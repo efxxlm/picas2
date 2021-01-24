@@ -124,7 +124,11 @@
                             Soporte de la solicitud
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-form-soporte-solicitud-url *ngIf="acordeones.tieneListaChequeo === true"></app-form-soporte-solicitud-url>
+                    <!--
+                        Validacion soporte solicitud
+                        *ngIf="acordeones.tieneListaChequeo === true"
+                    -->
+                    <app-form-soporte-solicitud-url [contrato]="contrato"></app-form-soporte-solicitud-url>
                 </mat-expansion-panel>
             </mat-accordion>
         </div>

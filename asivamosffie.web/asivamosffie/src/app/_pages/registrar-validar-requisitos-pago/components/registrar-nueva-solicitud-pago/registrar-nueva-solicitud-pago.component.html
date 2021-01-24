@@ -233,8 +233,11 @@
         <div *ngIf="addressForm.get( 'tipoSolicitud' ).value !== null
                     && (    addressForm.get( 'tipoSolicitud' ).value.codigo === tipoSolicitudCodigo.expensas
                             || addressForm.get( 'tipoSolicitud' ).value.codigo === tipoSolicitudCodigo.otrosCostos )">
-            <app-form-solicitud-expensas *ngIf="addressForm.get( 'tipoSolicitud' ).value.codigo === tipoSolicitudCodigo.expensas"></app-form-solicitud-expensas>
-            <app-form-solicitud-otros-costosservicios *ngIf="addressForm.get( 'tipoSolicitud' ).value.codigo === tipoSolicitudCodigo.otrosCostos"></app-form-solicitud-otros-costosservicios>
+            <!-- Formulario de expensas -->
+            <app-form-solicitud-expensas *ngIf="addressForm.get( 'tipoSolicitud' ).value.codigo === tipoSolicitudCodigo.expensas" [tipoSolicitud]="addressForm.get( 'tipoSolicitud' ).value.codigo"></app-form-solicitud-expensas>
+            <!-- Formulario de otros costos -->
+            <app-form-solicitud-otros-costosservicios *ngIf="addressForm.get( 'tipoSolicitud' ).value.codigo === tipoSolicitudCodigo.otrosCostos" [tipoSolicitud]="addressForm.get( 'tipoSolicitud' ).value.codigo"></app-form-solicitud-otros-costosservicios>
+
             <div class="text-center">
                 <p class="info-container">
                     <span class="info-text sin-diligenciar">Sin diligenciar</span>

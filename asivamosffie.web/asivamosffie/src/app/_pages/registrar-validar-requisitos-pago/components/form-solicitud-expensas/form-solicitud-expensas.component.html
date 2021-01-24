@@ -14,16 +14,15 @@
                         </div>
                         <div class="col d-flex">
                             <mat-form-field class="full-width">
-                                <input matInput #llaveMen type="text" maxlength="100" required [matAutocomplete]="auto">
+                                <input matInput #llaveMen type="text" maxlength="100" required [matAutocomplete]="auto" formControlName="llaveMen">
                                 <mat-autocomplete #auto="matAutocomplete">
-                                    <mat-option (click)="seleccionAutocomplete(contr.value)"
-                                        *ngFor="let contr of llavesMenArray" [value]="contr.name">
-                                        {{contr.name}}
+                                    <mat-option *ngFor="let llave of llavesMenArray" (click)="seleccionAutocomplete(llave)" [value]="llave.llaveMen">
+                                        {{llave.llaveMen}}
                                     </mat-option>
                                 </mat-autocomplete>
-                                <input type="hidden" formControlName="llaveMen">
+                                <input type="hidden" formControlName="llaveMenSeleccionada">
                             </mat-form-field>
-                            <button mat-button color="primary" class="busqueda--img">
+                            <button type="button" mat-button color="primary" class="busqueda--img" (click)="getLlaveMen()">
                                 <img src="assets/img/icon/lupa.svg" alt="Buscar" style="width: 20px; height: 20px;">
                             </button>
                         </div>
@@ -92,8 +91,8 @@
                         <div class="col">
                             <mat-form-field class="select-width">
                                 <mat-select formControlName="tipoPago" required>
-                                    <mat-option *ngFor="let tipoPago of tipoPagoArray" [value]="tipoPago.value">
-                                        {{ tipoPago.name }}
+                                    <mat-option *ngFor="let tipoPago of tipoPagoArray" [value]="tipoPago">
+                                        {{ tipoPago.nombre }}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
@@ -111,9 +110,8 @@
                         <div class="col">
                             <mat-form-field class="select-width">
                                 <mat-select formControlName="conceptoPagoCriterio" required>
-                                    <mat-option *ngFor="let conceptoPagoCriterio of conceptoPagoCriterioArray"
-                                        [value]="conceptoPagoCriterio.value">
-                                        {{ conceptoPagoCriterio.name }}
+                                    <mat-option *ngFor="let conceptoPagoCriterio of conceptoPagoCriterioArray" [value]="conceptoPagoCriterio">
+                                        {{ conceptoPagoCriterio.nombre }}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>

@@ -14,16 +14,14 @@
                         </div>
                         <div class="col d-flex">
                             <mat-form-field class="full-width">
-                                <input matInput #numeroContrato type="text" maxlength="100" required [matAutocomplete]="auto">
+                                <input matInput #numeroContrato type="text" maxlength="100" required [matAutocomplete]="auto" formControlName="numeroContrato">
                                 <mat-autocomplete #auto="matAutocomplete">
-                                    <mat-option (click)="seleccionAutocomplete(contr.value)"
-                                        *ngFor="let contr of contratosArray" [value]="contr.name">
+                                    <mat-option (click)="seleccionAutocomplete(contr.value)" *ngFor="let contr of contratosArray" [value]="contr.name">
                                         {{contr.name}}
                                     </mat-option>
                                 </mat-autocomplete>
-                                <input type="hidden" formControlName="numeroContrato">
                             </mat-form-field>
-                            <button mat-button color="primary" class="busqueda--img">
+                            <button mat-button color="primary" class="busqueda--img" type="button" (click)="getContratos()">
                                 <img src="assets/img/icon/lupa.svg" alt="Buscar" style="width: 20px; height: 20px;">
                             </button>
                         </div>
@@ -92,8 +90,8 @@
                         <div class="col">
                             <mat-form-field class="select-width">
                                 <mat-select formControlName="tipoPago" required>
-                                    <mat-option *ngFor="let tipoPago of tipoPagoArray" [value]="tipoPago.value">
-                                        {{ tipoPago.name }}
+                                    <mat-option *ngFor="let tipoPago of tipoPagoArray" [value]="tipoPago">
+                                        {{ tipoPago.nombre }}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>

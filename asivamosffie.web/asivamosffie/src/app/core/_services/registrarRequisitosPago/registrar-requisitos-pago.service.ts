@@ -32,6 +32,14 @@ export class RegistrarRequisitosPagoService {
     return this.http.post<Respuesta>( `${ this.apiUrl }/CreateEditNewPayment`, pSolicitudPago );
   }
 
+  createEditExpensas( pSolicitudPago: any ) {
+    return this.http.post<Respuesta>( `${ this.apiUrl }/CreateEditExpensas`, pSolicitudPago );
+  }
+
+  createEditOtrosCostosServicios( pSolicitudPago: any ) {
+    return this.http.post<Respuesta>( `${ this.apiUrl }/CreateEditOtrosCostosServicios`, pSolicitudPago );
+  }
+
   getListSolicitudPago() {
     return this.http.get<any[]>( `${ this.apiUrl }/GetListSolicitudPago` );
   }
@@ -59,7 +67,7 @@ export class RegistrarRequisitosPagoService {
   }
 
   getListProyectosByLlaveMen( pLlaveMen: string ) {
-    return this.http.get( `${ this.apiUrl }/GetListProyectosByLlaveMen?pLlaveMen=${ pLlaveMen }` );
+    return this.http.get<any[]>( `${ this.apiUrl }/GetListProyectosByLlaveMen?pLlaveMen=${ pLlaveMen }` );
   }
   // Eliminar criterio del contrato
   deleteSolicitudPagoFaseCriterio( pSolicitudPagoFaseCriterioId: number ) {

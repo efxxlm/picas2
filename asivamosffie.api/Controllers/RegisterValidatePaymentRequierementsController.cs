@@ -92,7 +92,7 @@ namespace asivamosffie.api.Controllers
         [HttpPost]
         [Route("CreateEditNewPayment")]
         public async Task<IActionResult> CreateEditNewPayment([FromBody] SolicitudPago pSolicitudPago)
-        {
+         {
             pSolicitudPago.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
             return Ok(await _registerValidatePaymentRequierementsService.CreateEditNewPayment(pSolicitudPago));
         }
