@@ -835,6 +835,7 @@ namespace asivamosffie.services
         private bool ValidateCompleteRecordSolicitudPagoFaseFactura(SolicitudPagoFaseFactura solicitudPagoFaseFactura)
         {
             if (string.IsNullOrEmpty(solicitudPagoFaseFactura.Fecha.ToString())
+                || solicitudPagoFaseFactura.TieneDescuento.HasValue
                 || string.IsNullOrEmpty(solicitudPagoFaseFactura.ValorFacturado.ToString())
                 || string.IsNullOrEmpty(solicitudPagoFaseFactura.Numero.ToString())
                 )
