@@ -46,7 +46,7 @@
                         >
                         Tramitar rendimientos
                     </button>
-                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.registrosConsistentes||element.registrosInconsistentes">
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.registrosConsistentes > 0 ">
                         Enviar para aprobación
                     </button>
                     <button mat-raised-button color="accent" class="btn-table" *ngIf="element.registrosInconsistentes > 0">
@@ -55,10 +55,10 @@
                     <button mat-raised-button color="accent" class="btn-table" *ngIf="element.registrosConsistentes > 0 || element.registrosInconsistentes > 0">
                         Descargar resultado
                     </button>
-                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.registrosConsistentes> 0">
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.pendienteAprobacion">
                         Ver registros consistentes
                     </button>
-                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.registrosInconsistente> 0">
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.registrosInconsistentes> 0 && element.registrosConsistentes == 0">
                         Ver registros inconsistentes
                     </button>
                 </td>

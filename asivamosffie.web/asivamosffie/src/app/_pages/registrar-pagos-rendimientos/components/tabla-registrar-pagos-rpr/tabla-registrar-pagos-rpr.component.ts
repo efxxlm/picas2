@@ -8,6 +8,7 @@ import { ObservacionesReportPagoRprComponent } from '../observaciones-report-pag
 import { FaseDosPagosRendimientosService } from '../../../../core/_services/faseDosPagosRendimientos/fase-dos-pagosRendimientos.service'
 import { FileDownloader } from 'src/app/_helpers/file-downloader'
 import exportFromJSON from 'export-from-json'
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component'
 
 @Component({
   selector: 'app-tabla-registrar-pagos-rpr',
@@ -83,14 +84,30 @@ export class TablaRegistrarPagosRprComponent implements OnInit {
     })
   }
 
-  deleteUpload(uploadPaymentId: number){
-    this.faseDosPagosRendimientosSvc.setPaymentsPerformanceStatus(uploadPaymentId)
-     .subscribe(( isDeleted)=>{
-        console.log("Eliminado", isDeleted)
-        this.getData()
-    },onError => {
-      
+   openDialogSiNo(modalTitle: string, modalText: string, uploadPaymentId:number) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText, siNoBoton:true }
+    });   
+    dialogRef.afterClosed().subscribe(result => {
+      if(result === true)
+      {
+        this.faseDosPagosRendimientosSvc.deletePaymentsPerformanceStatus(uploadPaymentId)
+          .subscribe(( isDeleted)=>{
+          console.log("Eliminado", isDeleted)
+          this.getData()
+          },onError => {
+            
+          });
+      }           
     });
+  }
+
+
+  deleteUpload(uploadPaymentId: number){
+    this.openDialogSiNo('','<b>¿Está seguro de eliminar este registro?</b>',uploadPaymentId);
+
+    
   }
 
   viewDetails(uploadPaymentId: number){

@@ -12,15 +12,17 @@ namespace asivamosffie.services.Interfaces
     {
         Task<Respuesta> uploadFileToValidate(IFormFile pFile, string pUsuarioCreo, string typeFile, bool saveSuccessProcess);
 
-        Task<List<dynamic>> getPaymentsPerformances(string typeFile);
+        Task<List<dynamic>> getPaymentsPerformances(string typeFile, string status);
 
         void setObservationPaymentsPerformances(string typeFile, string observaciones, string cargaPagosRendimientosId);
 
-        Task<Respuesta> setStatusPaymentPerformance(string cargaPagosRendimientosId, string uploadStatus);
+        Task<Respuesta> DeletePaymentPerformance(int uploadedOrderId);
 
         Respuesta DownloadPaymentPerformanceAsync(int uploadOrderId);
 
 
         Task<Respuesta> ManagePerformanceAsync(int uploadOrderId);
+
+        Task<Respuesta> ChangeStatusShowInconsistencies(int uploadOrderId);
     }
 }

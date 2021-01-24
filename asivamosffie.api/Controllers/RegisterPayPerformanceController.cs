@@ -58,15 +58,15 @@ namespace asivamosffie.api.Controllers
 
         [Route("getPaymentsPerformances")]
         [HttpGet]
-        public async Task<List<dynamic>> getPaymentsPerformances([FromQuery] string typeFile)
+        public async Task<List<dynamic>> getPaymentsPerformances([FromQuery] string typeFile, [FromQuery] string status)
         {
             try
             {
-                return await _registerPayPerformanceService.getPaymentsPerformances(typeFile);
+                return await _registerPayPerformanceService.getPaymentsPerformances(typeFile, status);
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw ex.InnerException;
             }
         }
 
@@ -88,11 +88,11 @@ namespace asivamosffie.api.Controllers
 
         [Route("deletePaymentPerformance")]
         [HttpGet]
-        public async Task<IActionResult> deleteUpload(string uploadedOrderId)
+        public async Task<IActionResult> deleteUpload(int uploadedOrderId)
         {
             try
             {
-                var result = await _registerPayPerformanceService.setStatusPaymentPerformance(uploadedOrderId, "Eliminado");
+                var result = await _registerPayPerformanceService.DeletePaymentPerformance(uploadedOrderId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -116,13 +116,13 @@ namespace asivamosffie.api.Controllers
         }
 
 
-        //[Route("getPaymentsPerformances")]
+        //[Route("getManagedPerformances")]
         //[HttpGet]
-        //public async Task<List<dynamic>> getPaymentsPerformances([FromQuery] string typeFile)
+        //public async Task<List<dynamic>> getManagePerformances([FromQuery] string typeFile)
         //{
         //    try
         //    {
-        //        return await _registerPayPerformanceService.getPaymentsPerformances(typeFile);
+        //        return await _registerPayPerformanceService.getPaymentsPerformances(typeFile, "Valido");
         //    }
         //    catch (Exception ex)
         //    {
@@ -138,6 +138,22 @@ namespace asivamosffie.api.Controllers
             try
             {
                 var result = await _registerPayPerformanceService.ManagePerformanceAsync(uploadedOrderId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+        [Route("SendInconsistencies")]
+        [HttpGet]
+        public async Task<IActionResult> ChangeStatusShowInconsistencies(int uploadedOrderId)
+        {
+            try
+            {
+                var result = await _registerPayPerformanceService.ChangeStatusShowInconsistencies(uploadedOrderId);
                 return Ok(result);
             }
             catch (Exception ex)

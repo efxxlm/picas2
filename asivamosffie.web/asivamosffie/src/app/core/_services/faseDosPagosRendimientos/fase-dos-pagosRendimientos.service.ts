@@ -25,9 +25,9 @@ export class FaseDosPagosRendimientosService {
     )
   }
 
-  getPaymentsPerformances(typeFile: string) {
+  getPaymentsPerformances(typeFile: string, status: string = "") {
     return this.http.get<CarguePagosRendimientos[]>(
-      `${this.urlApi}/getPaymentsPerformances?typeFile=${typeFile}`
+      `${this.urlApi}/getPaymentsPerformances?typeFile=${typeFile}&&status=${status}`
     )
   }
 
@@ -39,7 +39,7 @@ export class FaseDosPagosRendimientosService {
     )
   }
 
-  setPaymentsPerformanceStatus(uploadedOrderId: number){
+  deletePaymentsPerformanceStatus(uploadedOrderId: number){
     return this.http.get<any>(`${this.urlApi}/deletePaymentPerformance?uploadedOrderId=${uploadedOrderId}`)
   }
 

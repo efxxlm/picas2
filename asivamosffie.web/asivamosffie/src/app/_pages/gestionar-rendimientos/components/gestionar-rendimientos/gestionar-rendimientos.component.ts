@@ -55,7 +55,7 @@ export class GestionarRendimientosComponent implements OnInit {
 
   loadDataSource(){
     this.faseDosPagosRendimientosSvc
-    .getPaymentsPerformances(this.uploadType)
+    .getPaymentsPerformances(this.uploadType, "Valido")
     .subscribe((response: any[]) => {
       if (response.length === 0) {
         return
@@ -89,7 +89,8 @@ export class GestionarRendimientosComponent implements OnInit {
   managePerformance(uploadedOrderId: number){
     this.faseDosPagosRendimientosSvc
     .managePerformance(uploadedOrderId).subscribe((result)=>{
-      console.log(result.data)
+
+     this.loadDataSource();
     })
   }
 

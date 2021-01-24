@@ -15,5 +15,9 @@ namespace asivamosffie.model.Models
         public string EstadoCargue { get; set; }
         public string TipoCargue { get; set; }
         public DateTime FechaCargue { get; set; }
+        public DateTime? FechaTramite { get; set; }
+        public string TramiteJson { get; set; }
+        public int? RegistrosConsistentes { get; set; }
+        public int? RegistrosInconsistentes { get; set; }
     }
 }

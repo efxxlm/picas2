@@ -83,7 +83,7 @@ export class TablaRegistrarRendimientosRprComponent implements OnInit {
   };  
 
   deleteUpload(uploadPaymentId: number){
-    this.faseDosPagosRendimientosSvc.setPaymentsPerformanceStatus(uploadPaymentId)
+    this.faseDosPagosRendimientosSvc.deletePaymentsPerformanceStatus(uploadPaymentId)
      .subscribe(( isDeleted)=>{
         console.log("Eliminado", isDeleted)
         this.loadDataSource()

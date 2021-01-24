@@ -25,6 +25,8 @@ using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using asivamosffie.services.Helpers.Constants;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml.Spreadsheet;
+using Z.EntityFramework.Plus;
+using DocumentFormat.OpenXml.Bibliography;
 
 namespace asivamosffie.services
 {
@@ -85,10 +87,9 @@ namespace asivamosffie.services
                     // public ExcelRange this[int FromRow, int FromCol, int ToRow, int ToCol] { get; }
                     var columnAccounst = worksheet.Cells[2, 2, worksheet.Dimension.Rows, 2].Select( v=> v.Text).ToList<string>();
 
-                    var bankAccounts = _context.CuentaBancaria.Where(x => x.NumeroCuentaBanco != null && columnAccounst.Contains(x.NumeroCuentaBanco));
+                    var bankAccounts = _context.CuentaBancaria.Where(
+                        x => x.NumeroCuentaBanco != null && columnAccounst.Contains(x.NumeroCuentaBanco)).AsNoTracking();
                     // TODO add validation to prevent query a column in a  not existing position
-
-                    HashSet<string> accounts = new HashSet<string>();
 
                     //Controlar Registros
                     for (int indexWorkSheetRow = 2; indexWorkSheetRow <= worksheet.Dimension.Rows; indexWorkSheetRow++)
@@ -116,7 +117,7 @@ namespace asivamosffie.services
                                 carguePagosRendimiento.Add("Estado", "Valido");
                             }
 
-                            accounts.Add(carguePagosRendimiento.GetValueOrDefault("Número de Cuenta"));
+                            // accounts.Add(carguePagosRendimiento.GetValueOrDefault("Número de Cuenta"));
                             listaCarguePagosRendimientos.Add(carguePagosRendimiento);
                         }
                         catch (Exception ex)
@@ -415,11 +416,16 @@ namespace asivamosffie.services
             var accountNumbers = accountOrders.Select(x => x.AccountNumber);
 
             decimal valorAporteEnCuenta = 0;
+            int registrosConsistentes = 0;
             foreach (var accountOrder in accountOrders)
             {
                 valorAporteEnCuenta = 0;
-                var accounts = await _context.CuentaBancaria.SingleAsync( x=> x.NumeroCuentaBanco == accountOrder.AccountNumber);
+                var accounts = await _context.CuentaBancaria.SingleOrDefaultAsync( x=> x.NumeroCuentaBanco == accountOrder.AccountNumber);
 
+                if (accounts == null)
+                {
+                    new Exception("La cuenta asignada no existe");
+                }
                 var fundingSources = await _context.FuenteFinanciacion.
                     Where(r => !(bool)r.Eliminado && accounts.FuenteFinanciacionId ==  r.FuenteFinanciacionId).
                     Include(r => r.Aportante).ToListAsync();
@@ -453,6 +459,7 @@ namespace asivamosffie.services
                 if (valorAporteEnCuenta >= accountOrder.PerformancesToAdd)
                 {
                     accountOrder.Status = "Consistente";
+                    registrosConsistentes += 1;
                 }
             }
 
@@ -465,6 +472,28 @@ namespace asivamosffie.services
                 Code = GeneralCodes.OperacionExitosa,
                 Message = "" // await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreo, "VALIDAR EXCEL PROGRAMACION")
             };
+            var tramite = JsonConvert.SerializeObject(accountOrders);
+            try
+            {
+                await _context.Set<CarguePagosRendimientos>()
+                  .Where(order => order.CargaPagosRendimientosId == uploadedOrderId)
+                  .UpdateAsync(o => new CarguePagosRendimientos()
+                  {
+                      FechaTramite = DateTime.Now,
+                      TramiteJson = tramite,
+                      RegistrosConsistentes = registrosConsistentes,
+                      RegistrosInconsistentes = accountOrders.Count - registrosConsistentes,
+                  }); ;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+           
+
+            // 
 
             return respuesta;
         }
@@ -493,18 +522,23 @@ namespace asivamosffie.services
             return null;
         }
 
+        public Task<Respuesta> ChangeStatusShowInconsistencies(int uploadOrderId)
+        {
+            return null
+        }
+
         /// <summary>
         /// TODO Add by status
         /// </summary>
         /// <param name="typeFile"></param>
         /// <returns></returns>
-        public async Task<List<dynamic>> getPaymentsPerformances(string typeFile)
+        public async Task<List<dynamic>> getPaymentsPerformances(string typeFile, string status)
         {
             List<dynamic> listaContrats = new List<dynamic>();
 
-            List<CarguePagosRendimientos> lista =await _context.CarguePagosRendimientos.ToListAsync();
+            List<CarguePagosRendimientos> lista =await _context.CarguePagosRendimientos.AsNoTracking().ToListAsync();
 
-            lista.Where(w=>w.TipoCargue == typeFile).ToList().ForEach(c =>
+            lista.Where(w=>w.TipoCargue == typeFile && (string.IsNullOrEmpty(status)  || w.EstadoCargue == status) ).ToList().ForEach(c =>
             {
                 listaContrats.Add(new
                 {
@@ -516,7 +550,10 @@ namespace asivamosffie.services
                     c.RegistrosValidos,
                     c.RegistrosInvalidos,
                     c.EstadoCargue,
-                    c.FechaCargue
+                    c.FechaCargue,
+                    c.RegistrosInconsistentes,
+                    c.RegistrosConsistentes //,
+                    // c.FechaTramite
                 });
             });
 
@@ -556,18 +593,28 @@ namespace asivamosffie.services
         /// <param name="cargaPagosRendimientosId"></param>
         /// <param name="uploadStatus"></param>
         /// <returns></returns>
-        public async Task<Respuesta> setStatusPaymentPerformance(string cargaPagosRendimientosId, string uploadStatus)
+        public async Task<Respuesta> DeletePaymentPerformance(int uploadedOrderId)
         {
-            CarguePagosRendimientos CarguePagosRendimientos = _context.CarguePagosRendimientos.Find(int.Parse(cargaPagosRendimientosId));
-            CarguePagosRendimientos.EstadoCargue = uploadStatus;
-            _context.Entry<CarguePagosRendimientos>(CarguePagosRendimientos).State = EntityState.Modified;
+            int modifiedRows = -1;
+            if (uploadedOrderId > 0)
+            {
+                modifiedRows = await _context.Set<CarguePagosRendimientos>()
+                      .Where(order => order.CargaPagosRendimientosId == uploadedOrderId && !order.FechaTramite.HasValue)
+                      .UpdateAsync(o => new CarguePagosRendimientos()
+                      {
+                      // FechaTramite Fecha Actualización on Update
+                      EstadoCargue = "Eliminado",
+                      }); ;
 
-            var rowsAffected = await _context.SaveChangesAsync() > 0;
+            }
+            string codeResponse = modifiedRows > 0 ? GeneralCodes.OperacionExitosa : GeneralCodes.EntradaInvalida;
+
+            //  “El registro tiene información que depende de él, no se puede eliminar”
 
             return new Respuesta
             {
-                Data = rowsAffected,
-                IsSuccessful = true,
+                Data = modifiedRows,
+                IsSuccessful = modifiedRows > 0,
                 IsException = false,
                 IsValidation = false,
                 Code = GeneralCodes.OperacionExitosa,
