@@ -729,6 +729,7 @@ namespace asivamosffie.services
                     solicitudPagoFaseFacturaOld.Fecha = SolicitudPagoFaseFactura.Fecha;
                     solicitudPagoFaseFacturaOld.ValorFacturado = SolicitudPagoFaseFactura.ValorFacturado;
                     solicitudPagoFaseFacturaOld.Numero = SolicitudPagoFaseFactura.Numero;
+                    solicitudPagoFaseFacturaOld.ValorFacturadoConDescuento = SolicitudPagoFaseFactura.ValorFacturadoConDescuento;
                 }
                 else
                 {

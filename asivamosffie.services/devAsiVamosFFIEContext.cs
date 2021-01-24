@@ -5412,6 +5412,8 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.ValorFacturado).HasColumnType("decimal(25, 3)");
 
+                entity.Property(e => e.ValorFacturadoConDescuento).HasColumnType("decimal(25, 3)");
+
                 entity.HasOne(d => d.SolicitudPagoFase)
                     .WithMany(p => p.SolicitudPagoFaseFactura)
                     .HasForeignKey(d => d.SolicitudPagoFaseId)
