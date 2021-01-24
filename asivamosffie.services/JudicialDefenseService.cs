@@ -191,10 +191,17 @@ namespace asivamosffie.services
                     defensaJudicialBD.TipoAccionCodigo = defensaJudicial.TipoAccionCodigo;
                     defensaJudicialBD.JurisdiccionCodigo = defensaJudicial.JurisdiccionCodigo;
                     defensaJudicialBD.Pretensiones = defensaJudicial.Pretensiones;
-                    defensaJudicialBD.CuantiaPerjuicios = defensaJudicial.CuantiaPerjuicios;                    
+                    defensaJudicialBD.CuantiaPerjuicios = defensaJudicial.CuantiaPerjuicios;
+                    defensaJudicialBD.FechaRadicadoFfie = defensaJudicial.FechaRadicadoFfie;
+                    defensaJudicialBD.NumeroRadicadoFfie = defensaJudicial.NumeroRadicadoFfie;
+                    defensaJudicialBD.CanalIngresoCodigo = defensaJudicial.CanalIngresoCodigo;
 
                     defensaJudicialBD.UsuarioModificacion = defensaJudicial.UsuarioModificacion;
                     defensaJudicialBD.EsRequiereSupervisor = defensaJudicial.EsRequiereSupervisor;
+
+                    defensaJudicialBD.EsDemandaFfie = defensaJudicial.EsDemandaFfie;
+                    defensaJudicialBD.NumeroDemandantes = defensaJudicial.NumeroDemandantes;
+                    defensaJudicialBD.NumeroDemandados = defensaJudicial.NumeroDemandados;
 
                     //url
                     defensaJudicialBD.UrlSoporteProceso = defensaJudicial.UrlSoporteProceso;
@@ -237,22 +244,27 @@ namespace asivamosffie.services
                         }
                             
                     }
+                    
                     foreach (var defFicha in defensaJudicial.FichaEstudio)
                     {
-                        if(defFicha.UsuarioCreacion==null)
+                        if(defFicha!=null)
                         {
-                            defFicha.UsuarioCreacion = defensaJudicial.UsuarioCreacion;
-                            defFicha.FechaCreacion = DateTime.Now;
-                            defFicha.Eliminado = false;
-                            defFicha.DefensaJudicialId = defensaJudicialBD.DefensaJudicialId;
-                            _context.FichaEstudio.Add(defFicha);
+                            if (defFicha.UsuarioCreacion == null)
+                            {
+                                defFicha.UsuarioCreacion = defensaJudicial.UsuarioCreacion;
+                                defFicha.FechaCreacion = DateTime.Now;
+                                defFicha.Eliminado = false;
+                                defFicha.DefensaJudicialId = defensaJudicialBD.DefensaJudicialId;
+                                _context.FichaEstudio.Add(defFicha);
+                            }
+                            else
+                            {
+                                defFicha.UsuarioModificacion = defensaJudicial.UsuarioCreacion;
+                                defFicha.FechaModificacion = DateTime.Now;
+                                defFicha.Eliminado = false;
+                            }
                         }
-                        else
-                        {
-                            defFicha.UsuarioModificacion = defensaJudicial.UsuarioCreacion;
-                            defFicha.FechaModificacion = DateTime.Now;
-                            defFicha.Eliminado = false;
-                        }
+                        
                         
                     }
                     foreach (var defFicha in defensaJudicial.DefensaJudicialSeguimiento)

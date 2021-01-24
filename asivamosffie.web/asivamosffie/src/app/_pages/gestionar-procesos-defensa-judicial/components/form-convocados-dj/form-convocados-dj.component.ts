@@ -36,11 +36,16 @@ export class FormConvocadosDjComponent implements OnInit {
   @Input() defensaJudicial:DefensaJudicial;
 
   cargarRegistro() {
-    //this.ngOnInit().then(() => {
-      console.log("form");
-      console.log(this.defensaJudicial);
-      console.log(this.legitimacion);
-      console.log(this.tipoProceso);      
+    this.formContratista.get("numeroContratos").setValue(this.defensaJudicial.numeroDemandados);
+      let i=0;      
+      this.defensaJudicial.demandanteConvocante.forEach(element => {
+        console.log(this.perfiles.controls[i].get("nomConvocado"));
+        this.perfiles.controls[i].get("nomConvocado").setValue(element.nombre);
+        this.perfiles.controls[i].get("tipoIdentificacion").setValue(element.tipoIdentificacionCodigo);
+        this.perfiles.controls[i].get("numIdentificacion").setValue(element.numeroIdentificacion);
+        
+        i++;
+      });      
   }
 
   constructor ( private fb: FormBuilder,public commonService:CommonService,

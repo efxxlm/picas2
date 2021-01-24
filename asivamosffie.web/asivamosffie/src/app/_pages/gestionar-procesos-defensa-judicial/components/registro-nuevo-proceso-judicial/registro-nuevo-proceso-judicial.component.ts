@@ -71,12 +71,25 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
     this.estaIncompletoconvocados(defensaJudicial)+
     this.estaIncompletodetalle(defensaJudicial))==6)
     {
-      if(defensaJudicial.fichaEstudio.length++>0)
+      if(defensaJudicial.fichaEstudio.length>0)
       {
-        retorno= 2;
+        if(defensaJudicial.fichaEstudio[0].antecedentes!=null && 
+          defensaJudicial.fichaEstudio[0].hechosRelevantes!=null &&
+          defensaJudicial.fichaEstudio[0].jurisprudenciaDoctrina!=null &&
+          defensaJudicial.fichaEstudio[0].decisionComiteDirectrices!=null &&
+          defensaJudicial.fichaEstudio[0].analisisJuridico!=null &&
+          defensaJudicial.fichaEstudio[0].recomendaciones!=null)
+          {
+            retorno= 2;
+          }
+          else
+          {
+            retorno=1;
+          }
+        
       }
       else{       
-      retorno=1;
+        retorno=0;
       }    
     }
     else

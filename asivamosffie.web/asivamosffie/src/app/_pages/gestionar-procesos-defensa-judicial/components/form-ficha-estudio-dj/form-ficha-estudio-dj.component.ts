@@ -63,20 +63,22 @@ export class FormFichaEstudioDjComponent implements OnInit {
       console.log(this.defensaJudicial);
       console.log(this.legitimacion);
       console.log(this.tipoProceso);      
-      this.addressForm.get("antecedentes").setValue(this.defensaJudicial.fichaEstudio[0].antecedentes);
-      this.addressForm.get("hechosRelevantes").setValue(this.defensaJudicial.fichaEstudio[0].hechosRelevantes);
-      this.addressForm.get("jurisprudenciaDoctrina").setValue(this.defensaJudicial.fichaEstudio[0].jurisprudenciaDoctrina);
-      this.addressForm.get("decisionComite").setValue(this.defensaJudicial.fichaEstudio[0].decisionComiteDirectrices);
-      this.addressForm.get("analisisJuridico").setValue(this.defensaJudicial.fichaEstudio[0].analisisJuridico);
-      this.addressForm.get("recomendaciones").setValue(this.defensaJudicial.fichaEstudio[0].recomendaciones);
-      this.addressForm.get("procesoFichaComite").setValue(this.defensaJudicial.fichaEstudio[0].esPresentadoAnteComiteFfie);
-      this.addressForm.get("fechaComiteDefensa").setValue(this.defensaJudicial.fichaEstudio[0].fechaComiteDefensa);
-      this.addressForm.get("recomendacionFinal").setValue(this.defensaJudicial.fichaEstudio[0].recomendacionFinalComite);
-      this.addressForm.get("aperturaFormalProceso").setValue(this.defensaJudicial.fichaEstudio[0].esAprobadoAperturaProceso);
-      this.addressForm.get("tipoActuacionRecomendada").setValue(this.defensaJudicial.fichaEstudio[0].tipoActuacionCodigo);
-      this.addressForm.get("actuacionRecomendadaAlComite").setValue(this.defensaJudicial.fichaEstudio[0].esActuacionTramiteComite);
-      this.addressForm.get("urlSoporte").setValue(this.defensaJudicial.fichaEstudio[0].rutaSoporte);
-
+      if(this.defensaJudicial.fichaEstudio.length>0)
+      {
+        this.addressForm.get("antecedentes").setValue(this.defensaJudicial.fichaEstudio[0].antecedentes);
+        this.addressForm.get("hechosRelevantes").setValue(this.defensaJudicial.fichaEstudio[0].hechosRelevantes);
+        this.addressForm.get("jurisprudenciaDoctrina").setValue(this.defensaJudicial.fichaEstudio[0].jurisprudenciaDoctrina);
+        this.addressForm.get("decisionComite").setValue(this.defensaJudicial.fichaEstudio[0].decisionComiteDirectrices);
+        this.addressForm.get("analisisJuridico").setValue(this.defensaJudicial.fichaEstudio[0].analisisJuridico);
+        this.addressForm.get("recomendaciones").setValue(this.defensaJudicial.fichaEstudio[0].recomendaciones);
+        this.addressForm.get("procesoFichaComite").setValue(this.defensaJudicial.fichaEstudio[0].esPresentadoAnteComiteFfie);
+        this.addressForm.get("fechaComiteDefensa").setValue(this.defensaJudicial.fichaEstudio[0].fechaComiteDefensa);
+        this.addressForm.get("recomendacionFinal").setValue(this.defensaJudicial.fichaEstudio[0].recomendacionFinalComite);
+        this.addressForm.get("aperturaFormalProceso").setValue(this.defensaJudicial.fichaEstudio[0].esAprobadoAperturaProceso);
+        this.addressForm.get("tipoActuacionRecomendada").setValue(this.defensaJudicial.fichaEstudio[0].tipoActuacionCodigo);
+        this.addressForm.get("actuacionRecomendadaAlComite").setValue(this.defensaJudicial.fichaEstudio[0].esActuacionTramiteComite);
+        this.addressForm.get("urlSoporte").setValue(this.defensaJudicial.fichaEstudio[0].rutaSoporte);
+      }      
   }
 
   ngOnInit(): void {

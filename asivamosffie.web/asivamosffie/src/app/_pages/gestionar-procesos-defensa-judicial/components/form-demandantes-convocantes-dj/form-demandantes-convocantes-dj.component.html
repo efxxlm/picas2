@@ -7,9 +7,9 @@
                         proceso?</label>
                 </div>
                 <div class="col">
-                    <mat-radio-group class="radioInput" formControlName="demandaContraFFIE" required>
-                        <mat-radio-button [value]="true">Sí</mat-radio-button>
-                        <mat-radio-button [value]="false">No</mat-radio-button>
+                    <mat-radio-group class="radioInput" formControlName="demandaContraFFIE"  required>
+                        <mat-radio-button (change)="cambioTipoTexto()" [value]="true">Sí</mat-radio-button >
+                        <mat-radio-button (change)="cambioTipoTexto()" [value]="false">No</mat-radio-button>
                     </mat-radio-group>
                     <span class="required-form-group" style="margin-left: 1px;">*</span>
                 </div>
@@ -20,13 +20,13 @@
 <form autocomplete="off" [formGroup]="formContratista" (ngSubmit)="guardar()">
     <mat-card class="shipping-card">
         <mat-card-content align="left">
-            <div class="d-flex mt-1em col-md-6">
-                <label class="mr-label" class="label-left"><b>Número de demandantes</b></label>
+            <div class="d-flex mt-1em col-md-6"> 
+                <label class="mr-label" class="label-left" ><b>Número de {{textoConvocantes}}s</b></label>
                 <div class="col d-flex">
                     <mat-form-field class="w-70">
                         <input matInput type="text" maxlength="2" formControlName="numeroContratos" required>
                     </mat-form-field>
-                    <span class="contador">{{2 - formContratista.get( 'numeroContratos' ).value.toString().length}}</span>
+                    <span class="contador">{{2 - formContratista.get( 'numeroContratos' ).value?.toString().length}}</span>
                 </div>
             </div>
         </mat-card-content>
@@ -34,8 +34,10 @@
     <mat-accordion formArrayName="perfiles" *ngIf="formContratista.get( 'numeroContratos' ).value !== null">
         <mat-expansion-panel class="expansion-style sub-expansion" *ngFor="let perfil of perfiles.controls; index as i">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="{'sin-diligenciar': nomConvocado.value=='', 'completo': nomConvocado.value!=''}">
-                    Demandante {{ i+1 }}
+                <mat-panel-title class="expansion-style--title" style="text-transform: capitalize;" [ngClass]="{'sin-diligenciar': nomConvocado.value==''
+                && nomConvocado.tipoIdentificacion =='' && nomConvocado.numIdentificacion=='', 'completo': nomConvocado.value!=''
+                && nomConvocado.tipoIdentificacion !='' && nomConvocado.numIdentificacion!=''}">
+                    {{textoConvocantes}} {{ i+1 }}
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
@@ -45,7 +47,7 @@
                         <div class="col-md-12">
                             <div class="row">
                                 <div class="pr-1">
-                                    <label for="nomConvocado" class="label-left">Nombre del demandante</label>
+                                    <label for="nomConvocado" class="label-left">Nombre del {{textoConvocantes}}</label>
                                 </div>
                                 <div class="col d-flex">
                                     <mat-form-field class="full-width">
@@ -61,7 +63,7 @@
                         <div class="col-md-8">
                             <div class="row">
                                 <div class="pr-1">
-                                    <label class="label-left" for="tipoIdentificacion">Tipo de identificación del demandante</label>
+                                    <label class="label-left" for="tipoIdentificacion">Tipo de identificación del {{textoConvocantes}}</label>
                                 </div>
                                 <div class="col">
                                     <mat-form-field class="select-width">
@@ -79,7 +81,7 @@
                         <div class="col-md-8">
                             <div class="row">
                                 <div class="pr-1">
-                                    <label for="numIdentificacion" class="label-left">Número de identificación demandante</label>
+                                    <label for="numIdentificacion" class="label-left">Número de identificación {{textoConvocantes}}</label>
                                 </div>
                                 <div class="col d-flex">
                                     <mat-form-field class="full-width">
@@ -144,7 +146,7 @@
 <mat-accordion  *ngIf="this.addressForm.value.demandaContraFFIE==true">
     <mat-expansion-panel class="expansion-style">
         <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title sin-diligenciar">
+            <mat-panel-title class="expansion-style--title ">
                 Demandados
             </mat-panel-title>
         </mat-expansion-panel-header>
@@ -155,7 +157,7 @@
 <mat-accordion  *ngIf="this.addressForm.value.demandaContraFFIE==false">
     <mat-expansion-panel class="expansion-style">
         <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title sin-diligenciar">
+            <mat-panel-title class="expansion-style--title">
                 Convocados
             </mat-panel-title>
         </mat-expansion-panel-header>

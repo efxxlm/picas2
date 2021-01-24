@@ -101,9 +101,10 @@ export interface DefensaJudicial{
   fichaEstudio?:FichaEstudio[],
   defensaJudicialSeguimiento?: DefensaJudicialSeguimiento[];
   canalIngresoCodigo?: string;
-  numeroRadicadoFFIE?: string;
-  fechaRadicadoFFIE?: Date;
-  numeroDemandantes?: string;
+  numeroRadicadoFfie?: string;
+  fechaRadicadoFfie?: Date;
+  numeroDemandantes?: number;
+  numeroDemandados?: number;
   esDemandaFfie?: any;
   //not maped
   jurisdiccionCodigoNombre?:string,

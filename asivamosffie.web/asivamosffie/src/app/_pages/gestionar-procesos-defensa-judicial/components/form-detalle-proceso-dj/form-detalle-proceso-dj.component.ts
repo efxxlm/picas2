@@ -65,10 +65,17 @@ export class FormDetalleProcesoDjComponent implements OnInit {
       this.commonService.listaMunicipiosByIdDepartamento(this.defensaJudicial.departamentoID).subscribe(respuesta => {
         this.municipioArray = respuesta;
         //let mun =this.municipioArray.filter(x=>x.localizacionId==this.defensaJudicial.localizacionIdMunicipio)[0];
-        setTimeout(function(){ 
-          this.addressForm.get("municipioInicio").setValue(this.defensaJudicial.localizacionIdMunicipio);
+        setTimeout(() => {
+
+          this.updatemunform();
         }, 1000);
+        
       });
+  }
+
+  updatemunform()
+  {
+    this.addressForm.get("municipioInicio").setValue(this.defensaJudicial.localizacionIdMunicipio.toString());
   }
   
   ngOnInit(): void {

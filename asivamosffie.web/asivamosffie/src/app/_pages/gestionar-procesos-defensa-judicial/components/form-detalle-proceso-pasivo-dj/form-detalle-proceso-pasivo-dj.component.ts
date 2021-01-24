@@ -65,21 +65,27 @@ export class FormDetalleProcesoPasivoDjComponent implements OnInit {
       this.addressForm.get("pretensiones").setValue(this.defensaJudicial.pretensiones);
       this.addressForm.get("cuantiaPerjuicios").setValue(this.defensaJudicial.cuantiaPerjuicios);
       this.addressForm.get("requeridoParticipacionSupervisor").setValue(this.defensaJudicial.esRequiereSupervisor);
-      this.addressForm.get("fechaRadicado").setValue(this.defensaJudicial.fechaRadicadoFFIE);
-      this.addressForm.get("numeroRadicado").setValue(this.defensaJudicial.numeroRadicadoFFIE);
+      this.addressForm.get("fechaRadicado").setValue(this.defensaJudicial.fechaRadicadoFfie);
+      this.addressForm.get("numeroRadicado").setValue(this.defensaJudicial.numeroRadicadoFfie);
       this.addressForm.get("canalIngreso").setValue(this.defensaJudicial.canalIngresoCodigo);
       //let dep =this.departamentoArray.filter(x=>x.localizacionId==this.defensaJudicial.departamentoID)[0];
       this.addressForm.get("departamentoInicio").setValue(this.defensaJudicial.departamentoID);
       this.commonService.listaMunicipiosByIdDepartamento(this.defensaJudicial.departamentoID).subscribe(respuesta => {
         this.municipioArray = respuesta;
         //let mun =this.municipioArray.filter(x=>x.localizacionId==this.defensaJudicial.localizacionIdMunicipio)[0];
-        setTimeout(function(){ 
-          this.addressForm.get("municipioInicio").setValue(this.defensaJudicial.localizacionIdMunicipio);
+        setTimeout(() => {
+
+          this.updatemunform();
         }, 1000);
         
       });
   }
   
+  updatemunform()
+  {
+    this.addressForm.get("municipioInicio").setValue(this.defensaJudicial.localizacionIdMunicipio.toString());
+  }
+
   ngOnInit(): void {
     this.commonService.listaDepartamentos().subscribe(response=>{
       this.departamentoArray=response;
@@ -156,8 +162,8 @@ export class FormDetalleProcesoPasivoDjComponent implements OnInit {
     defensaJudicial.pretensiones=this.addressForm.get("pretensiones").value;
     defensaJudicial.cuantiaPerjuicios=this.addressForm.get("cuantiaPerjuicios").value;
     defensaJudicial.esRequiereSupervisor=this.addressForm.get("requeridoParticipacionSupervisor").value;
-    defensaJudicial.fechaRadicadoFFIE=this.addressForm.get("fechaRadicado").value;
-    defensaJudicial.numeroRadicadoFFIE=this.addressForm.get("numeroRadicado").value;
+    defensaJudicial.fechaRadicadoFfie=this.addressForm.get("fechaRadicado").value;
+    defensaJudicial.numeroRadicadoFfie=this.addressForm.get("numeroRadicado").value;
     defensaJudicial.canalIngresoCodigo=this.addressForm.get("canalIngreso").value;1    
       console.log(defensaJudicial);
       this.defensaService.CreateOrEditDefensaJudicial(defensaJudicial).subscribe(
