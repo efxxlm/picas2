@@ -1,30 +1,43 @@
 <div class="container">
   <div class="text-right">
-    <a [routerLink]="['/solicitarContratacion/solicitud/', idSolicitud]" mat-button color="primary"
-      class="btn-regresar">
-      <img src="assets/img/icon/regresar.svg" alt="Regresar">
+    <a
+      [routerLink]="['/solicitarContratacion/solicitud/', idSolicitud]"
+      mat-button
+      color="primary"
+      class="btn-regresar"
+    >
+      <img src="assets/img/icon/regresar.svg" alt="Regresar" />
     </a>
   </div>
   <div class="text-center">
-    <h1 class="title-menu--h1">
-      Definir características
-    </h1>
+    <h1 class="title-menu--h1">Definir características</h1>
   </div>
 
-  <p class="text-detalle flex-center colorMainColor" *ngIf="contratacionProyecto" style="margin-top: 1em;">
+  <p class="text-detalle flex-center colorMainColor" *ngIf="contratacionProyecto" style="margin-top: 1em">
     <span style="margin-right: 2em">{{ tipoIntervencion }}</span>
     <span style="margin-right: 2em">{{ contratacionProyecto.tipoIntervencionCodigo }}</span>
-    <span style="margin-right: 2em"><b>{{ contratacionProyecto.proyecto.institucionEducativa.nombre }} -
-        {{ contratacionProyecto.proyecto.sede.nombre }}</b></span>
+    <span style="margin-right: 2em"
+      ><b
+        >{{ contratacionProyecto.proyecto.institucionEducativa.nombre }} -
+        {{ contratacionProyecto.proyecto.sede.nombre }}</b
+      ></span
+    >
     <span> {{ municipio }} </span>
   </p>
 
   <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
     <mat-card class="shipping-card">
       <mat-card-content>
-        <div class="row" style="margin-left: .7em;">
+        <div class="row" style="margin-left: 0.7em">
           <div class="pr-1">
-            <label class="label-left" for="reasignacion">
+            <label
+              class="label-left"
+              for="completada"
+              [class.color-secondaryColor]="
+                (addressForm.get('completada').invalid && addressForm.get('completada').touched) ||
+                (addressForm.get('completada').invalid && estaEditando)
+              "
+            >
               ¿El proyecto tiene contemplada la obligación de disponer de servicio de monitoreo en tiempo real a través
               de cámaras con acceso web?
             </label>
@@ -36,12 +49,32 @@
             </mat-radio-group>
             <b class="color-mainColor">*</b>
           </div>
+          <span class="icon-incompleto">
+            <img
+              class="icon-incompleto--img"
+              src="assets/img/icon/incompleto.svg"
+              alt="este campo es requerido"
+              *ngIf="
+                (addressForm.get('completada').invalid && addressForm.get('completada').touched) ||
+                (addressForm.get('completada').invalid && estaEditando)
+              "
+            />
+          </span>
         </div>
         <div class="row">
           <div class="col-md-6">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left" for="reasignacion">¿El proyecto es una reasignación?</label>
+                <label
+                  class="label-left"
+                  for="reasignacion"
+                  [class.color-secondaryColor]="
+                    (addressForm.get('reasignacion').invalid && addressForm.get('reasignacion').touched) ||
+                    (addressForm.get('reasignacion').invalid && estaEditando)
+                  "
+                >
+                  ¿El proyecto es una reasignación?
+                </label>
               </div>
               <div class="col d-flex">
                 <mat-radio-group class="radioInput d-flex" formControlName="reasignacion">
@@ -50,6 +83,17 @@
                 </mat-radio-group>
                 <b class="color-mainColor">*</b>
               </div>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  *ngIf="
+                    (addressForm.get('reasignacion').invalid && addressForm.get('reasignacion').touched) ||
+                    (addressForm.get('reasignacion').invalid && estaEditando)
+                  "
+                />
+              </span>
             </div>
           </div>
         </div>
@@ -57,7 +101,16 @@
           <div class="col-md-6">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left" for="avanceObra">¿El proyecto tiene avance de obra?</label>
+                <label
+                  class="label-left"
+                  for="avanceObra"
+                  [class.color-secondaryColor]="
+                    (addressForm.get('avanceObra').invalid && addressForm.get('avanceObra').touched) ||
+                    (addressForm.get('avanceObra').invalid && estaEditando)
+                  "
+                >
+                  ¿El proyecto tiene avance de obra?
+                </label>
               </div>
               <div class="col d-flex">
                 <mat-radio-group class="radioInput d-flex" formControlName="avanceObra">
@@ -66,6 +119,17 @@
                 </mat-radio-group>
                 <b class="color-mainColor">*</b>
               </div>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  *ngIf="
+                    (addressForm.get('avanceObra').invalid && addressForm.get('avanceObra').touched) ||
+                    (addressForm.get('avanceObra').invalid && estaEditando)
+                  "
+                />
+              </span>
             </div>
           </div>
         </div>
@@ -73,33 +137,91 @@
           <div class="col-md-6">
             <div class="row">
               <div class="pr-1">
-                <label for="porcentajeAvanceObra" class="label-left">¿Cuál es el porcentaje de avance de obra?</label>
+                <label
+                  for="porcentajeAvanceObra"
+                  class="label-left"
+                  [class.color-secondaryColor]="
+                    (addressForm.get('porcentajeAvanceObra').invalid &&
+                      addressForm.get('porcentajeAvanceObra').touched) ||
+                    (addressForm.get('porcentajeAvanceObra').invalid && estaEditando)
+                  "
+                >
+                  ¿Cuál es el porcentaje de avance de obra?
+                </label>
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput type="number" min="1" max="100" formControlName="porcentajeAvanceObra" required>
+                  <input matInput type="number" min="1" max="100" formControlName="porcentajeAvanceObra" required />
                 </mat-form-field>
-                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico" matTooltipClass="info-tooltip">%</span>
+                <span
+                  class="contador"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Campo numérico"
+                  matTooltipClass="info-tooltip"
+                >
+                  %
+                </span>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    *ngIf="
+                      (addressForm.get('porcentajeAvanceObra').invalid &&
+                        addressForm.get('porcentajeAvanceObra').touched) ||
+                      (addressForm.get('porcentajeAvanceObra').invalid && estaEditando)
+                    "
+                  />
+                </span>
               </div>
             </div>
           </div>
         </div>
-        <div class="row animatedDown"
-          *ngIf=" ( addressForm.controls.porcentajeAvanceObra.value > 0 && addressForm.controls.porcentajeAvanceObra.value <= 100 )
-                  || ( addressForm.controls.reasignacion.value == false )
-                  || ( addressForm.controls.reasignacion.value == true && addressForm.controls.avanceObra.value == false )">
+        <div
+          class="row animatedDown"
+          *ngIf="
+            (addressForm.controls.porcentajeAvanceObra.value > 0 &&
+              addressForm.controls.porcentajeAvanceObra.value <= 100) ||
+            addressForm.controls.reasignacion.value == false ||
+            (addressForm.controls.reasignacion.value == true && addressForm.controls.avanceObra.value == false)
+          "
+        >
           <div class="col-md-6">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left" for="requiereLicencias">¿El proyecto requiere licencias?</label>
+                <label
+                  class="label-left"
+                  for="requiereLicencias"
+                  [class.color-secondaryColor]="
+                    (addressForm.get('requiereLicencias').invalid && addressForm.get('requiereLicencias').touched) ||
+                    (addressForm.get('requiereLicencias').invalid && estaEditando)
+                  "
+                >
+                  ¿El proyecto requiere licencias?
+                </label>
               </div>
               <div class="col d-flex">
-                <mat-radio-group class="radioInput d-flex" formControlName="requiereLicencias" (change)="changeProyectoRequiereLicencia($event)">
+                <mat-radio-group
+                  class="radioInput d-flex"
+                  formControlName="requiereLicencias"
+                  (change)="changeProyectoRequiereLicencia($event)"
+                >
                   <mat-radio-button [value]="true" class="mr-1em">Sí</mat-radio-button>
                   <mat-radio-button [value]="false">No</mat-radio-button>
                 </mat-radio-group>
                 <b class="color-mainColor">*</b>
               </div>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  *ngIf="
+                    (addressForm.get('requiereLicencias').invalid && addressForm.get('requiereLicencias').touched) ||
+                    (addressForm.get('requiereLicencias').invalid && estaEditando)
+                  "
+                />
+              </span>
             </div>
           </div>
         </div>
@@ -107,15 +229,35 @@
           <div class="col-md-6">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left" for="licenciaVigente">¿El proyecto tiene licencia vigente?</label>
+                <label
+                  class="label-left"
+                  for="licenciaVigente"
+                  [class.color-secondaryColor]="
+                    (addressForm.get('licenciaVigente').invalid && addressForm.get('licenciaVigente').touched) ||
+                    (addressForm.get('licenciaVigente').invalid && estaEditando)
+                  "
+                >
+                  ¿El proyecto tiene licencia vigente?
+                </label>
               </div>
               <div class="col d-flex">
-                <mat-radio-group class="radioInput d-flex" formControlName="licenciaVigente" >
+                <mat-radio-group class="radioInput d-flex" formControlName="licenciaVigente">
                   <mat-radio-button [value]="true" class="mr-1em">Sí</mat-radio-button>
                   <mat-radio-button [value]="false">No</mat-radio-button>
                 </mat-radio-group>
                 <b class="color-mainColor">*</b>
               </div>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  *ngIf="
+                    (addressForm.get('licenciaVigente').invalid && addressForm.get('licenciaVigente').touched) ||
+                    (addressForm.get('licenciaVigente').invalid && estaEditando)
+                  "
+                />
+              </span>
             </div>
           </div>
         </div>
@@ -123,13 +265,47 @@
           <div class="col-md-6">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left" for="numeroLicencia">Número de licencia</label>
+                <label
+                  class="label-left"
+                  for="numeroLicencia"
+                  [class.color-secondaryColor]="
+                    (addressForm.get('numeroLicencia').invalid && addressForm.get('numeroLicencia').touched) ||
+                    (addressForm.get('numeroLicencia').invalid && estaEditando)
+                  "
+                >
+                  Número de licencia
+                </label>
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #numeroLicencia type="text" maxlength="12" formControlName="numeroLicencia" required>
+                  <input
+                    matInput
+                    #numeroLicencia
+                    type="text"
+                    maxlength="12"
+                    formControlName="numeroLicencia"
+                    required
+                  />
                 </mat-form-field>
-                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{12 - numeroLicencia.value.length}}</span>
+                <span
+                  class="contador"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Campo alfanumérico"
+                  matTooltipClass="info-tooltip"
+                >
+                  {{ 12 - numeroLicencia.value.length }}
+                </span>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    *ngIf="
+                      (addressForm.get('numeroLicencia').invalid && addressForm.get('numeroLicencia').touched) ||
+                      (addressForm.get('numeroLicencia').invalid && estaEditando)
+                    "
+                  />
+                </span>
               </div>
             </div>
           </div>
@@ -138,17 +314,44 @@
           <div class="col-md-6">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left" for="fechaVigencia">Fecha de vigencia</label>
+                <label
+                  class="label-left"
+                  for="fechaVigencia"
+                  [class.color-secondaryColor]="
+                    (addressForm.get('fechaVigencia').invalid && addressForm.get('fechaVigencia').touched) ||
+                    (addressForm.get('fechaVigencia').invalid && estaEditando)
+                  "
+                >
+                  Fecha de vigencia
+                </label>
               </div>
               <div class="col d-flex align-items-center">
                 <mat-form-field class="example-full-width">
-                  <input matInput [matDatepicker]="picker" formControlName="fechaVigencia" readonly
-                    (click)="picker.open()" required placeholder="DD/MM/AAAA">
+                  <input
+                    matInput
+                    [matDatepicker]="picker"
+                    formControlName="fechaVigencia"
+                    readonly
+                    (click)="picker.open()"
+                    required
+                    placeholder="DD/MM/AAAA"
+                  />
                   <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
                 <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">
-                  <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                  <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
                 </button>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    *ngIf="
+                      (addressForm.get('fechaVigencia').invalid && addressForm.get('fechaVigencia').touched) ||
+                      (addressForm.get('fechaVigencia').invalid && estaEditando)
+                    "
+                  />
+                </span>
               </div>
             </div>
           </div>
@@ -157,7 +360,7 @@
     </mat-card>
     <div class="text-center animatedDown">
       <button mat-button color="warn" class="btn-guardar" type="submit">
-        <img src="assets/img/icon/guardar.svg" alt="guardar">
+        <img src="assets/img/icon/guardar.svg" alt="guardar" />
       </button>
     </div>
   </form>

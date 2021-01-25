@@ -58,6 +58,7 @@ export class PlanesProgramasVerificarRequisitosComponent implements OnInit, OnCh
   @Input() contratoConstruccionId: any;
 
   @Output() createEdit = new EventEmitter();
+  estaEditando = false;
 
   constructor(
     private dialog: MatDialog,
@@ -265,7 +266,7 @@ export class PlanesProgramasVerificarRequisitosComponent implements OnInit, OnCh
   }
 
   guardarPlanes() {
-
+    this.estaEditando = true;
     let construccion = {
       contratoConstruccionId: this.contratoConstruccionId,
       tieneObservacionesPlanesProgramasApoyo: this.addressForm.value.tieneObservaciones,

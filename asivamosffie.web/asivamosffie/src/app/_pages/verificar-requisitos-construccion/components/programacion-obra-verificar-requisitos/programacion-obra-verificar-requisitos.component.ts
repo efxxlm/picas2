@@ -37,6 +37,7 @@ export class ProgramacionObraVerificarRequisitosComponent implements OnInit {
   @Input() contratoConstruccionId: any;
 
   @Output() createEdit = new EventEmitter();
+  estaEditando = false;
 
   constructor(
     private dialog: MatDialog,
@@ -126,7 +127,7 @@ export class ProgramacionObraVerificarRequisitosComponent implements OnInit {
   }
 
   guardarProgramacion() {
-
+    this.estaEditando = true;
     let construccion = {
       contratoConstruccionId: this.contratoConstruccionId,
       tieneObservacionesProgramacionObraApoyo: this.addressForm.value.tieneObservaciones,

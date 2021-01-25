@@ -1,13 +1,11 @@
 <div class="container mb-2em">
   <div class="text-right">
     <a routerLink="/solicitarContratacion" mat-button color="primary" class="btn-regresar">
-      <img src="assets/img/icon/regresar.svg" alt="Regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar" />
     </a>
   </div>
   <div class="text-center">
-    <h1 class="title-menu--h1">
-      Registrar nueva solicitud de contratación
-    </h1>
+    <h1 class="title-menu--h1">Registrar nueva solicitud de contratación</h1>
   </div>
 
   <div class="row justify-content-center m1">
@@ -22,27 +20,41 @@
   </div>
 
   <div class="text-center">
-    <button mat-raised-button color="primary" class="btn-cargar-proyecto" (click)="verBusqueda = !verBusqueda"
-      [disabled]="esMultiple.value == 'free'">Gestionar busqueda de proyectos</button>
+    <button
+      mat-raised-button
+      color="primary"
+      class="btn-cargar-proyecto"
+      (click)="verBusqueda = !verBusqueda"
+      [disabled]="esMultiple.value == 'free'"
+    >
+      Gestionar busqueda de proyectos
+    </button>
   </div>
 
   <div class="animatedDown" *ngIf="verBusqueda">
     <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
       <mat-card class="shipping-card">
         <button type="button" mat-icon-button (click)="verBusqueda = false" class="text-info--close">
-          <img src="assets/img/icon/cerrar-primary.svg" alt="cerrar">
+          <img src="assets/img/icon/cerrar-primary.svg" alt="cerrar" />
         </button>
         <mat-card-header class="header-card header-card--margin">
-          <mat-card-title class="header-card--text">
-            Filtro de busqueda
-          </mat-card-title>
+          <mat-card-title class="header-card--text"> Filtro de busqueda </mat-card-title>
         </mat-card-header>
         <mat-card-content>
           <div class="row">
             <div class="col-md-6">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left" for="tipoInterventor">Tipo de intervención</label>
+                  <label
+                    class="label-left"
+                    for="tipoInterventor"
+                    [class.color-secondaryColor]="
+                      (addressForm.get('tipoInterventor').invalid && addressForm.get('tipoInterventor').touched) ||
+                      (addressForm.get('tipoInterventor').invalid && estaEditando)
+                    "
+                  >
+                    Tipo de intervención
+                  </label>
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
@@ -53,6 +65,18 @@
                     </mat-select>
                   </mat-form-field>
                 </div>
+
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    *ngIf="
+                      (addressForm.get('tipoInterventor').invalid && addressForm.get('tipoInterventor').touched) ||
+                      (addressForm.get('tipoInterventor').invalid && estaEditando)
+                    "
+                  />
+                </span>
               </div>
             </div>
           </div>
@@ -60,14 +84,48 @@
             <div class="col-md-6">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left" for="llaveMEN">Llave MEN</label>
+                  <label
+                    class="label-left"
+                    for="llaveMEN"
+                    [class.color-secondaryColor]="
+                      (addressForm.get('llaveMEN').invalid && addressForm.get('llaveMEN').touched) ||
+                      (addressForm.get('llaveMEN').invalid && estaEditando)
+                    "
+                  >
+                    Llave MEN
+                  </label>
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="full-width">
-                    <input matInput #llaveMEN type="text" maxlength="8" formControlName="llaveMEN"
-                      onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                    <input
+                      matInput
+                      #llaveMEN
+                      type="text"
+                      maxlength="8"
+                      formControlName="llaveMEN"
+                      onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    />
                   </mat-form-field>
-                  <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{8 - llaveMEN.value.length}}</span>
+                  <span
+                    class="contador"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Campo alfanumérico"
+                    matTooltipClass="info-tooltip"
+                  >
+                    {{ 8 - llaveMEN.value.length }}
+                  </span>
+
+                  <span class="icon-incompleto">
+                    <img
+                      class="icon-incompleto--img"
+                      src="assets/img/icon/incompleto.svg"
+                      alt="este campo es requerido"
+                      *ngIf="
+                        (addressForm.get('llaveMEN').invalid && addressForm.get('llaveMEN').touched) ||
+                        (addressForm.get('llaveMEN').invalid && estaEditando)
+                      "
+                    />
+                  </span>
                 </div>
               </div>
             </div>
@@ -76,7 +134,16 @@
             <div class="col-md-6">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left" for="region">Región</label>
+                  <label
+                    class="label-left"
+                    for="region"
+                    [class.color-secondaryColor]="
+                      (addressForm.get('region').invalid && addressForm.get('region').touched) ||
+                      (addressForm.get('region').invalid && estaEditando)
+                    "
+                  >
+                    Región
+                  </label>
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
@@ -87,6 +154,18 @@
                     </mat-select>
                   </mat-form-field>
                 </div>
+
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    *ngIf="
+                      (addressForm.get('region').invalid && addressForm.get('region').touched) ||
+                      (addressForm.get('region').invalid && estaEditando)
+                    "
+                  />
+                </span>
               </div>
             </div>
           </div>
@@ -94,17 +173,46 @@
             <div class="col-md-6">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left" for="departamento">Departamento</label>
+                  <label
+                    class="label-left"
+                    for="departamento"
+                    [class.color-secondaryColor]="
+                      (addressForm.get('departamento').invalid && addressForm.get('departamento').touched) ||
+                      (addressForm.get('departamento').invalid && estaEditando)
+                    "
+                  >
+                    Departamento
+                  </label>
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
-                    <mat-select class="capitalize" formControlName="departamento" (selectionChange)="changeDepartamento()">
-                      <mat-option class="capitalize" *ngFor="let departamento of selectDepartamento" [value]="departamento">
+                    <mat-select
+                      class="capitalize"
+                      formControlName="departamento"
+                      (selectionChange)="changeDepartamento()"
+                    >
+                      <mat-option
+                        class="capitalize"
+                        *ngFor="let departamento of selectDepartamento"
+                        [value]="departamento"
+                      >
                         {{ departamento.descripcion }}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
                 </div>
+
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    *ngIf="
+                      (addressForm.get('departamento').invalid && addressForm.get('departamento').touched) ||
+                      (addressForm.get('departamento').invalid && estaEditando)
+                    "
+                  />
+                </span>
               </div>
             </div>
           </div>
@@ -112,7 +220,16 @@
             <div class="col-md-6">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left" for="municipio">Municipio</label>
+                  <label
+                    class="label-left"
+                    for="municipio"
+                    [class.color-secondaryColor]="
+                      (addressForm.get('municipio').invalid && addressForm.get('municipio').touched) ||
+                      (addressForm.get('municipio').invalid && estaEditando)
+                    "
+                  >
+                    Municipio
+                  </label>
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
@@ -123,6 +240,18 @@
                     </mat-select>
                   </mat-form-field>
                 </div>
+
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    *ngIf="
+                      (addressForm.get('municipio').invalid && addressForm.get('municipio').touched) ||
+                      (addressForm.get('municipio').invalid && estaEditando)
+                    "
+                  />
+                </span>
               </div>
             </div>
           </div>
@@ -130,18 +259,43 @@
             <div class="col-md-6">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left" for="institucionEducativa">Institución Educativa</label>
+                  <label
+                    class="label-left"
+                    for="institucionEducativa"
+                    [class.color-secondaryColor]="
+                      (addressForm.get('institucionEducativa').invalid &&
+                        addressForm.get('institucionEducativa').touched) ||
+                      (addressForm.get('institucionEducativa').invalid && estaEditando)
+                    "
+                  >
+                    Institución Educativa
+                  </label>
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
                     <mat-select formControlName="institucionEducativa" (selectionChange)="changeInstitucionE()">
-                      <mat-option *ngFor="let institucionEducativa of selectinstitucionEducativa"
-                        [value]="institucionEducativa">
+                      <mat-option
+                        *ngFor="let institucionEducativa of selectinstitucionEducativa"
+                        [value]="institucionEducativa"
+                      >
                         {{ institucionEducativa.nombre }}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
                 </div>
+
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    *ngIf="
+                      (addressForm.get('institucionEducativa').invalid &&
+                        addressForm.get('institucionEducativa').touched) ||
+                      (addressForm.get('institucionEducativa').invalid && estaEditando)
+                    "
+                  />
+                </span>
               </div>
             </div>
           </div>
@@ -149,7 +303,16 @@
             <div class="col-md-6">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left" for="sede">Sede</label>
+                  <label
+                    class="label-left"
+                    for="sede"
+                    [class.color-secondaryColor]="
+                      (addressForm.get('sede').invalid && addressForm.get('sede').touched) ||
+                      (addressForm.get('sede').invalid && estaEditando)
+                    "
+                  >
+                    Sede
+                  </label>
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
@@ -160,26 +323,64 @@
                     </mat-select>
                   </mat-form-field>
                 </div>
+
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    *ngIf="
+                      (addressForm.get('sede').invalid && addressForm.get('sede').touched) ||
+                      (addressForm.get('sede').invalid && estaEditando)
+                    "
+                  />
+                </span>
               </div>
             </div>
           </div>
         </mat-card-content>
         <mat-card-actions class="text-center">
-          <button mat-button color="primary" class="btn-buscar btn-borrar" type="button"
-            (click)="reiniciarFiltro()" [disabled]="!addressForm.controls.tipoInterventor.value && !addressForm.controls.llaveMEN.value && !addressForm.controls.region.value && !addressForm.controls.departamento.value && !addressForm.controls.municipio.value && !addressForm.controls.institucionEducativa.value && !addressForm.controls.sede.value">
-            <img src="assets/img/icon/borrar.svg" alt="buscar">
+          <button
+            mat-button
+            color="primary"
+            class="btn-buscar btn-borrar"
+            type="button"
+            (click)="reiniciarFiltro()"
+            [disabled]="
+              !addressForm.controls.tipoInterventor.value &&
+              !addressForm.controls.llaveMEN.value &&
+              !addressForm.controls.region.value &&
+              !addressForm.controls.departamento.value &&
+              !addressForm.controls.municipio.value &&
+              !addressForm.controls.institucionEducativa.value &&
+              !addressForm.controls.sede.value
+            "
+          >
+            <img src="assets/img/icon/borrar.svg" alt="buscar" />
           </button>
 
-          <button mat-button color="primary" class="btn-buscar" type="submit"
-            [disabled]="!addressForm.controls.tipoInterventor.value && !addressForm.controls.llaveMEN.value && !addressForm.controls.region.value && !addressForm.controls.departamento.value && !addressForm.controls.municipio.value && !addressForm.controls.institucionEducativa.value && !addressForm.controls.sede.value">
-            <img src="assets/img/icon/lupa.svg" alt="buscar"> Buscar
+          <button
+            mat-button
+            color="primary"
+            class="btn-buscar"
+            type="submit"
+            [disabled]="
+              !addressForm.controls.tipoInterventor.value &&
+              !addressForm.controls.llaveMEN.value &&
+              !addressForm.controls.region.value &&
+              !addressForm.controls.departamento.value &&
+              !addressForm.controls.municipio.value &&
+              !addressForm.controls.institucionEducativa.value &&
+              !addressForm.controls.sede.value
+            "
+          >
+            <img src="assets/img/icon/lupa.svg" alt="buscar" /> Buscar
           </button>
-
         </mat-card-actions>
       </mat-card>
     </form>
   </div>
 </div>
-<button style="display: none;" (click)="tablaResultados.ngOnInit()" id="btnListaResultado"></button>
+<button style="display: none" (click)="tablaResultados.ngOnInit()" id="btnListaResultado"></button>
 <app-tabla-resultados [listaResultados]="listaResultado" [esMultiproyecto]="esMultiple.value" #tablaResultados>
 </app-tabla-resultados>

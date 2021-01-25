@@ -1,11 +1,9 @@
 <button mat-button mat-dialog-close class="modal--btn-cerrar" [mat-dialog-close]="true">
-  <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
+  <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar" />
 </button>
 
 <div class="text-center">
-  <h1 class="title-menu--h1">
-    Votación solicitud {{ data.sesionComiteSolicitud.numeroSolicitud }}
-  </h1>
+  <h1 class="title-menu--h1">Votación solicitud {{ data.sesionComiteSolicitud.numeroSolicitud }}</h1>
 
   <p>
     <span class="mx-1em">{{ data.sesionComiteSolicitud.fechaSolicitud | date: 'dd/MM/yyyy' }}</span>
@@ -17,27 +15,21 @@
         <table class="mat-table cdk-table mat-sort mat-table-style">
           <thead>
             <tr class="mat-header-row cdk-header-row ng-star-inserted">
-              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                Miembro participante
-              </th>
-              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                ¿Aprobó?
-              </th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">Miembro participante</th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">¿Aprobó?</th>
               <!-- <th class="mat-header-cell cdk-header-cell ng-star-inserted">
                 No aprobó
               </th> -->
-              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                Observaciones
-              </th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">Observaciones</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let temas of listaVotacion.controls; let i = index" [formGroupName]="i">
               <td class="mat-cell cdk-cell ng-star-inserted">
                 {{ addressForm.controls[i].get('nombreParticipante').value }}
-                <input type="hidden" formControlName="sesionSolicitudVotoId">
-                <input type="hidden" formControlName="sesionParticipanteId">
-                <input type="hidden" formControlName="sesionComiteSolicitudId">
+                <input type="hidden" formControlName="sesionSolicitudVotoId" />
+                <input type="hidden" formControlName="sesionParticipanteId" />
+                <input type="hidden" formControlName="sesionComiteSolicitudId" />
               </td>
               <td class="mat-cell cdk-cell ng-star-inserted">
                 <!-- <section class="example-section">
@@ -59,21 +51,40 @@
               <td class="mat-cell cdk-cell ng-star-inserted">
                 <section class="w-quill">
                   <div class="d-flex">
-
-                    <quill-editor class="quill-editor-style card"
+                    <quill-editor
+                      class="quill-editor-style card"
                       #observaciones
                       [styles]="editorStyle"
                       [modules]="config"
                       (onContentChanged)="maxLength($event, 1000)"
-                      formControlName="observaciones">
+                      formControlName="observaciones"
+                      [class.invalid]="
+                        (temas.get('observaciones').invalid && temas.get('observaciones').touched) ||
+                        (temas.get('observaciones').invalid && estaEditando)
+                      "
+                    >
                     </quill-editor>
 
                     <div class="d-flex align-items-center">
                       <span class="contador miles" *ngIf="temas.get('observaciones').value">
-                        {{1000 - (textoLimpio(temas.get('observaciones').value)>1000?1000:textoLimpio(temas.get('observaciones').value))}}
+                        {{
+                          1000 -
+                            (textoLimpio(temas.get('observaciones').value) > 1000
+                              ? 1000
+                              : textoLimpio(temas.get('observaciones').value))
+                        }}
                       </span>
-                      <span class="contador miles" *ngIf="!temas.get('observaciones').value">
-                        1000
+                      <span class="contador miles" *ngIf="!temas.get('observaciones').value"> 1000 </span>
+                      <span class="icon-incompleto">
+                        <img
+                          class="icon-incompleto--img"
+                          src="assets/img/icon/incompleto.svg"
+                          alt="este campo es requerido"
+                          *ngIf="
+                            (temas.get('observaciones').invalid && temas.get('observaciones').touched) ||
+                            (temas.get('observaciones').invalid && estaEditando)
+                          "
+                        />
                       </span>
                     </div>
                   </div>
@@ -88,7 +99,7 @@
                   (onContentChanged)="maxLength($event, 500)" formControlName="i"></quill-editor> -->
 
       <button mat-button color="warn" class="btn-guardar" type="submit">
-        <img src="assets/img/icon/guardar.svg" alt="guardar">
+        <img src="assets/img/icon/guardar.svg" alt="guardar" />
       </button>
     </form>
   </mat-dialog-content>
