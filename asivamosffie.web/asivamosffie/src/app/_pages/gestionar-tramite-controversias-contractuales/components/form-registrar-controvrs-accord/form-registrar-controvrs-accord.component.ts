@@ -302,15 +302,16 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       else {
         this.estaCompleto = false;
       }
-      const motivosList = [this.addressForm.value.motivosSolicitud[0].codigo];
+      let motivosList;
       if (this.addressForm.value.motivosSolicitud != undefined || this.addressForm.value.motivosSolicitud != null) {
+        motivosList = [this.addressForm.value.motivosSolicitud[0].codigo];
         for (let i = 1; i < this.addressForm.value.motivosSolicitud.length; i++) {
           const motivoAux = motivosList.push(this.addressForm.value.motivosSolicitud[i].codigo);
         }
       }
       let formArrayTai;
       let motivosArrayCollected;
-      let estadoControversia;
+      let estadoControversia = "1";
       if (this.estaCompleto == true && this.addressForm.value.procedeSolicitud == false && this.addressForm.value.requeridoComite) {
         estadoControversia = "2";
       }
@@ -491,12 +492,15 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       else {
         this.estaCompleto = false;
       }
-      const motivosList1 = [this.addressForm.value.motivosSolicitud[0].codigo];
-      for (let i = 1; i < this.addressForm.value.motivosSolicitud.length; i++) {
-        const motivoAux = motivosList1.push(this.addressForm.value.motivosSolicitud[i].codigo);
+      let motivosList1;
+      if (this.addressForm.value.motivosSolicitud != undefined || this.addressForm.value.motivosSolicitud != null) {
+        motivosList1 = [this.addressForm.value.motivosSolicitud[0].codigo];
+        for (let i = 1; i < this.addressForm.value.motivosSolicitud.length; i++) {
+          const motivoAux1 = motivosList1.push(this.addressForm.value.motivosSolicitud[i].codigo);
+        }
       }
       let formArrayNoTaiContratista;
-      let estadoControversiaContratista;
+      let estadoControversiaContratista = '1';
       let motivosArrayCollectedNoTaiContratista;
       if (this.estaCompleto == false) {
         estadoControversiaContratista = '1';
@@ -669,12 +673,15 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       else {
         this.estaCompleto = false;
       }
-      const motivosList2 = [this.addressForm.value.motivosSolicitud[0].codigo];
-      for (let i = 1; i < this.addressForm.value.motivosSolicitud.length; i++) {
-        const motivoAux = motivosList2.push(this.addressForm.value.motivosSolicitud[i].codigo);
+      let motivosList2;
+      if (this.addressForm.value.motivosSolicitud != undefined || this.addressForm.value.motivosSolicitud != null) {
+        motivosList2 = [this.addressForm.value.motivosSolicitud[0].codigo];
+        for (let i = 1; i < this.addressForm.value.motivosSolicitud.length; i++) {
+          const motivoAux2 = motivosList2.push(this.addressForm.value.motivosSolicitud[i].codigo);
+        }
       }
       let formArrayNoTaiContratante;
-      let estadoControversiaContratante;
+      let estadoControversiaContratante = '1';
       let motivosArrayCollectedNoTaiContratante;
       if (this.estaCompleto == false) {
         estadoControversiaContratante = '1';
