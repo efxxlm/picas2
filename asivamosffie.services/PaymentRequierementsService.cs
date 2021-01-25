@@ -27,7 +27,22 @@ namespace asivamosffie.services
             _commonService = commonService;
             _context = context;
         }
+     
+        private bool ValidateCompleteRecordSolicitudPagoObservacion(SolicitudPagoObservacion pSolicitudPagoObservacion)
+        {
+            if (!pSolicitudPagoObservacion.TieneObservacion)
+            {
+                return true;
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(pSolicitudPagoObservacion.Observacion))
+                    return true;
+            }
 
+            return false;
+        }
+   
         public async Task<Respuesta> CreateUpdateSolicitudPagoObservacion(SolicitudPagoObservacion pSolicitudPagoObservacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Actualizar_Solicitud_Pago_Observacion, (int)EnumeratorTipoDominio.Acciones);
@@ -64,25 +79,7 @@ namespace asivamosffie.services
                     };
             }
         }
-
-        private void ActualizarSolicitudPagoTieneObservacion(SolicitudPagoObservacion pSolicitudPagoObservacion, bool TieneObservacion)
-        {
-            SolicitudPago solicitudPago = _context.SolicitudPago.Find(pSolicitudPagoObservacion.SolicitudPagoId);
-            solicitudPago.FechaModificacion = DateTime.Now;
-            solicitudPago.UsuarioModificacion = pSolicitudPagoObservacion.UsuarioCreacion;
-
-            if (TieneObservacion)
-                solicitudPago.TieneObservacion = true;
-            else
-            {
-                if (_context.SolicitudPagoObservacion.Where(r => r.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId && (bool)r.TieneObservacion).Count() > 0)
-                    solicitudPago.TieneObservacion = true;
-                else
-                    solicitudPago.TieneObservacion = false;
-            }
-
-        }
-
+     
         private void CreateOrUpdateSolicitudPagoObservacion(SolicitudPagoObservacion pSolicitudPagoObservacion)
         {
             if (pSolicitudPagoObservacion.SolicitudPagoObservacionId > 0)
@@ -100,20 +97,23 @@ namespace asivamosffie.services
                 pSolicitudPagoObservacion.Eliminado = true;
             }
         }
-
-        private bool ValidateCompleteRecordSolicitudPagoObservacion(SolicitudPagoObservacion pSolicitudPagoObservacion)
+    
+        private void ActualizarSolicitudPagoTieneObservacion(SolicitudPagoObservacion pSolicitudPagoObservacion, bool TieneObservacion)
         {
-            if (!pSolicitudPagoObservacion.TieneObservacion)
-            {
-                return true;
-            }
+            SolicitudPago solicitudPago = _context.SolicitudPago.Find(pSolicitudPagoObservacion.SolicitudPagoId);
+            solicitudPago.FechaModificacion = DateTime.Now;
+            solicitudPago.UsuarioModificacion = pSolicitudPagoObservacion.UsuarioCreacion;
+
+            if (TieneObservacion)
+                solicitudPago.TieneObservacion = true;
             else
             {
-                if (!string.IsNullOrEmpty(pSolicitudPagoObservacion.Observacion))
-                    return true;
+                if (_context.SolicitudPagoObservacion.Where(r => r.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId && (bool)r.TieneObservacion).Count() > 0)
+                    solicitudPago.TieneObservacion = true;
+                else
+                    solicitudPago.TieneObservacion = false;
             }
 
-            return false;
         }
     }
 }
