@@ -996,6 +996,12 @@ namespace asivamosffie.services
 
                 });
 
+                var procesosel = _context.ProcesoSeleccion.Where(x=>x.NumeroProceso==pProcesoSeleccion.NumeroProceso).FirstOrDefault();
+                procesosel.CantidadProponentes = pProcesoSeleccion.CantidadProponentes;
+                procesosel.UrlSoporteProponentesSeleccionados = pProcesoSeleccion.UrlSoporteProponentesSeleccionados;
+                _context.ProcesoSeleccion.Update(procesosel);
+
+
                 await _context.SaveChangesAsync();
 
                 return respuesta = new Respuesta

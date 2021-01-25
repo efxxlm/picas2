@@ -259,7 +259,7 @@ export class InvitacionCerradaComponent implements OnInit {
     }
     else
     {
-      if(pProceso.listaContratistas.length>0)
+      if(pProceso.cantidadProponentes>0 && pProceso.urlSoporteProponentesSeleccionados!=null)
       {
         return 2;
       }

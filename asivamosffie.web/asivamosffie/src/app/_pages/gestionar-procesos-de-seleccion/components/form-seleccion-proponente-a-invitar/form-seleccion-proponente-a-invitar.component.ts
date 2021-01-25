@@ -42,7 +42,7 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
     if (this.noGuardado===true &&  this.addressForm.dirty) {
       let dialogRef =this.dialog.open(ModalDialogComponent, {
         width: '28em',
-        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
+        data: { modalTitle:"", modalText:"ï¿½Desea guardar la informaciï¿½n registrada?",siNoBoton:true }
       });   
       dialogRef.afterClosed().subscribe(result => {
         console.log(`Dialog result: ${result}`);
@@ -63,10 +63,9 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
   cargarRegistro() {
     this.ngOnInit().then(() => {
       console.log(this.procesoSeleccion.procesoSeleccionProponente.length);
-      this.addressForm.get('cuantosProponentes').setValue(1);
       if(this.procesoSeleccion.procesoSeleccionProponente.length>0)
       {
-        this.addressForm.get('cuantosProponentes').setValue(this.procesoSeleccion.procesoSeleccionProponente.length);
+        this.addressForm.get('cuantosProponentes').setValue(this.procesoSeleccion.cantidadProponentes);
       }      
       this.addressForm.get('url').setValue(this.procesoSeleccion.urlSoporteProponentesSeleccionados);
     });
@@ -103,6 +102,7 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
 
     const proceso: ProcesoSeleccion = {
       numeroProceso: this.procesoSeleccion.numeroProceso,
+      cantidadProponentes:this.addressForm.get('cuantosProponentes').value,
       procesoSeleccionProponente: this.listaProponentes,
       urlSoporteProponentesSeleccionados: this.addressForm.get('url').value
     };
