@@ -28,7 +28,7 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
-        [Route("GetListProyectosByLlaveMen")]
+        [Route("GetSolicitudPago")]
         public async Task<IActionResult> GetSolicitudPago([FromQuery] int pSolicitudPagoId)
         {
             return Ok(await _registerValidatePaymentRequierementsService.GetSolicitudPago(pSolicitudPagoId));
