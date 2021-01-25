@@ -50,4 +50,16 @@ export class FaseDosPagosRendimientosService {
   managePerformance(uploadedOrderId :number){
     return this.http.get<any>(`${this.urlApi}/managePerformance?uploadedOrderId=${uploadedOrderId}`)
   }
+
+  sendInconsistencies(uploadedOrderId :number){
+    return this.http.get<any>(`${this.urlApi}/sendInconsistencies?uploadedOrderId=${uploadedOrderId}`)
+  }
+
+  requestApproval(uploadedOrderId :number){
+    return this.http.get<any>(`${this.urlApi}/requestApproval?uploadedOrderId=${uploadedOrderId}`)
+  }
+
+  downloadManagedPerformances(uploadedOrderId :number, statusType: number){
+    return this.http.get<any>(`${this.urlApi}/downloadManagedPerformances?uploadedOrderId=${uploadedOrderId}&status=${statusType}`)
+  }
 }

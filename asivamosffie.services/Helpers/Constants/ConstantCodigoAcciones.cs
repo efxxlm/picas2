@@ -188,6 +188,12 @@ public const string Inicio_de_sesion = "1";
         public const string Cambiar_Estado_Verificacion_Construccion = "157";
 
         //4.4.3 registro de pagos
-        public const string Validar_Excel_Registro_Pagos = "158";
+        public const string Validar_Excel_Registro_Pagos = "190";
+        public const string Validar_Excel_Registro_Rendimientos = "191";
+        public const string Eliminar_Pagos = "192";
+        public const string Tramitar_Rendimientos = "193";
+        public const string Notificar_Inconsistencias = "194";
+        public const string Notificar_Pendiente_Aprobacion = "195";
+        
     }
 }

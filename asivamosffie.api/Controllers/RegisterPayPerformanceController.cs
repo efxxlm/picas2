@@ -149,11 +149,41 @@ namespace asivamosffie.api.Controllers
 
         [Route("SendInconsistencies")]
         [HttpGet]
-        public async Task<IActionResult> ChangeStatusShowInconsistencies(int uploadedOrderId)
+        public async Task<IActionResult> NotifyInconsistencies(int uploadedOrderId)
         {
             try
             {
-                var result = await _registerPayPerformanceService.ChangeStatusShowInconsistencies(uploadedOrderId);
+                var result = await _registerPayPerformanceService.NotifyEmailPerformanceInconsistencies(uploadedOrderId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [Route("requestApproval")]
+        [HttpGet]
+        public async Task<IActionResult> RequestApproval(int uploadedOrderId)
+        {
+            try
+            {
+                var result = await _registerPayPerformanceService.RequestManagedPerformancesApproval(uploadedOrderId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [Route("downloadManagedPerformances")]
+        [HttpGet]
+        public async Task<IActionResult> DownloadManagedPerformances(int uploadedOrderId, int statusType)
+        {
+            try
+            {
+                var result = await _registerPayPerformanceService.GetManagedPerformancesPerformances(uploadedOrderId, statusType);
                 return Ok(result);
             }
             catch (Exception ex)

@@ -27,6 +27,8 @@ using DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Z.EntityFramework.Plus;
 using DocumentFormat.OpenXml.Bibliography;
+using Microsoft.Extensions.Options;
+using asivamosffie.model.AditionalModels;
 
 namespace asivamosffie.services
 {
@@ -39,24 +41,68 @@ namespace asivamosffie.services
         public readonly IRegisterPreContructionPhase1Service _registerPreContructionPhase1Service;
         public readonly IBudgetAvailabilityService _budgetAvailabilityService;
         public ISourceFundingService _fundingSourceService { get; }
+        public AppSettings _mailSettings { get; }
 
         public RegisterPayPerformanceService(IConverter converter,
-                                                            devAsiVamosFFIEContext context,
-                                                            ISourceFundingService fundingSourceService,
-                                                            ICommonService commonService,
-                                                            IDocumentService documentService,
-                                                            IRegisterPreContructionPhase1Service registerPreContructionPhase1Service,
-                                                            IBudgetAvailabilityService budgetAvailabilityService)
-        {
+                                            devAsiVamosFFIEContext context,
+                                            ISourceFundingService fundingSourceService,
+                                            ICommonService commonService,
+                                            IDocumentService documentService,
+                                            IOptions<AppSettings> mailSettings
+                                           // IRegisterPreContructionPhase1Service registerPreContructionPhase1Service,
+                                           // IBudgetAvailabilityService budgetAvailabilityService
+            )
+{
             _converter = converter;
             _context = context;
             _fundingSourceService = fundingSourceService;
             _documentService = documentService;
+            _mailSettings = mailSettings.Value;
             _commonService = commonService;
-            _registerPreContructionPhase1Service = registerPreContructionPhase1Service;
-            _budgetAvailabilityService = budgetAvailabilityService;
+            // _registerPreContructionPhase1Service = registerPreContructionPhase1Service;
+            //_budgetAvailabilityService = budgetAvailabilityService;
         }
         #region loads
+
+        /// <summary>
+        /// TODO validar que este no tenga relaciones o información dependiente. 
+        /// En caso de contar con alguna relación, el sistema debe informar al usuario
+        /// por medio de un mensaje emergente “El registro tiene información que depende de él, no se puede eliminar”
+        /// , y no deberá eliminar el registro.
+        /// </summary>
+        /// <param name="cargaPagosRendimientosId"></param>
+        /// <param name="uploadStatus"></param>
+        /// <returns></returns>
+        public async Task<Respuesta> DeletePaymentPerformance(int uploadedOrderId)
+        {
+            int modifiedRows = -1;
+            if (uploadedOrderId > 0)
+            {
+                modifiedRows = await _context.Set<CarguePagosRendimientos>()
+                      .Where(order => order.CargaPagosRendimientosId == uploadedOrderId && !order.FechaTramite.HasValue)
+                      .UpdateAsync(o => new CarguePagosRendimientos()
+                      {
+                          // FechaTramite Fecha Actualización on Update
+                          Eliminado = true
+                      });
+
+            }
+            string codeResponse = modifiedRows > 0 ? GeneralCodes.OperacionExitosa : GeneralCodes.EntradaInvalida;
+
+            //  “El registro tiene información que depende de él, no se puede eliminar”
+
+            return new Respuesta
+            {
+                Data = modifiedRows,
+                IsSuccessful = modifiedRows > 0,
+                IsException = false,
+                IsValidation = false,
+                Code = GeneralCodes.OperacionExitosa,
+                Message = "" // await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreo, "VALIDAR EXCEL PROGRAMACION")
+            };
+        }
+
+
 
         /// <summary>
         /// TODO El sistema debe registrar la trazabilidad almacenando el usuario,
@@ -85,7 +131,7 @@ namespace asivamosffie.services
                     ExcelWorksheet worksheet = package.Workbook.Worksheets.FirstOrDefault();
 
                     // public ExcelRange this[int FromRow, int FromCol, int ToRow, int ToCol] { get; }
-                    var columnAccounst = worksheet.Cells[2, 2, worksheet.Dimension.Rows, 2].Select( v=> v.Text).ToList<string>();
+                    var columnAccounst = worksheet.Cells[2, 2, worksheet.Dimension.Rows, 2].Select(v => v.Text).ToList<string>();
 
                     var bankAccounts = _context.CuentaBancaria.Where(
                         x => x.NumeroCuentaBanco != null && columnAccounst.Contains(x.NumeroCuentaBanco)).AsNoTracking();
@@ -110,10 +156,13 @@ namespace asivamosffie.services
                                 tieneError = validatedValues.hasError;
                             }
 
-                            if (tieneError) {
+                            if (tieneError)
+                            {
                                 CantidadRegistrosInvalidos++;
                                 carguePagosRendimiento.Add("Estado", "Fallido");
-                            } else {
+                            }
+                            else
+                            {
                                 carguePagosRendimiento.Add("Estado", "Valido");
                             }
 
@@ -133,6 +182,7 @@ namespace asivamosffie.services
                         CarguePagosRendimientos CarguePagosRendimientos = new CarguePagosRendimientos
                         {
                             EstadoCargue = CantidadRegistrosInvalidos > 0 ? "Fallido" : "Valido",
+                            CargueValido = CantidadRegistrosInvalidos == 0,
                             NombreArchivo = pFile.FileName,
                             RegistrosValidos = cantidadRegistrosTotales - CantidadRegistrosInvalidos,
                             RegistrosInvalidos = CantidadRegistrosInvalidos,
@@ -143,7 +193,7 @@ namespace asivamosffie.services
                         };
 
                         _context.CarguePagosRendimientos.Add(CarguePagosRendimientos);
-                        _context.SaveChanges();                        
+                        _context.SaveChanges();
                     }
 
                     if (CantidadRegistrosInvalidos == 0)
@@ -245,22 +295,22 @@ namespace asivamosffie.services
             {
                 string cellValue = worksheet.Cells[indexRow, indexCell].Text;
                 carguePagosRendimiento.Add(rowFormat.Key, cellValue);
-                if((rowFormat.Value == "Date")
+                if ((rowFormat.Value == "Date")
                     && (string.IsNullOrEmpty(cellValue) || !DateTime.TryParseExact(cellValue, "dd/MM/yyyy", null, DateTimeStyles.None, out DateTime fecha)))
-                { 
+                {
                     hasError = true;
                 }
                 else if ((rowFormat.Value == "AlphaNum")
                     && (string.IsNullOrEmpty(cellValue) || cellValue.Length > 50))
                 {
-                        hasError = true;
-                    
+                    hasError = true;
+
                 }
                 else if ((rowFormat.Value == "Money")
                     && (IsCellNullOrEmpty(cellValue) || IsNumericValidSize(cellValue)))
                 {
-                        hasError = true;
-                    
+                    hasError = true;
+
                 }
 
                 if (!hasError && rowFormat.Key == "Número de Cuenta")
@@ -269,8 +319,8 @@ namespace asivamosffie.services
                     hasError = activeAccount == null;
                     if (activeAccount != null)
                     {
-                        hasError = !activeAccount.FuenteFinanciacionId.HasValue || 
-                            (activeAccount.Eliminado.HasValue && activeAccount.Eliminado.Value) ;
+                        hasError = !activeAccount.FuenteFinanciacionId.HasValue ||
+                            (activeAccount.Eliminado.HasValue && activeAccount.Eliminado.Value);
                     }
                 }
 
@@ -302,12 +352,13 @@ namespace asivamosffie.services
             //using (var packages = new ExcelPackage(streams))
             //{
             //    var workSheet = packages.Workbook.Worksheets.Add("Hoja 1");
-             //Move to other method to shared ... 
-                var collection = _context.CarguePagosRendimientos.Where(x => x.CargaPagosRendimientosId == uploadedOrderId)
-                    .Select(
-                    order => new {
-                        NombreArchivo = order.NombreArchivo,
-                        ArchivoJson = order.Json
+            //Move to other method to shared ... 
+            var collection = _context.CarguePagosRendimientos.Where(x => x.CargaPagosRendimientosId == uploadedOrderId)
+                .Select(
+                order => new
+                {
+                    NombreArchivo = order.NombreArchivo,
+                    ArchivoJson = order.Json
                         //EstadoCargue = CantidadRegistrosInvalidos > 0 ? "Fallido" : "Valido",
                         //NombreArchivo = pFile.FileName,
                         //RegistrosValidos = cantidadRegistrosTotales - CantidadRegistrosInvalidos,
@@ -344,17 +395,17 @@ namespace asivamosffie.services
                 Message = "" // await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreo, "VALIDAR EXCEL PROGRAMACION")
             };
 
-                //workSheet.Cells.LoadFromCollection(collection, true);
-                //packages.Save();
-                ////convert the excel package to a byte array
-                //byte[] bin = packages.GetAsByteArray();
-                //Stream stream = new MemoryStream(bin);
-                ////the path of the file
-                //string filePath = pFilePatch + "/" + pNameFiles + "_rev.xlsx";
+            //workSheet.Cells.LoadFromCollection(collection, true);
+            //packages.Save();
+            ////convert the excel package to a byte array
+            //byte[] bin = packages.GetAsByteArray();
+            //Stream stream = new MemoryStream(bin);
+            ////the path of the file
+            //string filePath = pFilePatch + "/" + pNameFiles + "_rev.xlsx";
 
-                ////write the file to the disk
-                //File.WriteAllBytes(filePath, bin);
-                //return filePath;
+            ////write the file to the disk
+            //File.WriteAllBytes(filePath, bin);
+            //return filePath;
             //}
             //return "";
         }
@@ -420,14 +471,14 @@ namespace asivamosffie.services
             foreach (var accountOrder in accountOrders)
             {
                 valorAporteEnCuenta = 0;
-                var accounts = await _context.CuentaBancaria.SingleOrDefaultAsync( x=> x.NumeroCuentaBanco == accountOrder.AccountNumber);
+                var accounts = await _context.CuentaBancaria.SingleOrDefaultAsync(x => x.NumeroCuentaBanco == accountOrder.AccountNumber);
 
                 if (accounts == null)
                 {
                     new Exception("La cuenta asignada no existe");
                 }
                 var fundingSources = await _context.FuenteFinanciacion.
-                    Where(r => !(bool)r.Eliminado && accounts.FuenteFinanciacionId ==  r.FuenteFinanciacionId).
+                    Where(r => !(bool)r.Eliminado && accounts.FuenteFinanciacionId == r.FuenteFinanciacionId).
                     Include(r => r.Aportante).ToListAsync();
 
                 foreach (var fundingSource in fundingSources)
@@ -448,13 +499,13 @@ namespace asivamosffie.services
                 //_commonService.listaFuenteRecursos()
                 // Rendimientos a incorporar
 
-                accountOrder.PerformancesToAdd = accountOrder.GeneratedPerformances 
+                accountOrder.PerformancesToAdd = accountOrder.GeneratedPerformances
                     - 0 // Rendimientos incorporados
-                    - accountOrder.FinancialLienProvision 
+                    - accountOrder.FinancialLienProvision
                     - accountOrder.BankCharges
                     - accountOrder.DiscountedCharge
                     - 0 // Visitas
-                    ; 
+                    ;
                 accountOrder.Status = "Inconsistente";
                 if (valorAporteEnCuenta >= accountOrder.PerformancesToAdd)
                 {
@@ -491,7 +542,7 @@ namespace asivamosffie.services
 
                 throw ex;
             }
-           
+
 
             // 
 
@@ -503,28 +554,113 @@ namespace asivamosffie.services
         /// </summary>
         /// <param name="uploadedOrderId"></param>
         /// <returns></returns>
-        public Task<Respuesta> getInconsistentPerformances(int uploadedOrderId)
+        public Task<Respuesta> GetManagedPerformancesPerformances(int uploadedOrderId, int statusType)
         {
 
             return null;
         }
 
         // Notify to Approve
-        public Task<Respuesta> NotifyToApprove(int uploadedOrderId) {
+        public async Task<Respuesta> RequestManagedPerformancesApproval(int uploadedOrderId)
+        {
+            Respuesta respuesta = new Respuesta();
 
-            return null;
+            try
+            {
+
+                var  uploadedPerformances = await _context.CarguePagosRendimientos
+                    .Where(d => d.CargaPagosRendimientosId == uploadedOrderId).AsNoTracking().FirstOrDefaultAsync();
+
+                if (uploadedPerformances != null)
+                {
+                    // ChangeStatusPendienteAprobación
+                    int modifiedRows = -1;
+                    if (uploadedOrderId > 0)
+                    {
+                        modifiedRows = await _context.Set<CarguePagosRendimientos>()
+                              .Where(order => order.CargaPagosRendimientosId == uploadedOrderId)
+                              .UpdateAsync(o => new CarguePagosRendimientos()
+                              {
+                                  // FechaTramite Fecha Actualización on Update
+                                  PendienteAprobacion = true
+                              });
+                    }
+
+
+                    //Save to new table? 
+
+
+                    // Send Message //
+
+                    Template temNotifyInconsistencies = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificacionAprobacion);
+
+                    string inconsistencies = "";
+                    string fechaCargue = "";
+                    if (uploadedPerformances != null)
+                    {
+                        inconsistencies = uploadedPerformances.RegistrosInconsistentes.ToString();
+                        fechaCargue = Convert.ToDateTime(uploadedPerformances.FechaCargue).ToString("dd/MM/yyy");
+                    }
+                    string tiposolicut = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Disponibilidad_Presupuestal && x.Codigo == "bla").FirstOrDefault().Nombre;
+                    string template = temNotifyInconsistencies.Contenido
+                        .Replace("_LinkF_", _mailSettings.DominioFront).
+                        Replace("[FECHA_CARGUE]", fechaCargue).
+                        Replace("INCONSISTENCIAS]", inconsistencies);
+
+                    string subject = "";
+                    this.SendMail(template, subject, EnumeratorPerfil.Fiduciaria);
+                }
+            }
+            finally
+            {
+                //respuesta = {
+                //    IsSuccessful = true,
+                //    IsException = false,
+                //    IsValidation = false,
+                //    Data = uploadedPerformances,
+                //    Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
+                //    // Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.DisponibilidadPresupuestal, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, "usuario creacon", strCrearEditar)
+
+                //};
+            }
+
+
+            return respuesta;
         }
 
         // Notify to show Inconsistentes
-        public Task<Respuesta> Notify(int uploadedOrderId)
+        public async Task<Respuesta> NotifyInconsistencies(int uploadedOrderId)
         {
-
+            await ChangeStatusShowInconsistencies(uploadedOrderId);
             return null;
         }
 
-        public Task<Respuesta> ChangeStatusShowInconsistencies(int uploadOrderId)
+        public async Task<Respuesta> ChangeStatusShowInconsistencies(int uploadedOrderId)
         {
-            return null;
+            int modifiedRows = -1;
+            if (uploadedOrderId > 0)
+            {
+                modifiedRows = await _context.Set<CarguePagosRendimientos>()
+                      .Where(order => order.CargaPagosRendimientosId == uploadedOrderId)
+                      .UpdateAsync(o => new CarguePagosRendimientos()
+                      {
+                          // FechaTramite Fecha Actualización on Update
+                          MostrarInconsistencias = true
+                      });
+            }
+            string codeResponse = modifiedRows > 0 ? GeneralCodes.OperacionExitosa : GeneralCodes.EntradaInvalida;
+
+            //  “El registro tiene información que depende de él, no se puede eliminar”
+
+            return new Respuesta
+            {
+                Data = modifiedRows,
+                IsSuccessful = modifiedRows > 0,
+                IsException = false,
+                IsValidation = false,
+                Code = GeneralCodes.OperacionExitosa,
+                Message = "" // await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreo, "VALIDAR EXCEL PROGRAMACION")
+            };
         }
 
         /// <summary>
@@ -536,9 +672,9 @@ namespace asivamosffie.services
         {
             List<dynamic> listaContrats = new List<dynamic>();
 
-            List<CarguePagosRendimientos> lista =await _context.CarguePagosRendimientos.AsNoTracking().ToListAsync();
+            List<CarguePagosRendimientos> lista = await _context.CarguePagosRendimientos.AsNoTracking().ToListAsync();
 
-            lista.Where(w=>w.TipoCargue == typeFile && (string.IsNullOrEmpty(status)  || w.EstadoCargue == status) ).ToList().ForEach(c =>
+            lista.Where(w => w.TipoCargue == typeFile && (string.IsNullOrEmpty(status) || w.EstadoCargue == status)).ToList().ForEach(c =>
             {
                 listaContrats.Add(new
                 {
@@ -552,8 +688,9 @@ namespace asivamosffie.services
                     c.EstadoCargue,
                     c.FechaCargue,
                     c.RegistrosInconsistentes,
-                    c.RegistrosConsistentes //,
-                    // c.FechaTramite
+                    c.RegistrosConsistentes,
+                    c.MostrarInconsistencias,
+                    c.FechaTramite
                 });
             });
 
@@ -583,46 +720,107 @@ namespace asivamosffie.services
 
         #endregion
 
-        #region crud
+      
+       
+
         /// <summary>
-        /// TODO validar que este no tenga relaciones o información dependiente. 
-        /// En caso de contar con alguna relación, el sistema debe informar al usuario
-        /// por medio de un mensaje emergente “El registro tiene información que depende de él, no se puede eliminar”
-        /// , y no deberá eliminar el registro.
+        /// el sistema notificará a la fiduciaria que se encuentra datos inconsistentes 
+        /// y generará un archivo de Excel con la información reportada por la fiduciaria
+        /// y la información calculada por el sistema, con el nombre “Inconsistentes”. 
+        /// En la primera columna se presentará si el registro es inconsistente. 
         /// </summary>
-        /// <param name="cargaPagosRendimientosId"></param>
-        /// <param name="uploadStatus"></param>
+        /// <param name="uploadedOrderId"></param>
         /// <returns></returns>
-        public async Task<Respuesta> DeletePaymentPerformance(int uploadedOrderId)
+        public async Task<Respuesta> NotifyEmailPerformanceInconsistencies(
+            int uploadedOrderId)
         {
-            int modifiedRows = -1;
-            if (uploadedOrderId > 0)
-            {
-                modifiedRows = await _context.Set<CarguePagosRendimientos>()
-                      .Where(order => order.CargaPagosRendimientosId == uploadedOrderId && !order.FechaTramite.HasValue)
-                      .UpdateAsync(o => new CarguePagosRendimientos()
-                      {
-                      // FechaTramite Fecha Actualización on Update
-                      EstadoCargue = "Eliminado",
-                      }); ;
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Notificar_Inconsistencias, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = string.Empty;
+            CarguePagosRendimientos uploadedPerformances = null;
 
+            try
+            {
+
+                uploadedPerformances = await _context.CarguePagosRendimientos
+                    .Where(d => d.CargaPagosRendimientosId == uploadedOrderId).AsNoTracking().FirstOrDefaultAsync();
+
+                if (uploadedPerformances != null)
+                {
+
+                    strCrearEditar = "ENVIAR SOLICITUD A DOSPONIBILIDAD PRESUPUESAL";
+                    int modifiedRows = -1;
+
+                    modifiedRows = await _context.Set<CarguePagosRendimientos>()
+                          .Where(order => order.CargaPagosRendimientosId == uploadedOrderId)
+                          .UpdateAsync(o => new CarguePagosRendimientos()
+                          {
+                          // FechaTramite Fecha Actualización on Update
+                          MostrarInconsistencias = true
+                          });
+
+                    
+                    //envio correo a fiduciaria
+                    Template temNotifyInconsistencies = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificacionInconsistencias);
+                   
+                    string inconsistencies = "";
+                    string fechaCargue = "";
+                    if (uploadedPerformances != null)
+                    {
+                        inconsistencies = uploadedPerformances.RegistrosInconsistentes.ToString();
+                        fechaCargue = Convert.ToDateTime(uploadedPerformances.FechaCargue).ToString("dd/MM/yyy");
+                    }
+                    string tiposolicut = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Disponibilidad_Presupuestal && x.Codigo == "bla").FirstOrDefault().Nombre;
+                    string template = temNotifyInconsistencies.Contenido
+                        .Replace("_LinkF_", _mailSettings.DominioFront).
+                        Replace("[FECHA_CARGUE]", fechaCargue).
+                        Replace("INCONSISTENCIAS]", inconsistencies);
+
+                    string subject = "";
+                    this.SendMail(template, subject, EnumeratorPerfil.Fiduciaria);
+                }
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = uploadedPerformances,
+                    Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
+                    // Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.DisponibilidadPresupuestal, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, "usuario creacon", strCrearEditar)
+
+                };
             }
-            string codeResponse = modifiedRows > 0 ? GeneralCodes.OperacionExitosa : GeneralCodes.EntradaInvalida;
 
-            //  “El registro tiene información que depende de él, no se puede eliminar”
-
-            return new Respuesta
+            catch (Exception ex)
             {
-                Data = modifiedRows,
-                IsSuccessful = modifiedRows > 0,
-                IsException = false,
-                IsValidation = false,
-                Code = GeneralCodes.OperacionExitosa,
-                Message = "" // await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreo, "VALIDAR EXCEL PROGRAMACION")
-            };
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = uploadedPerformances,
+                    Code = ConstantMessagesSesionComiteTema.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.Error, idAccion, "usuario creacion", ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
         }
-        #endregion
 
+        public void SendMail(string template, string subject,  EnumeratorPerfil enumeratorProfile)
+        {
+            var usertoSend = _context.UsuarioPerfil.Where(
+                       x => x.PerfilId == (int)EnumeratorPerfil.CordinadorFinanciera).Include(y => y.Usuario);
+              foreach (var fiduciariaEmail in usertoSend)
+            {
+                bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(fiduciariaEmail.Usuario.Email,
+                    subject,
+                    template,
+                    _mailSettings.Sender,
+                    _mailSettings.Password,
+                    _mailSettings.MailServer,
+                    _mailSettings.MailPort);
+            }
+        }
     }
 
 }

@@ -24,5 +24,12 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> ManagePerformanceAsync(int uploadOrderId);
 
         Task<Respuesta> ChangeStatusShowInconsistencies(int uploadOrderId);
+
+        Task<Respuesta>  GetManagedPerformancesPerformances(int uploadedOrderId, int statusType);
+
+
+        Task<Respuesta> NotifyEmailPerformanceInconsistencies(int uploadedOrderId);
+
+        Task<Respuesta> RequestManagedPerformancesApproval(int uploadedOrderId);
     }
 }

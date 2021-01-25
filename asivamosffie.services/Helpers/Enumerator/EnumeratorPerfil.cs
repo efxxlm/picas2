@@ -13,6 +13,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         Supervisor=8,
         Apoyo=9,
         Fiduciaria = 10,
-        Interventor=11 //cu 3_4_4
+        Interventor=11, //cu 3_4_4
+        CordinadorFinanciera = 12
     } 
 }

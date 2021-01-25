@@ -17,7 +17,11 @@ namespace asivamosffie.model.Models
         public DateTime FechaCargue { get; set; }
         public DateTime? FechaTramite { get; set; }
         public string TramiteJson { get; set; }
-        public int? RegistrosConsistentes { get; set; }
-        public int? RegistrosInconsistentes { get; set; }
+        public int RegistrosConsistentes { get; set; }
+        public int RegistrosInconsistentes { get; set; }
+        public bool PendienteAprobacion { get; set; }
+        public bool MostrarInconsistencias { get; set; }
+        public bool Eliminado { get; set; }
+        public bool CargueValido { get; set; }
     }
 }

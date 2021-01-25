@@ -59,6 +59,7 @@ namespace asivamosffie.api
             });
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
+            services.Configure<asivamosffie.model.AditionalModels.AppSettings>(appSettingsSection);
             var appSettings = appSettingsSection.Get<AppSettings>();
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

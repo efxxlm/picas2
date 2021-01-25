@@ -45,5 +45,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         Notificarinterventor=48,
         ObservacionesActaInicioFase2=50,
         NotificacionCompromisos=53,
+        NotificacionInconsistencias = 56,
+        NotificacionAprobacion = 59,
     }
 }
