@@ -23,6 +23,8 @@ namespace asivamosffie.model.Models
         public bool? RegistroCompleto { get; set; }
         public bool? TieneDescuento { get; set; }
         public decimal? ValorFacturadoConDescuento { get; set; }
+        public bool? RegistroCompletoSupervisor { get; set; }
+        public bool? RegistroCompletoCoordinador { get; set; }
 
         public virtual SolicitudPagoFase SolicitudPagoFase { get; set; }
         public virtual ICollection<SolicitudPagoFaseFacturaDescuento> SolicitudPagoFaseFacturaDescuento { get; set; }

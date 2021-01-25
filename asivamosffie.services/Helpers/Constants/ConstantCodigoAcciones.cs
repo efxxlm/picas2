@@ -247,6 +247,7 @@
         public const string Eliminar_Criterio_Proyecto = "186"; 
         public const string Eliminar_Llave_Criterio_Proyecto = "187";
         public const string Eliminar_Solicitud_Pago = "188";
-        public const string Eliminar_Descuento = "189";
+        public const string Eliminar_Descuento = "189";  
+        public const string Crear_Actualizar_Solicitud_Pago_Observacion = "190";
     }
 }

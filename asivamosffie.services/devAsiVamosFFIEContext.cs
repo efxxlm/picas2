@@ -183,7 +183,8 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValidarSeguimientoSemanal> VValidarSeguimientoSemanal { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
- 
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -5462,6 +5463,10 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
+                entity.Property(e => e.PerfilObservacionCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.TipoObservacionCodigo)
                     .HasMaxLength(2)
                     .IsUnicode(false);
@@ -5473,11 +5478,6 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(100)
                     .IsUnicode(false);
-
-                entity.HasOne(d => d.PerfilObservacion)
-                    .WithMany(p => p.SolicitudPagoObservacion)
-                    .HasForeignKey(d => d.PerfilObservacionId)
-                    .HasConstraintName("FK_SolicitudPagoObervacion_PerfilObservacion");
 
                 entity.HasOne(d => d.SolicitudPago)
                     .WithMany(p => p.SolicitudPagoObservacion)

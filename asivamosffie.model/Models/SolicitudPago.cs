@@ -28,7 +28,7 @@ namespace asivamosffie.model.Models
         public string EstadoCodigo { get; set; }
         public string NumeroSolicitud { get; set; }
         public bool? TieneObservacion { get; set; }
-        public bool? RegistroCompletoInterventor { get; set; }
+        public bool? RegistroCompletoSupervisor { get; set; }
         public bool? RegistroCompletoCoordinador { get; set; }
 
         public virtual ContratacionProyecto ContratacionProyecto { get; set; }

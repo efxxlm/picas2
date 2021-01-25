@@ -15,6 +15,8 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public bool? Eliminado { get; set; }
         public bool? RegistroCompleto { get; set; }
+        public bool? RegistroCompletoSupervisor { get; set; }
+        public bool? RegistroCompletoCoordinador { get; set; }
 
         public virtual SolicitudPagoFaseFactura SolicitudPagoFaseFactura { get; set; }
     }
