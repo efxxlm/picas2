@@ -1,3 +1,4 @@
+import { CommonService } from './../../../../core/_services/common/common.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -15,6 +16,7 @@ import { DialogDevolverSolicitudComponent } from '../dialog-devolver-solicitud/d
 })
 export class RegistrarValidarRequisitosPagoComponent implements OnInit {
 
+    tipoSolicitudCodigo: any = {};
     verAyuda = false;
     dataSource = new MatTableDataSource();
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -31,18 +33,38 @@ export class RegistrarValidarRequisitosPagoComponent implements OnInit {
     constructor(
         private router: Router,
         private dialog: MatDialog,
+        private commonSvc: CommonService,
         private registrarPagosSvc: RegistrarRequisitosPagoService, )
     {
-        this.registrarPagosSvc.getListSolicitudPago()
-            .subscribe(
-                response => {
-                    console.log( response );
-                    this.dataSource = new MatTableDataSource( response );
-                    this.dataSource.paginator = this.paginator;
-                    this.dataSource.sort = this.sort;
-                    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-                }
-            );
+        this.commonSvc.tiposDeSolicitudes()
+        .subscribe(
+          solicitudes => {
+            for ( const solicitud of solicitudes ) {
+              if ( solicitud.codigo === '1' ) {
+                this.tipoSolicitudCodigo.contratoObra = solicitud.codigo;
+              }
+              if ( solicitud.codigo === '2' ) {
+                this.tipoSolicitudCodigo.contratoInterventoria = solicitud.codigo;
+              }
+              if ( solicitud.codigo === '3' ) {
+                this.tipoSolicitudCodigo.expensas = solicitud.codigo;
+              }
+              if ( solicitud.codigo === '4' ) {
+                this.tipoSolicitudCodigo.otrosCostos = solicitud.codigo;
+              }
+            }
+            this.registrarPagosSvc.getListSolicitudPago()
+                .subscribe(
+                    response => {
+                        console.log( response );
+                        this.dataSource = new MatTableDataSource( response );
+                        this.dataSource.paginator = this.paginator;
+                        this.dataSource.sort = this.sort;
+                        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+                    }
+                );
+          }
+        );
     }
 
     ngOnInit(): void {

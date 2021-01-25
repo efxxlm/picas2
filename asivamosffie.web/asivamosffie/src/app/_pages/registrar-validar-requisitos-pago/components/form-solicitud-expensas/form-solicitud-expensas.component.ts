@@ -89,8 +89,8 @@ export class FormSolicitudExpensasComponent implements OnInit {
                 {
                     solicitudPagoExpensasId: this.solicitudPagoExpensasId,
                     solicitudPagoId: this.solicitudPagoId,
-                    numeroRadicadoSac: Number( this.addressForm.get( 'numeroRadicadoSAC' ).value ),
-                    numeroFactura: Number( this.addressForm.get( 'numeroFactura' ).value ),
+                    numeroRadicadoSac: this.addressForm.get( 'numeroRadicadoSAC' ).value,
+                    numeroFactura: this.addressForm.get( 'numeroFactura' ).value,
                     valorFacturado: this.addressForm.get( 'valorFacturado' ).value,
                     tipoPagoCodigo: this.addressForm.get( 'tipoPago' ).value !== null ? this.addressForm.get( 'tipoPago' ).value.codigo : this.addressForm.get( 'tipoPago' ).value,
                     conceptoPagoCriterioCodigo: this.addressForm.get( 'conceptoPagoCriterio' ).value !== null ? this.addressForm.get( 'conceptoPagoCriterio' ).value.codigo : this.addressForm.get( 'conceptoPagoCriterio' ).value,

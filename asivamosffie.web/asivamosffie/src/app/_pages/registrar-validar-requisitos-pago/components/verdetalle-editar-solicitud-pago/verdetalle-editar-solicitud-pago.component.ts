@@ -41,7 +41,7 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
         private registrarPagosSvc: RegistrarRequisitosPagoService,
         private commonSvc: CommonService )
     {
-        this.registrarPagosSvc.getContratoByContratoId( this.activatedRoute.snapshot.params.id )
+        this.registrarPagosSvc.getContratoByContratoId( this.activatedRoute.snapshot.params.idContrato, this.activatedRoute.snapshot.params.idSolicitud )
             .subscribe(
                 response => {
                     this.contrato = response;

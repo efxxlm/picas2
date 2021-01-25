@@ -16,8 +16,12 @@ export class RegistrarRequisitosPagoService {
     return this.http.get<any[]>( `${ this.apiUrl }/GetContratoByTipoSolicitudCodigoModalidadContratoCodigoOrNumeroContrato?pTipoSolicitud=${ pTipoSolicitud }&pModalidadContrato=${ pModalidadContrato }&pNumeroContrato=${ pNumeroContrato }` );
   }
 
-  getContratoByContratoId( pContratoId: number ) {
-    return this.http.get( `${ this.apiUrl }/GetContratoByContratoId?pContratoId=${ pContratoId }` );
+  getContratoByContratoId( pContratoId: number, pSolicitudPago: number ) {
+    return this.http.get( `${ this.apiUrl }/GetContratoByContratoId?pContratoId=${ pContratoId }&pSolicitudPago=${ pSolicitudPago }` );
+  }
+
+  getSolicitudPago( pSolicitudPagoId: number ) {
+    return this.http.get( `${ this.apiUrl }/GetSolicitudPago?pSolicitudPagoId=${ pSolicitudPagoId }` );
   }
 
   getProyectosByIdContrato( pContratoId: number ) {
