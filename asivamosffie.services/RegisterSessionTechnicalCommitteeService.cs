@@ -1324,7 +1324,8 @@ namespace asivamosffie.services
                //sesionComiteSolicitud.UsuarioComiteFiduciario == null ||
                //sesionComiteSolicitud.EstadoActaCodigo == null ||
                sesionComiteSolicitud.EstadoCodigo == null ||
-               string.IsNullOrEmpty(sesionComiteSolicitud.Observaciones)
+               string.IsNullOrEmpty(sesionComiteSolicitud.Observaciones) || 
+               string.IsNullOrEmpty(sesionComiteSolicitud.DesarrolloSolicitud) 
                 //string.IsNullOrEmpty(sesionComiteSolicitud.RutaSoporteVotacion
                 )
             {
