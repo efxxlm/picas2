@@ -1033,6 +1033,7 @@ namespace asivamosffie.services
             }
             else
             {
+                pSolicitudPago.EstadoCodigo = ConstanCodigoEstadoSolicitudPago.En_proceso_de_registro;
                 pSolicitudPago.NumeroSolicitud = await _commonService.EnumeradorSolicitudPagoExpensasAndOtros();
                 pSolicitudPago.FechaCreacion = DateTime.Now;
                 pSolicitudPago.Eliminado = false;
@@ -1063,7 +1064,7 @@ namespace asivamosffie.services
 
                 }
                 else
-                {
+                { 
                     SolicitudPagoExpensas.UsuarioCreacion = usuarioCreacion;
                     SolicitudPagoExpensas.FechaCreacion = DateTime.Now;
                     SolicitudPagoExpensas.Eliminado = false;
