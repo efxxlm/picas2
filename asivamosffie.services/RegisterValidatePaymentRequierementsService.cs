@@ -144,8 +144,8 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<Contrato> GetContratoByContratoId(int pContratoId)
-        {
+        public async Task<Contrato> GetContratoByContratoId(int pContratoId, int pSolicitudPago)
+        { 
             Contrato contrato = await _context.Contrato
                  .Where(c => c.ContratoId == pContratoId)
                  .Include(c => c.ContratoPoliza)
@@ -159,10 +159,12 @@ namespace asivamosffie.services
                     .ThenInclude(r => r.SolicitudPagoCargarFormaPago)
                  .FirstOrDefaultAsync();
 
-            if (contrato.SolicitudPago.Count() > 0)
-                contrato.SolicitudPagoOnly = GetSolicitudPago(contrato.SolicitudPago.LastOrDefault());
-
-            return contrato;
+            if (pSolicitudPago > 0)
+            {
+                SolicitudPago solicitudPago = _context.SolicitudPago.Find(pSolicitudPago); 
+                contrato.SolicitudPagoOnly = GetSolicitudPago(solicitudPago);
+            } 
+            return contrato;  
         }
 
         private SolicitudPago GetSolicitudPago(SolicitudPago solicitudPago)
@@ -207,7 +209,7 @@ namespace asivamosffie.services
                                     SolicitudPagoFaseFactura.SolicitudPagoFaseFacturaDescuento = SolicitudPagoFaseFactura.SolicitudPagoFaseFacturaDescuento.Where(r => r.Eliminado != true).ToList();
                             }
                         }
-                    } 
+                    }
 
                     return solicitudPago;
 
@@ -228,9 +230,9 @@ namespace asivamosffie.services
                     return solicitudPago;
 
 
-                default:  return solicitudPago;
+                default: return solicitudPago;
 
-            } 
+            }
         }
 
         public async Task<dynamic> GetProyectosByIdContrato(int pContratoId)

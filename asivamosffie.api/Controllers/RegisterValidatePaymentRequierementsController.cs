@@ -34,7 +34,6 @@ namespace asivamosffie.api.Controllers
             return Ok(await _registerValidatePaymentRequierementsService.GetSolicitudPago(pSolicitudPagoId));
         }
 
-
         [HttpGet]
         [Route("GetListProyectosByLlaveMen")]
         public async Task<IActionResult> GetListProyectosByLlaveMen([FromQuery] string pLlaveMen)
@@ -143,9 +142,9 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetContratoByContratoId")]
-        public async Task<IActionResult> GetContratoByContratoId([FromQuery] int pContratoId)
+        public async Task<IActionResult> GetContratoByContratoId([FromQuery] int pContratoId, int pSolicitudPago)
         {
-            return Ok(await _registerValidatePaymentRequierementsService.GetContratoByContratoId(pContratoId));
+            return Ok(await _registerValidatePaymentRequierementsService.GetContratoByContratoId(pContratoId, pSolicitudPago));
         }
 
 
