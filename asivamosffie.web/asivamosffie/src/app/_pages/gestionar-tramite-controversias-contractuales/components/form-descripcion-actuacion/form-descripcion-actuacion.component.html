@@ -27,7 +27,7 @@
             <div class="col">
               <mat-form-field class="select-width">
                 <mat-select formControlName="estadoAvanceTramite" required>
-                  <mat-option *ngFor="let contr of estadoAvanceTramiteArray" [value]="contr.value">
+                  <mat-option *ngFor="let contr of estadoAvanceTramiteArrayDom" [value]="contr.value">
                     {{ contr.name }}
                   </mat-option>
                 </mat-select>
@@ -132,7 +132,7 @@
             <div class="col">
               <mat-form-field class="select-width">
                 <mat-select formControlName="proximaActuacionRequerida" required>
-                  <mat-option *ngFor="let contr of proximaActuacionRequeridaArray" [value]="contr.value">
+                  <mat-option *ngFor="let contr of proximaActuacionRequeridaArrayDom" [value]="contr.value">
                     {{ contr.name }}
                   </mat-option>
                 </mat-select>
