@@ -16,14 +16,14 @@
     <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
         <ng-container matColumnDef="fecha">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de actualización </th>
-            <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.fechaCreacion }} </b> </td>
+            <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.fechaCreacion | date: 'dd/MM/yyyy'}} </b> </td>
         </ng-container>
 
 
         <ng-container matColumnDef="numeroActuacion">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de Actuación </th>
             <td mat-cell *matCellDef="let element" align="center">
-                {{element.defensaJudicialSeguimientoId}}
+                {{element.id}}
             </td>
         </ng-container>
         <ng-container matColumnDef="actuacion">
@@ -51,7 +51,7 @@
                     Finalizar actuación
                 </button>
                 <button mat-raised-button color="accent" class="btn-table"
-                    *ngIf="!element.esCompleto"
+                    *ngIf="element.estadoProcesoCodigo!=3"
                     (click)="verDetalleEditar(element.defensaJudicialSeguimientoId)">
                     Ver detalle / Editar
                 </button>
@@ -61,7 +61,7 @@
                     Eliminar
                 </button>
                 <button mat-raised-button color="accent" class="btn-table"
-                    *ngIf="element.esCompleto"
+                    *ngIf="element.estadoProcesoCodigo==3"
                     (click)="this.verDetalleEditar(element.defensaJudicialSeguimientoId)">
                     Ver detalle
                 </button>

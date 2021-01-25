@@ -2703,7 +2703,7 @@ namespace asivamosffie.services
                             string strEstadoCodigoControversia = "sin definir";
                             string strEstadoControversia = "sin definir";
                             string strTipoControversiaCodigo = "sin definir";
-                            string strTipoControversia = "sin definir";
+                            string strTipoControversia = "";
 
                             //Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
                             Dominio EstadoCodigoControversia;
@@ -2747,7 +2747,7 @@ namespace asivamosffie.services
                                 ControversiaContractualId = controversia.ControversiaContractualId,
                                 //NumeroSolicitud=controversia.NumeroSolicitud,
                                 //NumeroSolicitud = string.Format("0000"+ controversia.ControversiaContractualId.ToString()),
-                                NumeroSolicitud = prefijo + controversia.ControversiaContractualId.ToString("000"),
+                                NumeroSolicitud = controversia.NumeroSolicitud,
                                 //FechaSolicitud=controversia.FechaSolicitud,
                                 FechaSolicitud = controversia.FechaSolicitud != null ? Convert.ToDateTime(controversia.FechaSolicitud).ToString("dd/MM/yyyy") : controversia.FechaSolicitud.ToString(),
                                 TipoControversia = strTipoControversia,

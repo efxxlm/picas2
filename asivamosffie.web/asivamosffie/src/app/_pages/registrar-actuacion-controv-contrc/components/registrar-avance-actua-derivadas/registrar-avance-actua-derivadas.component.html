@@ -18,7 +18,7 @@
         <mat-card class="shipping-card">
             <mat-card-content align="left">
                 <p><strong>Actuación en la que se requiere participación o insumo de la fiduciaria: </strong></p>
-                <div [innerHtml]="controversia?.actuacionAdelantada"></div>
+                <div [innerHtml]="controversia?.numeroActuacionFormat"></div>
                 <p><strong>Fecha de la actuación adelantada: </strong>{{controversia?.fechaActuacion | date:
                     'dd/MM/yyyy'}}</p>
                 <div class="row">

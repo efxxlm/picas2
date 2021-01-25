@@ -15,6 +15,9 @@ namespace asivamosffie.model.Models
         public string ContratosAsociados { get; set; }
 
         [NotMapped]
+        public string EntidadContratista { get; set; }
+
+        [NotMapped]
         public string FuenteProceso { get; set; }
         
         [NotMapped]
@@ -28,6 +31,12 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public string DepartamentoID { get; set; }
+
+        [NotMapped]
+        public string Departamento { get; set; }
+
+        [NotMapped]
+        public string Municipio { get; set; }
 
     }
 }

@@ -428,7 +428,7 @@ namespace asivamosffie.services
                 Dominio TipoDocumentoCodigoContratista;
 
                 string TipoAccionTmp = string.Empty;
-                             
+
                 foreach (var defensaJudicial in ListDefensaJudicial)
                 {
                     TipoAccionCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(defensaJudicial.TipoAccionCodigo, (int)EnumeratorTipoDominio.Tipo_accion_judicial);
@@ -436,12 +436,30 @@ namespace asivamosffie.services
                     if (TipoAccionCodigo != null)
                         defensaJudicial.TipoAccionCodigoNombre = TipoAccionCodigo.Nombre;
 
-                    defensaJudicial.JurisdiccionCodigoNombre = "PENDIENTE";
-                    defensaJudicial.TipoProcesoCodigoNombre = "PENDIENTE";
+                    var jurisdicion = await _commonService.GetDominioByNombreDominioAndTipoDominio(defensaJudicial.JurisdiccionCodigo, (int)EnumeratorTipoDominio.Jurisdiccion);
+                    defensaJudicial.JurisdiccionCodigoNombre = jurisdicion == null ? "" : jurisdicion.Nombre;
+
+                    var proceso = await _commonService.GetDominioByNombreDominioAndTipoDominio(defensaJudicial.TipoProcesoCodigo, 105);
+
+                    defensaJudicial.TipoProcesoCodigoNombre = proceso == null ? "" : proceso.Nombre;
+                    if(defensaJudicial.DefensaJudicialContratacionProyecto.Count()>0)
+                    {
+                        var contraacionpro = defensaJudicial.DefensaJudicialContratacionProyecto.FirstOrDefault();
+                        var contratista = _context.ContratacionProyecto.Where(x => x.ContratacionProyectoId == contraacionpro.ContratacionProyectoId).Select(x => x.Contratacion.Contratista.Nombre).FirstOrDefault();
+                        defensaJudicial.EntidadContratista = contratista == null ? "" : contratista;
+                    }
+                    
 
                     defensaJudicial.ContratosAsociados = "PENDIENTE";
                     defensaJudicial.FuenteProceso = "PENDIENTE";
-
+                    if(defensaJudicial.LocalizacionIdMunicipio!=null)
+                    {
+                        var munici = _context.Localizacion.Find(defensaJudicial.LocalizacionIdMunicipio.ToString());
+                        var depto = _context.Localizacion.Find(munici.IdPadre.ToString());
+                        defensaJudicial.Departamento = depto.Descripcion;
+                        defensaJudicial.Municipio = munici.Descripcion;
+                    }
+                    
                     //contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
 
                     string TipoDocumentoContratistaTmp = string.Empty;

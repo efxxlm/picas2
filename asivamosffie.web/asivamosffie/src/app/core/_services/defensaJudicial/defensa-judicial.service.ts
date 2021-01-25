@@ -106,6 +106,7 @@ export interface DefensaJudicial{
   numeroDemandantes?: number;
   numeroDemandados?: number;
   esDemandaFfie?: any;
+  //existeConocimiento?:boolean,
   //not maped
   jurisdiccionCodigoNombre?:string,
   tipoAccionCodigoNombre?:string
@@ -149,7 +150,8 @@ export interface DemandadoConvocado{
   medioControlAccion?:string,
   etapaProcesoFfiecodigo?:string,
   caducidadPrescripcion?:Date,
-  defensaJudicialId?:number
+  defensaJudicialId?:number,
+  existeConocimiento?:boolean
 }
 
 export interface DemandanteConvocante{

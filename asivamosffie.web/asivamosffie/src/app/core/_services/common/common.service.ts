@@ -48,6 +48,10 @@ export class CommonService {
     return this.http.get<Localizacion[]>(`${environment.apiUrl}/Common/ListMunicipiosByIdDepartamento?idDepartamento=${pIdDepartamento}`);
   }
 
+  GetDepartamentoByIdMunicipio(pidMunicipio: string){
+    return this.http.get<Localizacion>(`${environment.apiUrl}/Common/GetDepartamentoByIdMunicipio?pIdMunicipio=${pidMunicipio}`);
+  }
+
   listaTipoDocFinanciacion(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=7`);
   }
