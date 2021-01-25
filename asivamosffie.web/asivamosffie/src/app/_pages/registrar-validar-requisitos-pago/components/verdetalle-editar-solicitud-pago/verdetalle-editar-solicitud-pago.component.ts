@@ -44,40 +44,42 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
         this.registrarPagosSvc.getContratoByContratoId( this.activatedRoute.snapshot.params.idContrato, this.activatedRoute.snapshot.params.idSolicitud )
             .subscribe(
                 response => {
-                    this.contrato = response;
-                    console.log( this.contrato );
-                    this.dataSource = new MatTableDataSource( this.contrato.contratacion.disponibilidadPresupuestal );
-                    this.dataSource.paginator = this.paginator;
-                    this.dataSource.sort = this.sort;
-                    // Get semaforo forma de pago
-                    const solicitudPagoCargarFormaPago = this.contrato.solicitudPagoOnly.solicitudPagoCargarFormaPago[0];
-                    if ( solicitudPagoCargarFormaPago.registroCompleto === false ) {
-                        this.semaforoFormaDePago = 'en-proceso';
-                    }
-                    if ( solicitudPagoCargarFormaPago.registroCompleto === true ) {
-                        this.semaforoFormaDePago = 'completo';
-                        this.acordeones.tieneFormaDePago = true;
-                    }
+                    this.commonSvc.tiposDeSolicitudes()
+                        .subscribe(
+                          solicitudes => {
+                            for ( const solicitud of solicitudes ) {
+                                if ( solicitud.codigo === '1' ) {
+                                  this.tipoSolicitudCodigo.contratoObra = solicitud.codigo;
+                                }
+                                if ( solicitud.codigo === '2' ) {
+                                  this.tipoSolicitudCodigo.contratoInterventoria = solicitud.codigo;
+                                }
+                                if ( solicitud.codigo === '3' ) {
+                                  this.tipoSolicitudCodigo.expensas = solicitud.codigo;
+                                }
+                                if ( solicitud.codigo === '4' ) {
+                                  this.tipoSolicitudCodigo.otrosCostos = solicitud.codigo;
+                                }
+                            }
+                            this.contrato = response;
+                            console.log( this.contrato );
+                            if ( this.contrato.solicitudPagoOnly.tipoSolicitudCodigo !== this.tipoSolicitudCodigo.otrosCostos ) {
+                                this.dataSource = new MatTableDataSource( this.contrato.contratacion.disponibilidadPresupuestal );
+                                this.dataSource.paginator = this.paginator;
+                                this.dataSource.sort = this.sort;
+                                // Get semaforo forma de pago
+                                const solicitudPagoCargarFormaPago = this.contrato.solicitudPagoOnly.solicitudPagoCargarFormaPago[0];
+                                if ( solicitudPagoCargarFormaPago.registroCompleto === false ) {
+                                    this.semaforoFormaDePago = 'en-proceso';
+                                }
+                                if ( solicitudPagoCargarFormaPago.registroCompleto === true ) {
+                                    this.semaforoFormaDePago = 'completo';
+                                    this.acordeones.tieneFormaDePago = true;
+                                }
+                            }
+                          }
+                        );
                 }
-            );
-        this.commonSvc.tiposDeSolicitudes()
-            .subscribe(
-              solicitudes => {
-                for ( const solicitud of solicitudes ) {
-                  if ( solicitud.codigo === '1' ) {
-                    this.tipoSolicitudCodigo.contratoObra = solicitud.codigo;
-                  }
-                  if ( solicitud.codigo === '2' ) {
-                    this.tipoSolicitudCodigo.contratoInterventoria = solicitud.codigo;
-                  }
-                  if ( solicitud.codigo === '3' ) {
-                    this.tipoSolicitudCodigo.expensas = solicitud.codigo;
-                  }
-                  if ( solicitud.codigo === '4' ) {
-                    this.tipoSolicitudCodigo.otrosCostos = solicitud.codigo;
-                  }
-                }
-              }
             );
     }
 

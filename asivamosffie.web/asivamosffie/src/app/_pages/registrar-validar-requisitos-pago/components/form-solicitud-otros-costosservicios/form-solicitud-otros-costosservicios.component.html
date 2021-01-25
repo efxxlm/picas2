@@ -16,8 +16,8 @@
                             <mat-form-field class="full-width">
                                 <input matInput #numeroContrato type="text" maxlength="100" required [matAutocomplete]="auto" formControlName="numeroContrato">
                                 <mat-autocomplete #auto="matAutocomplete">
-                                    <mat-option (click)="seleccionAutocomplete(contr.value)" *ngFor="let contr of contratosArray" [value]="contr.name">
-                                        {{contr.name}}
+                                    <mat-option *ngFor="let contrato of contratosArray" [value]="contrato.numeroContrato" (click)="seleccionAutocomplete(contrato)">
+                                        {{ contrato.numeroContrato }}
                                     </mat-option>
                                 </mat-autocomplete>
                             </mat-form-field>

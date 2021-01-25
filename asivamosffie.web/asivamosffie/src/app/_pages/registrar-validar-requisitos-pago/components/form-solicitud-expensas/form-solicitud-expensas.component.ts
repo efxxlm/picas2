@@ -127,13 +127,18 @@ export class FormSolicitudExpensasComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                        () => this.routes.navigate(
-                            [
-                                '/registrarValidarRequisitosPago/verDetalleEditar', this.addressForm.get( 'llaveMenSeleccionada' ).value.contratacionProyectoId
-                            ]
-                        )
-                    );
+                    if ( this.solicitudPagoId > 0 ) {
+                        this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                            () => this.routes.navigate(
+                                [
+                                    '/registrarValidarRequisitosPago/verDetalleEditarExpensas', this.solicitudPagoId
+                                ]
+                            )
+                        );
+                    } else {
+                        this.routes.navigateByUrl( '/', {skipLocationChange: true} )
+                            .then( () => this.routes.navigate( [ '/registrarValidarRequisitosPago' ] ) );
+                    }
                 },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
             );

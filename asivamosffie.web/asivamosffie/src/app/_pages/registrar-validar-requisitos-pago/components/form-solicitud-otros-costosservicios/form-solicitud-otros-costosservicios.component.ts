@@ -14,16 +14,22 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class FormSolicitudOtrosCostosserviciosComponent implements OnInit {
 
     @Input() tipoSolicitud: string;
+    @Input() solicitudPago: any;
+    @Input() esUnEditar = false;
+    @Input() contrato: any;
     addressForm = this.fb.group({
       numeroContrato: [null, Validators.required],
+      contratoSeleccionado: [ null, Validators.required ],
       numeroRadicadoSAC: [null, Validators.required],
       numeroFactura: [null, Validators.required],
       valorFacturado: [null, Validators.required],
       tipoPago: [null, Validators.required],
     });
+    contratoId = 0;
     solicitudPagoId = 0;
     contratosArray = [];
     tipoPagoArray: Dominio[] = [];
+    solicitudPagosOtrosCostosServiciosId = 0;
 
     constructor(
         private fb: FormBuilder,
@@ -37,11 +43,16 @@ export class FormSolicitudOtrosCostosserviciosComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        if ( this.solicitudPago !== undefined ) {
+            this.solicitudPagoId = this.solicitudPago.solicitudPagoId;
+            this.contratoId = this.contrato.contratoId;
+            this.addressForm.get( 'numeroContrato' ).setValue( this.contrato.numeroContrato );
+
+        }
     }
 
-    seleccionAutocomplete(id:any){
-      // this.addressForm.value.numeroContrato = id;
-      // this.contratoId = id;
+    seleccionAutocomplete( contrato: any ){
+        this.contratoId = contrato.contratoId;
     }
 
     getContratos() {
@@ -73,10 +84,10 @@ export class FormSolicitudOtrosCostosserviciosComponent implements OnInit {
         const pSolicitudPago = {
             solicitudPagoId: this.solicitudPagoId,
             tipoSolicitudCodigo: this.tipoSolicitud,
-            contratoId: 0,
+            contratoId: this.contratoId,
             solicitudPagosOtrosCostosServicios: [
                 {
-                    solicitudPagosOtrosCostosServiciosId: 0,
+                    solicitudPagosOtrosCostosServiciosId: this.solicitudPagosOtrosCostosServiciosId,
                     solicitudPagoId: this.solicitudPagoId,
                     numeroRadicadoSac: this.addressForm.get( 'numeroRadicadoSAC' ).value,
                     numeroFactura: this.addressForm.get( 'numeroFactura' ).value,
@@ -86,17 +97,25 @@ export class FormSolicitudOtrosCostosserviciosComponent implements OnInit {
             ]
           };
           console.log( pSolicitudPago );
-          this.registrarPagosSvc.createEditOtrosCostosServicios( pSolicitudPago )
+        this.registrarPagosSvc.createEditOtrosCostosServicios( pSolicitudPago )
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                        () => this.routes.navigate(
-                            [
-                                '/registrarValidarRequisitosPago/verDetalleEditar', 0
-                            ]
-                        )
-                    );
+                    if ( this.esUnEditar === false ) {
+                        this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                            () => this.routes.navigate( [ '/registrarValidarRequisitosPago' ]
+                            )
+                        );
+                    }
+                    if ( this.esUnEditar === true ) {
+                        this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                            () => this.routes.navigate(
+                                [
+                                    '/registrarValidarRequisitosPago/verDetalleEditar', this.solicitudPago.contratoId, this.solicitudPagoId
+                                ]
+                            )
+                        );
+                    }
                 },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
             );

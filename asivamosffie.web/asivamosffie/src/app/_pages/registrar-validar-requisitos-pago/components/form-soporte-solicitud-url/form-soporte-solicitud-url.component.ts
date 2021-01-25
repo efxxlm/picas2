@@ -12,11 +12,11 @@ import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrar
 })
 export class FormSoporteSolicitudUrlComponent implements OnInit {
 
-    @Input() contrato: any;
+    @Input() solicitudPago: any;
+    @Input() esExpensas = false;
     addressForm = this.fb.group({
       urlSoporte: [null, Validators.required]
     });
-    solicitudPago: any;
     solicitudPagoSoporteSolicitudId = 0;
     solicitudPagoId = 0;
 
@@ -28,11 +28,8 @@ export class FormSoporteSolicitudUrlComponent implements OnInit {
     { }
 
     ngOnInit(): void {
-        if ( this.contrato !== undefined ) {
-            if ( this.contrato.solicitudPagoOnly !== undefined ) {
-                this.solicitudPago = this.contrato.solicitudPagoOnly;
-                this.solicitudPagoId = this.solicitudPago.solicitudPagoId;
-            }
+        if ( this.solicitudPago !== undefined ) {
+            this.solicitudPagoId = this.solicitudPago.solicitudPagoId;
             if ( this.solicitudPago.solicitudPagoSoporteSolicitud.length > 0 ) {
                 this.solicitudPagoSoporteSolicitudId = this.solicitudPago.solicitudPagoSoporteSolicitud[0].solicitudPagoSoporteSolicitudId;
                 this.addressForm.get( 'urlSoporte' ).setValue( this.solicitudPago.solicitudPagoSoporteSolicitud[0].urlSoporte !== undefined ? this.solicitudPago.solicitudPagoSoporteSolicitud[0].urlSoporte : null );
@@ -61,13 +58,24 @@ export class FormSoporteSolicitudUrlComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                        () => this.routes.navigate(
-                            [
-                                '/registrarValidarRequisitosPago/verDetalleEditar', this.solicitudPago.contratoId
-                            ]
-                        )
-                    );
+                    if ( this.esExpensas === false ) {
+                        this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                            () => this.routes.navigate(
+                                [
+                                    '/registrarValidarRequisitosPago/verDetalleEditar', this.solicitudPago.contratoId, this.solicitudPagoId
+                                ]
+                            )
+                        );
+                    }
+                    if ( this.esExpensas === true ) {
+                        this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                            () => this.routes.navigate(
+                                [
+                                    '/registrarValidarRequisitosPago/verDetalleEditarExpensas', this.solicitudPagoId
+                                ]
+                            )
+                        );
+                    }
                 },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
             );
