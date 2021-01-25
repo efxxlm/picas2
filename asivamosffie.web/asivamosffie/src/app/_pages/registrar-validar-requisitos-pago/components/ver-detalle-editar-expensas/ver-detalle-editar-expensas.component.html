@@ -1,4 +1,4 @@
-<section class="container text-center mb-2em" *ngIf="tipoSolicitudCodigo.otrosCostos !== undefined">
+<section class="container text-center mb-2em" *ngIf="solicitudPago !== undefined">
     <section class="container text-center">
         <div class="text-right">
             <a routerLink="/registrarValidarRequisitosPago" mat-button color="primary" class="btn-regresar">
@@ -6,20 +6,18 @@
             </a>
         </div>
         <h1 class="title-menu--h1">
-            Ver detalle/Editar solicitud de pago <!-- {{ contrato.solicitudPagoOnly.numeroSolicitud }} -->
+            Ver detalle/Editar solicitud de pago {{ solicitudPago.numeroSolicitud }}
         </h1>
     </section>
     <p class="info-sub-title supportBlack">
-        <!--
-        <span *ngIf="solicitudPagoOnly.tipoSolicitudCodigo === tipoSolicitudCodigo.contratoObra">Tipo de solicitud: <b>Contratos de obra</b></span>
-        <span *ngIf="solicitudPagoOnly.tipoSolicitudCodigo === tipoSolicitudCodigo.contratoInterventoria">Tipo de solicitud: <b>Contratos de interventoria</b></span>
-        <span *ngIf="solicitudPagoOnly.tipoSolicitudCodigo === tipoSolicitudCodigo.expensas">Tipo de solicitud: <b>Expensas</b></span>
-        <span *ngIf="solicitudPagoOnly.tipoSolicitudCodigo === tipoSolicitudCodigo.otrosCostos">Tipo de solicitud: <b>Otros costos/servicios</b></span>
-        -->
+        <span *ngIf="solicitudPago.tipoSolicitudCodigo === tipoSolicitudCodigo.contratoObra">Tipo de solicitud: <b>Contratos de obra</b></span>
+        <span *ngIf="solicitudPago.tipoSolicitudCodigo === tipoSolicitudCodigo.contratoInterventoria">Tipo de solicitud: <b>Contratos de interventoria</b></span>
+        <span *ngIf="solicitudPago.tipoSolicitudCodigo === tipoSolicitudCodigo.expensas">Tipo de solicitud: <b>Expensas</b></span>
+        <span *ngIf="solicitudPago.tipoSolicitudCodigo === tipoSolicitudCodigo.otrosCostos">Tipo de solicitud: <b>Otros costos/servicios</b></span>
     </p>
 
     <!-- Formulario de expensas -->
-    <app-form-solicitud-expensas></app-form-solicitud-expensas>
+    <app-form-solicitud-expensas [tipoSolicitud]="tipoSolicitudCodigo.expensas" [solicitudPago]="solicitudPago"></app-form-solicitud-expensas>
 
     <div class="text-center">
         <p class="info-container">

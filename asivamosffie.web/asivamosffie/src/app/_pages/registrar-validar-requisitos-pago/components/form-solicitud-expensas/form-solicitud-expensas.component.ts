@@ -14,6 +14,7 @@ import { MatDialog } from '@angular/material/dialog';
 export class FormSolicitudExpensasComponent implements OnInit {
 
     @Input() tipoSolicitud: string;
+    @Input() solicitudPago: any;
     addressForm = this.fb.group({
       llaveMen: [null, Validators.required],
       llaveMenSeleccionada: [ null, Validators.required ],
@@ -38,14 +39,37 @@ export class FormSolicitudExpensasComponent implements OnInit {
         private commonSvc: CommonService,
         private registrarPagosSvc: RegistrarRequisitosPagoService )
     {
-        this.commonSvc.tiposDePagoExpensas()
-            .subscribe( response => this.tipoPagoArray = response );
-        this.commonSvc.conceptosDePagoExpensas()
-            .subscribe( response => this.conceptoPagoCriterioArray = response );
-
     }
 
     ngOnInit(): void {
+        this.commonSvc.tiposDePagoExpensas()
+            .subscribe( response => {
+                this.tipoPagoArray = response;
+                this.commonSvc.conceptosDePagoExpensas()
+                    .subscribe( response => {
+                        this.conceptoPagoCriterioArray = response;
+                        if ( this.solicitudPago !== undefined ) {
+                            this.solicitudPagoId = this.solicitudPago.solicitudPagoId;
+                            const solicitudPagoExpensas = this.solicitudPago.solicitudPagoExpensas[0];
+                            this.solicitudPagoExpensasId = solicitudPagoExpensas.solicitudPagoExpensasId;
+                            this.addressForm.setValue(
+                                {
+                                    llaveMen: this.solicitudPago.contratacionProyecto.proyecto.llaveMen,
+                                    llaveMenSeleccionada: {
+                                        contratacionProyectoId: this.solicitudPago.contratacionProyectoId,
+                                        llaveMen: this.solicitudPago.contratacionProyecto.proyecto.llaveMen
+                                    },
+                                    numeroRadicadoSAC: solicitudPagoExpensas.numeroRadicadoSac !== undefined ? solicitudPagoExpensas.numeroRadicadoSac : null,
+                                    numeroFactura: solicitudPagoExpensas.numeroFactura !== undefined ? solicitudPagoExpensas.numeroFactura : null,
+                                    valorFacturado: solicitudPagoExpensas.valorFacturado !== undefined ? solicitudPagoExpensas.valorFacturado : null,
+                                    tipoPago: solicitudPagoExpensas.tipoPagoCodigo !== undefined ? this.tipoPagoArray.filter( tipoPago => tipoPago.codigo === solicitudPagoExpensas.tipoPagoCodigo )[0] : null,
+                                    conceptoPagoCriterio: solicitudPagoExpensas.conceptoPagoCriterioCodigo !== undefined ? this.conceptoPagoCriterioArray.filter( conceptoPago => conceptoPago.codigo === solicitudPagoExpensas.conceptoPagoCriterioCodigo )[0] : null,
+                                    valorFacturadoConcepto: solicitudPagoExpensas.valorFacturadoConcepto !== undefined ? solicitudPagoExpensas.valorFacturadoConcepto : null
+                                }
+                            );
+                        }
+                    } );
+            } );
     }
 
     seleccionAutocomplete( llaveMen ){

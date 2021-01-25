@@ -11,6 +11,7 @@ import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrar
 export class VerDetalleEditarExpensasComponent implements OnInit {
 
     tipoSolicitudCodigo: any = {};
+    solicitudPago: any;
 
     constructor(
         private commonSvc: CommonService,
@@ -34,13 +35,14 @@ export class VerDetalleEditarExpensasComponent implements OnInit {
                     this.tipoSolicitudCodigo.otrosCostos = solicitud.codigo;
                   }
                 }
+                this.registrarPagosSvc.getSolicitudPago( this.activatedRoute.snapshot.params.id )
+                    .subscribe(
+                        response => {
+                            console.log( response );
+                            this.solicitudPago = response;
+                        }
+                    );
               }
-            );
-        this.registrarPagosSvc.getSolicitudPago( this.activatedRoute.snapshot.params.id )
-            .subscribe(
-                response => {
-                    console.log( response );
-                }
             );
     }
 
