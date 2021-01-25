@@ -48,7 +48,7 @@ export class FormularioProyectosComponent implements OnInit {
   noGuardado=true;
   
   ngOnDestroy(): void {
-    console.log("destroy"+this.proyecto.llaveMen);
+    // console.log("destroy"+this.proyecto.llaveMen);
 
     if (this.noGuardado==true && (this.proyecto.fechaSesionJunta!=null ||  
       this.proyecto.numeroActaJunta!=null ||  
@@ -82,7 +82,7 @@ export class FormularioProyectosComponent implements OnInit {
         data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
       });   
       dialogRef.afterClosed().subscribe(result => {
-        console.log(`Dialog result: ${result}`);
+        // console.log(`Dialog result: ${result}`);
         if(result === true)
         {
             this.onSubmit();          
@@ -144,13 +144,14 @@ export class FormularioProyectosComponent implements OnInit {
   codigoDaneSede: string = '';
 
   onSubmit() {
+    this.estaEditando = true;
     // ajusto latitud y longitud de predios
     this.proyecto.predioPrincipal.ubicacionLatitud = this.proyecto.predioPrincipal.ubicacionLatitud + '°' ;// + this.proyecto.predioPrincipal.ubicacionLatitud2;
     this.proyecto.predioPrincipal.ubicacionLongitud = this.proyecto.predioPrincipal.ubicacionLongitud + '°' ;// + this.proyecto.predioPrincipal.ubicacionLongitud2;
     //this.proyecto.institucionEducativaId = this.proyecto.institucionEducativaId;
     //this.proyecto.sedeId = this.proyecto.sede.institucionEducativaSedeId?this.proyecto.sede.institucionEducativaSedeId:this.proyecto.sedeId;
     //voy a revisar algunos datos minimos
-    console.log(this.proyecto)
+    // console.log(this.proyecto)
     if(!this.proyecto.tipoIntervencionCodigo)
     {
       this.openDialog('', '<b>El tipo de intervención es obligatorio.</b>');
@@ -191,7 +192,7 @@ export class FormularioProyectosComponent implements OnInit {
     },
       err => {
         let mensaje: string;
-        console.log(err);
+        // console.log(err);
         let msn = '';
         if (err.error.code === '501') {
           err.error.data.forEach((element: { errors: { key: string; forEach: (arg0: (element: any) => void) => void; }; }) => {
@@ -217,12 +218,12 @@ export class FormularioProyectosComponent implements OnInit {
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    console.log(id);
+    // console.log(id);
 
     if (id) {
       this.estaEditando = true;
       this.commonServices.forkProject().subscribe(listas => {
-        console.log(listas);
+        // console.log(listas);
         this.listadoTipoIntervencion = listas[0];
         this.listadoregion = listas[1];
         this.listadoPredios = listas[2];
@@ -240,12 +241,12 @@ export class FormularioProyectosComponent implements OnInit {
           }
           //this.proyecto.predioPrincipal.tipoPredioCodigo;
           // ajusto lartitud y longitud
-          console.log("viene predio?");
-          console.log(respuesta.predioPrincipal==undefined);
-          console.log(respuesta.predioPrincipal==null);
+          // console.log("viene predio?");
+          // console.log(respuesta.predioPrincipal==undefined);
+          // console.log(respuesta.predioPrincipal==null);
           if(!respuesta.predioPrincipal || respuesta.predioPrincipal==undefined)
           {
-            console.log("si, es nulo");
+            // console.log("si, es nulo");
             this.proyecto.predioPrincipal=
             {
               cedulaCatastral: '', direccion: '', documentoAcreditacionCodigo: '',
@@ -287,8 +288,8 @@ export class FormularioProyectosComponent implements OnInit {
           }
           let i = 0;
             respuesta.proyectoAportante.forEach(element => {
-              console.log("reviso por tipo");
-              console.log(element);
+              // console.log("reviso por tipo");
+              // console.log(element);
               this.getAportanteById(element.aportante.tipoAportanteId, i);
               this.getVigenciaById(element.aportanteId, i);
               i++;
@@ -297,7 +298,7 @@ export class FormularioProyectosComponent implements OnInit {
         },
           err => {
             let mensaje: string;
-            console.log(err);
+            // console.log(err);
             if (err.message) {
               mensaje = err.message;
             }
@@ -337,7 +338,7 @@ export class FormularioProyectosComponent implements OnInit {
     },
       err => {
         let mensaje: string;
-        console.log(err);
+        // console.log(err);
         if (err.message) {
           mensaje = err.message;
         }
@@ -356,7 +357,7 @@ export class FormularioProyectosComponent implements OnInit {
     },
       err => {
         let mensaje: string;
-        console.log(err);
+        // console.log(err);
         if (err.message) {
           mensaje = err.message;
         }
@@ -374,7 +375,7 @@ export class FormularioProyectosComponent implements OnInit {
     },
       err => {
         let mensaje: string;
-        console.log(err);
+        // console.log(err);
         if (err.message) {
           mensaje = err.message;
         }
@@ -392,7 +393,7 @@ export class FormularioProyectosComponent implements OnInit {
     },
       err => {
         let mensaje: string;
-        console.log(err);
+        // console.log(err);
         if (err.message) {
           mensaje = err.message;
         }
@@ -410,7 +411,7 @@ export class FormularioProyectosComponent implements OnInit {
     },
       err => {
         let mensaje: string;
-        console.log(err);
+        // console.log(err);
         if (err.message) {
           mensaje = err.message;
         }
@@ -427,7 +428,7 @@ export class FormularioProyectosComponent implements OnInit {
     },
       err => {
         let mensaje: string;
-        console.log(err);
+        // console.log(err);
         if (err.message) {
           mensaje = err.message;
         }
@@ -444,7 +445,7 @@ export class FormularioProyectosComponent implements OnInit {
     },
       err => {
         let mensaje: string;
-        console.log(err);
+        // console.log(err);
         if (err.message) {
           mensaje = err.message;
         }
@@ -461,7 +462,7 @@ export class FormularioProyectosComponent implements OnInit {
     },
       err => {
         let mensaje: string;
-        console.log(err);
+        // console.log(err);
         if (err.message) {
           mensaje = err.message;
         }
@@ -477,13 +478,13 @@ export class FormularioProyectosComponent implements OnInit {
   }
 
   getDepartments(event: MatSelectChange) {
-    console.log(event.value);
+    // console.log(event.value);
     this.commonServices.listaDepartamentosByRegionId(event.value).subscribe(respuesta => {
       this.listadoDepartamento = respuesta;
     },
       err => {
         let mensaje: string;
-        console.log(err);
+        // console.log(err);
         if (err.message) {
           mensaje = err.message;
         }
@@ -503,7 +504,7 @@ export class FormularioProyectosComponent implements OnInit {
     },
       err => {
         let mensaje: string;
-        console.log(err);
+        // console.log(err);
         if (err.message) {
           mensaje = err.message;
         }
@@ -519,7 +520,7 @@ export class FormularioProyectosComponent implements OnInit {
 
   getInstitucion(institudcionid?:number,sedeid?:number) {
 
-    console.log(this.proyecto);
+    // console.log(this.proyecto);
     this.commonServices.listaIntitucionEducativaByMunicipioId(this.proyecto.localizacionIdMunicipio).subscribe(respuesta => {
       this.listadoInstitucion = respuesta;
       this.proyecto.institucionEducativaId=institudcionid;//lo uso como patch pero no esta funcionando
@@ -527,7 +528,7 @@ export class FormularioProyectosComponent implements OnInit {
     },
       err => {
         let mensaje: string;
-        console.log(err);
+        // console.log(err);
         if (err.message) {
           mensaje = err.message;
         }
@@ -545,17 +546,17 @@ export class FormularioProyectosComponent implements OnInit {
     if(this.proyecto.tipoIntervencionCodigo!=1)
     {
       let institucion=this.listadoSede.filter(x=>x.institucionEducativaSedeId==this.proyecto.sedeId);
-      console.log(institucion);
+      // console.log(institucion);
       this.codigoDaneSede = institucion?institucion[0].codigoDane:"";
     }
   }
 
   getSede(sedeid?:number) {
-     console.log(this.proyecto.tipoIntervencionCodigo);
+    //  console.log(this.proyecto.tipoIntervencionCodigo);
     if(this.proyecto.tipoIntervencionCodigo>1)
     {
       let institucion=this.listadoInstitucion.filter(x=>x.institucionEducativaSedeId==this.proyecto.institucionEducativaId);
-      console.log(institucion);
+      // console.log(institucion);
       if(institucion.length>0)
       {
         this.CodigoDaneIE = institucion?institucion[0].codigoDane:"";  
@@ -563,17 +564,17 @@ export class FormularioProyectosComponent implements OnInit {
       
     }
     
-    console.log("loading sede");
+    // console.log("loading sede");
     this.commonServices.listaSedeByInstitucionEducativaId(this.proyecto.institucionEducativaId)
       .subscribe(respuesta => {
-        console.log("fin sede");
+        // console.log("fin sede");
         this.listadoSede = respuesta;    
-        console.log("set sede"+sedeid);    
+        // console.log("set sede"+sedeid);    
         this.proyecto.sedeId=sedeid;
       },
         err => {
           let mensaje: string;
-          console.log(err);
+          // console.log(err);
           if (err.message) {
             mensaje = err.message;
           }
@@ -601,7 +602,7 @@ export class FormularioProyectosComponent implements OnInit {
       data: { modalTitle, modalText,siNoBoton:true }
     });   
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+      // console.log(`Dialog result: ${result}`);
       if(result === true)
       {
         if(tipo==1)
@@ -655,13 +656,13 @@ export class FormularioProyectosComponent implements OnInit {
   }
 
   evaluopredios() {
-    console.log(this.proyecto.cantPrediosPostulados);
-    console.log(this.proyecto.proyectoPredio.length+1);
+    // console.log(this.proyecto.cantPrediosPostulados);
+    // console.log(this.proyecto.proyectoPredio.length+1);
     if (this.proyecto.cantPrediosPostulados >= 1) {
       if (this.proyecto.cantPrediosPostulados !== this.proyecto.proyectoPredio.length+1) {
         if (this.proyecto.cantPrediosPostulados < this.proyecto.proyectoPredio.length+1) {
           
-          console.log("debo eliminar");
+          // console.log("debo eliminar");
           //valido si tiene dataif()
           let bitesvacio=true;
           this.proyecto.proyectoPredio.forEach(element => {
@@ -684,7 +685,7 @@ export class FormularioProyectosComponent implements OnInit {
           if(bitesvacio)
           {
             let aeliminar=this.proyecto.proyectoPredio.length-this.proyecto.cantPrediosPostulados;
-            console.log(aeliminar);
+            // console.log(aeliminar);
             for(let i=0;i<=aeliminar;i++)
             {
               this.proyecto.proyectoPredio.pop();
@@ -693,7 +694,7 @@ export class FormularioProyectosComponent implements OnInit {
           }
           else
           {
-            console.log(this.proyecto.proyectoPredio.length+1);
+            // console.log(this.proyecto.proyectoPredio.length+1);
             this.proyecto.cantPrediosPostulados=this.proyecto.proyectoPredio.length+1;
             this.openDialog("","<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>");
             
@@ -724,7 +725,7 @@ export class FormularioProyectosComponent implements OnInit {
         //this.proyecto.proyectoAportante = [];
         if(this.proyecto.cantidadAportantes<this.proyecto.proyectoAportante.length)
         {
-          console.log("resta");
+          // console.log("resta");
           let bitesvacio=true;
           this.proyecto.proyectoAportante.forEach(element => {
           
@@ -745,7 +746,7 @@ export class FormularioProyectosComponent implements OnInit {
           if(bitesvacio)
           {
             let aeliminar=this.proyecto.proyectoAportante.length-this.proyecto.cantidadAportantes;
-            console.log(aeliminar);
+            // console.log(aeliminar);
             for(let i=0;i<aeliminar;i++)
             {
               this.proyecto.proyectoAportante.pop();
@@ -786,7 +787,7 @@ export class FormularioProyectosComponent implements OnInit {
               this.listaNombreAportantes.push(listavacia);
               this.listadoDepto.push(listavacia);
               this.listadoMun.push(listavacia);
-              console.log(this.listaAportante);
+              // console.log(this.listaAportante);
               this.listaVigencias.push(listavacia);
             }
           }
@@ -795,7 +796,7 @@ export class FormularioProyectosComponent implements OnInit {
     }    
   }
   valorTotal(aportantes: any) {
-    console.log(aportantes);
+    // console.log(aportantes);
     aportantes.valorTotalAportante = aportantes.valorInterventoria + aportantes.valorObra;
   }
 
@@ -817,7 +818,7 @@ export class FormularioProyectosComponent implements OnInit {
         if(this.tipoAportante.ET.includes(event.value.toString()))
         {
           this.listaAportante[i]=respuestaok;
-          console.log(this.listaAportante[i]);
+          // console.log(this.listaAportante[i]);
           this.listadoDepto[i]=[{localizacionId:null,descripcion:"un momento por favor."}]
           this.commonServices.listaDepartamentos().subscribe(res=>{
             this.listadoDepto[i]=res;
@@ -831,13 +832,13 @@ export class FormularioProyectosComponent implements OnInit {
           this.listaNombreAportantes[i]=[];
           respuestaok.forEach(element => {
             
-            console.log("evaluo");
-            console.log(element.nombre);
+            // console.log("evaluo");
+            // console.log(element.nombre);
             
             if(!this.listaNombreAportantes[i].includes(element.nombre))
             {              
               this.listaNombreAportantes[i].push(element.nombre); 
-              console.log(this.listaNombreAportantes);
+              // console.log(this.listaNombreAportantes);
             }
           });
         }  
@@ -845,7 +846,7 @@ export class FormularioProyectosComponent implements OnInit {
     },
       err => {
         let mensaje: string;
-        console.log(err);
+        // console.log(err);
         if (err.message) {
           mensaje = err.message;
         }
@@ -884,7 +885,7 @@ export class FormularioProyectosComponent implements OnInit {
         if(this.tipoAportante.ET.includes(id.toString()))
         {
           this.listaAportante[i]=respuestaok;
-          console.log(this.listaAportante[i]);
+          // console.log(this.listaAportante[i]);
           this.commonServices.listaDepartamentos().subscribe(res=>{
             this.listadoDepto[i]=res;
             this.proyecto.proyectoAportante[i].depto=this.proyecto.proyectoAportante[i].aportante.departamentoId.toString();
@@ -906,12 +907,12 @@ export class FormularioProyectosComponent implements OnInit {
           let nombreApo="";
           respuestaok.forEach(element => {
             
-            console.log("evaluo");
-            console.log(element.nombre);
+            // console.log("evaluo");
+            // console.log(element.nombre);
             
             if(!this.listaNombreAportantes[i].includes(element.nombre))
             {
-              console.log(this.listaNombreAportantes[i]);
+              // console.log(this.listaNombreAportantes[i]);
               this.listaNombreAportantes[i].push(element.nombre); 
               nombreApo=element.nombre;
             }
@@ -922,7 +923,7 @@ export class FormularioProyectosComponent implements OnInit {
     },
       err => {
         let mensaje: string;
-        console.log(err);
+        // console.log(err);
         if (err.message) {
           mensaje = err.message;
         }
@@ -937,21 +938,21 @@ export class FormularioProyectosComponent implements OnInit {
   }
 
   getVigenciaByMun(event: MatSelectChange, i: number) {
-    console.log("busco "+this.proyecto.proyectoAportante[i].mun);
-    console.log(this.listaAportante[i]);
+    // console.log("busco "+this.proyecto.proyectoAportante[i].mun);
+    // console.log(this.listaAportante[i]);
     this.listaVigencias[i]=this.listaAportante[i].filter(x=>x.municipioId==this.proyecto.proyectoAportante[i].mun);
   }
 
   getVigencia(event: MatSelectChange, i: number) {
-    console.log("busco "+this.proyecto.proyectoAportante[i].nombreAportante);
-    console.log(this.listaAportante[i]);
+    // console.log("busco "+this.proyecto.proyectoAportante[i].nombreAportante);
+    // console.log(this.listaAportante[i]);
     this.listaVigencias[i]=this.listaAportante[i].filter(x=>x.nombre==this.proyecto.proyectoAportante[i].nombreAportante);
     /*this.commonServices.listaDocumentoByAportanteId(event.value).subscribe(respuesta => {
       this.listaVigencias[i] = respuesta;
     },
       err => {
         let mensaje: string;
-        console.log(err);
+        // console.log(err);
         if (err.message) {
           mensaje = err.message;
         }
@@ -971,7 +972,7 @@ export class FormularioProyectosComponent implements OnInit {
     },
       err => {
         let mensaje: string;
-        console.log(err);
+        // console.log(err);
         if (err.message) {
           mensaje = err.message;
         }
@@ -1018,11 +1019,11 @@ export class FormularioProyectosComponent implements OnInit {
     const patron = /1/; // ver nota
     const te = String.fromCharCode(tecla);
     
-    console.log("patron: valor"+valor);
+    // console.log("patron: valor"+valor);
 
     if(ok)
     {
-      console.log(valor>30);
+      // console.log(valor>30);
       if(valor>30)
       {
         return false;
@@ -1060,7 +1061,7 @@ export class FormularioProyectosComponent implements OnInit {
     const tecla = e.keyCode;
     const patron = /[\d{1,7}+(\.\d{1,8})]/; // ver nota
     const te = String.fromCharCode(tecla);
-    console.log( patron.test(te) );
+    // console.log( patron.test(te) );
     return patron.test(te);
   }
 
@@ -1072,7 +1073,7 @@ export class FormularioProyectosComponent implements OnInit {
   }
   deleteInfraestructura(indice:number)
   {
-    console.log(indice)
+    // console.log(indice)
     this.openDialogSiNo("","<b>¿Está seguro de eliminar este registro?</b>",3,indice);
     //this.proyecto.infraestructuraIntervenirProyecto.splice(indice,1); 
   }

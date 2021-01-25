@@ -160,6 +160,10 @@ div.mat-select-arrow {
     min-width: 2.4em;
     margin-left: 0.4em;
     transform: translateY(-5px);
+
+    & + .icon-incompleto {
+      transform: translateY(-5px);
+    }
   }
 }
 
@@ -184,7 +188,7 @@ div.mat-select-arrow {
 }
 
 .mat-form-field input:required ~ .mat-form-field-label-wrapper::after {
-  content: "*";
+  content: '*';
   position: absolute;
   right: 0;
   top: 45%;
@@ -193,7 +197,7 @@ div.mat-select-arrow {
 }
 
 .mat-select[required]::after {
-  content: "*";
+  content: '*';
   position: absolute;
   right: 0;
   font-weight: 600;
@@ -271,7 +275,7 @@ div.mat-select-arrow {
     content: '';
 }*/
 .mat-form-field.nocontent input:required ~ .mat-form-field-label-wrapper::after {
-  content: "";
+  content: '';
 }
 
 .radio-color-detalle {
@@ -322,4 +326,28 @@ div.mat-select-arrow {
 
 .noBorderForm:focus{
     height: 0px;
+}
+
+.icon-incompleto {
+  min-width: 30px;
+  max-height: 30px;
+  margin-left: 0.3em;
+  display: inline-block;
+
+  .mat-form-field ~ & {
+    transform: translateY(0) !important;
+  }
+  
+  .col + & {
+    margin-left: -16px;
+  }
+  
+  &--img {
+    height: 2em;
+    border: solid 1px $secondaryColor;
+    border-radius: 50%;
+
+    animation-duration: 0.6s;
+    animation-name: animatedRequired;
+  }
 }

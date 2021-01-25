@@ -58,7 +58,7 @@
     }
 
     &::before {
-      content: "";
+      content: '';
     }
     &::-webkit-scrollbar {
       --scroll-size: 10px;
@@ -83,53 +83,38 @@
     }
   }
 
-  &.invalid .quill-editor-style.card .ql-container.ql-snow {
-    border-color: $secondaryColor;
-  }
-
   &.card {
-    width: 100%;
+      width: 100%;
 
-    &.invalid {
+      .ql-container.ql-snow {
+        border-bottom: $fontColor solid 1px;
+
+      &.invalid {
+        .ql-container.ql-snow {
+          max-width: 70em;
+          border-bottom: $secondaryColor solid 1px;
+        }
+      }
       .ql-container.ql-snow {
         max-width: 70em;
-        border-bottom: $secondaryColor solid 1px;
-      }
-    }
-    .ql-container.ql-snow {
-      max-width: 70em;
-      border-bottom: $fontColor solid 1px;
+        border-bottom: $fontColor solid 1px;
 
-      .quill-sin-borde & {
-        border-bottom: none;
-      }
+        .quill-sin-borde & {
+          border-bottom: none;
+        }
 
-      .w-quill & {
-        max-width: 30em;
-        margin: auto;
-      }
+        .quill-sin-borde & {
+          border-bottom: none;
+        }
 
-      .mat-card & {
-        max-width: initial;
-      }
-    }
-  }
-  &.card.color-secondaryColor .ql-container.ql-snow{
-    border-bottom: $secondaryColor solid 1px;
-  }
-  &.card-80em {
-    width: 100%;
-    .ql-container.ql-snow {
-      max-width: 80em;
-      border-bottom: $fontColor solid 1px;
-
-      .quill-sin-borde & {
-        border-bottom: none;
+        .w-quill & {
+          max-width: 30em;
+          margin: auto;
+        }
       }
 
-      .w-quill & {
-        max-width: 30em;
-        margin: auto;
+      &.invalid .ql-container.ql-snow {
+        border-color: $secondaryColor;
       }
     }
   }
@@ -137,7 +122,7 @@
   &[required] {
     // position: relative;
     &::after {
-      content: "*";
+      content: '*';
       position: absolute;
       right: 0.9em;
       font-weight: 600;
@@ -146,7 +131,7 @@
       color: $mainColor;
 
       .required-05 & {
-      top: calc(50% + .5em);
+        top: calc(50% + 0.5em);
       }
 
       .text-area-quill & {
@@ -159,3 +144,4 @@
     content: none;
   }
 }
+

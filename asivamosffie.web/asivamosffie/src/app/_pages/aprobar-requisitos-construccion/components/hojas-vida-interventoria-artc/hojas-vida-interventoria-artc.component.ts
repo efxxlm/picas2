@@ -35,6 +35,7 @@ export class HojasVidaInterventoriaArtcComponent implements OnInit {
     observaciones: [ null ],
     construccionPerfilObservacionId: [ null ]
   });
+  estaEditando = false;
 
   constructor(
     private dialog: MatDialog,
@@ -75,7 +76,7 @@ export class HojasVidaInterventoriaArtcComponent implements OnInit {
   }
 
   onSubmit(){
-
+    this.estaEditando = true;
     const ConstruccionPerfil = {
       construccionPerfilId: this.construccionPerfilId,
       tieneObservacionesSupervisor: this.addressForm.get( 'tieneObservaciones' ).value !== null ?
@@ -94,7 +95,7 @@ export class HojasVidaInterventoriaArtcComponent implements OnInit {
       ]
     };
 
-    console.log( ConstruccionPerfil );
+    // console.log( ConstruccionPerfil );
     this.faseDosAprobarConstruccionSvc.createEditObservacionPerfilSupervisor( ConstruccionPerfil )
       .subscribe(
         response => {

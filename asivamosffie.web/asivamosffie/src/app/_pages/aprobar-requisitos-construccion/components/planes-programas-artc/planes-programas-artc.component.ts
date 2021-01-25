@@ -65,6 +65,7 @@ export class PlanesProgramasArtcComponent implements OnInit {
   @Input() planesProgramas: any;
   @Input() contratoConstruccionId: any;
   @Output() createEdit = new EventEmitter();
+  estaEditando = false;
 
   constructor(
     private dialog: MatDialog,
@@ -81,8 +82,8 @@ export class PlanesProgramasArtcComponent implements OnInit {
 
 
   guardar() {
-    console.log( this.dataPlanesProgramas );
-    console.log( this.urlSoporte );
+    // console.log( this.dataPlanesProgramas );
+    // console.log( this.urlSoporte );
   }
 
   getDataTablePlanesProgramas() {
@@ -316,7 +317,7 @@ export class PlanesProgramasArtcComponent implements OnInit {
   }
 
   guardarPlanes() {
-
+    this.estaEditando = true;
     const construccion = {
       contratoConstruccionId: this.contratoConstruccionId,
       tieneObservacionesPlanesProgramasSupervisor: this.addressForm.value.tieneObservaciones,
@@ -332,7 +333,7 @@ export class PlanesProgramasArtcComponent implements OnInit {
       ]
     };
 
-    console.log( construccion );
+    // console.log( construccion );
 
     if (  this.addressForm.value.tieneObservaciones === false
           && this.totalGuardados === 0

@@ -100,6 +100,7 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
   idGarantia3: any;
   idGarantia4: any;
   nombreUser: any;
+  estaEditando = false;
 
   constructor(
     private router: Router,
@@ -138,7 +139,7 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
       } );
   };
   getvalues(values: Dominio[]) {
-    console.log(values);
+    // console.log(values);
     const buenManejo = values.find(value => value.codigo == "1");
     const garantiaObra = values.find(value => value.codigo == "2");
     const pCumplimiento = values.find(value => value.codigo == "3");
@@ -318,11 +319,12 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
+    this.estaEditando = true;
     const polizasList = [this.addressForm.value.polizasYSeguros[0].codigo];
     for (let i = 1; i < this.addressForm.value.polizasYSeguros.length; i++) {
       const membAux = polizasList.push(this.addressForm.value.polizasYSeguros[i].codigo);
     }
-    console.log(polizasList);
+    // console.log(polizasList);
     let nombreAprobado;
     if (this.addressForm.value.responsableAprob != undefined || this.addressForm.value.responsableAprob != null) {
       if (!this.addressForm.value.responsableAprob.usuarioId) {
@@ -360,7 +362,7 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
           completo=true;
         }            
     }
-    console.log(this.addressForm.value);
+    // console.log(this.addressForm.value);
     const contratoArray = {
       'contratoId': this.idContrato,
       "contratoPolizaId": this.idPoliza,
@@ -462,6 +464,6 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
         this.openDialog('', `<b>${data.message}</b>`);
       }
     });
-    console.log(this.addressForm.value);
+    // console.log(this.addressForm.value);
   }
 }

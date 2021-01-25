@@ -19,7 +19,7 @@ import { Aportante } from 'src/app/core/_services/project/project.service';
 })
 export class RegistrarComponent implements OnInit {
 
-  loading = false;
+  estaEditando = false;
 
   addressForm: FormGroup;
 
@@ -505,7 +505,7 @@ export class RegistrarComponent implements OnInit {
               });
               if(m)
               {
-                console.log("ya lo tiene");
+                // console.log("ya lo tiene");
               }
               else
               {
@@ -751,6 +751,7 @@ export class RegistrarComponent implements OnInit {
   }
 
   onSubmit() {
+    this.edicion=true; 
     //no puedo validarlo, porque puede ser parcial
     //if (this.addressForm.valid) {
       

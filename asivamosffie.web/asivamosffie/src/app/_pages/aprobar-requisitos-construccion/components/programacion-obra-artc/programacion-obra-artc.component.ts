@@ -46,6 +46,7 @@ export class ProgramacionObraArtcComponent implements OnInit {
   @Input() contratoConstruccion: any;
   @Input() contratoConstruccionId: any;
   @Output() createEdit = new EventEmitter();
+  estaEditando = false;
 
   constructor(
     private dialog: MatDialog,
@@ -128,7 +129,7 @@ export class ProgramacionObraArtcComponent implements OnInit {
   }
 
   guardarProgramacion() {
-
+    this.estaEditando = true;
     const construccion = {
       contratoConstruccionId: this.contratoConstruccionId,
       tieneObservacionesProgramacionObraSupervisor: this.addressForm.value.tieneObservaciones,
@@ -144,7 +145,7 @@ export class ProgramacionObraArtcComponent implements OnInit {
       ]
     };
 
-    console.log( construccion );
+    // console.log( construccion );
 
     if (  this.addressForm.value.tieneObservaciones === false
           && this.totalGuardados === 0

@@ -41,6 +41,7 @@ export class HojasVidaContratistaArtcComponent implements OnInit {
   @Input() perfil: any;
   @Output() createEdit = new EventEmitter();
   totalGuardados = 0;
+  estaEditando = false;
 
   constructor(
     private dialog: MatDialog,
@@ -106,7 +107,7 @@ export class HojasVidaContratistaArtcComponent implements OnInit {
   }
 
   onSubmit(){
-
+    this.estaEditando = true;
     const ConstruccionPerfil = {
       construccionPerfilId: this.perfil.construccionPerfilId,
       tieneObservacionesSupervisor: this.addressForm.value.tieneObservaciones,
@@ -121,7 +122,7 @@ export class HojasVidaContratistaArtcComponent implements OnInit {
       ]
     };
 
-    console.log( ConstruccionPerfil );
+    // console.log( ConstruccionPerfil );
 
     if (  this.addressForm.value.tieneObservaciones === false
           && this.totalGuardados === 0

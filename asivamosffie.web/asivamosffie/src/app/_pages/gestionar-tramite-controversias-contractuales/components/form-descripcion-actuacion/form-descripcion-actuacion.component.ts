@@ -55,7 +55,8 @@ export class FormDescripcionActuacionComponent implements OnInit {
   numReclamacion: any;
 
   constructor(private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private common: CommonService,private router: Router) { }
-
+  estaEditando = false;
+  
   ngOnInit(): void {
     this.common.listaEstadosAvanceTramite().subscribe(rep => {
       this.estadoAvanceTramiteArrayDom = rep;
@@ -133,6 +134,7 @@ export class FormDescripcionActuacionComponent implements OnInit {
 
   onSubmit() {
     let actuacionTaiArray;
+    this.estaEditando = true;
     if (this.isEditable == true) {
       actuacionTaiArray = {
         "ControversiaContractualId": this.controversiaID,

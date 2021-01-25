@@ -46,6 +46,7 @@ export class ManejoAnticipoArtcComponent implements OnInit {
   @Input() contratacion: any;
   @Input() contratoConstruccionId: any;
   @Output() createEdit = new EventEmitter();
+  estaEditando = false;
 
   constructor(
     private dialog: MatDialog,
@@ -124,7 +125,7 @@ export class ManejoAnticipoArtcComponent implements OnInit {
   }
 
   guardarManejo() {
-
+    this.estaEditando = true;
     const construccion = {
       contratoConstruccionId: this.contratoConstruccionId,
       tieneObservacionesManejoAnticipoSupervisor: this.addressForm.value.tieneObservaciones,
@@ -142,7 +143,7 @@ export class ManejoAnticipoArtcComponent implements OnInit {
       ]
     };
 
-    console.log( construccion );
+    // console.log( construccion );
 
     if (  this.addressForm.value.tieneObservaciones === false
           && this.totalGuardados === 0

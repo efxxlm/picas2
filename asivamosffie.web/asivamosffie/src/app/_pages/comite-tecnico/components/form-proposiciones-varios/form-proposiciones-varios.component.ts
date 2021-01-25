@@ -18,6 +18,7 @@ export class FormProposicionesVariosComponent implements OnInit {
   @Output() semaforo: EventEmitter<string> = new EventEmitter();
   listaMiembros: Dominio[] = [];
 
+  estaEditando = false;
 
   addressForm = this.fb.group({
     tema: this.fb.array([])
@@ -89,7 +90,9 @@ export class FormProposicionesVariosComponent implements OnInit {
 
   onSubmit() {
 
-    console.log(this.addressForm)
+    this.estaEditando = true;
+
+    // console.log(this.addressForm)
 
     let temas: SesionComiteTema[] = []
 
@@ -159,7 +162,7 @@ export class FormProposicionesVariosComponent implements OnInit {
       this.semaforo.emit('completo');
     }
 
-    console.log(cantidadIncompletos)
+    // console.log(cantidadIncompletos)
   }
 
   eliminarTema(i) {
@@ -174,7 +177,7 @@ export class FormProposicionesVariosComponent implements OnInit {
       data: { modalTitle, modalText, siNoBoton: true }
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+      // console.log(`Dialog result: ${result}`);
       if (result===true) {
         this.deleteTema(e)
       }
@@ -185,7 +188,7 @@ export class FormProposicionesVariosComponent implements OnInit {
     let grupo = this.addressForm.get('tema') as FormArray;
     let tema = grupo.controls[i];
 
-    console.log(tema)
+    // console.log(tema)
 
     this.technicalCommitteSessionService.deleteSesionComiteTema(tema.get('sesionTemaId').value)
       .subscribe(respuesta => {

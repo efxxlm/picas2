@@ -122,6 +122,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
   listaProponentesNombres: any[]=[];
   nombresapo: string[]=[];
   filteredNameJuridica2: Observable<string[]>;
+  estaEditando = false;
 
   get entidades() {
     return this.unionTemporalForm.get('entidades') as FormArray;
@@ -140,7 +141,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
   }
   ngOnInit() {
     
-    return new Promise( resolve => {
+    return new Promise<void>( resolve => {
       forkJoin([
         
         this.commonService.listaTipoProponente(),
@@ -354,6 +355,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
     }
 
 
+    this.estaEditando = true;
     if(!this.noTanNuevo)
     {
       this.procesoSeleccion.procesoSeleccionProponente = [];
@@ -385,6 +387,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
      this.openDialog("","<b>Por favor diligencie completamente el formulario</b>");
      return false; 
     }
+    this.estaEditando = true;
     if(!this.noTanNuevo)
     {
       this.procesoSeleccion.procesoSeleccionProponente = [];
@@ -448,6 +451,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
      this.openDialog("","<b>Por favor diligencie completamente el formulario</b>");
      return false; 
     }
+    this.estaEditando = true;
     let porcentaje: number = 0;
 
     if(!this.noTanNuevo)

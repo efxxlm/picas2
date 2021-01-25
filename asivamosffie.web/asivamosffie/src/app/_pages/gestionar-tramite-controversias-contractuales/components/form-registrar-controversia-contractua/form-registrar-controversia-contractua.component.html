@@ -12,7 +12,14 @@
             <div class="col-md-4">
                 <div class="row">
                     <div class="pr-1">
-                        <label class="label-left" for="contrato">Número de contrato</label>
+                        <label class="label-left" for="contrato"
+            [class.color-secondaryColor]="
+              (addressForm.get('contrato').invalid && addressForm.get('contrato').touched) ||
+              (addressForm.get('contrato').invalid && estaEditando)
+            ">
+                            Número de contrato
+
+                        </label>
                     </div>
                     <div class="col d-flex">
                         <mat-form-field class="full-width">
@@ -30,6 +37,17 @@
                             <img src="assets/img/icon/lupa.svg" alt="Buscar">
                         </button>
                       </div>
+          <span class="icon-incompleto">
+            <img
+                class="icon-incompleto--img"
+                src="assets/img/icon/incompleto.svg"
+                alt="este campo es requerido"
+                *ngIf="
+                    (addressForm.get('contrato').invalid && addressForm.get('contrato').touched) ||
+                    (addressForm.get('contrato').invalid && estaEditando)
+                "
+            />
+        </span>
                     <!--
                     <div class="col">
                         <mat-form-field class="select-width">

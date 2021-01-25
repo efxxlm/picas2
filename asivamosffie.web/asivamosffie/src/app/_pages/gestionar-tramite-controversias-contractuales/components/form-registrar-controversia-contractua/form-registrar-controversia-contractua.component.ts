@@ -24,6 +24,7 @@ export class FormRegistrarControversiaContractuaComponent implements OnInit {
   fechaInicioContrato: any;
   fechaFinalizacionContrato: any;
   contratoId: any;
+  estaEditando = false;
 
   constructor(  private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private polizaService: PolizaGarantiaService) { }
 

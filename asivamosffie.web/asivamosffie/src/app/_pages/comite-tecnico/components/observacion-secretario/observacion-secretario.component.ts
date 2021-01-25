@@ -24,6 +24,7 @@ export class ObservacionSecretarioComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
 
   constructor ( @Inject(MAT_DIALOG_DATA) public compromisoSeguimiento,
                 private fb: FormBuilder,
@@ -64,7 +65,7 @@ export class ObservacionSecretarioComponent implements OnInit {
   };
 
   onSubmit () {
-
+    this.estaEditando = true;
     this.disabledBtn = true;
     if ( this.reporte.invalid ) {
       this.openDialog( '', '<b>Debe registrar la observación para continuar.</b>' );

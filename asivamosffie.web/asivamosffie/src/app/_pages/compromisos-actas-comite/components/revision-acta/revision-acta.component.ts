@@ -38,6 +38,7 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
   temas: any[] = [];
   proposicionesVarios: any[] = [];
   seRealizoPeticion: boolean = false;
+  estaEditando = false;
 
   constructor(private routes: Router,
     public dialog: MatDialog,
@@ -139,7 +140,7 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
   };
   //Submit de la data
   onSubmit() {
-
+    this.estaEditando = true;
     if (this.form.invalid) {
       this.observacionInvalida = true;
       this.openDialog('', '<b>Falta registrar información.</b>');

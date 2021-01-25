@@ -87,6 +87,7 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
   tipoSolicitud: any;
   contratoPolizaId: any;
   realizoPeticion: boolean = false;
+  estaEditando = false;
   constructor(
     private router: Router,
     private polizaService: PolizaGarantiaService,
@@ -106,7 +107,7 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
     this.common.listaEstadoRevision()
       .subscribe(
         estadoRevision => {
-          console.log( estadoRevision );
+          // console.log( estadoRevision );
           this.estadoArray = estadoRevision;
         }
       );
@@ -233,7 +234,7 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
   }
 
   getvalues(values: Dominio[]) {
-    console.log(values);
+    // console.log(values);
     const buenManejo = values.find(value => value.codigo == "1");
     const garantiaObra = values.find(value => value.codigo == "2");
     const pCumplimiento = values.find(value => value.codigo == "3");
@@ -259,7 +260,8 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    console.log(this.addressForm.value);
+    this.estaEditando = true;
+    // console.log(this.addressForm.value);
     let polizasList;
     if (this.addressForm.value.polizasYSeguros != undefined || this.addressForm.value.polizasYSeguros != null) {
       if ( this.addressForm.value.polizasYSeguros.length > 0 ) {
@@ -267,7 +269,7 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
         for (let i = 1; i < this.addressForm.value.polizasYSeguros.length; i++) {
           const membAux = polizasList.push(this.addressForm.value.polizasYSeguros[i].codigo);
         }
-        console.log(polizasList);
+        // console.log(polizasList);
       }
     }
     let nombreAprobado;

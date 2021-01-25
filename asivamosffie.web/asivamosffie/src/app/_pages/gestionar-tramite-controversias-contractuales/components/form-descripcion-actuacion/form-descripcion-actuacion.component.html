@@ -5,7 +5,11 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="estadoAvanceTramite">Estado de avance del trámite</label>
+                            <label class="label-left" for="estadoAvanceTramite"
+                            [class.color-secondaryColor]="
+                  (addressForm.get('estadoAvanceTramite').invalid && addressForm.get('estadoAvanceTramite').touched) ||
+                  (addressForm.get('estadoAvanceTramite').invalid && estaEditando)
+                ">Estado de avance del trámite</label>
                         </div>
                         <div class="col">
                             <mat-form-field class="select-width">
@@ -19,27 +23,14 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="row">
-                        <div class="pr-1">
-                            <label class="label-left" for="fechaActuacionAdelantada">Fecha de la actuación
-                                adelantada</label>
-                        </div>
-                        <div class="col d-flex align-items-center">
-                            <mat-form-field class="example-full-width">
-                                <input matInput formControlName="fechaActuacionAdelantada"
-                                    [matDatepicker]="pickerfechaActuacionAdelantada" readonly
-                                    (click)="pickerfechaActuacionAdelantada.open()" required>
-                                <mat-datepicker #pickerfechaActuacionAdelantada></mat-datepicker>
-                            </mat-form-field>
-                            <button mat-button color="primary" type="button"
-                                (click)="pickerfechaActuacionAdelantada.open()" class="btn-calendario">
-                                <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
-                            </button>
-                        </div>
-                    </div>
-                </div>
+            <div class="col">
+              <mat-form-field class="select-width">
+                <mat-select formControlName="estadoAvanceTramite" required>
+                  <mat-option *ngFor="let contr of estadoAvanceTramiteArray" [value]="contr.value">
+                    {{ contr.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
             </div>
             <div class="row">
                 <div class="col-md-12">
@@ -129,27 +120,14 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="row">
-                        <div class="pr-1">
-                            <label class="label-left" for="fechaVencimientoTerminos">Fecha de vencimiento de términos
-                                para la próxima actuación requerida</label>
-                        </div>
-                        <div class="col d-flex align-items-center">
-                            <mat-form-field class="example-full-width">
-                                <input matInput formControlName="fechaVencimientoTerminos"
-                                    [matDatepicker]="pickerfechaVencimientoTerminos" readonly
-                                    (click)="pickerfechaVencimientoTerminos.open()" required>
-                                <mat-datepicker #pickerfechaVencimientoTerminos></mat-datepicker>
-                            </mat-form-field>
-                            <button mat-button color="primary" type="button"
-                                (click)="pickerfechaVencimientoTerminos.open()" class="btn-calendario">
-                                <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
-                            </button>
-                        </div>
-                    </div>
-                </div>
+            <div class="col">
+              <mat-form-field class="select-width">
+                <mat-select formControlName="proximaActuacionRequerida" required>
+                  <mat-option *ngFor="let contr of proximaActuacionRequeridaArray" [value]="contr.value">
+                    {{ contr.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
             </div>
             <div class="row">
                 <div class="col-md-12" style="padding-left: 0;">

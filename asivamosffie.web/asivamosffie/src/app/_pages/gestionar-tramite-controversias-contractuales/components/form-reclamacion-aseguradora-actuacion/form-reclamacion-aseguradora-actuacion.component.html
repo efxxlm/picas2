@@ -64,11 +64,25 @@
                     </div>
                 </div>
             </div>
-        </mat-card-content>
-    </mat-card>
-    <div class="text-center mb-2em">
-        <button mat-button color="warn" class="btn-guardar" type="submit">
-            <img src="assets/img/icon/guardar.svg" alt="Regresar">
-        </button>
-    </div>
+            <span class="icon-incompleto">
+              <img
+                class="icon-incompleto--img"
+                src="assets/img/icon/incompleto.svg"
+                alt="este campo es requerido"
+                *ngIf="
+                  (addressForm.get('definitivoyCerrado').invalid && addressForm.get('definitivoyCerrado').touched) ||
+                  (addressForm.get('definitivoyCerrado').invalid && estaEditando)
+                "
+              />
+            </span>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <div class="text-center mb-2em">
+    <button mat-button color="warn" class="btn-guardar" type="submit">
+      <img src="assets/img/icon/guardar.svg" alt="Regresar" />
+    </button>
+  </div>
 </form>

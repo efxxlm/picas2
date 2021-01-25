@@ -15,7 +15,7 @@ import { forkJoin } from 'rxjs';
 })
 export class RegistrarAcuerdoComponent implements OnInit {
 
-  loading = false;
+  // loading = false;
 
   estaEditando = false;
 
@@ -64,7 +64,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
         data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
       });   
       dialogRef.afterClosed().subscribe(result => {
-        console.log(`Dialog result: ${result}`);
+        // console.log(`Dialog result: ${result}`);
         if(result === true)
         {
             this.onSave(false);          
@@ -128,7 +128,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
     this.listaCofinancAportantes.forEach(apo => {
       let valorAportante = 0;
       apo.cofinanciacionDocumento.forEach(doc => {
-        console.log(doc.valorDocumento)
+        // console.log(doc.valorDocumento)
         valorTotal += doc.valorDocumento ? doc.valorDocumento : 0;
         valorAportante += doc.valorDocumento ? doc.valorDocumento : 0;
       });
@@ -170,7 +170,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
 
 
   changeTipoAportante(p: any) {
-    console.log(p);
+    // console.log(p);
   }
 
   borrarArray(borrarForm: any, i: number) {
@@ -194,8 +194,8 @@ export class RegistrarAcuerdoComponent implements OnInit {
         }
       } else if (FormNumAportantes.numAportes <= this.aportantes.length && FormNumAportantes.numAportes >= 0) {
 
-        console.log(this.datosAportantes);
-        console.log(this.datosAportantes.value.numAportes);
+        // console.log(this.datosAportantes);
+        // console.log(this.datosAportantes.value.numAportes);
         let estaenblanco = true;
         this.datosAportantes.value.aportantes.forEach((element: {
           cauntosDocumentos: string;
@@ -359,7 +359,8 @@ export class RegistrarAcuerdoComponent implements OnInit {
   }
 
   onSave(parcial: boolean) {
-    this.loading = true;
+    // this.loading = true;
+    this.estaEditando = true;
     this.listaAportantes();
 
     const cofinanciacion: Cofinanciacion =
@@ -375,7 +376,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
         this.verificarRespuesta(respuesta, parcial);
       },
       err => {
-        this.loading = false;
+        // this.loading = false;
         let mensaje: string;
         if (err.error.message) {
           mensaje = err.error.message;
@@ -387,7 +388,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
       },
       () => {
         // console.log('terminó');
-        this.loading = false;
+        // this.loading = false;
       });
   }
 
@@ -397,7 +398,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
       this.openDialog('', `<b>${respuesta.message}</b>`);
       if (!respuesta.isValidation) // have validations
       {
-        console.log(respuesta);
+        // console.log(respuesta);
         if (parcial) {
           if(this.id>0)
           {
@@ -435,7 +436,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
       }
     }
     else {
-      console.log(cantidadDocumentos, ' ', this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length);
+      // console.log(cantidadDocumentos, ' ', this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length);
       if (cantidadDocumentos > this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length
         && cantidadDocumentos < 1000) {
         while (this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length < cantidadDocumentos) {
@@ -534,8 +535,8 @@ export class RegistrarAcuerdoComponent implements OnInit {
     return retorno;
   }
   eliminadoc(aportante: any, documento: any, indexd: any) {
-    console.log(aportante);
-    console.log(indexd);
+    // console.log(aportante);
+    // console.log(indexd);
     let docid=aportante.cofinanciacionDocumento[indexd].cofinanciacionDocumentoId;
     const index = aportante.cofinanciacionDocumento.indexOf(documento, 0);
     if (index > -1) {
@@ -563,7 +564,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
   }
 
   validateNumber(event: Event, max: any) {
-    console.log(event);
+    // console.log(event);
     const alphanumeric = /[0-9]/;
     // let inputChar = String.fromCharCode(event.charCode);
     // return alphanumeric.test(inputChar) ? true : false;

@@ -13,7 +13,11 @@
 </div>
 <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
     <div class="d-flex align-items-center">
-        <div class="text-area-quill izqTitle">
+        <div class="text-area-quill izqTitle"
+        [class.color-secondaryColor]="
+          (addressForm.get('objeto').invalid && addressForm.get('objeto').touched) ||
+          (addressForm.get('objeto').invalid && estaEditando)
+        ">
           <label for="objeto" class="text-area-quill--label grayTitle">Observaciones</label>
           <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
             (onContentChanged)="maxLength($event, 2000)" formControlName="objeto"></quill-editor>
@@ -24,6 +28,17 @@
         <span class="contador miles" *ngIf="addressForm.get('objeto').value === null">
           2000
         </span>
+        <span class="icon-incompleto">
+          <img
+              class="icon-incompleto--img"
+              src="assets/img/icon/incompleto.svg"
+              alt="este campo es requerido"
+              *ngIf="
+                  (addressForm.get('objeto').invalid && addressForm.get('objeto').touched) ||
+                  (addressForm.get('objeto').invalid && estaEditando)
+              "
+          />
+      </span>
       </div>
       <div class="text-center botones">
         <button mat-raised-button color="accent" [disabled]="true" *ngIf="addressForm.get('objeto').value === null">Cancelar DRP</button>

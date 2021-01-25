@@ -11,6 +11,7 @@ export class ManejoAnticipoComponent implements OnInit {
   formAnticipo: FormGroup;
   @Input() contratoConstruccion: any;
   @Output() manejoAnticipo = new EventEmitter();
+  estaEditando = false;
 
   constructor ( private fb: FormBuilder ) {
     this.crearFormulario();
@@ -39,6 +40,7 @@ export class ManejoAnticipoComponent implements OnInit {
   };
 
   guardar () {
+    this.estaEditando = true;
     this.manejoAnticipo.emit( this.formAnticipo.value );
   }
 

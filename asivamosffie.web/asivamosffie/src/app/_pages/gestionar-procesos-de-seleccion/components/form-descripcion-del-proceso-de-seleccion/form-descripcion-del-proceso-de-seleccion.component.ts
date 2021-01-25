@@ -23,6 +23,8 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   @Input() editar:boolean;
   @Output() guardar: EventEmitter<any> = new EventEmitter();
 
+  estaEditando = false;
+
   listaTipoIntervencion: Dominio[];
   listaTipoAlcance: Dominio[];
   listatipoPresupuesto: Dominio[];
@@ -63,7 +65,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
         data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
       });   
       dialogRef.afterClosed().subscribe(result => {
-        console.log(`Dialog result: ${result}`);
+        // console.log(`Dialog result: ${result}`);
         if(result === true)
         {
             this.onSubmit();          
@@ -75,7 +77,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   ngOnInit() {
     
     this.addressForm = this.crearFormulario();
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       forkJoin([
 
         this.commonService.listaTipoIntervencion(),
@@ -153,7 +155,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
 
   CambioNumeroMeses(i:number)
   {
-    console.log(this.addressForm.controls.grupos.value[i]);
+    // console.log(this.addressForm.controls.grupos.value[i]);
     if(this.addressForm.controls.grupos.value[i].plazoMeses!="")
     {
       if(this.addressForm.controls.grupos.value[i].plazoMeses<=0)
@@ -218,7 +220,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
     
     borrarForm.removeAt(i);
     //si tiene id lo envio al servicio de eliminar
-    console.log(borrarForm);
+    // console.log(borrarForm);
 
     if(borrarForm.value[0].procesoSeleccionGrupoId>0)
     {
@@ -253,7 +255,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   }
 
   borrarCronograma( i: number ){    
-    console.log(this.cronogramas[i].value);
+    // console.log(this.cronogramas[i].value);
     if(this.cronogramas[i].value.procesoSeleccionCronogramaId>0)
     {
       this.procesoSeleccionService.deleteProcesoSeleccionActividadesByID(this.cronogramas[i].value.procesoSeleccionCronogramaId).subscribe();
@@ -337,7 +339,8 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.addressForm.value);
+    // console.log(this.addressForm.value);+
+    this.estaEditando = true;
 
     const listaGrupos = this.addressForm.get('grupos') as FormArray;
     const listaCronogramas = this.addressForm.get('cronogramas') as FormArray;
@@ -394,7 +397,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
       posicion++;
     });
 
-    console.log(this.procesoSeleccion);
+    // console.log(this.procesoSeleccion);
     this.noGuardado=false;
     this.guardar.emit(null);
   }
@@ -463,7 +466,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   nosuperarlimite(i:number,caso:number)
   {
     let limite=this.listaLimite[0].nombre.split(",");
-    console.log(limite[1]);
+    // console.log(limite[1]);
     let maximo=parseInt(limite[1])*parseInt(this.listaSalarioMinimo[0].descripcion);
     let minimo=parseInt(limite[0])*parseInt(this.listaSalarioMinimo[0].descripcion);
     const listaGrupo = this.addressForm.get('grupos') as FormArray;

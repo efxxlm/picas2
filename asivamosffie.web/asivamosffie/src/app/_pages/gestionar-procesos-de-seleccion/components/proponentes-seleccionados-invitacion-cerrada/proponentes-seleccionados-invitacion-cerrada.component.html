@@ -5,29 +5,76 @@
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
-              <label for="cuantosProponentes" class="label-left">
+              <label
+                for="cuantosProponentes"
+                class="label-left"
+                [class.color-secondaryColor]="
+                  (addressForm.get('cuantosProponentes').invalid && addressForm.get('cuantosProponentes').touched) ||
+                  (addressForm.get('cuantosProponentes').invalid && estaEditando)
+                "
+              >
                 ¿Cuántos proponentes serán invitados en el proceso?
               </label>
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput #cuantosProponentes type="number" maxlength="2" formControlName="cuantosProponentes"
-                  (keyup)="validaMinimo3()" maxlength="2" (keypress)="validateNumberKeypress($event)"
-                  onKeyPress="if(this.value.length>=this.maxLength) return false;" required>
+                <input
+                  matInput
+                  #cuantosProponentes
+                  type="number"
+                  maxlength="2"
+                  formControlName="cuantosProponentes"
+                  (keyup)="validaMinimo3()"
+                  maxlength="2"
+                  (keypress)="validateNumberKeypress($event)"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  required
+                />
               </mat-form-field>
-              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
-              matTooltipClass="info-tooltip">{{2 - cuantosProponentes.value.length}}</span>
+              <span
+                class="contador"
+                [matTooltipPosition]="'above'"
+                matTooltip="Campo numérico"
+                matTooltipClass="info-tooltip"
+              >
+                {{ 2 - cuantosProponentes.value.length }}
+              </span>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  *ngIf="
+                    (addressForm.get('cuantosProponentes').invalid && addressForm.get('cuantosProponentes').touched) ||
+                    (addressForm.get('cuantosProponentes').invalid && estaEditando)
+                  "
+                />
+              </span>
             </div>
           </div>
         </div>
       </div>
-      <div class="row" *ngIf="addressForm.get('cuantosProponentes').value>=3">
+      <div class="row" *ngIf="addressForm.get('cuantosProponentes').value >= 3">
         <div class="pr-1">
-          <label for="nombresProponentes" class="label-left">Nombres de proponentes:</label>
+          <label
+            for="nombresProponentes"
+            class="label-left"
+            [class.color-secondaryColor]="
+              (addressForm.get('nombresProponentes').invalid && addressForm.get('nombresProponentes').touched) ||
+              (addressForm.get('nombresProponentes').invalid && estaEditando)
+            "
+          >
+            Nombres de proponentes:
+          </label>
         </div>
         <div class="col">
           <mat-form-field class="select-width">
-            <mat-select formControlName="nombresProponentes" required (selectionChange)="changeProponente($event)" multiple>
+            <mat-select
+              formControlName="nombresProponentes"
+              required
+              (selectionChange)="changeProponente($event)"
+              multiple
+            >
               <mat-option *ngFor="let nombreProponente of nombresProponentesList" [value]="nombreProponente">
                 {{ nombreProponente.nombreProponente }}
               </mat-option>
@@ -35,12 +82,21 @@
             </mat-select>
           </mat-form-field>
         </div>
+        <span class="icon-incompleto">
+          <img
+            class="icon-incompleto--img"
+            src="assets/img/icon/incompleto.svg"
+            alt="este campo es requerido"
+            *ngIf="
+              (addressForm.get('nombresProponentes').invalid && addressForm.get('nombresProponentes').touched) ||
+              (addressForm.get('nombresProponentes').invalid && estaEditando)
+            "
+          />
+        </span>
       </div>
       <!-- <div *ngIf=" this.addressForm.get('nombresProponentes').value != 'Nuevo' "> -->
-      <div class="pt-1em" *ngFor=" let proponente of procesoSeleccion.procesoSeleccionProponente; let i = index ">
-        <mat-card-title class="header-card--text">
-          Proponente {{ i + 1 }}
-        </mat-card-title>
+      <div class="pt-1em" *ngFor="let proponente of procesoSeleccion.procesoSeleccionProponente; let i = index">
+        <mat-card-title class="header-card--text sub-text"> Proponente {{ i + 1 }} </mat-card-title>
         <p>
           <strong>Nombre del proponente:</strong>
           {{ proponente.nombreProponente }}
@@ -51,11 +107,11 @@
         </p>
         <p>
           <strong>Departamento del domicilio del proponente:</strong>
-          {{ proponente.departamentoString?proponente.departamentoString:proponente.nombreDepartamento }}
+          {{ proponente.departamentoString ? proponente.departamentoString : proponente.nombreDepartamento }}
         </p>
         <p>
           <strong>Municipio del domicilio del proponente:</strong>
-          {{ proponente.municipioString?proponente.municipioString:proponente.nombreMunicipio }}
+          {{ proponente.municipioString ? proponente.municipioString : proponente.nombreMunicipio }}
         </p>
         <p>
           <strong>Dirección del proponente:</strong>
@@ -72,18 +128,20 @@
       </div>
       <!-- </div> -->
       <div *ngIf="nuevo">
-        <app-form-datos-proponentes-nuevo #proponente [procesoSeleccion]="procesoSeleccion" [noTanNuevo]="true"
-          (guardar)="onSubmitNuevoProponente()">
+        <app-form-datos-proponentes-nuevo
+          #proponente
+          [procesoSeleccion]="procesoSeleccion"
+          [noTanNuevo]="true"
+          (guardar)="onSubmitNuevoProponente()"
+        >
         </app-form-datos-proponentes-nuevo>
-        <button style="display: none;" type="button" (click)="proponente.cargarRegistro()" id="botonProponente">
-        </button>
+        <button style="display: none" type="button" (click)="proponente.cargarRegistro()" id="botonProponente"></button>
       </div>
-
     </mat-card-content>
   </mat-card>
   <div class="text-center" *ngIf="!nuevo">
     <button *ngIf="editar" mat-button color="warn" class="btn-guardar" type="submit">
-      <img src="assets/img/icon/guardar.svg" alt="Regresar">
+      <img src="assets/img/icon/guardar.svg" alt="Regresar" />
     </button>
   </div>
 </form>

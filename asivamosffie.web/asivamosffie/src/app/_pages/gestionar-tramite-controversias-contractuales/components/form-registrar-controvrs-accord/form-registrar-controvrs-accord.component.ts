@@ -48,6 +48,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
   idContrato: any;
   numeroSolicitud: any;
   userCreation: any;
@@ -279,6 +280,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
 
   onSubmit() {
     console.log(this.addressForm.value);
+    this.estaEditando = true;
 
     let fecha1 = Date.parse(this.addressForm.get('fechaSolicitud').value);
     this.fechaSesion = new Date(fecha1);

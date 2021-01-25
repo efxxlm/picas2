@@ -37,6 +37,7 @@ export class FormRegistroTramiteComponent implements OnInit, OnDestroy {
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
 
   constructor(
     private dialog: MatDialog,
@@ -131,7 +132,7 @@ export class FormRegistroTramiteComponent implements OnInit, OnDestroy {
   }
 
   guardar() {
-
+    this.estaEditando = true;
     if ( this.dataFormulario.get( 'numeroContrato' ).value.length === 0 ) {
       this.openDialog( '', '<b>Falta registrar información</b>.' );
       this.dataFormulario.get( 'numeroContrato' ).markAsTouched();

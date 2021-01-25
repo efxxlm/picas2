@@ -1,18 +1,25 @@
 <section class="container">
   <div class="text-right">
     <a routerLink=".." mat-button color="primary" class="btn-regresar">
-      <img src="assets/img/icon/regresar.svg" alt="Regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar" />
     </a>
   </div>
   <div class="text-center">
-    <h1 class="title-menu--h1">
-      Registrar participantes de la sesión {{ objetoComiteTecnico.numeroComite }}
-    </h1>
+    <h1 class="title-menu--h1">Registrar participantes de la sesión {{ objetoComiteTecnico.numeroComite }}</h1>
   </div>
   <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
     <div class="row px-miembros mt-2em mb-2em">
       <div class="pr-1">
-        <label class="label-left">Miembros participantes</label>
+        <label
+          class="label-left"
+          for="miembrosParticipantes"
+          [class.color-secondaryColor]="
+            (addressForm.get('miembrosParticipantes').invalid && addressForm.get('miembrosParticipantes').touched) ||
+            (addressForm.get('miembrosParticipantes').invalid && estaEditando)
+          "
+        >
+          Miembros participantes
+        </label>
       </div>
       <div class="col">
         <mat-form-field class="select-width">
@@ -23,62 +30,151 @@
           </mat-select>
         </mat-form-field>
       </div>
+      <span class="icon-incompleto">
+        <img
+          class="icon-incompleto--img"
+          src="assets/img/icon/incompleto.svg"
+          alt="este campo es requerido"
+          *ngIf="
+            (addressForm.get('miembrosParticipantes').invalid && addressForm.get('miembrosParticipantes').touched) ||
+            (addressForm.get('miembrosParticipantes').invalid && estaEditando)
+          "
+        />
+      </span>
     </div>
     <mat-card class="shipping-card">
       <mat-card-header class="header-card header-card--margin">
-        <mat-card-title class="header-card--text">
-          Invitados
-        </mat-card-title>
+        <mat-card-title class="header-card--text"> Invitados </mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <div formGroupName="invitados">
           <div *ngFor="let invitado of invitados.controls; let i = index">
             <div [formGroupName]="i">
-              <mat-card-title class="header-card--text alineacion-titulos2 pl-0">
-                Invitado {{ i + 1 }}
-              </mat-card-title>
+              <mat-card-title class="header-card--text alineacion-titulos2 pl-0"> Invitado {{ i + 1 }} </mat-card-title>
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left">Nombre Invitado</label>
+                  <label
+                    class="label-left"
+                    for="nombre"
+                    [class.color-secondaryColor]="
+                      (invitado.get('nombre').invalid && addressForm.get('nombre').touched) ||
+                      (invitado.get('nombre').invalid && estaEditando)
+                    "
+                  >
+                    Nombre Invitado
+                  </label>
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="full-width">
-                    <input matInput #nombreInvitado type="text" formControlName="nombre" maxlength="100" required>
-                    <input type="hidden" formControlName="sesionInvitadoId">
+                    <input matInput #nombreInvitado type="text" formControlName="nombre" maxlength="100" required />
+                    <input type="hidden" formControlName="sesionInvitadoId" />
                   </mat-form-field>
-                  <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{100 - nombreInvitado.value.length}}</span>
+                  <span
+                    class="contador"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Campo alfanumérico"
+                    matTooltipClass="info-tooltip"
+                  >
+                    {{ 100 - nombreInvitado.value.length }}
+                  </span>
+                  <span class="icon-incompleto">
+                    <img
+                      class="icon-incompleto--img"
+                      src="assets/img/icon/incompleto.svg"
+                      alt="este campo es requerido"
+                      *ngIf="
+                        (invitado.get('nombre').invalid && addressForm.get('nombre').touched) ||
+                        (invitado.get('nombre').invalid && estaEditando)
+                      "
+                    />
+                  </span>
                 </div>
               </div>
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left">Cargo</label>
+                  <label
+                    class="label-left"
+                    for="cargo"
+                    [class.color-secondaryColor]="
+                      (invitado.get('cargo').invalid && addressForm.get('cargo').touched) ||
+                      (invitado.get('cargo').invalid && estaEditando)
+                    "
+                  >
+                    Cargo
+                  </label>
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="full-width">
-                    <input matInput #cargo type="text" formControlName="cargo" maxlength="50" required>
+                    <input matInput #cargo type="text" formControlName="cargo" maxlength="50" required />
                   </mat-form-field>
-                  <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{50 - cargo.value.length}}</span>
+                  <span
+                    class="contador"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Campo alfanumérico"
+                    matTooltipClass="info-tooltip"
+                  >
+                    {{ 50 - cargo.value.length }}
+                  </span>
+                  <span class="icon-incompleto">
+                    <img
+                      class="icon-incompleto--img"
+                      src="assets/img/icon/incompleto.svg"
+                      alt="este campo es requerido"
+                      *ngIf="
+                        (invitado.get('cargo').invalid && addressForm.get('cargo').touched) ||
+                        (invitado.get('cargo').invalid && estaEditando)
+                      "
+                    />
+                  </span>
                 </div>
               </div>
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left">Entidad</label>
+                  <label
+                    class="label-left"
+                    for="entidad"
+                    [class.color-secondaryColor]="
+                      (invitado.get('entidad').invalid && addressForm.get('entidad').touched) ||
+                      (invitado.get('entidad').invalid && estaEditando)
+                    "
+                  >
+                    Entidad
+                  </label>
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="full-width">
-                    <input matInput #entidad type="text" formControlName="entidad" maxlength="100" required>
+                    <input matInput #entidad type="text" formControlName="entidad" maxlength="100" required />
                   </mat-form-field>
-                  <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{100 - entidad.value.length}}</span>
+                  <span
+                    class="contador"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Campo alfanumérico"
+                    matTooltipClass="info-tooltip"
+                  >
+                    {{ 100 - entidad.value.length }}
+                  </span>
+                  <span class="icon-incompleto">
+                    <img
+                      class="icon-incompleto--img"
+                      src="assets/img/icon/incompleto.svg"
+                      alt="este campo es requerido"
+                      *ngIf="
+                        (invitado.get('entidad').invalid && addressForm.get('entidad').touched) ||
+                        (invitado.get('entidad').invalid && estaEditando)
+                      "
+                    />
+                  </span>
                 </div>
               </div>
               <div class="text-right" *ngIf="invitados.controls.length > 1">
-                <button mat-button
-                        color="warn"
-                        type="button"
-                        class="btn-eliminar"
-                        (click)="openDialogSiNo('', '<b>¿Está seguro de eliminar este registro?</b>', i)"
-                        >
-                  <img src="assets/img/icon/menos.svg" alt="Eliminar invitado">
+                <button
+                  mat-button
+                  color="warn"
+                  type="button"
+                  class="btn-eliminar"
+                  (click)="openDialogSiNo('', '<b>¿Está seguro de eliminar este registro?</b>', i)"
+                >
+                  <img src="assets/img/icon/menos.svg" alt="Eliminar invitado" />
                   Eliminar invitado
                 </button>
               </div>
@@ -89,19 +185,22 @@
     </mat-card>
     <div class="text-right">
       <button mat-button color="warn" type="button" class="btn-eliminar" (click)="agregaInvitado()">
-        <img src="assets/img/icon/mas.svg" alt="Agregar invitado">
+        <img src="assets/img/icon/mas.svg" alt="Agregar invitado" />
         Agregar invitado
       </button>
     </div>
 
     <div class="text-center">
       <button mat-button color="warn" class="btn-guardar" type="submit">
-        <img src="assets/img/icon/guardar.svg" alt="Guardar">
+        <img src="assets/img/icon/guardar.svg" alt="Guardar" />
       </button>
     </div>
   </form>
 
-  <div class="text-center" *ngIf="objetoComiteTecnico.sesionParticipante && objetoComiteTecnico.sesionParticipante.length > 0" >
+  <div
+    class="text-center"
+    *ngIf="objetoComiteTecnico.sesionParticipante && objetoComiteTecnico.sesionParticipante.length > 0"
+  >
     <p class="info-container">
       <span class="info-text sin-diligenciar">Sin diligenciar</span>
       <span class="info-text en-proceso">En proceso</span>
@@ -118,17 +217,17 @@
           class="expansion-style--title"
           [class.sin-diligenciar]="estadoSolicitudes == this.estadoFormulario.sinDiligenciar"
           [class.en-proceso]="estadoSolicitudes == this.estadoFormulario.enProceso"
-          [class.completo]="estadoSolicitudes == this.estadoFormulario.completo" >
+          [class.completo]="estadoSolicitudes == this.estadoFormulario.completo"
+        >
           Validación de solicitudes contractuales
         </mat-panel-title>
       </mat-expansion-panel-header>
 
       <button
         (click)="registrarSolicitudes.cargarRegistro()"
-        style="display: none;"
+        style="display: none"
         id="btnRegistrarSolicitudes"
-      >
-      </button>
+      ></button>
 
       <app-tabla-registrar-validacion-solicitudes-contractiales
         #registrarSolicitudes
@@ -143,17 +242,13 @@
           class="expansion-style--title"
           [class.sin-diligenciar]="estadoOtrosTemas == this.estadoFormulario.sinDiligenciar"
           [class.en-proceso]="estadoOtrosTemas == this.estadoFormulario.enProceso"
-          [class.completo]="estadoOtrosTemas == this.estadoFormulario.completo" >
+          [class.completo]="estadoOtrosTemas == this.estadoFormulario.completo"
+        >
           Otros temas
         </mat-panel-title>
       </mat-expansion-panel-header>
 
-      <button
-        (click)="otrosTemas.cargarRegistro()"
-        style="display: none;"
-        id="btnOtrosTemas"
-      >
-      </button>
+      <button (click)="otrosTemas.cargarRegistro()" style="display: none" id="btnOtrosTemas"></button>
 
       <app-tabla-registrar-otros-temas
         #otrosTemas
@@ -161,7 +256,7 @@
         [esProposicionesVarios]="false"
         (validar)="ngOnInit()"
       >
-    </app-tabla-registrar-otros-temas>
+      </app-tabla-registrar-otros-temas>
     </mat-expansion-panel>
     <mat-expansion-panel class="expansion-style">
       <mat-expansion-panel-header class="expansion-style--header">
@@ -169,17 +264,13 @@
           class="expansion-style--title"
           [class.sin-diligenciar]="estadoProposiciones == this.estadoFormulario.sinDiligenciar"
           [class.en-proceso]="estadoProposiciones == this.estadoFormulario.enProceso"
-          [class.completo]="estadoProposiciones == this.estadoFormulario.completo" >
+          [class.completo]="estadoProposiciones == this.estadoFormulario.completo"
+        >
           Proposiciones y varios
         </mat-panel-title>
       </mat-expansion-panel-header>
 
-      <button
-        (click)="proposiciones.cargarRegistro()"
-        style="display: none;"
-        id="btnProposiciones"
-      >
-      </button>
+      <button (click)="proposiciones.cargarRegistro()" style="display: none" id="btnProposiciones"></button>
 
       <app-tabla-registrar-otros-temas
         #proposiciones
@@ -192,16 +283,16 @@
   </mat-accordion>
 
   <div class="text-center">
-    <button mat-button
-            color="warn"
-            class="btn-guardar"
-            type="button"
-            *ngIf="objetoComiteTecnico.sesionParticipante && objetoComiteTecnico.sesionParticipante.length > 0"
-            (click)="CambiarEstado()"
-            [disabled]="!estaTodo">
-            
-      <img src="assets/img/icon/guardar.svg" alt="Guardar">
+    <button
+      mat-button
+      color="warn"
+      class="btn-guardar"
+      type="button"
+      *ngIf="objetoComiteTecnico.sesionParticipante && objetoComiteTecnico.sesionParticipante.length > 0"
+      (click)="CambiarEstado()"
+      [disabled]="!estaTodo"
+    >
+      <img src="assets/img/icon/guardar.svg" alt="Guardar" />
     </button>
   </div>
-
 </section>
