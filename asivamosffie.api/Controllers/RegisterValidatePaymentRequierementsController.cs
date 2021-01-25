@@ -26,6 +26,15 @@ namespace asivamosffie.api.Controllers
             _registerValidatePaymentRequierementsService = registerValidatePaymentRequierementsService;
             _settings = settings;
         }
+
+        [HttpGet]
+        [Route("GetListProyectosByLlaveMen")]
+        public async Task<IActionResult> GetSolicitudPago([FromQuery] int pSolicitudPagoId)
+        {
+            return Ok(await _registerValidatePaymentRequierementsService.GetSolicitudPago(pSolicitudPagoId));
+        }
+
+
         [HttpGet]
         [Route("GetListProyectosByLlaveMen")]
         public async Task<IActionResult> GetListProyectosByLlaveMen([FromQuery] string pLlaveMen)
@@ -46,7 +55,7 @@ namespace asivamosffie.api.Controllers
         {
             return Ok(await _registerValidatePaymentRequierementsService.DeleteSolicitudPago(pSolicitudPagoId, HttpContext.User.FindFirst("User").Value));
         }
- 
+
         [HttpPost]
         [Route("DeleteSolicitudPagoFaseFacturaDescuento")]
         public async Task<IActionResult> DeleteSolicitudPagoFaseFacturaDescuento([FromQuery] int pSolicitudPagoFaseFacturaDescuentoId)
@@ -92,7 +101,7 @@ namespace asivamosffie.api.Controllers
         [HttpPost]
         [Route("CreateEditNewPayment")]
         public async Task<IActionResult> CreateEditNewPayment([FromBody] SolicitudPago pSolicitudPago)
-         {
+        {
             pSolicitudPago.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
             return Ok(await _registerValidatePaymentRequierementsService.CreateEditNewPayment(pSolicitudPago));
         }
@@ -138,8 +147,8 @@ namespace asivamosffie.api.Controllers
         {
             return Ok(await _registerValidatePaymentRequierementsService.GetContratoByContratoId(pContratoId));
         }
-         
-      
+
+
 
     }
 }

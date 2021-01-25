@@ -32,6 +32,14 @@ namespace asivamosffie.services
         #endregion
 
         #region Get
+        public async Task<SolicitudPago> GetSolicitudPago(int pSolicitudPagoId)
+        {
+            SolicitudPago solicitudPago = await _context.SolicitudPago.FindAsync(pSolicitudPagoId);
+
+            return GetSolicitudPago(solicitudPago);
+
+        }
+
         public async Task<dynamic> GetListProyectosByLlaveMen(string pLlaveMen)
         {
             return await _context.Proyecto.Include(r => r.ContratacionProyecto)
@@ -99,7 +107,7 @@ namespace asivamosffie.services
                                                    && c.EstadoActaFase2 == ConstanCodigoEstadoActaContrato.Con_acta_suscrita_y_cargada
                                                    ).ToListAsync();
 
-                   // ListContratos.RemoveAll(item => ListContratosConSolicitudPago.Contains(item.ContratoId));
+                    // ListContratos.RemoveAll(item => ListContratosConSolicitudPago.Contains(item.ContratoId));
                     return ListContratos
                         .Select(r => new
                         {
@@ -109,10 +117,10 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                   // List<int?> ListContratosConSolicitudPago = _context.SolicitudPago
-                   //.Include(c => c.Contrato)
-                   //.Where(s => s.Eliminado == false && s.ContratoId != null)
-                   //        .Select(r => r.ContratoId).ToList();
+                    // List<int?> ListContratosConSolicitudPago = _context.SolicitudPago
+                    //.Include(c => c.Contrato)
+                    //.Where(s => s.Eliminado == false && s.ContratoId != null)
+                    //        .Select(r => r.ContratoId).ToList();
 
                     List<Contrato> ListContratos = await _context.Contrato
                                     .Include(c => c.Contratacion)
@@ -121,7 +129,7 @@ namespace asivamosffie.services
                                                    && c.EstadoActaFase2 == ConstanCodigoEstadoActaContrato.Con_acta_suscrita_y_cargada
                                                    ).ToListAsync();
 
-                  //  ListContratos.RemoveAll(item => ListContratosConSolicitudPago.Contains(item.ContratoId));
+                    //  ListContratos.RemoveAll(item => ListContratosConSolicitudPago.Contains(item.ContratoId));
                     return ListContratos
                         .Select(r => new
                         {
