@@ -1,98 +1,188 @@
+<div class="my-1em color-secondaryColor d-flex align-items-center justify-content-center">
+  <img class="icon-incompleto--img mr-05em" src="assets/img/icon/incompleto.svg" alt="este campo es requerido" />
+  Debe ingresar la información en el campo para continuar
+</div>
 <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
-    <mat-card class="shipping-card">
-        <mat-card-header class="header-card header-card--margin">
-            <mat-card-title class="header-card--text">
-                4 x mil
-            </mat-card-title>
-        </mat-card-header>
-        <mat-card-content style="text-align: left;">
-            <p><strong>Nombre del concepto: </strong>Demolición</p>
-            <mat-card-title class="header-card--text sub-text">
-                Aportante 1
-            </mat-card-title>
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="row">
-                        <div class="pr-1">
-                            <label class="label-left" for="tipoAportante">Tipo de aportante</label>
-                        </div>
-                        <div class="col">
-                            <mat-form-field class="select-width">
-                                <mat-select formControlName="tipoAportante" required>
-                                    <mat-option *ngFor="let contr of tipoAportanteArray" [value]="contr.value">
-                                        {{ contr.name }}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                    </div>
-                </div>
+  <mat-card class="shipping-card">
+    <mat-card-header class="header-card header-card--margin">
+      <mat-card-title class="header-card--text"> 4 x mil </mat-card-title>
+    </mat-card-header>
+    <mat-card-content style="text-align: left">
+      <p><strong>Nombre del concepto: </strong>Demolición</p>
+      <mat-card-title class="header-card--text sub-text"> Aportante 1 </mat-card-title>
+      <div class="row">
+        <div class="col-md-8">
+          <div class="row">
+            <div class="pr-1">
+              <label
+                class="label-left"
+                for="tipoAportante"
+                [class.color-secondaryColor]="
+                  (addressForm.get('tipoAportante').invalid && addressForm.get('tipoAportante').touched) ||
+                  (addressForm.get('tipoAportante').invalid && estaEditando)
+                "
+              >
+                Tipo de aportante
+              </label>
             </div>
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="row">
-                        <div class="pr-1">
-                            <label class="label-left" for="nombreAportante">Nombre del aportante</label>
-                        </div>
-                        <div class="col">
-                            <mat-form-field class="select-width">
-                                <mat-select formControlName="nombreAportante" required>
-                                    <mat-option *ngFor="let contr of nombreAportanteArray" [value]="contr.value">
-                                        {{ contr.name }}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                    </div>
-                </div>
+            <div class="col">
+              <mat-form-field class="select-width">
+                <mat-select formControlName="tipoAportante" required>
+                  <mat-option *ngFor="let contr of tipoAportanteArray" [value]="contr.value">
+                    {{ contr.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
             </div>
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="row">
-                        <div class="pr-1">
-                            <label class="label-left" for="fuenteRecursos">Fuente de los recursos</label>
-                        </div>
-                        <div class="col">
-                            <mat-form-field class="select-width">
-                                <mat-select formControlName="fuenteRecursos" required>
-                                    <mat-option *ngFor="let contr of fuenteRecursosArray" [value]="contr.value">
-                                        {{ contr.name }}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                    </div>
-                </div>
+            <span class="icon-incompleto">
+              <img
+                class="icon-incompleto--img"
+                src="assets/img/icon/incompleto.svg"
+                alt="este campo es requerido"
+                *ngIf="
+                  (addressForm.get('tipoAportante').invalid && addressForm.get('tipoAportante').touched) ||
+                  (addressForm.get('tipoAportante').invalid && estaEditando)
+                "
+              />
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-8">
+          <div class="row">
+            <div class="pr-1">
+              <label
+                class="label-left"
+                for="nombreAportante"
+                [class.color-secondaryColor]="
+                  (addressForm.get('nombreAportante').invalid && addressForm.get('nombreAportante').touched) ||
+                  (addressForm.get('nombreAportante').invalid && estaEditando)
+                "
+              >
+                Nombre del aportante
+              </label>
             </div>
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="row">
-                        <div class="pr-1">
-                            <label class="label-left" for="valorDescuento">
-                                Valor del descuento
-                            </label>
-                        </div>
-                        <div class="col d-flex">
-                            <mat-form-field class="full-width">
-                                <input matInput #valorDescuento currencyMask maxlength="20" required
-                                    formControlName="valorDescuento" (keypress)="validateNumberKeypress($event)"
-                                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                                    [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
-                            </mat-form-field>
-                            <span class="contador" [matTooltipPosition]="'above'"
-                                matTooltip="Valor en ($) Pesos colombianos" matTooltipClass="info-tooltip">{{20 -
-                                valorDescuento.value.length}}</span>
-                        </div>
-                    </div>
-                </div>
+            <div class="col">
+              <mat-form-field class="select-width">
+                <mat-select formControlName="nombreAportante" required>
+                  <mat-option *ngFor="let contr of nombreAportanteArray" [value]="contr.value">
+                    {{ contr.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
             </div>
-            <div class="text-right w-margin">
-                <button mat-button color="warn" type="button" class="btn-eliminar">
-                    <img src="assets/img/icon/mas.svg" alt="Agregar otro aportante">
-                    Agregar otro aportante
-                </button>
+            <span class="icon-incompleto">
+              <img
+                class="icon-incompleto--img"
+                src="assets/img/icon/incompleto.svg"
+                alt="este campo es requerido"
+                *ngIf="
+                  (addressForm.get('nombreAportante').invalid && addressForm.get('nombreAportante').touched) ||
+                  (addressForm.get('nombreAportante').invalid && estaEditando)
+                "
+              />
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-8">
+          <div class="row">
+            <div class="pr-1">
+              <label
+                class="label-left"
+                for="fuenteRecursos"
+                [class.color-secondaryColor]="
+                  (addressForm.get('fuenteRecursos').invalid && addressForm.get('fuenteRecursos').touched) ||
+                  (addressForm.get('fuenteRecursos').invalid && estaEditando)
+                "
+              >
+                Fuente de los recursos
+              </label>
             </div>
-            <!--
+            <div class="col">
+              <mat-form-field class="select-width">
+                <mat-select formControlName="fuenteRecursos" required>
+                  <mat-option *ngFor="let contr of fuenteRecursosArray" [value]="contr.value">
+                    {{ contr.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <span class="icon-incompleto">
+              <img
+                class="icon-incompleto--img"
+                src="assets/img/icon/incompleto.svg"
+                alt="este campo es requerido"
+                *ngIf="
+                  (addressForm.get('fuenteRecursos').invalid && addressForm.get('fuenteRecursos').touched) ||
+                  (addressForm.get('fuenteRecursos').invalid && estaEditando)
+                "
+              />
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-8">
+          <div class="row">
+            <div class="pr-1">
+              <label
+                class="label-left"
+                for="valorDescuento"
+                [class.color-secondaryColor]="
+                  (addressForm.get('valorDescuento').invalid && addressForm.get('valorDescuento').touched) ||
+                  (addressForm.get('valorDescuento').invalid && estaEditando)
+                "
+              >
+                Valor del descuento
+              </label>
+            </div>
+            <div class="col d-flex">
+              <mat-form-field class="full-width">
+                <input
+                  matInput
+                  #valorDescuento
+                  currencyMask
+                  maxlength="20"
+                  required
+                  formControlName="valorDescuento"
+                  (keypress)="validateNumberKeypress($event)"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
+                />
+              </mat-form-field>
+              <span
+                class="contador"
+                [matTooltipPosition]="'above'"
+                matTooltip="Valor en ($) Pesos colombianos"
+                matTooltipClass="info-tooltip"
+              >
+                {{ 20 - valorDescuento.value.length }}
+              </span>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  *ngIf="
+                    (addressForm.get('valorDescuento').invalid && addressForm.get('valorDescuento').touched) ||
+                    (addressForm.get('valorDescuento').invalid && estaEditando)
+                  "
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="text-right w-margin">
+        <button mat-button color="warn" type="button" class="btn-eliminar">
+          <img src="assets/img/icon/mas.svg" alt="Agregar otro aportante" />
+          Agregar otro aportante
+        </button>
+      </div>
+      <!--
             <div class="text-right" *ngIf="numeroRadicado.controls.length > 1">
                 <button mat-button color="warn" type="button" class="btn-eliminar" (click)="eliminarNumeroRadicado( j )">
                   <img src="assets/img/icon/menos.svg" alt=" Eliminar aportante">
@@ -100,11 +190,11 @@
                 </button>
               </div>
             -->
-        </mat-card-content>
-    </mat-card>
-    <div class="text-center mb-2em">
-        <button mat-button color="warn" class="btn-guardar" type="submit">
-            <img src="assets/img/icon/guardar.svg" alt="Regresar">
-        </button>
-    </div>
+    </mat-card-content>
+  </mat-card>
+  <div class="text-center mb-2em">
+    <button mat-button color="warn" class="btn-guardar" type="submit">
+      <img src="assets/img/icon/guardar.svg" alt="Regresar" />
+    </button>
+  </div>
 </form>

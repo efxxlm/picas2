@@ -23,7 +23,10 @@
       </app-tabla-solicitudes-contractuales>
     </mat-card-content>
   </mat-card>
-
+  <div class="my-1em color-secondaryColor d-flex align-items-center justify-content-center">
+    <img class="icon-incompleto--img mr-05em" src="assets/img/icon/incompleto.svg" alt="este campo es requerido" />
+    Debe ingresar la información en el campo para continuar
+  </div>  
   <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()" [style.pointer-events]="getStyle()">
     <mat-card class="shipping-card">
       <mat-card-header class="header-card header-card--margin">

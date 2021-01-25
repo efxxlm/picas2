@@ -36,6 +36,12 @@ export class FormDescripcionActuacionComponent implements OnInit {
   proximaActuacionRequeridaArrayDom  = [
 
   ];
+  proximaActuacionRequeridaArray  = [
+
+  ];
+  estadoAvanceTramiteArray  = [
+
+  ];
   actuacionAdelantadaArrayDom = [
 
   ];
