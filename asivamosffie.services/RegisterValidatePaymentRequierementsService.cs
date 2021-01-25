@@ -42,13 +42,14 @@ namespace asivamosffie.services
 
         public async Task<dynamic> GetListProyectosByLlaveMen(string pLlaveMen)
         {
-            return await _context.Proyecto.Include(r => r.ContratacionProyecto)
-                .Where(r => r.LlaveMen.Contains(pLlaveMen))
-                .Select(r => new
-                {
-                    r.ContratacionProyecto.FirstOrDefault().ContratacionProyectoId,
-                    r.LlaveMen
-                }).ToListAsync();
+            return await
+                _context.VProyectosXcontrato
+                .Where(r => r.LlaveMen.Contains(pLlaveMen)
+                && r.EstadoActaFase2 == ConstanCodigoEstadoActaContrato.Con_acta_suscrita_y_cargada)
+                                                        .Select(s =>  new {
+                                                                            s.LlaveMen, 
+                                                                            s.ContratacionProyectoId 
+                                                                        }).ToListAsync();
         }
 
         public async Task<dynamic> GetListSolicitudPago()
