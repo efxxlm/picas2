@@ -449,10 +449,12 @@ namespace asivamosffie.services
                     procesoSeleccionCronogramaAntiguo.Descripcion = procesoSeleccionCronograma.Descripcion;
                     procesoSeleccionCronogramaAntiguo.FechaMaxima = procesoSeleccionCronograma.FechaMaxima;
                     procesoSeleccionCronogramaAntiguo.EstadoActividadCodigo = procesoSeleccionCronograma.EstadoActividadCodigo;
+                    procesoSeleccionCronogramaAntiguo.EtapaActualProcesoCodigo = procesoSeleccionCronograma.EtapaActualProcesoCodigo;
                     //procesoSeleccionCronogramaAntiguo.FechaCreacion = procesoSeleccionCronograma.FechaCreacion;
                     //procesoSeleccionCronogramaAntiguo.UsuarioCreacion = "forozco"; ////HttpContext.User.FindFirst("User").Value
                     procesoSeleccionCronogramaAntiguo.Eliminado = false;
                     procesoSeleccionCronogramaAntiguo.FechaModificacion = DateTime.Now;
+
 
                     _context.ProcesoSeleccionCronograma.Update(procesoSeleccionCronogramaAntiguo);
                 }

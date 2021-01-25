@@ -40,7 +40,7 @@ export class FormEstudioDeMercadoComponent implements OnInit {
     if (this.noGuardado===true &&  this.addressForm.dirty) {
       let dialogRef =this.dialog.open(ModalDialogComponent, {
         width: '28em',
-        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
+        data: { modalTitle:"", modalText:"ï¿½Desea guardar la informaciï¿½n registrada?",siNoBoton:true }
       });   
       dialogRef.afterClosed().subscribe(result => {
         console.log(`Dialog result: ${result}`);
@@ -161,10 +161,10 @@ export class FormEstudioDeMercadoComponent implements OnInit {
 
   textoLimpio(texto: string) {
     let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
-
+    
     if ( texto ){
+      saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
+      saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
       const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
       return textolimpio.length + saltosDeLinea;
     }
