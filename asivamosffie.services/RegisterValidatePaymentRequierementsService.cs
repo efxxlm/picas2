@@ -207,17 +207,30 @@ namespace asivamosffie.services
                                     SolicitudPagoFaseFactura.SolicitudPagoFaseFacturaDescuento = SolicitudPagoFaseFactura.SolicitudPagoFaseFacturaDescuento.Where(r => r.Eliminado != true).ToList();
                             }
                         }
-                    }
+                    } 
 
-                    break;
+                    return solicitudPago;
+
                 case ConstanCodigoTipoSolicitudContratoSolicitudPago.Expensas:
+                    solicitudPago = _context.SolicitudPago.Where(r => r.SolicitudPagoId == solicitudPago.SolicitudPagoId)
+                        .Include(e => e.SolicitudPagoExpensas)
+                        .Include(e => e.SolicitudPagoSoporteSolicitud)
+                        .FirstOrDefault();
 
-                    break;
+                    return solicitudPago;
+
                 case ConstanCodigoTipoSolicitudContratoSolicitudPago.Otros_Costos_Servicios:
+                    solicitudPago = _context.SolicitudPago.Where(r => r.SolicitudPagoId == solicitudPago.SolicitudPagoId)
+                     .Include(e => e.SolicitudPagoOtrosCostosServicios)
+                     .Include(e => e.SolicitudPagoSoporteSolicitud)
+                     .FirstOrDefault();
 
-                    break;
-            }
-            return solicitudPago;
+                    return solicitudPago;
+
+
+                default:  return solicitudPago;
+
+            } 
         }
 
         public async Task<dynamic> GetProyectosByIdContrato(int pContratoId)
