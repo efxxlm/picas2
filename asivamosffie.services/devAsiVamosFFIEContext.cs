@@ -184,7 +184,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -384,6 +383,8 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaCargue).HasColumnType("datetime");
 
+                entity.Property(e => e.FechaTramite).HasColumnType("datetime");
+
                 entity.Property(e => e.Json)
                     .IsRequired()
                     .IsUnicode(false);
@@ -397,7 +398,6 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.TipoCargue)
                     .IsRequired()
-                    .HasColumnName("tipoCargue")
                     .HasMaxLength(20)
                     .IsUnicode(false);
             });
@@ -5259,7 +5259,14 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.NumeroRadicadoSac).HasColumnName("NumeroRadicadoSAC");
+                entity.Property(e => e.NumeroFactura)
+                    .HasMaxLength(25)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroRadicadoSac)
+                    .HasColumnName("NumeroRadicadoSAC")
+                    .HasMaxLength(25)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoPagoCodigo)
                     .HasMaxLength(2)
@@ -5276,9 +5283,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.ValorFacturado).HasColumnType("decimal(25, 3)");
 
-                entity.Property(e => e.ValorFacturadoConcepto)
-                    .HasMaxLength(2)
-                    .IsUnicode(false);
+                entity.Property(e => e.ValorFacturadoConcepto).HasColumnType("decimal(25, 3)");
 
                 entity.HasOne(d => d.SolicitudPago)
                     .WithMany(p => p.SolicitudPagoExpensas)
@@ -5491,7 +5496,10 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(25)
                     .IsUnicode(false);
 
-                entity.Property(e => e.NumeroRadicadoSac).HasColumnName("NumeroRadicadoSAC");
+                entity.Property(e => e.NumeroRadicadoSac)
+                    .HasColumnName("NumeroRadicadoSAC")
+                    .HasMaxLength(25)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoPagoCodigo)
                     .HasMaxLength(2)
@@ -5505,9 +5513,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ValorFacturado)
-                    .HasMaxLength(25)
-                    .IsUnicode(false);
+                entity.Property(e => e.ValorFacturado).HasColumnType("decimal(25, 3)");
 
                 entity.HasOne(d => d.SolicitudPago)
                     .WithMany(p => p.SolicitudPagoOtrosCostosServicios)

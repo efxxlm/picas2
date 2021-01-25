@@ -25,6 +25,7 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
         public int? DefensaJudicialId { get; set; }
+        public bool? ExisteConocimiento { get; set; }
 
         public virtual DefensaJudicial DefensaJudicial { get; set; }
     }

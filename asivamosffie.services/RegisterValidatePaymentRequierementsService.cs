@@ -648,7 +648,7 @@ namespace asivamosffie.services
                 {
                     SolicitudPagoFaseDescuento.UsuarioCreacion = pUsusarioCreacion;
                     SolicitudPagoFaseDescuento.FechaCreacion = DateTime.Now;
-                    SolicitudPagoFaseDescuento.Eliminado = true;
+                    SolicitudPagoFaseDescuento.Eliminado = false;
                     SolicitudPagoFaseDescuento.RegistroCompleto = ValidateCompleteRecordSolicitudPagoFaseFacturaDescuento(SolicitudPagoFaseDescuento);
 
                     _context.SolicitudPagoFaseFacturaDescuento.Add(SolicitudPagoFaseDescuento);
@@ -834,8 +834,9 @@ namespace asivamosffie.services
 
         private bool ValidateCompleteRecordSolicitudPagoFaseFactura(SolicitudPagoFaseFactura solicitudPagoFaseFactura)
         {
-            if (string.IsNullOrEmpty(solicitudPagoFaseFactura.Fecha.ToString())
-                || solicitudPagoFaseFactura.TieneDescuento.HasValue
+            if (
+                   string.IsNullOrEmpty(solicitudPagoFaseFactura.Fecha.ToString())
+                || !solicitudPagoFaseFactura.TieneDescuento.HasValue
                 || string.IsNullOrEmpty(solicitudPagoFaseFactura.ValorFacturado.ToString())
                 || string.IsNullOrEmpty(solicitudPagoFaseFactura.Numero.ToString())
                 )
