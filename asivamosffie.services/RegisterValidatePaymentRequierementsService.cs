@@ -49,6 +49,7 @@ namespace asivamosffie.services
                 .Include(r => r.Contrato)
                              .Select(s => new
                              {
+                                 s.TipoSolicitudCodigo,
                                  s.FechaCreacion,
                                  s.NumeroSolicitud,
                                  s.Contrato.ModalidadCodigo,
@@ -66,6 +67,7 @@ namespace asivamosffie.services
             {
                 grind.Add(new
                 {
+                    r.TipoSolicitudCodigo,
                     r.ContratoId,
                     r.SolicitudPagoId,
                     r.FechaCreacion,
@@ -528,6 +530,10 @@ namespace asivamosffie.services
                     SolicitudPagoSoporteSolicitud.FechaCreacion = DateTime.Now;
                     SolicitudPagoSoporteSolicitud.Eliminado = false;
                     SolicitudPagoSoporteSolicitud.RegistroCompleto = ValidateCompleteRecordSolicitudPagoSoporteSolicitud(SolicitudPagoSoporteSolicitud);
+
+                    _context.SolicitudPagoSoporteSolicitud.Add(SolicitudPagoSoporteSolicitud);
+
+
                 }
             }
         }
