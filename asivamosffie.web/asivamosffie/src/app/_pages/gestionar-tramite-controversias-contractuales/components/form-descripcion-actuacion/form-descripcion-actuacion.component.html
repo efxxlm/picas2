@@ -14,7 +14,8 @@
                         <div class="col">
                             <mat-form-field class="select-width">
                                 <mat-select formControlName="estadoAvanceTramite" required>
-                                    <mat-option *ngFor="let estadoAvanceTramite of estadoAvanceTramiteArrayDom" [value]="estadoAvanceTramite">
+                                    <mat-option *ngFor="let estadoAvanceTramite of estadoAvanceTramiteArrayDom"
+                                        [value]="estadoAvanceTramite">
                                         {{ estadoAvanceTramite.nombre }}
                                     </mat-option>
                                 </mat-select>
@@ -41,7 +42,8 @@
                         <div class="col">
                             <mat-form-field class="select-width">
                                 <mat-select formControlName="actuacionAdelantada" required>
-                                    <mat-option *ngFor="let actuacionAdelantada of actuacionAdelantadaArrayDom" [value]="actuacionAdelantada">
+                                    <mat-option *ngFor="let actuacionAdelantada of actuacionAdelantadaArrayDom"
+                                        [value]="actuacionAdelantada">
                                         {{ actuacionAdelantada.nombre }}
                                     </mat-option>
                                 </mat-select>
@@ -60,7 +62,8 @@
                         <div class="col">
                             <mat-form-field class="select-width">
                                 <mat-select formControlName="proximaActuacionRequerida" required>
-                                    <mat-option *ngFor="let proximaActuacionRequerida of proximaActuacionRequeridaArrayDom"
+                                    <mat-option
+                                        *ngFor="let proximaActuacionRequerida of proximaActuacionRequeridaArrayDom"
                                         [value]="proximaActuacionRequerida">
                                         {{ proximaActuacionRequerida.nombre }}
                                     </mat-option>
@@ -70,7 +73,8 @@
                     </div>
                 </div>
             </div>
-            <div class="row" *ngIf="addressForm.controls.proximaActuacionRequerida.value && addressForm.controls.proximaActuacionRequerida.value.codigo == '4'">
+            <div class="row"
+                *ngIf="addressForm.controls.proximaActuacionRequerida.value && addressForm.controls.proximaActuacionRequerida.value.codigo == '4'">
                 <div class="col-md-12" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
@@ -79,13 +83,15 @@
                     </div>
                 </div>
             </div>
-            <div class="row" *ngIf="addressForm.controls.proximaActuacionRequerida.value && addressForm.controls.proximaActuacionRequerida.value.codigo == '4'">
+            <div class="row"
+                *ngIf="addressForm.controls.proximaActuacionRequerida.value && addressForm.controls.proximaActuacionRequerida.value.codigo == '4'">
                 <div class="col-md-12" style="padding-left: 0;">
                     <div>
                         <div class="d-flex align-items-center">
                             <div class="text-area-quill auxBox">
                                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
-                                    required (onContentChanged)="maxLength($event, 500)" formControlName="cualOtro" #cualOtro>
+                                    required (onContentChanged)="maxLength($event, 500)" formControlName="cualOtro"
+                                    #cualOtro>
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.cualOtro.value">
@@ -107,11 +113,14 @@
                         </div>
                         <div class="col d-flex align-items-center">
                             <mat-form-field class="full-width">
-                                <input matInput #diasVencimientoTerminos type="text" maxlength="7"
-                                    formControlName="diasVencimientoTerminos" required>
+                                <input matInput (keypress)="validateNumberKeypress($event)"
+                                    onKeyPress="if(this.value.length>=this.maxLength) return false;" type="number"
+                                    maxlength="7" formControlName="diasVencimientoTerminos" required
+                                    #diasVencimientoTerminos>
                             </mat-form-field>
                             <span class="contador miles" *ngIf="addressForm.controls.diasVencimientoTerminos.value">
-                                {{7 - (addressForm.get('diasVencimientoTerminos').value?addressForm.get('diasVencimientoTerminos').value.toString().length:0)}}
+                                {{7 -
+                                (addressForm.get('diasVencimientoTerminos').value?addressForm.get('diasVencimientoTerminos').value.toString().length:0)}}
                             </span>
                             <span class="contador miles" *ngIf="!addressForm.controls.diasVencimientoTerminos.value">
                                 7
@@ -215,12 +224,14 @@
                         </div>
                     </div>
                 </div>
-            </div>            
+            </div>
             <div class="d-flex align-items-center mtop">
                 <div class="text-area-quill izqTitle auxBox">
-                    <label for="observaciones" class="text-area-quill--label" style="padding: 0; margin-left: 0; margin-top: .5em;">Observaciones</label>
-                    <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config" #observaciones
-                        (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" style="padding: 1.5em 0em 1.2em;"></quill-editor>
+                    <label for="observaciones" class="text-area-quill--label"
+                        style="padding: 0; margin-left: 0; margin-top: .5em;">Observaciones</label>
+                    <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
+                        #observaciones (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones"
+                        style="padding: 1.5em 0em 1.2em;"></quill-editor>
                 </div>
                 <span class="contador miles" *ngIf="addressForm.controls.observaciones.value">
                     {{1000 - (textoLimpio(observaciones.quillEditor))}}
@@ -246,10 +257,10 @@
                         </div>
                         <div class="col">
                             <mat-form-field class="full-width">
-                                <input matInput #urlSoporte type="text" 
-                                    formControlName="urlSoporte" required>
+                                <input matInput #urlSoporte type="text" formControlName="urlSoporte" required>
                             </mat-form-field>
-                            <span class="info-url">Indique la ruta en la que se encuentran los documentos de soporte del registro de la actuación de trámite</span>
+                            <span class="info-url">Indique la ruta en la que se encuentran los documentos de soporte del
+                                registro de la actuación de trámite</span>
                         </div>
                     </div>
                 </div>
