@@ -328,7 +328,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       if (this.isEditable == true) {
         formArrayTai = {
           "TipoControversiaCodigo": this.addressForm.value.tipoControversia.codigo,
-          "FechaSolicitud": this.fechaSesionString,
+          "FechaSolicitud": this.addressForm.value.fechaSolicitud,
           "NumeroSolicitud": this.numeroSolicitud,
           "SolicitudId": 0,
           "NumeroRadicadoSac": 0,
@@ -340,7 +340,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
           "MotivoJustificacionRechazo": this.addressForm.value.motivosRechazo,
           //"UsuarioCreacion": "us cre",
           //"UsuarioModificacion": "us mod",
-          "FechaComitePreTecnico": this.fechaSesionString2,
+          "FechaComitePreTecnico": this.addressForm.value.fechaComitePretecnico,
           "EsProcede": this.addressForm.value.procedeSolicitud,
           "EsRequiereComite": this.addressForm.value.requeridoComite,
           "ControversiaContractualId": parseInt(this.idControversia),
@@ -351,7 +351,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       else {
         formArrayTai = {
           "TipoControversiaCodigo": this.addressForm.value.tipoControversia.codigo,
-          "FechaSolicitud": this.fechaSesionString,
+          "FechaSolicitud": this.addressForm.value.fechaSolicitud,
           "NumeroSolicitud": "",
           "SolicitudId": 0,
           "NumeroRadicadoSac": 0,
@@ -363,7 +363,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
           "ConclusionComitePreTecnico": this.addressForm.value.conclusionComitePretecnico,
           "MotivoJustificacionRechazo": this.addressForm.value.motivosRechazo,
           //"UsuarioModificacion": "us mod",
-          "FechaComitePreTecnico": this.fechaSesionString2,
+          "FechaComitePreTecnico": this.addressForm.value.fechaComitePretecnico,
           "EsProcede": this.addressForm.value.procedeSolicitud,
           "EsRequiereComite": this.addressForm.value.requeridoComite,
           //"FechaCreacion":this.fechaSesionString2
@@ -511,7 +511,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       if (this.isEditable == true) {
         formArrayNoTaiContratista = {
           "TipoControversiaCodigo": this.addressForm.value.tipoControversia.codigo,
-          "FechaSolicitud": this.fechaSesionString3,
+          "FechaSolicitud": this.addressForm.value.fechaRadicadoSAC,
           "NumeroSolicitud": this.numeroSolicitud,
           "SolicitudId": 0,
           "NumeroRadicadoSac": this.addressForm.value.numeroRadicadoSAC,
@@ -533,7 +533,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       else {
         formArrayNoTaiContratista = {
           "TipoControversiaCodigo": this.addressForm.value.tipoControversia.codigo,
-          "FechaSolicitud": this.fechaSesionString3,
+          "FechaSolicitud": this.addressForm.value.fechaRadicadoSAC,
           "NumeroSolicitud": "",
           "SolicitudId": 0,
           "NumeroRadicadoSac": this.addressForm.value.numeroRadicadoSAC,
@@ -692,7 +692,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       if (this.isEditable == true) {
         formArrayNoTaiContratante = {
           "TipoControversiaCodigo": this.addressForm.value.tipoControversia.codigo,
-          "FechaSolicitud": this.fechaSesionString,
+          "FechaSolicitud": this.addressForm.value.fechaSolicitud,
           "NumeroSolicitud": this.numeroSolicitud,
           "SolicitudId": 0,
           "NumeroRadicadoSac": 0,
@@ -714,7 +714,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       else {
         formArrayNoTaiContratante = {
           "TipoControversiaCodigo": this.addressForm.value.tipoControversia.codigo,
-          "FechaSolicitud": this.fechaSesionString,
+          "FechaSolicitud": this.addressForm.value.fechaSolicitud,
           "NumeroSolicitud": "",
           "SolicitudId": 0,
           "NumeroRadicadoSac": 0,
