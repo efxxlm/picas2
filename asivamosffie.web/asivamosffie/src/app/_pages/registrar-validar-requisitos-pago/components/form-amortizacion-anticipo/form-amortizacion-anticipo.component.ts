@@ -90,7 +90,7 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                         () => this.routes.navigate(
                             [
-                                '/registrarValidarRequisitosPago/verDetalleEditar', this.solicitudPago.contratoId
+                                '/registrarValidarRequisitosPago/verDetalleEditar', this.solicitudPago.contratoId, this.solicitudPago.solicitudPagoId
                             ]
                         )
                     );

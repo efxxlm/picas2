@@ -82,10 +82,8 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                         }
                     } );
                     this.fasesArray = response;
-                    if ( this.contrato.solicitudPago.length > 0 ) {
-                        this.solicitudPagoId = this.contrato.solicitudPago[0].solicitudPagoId;
-                    }
                     if ( this.contrato.solicitudPagoOnly !== undefined ) {
+                        this.solicitudPagoId = this.contrato.solicitudPagoOnly.solicitudPagoId;
                         this.solicitudPagoRegistrarSolicitudPago = this.contrato.solicitudPagoOnly.solicitudPagoRegistrarSolicitudPago[0];
             
                         if ( this.solicitudPagoRegistrarSolicitudPago !== undefined ) {
@@ -251,7 +249,7 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                         () => this.routes.navigate(
                             [
-                                '/registrarValidarRequisitosPago/verDetalleEditar', this.contrato.contratoId
+                                '/registrarValidarRequisitosPago/verDetalleEditar', this.contrato.contratoId, this.solicitudPagoId
                             ]
                         )
                     );

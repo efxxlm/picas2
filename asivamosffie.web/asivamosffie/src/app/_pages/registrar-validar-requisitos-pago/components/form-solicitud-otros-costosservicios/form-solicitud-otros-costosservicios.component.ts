@@ -19,7 +19,6 @@ export class FormSolicitudOtrosCostosserviciosComponent implements OnInit {
     @Input() contrato: any;
     addressForm = this.fb.group({
       numeroContrato: [null, Validators.required],
-      contratoSeleccionado: [ null, Validators.required ],
       numeroRadicadoSAC: [null, Validators.required],
       numeroFactura: [null, Validators.required],
       valorFacturado: [null, Validators.required],
@@ -38,17 +37,29 @@ export class FormSolicitudOtrosCostosserviciosComponent implements OnInit {
         private dialog: MatDialog,
         private registrarPagosSvc: RegistrarRequisitosPagoService )
     {
-        this.commonSvc.tiposDePagoExpensas()
-            .subscribe( response => this.tipoPagoArray = response );
     }
 
     ngOnInit(): void {
-        if ( this.solicitudPago !== undefined ) {
-            this.solicitudPagoId = this.solicitudPago.solicitudPagoId;
-            this.contratoId = this.contrato.contratoId;
-            this.addressForm.get( 'numeroContrato' ).setValue( this.contrato.numeroContrato );
-
-        }
+        this.commonSvc.tiposDePagoExpensas()
+        .subscribe( response => {
+            this.tipoPagoArray = response;
+            if ( this.solicitudPago !== undefined ) {
+                this.solicitudPagoId = this.solicitudPago.solicitudPagoId;
+                this.contratoId = this.contrato.contratoId;
+                const solicitudPagoOtrosCostosServicios = this.solicitudPago.solicitudPagoOtrosCostosServicios[0];
+                this.solicitudPagosOtrosCostosServiciosId = solicitudPagoOtrosCostosServicios.solicitudPagoOtrosCostosServiciosId;
+                this.addressForm.get( 'numeroContrato' ).setValue( this.contrato.numeroContrato );
+                this.addressForm.setValue(
+                    {
+                        numeroContrato: this.contrato.numeroContrato,
+                        numeroRadicadoSAC: solicitudPagoOtrosCostosServicios.numeroRadicadoSac !== undefined ? solicitudPagoOtrosCostosServicios.numeroRadicadoSac : null,
+                        numeroFactura: solicitudPagoOtrosCostosServicios.numeroFactura !== undefined ? solicitudPagoOtrosCostosServicios.numeroFactura : null,
+                        valorFacturado: solicitudPagoOtrosCostosServicios.valorFacturado !== undefined ? solicitudPagoOtrosCostosServicios.valorFacturado : null,
+                        tipoPago: solicitudPagoOtrosCostosServicios.tipoPagoCodigo !== undefined ? this.tipoPagoArray.filter( tipoPago => tipoPago.codigo === solicitudPagoOtrosCostosServicios.tipoPagoCodigo )[0] : null
+                    }
+                );
+            }
+        } );
     }
 
     seleccionAutocomplete( contrato: any ){
@@ -87,7 +98,7 @@ export class FormSolicitudOtrosCostosserviciosComponent implements OnInit {
             contratoId: this.contratoId,
             solicitudPagoOtrosCostosServicios: [
                 {
-                    solicitudPagosOtrosCostosServiciosId: this.solicitudPagosOtrosCostosServiciosId,
+                    solicitudPagoOtrosCostosServiciosId: this.solicitudPagosOtrosCostosServiciosId,
                     solicitudPagoId: this.solicitudPagoId,
                     numeroRadicadoSac: this.addressForm.get( 'numeroRadicadoSAC' ).value,
                     numeroFactura: this.addressForm.get( 'numeroFactura' ).value,
