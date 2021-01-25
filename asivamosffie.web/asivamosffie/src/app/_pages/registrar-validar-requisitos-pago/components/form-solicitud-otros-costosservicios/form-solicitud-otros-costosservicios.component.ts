@@ -85,7 +85,7 @@ export class FormSolicitudOtrosCostosserviciosComponent implements OnInit {
             solicitudPagoId: this.solicitudPagoId,
             tipoSolicitudCodigo: this.tipoSolicitud,
             contratoId: this.contratoId,
-            solicitudPagosOtrosCostosServicios: [
+            solicitudPagoOtrosCostosServicios: [
                 {
                     solicitudPagosOtrosCostosServiciosId: this.solicitudPagosOtrosCostosServiciosId,
                     solicitudPagoId: this.solicitudPagoId,

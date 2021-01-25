@@ -15,6 +15,7 @@ export class FormCargarFormaDePagoComponent implements OnInit {
 
     @Input() contrato: any;
     @Input() tipoSolicitud: string;
+    @Input() esUnEditar = false;
     addressForm = this.fb.group({
       formaPagoPreconstruccion: [null, Validators.required],
       formaPagoConstruccion: [null, Validators.required]
@@ -94,10 +95,18 @@ export class FormCargarFormaDePagoComponent implements OnInit {
         .subscribe(
             response => {
                 this.openDialog( '', `<b>${ response.message }</b>` );
+                if ( this.esUnEditar === false ) {
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () => this.routes.navigate( [ '/registrarValidarRequisitosPago' ] )
+                    );
+                }
+                if ( this.esUnEditar === true ) {
+
+                }
                 this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                     () => this.routes.navigate(
                         [
-                            '/registrarValidarRequisitosPago/verDetalleEditar', this.contrato.contratoId
+                            '/registrarValidarRequisitosPago/verDetalleEditar', this.contrato.contratoId, this.solicitudPagoId
                         ]
                     )
                 );
