@@ -37,6 +37,7 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
 
   constructor(
     private fb: FormBuilder,
@@ -187,7 +188,7 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
   }
 
   onSubmit() {
-
+    this.estaEditando = true;
     if ( this.addressForm.valid ){
 
     this.objetoDisponibilidad.objeto = this.addressForm.get('objeto').value;

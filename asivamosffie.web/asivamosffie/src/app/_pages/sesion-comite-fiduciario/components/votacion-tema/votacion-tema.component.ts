@@ -18,6 +18,7 @@ export class VotacionTemaComponent implements OnInit{
   miembros: any[] =  ['Juan Lizcano Garcia', 'Fernando José Aldemar Rojas', 'Gonzalo Díaz Mesa'];
 
   addressForm = this.fb.array([]);
+  estaEditando = false;
 
   get listaVotacion() {
     return this.addressForm as FormArray;  
@@ -132,7 +133,7 @@ export class VotacionTemaComponent implements OnInit{
   }
 
   onSubmit() {
-
+    this.estaEditando = true;
     let sesionComiteTema: SesionComiteTema = {
 
       sesionTemaId: this.data.sesionComiteTema.sesionTemaId,

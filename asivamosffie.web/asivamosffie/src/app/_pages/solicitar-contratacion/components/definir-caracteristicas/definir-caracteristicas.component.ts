@@ -33,7 +33,8 @@ export class DefinirCaracteristicasComponent implements OnInit {
   });
 
   idSolicitud: number;
-
+  estaEditando = false;
+  
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
@@ -104,7 +105,7 @@ export class DefinirCaracteristicasComponent implements OnInit {
   }
 
   onSubmit() {
-
+    this.estaEditando = true;
     this.contratacionProyecto.esReasignacion = this.addressForm.get('reasignacion').value;
     this.contratacionProyecto.esAvanceobra = this.addressForm.get('avanceObra').value;
     this.contratacionProyecto.porcentajeAvanceObra = this.addressForm.get('porcentajeAvanceObra').value;

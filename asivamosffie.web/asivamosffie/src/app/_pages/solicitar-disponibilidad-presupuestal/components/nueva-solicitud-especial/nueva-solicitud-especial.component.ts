@@ -80,6 +80,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
   };
   disponibilidadaeditar: DisponibilidadPresupuestal;
   esEdicion: boolean=false;
+  estaEditando = false;
 
   constructor(  private fb: FormBuilder,
                 private commonService: CommonService,
@@ -372,7 +373,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
 
   onSubmit() {
     //if (this.addressForm.valid) {
-
+      this.estaEditando = true;
       let tipoDDP: Dominio = this.addressForm.get('tipo').value;
 
 
