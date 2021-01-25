@@ -145,7 +145,7 @@ namespace asivamosffie.services
         }
 
         public async Task<Contrato> GetContratoByContratoId(int pContratoId, int pSolicitudPago)
-        { 
+        {
             Contrato contrato = await _context.Contrato
                  .Where(c => c.ContratoId == pContratoId)
                  .Include(c => c.ContratoPoliza)
@@ -161,10 +161,10 @@ namespace asivamosffie.services
 
             if (pSolicitudPago > 0)
             {
-                SolicitudPago solicitudPago = _context.SolicitudPago.Find(pSolicitudPago); 
+                SolicitudPago solicitudPago = _context.SolicitudPago.Find(pSolicitudPago);
                 contrato.SolicitudPagoOnly = GetSolicitudPago(solicitudPago);
-            } 
-            return contrato;  
+            }
+            return contrato;
         }
 
         private SolicitudPago GetSolicitudPago(SolicitudPago solicitudPago)
@@ -1014,7 +1014,7 @@ namespace asivamosffie.services
             }
         }
 
-        private void CreateEditNewExpensas(SolicitudPago pSolicitudPago)
+        private async  void CreateEditNewExpensas(SolicitudPago pSolicitudPago)
         {
             if (pSolicitudPago.SolicitudPagoExpensas.Count() > 0)
             {
@@ -1031,6 +1031,7 @@ namespace asivamosffie.services
             }
             else
             {
+                pSolicitudPago.NumeroSolicitud = await _commonService.EnumeradorSolicitudPagoExpensasAndOtros();
                 pSolicitudPago.FechaCreacion = DateTime.Now;
                 pSolicitudPago.Eliminado = false;
                 pSolicitudPago.RegistroCompleto = ValidateCompleteRecordopSolicitudPagoExpensas(pSolicitudPago);
