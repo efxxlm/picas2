@@ -7,9 +7,9 @@ namespace asivamosffie.model.Models
     {
         public int SolicitudPagoOtrosCostosServiciosId { get; set; }
         public int SolicitudPagoId { get; set; }
-        public int? NumeroRadicadoSac { get; set; }
+        public string NumeroRadicadoSac { get; set; }
         public string NumeroFactura { get; set; }
-        public string ValorFacturado { get; set; }
+        public decimal? ValorFacturado { get; set; }
         public string TipoPagoCodigo { get; set; }
         public string UsuarioCreacion { get; set; }
         public DateTime? FechaCreacion { get; set; }
