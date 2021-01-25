@@ -42,6 +42,7 @@ export class FormRegistrarParticipantesComponent {
   hasUnitNumber = false;
 
   miembrosArray: SesionParticipante[] = [];
+  estaEditando = false;
 
   constructor(
     private fb: FormBuilder,
@@ -354,7 +355,7 @@ export class FormRegistrarParticipantesComponent {
   }
 
   onSubmit() {
-
+    this.estaEditando = true;
     if (this.addressForm.valid) {
 
       let comite: ComiteTecnico = {

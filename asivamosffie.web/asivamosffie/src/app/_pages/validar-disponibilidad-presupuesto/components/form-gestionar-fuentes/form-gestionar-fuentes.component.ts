@@ -38,6 +38,7 @@ export class FormGestionarFuentesComponent implements OnInit {
   fuentesbase: any[];
   disponibilidadPresupuestalProyectoid: any;
   valorGestionado: any;
+  estaEditando = false;
 
   constructor(
     private fb: FormBuilder, private fuenteFinanciacionService: FuenteFinanciacionService
@@ -216,7 +217,8 @@ export class FormGestionarFuentesComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.addressForm.controls.fuentes.value);
+    this.estaEditando = true;
+    // console.log(this.addressForm.controls.fuentes.value);
     let mensaje="";
     this.addressForm.controls.fuentes.value.forEach(fuente => {
       let CreateFinancialFundingGestion={

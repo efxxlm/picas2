@@ -41,7 +41,10 @@
         </div>
       </div>
 
-      <div class="row" *ngIf="sesionComiteSolicitud.tipoSolicitudCodigo == tiposSolicitud.ActualizacionCronogramaProcesoseleccion">
+      <div
+        class="row"
+        *ngIf="sesionComiteSolicitud.tipoSolicitudCodigo == tiposSolicitud.ActualizacionCronogramaProcesoseleccion"
+      >
         <div class="pr-1">
           <span class="label-left">Número actualización</span>
         </div>
@@ -65,19 +68,32 @@
 
       <div class="row">
         <div class="pr-1">
-          <span class="label-left">Desarrollo</span>
+          <span class="label-left"> Desarrollo </span>
         </div>
         <div class="col d-flex">
-          <quill-editor class="quill-editor-style card position-relative" [styles]="editorStyle" [modules]="config"
-            (onContentChanged)="maxLength($event, 5000)" formControlName="desarrolloSolicitud" required></quill-editor>
-            <div class="d-flex align-items-center">
-              <span class="contador miles mt-3em" *ngIf="addressForm.get('desarrolloSolicitud').value">
-                {{5000 - (textoLimpio(addressForm.get('desarrolloSolicitud').value)>5000?5000:textoLimpio(addressForm.get('desarrolloSolicitud').value))}}
-              </span>
-              <span class="contador miles mt-3em" *ngIf="!addressForm.get('desarrolloSolicitud').value">
-                5000
-              </span>
-            </div>
+          <quill-editor
+            class="quill-editor-style card position-relative"
+            [styles]="editorStyle"
+            [modules]="config"
+            (onContentChanged)="maxLength($event, 5000)"
+            formControlName="desarrolloSolicitud"
+            [class.invalid]="
+              (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+              (addressForm.get('observaciones').invalid && estaEditando)
+            "
+            required
+          ></quill-editor>
+          <div class="d-flex align-items-center">
+            <span class="contador miles mt-3em" *ngIf="addressForm.get('desarrolloSolicitud').value">
+              {{
+                5000 -
+                  (textoLimpio(addressForm.get('desarrolloSolicitud').value) > 5000
+                    ? 5000
+                    : textoLimpio(addressForm.get('desarrolloSolicitud').value))
+              }}
+            </span>
+            <span class="contador miles mt-3em" *ngIf="!addressForm.get('desarrolloSolicitud').value"> 5000 </span>
+          </div>
         </div>
       </div>
 
@@ -96,14 +112,12 @@
 
       <button
         (click)="solicitudMultiple.cargarRegistro()"
-        style="display: none;"
+        style="display: none"
         id="btnSolicitudMultiple"
         name="btnSolicitudMultiple"
         type="button"
         *ngIf="sesionComiteSolicitud.tipoSolicitudCodigo == tiposSolicitud.Contratacion"
-
-      >
-      </button>
+      ></button>
 
       <app-tabla-form-solicitud-multiple
         #solicitudMultiple
@@ -118,10 +132,19 @@
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
-              <label class="label-left" for="estadoSolicitud">Estado de la solicitud</label>
+              <label
+                class="label-left"
+                for="estadoSolicitud"
+                [class.color-secondaryColor]="
+                  (addressForm.get('estadoSolicitud').invalid && addressForm.get('estadoSolicitud').touched) ||
+                  (addressForm.get('estadoSolicitud').invalid && estaEditando)
+                "
+              >
+                Estado de la solicitud
+              </label>
             </div>
             <div class="col">
-              <mat-form-field class="select-width" >
+              <mat-form-field class="select-width">
                 <mat-select required formControlName="estadoSolicitud">
                   <mat-option *ngFor="let estado of estadosArray" [value]="estado.codigo">
                     {{ estado.nombre }}
@@ -129,50 +152,134 @@
                 </mat-select>
               </mat-form-field>
             </div>
+            <span class="icon-incompleto">
+              <img
+                class="icon-incompleto--img"
+                src="assets/img/icon/incompleto.svg"
+                alt="este campo es requerido"
+                *ngIf="
+                  (addressForm.get('estadoSolicitud').invalid && addressForm.get('estadoSolicitud').touched) ||
+                  (addressForm.get('estadoSolicitud').invalid && estaEditando)
+                "
+              />
+            </span>
           </div>
         </div>
       </div>
       <div class="row">
         <div class="pr-1">
-          <label class="label-left" for="observaciones">Observaciones de la solicitud</label>
+          <label
+            class="label-left"
+            for="observaciones"
+            [class.color-secondaryColor]="
+              (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+              (addressForm.get('observaciones').invalid && estaEditando)
+            "
+          >
+            Observaciones de la solicitud
+          </label>
         </div>
         <div class="col d-flex">
-          <quill-editor class="quill-editor-style card position-relative" [styles]="editorStyle" [modules]="config"
-            (onContentChanged)="maxLength($event, 5000)" formControlName="observaciones" required></quill-editor>
+          <quill-editor
+            class="quill-editor-style card position-relative"
+            [styles]="editorStyle"
+            [modules]="config"
+            (onContentChanged)="maxLength($event, 5000)"
+            formControlName="observaciones"
+            required
+          ></quill-editor>
           <div class="d-flex align-items-center">
             <span class="contador miles" *ngIf="addressForm.get('observaciones').value !== null">
-              {{5000 - (textoLimpio(addressForm.get('observaciones').value)>5000?5000:textoLimpio(addressForm.get('observaciones').value))}}
+              {{
+                5000 -
+                  (textoLimpio(addressForm.get('observaciones').value) > 5000
+                    ? 5000
+                    : textoLimpio(addressForm.get('observaciones').value))
+              }}
             </span>
-            <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null">
-              5000
+            <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null"> 5000 </span>
+            <span class="icon-incompleto">
+              <img
+                class="icon-incompleto--img"
+                src="assets/img/icon/incompleto.svg"
+                alt="este campo es requerido"
+                *ngIf="
+                  (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                  (addressForm.get('observaciones').invalid && estaEditando)
+                "
+              />
             </span>
           </div>
         </div>
       </div>
       <div class="row" *ngIf="tieneVotacion">
         <div class="pr-1">
-          <label class="label-left" for="url">URL con soporte de votación</label>
+          <label
+            class="label-left"
+            for="url"
+            [class.color-secondaryColor]="
+              (addressForm.get('url').invalid && addressForm.get('url').touched) ||
+              (addressForm.get('url').invalid && estaEditando)
+            "
+          >
+            URL con soporte de votación
+          </label>
         </div>
         <div class="col">
           <mat-form-field class="full-width">
-            <input matInput type="url" required formControlName="url" maxlength="1000">
+            <input matInput type="url" required formControlName="url" maxlength="1000" />
           </mat-form-field>
           <span class="info-url">Indique la ruta del soporte de esta información</span>
         </div>
+        <span class="icon-incompleto">
+          <img
+            class="icon-incompleto--img"
+            src="assets/img/icon/incompleto.svg"
+            alt="este campo es requerido"
+            *ngIf="
+              (addressForm.get('url').invalid && addressForm.get('url').touched) ||
+              (addressForm.get('url').invalid && estaEditando)
+            "
+          />
+        </span>
       </div>
       <h2 class="card-subTitle">Compromisos</h2>
       <div class="row">
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
-              <label class="label-left" for="tieneCompromisos">¿Este tema del orden del día generó compromisos?</label>
+              <label
+                class="label-left"
+                for="tieneCompromisos"
+                [class.color-secondaryColor]="
+                  (addressForm.get('tieneCompromisos').invalid && addressForm.get('tieneCompromisos').touched) ||
+                  (addressForm.get('tieneCompromisos').invalid && estaEditando)
+                "
+              >
+                ¿Este tema del orden del día generó compromisos?
+              </label>
             </div>
             <div class="col">
-              <mat-radio-group class="radioInput" formControlName="tieneCompromisos" (change)="changeCompromisos( $event )">
+              <mat-radio-group
+                class="radioInput"
+                formControlName="tieneCompromisos"
+                (change)="changeCompromisos($event)"
+              >
                 <mat-radio-button [value]="true">Sí</mat-radio-button>
                 <mat-radio-button [value]="false">No</mat-radio-button>
               </mat-radio-group>
             </div>
+            <span class="icon-incompleto">
+              <img
+                class="icon-incompleto--img"
+                src="assets/img/icon/incompleto.svg"
+                alt="este campo es requerido"
+                *ngIf="
+                  (addressForm.get('tieneCompromisos').invalid && addressForm.get('tieneCompromisos').touched) ||
+                  (addressForm.get('tieneCompromisos').invalid && estaEditando)
+                "
+              />
+            </span>
           </div>
         </div>
       </div>
@@ -180,17 +287,49 @@
         <div class="col-md-10">
           <div class="row">
             <div class="pr-1">
-              <label class="label-left" for="cuantosCompromisos">
+              <label
+                class="label-left"
+                for="cuantosCompromisos"
+                [class.color-secondaryColor]="
+                  (addressForm.get('cuantosCompromisos').invalid && addressForm.get('cuantosCompromisos').touched) ||
+                  (addressForm.get('cuantosCompromisos').invalid && estaEditando)
+                "
+              >
                 ¿Cuántos compromisos se generaron en este tema del orden del día?
               </label>
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput #cuantosGrupos type="number" min="1" max="10" formControlName="cuantosCompromisos"
-                  (keyup)="CambioCantidadCompromisos()" onkeyup="if(this.value>10) this.value = 10;">
+                <input
+                  matInput
+                  #cuantosGrupos
+                  type="number"
+                  min="1"
+                  max="10"
+                  formControlName="cuantosCompromisos"
+                  (keyup)="CambioCantidadCompromisos()"
+                  onkeyup="if(this.value>10) this.value = 10;"
+                />
               </mat-form-field>
-              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Ingrese un número de 1 a 10"
-              matTooltipClass="info-tooltip">{{2 - cuantosGrupos.value.length}}</span>
+              <span
+                class="contador"
+                [matTooltipPosition]="'above'"
+                matTooltip="Ingrese un número de 1 a 10"
+                matTooltipClass="info-tooltip"
+              >
+                {{ 2 - cuantosGrupos.value.length }}
+              </span>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  *ngIf="
+                    (addressForm.get('cuantosCompromisos').invalid && addressForm.get('cuantosCompromisos').touched) ||
+                    (addressForm.get('cuantosCompromisos').invalid && estaEditando)
+                  "
+                />
+              </span>
             </div>
           </div>
         </div>
@@ -198,32 +337,65 @@
 
       <div formGroupName="compromisos">
         <div *ngFor="let compromiso of compromisos.controls; let i = index" [formGroupName]="i">
-          <div >
-
-            <mat-card-title class="header-card--text sub-text">
-              Compromiso {{ i + 1 }}
-            </mat-card-title>
+          <div>
+            <mat-card-title class="header-card--text sub-text"> Compromiso {{ i + 1 }} </mat-card-title>
 
             <div class="row">
               <div class="pr-1">
-                <label class="label-left" for="tarea">Tarea</label>
+                <label
+                  class="label-left"
+                  for="tarea"
+                  [class.color-secondaryColor]="
+                    (addressForm.get('tarea').invalid && addressForm.get('tarea').touched) ||
+                    (addressForm.get('tarea').invalid && estaEditando)
+                  "
+                >
+                  Tarea
+                </label>
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #tarea type="text" maxlength="500" formControlName="tarea">
-                  <input type="hidden" formControlName="sesionSolicitudCompromisoId">
-                  <input type="hidden" formControlName="sesionComiteSolicitudId">
+                  <input matInput #tarea type="text" maxlength="500" formControlName="tarea" />
+                  <input type="hidden" formControlName="sesionSolicitudCompromisoId" />
+                  <input type="hidden" formControlName="sesionComiteSolicitudId" />
                 </mat-form-field>
-                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{500 - tarea.value.length}}</span>
+                <span
+                  class="contador"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Campo alfanumérico"
+                  matTooltipClass="info-tooltip"
+                >
+                  {{ 500 - tarea.value.length }}
+                </span>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    *ngIf="
+                      (addressForm.get('tarea').invalid && addressForm.get('tarea').touched) ||
+                      (addressForm.get('tarea').invalid && estaEditando)
+                    "
+                  />
+                </span>
               </div>
             </div>
           </div>
           <div class="row">
             <div class="pr-1">
-              <label class="label-left" for="responsable">Responsable</label>
+              <label
+                class="label-left"
+                for="responsable"
+                [class.color-secondaryColor]="
+                  (addressForm.get('responsable').invalid && addressForm.get('responsable').touched) ||
+                  (addressForm.get('responsable').invalid && estaEditando)
+                "
+              >
+                Responsable
+              </label>
             </div>
             <div class="col">
-              <mat-form-field class="select-width" >
+              <mat-form-field class="select-width">
                 <mat-select required formControlName="responsable">
                   <mat-option *ngFor="let estado of listaMiembros" [value]="estado">
                     {{ estado.nombre }}
@@ -231,35 +403,74 @@
                 </mat-select>
               </mat-form-field>
             </div>
+            <span class="icon-incompleto">
+              <img
+                class="icon-incompleto--img"
+                src="assets/img/icon/incompleto.svg"
+                alt="este campo es requerido"
+                *ngIf="
+                  (addressForm.get('responsable').invalid && addressForm.get('responsable').touched) ||
+                  (addressForm.get('responsable').invalid && estaEditando)
+                "
+              />
+            </span>
           </div>
           <div class="row">
             <div class="col-md-8">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left" for="fecha">Fecha de cumplimiento</label>
+                  <label
+                    class="label-left"
+                    for="fecha"
+                    [class.color-secondaryColor]="
+                      (addressForm.get('fecha').invalid && addressForm.get('fecha').touched) ||
+                      (addressForm.get('fecha').invalid && estaEditando)
+                    "
+                  >
+                    Fecha de cumplimiento
+                  </label>
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="example-full-width">
-                    <input matInput 
-                            [min]="fechaComite"
-                            [matDatepicker]="picker" 
-                            formControlName="fecha" 
-                            readonly
-                            (click)="picker.open()" 
-                            placeholder="DD/MM/AAAA">
+                    <input
+                      matInput
+                      [min]="fechaComite"
+                      [matDatepicker]="picker"
+                      formControlName="fecha"
+                      readonly
+                      (click)="picker.open()"
+                      placeholder="DD/MM/AAAA"
+                    />
                     <mat-datepicker #picker></mat-datepicker>
                   </mat-form-field>
                   <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">
-                    <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                    <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
                   </button>
+                  <span class="icon-incompleto">
+                    <img
+                      class="icon-incompleto--img"
+                      src="assets/img/icon/incompleto.svg"
+                      alt="este campo es requerido"
+                      *ngIf="
+                        (addressForm.get('fecha').invalid && addressForm.get('fecha').touched) ||
+                        (addressForm.get('fecha').invalid && estaEditando)
+                      "
+                    />
+                  </span>
                 </div>
               </div>
             </div>
             <div class="col md-4">
               <div class="text-right" *ngIf="2 > 1">
-                <button mat-button color="warn" type="button" class="btn-eliminar" (click)="eliminarCompromiso( i)"
-                  *ngIf="compromisos.controls.length > 0">
-                  <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
+                <button
+                  mat-button
+                  color="warn"
+                  type="button"
+                  class="btn-eliminar"
+                  (click)="eliminarCompromiso(i)"
+                  *ngIf="compromisos.controls.length > 0"
+                >
+                  <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia" />
                   Eliminar compromiso
                 </button>
               </div>
@@ -267,13 +478,12 @@
           </div>
         </div>
       </div>
-
     </mat-card-content>
   </mat-card>
 
   <div class="text-center">
     <button mat-button color="warn" class="btn-guardar" type="submit">
-      <img src="assets/img/icon/guardar.svg" alt="Guardar">
+      <img src="assets/img/icon/guardar.svg" alt="Guardar" />
     </button>
   </div>
 </form>

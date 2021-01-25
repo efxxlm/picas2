@@ -1,62 +1,114 @@
-<div class="container" style="margin-bottom: 2em;">
-    <div class="text-right">
-        <a routerLink="/solicitarDisponibilidadPresupuestal/crearSolicitudEspecial" mat-button color="primary"
-            class="btn-regresar">
-            <img src="assets/img/icon/regresar.svg" alt="Regresar">
-        </a>
-    </div>
-    <div class="text-center">
-        <h1 class="title-menu--h1">
-            Nueva solicitud DDP especial
-        </h1>
-    </div>
+<div class="container" style="margin-bottom: 2em">
+  <div class="text-right">
+    <a
+      routerLink="/solicitarDisponibilidadPresupuestal/crearSolicitudEspecial"
+      mat-button
+      color="primary"
+      class="btn-regresar"
+    >
+      <img src="assets/img/icon/regresar.svg" alt="Regresar" />
+    </a>
+  </div>
+  <div class="text-center">
+    <h1 class="title-menu--h1">Nueva solicitud DDP especial</h1>
+  </div>
 
-    <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
-        <mat-card class="shipping-card">
-            <mat-card-header class="header-card header-card--margin">
-                <mat-card-title class="header-card--text">
-                    DDP especial
-                </mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="row">
-                            <div class="pr-1">
-                                <label class="label-left" for="tipo">Tipo de solicitud DDP especial</label>
-                            </div>
-                            <div class="col">
-                                <mat-form-field class="select-width">
-                                    <mat-select formControlName="tipo" required>
-                                        <mat-option *ngFor="let tipoSolicitud of tipoSolicitudArray"
-                                            [value]="tipoSolicitud">
-                                            {{ tipoSolicitud.nombre }}
-                                        </mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                        <div class="pr-1">
-                            <label class="label-left" for="objeto">Objeto</label>
-                        </div>
-                        <div class="col d-flex">
-                            <quill-editor class="quill-editor-style card position-relative" [styles]="editorStyle" [modules]="config"
-                                required (onContentChanged)="maxLength($event, 1000)" formControlName="objeto"></quill-editor>
-                                <input type="hidden" formControlName="disponibilidadPresupuestalId" >
-                                <input type="hidden" formControlName="disponibilidadPresupuestalProyectoId" >
-                            <div class="d-flex align-items-center">
-                                <span class="contador miles mt-3em" *ngIf="addressForm.get('objeto').value !== null">
-                                    {{1000 - (textoLimpio(addressForm.get('objeto').value)>1000?1000:textoLimpio(addressForm.get('objeto').value))}}
-                                </span>
-                                <span class="contador miles mt-3em" *ngIf="addressForm.get('objeto').value === null">
-                                    1000
-                                </span>
-                            </div>
-                        </div>
-                    <!-- <div class="d-flex align-items-center">
+  <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+    <mat-card class="shipping-card">
+      <mat-card-header class="header-card header-card--margin">
+        <mat-card-title class="header-card--text"> DDP especial </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label
+                  class="label-left"
+                  for="tipo"
+                  [class.color-secondaryColor]="
+                    (addressForm.get('tipo').invalid && addressForm.get('tipo').touched) ||
+                    (addressForm.get('tipo').invalid && estaEditando)
+                  "
+                >
+                  Tipo de solicitud DDP especial
+                </label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select formControlName="tipo" required>
+                    <mat-option *ngFor="let tipoSolicitud of tipoSolicitudArray" [value]="tipoSolicitud">
+                      {{ tipoSolicitud.nombre }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  *ngIf="
+                    (addressForm.get('tipo').invalid && addressForm.get('tipo').touched) ||
+                    (addressForm.get('tipo').invalid && estaEditando)
+                  "
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="pr-1">
+            <label
+              class="label-left"
+              for="objeto"
+              [class.color-secondaryColor]="
+                (addressForm.get('objeto').invalid && addressForm.get('objeto').touched) ||
+                (addressForm.get('objeto').invalid && estaEditando)
+              "
+            >
+              Objeto
+            </label>
+          </div>
+          <div class="col d-flex">
+            <quill-editor
+              class="quill-editor-style card position-relative"
+              [styles]="editorStyle"
+              [modules]="config"
+              required
+              (onContentChanged)="maxLength($event, 1000)"
+              formControlName="objeto"
+              [class.invalid]="
+                (addressForm.get('objeto').invalid && addressForm.get('objeto').touched) ||
+                (addressForm.get('objeto').invalid && estaEditando)
+              "
+            ></quill-editor>
+            <input type="hidden" formControlName="disponibilidadPresupuestalId" />
+            <input type="hidden" formControlName="disponibilidadPresupuestalProyectoId" />
+            <div class="d-flex align-items-center">
+              <span class="contador miles mt-3em" *ngIf="addressForm.get('objeto').value !== null">
+                {{
+                  1000 -
+                    (textoLimpio(addressForm.get('objeto').value) > 1000
+                      ? 1000
+                      : textoLimpio(addressForm.get('objeto').value))
+                }}
+              </span>
+              <span class="contador miles mt-3em" *ngIf="addressForm.get('objeto').value === null"> 1000 </span>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  *ngIf="
+                    (addressForm.get('objeto').invalid && addressForm.get('objeto').touched) ||
+                    (addressForm.get('objeto').invalid && estaEditando)
+                  "
+                />
+              </span>
+            </div>
+          </div>
+          <!-- <div class="d-flex align-items-center">
                         <label for="objeto" class="text-area-quill--label">Objeto</label>
                         <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                             (onContentChanged)="maxLength($event, 1000)" formControlName="objeto" required>
@@ -68,290 +120,549 @@
                             1000
                         </span>
                     </div> -->
-                </div>
-                <div class="row mt-05em">
-                    <div class="col-md-8">
-                        <div class="row">
-                            <div class="pr-1">
-                                <label class="label-left" for="numeroRadicado">
-                                    Número de radicado de la solicitud
-                                </label>
-                            </div>
-                            <div class="col d-flex">
-                                <mat-form-field class="full-width">
-                                    <input matInput #numeroRadicado type="text" maxlength="15"
-                                        formControlName="numeroRadicado" required>
-                                </mat-form-field>
-                                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{15 - numeroRadicado.value.length}}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        </div>
+        <div class="row mt-05em">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label
+                  class="label-left"
+                  for="numeroRadicado"
+                  [class.color-secondaryColor]="
+                    (addressForm.get('numeroRadicado').invalid && addressForm.get('numeroRadicado').touched) ||
+                    (addressForm.get('numeroRadicado').invalid && estaEditando)
+                  "
+                >
+                  Número de radicado de la solicitud
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input
+                    matInput
+                    #numeroRadicado
+                    type="text"
+                    maxlength="15"
+                    formControlName="numeroRadicado"
+                    required
+                  />
+                </mat-form-field>
+                <span
+                  class="contador"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Campo alfanumérico"
+                  matTooltipClass="info-tooltip"
+                >
+                  {{ 15 - numeroRadicado.value.length }}
+                </span>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    *ngIf="
+                      (addressForm.get('numeroRadicado').invalid && addressForm.get('numeroRadicado').touched) ||
+                      (addressForm.get('numeroRadicado').invalid && estaEditando)
+                    "
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
 
-                <div class="animatedDown" *ngIf="addressForm.controls.tipo.value && addressForm.controls.tipo.value.codigo == '1'">
-                    <h2 class="card-subTitle">Expensas</h2>
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="row">
-                                <div class="pr-1">
-                                    <label class="label-left" for="cartaAutorizacionET">
-                                      ¿Cuenta con carta de autorización de la ET?
-                                    </label>
-                                </div>
-                                <div class="col">
-                                    <mat-radio-group class="radioInput" formControlName="cartaAutorizacionET">
-                                        <mat-radio-button [value]="true">Sí</mat-radio-button>
-                                        <mat-radio-button [value]="false">No</mat-radio-button>
-                                    </mat-radio-group>
-                                    <span class="required-form-group">*</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="row">
-                                <div class="pr-1">
-                                    <label class="label-left" for="departemento">Departamento</label>
-                                </div>
-                                <div class="col capitalize">
-                                    <mat-form-field class="select-width">
-                                        <mat-select formControlName="departemento" (selectionChange)="changeDepartamento()" required>
-                                            <mat-option #departamento class="capitalize"
-                                                *ngFor="let departamento of listaDepartamento"
-                                                [value]="departamento">
-                                                {{ departamento.descripcion }}
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="row">
-                                <div class="pr-1">
-                                    <label class="label-left" for="municipio">Municipio</label>
-                                </div>
-                                <div class="col capitalize">
-                                    <mat-form-field class="select-width">
-                                        <mat-select formControlName="municipio" required>
-                                            <mat-option #municipio class="capitalize" *ngFor="let tipoSolicitud of listaMunicipio"
-                                                [value]="tipoSolicitud" required>
-                                                {{ tipoSolicitud.descripcion }}
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row" *ngIf="addressForm.get( 'departemento' ).value !== null && addressForm.get( 'municipio' ).value !== null">
-                        <div class="col-md-8">
-                            <div class="row">
-                                <div class="pr-1">
-                                    <label class="label-left" for="llaveMEN">Llave MEN</label>
-                                </div>
-                                <div class="col d-flex">
-                                    <mat-form-field class="full-width">
-                                        <input  matInput
-                                                #llaveMEN
-                                                type="text"
-                                                maxlength="8"
-                                                formControlName="llaveMEN"
-                                                required>
-                                    </mat-form-field>
-                                    <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{8 - llaveMEN.value.length}}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        <div
+          class="animatedDown"
+          *ngIf="addressForm.controls.tipo.value && addressForm.controls.tipo.value.codigo == '1'"
+        >
+          <h2 class="card-subTitle">Expensas</h2>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label
+                    class="label-left"
+                    for="cartaAutorizacionET"
+                    [class.color-secondaryColor]="
+                      (addressForm.get('cartaAutorizacionET').invalid &&
+                        addressForm.get('cartaAutorizacionET').touched) ||
+                      (addressForm.get('cartaAutorizacionET').invalid && estaEditando)
+                    "
+                  >
+                    ¿Cuenta con carta de autorización de la ET?
+                  </label>
                 </div>
-                <div class="animatedDown" *ngIf="addressForm.controls.tipo.value && addressForm.controls.tipo.value.codigo == '2'">
-                    <h2 class="card-subTitle">Otros costos/Servicios</h2>
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="row">
-                                <div class="pr-1">
-                                    <label class="label-left" for="numeroContrato">Número de contrato</label>
-                                </div>
-                                <div class="col d-flex">
-                                    <mat-form-field class="full-width">
-                                        <!--<input  matInput
+                <div class="col">
+                  <mat-radio-group class="radioInput" formControlName="cartaAutorizacionET">
+                    <mat-radio-button [value]="true">Sí</mat-radio-button>
+                    <mat-radio-button [value]="false">No</mat-radio-button>
+                  </mat-radio-group>
+                  <span class="required-form-group">*</span>
+                  <span class="icon-incompleto">
+                    <img
+                      class="icon-incompleto--img"
+                      src="assets/img/icon/incompleto.svg"
+                      alt="este campo es requerido"
+                      *ngIf="
+                        (addressForm.get('cartaAutorizacionET').invalid &&
+                          addressForm.get('cartaAutorizacionET').touched) ||
+                        (addressForm.get('cartaAutorizacionET').invalid && estaEditando)
+                      "
+                    />
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label
+                    class="label-left"
+                    for="departemento"
+                    [class.color-secondaryColor]="
+                      (addressForm.get('departemento').invalid && addressForm.get('departemento').touched) ||
+                      (addressForm.get('departemento').invalid && estaEditando)
+                    "
+                  >
+                    Departamento
+                  </label>
+                </div>
+                <div class="col capitalize">
+                  <mat-form-field class="select-width">
+                    <mat-select formControlName="departemento" (selectionChange)="changeDepartamento()" required>
+                      <mat-option
+                        #departamento
+                        class="capitalize"
+                        *ngFor="let departamento of listaDepartamento"
+                        [value]="departamento"
+                      >
+                        {{ departamento.descripcion }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    *ngIf="
+                      (addressForm.get('departemento').invalid && addressForm.get('departemento').touched) ||
+                      (addressForm.get('departemento').invalid && estaEditando)
+                    "
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label
+                    class="label-left"
+                    for="municipio"
+                    [class.color-secondaryColor]="
+                      (addressForm.get('municipio').invalid && addressForm.get('municipio').touched) ||
+                      (addressForm.get('municipio').invalid && estaEditando)
+                    "
+                  >
+                    Municipio
+                  </label>
+                </div>
+                <div class="col capitalize">
+                  <mat-form-field class="select-width">
+                    <mat-select formControlName="municipio" required>
+                      <mat-option
+                        #municipio
+                        class="capitalize"
+                        *ngFor="let tipoSolicitud of listaMunicipio"
+                        [value]="tipoSolicitud"
+                        required
+                      >
+                        {{ tipoSolicitud.descripcion }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    *ngIf="
+                      (addressForm.get('municipio').invalid && addressForm.get('municipio').touched) ||
+                      (addressForm.get('municipio').invalid && estaEditando)
+                    "
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
+          <div
+            class="row"
+            *ngIf="addressForm.get('departemento').value !== null && addressForm.get('municipio').value !== null"
+          >
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label
+                    class="label-left"
+                    for="llaveMEN"
+                    [class.color-secondaryColor]="
+                      (addressForm.get('llaveMEN').invalid && addressForm.get('llaveMEN').touched) ||
+                      (addressForm.get('llaveMEN').invalid && estaEditando)
+                    "
+                  >
+                    Llave MEN
+                  </label>
+                </div>
+                <div class="col d-flex">
+                  <mat-form-field class="full-width">
+                    <input matInput #llaveMEN type="text" maxlength="8" formControlName="llaveMEN" required />
+                  </mat-form-field>
+                  <span
+                    class="contador"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Campo alfanumérico"
+                    matTooltipClass="info-tooltip"
+                  >
+                    {{ 8 - llaveMEN.value.length }}
+                  </span>
+                  <span class="icon-incompleto">
+                    <img
+                      class="icon-incompleto--img"
+                      src="assets/img/icon/incompleto.svg"
+                      alt="este campo es requerido"
+                      *ngIf="
+                        (addressForm.get('llaveMEN').invalid && addressForm.get('llaveMEN').touched) ||
+                        (addressForm.get('llaveMEN').invalid && estaEditando)
+                      "
+                    />
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="animatedDown"
+          *ngIf="addressForm.controls.tipo.value && addressForm.controls.tipo.value.codigo == '2'"
+        >
+          <h2 class="card-subTitle">Otros costos/Servicios</h2>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label
+                    class="label-left"
+                    for="numeroContrato"
+                    [class.color-secondaryColor]="
+                      (addressForm.get('numeroContrato').invalid && addressForm.get('numeroContrato').touched) ||
+                      (addressForm.get('numeroContrato').invalid && estaEditando)
+                    "
+                  >
+                    Número de contrato
+                  </label>
+                </div>
+                <div class="col d-flex">
+                  <mat-form-field class="full-width">
+                    <!--<input  matInput
                                             #numeroContrato
                                             type="text"
                                             maxlength="10"
                                             formControlName="numeroContrato">-->
-                                        <input matInput #nombre2 type="text" maxlength="1000" [formControl]="myFilter" required
-                                            [matAutocomplete]="auto2">
-                                        <mat-autocomplete #auto2="matAutocomplete">
-                                        <mat-option (click)="seleccionAutocomplete(nombres)" *ngFor="let nombres of filteredContrato  | async"
-                                            [value]="nombres">
-                                            {{nombres}}
-                                        </mat-option>
-                                        </mat-autocomplete>
-                                    </mat-form-field>
-                                    <!-- como es autocompletar, ps  no debería tener longitud<span class="contador">{{10 - numeroContrato.value.length}}</span>-->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <input
+                      matInput
+                      #nombre2
+                      type="text"
+                      maxlength="10"
+                      [formControl]="myFilter"
+                      required
+                      [matAutocomplete]="auto2"
+                    />
+                    <mat-autocomplete #auto2="matAutocomplete">
+                      <mat-option
+                        (click)="seleccionAutocomplete(nombres)"
+                        *ngFor="let nombres of filteredContrato | async"
+                        [value]="nombres"
+                      >
+                        {{ nombres }}
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+                  <!-- como es autocompletar, ps  no debería tener longitud<span class="contador">{{10 - numeroContrato.value.length}}</span>-->
                 </div>
-
-            </mat-card-content>
-        </mat-card>
-
-        <mat-card class="shipping-card var-main-gris animatedDown" *ngIf="proyectoEncontrado">
-            <mat-card-header class="header-card header-card--margin">
-                <mat-card-title class="header-card--text">
-                    {{ proyecto.llaveMen }}
-                </mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-                <p>
-                    <b>Tipo de intervención:</b>
-                    {{ proyecto.tipoIntervencionString }}
-                </p>
-                <p>
-                    <b>Nombre de la I.E:</b>
-                    {{ proyecto.institucionEducativa.nombre }}
-                </p>
-                <p>
-                    <b>Sede:</b>
-                    {{ proyecto.sede.nombre }}
-                </p>
-            </mat-card-content>
-        </mat-card>
-        
-
-        <mat-card class="shipping-card var-main-gris animatedDown" *ngIf="contrato">
-            <mat-card-header class="header-card header-card--margin">
-                <mat-card-title class="header-card--text">
-                    {{ contrato.numeroContrato }}
-                </mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-
-                <section>
-                    <b>Nombre de la entidad contratista:</b> {{ contrato.contratacion.contratista.nombre }}
-                </section>
-
-            </mat-card-content>
-        </mat-card>
-
-        <section *ngIf="contrato">
-            <div class="d-flex align-items-center">
-                <div class="text-area-quill">
-                  <label for="justificacion" class="text-area-quill--label title-objeto">Limitación especial</label>
-                  <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
-                    (onContentChanged)="maxLength($event, 500)" formControlName="observacionLimiteEspecial"></quill-editor>
-                </div>
-                <span class="contador" *ngIf="addressForm.get('observacionLimiteEspecial').value !== null">
-                  {{500 - (textoLimpio(addressForm.get('observacionLimiteEspecial').value)>500?500:textoLimpio(addressForm.get('observacionLimiteEspecial').value))}}
-                </span>
-                <span class="contador" *ngIf="addressForm.get('observacionLimiteEspecial').value === null">
-                  500
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    *ngIf="
+                      (addressForm.get('numeroContrato').invalid && addressForm.get('numeroContrato').touched) ||
+                      (addressForm.get('numeroContrato').invalid && estaEditando)
+                    "
+                  />
                 </span>
               </div>
-        </section>
-
-        <mat-card class="shipping-card animatedDown" *ngIf="seRecibioAportante === true || contrato">
-            <mat-card-header class="header-card header-card--margin">
-                <mat-card-title class="header-card--text">
-                    Aportante
-                </mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-                <div class="row" *ngIf="addressForm.controls.tipo.value && addressForm.controls.tipo.value.codigo == '2'">
-                    <div class="col-md-8">
-                        <div class="row">
-                            <div class="pr-1">
-                                <label class="label-left" for="tipoAportante">Tipo de aportante</label>
-                            </div>
-                            <div class="col">
-                                <mat-form-field class="select-width">
-                                    <mat-select formControlName="tipoAportante" required>
-                                        <mat-option *ngFor="let tipoSolicitud of tipoAportantes"
-                                            [value]="tipoSolicitud.codigo">
-                                            {{ tipoSolicitud.nombre }}
-                                        </mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="row">
-                            <div class="pr-1">
-                                <label class="label-left" for="nombreAportante">Nombre del aportante</label>
-                            </div>
-                            <div class="col">
-
-                                <mat-form-field class="select-width">
-                                    <mat-select formControlName="nombreAportante" required>
-                                        <mat-option *ngFor="let aportante of nombreAportantes"
-                                            [value]="aportante">
-                                            {{ aportante.nombre }}
-                                        </mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="row">
-                            <div class="pr-1">
-                                <label class="label-left" for="valor">Valor</label>
-                            </div>
-                            <div class="col d-flex">
-                                <mat-form-field class="full-width">
-                                    <input  matInput
-                                            #valor
-                                            maxlength="16"
-                                            formControlName="valor"
-                                            currencyMask
-                                            [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
-                                            required>
-                                </mat-form-field>
-                                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
-                                matTooltipClass="info-tooltip" *ngIf="addressForm.get( 'valor' ).value.toString() !== null">{{11 - addressForm.get( 'valor' ).value.toString().length }}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </mat-card-content>
-        </mat-card>
-        <div class="row px-5em animatedDown" *ngIf="addressForm.get( 'valor' ).value !== null && addressForm.get( 'valor' ).value > 0">
-            <div class="pr-1">
-                <label class="label-left" for="url">URL con soporte</label>
             </div>
-            <div class="col pr-3em">
-                <mat-form-field class="full-width">
-                    <input matInput type="url" formControlName="url">
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="shipping-card var-main-gris animatedDown" *ngIf="proyectoEncontrado">
+      <mat-card-header class="header-card header-card--margin">
+        <mat-card-title class="header-card--text">
+          {{ proyecto.llaveMen }}
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>
+          <b>Tipo de intervención:</b>
+          {{ proyecto.tipoIntervencionString }}
+        </p>
+        <p>
+          <b>Nombre de la I.E:</b>
+          {{ proyecto.institucionEducativa.nombre }}
+        </p>
+        <p>
+          <b>Sede:</b>
+          {{ proyecto.sede.nombre }}
+        </p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="shipping-card var-main-gris animatedDown" *ngIf="contrato">
+      <mat-card-header class="header-card header-card--margin">
+        <mat-card-title class="header-card--text">
+          {{ contrato.numeroContrato }}
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <section><b>Nombre de la entidad contratista:</b> {{ contrato.contratacion.contratista.nombre }}</section>
+      </mat-card-content>
+    </mat-card>
+
+    <section *ngIf="contrato">
+      <div class="d-flex align-items-center">
+        <div
+          class="text-area-quill"
+          [class.color-secondaryColor]="
+            (addressForm.get('observacionLimiteEspecial').invalid &&
+              addressForm.get('observacionLimiteEspecial').touched) ||
+            (addressForm.get('observacionLimiteEspecial').invalid && estaEditando)
+          "
+        >
+          <label for="observacionLimiteEspecial" class="text-area-quill--label title-objeto">Limitación especial</label>
+          <quill-editor
+            class="quill-editor-style"
+            [styles]="editorStyle"
+            [modules]="config"
+            required
+            (onContentChanged)="maxLength($event, 500)"
+            formControlName="observacionLimiteEspecial"
+          ></quill-editor>
+        </div>
+        <span class="contador" *ngIf="addressForm.get('observacionLimiteEspecial').value !== null">
+          {{
+            500 -
+              (textoLimpio(addressForm.get('observacionLimiteEspecial').value) > 500
+                ? 500
+                : textoLimpio(addressForm.get('observacionLimiteEspecial').value))
+          }}
+        </span>
+        <span class="contador" *ngIf="addressForm.get('observacionLimiteEspecial').value === null"> 500 </span>
+        <span class="icon-incompleto">
+          <img
+            class="icon-incompleto--img"
+            src="assets/img/icon/incompleto.svg"
+            alt="este campo es requerido"
+            *ngIf="
+              (addressForm.get('observacionLimiteEspecial').invalid &&
+                addressForm.get('observacionLimiteEspecial').touched) ||
+              (addressForm.get('observacionLimiteEspecial').invalid && estaEditando)
+            "
+          />
+        </span>
+      </div>
+    </section>
+
+    <mat-card class="shipping-card animatedDown" *ngIf="seRecibioAportante === true || contrato">
+      <mat-card-header class="header-card header-card--margin">
+        <mat-card-title class="header-card--text"> Aportante </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="row" *ngIf="addressForm.controls.tipo.value && addressForm.controls.tipo.value.codigo == '2'">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label
+                  class="label-left"
+                  for="tipoAportante"
+                  [class.color-secondaryColor]="
+                    (addressForm.get('tipoAportante').invalid && addressForm.get('tipoAportante').touched) ||
+                    (addressForm.get('tipoAportante').invalid && estaEditando)
+                  "
+                >
+                  Tipo de aportante
+                </label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select formControlName="tipoAportante" required>
+                    <mat-option *ngFor="let tipoSolicitud of tipoAportantes" [value]="tipoSolicitud.codigo">
+                      {{ tipoSolicitud.nombre }}
+                    </mat-option>
+                  </mat-select>
                 </mat-form-field>
-                <span class="info-url">Indique la ruta del soporte de esta información</span>
+              </div>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  *ngIf="
+                    (addressForm.get('tipoAportante').invalid && addressForm.get('tipoAportante').touched) ||
+                    (addressForm.get('tipoAportante').invalid && estaEditando)
+                  "
+                />
+              </span>
             </div>
+          </div>
         </div>
-        <mat-card class="shipping-card animatedDown" *ngIf="disponibilidadaeditar?.disponibilidadPresupuestalObservacion.length>0">
-            <mat-card-header class="header-card header-card--margin">
-                <mat-card-title class="header-card--text">
-                    Observaciones
-                </mat-card-title>
-            </mat-card-header>
-            <mat-card-content align="left" *ngFor="let ob of disponibilidadaeditar.disponibilidadPresupuestalObservacion">
-                <div [innerHtml]="ob.observacion"></div>
-            </mat-card-content>
-        </mat-card>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label
+                  class="label-left"
+                  for="nombreAportante"
+                  [class.color-secondaryColor]="
+                    (addressForm.get('nombreAportante').invalid && addressForm.get('nombreAportante').touched) ||
+                    (addressForm.get('nombreAportante').invalid && estaEditando)
+                  "
+                >
+                  Nombre del aportante
+                </label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select formControlName="nombreAportante" required>
+                    <mat-option *ngFor="let aportante of nombreAportantes" [value]="aportante">
+                      {{ aportante.nombre }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  *ngIf="
+                    (addressForm.get('nombreAportante').invalid && addressForm.get('nombreAportante').touched) ||
+                    (addressForm.get('nombreAportante').invalid && estaEditando)
+                  "
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label
+                  class="label-left"
+                  for="valor"
+                  [class.color-secondaryColor]="
+                    (addressForm.get('valor').invalid && addressForm.get('valor').touched) ||
+                    (addressForm.get('valor').invalid && estaEditando)
+                  "
+                >
+                  Valor
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input
+                    matInput
+                    #valor
+                    maxlength="16"
+                    formControlName="valor"
+                    currencyMask
+                    [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
+                    required
+                  />
+                </mat-form-field>
+                <span
+                  class="contador"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Valor en ($) Pesos colombianos"
+                  matTooltipClass="info-tooltip"
+                  *ngIf="addressForm.get('valor').value.toString() !== null"
+                >
+                  {{ 11 - addressForm.get('valor').value.toString().length }}
+                </span>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    *ngIf="
+                      (addressForm.get('valor').invalid && addressForm.get('valor').touched) ||
+                      (addressForm.get('valor').invalid && estaEditando)
+                    "
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <div
+      class="row px-5em animatedDown"
+      *ngIf="addressForm.get('valor').value !== null && addressForm.get('valor').value > 0"
+    >
+      <div class="pr-1">
+        <label
+          class="label-left"
+          for="url"
+          [class.color-secondaryColor]="
+            (addressForm.get('url').invalid && addressForm.get('url').touched) ||
+            (addressForm.get('url').invalid && estaEditando)
+          "
+        >
+          URL con soporte
+        </label>
+      </div>
+      <div class="col">
+        <mat-form-field class="full-width">
+          <input matInput type="url" formControlName="url" />
+        </mat-form-field>
+        <span class="info-url">Indique la ruta del soporte de esta información</span>
+      </div>
+      <span class="icon-incompleto pr-3em">
+        <img
+          class="icon-incompleto--img"
+          src="assets/img/icon/incompleto.svg"
+          alt="este campo es requerido"
+          *ngIf="
+            (addressForm.get('url').invalid && addressForm.get('url').touched) ||
+            (addressForm.get('url').invalid && estaEditando)
+          "
+        />
+      </span>
+    </div>
 
-        <div class="text-center">
-            <button mat-button color="warn" class="btn-guardar" type="submit">
-                <img src="assets/img/icon/guardar.svg" alt="Guardar">
-            </button>
-        </div>
-    </form>
+    <div class="text-center">
+      <button mat-button color="warn" class="btn-guardar" type="submit">
+        <img src="assets/img/icon/guardar.svg" alt="Guardar" />
+      </button>
+    </div>
+  </form>
 </div>
