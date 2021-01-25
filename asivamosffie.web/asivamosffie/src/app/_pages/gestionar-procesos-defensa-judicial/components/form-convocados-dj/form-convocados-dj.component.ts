@@ -165,6 +165,7 @@ export class FormConvocadosDjComponent implements OnInit {
       };
     }
     defensaJudicial.demandadoConvocado=defContraProyecto;
+    defensaJudicial.numeroDemandados=this.formContratista.get("numeroContratos").value;
     
       console.log(defensaJudicial);
       this.defensaService.CreateOrEditDefensaJudicial(defensaJudicial).subscribe(

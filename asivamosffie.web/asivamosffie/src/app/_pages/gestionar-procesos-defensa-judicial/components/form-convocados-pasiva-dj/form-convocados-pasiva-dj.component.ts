@@ -190,6 +190,7 @@ export class FormConvocadosPasivaDjComponent implements OnInit {
         esCompleto:false,      
       };
     }
+    defensaJudicial.numeroDemandados=this.formContratista.get("numeroContratos").value;
     defensaJudicial.demandadoConvocado=defContraProyecto;
     
       console.log(defensaJudicial);

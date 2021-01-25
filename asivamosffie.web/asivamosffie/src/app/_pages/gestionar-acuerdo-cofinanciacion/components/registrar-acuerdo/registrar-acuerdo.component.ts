@@ -508,12 +508,12 @@ export class RegistrarAcuerdoComponent implements OnInit {
           // retorno=0;
         }
         else if (
-          element.fechaAcuerdo !== null &&
-          element.numeroAcuerdo !== null &&
-          element.tipoDocumentoId !== null &&
-          element.valorDocumento !== null &&
+          (element.fechaAcuerdo !== null && element.fechaAcuerdo) &&
+          (element.numeroAcuerdo !== null && element.numeroAcuerdo) &&
+          (element.tipoDocumentoId !== null && element.tipoDocumentoId) &&
+          (element.valorDocumento !== null && element.valorDocumento) &&
           // element.valorTotalAportante!=null&&
-          element.vigenciaAporte !== null) {
+          (element.vigenciaAporte !== null && element.vigenciaAporte)) {
           retorno += 2;
         }
         else {
