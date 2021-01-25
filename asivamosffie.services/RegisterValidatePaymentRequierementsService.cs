@@ -215,6 +215,7 @@ namespace asivamosffie.services
 
                 case ConstanCodigoTipoSolicitudContratoSolicitudPago.Expensas:
                     solicitudPago = _context.SolicitudPago.Where(r => r.SolicitudPagoId == solicitudPago.SolicitudPagoId)
+                        .Include(e => e.ContratacionProyecto).ThenInclude(p => p.Proyecto)
                         .Include(e => e.SolicitudPagoExpensas)
                         .Include(e => e.SolicitudPagoSoporteSolicitud)
                         .FirstOrDefault();
@@ -1014,7 +1015,7 @@ namespace asivamosffie.services
             }
         }
 
-        private async  void CreateEditNewExpensas(SolicitudPago pSolicitudPago)
+        private async void CreateEditNewExpensas(SolicitudPago pSolicitudPago)
         {
             if (pSolicitudPago.SolicitudPagoExpensas.Count() > 0)
             {
