@@ -46,19 +46,28 @@
                         >
                         Tramitar rendimientos
                     </button>
-                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.registrosConsistentes > 0 ">
+                    <button mat-raised-button color="accent" class="btn-table" 
+                        *ngIf="element.registrosConsistentes > 0 "
+                        (click)="requestApproval(element.cargaPagosRendimientosId, element)"
+                        >
                         Enviar para aprobación
                     </button>
-                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.registrosInconsistentes > 0">
+                    <button mat-raised-button color="accent" class="btn-table" 
+                        *ngIf="element.registrosInconsistentes > 0 && !element.mostrarInconsistencias"
+                        (click)="sendInconsistencies(element.cargaPagosRendimientosId, element)">
                         Enviar inconsistencias
                     </button>
-                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.registrosConsistentes > 0 || element.registrosInconsistentes > 0">
+                    <button mat-raised-button color="accent" class="btn-table" 
+                        *ngIf="element.registrosConsistentes > 0 || element.registrosInconsistentes > 0">
                         Descargar resultado
                     </button>
-                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.pendienteAprobacion">
+                    <button mat-raised-button color="accent" class="btn-table" 
+                        *ngIf="element.pendienteAprobacion">
                         Ver registros consistentes
                     </button>
-                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.registrosInconsistentes> 0 && element.registrosConsistentes == 0">
+                    <button mat-raised-button color="accent" class="btn-table" 
+                        *ngIf="(element.registrosInconsistentes> 0 && element.registrosConsistentes == 0)||element.mostrarInconsistencias"
+                        (click)="downloadInconsistencies(element.cargaPagosRendimientosId)">
                         Ver registros inconsistentes
                     </button>
                 </td>

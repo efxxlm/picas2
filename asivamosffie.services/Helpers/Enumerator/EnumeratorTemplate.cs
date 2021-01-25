@@ -48,6 +48,8 @@ namespace asivamosffie.services.Helpers.Enumerator
         ObservacionesActaInicioFase2=50,
         NotificacionCompromisos=53,
         msjAprobacion4_1_10 = 54,
-        Alerta5Dias4_1_10 = 55
+        Alerta5Dias4_1_10 = 55,
+        NotificacionInconsistencias = 56,
+        NotificacionAprobacion = 59,
     }
 }

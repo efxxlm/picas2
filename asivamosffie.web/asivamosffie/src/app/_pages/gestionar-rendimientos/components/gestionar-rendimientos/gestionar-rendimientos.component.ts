@@ -94,4 +94,24 @@ export class GestionarRendimientosComponent implements OnInit {
     })
   }
 
+  sendInconsistencies(uploadedOrderId: number, order){
+    this.faseDosPagosRendimientosSvc
+    .sendInconsistencies(uploadedOrderId).subscribe((result)=>{
+      order.ShowInconsistencies = result
+     this.loadDataSource();
+    })
+  }
+
+  downloadInconsistencies(uploadedOrderId: number){
+  
+  }
+
+  requestApproval(uploadedOrderId: number, order){
+    this.faseDosPagosRendimientosSvc
+    .requestApproval(uploadedOrderId).subscribe((result)=>{
+      order.pendienteAprobacion = true;
+     this.loadDataSource();
+    })
+  }
+
 }

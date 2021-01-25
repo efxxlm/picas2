@@ -221,8 +221,6 @@
 
         public const string Cambiar_Estado_Verificacion_Construccion = "157";
 
-        //4.4.3 registro de pagos
-        public const string Validar_Excel_Registro_Pagos = "158";
         //4.4.1 Registrar actuaciones de controversias contractuales
         public const string Crear_Editar_Novedad_Contractual = "163";
         public const string Notificación_Novedad_Contractual = "164";
@@ -246,6 +244,14 @@
         public const string Editar_crear_url = "178";
         public const string Visita_url = "179";
         public const string Cargar_Acta_Terminacion_Contrato = "180";
-        	
+
+          //4.4.3 registro de pagos    	
+        public const string Validar_Excel_Registro_Pagos = "190";
+        public const string Validar_Excel_Registro_Rendimientos = "191";
+        public const string Eliminar_Pagos = "192";
+        public const string Tramitar_Rendimientos = "193";
+        public const string Notificar_Inconsistencias = "194";
+        public const string Notificar_Pendiente_Aprobacion = "195";
+        
     }
 }   
