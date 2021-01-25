@@ -3021,7 +3021,8 @@ namespace asivamosffie.services
                sesionComiteSolicitud.GeneraCompromisoFiduciario == null ||
                sesionComiteSolicitud.RequiereVotacionFiduciario == null ||
                sesionComiteSolicitud.EstadoCodigo == null ||
-               string.IsNullOrEmpty(sesionComiteSolicitud.ObservacionesFiduciario)
+               string.IsNullOrEmpty(sesionComiteSolicitud.ObservacionesFiduciario) ||
+               string.IsNullOrEmpty(sesionComiteSolicitud.DesarrolloSolicitudFiduciario)
                 )
             {
                 return false;

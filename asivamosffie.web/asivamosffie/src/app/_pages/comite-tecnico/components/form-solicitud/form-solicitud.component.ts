@@ -342,6 +342,17 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
           }else if ( this.cantidadAprobado <= this.cantidadNoAprobado ){
             this.resultadoVotacion = 'No Aprobó'
           }
+
+          this.estadosArray.sort(function (a, b) {
+            if (a.codigo > b.codigo) {
+              return 1;
+            }
+            if (a.codigo < b.codigo) {
+              return -1;
+            }
+            // a must be equal to b
+            return 0;
+          });
         }
         
       })

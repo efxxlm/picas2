@@ -36,6 +36,7 @@
                                           >Sí</mat-radio-button>
                         <mat-radio-button [value]="false" 
                                           (change)="changeRequiere(false, element)"
+                                          [disabled]="element.tipoSolicitudCodigo === '2'"
                                           >No</mat-radio-button>
                     </mat-radio-group>
                     <span class="required-form-group">*</span>
