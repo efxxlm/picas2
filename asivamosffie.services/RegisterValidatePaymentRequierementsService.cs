@@ -67,7 +67,7 @@ namespace asivamosffie.services
                                  s.ContratoId,
                                  s.SolicitudPagoId,
                                  RegistroCompleto = s.RegistroCompleto ?? false
-                             }).ToListAsync();
+                             }).OrderByDescending(r=> r.SolicitudPagoId).ToListAsync();
 
             List<dynamic> grind = new List<dynamic>();
             List<Dominio> ListParametricas = _context.Dominio.Where(d => d.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato || d.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Registro_Pago).ToList();
@@ -1113,6 +1113,8 @@ namespace asivamosffie.services
                 }
                 else
                 {
+                    pSolicitudPago.EstadoCodigo = ConstanCodigoEstadoSolicitudPago.En_proceso_de_registro;
+                    pSolicitudPago.NumeroSolicitud = await _commonService.EnumeradorSolicitudPagoExpensasAndOtros();
                     pSolicitudPago.FechaCreacion = DateTime.Now;
                     pSolicitudPago.Eliminado = false;
                     pSolicitudPago.RegistroCompleto = ValidateCompleteRecordoSolicitudPagoOtrosCostosServicios(pSolicitudPago);
@@ -1175,9 +1177,9 @@ namespace asivamosffie.services
             }
         }
 
-        private bool? ValidateCompleteRecordoOtrosCostosServicios(SolicitudPagoOtrosCostosServicios solicitudPagoOtrosCostosServiciosOld)
+        private bool ValidateCompleteRecordoOtrosCostosServicios(SolicitudPagoOtrosCostosServicios solicitudPagoOtrosCostosServiciosOld)
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         private bool ValidateCompleteRecordoSolicitudPagoOtrosCostosServicios(SolicitudPago pSolicitudPago)
