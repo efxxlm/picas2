@@ -1095,7 +1095,7 @@ namespace asivamosffie.services
             try
             {
 
-                if (pSolicitudPago.SolicitudPagoExpensas.Count() > 0)
+                if (pSolicitudPago.SolicitudPagoOtrosCostosServicios.Count() > 0)
                 {
                     CreateEditNewOtrosCostosServicios(pSolicitudPago.SolicitudPagoOtrosCostosServicios, pSolicitudPago.UsuarioCreacion);
                 }
