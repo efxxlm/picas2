@@ -99,8 +99,8 @@ export class TechnicalCommitteSessionService {
     return this.http.post<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/noRequiereVotacionSesionComiteTema?idSesionComiteTema=${ sesionComiteTema.sesionTemaId }&pRequiereVotacion=${ pRequiereVotacion }`, sesionComiteTema );
    }
 
-   getCompromisosByComiteTecnicoId( id: number){
-    return this.http.get<ComiteTecnico>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/getCompromisosByComiteTecnicoId?ComiteTecnicoId=${ id }`); 
+   getCompromisosByComiteTecnicoId( id: number, esFiduciario: boolean){
+    return this.http.get<ComiteTecnico>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/getCompromisosByComiteTecnicoId?ComiteTecnicoId=${ id }&pEsFiduciario=${ esFiduciario }`); 
    }
 
    verificarTemasCompromisos( comite: ComiteTecnico ){
