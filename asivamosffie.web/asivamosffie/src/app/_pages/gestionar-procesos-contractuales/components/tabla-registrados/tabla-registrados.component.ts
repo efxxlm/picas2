@@ -40,7 +40,7 @@ export class TablaRegistradosComponent implements OnInit {
         
         
         for ( let contrataciones of resp ) {
-          if ( contrataciones.contratacion.estadoSolicitudCodigo === this.estadoCodigos.registrado ) {
+          if ( contrataciones.estadoCodigo === this.estadoCodigos.registrado ) {
             this.dataTable.push( contrataciones );
           };
         };
