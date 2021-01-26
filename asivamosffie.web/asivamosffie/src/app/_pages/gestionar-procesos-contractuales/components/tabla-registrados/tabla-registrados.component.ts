@@ -70,7 +70,7 @@ export class TablaRegistradosComponent implements OnInit {
       break;
 
       case "Modificación contractual":
-        this.routes.navigate( [ '/contratosModificacionesContractuales/modificacionContractual', id ] );
+        this.routes.navigate( [ '/procesosContractuales', id ] );
       break;
       default:
         console.log( 'No es una opcion valida.' );
