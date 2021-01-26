@@ -1,0 +1,214 @@
+<button
+  mat-button
+  mat-dialog-close
+  class="modal--btn-cerrar"
+  [mat-dialog-close]="null"
+>
+  <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar" />
+</button>
+
+<div class="text-center">
+  <h1 class="title-menu--h1">Tipo de documento LJ776554</h1>
+  <p>
+    Estado del requisito:
+    <b> Cumple </b>
+  </p>
+  <p>
+    <b> 2. </b>
+    Acta de inventario por espacios
+  </p>
+</div>
+
+<form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+  <mat-card class="shipping-card">
+    <mat-card-content>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="pr-1">
+              <label
+                class="label-left"
+                for="tipoDeAnexo"
+                [class.color-secondaryColor]="
+                  (addressForm.get('tipoDeAnexo').invalid && addressForm.get('tipoDeAnexo').touched) ||
+                  (addressForm.get('tipoDeAnexo').invalid && estaEditando)
+                "
+              >
+                Tipo de anexo
+              </label>
+            </div>
+            <div class="col">
+              <mat-form-field class="select-width">
+                <mat-select required formControlName="tipoDeAnexo">
+                  <mat-option
+                    *ngFor="let tipo of tipoAnexoArray"
+                    [value]="tipo.value"
+                  >
+                    {{ tipo.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="addressForm.get('tipoDeAnexo').value === 'digital'">
+        <div class="pr-1">
+          <label
+            class="label-left"
+            for="URLSoporte"
+            [class.color-secondaryColor]="
+              (addressForm.get('URLSoporte').invalid &&
+                addressForm.get('URLSoporte').touched) ||
+              (addressForm.get('URLSoporte').invalid && estaEditando)
+            "
+          >
+          Url con soporte
+          </label>
+        </div>
+        <div class="col">
+          <mat-form-field class="full-width">
+            <input
+              matInput
+              #numeroRadicadoInput
+              type="url"
+              formControlName="URLSoporte"
+              maxlength="20"
+              required
+            />
+          </mat-form-field>
+          <span
+            class="info-url"
+            [matTooltipPosition]="'above'"
+            matTooltip="Campo alfanumérico"
+            matTooltipClass="info-tooltip"
+          >
+            Indique la ruta en la que se encuentra el soporte del documento
+          </span>
+        </div>
+        <span class="icon-incompleto">
+          <img
+            class="icon-incompleto--img"
+            src="assets/img/icon/incompleto.svg"
+            alt="este campo es requerido"
+            *ngIf="
+              (addressForm.get('URLSoporte').invalid && addressForm.get('URLSoporte').touched) ||
+              (addressForm.get('URLSoporte').invalid && estaEditando)
+            "
+          />
+        </span>
+      </div>
+      <div class="row" *ngIf="addressForm.get('tipoDeAnexo').value === 'fisico'">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="pr-1">
+              <label
+                class="label-left"
+                for="numeroRadicadoSAC"
+                [class.color-secondaryColor]="
+                  (addressForm.get('numeroRadicadoSAC').invalid &&
+                    addressForm.get('numeroRadicadoSAC').touched) ||
+                  (addressForm.get('numeroRadicadoSAC').invalid && estaEditando)
+                "
+              > 
+              Número de radicado en SAC
+              </label>
+            </div>
+            <div class="col d-flex">
+              <mat-form-field class="full-width">
+                <input
+                  matInput
+                  type="text"
+                  formControlName="numeroRadicadoSAC"
+                  #numeroRadicadoSAC
+                  maxlength="10"
+                  required
+                />
+              </mat-form-field>
+              <span
+                class="contador"
+                [matTooltipPosition]="'above'"
+                matTooltip="Campo numérico"
+                matTooltipClass="info-tooltip"
+              >
+                {{ 10 - numeroRadicadoSAC.value.length }}
+              </span>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  *ngIf="
+                    (addressForm.get('numeroRadicadoSAC').invalid && addressForm.get('numeroRadicadoSAC').touched) ||
+                    (addressForm.get('numeroRadicadoSAC').invalid && estaEditando)
+                  "
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="addressForm.get('tipoDeAnexo').value === 'fisico'">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="pr-1">
+              <label
+                class="label-left"
+                for="fechaRadicado"
+                [class.color-secondaryColor]="
+                  (addressForm.get('fechaRadicado').invalid &&
+                    addressForm.get('fechaRadicado').touched) ||
+                  (addressForm.get('fechaRadicado').invalid && estaEditando)
+                "
+              >
+              Fecha de radicado
+              </label>
+            </div>
+            <div class="col d-flex">
+              <mat-form-field class="example-full-width">
+                <input
+                  matInput
+                  [matDatepicker]="pickerFechaDeRadicado"
+                  formControlName="fechaRadicado"
+                  readonly
+                  (click)="pickerFechaDeRadicado.open()"
+                  placeholder="DD/MM/AAAA"
+                  required
+                />
+                <mat-datepicker #pickerFechaDeRadicado></mat-datepicker>
+              </mat-form-field>
+              <button
+                mat-button
+                color="primary"
+                type="button"
+                (click)="pickerFechaDeRadicado.open()"
+                class="btn-calendario"
+              >
+                <img
+                  src="assets/img/icon/calendarioCirculo.svg"
+                  alt="Abrir Calendario"
+                />
+              </button>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  *ngIf="
+                    (addressForm.get('fechaRadicado').invalid && addressForm.get('fechaRadicado').touched) ||
+                    (addressForm.get('fechaRadicado').invalid && estaEditando)
+                  "
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <div class="text-center">
+    <button mat-button color="warn" class="btn-guardar" type="submit">
+      <img src="assets/img/icon/guardar.svg" alt="Guardar" />
+    </button>
+  </div>
+</form>

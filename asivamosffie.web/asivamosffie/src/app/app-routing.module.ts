@@ -239,6 +239,11 @@ const routes: Routes = [
         loadChildren: () => import( './_pages/requisitos-tecnicos-construccion/requisitos-tecnicos-construccion.module' )
           .then( module => module.RequisitosTecnicosConstruccionModule )
       }, 
+      {
+        path: 'registrarInformeFinalProyecto',
+        loadChildren: () => import( './_pages/registrar-informe-final-proyecto/registrar-informe-final-proyecto.module' )
+          .then( module => module.RegistrarInformeFinalProyectoModule )
+      }, 
       
     ]
 
