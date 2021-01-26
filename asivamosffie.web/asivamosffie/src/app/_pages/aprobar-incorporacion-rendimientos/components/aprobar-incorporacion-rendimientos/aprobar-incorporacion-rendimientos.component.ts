@@ -56,7 +56,7 @@ export class AprobarIncorporacionRendimientosComponent implements OnInit {
   cargarActaFirmada(){
     const dialogConfig = new MatDialogConfig();
     dialogConfig.height = 'auto';
-    dialogConfig.width = '865px';
+    dialogConfig.width = '50%';
     const dialogRef = this.dialog.open(DialogCargarActaFirmadaAirComponent, dialogConfig);
   }
 }
