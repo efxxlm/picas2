@@ -1,9 +1,11 @@
 import { ContratosModificacionesContractualesService } from './../../../../core/_services/contratos-modificaciones-contractuales/contratos-modificaciones-contractuales.service';
-import { Component, OnInit, Output, ViewChild, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, ViewChild, EventEmitter, Input } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { GrillaProcesosContractuales } from 'src/app/_interfaces/procesosContractuales.interface';
 
 @Component({
   selector: 'app-tabla-registrados',
@@ -13,6 +15,7 @@ import { Router } from '@angular/router';
 export class TablaRegistradosComponent implements OnInit {
 
   dataSource                = new MatTableDataSource();
+  @Input() $data: Observable<GrillaProcesosContractuales[]>;
   @Output() sinData = new EventEmitter<string>();
   @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
   @ViewChild( MatSort, { static: true } ) sort          : MatSort;
@@ -22,8 +25,10 @@ export class TablaRegistradosComponent implements OnInit {
     registrado: '6'
   };
 
-  constructor ( private routes: Router,
-                private contratosContractualesSvc: ContratosModificacionesContractualesService ) {
+  constructor (
+    private routes: Router,
+    private contratosContractualesSvc: ContratosModificacionesContractualesService )
+  {
     this.getGrilla();
   }
 
@@ -31,8 +36,7 @@ export class TablaRegistradosComponent implements OnInit {
   };
 
   getGrilla () {
-    this.contratosContractualesSvc.getGrilla()
-      .subscribe( ( resp: any ) => {
+    this.$data.subscribe( ( resp: any ) => {
         
         
         for ( let contrataciones of resp ) {

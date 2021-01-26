@@ -52,7 +52,7 @@
             Registradas por la fiduciaria
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <app-tabla-registrados (sinData)="estadoAcordeonRegistrados = $event"></app-tabla-registrados>
+        <app-tabla-registrados (sinData)="estadoAcordeonRegistrados = $event" [$data]="$data"></app-tabla-registrados>
       </mat-expansion-panel>
     </mat-accordion>
   </section>
