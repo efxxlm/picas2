@@ -34,8 +34,8 @@ export class TablaResultadosContratistasComponent implements OnInit, OnChanges {
   ];
   dataSource = new MatTableDataSource();
 
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: false}) sort: MatSort;
 
   elementosSelecciondos: any[] = [];
 
@@ -76,20 +76,8 @@ export class TablaResultadosContratistasComponent implements OnInit, OnChanges {
           idContratista: this.contratacion.contratistaId,
 
         }
-        this.dataSource = new MatTableDataSource( [ this.contratacion[ 'contratista' ] ] );
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
-        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-        this.paginator._intl.nextPageLabel = 'Siguiente';
-        this.paginator._intl.previousPageLabel = 'Anterior';
       }
     }, 2000);
-
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-    this.paginator._intl.nextPageLabel = 'Siguiente';
-    this.paginator._intl.previousPageLabel = 'Anterior';
   }
 
   selectElement(elemento: ContratistaGrilla) {
@@ -130,6 +118,13 @@ export class TablaResultadosContratistasComponent implements OnInit, OnChanges {
           return;
         }
         this.dataSource = new MatTableDataSource(response);
+        setTimeout(() => {
+          this.dataSource.sort = this.sort;
+          this.dataSource.paginator = this.paginator;
+          this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+          this.paginator._intl.nextPageLabel = 'Siguiente';
+          this.paginator._intl.previousPageLabel = 'Anterior';
+        }, 10);
       })
 
   }
@@ -141,7 +136,7 @@ export class TablaResultadosContratistasComponent implements OnInit, OnChanges {
       this.contratista.idContratista = 0;
     if (this.contratacion[ 'contratista' ] !== undefined)
       this.contratacion[ 'contratista' ].numeroIdentificacion = '';
-    this.dataSource = new MatTableDataSource(null);
+    this.dataSource = new MatTableDataSource();
   }
 
   cargarRegistros(){

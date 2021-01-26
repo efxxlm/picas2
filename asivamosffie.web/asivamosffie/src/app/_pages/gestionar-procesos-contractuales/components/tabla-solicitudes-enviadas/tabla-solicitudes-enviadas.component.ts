@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, Output, ViewChild, EventEmitter } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -15,6 +15,7 @@ export class TablaSolicitudesEnviadasComponent implements OnInit {
 
   @Input() enviadasFiduciaria: boolean;
   @Input() $data: Observable<GrillaProcesosContractuales[]>;
+  @Output() estadoSemaforo = new EventEmitter<string>();
   dataSource = new MatTableDataSource();
   @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
   @ViewChild( MatSort, { static: true } ) sort          : MatSort;
@@ -32,10 +33,14 @@ export class TablaSolicitudesEnviadasComponent implements OnInit {
       let dataTable = [];
 
       response.forEach( lista => {
-         if ( lista.estadoCodigo === this.estadoCodigos.enviadaFiduciaria ) {
-           dataTable.push( lista );
-         };
+        if ( lista.estadoCodigo === this.estadoCodigos.enviadaFiduciaria ) {
+          dataTable.push( lista );
+        };
       } );
+
+      if ( dataTable.length > 0 ) {
+        this.estadoSemaforo.emit( 'completo' );
+      }
 
       this.dataSource = new MatTableDataSource( dataTable );
       this.dataSource.paginator              = this.paginator;

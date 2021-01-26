@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 export class TablaRegistradosComponent implements OnInit {
 
   dataSource                = new MatTableDataSource();
-  @Output() sinData = new EventEmitter<boolean>();
+  @Output() sinData = new EventEmitter<string>();
   @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
   @ViewChild( MatSort, { static: true } ) sort          : MatSort;
   displayedColumns: string[] = [ 'fechaSolicitud', 'numeroSolicitud', 'tipoSolicitud', 'estadoRegistro', 'id' ];
@@ -41,8 +41,8 @@ export class TablaRegistradosComponent implements OnInit {
           };
         };
 
-        if ( this.dataTable.length === 0 ) {
-          this.sinData.emit( false );
+        if ( this.dataTable.length > 0 ) {
+          this.sinData.emit( 'completo' );
         }
 
         this.dataSource                        = new MatTableDataSource( this.dataTable );

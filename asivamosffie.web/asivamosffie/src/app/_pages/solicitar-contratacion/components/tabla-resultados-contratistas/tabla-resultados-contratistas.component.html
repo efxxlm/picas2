@@ -37,7 +37,7 @@
     </mat-card-content>
 </mat-card>
 
-<div class="text-center">
+<div class="text-center" *ngIf="dataSource.data.length > 0">
     <p class="info-table cantidad-seleccionados">
         <img class="info-table--img" src="assets/img/icon/sim.svg" alt="icono información">
         Seleccione el contratista
