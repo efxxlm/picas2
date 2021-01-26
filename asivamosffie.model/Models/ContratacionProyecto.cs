@@ -10,9 +10,12 @@ namespace asivamosffie.model.Models
             ContratacionObservacion = new HashSet<ContratacionObservacion>();
             ContratacionProyectoAportante = new HashSet<ContratacionProyectoAportante>();
             DefensaJudicialContratacionProyecto = new HashSet<DefensaJudicialContratacionProyecto>();
+            InformeFinal = new HashSet<InformeFinal>();
             SeguimientoDiario = new HashSet<SeguimientoDiario>();
             SeguimientoSemanal = new HashSet<SeguimientoSemanal>();
             SesionSolicitudObservacionProyecto = new HashSet<SesionSolicitudObservacionProyecto>();
+            SolicitudPago = new HashSet<SolicitudPago>();
+            SolicitudPagoFaseCriterioProyecto = new HashSet<SolicitudPagoFaseCriterioProyecto>();
         }
 
         public int ContratacionProyectoId { get; set; }
@@ -43,8 +46,11 @@ namespace asivamosffie.model.Models
         public virtual ICollection<ContratacionObservacion> ContratacionObservacion { get; set; }
         public virtual ICollection<ContratacionProyectoAportante> ContratacionProyectoAportante { get; set; }
         public virtual ICollection<DefensaJudicialContratacionProyecto> DefensaJudicialContratacionProyecto { get; set; }
+        public virtual ICollection<InformeFinal> InformeFinal { get; set; }
         public virtual ICollection<SeguimientoDiario> SeguimientoDiario { get; set; }
         public virtual ICollection<SeguimientoSemanal> SeguimientoSemanal { get; set; }
         public virtual ICollection<SesionSolicitudObservacionProyecto> SesionSolicitudObservacionProyecto { get; set; }
+        public virtual ICollection<SolicitudPago> SolicitudPago { get; set; }
+        public virtual ICollection<SolicitudPagoFaseCriterioProyecto> SolicitudPagoFaseCriterioProyecto { get; set; }
     }
 }

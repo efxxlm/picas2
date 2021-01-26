@@ -214,6 +214,7 @@
         public const string Crear_Editar_Observacion_Perfil = "143";
         public const string Aprobar_Inicio_Construccion = "144";
         public const string Cargar_Acta_Terminacion_Contrato = "180";
-        	
+        public const string Crear_Informe_Final = "192";
+
     }
 }

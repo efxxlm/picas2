@@ -40,6 +40,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         Gestionar_procesos_Defensa_Judicial = 52,
         Registrar_Avance_Semanal = 55,
         Verificar_Requisitos_Tecnicos_Construccion = 45,
+        Registrar_Informe_Final = 64,
     }
 
     public enum enumeratorAccion
