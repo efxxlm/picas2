@@ -129,9 +129,11 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
   private contarSaltosDeLinea(cadena: string, subcadena: string) {
     let contadorConcurrencias = 0;
     let posicion = 0;
-    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
-      ++contadorConcurrencias;
-      posicion += subcadena.length;
+    if ( cadena ){
+      while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
+        ++contadorConcurrencias;
+        posicion += subcadena.length;
+      }
     }
     return contadorConcurrencias;
   }

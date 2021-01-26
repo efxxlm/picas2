@@ -67,7 +67,7 @@ export class FormOtrosTemasComponent implements OnInit {
     private technicalCommitteSessionService: TechnicalCommitteSessionService,
     public dialog: MatDialog,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     let estados: string[] = ['1', '3', '5', '8']
@@ -108,9 +108,11 @@ export class FormOtrosTemasComponent implements OnInit {
   private contarSaltosDeLinea(cadena: string, subcadena: string) {
     let contadorConcurrencias = 0
     let posicion = 0
-    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
-      ++contadorConcurrencias
-      posicion += subcadena.length
+    if (cadena) {
+      while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
+        ++contadorConcurrencias
+        posicion += subcadena.length
+      }
     }
     return contadorConcurrencias
   }
