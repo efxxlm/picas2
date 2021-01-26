@@ -29,10 +29,10 @@ export class TablaRegistradosComponent implements OnInit {
     private routes: Router,
     private contratosContractualesSvc: ContratosModificacionesContractualesService )
   {
-    this.getGrilla();
   }
 
   ngOnInit(): void {
+    this.getGrilla();
   };
 
   getGrilla () {
