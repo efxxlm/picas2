@@ -13,8 +13,10 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class FormAmortizacionAnticipoComponent implements OnInit {
 
     @Input() solicitudPago: any;
+    @Input() contrato: any;
     solicitudPagoFase: any;
     solicitudPagoFaseAmortizacionId = 0;
+    valorTotalDelContrato = 0;
     addressForm = this.fb.group({
       porcentajeAmortizacion: [null, Validators.required],
       valorAmortizacion: [ { value: null, disabled: true } , Validators.required]
@@ -29,15 +31,20 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
         this.addressForm.get( 'porcentajeAmortizacion' ).valueChanges
             .subscribe(
                 value => {
-                    const exampleValue = 300000000 * 0.20;
-                    const porcentajeCalculo = value / 100;
-                    const valorAmortizacion = exampleValue * porcentajeCalculo;
-                    this.addressForm.get( 'valorAmortizacion' ).setValue( valorAmortizacion );
+                    if ( this.valorTotalDelContrato > 0 ) {
+                        const exampleValue = this.valorTotalDelContrato * 0.20;
+                        const porcentajeCalculo = value / 100;
+                        const valorAmortizacion = exampleValue * porcentajeCalculo;
+                        this.addressForm.get( 'valorAmortizacion' ).setValue( valorAmortizacion );
+                    }
                 }
             );
     }
 
     ngOnInit(): void {
+        if ( this.contrato.contratacion.disponibilidadPresupuestal.length > 0 ) {
+            this.contrato.contratacion.disponibilidadPresupuestal.forEach( ddp => this.valorTotalDelContrato += ddp.valorSolicitud );
+        }
         this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
         if ( this.solicitudPagoFase.solicitudPagoFaseAmortizacion.length > 0 ) {
             const solicitudPagoFaseAmortizacion = this.solicitudPagoFase.solicitudPagoFaseAmortizacion[0]
