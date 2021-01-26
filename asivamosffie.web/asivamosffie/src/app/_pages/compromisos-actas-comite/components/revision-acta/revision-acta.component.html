@@ -267,7 +267,7 @@
       color="accent"
       class="tabs--btn"
       (click)="aprobarActa(acta.comiteTecnicoId)"
-      [disabled]="acta.estadoActaCodigo !== '2'"
+      [disabled]="acta.estadoActaCodigo !== estadoActa.revisarActa"
     >
       Aprobar acta
     </button>
@@ -275,7 +275,7 @@
       mat-raised-button
       color="accent"
       class="tabs--btn"
-      *ngIf="acta.estadoActaCodigo === '2'"
+      *ngIf="acta.estadoActaCodigo === estadoActa.revisarActa"
       (click)="comentarActa = !comentarActa"
     >
       Comentar y devolver acta
@@ -285,7 +285,7 @@
       color="accent"
       class="tabs--btn"
       (click)="comentarios = !comentarios"
-      *ngIf="acta.estadoActaCodigo === '4'"
+      *ngIf="acta.estadoActaCodigo === estadoActa.devuelto"
     >
       Comentarios del acta
     </button>

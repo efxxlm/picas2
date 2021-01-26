@@ -39,6 +39,11 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
   proposicionesVarios: any[] = [];
   seRealizoPeticion: boolean = false;
   estaEditando = false;
+  estadoActa = {
+    revisarActa: '2',
+    aprobado: '3',
+    devuelto: '4'
+  };
 
   constructor(private routes: Router,
     public dialog: MatDialog,
