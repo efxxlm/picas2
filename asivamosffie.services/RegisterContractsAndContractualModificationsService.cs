@@ -28,6 +28,8 @@ namespace asivamosffie.services
             _context = context;
         }
 
+ 
+
         public async Task<List<SesionComiteSolicitud>> GetListSesionComiteSolicitud()
         {
             List<SesionComiteSolicitud> ListSesionComiteSolicitud = await _context.SesionComiteSolicitud
@@ -375,6 +377,11 @@ namespace asivamosffie.services
                 ) { return false; }
 
             return true;
+        }
+ 
+        public async Task<List<VListaContratacionModificacionContractual>> GetListSesionComiteSolicitudV2()
+        {
+            return await _context.VListaContratacionModificacionContractual.OrderByDescending(v => v.SesionComiteSolicitudId).ToListAsync();
         }
     }
 }

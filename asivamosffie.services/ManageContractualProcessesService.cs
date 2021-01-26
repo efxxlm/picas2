@@ -582,6 +582,11 @@ namespace asivamosffie.services
             return pPlantilla;
         }
 
+        public async Task<List<VListaContratacionModificacionContractual>> GetListSesionComiteSolicitudV2()
+        { 
+            return await _context.VListaContratacionModificacionContractual.OrderByDescending(v => v.SesionComiteSolicitudId).ToListAsync(); 
+        }
+
         public async Task<List<SesionComiteSolicitud>> GetListSesionComiteSolicitud()
         {
             try

@@ -10,11 +10,14 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IManageContractualProcessesService
     {
+        Task<List<VListaContratacionModificacionContractual>> GetListSesionComiteSolicitudV2();
+
+        Task<List<SesionComiteSolicitud>> GetListSesionComiteSolicitud();
+
         Task<byte[]> GetDDPBySesionComiteSolicitudID(int pSesionComiteSolicitudID ,string pPatchLogo);
 
         Task<Respuesta> CambiarEstadoSesionComiteSolicitud(SesionComiteSolicitud pSesionComiteSolicitud, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
-
-        Task<List<SesionComiteSolicitud>> GetListSesionComiteSolicitud();
+       
 
         Task<Contratacion> GetContratacionByContratacionId(int pContratacionId);
 

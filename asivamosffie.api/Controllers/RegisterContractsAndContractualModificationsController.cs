@@ -30,6 +30,13 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
+        [Route("GetListSesionComiteSolicitudV2")]
+        public async Task<List<VListaContratacionModificacionContractual>> GetListSesionComiteSolicitudV2()
+        {
+            return await _registerContractsService.GetListSesionComiteSolicitudV2();
+        }
+
+        [HttpGet]
         [Route("GetListSesionComiteSolicitud")]
         public async Task<List<SesionComiteSolicitud>> GetListSesionComiteSolicitud()
         {

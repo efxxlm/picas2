@@ -216,7 +216,6 @@ namespace asivamosffie.services
                       .OrderByDescending(r => r.ComiteTecnicoId)
                   .ToListAsync();
 
-
             ListComiteTecnico.ForEach(l =>
             {
                 l.esVotoAprobado = l.SesionComentario.Where(r => r.MiembroSesionParticipanteId == pUserId && r.EstadoActaVoto == ConstantCodigoActas.Aprobada).Count() > 0 ? true : false; 
