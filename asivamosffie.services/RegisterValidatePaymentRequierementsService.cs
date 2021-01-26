@@ -44,12 +44,13 @@ namespace asivamosffie.services
         {
             return await
                 _context.VProyectosXcontrato
-                .Where(r => r.LlaveMen.Contains(pLlaveMen)
-                && r.EstadoActaFase2 == ConstanCodigoEstadoActaContrato.Con_acta_suscrita_y_cargada)
-                                                        .Select(s =>  new {
-                                                                            s.LlaveMen, 
-                                                                            s.ContratacionProyectoId 
-                                                                        }).ToListAsync();
+                                            .Where(r => r.LlaveMen.Contains(pLlaveMen)
+                                            && r.EstadoActaFase2 == ConstanCodigoEstadoActaContrato.Con_acta_suscrita_y_cargada)
+                                                                                                                                .Select(s => new
+                                                                                                                                {
+                                                                                                                                    s.LlaveMen,
+                                                                                                                                    s.ContratacionProyectoId
+                                                                                                                                }).ToListAsync();
         }
 
         public async Task<dynamic> GetListSolicitudPago()
@@ -67,7 +68,7 @@ namespace asivamosffie.services
                                  s.ContratoId,
                                  s.SolicitudPagoId,
                                  RegistroCompleto = s.RegistroCompleto ?? false
-                             }).OrderByDescending(r=> r.SolicitudPagoId).ToListAsync();
+                             }).OrderByDescending(r => r.SolicitudPagoId).ToListAsync();
 
             List<dynamic> grind = new List<dynamic>();
             List<Dominio> ListParametricas = _context.Dominio.Where(d => d.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato || d.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Registro_Pago).ToList();
@@ -76,6 +77,7 @@ namespace asivamosffie.services
             {
                 grind.Add(new
                 {
+                    r.RegistroCompleto,
                     r.TipoSolicitudCodigo,
                     r.ContratoId,
                     r.SolicitudPagoId,
@@ -83,7 +85,7 @@ namespace asivamosffie.services
                     r.NumeroSolicitud,
                     r.NumeroContrato,
                     Estado = !string.IsNullOrEmpty(r.EstadoCodigo) ? ListParametricas.Where(l => l.Codigo == r.EstadoCodigo && l.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Registro_Pago).FirstOrDefault().Nombre : " - ",
-                    Modalidad = !string.IsNullOrEmpty(r.ModalidadCodigo) ? ListParametricas.Where(l => l.Codigo == r.ModalidadCodigo && l.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato).FirstOrDefault().Nombre : " - "
+                    Modalidad = !string.IsNullOrEmpty(r.ModalidadCodigo) ? ListParametricas.Where(l => l.Codigo == r.ModalidadCodigo && l.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato).FirstOrDefault().Nombre : "No aplica"
                 });
             });
             return grind;
@@ -692,7 +694,11 @@ namespace asivamosffie.services
             foreach (var SolicitudPagoFase in solicitudPagoFaseList)
             {
                 if (SolicitudPagoFase.SolicitudPagoFaseCriterio.Count() > 0)
+                {
+                    SolicitudPagoFase.RegistroCompletoCriterio = ValidateCompleteRecordSolicitudPagoFaseCriterio2(SolicitudPagoFase.SolicitudPagoFaseCriterio);
                     CreateEditSolicitudPagoFaseCriterio(SolicitudPagoFase.SolicitudPagoFaseCriterio, SolicitudPagoFase.UsuarioCreacion);
+                }
+
                 if (SolicitudPagoFase.SolicitudPagoFaseFactura.Count() > 0)
                     CreateEditSolicitudPagoFaseFactura(SolicitudPagoFase.SolicitudPagoFaseFactura, pUsuarioCreacion);
                 if (SolicitudPagoFase.SolicitudPagoFaseAmortizacion.Count() > 0)
@@ -714,6 +720,19 @@ namespace asivamosffie.services
                     _context.SolicitudPagoFase.Add(SolicitudPagoFase);
                 }
             }
+        }
+
+        private bool ValidateCompleteRecordSolicitudPagoFaseCriterio2(ICollection<SolicitudPagoFaseCriterio> ListsolicitudPagoFaseCriterio)
+        {
+            foreach (var solicitudPagoFaseCriterio in ListsolicitudPagoFaseCriterio)
+            {
+                if (string.IsNullOrEmpty(solicitudPagoFaseCriterio.TipoCriterioCodigo)
+                      || string.IsNullOrEmpty(solicitudPagoFaseCriterio.ConceptoPagoCriterio)
+                      || string.IsNullOrEmpty(solicitudPagoFaseCriterio.ValorFacturado.ToString())
+                      ) return false;
+            }
+
+            return true;
         }
 
         private void CreateEditSolicitudPagoSolicitudPagoAmortizacion(ICollection<SolicitudPagoFaseAmortizacion> pSolicitudPagoAmortizacionList, string pUsuarioCreacion)
@@ -1064,7 +1083,7 @@ namespace asivamosffie.services
 
                 }
                 else
-                { 
+                {
                     SolicitudPagoExpensas.UsuarioCreacion = usuarioCreacion;
                     SolicitudPagoExpensas.FechaCreacion = DateTime.Now;
                     SolicitudPagoExpensas.Eliminado = false;
