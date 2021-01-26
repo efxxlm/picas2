@@ -13,8 +13,8 @@ namespace asivamosffie.model.Models
         public int NumeroCompromisosCumplidos { get; set; }
         [NotMapped]
         public int UsuarioId { get; set; }
-
-
+        [NotMapped]
+        public bool esVotoAprobado  { get; set; } 
     }
 
 }

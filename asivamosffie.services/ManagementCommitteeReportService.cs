@@ -199,13 +199,13 @@ namespace asivamosffie.services
         //Gestion de actas
         public async Task<ActionResult<List<ComiteTecnico>>> GetManagementReport(int pUserId)
         {
-            List<GrillaSesionComiteTecnicoCompromiso> grillaSesionComiteTecnicoCompromisos = new List<GrillaSesionComiteTecnicoCompromiso>();
             string StrSql = "SELECT ComiteTecnico.*" +
                 " FROM  dbo.ComiteTecnico " +
                 "INNER JOIN dbo.SesionParticipante  ON   ComiteTecnico.ComiteTecnicoId = SesionParticipante.ComiteTecnicoId " +
                 "WHERE  SesionParticipante.UsuarioId = " + pUserId + " AND   ComiteTecnico.Eliminado = 0 AND  SesionParticipante.Eliminado = 0";
 
-            return await _context.ComiteTecnico.FromSqlRaw(StrSql)
+            List<ComiteTecnico> ListComiteTecnico = await _context.ComiteTecnico.FromSqlRaw(StrSql)
+                      .Include(r => r.SesionComentario)
                       .Include(r => r.SesionComiteTecnicoCompromiso)
                       .Include(r => r.SesionComiteSolicitudComiteTecnico)
                       .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
@@ -215,6 +215,13 @@ namespace asivamosffie.services
                       .Distinct()
                       .OrderByDescending(r => r.ComiteTecnicoId)
                   .ToListAsync();
+
+
+            ListComiteTecnico.ForEach(l =>
+            {
+                l.esVotoAprobado = l.SesionComentario.Where(r => r.MiembroSesionParticipanteId == pUserId && r.EstadoActaVoto == ConstantCodigoActas.Aprobada).Count() > 0 ? true : false; 
+            });
+            return ListComiteTecnico;
         }
 
         //Detalle gestion de actas
@@ -522,7 +529,7 @@ namespace asivamosffie.services
                                 //obtengo el proponente y lo convierto en contratista
                                 var proponentes = _context.ProcesoSeleccionProponente.Where(x => x.ProcesoSeleccionId == pses.SolicitudId).Include(x => x.ProcesoSeleccion).ToList();
                                 //solo si no es invitación cerrada
-                                if(proponentes.FirstOrDefault().ProcesoSeleccion.TipoProcesoCodigo!= ConstanCodigoTipoProcesoSeleccion.Invitacion_Cerrada)
+                                if (proponentes.FirstOrDefault().ProcesoSeleccion.TipoProcesoCodigo != ConstanCodigoTipoProcesoSeleccion.Invitacion_Cerrada)
                                 {
                                     foreach (var p in proponentes)
                                     {
@@ -546,7 +553,7 @@ namespace asivamosffie.services
                                             _context.Contratista.Add(contratista);
                                         }
                                     }
-                                }                                
+                                }
                             }
                         }
                     }
