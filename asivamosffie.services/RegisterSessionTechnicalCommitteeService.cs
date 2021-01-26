@@ -5012,7 +5012,9 @@ namespace asivamosffie.services
                             FechaCumplimiento = ((DateTime)SesionSolicitudCompromiso.FechaCumplimiento).ToString("dd-MMMM-YY"),
                             TipoSolicitud = ConstanCodigoTipoCompromisos.CompromisosSolicitud.ToString(),
                             CompromisoId = SesionSolicitudCompromiso.SesionSolicitudCompromisoId,
-                            ComiteTecnicoId = ComiteTecnico.ComiteTecnicoId
+                            ComiteTecnicoId = ComiteTecnico.ComiteTecnicoId,
+                            EsCumplido = SesionSolicitudCompromiso.EsCumplido,
+
                         });
                     }
                 }
@@ -5029,7 +5031,9 @@ namespace asivamosffie.services
                             FechaCumplimiento = ((DateTime)SesionSolicitudCompromiso.FechaCumplimiento).ToString("dd-MMMM-YY"),
                             TipoSolicitud = ConstanCodigoTipoCompromisos.CompromisosSolicitud.ToString(),
                             CompromisoId = SesionSolicitudCompromiso.SesionSolicitudCompromisoId,
-                            ComiteTecnicoId = ComiteTecnico.ComiteTecnicoId
+                            ComiteTecnicoId = ComiteTecnico.ComiteTecnicoId,
+                            EsCumplido = SesionSolicitudCompromiso.EsCumplido,
+
                         });
                     }
                 }
@@ -5054,7 +5058,9 @@ namespace asivamosffie.services
                             FechaCumplimiento = ((DateTime)TemaCompromiso.FechaCumplimiento).ToString("dd-MMMM-YY"),
                             TipoSolicitud = ConstanCodigoTipoCompromisos.CompromisosTema.ToString(),
                             CompromisoId = TemaCompromiso.TemaCompromisoId,
-                            ComiteTecnicoId = ComiteTecnico.ComiteTecnicoId
+                            ComiteTecnicoId = ComiteTecnico.ComiteTecnicoId,
+                            EsCumplido = TemaCompromiso.EsCumplido,
+
                         });
                     }
                 }
@@ -5069,9 +5075,9 @@ namespace asivamosffie.services
                         FechaOrdenDia = item.FechaComite,
                         item.NumeroComite,
                         cantidadCompromisos = ListCompromisos.Where(r => r.ComiteTecnicoId == item.ComiteTecnicoId).Count(),
-                        cantidadCompromisosCumplidos = ListCompromisos.Where(r => r.ComiteTecnicoId == item.ComiteTecnicoId && r.EstadoCodigo == ConstantCodigoCompromisos.Finalizado).Count(),
+                        cantidadCompromisosCumplidos = ListCompromisos.Where(r => r.ComiteTecnicoId == item.ComiteTecnicoId && r.EsCumplido == true).Count(),
                         item.ComiteTecnicoId
-                    });
+                    }); ;
                 }
             }
             return ListGrilla;
