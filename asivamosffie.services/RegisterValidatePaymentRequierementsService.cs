@@ -693,11 +693,9 @@ namespace asivamosffie.services
         {
             foreach (var SolicitudPagoFase in solicitudPagoFaseList)
             {
-                if (SolicitudPagoFase.SolicitudPagoFaseCriterio.Count() > 0)
-                {
-                    SolicitudPagoFase.RegistroCompletoCriterio = ValidateCompleteRecordSolicitudPagoFaseCriterio2(SolicitudPagoFase.SolicitudPagoFaseCriterio);
-                    CreateEditSolicitudPagoFaseCriterio(SolicitudPagoFase.SolicitudPagoFaseCriterio, SolicitudPagoFase.UsuarioCreacion);
-                }
+                if (SolicitudPagoFase.SolicitudPagoFaseCriterio.Count() > 0) 
+                CreateEditSolicitudPagoFaseCriterio(SolicitudPagoFase.SolicitudPagoFaseCriterio, SolicitudPagoFase.UsuarioCreacion);
+               
 
                 if (SolicitudPagoFase.SolicitudPagoFaseFactura.Count() > 0)
                     CreateEditSolicitudPagoFaseFactura(SolicitudPagoFase.SolicitudPagoFaseFactura, pUsuarioCreacion);
@@ -707,12 +705,20 @@ namespace asivamosffie.services
                 if (SolicitudPagoFase.SolicitudPagoFaseId > 0)
                 {
                     SolicitudPagoFase solicitudPagoFaseOld = _context.SolicitudPagoFase.Find(SolicitudPagoFase.SolicitudPagoFaseId);
+
+                    if (SolicitudPagoFase.SolicitudPagoFaseCriterio.Count() > 0)
+                        solicitudPagoFaseOld.RegistroCompletoCriterio = ValidateCompleteRecordSolicitudPagoFaseCriterio2(SolicitudPagoFase.SolicitudPagoFaseCriterio);
+             
                     solicitudPagoFaseOld.UsuarioModificacion = pUsuarioCreacion;
                     solicitudPagoFaseOld.FechaModificacion = DateTime.Now;
+                
                     solicitudPagoFaseOld.RegistroCompleto = ValidateCompleteRecordSolicitudPagoFase(SolicitudPagoFase);
                 }
                 else
                 {
+                    if (SolicitudPagoFase.SolicitudPagoFaseCriterio.Count() > 0)
+                        SolicitudPagoFase.RegistroCompletoCriterio = ValidateCompleteRecordSolicitudPagoFaseCriterio2(SolicitudPagoFase.SolicitudPagoFaseCriterio);
+
                     SolicitudPagoFase.FechaCreacion = DateTime.Now;
                     SolicitudPagoFase.Eliminado = false;
                     SolicitudPagoFase.UsuarioCreacion = pUsuarioCreacion;
