@@ -37,7 +37,7 @@ namespace asivamosffie.api.Controllers
  
         [Route("GetListSolicitudPago")]
         [HttpGet]
-        public async Task<OrdenGiro> GetListSolicitudPago()
+        public async Task<dynamic> GetListSolicitudPago()
         {
             var result = await _generateSpinOrderService.GetListSolicitudPago();
             return result;
