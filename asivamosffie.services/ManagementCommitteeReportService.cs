@@ -679,6 +679,7 @@ namespace asivamosffie.services
 
                 foreach (var sesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnico)
                 {
+                    sesionComiteSolicitud.SesionSolicitudCompromiso = sesionComiteSolicitud.SesionSolicitudCompromiso.Where(r => r.EsFiduciario != true).ToList();
                     foreach (var sesionSolicitudCompromiso in sesionComiteSolicitud.SesionSolicitudCompromiso)
                     {
                         if (!string.IsNullOrEmpty(sesionSolicitudCompromiso?.ResponsableSesionParticipante?.Usuario?.Email))
@@ -687,10 +688,10 @@ namespace asivamosffie.services
                             string template =
                                 TemplateNotificacionCompromisos.Contenido
                                 .Replace("_LinkF_", pDominioFront)
-                                .Replace("[URL]", pDominioFront)
+                                .Replace("[URL]", pDominioFront + "compromisosActasComite")
                                 .Replace("[NUMERO_COMITE]", comiteTecnico.NumeroComite)
                                 .Replace("[COMPROMISO]", sesionSolicitudCompromiso.Tarea)
-                                .Replace("[COMPROMISO]", sesionSolicitudCompromiso.FechaCumplimiento.HasValue ? sesionSolicitudCompromiso.FechaCumplimiento.Value.ToString("dd-MM-yyyy") : null);
+                                .Replace("[FECHA_CUMPLIMIENTO]", sesionSolicitudCompromiso.FechaCumplimiento.HasValue ? sesionSolicitudCompromiso.FechaCumplimiento.Value.ToString("dd-MM-yyyy") : null);
 
                             blEnvioCorreo = Helpers.Helpers.EnviarCorreo(sesionSolicitudCompromiso?.ResponsableSesionParticipante?.Usuario?.Email, "Notificación Compromisos", template, pSender, pPassword, pMailServer, pMailPort);
                         }
@@ -699,6 +700,7 @@ namespace asivamosffie.services
 
                 foreach (var sesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario)
                 {
+                    sesionComiteSolicitud.SesionSolicitudCompromiso = sesionComiteSolicitud.SesionSolicitudCompromiso.Where(r => r.EsFiduciario == true).ToList();
                     foreach (var sesionSolicitudCompromiso in sesionComiteSolicitud.SesionSolicitudCompromiso)
                     {
                         if (!string.IsNullOrEmpty(sesionSolicitudCompromiso?.ResponsableSesionParticipante?.Usuario?.Email))
@@ -707,7 +709,7 @@ namespace asivamosffie.services
                             string template =
                                 TemplateNotificacionCompromisos.Contenido
                                 .Replace("_LinkF_", pDominioFront)
-                                .Replace("[URL]", pDominioFront)
+                                .Replace("[URL]", pDominioFront + "compromisosActasComite")
                                 .Replace("[NUMERO_COMITE]", comiteTecnico.NumeroComite)
                                 .Replace("[COMPROMISO]", sesionSolicitudCompromiso.Tarea)
                                 .Replace("[FECHA_CUMPLIMIENTO]", sesionSolicitudCompromiso.FechaCumplimiento.HasValue ? sesionSolicitudCompromiso.FechaCumplimiento.Value.ToString("dd-MM-yyyy") : null);
