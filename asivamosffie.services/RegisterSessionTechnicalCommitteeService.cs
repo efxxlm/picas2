@@ -2495,6 +2495,8 @@ namespace asivamosffie.services
             List<Dominio> placeholders = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.PlaceHolder).ToList();
             List<Usuario> listaUsuarios = _context.Usuario.ToList();
 
+            #region plantillas
+
             string TipoPlantillaRegistrosGruposProcesoSeleccion = ((int)ConstanCodigoPlantillas.Registros_Grupos_Proceso_Seleccion).ToString();
             string DetalleGrupoProcesosSeleccion = _context.Plantilla.Where(r => r.Codigo == TipoPlantillaRegistrosGruposProcesoSeleccion).Select(r => r.Contenido).FirstOrDefault();
             string DetallesGrupoProcesosSeleccion = "";
@@ -2515,7 +2517,15 @@ namespace asivamosffie.services
             string ProcesoSeleccionAbierta = _context.Plantilla.Where(r => r.Codigo == TipoPlantillaProcesoSeleccionAbierta).Select(r => r.Contenido).FirstOrDefault();
             string ProcesosSeleccionAbierta = " ";
 
+            string TipoPlantillaProponentes = ((int)ConstanCodigoPlantillas.Proponentes_Proceso_Seleccion).ToString();
+            string ProponenteProcesoSeleccion = _context.Plantilla.Where(r => r.Codigo == TipoPlantillaProponentes).Select(r => r.Contenido).FirstOrDefault();
+            string ProponentesProcesosSeleccion = " ";
+
+            #endregion plantillas
+
             List<Dominio> ListaParametricas = _context.Dominio.ToList();
+
+            #region Grupos de seleccion
 
             //Plantilla Grupos de seleccion
             foreach (var ProcesoSeleccionGrupo in pProcesoSeleccion.ProcesoSeleccionGrupo)
@@ -2549,6 +2559,10 @@ namespace asivamosffie.services
                 }
             }
 
+            #endregion Grupos de seleccion
+
+            #region Cronograma
+
             //Plantilla Cronograma 
             foreach (var ProcesoSeleccionCronograma in pProcesoSeleccion.ProcesoSeleccionCronograma)
             {
@@ -2576,10 +2590,15 @@ namespace asivamosffie.services
                 }
             }
 
+            #endregion Cronograma
+
+            #region Tipo de proceso de solicitud
+
             //Plantilla que Depende del Tipo de proceso de solicitud
 
             switch (pProcesoSeleccion.TipoProcesoCodigo)
             {
+                #region Invitacion_Abierta
                 case ConstanCodigoTipoProcesoSeleccion.Invitacion_Abierta:
                     ProcesosSeleccionAbierta = ProcesoSeleccionAbierta;
                     foreach (Dominio placeholderDominio in placeholders)
@@ -2631,6 +2650,9 @@ namespace asivamosffie.services
                     }
 
                     break;
+                #endregion Invitacion_Abierta
+
+                #region Invitacion_Cerrada
                 case ConstanCodigoTipoProcesoSeleccion.Invitacion_Cerrada:
                     ProcesosSeleccionCerrada = ProcesoSeleccionCerrada;
                     foreach (Dominio placeholderDominio in placeholders)
@@ -2666,22 +2688,30 @@ namespace asivamosffie.services
 
                             case ConstanCodigoVariablesPlaceHolders.NOMBRE_ORGANIZACION_CERRADA_PS:
 
+                                string proponentes = "";
+
                                 pProcesoSeleccion.ProcesoSeleccionCotizacion.ToList().ForEach(c =>
                                 {
-                                    ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
-                                  Replace(placeholderDominio.Nombre, c.NombreOrganizacion);
+                                    proponentes = proponentes + ProponenteProcesoSeleccion;
+                                    proponentes = proponentes.Replace(placeholderDominio.Nombre, c.NombreOrganizacion)
+                                    .Replace("[VALOR_CONTIZACION_CERRADA_PS]", "$" + String.Format("{0:n0}", c.ValorCotizacion));
+
+                                    
                                 });
+
+                                ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
+                                  Replace("[PROPONENTES]", proponentes);
 
                                 break;
 
-                            case ConstanCodigoVariablesPlaceHolders.VALOR_CONTIZACION_CERRADA_PS:
-                                pProcesoSeleccion.ProcesoSeleccionCotizacion.ToList().ForEach(c =>
-                                {
-                                    ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
-                                  Replace(placeholderDominio.Nombre, "$" + String.Format("{0:n0}", c.ValorCotizacion));
-                                });
+                            //case ConstanCodigoVariablesPlaceHolders.VALOR_CONTIZACION_CERRADA_PS:
+                            //    pProcesoSeleccion.ProcesoSeleccionCotizacion.ToList().ForEach(c =>
+                            //    {
+                            //        ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
+                            //      Replace(placeholderDominio.Nombre, "$" + String.Format("{0:n0}", c.ValorCotizacion));
+                            //    });
 
-                                break;
+                            //    break;
 
                             case ConstanCodigoVariablesPlaceHolders.EVALUACION_DESCRIPCION_CERRADA_PS:
                                 ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
@@ -2690,6 +2720,10 @@ namespace asivamosffie.services
                         }
                     }
                     break;
+
+                #endregion Invitacion_Cerrada
+
+                #region Invitacion_Privada
 
                 case ConstanCodigoTipoProcesoSeleccion.Invitacion_Privada:
                     //ProcesosSeleccionPrivada = ProcesoSeleccionPrivada;
@@ -2802,8 +2836,13 @@ namespace asivamosffie.services
                         // }
                     }
                     break;
+
+                #endregion Invitacion_Privada
             }
 
+            #endregion Tipo de proceso de solicitud
+
+            #region principal
 
             //Plantilla Principal
             foreach (Dominio placeholderDominio in placeholders)
@@ -2892,6 +2931,8 @@ namespace asivamosffie.services
                         break;
                 }
             }
+
+            #endregion principal
 
             return pPlantilla;
 
