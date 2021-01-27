@@ -35,21 +35,19 @@ namespace asivamosffie.services
         {
             var result = await _context.SolicitudPago
                  .Include(r => r.Contrato)
-                 .Include(r => r.OrdenGiro).Where(s => s.Eliminado != true)
-
-                                        .Select(s => new
-                                        {
-                                            s.TipoSolicitudCodigo,
-                                            s.FechaCreacion,
-                                            s.NumeroSolicitud,
-                                            s.Contrato.ModalidadCodigo,
-                                            s.Contrato.NumeroContrato,
-                                            s.EstadoCodigo,
-                                            s.ContratoId,
-                                            s.SolicitudPagoId,
-                                            s.OrdenGiro,
-                                            RegistroCompleto = s.OrdenGiro.Count() > 0 ? s.OrdenGiro.FirstOrDefault().RegistroCompleto : false
-                                        }).OrderByDescending(r => r.SolicitudPagoId).ToListAsync();
+                 .Include(r => r.OrdenGiro).Where(s => s.Eliminado != true) 
+                                                                            .Select(s => new
+                                                                            {
+                                                                                    s.TipoSolicitudCodigo,
+                                                                                    s.FechaCreacion,
+                                                                                    s.NumeroSolicitud,
+                                                                                    s.Contrato.ModalidadCodigo,
+                                                                                    s.Contrato.NumeroContrato,
+                                                                                    s.EstadoCodigo,
+                                                                                    s.ContratoId,
+                                                                                    s.SolicitudPagoId,
+                                                                                    s.OrdenGiro
+                                                                            }).OrderByDescending(r => r.SolicitudPagoId).ToListAsync();
 
             List<dynamic> grind = new List<dynamic>();
             List<Dominio> ListParametricas = _context.Dominio.Where(d => d.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato || d.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Registro_Pago).ToList();
@@ -64,9 +62,7 @@ namespace asivamosffie.services
                     r.SolicitudPagoId,
                     r.NumeroSolicitud,
                     r.NumeroContrato,
-                    r.RegistroCompleto,
-                    Modalidad = !string.IsNullOrEmpty(r.ModalidadCodigo) ? ListParametricas.Where(l => l.Codigo == r.ModalidadCodigo && l.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato).FirstOrDefault().Nombre : "No aplica",
-                    EstadoOrdenGiro = r.OrdenGiro != null ? ListParametricas.Where(l => l.Codigo == r.ModalidadCodigo && l.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Registro_Pago).FirstOrDefault().Nombre : "No aplica",
+                    r.OrdenGiro
                 });
             });
             return grind;
