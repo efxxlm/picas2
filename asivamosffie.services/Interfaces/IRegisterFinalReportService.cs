@@ -14,6 +14,7 @@ namespace asivamosffie.services.Interfaces
         Task<List<VProyectosCierre>> gridRegisterFinalReport();
         Task<List<dynamic>> GetInformeFinalListaChequeoByInformeFinalInterventoriaId(int pInformeFinalInterventoriaId);
         Task<List<ContratacionProyecto>> GetInformeFinalByContratacionProyectoId(int pContratacionProyectoId);
+        Task<InformeFinalInterventoria> GetInformeFinalAnexoByInformeFinalInterventoriaId(int pInformeFinalInterventoriaId);
 
         //Creación y edición
         Task<Respuesta> CreateEditInformeFinal(InformeFinal pInformeFinal);

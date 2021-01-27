@@ -70,6 +70,21 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetInformeFinalAnexoByInformeFinalInterventoriaId")]
+        public async Task<InformeFinalInterventoria> GetInformeFinalAnexoByInformeFinalInterventoriaId([FromQuery] int pInformeFinalInterventoriaId)
+        {
+            try
+            {
+                return await _registerFinalReport.GetInformeFinalAnexoByInformeFinalInterventoriaId(pInformeFinalInterventoriaId);
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         //Creaciones y modificaciones
 
         [HttpPost]
@@ -79,8 +94,8 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                //pInformeFinal.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                pInformeFinal.UsuarioCreacion = "LCT";
+                pInformeFinal.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                //pInformeFinal.UsuarioCreacion = "LCT";
                 respuesta = await _registerFinalReport.CreateEditInformeFinal(pInformeFinal);
                 return Ok(respuesta);
             }
@@ -98,8 +113,8 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                //pInformeFinalInterventoriaId.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                pInformeFinalInterventoriaId.UsuarioCreacion = "LCT";
+                pInformeFinalInterventoriaId.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                //pInformeFinalInterventoriaId.UsuarioCreacion = "LCT";
                 respuesta = await _registerFinalReport.CreateEditInformeFinalInterventoria(pInformeFinalInterventoriaId);
                 return Ok(respuesta);
             }
@@ -118,8 +133,8 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                //pInformeFinalAnexoId.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                pInformeFinalAnexoId.UsuarioCreacion = "LCT";
+                pInformeFinalAnexoId.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                //pInformeFinalAnexoId.UsuarioCreacion = "LCT";
                 respuesta = await _registerFinalReport.CreateEditInformeFinalAnexo(pInformeFinalAnexoId, pInformeFinalInterventoriaId);
                 return Ok(respuesta);
             }
@@ -137,8 +152,8 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                //pObservacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                pObservacion.UsuarioCreacion = "LCT";
+                pObservacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                //pObservacion.UsuarioCreacion = "LCT";
                 respuesta = await _registerFinalReport.CreateEditInformeFinalInterventoriaObservacion(pObservacion);
                 return Ok(respuesta);
             }

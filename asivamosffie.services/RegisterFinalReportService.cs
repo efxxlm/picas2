@@ -38,9 +38,20 @@ namespace asivamosffie.services
                                                          .ThenInclude(r => r.Contratista)
                                                         .Include(r => r.Contratacion)
                                                          .ThenInclude(r => r.Contrato)
-                                                         .Include(r => r.InformeFinal).ToListAsync();
+                                                         .Include(r => r.InformeFinal)
+                                                            .ThenInclude(r => r.InformeFinalInterventoria)
+                                                                .ThenInclude(r => r.InformeFinalInterventoriaObservaciones).ToListAsync();
 
            return ListInfomeFinal;
+        }
+
+        public async Task<InformeFinalInterventoria> GetInformeFinalAnexoByInformeFinalInterventoriaId(int pInformeFinalInterventoriaId)
+        {
+            InformeFinalInterventoria InformeFinalAnexo = await _context.InformeFinalInterventoria.Where(r => r.InformeFinalInterventoriaId == pInformeFinalInterventoriaId)
+                                                        .Include(r => r.InformeFinalAnexo).FirstOrDefaultAsync();
+            InformeFinalAnexo.InformeFinalInterventoriaObservaciones = _context.InformeFinalInterventoriaObservaciones.Where(r => r.EsSupervision == true).ToList();
+
+            return InformeFinalAnexo;
         }
 
         private bool VerificarRegistroCompleto(InformeFinal pInformeFinal)
@@ -134,7 +145,10 @@ namespace asivamosffie.services
                         Nombre = item.Nombre,
                         CalificacionCodigo = informeFinalInterventoria.CalificacionCodigo,
                         InformeFinalListaChequeoId = informeFinalInterventoria.InformeFinalListaChequeoId,
-                        InformeFinalInterventoriaId = informeFinalInterventoria.InformeFinalInterventoriaId
+                        InformeFinalInterventoriaId = informeFinalInterventoria.InformeFinalInterventoriaId,
+                        TieneObservacionSupervisor = informeFinalInterventoria.TieneObservacionSupervisor is null ? false : informeFinalInterventoria.TieneObservacionSupervisor
+
+
                     });
                 }
                 else
@@ -144,7 +158,8 @@ namespace asivamosffie.services
                         Nombre = item.Nombre,
                         CalificacionCodigo = calificacionCodigo,
                         InformeFinalListaChequeoId = item.InformeFinalListaChequeoId,
-                        InformeFinalInterventoriaId = pInformeFinalInterventoriaId
+                        InformeFinalInterventoriaId = pInformeFinalInterventoriaId,
+                        TieneObservacionSupervisor = false
                     });
                 }
             }
@@ -322,40 +337,51 @@ namespace asivamosffie.services
             try
             {
                 string strCrearEditar = "";
-                if (pObservacion.InformeFinalInterventoriaObservacionesId > 0)
+                if (pObservacion.InformeFinalInterventoriaObservacionesId == 0)
                 {
-                    strCrearEditar = "EDITAR OBSERVACION INFORME FINAL INTERVENTORIA";
+                    strCrearEditar = "CREAR INFORME FINAL ANEXO";
+                    pObservacion.FechaCreacion = DateTime.Now;
 
-                    pObservacion.FechaModificacion = DateTime.Now;
-                    pObservacion.UsuarioModificacion = pObservacion.UsuarioCreacion;
-
-                    pObservacion.Observaciones = pObservacion.Observaciones;
-                    _context.SaveChanges();
-                }
-                else
-                {
-                    strCrearEditar = "CREAR OBSERVACION INFORME FINAL INTERVENTORIA";
+                    _context.InformeFinalInterventoriaObservaciones.Add(pObservacion);
 
                     if (pObservacion.EsSupervision == true)
                     {
                         InformeFinalInterventoria informeFinalInterventoria = _context.InformeFinalInterventoria.Find(pObservacion.InformeFinalInterventoriaId);
-
+                        
                         informeFinalInterventoria.CalificacionCodigo = ConstantCodigoEstadoInformeFinal.Con_Observaciones_del_supervisor;
-                        _context.SaveChanges();
+                    }
+                }
+                else
+                {
+                    strCrearEditar = "ACTUALIZAR OBSERVACION INFORME FINAL INTERVENTORIA";
+
+                    InformeFinalInterventoriaObservaciones InformeFinalInterventoriaObservacionesOld = _context.InformeFinalInterventoriaObservaciones
+                        .Where(r => r.InformeFinalInterventoriaObservacionesId == pObservacion.InformeFinalInterventoriaObservacionesId).FirstOrDefault();
+
+                    if (InformeFinalInterventoriaObservacionesOld != null)
+                    {
+                        InformeFinalInterventoriaObservacionesOld.FechaModificacion = DateTime.Now;
+                        InformeFinalInterventoriaObservacionesOld.UsuarioModificacion = pObservacion.UsuarioCreacion;
+                        InformeFinalInterventoriaObservacionesOld.Observaciones = pObservacion.Observaciones;
+                    }
+                    else
+                    {
+                        strCrearEditar = "NO SE PUDO ACTUALIZAR EL INFORME FINAL ANEXO";
                     }
 
-                    InformeFinalInterventoriaObservaciones informeFinalInterventoriaObservaciones = new InformeFinalInterventoriaObservaciones
-                    {
-                        FechaCreacion = DateTime.Now,
-                        Observaciones = pObservacion.Observaciones,
-                        EsSupervision = pObservacion.EsSupervision,
-                        EsCalificacion = pObservacion.EsCalificacion,
-                    };
-
-                    _context.InformeFinalInterventoriaObservaciones.Add(informeFinalInterventoriaObservaciones);
                 }
 
-                return respuesta;
+                _context.SaveChanges();
+
+                return
+                new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Informe_Final, GeneralCodes.OperacionExitosa, idAccion, pObservacion.UsuarioCreacion, strCrearEditar)
+                };
             }
             catch (Exception ex)
             {
