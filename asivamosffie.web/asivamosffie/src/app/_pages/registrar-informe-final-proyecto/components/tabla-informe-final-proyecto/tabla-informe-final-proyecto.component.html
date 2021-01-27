@@ -13,22 +13,22 @@
   </button>
 </div>
 
-<div class="table-responsive">
+<div class="table-responsive mb-2em">
   <table mat-table [dataSource]="dataSource" matSort>
-    <!-- fechaTerminacion Column -->
-    <ng-container matColumnDef="fechaTerminacion">
+    <!-- fechaTerminacionProyecto Column -->
+    <ng-container matColumnDef="fechaTerminacionProyecto">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         Fecha de terminación del proyecto
       </th>
       <td mat-cell *matCellDef="let element">
-        <b>{{ element.fechaTerminacion }}</b>
+        <b>{{ element.fechaTerminacionProyecto | date:'dd/MM/yyyy' }}</b>
       </td>
     </ng-container>
 
-    <!-- llaveMEN Column -->
-    <ng-container matColumnDef="llaveMEN">
+    <!-- llaveMen Column -->
+    <ng-container matColumnDef="llaveMen">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Llave MEN</th>
-      <td mat-cell *matCellDef="let element">{{ element.llaveMEN }}</td>
+      <td mat-cell *matCellDef="let element">{{ element.llaveMen }}</td>
     </ng-container>
 
     <!-- tipoIntervencion Column -->
@@ -49,54 +49,88 @@
       </td>
     </ng-container>
 
-    <!-- sede Column -->
-    <ng-container matColumnDef="sede">
+    <!-- sedeEducativa Column -->
+    <ng-container matColumnDef="sedeEducativa">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Sede</th>
-      <td mat-cell *matCellDef="let element">{{ element.sede }}</td>
+      <td mat-cell *matCellDef="let element">{{ element.sedeEducativa }}</td>
     </ng-container>
 
-    <!-- estadoInformeFinal Column -->
-    <ng-container matColumnDef="estadoInformeFinal">
+    <!-- estadoInforme Column -->
+    <ng-container matColumnDef="estadoInforme">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         Estado del informe final
       </th>
       <td mat-cell *matCellDef="let element">
-        {{ element.estadoInformeFinal }}
+        {{ element.estadoInforme }}
       </td>
     </ng-container>
 
-    <!-- estadoRegistro Column -->
-    <ng-container matColumnDef="estadoRegistro">
+    <!-- registroCompleto Column -->
+    <ng-container matColumnDef="registroCompleto">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         Estado del registro
       </th>
       <td mat-cell *matCellDef="let element">
         <span
           class="info-text d-block m-0"
-          [class.sin-diligenciar]="element.estadoRegistro === 'Sin diligenciar'"
-          [class.sin-diligenciar]="element.estadoRegistro === 'Incompleto'"
-          [class.en-proceso]="element.estadoRegistro === 'En proceso'"
-          [class.completo]="element.estadoRegistro === 'Completo'"
+          [class.sin-diligenciar]="element.registroCompleto === false"
+          [class.completo]="element.registroCompleto === true"
         ></span>
-        {{ element.estadoRegistro }}
+        {{ element.registroCompleto? 'Completo': 'Sin diligenciar' }}
       </td>
     </ng-container>
 
-    <!-- Id Column -->
-    <ng-container matColumnDef="id">
+    <!-- contratacionProyectoId Column -->
+    <ng-container matColumnDef="contratacionProyectoId">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Gestión</th>
       <td mat-cell *matCellDef="let element">
         <a
           mat-button
-          color="warn"
+          mat-raised-button
+          color="accent"
+          class="btn-table"
+          [routerLink]="['registrar', element.contratacionProyectoId]"
+        >
+          Registrar informe final
+        </a>
+        <!-- <a
+          mat-button
           mat-raised-button
           color="accent"
           class="btn-table"
           type="button"
-          [routerLink]="['registrar', element.id]"
+          [routerLink]="['registrar', element.contratacionProyectoId]"
         >
-          Registrar informe final
-        </a>
+        Ver detalle / Editar
+        </a> -->
+        <!-- <a
+          mat-button
+          mat-raised-button
+          color="accent"
+          class="btn-table"
+          type="button"
+          [routerLink]="['registrar', element.contratacionProyectoId]"
+        >
+        Ver detalle
+        </a> -->
+        <!-- <button
+          mat-button
+          mat-raised-button
+          color="accent"
+          class="btn-table"
+          type="button"
+        >
+        Enviar informe a validación
+      </button> -->
+        <!-- <button
+          mat-button
+          mat-raised-button
+          color="accent"
+          class="btn-table"
+          type="button"
+        >
+        Ver observaciones de supervisor
+      </button> -->
       </td>
     </ng-container>
 

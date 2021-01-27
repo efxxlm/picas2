@@ -1,31 +1,25 @@
-import { Component, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, OnInit } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
-export interface VerificacionDiaria {
-  id: string;
-  fechaTerminacion: string;
-  llaveMEN: string;
-  tipoIntervencion: string;
-  institucionEducativa: string;
-  sede: string;
-  estadoInformeFinal: string;
-  estadoRegistro: string;
-}
+import { RegistrarInformeFinalProyectoService } from 'src/app/core/_services/registrar-informe-final-proyecto.service';
 
-const ELEMENT_DATA: VerificacionDiaria[] = [
-  {
-    id: '1',
-    fechaTerminacion: '21/06/2020',
-    llaveMEN: 'LJ776554',
-    tipoIntervencion: 'Remodelación',
-    institucionEducativa: 'I.E. María Villa Campo',
-    sede: 'Única Sede',
-    estadoInformeFinal: 'Sin registrar',
-    estadoRegistro: 'Incompleto',
-  }
-];
+export interface RegistrarInterface {
+  
+  fechaTerminacionProyecto: Date,
+  llaveMen: string,
+  tipoIntervencion: string,
+  institucionEducativa: string,
+  sedeEducativa: string,
+  contratoId: number,
+  proyectoId: number,
+  contratacionId: number,
+  contratacionProyectoId: number,
+  registroCompleto: boolean;
+  estadoInforme: string
+  
+}
 
 @Component({
   selector: 'app-tabla-informe-final-proyecto',
@@ -33,24 +27,37 @@ const ELEMENT_DATA: VerificacionDiaria[] = [
   styleUrls: ['./tabla-informe-final-proyecto.component.scss']
 })
 
-export class TablaInformeFinalProyectoComponent implements AfterViewInit {
-
+export class TablaInformeFinalProyectoComponent implements OnInit, AfterViewInit {
+  ELEMENT_DATA : RegistrarInterface[] = [];
   displayedColumns: string[] = [
-    'fechaTerminacion',
-    'llaveMEN',
+    'fechaTerminacionProyecto',
+    'llaveMen',
     'tipoIntervencion',
     'institucionEducativa',
-    'sede',
-    'estadoInformeFinal',
-    'estadoRegistro',
-    'id'
+    'sedeEducativa',
+    'estadoInforme',
+    'registroCompleto',
+    'contratacionProyectoId'
   ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource<RegistrarInterface>(this.ELEMENT_DATA);
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor() { }
+  constructor(
+    private registrarInformeFinalProyectoService: RegistrarInformeFinalProyectoService
+  ) { }
+
+  ngOnInit(): void {
+    this.getAllReports();
+  }
+
+  getAllReports(){
+    this.registrarInformeFinalProyectoService.getListReportGrilla()
+    .subscribe(report => {
+      this.dataSource.data = report as RegistrarInterface[];
+    });
+  }
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;

@@ -1,64 +1,45 @@
 <mat-card class="shipping-card var-main-gris">
-    <mat-card-header class="header-card header-card--margin">
-        <mat-card-title class="mat-card-title header-card--text">
-            Datos del proyecto
-        </mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-        <p>
-            <strong>
-                Tipo de intervención:
-            </strong>
-            Remodelación
-        </p>
-        <p>
-            <strong>
-                Institución educativa:
-            </strong>
-            I.E. María Villa Campo
-        </p>
-        <p>
-            <strong>
-                Sede educativa:
-            </strong>
-            Única sede
-        </p>
-        <p>
-            <strong>
-                Departamento:
-            </strong>
-            Atlántico
-        </p>
-        <p>
-            <strong>
-                Municipio:
-            </strong>
-            Manatí
-        </p>
-        <p>
-            <strong>
-                Número de contrato de obra:
-            </strong>
-            CC223456789
-        </p>
-        <p>
-            <strong>
-                Nombre del contratista de obra:
-            </strong>
-            Constructora Colpatria SAS
-        </p>
-        <p>
-            <strong>
-                Número de contrato de interventoría:
-            </strong>
-            CI8769-98076
-        </p>
-        <p>
-            <strong>
-                Nombre de contratista de interventoría:
-            </strong>
-            Constructora Bolivar
-        </p>
-
-    </mat-card-content>
+  <mat-card-header class="header-card header-card--margin">
+    <mat-card-title class="mat-card-title header-card--text">
+      Datos del proyecto
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <p>
+      <strong> Tipo de intervención: </strong>
+      {{ report.proyecto.tipoIntervencionCodigo }}
+    </p>
+    <p>
+      <strong> Institución educativa: </strong>
+      {{ report.proyecto.institucionEducativa.nombre }}
+    </p>
+    <p>
+      <strong> Sede educativa: </strong>
+      {{ report.proyecto.institucionEducativa.proyectoSede }}
+    </p>
+    <p>
+      <strong> Departamento: </strong>
+      Atlántico
+    </p>
+    <p>
+      <strong> Municipio: </strong>
+      Manatí
+    </p>
+    <p>
+      <strong> Número de contrato de obra: </strong>
+      {{ report.contratacion.contrato[0].numeroContrato }}
+    </p>
+    <p>
+      <strong> Nombre del contratista de obra: </strong>
+      {{ report.contratacion.contratista.nombre }}
+    </p>
+    <p>
+      <strong> Número de contrato de interventoría: </strong>
+      {{ report.contratacion.contrato[0].numeroContrato }}
+    </p>
+    <p>
+      <strong> Nombre de contratista de interventoría: </strong>
+      {{ report.contratacion.contratista.nombre }}
+    </p>
+  </mat-card-content>
 </mat-card>

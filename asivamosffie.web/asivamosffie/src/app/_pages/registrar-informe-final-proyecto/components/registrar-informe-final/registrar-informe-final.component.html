@@ -7,17 +7,17 @@
   <div class="text-center">
     <h1 class="title-menu--h1">
       Registrar informe final
-      <b> LJ776554 </b>
+      <b> {{ id }} </b>
     </h1>
     <p class="colorMainColor mt-05em"> 
       Fecha de terminación del proyecto
-      <b>
-        21/06/2020
+      <b *ngIf="report">
+        {{ report.contratacion.contrato[0].fechaTerminacion  | date:'dd/MM/yyyy' }}
       </b>
     </p>
   </div>
 
-  <app-datos-del-proyecto></app-datos-del-proyecto>
+  <app-datos-del-proyecto *ngIf="report" [report]="report"></app-datos-del-proyecto>
   <app-form-recibo-a-satisfaccion></app-form-recibo-a-satisfaccion>
   <app-informe-final-anexos></app-informe-final-anexos>
 </section>

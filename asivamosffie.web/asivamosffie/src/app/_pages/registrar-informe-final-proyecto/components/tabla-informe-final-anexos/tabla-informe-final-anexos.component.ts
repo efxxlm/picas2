@@ -65,14 +65,14 @@ export class TablaInformeFinalAnexosComponent implements AfterViewInit {
   ) { }
 
   ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-    this.paginator._intl.nextPageLabel = 'Siguiente';
-    this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
-      return (page + 1).toString() + ' de ' + length.toString();
-    };
-    this.paginator._intl.previousPageLabel = 'Anterior';
+    // this.dataSource.sort = this.sort;
+    // this.dataSource.paginator = this.paginator;
+    // this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+    // this.paginator._intl.nextPageLabel = 'Siguiente';
+    // this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
+    //   return (page + 1).toString() + ' de ' + length.toString();
+    // };
+    // this.paginator._intl.previousPageLabel = 'Anterior';
   }
 
   applyFilter(event: Event) {
@@ -85,7 +85,9 @@ export class TablaInformeFinalAnexosComponent implements AfterViewInit {
   }
 
   openDialogTipoDocumento() {
-    let dialogRef = this.dialog.open(DialogTipoDocumentoComponent);
+    let dialogRef = this.dialog.open(DialogTipoDocumentoComponent, {
+      width: '70em'
+    });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
