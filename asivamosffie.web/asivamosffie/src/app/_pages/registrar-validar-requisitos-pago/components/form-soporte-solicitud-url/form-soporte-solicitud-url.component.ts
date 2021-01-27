@@ -59,13 +59,18 @@ export class FormSoporteSolicitudUrlComponent implements OnInit {
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
                     if ( this.esExpensas === false ) {
-                        this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                            () => this.routes.navigate(
-                                [
-                                    '/registrarValidarRequisitosPago/verDetalleEditar', this.solicitudPago.contratoId, this.solicitudPagoId
-                                ]
-                            )
-                        );
+                        this.registrarPagosSvc.getValidateSolicitudPagoId( this.solicitudPago.solicitudPagoId )
+                            .subscribe(
+                                () => {
+                                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                                        () => this.routes.navigate(
+                                            [
+                                                '/registrarValidarRequisitosPago/verDetalleEditar',  this.solicitudPago.contratoId, this.solicitudPago.solicitudPagoId
+                                            ]
+                                        )
+                                    );
+                                }
+                            );
                     }
                     if ( this.esExpensas === true ) {
                         this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(

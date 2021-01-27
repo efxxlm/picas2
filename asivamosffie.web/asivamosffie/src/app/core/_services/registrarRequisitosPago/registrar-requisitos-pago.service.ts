@@ -32,6 +32,10 @@ export class RegistrarRequisitosPagoService {
     return this.http.get<{ codigo: string, nombre: string }[]>( `${ this.apiUrl }/GetCriterioByFormaPagoCodigo?pFormaPagoCodigo=${ pFormaPagoCodigo }` );
   }
 
+  getValidateSolicitudPagoId( pSolicitudPagoId: number ) {
+    return this.http.get( `${ this.apiUrl }/GetValidateSolicitudPagoId?pSolicitudPagoId=${ pSolicitudPagoId }` );
+  }
+
   createEditNewPayment( pSolicitudPago: any ) {
     return this.http.post<Respuesta>( `${ this.apiUrl }/CreateEditNewPayment`, pSolicitudPago );
   }

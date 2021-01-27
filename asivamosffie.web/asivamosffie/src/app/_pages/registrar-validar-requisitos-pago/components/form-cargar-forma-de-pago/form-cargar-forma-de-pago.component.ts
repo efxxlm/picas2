@@ -103,13 +103,18 @@ export class FormCargarFormaDePagoComponent implements OnInit {
                 if ( this.esUnEditar === true ) {
 
                 }
-                this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                    () => this.routes.navigate(
-                        [
-                            '/registrarValidarRequisitosPago/verDetalleEditar', this.contrato.contratoId, this.solicitudPagoId
-                        ]
-                    )
-                );
+                this.registrarPagosSvc.getValidateSolicitudPagoId( this.solicitudPagoId )
+                    .subscribe(
+                        () => {
+                            this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                                () => this.routes.navigate(
+                                    [
+                                        '/registrarValidarRequisitosPago/verDetalleEditar',  this.contrato.contratoId, this.solicitudPagoId
+                                    ]
+                                )
+                            );
+                        }
+                    );
             },
             err => this.openDialog( '', `<b>${ err.message }</b>` )
         );

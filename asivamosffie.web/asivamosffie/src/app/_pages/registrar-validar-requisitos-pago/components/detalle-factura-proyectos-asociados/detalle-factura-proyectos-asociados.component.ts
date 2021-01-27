@@ -440,12 +440,17 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                        () => this.routes.navigate(
-                            [
-                                '/registrarValidarRequisitosPago/verDetalleEditar', this.solicitudPago.contratoId, this.solicitudPago.solicitudPagoId
-                            ]
-                        )
+                    this.registrarPagosSvc.getValidateSolicitudPagoId( this.solicitudPago.solicitudPagoId )
+                    .subscribe(
+                        () => {
+                            this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                                () => this.routes.navigate(
+                                    [
+                                        '/registrarValidarRequisitosPago/verDetalleEditar',  this.solicitudPago.contratoId, this.solicitudPago.solicitudPagoId
+                                    ]
+                                )
+                            );
+                        }
                     );
                 },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
