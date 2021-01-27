@@ -70,15 +70,16 @@ export class FormCriteriosPagoComponent implements OnInit {
                                             tipoCriterioCodigo: [ criterio.tipoCriterioCodigo ],
                                             nombreCriterio: [ criterioSeleccionado[0].nombre ],
                                             tiposDePago: [ tiposDePago ],
-                                            tipoPago: [ tipoDePago[0], Validators.required ],
-                                            conceptosDePago: [ conceptosDePago, Validators.required ],
-                                            conceptoPago: [ conceptoDePago[0], Validators.required ],
-                                            valorFacturado: [ criterio.valorFacturado, Validators.required ]
+                                            tipoPago: [ tipoDePago.length > 0 ? tipoDePago[0] : null ],
+                                            conceptosDePago: [ conceptosDePago ],
+                                            conceptoPago: [ conceptoDePago.length > 0 ? conceptoDePago[0] : null ],
+                                            valorFacturado: [ criterio.valorFacturado !== undefined ? criterio.valorFacturado : null ]
                                         }
                                     )
                                 );
                             } );
                         }
+                        
                         this.criteriosArray = response;
                         this.addressForm.get( 'criterioPago' ).setValue( criteriosArray );
                     }
@@ -319,7 +320,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                         this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                             () => this.routes.navigate(
                                 [
-                                    '/registrarValidarRequisitosPago/verDetalleEditar', this.solicitudPago.contratoId
+                                    '/registrarValidarRequisitosPago/verDetalleEditar', this.solicitudPago.contratoId, this.solicitudPago.solicitudPagoId
                                 ]
                             )
                         );
@@ -357,7 +358,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                         this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                             () => this.routes.navigate(
                                 [
-                                    '/registrarValidarRequisitosPago/verDetalleEditar', this.solicitudPago.contratoId, this.solicitudPago.solicitudPagoId
+                                    '/registrarValidarRequisitosPago/verDetalleEditar',  this.solicitudPago.contratoId, this.solicitudPago.solicitudPagoId
                                 ]
                             )
                         );

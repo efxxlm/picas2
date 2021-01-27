@@ -104,18 +104,14 @@
         <mat-accordion>
             <mat-expansion-panel class="expansion-style sub-expansion">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeonFase( solicitudPagoRegistrarSolicitudPago?.registroCompleto, true )">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeonFase( estadoRegistroCompleto.formRegistroCompleto, true )">
                         Fase 1 - Preconstrucción
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <!--
-                    Validacion mat-acordeon de las fase preconstruccion
-                    *ngIf="this.solicitudPagoRegistrarSolicitudPago !== undefined && this.solicitudPagoRegistrarSolicitudPago.registroCompleto === true"
-                -->
-                <mat-accordion>
+                <mat-accordion *ngIf="estadoRegistroCompleto.formRegistroCompleto === true">
                     <mat-expansion-panel class="expansion-style sub-expansion-black">
                         <mat-expansion-panel-header class="expansion-style--header">
-                            <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeonSubFase( solicitudPagoFase, 'criterioDePago' )">
+                            <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeonSubFase( 'criterioDePago', true )">
                                 Criterios de pago incluidos en la factura
                             </mat-panel-title>
                         </mat-expansion-panel-header>
@@ -123,11 +119,11 @@
                     </mat-expansion-panel>
                     <mat-expansion-panel class="expansion-style sub-expansion-black">
                         <mat-expansion-panel-header class="expansion-style--header">
-                            <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeonSubFase( solicitudPagoFase, 'detalleFactura' )">
+                            <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeonSubFase( 'detalleFactura', true )">
                                 Detalle factura para proyectos asociados
                             </mat-panel-title>
                         </mat-expansion-panel-header>
-                        <app-detalle-factura-proyectos-asociados [solicitudPago]="contrato.solicitudPagoOnly"></app-detalle-factura-proyectos-asociados>
+                        <app-detalle-factura-proyectos-asociados [solicitudPago]="contrato.solicitudPagoOnly" *ngIf="estadoRegistroCompletoSubAcordeon.amortizacionRegistroCompleto === true"></app-detalle-factura-proyectos-asociados>
                     </mat-expansion-panel>
                 </mat-accordion>
             </mat-expansion-panel>
@@ -137,17 +133,14 @@
         <mat-accordion>
             <mat-expansion-panel class="expansion-style sub-expansion">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeonFase( solicitudPagoRegistrarSolicitudPago?.registroCompleto, false )">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeonFase( estadoRegistroCompleto.formRegistroCompleto, false )">
                         Fase 2 - Construcción
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <!--
-                    *ngIf="this.solicitudPagoRegistrarSolicitudPago !== undefined && solicitudPagoRegistrarSolicitudPago.registroCompleto === true"
-                -->
-                <mat-accordion>
+                <mat-accordion *ngIf="estadoRegistroCompleto.formRegistroCompleto === true">
                     <mat-expansion-panel class="expansion-style sub-expansion-black">
                         <mat-expansion-panel-header class="expansion-style--header">
-                            <mat-panel-title class="expansion-style--title sin-diligenciar">
+                            <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeonSubFase( 'criterioDePago', false )">
                                 Criterios de pago incluidos en la factura
                             </mat-panel-title>
                         </mat-expansion-panel-header>
@@ -155,19 +148,19 @@
                     </mat-expansion-panel>
                     <mat-expansion-panel class="expansion-style sub-expansion-black">
                         <mat-expansion-panel-header class="expansion-style--header">
-                            <mat-panel-title class="expansion-style--title en-alerta">
+                            <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeonSubFase( 'amortizacion', false )">
                                 Amortización del anticipo
                             </mat-panel-title>
                         </mat-expansion-panel-header>
-                        <app-form-amortizacion-anticipo [solicitudPago]="contrato.solicitudPagoOnly" [contrato]="contrato"></app-form-amortizacion-anticipo>
+                        <app-form-amortizacion-anticipo [solicitudPago]="contrato.solicitudPagoOnly" [contrato]="contrato" *ngIf="estadoRegistroCompletoSubAcordeon.criterioRegistroCompleto === true"></app-form-amortizacion-anticipo>
                     </mat-expansion-panel>
                     <mat-expansion-panel class="expansion-style sub-expansion-black">
                         <mat-expansion-panel-header class="expansion-style--header">
-                            <mat-panel-title class="expansion-style--title en-alerta">
+                            <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeonSubFase( 'detalleFactura', false )">
                                 Detalle factura para proyectos asociados
                             </mat-panel-title>
                         </mat-expansion-panel-header>
-                        <app-detalle-factura-proyectos-asociados [solicitudPago]="contrato.solicitudPagoOnly"></app-detalle-factura-proyectos-asociados>
+                        <app-detalle-factura-proyectos-asociados [solicitudPago]="contrato.solicitudPagoOnly" *ngIf="estadoRegistroCompletoSubAcordeon.amortizacionRegistroCompleto === true"></app-detalle-factura-proyectos-asociados>
                     </mat-expansion-panel>
                 </mat-accordion>
             </mat-expansion-panel>
@@ -176,11 +169,11 @@
     <mat-accordion>
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title en-alerta">
+                <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeonFase( estadoRegistroCompleto.solicitudPagoFaseRegistroCompleto )">
                     Datos de la factura
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-datos-factura-construccion-rvrp [solicitudPago]="contrato.solicitudPagoOnly"></app-datos-factura-construccion-rvrp>
+            <app-datos-factura-construccion-rvrp [solicitudPago]="contrato.solicitudPagoOnly" *ngIf="estadoRegistroCompleto.solicitudPagoFaseRegistroCompleto === true"></app-datos-factura-construccion-rvrp>
         </mat-expansion-panel>
     </mat-accordion>
 </section>

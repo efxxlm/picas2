@@ -43,7 +43,7 @@
                         <div class="chart2">
                             <p *ngIf="contrato.plazoFase1PreDias !== undefined"><strong>Plazo: Meses:</strong> {{ contrato.plazoFase2ConstruccionMeses + contrato.plazoFase1PreMeses }} <strong>Días:</strong> {{ contrato.plazoFase1PreDias + contrato.plazoFase2ConstruccionDias }} </p>
                             <p *ngIf="contrato.plazoFase1PreDias === undefined"><strong>Plazo: Meses:</strong> {{ contrato.plazoFase2ConstruccionMeses }} <strong>Días:</strong> {{ contrato.plazoFase2ConstruccionDias }} </p>
-                            <p><strong>Fecha fin del contrato:</strong> Se trae del CU3.1.13 del campo posible fecha de terminacion de contrato</p>
+                            <p><strong>Fecha fin del contrato:</strong> {{ contrato.fechaTerminacionFase2 | date: 'dd/MM/yyyy' }} </p>
                             <p *ngIf="contrato.plazoFase1PreDias !== undefined"><strong>Plazo fase 2 - Construccion: Meses:</strong> {{ contrato.plazoFase2ConstruccionMeses }} <strong>Días:</strong> {{ contrato.plazoFase2ConstruccionDias }} </p>
                         </div>
                     </div>
@@ -101,21 +101,27 @@
                 <mat-accordion>
                     <mat-expansion-panel class="expansion-style">
                         <mat-expansion-panel-header class="expansion-style--header">
-                            <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeon( 'solicitudDePago', acordeones.tieneFormaDePago )">
+                            <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeon( 'solicitudDePago', registroCompletoAcordeones.registroCompletoFormaDePago )">
                                 Registrar solicitud de pago
                             </mat-panel-title>
                         </mat-expansion-panel-header>
-                        <app-form-registrar-solicitud-de-pago [contrato]="contrato" *ngIf="acordeones.tieneFormaDePago === true"></app-form-registrar-solicitud-de-pago>
+                        <app-form-registrar-solicitud-de-pago [contrato]="contrato" *ngIf="registroCompletoAcordeones.registroCompletoFormaDePago === true"></app-form-registrar-solicitud-de-pago>
                     </mat-expansion-panel>
                 </mat-accordion>
                 <mat-accordion>
                     <mat-expansion-panel class="expansion-style">
                         <mat-expansion-panel-header class="expansion-style--header">
-                            <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeon( 'listaChequeo', acordeones.tieneRegistroSolicitudPago )">
+                            <!-- Se deshabilita mientras se termina el CU lista de chequeo, luego se valida con el siguiente campo 'registroCompletoAcordeones.registroCompletoSolicitudPago' -->
+                            <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeon( 'listaChequeo', registroCompletoAcordeones.registroCompletoListaChequeo )">
                                 Validar lista de chequeo
                             </mat-panel-title>
                         </mat-expansion-panel-header>
-                        <app-validar-lista-chequeo *ngIf="acordeones.tieneRegistroSolicitudPago === true"></app-validar-lista-chequeo>
+                        <app-validar-lista-chequeo *ngIf="registroCompletoAcordeones.registroCompletoListaChequeo === true"></app-validar-lista-chequeo>
+                        <div style="margin-top: 1em;" *ngIf="contrato !== undefined">
+                            <div class="d-flex align-items-center solbloq ml8 info-text en-alertaLibre mb-2em">
+                                Se habilitara este acordeon cuando se finalice la siguiente funcionalidad "CU listas de chequeo"
+                            </div>
+                        </div>
                     </mat-expansion-panel>
                 </mat-accordion>
             </div>
@@ -128,7 +134,9 @@
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeon( 'soporteSolicitud', acordeones.tieneListaChequeo )">
+                <!-- Temporalmente mientras se termina el CU listas de chequeo se validara el acordeon con el registro completo de solicitud de pago, luego se validara con el siguiente campo 'registroCompletoAcordeones.registroCompletoListaChequeo' mientras la solicitud no sea otros costos -->
+                <mat-panel-title    class="expansion-style--title"
+                                    [ngClass]=" contrato.solicitudPagoOnly.tipoSolicitudCodigo !== tipoSolicitudCodigo.otrosCostos ? enabledAcordeon( 'soporteSolicitud', registroCompletoAcordeones.registroCompletoSolicitudPago ) : enabledAcordeon( 'soporteSolicitud', registroCompletoAcordeones.registroCompletoOtrosCostos )">
                     Soporte de la solicitud
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -136,7 +144,7 @@
                 Validacion soporte solicitud
                 *ngIf="acordeones.tieneListaChequeo === true"
             -->
-            <app-form-soporte-solicitud-url [solicitudPago]="contrato.solicitudPagoOnly"></app-form-soporte-solicitud-url>
+            <app-form-soporte-solicitud-url [solicitudPago]="contrato.solicitudPagoOnly" *ngIf="registroCompletoAcordeones.registroCompletoSolicitudPago === true"></app-form-soporte-solicitud-url>
         </mat-expansion-panel>
     </mat-accordion>
     <div style="margin-top: 1em;" *ngIf="contrato !== undefined">

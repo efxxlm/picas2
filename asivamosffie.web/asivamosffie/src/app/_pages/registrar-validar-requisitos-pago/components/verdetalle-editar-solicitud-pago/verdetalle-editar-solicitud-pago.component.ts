@@ -23,10 +23,11 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
     // Semaforos
     semaforoFormaDePago = 'sin-diligenciar';
     // Acordeones habilitados
-    acordeones: any = {
-        tieneFormaDePago: false,
-        tieneRegistroSolicitudPago: false,
-        tieneListaChequeo: false
+    registroCompletoAcordeones: any = {
+        registroCompletoFormaDePago: false,
+        registroCompletoSolicitudPago: false,
+        registroCompletoListaChequeo: false,
+        registroCompletoOtrosCostos: false
     }
     displayedColumns: string[] = [
       'drp',
@@ -41,6 +42,13 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
         private registrarPagosSvc: RegistrarRequisitosPagoService,
         private commonSvc: CommonService )
     {
+        this.getContrato();
+    }
+
+    ngOnInit(): void {
+    }
+
+    getContrato() {
         this.registrarPagosSvc.getContratoByContratoId( this.activatedRoute.snapshot.params.idContrato, this.activatedRoute.snapshot.params.idSolicitud )
             .subscribe(
                 response => {
@@ -67,23 +75,27 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
                                 this.dataSource = new MatTableDataSource( this.contrato.contratacion.disponibilidadPresupuestal );
                                 this.dataSource.paginator = this.paginator;
                                 this.dataSource.sort = this.sort;
-                                // Get semaforo forma de pago
+
+                                // Get semaforo forma de pago y registro completo
                                 const solicitudPagoCargarFormaPago = this.contrato.solicitudPagoOnly.solicitudPagoCargarFormaPago[0];
-                                if ( solicitudPagoCargarFormaPago.registroCompleto === false ) {
-                                    this.semaforoFormaDePago = 'en-proceso';
-                                }
-                                if ( solicitudPagoCargarFormaPago.registroCompleto === true ) {
-                                    this.semaforoFormaDePago = 'completo';
-                                    this.acordeones.tieneFormaDePago = true;
+
+                                if ( solicitudPagoCargarFormaPago !== undefined ) {
+
+                                    // Get semaforo
+                                    if ( solicitudPagoCargarFormaPago.registroCompleto === false ) {
+                                        this.semaforoFormaDePago = 'en-proceso';
+                                    }
+                                    if ( solicitudPagoCargarFormaPago.registroCompleto === true ) {
+                                        this.semaforoFormaDePago = 'completo';
+                                        //Get registro completo
+                                        this.registroCompletoAcordeones.registroCompletoFormaDePago = true;
+                                    }
                                 }
                             }
                           }
                         );
                 }
             );
-    }
-
-    ngOnInit(): void {
     }
 
     applyFilter(event: Event) {
@@ -103,26 +115,57 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
     }
 
     enabledAcordeon( nombreAcordeon: string, tieneRegistroAnterior: boolean ) {
+
         // Acordeon solicitud de pago
         if ( nombreAcordeon === 'solicitudDePago' && tieneRegistroAnterior === false ) {
             return 'en-alerta';
         }
         if ( nombreAcordeon === 'solicitudDePago' && tieneRegistroAnterior === true ) {
-            return 'sin-diligenciar';
+
+            const solicitudPagoRegistrarSolicitudPago = this.contrato.solicitudPagoOnly.solicitudPagoRegistrarSolicitudPago[0];
+            let semaforoSolicitudPago = 'sin-diligenciar';
+
+            if ( solicitudPagoRegistrarSolicitudPago !== undefined ) {
+                if ( solicitudPagoRegistrarSolicitudPago.registroCompleto === false ) {
+                    semaforoSolicitudPago = 'en-proceso';
+                }
+                if ( solicitudPagoRegistrarSolicitudPago.registroCompleto === true ) {
+                    semaforoSolicitudPago = 'completo';
+                    // Get registro completo
+                    this.registroCompletoAcordeones.registroCompletoSolicitudPago = true;
+                }
+            }
+            return semaforoSolicitudPago;
         }
+
         // Acordeon lista de chequeo
         if ( nombreAcordeon === 'listaChequeo' && tieneRegistroAnterior === false ) {
             return 'en-alerta';
         }
         if ( nombreAcordeon === 'listaChequeo' && tieneRegistroAnterior === true ) {
-            return 'sin-diligenciar';
+            // Get semaforo se coloca con la clase 'en-alerta' ya que el CU lista de chequeo no esta terminado
+            return 'en-alerta';
         }
+
         // Acordeon soporte de la solicitud
         if ( nombreAcordeon === 'soporteSolicitud' && tieneRegistroAnterior === false ) {
             return 'en-alerta';
         }
         if ( nombreAcordeon === 'soporteSolicitud' && tieneRegistroAnterior === true ) {
-            return 'sin-diligenciar';
+
+            const solicitudPagoSoporteSolicitud = this.contrato.solicitudPagoOnly.solicitudPagoSoporteSolicitud[0];
+            let semaforoSolicitudPago = 'sin-diligenciar';
+
+            if ( solicitudPagoSoporteSolicitud !== undefined ) {
+                if ( solicitudPagoSoporteSolicitud.registroCompleto === false ) {
+                    semaforoSolicitudPago = 'en-proceso';
+                }
+                if ( solicitudPagoSoporteSolicitud.registroCompleto === true ) {
+                    semaforoSolicitudPago = 'completo';
+                }
+            }
+
+            return semaforoSolicitudPago;
         }
     }
 
