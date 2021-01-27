@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
- 
+
 namespace asivamosffie.services
 {
     public class GenerateSpinOrderService : IGenerateSpinOrderService
@@ -19,12 +19,13 @@ namespace asivamosffie.services
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
         private readonly IDocumentService _documentService;
-
-        public GenerateSpinOrderService(IDocumentService documentService, devAsiVamosFFIEContext context, ICommonService commonService)
+        private readonly IRegisterValidatePaymentRequierementsService _registerValidatePayment;
+        public GenerateSpinOrderService(IDocumentService documentService, IRegisterValidatePaymentRequierementsService registerValidatePaymentRequierementsService, devAsiVamosFFIEContext context, ICommonService commonService)
         {
             _documentService = documentService;
             _commonService = commonService;
             _context = context;
+            _registerValidatePayment = registerValidatePaymentRequierementsService;
         }
         /// <summary>
         /// TODO : VALIDAR SOLICITUDES DE PAGO QUE YA TENGAN APROBACION 
@@ -57,7 +58,7 @@ namespace asivamosffie.services
                     r.FechaCreacion,
                     r.TipoSolicitudCodigo,
                     r.ContratoId,
-                    r.SolicitudPagoId, 
+                    r.SolicitudPagoId,
                     r.NumeroSolicitud,
                     r.NumeroContrato,
                     Modalidad = !string.IsNullOrEmpty(r.ModalidadCodigo) ? ListParametricas.Where(l => l.Codigo == r.ModalidadCodigo && l.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato).FirstOrDefault().Nombre : "No aplica"
@@ -65,92 +66,50 @@ namespace asivamosffie.services
             });
             return grind;
         }
+         
+        public async Task<OrdenGiro> GetOrdenGiroByOrdenGiroId(int pOrdenGiroId)
+        {
+            OrdenGiro ordenGiro =  _context.OrdenGiro.Where(o => o.OrdenGiroId == pOrdenGiroId)
+                .Include(t => t.OrdenGiroTercero)
+                .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleEstrategiaPago)
+                .Include(d => d.SolicitudPago).FirstOrDefault();
 
+            ordenGiro.SolicitudPago = await _registerValidatePayment.GetSolicitudPago(ordenGiro.SolicitudPago.SolicitudPagoId);
 
-      
-        private  void GetOrdenGiroByOrdenGiroId(int pOrdenGiroId)
-        { 
-
-
-
-            //Contrato contrato = await _context.Contrato
-            //.Include(c => c.ContratoPoliza)
-            //.Include(c => c.Contratacion)
-            //   .ThenInclude(c => c.Contratista)
-            //.Include(c => c.Contratacion)
-            //   .ThenInclude(c => c.ContratacionProyecto)
-            //.Include(c => c.Contratacion)
-            //   .ThenInclude(cp => cp.DisponibilidadPresupuestal)
-            //.Include(r => r.SolicitudPago)
-            //   .ThenInclude(r => r.SolicitudPagoCargarFormaPago)
-            //.FirstOrDefaultAsync();
-
-            //switch (solicitudPago.TipoSolicitudCodigo)
-            //{
-            //    case ConstanCodigoTipoSolicitudContratoSolicitudPago.Contratos_Interventoria:
-            //    case ConstanCodigoTipoSolicitudContratoSolicitudPago.Contratos_Obra:
-
-            //        solicitudPago = _context.SolicitudPago.Where(r => r.SolicitudPagoId == solicitudPago.SolicitudPagoId)
-            //            .Include(r => r.SolicitudPagoCargarFormaPago)
-            //            .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
-            //               .ThenInclude(r => r.SolicitudPagoFase)
-            //                   .ThenInclude(r => r.SolicitudPagoFaseCriterio)
-            //                       .ThenInclude(r => r.SolicitudPagoFaseCriterioProyecto)
-            //           .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
-            //              .ThenInclude(r => r.SolicitudPagoFase)
-            //                  .ThenInclude(r => r.SolicitudPagoFaseAmortizacion)
-            //           .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
-            //              .ThenInclude(r => r.SolicitudPagoFase)
-            //                  .ThenInclude(r => r.SolicitudPagoFaseFactura)
-            //                      .ThenInclude(r => r.SolicitudPagoFaseFacturaDescuento)
-            //           .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
-            //           .Include(r => r.SolicitudPagoSoporteSolicitud).FirstOrDefault();
-
-            //        foreach (var SolicitudPagoRegistrarSolicitudPago in solicitudPago.SolicitudPagoRegistrarSolicitudPago)
-            //        {
-            //            foreach (var SolicitudPagoFase in SolicitudPagoRegistrarSolicitudPago.SolicitudPagoFase)
-            //            {
-            //                if (SolicitudPagoFase.SolicitudPagoFaseCriterio.Count() > 0)
-            //                    SolicitudPagoFase.SolicitudPagoFaseCriterio = SolicitudPagoFase.SolicitudPagoFaseCriterio.Where(r => r.Eliminado != true).ToList();
-
-            //                foreach (var SolicitudPagoFaseCriterio in SolicitudPagoFase.SolicitudPagoFaseCriterio)
-            //                {
-            //                    if (SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioProyecto.Count() > 0)
-            //                        SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioProyecto = SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioProyecto.Where(r => r.Eliminado != true).ToList();
-            //                }
-
-            //                foreach (var SolicitudPagoFaseFactura in SolicitudPagoFase.SolicitudPagoFaseFactura)
-            //                {
-            //                    if (SolicitudPagoFaseFactura.SolicitudPagoFaseFacturaDescuento.Count() > 0)
-            //                        SolicitudPagoFaseFactura.SolicitudPagoFaseFacturaDescuento = SolicitudPagoFaseFactura.SolicitudPagoFaseFacturaDescuento.Where(r => r.Eliminado != true).ToList();
-            //                }
-            //            }
-            //        }
-
-            //        return solicitudPago;
-
-            //    case ConstanCodigoTipoSolicitudContratoSolicitudPago.Expensas:
-            //        solicitudPago = _context.SolicitudPago.Where(r => r.SolicitudPagoId == solicitudPago.SolicitudPagoId)
-            //            .Include(e => e.ContratacionProyecto).ThenInclude(p => p.Proyecto)
-            //            .Include(e => e.SolicitudPagoExpensas)
-            //            .Include(e => e.SolicitudPagoSoporteSolicitud)
-            //            .FirstOrDefault();
-
-            //        return solicitudPago;
-
-            //    case ConstanCodigoTipoSolicitudContratoSolicitudPago.Otros_Costos_Servicios:
-            //        solicitudPago = _context.SolicitudPago.Where(r => r.SolicitudPagoId == solicitudPago.SolicitudPagoId)
-            //         .Include(e => e.SolicitudPagoOtrosCostosServicios)
-            //         .Include(e => e.SolicitudPagoSoporteSolicitud)
-            //         .FirstOrDefault();
-
-            //        return solicitudPago;
-
-
-            //    default: return solicitudPago;
-
-            //}
+            return ordenGiro;
         }
+
+        public async Task<Respuesta> CreateEditOrdenGiro(OrdenGiro pOrdenGiro)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            { 
+              
+                return
+                     new Respuesta
+                     {
+                         IsSuccessful = true,
+                         IsException = false,
+                         IsValidation = false,
+                         Code = GeneralCodes.OperacionExitosa,
+                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Orden_de_giro, GeneralCodes.OperacionExitosa, idAccion, "", "CREAR ORDEN GIRO")
+                     };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Orden_de_giro, GeneralCodes.Error, idAccion, "", ex.InnerException.ToString())
+                    };
+            }
+        }
+
 
     }
 }

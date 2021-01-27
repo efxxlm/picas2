@@ -27,5 +27,13 @@ namespace asivamosffie.api.Controllers
             _settings = settings;
         }
          
+        [Route("GetOrdenGiroByOrdenGiroId")]
+        [HttpGet]
+        public async Task<OrdenGiro> GetOrdenGiroByOrdenGiroId([FromQuery] int pOrdenGiroId)
+        {
+            var result = await _generateSpinOrderService.GetOrdenGiroByOrdenGiroId(pOrdenGiroId);
+            return result;
+        }
+
     }
 }

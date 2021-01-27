@@ -170,7 +170,34 @@ namespace asivamosffie.services
             return contrato;
         }
 
-        private SolicitudPago GetSolicitudPago(SolicitudPago solicitudPago)
+        private SolicitudPago GetRemoveObjectsDelete(SolicitudPago solicitudPago)
+        {
+            foreach (var SolicitudPagoRegistrarSolicitudPago in solicitudPago.SolicitudPagoRegistrarSolicitudPago)
+            {
+                foreach (var SolicitudPagoFase in SolicitudPagoRegistrarSolicitudPago.SolicitudPagoFase)
+                {
+                    if (SolicitudPagoFase.SolicitudPagoFaseCriterio.Count() > 0)
+                        SolicitudPagoFase.SolicitudPagoFaseCriterio = SolicitudPagoFase.SolicitudPagoFaseCriterio.Where(r => r.Eliminado != true).ToList();
+
+                    foreach (var SolicitudPagoFaseCriterio in SolicitudPagoFase.SolicitudPagoFaseCriterio)
+                    {
+                        if (SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioProyecto.Count() > 0)
+                            SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioProyecto = SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioProyecto.Where(r => r.Eliminado != true).ToList();
+                    }
+
+                    foreach (var SolicitudPagoFaseFactura in SolicitudPagoFase.SolicitudPagoFaseFactura)
+                    {
+                        if (SolicitudPagoFaseFactura.SolicitudPagoFaseFacturaDescuento.Count() > 0)
+                            SolicitudPagoFaseFactura.SolicitudPagoFaseFacturaDescuento = SolicitudPagoFaseFactura.SolicitudPagoFaseFacturaDescuento.Where(r => r.Eliminado != true).ToList();
+                     
+                    }
+                }
+            }
+
+            return solicitudPago;
+        }
+         
+        public SolicitudPago GetSolicitudPago(SolicitudPago solicitudPago)
         {
             switch (solicitudPago.TipoSolicitudCodigo)
             {
@@ -189,30 +216,11 @@ namespace asivamosffie.services
                        .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
                           .ThenInclude(r => r.SolicitudPagoFase)
                               .ThenInclude(r => r.SolicitudPagoFaseFactura)
-                                  .ThenInclude(r => r.SolicitudPagoFaseFacturaDescuento)
+                                  .ThenInclude(r => r.SolicitudPagoFaseFacturaDescuento) 
                        .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
                        .Include(r => r.SolicitudPagoSoporteSolicitud).FirstOrDefault();
 
-                    foreach (var SolicitudPagoRegistrarSolicitudPago in solicitudPago.SolicitudPagoRegistrarSolicitudPago)
-                    {
-                        foreach (var SolicitudPagoFase in SolicitudPagoRegistrarSolicitudPago.SolicitudPagoFase)
-                        {
-                            if (SolicitudPagoFase.SolicitudPagoFaseCriterio.Count() > 0)
-                                SolicitudPagoFase.SolicitudPagoFaseCriterio = SolicitudPagoFase.SolicitudPagoFaseCriterio.Where(r => r.Eliminado != true).ToList();
-
-                            foreach (var SolicitudPagoFaseCriterio in SolicitudPagoFase.SolicitudPagoFaseCriterio)
-                            {
-                                if (SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioProyecto.Count() > 0)
-                                    SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioProyecto = SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioProyecto.Where(r => r.Eliminado != true).ToList();
-                            }
-
-                            foreach (var SolicitudPagoFaseFactura in SolicitudPagoFase.SolicitudPagoFaseFactura)
-                            {
-                                if (SolicitudPagoFaseFactura.SolicitudPagoFaseFacturaDescuento.Count() > 0)
-                                    SolicitudPagoFaseFactura.SolicitudPagoFaseFacturaDescuento = SolicitudPagoFaseFactura.SolicitudPagoFaseFacturaDescuento.Where(r => r.Eliminado != true).ToList();
-                            }
-                        }
-                    }
+                    GetRemoveObjectsDelete(solicitudPago);
 
                     return solicitudPago;
 

@@ -249,5 +249,9 @@
         public const string Eliminar_Solicitud_Pago = "188";
         public const string Eliminar_Descuento = "189";  
         public const string Crear_Actualizar_Solicitud_Pago_Observacion = "190";
+
+        //4.3.3 Generar Orden Giro
+        public const string Crear_Editar_Orden_Giro = "201";
+        
     }
 }

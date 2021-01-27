@@ -3,15 +3,15 @@ using System.Collections.Generic;
 
 namespace asivamosffie.model.Models
 {
-    public partial class OrdenGiroDetalleEstrategiaPago
+    public partial class OrdenGiroDetalleTerceroCausacion
     {
-        public OrdenGiroDetalleEstrategiaPago()
+        public OrdenGiroDetalleTerceroCausacion()
         {
             OrdenGiroDetalle = new HashSet<OrdenGiroDetalle>();
+            OrdenGiroDetalleTerceroCausacionDescuento = new HashSet<OrdenGiroDetalleTerceroCausacionDescuento>();
         }
 
-        public int OrdenGiroDetalleEstrategiaPagoId { get; set; }
-        public string EstrategiaPagoCodigo { get; set; }
+        public int OrdenGiroDetalleTerceroCausacionId { get; set; }
         public string UsuarioCreacion { get; set; }
         public DateTime? FechaCreacion { get; set; }
         public string UsuarioModificacion { get; set; }
@@ -20,5 +20,6 @@ namespace asivamosffie.model.Models
         public bool? RegistroCompleto { get; set; }
 
         public virtual ICollection<OrdenGiroDetalle> OrdenGiroDetalle { get; set; }
+        public virtual ICollection<OrdenGiroDetalleTerceroCausacionDescuento> OrdenGiroDetalleTerceroCausacionDescuento { get; set; }
     }
 }

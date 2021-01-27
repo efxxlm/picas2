@@ -46,7 +46,9 @@ namespace asivamosffie.services.Helpers.Enumerator
          
         Cargar_enlace_monitoreo = 43,
 
-        Registrar_validar_requisitos_de_pago = 63
+        Registrar_validar_requisitos_de_pago = 63,
+
+      	Generar_Orden_de_giro = 68
 
     }
 
