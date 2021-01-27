@@ -4482,18 +4482,55 @@ namespace asivamosffie.services
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.RESULTADO_VOTACION:
+
                                         string TextoResultadoVotacion = string.Empty;
 
-                                        if (SesionComiteSolicitud.RequiereVotacion == null || !(bool)SesionComiteSolicitud.RequiereVotacion)
+                                        if (
+                                            SesionComiteSolicitud.RequiereVotacion != null &&
+                                            SesionComiteSolicitud.RequiereVotacion.Value == true
+                                            )
                                         {
-                                            TextoResultadoVotacion = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Votacion_No_Unanime).ToString()).FirstOrDefault().Nombre;
+
+                                            int cantidadAprobado = 0;
+                                            int cantidadNoAprobado = 0;
+
+                                            SesionComiteSolicitud.SesionSolicitudVoto.Where(v => v.Eliminado != true && v.ComiteTecnicoFiduciarioId == null).ToList().ForEach(ssv =>
+                                            {
+                                                if (ssv.EsAprobado == true)
+                                                    cantidadAprobado++;
+                                                else
+                                                    cantidadNoAprobado++;
+                                            });
+
+                                            if (cantidadNoAprobado == 0)
+                                            {
+                                                TextoResultadoVotacion = PlantillaVotacionUnanime;
+                                            }
+                                            else if (cantidadAprobado > cantidadNoAprobado)
+                                            {
+                                                TextoResultadoVotacion = PlantillaNoVotacionUnanime;
+                                            }
+
+                                            TextoResultadoVotacion = TextoResultadoVotacion.Replace("[URL_SOPORTES_VOTO]", SesionComiteSolicitud.RutaSoporteVotacion);
+
                                         }
-                                        else
-                                        {
-                                            TextoResultadoVotacion = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Votacion_Unanime).ToString()).FirstOrDefault().Nombre;
-                                        }
+
                                         registrosProcesosSelecccion = registrosProcesosSelecccion
                                         .Replace(placeholderDominio.Nombre, TextoResultadoVotacion);
+
+
+
+
+                                        //if (SesionComiteSolicitud.RequiereVotacion == null || !(bool)SesionComiteSolicitud.RequiereVotacion)
+                                        //{
+                                        //    TextoResultadoVotacion = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Votacion_No_Unanime).ToString()).FirstOrDefault().Nombre;
+                                        //}
+                                        //else
+                                        //{
+                                        //    TextoResultadoVotacion = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Votacion_Unanime).ToString()).FirstOrDefault().Nombre;
+                                        //}
+                                        //registrosProcesosSelecccion = registrosProcesosSelecccion
+                                        //.Replace(placeholderDominio.Nombre, TextoResultadoVotacion);
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.REGISTROS_COMPROMISOS_SOLICITUD:
