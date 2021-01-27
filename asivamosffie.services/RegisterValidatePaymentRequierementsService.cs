@@ -955,24 +955,23 @@ namespace asivamosffie.services
             if (pSolicitudPagoRegistrarSolicitudPago.SolicitudPagoFase.Count() == 0)
                 return false;
 
-            foreach (var SolicitudPagoFase in pSolicitudPagoRegistrarSolicitudPago.SolicitudPagoFase)
+            if (pSolicitudPagoRegistrarSolicitudPago.SolicitudPagoFase.FirstOrDefault().SolicitudPagoFaseFactura.Count() == 0)
+                return false;
+
+            foreach (var SolicitudPagoFaseFactura in pSolicitudPagoRegistrarSolicitudPago.SolicitudPagoFase.FirstOrDefault().SolicitudPagoFaseFactura)
             {
-                if (!ValidateCompleteRecordSolicitudPagoFase(SolicitudPagoFase))
+                if (!ValidateCompleteRecordSolicitudPagoFaseFactura(SolicitudPagoFaseFactura))
                     return false;
             }
+
+            if (!ValidateCompleteRecordSolicitudPagoFase(pSolicitudPagoRegistrarSolicitudPago.SolicitudPagoFase.FirstOrDefault()))
+                return false;
+
             return true;
         }
 
         private bool ValidateCompleteRecordSolicitudPagoFase(SolicitudPagoFase pSolicitudPagoFase)
         {
-            if (pSolicitudPagoFase.SolicitudPagoFaseFactura.Count() == 0
-                ) return false;
-
-            foreach (var SolicitudPagoFaseFactura in pSolicitudPagoFase.SolicitudPagoFaseFactura)
-            {
-                if (!ValidateCompleteRecordSolicitudPagoFaseFactura(SolicitudPagoFaseFactura))
-                    return false;
-            }
             //La Fase Construccion Es la unica que tiene amortizacion
             if (!pSolicitudPagoFase.EsPreconstruccion)
             {
