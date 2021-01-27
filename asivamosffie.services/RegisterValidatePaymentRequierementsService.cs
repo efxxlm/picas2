@@ -693,14 +693,15 @@ namespace asivamosffie.services
         {
             foreach (var SolicitudPagoFase in solicitudPagoFaseList)
             {
-                if (SolicitudPagoFase.SolicitudPagoFaseCriterio.Count() > 0) 
-                CreateEditSolicitudPagoFaseCriterio(SolicitudPagoFase.SolicitudPagoFaseCriterio, SolicitudPagoFase.UsuarioCreacion);
-               
+                if (SolicitudPagoFase.SolicitudPagoFaseCriterio.Count() > 0)
+                    CreateEditSolicitudPagoFaseCriterio(SolicitudPagoFase.SolicitudPagoFaseCriterio, SolicitudPagoFase.UsuarioCreacion);
+
 
                 if (SolicitudPagoFase.SolicitudPagoFaseFactura.Count() > 0)
                     CreateEditSolicitudPagoFaseFactura(SolicitudPagoFase.SolicitudPagoFaseFactura, pUsuarioCreacion);
-                if (SolicitudPagoFase.SolicitudPagoFaseAmortizacion.Count() > 0)
-                    CreateEditSolicitudPagoSolicitudPagoAmortizacion(SolicitudPagoFase.SolicitudPagoFaseAmortizacion, pUsuarioCreacion);
+                if (!SolicitudPagoFase.EsPreconstruccion)
+                    if (SolicitudPagoFase.SolicitudPagoFaseAmortizacion.Count() > 0)
+                        CreateEditSolicitudPagoSolicitudPagoAmortizacion(SolicitudPagoFase.SolicitudPagoFaseAmortizacion, pUsuarioCreacion);
 
                 if (SolicitudPagoFase.SolicitudPagoFaseId > 0)
                 {
@@ -708,10 +709,10 @@ namespace asivamosffie.services
 
                     if (SolicitudPagoFase.SolicitudPagoFaseCriterio.Count() > 0)
                         solicitudPagoFaseOld.RegistroCompletoCriterio = ValidateCompleteRecordSolicitudPagoFaseCriterio2(SolicitudPagoFase.SolicitudPagoFaseCriterio);
-             
+
                     solicitudPagoFaseOld.UsuarioModificacion = pUsuarioCreacion;
                     solicitudPagoFaseOld.FechaModificacion = DateTime.Now;
-                
+
                     solicitudPagoFaseOld.RegistroCompleto = ValidateCompleteRecordSolicitudPagoFase(SolicitudPagoFase);
                 }
                 else
@@ -965,7 +966,6 @@ namespace asivamosffie.services
         private bool ValidateCompleteRecordSolicitudPagoFase(SolicitudPagoFase pSolicitudPagoFase)
         {
             if (pSolicitudPagoFase.SolicitudPagoFaseFactura.Count() == 0
-                || pSolicitudPagoFase.SolicitudPagoFaseAmortizacion.Count() == 0
                 ) return false;
 
             foreach (var SolicitudPagoFaseFactura in pSolicitudPagoFase.SolicitudPagoFaseFactura)
@@ -973,11 +973,17 @@ namespace asivamosffie.services
                 if (!ValidateCompleteRecordSolicitudPagoFaseFactura(SolicitudPagoFaseFactura))
                     return false;
             }
-
-            foreach (var SolicitudPagoAmortizacion in pSolicitudPagoFase.SolicitudPagoFaseAmortizacion)
+            //La Fase Construccion Es la unica que tiene amortizacion
+            if (!pSolicitudPagoFase.EsPreconstruccion)
             {
-                if (!ValidateCompleteRecordSolicitudPagoAmortizacion(SolicitudPagoAmortizacion))
+                if (pSolicitudPagoFase.SolicitudPagoFaseAmortizacion.Count() == 0)
                     return false;
+
+                foreach (var SolicitudPagoAmortizacion in pSolicitudPagoFase.SolicitudPagoFaseAmortizacion)
+                {
+                    if (!ValidateCompleteRecordSolicitudPagoAmortizacion(SolicitudPagoAmortizacion))
+                        return false;
+                }
             }
             return true;
         }
