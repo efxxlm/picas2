@@ -10,5 +10,7 @@ namespace asivamosffie.services.Interfaces
     public interface IGenerateSpinOrderService
     {
         Task<OrdenGiro> GetOrdenGiroByOrdenGiroId(int pOrdenGiroId);
+
+        Task<dynamic> GetListSolicitudPago();
     }
 }

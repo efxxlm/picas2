@@ -34,6 +34,14 @@ namespace asivamosffie.api.Controllers
             var result = await _generateSpinOrderService.GetOrdenGiroByOrdenGiroId(pOrdenGiroId);
             return result;
         }
+ 
+        [Route("GetListSolicitudPago")]
+        [HttpGet]
+        public async Task<OrdenGiro> GetListSolicitudPago()
+        {
+            var result = await _generateSpinOrderService.GetListSolicitudPago();
+            return result;
+        }
 
     }
 }
