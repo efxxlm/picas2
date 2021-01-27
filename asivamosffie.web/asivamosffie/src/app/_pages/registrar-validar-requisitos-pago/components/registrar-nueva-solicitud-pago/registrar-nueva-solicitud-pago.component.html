@@ -248,21 +248,25 @@
             <mat-accordion>
                 <mat-expansion-panel class="expansion-style">
                     <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title completo">
+                        <mat-panel-title class="expansion-style--title en-alerta">
                             Lista de chequeo
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-form-listachequeo-expensas></app-form-listachequeo-expensas>
+                    <!-- <app-form-listachequeo-expensas></app-form-listachequeo-expensas> -->
+                    <div style="margin-top: 1em;" *ngIf="contrato !== undefined">
+                        <div class="d-flex align-items-center solbloq ml8 info-text en-alertaLibre mb-2em">
+                            Este acordeón consume información de la funcionalidad Listas de chequeó.
+                        </div>
+                    </div>
                 </mat-expansion-panel>
             </mat-accordion>
             <mat-accordion>
                 <mat-expansion-panel class="expansion-style">
                     <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title completo">
+                        <mat-panel-title class="expansion-style--title en-alerta">
                             Soporte
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-form-soporte-solicitud-url></app-form-soporte-solicitud-url>
                 </mat-expansion-panel>
             </mat-accordion>
         </div>
