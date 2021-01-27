@@ -251,8 +251,8 @@ export class HojaVidaContratistaComponent implements OnInit {
     }
   }
 
-  disabledDate( cantidadHvAprobadas: string, cantidadHvRequeridas: string, index: number ) {
-    if ( cantidadHvAprobadas != null && cantidadHvRequeridas != null){
+  disabledDate( cantidadHvAprobadas: string, cantidadHvRequeridas: string, cantidadHvRecibidas: string, index: number ) {
+    if ( cantidadHvAprobadas != null && cantidadHvRequeridas != null && cantidadHvRecibidas != null){
       if ( cantidadHvAprobadas >= cantidadHvRequeridas ) {
         this.perfiles.controls[index].get( 'fechaAprobacion' ).enable();
       } else {
@@ -261,6 +261,10 @@ export class HojaVidaContratistaComponent implements OnInit {
       if ( cantidadHvRequeridas.length === 0 ) {
         this.perfiles.controls[index].get( 'fechaAprobacion' ).disable();
         this.perfiles.controls[index].get( 'fechaAprobacion' ).setValue(null);
+      }
+      if (Number( cantidadHvAprobadas ) > Number( cantidadHvRecibidas )){
+        this.perfiles.controls[index].get( 'fechaAprobacion' ).disable();
+        this.perfiles.controls[index].get( 'fechaAprobacion' ).setValue( null );
       }
     }else{
       this.perfiles.controls[index].get( 'fechaAprobacion' ).disable();

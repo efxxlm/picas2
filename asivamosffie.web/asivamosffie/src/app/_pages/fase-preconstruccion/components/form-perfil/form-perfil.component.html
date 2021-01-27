@@ -76,12 +76,13 @@
             <div class="col-md-12">
               <div class="row">
                 <div class="pr-1 mt-1em">
+                  {{ perfil.get('perfilCodigo').invalid | json }}
                   <label
                     class="label-left"
                     for="perfilCodigo"
-                    [class.color-secondaryColor]="
-                      (perfiles.get('perfilCodigo').invalid && perfiles.get('perfilCodigo').touched) ||
-                      (perfiles.get('perfilCodigo').invalid && estaEditando)
+                    [class.color-secondaryColor]=" 
+                      (perfil.get('perfilCodigo').invalid && perfil.get('perfilCodigo').touched) ||
+                      (perfil.get('perfilCodigo').invalid && estaEditando)
                     "
                   >
                     Perfil
@@ -102,8 +103,8 @@
                     src="assets/img/icon/incompleto.svg"
                     alt="este campo es requerido"
                     *ngIf="
-                      (perfiles.get('perfilCodigo').invalid && perfiles.get('perfilCodigo').touched) ||
-                      (perfiles.get('perfilCodigo').invalid && estaEditando)
+                      (perfil.get('perfilCodigo').invalid && perfil.get('perfilCodigo').touched) ||
+                      (perfil.get('perfilCodigo').invalid && estaEditando)
                     "
                   />
                 </span>
@@ -119,8 +120,8 @@
                     class="label-left"
                     for="cantidadHvRequeridas"
                     [class.color-secondaryColor]="
-                      (perfiles.get('cantidadHvRequeridas').invalid && perfiles.get('cantidadHvRequeridas').touched) ||
-                      (perfiles.get('cantidadHvRequeridas').invalid && estaEditando)
+                      (perfil.get('cantidadHvRequeridas').invalid && perfil.get('cantidadHvRequeridas').touched) ||
+                      (perfil.get('cantidadHvRequeridas').invalid && estaEditando)
                     "
                   >
                     Cantidad de hojas de vida requeridas para el perfil
@@ -160,9 +161,9 @@
                       src="assets/img/icon/incompleto.svg"
                       alt="este campo es requerido"
                       *ngIf="
-                        (perfiles.get('cantidadHvRequeridas').invalid &&
-                          perfiles.get('cantidadHvRequeridas').touched) ||
-                        (perfiles.get('cantidadHvRequeridas').invalid && estaEditando)
+                        (perfil.get('cantidadHvRequeridas').invalid &&
+                          perfil.get('cantidadHvRequeridas').touched) ||
+                        (perfil.get('cantidadHvRequeridas').invalid && estaEditando)
                       "
                     />
                   </span>
@@ -179,8 +180,8 @@
                     class="label-left"
                     for="cantidadHvRecibidas"
                     [class.color-secondaryColor]="
-                      (perfiles.get('cantidadHvRecibidas').invalid && perfiles.get('cantidadHvRecibidas').touched) ||
-                      (perfiles.get('cantidadHvRecibidas').invalid && estaEditando)
+                      (perfil.get('cantidadHvRecibidas').invalid && perfil.get('cantidadHvRecibidas').touched) ||
+                      (perfil.get('cantidadHvRecibidas').invalid && estaEditando)
                     "
                   >
                     Cantidad de hojas de vida recibidas para el perfil
@@ -220,8 +221,8 @@
                       src="assets/img/icon/incompleto.svg"
                       alt="este campo es requerido"
                       *ngIf="
-                        (perfiles.get('cantidadHvRecibidas').invalid && perfiles.get('cantidadHvRecibidas').touched) ||
-                        (perfiles.get('cantidadHvRecibidas').invalid && estaEditando)
+                        (perfil.get('cantidadHvRecibidas').invalid && perfil.get('cantidadHvRecibidas').touched) ||
+                        (perfil.get('cantidadHvRecibidas').invalid && estaEditando)
                       "
                     />
                   </span>
@@ -238,8 +239,8 @@
                     class="label-left"
                     for="cantidadHvAprobadas"
                     [class.color-secondaryColor]="
-                      (perfiles.get('cantidadHvAprobadas').invalid && perfiles.get('cantidadHvAprobadas').touched) ||
-                      (perfiles.get('cantidadHvAprobadas').invalid && estaEditando)
+                      (perfil.get('cantidadHvAprobadas').invalid && perfil.get('cantidadHvAprobadas').touched) ||
+                      (perfil.get('cantidadHvAprobadas').invalid && estaEditando)
                     "
                   >
                     Cantidad de hojas de vida aprobadas para el perfil
@@ -279,8 +280,8 @@
                       src="assets/img/icon/incompleto.svg"
                       alt="este campo es requerido"
                       *ngIf="
-                        (perfiles.get('cantidadHvAprobadas').invalid && perfiles.get('cantidadHvAprobadas').touched) ||
-                        (perfiles.get('cantidadHvAprobadas').invalid && estaEditando)
+                        (perfil.get('cantidadHvAprobadas').invalid && perfil.get('cantidadHvAprobadas').touched) ||
+                        (perfil.get('cantidadHvAprobadas').invalid && estaEditando)
                       "
                     />
                   </span>
@@ -297,8 +298,8 @@
                     class="label-left"
                     for="fechaAprobacion"
                     [class.color-secondaryColor]="
-                      (perfiles.get('fechaAprobacion').invalid && perfiles.get('fechaAprobacion').touched) ||
-                      (perfiles.get('fechaAprobacion').invalid && estaEditando)
+                      (perfil.get('fechaAprobacion').invalid && perfil.get('fechaAprobacion').touched) ||
+                      (perfil.get('fechaAprobacion').invalid && estaEditando)
                     "
                   >
                     Fecha de aprobación de la totalidad de las hojas de vida
@@ -318,6 +319,7 @@
                         disabledDate(
                           perfil.get('cantidadHvAprobadas').value,
                           perfil.get('cantidadHvRequeridas').value,
+                          perfil.get('cantidadHvRecibidas').value,
                           i
                         )
                       "
@@ -344,8 +346,8 @@
                       src="assets/img/icon/incompleto.svg"
                       alt="este campo es requerido"
                       *ngIf="
-                        (perfiles.get('fechaAprobacion').invalid && perfiles.get('fechaAprobacion').touched) ||
-                        (perfiles.get('fechaAprobacion').invalid && estaEditando)
+                        (perfil.get('fechaAprobacion').invalid && perfil.get('fechaAprobacion').touched) ||
+                        (perfil.get('fechaAprobacion').invalid && estaEditando)
                       "
                     />
                   </span>
@@ -414,8 +416,8 @@
                         class="label-left"
                         for="numeroRadicado"
                         [class.color-secondaryColor]="
-                          (perfiles.get('numeroRadicado').invalid && perfiles.get('numeroRadicado').touched) ||
-                          (perfiles.get('numeroRadicado').invalid && estaEditando)
+                          (numero.get('numeroRadicado').invalid && numero.get('numeroRadicado').touched) ||
+                          (numero.get('numeroRadicado').invalid && estaEditando)
                         "
                       >
                         Número de radicado en FFIE de aprobación de hojas de vida {{ j + 1 }}
@@ -450,8 +452,8 @@
                           src="assets/img/icon/incompleto.svg"
                           alt="este campo es requerido"
                           *ngIf="
-                            (perfiles.get('numeroRadicado').invalid && perfiles.get('numeroRadicado').touched) ||
-                            (perfiles.get('numeroRadicado').invalid && estaEditando)
+                            (numero.get('numeroRadicado').invalid && numero.get('numeroRadicado').touched) ||
+                            (numero.get('numeroRadicado').invalid && estaEditando)
                           "
                         />
                       </span>
@@ -518,8 +520,8 @@
                     class="label-left"
                     for="rutaSoporte"
                     [class.color-secondaryColor]="
-                      (perfiles.get('rutaSoporte').invalid && perfiles.get('rutaSoporte').touched) ||
-                      (perfiles.get('rutaSoporte').invalid && estaEditando)
+                      (perfil.get('rutaSoporte').invalid && perfil.get('rutaSoporte').touched) ||
+                      (perfil.get('rutaSoporte').invalid && estaEditando)
                     "
                   >
                     URL con soporte
@@ -553,8 +555,8 @@
                   src="assets/img/icon/incompleto.svg"
                   alt="este campo es requerido"
                   *ngIf="
-                    (perfiles.get('rutaSoporte').invalid && perfiles.get('rutaSoporte').touched) ||
-                    (perfiles.get('rutaSoporte').invalid && estaEditando)
+                    (perfil.get('rutaSoporte').invalid && perfil.get('rutaSoporte').touched) ||
+                    (perfil.get('rutaSoporte').invalid && estaEditando)
                   "
                 />
               </span>

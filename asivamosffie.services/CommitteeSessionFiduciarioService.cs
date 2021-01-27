@@ -1520,6 +1520,10 @@ namespace asivamosffie.services
             string ProcesoSeleccionAbierta = _context.Plantilla.Where(r => r.Codigo == TipoPlantillaProcesoSeleccionAbierta).Select(r => r.Contenido).FirstOrDefault();
             string ProcesosSeleccionAbierta = " ";
 
+            string TipoPlantillaProponentes = ((int)ConstanCodigoPlantillas.Proponentes_Proceso_Seleccion).ToString();
+            string ProponenteProcesoSeleccion = _context.Plantilla.Where(r => r.Codigo == TipoPlantillaProponentes).Select(r => r.Contenido).FirstOrDefault();
+            string ProponentesProcesosSeleccion = " ";
+
             List<Dominio> ListaParametricas = _context.Dominio.ToList();
 
             //Plantilla Grupos de seleccion
@@ -1671,20 +1675,29 @@ namespace asivamosffie.services
 
                             case ConstanCodigoVariablesPlaceHolders.NOMBRE_ORGANIZACION_CERRADA_PS:
 
-                                pProcesoSeleccion.ProcesoSeleccionCotizacion.ToList().ForEach( c => {
-                                    ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
-                                  Replace(placeholderDominio.Nombre, c.NombreOrganizacion);                
+                                string proponentes = "";
+
+                                pProcesoSeleccion.ProcesoSeleccionCotizacion.ToList().ForEach(c =>
+                                {
+                                    proponentes = proponentes + ProponenteProcesoSeleccion;
+                                    proponentes = proponentes.Replace(placeholderDominio.Nombre, c.NombreOrganizacion)
+                                    .Replace("[VALOR_CONTIZACION_CERRADA_PS]", "$" + String.Format("{0:n0}", c.ValorCotizacion));
+
+
                                 });
 
-                                break; 
+                                ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
+                                  Replace("[PROPONENTES]", proponentes);
 
-                            case ConstanCodigoVariablesPlaceHolders.VALOR_CONTIZACION_CERRADA_PS:
-                                pProcesoSeleccion.ProcesoSeleccionCotizacion.ToList().ForEach( c => {
-                                    ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
-                                  Replace(placeholderDominio.Nombre,"$" + String.Format("{0:n0}", c.ValorCotizacion) );                
-                                });
+                                break;
 
-                               break;
+                            //case ConstanCodigoVariablesPlaceHolders.VALOR_CONTIZACION_CERRADA_PS:
+                            //    pProcesoSeleccion.ProcesoSeleccionCotizacion.ToList().ForEach( c => {
+                            //        ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
+                            //      Replace(placeholderDominio.Nombre,"$" + String.Format("{0:n0}", c.ValorCotizacion) );                
+                            //    });
+
+                            //   break;
 
 
                             case ConstanCodigoVariablesPlaceHolders.EVALUACION_DESCRIPCION_CERRADA_PS:
