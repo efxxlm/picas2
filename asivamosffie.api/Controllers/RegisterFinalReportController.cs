@@ -55,24 +55,6 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("CreateEditInformeFinal")]
-        public async Task<IActionResult> CreateEditInformeFinal([FromBody] InformeFinal pInformeFinal)
-        {
-            Respuesta respuesta = new Respuesta();
-            try
-            {
-                pInformeFinal.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _registerFinalReport.CreateEditInformeFinal( pInformeFinal );
-                return Ok(respuesta);
-            }
-            catch (Exception ex)
-            {
-                respuesta.Data = ex.ToString();
-                return BadRequest(respuesta);
-            }
-        }
-
         [HttpGet]
         [Route("GetInformeFinalListaChequeoByInformeFinalInterventoriaId")]
         public async Task<List<dynamic>> GetInformeFinalListaChequeoByInformeFinalInterventoriaId([FromQuery] int pInformeFinalInterventoriaId)
@@ -88,5 +70,83 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        //Creaciones y modificaciones
+
+        [HttpPost]
+        [Route("CreateEditInformeFinal")]
+        public async Task<IActionResult> CreateEditInformeFinal([FromBody] InformeFinal pInformeFinal)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                //pInformeFinal.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                pInformeFinal.UsuarioCreacion = "LCT";
+                respuesta = await _registerFinalReport.CreateEditInformeFinal(pInformeFinal);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [HttpPost]
+        [Route("CreateEditInformeFinalInterventoria")]
+        public async Task<IActionResult> CreateEditInformeFinalInterventoria([FromBody] InformeFinalInterventoria pInformeFinalInterventoriaId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                //pInformeFinalInterventoriaId.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                pInformeFinalInterventoriaId.UsuarioCreacion = "LCT";
+                respuesta = await _registerFinalReport.CreateEditInformeFinalInterventoria(pInformeFinalInterventoriaId);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [HttpPost]
+        [Route("CreateEditInformeFinalAnexo/{pInformeFinalInterventoriaId:int}")]
+
+        public async Task<IActionResult> CreateEditInformeFinalAnexo([FromBody] InformeFinalAnexo pInformeFinalAnexoId,[FromRoute()] int pInformeFinalInterventoriaId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                //pInformeFinalAnexoId.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                pInformeFinalAnexoId.UsuarioCreacion = "LCT";
+                respuesta = await _registerFinalReport.CreateEditInformeFinalAnexo(pInformeFinalAnexoId, pInformeFinalInterventoriaId);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [HttpPost]
+        [Route("CreateEditInformeFinalInterventoriaObservacion")]
+        public async Task<IActionResult> CreateEditInformeFinalInterventoriaObservacion([FromBody] InformeFinalInterventoriaObservaciones pObservacion)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                //pObservacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                pObservacion.UsuarioCreacion = "LCT";
+                respuesta = await _registerFinalReport.CreateEditInformeFinalInterventoriaObservacion(pObservacion);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
     }
 }
