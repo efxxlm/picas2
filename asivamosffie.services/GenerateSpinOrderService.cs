@@ -33,8 +33,10 @@ namespace asivamosffie.services
         /// <returns></returns>
         public async Task<dynamic> GetListSolicitudPago()
         {
-            var result = await _context.SolicitudPago.Where(s => s.Eliminado != true)
-                .Include(r => r.Contrato)
+            var result = await _context.SolicitudPago
+                 .Include(r => r.Contrato)
+                 .Include(r => r.OrdenGiro).Where(s => s.Eliminado != true)
+
                                         .Select(s => new
                                         {
                                             s.TipoSolicitudCodigo,
@@ -45,7 +47,8 @@ namespace asivamosffie.services
                                             s.EstadoCodigo,
                                             s.ContratoId,
                                             s.SolicitudPagoId,
-                                            RegistroCompleto = s.RegistroCompleto ?? false
+                                            s.OrdenGiro,
+                                            RegistroCompleto = s.OrdenGiro.Count() > 0 ? s.OrdenGiro.FirstOrDefault().RegistroCompleto : false
                                         }).OrderByDescending(r => r.SolicitudPagoId).ToListAsync();
 
             List<dynamic> grind = new List<dynamic>();
@@ -61,15 +64,17 @@ namespace asivamosffie.services
                     r.SolicitudPagoId,
                     r.NumeroSolicitud,
                     r.NumeroContrato,
-                    Modalidad = !string.IsNullOrEmpty(r.ModalidadCodigo) ? ListParametricas.Where(l => l.Codigo == r.ModalidadCodigo && l.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato).FirstOrDefault().Nombre : "No aplica"
+                    r.RegistroCompleto,
+                    Modalidad = !string.IsNullOrEmpty(r.ModalidadCodigo) ? ListParametricas.Where(l => l.Codigo == r.ModalidadCodigo && l.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato).FirstOrDefault().Nombre : "No aplica",
+                    EstadoOrdenGiro = r.OrdenGiro != null ? ListParametricas.Where(l => l.Codigo == r.ModalidadCodigo && l.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Registro_Pago).FirstOrDefault().Nombre : "No aplica",
                 });
             });
             return grind;
         }
-         
+
         public async Task<OrdenGiro> GetOrdenGiroByOrdenGiroId(int pOrdenGiroId)
         {
-            OrdenGiro ordenGiro =  _context.OrdenGiro.Where(o => o.OrdenGiroId == pOrdenGiroId)
+            OrdenGiro ordenGiro = _context.OrdenGiro.Where(o => o.OrdenGiroId == pOrdenGiroId)
                 .Include(t => t.OrdenGiroTercero)
                 .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleEstrategiaPago)
                 .Include(d => d.SolicitudPago).FirstOrDefault();
@@ -84,8 +89,8 @@ namespace asivamosffie.services
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
 
             try
-            { 
-              
+            {
+
                 return
                      new Respuesta
                      {

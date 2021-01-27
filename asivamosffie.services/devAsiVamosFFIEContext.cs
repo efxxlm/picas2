@@ -201,7 +201,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
-    
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -842,7 +841,7 @@ namespace asivamosffie.model.Models
             modelBuilder.Entity<Contratacion>(entity =>
             {
                 entity.Property(e => e.ConsideracionDescripcion)
-                    .HasMaxLength(2000)
+                    .HasMaxLength(2500)
                     .IsUnicode(false);
 
                 entity.Property(e => e.EstadoSolicitudCodigo)
@@ -3300,6 +3299,10 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<OrdenGiro>(entity =>
             {
+                entity.Property(e => e.EstadoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");

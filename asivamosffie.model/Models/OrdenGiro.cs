@@ -17,6 +17,7 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public bool? Eliminado { get; set; }
         public bool? RegistroCompleto { get; set; }
+        public string EstadoCodigo { get; set; }
 
         public virtual OrdenGiroDetalle OrdenGiroDetalle { get; set; }
         public virtual OrdenGiroTercero OrdenGiroTercero { get; set; }
