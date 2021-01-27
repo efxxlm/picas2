@@ -11,9 +11,9 @@ namespace asivamosffie.services.Interfaces
     public interface IRegisterFinalReportService
     {
         Task<List<VProyectosCierre>> gridRegisterFinalReport();
-        Task<List<InformeFinal>> GetInformeFinalByContratacionProyectoId(int pContratacionProyectoId);
+        Task<List<ContratacionProyecto>> GetInformeFinalByContratacionProyectoId(int pContratacionProyectoId);
         Task<Respuesta> CreateEditInformeFinal( InformeFinal pInformeFinal );
-        Task<List<InformeFinalInterventoria>> GetInformeFinalListaChequeoByInformeFinalId(int pInformeFinalId);
+        Task<List<dynamic>> GetInformeFinalListaChequeoByInformeFinalInterventoriaId(int pInformeFinalInterventoriaId);
 
     }
 }
