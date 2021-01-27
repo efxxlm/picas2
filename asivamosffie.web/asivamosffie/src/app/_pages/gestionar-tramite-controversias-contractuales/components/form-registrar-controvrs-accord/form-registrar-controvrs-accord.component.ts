@@ -22,6 +22,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
     tipoControversia: [null, Validators.required],
     fechaSolicitud: [null, Validators.required],
     motivosSolicitud: [null, Validators.required],
+    cualOtroMotivo: [null, Validators.required],
     fechaComitePretecnico: [null, Validators.required],
     conclusionComitePretecnico: ['', Validators.required],
     procedeSolicitud: [null, Validators.required],
@@ -69,6 +70,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
   fechaSesion3: Date;
 
   sucessInfo: string = 'La información ha sido guardada exitosamente.';
+  obj1: boolean;
 
   constructor(private router: Router, private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private common: CommonService) {
     this.common.listaTiposDeControversiaContractual().subscribe(data => {
@@ -232,9 +234,8 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
     const buenManejo = values.find(value => value.codigo == "1");
     const garantiaObra = values.find(value => value.codigo == "2");
     const pCumplimiento = values.find(value => value.codigo == "3");
-    const polizasYSeguros = values.find(value => value.codigo == "4");
-
-
+    const cualOtro = values.find(value => value.codigo == "4");
+    cualOtro ? this.obj1 = true : this.obj1 = false;
   }
   // evalua tecla a tecla
   validateNumberKeypress(event: KeyboardEvent) {
