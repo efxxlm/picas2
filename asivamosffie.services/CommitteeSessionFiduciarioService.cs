@@ -3131,6 +3131,9 @@ namespace asivamosffie.services
                 List<int> ListContratacionId = pComiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion).Select(r => r.SolicitudId).ToList();
 
                 List<Contratacion> ListContratacion = new List<Contratacion>();
+                List<ProcesoSeleccion> ListProcesoSeleccion = new List<ProcesoSeleccion>();
+
+                #region consulta Contratacion
 
                 foreach (var ContratacionId in ListContratacionId)
                 {
@@ -3143,16 +3146,24 @@ namespace asivamosffie.services
                     ListContratacion.Add(contratacion);
                 }
 
-                List<ProcesoSeleccion> ListProcesoSeleccion = new List<ProcesoSeleccion>();
+                #endregion consulta Contratacion
+
+                #region consulta Proceso Seleccion
 
                 foreach (var idProcesoSeleccion in ListProcesoSeleccionIdSolicitudId)
                 {
                     ListProcesoSeleccion.Add(_context.ProcesoSeleccion.Find(idProcesoSeleccion));
                 }
+
+                #endregion consulta Proceso Seleccion
+
+                #region Listas
+
                 List<Localizacion> localizacions = _context.Localizacion.ToList();
                 List<Dominio> ListParametricas = _context.Dominio.Where(r => r.TipoDominioId != (int)EnumeratorTipoDominio.PlaceHolder).ToList();
                 List<Dominio> placeholders = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.PlaceHolder).ToList();
                 List<InstitucionEducativaSede> ListIntitucionEducativa = _context.InstitucionEducativaSede.ToList();
+
                 List<SesionParticipante> ListSesionParticipante = _context.SesionParticipante
                     .Where(r => r.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId)
                     .Include(r => r.Usuario)
@@ -3160,7 +3171,10 @@ namespace asivamosffie.services
 
                 List<SesionInvitado> ListInvitados = _context.SesionInvitado
                     .Where(r => r.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId).ToList();
-                //Tablas Dinamicas
+
+                #endregion Listas
+
+                #region plantillas
 
                 //Plantilla orden dia
                 string PlantillaSolicitudesContractuales = _context.Plantilla
@@ -3243,10 +3257,13 @@ namespace asivamosffie.services
                     .ToString()).FirstOrDefault()
                  .Contenido;
 
+                #endregion plantillas
+
                 string RegistrosFirmas = string.Empty;
 
                 string registrosProcesosSelecccion = string.Empty;
 
+                #region Orden del dia 
                 //Orden del dia 
 
                 if (pComiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario.Count() == 0)
@@ -3338,6 +3355,9 @@ namespace asivamosffie.services
                     PlantillaSolicitudesContractuales = PlantillaSolicitudesContractuales.Replace("[REGISTROS_SOLICITUDES_CONTRACTUALES]", RegistrosSolicitudesContractuales);
                 }
 
+                #endregion Orden del dia 
+
+                #region Tabla Invitados
                 //Tabla Invitados
                 foreach (var invitado in ListInvitados.Where(r => !(bool)r.Eliminado).ToList())
                 {
@@ -3363,6 +3383,11 @@ namespace asivamosffie.services
                         }
                     }
                 }
+
+                #endregion Tabla Invitados
+
+                #region Logica Orden Del Dia
+
                 //Logica Orden Del Dia
                 int enumOrdenDelDia = 1;
                 foreach (var SesionComiteSolicitud in pComiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario)
@@ -3689,7 +3714,7 @@ namespace asivamosffie.services
                                         {
                                             TextoResultadoVotacion = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Votacion_Unanime).ToString()).FirstOrDefault().Nombre;
                                         }
-                                        registrosProcesosSelecccion = registrosContratacion
+                                        registrosProcesosSelecccion = registrosProcesosSelecccion
                                         .Replace(placeholderDominio.Nombre, TextoResultadoVotacion);
                                         break;
 
@@ -3736,6 +3761,10 @@ namespace asivamosffie.services
                     }
 
                 }
+
+                #endregion Logica Orden Del Dia
+
+                #region Nuevos Temas
 
                 //Nuevos Temas
                 int EnumTema = 1;
@@ -3838,6 +3867,10 @@ namespace asivamosffie.services
                     }
                 }
 
+                #endregion Nuevos Temas
+
+                #region Temas para ordel del dia
+
                 //Temas para ordel del dia
                 int enumTemaOrdelDia = 1;
                 foreach (var Tema in pComiteTecnico.SesionComiteTema.Where(r => r.EsProposicionesVarios == null).ToList())
@@ -3883,6 +3916,10 @@ namespace asivamosffie.services
                     }
                 }
 
+                #endregion Temas para ordel del dia
+
+                #region Proposiciones y varios para ordel del dia
+
                 //Proposiciones y varios para ordel del dia
                 int enumPropisicionesVarios = 1;
                 foreach (var Tema in pComiteTecnico.SesionComiteTema.Where(r => r.EsProposicionesVarios != null).ToList())
@@ -3927,6 +3964,10 @@ namespace asivamosffie.services
                         }
                     }
                 }
+
+                #endregion Proposiciones y varios para ordel del dia
+
+                #region Proposiciones y varios
 
                 //Proposiciones y varios
                 int EnumProposiciones = 1;
@@ -4032,6 +4073,10 @@ namespace asivamosffie.services
                     }
                 }
 
+                #endregion Proposiciones y varios
+
+                #region Firmas
+
                 //Firmas 
                 int enumFirmar = 1;
                 foreach (var SesionParticipante in ListSesionParticipante)
@@ -4064,6 +4109,10 @@ namespace asivamosffie.services
 
                     }
                 }
+
+                #endregion Firmas
+
+                #region Anexos 
 
                 //Anexos
                 string Anexos = string.Empty;
@@ -4103,6 +4152,10 @@ namespace asivamosffie.services
                 }
                 //Suma de las fichas 
                 RegistrosFichaContratacion += RegistrosFichaProcesosSeleccion;
+
+                #endregion Anexos
+
+                #region Plantilla Principal 
 
                 //Plantilla Principal 
                 foreach (Dominio placeholderDominio in placeholders)
@@ -4216,6 +4269,8 @@ namespace asivamosffie.services
                             break;
                     }
                 }
+
+                #endregion Plantilla Principal 
 
                 return strContenido;
             }
