@@ -1,0 +1,51 @@
+<section class="container text-center mb-2em" *ngIf="solicitudPago !== undefined">
+    <section class="container text-center">
+        <div class="text-right">
+            <a routerLink="/registrarValidarRequisitosPago" mat-button color="primary" class="btn-regresar">
+                <img src="assets/img/icon/regresar.svg" alt="Regresar">
+            </a>
+        </div>
+        <h1 class="title-menu--h1">
+            Ver detalle/Editar solicitud de pago {{ solicitudPago.numeroSolicitud }}
+        </h1>
+    </section>
+    <p class="info-sub-title supportBlack">
+        <span *ngIf="solicitudPago.tipoSolicitudCodigo === tipoSolicitudCodigo.expensas">Tipo de solicitud: <b>Expensas</b></span>
+    </p>
+
+    <!-- Formulario de expensas -->
+    <app-form-solicitud-expensas [tipoSolicitud]="tipoSolicitudCodigo.expensas" [solicitudPago]="solicitudPago" [esVerDetalle]="true"></app-form-solicitud-expensas>
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Lista de chequeo
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div style="margin-top: 1em;">
+                <div class="d-flex align-items-center solbloq ml8 info-text en-alertaLibre mb-2em">
+                    Este acordeón consume información de la funcionalidad Listas de chequeó.
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title ">
+                   Soporte de la solicitud
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-card class="shipping-card var-main-gris">
+                <mat-card-header class="header-card header-card--margin">
+                    <mat-card-title class="header-card--text textoGris">
+                        Soporte de la solicitud de pago
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content style="text-align: left; margin-bottom: 2em;">
+                    <p><strong>URL con soporte:</strong> {{ solicitudPago.solicitudPagoSoporteSolicitud[0].urlSoporte }} </p>
+                </mat-card-content>
+            </mat-card>
+        </mat-expansion-panel>
+    </mat-accordion>
+</section>

@@ -3,11 +3,11 @@
 </button>
 <div style="padding: 10px; text-align: center;">
     <h1 class="title-menu--h1 centerTrick">
-        Devolver solicitud SolPagoO0001
+        Devolver solicitud {{ registro.numeroSolicitud }}
     </h1>
     <p class="info-sub-title">
-        <span>Número de contrato: <b>N801801</b></span>
-        <span>Modalidad del contrato: <b>Tipo B</b></span>
+        <span>Número de contrato: <b> {{ registro.numeroContrato }} </b></span>
+        <span>Modalidad del contrato: <b> {{ registro.modalidad }} </b></span>
     </p>
     <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
         <mat-card class="shipping-card">

@@ -20,7 +20,7 @@
         <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
             <ng-container matColumnDef="fechaValidacionFinanciera">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 14%;"> Fecha de validación financiera </th>
-                <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.fechaValidacionFinanciera }}</b> </td>
+                <td mat-cell *matCellDef="let element" align="center"> <b>{{ 'Funcionalidad pendiente' }}</b> </td>
             </ng-container>
             <ng-container matColumnDef="numeroSolicitud">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 12%;"> Número de solicitud </th>
@@ -28,7 +28,7 @@
             </ng-container>
             <ng-container matColumnDef="modalidadContrato">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 11%;"> Modalidad del contrato </th>
-                <td mat-cell *matCellDef="let element" align="center"> {{ element.modalidadContrato }} </td>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.modalidad }} </td>
             </ng-container>
             <ng-container matColumnDef="numeroContrato">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de contrato </th>

@@ -86,6 +86,13 @@ export class RegistrarValidarRequisitosPagoComponent implements OnInit {
         });
     }
 
+    devolverSolicitudDialog( registro: any ) {
+        const dialogRef = this.dialog.open( DialogDevolverSolicitudComponent , {
+          width: '65em',
+          data: registro
+        });
+    }
+
     devolverSolictud( pSolicitudPagoId: number ){
         this.registrarPagosSvc.deleteSolicitudPago( pSolicitudPagoId )
             .subscribe(

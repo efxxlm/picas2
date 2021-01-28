@@ -15,6 +15,7 @@ export class FormSolicitudExpensasComponent implements OnInit {
 
     @Input() tipoSolicitud: string;
     @Input() solicitudPago: any;
+    @Input() esVerDetalle = false;
     addressForm = this.fb.group({
       llaveMen: [null, Validators.required],
       llaveMenSeleccionada: [ null, Validators.required ],

@@ -14,6 +14,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class DatosFacturaConstruccionRvrpComponent implements OnInit {
 
     @Input() solicitudPago: any;
+    @Input() esVerDetalle = false;
     addressForm = this.fb.group({
         numeroFactura: [null, Validators.required],
         fechaFactura: [null, Validators.required],
@@ -133,6 +134,13 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
     maxLength(e: any, n: number) {
         if (e.editor.getLength() > n) {
           e.editor.deleteText(n, e.editor.getLength());
+        }
+    }
+
+    getTipoDescuento( tipoDescuentoCodigo: string ) {
+        if ( this.tiposDescuentoArray.length > 0 ) {
+            const descuento = this.tiposDescuentoArray.filter( descuento => descuento.codigo === tipoDescuentoCodigo );
+            return descuento[0].nombre;
         }
     }
 

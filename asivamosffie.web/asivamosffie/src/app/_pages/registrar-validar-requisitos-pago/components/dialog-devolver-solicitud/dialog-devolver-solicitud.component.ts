@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { Validators, FormBuilder } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-dialog-devolver-solicitud',
@@ -8,48 +9,39 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
   styleUrls: ['./dialog-devolver-solicitud.component.scss']
 })
 export class DialogDevolverSolicitudComponent implements OnInit {
-  addressForm = this.fb.group({
-    fechaRadicacionSAC: [null, Validators.required],
-    numeroRadicacionSAC: [null, Validators.required]
-  });
-  constructor(private fb: FormBuilder, public matDialogRef: MatDialogRef<DialogDevolverSolicitudComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
-  ngOnInit(): void {
-  }
-  validateNumberKeypress(event: KeyboardEvent) {
-    const alphanumeric = /[0-9]/;
-    const inputChar = String.fromCharCode(event.charCode);
-    return alphanumeric.test(inputChar) ? true : false;
-  }
+    addressForm = this.fb.group({
+      fechaRadicacionSAC: [null, Validators.required],
+      numeroRadicacionSAC: [null, Validators.required]
+    });
 
-  maxLength(e: any, n: number) {
-    if (e.editor.getLength() > n) {
-      e.editor.deleteText(n, e.editor.getLength());
+    constructor(
+        private fb: FormBuilder,
+        private dialog: MatDialog,
+        private matDialogRef: MatDialogRef<DialogDevolverSolicitudComponent>,
+        @Inject(MAT_DIALOG_DATA) public registro: any )
+    { }
+
+    ngOnInit(): void {
+        console.log( this.registro );
     }
-  }
 
-  textoLimpio(texto: string) {
-    let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
-
-    if ( texto ){
-      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
-      return textolimpio.length + saltosDeLinea;
+    validateNumberKeypress(event: KeyboardEvent) {
+      const alphanumeric = /[0-9]/;
+      const inputChar = String.fromCharCode(event.charCode);
+      return alphanumeric.test(inputChar) ? true : false;
     }
-  }
 
-  private contarSaltosDeLinea(cadena: string, subcadena: string) {
-    let contadorConcurrencias = 0;
-    let posicion = 0;
-    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
-      ++contadorConcurrencias;
-      posicion += subcadena.length;
+    openDialog(modalTitle: string, modalText: string) {
+        const dialogRef = this.dialog.open(ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle, modalText }
+        });
     }
-    return contadorConcurrencias;
-  }
-  onSubmit() {
-    console.log(this.addressForm.value);
-    //this.openDialog('', 'La información ha sido guardada exitosamente.');
-  }
+
+    onSubmit() {
+      console.log(this.addressForm.value);
+      // this.openDialog('', 'La información ha sido guardada exitosamente.');
+    }
+
 }

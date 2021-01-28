@@ -13,6 +13,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class FormAmortizacionAnticipoComponent implements OnInit {
 
     @Input() solicitudPago: any;
+    @Input() esVerDetalle = false;
     @Input() contrato: any;
     solicitudPagoFase: any;
     solicitudPagoFaseAmortizacionId = 0;

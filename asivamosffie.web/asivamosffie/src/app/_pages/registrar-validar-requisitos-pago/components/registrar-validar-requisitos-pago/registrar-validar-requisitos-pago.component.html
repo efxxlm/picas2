@@ -57,22 +57,28 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Gestión </th>
                 <td mat-cell *matCellDef="let element" align="center">
                     <ng-container *ngIf="element.tipoSolicitudCodigo !== tipoSolicitudCodigo.expensas; else esExpensas">
-                        <button mat-raised-button color="accent" class="btn-table" (click)="this.devolverSolictud( element.solicitudPagoId )">
+                        <button mat-raised-button color="accent" class="btn-table" (click)="devolverSolicitudDialog( element )">
                             Devolver solicitud
                         </button>
                         <button mat-raised-button color="accent" class="btn-table" [routerLink]="[ 'verDetalleEditar', element.contratoId, element.solicitudPagoId ]"> 
                             Ver detalle/Editar
+                        </button>
+                        <button mat-raised-button color="accent" class="btn-table" [routerLink]="[ 'verDetalle', element.contratoId, element.solicitudPagoId ]"> 
+                            Ver detalle
                         </button>
                         <button mat-raised-button color="accent" class="btn-table">
                             Eliminar
                         </button>
                     </ng-container>
                     <ng-template #esExpensas>
-                        <button mat-raised-button color="accent" class="btn-table" (click)="this.devolverSolictud( element.solicitudPagoId )">
+                        <button mat-raised-button color="accent" class="btn-table" (click)="devolverSolicitudDialog( element )">
                             Devolver solicitud
                         </button>
                         <button mat-raised-button color="accent" class="btn-table" [routerLink]="[ 'verDetalleEditarExpensas', element.solicitudPagoId ]"> 
                             Ver detalle/Editar
+                        </button>
+                        <button mat-raised-button color="accent" class="btn-table" [routerLink]="[ 'verDetalleExpensas', element.solicitudPagoId ]">
+                            Ver detalle
                         </button>
                         <button mat-raised-button color="accent" class="btn-table">
                             Eliminar

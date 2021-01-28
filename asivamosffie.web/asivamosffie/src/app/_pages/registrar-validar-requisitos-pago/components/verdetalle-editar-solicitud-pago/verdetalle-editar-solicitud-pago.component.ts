@@ -91,6 +91,8 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
                                         this.registroCompletoAcordeones.registroCompletoFormaDePago = true;
                                     }
                                 }
+                            } else {
+                                this.registroCompletoAcordeones.registroCompletoSolicitudPago = true;
                             }
                           }
                         );

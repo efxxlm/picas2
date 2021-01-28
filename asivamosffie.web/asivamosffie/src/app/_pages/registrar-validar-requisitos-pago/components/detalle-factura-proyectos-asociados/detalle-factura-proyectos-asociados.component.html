@@ -1,53 +1,45 @@
 <ng-container *ngIf="esMultiProyecto === true; else noEsMultiProyecto">
-    <div class="table-responsive">
-        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-
-            <ng-container matColumnDef="llaveMen">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Llave MEN </th>
-                <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.llaveMen }}</b> </td>
-            </ng-container>
-
-            <ng-container matColumnDef="tipoIntervencion">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de intervención </th>
-                <td mat-cell *matCellDef="let element" align="center"> {{ element.tipoIntervencion }} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="departamento">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Departamento </th>
-                <td mat-cell *matCellDef="let element" align="center"> {{ element.departamento }} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="municipio">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Municipio </th>
-                <td mat-cell *matCellDef="let element" align="center"> {{ element.municipio }} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="institucionEducativa">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Institución educativa </th>
-                <td mat-cell *matCellDef="let element" align="center"> {{ element.institucionEducativa }} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="sede">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Sede </th>
-                <td mat-cell *matCellDef="let element" align="center"> {{ element.sede }} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="validar">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Seleccionar </th>
-                <td mat-cell *matCellDef="let element" align="center">
-                    <section class="example-section">
-                        <mat-checkbox [(ngModel)]="element.check" (ngModelChange)="projectSelect()"></mat-checkbox>
-                    </section>
-                </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumnsMultiProyecto"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumnsMultiProyecto;"></tr>
-        </table>
-    </div>
-    <form [formGroup]="formProject" (ngSubmit)="guardar()">
-        <div style="margin-top: 3em;" *ngFor="let project of projects.controls; index as i" [formGroup]="project">
-            <mat-card class="shipping-card" *ngIf="project.get( 'check' ).value === true">
+    <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+        <div class="table-responsive">
+            <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+    
+                <ng-container matColumnDef="llaveMen">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Llave MEN </th>
+                    <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.llaveMen }}</b> </td>
+                </ng-container>
+    
+                <ng-container matColumnDef="tipoIntervencion">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de intervención </th>
+                    <td mat-cell *matCellDef="let element" align="center"> {{ element.tipoIntervencion }} </td>
+                </ng-container>
+    
+                <ng-container matColumnDef="departamento">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Departamento </th>
+                    <td mat-cell *matCellDef="let element" align="center"> {{ element.departamento }} </td>
+                </ng-container>
+    
+                <ng-container matColumnDef="municipio">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Municipio </th>
+                    <td mat-cell *matCellDef="let element" align="center"> {{ element.municipio }} </td>
+                </ng-container>
+    
+                <ng-container matColumnDef="institucionEducativa">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Institución educativa </th>
+                    <td mat-cell *matCellDef="let element" align="center"> {{ element.institucionEducativa }} </td>
+                </ng-container>
+    
+                <ng-container matColumnDef="sede">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Sede </th>
+                    <td mat-cell *matCellDef="let element" align="center"> {{ element.sede }} </td>
+                </ng-container>
+    
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+            <!--<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>-->
+        </div>
+        <div style="margin-top: 3em;" *ngIf="projects.length > 0">
+            <mat-card class="shipping-card var-main-gris" *ngFor="let project of projects.controls; index as i" [formGroup]="project">
                 <mat-card-header class="header-card header-card--margin">
                     <mat-card-title class="header-card--text">
                         {{ project.get( 'llaveMen' ).value }}
@@ -57,73 +49,150 @@
                     <p><strong>Monto máximo a pagar en el proyecto:</strong> $30.000.000</p>
                     <p><strong>Monto pendiente a pagar en el proyecto:</strong> $30.000.000</p>
                     <br>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="row">
-                                <div class="pr-1">
-                                    <label class="label-left" for="criterioPago">Criterio</label>
-                                </div>
-                                <div class="col">
-                                    <mat-form-field class="select-width" style="width: 99%;">
-                                        <mat-select formControlName="criterioPago" multiple required (selectionChange)="getvalues( $event.value, i )">
-                                            <mat-option *ngFor="let criterioPago of project.get( 'listaCriterios' ).value" [value]="criterioPago">
-                                                {{ criterioPago.nombre }}
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </div>
-                            </div>
-                        </div>
+                    <br>
+                    <div class="d-flex">
+                        <strong>Criterios:</strong>
+                        <p *ngFor="let criterio of criteriosArraySeleccionados; index as i" style="margin-left: .4em;"> {{ filterCriterios( criterio.codigo ) }}<span *ngIf="criteriosArraySeleccionados.length - 1 !== i">,</span><span *ngIf="criteriosArraySeleccionados.length - 1 === i">.</span> </p>
                     </div>
                     <section formArrayName="criteriosProyecto" class="mt-1em" *ngIf="criteriosProyecto( i ).length > 0">
                         <div *ngFor="let criterioProyecto of criteriosProyecto( i ).controls; index as j" [formGroup]="criterioProyecto">
-                            <h2 class="color-p">
+                            <h2>
                                 <b> {{ criterioProyecto.get( 'nombre' ).value }} </b>
                             </h2>
-                            <div class="row">
-                                <div class="col-md-8">
-                                  <div class="row">
-                                    <div class="pr-1">
-                                        <label class="label-left" for="valorFacturado">
-                                            Valor facturado para el proyecto en el criterio
-                                        </label>
-                                    </div>
-                                    <div class="col d-flex">
-                                      <mat-form-field class="full-width">
-                                        <input  matInput #valorFacturado currencyMask maxlength="28" required formControlName="valorFacturado"
-                                                [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
-                                      </mat-form-field>
-                                      <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico" matTooltipClass="info-tooltip" *ngIf="criterioProyecto.get( 'valorFacturado' ).value !== null">{{20 - criterioProyecto.get( 'valorFacturado' ).value.toString().length}}</span>
-                                      <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico" matTooltipClass="info-tooltip" *ngIf="criterioProyecto.get( 'valorFacturado' ).value === null">20</span>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="text-right">
-                                        <button mat-button color="warn" type="button" class="btn-eliminar" (click)="deleteCriterio( criterioProyecto, i, j )">
-                                          <img src="assets/img/icon/menos.svg">
-                                          Eliminar criterio
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
+                            <p><strong>Valor facturado para el proyecto en el criterio:</strong> ${{ criterioProyecto.get( 'valorFacturado' ).value | currency:' ':'symbol-narrow':'.0-0' }} </p>
                         </div>
                     </section>
                 </mat-card-content>
             </mat-card>
-            <div class="text-right" *ngIf="project.get( 'check' ).value === true">
-                <button mat-button color="warn" type="button" class="btn-eliminar" (click)="deleteLLave( project, i )">
-                  <img src="assets/img/icon/menos.svg">
-                  Eliminar llave
+        </div>
+    </ng-container>
+    <ng-template #noEsVerDetalle>
+        <div class="table-responsive">
+            <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+    
+                <ng-container matColumnDef="llaveMen">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Llave MEN </th>
+                    <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.llaveMen }}</b> </td>
+                </ng-container>
+    
+                <ng-container matColumnDef="tipoIntervencion">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de intervención </th>
+                    <td mat-cell *matCellDef="let element" align="center"> {{ element.tipoIntervencion }} </td>
+                </ng-container>
+    
+                <ng-container matColumnDef="departamento">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Departamento </th>
+                    <td mat-cell *matCellDef="let element" align="center"> {{ element.departamento }} </td>
+                </ng-container>
+    
+                <ng-container matColumnDef="municipio">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Municipio </th>
+                    <td mat-cell *matCellDef="let element" align="center"> {{ element.municipio }} </td>
+                </ng-container>
+    
+                <ng-container matColumnDef="institucionEducativa">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Institución educativa </th>
+                    <td mat-cell *matCellDef="let element" align="center"> {{ element.institucionEducativa }} </td>
+                </ng-container>
+    
+                <ng-container matColumnDef="sede">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Sede </th>
+                    <td mat-cell *matCellDef="let element" align="center"> {{ element.sede }} </td>
+                </ng-container>
+    
+                <ng-container matColumnDef="validar">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Seleccionar </th>
+                    <td mat-cell *matCellDef="let element" align="center">
+                        <section class="example-section">
+                            <mat-checkbox [(ngModel)]="element.check" (ngModelChange)="projectSelect()"></mat-checkbox>
+                        </section>
+                    </td>
+                </ng-container>
+    
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsMultiProyecto"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumnsMultiProyecto;"></tr>
+            </table>
+        </div>
+        <form [formGroup]="formProject" (ngSubmit)="guardar()">
+            <div style="margin-top: 3em;" *ngFor="let project of projects.controls; index as i" [formGroup]="project">
+                <mat-card class="shipping-card" *ngIf="project.get( 'check' ).value === true">
+                    <mat-card-header class="header-card header-card--margin">
+                        <mat-card-title class="header-card--text">
+                            {{ project.get( 'llaveMen' ).value }}
+                        </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content style="text-align: left;">
+                        <p><strong>Monto máximo a pagar en el proyecto:</strong> $30.000.000</p>
+                        <p><strong>Monto pendiente a pagar en el proyecto:</strong> $30.000.000</p>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="pr-1">
+                                        <label class="label-left" for="criterioPago">Criterio</label>
+                                    </div>
+                                    <div class="col">
+                                        <mat-form-field class="select-width" style="width: 99%;">
+                                            <mat-select formControlName="criterioPago" multiple required (selectionChange)="getvalues( $event.value, i )">
+                                                <mat-option *ngFor="let criterioPago of project.get( 'listaCriterios' ).value" [value]="criterioPago">
+                                                    {{ criterioPago.nombre }}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <section formArrayName="criteriosProyecto" class="mt-1em" *ngIf="criteriosProyecto( i ).length > 0">
+                            <div *ngFor="let criterioProyecto of criteriosProyecto( i ).controls; index as j" [formGroup]="criterioProyecto">
+                                <h2 class="color-p">
+                                    <b> {{ criterioProyecto.get( 'nombre' ).value }} </b>
+                                </h2>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                      <div class="row">
+                                        <div class="pr-1">
+                                            <label class="label-left" for="valorFacturado">
+                                                Valor facturado para el proyecto en el criterio
+                                            </label>
+                                        </div>
+                                        <div class="col d-flex">
+                                          <mat-form-field class="full-width">
+                                            <input  matInput #valorFacturado currencyMask maxlength="28" required formControlName="valorFacturado"
+                                                    [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
+                                          </mat-form-field>
+                                          <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico" matTooltipClass="info-tooltip" *ngIf="criterioProyecto.get( 'valorFacturado' ).value !== null">{{20 - criterioProyecto.get( 'valorFacturado' ).value.toString().length}}</span>
+                                          <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico" matTooltipClass="info-tooltip" *ngIf="criterioProyecto.get( 'valorFacturado' ).value === null">20</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="text-right">
+                                            <button mat-button color="warn" type="button" class="btn-eliminar" (click)="deleteCriterio( criterioProyecto, i, j )">
+                                              <img src="assets/img/icon/menos.svg">
+                                              Eliminar criterio
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </mat-card-content>
+                </mat-card>
+                <div class="text-right" *ngIf="project.get( 'check' ).value === true">
+                    <button mat-button color="warn" type="button" class="btn-eliminar" (click)="deleteLLave( project, i )">
+                      <img src="assets/img/icon/menos.svg">
+                      Eliminar llave
+                    </button>
+                </div>
+            </div>
+            <div class="text-center mb-2em">
+                <button mat-button color="warn" class="btn-guardar" type="submit">
+                  <img src="assets/img/icon/guardar.svg">
                 </button>
             </div>
-        </div>
-        <div class="text-center mb-2em">
-            <button mat-button color="warn" class="btn-guardar" type="submit">
-              <img src="assets/img/icon/guardar.svg">
-            </button>
-        </div>
-    </form>
+        </form>
+    </ng-template>
 </ng-container>
 <ng-template #noEsMultiProyecto>
     <div class="table-responsive">

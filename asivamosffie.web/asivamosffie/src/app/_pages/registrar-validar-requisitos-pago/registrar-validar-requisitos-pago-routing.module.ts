@@ -1,3 +1,4 @@
+import { VerDetalleExpensasComponent } from './components/ver-detalle-expensas/ver-detalle-expensas.component';
 import { VerDetalleEditarExpensasComponent } from './components/ver-detalle-editar-expensas/ver-detalle-editar-expensas.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -38,9 +39,13 @@ const routes: Routes = [
     component: VerDetalleEditarExpensasComponent
   },
   {
-    path: 'verDetalle/:id',
+    path: 'verDetalle/:idContrato/:idSolicitud',
     component: VerdetalleSolicitudPagoComponent
   },
+  {
+    path: 'verDetalleExpensas/:id',
+    component: VerDetalleExpensasComponent
+  }
 ];
 @NgModule({
   imports: [RouterModule.forChild(routes),NgxCurrencyModule.forRoot(customCurrencyMaskConfig)],

@@ -17,6 +17,7 @@ export class FormSolicitudOtrosCostosserviciosComponent implements OnInit {
     @Input() solicitudPago: any;
     @Input() esUnEditar = false;
     @Input() contrato: any;
+    @Input() esVerDetalle = false;
     addressForm = this.fb.group({
       numeroContrato: [null, Validators.required],
       numeroRadicadoSAC: [null, Validators.required],

@@ -1,4 +1,4 @@
-<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+<ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
     <mat-card class="shipping-card">
         <mat-card-header class="header-card header-card--margin">
             <mat-card-title class="header-card--text">
@@ -6,52 +6,67 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content style="text-align: left;">
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="row">
-                        <div class="pr-1">
-                            <label for="porcentajeAmortizacion" class="label-left">Porcentaje de amortización</label>
-                        </div>
-                        <div class="col d-flex">
-                            <mat-form-field class="full-width">
-                                <input  matInput
-                                        #porcentajeAmortizacion
-                                        type="number"
-                                        formControlName="porcentajeAmortizacion"
-                                        (ngModelChange)="numberValidate( $event )"
-                                        required>
-                            </mat-form-field>
-                            <span class="contador">%</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="row">
-                        <div class="pr-1">
-                            <label class="label-left" for="valorAmortizacion">
-                                Valor de amortización
-                            </label>
-                        </div>
-                        <div class="col d-flex">
-                            <mat-form-field class="full-width">
-                                <input matInput #valorAmortizacion currencyMask maxlength="20" required
-                                    formControlName="valorAmortizacion" (keypress)="validateNumberKeypress($event)"
-                                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                                    [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
-                            </mat-form-field>
-                            <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
-                                matTooltipClass="info-tooltip">{{20 - valorAmortizacion.value.length}}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <p><strong>Porcentaje de amortización:</strong> {{ addressForm.get( 'porcentajeAmortizacion' ).value }} </p>
+            <p><strong>Valor de amortización:</strong> {{ addressForm.get( 'valorAmortizacion' ).value }} </p>
         </mat-card-content>
     </mat-card>
-    <div class="text-center mb-2em">
-        <button mat-button color="warn" class="btn-guardar" type="submit">
-            <img src="assets/img/icon/guardar.svg" alt="Regresar">
-        </button>
-    </div>
-</form>
+</ng-container>
+<ng-template #noEsVerDetalle>
+    <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+        <mat-card class="shipping-card">
+            <mat-card-header class="header-card header-card--margin">
+                <mat-card-title class="header-card--text">
+                    Amortización del anticipo en el criterio de pago
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content style="text-align: left;">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label for="porcentajeAmortizacion" class="label-left">Porcentaje de amortización</label>
+                            </div>
+                            <div class="col d-flex">
+                                <mat-form-field class="full-width">
+                                    <input  matInput
+                                            #porcentajeAmortizacion
+                                            type="number"
+                                            formControlName="porcentajeAmortizacion"
+                                            (ngModelChange)="numberValidate( $event )"
+                                            required>
+                                </mat-form-field>
+                                <span class="contador">%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left" for="valorAmortizacion">
+                                    Valor de amortización
+                                </label>
+                            </div>
+                            <div class="col d-flex">
+                                <mat-form-field class="full-width">
+                                    <input matInput #valorAmortizacion currencyMask maxlength="20" required
+                                        formControlName="valorAmortizacion" (keypress)="validateNumberKeypress($event)"
+                                        onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                        [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
+                                </mat-form-field>
+                                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                                    matTooltipClass="info-tooltip">{{20 - valorAmortizacion.value.length}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+        <div class="text-center mb-2em">
+            <button mat-button color="warn" class="btn-guardar" type="submit">
+                <img src="assets/img/icon/guardar.svg" alt="Regresar">
+            </button>
+        </div>
+    </form>
+</ng-template>

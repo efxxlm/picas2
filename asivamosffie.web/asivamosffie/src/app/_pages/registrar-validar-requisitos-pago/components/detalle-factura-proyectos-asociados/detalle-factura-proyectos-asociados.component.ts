@@ -17,6 +17,7 @@ import { Router } from '@angular/router';
 export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
 
     @Input() solicitudPago: any;
+    @Input() esVerDetalle = false;
     dataSource = new MatTableDataSource();
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -149,7 +150,8 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
                                                     )
                                                 );
                                             }
-                                        } else {
+                                        }
+                                        if ( proyectos[1].length < 2 || this.esVerDetalle === true ) {
                                             this.solicitudPagoFaseCriterio.forEach( criterio => {
                                                 this.criteriosArraySeleccionados.push( this.listaCriterios.filter( criterioValue => criterioValue.codigo === criterio.tipoCriterioCodigo )[0] );
                                             } );

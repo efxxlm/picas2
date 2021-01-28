@@ -289,12 +289,14 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                         const solicitudPagoFaseAmortizacion = this.solicitudPagoFase.solicitudPagoFaseAmortizacion[0];
                         let semaforoAmortizacion = 'sin-diligenciar';
     
-                        if ( solicitudPagoFaseAmortizacion.registroCompleto === false ) {
-                            semaforoAmortizacion = 'en-proceso';
-                        }
-                        if ( solicitudPagoFaseAmortizacion.registroCompleto === true ) {
-                            semaforoAmortizacion = 'completo';
-                            this.estadoRegistroCompletoSubAcordeon.amortizacionRegistroCompleto = true;
+                        if ( solicitudPagoFaseAmortizacion !== undefined ) {
+                            if ( solicitudPagoFaseAmortizacion.registroCompleto === false ) {
+                                semaforoAmortizacion = 'en-proceso';
+                            }
+                            if ( solicitudPagoFaseAmortizacion.registroCompleto === true ) {
+                                semaforoAmortizacion = 'completo';
+                                this.estadoRegistroCompletoSubAcordeon.amortizacionRegistroCompleto = true;
+                            }
                         }
     
                         return semaforoAmortizacion;

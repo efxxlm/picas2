@@ -10,7 +10,6 @@
     <p class="info-sub-title supportBlack">
         <span *ngIf="contrato.solicitudPagoOnly.tipoSolicitudCodigo === tipoSolicitudCodigo.contratoObra">Tipo de solicitud: <b>Contratos de obra</b></span>
         <span *ngIf="contrato.solicitudPagoOnly.tipoSolicitudCodigo === tipoSolicitudCodigo.contratoInterventoria">Tipo de solicitud: <b>Contratos de interventoria</b></span>
-        <span *ngIf="contrato.solicitudPagoOnly.tipoSolicitudCodigo === tipoSolicitudCodigo.expensas">Tipo de solicitud: <b>Expensas</b></span>
         <span *ngIf="contrato.solicitudPagoOnly.tipoSolicitudCodigo === tipoSolicitudCodigo.otrosCostos">Tipo de solicitud: <b>Otros costos/servicios</b></span>
     </p>
     <ng-container *ngIf="contrato.solicitudPagoOnly.tipoSolicitudCodigo !== tipoSolicitudCodigo.otrosCostos; else esOtrosCostos">
@@ -18,7 +17,9 @@
             <mat-card class="shipping-card var-main-gris">
                 <mat-card-header class="header-card header-card--margin">
                     <mat-card-title class="header-card--text textoGris">
-                        Contratos de obra
+                        <span *ngIf="contrato.solicitudPagoOnly.tipoSolicitudCodigo === tipoSolicitudCodigo.contratoObra"> Contratos de obra </span>
+                        <span *ngIf="contrato.solicitudPagoOnly.tipoSolicitudCodigo === tipoSolicitudCodigo.contratoInterventoria"> Contratos de interventoria </span>
+                        <span *ngIf="contrato.solicitudPagoOnly.tipoSolicitudCodigo === tipoSolicitudCodigo.otrosCostos"> Otros costos/servicios </span>
                     </mat-card-title>
                 </mat-card-header>
                 <mat-card-content style="text-align: left;">
@@ -136,7 +137,7 @@
             <mat-expansion-panel-header class="expansion-style--header">
                 <!-- Temporalmente mientras se termina el CU listas de chequeo se validara el acordeon con el registro completo de solicitud de pago, luego se validara con el siguiente campo 'registroCompletoAcordeones.registroCompletoListaChequeo' mientras la solicitud no sea otros costos -->
                 <mat-panel-title    class="expansion-style--title"
-                                    [ngClass]=" contrato.solicitudPagoOnly.tipoSolicitudCodigo !== tipoSolicitudCodigo.otrosCostos ? enabledAcordeon( 'soporteSolicitud', registroCompletoAcordeones.registroCompletoSolicitudPago ) : enabledAcordeon( 'soporteSolicitud', registroCompletoAcordeones.registroCompletoOtrosCostos )">
+                                    [ngClass]="enabledAcordeon( 'soporteSolicitud', registroCompletoAcordeones.registroCompletoSolicitudPago )">
                     Soporte de la solicitud
                 </mat-panel-title>
             </mat-expansion-panel-header>
