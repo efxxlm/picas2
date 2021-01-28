@@ -275,10 +275,14 @@ export class FormPerfilComponent implements OnInit {
     this.tieneEstadoFase1Diagnostico = values.includes( 'Diagnóstico' );
   }
 
-  disabledDate( cantidadHvAprobadas: string, cantidadHvRequeridas: string, index: number ) {
+  disabledDate( cantidadHvAprobadas: string, cantidadHvRequeridas: string, cantidadHvRecibidas: string, index: number ) {
     if ( Number( cantidadHvAprobadas ) >= Number( cantidadHvRequeridas ) ) {
       this.perfiles.controls[index].get( 'fechaAprobacion' ).enable();
     } else {
+      this.perfiles.controls[index].get( 'fechaAprobacion' ).disable();
+      this.perfiles.controls[index].get( 'fechaAprobacion' ).setValue( null );
+    }
+    if (Number( cantidadHvAprobadas ) > Number( cantidadHvRecibidas )){
       this.perfiles.controls[index].get( 'fechaAprobacion' ).disable();
       this.perfiles.controls[index].get( 'fechaAprobacion' ).setValue( null );
     }
