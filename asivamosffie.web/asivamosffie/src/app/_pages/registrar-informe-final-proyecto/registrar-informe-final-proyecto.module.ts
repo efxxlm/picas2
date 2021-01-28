@@ -15,6 +15,7 @@ import { FormReciboASatisfaccionComponent } from './components/form-recibo-a-sat
 import { InformeFinalAnexosComponent } from './components/informe-final-anexos/informe-final-anexos.component';
 import { TablaInformeFinalAnexosComponent } from './components/tabla-informe-final-anexos/tabla-informe-final-anexos.component';
 import { DialogTipoDocumentoComponent } from './components/dialog-tipo-documento/dialog-tipo-documento.component';
+import { DialogObservacionesComponent } from './components/dialog-observaciones/dialog-observaciones.component';
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import { DialogTipoDocumentoComponent } from './components/dialog-tipo-documento
     FormReciboASatisfaccionComponent,
     InformeFinalAnexosComponent,
     TablaInformeFinalAnexosComponent,
-    DialogTipoDocumentoComponent
+    DialogTipoDocumentoComponent,
+    DialogObservacionesComponent
   ],
   entryComponents: [DialogTipoDocumentoComponent],
   imports: [

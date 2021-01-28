@@ -1,0 +1,40 @@
+<button
+  mat-button
+  mat-dialog-close
+  class="modal--btn-cerrar"
+  [mat-dialog-close]="null"
+>
+  <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar" />
+</button>
+
+<div class="text-center">
+  <h1 class="title-menu--h1">Tipo de documento LJ776554</h1>
+  <p>
+    Estado del requisito:
+    <b> No Cumple </b>
+  </p>
+  <p>
+    <b> 3. </b>
+    Informe final de Obra del contratista de obra
+  </p>
+</div>
+
+<div class="d-flex align-items-center">
+  <div class="text-area-quill">
+      <label for="alcanceParticular" class="text-area-quill--label">Observaciones</label>
+      <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
+          (onContentChanged)="maxLength($event, 500)" [formControl]="observaciones"></quill-editor>
+  </div>
+  <span class="contador miles" *ngIf="observaciones.value">
+      {{500 - (textoLimpio(observaciones.value)>500?500:textoLimpio(observaciones.value))}}
+  </span>
+  <span class="contador miles" *ngIf="!observaciones.value">
+      500
+  </span>
+</div>
+
+<div class="row justify-content-center mt-1em mb-1em">
+  <button mat-raised-button color="accent" [disabled]="observaciones.invalid" (click)="onSubmit()">
+    Guardar
+  </button>
+</div>

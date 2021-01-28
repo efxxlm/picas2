@@ -59,6 +59,16 @@
               </mat-select>
             </mat-form-field>
           </section>
+          <span class="icon-incompleto">
+            <img
+              class="icon-incompleto--img"
+              src="assets/img/icon/incompleto.svg"
+              alt="este campo es requerido"
+              *ngIf="
+              element.calificacionCodigo === '' && estaEditando
+              "
+            />
+          </span>
         </td>
       </ng-container>
   
@@ -69,15 +79,28 @@
           </th>
         <td mat-cell *matCellDef="let element">
           <button
+          *ngIf="element.calificacionCodigo === 1"
               mat-button
               color="warn"
               mat-raised-button
               color="accent"
-              class="btn-table"
+              class="btn-table animatedOpacity"
               type="button"
               (click)="openDialogTipoDocumento(element)"
             >
             Tipo de documento
+            </button>
+          <button
+          *ngIf="element.calificacionCodigo === 2"
+              mat-button
+              color="warn"
+              mat-raised-button
+              color="accent"
+              class="btn-table animatedOpacity"
+              type="button"
+              (click)="openDialogObservaciones(element)"
+            >
+            Observaciones
             </button>
         </td>
       </ng-container>

@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { DialogTipoDocumentoComponent } from '../dialog-tipo-documento/dialog-tipo-documento.component';
+import { DialogObservacionesComponent } from '../dialog-observaciones/dialog-observaciones.component';
 
 import { Anexo } from 'src/app/_interfaces/proyecto-final-anexos.model';
 import { RegistrarInformeFinalProyectoService } from 'src/app/core/_services/registrar-informe-final-proyecto.service';
@@ -95,7 +96,20 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     let dialogRef = this.dialog.open(DialogTipoDocumentoComponent, {
       width: '70em',
       data:{
-        informe: informe,
+        informe: informe
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
+
+  openDialogObservaciones(informe:any) {
+    let dialogRef = this.dialog.open(DialogObservacionesComponent, {
+      width: '70em',
+      data: {
+        informe: informe
       }
     });
 
