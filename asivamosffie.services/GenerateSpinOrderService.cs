@@ -87,16 +87,24 @@ namespace asivamosffie.services
         {
             SolicitudPago SolicitudPago = await _registerValidatePayment.GetSolicitudPago(SolicitudPagoId);
 
-            if(SolicitudPago.ContratoId > 0) 
-                SolicitudPago.contrato = await _registerValidatePayment.GetContratoByContratoId((int)SolicitudPago.ContratoId, 0);
-     
-     
-            if (SolicitudPago.OrdenGiroId != null)
+            try
             {
-                SolicitudPago.OrdenGiro = _context.OrdenGiro.Where(o => o.OrdenGiroId == SolicitudPago.OrdenGiroId)
-                    .Include(t => t.OrdenGiroTercero)
-                    .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleEstrategiaPago)
-                    .Include(d => d.SolicitudPago).FirstOrDefault();
+                if (SolicitudPago.ContratoId > 0)
+                    SolicitudPago.ContratoSon = await _registerValidatePayment.GetContratoByContratoId((int)SolicitudPago.ContratoId, 0);
+
+
+                if (SolicitudPago.OrdenGiroId != null)
+                {
+                    SolicitudPago.OrdenGiro = _context.OrdenGiro.Where(o => o.OrdenGiroId == SolicitudPago.OrdenGiroId)
+                        .Include(t => t.OrdenGiroTercero)
+                        .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleEstrategiaPago)
+                        .Include(d => d.SolicitudPago).FirstOrDefault();
+                }
+            }
+            catch (Exception ex )
+            {
+
+                throw;
             }
 
             return SolicitudPago;

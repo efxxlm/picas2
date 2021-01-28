@@ -30,9 +30,15 @@ namespace asivamosffie.api.Controllers
         [Route("GetSolicitudPagoBySolicitudPagoId")]
         [HttpGet]
         public async Task<SolicitudPago> GetSolicitudPagoBySolicitudPagoId([FromQuery] int SolicitudPagoId)
-        {
-            var result = await _generateSpinOrderService.GetSolicitudPagoBySolicitudPagoId(SolicitudPagoId);
-            return result;
+        { 
+            try
+            {
+                return  await _generateSpinOrderService.GetSolicitudPagoBySolicitudPagoId(SolicitudPagoId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
  
         [Route("GetListSolicitudPago")]
