@@ -35,49 +35,67 @@ namespace asivamosffie.services
         {
             var result = await _context.SolicitudPago
                  .Include(r => r.Contrato)
-                 .Include(r => r.OrdenGiro).Where(s => s.Eliminado != true) 
+                 .Include(r => r.OrdenGiro).Where(s => s.Eliminado != true)
                                                                             .Select(s => new
                                                                             {
-                                                                                    s.TipoSolicitudCodigo,
-                                                                                    s.FechaCreacion,
-                                                                                    s.NumeroSolicitud,
-                                                                                    s.Contrato.ModalidadCodigo,
-                                                                                    s.Contrato.NumeroContrato,
-                                                                                    s.EstadoCodigo,
-                                                                                    s.ContratoId,
-                                                                                    s.SolicitudPagoId,
-                                                                                    s.OrdenGiro
+                                                                                s.FechaAprobacionFinanciera, 
+                                                                                s.NumeroSolicitud,
+                                                                                s.Contrato.ModalidadCodigo,
+                                                                                s.Contrato.NumeroContrato,
+                                                                                s.EstadoCodigo,
+                                                                                s.ContratoId,
+                                                                                s.SolicitudPagoId,
+                                                                                s.OrdenGiro
                                                                             }).OrderByDescending(r => r.SolicitudPagoId).ToListAsync();
 
             List<dynamic> grind = new List<dynamic>();
-            List<Dominio> ListParametricas = _context.Dominio.Where(d => d.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato || d.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Registro_Pago).ToList();
+            List<Dominio> ListParametricas = _context.Dominio.Where(
+                                                                     d => d.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato
+                                                                  || d.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Registro_Pago
+                                                                  || d.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Orden_Giro
+                                                              ).ToList();
 
             result.ForEach(r =>
             {
+                bool RegistroCompleto = false;
+                string EstadoOrdenGiro = string.Empty; 
+                if (r.OrdenGiro == null)
+                    EstadoOrdenGiro = ConstanCodigoEstadoOrdenGiro.Sin_generacion;
+                else
+                {
+                    EstadoOrdenGiro = r.OrdenGiro.EstadoCodigo;
+                    RegistroCompleto = r.OrdenGiro.RegistroCompleto ?? false;
+                }
+                EstadoOrdenGiro = ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Orden_Giro && r.Codigo == EstadoOrdenGiro).FirstOrDefault().Nombre;
+
                 grind.Add(new
                 {
-                    r.FechaCreacion,
-                    r.TipoSolicitudCodigo,
-                    r.ContratoId,
+                    r.FechaAprobacionFinanciera,
+                    r.NumeroSolicitud,      
+                    Modalidad = !string.IsNullOrEmpty(r.ModalidadCodigo) ? ListParametricas.Where(l => l.Codigo == r.ModalidadCodigo && l.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato).FirstOrDefault().Nombre : "No aplica",
+                    r.NumeroContrato,  
+                    r.OrdenGiro,
+                    EstadoOrdenGiro,
+                    RegistroCompleto,
                     r.SolicitudPagoId,
-                    r.NumeroSolicitud,
-                    r.NumeroContrato,
-                    r.OrdenGiro
                 });
             });
             return grind;
         }
 
-        public async Task<OrdenGiro> GetOrdenGiroByOrdenGiroId(int pOrdenGiroId)
+        public async Task<SolicitudPago> GetSolicitudPagoBySolicitudPagoId(int SolicitudPagoId)
         {
-            OrdenGiro ordenGiro = _context.OrdenGiro.Where(o => o.OrdenGiroId == pOrdenGiroId)
-                .Include(t => t.OrdenGiroTercero)
-                .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleEstrategiaPago)
-                .Include(d => d.SolicitudPago).FirstOrDefault();
+            SolicitudPago SolicitudPago = await _registerValidatePayment.GetSolicitudPago(SolicitudPagoId);
 
-            ordenGiro.SolicitudPago = await _registerValidatePayment.GetSolicitudPago(ordenGiro.SolicitudPago.SolicitudPagoId);
+            if (SolicitudPago.OrdenGiroId != null)
+            {
+                SolicitudPago.OrdenGiro = _context.OrdenGiro.Where(o => o.OrdenGiroId == SolicitudPago.OrdenGiroId)
+                    .Include(t => t.OrdenGiroTercero)
+                    .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleEstrategiaPago)
+                    .Include(d => d.SolicitudPago).FirstOrDefault();
+            }
 
-            return ordenGiro;
+            return SolicitudPago;
         }
 
         public async Task<Respuesta> CreateEditOrdenGiro(OrdenGiro pOrdenGiro)

@@ -7,7 +7,6 @@ namespace asivamosffie.model.Models
     {
         public SolicitudPago()
         {
-            OrdenGiro = new HashSet<OrdenGiro>();
             SolicitudPagoCargarFormaPago = new HashSet<SolicitudPagoCargarFormaPago>();
             SolicitudPagoExpensas = new HashSet<SolicitudPagoExpensas>();
             SolicitudPagoObservacion = new HashSet<SolicitudPagoObservacion>();
@@ -23,7 +22,8 @@ namespace asivamosffie.model.Models
         public string UsuarioCreacion { get; set; }
         public DateTime FechaCreacion { get; set; }
         public string UsuarioModificacion { get; set; }
-        public DateTime? FechaModificacion { get; set; }
+        public DateTime? FechaModificacion { get; set; }       
+        public DateTime? FechaAprobacionFinanciera { get; set; }
         public bool? Eliminado { get; set; }
         public bool? RegistroCompleto { get; set; }
         public string EstadoCodigo { get; set; }
@@ -31,10 +31,11 @@ namespace asivamosffie.model.Models
         public bool? TieneObservacion { get; set; }
         public bool? RegistroCompletoSupervisor { get; set; }
         public bool? RegistroCompletoCoordinador { get; set; }
+        public int? OrdenGiroId { get; set; }
 
         public virtual ContratacionProyecto ContratacionProyecto { get; set; }
         public virtual Contrato Contrato { get; set; }
-        public virtual ICollection<OrdenGiro> OrdenGiro { get; set; }
+        public virtual OrdenGiro OrdenGiro { get; set; }
         public virtual ICollection<SolicitudPagoCargarFormaPago> SolicitudPagoCargarFormaPago { get; set; }
         public virtual ICollection<SolicitudPagoExpensas> SolicitudPagoExpensas { get; set; }
         public virtual ICollection<SolicitudPagoObservacion> SolicitudPagoObservacion { get; set; }

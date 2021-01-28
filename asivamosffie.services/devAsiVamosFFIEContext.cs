@@ -202,6 +202,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -3324,11 +3325,6 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.OrdenGiro)
                     .HasForeignKey(d => d.OrdenGiroTerceroId)
                     .HasConstraintName("FK_OrdenGiro_OrdenGiroTercero");
-
-                entity.HasOne(d => d.SolicitudPago)
-                    .WithMany(p => p.OrdenGiro)
-                    .HasForeignKey(d => d.SolicitudPagoId)
-                    .HasConstraintName("FK_OrdenGiro_SolicitudPago");
             });
 
             modelBuilder.Entity<OrdenGiroDetalle>(entity =>
@@ -5636,6 +5632,11 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.SolicitudPago)
                     .HasForeignKey(d => d.ContratoId)
                     .HasConstraintName("FK_SolicitudPagoId_ContratoId");
+
+                entity.HasOne(d => d.OrdenGiro)
+                    .WithMany(p => p.SolicitudPago)
+                    .HasForeignKey(d => d.OrdenGiroId)
+                    .HasConstraintName("FK_SolicitudPago_OrdenGiro");
             });
 
             modelBuilder.Entity<SolicitudPagoCargarFormaPago>(entity =>

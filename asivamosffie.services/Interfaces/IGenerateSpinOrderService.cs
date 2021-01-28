@@ -9,7 +9,7 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IGenerateSpinOrderService
     {
-        Task<OrdenGiro> GetOrdenGiroByOrdenGiroId(int pOrdenGiroId);
+        Task<SolicitudPago> GetSolicitudPagoBySolicitudPagoId(int pOrdenGiroId);
 
         Task<dynamic> GetListSolicitudPago();
     }
