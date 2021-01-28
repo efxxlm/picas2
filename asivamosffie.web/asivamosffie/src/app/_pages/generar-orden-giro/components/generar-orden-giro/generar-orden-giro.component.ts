@@ -37,6 +37,7 @@ export class GenerarOrdenGiroComponent implements OnInit {
         this.ordenPagoSvc.getListSolicitudPago()
             .subscribe(
                 response => {
+                  console.log( response );
                     this.dataSource = new MatTableDataSource( response );
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.sort = this.sort;

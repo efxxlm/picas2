@@ -36,38 +36,35 @@
             </ng-container>
             <ng-container matColumnDef="estadoGeneracion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la generación </th>
-                <td mat-cell *matCellDef="let element" align="center"> {{ element.estadoGeneracion }} </td>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.estadoOrdenGiro }} </td>
             </ng-container>
             <ng-container matColumnDef="estadoRegistro">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del registro </th>
                 <td mat-cell *matCellDef="let element" align="center"> 
-                    <span class="info-text info-text__table" [ngClass]="{'sin-diligenciar' : element.estadoRegistro=='Incompleto', 'completo' : element.estadoRegistro=='Completo'}"></span>
-                    {{ element.estadoRegistro }} 
+                    <span class="info-text info-text__table" [ngClass]="element.registroCompleto === false ? 'sin-diligenciar':'completo'"></span>
+                    {{ element.registroCompleto === false ? 'Incompleto' : 'Completo' }}
                 </td>
             </ng-container>
             <ng-container matColumnDef="gestion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Gestión </th>
                 <td mat-cell *matCellDef="let element" align="center"> 
-                    <button mat-raised-button color="accent" class="btn-table" (click)="this.generarOrden(element.gestion)"
-                    *ngIf="element.estadoGeneracion=='Sin generación'">
+                    <button mat-raised-button color="accent" class="btn-table" [routerLink]="[ 'generacionOrdenGiro', element.solicitudPagoId ]">
                         Generar orden de giro
                     </button>
-                    <button mat-raised-button color="accent" class="btn-table" (click)="this.devolverSolicitud()"
-                    *ngIf="element.estadoGeneracion=='En proceso de generación'">
+                    <!--
+                    <button mat-raised-button color="accent" class="btn-table" (click)="devolverSolicitud()">
                         Enviar para verificación orden de giro
                     </button>
-                    <button mat-raised-button color="accent" class="btn-table" (click)="this.devolverSolicitud()"
-                    *ngIf="element.estadoGeneracion=='En proceso de generación'">
+                    <button mat-raised-button color="accent" class="btn-table" (click)="devolverSolicitud()">
                         Devolver solicitud de pago
                     </button>
-                    <button mat-raised-button color="accent" class="btn-table" (click)="this.verDetalleEdit(element.gestion)"
-                    *ngIf="element.estadoGeneracion=='En proceso de generación'">
+                    <button mat-raised-button color="accent" class="btn-table" (click)="verDetalleEdit(element.gestion)">
                         Ver detalle/Editar
                     </button>
-                    <button mat-raised-button color="accent" class="btn-table" (click)="this.verDetalle(element.gestion)"
-                    *ngIf="element.estadoGeneracion=='Solicitud enviada a verificación'">
+                    <button mat-raised-button color="accent" class="btn-table" (click)="verDetalle(element.gestion)">
                         Ver detalle
                     </button>
+                    -->
                 </td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
