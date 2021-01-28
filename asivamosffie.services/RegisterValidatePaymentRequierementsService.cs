@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-
+using Z.EntityFramework.Plus;
 
 namespace asivamosffie.services
 {
@@ -376,17 +376,15 @@ namespace asivamosffie.services
 
         public async Task GetValidateSolicitudPagoId(int SolicitudPagoId)
         {
-            try
-            {
-                SolicitudPago solicitudPago = await GetSolicitudPago(SolicitudPagoId);
-                solicitudPago.RegistroCompleto = ValidateCompleteRecordSolicitudPago(solicitudPago);
-                _context.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                ex.InnerException.ToString();
-            }
-     
+            SolicitudPago solicitudPago = await GetSolicitudPago(SolicitudPagoId);
+            bool CompleteRecord = ValidateCompleteRecordSolicitudPago(solicitudPago);
+
+            await _context.Set<SolicitudPago>()
+                  .Where(s => s.SolicitudPagoId == SolicitudPagoId)
+                  .UpdateAsync(r => new SolicitudPago()
+                  {
+                      RegistroCompleto = CompleteRecord
+                  });
         }
 
 
@@ -1241,7 +1239,7 @@ namespace asivamosffie.services
             return true;
         }
 
-      
+
 
         #endregion
 
