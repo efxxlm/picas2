@@ -48,7 +48,7 @@
                 </div>
             </div>
             <div class="row"
-            *ngIf="(addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '2') || (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '3') || (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '4')">
+                *ngIf="(addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '2') || (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '3') || (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '4')">
                 <div class="col-md-6" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
@@ -60,7 +60,8 @@
                                     formControlName="numeroRadicadoSAC" required>
                             </mat-form-field>
                             <span class="contador" *ngIf="addressForm.controls.numeroRadicadoSAC.value">
-                                {{10 - (addressForm.get('numeroRadicadoSAC').value?addressForm.get('numeroRadicadoSAC').value.toString().length:0)}}
+                                {{10 -
+                                (addressForm.get('numeroRadicadoSAC').value?addressForm.get('numeroRadicadoSAC').value.toString().length:0)}}
                             </span>
                             <span class="contador" *ngIf="!addressForm.controls.numeroRadicadoSAC.value">
                                 10
@@ -69,7 +70,8 @@
                     </div>
                 </div>
             </div>
-            <div class="row" *ngIf="(addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '1')
+            <div class="row"
+                *ngIf="(addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '1')
             || (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '5')
             ||(addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '6')
             ||(addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '7')">
@@ -100,7 +102,8 @@
                         </div>
                         <div class="col">
                             <mat-form-field class="select-width">
-                                <mat-select formControlName="motivosSolicitud" required multiple (selectionChange)="getvalues($event.value)">
+                                <mat-select formControlName="motivosSolicitud" required multiple
+                                    (selectionChange)="getvalues($event.value)">
                                     <mat-option *ngFor="let motivosSolicitud of motivosSolicitudArray"
                                         [value]="motivosSolicitud">
                                         {{ motivosSolicitud.nombre }}
@@ -111,7 +114,39 @@
                     </div>
                 </div>
             </div>
-            <div class="row" *ngIf="addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '1'">
+            <div *ngIf="this.obj1==true">
+                <div class="row">
+                <div class="col-md-12" style="padding-left: 0;">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="cualOtroMotivo">¿Cuál?</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                <div class="row">
+                    <div class="col-md-12" style="padding-left: 0;">
+                        <div>
+                            <div class="d-flex align-items-center">
+                                <div class="text-area-quill auxBox">
+                                    <quill-editor class="quill-editor-style card" [styles]="editorStyle"
+                                        [modules]="config" required (onContentChanged)="maxLength($event, 100)"
+                                        formControlName="cualOtroMotivo" #cualOtroMotivo>
+                                    </quill-editor>
+                                </div>
+                                <span class="contador miles" *ngIf="addressForm.controls.cualOtroMotivo.value">
+                                    {{100 - (textoLimpio(addressForm.get('cualOtroMotivo').value))}}
+                                </span>
+                                <span class="contador miles" *ngIf="!addressForm.controls.cualOtroMotivo.value">
+                                    100
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row"
+                *ngIf="addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '1'">
                 <div class="col-md-6" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
@@ -132,7 +167,8 @@
                     </div>
                 </div>
             </div>
-            <div class="row" *ngIf="addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '1'">
+            <div class="row"
+                *ngIf="addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '1'">
                 <div class="col-md-12" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
@@ -142,7 +178,8 @@
                     </div>
                 </div>
             </div>
-            <div class="row" *ngIf="addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '1'">
+            <div class="row"
+                *ngIf="addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '1'">
                 <div class="col-md-12" style="padding-left: 0;">
                     <div>
                         <div class="d-flex align-items-center">
@@ -163,7 +200,7 @@
                 </div>
             </div>
             <div class="row"
-            *ngIf="addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo != '1'">
+                *ngIf="addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo != '1'">
                 <div class="col-md-12" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
@@ -174,7 +211,7 @@
                 </div>
             </div>
             <div class="row"
-            *ngIf="addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo != '1'">
+                *ngIf="addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo != '1'">
                 <div class="col-md-12" style="padding-left: 0;">
                     <div>
                         <div class="d-flex align-items-center">
@@ -196,7 +233,8 @@
                     </div>
                 </div>
             </div>
-            <div class="row" *ngIf="addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '1'">
+            <div class="row"
+                *ngIf="addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '1'">
                 <div class="col-md-6" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
@@ -213,7 +251,7 @@
                 </div>
             </div>
             <div class="row"
-            *ngIf="addressForm.value.procedeSolicitud===false && (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '1')">
+                *ngIf="addressForm.value.procedeSolicitud===false && (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '1')">
                 <div class="col-md-12" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
@@ -223,7 +261,7 @@
                 </div>
             </div>
             <div class="row"
-            *ngIf="addressForm.value.procedeSolicitud===false && (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '1')">
+                *ngIf="addressForm.value.procedeSolicitud===false && (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '1')">
                 <div class="col-md-12" style="padding-left: 0;">
                     <div>
                         <div class="d-flex align-items-center">
@@ -233,12 +271,10 @@
                                     formControlName="motivosRechazo" #motivosRechazo>
                                 </quill-editor>
                             </div>
-                            <span class="contador miles"
-                                *ngIf="addressForm.controls.motivosRechazo.value">
+                            <span class="contador miles" *ngIf="addressForm.controls.motivosRechazo.value">
                                 {{ 1000 - textoLimpio(addressForm.get('motivosRechazo').value) }}
                             </span>
-                            <span class="contador miles"
-                                *ngIf="!addressForm.controls.motivosRechazo.value">
+                            <span class="contador miles" *ngIf="!addressForm.controls.motivosRechazo.value">
                                 1000
                             </span>
                         </div>
