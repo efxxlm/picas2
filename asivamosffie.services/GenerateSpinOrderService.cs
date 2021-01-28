@@ -87,6 +87,10 @@ namespace asivamosffie.services
         {
             SolicitudPago SolicitudPago = await _registerValidatePayment.GetSolicitudPago(SolicitudPagoId);
 
+            if(SolicitudPago.ContratoId > 0) 
+                SolicitudPago.contrato = await _registerValidatePayment.GetContratoByContratoId((int)SolicitudPago.ContratoId, 0);
+     
+     
             if (SolicitudPago.OrdenGiroId != null)
             {
                 SolicitudPago.OrdenGiro = _context.OrdenGiro.Where(o => o.OrdenGiroId == SolicitudPago.OrdenGiroId)

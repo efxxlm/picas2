@@ -11,6 +11,7 @@ namespace asivamosffie.services.Interfaces
     {
         Task  GetValidateSolicitudPagoId(int SolicitudPagoId);
 
+        Task<Contrato> GetContratoByContratoId(int pContratoId, int pSolicitudPago);
 
         Task<SolicitudPago> GetSolicitudPago(int pSolicitudPagoId);
 
@@ -41,9 +42,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CreateEditNewPayment(SolicitudPago pSolicitudPago);
 
         Task<dynamic> GetContratoByTipoSolicitudCodigoModalidadContratoCodigoOrNumeroContrato(string pTipoSolicitud, string pModalidadContrato, string pNumeroContrato);
-
-        Task<Contrato> GetContratoByContratoId(int pContratoId, int pSolicitudPago);
-
+  
         Task<dynamic> GetProyectosByIdContrato(int pContratoId);
     }
 }
