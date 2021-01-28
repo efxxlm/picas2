@@ -11,7 +11,10 @@
   <div class="text-center">
     <h1 class="title-menu--h1">Registrar nuevo acuerdo de cofinanciación</h1>
   </div>
-  <div class="my-1em color-secondaryColor d-flex align-items-center justify-content-center">
+  <div
+    *ngIf="datosAportantes.invalid && datosAportantes.touched"
+    class="animateDown my-1em color-secondaryColor d-flex align-items-center justify-content-center"
+  >
     <img class="icon-incompleto--img mr-05em" src="assets/img/icon/incompleto.svg" alt="este campo es requerido" />
     Debe ingresar la información en el campo para continuar
   </div>
@@ -761,10 +764,15 @@
                     </div>
                   </div>
 
-                  <div class="col text-right" *ngIf="aportante.cofinanciacionDocumento.length>1">
-                    <button mat-button color="warn" type="button" class="btn-eliminar"
-                      (click)="eliminadoc(aportante,documento,a)">
-                      <img src="assets/img/icon/menos.svg" alt="Eliminar documento">
+                  <div class="col text-right" *ngIf="aportante.cofinanciacionDocumento.length > 1">
+                    <button
+                      mat-button
+                      color="warn"
+                      type="button"
+                      class="btn-eliminar"
+                      (click)="eliminadoc(aportante, documento, a)"
+                    >
+                      <img src="assets/img/icon/menos.svg" alt="Eliminar documento" />
                       Eliminar documento
                     </button>
                   </div>

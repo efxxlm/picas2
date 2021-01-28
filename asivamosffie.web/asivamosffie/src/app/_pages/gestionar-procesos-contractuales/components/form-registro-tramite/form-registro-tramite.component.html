@@ -1,4 +1,7 @@
-<div class="my-1em color-secondaryColor d-flex align-items-center justify-content-center">
+<div
+  *ngIf="dataFormulario.invalid && dataFormulario.touched"
+  class="animateDown my-1em color-secondaryColor d-flex align-items-center justify-content-center"
+>
   <img class="icon-incompleto--img mr-05em" src="assets/img/icon/incompleto.svg" alt="este campo es requerido" />
   Debe ingresar la información en el campo para continuar
 </div>
@@ -32,7 +35,7 @@
       </button>
       <span class="icon-incompleto">
         <img
-          class="icon-incompleto--img"
+          class="icon-incompleto--img mt-0-8-em"
           src="assets/img/icon/incompleto.svg"
           alt="este campo es requerido"
           *ngIf="
@@ -89,17 +92,18 @@
             (dataFormulario.get('minuta').invalid && dataFormulario.get('minuta').touched) ||
             (dataFormulario.get('minuta').invalid && camposFaltantes)
           "
-          >Minuta</label
+          >
+          URL con soporte</label
         >
       </div>
       <div class="input" style="width: 90%">
-        <div class="col pr-3em">
+        <div class="col">
           <mat-form-field class="full-width">
             <input matInput type="url" required formControlName="rutaDocumento" maxlength="300" />
           </mat-form-field>
           <span class="info-url">indique la ruta donde se encuentra la minuta del contrato</span>
         </div>
-        <span class="icon-incompleto">
+        <span class="icon-incompleto pr-3em">
           <img
             class="icon-incompleto--img"
             src="assets/img/icon/incompleto.svg"

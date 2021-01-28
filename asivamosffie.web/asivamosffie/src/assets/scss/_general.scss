@@ -33,8 +33,8 @@ strong {
 
 .container {
   @media only screen and (max-width: 48em) {
-    margin-right: .5em;
-    margin-left: .5em;
+    margin-right: 0.5em;
+    margin-left: 0.5em;
   }
 
   @media only screen and (min-width: 48em) {
@@ -69,7 +69,7 @@ strong {
   margin-top: 1em;
 
   @media only screen and (max-width: 48em) {
-    margin-bottom: .5em;
+    margin-bottom: 0.5em;
   }
 
   img {
@@ -88,7 +88,7 @@ strong {
     display: inline-block;
 
     &::after {
-      content: "";
+      content: '';
       display: block;
       position: relative;
       height: 0.15em;
@@ -136,11 +136,15 @@ strong {
 }
 
 .mb-05em {
-  margin-bottom: .5em !important;
+  margin-bottom: 0.5em !important;
+}
+
+.mt-0-8-em {
+  margin-top: 0.8em;
 }
 
 .mt-05em {
-  margin-top: .5em !important;
+  margin-top: 0.5em !important;
   margin-bottom: 0.5em !important;
 }
 
@@ -264,8 +268,8 @@ strong {
   left: 1.7em;
 }
 
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
@@ -348,12 +352,12 @@ input[type="number"]::-webkit-outer-spin-button {
   color: $tertiaryColorFont;
   background-color: $tertiaryColor;
   border-radius: 50em;
-  padding: .2em 1em;
+  padding: 0.2em 1em;
   position: absolute;
   top: -2em;
   transform-origin: bottom;
   animation-name: animatedSelect;
-  animation-duration: .2s;
+  animation-duration: 0.2s;
   animation-fill-mode: forwards;
 }
 

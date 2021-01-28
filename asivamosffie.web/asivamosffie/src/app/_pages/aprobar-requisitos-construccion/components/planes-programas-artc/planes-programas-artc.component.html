@@ -111,7 +111,10 @@
   </div>
 </div>
 <div align="center" class="mt-2em" *ngIf="this.observacionesCompleted == false">
-  <div class="my-1em color-secondaryColor d-flex align-items-center justify-content-center">
+  <div
+    *ngIf="addressForm.invalid && addressForm.touched"
+    class="animateDown my-1em color-secondaryColor d-flex align-items-center justify-content-center"
+  >
     <img class="icon-incompleto--img mr-05em" src="assets/img/icon/incompleto.svg" alt="este campo es requerido" />
     Debe ingresar la información en el campo para continuar
   </div>

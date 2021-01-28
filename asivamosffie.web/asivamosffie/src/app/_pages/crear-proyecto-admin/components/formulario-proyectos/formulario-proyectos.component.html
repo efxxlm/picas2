@@ -9,10 +9,13 @@
     <b>Proyecto administrativo: {{ proyectoAdmin ? proyectoAdmin.identificador : 0 }}</b>
   </p>
   <div *ngIf="proyectoAdmin">
-    <div class="my-1em color-secondaryColor d-flex align-items-center justify-content-center">
+    <div
+      
+      class="animateDown my-1em color-secondaryColor d-flex align-items-center justify-content-center"
+    >
       <img class="icon-incompleto--img mr-05em" src="assets/img/icon/incompleto.svg" alt="este campo es requerido" />
       Debe ingresar la información en el campo para continuar
-    </div>    
+    </div>
     <div *ngFor="let aportantes of proyectoAdmin.proyectoAdministrativoAportante; index as a" class="mt-3em">
       <mat-card class="shipping-card">
         <mat-card-header class="header-card">
