@@ -8,7 +8,7 @@ namespace asivamosffie.model.APIModels
     {
         public string typeFile { get; set; }
         public string observaciones { get; set; }
-        public string cargaPagosRendimientosId { get; set; }
+        public int cargaPagosRendimientosId { get; set; }
 
     }
 }

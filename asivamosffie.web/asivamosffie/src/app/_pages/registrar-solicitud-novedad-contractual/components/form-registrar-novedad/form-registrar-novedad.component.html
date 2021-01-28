@@ -1,0 +1,397 @@
+{{tiposNovedadModificacionContractual.Suspension}}---
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+  <mat-card class="shipping-card">
+    <mat-card-content>
+
+      <div class="row">
+        <div class="col-md-8">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left" for="fechaSolicitudNovedad" [class.color-secondaryColor]="
+                addressForm.get('fechaSolicitudNovedad').invalid && addressForm.get('fechaSolicitudNovedad').touched ||
+                addressForm.get('fechaSolicitudNovedad').invalid && estaEditando">
+                Fecha de solicitud de la novedad
+              </label>
+            </div>
+            <div class="col d-flex">
+              <mat-form-field class="example-full-width">
+                <input matInput [matDatepicker]="pickerSolicitudNovedad" formControlName="fechaSolicitudNovedad"
+                  readonly (click)="pickerSolicitudNovedad.open()" placeholder="DD/MM/AAAA" required>
+                <mat-datepicker #pickerSolicitudNovedad></mat-datepicker>
+              </mat-form-field>
+              <button mat-button color="primary" type="button" (click)="pickerSolicitudNovedad.open()"
+                class="btn-calendario">
+                <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-8">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left" for="documentacionSuficiente" [class.color-secondaryColor]="
+              addressForm.get('documentacionSuficiente').invalid && addressForm.get('documentacionSuficiente').touched ||
+              addressForm.get('documentacionSuficiente').invalid && estaEditando">
+                ¿Cuenta con la documentación soporte suficiente?
+              </label>
+            </div>
+            <div class="col">
+              <mat-radio-group class="radioInput" formControlName="documentacionSuficiente" required>
+                <mat-radio-button [value]="true">Sí</mat-radio-button>
+                <mat-radio-button [value]="false">No</mat-radio-button>
+              </mat-radio-group>
+              <span class="required-form-group">*</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left" for="instanciaPresentoSolicitud" [class.color-secondaryColor]="
+                addressForm.get('instanciaPresentoSolicitud').invalid && addressForm.get('instanciaPresentoSolicitud').touched ||
+                addressForm.get('instanciaPresentoSolicitud').invalid && estaEditando">
+                Instancia donde se presentó la solicitud
+              </label>
+            </div>
+            <div class="col">
+              <mat-form-field class="select-width">
+                <mat-select required formControlName="instanciaPresentoSolicitud">
+                  <mat-option *ngFor="let instancia of instanciaPresentoSolicitudArray" [value]="instancia.codigo">
+                    {{ instancia.nombre }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row animatedDown" *ngIf="
+      addressForm.get('instanciaPresentoSolicitud').value !== null &&
+      addressForm.get('instanciaPresentoSolicitud').value !== instanciaSeguimientoTecnico.NoAplica"> 
+        <div class="col-md-8">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left" for="fechaSesionInstancia" [class.color-secondaryColor]="
+                addressForm.get('fechaSesionInstancia').invalid && addressForm.get('fechaSesionInstancia').touched ||
+                addressForm.get('fechaSesionInstancia').invalid && estaEditando" required>
+                Fecha de la sesión de la instancia
+              </label>
+            </div>
+            <div class="col d-flex">
+              <mat-form-field class="example-full-width">
+                <input matInput [matDatepicker]="pickerSesionInstancia" formControlName="fechaSesionInstancia" readonly
+                  (click)="pickerSesionInstancia.open()" placeholder="DD/MM/AAAA">
+                <mat-datepicker #pickerSesionInstancia></mat-datepicker>
+              </mat-form-field>
+              <button mat-button color="primary" type="button" (click)="pickerSesionInstancia.open()"
+                class="btn-calendario">
+                <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left" for="tipoNovedad" [class.color-secondaryColor]="
+                addressForm.get('tipoNovedad').invalid && addressForm.get('tipoNovedad').touched ||
+                addressForm.get('tipoNovedad').invalid && estaEditando">
+                Tipo de novedad
+              </label>
+            </div>
+            <div class="col">
+              <mat-form-field class="select-width">
+                <mat-select required formControlName="tipoNovedad" #tipoNovedad multiple>
+                  <mat-option *ngFor="let tnovedad of tipoNovedadArray" [value]="tnovedad.codigo">
+                    {{ tnovedad.nombre }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left" for="motivosNovedad" [class.color-secondaryColor]="
+                addressForm.get('motivosNovedad').invalid && addressForm.get('motivosNovedad').touched ||
+                addressForm.get('motivosNovedad').invalid && estaEditando">
+                Motivos de la novedad
+              </label>
+            </div>
+            <div class="col">
+              <mat-form-field class="select-width">
+                <mat-select required formControlName="motivosNovedad">
+                  <mat-option *ngFor="let mnovedad of motivosNovedadArray" [value]="mnovedad.value">
+                    {{ mnovedad.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mb-05em">
+        <div>
+          <label class="label-left" for="resumenJustificacionNovedad" [class.color-secondaryColor]="
+            addressForm.get('resumenJustificacionNovedad').invalid && addressForm.get('resumenJustificacionNovedad').touched ||
+            addressForm.get('resumenJustificacionNovedad').invalid && estaEditando">
+            Resumen de la justificación de la novedad
+          </label>
+        </div>
+        <div class="col d-flex">
+          <quill-editor class="quill-editor-style card position-relative" [styles]="editorStyle" [modules]="config"
+            (onContentChanged)="maxLength($event, 1000)" formControlName="resumenJustificacionNovedad" [class.invalid]="
+            addressForm.get('resumenJustificacionNovedad').invalid && addressForm.get('resumenJustificacionNovedad').touched ||
+            addressForm.get('resumenJustificacionNovedad').invalid && estaEditando" required>
+          </quill-editor>
+          <div class="d-flex align-items-center">
+            <span class="contador miles mt-3em" *ngIf="addressForm.get('resumenJustificacionNovedad').value">
+              {{1000 - (textoLimpio(addressForm.get('resumenJustificacionNovedad').value)>1000?1000:textoLimpio(addressForm.get('resumenJustificacionNovedad').value))}}
+            </span>
+            <span class="contador miles mt-3em" *ngIf="!addressForm.get('resumenJustificacionNovedad').value">
+              1000
+            </span>
+          </div>
+        </div>
+      </div>
+      <mat-card-title class="header-card--text sub-text" *ngIf="addressForm.get('tipoNovedad').value!=null &&
+        (addressForm.get('tipoNovedad').value==tiposNovedadModificacionContractual.Suspension ||
+        addressForm.get('tipoNovedad').value==tiposNovedadModificacionContractual.ProrrogaSuspension)">
+        Plazo solicitado {{addressForm.get('tipoNovedad').value!=null}}
+      </mat-card-title>
+      <div formArrayName="plazoSolicitado" *ngIf="addressForm.get('tipoNovedad').value!=null &&
+      (addressForm.get('tipoNovedad').value==tiposNovedadModificacionContractual.Suspension ||
+      addressForm.get('tipoNovedad').value==tiposNovedadModificacionContractual.ProrrogaSuspension)"
+      >
+      <div *ngFor="let plazoSolicitado of plazoSolicitadoField.controls; let i = index">
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="fechaInicio" [class.color-secondaryColor]="
+                  plazoSolicitado.get('fechaInicio').invalid && plazoSolicitado.get('fechaInicio').touched ||
+                  plazoSolicitado.get('fechaInicio').invalid && estaEditando">
+                  Fecha de inicio de la suspensión
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="example-full-width">
+                  <input matInput [matDatepicker]="pickerPlazoInicio" formControlName="fechaInicio" readonly
+                    (click)="pickerPlazoInicio.open()" placeholder="DD/MM/AAAA" required>
+                  <mat-datepicker #pickerPlazoInicio></mat-datepicker>
+                </mat-form-field>
+                <button mat-button color="primary" type="button" (click)="pickerPlazoInicio.open()"
+                  class="btn-calendario">
+                  <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="fechaFinal" [class.color-secondaryColor]="
+                  plazoSolicitado.get('fechaFinal').invalid && plazoSolicitado.get('fechaFinal').touched ||
+                  plazoSolicitado.get('fechaFinal').invalid && estaEditando">
+                  Fecha final de la suspensión
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="example-full-width">
+                  <input matInput [matDatepicker]="pickerPlazoFin" formControlName="fechaFinal"
+                    readonly (click)="pickerPlazoFin.open()" placeholder="DD/MM/AAAA" required>
+                  <mat-datepicker #pickerPlazoFin></mat-datepicker>
+                </mat-form-field>
+                <button mat-button color="primary" type="button" (click)="pickerPlazoFin.open()"
+                  class="btn-calendario">
+                  <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+      <div formArrayName="clausula" *ngFor="let clausula of clausulaField.controls; let i = index">
+        <div [formGroupName]="i">
+          <div class="mb-05em">
+            <div>
+              <label class="label-left" for="clausulaModificar" [class.color-secondaryColor]="
+                clausula.get('clausulaModificar').invalid && clausula.get('clausulaModificar').touched ||
+                clausula.get('clausulaModificar').invalid && estaEditando">
+                Cláusula a modificar
+                <span *ngIf="clausulaField.controls.length > 1">
+                  {{i + 1}}
+                </span>
+              </label>
+            </div>
+            <div class="col d-flex">
+              <quill-editor class="quill-editor-style card position-relative" [styles]="editorStyle" [modules]="config"
+                (onContentChanged)="maxLength($event, 1000)" formControlName="clausulaModificar" [class.invalid]="
+                clausula.get('clausulaModificar').invalid && clausula.get('clausulaModificar').touched ||
+                clausula.get('clausulaModificar').invalid && estaEditando" required>
+              </quill-editor>
+              <div class="d-flex align-items-center">
+                <span class="contador miles mt-3em" *ngIf="clausula.get('clausulaModificar').value">
+                  {{1000 - (textoLimpio(clausula.get('clausulaModificar').value)>1000?1000:textoLimpio(clausula.get('clausulaModificar').value))}}
+                </span>
+                <span class="contador miles mt-3em" *ngIf="!clausula.get('clausulaModificar').value">
+                  1000
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="mb-05em">
+            <div>
+              <label class="label-left" for="ajusteSolicitadoClausula" [class.color-secondaryColor]="
+                clausula.get('ajusteSolicitadoClausula').invalid && clausula.get('ajusteSolicitadoClausula').touched ||
+                clausula.get('ajusteSolicitadoClausula').invalid && estaEditando">
+                Ajuste solicitado a la cláusula
+                <span *ngIf="clausulaField.controls.length > 1">
+                  {{i + 1}}
+                </span>
+              </label>
+            </div>
+            <div class="col d-flex">
+              <quill-editor class="quill-editor-style card position-relative" [styles]="editorStyle" [modules]="config"
+                (onContentChanged)="maxLength($event, 1000)" formControlName="ajusteSolicitadoClausula" [class.invalid]="
+                clausula.get('ajusteSolicitadoClausula').invalid && clausula.get('ajusteSolicitadoClausula').touched ||
+                clausula.get('ajusteSolicitadoClausula').invalid && estaEditando" required>
+              </quill-editor>
+              <div class="d-flex align-items-center">
+                <span class="contador miles mt-3em" *ngIf="clausula.get('ajusteSolicitadoClausula').value">
+                  {{1000 - (textoLimpio(clausula.get('ajusteSolicitadoClausula').value)>1000?1000:textoLimpio(clausula.get('ajusteSolicitadoClausula').value))}}
+                </span>
+                <span class="contador miles mt-3em" *ngIf="!clausula.get('ajusteSolicitadoClausula').value">
+                  1000
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="text-right">
+          <button mat-button color="warn" type="button" class="btn-eliminar" (click)="eliminarClausula(i)"
+            *ngIf="clausulaField.controls.length > 1">
+            <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
+            Eliminar tema
+          </button>
+          <button mat-button color="warn" type="button" class="btn-eliminar" (click)="agregarClausula()"
+            *ngIf="i + 1 === clausulaField.controls.length">
+            <img src="assets/img/icon/mas.svg" alt="Agregar otra claúsula">
+            Agregar otra claúsula
+          </button>
+        </div>
+      </div>
+
+      <div class="mb-05em">
+        <div>
+          <label class="label-left" for="conceptoTecnico" [class.color-secondaryColor]="
+            addressForm.get('conceptoTecnico').invalid && addressForm.get('conceptoTecnico').touched ||
+            addressForm.get('conceptoTecnico').invalid && estaEditando">
+            Concepto técnico
+          </label>
+        </div>
+        <div class="col d-flex">
+          <quill-editor class="quill-editor-style card position-relative" [styles]="editorStyle" [modules]="config"
+            (onContentChanged)="maxLength($event, 2000)" formControlName="conceptoTecnico" [class.invalid]="
+            addressForm.get('conceptoTecnico').invalid && addressForm.get('conceptoTecnico').touched ||
+            addressForm.get('conceptoTecnico').invalid && estaEditando">
+          </quill-editor>
+          <div class="d-flex align-items-center">
+            <span class="contador miles mt-3em" *ngIf="addressForm.get('conceptoTecnico').value">
+              {{2000 - (textoLimpio(addressForm.get('conceptoTecnico').value)>2000?2000:textoLimpio(addressForm.get('conceptoTecnico').value))}}
+            </span>
+            <span class="contador miles mt-3em" *ngIf="!addressForm.get('conceptoTecnico').value">
+              2000
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-8">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left" for="fechaConceptoTecnico" [class.color-secondaryColor]="
+                addressForm.get('fechaConceptoTecnico').invalid && addressForm.get('fechaConceptoTecnico').touched ||
+                addressForm.get('fechaConceptoTecnico').invalid && estaEditando">
+                Fecha concepto técnico
+              </label>
+            </div>
+            <div class="col d-flex">
+              <mat-form-field class="example-full-width">
+                <input matInput [matDatepicker]="pickerConceptoTecnico" formControlName="fechaConceptoTecnico" readonly
+                  (click)="pickerConceptoTecnico.open()" placeholder="DD/MM/AAAA">
+                <mat-datepicker #pickerConceptoTecnico></mat-datepicker>
+              </mat-form-field>
+              <button mat-button color="primary" type="button" (click)="pickerConceptoTecnico.open()"
+                class="btn-calendario">
+                <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-8">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left" for="numeroRadicadoSolicitud" [class.color-secondaryColor]="
+              addressForm.get('numeroRadicadoSolicitud').invalid && addressForm.get('numeroRadicadoSolicitud').touched ||
+              addressForm.get('numeroRadicadoSolicitud').invalid && estaEditando">
+                Número de radicado en FFIE de solicitud
+              </label>
+            </div>
+            <div class="col d-flex">
+              <mat-form-field class="full-width">
+                <input matInput type="text" formControlName="numeroRadicadoSolicitud" #numeroRadicadoSolicitud
+                  maxlength="20" required>
+              </mat-form-field>
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                matTooltipClass="info-tooltip">
+                {{20 - numeroRadicadoSolicitud.value.length}}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-8">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left" for="documentacion" [class.color-secondaryColor]="
+              addressForm.get('documentacion').invalid && addressForm.get('documentacion').touched ||
+              addressForm.get('documentacion').invalid && estaEditando">
+                ¿Cuenta con la documentación soporte suficiente?
+              </label>
+            </div>
+            <div class="col">
+              <mat-radio-group class="radioInput" formControlName="documentacion">
+                <mat-radio-button [value]="true">Sí</mat-radio-button>
+                <mat-radio-button [value]="false">No</mat-radio-button>
+              </mat-radio-group>
+              <span class="required-form-group">*</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+  <div class="text-center">
+    <button mat-button color="warn" class="btn-guardar" type="submit">
+      <img src="assets/img/icon/guardar.svg" alt="Guardar">
+    </button>
+  </div>
+</form>

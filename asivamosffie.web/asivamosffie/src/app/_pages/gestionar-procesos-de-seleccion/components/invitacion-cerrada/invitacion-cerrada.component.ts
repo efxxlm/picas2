@@ -238,7 +238,7 @@ export class InvitacionCerradaComponent implements OnInit {
       {
         if(pProceso.evaluacionDescripcion!="" || pProceso.urlSoporteEvaluacion!="")
         {
-         if(pProceso.evaluacionDescripcion!="" && pProceso.urlSoporteEvaluacion!="")
+         if(pProceso.evaluacionDescripcion!=undefined && pProceso.evaluacionDescripcion!="" && pProceso.urlSoporteEvaluacion!="" && pProceso.urlSoporteEvaluacion!=undefined)
          {
            retorno=2;
          }  

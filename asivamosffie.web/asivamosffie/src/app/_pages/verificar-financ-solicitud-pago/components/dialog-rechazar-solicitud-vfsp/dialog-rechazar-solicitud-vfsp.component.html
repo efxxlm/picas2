@@ -1,0 +1,91 @@
+<button mat-button mat-dialog-close class="modal--btn-cerrar">
+    <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
+</button>
+<div style="padding: 30px 20px; text-align: center;">
+    <h1 class="title-menu--h1 centerTrick">
+       Rechazar solicitud SolPagoO0001
+    </h1>
+    <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+        <mat-card class="shipping-card mainGris auxBoxCard">
+            <mat-card-content align="left">
+                <div class="row">
+                    <div class="col-md-12" style="padding-left: 0;">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left supportBlack" for="fechaRadicacionSAC">Fecha de radicación SAC al contratista</label>
+                            </div>
+                            <div class="col d-flex align-items-center">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput formControlName="fechaRadicacionSAC"
+                                        [matDatepicker]="pickerfechaRadicadoSAC" readonly
+                                        (click)="pickerfechaRadicadoSAC.open()" required>
+                                    <mat-datepicker #pickerfechaRadicadoSAC></mat-datepicker>
+                                </mat-form-field>
+                                <button mat-button color="primary" type="button"
+                                    (click)="pickerfechaRadicadoSAC.open()" class="btn-calendario">
+                                    <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12" style="padding-left: 0;">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left supportBlack" for="numeroRadicacionSAC">Número de radicación SAC al contratista</label>
+                            </div>
+                            <div class="col d-flex align-items-center">
+                                <mat-form-field class="full-width">
+                                    <input matInput #numeroRadicacionSAC type="text" maxlength="10" formControlName="numeroRadicacionSAC"
+                                      required>
+                                  </mat-form-field>
+                                <span class="contador miles" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip" *ngIf="addressForm.controls.numeroRadicacionSAC.value">
+                                    {{10 - numeroRadicacionSAC.value.length}}
+                                </span>
+                                <span class="contador miles" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip" *ngIf="!addressForm.controls.numeroRadicacionSAC.value">
+                                    10
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12" style="padding-left: 0;">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left supportBlack" for="observaciones">Observaciones</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12" style="padding-left: 0;">
+                        <div>
+                            <div class="d-flex align-items-center">
+                                <div class="text-area-quill auxBox">
+                                    <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
+                                        required (onContentChanged)="maxLength($event, 1000)"
+                                        formControlName="observaciones" #observaciones>
+                                    </quill-editor>
+                                </div>
+                                <span class="contador miles" *ngIf="addressForm.controls.observaciones.value">
+                                    {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
+                                </span>
+                                <span class="contador miles" *ngIf="!addressForm.controls.observaciones.value">
+                                    1000
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+        <div class="text-center" style="margin-top: 15px;">
+            <button mat-raised-button color="accent" class="btn-dialog" type="submit" [disabled]="addressForm.invalid">
+                Rechazar solicitud
+            </button>
+        </div>
+    </form>
+</div>
+

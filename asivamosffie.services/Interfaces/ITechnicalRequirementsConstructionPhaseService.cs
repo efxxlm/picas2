@@ -40,6 +40,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> EnviarAlSupervisor(int pContratoId, string pUsuarioCreacion, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
         Task<Respuesta> CreateEditObservacionPerfil(ConstruccionPerfil pPerfil, bool esSupervisor);
         Task<Respuesta> AprobarInicio(int pContratoId, string pUsuarioCreacion);
+        Proyecto CalcularFechaInicioContrato(int pContratoConstruccionId);
 
     }
 }

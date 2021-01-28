@@ -1,0 +1,29 @@
+<section class="text-center">
+  <h1 class="mb-05em">
+    Validación de registro
+  </h1>
+
+  <p>
+    Número de registros en el archivo:
+    <b>
+      4
+    </b>
+  </p>
+  <p>
+    Número de registros validos:
+    <b>
+      4
+    </b>
+  </p>
+  <p>
+    Número de registros inválidos:
+    <b>
+      0
+    </b>
+  </p>
+  <strong>¿Desea realizar el cargue del flujo de inversión de recursos?</strong>
+  <mat-dialog-actions *ngIf="true">
+    <button class="btn-sino" mat-button (click)="guardar()">Si</button>
+    <button class="btn-sino" mat-button (click)="guardar()">No</button>
+</mat-dialog-actions>
+</section>

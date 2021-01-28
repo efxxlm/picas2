@@ -132,3 +132,8 @@ button.btn-calendario {
     padding: 0 2em;
     // margin-bottom: 2em;
 }
+
+a[target=_blank] {
+  color: $fontColor;
+  text-decoration: none;
+}

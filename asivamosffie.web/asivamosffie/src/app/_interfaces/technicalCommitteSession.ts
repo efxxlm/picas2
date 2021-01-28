@@ -344,6 +344,8 @@ interface EstadoComite{
     Contratacion?: string,
     ModificacionContractual?: string,
     ActualizacionCronogramaProcesoseleccion?: string,
+    ActuacionesControversiasContractuales?: string,
+    
   }
   
   export const TiposSolicitud: TipoSolicitud = {
@@ -351,6 +353,7 @@ interface EstadoComite{
     Contratacion: "2",
     ModificacionContractual: "3",
     ActualizacionCronogramaProcesoseleccion: "6",
+    ActuacionesControversiasContractuales: "8",
 
   }
 

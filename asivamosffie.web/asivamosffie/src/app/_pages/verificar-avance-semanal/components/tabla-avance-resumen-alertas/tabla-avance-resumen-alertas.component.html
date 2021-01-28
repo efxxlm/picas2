@@ -1,0 +1,66 @@
+<section class="table-responsive size-table" *ngIf="seguimientoDiario !== undefined">
+    <table mat-table [dataSource]="tablaAvanceResumen" matSort>
+  
+      <ng-container matColumnDef="fechaReporte">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha del reporte </th>
+        <td mat-cell *matCellDef="let element" align="center" class="padding-0em">
+          <div class="sub-item-table flex-table justify-content-center align-items-center h-3em" *ngFor="let resumen of element.resumenAlertas">
+            {{ resumen.fechaSeguimiento | date: 'dd/MM/yyyy' }}
+          </div>
+        </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="cantidadPersonalProgramado">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Cantidad de personal programado </th>
+        <td mat-cell *matCellDef="let element" align="center" class="padding-0em">
+          <div class="sub-item-table flex-table justify-content-center align-items-center h-3em" *ngFor="let resumen of element.resumenAlertas">
+            {{ resumen.cantidadPersonalProgramado }}
+          </div>
+        </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="cantidadPersonalTrabajando">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Cantidad de personal trabajando </th>
+        <td mat-cell *matCellDef="let element" align="center" class="padding-0em">
+          <div class="sub-item-table flex-table justify-content-center align-items-center h-3em" *ngFor="let resumen of element.resumenAlertas">
+            {{ resumen.cantidadPersonalTrabajando }}
+          </div>
+        </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="horasRetraso">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de horas de retraso </th>
+        <td mat-cell *matCellDef="let element" align="center" class="padding-0em">
+          <div class="sub-item-table flex-table justify-content-center align-items-center h-3em" *ngFor="let resumen of element.resumenAlertas">
+            {{ resumen.numeroHorasRetrasoPersonal }}
+          </div>
+        </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="observaciones">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Observaciones </th>
+          <td mat-cell *matCellDef="let element" align="center" class="padding-0em">
+            <div class="sub-item-table" *ngFor="let resumen of element.resumenAlertas">
+              <button mat-raised-button
+                      color="accent" 
+                      class="btn-table expansion-style--title btn-color h-2em"
+                      style="width: 90%;"
+                      [disabled]="resumen.seguimientoDiarioObservaciones.length === 0"
+                      (click)="openDialogObservaciones( resumen.seguimientoDiarioObservaciones[0].observaciones, resumen )">
+                      <small>Observaciones</small>
+              </button>
+            </div>
+          </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="totalHorasRetraso">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Total de horas de retraso </th>
+          <td mat-cell *matCellDef="let element" align="center"> {{ element.totalHorasRetraso }} </td>
+      </ng-container>
+    
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+</section>

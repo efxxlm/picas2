@@ -1,0 +1,28 @@
+<div class="container text-center">
+  <div class="text-right">
+    <a routerLink="/home" mat-button color="primary" class="btn-regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar">
+    </a>
+  </div>
+  <h1 class="title-menu--h1">
+    Registrar solicitud de novedad contractual
+  </h1>
+  <button mat-mini-fab color="primary" class="btn-info" (click)="verAyuda = !verAyuda">?</button>
+
+  <div class="text-info" *ngIf="verAyuda">
+    <button mat-icon-button (click)="verAyuda = false" class="text-info--close">
+      <img src="assets/img/icon/cerrar-gris.svg" alt="cerrar ayuda">
+    </button>
+    Bienvenido/a, aquí podrá realizar una solicitud de novedad contractual para los contratos de obra asignados a usted,
+    que cuentan con póliza aprobada y registro presupuestal, que se encuentran en ejecución en el marco de la gestión
+    del FFIE.
+  </div>
+
+  <div class="mt-2em mb-2em">
+    <a routerLink="registrarSolicitud" mat-raised-button color="accent">
+      Registrar solicitud de novedad
+    </a>
+  </div>
+
+  <app-tabla-solicitud-novedad-contractual></app-tabla-solicitud-novedad-contractual>
+</div>

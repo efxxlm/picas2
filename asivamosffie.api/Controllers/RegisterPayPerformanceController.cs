@@ -37,7 +37,7 @@ namespace asivamosffie.api.Controllers
 
         [Route("uploadFileToValidate")]
         [HttpPost]
-        public async Task<IActionResult> uploadFileToValidate(IFormFile file, [FromQuery] string typeFile, bool saveSuccessProcess)
+        public async Task<IActionResult> UploadFileToValidate(IFormFile file, [FromQuery] string typeFile, bool saveSuccessProcess)
         {
             try
             {
@@ -45,8 +45,8 @@ namespace asivamosffie.api.Controllers
 
                 if (file.Length > 0 && file.FileName.Contains(".xls"))
                 {
-                    string strUsuario = HttpContext.User.FindFirst("User").Value;
-                    respuesta = await _registerPayPerformanceService.uploadFileToValidate(file, strUsuario, typeFile, saveSuccessProcess);
+                    string strUsuario = User.Identity.Name;
+                    respuesta = await _registerPayPerformanceService.UploadFileToValidate(file, strUsuario, typeFile, saveSuccessProcess);
                 }
                 return Ok(respuesta);
             }
@@ -58,7 +58,7 @@ namespace asivamosffie.api.Controllers
 
         [Route("getPaymentsPerformances")]
         [HttpGet]
-        public async Task<List<dynamic>> getPaymentsPerformances([FromQuery] string typeFile, [FromQuery] string status)
+        public async Task<List<dynamic>> GetPaymentsPerformances([FromQuery] string typeFile, [FromQuery] string status)
         {
             try
             {
@@ -76,9 +76,9 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                _registerPayPerformanceService.setObservationPaymentsPerformances(data.typeFile, data.observaciones, data.cargaPagosRendimientosId);
+                var response = await _registerPayPerformanceService.SetObservationPayments(data.typeFile, data.observaciones, data.cargaPagosRendimientosId);
 
-                return Ok("Se actualizo correctamente");
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -88,11 +88,12 @@ namespace asivamosffie.api.Controllers
 
         [Route("deletePaymentPerformance")]
         [HttpGet]
-        public async Task<IActionResult> deleteUpload(int uploadedOrderId)
+        public async Task<IActionResult> DeletePaymentOrder(int uploadedOrderId)
         {
             try
             {
-                var result = await _registerPayPerformanceService.DeletePaymentPerformance(uploadedOrderId);
+                string username = User.Identity.Name;
+                var result = await _registerPayPerformanceService.DeletePayment(uploadedOrderId, username);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -101,34 +102,7 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        [Route("downloadPaymentPerformance")]
-        [HttpGet]
-        public async Task<IActionResult> DownloadPaymentPerformance(int uploadedOrderId)
-        {
-            try
-            {
-                return Ok(_registerPayPerformanceService.DownloadPaymentPerformanceAsync(uploadedOrderId));
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-
-        //[Route("getManagedPerformances")]
-        //[HttpGet]
-        //public async Task<List<dynamic>> getManagePerformances([FromQuery] string typeFile)
-        //{
-        //    try
-        //    {
-        //        return await _registerPayPerformanceService.getPaymentsPerformances(typeFile, "Valido");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
+        
 
 
         [Route("managePerformance")]
@@ -153,7 +127,8 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                var result = await _registerPayPerformanceService.NotifyEmailPerformanceInconsistencies(uploadedOrderId);
+                string author = User.Identity.Name;
+                var result = await _registerPayPerformanceService.NotifyEmailPerformanceInconsistencies(uploadedOrderId, author);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -168,7 +143,8 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                var result = await _registerPayPerformanceService.RequestManagedPerformancesApproval(uploadedOrderId);
+                string author = User.Identity.Name;
+                var result = await _registerPayPerformanceService.NotifyRequestManagedPerformancesApproval(uploadedOrderId, author);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -177,13 +153,15 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        #region managedperformances
         [Route("downloadManagedPerformances")]
         [HttpGet]
         public async Task<IActionResult> DownloadManagedPerformances(int uploadedOrderId, int statusType)
         {
             try
             {
-                var result = await _registerPayPerformanceService.GetManagedPerformancesPerformances(uploadedOrderId, statusType);
+                string author = User.Identity.Name;
+                var result = await _registerPayPerformanceService.GetManagedPerformances(uploadedOrderId, statusType);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -191,6 +169,82 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
+
+        [Route("downloadPaymentPerformance")]
+        [HttpPost]
+        public async Task<IActionResult> DownloadPaymentPerformance([FromBody] FileRequest fileRequest, [FromQuery]string fileType)
+        {
+            //if (String.IsNullOrEmpty(pNameFiles))
+            //    return BadRequest();
+            try
+            {
+                fileRequest.Username = User.Identity.Name;
+                var result = await _registerPayPerformanceService.DownloadPaymentPerformanceAsync(fileRequest, fileType);
+
+                if (result.IsSuccessful && !result.IsException)
+                {
+                    /*string Ruta = archivoCargue.Ruta + '/' + archivoCargue.Nombre + ".xlsx";
+                    */
+                    Stream stream = new FileStream(result.Data.ToString(), FileMode.Open, FileAccess.Read);
+
+                    if (stream == null)
+                        return NotFound();
+                    var file = File(stream, "application/octet-stream");
+                    return file;
+                }
+                else if (result.IsSuccessful && result.IsException)
+                {
+                    //Status409Conflict
+                    return Ok(result);
+                }
+                return BadRequest("Archivo no encontrado");
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Archivo no encontrado");
+            }
+        }
+
+        [Route("downloadPerformancesInconsistencies")]
+        [HttpPost]
+        public async Task<IActionResult> GetPerformancesInconsistencies(int uploadedOrderId, int statusType)
+        {
+           
+            try
+            {
+                string author = User.Identity.Name;
+                var result = await _registerPayPerformanceService.GetInconsistencies(author, uploadedOrderId);
+
+
+
+                if (result.IsSuccessful && !result.IsException)
+                {
+                    /*string Ruta = archivoCargue.Ruta + '/' + archivoCargue.Nombre + ".xlsx";
+                    */
+                    string ruta = result.Data.ToString();
+                    Stream stream = new FileStream(ruta, FileMode.Open, FileAccess.Read);
+
+                    if (stream == null)
+                        return NotFound();
+                    var file = File(stream, "application/octet-stream");
+                    return file;
+                }
+                else if (result.IsSuccessful && result.IsException)
+                {
+                    //Status409Conflict
+                    return Ok(result);
+                }
+
+                return BadRequest("Archivo no encontrado");
+            }
+            catch (Exception ex)
+            {
+                // throw ex;
+                return BadRequest("Archivo no encontrado"); /// ?
+            }
+        } 
+        #endregion
+
 
     }
 }

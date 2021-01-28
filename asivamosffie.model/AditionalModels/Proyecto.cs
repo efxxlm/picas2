@@ -48,5 +48,9 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public decimal? ValorFaseConstruccion { get; set; }
+
+        [NotMapped]
+        public VProyectosXcontrato InfoProyecto { get; set; }
+
     }
 }

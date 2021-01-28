@@ -508,13 +508,13 @@
         <div class="text-area-quill">
           <label for="alcanceParticular" class="text-area-quill--label">Observaciones generales</label>
           <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
-            (onContentChanged)="maxLength($event, 2000)" formControlName="observacionesGenerales">
+            (onContentChanged)="maxLength($event, 2000)" formControlName="observacionesGenerales" #obsGeneral>
           </quill-editor>
         </div>
-        <span class="contador miles" *ngIf="addressForm.controls.observacionesGenerales.value">
-          {{2000 - (textoLimpio(addressForm.controls.observacionesGenerales.value)>2000?2000:textoLimpio(addressForm.controls.observacionesGenerales.value))}}
+        <span class="contador miles" *ngIf="addressForm.controls.observacionesGenerales.value !== null">
+          {{2000 - textoLimpio( obsGeneral.quillEditor, 2000 )}}
         </span>
-        <span class="contador miles" *ngIf="!addressForm.controls.observacionesGenerales.value">
+        <span class="contador miles" *ngIf="addressForm.controls.observacionesGenerales.value === null">
           2000
         </span>
       </div>

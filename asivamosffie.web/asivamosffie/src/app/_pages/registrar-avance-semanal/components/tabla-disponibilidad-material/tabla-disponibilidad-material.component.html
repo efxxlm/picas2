@@ -1,0 +1,76 @@
+<table class="mat-table cdk-table mat-sort mat-table-style table-form table-form--2 mt-1em" *ngIf="seguimientoDiario !== undefined && dataSeguimientoDiario.length > 0">
+    <thead>
+        <tr class="mat-header-row cdk-header-row ng-star-inserted">
+            <th class="mat-header-cell cdk-header-cell ng-star-inserted" rowspan="2">
+                Fecha del reporte
+            </th>
+            <th class="mat-header-cell cdk-header-cell ng-star-inserted border-bottom-fff" colspan="3">
+                Causa de baja / media disponibilidad
+            </th>
+            <th class="mat-header-cell cdk-header-cell ng-star-inserted" rowspan="2" style="width: 10%;">
+                Número de horas de retraso
+            </th>
+            <th class="mat-header-cell cdk-header-cell ng-star-inserted" rowspan="2" style="width: 15%;">
+                Observación
+            </th>
+            <th class="mat-header-cell cdk-header-cell ng-star-inserted" rowspan="2" style="width: 12%;">
+                Total de horas de retraso
+            </th>
+        </tr>
+        <tr class="mat-header-row cdk-header-row ng-star-inserted">
+            <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                materiales
+            </th>
+            <th class="mat-header-cell cdk-header-cell ng-star-inserted" style="width: 15%;">
+                Equipo
+            </th>
+            <th class="mat-header-cell cdk-header-cell ng-star-inserted border-right-fff">
+                Productividad
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="mat-cell cdk-cell ng-star-inserted" style="padding: 0em !important;">
+            <div class="sub-item-table flex-table justify-content-center align-items-center h-3em" *ngFor="let resumen of dataSeguimientoDiario[0].resumenAlertas">
+                {{ resumen.fechaSeguimiento !== null ? ( resumen.fechaSeguimiento | date: 'dd/MM/yyyy' ) : '---' }}
+            </div>
+        </td>
+        <td class="mat-cell cdk-cell ng-star-inserted" style="padding: 0em !important;">
+            <div class="sub-item-table flex-table justify-content-center align-items-center h-3em" *ngFor="let resumen of dataSeguimientoDiario[0].resumenAlertas">
+                {{ resumen.causaIndisponibilidadMaterialCodigo }}
+            </div>
+        </td>
+        <td class="mat-cell cdk-cell ng-star-inserted" style="padding: 0em !important;">
+            <div class="sub-item-table flex-table justify-content-center align-items-center h-3em" *ngFor="let resumen of dataSeguimientoDiario[0].resumenAlertas">
+                {{ resumen.causaIndisponibilidadEquipoCodigo }}
+            </div>
+        </td>
+        <td class="mat-cell cdk-cell ng-star-inserted" style="padding: 0em !important;">
+            <div class="sub-item-table flex-table justify-content-center align-items-center h-3em" *ngFor="let resumen of dataSeguimientoDiario[0].resumenAlertas">
+                {{ resumen.causaIndisponibilidadProductividadCodigo }}
+            </div>
+        </td>
+        <td class="mat-cell cdk-cell ng-star-inserted" style="padding: 0em !important;">
+            <div class="sub-item-table flex-table justify-content-center align-items-center h-3em" *ngFor="let resumen of dataSeguimientoDiario[0].resumenAlertas">
+                {{ resumen.totalHorasRetraso }}
+            </div>
+        </td>
+        <td class="mat-cell cdk-cell ng-star-inserted" style="padding: 0em !important;">
+            <div class="sub-item-table flex-table justify-content-center align-items-center h-3em" *ngFor="let resumen of dataSeguimientoDiario[0].resumenAlertas">
+                <button mat-raised-button
+                        color="accent" 
+                        class="btn-table expansion-style--title btn-color h-2em"
+                        style="width: 90%;"
+                        [disabled]="resumen.seguimientoDiarioObservaciones.length === 0"
+                        (click)="openDialogObservaciones( resumen.seguimientoDiarioObservaciones[0].observaciones, resumen )">
+                        <small>Observaciones</small>
+                </button>
+            </div>
+        </td>
+        <td class="mat-cell cdk-cell ng-star-inserted">
+          <div class="p-table"> {{ dataSeguimientoDiario[0].totalHorasRetraso }} </div>
+        </td>
+      </tr>
+    </tbody>
+</table>

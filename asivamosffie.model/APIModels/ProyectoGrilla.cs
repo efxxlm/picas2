@@ -27,7 +27,17 @@ namespace asivamosffie.model.APIModels
         public decimal? ValorAportante { get; set; }
         public int AportanteID { get; set; }
         public int DisponibilidadPresupuestalProyecto { get; set; }
-        public decimal ValorGestionado { get; set; }
+        public decimal ValorGestionado { get; set; } 
+        public string EstadoProgramacion { get; set; }
+        public string NumeroContrato { get; set; }     
+
+        public string? URLMonitoreo { get; set; }
+        public int? ContratoId { get; set; }
         public List<CofinanicacionAportanteGrilla> Aportantes { get; set; }
+        public string CodigoDane { get; set; }
+        public string SedeCodigo { get; set; }
+        public string NombreContratista { get; set; }
+        /*4.2.2*/
+        public int ContratacionProyectoId { get; set; }
     }
 }

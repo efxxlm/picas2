@@ -1,0 +1,110 @@
+<form autocomplete="off" [formGroup]="formDescuentos" (ngSubmit)="guardar()">
+    <div class="row" style="justify-content: center;">
+        <div class="col-md-4">
+            <div class="row">
+                <div class="pr-1">
+                    <label class="label-left" for="aplicaDescuento">¿Aplican descuentos?</label>
+                </div>
+                <div class="col">
+                    <mat-radio-group class="radioInput" formControlName="aplicaDescuento" required>
+                        <mat-radio-button [value]="true">Sí</mat-radio-button>
+                        <mat-radio-button [value]="false">No</mat-radio-button>
+                    </mat-radio-group>
+                    <span class="required-form-group" style="margin-left: 1px;">*</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="formDescuentos.get( 'aplicaDescuento' ).value == true">
+        <div class="d-flex mt-1em col-md-6" style="margin: 10px auto;">
+            <label class="mr-label" class="label-left"><b>¿Cuántos descuentos se aplican sobre la factura?</b></label>
+            <div class="col d-flex">
+                <mat-form-field class="w-70">
+                    <input matInput type="text" maxlength="2" formControlName="numeroDescuentos" required>
+                </mat-form-field>
+                <span class="contador">{{2 - formDescuentos.get( 'numeroDescuentos' ).value.length}}</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8" style="margin: 0 auto;">
+                <div class="row">
+                    <div class="pr-1">
+                        <label for="valorAPagarDespues" class="label-left">Valor a pagar después de descuentos</label>
+                    </div>
+                    <div class="col d-flex">
+                      <mat-form-field class="full-width">
+                        <input matInput #valorAPagarDespues currencyMask maxlength="10" required formControlName="valorAPagarDespues"
+                          (keypress)="validateNumberKeypress($event)"
+                          onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                          [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
+                      </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div formArrayName="descuentos" *ngIf="formDescuentos.get( 'numeroDescuentos' ).value !== null">
+            <div *ngFor="let descuento of descuentos.controls; index as i">
+                <mat-card class="shipping-card" [formGroup]="descuento">
+                    <mat-card-header class="header-card header-card--margin">
+                        <mat-card-title class="header-card--text">
+                            Descuento {{i+1}}
+                        </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content style="text-align: left;">
+                        <div class="row">
+                            <div class="col-md-12">
+                              <div class="row">
+                                <div class="pr-1">
+                                  <label class="label-left" for="tipoDescuento">Tipo de descuento</label>
+                                </div>
+                                <div class="col">
+                                  <mat-form-field class="select-width">
+                                    <mat-select formControlName="tipoDescuento" required>
+                                      <mat-option *ngFor="let tipoDescuento of tiposDescuentoArray" [value]="tipoDescuento.value">
+                                        {{ tipoDescuento.name }}
+                                      </mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-8">
+                              <div class="row">
+                                <div class="pr-1">
+                                  <label class="label-left" for="valorDescuento">
+                                    Valor del descuento
+                                  </label>
+                                </div>
+                                <div class="col d-flex">
+                                  <mat-form-field class="full-width">
+                                    <input matInput #valorDescuento currencyMask maxlength="20" required formControlName="valorDescuento"
+                                      (keypress)="validateNumberKeypress($event)"
+                                      onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                      [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
+                                  </mat-form-field>
+                                  <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                                    matTooltipClass="info-tooltip">{{20 - valorDescuento.value.length}}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                    </mat-card-content>
+                </mat-card>
+                <div class="text-right">
+                    <button mat-button color="warn" type="button" class="btn-eliminar" (click)="eliminarDescuento( i )"
+                        [disabled]="descuentos.controls.length == 1">
+                        <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
+                        Eliminar descuento
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="text-center">
+            <button mat-button color="warn" class="btn-guardar" type="button" (click)="guardar()">
+                <img src="assets/img/icon/guardar.svg">
+            </button>
+        </div>
+    </div>
+</form>

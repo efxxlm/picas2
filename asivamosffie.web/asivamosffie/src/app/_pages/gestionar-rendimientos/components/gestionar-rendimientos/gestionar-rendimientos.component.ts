@@ -3,7 +3,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Respuesta } from 'src/app/core/_services/common/common.service';
 import { FaseDosPagosRendimientosService } from 'src/app/core/_services/faseDosPagosRendimientos/fase-dos-pagosRendimientos.service';
+import { FileDownloader } from 'src/app/_helpers/file-downloader';
 
 @Component({
   selector: 'app-gestionar-rendimientos',
@@ -95,15 +97,25 @@ export class GestionarRendimientosComponent implements OnInit {
   }
 
   sendInconsistencies(uploadedOrderId: number, order){
-    this.faseDosPagosRendimientosSvc
-    .sendInconsistencies(uploadedOrderId).subscribe((result)=>{
-      order.ShowInconsistencies = result
-     this.loadDataSource();
+    this.faseDosPagosRendimientosSvc.sendInconsistencies(uploadedOrderId)
+      .subscribe((result: Respuesta)=>{
+      order.ShowInconsistencies = result.isSuccessful
+      //this.loadDataSource();
     })
   }
 
   downloadInconsistencies(uploadedOrderId: number){
-  
+    this.faseDosPagosRendimientosSvc.downloadPerformancesInconsistencies(uploadedOrderId)
+    .subscribe((content)=>{
+      // if(result.isSuccessful){
+      //   console.log("Succss")
+      // }
+      // if(typeof result  != "string"){
+      //   console.log("typeof", typeof result)
+      // }
+      FileDownloader.exportExcel("file", content)
+      
+    })
   }
 
   requestApproval(uploadedOrderId: number, order){

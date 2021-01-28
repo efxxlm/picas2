@@ -1,0 +1,35 @@
+<div class="container text-center">
+    <div class="text-right">
+        <a routerLink="/gestionarTramiteControversiasContractuales/actualizarTramiteControversia" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">
+        Ver detalle reclamación {{this.reclamacionCod}}
+    </h1>
+    <p class="info-sub-title">
+        <span>Actuación: <b>{{this.actuacion}}</b> Número de actuación: <b>{{this.numActuacion}}</b></span>
+    </p>
+    <mat-card class="shipping-card mainGris">
+        <mat-card-header class="header-card header-card--margin">
+            <mat-card-title class="header-card--text textoGris">
+                Reclamación
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content style="text-align: left;">
+            <p><strong>Resumen de la propuesta de reclamación ante la fiduciaria:</strong></p>
+            <div [innerHtml]="this.resumen"></div> 
+            <p><strong>¿Se requiere presentar la propuesta de reclamación a comité técnico?:</strong> {{this.requiereReclamacionComite}}</p>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="shipping-card mainGris">
+        <mat-card-header class="header-card header-card--margin">
+            <mat-card-title class="header-card--text textoGris">
+                Soporte de la reclamación
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content style="text-align: left;">
+            <p><strong>URL con soporte:</strong> {{this.soporteReclamacion}}</p>
+        </mat-card-content>
+    </mat-card>
+</div>

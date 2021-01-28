@@ -5,17 +5,45 @@
         </a>
     </div>
     <h1 class="title-menu--h1">
-        Actualizar trámite solicitud CO001
+        Actualizar trámite solicitud {{this.codigoSolicitud}}
     </h1>
     <div>
         <mat-card class="shipping-card mainGris">
             <mat-card-content style="text-align: left;">
-                <p><strong>Fecha de solicitud:</strong> 05/08/2020</p>
-                <p><strong>Fecha de la solicitud del trámite:</strong> 07/08/2020</p>
-                <p><strong>Número del contrato:</strong> C223456789</p>
-                <p><strong>Tipo de Controversia:</strong> Terminación anticipada por incumplimiento (TAI)</p>
+                <p><strong>Fecha de solicitud:</strong> {{this.fechaSolicitud | date:'dd/MM/yyyy'}}</p>
+                <p><strong>Número del contrato:</strong> {{this.numeroContrato}}</p>
+                <p><strong>Tipo de Controversia:</strong> {{this.tipoControversia}}</p>
             </mat-card-content>
         </mat-card>
-        <app-control-y-tabla-actua-tramite-cc></app-control-y-tabla-actua-tramite-cc>
+        <div *ngIf="this.tipoControversia=='Terminación anticipada por incumplimiento (TAI)'">
+            <div class="tabs--actions">
+                <button mat-raised-button color="accent" class="tabs--btn" [ngClass]="{'active': opcion1 === true}"
+                    (click)="opcion1 = true; opcion2 = false;">
+                    Actuaciones
+                </button>
+                <button mat-raised-button color="accent" class="tabs--btn" [ngClass]="{'active': opcion2 === true}"
+                    (click)="opcion2 = true; opcion1 = false;">
+                    Reclamaciones
+                </button>
+            </div>
+            <app-control-y-tabla-actua-tramite-cc *ngIf="opcion1"></app-control-y-tabla-actua-tramite-cc>
+            <!--<app-control-y-tabla-actuacion-reclamacion *ngIf="opcion2"></app-control-y-tabla-actuacion-reclamacion>-->
+            <app-control-y-tabla-reclamacion-cc *ngIf="opcion2"></app-control-y-tabla-reclamacion-cc>
+        </div>
+        <div *ngIf="this.tipoControversia!='Terminación anticipada por incumplimiento (TAI)'">
+            <div class="tabs--actions">
+                <button mat-raised-button color="accent" class="tabs--btn" [ngClass]="{'active': opcion1 === true}"
+                    (click)="opcion1 = true; opcion2 = false;">
+                    Actuaciones
+                </button>
+                <button mat-raised-button color="accent" class="tabs--btn" [ngClass]="{'active': opcion2 === true}"
+                    (click)="opcion2 = true; opcion1 = false;">
+                    Mesas de trabajo
+                </button>
+            </div>
+            <app-control-y-tabla-actuaciones-no-tai *ngIf="opcion1"></app-control-y-tabla-actuaciones-no-tai>
+            <!--<app-control-y-tabla-actuacion-mt *ngIf="opcion2"></app-control-y-tabla-actuacion-mt>-->
+            <app-control-y-tabla-mesas-trabajo-cc *ngIf="opcion2"></app-control-y-tabla-mesas-trabajo-cc>
+        </div>
     </div>
 </div>

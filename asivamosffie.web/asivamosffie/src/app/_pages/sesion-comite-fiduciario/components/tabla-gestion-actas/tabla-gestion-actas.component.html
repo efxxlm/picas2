@@ -45,10 +45,6 @@
                     [routerLink]="['crearActa', element.id]" mat-raised-button color="accent" class="btn-table">
                     Crear acta</a>
 
-                <a *ngIf="!element.registroCompleto && element.estadoActa == 'Sin Acta' && element.estadoActaCodigo == '0' "
-                    [routerLink]="['crearActa', element.id]" mat-raised-button color="accent" class="btn-table">
-                    Ver detalle/Editar</a>
-
                 <a *ngIf="element.registroCompleto && element.estadoActa == 'En proceso de aprobación'"
                     [routerLink]="['crearActa', element.id]" mat-raised-button color="accent" class="btn-table">
                     Ver detalle</a>

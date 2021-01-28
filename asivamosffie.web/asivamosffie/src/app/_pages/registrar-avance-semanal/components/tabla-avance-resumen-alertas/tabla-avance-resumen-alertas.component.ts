@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -11,6 +11,8 @@ import { DialogTablaAvanceResumenComponent } from '../dialog-tabla-avance-resume
 })
 export class TablaAvanceResumenAlertasComponent implements OnInit {
 
+    @Input() esVerDetalle = false;
+    @Input() seguimientoDiario: any;
     tablaAvanceResumen = new MatTableDataSource();
     @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
     displayedColumns: string[]  = [
@@ -21,28 +23,51 @@ export class TablaAvanceResumenAlertasComponent implements OnInit {
       'observaciones',
       'totalHorasRetraso'
     ];
-    dataTable: any[] = [
-        {
-            fechaReporte: '05/07/2020',
-            cantidadPersonalProgramado: 24,
-            cantidadPersonalTrabajando: 19,
-            horasRetraso: 6,
-            observaciones: 'Cinco personas se reportaron incapacitadas por enfermedad.',
-            totalHorasRetraso: 6
-        }
-    ];
 
-    constructor ( private dialog: MatDialog ) { };
+    constructor( private dialog: MatDialog ) { }
 
     ngOnInit(): void {
-        this.tablaAvanceResumen = new MatTableDataSource( this.dataTable );
-    };
+        if ( this.seguimientoDiario !== undefined ) {
+            const dataSeguimientoDiario = [];
+            const seguimientoDiario = [];
+            let sumaTotal = 0;
+            if ( this.seguimientoDiario.length > 0 ) {
+                for ( const seguimiento of this.seguimientoDiario ) {
+                    if (    seguimiento.cantidadPersonalProgramado !== undefined
+                            && seguimiento.cantidadPersonalTrabajando !== undefined
+                            && seguimiento.numeroHorasRetrasoPersonal !== undefined )
+                    {
+                        seguimientoDiario.push( seguimiento );
+                        sumaTotal += seguimiento.numeroHorasRetrasoPersonal;
+                    }
+                }
+            } else {
+                seguimientoDiario.push(
+                    {
+                        fechaSeguimiento: null,
+                        cantidadPersonalProgramado: '---',
+                        cantidadPersonalTrabajando: '---',
+                        numeroHorasRetrasoPersonal: '---',
+                        seguimientoDiarioObservaciones: ''
+                    }
+                );
+            }
 
-    openDialogObservaciones ( observacion: string ) {
+            dataSeguimientoDiario.push(
+                {
+                    totalHorasRetraso: sumaTotal === 0 ? '---' : sumaTotal,
+                    resumenAlertas: seguimientoDiario
+                }
+            );
+            this.tablaAvanceResumen = new MatTableDataSource( dataSeguimientoDiario );
+        }
+    }
+
+    openDialogObservaciones( observacion: string, registro: any ) {
         this.dialog.open( DialogTablaAvanceResumenComponent, {
             width: '60em',
-            data : observacion
+            data : { observacion, registro }
         } );
-    };
+    }
 
-};
+}

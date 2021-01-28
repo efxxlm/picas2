@@ -1,0 +1,119 @@
+<div class="busqueda">
+  <mat-form-field appearance="outline" class="busqueda--input">
+    <mat-label>Buscador / Filtro</mat-label>
+    <input matInput #filtro (keyup)="applyFilter($event)">
+  </mat-form-field>
+  <button mat-button color="primary" class="busqueda--img" (click)="filtro.focus()">
+    <img src="assets/img/icon/lupa.svg" alt="Buscar">
+  </button>
+</div>
+
+<div class="table-responsive">
+  <table mat-table [dataSource]="dataSource" matSort>
+
+    <!-- Numero contrato Column -->
+    <ng-container matColumnDef="numeroContrato">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Número Contrato</th>
+      <td mat-cell *matCellDef="let element">{{element.numeroContrato}}</td>
+    </ng-container>
+
+    <!-- llaveMEN Column -->
+    <ng-container matColumnDef="llaveMen">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Llave MEN</th>
+      <td mat-cell *matCellDef="let element">{{element.llaveMen}}</td>
+    </ng-container>
+
+    <!-- tipoInterventor Column -->
+    <ng-container matColumnDef="tipoIntervencion">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>tipo Intervención</th>
+      <td mat-cell *matCellDef="let element">{{element.tipoIntervencion}}</td>
+    </ng-container>
+
+    <!-- institucionEducativa Column -->
+    <ng-container matColumnDef="institucionEducativa">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Institución Educativa</th>
+      <td mat-cell *matCellDef="let element">{{element.institucionEducativa}}</td>
+    </ng-container>
+
+    <!-- Sede Column -->
+    <ng-container matColumnDef="sede">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Sede</th>
+      <td mat-cell *matCellDef="let element">{{element.sede}}</td>
+    </ng-container>
+
+    <!-- fechaUltimoReporte Column -->
+    <ng-container matColumnDef="fechaUltimoSeguimientoDiario">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha del último reporte</th>
+      <td [ngSwitch]="element.fechaUltimoSeguimientoDiario" mat-cell *matCellDef="let element">
+        <section *ngSwitchCase="undefined"> Sin registro  </section> 
+        <section *ngSwitchDefault> {{element.fechaUltimoSeguimientoDiario | date: 'dd/MM/yyyy'}} </section> 
+      </td>
+        <!-- <td *ngSwitchDefault mat-cell *matCellDef="let element">{{element.fechaUltimoSeguimientoDiario | date: 'dd/MM/yyyy'}} </td> -->
+    </ng-container>
+
+    <!-- Id Column -->
+    <ng-container matColumnDef="seguimientoDiarioId">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Gestión</th>
+      <td mat-cell *matCellDef="let element">
+
+        <a mat-button color="warn" 
+                      mat-raised-button color="accent" 
+                      class="btn-table" 
+                      type="button"
+                      (click)="Enviar( element.seguimientoDiarioId )" 
+                      *ngIf="element.registroCompleto && element.estadoCodigo === '1'" >
+        Enviar seguimiento diario
+        </a>
+
+        <a mat-button color="warn" 
+                      mat-raised-button color="accent" 
+                      class="btn-table" 
+                      type="button"
+                      (click)="RegistrarNuevo( element )" 
+                      *ngIf="element.estadoCodigo !== '1'" >
+        Registrar seguimiento diario
+        </a>
+
+        <a mat-button color="warn" 
+                      mat-raised-button color="accent" 
+                      class="btn-table {{ 
+                                ( element.registroCompletoTieneObservaciones !== true && element.tieneObservaciones === true ) ? 
+                                'info-text sin-diligenciar' :
+                                    ( element.registroCompletoTieneObservaciones === true && element.tieneObservaciones === true ) ? 
+                                    'info-text completo' :
+                                  '' }}" 
+                      type="button"
+                      [routerLink]="[ 'verBitacora', element.contratacionProyectoId ]"
+                      *ngIf="element.seguimientoDiarioId > 0">
+        Ver bitácora
+        </a>
+
+        <a mat-button color="warn" 
+                      mat-raised-button color="accent" 
+                      class="btn-table" 
+                      type="button"
+                      (click)="openDialogSiNo('', '<b>¿Está seguro de eliminar este registro?</b>',element.seguimientoDiarioId)"
+                      *ngIf="element.seguimientoDiarioId > 0 && element.estadoCodigo === '1'" >
+        Eliminar registro
+        </a>
+
+        <a mat-button color="warn" 
+                      mat-raised-button color="accent" 
+                      class="btn-table" 
+                      type="button"
+                      (click)="Editar( element )" 
+                      *ngIf="element.seguimientoDiarioId > 0 && element.estadoCodigo === '1' ">
+        Ver detalle/Editar
+        </a>
+
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator #paginator [length]="dataSource?.data.length" [pageIndex]="0" [pageSize]="5"
+    [pageSizeOptions]="[5, 10, 25, 100]">
+  </mat-paginator>
+</div>

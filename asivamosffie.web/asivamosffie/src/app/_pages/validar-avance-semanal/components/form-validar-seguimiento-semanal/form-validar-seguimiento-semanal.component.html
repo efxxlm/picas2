@@ -1,0 +1,118 @@
+<section class="container" *ngIf="seguimientoSemanal !== undefined && tipoObservaciones !== undefined">
+    <div class="text-right">
+        <a mat-button color="primary" class="btn-regresar" routerLink="/validarAvanceSemanal">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+
+    <div class="text-center">
+        <h1 class="title-menu--h1">
+            Validar avance semanal {{ seguimientoSemanal.contratacionProyecto.proyecto.llaveMen }}
+        </h1>
+    </div>
+
+    <div class="d-flex justify-content-center colorMainColor mt-1em">
+        <p>Número de contrato de obra: <b> {{ seguimientoSemanal.contratacionProyecto.contratacion.contrato[0].numeroContrato }} </b> </p>
+        <p style="margin-left: 2em;">Fecha del reporte: <b>{{ seguimientoSemanal.fechaModificacion | date: 'dd/MM/yyyy' }}</b> </p>
+        <p style="margin-left: 2em;">Semana número: <b> {{ seguimientoSemanal.numeroSemana }} </b> </p>
+    </div>
+
+    <div class="mt-2em" align="left">
+        <mat-card class="border">
+            <mat-card-content class="mt-1em">
+                <p><b>Tipo de intervención</b>: {{ seguimientoSemanal.contratacionProyecto.proyecto.tipoIntervencionString }} </p>
+                <p><b>Departamento</b>: {{ seguimientoSemanal.contratacionProyecto.proyecto.departamentoObj.descripcion }} </p>
+                <p><b>Municipio</b>: {{ seguimientoSemanal.contratacionProyecto.proyecto.municipioObj.descripcion }} </p>
+                <p><b>Institución Educativa</b>: {{ seguimientoSemanal.contratacionProyecto.proyecto.institucionEducativa.nombre }} </p>
+                <p><b>Sede</b>: {{ seguimientoSemanal.contratacionProyecto.proyecto.sede.nombre }} </p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <div align="left">
+        <mat-card class="border">
+            <mat-card-title class="text-area-quill--label">Semana de reporte</mat-card-title>
+            <mat-card-content class="mt-1em">
+                <section class="d-flex">
+                    <p class="ml-1em"><b>Fecha inicial</b>: {{ seguimientoSemanal.fechaInicio | date: 'dd/MM/yyyy' }} </p>
+                    <p class="ml-final-date"><b>Fecha final</b>: {{ seguimientoSemanal.fechaFin | date: 'dd/MM/yyyy' }} </p>
+                </section>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <div class="text-center">
+        <p class="info-container">
+			<span class="info-text sin-diligenciar">Sin diligenciar</span>
+			<span class="info-text en-proceso">En proceso</span>
+			<span class="info-text completo">Completo</span>
+        </p>
+
+        <mat-accordion>
+            <mat-expansion-panel class="expansion-style">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="semaforoAvanceFisico">
+                        Avance físico
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <app-verificar-avance-fisico [seguimientoSemanal]="seguimientoSemanal" [avanceFisicoObs]="tipoObservaciones.avanceFisico" [estadoSemaforo]="semaforoAvanceFisico"></app-verificar-avance-fisico>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel class="expansion-style">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="valuePending( seguimientoSemanal.numeroSemana )">
+                        Avance financiero
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <app-avance-financiero [seguimientoSemanal]="seguimientoSemanal" *ngIf="seguimientoSemanal.numeroSemana % 5 === 0" [avanceFinancieroObs]="tipoObservaciones.avanceFinanciero"></app-avance-financiero>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel class="expansion-style">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="semaforoGestionObra">
+                        Gestión de la obra
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <app-gestion-de-obra [seguimientoSemanal]="seguimientoSemanal" [tipoObservaciones]="tipoObservaciones" (estadoSemaforo)="valuePendingSemaforo( 'gestionObra', $event, 5 )"></app-gestion-de-obra>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel class="expansion-style">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="semaforoReporteActividad">
+                        Reporte de actividades
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <app-reporte-actividades [seguimientoSemanal]="seguimientoSemanal" [tipoReporteActividad]="tipoObservaciones.reporteActividades" (estadoSemaforo)="valuePendingSemaforo( 'reporteActividad', $event, 3 )"></app-reporte-actividades>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel class="expansion-style">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="semaforoRegistroFotografico">
+                        Registro fotográfico
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <app-registro-fotografico [seguimientoSemanal]="seguimientoSemanal" [tipoRegistroFotografico]="tipoObservaciones.registroFotografico"></app-registro-fotografico>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel class="expansion-style">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="semaforoComiteObra">
+                        Comité de obra
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <app-comite-obra [seguimientoSemanal]="seguimientoSemanal" [tipoComiteObra]="tipoObservaciones.comiteObra"></app-comite-obra>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+
+    <div class="d-flex justify-content-center align-items-center mt-1em mb-1em" *ngIf="seguimientoSemanal.numeroSemana % 5 !== 0">
+        <img src="./assets/img/icon/sim.svg" class="img-size">
+        <p><small>Una vez cumplido el mes calendario, se habilitará la sección <b>“Avance financiero”</b>, para continuar el proceso</small></p>
+    </div>
+</section>

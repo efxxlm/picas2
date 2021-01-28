@@ -1,0 +1,8 @@
+<section *ngIf="formOtrosManejos !== undefined">
+    <p><b>Fecha de actividad</b>: {{ formOtrosManejos.get( 'fechaActividad' ).value | date: 'dd/MM/yyyy' }} </p>
+    <section>
+      <b>Actividad</b>:
+      <div [innerHTML]="formOtrosManejos.get( 'actividad' ).value"></div>
+    </section>
+    <p *ngIf="formOtrosManejos.get( 'urlSoporteGestion' ).value.length > 0"><b>URL con soporte</b>: {{ formOtrosManejos.get( 'urlSoporteGestion' ).value }} </p>
+  </section>

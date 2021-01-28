@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http'
 import { environment } from 'src/environments/environment'
 import { CarguePagosRendimientos } from '../../../_interfaces/faseDosPagosRendimientos'
 import exportFromJSON from 'export-from-json'
+import { deprecate } from 'util'
 
 @Injectable({
   providedIn: 'root'
@@ -43,8 +44,14 @@ export class FaseDosPagosRendimientosService {
     return this.http.get<any>(`${this.urlApi}/deletePaymentPerformance?uploadedOrderId=${uploadedOrderId}`)
   }
 
+ /**
+ * @deprecated The method should not be used
+ */
   downlaodPaymentsPerformanceStatus(uploadedOrderId: number){
     return this.http.get<any>(`${this.urlApi}/downloadPaymentPerformance?uploadedOrderId=${uploadedOrderId}`)
+  }
+  downloadPaymentsPerformanceStatus(fileRequest: any, fileType: string){
+    return this.http.post(`${this.urlApi}/downloadPaymentPerformance?fileType=${fileType}`, fileRequest , { responseType: "blob" })
   }
 
   managePerformance(uploadedOrderId :number){
@@ -60,6 +67,13 @@ export class FaseDosPagosRendimientosService {
   }
 
   downloadManagedPerformances(uploadedOrderId :number, statusType: number){
-    return this.http.get<any>(`${this.urlApi}/downloadManagedPerformances?uploadedOrderId=${uploadedOrderId}&status=${statusType}`)
+    return this.http.get<any>(
+      `${this.urlApi}/downloadManagedPerformances?uploadedOrderId=${uploadedOrderId}&status=${statusType}`)
+  }
+
+  downloadPerformancesInconsistencies(uploadedOrderId :number){
+    //  fileRequest , { responseType: "blob" })
+    return this.http.post(
+      `${this.urlApi}/downloadPerformancesInconsistencies?uploadedOrderId=${uploadedOrderId}&status=${1}`, {} , {responseType: "blob" })
   }
 }

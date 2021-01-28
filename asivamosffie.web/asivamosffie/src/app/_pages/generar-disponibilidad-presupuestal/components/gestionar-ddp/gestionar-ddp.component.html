@@ -133,7 +133,7 @@
                         {{aportante.valorAportanteAlProyecto| currency:'':'symbol':'3.0'}}
                     </p>
                     <p *ngIf="detailavailabilityBudget?.urlConSoporte">
-                        <strong>URL con soporte:</strong>
+                        <strong>Url con soporte:</strong>
                         {{detailavailabilityBudget?.urlConSoporte}}
                     </p>
                     <mat-card-title class="header-card--text sub-text"
@@ -215,7 +215,7 @@
                         <mat-card-title class="header-card--text sub-text textoGris">Fuentes</mat-card-title>
                         <div *ngFor="let fuente of apo.fuentesFinanciacion;index as j">
                             <mat-card-title class="header-card--text sub-text textoGris" >Fuente {{j+1}}</mat-card-title>
-
+                            
                             <p>
                                 <strong>Fuente:</strong>
                                 {{fuente.fuente}}
@@ -237,7 +237,7 @@
                                 {{fuente.estado_de_las_fuentes}}
                             </p>-->
                         </div>
-
+                        
                     </div>
 
                     </mat-card-content>

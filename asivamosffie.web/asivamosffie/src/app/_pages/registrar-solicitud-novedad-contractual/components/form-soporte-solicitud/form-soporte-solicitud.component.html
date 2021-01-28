@@ -1,0 +1,31 @@
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+  <mat-card class="shipping-card">
+    <mat-card-header class="header-card header-card--margin">
+      <mat-card-title class="header-card--text">
+        Soporte del registro del proceso
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+
+      <div class="row">
+        <div class="pr-1">
+          <label class="label-left" for="urlSoporte" [class.color-secondaryColor]="
+          addressForm.get('urlSoporte').invalid && addressForm.get('urlSoporte').touched ||
+          addressForm.get('urlSoporte').invalid && estaEditando">URL con soporte</label>
+        </div>
+        <div class="col pr-3em">
+          <mat-form-field class="full-width">
+            <input matInput type="url" formControlName="urlSoporte" required>
+          </mat-form-field>
+          <span class="info-url">Indique la ruta en la que se encuentran los documentos de soporte de la novedad</span>
+        </div>
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+  <div class="text-center">
+    <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="addressForm.invalid">
+      <img src="assets/img/icon/guardar.svg" alt="Guardar">
+    </button>
+  </div>
+</form>

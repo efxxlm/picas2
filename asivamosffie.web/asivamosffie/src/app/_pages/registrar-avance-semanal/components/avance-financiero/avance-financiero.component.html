@@ -1,0 +1,110 @@
+<section class="text-center" *ngIf="esVerDetalle === false && seguimientoSemanal !== undefined">
+    <p class="colorMainColor">Periodo del reporte: <b>{{ seguimientoSemanal.fechaInicio | date: 'dd/MM/yyyy' }} - {{ seguimientoSemanal.fechaFin | date: 'dd/MM/yyyy' }}</b> </p>
+
+    <app-tabla-avance-financiero class="mt-1em"></app-tabla-avance-financiero>
+
+    <form class="mt-1em" autocomplete="off" [formGroup]="formAvanceFinanciero" (ngSubmit)="guardar()">
+        <div align="left">
+            <mat-card>
+                <mat-card-content>
+                    <div class="row">
+                        <div class="col-md-12">
+                          <div class="row">
+                            <div class="pr-1">
+                              <label class="label-left" style="margin-top: 1.5em;">¿Requiere hacer alguna observación al avance financiero?</label>
+                            </div>
+                            <div class="col d-flex">
+                                <section style="width: 100%;">
+                                    <mat-form-field appearance="fill">
+                                      <mat-select class="padding-left" formControlName="requiereObservacion" required>
+                                        <mat-option *ngFor="let requisito of booleanosEnsayosLaboratorio" [value]="requisito.value">
+                                          {{requisito.viewValue}}
+                                        </mat-option>
+                                      </mat-select>
+                                    </mat-form-field>
+                                  </section>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-bottom: 1em;" *ngIf="formAvanceFinanciero.get( 'requiereObservacion' ).value === true">
+                        <div class="col-md-12">
+                          <div>
+                            <div class="pr-1">
+                              <label class="label-left">Observaciones</label>
+                            </div>
+                            <div class="col d-flex">
+                                <quill-editor   class="quill-editor-style card-80em position-relative"
+                                                [styles]="editorStyle"
+                                                [modules]="config"
+                                                (onContentChanged)="maxLength($event, 400)"
+                                                formControlName="observacion"
+                                                required>
+                                </quill-editor>
+                                <span class="contador miles" *ngIf="formAvanceFinanciero.get('observacion').value !== null" style="margin-top: 3.5em;">
+                                    {{400 - (textoLimpio(formAvanceFinanciero.get('observacion').value))}}
+                                </span>
+                                <span class="contador miles" *ngIf="formAvanceFinanciero.get('observacion').value === null" style="margin-top: 3.5em;">
+                                    400
+                                </span>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                          <div class="row">
+                            <div class="pr-1">
+                              <label class="label-left" style="margin-top: 1.5em;">¿Considera que se debe generar una alerta sobre el avance financiero de la obra?</label>
+                            </div>
+                            <div class="col d-flex">
+                                <section style="width: 100%;">
+                                    <mat-form-field appearance="fill">
+                                      <mat-select class="padding-left" formControlName="generarAlerta" required>
+                                        <mat-option *ngFor="let requisito of booleanosEnsayosLaboratorio" [value]="requisito.value">
+                                          {{requisito.viewValue}}
+                                        </mat-option>
+                                      </mat-select>
+                                    </mat-form-field>
+                                  </section>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div class="text-center" style="margin-top: 2em;">
+            <button mat-button
+                    color="warn"
+                    class="btn-guardar"
+                    type="submit">
+                    <img  src="assets/img/icon/guardar.svg">
+            </button>
+        </div>
+    </form>
+</section>
+
+<!-- Ver detalle -->
+<section class="text-center" *ngIf="esVerDetalle === true && avanceFinanciero !== undefined">
+  <p class="colorMainColor">Periodo del reporte: <b>{{ seguimientoSemanal.fechaInicio | date: 'dd/MM/yyyy' }} - {{ seguimientoSemanal.fechaFin | date: 'dd/MM/yyyy' }}</b> </p>
+
+  <app-tabla-avance-financiero class="mt-1em"></app-tabla-avance-financiero>
+
+  <div align="left">
+    <mat-card class="border">
+        <mat-card-content class="mt-1em">
+            <p *ngIf="this.avanceFinanciero.requiereObservacion === true"><b>¿Requiere hacer alguna observación al avance financiero?</b>: Si </p>
+            <p *ngIf="this.avanceFinanciero.requiereObservacion === false"><b>¿Requiere hacer alguna observación al avance financiero?</b>: No </p>
+            <section *ngIf="this.avanceFinanciero.requiereObservacion === true">
+              <b>Observaciones</b>:
+              <div [innerHTML]="avanceFinanciero.observacion"></div>
+            </section>
+            <p *ngIf="avanceFinanciero.generarAlerta === true"><b>¿Considera que se debe generar una alerta sobre el avance financiero de la obra?</b>: Si </p>
+            <p *ngIf="avanceFinanciero.generarAlerta === false"><b>¿Considera que se debe generar una alerta sobre el avance financiero de la obra?</b>: No </p>
+        </mat-card-content>
+    </mat-card>
+</div>
+</section>

@@ -10,15 +10,15 @@ namespace asivamosffie.services.Interfaces
     public interface ICommonService
     {
         Task<DateTime> CalculardiasLaborales(int pDias, DateTime pFechaCalcular);
-
         Task<DateTime> CalculardiasLaboralesTranscurridos(int pDias, DateTime pFechaCalcular);        
-
         Task<string> EnumeradorComiteTecnico();
 
         Task<string> EnumeradorComiteFiduciario();
 
         Task<string> EnumeradorContratacion();
-         
+
+        Task<string> EnumeradorComiteObra();
+
         Task<List<dynamic>> GetUsuarioByPerfil(int idPerfil);
   
         string GetNombreLocalizacionByLocalizacionId(string pLocalizacionId);
@@ -86,5 +86,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<InstitucionEducativaSede> GetInstitucionEducativaById(int InstitucionEducativaById);
         Task<List<Usuario>> GetUsuariosByPerfil(int pIdPerfil);
+
+      
     }
 }

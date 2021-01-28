@@ -91,6 +91,10 @@ export class FuenteFinanciacionService {
     return this.http.put<Respuesta>(`${environment.apiUrl}/ResourceControl/DeleteResourceFundingBySourceFunding?id=${id}`,null);
   }
 
+  eliminarCuentaBancaria(cuentaBancariaId: any) {
+    return this.http.delete(`${environment.apiUrl}/SourceFunding/EliminarCuentaBancaria?id=${cuentaBancariaId}`);
+  }
+
 }
 
 export interface FuenteFinanciacion{

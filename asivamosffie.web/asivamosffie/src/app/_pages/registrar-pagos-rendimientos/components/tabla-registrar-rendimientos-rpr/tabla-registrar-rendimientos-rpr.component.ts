@@ -5,6 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import exportFromJSON from 'export-from-json';
 import { FaseDosPagosRendimientosService } from 'src/app/core/_services/faseDosPagosRendimientos/fase-dos-pagosRendimientos.service';
+import { FileDownloader } from 'src/app/_helpers/file-downloader';
 import { DialogCargarReportRendRprComponent } from '../dialog-cargar-report-rend-rpr/dialog-cargar-report-rend-rpr.component';
 
 @Component({
@@ -92,17 +93,28 @@ export class TablaRegistrarRendimientosRprComponent implements OnInit {
     });
   }
 
-  viewDetails(uploadPaymentId: number){
-    this.faseDosPagosRendimientosSvc.downlaodPaymentsPerformanceStatus(uploadPaymentId)
-    .subscribe((content: any)=>{
-      const data = content.data.archivoJson;
+  downloadInconsistencies(uploadedOrderId: number){
+    this.faseDosPagosRendimientosSvc.downloadPerformancesInconsistencies(uploadedOrderId)
+    .subscribe((result)=>{
+      console.log(result);
+     FileDownloader.exportExcel("file", result)
+    })
+  }
 
-      const fileName = content.data.nombreArchivo
-      const exportType = 'xls'
+
+  viewDetails(uploadPaymentId: number){
+    const fileRequest = {resourceId: uploadPaymentId, fileName: "Rendimientos"}
+    this.faseDosPagosRendimientosSvc.downloadPaymentsPerformanceStatus(fileRequest, this.uploadType)
+    .subscribe((content: any)=>{
+      FileDownloader.exportExcel("Rendimientos.xlsx", content)
+      // const data = content.data.archivoJson;
+
+      // const fileName = content.data.nombreArchivo
+      // const exportType = 'xls'
  
-      exportFromJSON({ data, fileName, exportType, withBOM: true })
+      // exportFromJSON({ data, fileName, exportType, withBOM: true })
     },onError => {
-      
+       console.log("error", onError);
     });
     // FileDownloader.exportExcel("RegistrarPagos.xlsx", {})
   }

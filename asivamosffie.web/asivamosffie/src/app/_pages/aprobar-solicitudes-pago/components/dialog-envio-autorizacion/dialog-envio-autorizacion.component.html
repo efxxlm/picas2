@@ -1,0 +1,40 @@
+<button mat-button mat-dialog-close class="modal--btn-cerrar">
+    <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
+</button>
+<div style="padding: 30px 20px; text-align: center;">
+    <h1 class="title-menu--h1 centerTrick">
+        Certificado solicitud SolPagoO0001
+    </h1>
+</div>
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+    <mat-card class="shipping-card">
+        <mat-card-header class="header-card header-card--margin">
+            <mat-card-title class="header-card--text">
+                Certificado
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content style="text-align: left;">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="urlSoporte">URL con certificado</label>
+                        </div>
+                        <div class="col">
+                            <mat-form-field class="full-width">
+                                <input matInput #urlSoporte type="text" formControlName="urlSoporte"
+                                  required>
+                            </mat-form-field>
+                            <span class="info-url">Indique la ruta en la que se encuentran los documentos de soporte de la novedad</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+    <div class="text-center">
+        <button mat-raised-button color="accent" class="btn-dialog" type="submit" [disabled]="addressForm.invalid">
+            Enviar para autorización
+        </button>
+    </div>
+</form>

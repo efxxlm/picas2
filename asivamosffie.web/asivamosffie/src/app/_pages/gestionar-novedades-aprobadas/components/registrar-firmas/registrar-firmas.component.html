@@ -1,0 +1,279 @@
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+
+  <div class="row justify-content-center mb-2em">
+    <div class="pr-1">
+      <label class="label-left" for="continuarProceso" [class.color-secondaryColor]="
+      addressForm.get('continuarProceso').invalid && addressForm.get('continuarProceso').touched ||
+      addressForm.get('continuarProceso').invalid && estaEditando">
+        ¿Desea continuar con el proceso?
+      </label>
+    </div>
+    <div>
+      <mat-radio-group class="radioInput" formControlName="continuarProceso">
+        <mat-radio-button [value]="true">Sí</mat-radio-button>
+        <mat-radio-button [value]="false">No</mat-radio-button>
+      </mat-radio-group>
+      <span class="required-form-group m-0">*</span>
+    </div>
+  </div>
+
+  <div class="animatedDown" *ngIf="addressForm.get('continuarProceso').value === true">
+    <mat-card class="shipping-card animatedDown">
+      <mat-card-content>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="fechaEnvioActaFirmaContratistaObra" [class.color-secondaryColor]="
+                addressForm.get('fechaEnvioActaFirmaContratistaObra').invalid && addressForm.get('fechaEnvioActaFirmaContratistaObra').touched ||
+                addressForm.get('fechaEnvioActaFirmaContratistaObra').invalid && estaEditando">
+                  Fecha de envió de acta para firma del contratista de obra
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="example-full-width">
+                  <input matInput [matDatepicker]="fechaEnvioActaFirmaContratistaObraPicker"
+                    formControlName="fechaEnvioActaFirmaContratistaObra" readonly
+                    (click)="fechaEnvioActaFirmaContratistaObraPicker.open()" placeholder="DD/MM/AAAA" required>
+                  <mat-datepicker #fechaEnvioActaFirmaContratistaObraPicker></mat-datepicker>
+                </mat-form-field>
+                <button mat-button color="primary" type="button"
+                  (click)="fechaEnvioActaFirmaContratistaObraPicker.open()" class="btn-calendario">
+                  <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="fechaEnvioActaFirmaContratistaObra" [class.color-secondaryColor]="
+                addressForm.get('fechaEnvioActaFirmaContratistaObra').invalid && addressForm.get('fechaEnvioActaFirmaContratistaObra').touched ||
+                addressForm.get('fechaEnvioActaFirmaContratistaObra').invalid && estaEditando">
+                  Fecha de firma del contratista de obra
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="example-full-width">
+                  <input matInput [matDatepicker]="fechaFirmaContratistaObraPicker"
+                    formControlName="fechaEnvioActaFirmaContratistaObra" readonly
+                    (click)="fechaFirmaContratistaObraPicker.open()" placeholder="DD/MM/AAAA" required>
+                  <mat-datepicker #fechaFirmaContratistaObraPicker></mat-datepicker>
+                </mat-form-field>
+                <button mat-button color="primary" type="button"
+                  (click)="fechaFirmaContratistaObraPicker.open()" class="btn-calendario">
+                  <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="fechaEnvioActaFirmaContratistaInterventoria"
+                  [class.color-secondaryColor]="
+                addressForm.get('fechaEnvioActaFirmaContratistaInterventoria').invalid && addressForm.get('fechaEnvioActaFirmaContratistaInterventoria').touched ||
+                addressForm.get('fechaEnvioActaFirmaContratistaInterventoria').invalid && estaEditando">
+                  Fecha de envió del acta para firma del contratista de interventoría
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="example-full-width">
+                  <input matInput [matDatepicker]="fechaEnvioActaFirmaContratistaInterventoriaPicker"
+                    formControlName="fechaEnvioActaFirmaContratistaInterventoria" readonly
+                    (click)="fechaEnvioActaFirmaContratistaInterventoriaPicker.open()" placeholder="DD/MM/AAAA"
+                    required>
+                  <mat-datepicker #fechaEnvioActaFirmaContratistaInterventoriaPicker></mat-datepicker>
+                </mat-form-field>
+                <button mat-button color="primary" type="button"
+                  (click)="fechaEnvioActaFirmaContratistaInterventoriaPicker.open()" class="btn-calendario">
+                  <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="fechaFirmaContratistaInterventoria" [class.color-secondaryColor]="
+                addressForm.get('fechaFirmaContratistaInterventoria').invalid && addressForm.get('fechaFirmaContratistaInterventoria').touched ||
+                addressForm.get('fechaFirmaContratistaInterventoria').invalid && estaEditando">
+                  Fecha de firma del contratista de interventoría
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="example-full-width">
+                  <input matInput [matDatepicker]="fechaFirmaContratistaInterventoriaPicker"
+                    formControlName="fechaFirmaContratistaInterventoria" readonly
+                    (click)="fechaFirmaContratistaInterventoriaPicker.open()" placeholder="DD/MM/AAAA" required>
+                  <mat-datepicker #fechaFirmaContratistaInterventoriaPicker></mat-datepicker>
+                </mat-form-field>
+                <button mat-button color="primary" type="button"
+                  (click)="fechaFirmaContratistaInterventoriaPicker.open()" class="btn-calendario">
+                  <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="fechaEnvioActaFirmaApoyoSupervision" [class.color-secondaryColor]="
+                addressForm.get('fechaEnvioActaFirmaApoyoSupervision').invalid && addressForm.get('fechaEnvioActaFirmaApoyoSupervision').touched ||
+                addressForm.get('fechaEnvioActaFirmaApoyoSupervision').invalid && estaEditando">
+                  Fecha de envío del acta para firma del apoyo a la supervisión
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="example-full-width">
+                  <input matInput [matDatepicker]="fechaEnvioActaFirmaApoyoSupervisionPicker"
+                    formControlName="fechaEnvioActaFirmaApoyoSupervision" readonly
+                    (click)="fechaEnvioActaFirmaApoyoSupervisionPicker.open()" placeholder="DD/MM/AAAA" required>
+                  <mat-datepicker #fechaEnvioActaFirmaApoyoSupervisionPicker></mat-datepicker>
+                </mat-form-field>
+                <button mat-button color="primary" type="button"
+                  (click)="fechaEnvioActaFirmaApoyoSupervisionPicker.open()" class="btn-calendario">
+                  <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="fechaFirmaApoyoSupervision" [class.color-secondaryColor]="
+                addressForm.get('fechaFirmaApoyoSupervision').invalid && addressForm.get('fechaFirmaApoyoSupervision').touched ||
+                addressForm.get('fechaFirmaApoyoSupervision').invalid && estaEditando">
+                  Fecha de firma del apoyo a la supervisión
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="example-full-width">
+                  <input matInput [matDatepicker]="fechaFirmaApoyoSupervisionPicker"
+                    formControlName="fechaFirmaApoyoSupervision" readonly
+                    (click)="fechaFirmaApoyoSupervisionPicker.open()" placeholder="DD/MM/AAAA" required>
+                  <mat-datepicker #fechaFirmaApoyoSupervisionPicker></mat-datepicker>
+                </mat-form-field>
+                <button mat-button color="primary" type="button" (click)="fechaFirmaApoyoSupervisionPicker.open()"
+                  class="btn-calendario">
+                  <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="fechaEnvioFirmaSupervisor" [class.color-secondaryColor]="
+                addressForm.get('fechaEnvioFirmaSupervisor').invalid && addressForm.get('fechaEnvioFirmaSupervisor').touched ||
+                addressForm.get('fechaEnvioFirmaSupervisor').invalid && estaEditando">
+                  Fecha de envío para firma del supervisor
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="example-full-width">
+                  <input matInput [matDatepicker]="fechaEnvioFirmaSupervisorPicker"
+                    formControlName="fechaEnvioFirmaSupervisor" readonly
+                    (click)="fechaEnvioFirmaSupervisorPicker.open()" placeholder="DD/MM/AAAA" required>
+                  <mat-datepicker #fechaEnvioFirmaSupervisorPicker></mat-datepicker>
+                </mat-form-field>
+                <button mat-button color="primary" type="button" (click)="fechaEnvioFirmaSupervisorPicker.open()"
+                  class="btn-calendario">
+                  <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="fechaFirmaSupervisor" [class.color-secondaryColor]="
+                addressForm.get('fechaFirmaSupervisor').invalid && addressForm.get('fechaFirmaSupervisor').touched ||
+                addressForm.get('fechaFirmaSupervisor').invalid && estaEditando">
+                  Fecha de firma del supervisor
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="example-full-width">
+                  <input matInput [matDatepicker]="fechaFirmaSupervisorPicker" formControlName="fechaFirmaSupervisor"
+                    readonly (click)="fechaFirmaSupervisorPicker.open()" placeholder="DD/MM/AAAA" required>
+                  <mat-datepicker #fechaFirmaSupervisorPicker></mat-datepicker>
+                </mat-form-field>
+                <button mat-button color="primary" type="button" (click)="fechaFirmaSupervisorPicker.open()"
+                  class="btn-calendario">
+                  <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="animateDown" *ngIf="addressForm.get('continuarProceso').value !== false">
+    <mat-card class="shipping-card">
+      <mat-card-header class="header-card header-card--margin">
+        <mat-card-title class="header-card--text">
+          Soporte del registro de firmas
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="row">
+          <div class="pr-1">
+            <label class="label-left" for="urlFirmas" [class.color-secondaryColor]="
+          addressForm.get('urlFirmas').invalid && addressForm.get('urlFirmas').touched ||
+          addressForm.get('urlFirmas').invalid && estaEditando">
+              URL con soporte
+            </label>
+          </div>
+          <div class="col">
+            <mat-form-field class="full-width">
+              <input matInput type="url" formControlName="urlFirmas" maxlength="1000" required>
+            </mat-form-field>
+            <span class="info-url">Indique la ruta en la que se encuentran los documentos de soporte de la
+              novedad</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+    <div class="d-flex align-items-center animateDown" *ngIf="addressForm.get('continuarProceso').value === false">
+      <div class="text-area-quill"
+        [class.color-secondaryColor]="addressForm.get('razones').invalid && addressForm.get('razones').touched">
+        <label for="razones" class="text-area-quill--label size-label colorMainColor"
+          [class.color-secondaryColor]="addressForm.get('razones').invalid && addressForm.get('razones').touched">
+          Razones por las cuales no se continua con el proceso
+        </label>
+        <quill-editor class="quill-editor-style miles" [styles]="editorStyle" [modules]="config"
+          (onContentChanged)="maxLength($event, 1000)" formControlName="razones" required>
+        </quill-editor>
+      </div>
+      <span class="contador miles" *ngIf="addressForm.get('razones').value !== null">
+        {{1000 -
+        (textoLimpio(addressForm.get('razones').value)>1000?1000:textoLimpio(addressForm.get('razones').value))}}
+      </span>
+      <span class="contador miles" *ngIf="addressForm.get('razones').value === null">
+        1000
+      </span>
+    </div>
+  <div class="text-center">
+    <button mat-button color="warn" class="btn-guardar" type="submit">
+      <img src="assets/img/icon/guardar.svg" alt="Guardar">
+    </button>
+  </div>
+</form>

@@ -96,7 +96,7 @@
       <div class="col d-flex">
         <mat-form-field class="full-width">
           <input matInput #direccion type="text" maxlength="500" formControlName="direccion"
-            (keypress)="validateNumberKeypress($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
+            
             required>
         </mat-form-field>
         <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{500 - direccion.value.length}}</span>
@@ -256,8 +256,7 @@
           <div class="col d-flex">
             <mat-form-field class="full-width">
               <input matInput #direccion2 type="text" maxlength="500" formControlName="direccion"
-                (keypress)="validateNumberKeypress($event)"
-                onKeyPress="if(this.value.length>=this.maxLength) return false;" required>
+                 required>
             </mat-form-field>
             <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{500 - direccion2.value.length}}</span>
           </div>

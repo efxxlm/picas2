@@ -513,7 +513,7 @@ namespace asivamosffie.services
                     contratoMod.RegistroCompleto = false;
                     await EnviarCorreoSupervisor(ConstanCodigoTipoContratacionSTRING.Obra, contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
                 }
-
+            
 
                 ///Logica para devoluciones
                 ///

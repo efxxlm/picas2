@@ -55,6 +55,12 @@ namespace asivamosffie.api.Controllers
             return this;
         }
 
+        public JwtTokenBuilder AddUsername(string value)
+        {
+            this.claims.Add(ClaimTypes.Name, value);
+            return this;
+        }
+
         public JwtTokenBuilder AddClaims(IEnumerable<Claim> claims)
         {
             foreach (var item in claims)

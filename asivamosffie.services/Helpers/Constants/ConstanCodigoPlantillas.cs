@@ -46,12 +46,11 @@
         Registros_Fuente_De_Uso = 38,
         Registros_Usos_Registros_Fuente_de_Uso = 39,
 
+        Tabla_Solicitudes_Contractuales=40,
+        Registros_Tabla_Solicitudes_Contractuales=41,
+        Tabla_Registros_Temas_Y_Proposiciones_y_Varios=42,
         Acta_inicio_obra_PDF = 48,
         Acta_inicio_interventoria_PDF = 49,
-        Tabla_Solicitudes_Contractuales = 40,
-        Registros_Tabla_Solicitudes_Contractuales = 41,
-        Tabla_Registros_Temas_Y_Proposiciones_y_Varios = 42,
-
         Titulo_solicitudes_contractuales = 43,
         Titulo_temas_nuevos = 44,
         Titulo_proposicione_varios = 45,
@@ -66,9 +65,11 @@
         Ficha_DRP = 52,
         DRP_TABLA_FUENTES = 53,
         DRP_TABLA_USOS = 54,
-        DDP_Cabecera_Proyecto = 55,
+        DDP_Cabecera_Proyecto=55,
+        Controversia_Contractual = 59,
+        Ficha_Estudio_Defensa_Judicial = 60,
         Registro_Proyectos_Acta = 61,
-
+        Ficha_estudio_tr_contratos=62,
         Contrato_Acta_Interventoria_Construccion = 63,
         Contrato_Acta_Obra_Construccion = 64
     }

@@ -21,19 +21,20 @@ export interface EstadosProgramacion {
 };
 
 export interface DetalleProgramacionPersonal {
+    seguimientoSemanalPersonalObra: any;
     cantidadPersonal: number | string;
     contratoConstruccion: any;
     contratoConstruccionId: number;
     numeroSemana: number;
     programacionPersonalContratoConstruccionId: number;
-};
+}
 
-export interface pContratoConstruccion {
+export interface ContratoConstruccion {
     contratoConstruccionId: number;
-    programacionPersonalContratoConstruccion: programacionPersonalContratoConstruccion[];
-};
+    programacionPersonalContratoConstruccion: ProgramacionPersonalContratoConstruccion[];
+}
 
-interface programacionPersonalContratoConstruccion {
+interface ProgramacionPersonalContratoConstruccion {
     cantidadPersonal: number;
     programacionPersonalContratoConstruccionId: number;
-};
+}

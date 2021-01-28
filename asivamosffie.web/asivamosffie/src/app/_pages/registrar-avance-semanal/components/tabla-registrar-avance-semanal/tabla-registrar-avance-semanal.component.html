@@ -38,7 +38,10 @@
 
     <ng-container matColumnDef="fechaUltimoReporte">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha del último reporte </th>
-        <td mat-cell *matCellDef="let element" align="center"> {{ element.fechaUltimoReporte }} </td>
+        <td mat-cell *matCellDef="let element" align="center">
+          <section *ngIf="element.fechaUltimoReporte === 'Sin registro'"> {{ element.fechaUltimoReporte }} </section>
+          <section *ngIf="element.fechaUltimoReporte !== 'Sin registro'"> {{ element.fechaUltimoReporte | date: 'dd/MM/yyyy' }} </section>
+        </td>
     </ng-container>
 
     <ng-container matColumnDef="estadoObra">
@@ -53,27 +56,46 @@
         <button mat-raised-button
                 color="accent" 
                 class="btn-table"
-                [routerLink]="[ 'registroSeguimientoSemanal', element.id ]">
+                *ngIf="element.verReportarSeguimientoSemanal === true && element.fechaUltimoReporte !== 'Sin registro'"
+                [routerLink]="[ 'registroSeguimientoSemanal', element.contratacionProyectoId ]">
                 Registrar seguimiento semanal
         </button>
-        <!--
         <button mat-raised-button
                 color="accent" 
-                class="btn-table">
-                Enviar a verificación
+                class="btn-table"
+                *ngIf="element.numeroSemana !== primeraSemana && element.verEditarBitacora === true"
+                [routerLink]="[ 'consultarEditarBitacora', element.contratacionProyectoId ]">
+                Consultar/Editar bitacora
         </button>
         <button mat-raised-button
                 color="accent" 
-                class="btn-table">
+                class="btn-table"
+                (click)="enviarVerificacion( element.seguimientoSemanalId )"
+                *ngIf="element.enviarVerificacion === true">
+                {{ element.numeroSemana !== element.cantidadSemanas && element.actaCargada === false ? 'Enviar a verificación' : 'Enviar para registrar informe final' }}
+        </button>
+        <button mat-raised-button
+                color="accent" 
+                class="btn-table"
+                *ngIf="element.verCargarActa === true"
+                (click)="openDialogCargarActa( element )">
+                Cargar acta de terminación de contrato
+        </button>
+        <button mat-raised-button
+                color="accent" 
+                class="btn-table"
+                *ngIf="element.verReportarSeguimientoSemanal === true && element.fechaUltimoReporte === 'Sin registro'"
+                [routerLink]="[ 'registroSeguimientoSemanal', element.contratacionProyectoId ]">
                 Ver detalle/Editar
         </button>
         <button mat-raised-button
                 color="accent" 
-                class="btn-table">
-                Eliminar
+                class="btn-table"
+                *ngIf="element.numeroSemana !== primeraSemana && element.verEditarBitacora === false"
+                [routerLink]="[ 'consultarEditarBitacora', element.contratacionProyectoId ]">
+                Consultar bitácora
         </button>
-        -->
-  
+
       </td>
     </ng-container>
   

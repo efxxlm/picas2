@@ -51,6 +51,17 @@
           </p>
         </div>
       </div>
+      <div class="row"
+        *ngIf="sesionComiteSolicitud.tipoSolicitudCodigo == tiposSolicitud.ActuacionesControversiasContractuales">
+        <div class="pr-1">
+          <span class="label-left">Número actuación</span>
+        </div>
+        <div class="col">
+          <p class="label-left colorMainColor pt-1 font-weight-lighter">
+            {{ sesionComiteSolicitud.numeroHijo }}
+          </p>
+        </div>
+      </div>
 
       <div class="row">
         <div class="pr-1">

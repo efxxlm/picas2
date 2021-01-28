@@ -51,12 +51,12 @@
           class="info-text info-text__table"
           style="margin-right: 0em"
           [ngClass]="{
-            'sin-diligenciar': element.estadoCargue == 'Fallido',
-            completo: element.estadoCargue == 'Valido'
+            'sin-diligenciar': !element.cargueValido,
+            completo: element.cargueValido
           }"
         ></span>
         <br />
-        {{ element.estadoCargue }}
+        {{element.cargueValido ? 'Valido' : 'Fallido'}}
       </td>
     </ng-container>
     <ng-container matColumnDef="gestion">
@@ -76,14 +76,14 @@
           class="btn-table"
           [class.sin-diligenciar]="element.estadoCargue == 'Fallido'"
           *ngIf="element.registrosInvalidos > 0"
-          (click)="abrirObservaciones(element.cargaPagosRendimientosId)"
+          (click)="abrirObservaciones(element.cargaPagosRendimientosId, element)"
         >
           Observaciones
         </button>
         <button mat-raised-button color="accent" 
           *ngIf="element.estadoCargue == 'Valido'"
           class="btn-table"
-          (click)="deleteUpload(element.cargaPagosRendimientosId)"
+          (click)="deleteUploadConfirm(element.cargaPagosRendimientosId)"
           >
           Eliminar
         </button>

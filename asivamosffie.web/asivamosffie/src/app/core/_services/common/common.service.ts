@@ -203,8 +203,84 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=63`);
   }
 
-  listaEstadoRevision(){
+  listaTipoActividades() {
+    return this.http.get<Dominio[]>( `${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=109` );
+  }
+
+
+listaEstadoRevision(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=61`);
+  }
+
+listaEstadosPoliza(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=51`)
+      .pipe(
+        map( estados => {
+          const estadoPoliza: any = {};
+          for ( const estado of estados ) {
+            if ( estado.codigo === '1' ) {
+              estadoPoliza.sinRadicacion = estado.codigo
+            }
+            if ( estado.codigo === '2' ) {
+              estadoPoliza.enRevision = estado.codigo
+            }
+            if ( estado.codigo === '3' ) {
+              estadoPoliza.polizaDevuelta = estado.codigo
+            }
+            if ( estado.codigo === '4' ) {
+              estadoPoliza.conAprobacion = estado.codigo
+            }
+          }
+          return estadoPoliza;
+        } )
+      );
+}
+  listaTipoEnsayos() {
+    return this.http.get<Dominio[]>( `${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=74` );
+  }
+
+  listaCausaAccidente() {
+    return this.http.get<Dominio[]>( `${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=75` );
+  }
+
+  listaInstanciasdeSeguimientoTecnico(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=76`);
+  }
+
+  listaTipoNovedadModificacionContractual(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=76`);
+  }
+  
+  listaProcesosJudiciales() {
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=105`);
+  }
+
+  listaTipoAccionJudicial() {
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=106`);
+  }
+
+  listaJurisdiccion() {
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=116`);
+  }
+
+  listaTipodocumento(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=30`);
+  }
+
+  getTipoActuacion() {
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=119`);
+  }
+
+  listaCanalIngreso(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=121`);
+  }
+
+  getEstadoAvanceProcesosDefensa() {
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=122`);
+  }
+
+  getEstadoActuacionDerivada() {
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=125`);
   }
 
   public listaUsuarios(){
@@ -271,6 +347,65 @@ export class CommonService {
   listaGarantiasPolizas(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=58`);
   }
+  
+  listaTiposDeControversiaContractual(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=100`);
+  }
+  listaMotivosSolicitudControversiaContractual(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=99`);
+  }
+  listaEstadosAvanceTramite(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=90`);
+  }
+  listaActuacionAdelantada(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=104`);
+  }
+
+  listaDisponibilidadMaterial(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=92`);
+  }
+
+  listaDisponibilidadEquipo(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=93`);
+  }
+
+  listaProductividad(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=94`);
+  }
+
+  listaCausaBajaDisponibilidadMaterial(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=95`);
+  }
+
+  listaCausaBajaDisponibilidadEquipo(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=96`);
+  }
+
+  listaCausaBajaDisponibilidadProductividad(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=97`);
+  }
+
+  listaProximaActuacionRequerida(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=103`);
+  }
+
+  listaEstadosAvanceReclamacion(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=127`);
+  }
+
+  listaEstadosControversiaNoTAI(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=128`);
+  }
+
+  listaRequiereSolicitudConcepto(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=129`);
+  }
+  listaEstadoAvanceMesaTrabajo(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=130`);
+  }
+  listaEtapaJudicial() {
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=124`);
+  }
 
   vigenciasDesde2015(): number[]{
     const fecha = new Date();
@@ -287,8 +422,6 @@ export class CommonService {
     return retorno;
   }
 }
-
-
 
 export interface Dominio{
   descripcion?: string;
@@ -327,4 +460,31 @@ export const TiposAportante: TipoAportante = {
   Tercero:["10"]
 }
 
+interface InstanciaSeguimientoTecnico{
+  ComitedeObra: string[];
+  ComitedeAsesores: string[];
+  NoAplica: string[];
+}
 
+export const InstanciasSeguimientoTecnico: InstanciaSeguimientoTecnico = {
+  ComitedeObra:   ["1"],
+  ComitedeAsesores:     ["2"],
+  NoAplica:["3"]
+}
+
+
+interface TipoNovedadModificacionContractual{
+  Suspension: string[];
+  ProrrogaSuspension: string[];
+  Adicion: string[];
+  Prorroga: string[];
+  ModificacionCondicionesContractuales: string[];
+}
+
+export const TiposNovedadModificacionContractual: TipoNovedadModificacionContractual = {
+  Suspension: ["1"],
+  ProrrogaSuspension:["2"],
+  Adicion: ["3"],
+  Prorroga: ["4"],
+  ModificacionCondicionesContractuales: ["5"]
+}

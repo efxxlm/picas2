@@ -31,16 +31,17 @@
             <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 12%;"> Estado del cargue </th>
             <td mat-cell *matCellDef="let element" align="center">
                 <span class="info-text info-text__table" style="margin-right: 0em;"
-                    [ngClass]="{'sin-diligenciar' : element.estadoCargue=='Fallido', 'completo' : element.estadoCargue=='Valido'}"></span>
+                    [ngClass]="{'sin-diligenciar' : !element.cargueValido, 'completo' : element.cargueValido}"></span>
                 <br>
-                {{ element.estadoCargue }}
+                {{element.cargueValido ? 'Valido' : 'Fallido'}}
             </td>
         </ng-container>
         <ng-container matColumnDef="gestion">
             <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"> Gestión </th>
             <td mat-cell *matCellDef="let element" align="center">
                 <button mat-raised-button color="accent" class="btn-table" 
-                   *ngIf="element.registrosInconsistentes > 0 && element.mostrarInconsistencias">
+                   *ngIf="element.registrosInconsistentes > 0 && element.mostrarInconsistencias"
+                   (click)="downloadInconsistencies(element.cargaPagosRendimientosId)">
                     Ver inconsistencias
                 </button>
                 <button mat-raised-button color="accent" 

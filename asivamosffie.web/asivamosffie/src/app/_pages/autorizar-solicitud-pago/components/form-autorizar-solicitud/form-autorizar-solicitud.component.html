@@ -1,0 +1,167 @@
+<section class="container text-center">
+    <div class="text-right">
+        <a routerLink="/autorizarSolicitudDePago" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">
+        Autorizar solicitud {{this.solicitud}}
+    </h1>
+    <p style="margin-top: 0.5em;" *ngIf="this.idGestion==1">
+        <span class="mx-1em"><b>Tipo de solicitud: </b>Contratos de obra</span>
+    </p>
+    <p style="margin-top: 0.5em;" *ngIf="this.idGestion==2">
+        <span class="mx-1em"><b>Tipo de solicitud: </b>Expensas</span>
+        <span class="mx-1em"><b>Número de contrato: </b>N326326</span>
+    </p>
+    <div *ngIf="this.idGestion==1">
+        <mat-card class="shipping-card var-main-gris">
+            <mat-card-header class="header-card header-card--margin">
+                <mat-card-title class="header-card--text textoGris">
+                    Contratos de obra
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content style="text-align: left;">
+                <p><strong>Modalidad del contrato:</strong> Tipo B</p>
+                <p><strong>Número de contrato:</strong> N801801</p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="shipping-card var-main-gris">
+            <mat-card-header class="header-card header-card--margin">
+                <mat-card-title class="header-card--text textoGris">
+                    N801801
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content style="text-align: left;">
+                <div class="chartGen">
+                    <div class="chart1">
+                        <p><strong>Nombre de entidad contratista:</strong> Interventores S.A</p>
+                        <p><strong>Fecha de inicio del contrato:</strong> 26/09/2020</p>
+                        <p><strong>Plazo fase 1 - Preconstruccion: Meses:</strong> 02 <strong>Días:</strong> 00</p>
+                    </div>
+                    <div class="chart2">
+                        <p><strong>Plazo: Meses:</strong> 06 <strong>Días:</strong> 13</p>
+                        <p><strong>Fecha fin del contrato:</strong> 14/11/2021</p>
+                        <p><strong>Plazo fase 2 - Construccion: Meses:</strong> 05 <strong>Días:</strong> 28</p>
+                    </div>
+                </div>
+                <h2 class="card-subTitle">DRP</h2>
+                <div class="table-responsive">
+                    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+                        <ng-container matColumnDef="drp">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> DRP </th>
+                            <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.drp }}</b> </td>
+                        </ng-container>
+                        <ng-container matColumnDef="numDrp">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Número DRP </th>
+                            <td mat-cell *matCellDef="let element" align="center"> {{ element.numDrp }} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="valor">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor </th>
+                            <td mat-cell *matCellDef="let element" align="center"> {{ element.valor }} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="saldo">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Saldo </th>
+                            <td mat-cell *matCellDef="let element" align="center"> {{ element.saldo }} </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                    <!--<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>-->
+                </div>
+                <div class="tabs--actions" style="margin-top: 1em;">
+                    <button mat-raised-button color="accent" class="tabs--btn auxBtn" (click)="this.openProyectosAsociados()">
+                        Ver proyectos asociados
+                    </button>
+                </div>
+            </mat-card-content>
+        </mat-card>
+        <div class="text-center">
+            <p class="info-container">
+                <span class="info-text sin-diligenciar">Sin diligenciar</span>
+                <span class="info-text en-proceso">En proceso</span>
+                <span class="info-text completo">Completo</span>
+            </p>
+        </div>
+        <mat-accordion>
+            <mat-expansion-panel class="expansion-style">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title sin-diligenciar">
+                        Cargar forma de pago
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <app-obs-cargar-formpago-autoriz></app-obs-cargar-formpago-autoriz>
+            </mat-expansion-panel>
+            <mat-expansion-panel class="expansion-style">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title sin-diligenciar">
+                        Registrar solicitud de pago
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <app-obs-registrar-sol-pago-autoriz></app-obs-registrar-sol-pago-autoriz>
+            </mat-expansion-panel>
+            <mat-expansion-panel class="expansion-style">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title sin-diligenciar">
+                        Validar lista de chequeo
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <app-obs-valid-listchqeo-autoriz></app-obs-valid-listchqeo-autoriz>
+            </mat-expansion-panel>
+            <mat-expansion-panel class="expansion-style">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title sin-diligenciar">
+                        Certificado de autorización
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <app-obs-cert-autorizacion-autoriz></app-obs-cert-autorizacion-autoriz>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+    <div *ngIf="this.idGestion==2">
+        <mat-card class="shipping-card var-main-gris">
+            <mat-card-header class="header-card header-card--margin">
+                <mat-card-title class="header-card--text textoGris">
+                    Expensas
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content style="text-align: left;">
+                <p><strong>Llave MEN:</strong> LL990088</p>
+                <p><strong>Número de radicado SAC:</strong> 00987652</p>
+                <p><strong>Número de factura:</strong> FAC00983</p>
+                <p><strong>Valor facturado:</strong> $35.000.000</p>
+                <p><strong>Tipo de pago:</strong> Costo variable</p>
+                <p><strong>Concepto de pago para el criterio:</strong> Derribar arbol de 45 mtrs</p>
+                <p><strong>Valor facturado al concepto:</strong> $2.115.000</p>
+            </mat-card-content>
+        </mat-card>
+        <div class="text-center">
+            <p class="info-container">
+                <span class="info-text sin-diligenciar">Sin diligenciar</span>
+                <span class="info-text en-proceso">En proceso</span>
+                <span class="info-text completo">Completo</span>
+            </p>
+        </div>
+        <mat-accordion>
+            <mat-expansion-panel class="expansion-style">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title sin-diligenciar">
+                        Lista de chequeo    
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <!-- dbenitez, Este componente puesto es provisional mientras se define al momento de la integracion-->
+                <app-obs-valid-listchqeo-autoriz></app-obs-valid-listchqeo-autoriz>
+            </mat-expansion-panel>
+        </mat-accordion>
+        <mat-accordion>
+            <mat-expansion-panel class="expansion-style">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title sin-diligenciar">
+                        Soporte
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <app-obs-soporteurl-autoriz></app-obs-soporteurl-autoriz>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+</section>

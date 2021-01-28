@@ -2,7 +2,7 @@
 {
     public class ConstantCodigoAcciones
     {
-public const string Inicio_de_sesion = "1";
+        public const string Inicio_de_sesion = "1";
         public const string Cambio_de_contrasena = "2";
         public const string Solicitud_de_contrasena = "3";
         public const string CrearActualizarCofinanciacion = "4";
@@ -104,14 +104,14 @@ public const string Inicio_de_sesion = "1";
 
         //Acta inicio contrato Fase 2     
         public const string Editar_Plazo_Ejecucion_Fase_2 = "108";
-        public const string Editar_Cargar_Acta_Suscrita_Contrato_Fase_2 = "109";        
+        public const string Editar_Cargar_Acta_Suscrita_Contrato_Fase_2 = "109";
         public const string Editar_Tiene_Observaciones_Acta_Inicio_Fase2 = "110";
         public const string Notificación_Acta_Inicio_Fase_II = "111";
         public const string Cambiar_Estado_Acta_Inicio_Fase_2 = "121";
         public const string Cambiar_Estado_Verificacion_Acta_Inicio_Fase_2 = "124";
         public const string Crear_Editar_Contrato_Observacion = "122";
 
-        
+
 
         public const string Crear_Cronograma_monitoreo = "114";
 
@@ -129,6 +129,22 @@ public const string Inicio_de_sesion = "1";
 
         public const string Cambiar_estado_Gestion_Poliza = "135";
 
+        public const string Crear_Edit_Contrato_Observacion = "141";
+
+        public const string Create_Edit_Seguimiento_Diario = "149";
+
+        public const string Eliminar_Seguimiento_Diario = "151";
+
+        public const string Enviar_Seguimiento_Diario_A_Apoyo = "152";
+
+        public const string Create_Edit_Observacion_Seguimiento_Diario = "154";
+
+        public const string Enviar_Seguimiento_Diario_A_Supervision = "155";
+
+        public const string Aprobar_Seguimiento_Diario = "172";
+        public const string Devolver_Seguimiento_Diario = "173";
+                
+
         public const string Eliminar_Contrato_Perfil = "83";
 
         public const string Aprobar_Inicio_Contrato = "84";
@@ -141,7 +157,7 @@ public const string Inicio_de_sesion = "1";
 
         public const string Eliminar_Numero_Radicado = "99";
 
-        public const string Crear_Observacion_Contrato_Perfil = "100";
+        public const string Crear_Observacion_Contrato_Perfil = "100"; 
 
         public const string Cambiar_Estado_Verificacion_Contrato = "103";
 
@@ -149,21 +165,39 @@ public const string Inicio_de_sesion = "1";
 
         public const string Cambiar_Estado_Programacion_Especial = "139";
         public const string Crear_Editar_Controversia_Contractual = "128";
-       	public const string Crear_Editar_Controversia_Actuacion= "129";
-        public const string Eliminar_Controversia_Contractual= "130";
-        public const string Eliminar_Controversia_Actuacion= "131";
-        public const string Crear_Editar_Actuacion_Seguimiento = "148";        
+        public const string Crear_Editar_Controversia_Actuacion = "129";
+        public const string Eliminar_Controversia_Contractual = "130";
+        public const string Eliminar_Controversia_Actuacion = "131";
+        public const string Crear_Editar_Actuacion_Seguimiento = "148";
 
         public const string Cambiar_estado_Controversia_Actuacion = "136";
         public const string  Cambiar_estado_Controversia_Contractual = "137";
         public const string  Notificacion_Controversia_Contractual= "140";
+        public const string  Cambiar_estado_Actuacion_Seguimiento= "150";
+        public const string  Crear_Editar_Controversia_Motivo= "153";        	
 
-        //4.2.2 Gestionar procesos de Defensa Judicial
-        public const string Crear_Edit_Contrato_Observacion = "141";
-        public const string  Crear_Editar_Ficha_Estudio= "145";
-        public const string  Crear_Editar_Demandado_Convocado= "146";
-        public const string  Cambiar_Estado_Proceso= "147";
-         
+        //4.2.2 Gestionar procesos de Defensa Judicial        
+        public const string Crear_Editar_Ficha_Estudio = "145";
+        public const string Crear_Editar_Demandado_Convocado = "146";
+        public const string Cambiar_Estado_Proceso = "147";
+
+        // 4.1.12
+        public const string Crear_Editar_Seguimiento_Semanal = "160";
+
+        public const string Eliminar_Manejo_Materiales_Insumo_Proveedor = "161";
+
+        public const string Eliminar_Residuos_Construccion_Demolicion_Gestor = "162";
+
+        public const string Crear_Editar_Ensayo_Laboratorio_Muestra = "166";
+
+        public const string Eliminar_Gestion_Obra_Calidad_Ensayo_Laboratorio = "167";
+
+        public const string Cambiar_Estado_Seguimiento_Semanal = "174";
+
+        public const string Cambiar_Estado_Muestras_Seguimiento_Semanal = "175";
+
+        public const string Crear_Editar_Observacion_Seguimiento_Semanal = "176";
+
         public const string Crear_Editar_Contrato_Construccion = "101";
         public const string Crear_Editar_Construccion_Perfil = "102";
         public const string Eliminar_Construccion_Perfil = "104";
@@ -181,19 +215,50 @@ public const string Inicio_de_sesion = "1";
         public const string Crear_Editar_Observacion_Construccion_ProgramacionObra = "119";
         public const string Crear_Editar_Observacion_Construccion_FlujoInversion = "120";
         public const string Enviar_Al_Supervisor = "123";
-        public const string Cambiar_Estado_Contrato_Construccion ="142";
+        public const string Cambiar_Estado_Contrato_Construccion = "142";
         public const string Crear_Editar_Observacion_Perfil = "143";
         public const string Aprobar_Inicio_Construccion = "144";
 
         public const string Cambiar_Estado_Verificacion_Construccion = "157";
 
-        //4.4.3 registro de pagos
-        public const string Validar_Excel_Registro_Pagos = "190";
-        public const string Validar_Excel_Registro_Rendimientos = "191";
-        public const string Eliminar_Pagos = "192";
-        public const string Tramitar_Rendimientos = "193";
-        public const string Notificar_Inconsistencias = "194";
-        public const string Notificar_Pendiente_Aprobacion = "195";
+        //4.4.1 Registrar actuaciones de controversias contractuales
+        public const string Crear_Editar_Novedad_Contractual = "163";
+        public const string Notificación_Novedad_Contractual = "164";
+        public const string Eliminar_Novedad_Contractual = "165";
+        public const string Enviar_Correo_Crear_Contrato_Poliza = "182";
+
+
+        //CU 4_4_1
+        public const string Crear_seguimiento_actuacion_derivada = "168";
+        public const string Cambiar_estado_actuacion_derivada = "169";
+        public const string Eliminar_Controversia_Actuacion_Derivada = "170";
+        public const string  Notificacion_Actuacion_Derivada= "171";     
+                      
+            
         
+        public const string Crear_Editar_Defensa_Judicial = "156";
+        public const string Eliminar_Defensa_Judicial = "159";
+        public const string Enviar_Defensa_Judicial = "177";
+
+        //4.1.1
+        public const string Editar_crear_url = "178";
+        public const string Visita_url = "179";
+        public const string Cargar_Acta_Terminacion_Contrato = "180";
+
+        //4.4.3 registro de pagos    	
+        public const string Validar_Excel_Registro_Pagos = "191";
+        public const string Comentar_Pagos = "197";
+        public const string Validar_Excel_Registro_Rendimientos = "198";
+        public const string Eliminar_Pagos = "199";
+        // public const string Tramitar_Pagos = "200";
+        public const string Ver_Detalle_Pagos = "201";
+        public const string Ver_Detalle_Rendimientos = "202";
+        public const string Ver_Inconsistencias = "203";
+
+        public const string Tramitar_Rendimientos = "200";
+        public const string Notificar_Inconsistencias = "195";
+        public const string Notificar_Solicitud_Aprobacion = "196";
+        
+
     }
-}
+}   

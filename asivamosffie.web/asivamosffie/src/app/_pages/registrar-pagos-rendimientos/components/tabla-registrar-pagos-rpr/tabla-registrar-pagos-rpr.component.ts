@@ -9,6 +9,9 @@ import { FaseDosPagosRendimientosService } from '../../../../core/_services/fase
 import { FileDownloader } from 'src/app/_helpers/file-downloader'
 import exportFromJSON from 'export-from-json'
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component'
+import { filter } from 'rxjs/internal/operators/filter'
+import { switchMap } from 'rxjs/operators'
+import { Respuesta } from 'src/app/core/_services/common/common.service'
 
 @Component({
   selector: 'app-tabla-registrar-pagos-rpr',
@@ -89,63 +92,72 @@ export class TablaRegistrarPagosRprComponent implements OnInit {
       width: '28em',
       data: { modalTitle, modalText, siNoBoton:true }
     });   
-    dialogRef.afterClosed().subscribe(result => {
-      if(result === true)
-      {
+    const onConfirmDelete = dialogRef.afterClosed().pipe(filter(result => result));
+    
+    onConfirmDelete.subscribe( X =>{
         this.faseDosPagosRendimientosSvc.deletePaymentsPerformanceStatus(uploadPaymentId)
           .subscribe(( isDeleted)=>{
-          console.log("Eliminado", isDeleted)
           this.getData()
           },onError => {
             
           });
-      }           
-    });
+      });
   }
 
 
-  deleteUpload(uploadPaymentId: number){
-    this.openDialogSiNo('','<b>¿Está seguro de eliminar este registro?</b>',uploadPaymentId);
-
-    
+  deleteUploadConfirm(uploadPaymentId: number){
+    this.openDialogSiNo('','<b>¿Está seguro de eliminar este registro?</b>',uploadPaymentId);    
   }
 
   viewDetails(uploadPaymentId: number){
-    this.faseDosPagosRendimientosSvc.downlaodPaymentsPerformanceStatus(uploadPaymentId)
+    const fileRequest = {resourceId: uploadPaymentId, fileName: "Payment"}
+    this.faseDosPagosRendimientosSvc.downloadPaymentsPerformanceStatus(fileRequest , "Pagos")
     .subscribe((content: any)=>{
-      const data = content.data.archivoJson;
-
-      const fileName = content.data.nombreArchivo
-      const exportType = 'xls'
+      console.log(content);
+       FileDownloader.exportExcel("RegistrarPagos.xlsx", content)
+      // const data = content.data.archivoJson;
+      // const fileName = content.data.nombreArchivo
+      // const exportType = 'xls'
  
-      exportFromJSON({ data, fileName, exportType, withBOM: true })
+      // exportFromJSON({ data, fileName, exportType, withBOM: true })
     },onError => {
       
     });
-    // FileDownloader.exportExcel("RegistrarPagos.xlsx", {})
+    
   }
 
-  abrirObservaciones(cargaPagosRendimientosId: number) {
+  abrirObservaciones(cargaPagosRendimientosId: number, element: any) {
     const dialogConfig = new MatDialogConfig()
     dialogConfig.height = 'auto'
-    dialogConfig.width = '865px'
+    dialogConfig.width = '865px';
+    dialogConfig.data =  element;
     const dialogRef = this.dialog.open(
       ObservacionesReportPagoRprComponent,
       dialogConfig
     )
 
-    dialogRef.afterClosed().subscribe((result) => {
-      let data = {
-        observaciones: result.data,
-        typeFile: this.tipoCargue,
-        cargaPagosRendimientosId: cargaPagosRendimientosId
-      }
-
-      this.faseDosPagosRendimientosSvc
-        .setObservationPaymentsPerformances(data)
-        .subscribe((response: any[]) => {
+    dialogRef.afterClosed().pipe(
+      filter(result => result !=undefined && result.data !=undefined && element.observaciones !== result.data)
+      , switchMap( (result:any) => { 
+         const data = {
+          observaciones: result.data,
+          typeFile: this.tipoCargue,
+          cargaPagosRendimientosId: cargaPagosRendimientosId
+        }
+        return this.faseDosPagosRendimientosSvc.setObservationPaymentsPerformances(data)
+      })
+    ).subscribe((response: Respuesta) => {
+        if(response.isSuccessful){
+          this.openMessageInformation('', '<b>La información ha sido guardada exitosamente</b>')
           this.getData()
-        })
+        }
+    });
+  }
+
+  private openMessageInformation(modalTitle: string, modalText: string){
+    this.dialog.open(ModalDialogComponent, {
+      width: '40em',
+      data: { modalTitle, modalText }
     })
   }
 }

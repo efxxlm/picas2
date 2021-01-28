@@ -100,8 +100,12 @@ namespace asivamosffie.services
                 .Include(r => r.SesionComentario)
                 .Include(r => r.SesionComiteSolicitudComiteTecnico)
                       .ThenInclude(r => r.SesionSolicitudCompromiso)
+                         .ThenInclude(r => r.ResponsableSesionParticipante)
+                          .ThenInclude(r => r.Usuario)
                 .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
                      .ThenInclude(r => r.SesionSolicitudCompromiso)
+                       .ThenInclude(r => r.ResponsableSesionParticipante)
+                          .ThenInclude(r => r.Usuario)
                 .Include(r => r.SesionComiteTema)
                     .ThenInclude(r => r.TemaCompromiso).ToListAsync();
 
@@ -111,7 +115,7 @@ namespace asivamosffie.services
             {
                 foreach (var SesionComiteSolicitudComiteTecnico in ComiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => !(bool)r.Eliminado).ToList().OrderByDescending(r => r.SesionComiteSolicitudId))
                 {
-                    foreach (var SesionSolicitudCompromiso in SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Where(r => !(bool)r.Eliminado).ToList().OrderByDescending(r => r.SesionSolicitudCompromisoId))
+                    foreach (var SesionSolicitudCompromiso in SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Where(r => r.Eliminado != true && r.ResponsableSesionParticipante.Usuario.UsuarioId == pUserId).ToList().OrderByDescending(r => r.SesionSolicitudCompromisoId))
                     {
                         ListDynamic.Add(new
                         {
@@ -125,9 +129,9 @@ namespace asivamosffie.services
                         });
                     }
                 }
-                foreach (var SesionComiteSolicitudComiteTecnico in ComiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario.Where(r => !(bool)r.Eliminado).ToList().OrderByDescending(r => r.SesionComiteSolicitudId))
+                foreach (var SesionComiteSolicitudComiteTecnico in ComiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario.Where(r => r.Eliminado != true).ToList().OrderByDescending(r => r.SesionComiteSolicitudId))
                 {
-                    foreach (var SesionSolicitudCompromiso in SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Where(r => !(bool)r.Eliminado).ToList().OrderByDescending(r => r.SesionSolicitudCompromisoId))
+                    foreach (var SesionSolicitudCompromiso in SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Where(r => r.Eliminado != true && r.ResponsableSesionParticipante.Usuario.UsuarioId == pUserId).ToList().OrderByDescending(r => r.SesionSolicitudCompromisoId))
                     {
                         ListDynamic.Add(new
                         {
@@ -677,7 +681,7 @@ namespace asivamosffie.services
                                 .Replace("[NUMERO_COMITE]", comiteTecnico.NumeroComite)
                                 .Replace("[COMPROMISO]", sesionSolicitudCompromiso.Tarea)
                                 .Replace("[COMPROMISO]", sesionSolicitudCompromiso.FechaCumplimiento.HasValue ? sesionSolicitudCompromiso.FechaCumplimiento.Value.ToString("dd-MM-yyyy") : null);
-                                
+
                             blEnvioCorreo = Helpers.Helpers.EnviarCorreo(sesionSolicitudCompromiso?.ResponsableSesionParticipante?.Usuario?.Email, "Notificación Compromisos", template, pSender, pPassword, pMailServer, pMailPort);
                         }
                     }
@@ -697,7 +701,7 @@ namespace asivamosffie.services
                                 .Replace("[NUMERO_COMITE]", comiteTecnico.NumeroComite)
                                 .Replace("[COMPROMISO]", sesionSolicitudCompromiso.Tarea)
                                 .Replace("[FECHA_CUMPLIMIENTO]", sesionSolicitudCompromiso.FechaCumplimiento.HasValue ? sesionSolicitudCompromiso.FechaCumplimiento.Value.ToString("dd-MM-yyyy") : null);
-                                
+
                             blEnvioCorreo = Helpers.Helpers.EnviarCorreo(sesionSolicitudCompromiso?.ResponsableSesionParticipante?.Usuario?.Email, "Notificación Compromisos", template, pSender, pPassword, pMailServer, pMailPort);
                         }
                     }

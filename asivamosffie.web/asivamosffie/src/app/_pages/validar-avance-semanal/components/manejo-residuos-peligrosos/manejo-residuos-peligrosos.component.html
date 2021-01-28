@@ -1,0 +1,11 @@
+<section *ngIf="formManejoResiduosPeligrosos !== undefined">
+    <p *ngIf="formManejoResiduosPeligrosos.get( 'estanClasificados' ).value === true"><b>¿Los residuos peligrosos y especiales se clasificaron y acopiaron en lugares seguros?</b>: Si</p>
+    <p *ngIf="formManejoResiduosPeligrosos.get( 'estanClasificados' ).value === false"><b>¿Los residuos peligrosos y especiales se clasificaron y acopiaron en lugares seguros?</b>: No</p>
+    <p *ngIf="formManejoResiduosPeligrosos.get( 'requiereObservacion' ).value === true"><b>¿Requiere hacer una observación acerca de la clasificación y acopio de los residuos peligrosos?</b>: Si</p>
+    <p *ngIf="formManejoResiduosPeligrosos.get( 'requiereObservacion' ).value === false"><b>¿Requiere hacer una observación acerca de la clasificación y acopio de los residuos peligrosos?</b>: No</p>
+    <section *ngIf="formManejoResiduosPeligrosos.get( 'requiereObservacion' ).value === true">
+      <b>Observaciones</b>
+      <div [innerHTML]="formManejoResiduosPeligrosos.get( 'observacion' ).value"></div>
+    </section>
+    <p *ngIf="formManejoResiduosPeligrosos.get( 'urlRegistroFotografico' ).value.length > 0"><b>URL con soporte registro fotográfico</b>: {{ formManejoResiduosPeligrosos.get( 'urlRegistroFotografico' ).value }} </p>
+</section>

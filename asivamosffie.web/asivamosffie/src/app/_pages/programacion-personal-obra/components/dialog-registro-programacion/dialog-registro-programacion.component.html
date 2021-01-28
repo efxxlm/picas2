@@ -18,7 +18,7 @@
         </p>
 
         <p class="p ml-2em">
-          {{ dataContrato.contrato.institucionEducativaSede }}
+          {{ dataContrato.contrato.institucionEducativa }}
         </p>
 
         <p class="p ml-2em">
@@ -26,13 +26,15 @@
         </p>
 
         <p class="p ml-2em">
-            Plazo del proyecto: <b>{{ dataContrato.contrato.plazoProyecto }} semanas</b>
+            Plazo del proyecto: <b>{{ registroSemanas.length }} semanas</b>
         </p>
       </div>
 
-      <app-tabla-registro-semanas [contratoConstruccionId]="dataContrato.contrato.contratoConstruccionId"
-                                  [registroSemanas]="registroSemanas"
-                                  (seRealizoPeticion)="seRealizoPeticion( $event )">
-      </app-tabla-registro-semanas>
+      <mat-dialog-content>
+        <app-tabla-registro-semanas [contratoConstruccionId]="dataContrato.contrato.contratoConstruccionId"
+                                    [registroSemanas]="registroSemanas"
+                                    (seRealizoPeticion)="seRealizoPeticion( $event )">
+        </app-tabla-registro-semanas>
+      </mat-dialog-content>
     </div>
 </section>

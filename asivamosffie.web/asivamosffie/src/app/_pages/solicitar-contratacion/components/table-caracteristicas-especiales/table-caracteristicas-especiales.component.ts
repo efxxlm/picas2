@@ -45,40 +45,42 @@ export class TableCaracteristicasEspecialesComponent implements OnInit {
   getSemaforo(elemento: any, contratacionProyecto: any) {
 
     let caracteristicasconalgo = false;
-    
-    if (
-      contratacionProyecto['tieneMonitoreoWeb'] !== undefined ||
-      contratacionProyecto['esReasignacion'] !== undefined ||
-      contratacionProyecto['esAvanceobra'] !== undefined ||
-      contratacionProyecto['porcentajeAvanceObra'] !== undefined || 
-      contratacionProyecto['requiereLicencia'] !== undefined ||
-      contratacionProyecto['numeroLicencia'] !== undefined ||
-      contratacionProyecto['licenciaVigente'] != undefined || 
-      contratacionProyecto['fechaVigencia'] !== undefined
-      
-    ) 
-    {
-      caracteristicasconalgo = true;
-    }
-
     let registroCompleto: boolean = true;
 
-    if (
-      contratacionProyecto['tieneMonitoreoWeb'] === undefined ||
-      contratacionProyecto['esReasignacion'] === undefined ||
-      (contratacionProyecto['esReasignacion'] === true && contratacionProyecto['esAvanceobra'] === undefined) ||
-      (contratacionProyecto['esAvanceobra'] === true && contratacionProyecto['porcentajeAvanceObra'] === undefined) ||
-      (contratacionProyecto['porcentajeAvanceObra'] !== undefined && contratacionProyecto['requiereLicencia'] === undefined) ||
-      (contratacionProyecto['requiereLicencia'] === true && contratacionProyecto['licenciaVigente'] === undefined) ||
-      (contratacionProyecto['licenciaVigente'] === true && contratacionProyecto['numeroLicencia'] === undefined) ||
-      (contratacionProyecto['licenciaVigente'] === true && contratacionProyecto['fechaVigencia'] === undefined) ||
-
-      (contratacionProyecto['esReasignacion'] === false && contratacionProyecto['requiereLicencia'] === undefined) ||
-      (contratacionProyecto['esAvanceobra'] === false && contratacionProyecto['requiereLicencia'] === undefined)
-    ) 
-    {
-      registroCompleto = false;
+    if ( contratacionProyecto !== undefined ){
+      if (
+        contratacionProyecto['tieneMonitoreoWeb'] !== undefined ||
+        contratacionProyecto['esReasignacion'] !== undefined ||
+        contratacionProyecto['esAvanceobra'] !== undefined ||
+        contratacionProyecto['porcentajeAvanceObra'] !== undefined || 
+        contratacionProyecto['requiereLicencia'] !== undefined ||
+        contratacionProyecto['numeroLicencia'] !== undefined ||
+        contratacionProyecto['licenciaVigente'] != undefined || 
+        contratacionProyecto['fechaVigencia'] !== undefined
+        
+      ) 
+      {
+        caracteristicasconalgo = true;
+      }
+  
+      if (
+        contratacionProyecto['tieneMonitoreoWeb'] === undefined ||
+        contratacionProyecto['esReasignacion'] === undefined ||
+        (contratacionProyecto['esReasignacion'] === true && contratacionProyecto['esAvanceobra'] === undefined) ||
+        (contratacionProyecto['esAvanceobra'] === true && contratacionProyecto['porcentajeAvanceObra'] === undefined) ||
+        (contratacionProyecto['porcentajeAvanceObra'] !== undefined && contratacionProyecto['requiereLicencia'] === undefined) ||
+        (contratacionProyecto['requiereLicencia'] === true && contratacionProyecto['licenciaVigente'] === undefined) ||
+        (contratacionProyecto['licenciaVigente'] === true && contratacionProyecto['numeroLicencia'] === undefined) ||
+        (contratacionProyecto['licenciaVigente'] === true && contratacionProyecto['fechaVigencia'] === undefined) ||
+  
+        (contratacionProyecto['esReasignacion'] === false && contratacionProyecto['requiereLicencia'] === undefined) ||
+        (contratacionProyecto['esAvanceobra'] === false && contratacionProyecto['requiereLicencia'] === undefined)
+      ) 
+      {
+        registroCompleto = false;
+      }
     }
+    
 
     let respuesta: string = '';
 

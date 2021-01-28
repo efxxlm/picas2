@@ -1,0 +1,155 @@
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+  <mat-card class="shipping-card">
+    <mat-card-content>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left" for="fechaEnvioSolicitud" [class.color-secondaryColor]="
+                addressForm.get('fechaEnvioSolicitud').invalid && addressForm.get('fechaEnvioSolicitud').touched ||
+                addressForm.get('fechaEnvioSolicitud').invalid && estaEditando">
+                Fecha de solicitud de la novedad
+              </label>
+            </div>
+            <div class="col d-flex">
+              <mat-form-field class="example-full-width">
+                <input matInput [matDatepicker]="pickerEnvioSolicitud" formControlName="fechaEnvioSolicitud"
+                  readonly (click)="pickerEnvioSolicitud.open()" placeholder="DD/MM/AAAA" required>
+                <mat-datepicker #pickerEnvioSolicitud></mat-datepicker>
+              </mat-form-field>
+              <button mat-button color="primary" type="button" (click)="pickerEnvioSolicitud.open()"
+                class="btn-calendario">
+                <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left" for="estadoDelProceso" [class.color-secondaryColor]="
+                addressForm.get('estadoDelProceso').invalid && addressForm.get('estadoDelProceso').touched ||
+                addressForm.get('estadoDelProceso').invalid && estaEditando">
+                Instancia donde se presentó la solicitud
+              </label>
+            </div>
+            <div class="col">
+              <mat-form-field class="select-width">
+                <mat-select required formControlName="estadoDelProceso">
+                  <mat-option *ngFor="let instancia of estadoDelProcesoArray" [value]="instancia.value">
+                    {{ instancia.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="animatedDown" *ngIf="addressForm.get('estadoDelProceso').value === '1'">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="fechaSolicitudNovedad" [class.color-secondaryColor]="
+                  addressForm.get('fechaSolicitudNovedad').invalid && addressForm.get('fechaSolicitudNovedad').touched ||
+                  addressForm.get('fechaSolicitudNovedad').invalid && estaEditando">
+                  Fecha de solicitud de la novedad
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="example-full-width">
+                  <input matInput [matDatepicker]="pickerSolicitudNovedad" formControlName="fechaSolicitudNovedad"
+                    readonly (click)="pickerSolicitudNovedad.open()" placeholder="DD/MM/AAAA" required>
+                  <mat-datepicker #pickerSolicitudNovedad></mat-datepicker>
+                </mat-form-field>
+                <button mat-button color="primary" type="button" (click)="pickerSolicitudNovedad.open()"
+                  class="btn-calendario">
+                  <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="nombreAbogadoPresentoSolicitud" [class.color-secondaryColor]="
+                  addressForm.get('nombreAbogadoPresentoSolicitud').invalid && addressForm.get('nombreAbogadoPresentoSolicitud').touched ||
+                  addressForm.get('nombreAbogadoPresentoSolicitud').invalid && estaEditando">
+                  Instancia donde se presentó la solicitud
+                </label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select required formControlName="nombreAbogadoPresentoSolicitud">
+                    <mat-option *ngFor="let instancia of nombreAbogadoPresentoSolicitudArray" [value]="instancia.value">
+                      {{ instancia.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="animatedDown" *ngIf="addressForm.get('estadoDelProceso').value === '1'">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="fechaAprobacionGrupoGestionContractual" [class.color-secondaryColor]="
+                  addressForm.get('fechaAprobacionGrupoGestionContractual').invalid && addressForm.get('fechaAprobacionGrupoGestionContractual').touched ||
+                  addressForm.get('fechaAprobacionGrupoGestionContractual').invalid && estaEditando">
+                  Fecha de solicitud de la novedad
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="example-full-width">
+                  <input matInput [matDatepicker]="pickerSolicitudNovedad" formControlName="fechaAprobacionGrupoGestionContractual"
+                    readonly (click)="pickerSolicitudNovedad.open()" placeholder="DD/MM/AAAA" required>
+                  <mat-datepicker #pickerSolicitudNovedad></mat-datepicker>
+                </mat-form-field>
+                <button mat-button color="primary" type="button" (click)="pickerSolicitudNovedad.open()"
+                  class="btn-calendario">
+                  <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="nombreAbogadorealizoRevision" [class.color-secondaryColor]="
+                  addressForm.get('nombreAbogadorealizoRevision').invalid && addressForm.get('nombreAbogadorealizoRevision').touched ||
+                  addressForm.get('nombreAbogadorealizoRevision').invalid && estaEditando">
+                  Instancia donde se presentó la solicitud
+                </label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select required formControlName="nombreAbogadorealizoRevision">
+                    <mat-option *ngFor="let instancia of nombreAbogadorealizoRevisionArray" [value]="instancia.value">
+                      {{ instancia.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+  <div class="text-center">
+    <button mat-button color="warn" class="btn-guardar" type="submit">
+      <img src="assets/img/icon/guardar.svg" alt="Guardar">
+    </button>
+  </div>
+</form>

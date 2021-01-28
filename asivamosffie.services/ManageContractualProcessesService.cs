@@ -49,8 +49,8 @@ namespace asivamosffie.services
             try
             {
                 SesionComiteSolicitud sesionComiteSolicitudOld = await
-                    _context.SesionComiteSolicitud.Where(r => r.SesionComiteSolicitudId == pSesionComiteSolicitud.SesionComiteSolicitudId)
-                    .Include(r => r.ComiteTecnico).FirstOrDefaultAsync();
+                    _context.SesionComiteSolicitud.Where(r=> r.SesionComiteSolicitudId == pSesionComiteSolicitud.SesionComiteSolicitudId)
+                    .Include(r=> r.ComiteTecnico).FirstOrDefaultAsync();
                 sesionComiteSolicitudOld.EstadoCodigo = pSesionComiteSolicitud.EstadoCodigo;
                 sesionComiteSolicitudOld.FechaModificacion = DateTime.Now;
                 sesionComiteSolicitudOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
@@ -58,8 +58,8 @@ namespace asivamosffie.services
                 //TODO :se cambia el estado tambien a la contratacion o solo a la contratacion?
 
                 Contratacion contratacion = _context.Contratacion
-                    .Where(r => r.ContratacionId == pSesionComiteSolicitud.SolicitudId)
-                    .Include(r => r.Contrato)
+                    .Where(r=> r.ContratacionId == pSesionComiteSolicitud.SolicitudId)
+                    .Include(r=> r.Contrato)
                     .Include(r => r.DisponibilidadPresupuestal)
                     .FirstOrDefault();
                 contratacion.EstadoSolicitudCodigo = pSesionComiteSolicitud.EstadoCodigo;
@@ -167,7 +167,7 @@ namespace asivamosffie.services
         }
 
         public string ReemplazarDatosPlantillaContratacion(string pPlantilla, Contratacion pContratacion, SesionComiteSolicitud pSesionComiteSolicitud)
-        {
+        { 
             pSesionComiteSolicitud.ComiteTecnico = _context.ComiteTecnico
                 .Where(r => !(bool)r.EsComiteFiduciario && r.ComiteTecnicoId == pSesionComiteSolicitud.ComiteTecnicoId)
                 .FirstOrDefault();
@@ -618,6 +618,13 @@ namespace asivamosffie.services
                                 {
                                     break;
                                 }
+
+                                //jflorez, peque�o ajsute porque toteaba                                    
+                                if (contratacion.DisponibilidadPresupuestal.FirstOrDefault().NumeroDdp == null || string.IsNullOrEmpty(contratacion.DisponibilidadPresupuestal.FirstOrDefault().NumeroDdp))
+                                {
+                                    break;
+                                }
+
                                 // sesionComiteSolicitud.Contratacion = contratacion;
                                 sesionComiteSolicitud.EstadoCodigo = contratacion.EstadoSolicitudCodigo;
 
@@ -871,7 +878,7 @@ namespace asivamosffie.services
             {
                 TextInfo myTI = new CultureInfo("en-US", false).TextInfo;
                 //TODO Validar Cuandos sea otro tipo de solicitud
-
+                 
                 bool blEnvioCorreo = false;
                 var usuariosecretario = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Fiduciaria).Select(x => x.Usuario.Email).ToList();
                 List<Dominio> ListDominio = _context.Dominio.ToList();
@@ -881,9 +888,9 @@ namespace asivamosffie.services
                     string template =
                         TemplateActaAprobada.Contenido
                         .Replace("_LinkF_", pDominioFront)
-                        .Replace("[TIPO_SOLICITUD]", ListDominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud && r.Codigo == pSesionComiteSolicitud.TipoSolicitudCodigo).FirstOrDefault().Nombre)
+                        .Replace("[TIPO_SOLICITUD]", ListDominio.Where(r=> r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud && r.Codigo == pSesionComiteSolicitud.TipoSolicitudCodigo).FirstOrDefault().Nombre)
                         .Replace("[NUMERO_DDP]", pSesionComiteSolicitud.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().NumeroDdp ?? " ")
-                        .Replace("[OBJETO]", " ")
+                        .Replace("[OBJETO]", pSesionComiteSolicitud.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().Objeto ?? " ")
                         .Replace("[FECHA_COMITE_FIDUCIARIO]", pSesionComiteSolicitud.ComiteTecnico.FechaOrdenDia.HasValue ? ((DateTime)pSesionComiteSolicitud.ComiteTecnico.FechaOrdenDia).ToString("dd-MMMM-yy") : " ")
                         .Replace("[FECHA_TRAMITE]", pSesionComiteSolicitud.Contratacion.FechaTramite.HasValue ? ((DateTime)pSesionComiteSolicitud.Contratacion.FechaTramite).ToString("dd-MMMM-yy") : " ")
                         .Replace("[FECHA_ENVIO_TRAMITE]", pSesionComiteSolicitud.Contratacion.Contrato.FirstOrDefault().FechaEnvioFirma.HasValue ? ((DateTime)pSesionComiteSolicitud.Contratacion.Contrato.FirstOrDefault().FechaEnvioFirma).ToString("dd-MMMM-yy") : " ")
