@@ -305,6 +305,7 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
       'ObservacionesRevisionGeneral': this.addressForm.value.observacionesGenerales,
       'ResponsableAprobacion': nombreAprobado,
       'EstadoPolizaCodigo': this.addressForm.value.estadoRevision !== null ? ( this.addressForm.value.estadoRevision.value.codigo === this.estadosPoliza.sinRadicacion ? this.estadosPoliza.polizaDevuelta : this.estadosPoliza.enRevision) : this.estadosPoliza.enRevision,
+      'EstadoPolizaCodigo': this.addressForm.get( 'estadoRevision' ).value !== null ? ( this.addressForm.get( 'estadoRevision' ).value.codigo === this.estadosPoliza.sinRadicacion ? this.estadosPoliza.polizaDevuelta : this.estadosPoliza.enRevision) : this.estadosPoliza.enRevision,
       'UsuarioCreacion': "",
       'UsuarioModificacion': "",
       'FechaExpedicion': this.addressForm.value.fecha,
