@@ -18,6 +18,6 @@
   </div>
 
   <app-datos-del-proyecto *ngIf="report" [report]="report"></app-datos-del-proyecto>
-  <app-form-recibo-a-satisfaccion></app-form-recibo-a-satisfaccion>
-  <app-informe-final-anexos></app-informe-final-anexos>
+  <app-form-recibo-a-satisfaccion *ngIf="report" [report]="report"></app-form-recibo-a-satisfaccion>
+  <app-informe-final-anexos [id]="id"></app-informe-final-anexos>
 </section>

@@ -30,9 +30,7 @@ export class RegistrarInformeFinalComponent implements OnInit {
     this.registrarInformeFinalProyectoService.getInformeFinalByContratacionProyecto(id)
     .subscribe(report => {
       this.report = report[0];
-      console.log(this.report)
     });
-
   }
   
 }

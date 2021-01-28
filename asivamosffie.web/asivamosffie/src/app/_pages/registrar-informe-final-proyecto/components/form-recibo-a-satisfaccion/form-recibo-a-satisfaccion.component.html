@@ -10,10 +10,10 @@
         <div class="pr-1">
           <label
             class="label-left"
-            for="URLActaRecibo"
+            for="UrlActa"
             [class.color-secondaryColor]="
-              (addressForm.get('URLActaRecibo').invalid && addressForm.get('URLActaRecibo').touched) ||
-              (addressForm.get('URLActaRecibo').invalid && estaEditando)
+              (addressForm.get('UrlActa').invalid && addressForm.get('UrlActa').touched) ||
+              (addressForm.get('UrlActa').invalid && estaEditando)
             "
           >
             URL Acta de recibo a satisfaccion - Obra
@@ -25,7 +25,7 @@
               matInput
               #numeroRadicadoInput
               type="url"
-              formControlName="URLActaRecibo"
+              formControlName="UrlActa"
               maxlength="20"
               required
             />
@@ -46,8 +46,8 @@
             src="assets/img/icon/incompleto.svg"
             alt="este campo es requerido"
             *ngIf="
-              (addressForm.get('URLActaRecibo').invalid && addressForm.get('URLActaRecibo').touched) ||
-              (addressForm.get('URLActaRecibo').invalid && estaEditando)
+              (addressForm.get('UrlActa').invalid && addressForm.get('UrlActa').touched) ||
+              (addressForm.get('UrlActa').invalid && estaEditando)
             "
           />
         </span>
@@ -58,10 +58,10 @@
             <div class="pr-1">
               <label
                 class="label-left"
-                for="fechaSuscripcion"
+                for="FechaSuscripcion"
                 [class.color-secondaryColor]="
-                  (addressForm.get('fechaSuscripcion').invalid && addressForm.get('fechaSuscripcion').touched) ||
-                  (addressForm.get('fechaSuscripcion').invalid && estaEditando)
+                  (addressForm.get('FechaSuscripcion').invalid && addressForm.get('FechaSuscripcion').touched) ||
+                  (addressForm.get('FechaSuscripcion').invalid && estaEditando)
                 "
               >
                 Fecha
@@ -72,7 +72,7 @@
                 <input
                   matInput
                   [matDatepicker]="pickerSolicitudNovedad"
-                  formControlName="fechaSuscripcion"
+                  formControlName="FechaSuscripcion"
                   readonly
                   (click)="pickerSolicitudNovedad.open()"
                   placeholder="DD/MM/AAAA"
@@ -98,8 +98,8 @@
                   src="assets/img/icon/incompleto.svg"
                   alt="este campo es requerido"
                   *ngIf="
-                    (addressForm.get('fechaSuscripcion').invalid && addressForm.get('fechaSuscripcion').touched) ||
-                    (addressForm.get('fechaSuscripcion').invalid && estaEditando)
+                    (addressForm.get('FechaSuscripcion').invalid && addressForm.get('FechaSuscripcion').touched) ||
+                    (addressForm.get('FechaSuscripcion').invalid && estaEditando)
                   "
                 />
               </span>

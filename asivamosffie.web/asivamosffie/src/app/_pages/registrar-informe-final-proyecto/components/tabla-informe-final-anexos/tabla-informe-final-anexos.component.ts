@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, OnInit, Input } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -6,6 +6,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { DialogTipoDocumentoComponent } from '../dialog-tipo-documento/dialog-tipo-documento.component';
+
+import { Anexo } from 'src/app/_interfaces/proyecto-final-anexos.model';
+import { RegistrarInformeFinalProyectoService } from 'src/app/core/_services/registrar-informe-final-proyecto.service';
 
 export interface VerificacionDiaria {
   id: string;
@@ -28,8 +31,10 @@ const ELEMENT_DATA: VerificacionDiaria[] = [
   templateUrl: './tabla-informe-final-anexos.component.html',
   styleUrls: ['./tabla-informe-final-anexos.component.scss']
 })
-export class TablaInformeFinalAnexosComponent implements AfterViewInit {
+export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
 
+  @Input() id: string;
+  anexos: any;
   displayedColumns: string[] = [
     'numero',
     'item',
@@ -61,8 +66,22 @@ export class TablaInformeFinalAnexosComponent implements AfterViewInit {
 
   constructor(
     private fb: FormBuilder,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private registrarInformeFinalProyectoService: RegistrarInformeFinalProyectoService
   ) { }
+
+  ngOnInit(): void {
+    this.getInformeFinalListaChequeo(this.id);
+  }
+
+  getInformeFinalListaChequeo (id:string) {
+    this.registrarInformeFinalProyectoService.getInformeFinalListaChequeo(id)
+    .subscribe(anexos => {
+      this.anexos = anexos;
+      console.log(this.anexos);
+      console.log(anexos);
+    });
+  }
 
   ngAfterViewInit() {
     // this.dataSource.sort = this.sort;

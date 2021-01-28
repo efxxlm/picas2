@@ -99,12 +99,12 @@
         </tr>
       </thead>
       <tbody>
-        <tr formArrayName="informe" *ngFor="let informe of informeField.controls; let i = index">
+        <tr formArrayName="informe" *ngFor="let informe of anexos; let i = index">
           <td class="mat-cell cdk-cell ng-star-inserted">
-            {{ i + 1 }}
+            {{ informe.informeFinalListaChequeoId }}
           </td>
           <td class="mat-cell cdk-cell ng-star-inserted">
-            Acta de recibo a satisfacción de la fase 2 - Interventoría
+            {{ informe.nombre }}
           </td>
           <td class="mat-cell cdk-cell ng-star-inserted">
             <mat-form-field class="select-width">
