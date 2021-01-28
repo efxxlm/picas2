@@ -17,52 +17,68 @@
   Seleccione si el item Cumple, No cumple o No aplica, tenga en cuenta que para continuar el proceso todos los items deben estar en estado de Cumple o No aplica.
 </div>
 
-<div *ngIf="false">
+<div>
   <div class="table-responsive">
     <table mat-table [dataSource]="dataSource" matSort>
-      <!-- numero Column -->
-      <ng-container matColumnDef="numero">
+      <!-- informeFinalListaChequeoId Column -->
+      <ng-container matColumnDef="informeFinalListaChequeoId">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
             No.
           </th>
         <td mat-cell *matCellDef="let element">
-          <b>{{ element.numero }}</b>
+          <b>{{ element.informeFinalListaChequeoId }}</b>
         </td>
       </ng-container>
   
-      <!-- item Column -->
-      <ng-container matColumnDef="item">
+      <!-- nombre Column -->
+      <ng-container matColumnDef="nombre">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
             Ítem
           </th>
-        <td mat-cell *matCellDef="let element">{{ element.item }}</td>
+        <td mat-cell *matCellDef="let element">{{ element.nombre }}</td>
       </ng-container>
   
-      <!-- estadoRequisito Column -->
-      <ng-container matColumnDef="estadoRequisito">
+      <!-- calificacionCodigo Column -->
+      <ng-container matColumnDef="calificacionCodigo">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           Estado del requisito
         </th>
-        <td mat-cell *matCellDef="let element">{{ element.estadoRequisito }}</td>
+        <td mat-cell *matCellDef="let element">
+          <section class="mt-1em">
+            <mat-form-field class="select-width">
+              <mat-select
+                [(ngModel)]="element.calificacionCodigo"
+                required
+              >
+                <mat-option
+                  *ngFor="let estado of estadoArray"
+                  [value]="estado.value"
+                >
+                  {{ estado.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </section>
+        </td>
       </ng-container>
   
       <!-- Id Column -->
-      <ng-container matColumnDef="id">
+      <ng-container matColumnDef="informeFinalInterventoriaId">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
             Gestión
           </th>
         <td mat-cell *matCellDef="let element">
           <button
-            mat-button
-            color="warn"
-            mat-raised-button
-            color="accent"
-            class="btn-table"
-            type="button"
-            
-          >
+              mat-button
+              color="warn"
+              mat-raised-button
+              color="accent"
+              class="btn-table"
+              type="button"
+              (click)="openDialogTipoDocumento( element)"
+            >
             Tipo de documento
-          </button>
+            </button>
         </td>
       </ng-container>
   
@@ -79,68 +95,8 @@
   ></mat-paginator>
 </div>
 
-<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
-  <div class="table-responsive">
-    <table class="text-center mat-table cdk-table mat-sort mat-table-style table-form table-form--2 spacing-0">
-      <thead>
-        <tr class="mat-header-row cdk-header-row ng-star-inserted">
-          <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-            No.
-          </th>
-          <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-            Ítem
-          </th>
-          <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-            Estado del requisito
-          </th>
-          <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-            Gestión
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr formArrayName="informe" *ngFor="let informe of anexos; let i = index">
-          <td class="mat-cell cdk-cell ng-star-inserted">
-            {{ informe.informeFinalListaChequeoId }}
-          </td>
-          <td class="mat-cell cdk-cell ng-star-inserted">
-            {{ informe.nombre }}
-          </td>
-          <td class="mat-cell cdk-cell ng-star-inserted">
-            <mat-form-field class="select-width">
-              <mat-select
-                required
-                [formControlName]="i"
-              >
-                <mat-option
-                  *ngFor="let estado of estadoArray"
-                  [value]="estado.value"
-                >
-                  {{ estado.name }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </td>
-          <td class="mat-cell cdk-cell ng-star-inserted">
-            <button
-              mat-button
-              color="warn"
-              mat-raised-button
-              color="accent"
-              class="btn-table"
-              type="button"
-              (click)="openDialogTipoDocumento()"
-            >
-            Tipo de documento
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="text-center">
-    <button mat-button color="warn" class="btn-guardar" type="submit">
-      <img src="assets/img/icon/guardar.svg" alt="Guardar" />
-    </button>
-  </div>
-</form>
+<div class="text-center">
+  <button mat-button color="warn" class="btn-guardar" type="submit">
+    <img src="assets/img/icon/guardar.svg" alt="Guardar" />
+  </button>
+</div>
