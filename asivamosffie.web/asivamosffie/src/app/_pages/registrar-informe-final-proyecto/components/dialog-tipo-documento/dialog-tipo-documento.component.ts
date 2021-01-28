@@ -10,7 +10,6 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class DialogTipoDocumentoComponent implements OnInit {
 
   estaEditando = false;
-
   addressForm = this.fb.group({
     tipoDeAnexo: [null, Validators.required],
     URLSoporte: [null, Validators.required],
@@ -19,13 +18,14 @@ export class DialogTipoDocumentoComponent implements OnInit {
   });
 
   tipoAnexoArray = [
-    { name: 'Físico', value: 'fisico' },
-    { name: 'Digital', value: 'digital' }
+    { name: 'Físico', value: '1' },
+    { name: 'Digital', value: '2' }
   ];
 
   constructor(
     private fb: FormBuilder,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    @Inject(MAT_DIALOG_DATA) public data
   ) {}
 
   ngOnInit(): void {}
@@ -38,7 +38,7 @@ export class DialogTipoDocumentoComponent implements OnInit {
     }
 
     onSubmit() {
-      console.log(this.addressForm.value);
+      console.log(this.addressForm.value, "Acá se supone:",this.data.informe);
       this.estaEditando = true;
       this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
     }

@@ -31,4 +31,17 @@ export class RegistrarInformeFinalProyectoService {
   getInformeFinalListaChequeo(pContratacionProyectoId: any){
     return this.http.get<Anexo[]>(`${environment.apiUrl}/${this.final_report}/GetInformeFinalListaChequeoByInformeFinalInterventoriaId?pInformeFinalInterventoriaId=${ pContratacionProyectoId }`);
   }
+
+  createEditInformeFinalInterventoria( informeFinalInterventoria: any ){
+    return this.http.post(`${environment.apiUrl}/${this.final_report}/CreateEditInformeFinalInterventoria`, informeFinalInterventoria );
+  }
+
+  createEditInformeFinalAnexo ( informeFinalAnexo:any,pInformeFinalInterventoriaId:number  ){
+    return this.http.post(`${environment.apiUrl}/${this.final_report}/CreateEditInformeFinalAnexo?pInformeFinalInterventoriaId=${ pInformeFinalInterventoriaId }`, informeFinalAnexo );
+  }
+
+  createEditInformeFinalInterventoriaObservacion( informeFinalInterventoriaObservaciones: any ){
+    return this.http.post(`${environment.apiUrl}/${this.final_report}/CreateEditInformeFinalInterventoriaObservacion`, informeFinalInterventoriaObservaciones );
+  }
+
 }

@@ -153,7 +153,20 @@ export interface Report {
     contratacionObservacion: [],
     contratacionProyectoAportante: [],
     defensaJudicialContratacionProyecto: [],
-    informeFinal: [],
+    informeFinal: [
+        {
+            informeFinalId: number,
+            contratacionProyectoId: number,
+            eliminado: boolean
+            estadoInforme: string,
+            fechaCreacion: string,
+            informeFinalInterventoria: [],
+            registroCompleto: boolean,
+            usuarioCreacion: string,
+            urlActa: string,
+            fechaSuscripcion: string
+        }
+    ],
     seguimientoDiario: [],
     seguimientoSemanal: [],
     sesionSolicitudObservacionProyecto: [],

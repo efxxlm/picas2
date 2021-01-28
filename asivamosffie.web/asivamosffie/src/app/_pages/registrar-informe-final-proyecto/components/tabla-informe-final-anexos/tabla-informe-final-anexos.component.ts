@@ -90,9 +90,13 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     }
   }
 
-  openDialogTipoDocumento() {
+  openDialogTipoDocumento(informe:any) {
+    console.log("estoy probando: ",informe);
     let dialogRef = this.dialog.open(DialogTipoDocumentoComponent, {
-      width: '70em'
+      width: '70em',
+      data:{
+        informe: informe,
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {
