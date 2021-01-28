@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.model.APIModels;
+using System.Globalization;
 
 namespace asivamosffie.services
 {
@@ -660,9 +661,9 @@ namespace asivamosffie.services
 
             listaFechasTotal.ForEach(f =>
             {
-                if (contratacion.SeguimientoDiario.Where(s => s.FechaSeguimiento == f && s.Eliminado != true).Count() == 0)
+                if (contratacion.SeguimientoDiario.Where(s => s.FechaSeguimiento.ToShortDateString() == f.ToShortDateString() && s.Eliminado != true).Count() == 0)
                 {
-                    listaFechas.Add(f.ToShortDateString());
+                    listaFechas.Add(f.ToString("d/M/yyyy", CultureInfo.InvariantCulture));
                 }
             });
 
