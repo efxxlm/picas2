@@ -5,8 +5,7 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="estadoAvanceTramite"
-                            [class.color-secondaryColor]="
+                            <label class="label-left" for="estadoAvanceTramite" [class.color-secondaryColor]="
                   (addressForm.get('estadoAvanceTramite').invalid && addressForm.get('estadoAvanceTramite').touched) ||
                   (addressForm.get('estadoAvanceTramite').invalid && estaEditando)
                 ">Estado de avance del trámite</label>
@@ -108,7 +107,7 @@
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.cualOtro.value">
-                                {{500 - (textoLimpio(cualOtro.quillEditor))}}
+                                {{500 - (textoLimpio(addressForm.get('cualOtro').value))}}
                             </span>
                             <span class="contador miles" *ngIf="!addressForm.controls.cualOtro.value">
                                 500
@@ -260,7 +259,7 @@
                         style="padding: 1.5em 0em 1.2em;"></quill-editor>
                 </div>
                 <span class="contador miles" *ngIf="addressForm.controls.observaciones.value">
-                    {{1000 - (textoLimpio(observaciones.quillEditor))}}
+                    {{1000 - (textoLimpio(addressForm.get('observaciones').value))}}
                 </span>
                 <span class="contador miles" *ngIf="!addressForm.controls.observaciones.value">
                     1000
