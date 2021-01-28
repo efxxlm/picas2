@@ -382,6 +382,8 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaTramite).HasColumnType("datetime");
 
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
                 entity.Property(e => e.Json)
                     .IsRequired()
                     .IsUnicode(false);

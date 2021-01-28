@@ -6,7 +6,11 @@
         Observaciones reporte de pago
     </h1>
     <div class="mt-1em">
-        10/08/2020&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="info-text info-text__table sin-diligenciar"></span>Fallido
+        {{data.fechaCargue | date: "dd/mm/yyyy hh:mm" }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span class="info-text info-text__table" 
+        [ngClass]="{'sin-diligenciar': !data.cargueValido, 'completo': data.cargueValido }">
+        </span>
+        {{data.cargueValido ? 'Valido' : 'Fallido'}}
     </div>
     <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
         <div class="row">

@@ -14,6 +14,7 @@ using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.model.APIModels;
 using Newtonsoft.Json;
+using System.Security.Claims;
 
 namespace asivamosffie.services
 {
@@ -97,6 +98,7 @@ namespace asivamosffie.services
             .AddClaim("User", prmUser.Email)
             .AddClaim("UserId", prmUser.UsuarioId.ToString())
             .AddClaim("Rol", JsonConvert.SerializeObject(prmPerfiles))
+            .AddUsername(prmUser.Email)
             //.AddRole(result.IdrolNavigation.Nombre)
             .Build();
             return token;

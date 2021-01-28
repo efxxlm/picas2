@@ -28,6 +28,7 @@ export class ObservacionesReportPagoRprComponent implements OnInit {
       [{ align: [] }]
     ]
   }
+  private beforeObservation: string;
   constructor(
     private dialog: MatDialog,
     public matDialogRef: MatDialogRef<ObservacionesReportPagoRprComponent>,
@@ -41,7 +42,7 @@ export class ObservacionesReportPagoRprComponent implements OnInit {
   }
   crearFormulario() {
     return this.fb.group({
-      observaciones: [null, Validators.required]
+      observaciones: [this.data.observaciones, Validators.required]
     })
   }
   maxLength(e: any, n: number) {
@@ -54,7 +55,7 @@ export class ObservacionesReportPagoRprComponent implements OnInit {
       return texto.getLength() > n ? n : texto.getLength()
     }
   }
-  openDialog(modalTitle: string, modalText: string) {
+  openDialog(modalTitle: string, modalText: string, ) {
     this.dialog.open(ModalDialogComponent, {
       width: '40em',
       data: { modalTitle, modalText }
@@ -63,7 +64,6 @@ export class ObservacionesReportPagoRprComponent implements OnInit {
   onSubmit() {
     this.matDialogRef.close({
       data: this.addressForm.value.observaciones
-    })
-    this.openDialog('', '<b>La información ha sido guardada exitosamente</b>')
+    })    
   }
 }

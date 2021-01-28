@@ -245,13 +245,20 @@
         public const string Visita_url = "179";
         public const string Cargar_Acta_Terminacion_Contrato = "180";
 
-          //4.4.3 registro de pagos    	
-        public const string Validar_Excel_Registro_Pagos = "190";
-        public const string Validar_Excel_Registro_Rendimientos = "191";
-        public const string Eliminar_Pagos = "192";
-        public const string Tramitar_Rendimientos = "193";
-        public const string Notificar_Inconsistencias = "194";
-        public const string Notificar_Pendiente_Aprobacion = "195";
+        //4.4.3 registro de pagos    	
+        public const string Validar_Excel_Registro_Pagos = "191";
+        public const string Comentar_Pagos = "197";
+        public const string Validar_Excel_Registro_Rendimientos = "198";
+        public const string Eliminar_Pagos = "199";
+        // public const string Tramitar_Pagos = "200";
+        public const string Ver_Detalle_Pagos = "201";
+        public const string Ver_Detalle_Rendimientos = "202";
+        public const string Ver_Inconsistencias = "203";
+
+        public const string Tramitar_Rendimientos = "200";
+        public const string Notificar_Inconsistencias = "195";
+        public const string Notificar_Solicitud_Aprobacion = "196";
         
+
     }
 }   

@@ -5,34 +5,100 @@ using System.Threading.Tasks;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using lalupa.Authorization.JwtHelpers;
-using asivamosffie.api.Controllers;
-using AuthorizationTest.JwtHelpers;
-using asivamosffie.services.Exceptions;
-using asivamosffie.services.Helpers;
 using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.model.APIModels;
 using Newtonsoft.Json;
-using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.AspNetCore.Http;
 using System.IO;
-using DinkToPdf;
 using DinkToPdf.Contracts;
 using System.Globalization;
 using OfficeOpenXml;
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
-using asivamosffie.services.Helpers.Constants;
-using DocumentFormat.OpenXml.Drawing.Charts;
-using DocumentFormat.OpenXml.Spreadsheet;
 using Z.EntityFramework.Plus;
-using DocumentFormat.OpenXml.Bibliography;
 using Microsoft.Extensions.Options;
 using asivamosffie.model.AditionalModels;
+using asivamosffie.services.Helpers.Extensions;
+using Microsoft.VisualBasic;
+using DinkToPdf;
 
 namespace asivamosffie.services
 {
-    public class RegisterPayPerformanceService : IRegisterPayPerformanceService
+    public partial class RegisterPayPerformanceService
+    {
+        #region Audit
+        private async Task<int> GetActionIdAudit(string action)
+        {
+            return await _commonService.GetDominioIdByCodigoAndTipoDominio(
+                            action, (int)EnumeratorTipoDominio.Acciones);
+        }
+
+        private async Task<string> SaveAuditAction(string author, int idAction, enumeratorMenu menu, string code, string comment)
+        {
+            return await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                                                     (int)menu, code, idAction, author, comment);
+        }
+        #endregion
+
+        #region Validation
+        private string CheckFileDownloadDirectory()
+        {
+            string directory = Path.Combine(_mailSettings.DirectoryBase,
+                                                   _mailSettings.DirectoryBaseCargue,
+                                                   _mailSettings.DirectoryBasePagos);
+
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            return directory;
+        }
+        #endregion
+
+        private static string WriteCollectionToPath<T>(string fileName, string directory, List<T> list)
+        {
+            string filePath;
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            var streams = new MemoryStream();
+            using (var packages = new ExcelPackage())
+            {
+                var workSheet = packages.Workbook.Worksheets.Add("Hoja 1");
+                workSheet.Cells["A1"].LoadFromCollection(list, true);
+                packages.Save();
+                ////convert the excel package to a byte array
+                byte[] bin = packages.GetAsByteArray();
+                Stream stream = new MemoryStream(bin);
+                ////the path of the file
+                filePath = directory + "/" + fileName + "_rev.xlsx";
+
+                ////write the file to the disk
+                File.WriteAllBytes(filePath, bin);
+            }
+
+            return filePath;
+        }
+
+        public bool SendMail(string template, string subject, EnumeratorPerfil enumeratorProfile)
+        {
+            bool isMailSent = false;
+            var usertoSend = _context.UsuarioPerfil.Where(
+                       x => x.PerfilId == (int)EnumeratorPerfil.CordinadorFinanciera).Include(y => y.Usuario);
+            foreach (var fiduciariaEmail in usertoSend)
+            {
+                isMailSent = Helpers.Helpers.EnviarCorreo(fiduciariaEmail.Usuario.Email,
+                    subject,
+                    template,
+                    _mailSettings.Sender,
+                    _mailSettings.Password,
+                    _mailSettings.MailServer,
+                    _mailSettings.MailPort);
+            }
+            return isMailSent;
+        }
+
+    }
+
+    public partial class RegisterPayPerformanceService : IRegisterPayPerformanceService
     {
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
@@ -42,6 +108,8 @@ namespace asivamosffie.services
         public readonly IBudgetAvailabilityService _budgetAvailabilityService;
         public ISourceFundingService _fundingSourceService { get; }
         public AppSettings _mailSettings { get; }
+        public readonly string CONSTPAGOS = "Pagos";
+        public readonly int _500 = 500;
 
         public RegisterPayPerformanceService(IConverter converter,
                                             devAsiVamosFFIEContext context,
@@ -49,8 +117,6 @@ namespace asivamosffie.services
                                             ICommonService commonService,
                                             IDocumentService documentService,
                                             IOptions<AppSettings> mailSettings
-                                           // IRegisterPreContructionPhase1Service registerPreContructionPhase1Service,
-                                           // IBudgetAvailabilityService budgetAvailabilityService
             )
 {
             _converter = converter;
@@ -59,182 +125,193 @@ namespace asivamosffie.services
             _documentService = documentService;
             _mailSettings = mailSettings.Value;
             _commonService = commonService;
-            // _registerPreContructionPhase1Service = registerPreContructionPhase1Service;
-            //_budgetAvailabilityService = budgetAvailabilityService;
         }
+
         #region loads
 
         /// <summary>
-        /// TODO validar que este no tenga relaciones o información dependiente. 
-        /// En caso de contar con alguna relación, el sistema debe informar al usuario
-        /// por medio de un mensaje emergente “El registro tiene información que depende de él, no se puede eliminar”
-        /// , y no deberá eliminar el registro.
+        /// Get main tables
         /// </summary>
-        /// <param name="cargaPagosRendimientosId"></param>
-        /// <param name="uploadStatus"></param>
+        /// <param name="typeFile"></param>
         /// <returns></returns>
-        public async Task<Respuesta> DeletePaymentPerformance(int uploadedOrderId)
+        public async Task<List<dynamic>> getPaymentsPerformances(string typeFile, string status)
         {
-            int modifiedRows = -1;
-            if (uploadedOrderId > 0)
-            {
-                modifiedRows = await _context.Set<CarguePagosRendimientos>()
-                      .Where(order => order.CargaPagosRendimientosId == uploadedOrderId && !order.FechaTramite.HasValue)
-                      .UpdateAsync(o => new CarguePagosRendimientos()
-                      {
-                          // FechaTramite Fecha Actualización on Update
-                          Eliminado = true
-                      });
+            List<dynamic> listaContrats = new List<dynamic>();
 
-            }
-            string codeResponse = modifiedRows > 0 ? GeneralCodes.OperacionExitosa : GeneralCodes.EntradaInvalida;
+            List<CarguePagosRendimientos> lista = await _context.CarguePagosRendimientos
+                .Where(order => !order.Eliminado).ToListAsync();
 
-            //  “El registro tiene información que depende de él, no se puede eliminar”
+            lista.Where(w => w.TipoCargue == typeFile && (string.IsNullOrEmpty(status) || w.EstadoCargue == status))
+                .ToList().ForEach(c =>
+                {
+                    listaContrats.Add(new
+                    {
+                        c.CargaPagosRendimientosId,
+                        c.NombreArchivo,
+                        c.Json,
+                        c.Observaciones,
+                        c.TotalRegistros,
+                        c.RegistrosValidos,
+                        c.RegistrosInvalidos,
+                        c.CargueValido,
+                        c.FechaCargue,
+                        c.RegistrosInconsistentes,
+                        c.RegistrosConsistentes,
+                        c.MostrarInconsistencias,
+                        c.FechaTramite
+                    });
+                });
 
-            return new Respuesta
-            {
-                Data = modifiedRows,
-                IsSuccessful = modifiedRows > 0,
-                IsException = false,
-                IsValidation = false,
-                Code = GeneralCodes.OperacionExitosa,
-                Message = "" // await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreo, "VALIDAR EXCEL PROGRAMACION")
-            };
+            return listaContrats;
         }
 
-
-
         /// <summary>
-        /// TODO El sistema debe registrar la trazabilidad almacenando el usuario,
-        /// fecha, hora, acción y consulta realizada,
-        /// con el fin de generar la auditoria. 
+        /// Validate and Upload Payments and Performances
         /// </summary>
         /// <param name="pFile"></param>
-        /// <param name="pUsuarioCreo"></param>
-        /// <param name="typeFile"></param>
+        /// <param name="author"></param>
+        /// <param name="fileType"></param>
         /// <param name="saveSuccessProcess"></param>
-        /// <returns></returns>
-        public async Task<Respuesta> uploadFileToValidate(IFormFile pFile, string pUsuarioCreo, string typeFile, bool saveSuccessProcess)
+        /// <returns></returns>        
+        public async Task<Respuesta> UploadFileToValidate(IFormFile pFile, string author, string fileType, bool saveSuccessProcess)
         {
             int CantidadRegistrosInvalidos = 0;
-
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Validar_Excel_Registro_Pagos, (int)EnumeratorTipoDominio.Acciones);
-
-            if (pFile != null)
-            {
-                using (var stream = new MemoryStream())
-                {
-                    await pFile.CopyToAsync(stream);
-                    List<Dictionary<string, string>> listaCarguePagosRendimientos = new List<Dictionary<string, string>>();
-                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-                    using var package = new ExcelPackage(stream);
-                    ExcelWorksheet worksheet = package.Workbook.Worksheets.FirstOrDefault();
-
-                    // public ExcelRange this[int FromRow, int FromCol, int ToRow, int ToCol] { get; }
-                    var columnAccounst = worksheet.Cells[2, 2, worksheet.Dimension.Rows, 2].Select(v => v.Text).ToList<string>();
-
-                    var bankAccounts = _context.CuentaBancaria.Where(
-                        x => x.NumeroCuentaBanco != null && columnAccounst.Contains(x.NumeroCuentaBanco)).AsNoTracking();
-                    // TODO add validation to prevent query a column in a  not existing position
-
-                    //Controlar Registros
-                    for (int indexWorkSheetRow = 2; indexWorkSheetRow <= worksheet.Dimension.Rows; indexWorkSheetRow++)
-                    {
-                        Dictionary<string, string> carguePagosRendimiento = new Dictionary<string, string>();
-                        bool tieneError = false;
-                        try
-                        {
-                            if (typeFile == "Pagos")
-                            {
-                                tieneError = ValidatePaymentFile(worksheet, indexWorkSheetRow, carguePagosRendimiento, tieneError);
-                            }
-                            else if (typeFile == "Rendimientos")
-                            {
-                                var validatedValues = ValidateFinancialPerformanceFile(worksheet, indexWorkSheetRow, bankAccounts);
-
-                                carguePagosRendimiento = validatedValues.list;
-                                tieneError = validatedValues.hasError;
-                            }
-
-                            if (tieneError)
-                            {
-                                CantidadRegistrosInvalidos++;
-                                carguePagosRendimiento.Add("Estado", "Fallido");
-                            }
-                            else
-                            {
-                                carguePagosRendimiento.Add("Estado", "Valido");
-                            }
-
-                            // accounts.Add(carguePagosRendimiento.GetValueOrDefault("Número de Cuenta"));
-                            listaCarguePagosRendimientos.Add(carguePagosRendimiento);
-                        }
-                        catch (Exception ex)
-                        {
-                            CantidadRegistrosInvalidos++;
-                        }
-                    }
-
-                    int cantidadRegistrosTotales = worksheet.Dimension.Rows - 1;
-
-                    if (CantidadRegistrosInvalidos > 0 || saveSuccessProcess)
-                    {
-                        CarguePagosRendimientos CarguePagosRendimientos = new CarguePagosRendimientos
-                        {
-                            EstadoCargue = CantidadRegistrosInvalidos > 0 ? "Fallido" : "Valido",
-                            CargueValido = CantidadRegistrosInvalidos == 0,
-                            NombreArchivo = pFile.FileName,
-                            RegistrosValidos = cantidadRegistrosTotales - CantidadRegistrosInvalidos,
-                            RegistrosInvalidos = CantidadRegistrosInvalidos,
-                            TotalRegistros = cantidadRegistrosTotales,
-                            TipoCargue = typeFile,
-                            FechaCargue = DateTime.Now,
-                            Json = JsonConvert.SerializeObject(listaCarguePagosRendimientos)
-                        };
-
-                        _context.CarguePagosRendimientos.Add(CarguePagosRendimientos);
-                        _context.SaveChanges();
-                    }
-
-                    if (CantidadRegistrosInvalidos == 0)
-                    {
-                        processPaymentsPerformances(typeFile, listaCarguePagosRendimientos);
-                    }
-
-                    ArchivoCargueRespuesta archivoCargueRespuesta = new ArchivoCargueRespuesta
-                    {
-                        CantidadDeRegistros = cantidadRegistrosTotales.ToString(),
-                        CantidadDeRegistrosInvalidos = CantidadRegistrosInvalidos.ToString(),
-                        CantidadDeRegistrosValidos = (cantidadRegistrosTotales - CantidadRegistrosInvalidos).ToString(),
-                        LlaveConsulta = pFile.FileName
-                    };
-
-                    return new Respuesta
-                    {
-                        Data = archivoCargueRespuesta,
-                        IsSuccessful = true,
-                        IsException = false,
-                        IsValidation = false,
-                        Code = GeneralCodes.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreo, "VALIDAR EXCEL PROGRAMACION")
-                    };
-                }
-            }
-            else
+            int idAction = await GetActionIdAudit(ConstantCodigoAcciones.Validar_Excel_Registro_Pagos);
+            string actionMesage = fileType == CONSTPAGOS ? 
+                ConstantCommonMessages.Performances.REGISTRAR_ORDENES_PAGOS : ConstantCommonMessages.Performances.REGISTRAR_RENDIMIENTOS;
+            if (pFile == null)
             {
                 return new Respuesta
                 {
+                    IsSuccessful = false,
+                    IsException = false,
+                    IsValidation = true,
+                    Code = GeneralCodes.EntradaInvalida,
+                    Message = await SaveAuditAction(author, idAction,
+                                        enumeratorMenu.RegistrarPagosRendimientos,
+                                        GeneralCodes.EntradaInvalida,
+                                        actionMesage)
+                };
+            }
+
+            using (var stream = new MemoryStream())
+            {
+                List<Dictionary<string, string>> listaCarguePagosRendimientos = new List<Dictionary<string, string>>();
+
+                await pFile.CopyToAsync(stream);
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                using var package = new ExcelPackage(stream);
+
+                ExcelWorksheet worksheet = package.Workbook.Worksheets.FirstOrDefault();
+
+                // TODO add validation to prevent query a column in a  not existing position
+                var columnAccounst = worksheet.Cells[2, 2, worksheet.Dimension.Rows, 2].Select(v => v.Text).ToList<string>();
+
+                var bankAccounts = _context.CuentaBancaria.Where(
+                    x => x.NumeroCuentaBanco != null && columnAccounst.Contains(x.NumeroCuentaBanco)).AsNoTracking();
+
+                //Controlar Registros
+
+                //TODO ADD PARALLEL FOREACH
+
+                for (int indexWorkSheetRow = 2; indexWorkSheetRow <= worksheet.Dimension.Rows; indexWorkSheetRow++)
+                {
+                    Dictionary<string, string> carguePagosRendimiento = new Dictionary<string, string>();
+                    bool tieneError = false;
+                    try
+                    {
+                        if (fileType == CONSTPAGOS)
+                        {
+                            tieneError = ValidatePaymentFile(worksheet, indexWorkSheetRow, carguePagosRendimiento);
+                        }
+                        else if (fileType == "Rendimientos")
+                        {
+                            var validatedValues = ValidateFinancialPerformanceFile(worksheet, indexWorkSheetRow, bankAccounts);
+
+                            carguePagosRendimiento = validatedValues.list;
+                            tieneError = validatedValues.hasError;
+                        }
+
+                        if (tieneError)
+                        {
+                            CantidadRegistrosInvalidos++;
+                            carguePagosRendimiento.Add("Estado", "Fallido");
+                        }
+                        else
+                        {
+                            carguePagosRendimiento.Add("Estado", "Valido");
+                        }
+
+                        // accounts.Add(carguePagosRendimiento.GetValueOrDefault("Número de Cuenta"));
+                        listaCarguePagosRendimientos.Add(carguePagosRendimiento);
+                    }
+                    catch (Exception ex)
+                    {
+                        CantidadRegistrosInvalidos++;
+                    }
+                }
+
+                int cantidadRegistrosTotales = worksheet.Dimension.Rows - 1;
+
+                if (CantidadRegistrosInvalidos > 0 || saveSuccessProcess)
+                {
+                    CarguePagosRendimientos CarguePagosRendimientos = new CarguePagosRendimientos
+                    {
+                        EstadoCargue = CantidadRegistrosInvalidos > 0 ? "Fallido" : "Valido",
+                        CargueValido = CantidadRegistrosInvalidos == 0,
+                        NombreArchivo = pFile.FileName,
+                        RegistrosValidos = cantidadRegistrosTotales - CantidadRegistrosInvalidos,
+                        RegistrosInvalidos = CantidadRegistrosInvalidos,
+                        TotalRegistros = cantidadRegistrosTotales,
+                        TipoCargue = fileType,
+                        FechaCargue = DateTime.Now,
+                        Json = JsonConvert.SerializeObject(listaCarguePagosRendimientos),
+                        UsuarioCreacion = author
+                    };
+
+                    _context.CarguePagosRendimientos.Add(CarguePagosRendimientos);
+                    _context.SaveChanges();
+                }
+
+                if (CantidadRegistrosInvalidos == 0)
+                {
+                    ProcessPayment(fileType, listaCarguePagosRendimientos);
+                }
+
+                ArchivoCargueRespuesta archivoCargueRespuesta = new ArchivoCargueRespuesta
+                {
+                    CantidadDeRegistros = cantidadRegistrosTotales.ToString(),
+                    CantidadDeRegistrosInvalidos = CantidadRegistrosInvalidos.ToString(),
+                    CantidadDeRegistrosValidos = (cantidadRegistrosTotales - CantidadRegistrosInvalidos).ToString(),
+                    LlaveConsulta = pFile.FileName
+                };
+
+                return new Respuesta
+                {
+                    Data = archivoCargueRespuesta,
                     IsSuccessful = true,
                     IsException = false,
                     IsValidation = false,
-                    Code = ConstantMessagesCargueElegibilidad.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pUsuarioCreo, "VALIDAR EXCEL PROGRAMACION")
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await SaveAuditAction(author, idAction,
+                                        enumeratorMenu.RegistrarPagosRendimientos,
+                                        GeneralCodes.OperacionExitosa,
+                                        actionMesage)
                 };
             }
         }
 
-        private static bool ValidatePaymentFile(ExcelWorksheet worksheet, int i, Dictionary<string, string> carguePagosRendimiento, bool tieneError)
+        /// <summary>
+        /// TODO Y validar que la Orden de Giro exista, corresponda con el valor pagado, 
+        /// con el valor que se encuentra en el archivo.
+        /// </summary>
+        /// <param name="worksheet"></param>
+        /// <param name="i"></param>
+        /// <param name="carguePagosRendimiento"></param>
+        /// <returns></returns>
+        private static bool ValidatePaymentFile(ExcelWorksheet worksheet, int i, Dictionary<string, string> carguePagosRendimiento)
         {
+            bool tieneError = false;
             // #1
             //Número de orden de giro
             carguePagosRendimiento.Add("Número de orden de giro", worksheet.Cells[i, 1].Text);
@@ -291,6 +368,9 @@ namespace asivamosffie.services
             performanceStructure.Add("Acumulado de gravamen financiero descontado no exentos", "Money");
 
             int indexCell = 1;
+
+           //worksheet.Cells[1, 1].AddComment("se debe eliminar una carga de flujo de inversión asociada a este Proyecto", "Admin");
+
             foreach (var rowFormat in performanceStructure)
             {
                 string cellValue = worksheet.Cells[indexRow, indexCell].Text;
@@ -301,13 +381,13 @@ namespace asivamosffie.services
                     hasError = true;
                 }
                 else if ((rowFormat.Value == "AlphaNum")
-                    && (string.IsNullOrEmpty(cellValue) || cellValue.Length > 50))
+                    && (string.IsNullOrWhiteSpace(cellValue) || !cellValue.IsValidSize(50)))
                 {
                     hasError = true;
 
                 }
                 else if ((rowFormat.Value == "Money")
-                    && (IsCellNullOrEmpty(cellValue) || IsNumericValidSize(cellValue)))
+                    && (string.IsNullOrWhiteSpace(cellValue) || !cellValue.IsMoneyValueValidSize(20)))
                 {
                     hasError = true;
 
@@ -332,82 +412,113 @@ namespace asivamosffie.services
             return (carguePagosRendimiento, hasError);
         }
 
-        private static bool IsNumericValidSize(string value)
+        #endregion
+
+        /// <summary>
+        /// TODO validar que este no tenga relaciones o información dependiente. 
+        /// En caso de contar con alguna relación, el sistema debe informar al usuario
+        /// por medio de un mensaje emergente “El registro tiene información que depende de él, no se puede eliminar”
+        /// , y no deberá eliminar el registro.
+        /// </summary>
+        /// <param name="cargaPagosRendimientosId"></param>
+        /// <param name="uploadStatus"></param>
+        /// <returns></returns>
+        public async Task<Respuesta> DeletePayment(int uploadedOrderId, string author)
         {
-            string cellValue = value.Replace(".", "").Replace("$", "");
-            bool isValid = cellValue.Length > 20 || !decimal.TryParse(cellValue, out decimal respValNumber);
-            return isValid;
-        }
-
-        private static bool IsCellNullOrEmpty(string cellValue)
-        {
-            return string.IsNullOrEmpty(cellValue);
-        }
-
-        public Respuesta DownloadPaymentPerformanceAsync(int uploadedOrderId)
-        {
-            // string pNameFiles, string pFilePatch, string pUser, int uploadOrderId
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            var streams = new MemoryStream();
-            //using (var packages = new ExcelPackage(streams))
-            //{
-            //    var workSheet = packages.Workbook.Worksheets.Add("Hoja 1");
-            //Move to other method to shared ... 
-            var collection = _context.CarguePagosRendimientos.Where(x => x.CargaPagosRendimientosId == uploadedOrderId)
-                .Select(
-                order => new
-                {
-                    NombreArchivo = order.NombreArchivo,
-                    ArchivoJson = order.Json
-                        //EstadoCargue = CantidadRegistrosInvalidos > 0 ? "Fallido" : "Valido",
-                        //NombreArchivo = pFile.FileName,
-                        //RegistrosValidos = cantidadRegistrosTotales - CantidadRegistrosInvalidos,
-                        //RegistrosInvalidos = CantidadRegistrosInvalidos,
-                        //TotalRegistros = cantidadRegistrosTotales,
-                        //TipoCargue = typeFile,
-                        //FechaCargue = DateTime.Now,
-                        //Json = JsonConvert.SerializeObject(listaCarguePagosRendimientos)
-
-
-                        //Es_valido = x.EstaValidado,
-                        //Tipo_de_proponente = x.TipoProponenteId,
-                        //Nombre_del_proponente = x.NombreProponente,
-                        //Numero_de_identificacion_del_proponente = x.NumeroIddentificacionProponente,
-                        //Departamento_del_domicilio_del_proponente = x.Departamento,
-                        //Municipio_del_domicilio_del_proponente = x.Minicipio,
-                        //Direccion_del_proponente = x.Direccion,
-                        //Telefono_del_proponente = x.Telefono,
-                        //Correo_electronico_del_proponente = x.Correo,
-                        //Nombre_de_la_Entidad = x.NombreEntidad,
-                        //Numero_de_identificacion_Tributaria = x.IdentificacionTributaria,
-                        //Nombre_del_Representante_legal = x.RepresentanteLegal,
-                        //Cedula_del_representante = x.CedulaRepresentanteLegal,
-                        //Departamento_del_domicilio_del_representante_legal = x.DepartamentoRl
-                    }).FirstOrDefault();
+            string actionMesage = ConstantCommonMessages.Performances.ELIMINAR_ORDENES_PAGOS;
+            int actionId = await GetActionIdAudit(ConstantCodigoAcciones.Eliminar_Pagos);
+            int modifiedRows = -1;
+            if (uploadedOrderId > 0)
+            {
+                modifiedRows = await _context.Set<CarguePagosRendimientos>()
+                      .Where(order => order.CargaPagosRendimientosId == uploadedOrderId && !order.FechaTramite.HasValue)
+                      .UpdateAsync(o => new CarguePagosRendimientos()
+                      {
+                          FechaModificacion = DateTime.Now,
+                          UsuarioModificacion = author,
+                          Eliminado = true
+                      });
+            }
+            string codeResponse = modifiedRows > 0 ? GeneralCodes.OperacionExitosa : ConstMessagesPerformances.ErrorGuardarCambios;
 
             return new Respuesta
             {
-                Data = collection,
-                IsSuccessful = true,
+                Data = modifiedRows,
+                IsSuccessful = modifiedRows > 0,
                 IsException = false,
                 IsValidation = false,
                 Code = GeneralCodes.OperacionExitosa,
-                Message = "" // await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreo, "VALIDAR EXCEL PROGRAMACION")
+                Message = await SaveAuditAction(author, actionId,
+                                        enumeratorMenu.RegistrarPagosRendimientos,
+                                        codeResponse,
+                                        actionMesage)
             };
+        }
+        
+        public async Task<Respuesta> DownloadPaymentPerformanceAsync(FileRequest fileRequest, string fileType)
+        {
+            Respuesta response = new Respuesta();
+            string action = fileType == CONSTPAGOS ? ConstantCodigoAcciones.Ver_Detalle_Pagos : ConstantCodigoAcciones.Ver_Detalle_Rendimientos;
+            int actionId = await GetActionIdAudit(action);
+            string actionMesage = fileType == CONSTPAGOS ?
+                ConstantCommonMessages.Performances.VER_DETALLE_PAGOS : ConstantCommonMessages.Performances.VER_DETALLE_RENDIMIENTOS;
+            string directory = CheckFileDownloadDirectory();
+            string filePath = string.Empty;
+            string jsonString = string.Empty;
+            try
+            {
+                var collection = _context.CarguePagosRendimientos.Where(x => x.CargaPagosRendimientosId == fileRequest.ResourceId)
+                            .Select(
+                            order => new
+                            {
+                                Estado = order.CargueValido,
+                                ArchivoJson = order.Json
+                            }).FirstOrDefault();
+                jsonString = collection.ArchivoJson;
+                if (fileType == CONSTPAGOS)
+                {
+                    List<PaymentOrder> list = SerializePaymentOrders(fileRequest.ResourceId, collection.ArchivoJson);
+                    filePath = WriteCollectionToPath(fileRequest.FileName, directory, list);
+                }
+                else
+                {
+                    List<PerformanceOrder> list2 = SerializePerformances(fileRequest.ResourceId, collection.ArchivoJson);
+                    filePath = WriteCollectionToPath(fileRequest.FileName, directory, list2);
+                }
+            }
+            catch (Newtonsoft.Json.JsonSerializationException ex)
+            {
+                response.IsException = true;
+                response.IsSuccessful = true;
+                response.Code = GeneralCodes.OperacionExitosa;
+                response.Data = jsonString;
+                response.Message = await SaveAuditAction(fileRequest.Username, actionId,
+                                        enumeratorMenu.RegistrarPagosRendimientos,
+                                        GeneralCodes.OperacionExitosa,
+                                        actionMesage);
+            }
 
-            //workSheet.Cells.LoadFromCollection(collection, true);
-            //packages.Save();
-            ////convert the excel package to a byte array
-            //byte[] bin = packages.GetAsByteArray();
-            //Stream stream = new MemoryStream(bin);
-            ////the path of the file
-            //string filePath = pFilePatch + "/" + pNameFiles + "_rev.xlsx";
+            response.Data = filePath;
+            response.IsSuccessful = true;
+            response.Code = GeneralCodes.OperacionExitosa;
+            response.Message = await SaveAuditAction(fileRequest.Username, actionId,
+                                    enumeratorMenu.RegistrarPagosRendimientos,
+                                    GeneralCodes.OperacionExitosa,
+                                    actionMesage);
 
-            ////write the file to the disk
-            //File.WriteAllBytes(filePath, bin);
-            //return filePath;
-            //}
-            //return "";
+            return response;
+        }
+
+        private List<PerformanceOrder> SerializePerformances(int uploadedOrderId, string stringJson)
+        {   
+            var list = JsonConvert.DeserializeObject<List<PerformanceOrder>>(stringJson);
+            return list;
+        }
+
+        private List<PaymentOrder> SerializePaymentOrders(int uploadedOrderId,string  stringJson)
+        {            
+            var list = JsonConvert.DeserializeObject<List<PaymentOrder>>(stringJson);
+            return list;
         }
 
         /// <summary>
@@ -430,6 +541,11 @@ namespace asivamosffie.services
         /// <returns></returns>
         public async Task<Respuesta> ManagePerformanceAsync(int uploadedOrderId)
         {
+            Respuesta response = new Respuesta();
+            string action = ConstantCodigoAcciones.Tramitar_Rendimientos;
+            int actionId = await GetActionIdAudit(action);
+            string actionMesage = ConstantCommonMessages.Performances.TRAMITAR_RENDIMIENTOS;
+
             // Query Previous Month
             // Query Fuente by Valor Disponible > #8 Consistente
             // Query Fuente < Inconsistente
@@ -444,31 +560,14 @@ namespace asivamosffie.services
             List<PerformanceOrder> performanceOrders = new List<PerformanceOrder>();
             if (collection != null)
             {
-                performanceOrders =
-                    JsonConvert.DeserializeObject<List<PerformanceOrder>>(collection.Json);
-
+                performanceOrders = JsonConvert.DeserializeObject<List<PerformanceOrder>>(collection.Json);
             }
 
-            // TODO ask if filter by date
-            var accountOrders = performanceOrders.GroupBy(x => x.AccountNumber)
-                .Select(accountOrders => new PerformanceOrder
-                {
-                    AccountNumber = accountOrders.Key,
-                    ExemptResources = accountOrders.Sum(order => order.ExemptResources),
-                    ExemptPerformances = accountOrders.Sum(order => order.ExemptPerformances),
-                    ExemptBankCharges = accountOrders.Sum(order => order.ExemptBankCharges),
-                    ExemptDiscountedCharge = accountOrders.Sum(order => order.ExemptDiscountedCharge),
-                    LiableContributtions = accountOrders.Sum(order => order.LiableContributtions),
-                    LiablePerformances = accountOrders.Sum(order => order.LiablePerformances),
-                    LiableBankCharges = accountOrders.Sum(order => order.LiableBankCharges),
-                    LiableDiscountedCharge = accountOrders.Sum(order => order.LiableDiscountedCharge)
-                }).ToList();
-
-            var accountNumbers = accountOrders.Select(x => x.AccountNumber);
+            var accountNumbers = performanceOrders.Select(x => x.AccountNumber).Distinct();
 
             decimal valorAporteEnCuenta = 0;
             int registrosConsistentes = 0;
-            foreach (var accountOrder in accountOrders)
+            foreach (var accountOrder in performanceOrders)
             {
                 valorAporteEnCuenta = 0;
                 var accounts = await _context.CuentaBancaria.SingleOrDefaultAsync(x => x.NumeroCuentaBanco == accountOrder.AccountNumber);
@@ -514,16 +613,11 @@ namespace asivamosffie.services
                 }
             }
 
-            var respuesta = new Respuesta
-            {
-                Data = accountOrders,
-                IsSuccessful = true,
-                IsException = false,
-                IsValidation = false,
-                Code = GeneralCodes.OperacionExitosa,
-                Message = "" // await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreo, "VALIDAR EXCEL PROGRAMACION")
-            };
-            var tramite = JsonConvert.SerializeObject(accountOrders);
+            response.Data = performanceOrders;
+            response.IsSuccessful = true;
+            response.Code = GeneralCodes.OperacionExitosa;
+            
+            var tramite = JsonConvert.SerializeObject(performanceOrders);
             try
             {
                 await _context.Set<CarguePagosRendimientos>()
@@ -533,20 +627,21 @@ namespace asivamosffie.services
                       FechaTramite = DateTime.Now,
                       TramiteJson = tramite,
                       RegistrosConsistentes = registrosConsistentes,
-                      RegistrosInconsistentes = accountOrders.Count - registrosConsistentes,
+                      RegistrosInconsistentes = performanceOrders.Count - registrosConsistentes,
                   }); ;
 
             }
             catch (Exception ex)
             {
-
-                throw ex;
+                response.IsSuccessful = false;
+                response.Code = GeneralCodes.Error;
             }
 
 
-            // 
+            response.Message = ""; // await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreo, "VALIDAR EXCEL PROGRAMACION")
 
-            return respuesta;
+
+            return response;
         }
 
         /// <summary>
@@ -554,150 +649,105 @@ namespace asivamosffie.services
         /// </summary>
         /// <param name="uploadedOrderId"></param>
         /// <returns></returns>
-        public Task<Respuesta> GetManagedPerformancesPerformances(int uploadedOrderId, int statusType)
+        public Task<Respuesta> GetManagedPerformances(int uploadedOrderId, int statusType)
         {
 
             return null;
         }
 
         // Notify to Approve
-        public async Task<Respuesta> RequestManagedPerformancesApproval(int uploadedOrderId)
+        public async Task<Respuesta> NotifyRequestManagedPerformancesApproval(int uploadedOrderId, string author)
         {
-            Respuesta respuesta = new Respuesta();
+            Respuesta response = new Respuesta();
+            bool isMailSent = false;
+#if !DEBUG
+            isMailSent = true;
+#endif
+            int modifiedRows = -1;
+            int actionId = await GetActionIdAudit(ConstantCodigoAcciones.Notificar_Solicitud_Aprobacion);
+            string actionMesage = ConstantCommonMessages.Performances.NOTIFICAR_SOLICITUD_APROBACION;
+            CarguePagosRendimientos uploadedPerformances = await _context.CarguePagosRendimientos
+                    .Where(d => d.CargaPagosRendimientosId == uploadedOrderId).AsNoTracking().FirstOrDefaultAsync();
+
+            if (uploadedPerformances == null || uploadedOrderId == 0)
+            {
+                response.Code = GeneralCodes.EntradaInvalida;
+                response.Message = await SaveAuditAction(author, actionId,
+                                        enumeratorMenu.GestionarRendimientos,
+                                        response.Code,
+                                        actionMesage);
+                return response;
+            }
 
             try
             {
-
-                var  uploadedPerformances = await _context.CarguePagosRendimientos
-                    .Where(d => d.CargaPagosRendimientosId == uploadedOrderId).AsNoTracking().FirstOrDefaultAsync();
-
+                Template temNotifyInconsistencies = await _commonService.GetTemplateById(
+                                                            (int)enumeratorTemplate.NotificacionAprobacion);
+                string inconsistencies = "";
+                string fechaCargue = "";
                 if (uploadedPerformances != null)
                 {
-                    // ChangeStatusPendienteAprobación
-                    int modifiedRows = -1;
-                    if (uploadedOrderId > 0)
-                    {
-                        modifiedRows = await _context.Set<CarguePagosRendimientos>()
-                              .Where(order => order.CargaPagosRendimientosId == uploadedOrderId)
-                              .UpdateAsync(o => new CarguePagosRendimientos()
-                              {
-                                  // FechaTramite Fecha Actualización on Update
-                                  PendienteAprobacion = true
-                              });
-                    }
-
-
-                    //Save to new table? 
-
-
-                    // Send Message //
-
-                    Template temNotifyInconsistencies = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificacionAprobacion);
-
-                    string inconsistencies = "";
-                    string fechaCargue = "";
-                    if (uploadedPerformances != null)
-                    {
-                        inconsistencies = uploadedPerformances.RegistrosInconsistentes.ToString();
-                        fechaCargue = Convert.ToDateTime(uploadedPerformances.FechaCargue).ToString("dd/MM/yyy");
-                    }
-                    string tiposolicut = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Disponibilidad_Presupuestal && x.Codigo == "bla").FirstOrDefault().Nombre;
-                    string template = temNotifyInconsistencies.Contenido
-                        .Replace("_LinkF_", _mailSettings.DominioFront).
-                        Replace("[FECHA_CARGUE]", fechaCargue).
-                        Replace("INCONSISTENCIAS]", inconsistencies);
-
-                    string subject = "";
-                    this.SendMail(template, subject, EnumeratorPerfil.Fiduciaria);
+                    inconsistencies = uploadedPerformances.RegistrosInconsistentes.ToString();
+                    fechaCargue = Convert.ToDateTime(uploadedPerformances.FechaCargue).ToString("dd/MM/yyy");
                 }
-            }
-            finally
-            {
-                //respuesta = {
-                //    IsSuccessful = true,
-                //    IsException = false,
-                //    IsValidation = false,
-                //    Data = uploadedPerformances,
-                //    Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
-                //    // Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.DisponibilidadPresupuestal, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, "usuario creacon", strCrearEditar)
+                // TODO Replace string
+                string template = temNotifyInconsistencies.Contenido
+                    .Replace("_LinkF_", _mailSettings.DominioFront).
+                    Replace("[FECHA_CARGUE]", fechaCargue).
+                    Replace("[INCONSISTENCIAS]", inconsistencies).
+                    Replace("[URL]", _mailSettings.DominioFront);
 
-                //};
-            }
+                string subject = "";
+#if !DEBUG
+                isMailSent = this.SendMail(template, subject, EnumeratorPerfil.Fiduciaria);
+#endif
+                if (isMailSent)
+                {
+                    response.Code = ConstMessagesPerformances.ErrorEnviarCorreo;
+                    response.Message = await SaveAuditAction(author, actionId, enumeratorMenu.GestionarRendimientos,
+                                            response.Code, actionMesage);
+                    return response;
+                }
 
-
-            return respuesta;
-        }
-
-        // Notify to show Inconsistentes
-        public async Task<Respuesta> NotifyInconsistencies(int uploadedOrderId)
-        {
-            await ChangeStatusShowInconsistencies(uploadedOrderId);
-            return null;
-        }
-
-        public async Task<Respuesta> ChangeStatusShowInconsistencies(int uploadedOrderId)
-        {
-            int modifiedRows = -1;
-            if (uploadedOrderId > 0)
-            {
+                
                 modifiedRows = await _context.Set<CarguePagosRendimientos>()
-                      .Where(order => order.CargaPagosRendimientosId == uploadedOrderId)
-                      .UpdateAsync(o => new CarguePagosRendimientos()
-                      {
-                          // FechaTramite Fecha Actualización on Update
-                          MostrarInconsistencias = true
-                      });
+                    .Where(order => order.CargaPagosRendimientosId == uploadedOrderId)
+                    .UpdateAsync(o => new CarguePagosRendimientos()
+                    {
+                            PendienteAprobacion = true,
+                            FechaModificacion = DateTime.Now,
+                            UsuarioModificacion = author
+                    });
+
+
+                response.IsSuccessful = isMailSent;
+                response.Code = ConstMessagesPerformances.CorreoEnviado;
+                string message = await SaveAuditAction(author, actionId, enumeratorMenu.GestionarRendimientos,
+                                            response.Code, actionMesage);
+                response.Message = message;
             }
-            string codeResponse = modifiedRows > 0 ? GeneralCodes.OperacionExitosa : GeneralCodes.EntradaInvalida;
-
-            //  “El registro tiene información que depende de él, no se puede eliminar”
-
-            return new Respuesta
+            catch (Exception ex)
             {
-                Data = modifiedRows,
-                IsSuccessful = modifiedRows > 0,
-                IsException = false,
-                IsValidation = false,
-                Code = GeneralCodes.OperacionExitosa,
-                Message = "" // await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreo, "VALIDAR EXCEL PROGRAMACION")
-            };
+                response.IsSuccessful = false;
+                response.IsException = true;
+                response.Code = GeneralCodes.Error;
+                response.Message = await SaveAuditAction(author, actionId, enumeratorMenu.GestionarRendimientos,
+                                            response.Code, ex.SubstringValid(_500));
+            }
+
+            return response;
         }
+
 
         /// <summary>
-        /// TODO Add by status
+        /// Al guardar la información para los registros válidos, 
+        /// el sistema deberá afectar los saldos de las cuentas asociadas 
+        /// a las órdenes de giro especificadas en el archivo, de acuerdo 
+        /// con los valores referenciados en cada una de ellas.
         /// </summary>
         /// <param name="typeFile"></param>
-        /// <returns></returns>
-        public async Task<List<dynamic>> getPaymentsPerformances(string typeFile, string status)
-        {
-            List<dynamic> listaContrats = new List<dynamic>();
-
-            List<CarguePagosRendimientos> lista = await _context.CarguePagosRendimientos.AsNoTracking().ToListAsync();
-
-            lista.Where(w => w.TipoCargue == typeFile && (string.IsNullOrEmpty(status) || w.EstadoCargue == status)).ToList().ForEach(c =>
-            {
-                listaContrats.Add(new
-                {
-                    c.CargaPagosRendimientosId,
-                    c.NombreArchivo,
-                    c.Json,
-                    c.Observaciones,
-                    c.TotalRegistros,
-                    c.RegistrosValidos,
-                    c.RegistrosInvalidos,
-                    c.EstadoCargue,
-                    c.FechaCargue,
-                    c.RegistrosInconsistentes,
-                    c.RegistrosConsistentes,
-                    c.MostrarInconsistencias,
-                    c.FechaTramite
-                });
-            });
-
-            return listaContrats;
-        }
-
-        public void processPaymentsPerformances(string typeFile, List<Dictionary<string, string>> listaCarguePagosRendimientos)
+        /// <param name="listaCarguePagosRendimientos"></param>
+        public void ProcessPayment(string typeFile, List<Dictionary<string, string>> listaCarguePagosRendimientos)
         {
             foreach (var pagoRendimiento in listaCarguePagosRendimientos)
             {
@@ -708,20 +758,46 @@ namespace asivamosffie.services
             }
         }
 
-        public void setObservationPaymentsPerformances(string typeFile, string observaciones, string cargaPagosRendimientosId)
+        public async Task<Respuesta> SetObservationPayments(string author, string observaciones, int uploadedOrderId)
         {
-            CarguePagosRendimientos CarguePagosRendimientos = _context.CarguePagosRendimientos.Find(int.Parse(cargaPagosRendimientosId));
-            CarguePagosRendimientos.Observaciones = observaciones;
-            _context.Entry<CarguePagosRendimientos>(CarguePagosRendimientos).State = EntityState.Modified;
+            Respuesta response = new Respuesta();
+            string actionMesage = ConstantCommonMessages.Performances.OBSERVACIONES_PAGOS;
+            int actionId = await GetActionIdAudit(ConstantCodigoAcciones.Comentar_Pagos);
+            int modifiedRows = 0;
+            if (string.IsNullOrWhiteSpace(observaciones))
+            {
+                response.Code = GeneralCodes.CamposVacios;
+                response.Message = await SaveAuditAction(author, actionId,
+                                        enumeratorMenu.RegistrarPagosRendimientos,
+                                        GeneralCodes.EntradaInvalida,
+                                        actionMesage);
+                return response;
+            }
 
-            _context.SaveChanges();
+            if (uploadedOrderId > 0)
+            {
+                modifiedRows = await _context.Set<CarguePagosRendimientos>()
+                      .Where(order => order.CargaPagosRendimientosId == uploadedOrderId)
+                      .UpdateAsync(o => new CarguePagosRendimientos()
+                      {
+                          FechaModificacion = DateTime.Now,
+                          UsuarioModificacion = author,
+                          Observaciones = observaciones
+                      });
+
+            }
+            string codeResponse = modifiedRows > 0 ? GeneralCodes.OperacionExitosa : GeneralCodes.EntradaInvalida;
+
+            response.IsSuccessful = true;
+            response.Code = codeResponse;
+            response.Message = await SaveAuditAction(author, actionId,
+                                        enumeratorMenu.RegistrarPagosRendimientos,
+                                        codeResponse,
+                                        actionMesage);
+
+            return response;
         }
 
-
-        #endregion
-
-      
-       
 
         /// <summary>
         /// el sistema notificará a la fiduciaria que se encuentra datos inconsistentes 
@@ -732,94 +808,128 @@ namespace asivamosffie.services
         /// <param name="uploadedOrderId"></param>
         /// <returns></returns>
         public async Task<Respuesta> NotifyEmailPerformanceInconsistencies(
-            int uploadedOrderId)
+            int uploadedOrderId, string author)
         {
-            Respuesta respuesta = new Respuesta();
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Notificar_Inconsistencias, (int)EnumeratorTipoDominio.Acciones);
-            string strCrearEditar = string.Empty;
+            Respuesta response = new Respuesta();
+            bool isMailSent = false;
+#if !DEBUG
+            isMailSent = true;
+#endif
+            int modifiedRows = -1;
+            int actionId = await GetActionIdAudit(ConstantCodigoAcciones.Notificar_Inconsistencias);
+            string actionMesage = ConstantCommonMessages.Performances.NOTIFICAR_INCONSISTENCIAS;
             CarguePagosRendimientos uploadedPerformances = null;
+
+            uploadedPerformances = await _context.CarguePagosRendimientos
+                    .Where(d => d.CargaPagosRendimientosId == uploadedOrderId).AsNoTracking().FirstOrDefaultAsync();
+
+            if (uploadedPerformances == null || uploadedOrderId == 0)
+            {
+                response.Code = GeneralCodes.EntradaInvalida;
+                response.Message = await SaveAuditAction(author, actionId,
+                                        enumeratorMenu.GestionarRendimientos,
+                                        response.Code,
+                                        actionMesage);
+                return response;
+            }
 
             try
             {
-
-                uploadedPerformances = await _context.CarguePagosRendimientos
-                    .Where(d => d.CargaPagosRendimientosId == uploadedOrderId).AsNoTracking().FirstOrDefaultAsync();
-
+                Template temNotifyInconsistencies = await _commonService.GetTemplateById(
+                                                            (int)enumeratorTemplate.NotificacionInconsistencias);                   
+                string inconsistencies = "";
+                string fechaCargue = "";
                 if (uploadedPerformances != null)
                 {
-
-                    strCrearEditar = "ENVIAR SOLICITUD A DOSPONIBILIDAD PRESUPUESAL";
-                    int modifiedRows = -1;
-
-                    modifiedRows = await _context.Set<CarguePagosRendimientos>()
-                          .Where(order => order.CargaPagosRendimientosId == uploadedOrderId)
-                          .UpdateAsync(o => new CarguePagosRendimientos()
-                          {
-                          // FechaTramite Fecha Actualización on Update
-                          MostrarInconsistencias = true
-                          });
-
-                    
-                    //envio correo a fiduciaria
-                    Template temNotifyInconsistencies = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificacionInconsistencias);
-                   
-                    string inconsistencies = "";
-                    string fechaCargue = "";
-                    if (uploadedPerformances != null)
-                    {
-                        inconsistencies = uploadedPerformances.RegistrosInconsistentes.ToString();
-                        fechaCargue = Convert.ToDateTime(uploadedPerformances.FechaCargue).ToString("dd/MM/yyy");
-                    }
-                    string tiposolicut = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Disponibilidad_Presupuestal && x.Codigo == "bla").FirstOrDefault().Nombre;
-                    string template = temNotifyInconsistencies.Contenido
-                        .Replace("_LinkF_", _mailSettings.DominioFront).
-                        Replace("[FECHA_CARGUE]", fechaCargue).
-                        Replace("INCONSISTENCIAS]", inconsistencies);
+                    inconsistencies = uploadedPerformances.RegistrosInconsistentes.ToString();
+                    fechaCargue = Convert.ToDateTime(uploadedPerformances.FechaCargue).ToString("dd/MM/yyy");
+                }
+                 // TODO Replace string
+                string template = temNotifyInconsistencies.Contenido
+                    .Replace("_LinkF_", _mailSettings.DominioFront).
+                    Replace("[FECHA_CARGUE]", fechaCargue).
+                    Replace("[INCONSISTENCIAS]", inconsistencies).
+                    Replace("[URL]", _mailSettings.DominioFront);
 
                     string subject = "";
-                    this.SendMail(template, subject, EnumeratorPerfil.Fiduciaria);
+#if !DEBUG
+                isMailSent = this.SendMail(template, subject, EnumeratorPerfil.Fiduciaria);
+#endif
+                if (isMailSent)
+                {
+                    response.Code = ConstMessagesPerformances.ErrorEnviarCorreo;
+                    response.Message = await SaveAuditAction(author, actionId, enumeratorMenu.GestionarRendimientos,
+                                            response.Code, actionMesage);
+                    return response;
                 }
 
-                return respuesta = new Respuesta
-                {
-                    IsSuccessful = true,
-                    IsException = false,
-                    IsValidation = false,
-                    Data = uploadedPerformances,
-                    Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
-                    // Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.DisponibilidadPresupuestal, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, "usuario creacon", strCrearEditar)
+                modifiedRows = await _context.Set<CarguePagosRendimientos>()
+                        .Where(order => order.CargaPagosRendimientosId == uploadedOrderId)
+                        .UpdateAsync(o => new CarguePagosRendimientos()
+                        {
+                            FechaTramite = DateTime.Now,
+                            MostrarInconsistencias = true,
+                            FechaModificacion = DateTime.Now,
+                            UsuarioModificacion = author
+                        });
 
-                };
-            }
-
+                response.IsSuccessful = isMailSent;
+                response.Code = ConstMessagesPerformances.CorreoEnviado;
+                string message = await SaveAuditAction(author, actionId, enumeratorMenu.GestionarRendimientos,
+                                            response.Code, actionMesage);
+                                
+                response.Message = message;
+            } 
             catch (Exception ex)
             {
-                return respuesta = new Respuesta
-                {
-                    IsSuccessful = false,
-                    IsException = true,
-                    IsValidation = false,
-                    Data = uploadedPerformances,
-                    Code = ConstantMessagesSesionComiteTema.Error,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.Error, idAccion, "usuario creacion", ex.InnerException.ToString().Substring(0, 500))
-                };
+                response.IsSuccessful = false;
+                response.IsException = true;
+                response.Code = GeneralCodes.Error;
+                response.Message = await SaveAuditAction(author, actionId, enumeratorMenu.GestionarRendimientos,
+                                            response.Code, ex.SubstringValid(_500));
             }
+            return response;
         }
+    
 
-        public void SendMail(string template, string subject,  EnumeratorPerfil enumeratorProfile)
+        public async Task<Respuesta> GetInconsistencies(string author, int uploadedOrderId)
         {
-            var usertoSend = _context.UsuarioPerfil.Where(
-                       x => x.PerfilId == (int)EnumeratorPerfil.CordinadorFinanciera).Include(y => y.Usuario);
-              foreach (var fiduciariaEmail in usertoSend)
+            Respuesta response = new Respuesta();
+            string actionMesage = ConstantCommonMessages.Performances.VER_INCONSISTENCIAS;
+            int actionId = await GetActionIdAudit(ConstantCodigoAcciones.Ver_Inconsistencias);
+            string directory = CheckFileDownloadDirectory();
+            var collection = _context.CarguePagosRendimientos.Where(x => x.CargaPagosRendimientosId == uploadedOrderId)
+                            .Select( order => new
+                            {
+                                Estado = order.CargueValido,
+                                ArchivoJson = order.TramiteJson
+                            }).FirstOrDefault();
+
+            if (string.IsNullOrWhiteSpace(collection.ArchivoJson))
             {
-                bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(fiduciariaEmail.Usuario.Email,
-                    subject,
-                    template,
-                    _mailSettings.Sender,
-                    _mailSettings.Password,
-                    _mailSettings.MailServer,
-                    _mailSettings.MailPort);
+                response.Code = GeneralCodes.EntradaInvalida;
+                response.Message = await SaveAuditAction(author, actionId,
+                                        enumeratorMenu.RegistrarPagosRendimientos,
+                                        response.Code,
+                                        actionMesage);
+                return response;
             }
+
+            List<PerformanceOrder> list = JsonConvert.DeserializeObject<List<PerformanceOrder>>(collection.ArchivoJson);
+
+            WriteCollectionToPath("Inconsistencias", directory, list);
+            ////the path of the file
+            string newfilePath = directory + "/" + "Inconsistencias" + "_rev.xlsx";
+
+            response.Data = newfilePath;
+            response.IsSuccessful = true;
+            response.Message = await SaveAuditAction(author, actionId,
+                                        enumeratorMenu.GestionarRendimientos,
+                                        GeneralCodes.OperacionExitosa,
+                                        actionMesage);
+
+            return response;
+
         }
     }
 

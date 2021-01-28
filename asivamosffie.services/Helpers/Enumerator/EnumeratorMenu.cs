@@ -39,8 +39,12 @@ namespace asivamosffie.services.Helpers.Enumerator
         Registrar_seguimiento_diario = 53,
         Verificar_seguimiento_diario = 54,      
         Registrar_Avance_Semanal = 55,
-        Registrar_actuaciones_controversias_contractuales=57,    
-	}
+        Registrar_actuaciones_controversias_contractuales=57,
+
+        RegistrarPagosRendimientos = 65,
+        GestionarRendimientos = 66,
+        AprobarIncorporacionRendimientos = 67
+    }
 
     public enum enumeratorAccion
     {
