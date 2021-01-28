@@ -189,14 +189,14 @@ namespace asivamosffie.services
                     {
                         if (SolicitudPagoFaseFactura.SolicitudPagoFaseFacturaDescuento.Count() > 0)
                             SolicitudPagoFaseFactura.SolicitudPagoFaseFacturaDescuento = SolicitudPagoFaseFactura.SolicitudPagoFaseFacturaDescuento.Where(r => r.Eliminado != true).ToList();
-                     
+
                     }
                 }
             }
 
             return solicitudPago;
         }
-         
+
         public SolicitudPago GetSolicitudPago(SolicitudPago solicitudPago)
         {
             switch (solicitudPago.TipoSolicitudCodigo)
@@ -216,7 +216,7 @@ namespace asivamosffie.services
                        .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
                           .ThenInclude(r => r.SolicitudPagoFase)
                               .ThenInclude(r => r.SolicitudPagoFaseFactura)
-                                  .ThenInclude(r => r.SolicitudPagoFaseFacturaDescuento) 
+                                  .ThenInclude(r => r.SolicitudPagoFaseFacturaDescuento)
                        .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
                        .Include(r => r.SolicitudPagoSoporteSolicitud).FirstOrDefault();
 
@@ -373,6 +373,15 @@ namespace asivamosffie.services
         }
 
         #region  Tipo Obra Interventoria
+
+        public async Task GetValidateSolicitudPagoId(int SolicitudPagoId)
+        {
+            SolicitudPago solicitudPago = await GetSolicitudPago(SolicitudPagoId);
+            solicitudPago.RegistroCompleto = ValidateCompleteRecordSolicitudPago(solicitudPago);
+            _context.SaveChanges();
+        }
+
+
         public async Task<Respuesta> DeleteSolicitudPagoFaseFacturaDescuento(int pSolicitudPagoFaseFacturaDescuentoId, string pUsuarioModificacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Descuento, (int)EnumeratorTipoDominio.Acciones);
@@ -534,7 +543,6 @@ namespace asivamosffie.services
             {
                 pSolicitudPago.UsuarioModificacion = pSolicitudPago.UsuarioCreacion;
                 pSolicitudPago.FechaModificacion = DateTime.Now;
-                pSolicitudPago.RegistroCompleto = ValidateCompleteRecordSolicitudPago(pSolicitudPago);
             }
             else
             {
@@ -1225,7 +1233,7 @@ namespace asivamosffie.services
             return true;
         }
 
-
+      
 
         #endregion
 
