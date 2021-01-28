@@ -73,7 +73,7 @@ namespace asivamosffie.services
                     r.FechaAprobacionFinanciera,
                     r.NumeroSolicitud,      
                     Modalidad = !string.IsNullOrEmpty(r.ModalidadCodigo) ? ListParametricas.Where(l => l.Codigo == r.ModalidadCodigo && l.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato).FirstOrDefault().Nombre : "No aplica",
-                    r.NumeroContrato,  
+                    NumeroContrato = r.NumeroContrato?? "No Aplica",  
                     r.OrdenGiro,
                     EstadoOrdenGiro,
                     RegistroCompleto,

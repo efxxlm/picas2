@@ -83,7 +83,7 @@ namespace asivamosffie.services
                     r.SolicitudPagoId,
                     r.FechaCreacion,
                     r.NumeroSolicitud,
-                    r.NumeroContrato,
+                    NumeroContrato = r.NumeroContrato ?? "No Aplica",
                     Estado = !string.IsNullOrEmpty(r.EstadoCodigo) ? ListParametricas.Where(l => l.Codigo == r.EstadoCodigo && l.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Registro_Pago).FirstOrDefault().Nombre : " - ",
                     Modalidad = !string.IsNullOrEmpty(r.ModalidadCodigo) ? ListParametricas.Where(l => l.Codigo == r.ModalidadCodigo && l.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato).FirstOrDefault().Nombre : "No aplica"
                 });
@@ -376,9 +376,17 @@ namespace asivamosffie.services
 
         public async Task GetValidateSolicitudPagoId(int SolicitudPagoId)
         {
-            SolicitudPago solicitudPago = await GetSolicitudPago(SolicitudPagoId);
-            solicitudPago.RegistroCompleto = ValidateCompleteRecordSolicitudPago(solicitudPago);
-            _context.SaveChanges();
+            try
+            {
+                SolicitudPago solicitudPago = await GetSolicitudPago(SolicitudPagoId);
+                solicitudPago.RegistroCompleto = ValidateCompleteRecordSolicitudPago(solicitudPago);
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                ex.InnerException.ToString();
+            }
+     
         }
 
 
