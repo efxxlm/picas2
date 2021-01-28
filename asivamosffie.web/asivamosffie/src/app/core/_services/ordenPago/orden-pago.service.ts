@@ -15,8 +15,8 @@ export class OrdenPagoService {
     return this.http.get<any[]>( `${ this.urlApi }/GetListSolicitudPago` );
   }
 
-  getOrdenGiroByOrdenGiroId( pOrdenGiroId: number ) {
-    return this.http.get( `${ this.urlApi }/GetOrdenGiroByOrdenGiroId?pOrdenGiroId=${ pOrdenGiroId }` );
+  getSolicitudPagoBySolicitudPagoId( SolicitudPagoId: number ) {
+    return this.http.get( `${ this.urlApi }/GetSolicitudPagoBySolicitudPagoId?SolicitudPagoId=${ SolicitudPagoId }` );
   }
 
 }

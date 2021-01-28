@@ -1,4 +1,6 @@
+import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
+import { OrdenPagoService } from 'src/app/core/_services/ordenPago/orden-pago.service';
 
 @Component({
   selector: 'app-form-generar-orden-giro',
@@ -7,9 +9,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FormGenerarOrdenGiroComponent implements OnInit {
 
-  constructor() { }
+    constructor(
+        private activatedRoute: ActivatedRoute,
+        private ordenPagoSvc: OrdenPagoService )
+    {
+        this.ordenPagoSvc.getSolicitudPagoBySolicitudPagoId( this.activatedRoute.snapshot.params.id )
+            .subscribe(
+                response => {
+                    console.log( response );
+                }
+            );
+    }
 
-  ngOnInit(): void {
-  }
+    ngOnInit(): void {
+    }
 
 }
