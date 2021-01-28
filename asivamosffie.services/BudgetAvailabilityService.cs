@@ -1456,9 +1456,16 @@ namespace asivamosffie.services
        impacto: CU 3.3.4*/
         public async Task<Respuesta> CreateDRP(int pId, string pUsuarioModificacion, string urlDestino, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
         {
-            var DisponibilidadCancelar = _context.DisponibilidadPresupuestal.Include(x => x.Contratacion).
-                ThenInclude(x => x.ContratacionProyecto).ThenInclude(x => x.ContratacionProyectoAportante).ThenInclude(x => x.CofinanciacionAportante).
-                ThenInclude(x => x.FuenteFinanciacion).FirstOrDefault(x => x.DisponibilidadPresupuestalId == pId);
+            var DisponibilidadCancelar = _context.DisponibilidadPresupuestal
+                                                    .Include(x => x.Contratacion)
+                                                        .ThenInclude( x => x.Contrato )
+                                                    .Include(x => x.Contratacion)
+                                                        .ThenInclude(x => x.ContratacionProyecto)
+                                                            .ThenInclude(x => x.ContratacionProyectoAportante)
+                                                                .ThenInclude(x => x.CofinanciacionAportante).
+                                                                    ThenInclude(x => x.FuenteFinanciacion)
+                                                    .FirstOrDefault(x => x.DisponibilidadPresupuestalId == pId);
+
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Disponibilidad_Presupuestal, (int)EnumeratorTipoDominio.Acciones);
             int consecutivo = _context.DisponibilidadPresupuestal.Where(x => x.NumeroDrp != null).Count();
             try
