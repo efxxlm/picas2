@@ -46,14 +46,20 @@ export class FormSoporteSolicitudUrlComponent implements OnInit {
 
     onSubmit() {
         console.log(this.addressForm.value);
-        const solicitudPagoSoporteSolicitud = [
-            {
-                solicitudPagoSoporteSolicitudId: this.solicitudPagoSoporteSolicitudId,
-                solicitudPagoId: this.solicitudPagoId,
-                urlSoporte: this.addressForm.get( 'urlSoporte' ).value
-            }
-        ]
-        this.solicitudPago.solicitudPagoSoporteSolicitud = solicitudPagoSoporteSolicitud;
+
+        if ( this.solicitudPago.solicitudPagoSoporteSolicitud.length === 0 ) {
+            const solicitudPagoSoporteSolicitud = [
+                {
+                    solicitudPagoSoporteSolicitudId: this.solicitudPagoSoporteSolicitudId,
+                    solicitudPagoId: this.solicitudPagoId,
+                    urlSoporte: this.addressForm.get( 'urlSoporte' ).value
+                }
+            ]
+            this.solicitudPago.solicitudPagoSoporteSolicitud = solicitudPagoSoporteSolicitud;
+        } else {
+            this.solicitudPago.solicitudPagoSoporteSolicitud[0].urlSoporte = this.addressForm.get( 'urlSoporte' ).value;
+        }
+
         this.registrarPagosSvc.createEditNewPayment( this.solicitudPago )
             .subscribe(
                 response => {
