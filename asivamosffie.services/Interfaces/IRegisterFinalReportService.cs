@@ -15,6 +15,7 @@ namespace asivamosffie.services.Interfaces
         Task<List<dynamic>> GetInformeFinalListaChequeoByContratacionProyectoId(int pContratacionProyectoId);
         Task<List<ContratacionProyecto>> GetInformeFinalByContratacionProyectoId(int pContratacionProyectoId);
         Task<InformeFinalInterventoria> GetInformeFinalAnexoByInformeFinalInterventoriaId(int pInformeFinalInterventoriaId);
+        Task<bool> VerificarInformeFinalEstadoCompleto(int pInformeFinalId);
 
         //Creación y edición
         Task<Respuesta> CreateEditInformeFinal(InformeFinal pInformeFinal);

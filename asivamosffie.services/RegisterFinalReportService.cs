@@ -79,6 +79,36 @@ namespace asivamosffie.services
             return completo;
         }
 
+        public async Task<bool> VerificarInformeFinalEstadoCompleto(int pInformeFinalId)
+        {
+            List<InformeFinalInterventoria> ListInformeFinalInterventoria = await _context.InformeFinalInterventoria
+                                    .Where(r => r.InformeFinalId == pInformeFinalId)
+                                    .ToListAsync();
+            bool completo = true;
+            int phrasesCount = await _context.InformeFinalListaChequeo.CountAsync();
+            //Validación # 1
+            if (ListInformeFinalInterventoria.Count() < phrasesCount)
+            {
+                return false;
+            }
+            else
+            {
+                foreach (InformeFinalInterventoria item in ListInformeFinalInterventoria)
+                {
+                    if (item.CalificacionCodigo == ConstantCodigoCalificacionInformeFinal.No_Cumple)
+                    {
+                        return false;
+                    }
+                }
+            }
+            InformeFinal informeFinal = _context.InformeFinal
+                        .Where(r => r.InformeFinalId == pInformeFinalId)
+                        .FirstOrDefault();
+            informeFinal.RegistroCompleto = true;
+            _context.SaveChanges();
+            return completo;
+        }
+
         public async Task<Respuesta> CreateEditInformeFinal(InformeFinal pInformeFinal)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Informe_Final, (int)EnumeratorTipoDominio.Acciones);
