@@ -26,7 +26,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
     fechaComitePretecnico: [null, Validators.required],
     conclusionComitePretecnico: ['', Validators.required],
     procedeSolicitud: [null, Validators.required],
-    motivosRechazo: ['', Validators.required],
+    motivosRechazo: [null, Validators.required],
     requeridoComite: [null, Validators.required],
     fechaRadicadoSAC: ['', Validators.required],
     numeroRadicadoSAC: ['', Validators.required],
