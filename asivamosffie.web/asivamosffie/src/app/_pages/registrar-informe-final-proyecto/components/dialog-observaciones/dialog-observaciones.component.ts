@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Respuesta } from 'src/app/core/_services/common/common.service';
 import { RegistrarInformeFinalProyectoService } from 'src/app/core/_services/registrar-informe-final-proyecto.service';
@@ -12,12 +12,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class DialogObservacionesComponent implements OnInit {
 
-  observaciones = this.fb.group({
-    informeFinalInterventoriaObservacionesId: [null, Validators.required],
-    informeFinalInterventoriaId: [null, Validators.required],
-    ibservaciones: [null, Validators.required],
-    esCalificacion: [true, Validators.required],
-  });
+  observaciones: FormGroup;
   editorStyle = {
     height: '100px'
   };
@@ -40,6 +35,17 @@ export class DialogObservacionesComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.buildForm();
+  }
+
+  buildForm() {
+    this.observaciones = this.fb.group({
+      informeFinalInterventoriaObservacionesId: [null, Validators.required],
+      informeFinalInterventoriaId: [null, Validators.required],
+      observaciones:[null, Validators.required],
+      esSupervision: [null, Validators.required],
+      esCalificacion: [true, Validators.required],
+    });
   }
 
   maxLength(e: any, n: number) {

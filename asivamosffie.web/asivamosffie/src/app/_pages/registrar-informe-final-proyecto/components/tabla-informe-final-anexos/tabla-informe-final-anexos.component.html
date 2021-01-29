@@ -97,7 +97,9 @@
               color="warn"
               mat-raised-button
               color="accent"
-              class="btn-table animatedOpacity"
+              class="btn-table animatedOpacity info-button"
+              [class.sin-diligenciar]="true"
+              [class.completo]="false"
               type="button"
               (click)="openDialogObservaciones(element)"
             >
