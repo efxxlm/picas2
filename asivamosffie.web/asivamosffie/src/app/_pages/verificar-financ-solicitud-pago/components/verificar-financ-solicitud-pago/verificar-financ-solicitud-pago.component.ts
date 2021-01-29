@@ -31,7 +31,7 @@ export class VerificarFinancSolicitudPagoComponent implements OnInit {
       numeroSolicitud: 'SolPagoO0001',
       modalidadContrato: 'Tipo B',
       numeroContrato: 'N801801',
-      estadoVerificacion: 'Sin verificación',
+      estadoVerificacion: 'Con verificación de la solicitud por el equipo financiero',
       estadoRegistro: 'Incompleto',
       gestion: 1
     },

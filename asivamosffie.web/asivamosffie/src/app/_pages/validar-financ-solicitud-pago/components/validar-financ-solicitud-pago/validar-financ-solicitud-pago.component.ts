@@ -22,6 +22,7 @@ export class ValidarFinancSolicitudPagoComponent implements OnInit {
     'modalidadContrato',
     'numeroContrato',
     'estadoValidacion',
+    'estadoRegistro',
     'gestion'
   ];
   dataTable: any[] = [
@@ -30,7 +31,8 @@ export class ValidarFinancSolicitudPagoComponent implements OnInit {
       numeroSolicitud: 'SolPagoO0001',
       modalidadContrato: 'Tipo B',
       numeroContrato: 'N801801',
-      estadoValidacion: 'Rechazada por el equipo financiero',
+      estadoValidacion: 'Con validación de la solicitud por el equipo financiero',
+      estadoRegistro: 'Completo',
       gestion: 1
     },
     {
@@ -39,6 +41,7 @@ export class ValidarFinancSolicitudPagoComponent implements OnInit {
       modalidadContrato: 'No Aplica',
       numeroContrato: 'N326326',
       estadoValidacion: 'Sin validación',
+      estadoRegistro: 'Incompleto',
       gestion: 2
     },
   ];
