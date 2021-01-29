@@ -147,7 +147,9 @@ namespace asivamosffie.services
             List<dynamic> ListChequeo = new List<dynamic>();
             String calificacionCodigo = "";
             InformeFinal informeFinal = _context.InformeFinal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId).FirstOrDefault();
-            
+            int informeFinaInterventoriaObservacionesId = 0;
+            bool tieneObservacionNoCumple = false;
+
             if (informeFinal!=null)//Sino han llenado los campos de informe final no se muestra la lista de chequeos
             {
                 foreach (var item in ListInformeFinalChequeo)
@@ -156,6 +158,16 @@ namespace asivamosffie.services
 
                     if (informeFinalInterventoria != null)
                     {
+                        if (informeFinalInterventoria.CalificacionCodigo == ConstantCodigoCalificacionInformeFinal.No_Cumple)
+                        {
+                            //Validar si tiene observaciones
+                            InformeFinalInterventoriaObservaciones informeFinalInterventoriaObservaciones = _context.InformeFinalInterventoriaObservaciones.Where(r => r.InformeFinalInterventoriaId == informeFinalInterventoria.InformeFinalInterventoriaId && r.EsCalificacion == true).FirstOrDefault();
+                            if (informeFinalInterventoriaObservaciones != null)
+                            {
+                                informeFinaInterventoriaObservacionesId = informeFinalInterventoriaObservaciones.InformeFinalInterventoriaObservacionesId;
+                                tieneObservacionNoCumple = true;
+                            }
+                        }
                         ListChequeo.Add(new
                         {
                             Nombre = item.Nombre,
@@ -164,7 +176,9 @@ namespace asivamosffie.services
                             InformeFinalInterventoriaId = informeFinalInterventoria.InformeFinalInterventoriaId,
                             TieneObservacionSupervisor = informeFinalInterventoria.TieneObservacionSupervisor is null ? false : informeFinalInterventoria.TieneObservacionSupervisor,
                             InformeFinalId = informeFinalInterventoria.InformeFinalId,
-                            InformeFinalAnexoId =informeFinalInterventoria.InformeFinalAnexoId
+                            InformeFinalAnexoId =informeFinalInterventoria.InformeFinalAnexoId,
+                            InformeFinaInterventoriaObservacionesId = informeFinaInterventoriaObservacionesId,
+                            TieneObservacionNoCumple = tieneObservacionNoCumple
                         });
                     }
                     else
@@ -177,7 +191,9 @@ namespace asivamosffie.services
                             InformeFinalInterventoriaId = 0,
                             TieneObservacionSupervisor = false,
                             InformeFinalId = informeFinal.InformeFinalId,
-                            InformeFinalAnexoId = 0
+                            InformeFinalAnexoId = 0,
+                            InformeFinaInterventoriaObservacionesId = informeFinaInterventoriaObservacionesId,
+                            TieneObservacionNoCumple = tieneObservacionNoCumple
                         });
                     }
                 }
