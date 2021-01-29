@@ -147,7 +147,7 @@ namespace asivamosffie.services
             List<dynamic> ListChequeo = new List<dynamic>();
             String calificacionCodigo = "";
             InformeFinal informeFinal = _context.InformeFinal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId).FirstOrDefault();
-            int informeFinaInterventoriaObservacionesId = 0;
+            int informeFinalInterventoriaObservacionesId = 0;
             bool tieneObservacionNoCumple = false;
 
             if (informeFinal!=null)//Sino han llenado los campos de informe final no se muestra la lista de chequeos
@@ -164,9 +164,19 @@ namespace asivamosffie.services
                             InformeFinalInterventoriaObservaciones informeFinalInterventoriaObservaciones = _context.InformeFinalInterventoriaObservaciones.Where(r => r.InformeFinalInterventoriaId == informeFinalInterventoria.InformeFinalInterventoriaId && r.EsCalificacion == true).FirstOrDefault();
                             if (informeFinalInterventoriaObservaciones != null)
                             {
-                                informeFinaInterventoriaObservacionesId = informeFinalInterventoriaObservaciones.InformeFinalInterventoriaObservacionesId;
+                                informeFinalInterventoriaObservacionesId = informeFinalInterventoriaObservaciones.InformeFinalInterventoriaObservacionesId;
                                 tieneObservacionNoCumple = true;
                             }
+                            else
+                            {
+                                informeFinalInterventoriaObservacionesId = 0;
+                                tieneObservacionNoCumple = false;
+                            }
+                        }
+                        else
+                        {
+                            informeFinalInterventoriaObservacionesId = 0;
+                            tieneObservacionNoCumple = false;
                         }
                         ListChequeo.Add(new
                         {
@@ -177,7 +187,7 @@ namespace asivamosffie.services
                             TieneObservacionSupervisor = informeFinalInterventoria.TieneObservacionSupervisor is null ? false : informeFinalInterventoria.TieneObservacionSupervisor,
                             InformeFinalId = informeFinalInterventoria.InformeFinalId,
                             InformeFinalAnexoId =informeFinalInterventoria.InformeFinalAnexoId,
-                            InformeFinaInterventoriaObservacionesId = informeFinaInterventoriaObservacionesId,
+                            InformeFinalInterventoriaObservacionesId = informeFinalInterventoriaObservacionesId,
                             TieneObservacionNoCumple = tieneObservacionNoCumple
                         });
                     }
@@ -192,8 +202,8 @@ namespace asivamosffie.services
                             TieneObservacionSupervisor = false,
                             InformeFinalId = informeFinal.InformeFinalId,
                             InformeFinalAnexoId = 0,
-                            InformeFinaInterventoriaObservacionesId = informeFinaInterventoriaObservacionesId,
-                            TieneObservacionNoCumple = tieneObservacionNoCumple
+                            InformeFinalInterventoriaObservacionesId = 0,
+                            TieneObservacionNoCumple = false
                         });
                     }
                 }
@@ -375,6 +385,15 @@ namespace asivamosffie.services
             try
             {
                 string strCrearEditar = "";
+
+                InformeFinalInterventoriaObservaciones informeFinalInterventoriaObservaciones = _context.InformeFinalInterventoriaObservaciones
+                    .Where(r => r.InformeFinalInterventoriaId == pObservacion.InformeFinalInterventoriaId && r.EsCalificacion == true).FirstOrDefault();
+
+                if (pObservacion.EsCalificacion == true && informeFinalInterventoriaObservaciones !=null)
+                {
+                    pObservacion.InformeFinalInterventoriaObservacionesId = informeFinalInterventoriaObservaciones.InformeFinalInterventoriaObservacionesId;
+                }
+
                 if (pObservacion.InformeFinalInterventoriaObservacionesId == 0)
                 {
                     strCrearEditar = "CREAR INFORME FINAL ANEXO";

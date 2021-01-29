@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Respuesta } from 'src/app/core/_services/common/common.service';
 import { RegistrarInformeFinalProyectoService } from 'src/app/core/_services/registrar-informe-final-proyecto.service';
@@ -12,7 +12,14 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class DialogObservacionesComponent implements OnInit {
 
-  observaciones: FormGroup;
+  observaciones = this.fb.group({
+    informeFinalInterventoriaObservacionesId: [null, Validators.required],
+    informeFinalInterventoriaId: [null, Validators.required],
+    observaciones:[null, Validators.required],
+    esSupervision: [null, Validators.required],
+    esCalificacion: [true, Validators.required],
+  });
+
   editorStyle = {
     height: '100px'
   };
@@ -35,17 +42,6 @@ export class DialogObservacionesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.buildForm();
-  }
-
-  buildForm() {
-    this.observaciones = this.fb.group({
-      informeFinalInterventoriaObservacionesId: [null, Validators.required],
-      informeFinalInterventoriaId: [null, Validators.required],
-      observaciones:[null, Validators.required],
-      esSupervision: [null, Validators.required],
-      esCalificacion: [true, Validators.required],
-    });
   }
 
   maxLength(e: any, n: number) {
@@ -83,9 +79,14 @@ export class DialogObservacionesComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.observaciones.value,this.data.informe.informeFinalInterventoriaId);
+    console.log(this.data.informe);
     this.observaciones.value.informeFinalInterventoriaId = this.data.informe.informeFinalInterventoriaId;
-    this.createEditInformeFinalInterventoriaObservacion(this.observaciones);
+    this.observaciones.value.esCalificacion = true;
+    if(this.data.informe.informeFinalInterventoriaObservacionesId != null){
+      this.observaciones.value.informeFinalInterventoriaObservacionesId = this.data.informe.informeFinalInterventoriaObservacionesId;
+    }
+    console.log("Enviar:",this.observaciones.value);
+    this.createEditInformeFinalInterventoriaObservacion(this.observaciones.value);
     //this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
   }
 
