@@ -8,14 +8,16 @@
 </button>
 
 <div class="text-center">
-  <h1 class="title-menu--h1">Tipo de documento LJ776554</h1>
+  <h1 class="title-menu--h1">Tipo de documento 
+    {{ data.llaveMen }}
+  </h1>
   <p>
     Estado del requisito:
     <b> Cumple </b>
   </p>
   <p>
-    <b> 2. </b>
-    Acta de inventario por espacios
+    <b> {{ data.informeFinalListaChequeoId }}. </b>
+    {{ data.nombre }}
   </p>
 </div>
 
@@ -49,6 +51,17 @@
                 </mat-select>
               </mat-form-field>
             </div>
+            <span class="icon-incompleto">
+              <img
+                class="icon-incompleto--img"
+                src="assets/img/icon/incompleto.svg"
+                alt="este campo es requerido"
+                *ngIf="
+                  (addressForm.get('tipoAnexo').invalid && addressForm.get('tipoAnexo').touched) ||
+                  (addressForm.get('tipoAnexo').invalid && estaEditando)
+                "
+              />
+            </span>
           </div>
         </div>
       </div>
@@ -86,7 +99,7 @@
             Indique la ruta en la que se encuentra el soporte del documento
           </span>
         </div>
-        <span class="icon-incompleto">
+        <span class="icon-incompleto mr-05em">
           <img
             class="icon-incompleto--img"
             src="assets/img/icon/incompleto.svg"

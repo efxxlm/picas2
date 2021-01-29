@@ -1,0 +1,83 @@
+<!-- <div class="busqueda">
+  <mat-form-field appearance="outline" class="busqueda--input">
+    <mat-label>Buscador / Filtro</mat-label>
+    <input matInput #filtro (keyup)="applyFilter($event)" />
+  </mat-form-field>
+  <button
+    mat-button
+    color="primary"
+    class="busqueda--img"
+    (click)="filtro.focus()"
+  >
+    <img src="assets/img/icon/lupa.svg" alt="Buscar" />
+  </button>
+</div> -->
+
+<section class="text-center">
+  <div class="d-flex align-items-center info-text en-alertaLibre">
+    Seleccione si el item Cumple, No cumple o No aplica, tenga en cuenta que
+    para continuar el proceso todos los items deben estar en estado de Cumple o
+    No aplica.
+  </div>
+
+  <div class="tabla-gris">
+    <div class="table-responsive">
+      <table mat-table [dataSource]="dataSource" matSort>
+        <!-- informeFinalListaChequeoId Column -->
+        <ng-container matColumnDef="informeFinalListaChequeoId">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>No.</th>
+          <td mat-cell *matCellDef="let element">
+            <b>{{ element.informeFinalListaChequeoId }}</b>
+          </td>
+        </ng-container>
+
+        <!-- nombre Column -->
+        <ng-container matColumnDef="nombre">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Ítem</th>
+          <td mat-cell *matCellDef="let element">{{ element.nombre }}</td>
+        </ng-container>
+
+        <!-- calificacionCodigo Column -->
+        <ng-container matColumnDef="calificacionCodigo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            Estado del requisito
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <span *ngIf="element.calificacionCodigo === '1'">Cumple</span>
+            <span *ngIf="element.calificacionCodigo === '2'">No cumple</span>
+            <span *ngIf="element.calificacionCodigo === '3'">No aplica</span>
+          </td>
+        </ng-container>
+
+        <!-- Id Column -->
+        <ng-container matColumnDef="informeFinalInterventoriaId">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Gestión</th>
+          <td mat-cell *matCellDef="let element">
+            <button
+              *ngIf="element.calificacionCodigo === '1'"
+              mat-button
+              color="warn"
+              mat-raised-button
+              color="accent"
+              class="btn-table animatedOpacity"
+              type="button"
+              (click)="openDialogTipoDocumento(element)"
+            >
+              Tipo de documento
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+    <mat-paginator
+      #paginator
+      [length]="dataSource?.data.length"
+      [pageIndex]="0"
+      [pageSize]="5"
+      [pageSizeOptions]="[5, 10, 25, 100]"
+    ></mat-paginator>
+  </div>
+</section>

@@ -44,4 +44,8 @@ export class RegistrarInformeFinalProyectoService {
     return this.http.post(`${environment.apiUrl}/${this.final_report}/CreateEditInformeFinalInterventoriaObservacion`, informeFinalInterventoriaObservaciones );
   }
 
+  getInformeFinalAnexoByInformeFinalInterventoriaId(pInformeFinalInterventoriaId: string){
+    return this.http.get(`${environment.apiUrl}/${this.final_report}/GetInformeFinalAnexoByInformeFinalInterventoriaId?pInformeFinalInterventoriaId=${ pInformeFinalInterventoriaId }`);
+  }
+
 }

@@ -3,16 +3,16 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 
 import { RegistrarInformeFinalProyectoService } from 'src/app/core/_services/registrar-informe-final-proyecto.service';
 import { Report } from 'src/app/_interfaces/proyecto-final.model';
+
 @Component({
-  selector: 'app-registrar-informe-final',
-  templateUrl: './registrar-informe-final.component.html',
-  styleUrls: ['./registrar-informe-final.component.scss']
+  selector: 'app-ver-detalle-informe-final',
+  templateUrl: './ver-detalle-informe-final.component.html',
+  styleUrls: ['./ver-detalle-informe-final.component.scss']
 })
-export class RegistrarInformeFinalComponent implements OnInit {
+export class VerDetalleInformeFinalComponent implements OnInit {
 
   id: string;
   report: Report;
-  
 
   constructor(
     private router: Router,
@@ -30,7 +30,9 @@ export class RegistrarInformeFinalComponent implements OnInit {
     this.registrarInformeFinalProyectoService.getInformeFinalByContratacionProyecto(id)
     .subscribe(report => {
       this.report = report[0];
+      console.log(this.report);
+      
     });
   }
-  
+
 }

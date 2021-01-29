@@ -8,6 +8,7 @@ import { Component, Input, OnInit } from '@angular/core';
 export class InformeFinalAnexosComponent implements OnInit {
 
   @Input() id: string;
+  @Input() llaveMen: string;
 
   constructor() { }
 

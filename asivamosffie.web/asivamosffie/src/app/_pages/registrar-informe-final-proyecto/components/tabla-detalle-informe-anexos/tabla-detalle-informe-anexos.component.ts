@@ -13,14 +13,14 @@ import { RegistrarInformeFinalProyectoService } from 'src/app/core/_services/reg
 import { Respuesta } from 'src/app/core/_services/common/common.service';
 
 @Component({
-  selector: 'app-tabla-informe-final-anexos',
-  templateUrl: './tabla-informe-final-anexos.component.html',
-  styleUrls: ['./tabla-informe-final-anexos.component.scss']
+  selector: 'app-tabla-detalle-informe-anexos',
+  templateUrl: './tabla-detalle-informe-anexos.component.html',
+  styleUrls: ['./tabla-detalle-informe-anexos.component.scss']
 })
-export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
+export class TablaDetalleInformeAnexosComponent implements OnInit, AfterViewInit {
+
   ELEMENT_DATA : Anexo[] = [];
   @Input() id: string;
-  @Input() llaveMen: string;
   anexos: any;
   displayedColumns: string[] = [
     'informeFinalListaChequeoId',
@@ -28,22 +28,13 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     'calificacionCodigo',
     'informeFinalInterventoriaId'
   ];
-  addressForm: FormGroup;
+
   dataSource = new MatTableDataSource<Anexo>(this.ELEMENT_DATA);
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  estaEditando = false;
-
-  estadoArray = [
-    { name: 'Cumple', value: 1 },
-    { name: 'No cumple', value: 2 },
-    { name: 'No aplica', value: 3 ,}
-  ];
-
   constructor(
-    private fb: FormBuilder,
     public dialog: MatDialog,
     private registrarInformeFinalProyectoService: RegistrarInformeFinalProyectoService
   ) { }
@@ -85,62 +76,13 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     let dialogRef = this.dialog.open(DialogTipoDocumentoComponent, {
       width: '70em',
       data:{
-        informe: informe,
-        llaveMen: this.llaveMen
+        informe: informe
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
     });
-  }
-
-  openDialogObservaciones(informe:any) {
-    let dialogRef = this.dialog.open(DialogObservacionesComponent, {
-      width: '70em',
-      data: {
-        informe: informe,
-        llaveMen: this.llaveMen
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-    });
-  }
-
-  openDialog(modalTitle: string, modalText: string) {
-    this.dialog.open(ModalDialogComponent, {
-      width: '28em',
-      data: { modalTitle, modalText },
-    });
-  }
-
-  onSubmit() {
-    // console.log(this.addressForm.value);
-    this.estaEditando = true;
-    this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
-  }
-
-  select(informeFinalAnexo) {
-    this.addressForm = this.fb.group({
-      calificacionCodigo:  [informeFinalAnexo.calificacionCodigo, Validators.required],
-      informeFinalId:  [informeFinalAnexo.informeFinalId, Validators.required],
-      informeFinalInterventoriaId:  [informeFinalAnexo.informeFinalInterventoriaId, Validators.required],
-      informeFinalListaChequeoId:  [informeFinalAnexo.informeFinalListaChequeoId, Validators.required],
-    });
-    //console.log("Autosave test: ",this.addressForm.value);
-    this.createInformeFinalInterventoria(this.addressForm.value);
-  }
-
-  createInformeFinalInterventoria( informeFinalInterventoria: any ) {
-    this.registrarInformeFinalProyectoService.createEditInformeFinalInterventoria(informeFinalInterventoria)
-    .subscribe((respuesta: Respuesta) => {
-        console.log(respuesta.message);
-      },
-      err => {
-        console.log( err );
-      });
   }
 
 }

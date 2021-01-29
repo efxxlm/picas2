@@ -6,7 +6,7 @@
   </div>
   <div class="text-center">
     <h1 class="title-menu--h1">
-      Registrar informe final
+      Ver detalle registro informe final
       <b *ngIf="report"> {{ report.proyecto.llaveMen }} </b>
     </h1>
     <p class="colorMainColor mt-05em"> 
@@ -18,6 +18,6 @@
   </div>
 
   <app-datos-del-proyecto *ngIf="report" [report]="report"></app-datos-del-proyecto>
-  <app-form-recibo-a-satisfaccion *ngIf="report" [report]="report"></app-form-recibo-a-satisfaccion>
-  <app-informe-final-anexos *ngIf="report" [id]="id" [llaveMen]="report.proyecto.llaveMen"></app-informe-final-anexos>
+  <app-detalle-recibo-satisfaccion *ngIf="report" [report]="report"></app-detalle-recibo-satisfaccion>
+  <app-tabla-detalle-informe-anexos [id]="id"></app-tabla-detalle-informe-anexos>
 </section>
