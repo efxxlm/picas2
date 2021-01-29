@@ -20,5 +20,6 @@ namespace asivamosffie.model.Models
         public DateTime? FechaActaInicioFase2 { get; set; }
         public string EstadoActaFase2 { get; set; }
         public decimal? ValorTotal { get; set; }
+        public string TipoSolicitudCodigo { get; set; }
     }
 }
