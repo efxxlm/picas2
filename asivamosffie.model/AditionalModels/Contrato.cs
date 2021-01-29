@@ -51,5 +51,8 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public SolicitudPago SolicitudPagoOnly { get; set; }
+
+        [NotMapped]
+        public dynamic ListProyectos { get; set; }
     }
 }

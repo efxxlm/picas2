@@ -38,7 +38,7 @@ namespace asivamosffie.services
                  .Include(r => r.OrdenGiro).Where(s => s.Eliminado != true)
                                                                             .Select(s => new
                                                                             {
-                                                                                s.FechaAprobacionFinanciera, 
+                                                                                s.FechaAprobacionFinanciera,
                                                                                 s.NumeroSolicitud,
                                                                                 s.Contrato.ModalidadCodigo,
                                                                                 s.Contrato.NumeroContrato,
@@ -58,7 +58,7 @@ namespace asivamosffie.services
             result.ForEach(r =>
             {
                 bool RegistroCompleto = false;
-                string EstadoOrdenGiro = string.Empty; 
+                string EstadoOrdenGiro = string.Empty;
                 if (r.OrdenGiro == null)
                     EstadoOrdenGiro = ConstanCodigoEstadoOrdenGiro.Sin_generacion;
                 else
@@ -71,9 +71,9 @@ namespace asivamosffie.services
                 grind.Add(new
                 {
                     r.FechaAprobacionFinanciera,
-                    r.NumeroSolicitud,      
+                    r.NumeroSolicitud,
                     Modalidad = !string.IsNullOrEmpty(r.ModalidadCodigo) ? ListParametricas.Where(l => l.Codigo == r.ModalidadCodigo && l.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato).FirstOrDefault().Nombre : "No aplica",
-                    NumeroContrato = r.NumeroContrato?? "No Aplica",  
+                    NumeroContrato = r.NumeroContrato ?? "No Aplica",
                     r.OrdenGiro,
                     EstadoOrdenGiro,
                     RegistroCompleto,
@@ -90,9 +90,10 @@ namespace asivamosffie.services
             try
             {
                 if (SolicitudPago.ContratoId > 0)
+                {
                     SolicitudPago.ContratoSon = await _registerValidatePayment.GetContratoByContratoId((int)SolicitudPago.ContratoId, 0);
-
-
+                    SolicitudPago.ContratoSon.ListProyectos = await _registerValidatePayment.GetProyectosByIdContrato((int)SolicitudPago.ContratoId);
+                }
                 if (SolicitudPago.OrdenGiroId != null)
                 {
                     SolicitudPago.OrdenGiro = _context.OrdenGiro.Where(o => o.OrdenGiroId == SolicitudPago.OrdenGiroId)
@@ -101,7 +102,7 @@ namespace asivamosffie.services
                         .Include(d => d.SolicitudPago).FirstOrDefault();
                 }
             }
-            catch (Exception ex )
+            catch (Exception ex)
             {
 
                 throw;
