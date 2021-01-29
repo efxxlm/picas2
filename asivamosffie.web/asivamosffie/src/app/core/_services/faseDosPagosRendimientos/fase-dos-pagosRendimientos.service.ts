@@ -44,12 +44,6 @@ export class FaseDosPagosRendimientosService {
     return this.http.get<any>(`${this.urlApi}/deletePaymentPerformance?uploadedOrderId=${uploadedOrderId}`)
   }
 
- /**
- * @deprecated The method should not be used
- */
-  downlaodPaymentsPerformanceStatus(uploadedOrderId: number){
-    return this.http.get<any>(`${this.urlApi}/downloadPaymentPerformance?uploadedOrderId=${uploadedOrderId}`)
-  }
   downloadPaymentsPerformanceStatus(fileRequest: any, fileType: string){
     return this.http.post(`${this.urlApi}/downloadPaymentPerformance?fileType=${fileType}`, fileRequest , { responseType: "blob" })
   }
@@ -75,5 +69,11 @@ export class FaseDosPagosRendimientosService {
     //  fileRequest , { responseType: "blob" })
     return this.http.post(
       `${this.urlApi}/downloadPerformancesInconsistencies?uploadedOrderId=${uploadedOrderId}&status=${1}`, {} , {responseType: "blob" })
+  }
+
+  getRequestedApprovalPerformances() {
+    return this.http.get<CarguePagosRendimientos[]>(
+      `${this.urlApi}/requestedApprovalPerformances`
+    )
   }
 }

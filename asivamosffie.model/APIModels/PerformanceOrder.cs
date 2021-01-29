@@ -179,7 +179,15 @@ namespace asivamosffie.model.APIModels
 
 
     public class ManagedPerformancesOrder : PerformanceOrder{
-       [JsonProperty(PropertyName = "LiablePerformances")]
-        public decimal LiablePerformances { get; set; }
+       
+        public new decimal GeneratedPerformances { get; }
+
+        public new decimal FinancialLienProvision { get; }
+
+        public new decimal BankCharges { get; }
+
+        public new decimal DiscountedCharge { get; }
+        public new decimal PerformancesToAdd { get; }
+        public new string Status { get; }
     }
 }

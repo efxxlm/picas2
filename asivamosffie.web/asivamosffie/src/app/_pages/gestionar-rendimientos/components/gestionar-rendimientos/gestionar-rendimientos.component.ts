@@ -5,6 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Respuesta } from 'src/app/core/_services/common/common.service';
 import { FaseDosPagosRendimientosService } from 'src/app/core/_services/faseDosPagosRendimientos/fase-dos-pagosRendimientos.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { FileDownloader } from 'src/app/_helpers/file-downloader';
 
 @Component({
@@ -120,9 +121,19 @@ export class GestionarRendimientosComponent implements OnInit {
 
   requestApproval(uploadedOrderId: number, order){
     this.faseDosPagosRendimientosSvc
-    .requestApproval(uploadedOrderId).subscribe((result)=>{
-      order.pendienteAprobacion = true;
-     this.loadDataSource();
+    .requestApproval(uploadedOrderId).subscribe((result:Respuesta)=>{
+      if(result.isSuccessful){
+        order.pendienteAprobacion = true;
+      }
+      this.openDialog("", result.message)
+     
+    })
+  }
+  
+  openDialog(modalTitle: string, modalText: string) {
+    let dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '30em',
+      data: { modalTitle, modalText }
     })
   }
 

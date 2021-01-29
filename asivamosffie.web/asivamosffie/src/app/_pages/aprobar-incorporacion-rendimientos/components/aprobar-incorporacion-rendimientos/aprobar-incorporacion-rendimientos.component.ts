@@ -3,6 +3,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { FaseDosPagosRendimientosService } from 'src/app/core/_services/faseDosPagosRendimientos/fase-dos-pagosRendimientos.service';
 import { DialogCargarActaFirmadaAirComponent } from '../dialog-cargar-acta-firmada-air/dialog-cargar-acta-firmada-air.component';
 
 
@@ -18,20 +19,26 @@ export class AprobarIncorporacionRendimientosComponent implements OnInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   displayedColumns: string[] = [
     'fechaCargue',
-    'numTotalRegistrosIncorporados',
+    'totalRegistros',
     'gestion'
   ];
-  dataTable: any[] = [
-    {
-      fechaCargue: '10/08/2020',
-      numTotalRegistrosIncorporados: 5,
-      gestion: 1
-    }
-  ]
-  constructor(public dialog: MatDialog) { }
+  
+  constructor(public dialog: MatDialog,
+    private faseDosPagosRendimientosSvc: FaseDosPagosRendimientosService) { }
 
   ngOnInit(): void {
-    this.dataSource = new MatTableDataSource(this.dataTable);
+    this.loadDataSource();
+  }
+
+  loadDataSource(){
+    this.faseDosPagosRendimientosSvc.getRequestedApprovalPerformances()
+    .subscribe((data)=>{
+      this.setDataSource(data);
+    })
+  }
+
+  setDataSource(data: any[]){
+    this.dataSource = new MatTableDataSource(data);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';

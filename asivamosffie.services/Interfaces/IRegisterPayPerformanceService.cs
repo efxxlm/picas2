@@ -22,12 +22,14 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> ManagePerformanceAsync(int uploadOrderId);
 
-        Task<Respuesta>  GetManagedPerformances(int uploadedOrderId, int statusType);
+        Task<Respuesta> GetManagedPerformances(int uploadedOrderId, int statusType);
 
         Task<Respuesta> NotifyEmailPerformanceInconsistencies(int uploadedOrderId, string author);
 
         Task<Respuesta> NotifyRequestManagedPerformancesApproval(int uploadedOrderId, string author);
 
         Task<Respuesta> GetInconsistencies(string author, int uploadedOrderId);
+
+        Task<IEnumerable<dynamic>> GetRequestedApprovalPerformances();
     }
 }

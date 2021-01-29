@@ -242,8 +242,24 @@ namespace asivamosffie.api.Controllers
                 // throw ex;
                 return BadRequest("Archivo no encontrado"); /// ?
             }
-        } 
+        }
         #endregion
+
+
+        [Route("requestedApprovalPerformances")]
+        [HttpGet]
+        public async Task<IEnumerable<dynamic>> GetRequestedApprovalPerformances()
+        {
+            try
+            {
+                var  list =  await _registerPayPerformanceService.GetRequestedApprovalPerformances();
+                return list;
+            }
+            catch (Exception ex)
+            {
+                throw ex.InnerException;
+            }
+        }
 
 
     }

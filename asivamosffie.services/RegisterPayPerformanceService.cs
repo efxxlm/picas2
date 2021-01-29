@@ -82,7 +82,7 @@ namespace asivamosffie.services
         {
             bool isMailSent = false;
             var usertoSend = _context.UsuarioPerfil.Where(
-                       x => x.PerfilId == (int)EnumeratorPerfil.CordinadorFinanciera).Include(y => y.Usuario);
+                       x => x.PerfilId == (int)enumeratorProfile).Include(y => y.Usuario);
             foreach (var fiduciariaEmail in usertoSend)
             {
                 isMailSent = Helpers.Helpers.EnviarCorreo(fiduciariaEmail.Usuario.Email,
@@ -567,6 +567,13 @@ namespace asivamosffie.services
 
             decimal valorAporteEnCuenta = 0;
             int registrosConsistentes = 0;
+
+            // performancesOrders 
+
+            // decimal rendimientosIncorporados = 
+            // CarguePagos rendimientos where Deserilize Performances, < = Month before incorporados = true, 
+            // Consistente , or save month or orders process ?
+
             foreach (var accountOrder in performanceOrders)
             {
                 valorAporteEnCuenta = 0;
@@ -660,7 +667,7 @@ namespace asivamosffie.services
         {
             Respuesta response = new Respuesta();
             bool isMailSent = false;
-#if !DEBUG
+#if DEBUG
             isMailSent = true;
 #endif
             int modifiedRows = -1;
@@ -694,21 +701,19 @@ namespace asivamosffie.services
                 string template = temNotifyInconsistencies.Contenido
                     .Replace("_LinkF_", _mailSettings.DominioFront).
                     Replace("[FECHA_CARGUE]", fechaCargue).
-                    Replace("[INCONSISTENCIAS]", inconsistencies).
                     Replace("[URL]", _mailSettings.DominioFront);
 
                 string subject = "";
 #if !DEBUG
-                isMailSent = this.SendMail(template, subject, EnumeratorPerfil.Fiduciaria);
+                isMailSent = this.SendMail(template, subject, EnumeratorPerfil.CordinadorFinanciera);
 #endif
-                if (isMailSent)
+                if (!isMailSent)
                 {
                     response.Code = ConstMessagesPerformances.ErrorEnviarCorreo;
                     response.Message = await SaveAuditAction(author, actionId, enumeratorMenu.GestionarRendimientos,
                                             response.Code, actionMesage);
                     return response;
                 }
-
                 
                 modifiedRows = await _context.Set<CarguePagosRendimientos>()
                     .Where(order => order.CargaPagosRendimientosId == uploadedOrderId)
@@ -812,7 +817,7 @@ namespace asivamosffie.services
         {
             Respuesta response = new Respuesta();
             bool isMailSent = false;
-#if !DEBUG
+#if DEBUG
             isMailSent = true;
 #endif
             int modifiedRows = -1;
@@ -855,7 +860,7 @@ namespace asivamosffie.services
 #if !DEBUG
                 isMailSent = this.SendMail(template, subject, EnumeratorPerfil.Fiduciaria);
 #endif
-                if (isMailSent)
+                if (!isMailSent)
                 {
                     response.Code = ConstMessagesPerformances.ErrorEnviarCorreo;
                     response.Message = await SaveAuditAction(author, actionId, enumeratorMenu.GestionarRendimientos,
@@ -892,7 +897,7 @@ namespace asivamosffie.services
         }
     
 
-        public async Task<Respuesta> GetInconsistencies(string author, int uploadedOrderId)
+        public async Task<Respuesta> GetPerformancesByStatus(string author, int uploadedOrderId)
         {
             Respuesta response = new Respuesta();
             string actionMesage = ConstantCommonMessages.Performances.VER_INCONSISTENCIAS;
@@ -915,9 +920,12 @@ namespace asivamosffie.services
                 return response;
             }
 
-            List<PerformanceOrder> list = JsonConvert.DeserializeObject<List<PerformanceOrder>>(collection.ArchivoJson);
+            List<ManagedPerformancesOrder> list =
+                JsonConvert.DeserializeObject<List<ManagedPerformancesOrder>>(collection.ArchivoJson);
 
-            WriteCollectionToPath("Inconsistencias", directory, list);
+            List<ManagedPerformancesOrder> listInconsistent = list.Where(x => x.Status == "Inconsistente").ToList();
+
+            WriteCollectionToPath("Inconsistencias", directory, listInconsistent);
             ////the path of the file
             string newfilePath = directory + "/" + "Inconsistencias" + "_rev.xlsx";
 
@@ -931,6 +939,43 @@ namespace asivamosffie.services
             return response;
 
         }
+
+        public async Task<IEnumerable<dynamic>> GetRequestedApprovalPerformances()
+        {
+            var requestedApprovals = await _context.CarguePagosRendimientos.Where(
+                x => !x.Eliminado && x.PendienteAprobacion).Select(x =>
+           new
+           {
+               x.FechaCargue,
+               x.TotalRegistros,
+               x.CargaPagosRendimientosId
+           }).AsNoTracking().ToListAsync<dynamic>();
+
+            return requestedApprovals;
+        }
+
+
+        /// Incorporar rendimientos
+        /// 
+        public void IncorporarRendimientos(int uploadOrderId)
+        {
+            // Deserialize ManagedPerformanceOrders
+            // foreach account 
+            // cuentas
+            // saldos en fuentest modificar
+            // 
+
+            // Add a column incorporado en Cargue o nueva tabla
+
+            // Se incorpora todo el bloque o solo los consistentestes ? 
+
+        }
+
+        public void GenerarActa()
+        {
+
+        }
+
     }
 
 }

@@ -28,6 +28,14 @@ namespace asivamosffie.services.Helpers.Extensions
 
         public static string SubstringValid(this Exception exception, int lenght)
         {
+            if(exception == null)
+            {
+                return string.Empty;
+            }
+            else if(exception.InnerException == null)
+            {
+                return exception.Message;
+            }
             string str = exception.ToString();
             if (str.Length >= lenght)
             {
