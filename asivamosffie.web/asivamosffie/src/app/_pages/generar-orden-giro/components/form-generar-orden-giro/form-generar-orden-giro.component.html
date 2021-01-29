@@ -1,4 +1,4 @@
-<section class="container text-center">
+<section class="container text-center" *ngIf="solicitudPago !== undefined && contrato !== undefined">
     <div class="text-right">
         <a routerLink="/generarOrdenDeGiro" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
@@ -8,14 +8,14 @@
         Generar orden de giro
     </h1>
     <p class="info-sub-title">
-        <span>Número de contrato <b>N801801</b></span>
+        <span>Número de contrato <b> {{ contrato.numeroContrato }} </b></span>
     </p>
     <mat-card class="shipping-card var-main-gris">
         <mat-card-content align="left">
-            <p><strong>Fecha de solicitud de pago:</strong> 05/10/2020</p>
-            <p><strong>Fecha de validación financiera:</strong> 10/10/2020</p>
-            <p><strong>Número de solicitud:</strong> Sol Pago O 001</p>
-            <p><strong>Modalidad de contrato:</strong> Mejoramiento</p>
+            <p><strong>Fecha de solicitud de pago:</strong> {{ solicitudPago.solicitudPagoRegistrarSolicitudPago[0].fechaSolicitud | date: 'dd/MM/yyyy' }} </p>
+            <p><strong>Fecha de validación financiera:</strong> {{ solicitudPago.fechaAprobacionFinanciera | date: 'dd/MM/yyyy' }} </p>
+            <p><strong>Número de solicitud:</strong> {{ solicitudPago.numeroSolicitud }} </p>
+            <p><strong>Modalidad de contrato:</strong> {{ getModalidadContrato( contrato.modalidadCodigo ) }} </p>
         </mat-card-content>
     </mat-card>
     <div class="text-center">
