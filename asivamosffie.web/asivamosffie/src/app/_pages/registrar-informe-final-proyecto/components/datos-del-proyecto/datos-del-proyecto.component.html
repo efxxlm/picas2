@@ -7,7 +7,7 @@
   <mat-card-content>
     <p>
       <strong> Tipo de intervención: </strong>
-      {{ report.proyecto.tipoIntervencionCodigo }}
+      {{ report.proyecto.tipoIntervencionString }}
     </p>
     <p>
       <strong> Institución educativa: </strong>
@@ -15,30 +15,26 @@
     </p>
     <p>
       <strong> Sede educativa: </strong>
-      {{ report.proyecto.institucionEducativa.proyectoSede }}
+      {{ report.proyecto.sede.nombre }}
     </p>
     <p>
       <strong> Departamento: </strong>
-      Atlántico
+      {{ report.proyecto.departamentoObj.descripcion }}
     </p>
     <p>
       <strong> Municipio: </strong>
-      Manatí
+      {{ report.proyecto.municipioObj.descripcion }}
     </p>
     <p>
-      <strong> Número de contrato de obra: </strong>
+      <strong> Tipo de contratación: </strong>
+      {{ report.contratacion.tipoContratacionCodigo }}
+    </p>
+    <p>
+      <strong> Número de contrato: </strong>
       {{ report.contratacion.contrato[0].numeroContrato }}
     </p>
     <p>
-      <strong> Nombre del contratista de obra: </strong>
-      {{ report.contratacion.contratista.nombre }}
-    </p>
-    <p>
-      <strong> Número de contrato de interventoría: </strong>
-      {{ report.contratacion.contrato[0].numeroContrato }}
-    </p>
-    <p>
-      <strong> Nombre de contratista de interventoría: </strong>
+      <strong> Nombre del contratista: </strong>
       {{ report.contratacion.contratista.nombre }}
     </p>
   </mat-card-content>

@@ -1,6 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Respuesta } from 'src/app/core/_services/common/common.service';
+import { RegistrarInformeFinalProyectoService } from 'src/app/core/_services/registrar-informe-final-proyecto.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -10,8 +12,12 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class DialogObservacionesComponent implements OnInit {
 
-  observaciones: FormControl;
-
+  observaciones = this.fb.group({
+    informeFinalInterventoriaObservacionesId: [null, Validators.required],
+    informeFinalInterventoriaId: [null, Validators.required],
+    ibservaciones: [null, Validators.required],
+    esCalificacion: [true, Validators.required],
+  });
   editorStyle = {
     height: '100px'
   };
@@ -26,10 +32,11 @@ export class DialogObservacionesComponent implements OnInit {
   };
 
   constructor(
+    private fb: FormBuilder,
+    private registrarInformeFinalProyectoService: RegistrarInformeFinalProyectoService,
     @Inject(MAT_DIALOG_DATA) public data,
     public dialog: MatDialog
   ) {
-    this.declararOnservaciones();
   }
 
   ngOnInit(): void {
@@ -62,10 +69,6 @@ export class DialogObservacionesComponent implements OnInit {
     return contadorConcurrencias;
   }
 
-  private declararOnservaciones() {
-    this.observaciones = new FormControl(null, [Validators.required]);
-  }
-
   openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
       width: '28em',
@@ -74,8 +77,17 @@ export class DialogObservacionesComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.observaciones.value);
-    this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+    console.log(this.observaciones.value,this.data.informe.informeFinalInterventoriaId);
+    this.observaciones.value.informeFinalInterventoriaId = this.data.informe.informeFinalInterventoriaId;
+    this.createEditInformeFinalInterventoriaObservacion(this.observaciones);
+    //this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+  }
+
+  createEditInformeFinalInterventoriaObservacion( pObservaciones: any) {
+    this.registrarInformeFinalProyectoService.createEditInformeFinalInterventoriaObservacion(pObservaciones)
+    .subscribe((respuesta: Respuesta) => {
+      this.openDialog('', respuesta.message)
+    });
   }
 
 }

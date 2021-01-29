@@ -31,6 +31,11 @@ namespace asivamosffie.services
 
         public async Task<List<ContratacionProyecto>> GetInformeFinalByContratacionProyectoId(int pContratacionProyectoId)
         {
+            List<Dominio> TipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).ToList();
+            List<InstitucionEducativaSede> ListInstitucionEducativaSede = _context.InstitucionEducativaSede.ToList();
+            List<Dominio> TipoObraIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar).ToList();
+
+            List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
             List<ContratacionProyecto> ListInfomeFinal = await _context.ContratacionProyecto.Where(r => r.ContratacionProyectoId == pContratacionProyectoId)
                                                         .Include(r => r.Proyecto)
                                                             .ThenInclude(r => r.InstitucionEducativa)
@@ -41,8 +46,15 @@ namespace asivamosffie.services
                                                          .Include(r => r.InformeFinal)
                                                             .ThenInclude(r => r.InformeFinalInterventoria)
                                                                 .ThenInclude(r => r.InformeFinalInterventoriaObservaciones).ToListAsync();
-
-           return ListInfomeFinal;
+            InstitucionEducativaSede Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == ListInfomeFinal[0].Proyecto.SedeId).FirstOrDefault();
+            Localizacion Municipio = ListLocalizacion.Where(r => r.LocalizacionId == ListInfomeFinal[0].Proyecto.LocalizacionIdMunicipio).FirstOrDefault();
+            ListInfomeFinal[0].Proyecto.MunicipioObj = Municipio;
+            ListInfomeFinal[0].Proyecto.DepartamentoObj = ListLocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
+            ListInfomeFinal[0].Proyecto.tipoIntervencionString = TipoIntervencion.Where(r => r.Codigo == ListInfomeFinal[0].Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
+            ListInfomeFinal[0].Contratacion.TipoContratacionCodigo = TipoObraIntervencion.Where(r => r.Codigo == ListInfomeFinal[0].Contratacion.TipoSolicitudCodigo).Select(r => r.Nombre).FirstOrDefault();
+            ListInfomeFinal[0].Proyecto.Sede = Sede;
+            
+            return ListInfomeFinal;
         }
 
         public async Task<InformeFinalInterventoria> GetInformeFinalAnexoByInformeFinalInterventoriaId(int pInformeFinalInterventoriaId)
@@ -127,42 +139,50 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<List<dynamic>> GetInformeFinalListaChequeoByInformeFinalInterventoriaId(int pInformeFinalInterventoriaId)
+        public async Task<List<dynamic>> GetInformeFinalListaChequeoByContratacionProyectoId(int pContratacionProyectoId)
         {
             List<InformeFinalListaChequeo> ListInformeFinalChequeo = await _context.InformeFinalListaChequeo
                                 .ToListAsync();
 
             List<dynamic> ListChequeo = new List<dynamic>();
             String calificacionCodigo = "";
-            foreach (var item in ListInformeFinalChequeo)
+            InformeFinal informeFinal = _context.InformeFinal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId).FirstOrDefault();
+            
+            if (informeFinal!=null)//Sino han llenado los campos de informe final no se muestra la lista de chequeos
             {
-                InformeFinalInterventoria informeFinalInterventoria = _context.InformeFinalInterventoria.Where(r => r.InformeFinalInterventoriaId == pInformeFinalInterventoriaId && r.InformeFinalListaChequeoId == item.InformeFinalListaChequeoId).FirstOrDefault();
-
-                if (informeFinalInterventoria != null)
+                foreach (var item in ListInformeFinalChequeo)
                 {
-                    ListChequeo.Add(new
-                    {
-                        Nombre = item.Nombre,
-                        CalificacionCodigo = informeFinalInterventoria.CalificacionCodigo,
-                        InformeFinalListaChequeoId = informeFinalInterventoria.InformeFinalListaChequeoId,
-                        InformeFinalInterventoriaId = informeFinalInterventoria.InformeFinalInterventoriaId,
-                        TieneObservacionSupervisor = informeFinalInterventoria.TieneObservacionSupervisor is null ? false : informeFinalInterventoria.TieneObservacionSupervisor
+                    InformeFinalInterventoria informeFinalInterventoria = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == informeFinal.InformeFinalId && r.InformeFinalListaChequeoId == item.InformeFinalListaChequeoId).FirstOrDefault();
 
-
-                    });
-                }
-                else
-                {
-                    ListChequeo.Add(new
+                    if (informeFinalInterventoria != null)
                     {
-                        Nombre = item.Nombre,
-                        CalificacionCodigo = calificacionCodigo,
-                        InformeFinalListaChequeoId = item.InformeFinalListaChequeoId,
-                        InformeFinalInterventoriaId = pInformeFinalInterventoriaId,
-                        TieneObservacionSupervisor = false
-                    });
+                        ListChequeo.Add(new
+                        {
+                            Nombre = item.Nombre,
+                            CalificacionCodigo = informeFinalInterventoria.CalificacionCodigo,
+                            InformeFinalListaChequeoId = informeFinalInterventoria.InformeFinalListaChequeoId,
+                            InformeFinalInterventoriaId = informeFinalInterventoria.InformeFinalInterventoriaId,
+                            TieneObservacionSupervisor = informeFinalInterventoria.TieneObservacionSupervisor is null ? false : informeFinalInterventoria.TieneObservacionSupervisor,
+                            InformeFinalId = informeFinalInterventoria.InformeFinalId,
+                            InformeFinalAnexoId =informeFinalInterventoria.InformeFinalAnexoId
+                        });
+                    }
+                    else
+                    {
+                        ListChequeo.Add(new
+                        {
+                            Nombre = item.Nombre,
+                            CalificacionCodigo = calificacionCodigo,
+                            InformeFinalListaChequeoId = item.InformeFinalListaChequeoId,
+                            InformeFinalInterventoriaId = 0,
+                            TieneObservacionSupervisor = false,
+                            InformeFinalId = informeFinal.InformeFinalId,
+                            InformeFinalAnexoId = 0
+                        });
+                    }
                 }
             }
+            
             return ListChequeo;
         }
 
@@ -199,8 +219,10 @@ namespace asivamosffie.services
             string CreateEdit = "";
             try
             {
+                InformeFinalInterventoria informeFinalInterventoria = _context.InformeFinalInterventoria
+                        .Where(r => r.InformeFinalId == pInformeFinalInterventoriaId.InformeFinalId && r.InformeFinalListaChequeoId == pInformeFinalInterventoriaId.InformeFinalListaChequeoId).FirstOrDefault();
 
-                if (pInformeFinalInterventoriaId.InformeFinalInterventoriaId == 0)
+                if (pInformeFinalInterventoriaId.InformeFinalInterventoriaId == 0 && informeFinalInterventoria ==null)
                 {
                     CreateEdit = "CREAR INFORME FINAL INTERVENTORIA";
                     pInformeFinalInterventoriaId.FechaCreacion = DateTime.Now;
@@ -211,7 +233,7 @@ namespace asivamosffie.services
                     CreateEdit = "ACTUALIZAR INFORME FINAL INTERVENTORIA";
 
                     InformeFinalInterventoria informeFinalInterventoriaOld = _context.InformeFinalInterventoria
-                        .Where(r => r.InformeFinalId == pInformeFinalInterventoriaId.InformeFinalId && r.InformeFinalListaChequeoId == pInformeFinalInterventoriaId.InformeFinalListaChequeoId && r.InformeFinalInterventoriaId == pInformeFinalInterventoriaId.InformeFinalInterventoriaId).FirstOrDefault();
+                        .Where(r => r.InformeFinalId == pInformeFinalInterventoriaId.InformeFinalId && r.InformeFinalListaChequeoId == pInformeFinalInterventoriaId.InformeFinalListaChequeoId).FirstOrDefault();
 
                     if (informeFinalInterventoriaOld != null)
                     {

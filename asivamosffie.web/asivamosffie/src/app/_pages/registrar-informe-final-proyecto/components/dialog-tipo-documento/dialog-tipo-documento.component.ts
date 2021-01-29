@@ -1,6 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Respuesta } from 'src/app/core/_services/common/common.service';
+import { RegistrarInformeFinalProyectoService } from 'src/app/core/_services/registrar-informe-final-proyecto.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 @Component({
   selector: 'app-dialog-tipo-documento',
@@ -11,9 +13,10 @@ export class DialogTipoDocumentoComponent implements OnInit {
 
   estaEditando = false;
   addressForm = this.fb.group({
-    tipoDeAnexo: [null, Validators.required],
+    informeFinalAnexoId: [null, Validators.required],
+    tipoAnexo: [null, Validators.required],
     URLSoporte: [null, Validators.required],
-    numeroRadicadoSAC: [null, Validators.required],
+    numRadicadoSac: [null, Validators.required],
     fechaRadicado: [null, Validators.required]
   });
 
@@ -25,6 +28,7 @@ export class DialogTipoDocumentoComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     public dialog: MatDialog,
+    private registrarInformeFinalProyectoService: RegistrarInformeFinalProyectoService,
     @Inject(MAT_DIALOG_DATA) public data
   ) {}
 
@@ -38,9 +42,19 @@ export class DialogTipoDocumentoComponent implements OnInit {
     }
 
     onSubmit() {
-      console.log(this.addressForm.value, "Acá se supone:",this.data.informe);
+      console.log(this.addressForm.value,this.data.informe.informeFinalInterventoriaId, this.data.informe.informeFinalAnexoId);
       this.estaEditando = true;
-      this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+      if(this.data.informe.informeFinalAnexoId != null){
+        this.addressForm.value.informeFinalAnexoId = this.data.informe.informeFinalAnexoId;
+      }
+      this.createEditInformeFinalAnexo(this.addressForm.value,this.data.informe.informeFinalInterventoriaId);
+    }
+
+    createEditInformeFinalAnexo( informeFinalAnexo: any , informeFinalInterventoriaid: number) {
+      this.registrarInformeFinalProyectoService.createEditInformeFinalAnexo(informeFinalAnexo,informeFinalInterventoriaid)
+      .subscribe((respuesta: Respuesta) => {
+        this.openDialog('', respuesta.message)
+      });
     }
 
 }

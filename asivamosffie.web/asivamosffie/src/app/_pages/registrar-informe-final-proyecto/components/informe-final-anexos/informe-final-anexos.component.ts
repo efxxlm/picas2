@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-informe-final-anexos',
@@ -6,6 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./informe-final-anexos.component.scss']
 })
 export class InformeFinalAnexosComponent implements OnInit {
+
+  @Input() id: string;
 
   constructor() { }
 

@@ -27,6 +27,7 @@ export class RegistrarInformeFinalComponent implements OnInit {
     })
   }
   getInformeFinalByContratacionProyecto (id:string) {
+    console.log("Aquí entra un id", id);
     this.registrarInformeFinalProyectoService.getInformeFinalByContratacionProyecto(id)
     .subscribe(report => {
       this.report = report[0];

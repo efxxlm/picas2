@@ -12,7 +12,7 @@ namespace asivamosffie.services.Interfaces
     {
         //Consultas
         Task<List<VProyectosCierre>> gridRegisterFinalReport();
-        Task<List<dynamic>> GetInformeFinalListaChequeoByInformeFinalInterventoriaId(int pInformeFinalInterventoriaId);
+        Task<List<dynamic>> GetInformeFinalListaChequeoByContratacionProyectoId(int pContratacionProyectoId);
         Task<List<ContratacionProyecto>> GetInformeFinalByContratacionProyectoId(int pContratacionProyectoId);
         Task<InformeFinalInterventoria> GetInformeFinalAnexoByInformeFinalInterventoriaId(int pInformeFinalInterventoriaId);
 

@@ -3,14 +3,14 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-import { FormBuilder, Validators, FormArray } from '@angular/forms';
+import { FormBuilder, Validators, FormArray, FormGroup } from '@angular/forms';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { DialogTipoDocumentoComponent } from '../dialog-tipo-documento/dialog-tipo-documento.component';
 import { DialogObservacionesComponent } from '../dialog-observaciones/dialog-observaciones.component';
 
 import { Anexo } from 'src/app/_interfaces/proyecto-final-anexos.model';
 import { RegistrarInformeFinalProyectoService } from 'src/app/core/_services/registrar-informe-final-proyecto.service';
-
+import { Respuesta } from 'src/app/core/_services/common/common.service';
 
 @Component({
   selector: 'app-tabla-informe-final-anexos',
@@ -27,6 +27,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     'calificacionCodigo',
     'informeFinalInterventoriaId'
   ];
+  addressForm: FormGroup;
   dataSource = new MatTableDataSource<Anexo>(this.ELEMENT_DATA);
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -65,7 +66,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     .subscribe(anexos => {
       this.dataSource.data = anexos as Anexo[];
       this.anexos = anexos;
-      console.log(this.anexos);
+      console.log("Aquí:",this.anexos);
     });
   }
 
@@ -92,7 +93,6 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   }
 
   openDialogTipoDocumento(informe:any) {
-    console.log("estoy probando: ",informe);
     let dialogRef = this.dialog.open(DialogTipoDocumentoComponent, {
       width: '70em',
       data:{
@@ -129,6 +129,27 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     // console.log(this.addressForm.value);
     this.estaEditando = true;
     this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+  }
+
+  select(informeFinalAnexo) {
+    this.addressForm = this.fb.group({
+      calificacionCodigo:  [informeFinalAnexo.calificacionCodigo, Validators.required],
+      informeFinalId:  [informeFinalAnexo.informeFinalId, Validators.required],
+      informeFinalInterventoriaId:  [informeFinalAnexo.informeFinalInterventoriaId, Validators.required],
+      informeFinalListaChequeoId:  [informeFinalAnexo.informeFinalListaChequeoId, Validators.required],
+    });
+    //console.log("Autosave test: ",this.addressForm.value);
+    this.createInformeFinalInterventoria(this.addressForm.value);
+  }
+
+  createInformeFinalInterventoria( informeFinalInterventoria: any ) {
+    this.registrarInformeFinalProyectoService.createEditInformeFinalInterventoria(informeFinalInterventoria)
+    .subscribe((respuesta: Respuesta) => {
+        console.log(respuesta.message);
+      },
+      err => {
+        console.log( err );
+      });
   }
 
 }

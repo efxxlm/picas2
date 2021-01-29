@@ -29,6 +29,7 @@ export interface Report {
         observaciones: string,
         rutaMinuta: string,
         fechaTramite: Date,
+        tipoContratacionCodigo: string,
         registroCompleto1: boolean,
         contratista: {
             contratistaId: number,
@@ -95,6 +96,27 @@ export interface Report {
         disponibilidadPresupuestal: []
     },
     proyecto: {
+        departamentoObj: {
+            localizacionId: string,
+            descripcion:string,
+            idPadre: string,
+            nivel: number,
+            tipo: string,
+            cofinanciacionAportanteDepartamento: [],
+            cofinanciacionAportanteMunicipio: [],
+            proyecto: []
+        },
+        municipioObj: {
+            localizacionId: string,
+            descripcion: string,
+            idPadre: string,
+            nivel: number,
+            tipo: string,
+            cofinanciacionAportanteDepartamento: [],
+            cofinanciacionAportanteMunicipio: [],
+            proyecto: []
+        },
+        tipoIntervencionString: string,
         fechaInicioEtapaObra: string,
         fechaFinEtapaObra: string,
         plazoEnSemanas: number,
@@ -130,6 +152,18 @@ export interface Report {
             institucionEducativaSedeId: number,
             nombre: string,
             codigoDane: string,
+            localizacionIdMunicipio: string,
+            fechaCreacion: string,
+            usuarioCreacion: string,
+            activo: boolean,
+            predio: [],
+            proyectoInstitucionEducativa: [],
+            proyectoSede: []
+        },
+        sede: {
+            institucionEducativaSedeId: number,
+            padreId: number,
+            nombre: string,
             localizacionIdMunicipio: string,
             fechaCreacion: string,
             usuarioCreacion: string,

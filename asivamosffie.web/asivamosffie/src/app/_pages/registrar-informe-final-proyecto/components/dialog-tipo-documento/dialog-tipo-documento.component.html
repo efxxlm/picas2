@@ -28,10 +28,10 @@
             <div class="pr-1">
               <label
                 class="label-left"
-                for="tipoDeAnexo"
+                for="tipoAnexo"
                 [class.color-secondaryColor]="
-                  (addressForm.get('tipoDeAnexo').invalid && addressForm.get('tipoDeAnexo').touched) ||
-                  (addressForm.get('tipoDeAnexo').invalid && estaEditando)
+                  (addressForm.get('tipoAnexo').invalid && addressForm.get('tipoAnexo').touched) ||
+                  (addressForm.get('tipoAnexo').invalid && estaEditando)
                 "
               >
                 Tipo de anexo
@@ -39,7 +39,7 @@
             </div>
             <div class="col">
               <mat-form-field class="select-width">
-                <mat-select required formControlName="tipoDeAnexo">
+                <mat-select required formControlName="tipoAnexo">
                   <mat-option
                     *ngFor="let tipo of tipoAnexoArray"
                     [value]="tipo.value"
@@ -52,7 +52,7 @@
           </div>
         </div>
       </div>
-      <div class="row animatedDown" *ngIf="addressForm.get('tipoDeAnexo').value === '2'">
+      <div class="row animatedDown" *ngIf="addressForm.get('tipoAnexo').value === '2'">
         <div class="pr-1">
           <label
             class="label-left"
@@ -98,17 +98,17 @@
           />
         </span>
       </div>
-      <div class="row" *ngIf="addressForm.get('tipoDeAnexo').value === '1'">
+      <div class="row" *ngIf="addressForm.get('tipoAnexo').value === '1'">
         <div class="col-md-12">
           <div class="row">
             <div class="pr-1">
               <label
                 class="label-left"
-                for="numeroRadicadoSAC"
+                for="numRadicadoSac"
                 [class.color-secondaryColor]="
-                  (addressForm.get('numeroRadicadoSAC').invalid &&
-                    addressForm.get('numeroRadicadoSAC').touched) ||
-                  (addressForm.get('numeroRadicadoSAC').invalid && estaEditando)
+                  (addressForm.get('numRadicadoSac').invalid &&
+                    addressForm.get('numRadicadoSac').touched) ||
+                  (addressForm.get('numRadicadoSac').invalid && estaEditando)
                 "
               > 
               Número de radicado en SAC
@@ -119,8 +119,8 @@
                 <input
                   matInput
                   type="text"
-                  formControlName="numeroRadicadoSAC"
-                  #numeroRadicadoSAC
+                  formControlName="numRadicadoSac"
+                  #numRadicadoSac
                   maxlength="10"
                   required
                 />
@@ -131,7 +131,7 @@
                 matTooltip="Campo numérico"
                 matTooltipClass="info-tooltip"
               >
-                {{ 10 - numeroRadicadoSAC.value.length }}
+                {{ 10 - numRadicadoSac.value.length }}
               </span>
               <span class="icon-incompleto">
                 <img
@@ -139,8 +139,8 @@
                   src="assets/img/icon/incompleto.svg"
                   alt="este campo es requerido"
                   *ngIf="
-                    (addressForm.get('numeroRadicadoSAC').invalid && addressForm.get('numeroRadicadoSAC').touched) ||
-                    (addressForm.get('numeroRadicadoSAC').invalid && estaEditando)
+                    (addressForm.get('numRadicadoSac').invalid && addressForm.get('numRadicadoSac').touched) ||
+                    (addressForm.get('numRadicadoSac').invalid && estaEditando)
                   "
                 />
               </span>
@@ -148,7 +148,7 @@
           </div>
         </div>
       </div>
-      <div class="row" *ngIf="addressForm.get('tipoDeAnexo').value === 'fisico'">
+      <div class="row" *ngIf="addressForm.get('tipoAnexo').value === '1'">
         <div class="col-md-12">
           <div class="row">
             <div class="pr-1">

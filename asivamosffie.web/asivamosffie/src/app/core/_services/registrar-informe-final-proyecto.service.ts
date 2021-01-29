@@ -28,8 +28,8 @@ export class RegistrarInformeFinalProyectoService {
     return this.http.put(`${environment.apiUrl}/${this.final_report}/CreateEditInformeFinal`, informeFinal );
   }
 
-  getInformeFinalListaChequeo(pContratacionProyectoId: any){
-    return this.http.get<Anexo[]>(`${environment.apiUrl}/${this.final_report}/GetInformeFinalListaChequeoByInformeFinalInterventoriaId?pInformeFinalInterventoriaId=${ pContratacionProyectoId }`);
+  getInformeFinalListaChequeo(pContratacionProyectoId: string){
+    return this.http.get<Anexo[]>(`${environment.apiUrl}/${this.final_report}/GetInformeFinalListaChequeoByContratacionProyectoId?pContratacionProyectoId=${ pContratacionProyectoId }`);
   }
 
   createEditInformeFinalInterventoria( informeFinalInterventoria: any ){
@@ -37,7 +37,7 @@ export class RegistrarInformeFinalProyectoService {
   }
 
   createEditInformeFinalAnexo ( informeFinalAnexo:any,pInformeFinalInterventoriaId:number  ){
-    return this.http.post(`${environment.apiUrl}/${this.final_report}/CreateEditInformeFinalAnexo?pInformeFinalInterventoriaId=${ pInformeFinalInterventoriaId }`, informeFinalAnexo );
+    return this.http.post(`${environment.apiUrl}/${this.final_report}/CreateEditInformeFinalAnexo/${ pInformeFinalInterventoriaId }`, informeFinalAnexo );
   }
 
   createEditInformeFinalInterventoriaObservacion( informeFinalInterventoriaObservaciones: any ){

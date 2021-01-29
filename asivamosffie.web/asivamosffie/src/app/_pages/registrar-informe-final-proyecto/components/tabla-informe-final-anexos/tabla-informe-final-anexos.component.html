@@ -48,6 +48,7 @@
             <mat-form-field class="select-width">
               <mat-select
                 [(ngModel)]="element.calificacionCodigo"
+                (selectionChange)="select(element)"
                 required
               >
                 <mat-option

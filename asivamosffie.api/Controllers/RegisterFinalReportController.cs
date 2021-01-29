@@ -56,12 +56,12 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
-        [Route("GetInformeFinalListaChequeoByInformeFinalInterventoriaId")]
-        public async Task<List<dynamic>> GetInformeFinalListaChequeoByInformeFinalInterventoriaId([FromQuery] int pInformeFinalInterventoriaId)
+        [Route("GetInformeFinalListaChequeoByContratacionProyectoId")]
+        public async Task<List<dynamic>> GetInformeFinalListaChequeoByContratacionProyectoId([FromQuery] int pContratacionProyectoId)
         {
             try
             {
-                return await _registerFinalReport.GetInformeFinalListaChequeoByInformeFinalInterventoriaId(pInformeFinalInterventoriaId);
+                return await _registerFinalReport.GetInformeFinalListaChequeoByContratacionProyectoId(pContratacionProyectoId);
             }
 
             catch (Exception ex)
