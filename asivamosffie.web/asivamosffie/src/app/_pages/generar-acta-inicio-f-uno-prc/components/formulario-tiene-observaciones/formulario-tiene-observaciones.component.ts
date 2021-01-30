@@ -99,12 +99,13 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
       }
     });
   }
-  generarActaSuscrita(){
-    this.service.GetActaByIdPerfil(8,this.contratoId).subscribe((resp:any)=>{
+
+  descargarActaDesdeTabla(){
+    this.service.GetActaByIdPerfil(this.contratoId, 'False').subscribe(resp => {
       const documento = `Acta contrato ${this.numContrato}.pdf`; // Valor de prueba
       const text = documento,
-      blob = new Blob([resp], { type: 'application/pdf' }),
-      anchor = document.createElement('a');
+        blob = new Blob([resp], { type: 'application/pdf' }),
+        anchor = document.createElement('a');
       anchor.download = documento;
       anchor.href = window.URL.createObjectURL(blob);
       anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');

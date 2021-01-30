@@ -329,10 +329,6 @@
               [modules]="config"
               (onContentChanged)="maxLength($event, 500)"
               formControlName="observacionesEspeciales"
-              [class.invalid]="
-                (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
-                (addressForm.get('observaciones').invalid && estaEditando)
-              "
             >
             </quill-editor>
 

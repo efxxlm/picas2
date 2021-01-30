@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActBeginService, ConstruccionObservacion, ContratoObservacion } from 'src/app/core/_services/actBegin/act-begin.service';
+import { GestionarActPreConstrFUnoService } from 'src/app/core/_services/GestionarActPreConstrFUno/gestionar-act-pre-constr-funo.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { Contrato } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
 
@@ -63,7 +64,7 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
   valorProponente: any;
   numeroIdentificacionRepresentanteContratistaInterventoria: any;
   estaEditando = false;
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, private services: ActBeginService) { }
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, private services: ActBeginService, private gestionarActaSvc: GestionarActPreConstrFUnoService) { }
   ngOnInit(): void {
     this.addressForm = this.crearFormulario();
     this.activatedRoute.params.subscribe(param => {
@@ -219,6 +220,18 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
   generarActaSuscrita() {
     this.services.GetPlantillaActaInicio(this.contratoId).subscribe(resp => {
       const documento = `Prueba.pdf`; // Valor de prueba
+      const text = documento,
+        blob = new Blob([resp], { type: 'application/pdf' }),
+        anchor = document.createElement('a');
+      anchor.download = documento;
+      anchor.href = window.URL.createObjectURL(blob);
+      anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+      anchor.click();
+    });
+  }
+  descargarActaDesdeTabla() {
+    this.gestionarActaSvc.GetActaByIdPerfil(this.contratoId, 'True').subscribe(resp => {
+      const documento = `${this.contratoCode}.pdf`; // Valor de prueba
       const text = documento,
         blob = new Blob([resp], { type: 'application/pdf' }),
         anchor = document.createElement('a');
