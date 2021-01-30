@@ -18,6 +18,7 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public bool? Eliminado { get; set; }
         public bool? RegistroCompleto { get; set; }
+        public decimal? ValorNetoGiro { get; set; }
 
         public virtual ICollection<OrdenGiroDetalle> OrdenGiroDetalle { get; set; }
         public virtual ICollection<OrdenGiroDetalleTerceroCausacionDescuento> OrdenGiroDetalleTerceroCausacionDescuento { get; set; }

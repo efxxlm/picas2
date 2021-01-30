@@ -22,8 +22,7 @@ namespace asivamosffie.model.Models
         public string UsuarioCreacion { get; set; }
         public DateTime FechaCreacion { get; set; }
         public string UsuarioModificacion { get; set; }
-        public DateTime? FechaModificacion { get; set; }       
-        public DateTime? FechaAprobacionFinanciera { get; set; }
+        public DateTime? FechaModificacion { get; set; }
         public bool? Eliminado { get; set; }
         public bool? RegistroCompleto { get; set; }
         public string EstadoCodigo { get; set; }
@@ -32,6 +31,7 @@ namespace asivamosffie.model.Models
         public bool? RegistroCompletoSupervisor { get; set; }
         public bool? RegistroCompletoCoordinador { get; set; }
         public int? OrdenGiroId { get; set; }
+        public DateTime? FechaAprobacionFinanciera { get; set; }
 
         public virtual ContratacionProyecto ContratacionProyecto { get; set; }
         public virtual Contrato Contrato { get; set; }
