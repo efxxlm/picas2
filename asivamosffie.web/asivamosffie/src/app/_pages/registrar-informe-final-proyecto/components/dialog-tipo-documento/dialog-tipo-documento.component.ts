@@ -10,7 +10,6 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   styleUrls: ['./dialog-tipo-documento.component.scss']
 })
 export class DialogTipoDocumentoComponent implements OnInit {
-
   estaEditando = false;
   addressForm = this.fb.group({
     informeFinalAnexoId: [null, Validators.required],
@@ -32,29 +31,63 @@ export class DialogTipoDocumentoComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data
   ) {}
 
-  ngOnInit(): void {}
-
-    openDialog( modalTitle: string, modalText: string ) {
-        this.dialog.open( ModalDialogComponent, {
-          width: '40em',
-          data : { modalTitle, modalText }
-        });
+  ngOnInit(): void {
+    if (this.data.pInformeFinalInterventoriaId) {
+      this.getInformeFinalAnexoByInformeFinalInterventoriaId(
+        this.data.getInformeFinalAnexoByInformeFinalInterventoriaId
+      );
     }
+  }
 
-    onSubmit() {
-      console.log(this.addressForm.value,this.data.informe.informeFinalInterventoriaId, this.data.informe.informeFinalAnexoId);
-      this.estaEditando = true;
-      if(this.data.informe.informeFinalAnexoId != null){
-        this.addressForm.value.informeFinalAnexoId = this.data.informe.informeFinalAnexoId;
-      }
-      this.createEditInformeFinalAnexo(this.addressForm.value,this.data.informe.informeFinalInterventoriaId);
+  // evalua tecla a tecla
+  validateNumberKeypress(event: KeyboardEvent) {
+    const alphanumeric = /[0-9]/;
+    const inputChar = String.fromCharCode(event.charCode);
+    return alphanumeric.test(inputChar) ? true : false;
+  }
+
+  openDialog(modalTitle: string, modalText: string) {
+    this.dialog.open(ModalDialogComponent, {
+      width: '40em',
+      data: { modalTitle, modalText },
+    });
+  }
+
+  onSubmit() {
+    console.log(
+      this.addressForm.value,
+      this.data.informe.informeFinalInterventoriaId,
+      this.data.informe.informeFinalAnexoId
+    );
+    this.estaEditando = true;
+    if (this.data.informe.informeFinalAnexoId != null) {
+      this.addressForm.value.informeFinalAnexoId = this.data.informe.informeFinalAnexoId;
     }
+    this.createEditInformeFinalAnexo(
+      this.addressForm.value,
+      this.data.informe.informeFinalInterventoriaId
+    );
+  }
 
-    createEditInformeFinalAnexo( informeFinalAnexo: any , informeFinalInterventoriaid: number) {
-      this.registrarInformeFinalProyectoService.createEditInformeFinalAnexo(informeFinalAnexo,informeFinalInterventoriaid)
+  createEditInformeFinalAnexo(
+    informeFinalAnexo: any,
+    informeFinalInterventoriaid: number
+  ) {
+    this.registrarInformeFinalProyectoService
+      .createEditInformeFinalAnexo(
+        informeFinalAnexo,
+        informeFinalInterventoriaid
+      )
       .subscribe((respuesta: Respuesta) => {
-        this.openDialog('', respuesta.message)
+        this.openDialog('', respuesta.message);
       });
-    }
+  }
 
+  getInformeFinalAnexoByInformeFinalInterventoriaId(id: string) {
+    this.registrarInformeFinalProyectoService
+      .getInformeFinalAnexoByInformeFinalInterventoriaId(id)
+      .subscribe((data) => {
+        this.addressForm.patchValue(data);
+      });
+  }
 }

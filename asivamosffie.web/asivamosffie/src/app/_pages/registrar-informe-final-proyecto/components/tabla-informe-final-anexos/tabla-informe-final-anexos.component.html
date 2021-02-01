@@ -44,6 +44,7 @@
           Estado del requisito
         </th>
         <td mat-cell *matCellDef="let element">
+          {{element.calificacionCodigo}}
           <section class="slect-table-contain mt-1em">
             <mat-form-field class="select-width">
               <mat-select
@@ -87,7 +88,8 @@
               type="button"
               (click)="openDialogTipoDocumento(element)"
             >
-            Tipo de documento
+            <span *ngIf="!element.tieneObservacionSupervisor">Tipo de documento</span>
+            <span *ngIf="element.tieneObservacionSupervisor">Ver detalle/ Editar</span>
             </button>
           <button
           *ngIf="element.calificacionCodigo === 2"

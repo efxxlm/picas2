@@ -131,11 +131,12 @@
               <mat-form-field class="full-width">
                 <input
                   matInput
-                  type="text"
+                  type="number"
                   formControlName="numRadicadoSac"
                   #numRadicadoSac
                   maxlength="10"
-                  required
+                  required(keypress)="validateNumberKeypress($event)"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
                 />
               </mat-form-field>
               <span
