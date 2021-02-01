@@ -39,7 +39,6 @@ namespace asivamosffie.services.Helpers.Enumerator
         Registrar_seguimiento_diario = 53,
         Verificar_seguimiento_diario = 54,      
         Registrar_Avance_Semanal = 55,
-        Verificar_Requisitos_Tecnicos_Construccion = 45,
         Registrar_Informe_Final = 64,
         Registrar_actuaciones_controversias_contractuales=57,    
 	}
