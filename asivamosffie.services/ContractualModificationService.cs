@@ -183,9 +183,9 @@ namespace asivamosffie.services
                 if (novedadContractual != null)
                 {
                     strCrearEditar = "Eliminar NOVEDAD CONTRACTUAL";
-                    //pNovedadContractualId.FechaModificacion = DateTime.Now;
-                    //pNovedadContractualId.UsuarioModificacion = pUsuario;
-                    //pNovedadContractualId.Eliminado = true;
+                    novedadContractual.FechaModificacion = DateTime.Now;
+                    novedadContractual.UsuarioModificacion = pUsuario;
+                    novedadContractual.Eliminado = true;
                     _context.NovedadContractual.Update(novedadContractual);
 
                     _context.SaveChanges();

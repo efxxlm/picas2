@@ -67,7 +67,8 @@
           Ver detalle/Editar
         </a>
         <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
-          (click)="eliminarSolicitud(element.novedadContractualId)">
+          (click)="openDialogSiNo('', '<b>¿Está seguro de eliminar este registro?</b>',element.novedadContractualId)"
+          >
           Eliminar
         </button>
       </td>

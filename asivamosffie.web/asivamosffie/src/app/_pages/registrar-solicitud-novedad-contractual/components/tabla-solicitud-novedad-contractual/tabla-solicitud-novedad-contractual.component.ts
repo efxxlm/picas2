@@ -37,7 +37,8 @@ export class TablaSolicitudNovedadContractualComponent implements AfterViewInit 
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
-    private contratoServices: ContratosModificacionesContractualesService
+    private contratoServices: ContratosModificacionesContractualesService,
+    public dialog: MatDialog,
   ) { }
 
   ngAfterViewInit() {
@@ -74,8 +75,31 @@ export class TablaSolicitudNovedadContractualComponent implements AfterViewInit 
     console.log(`Aprobar solicitud ${id}`);
   }
 
-  eliminarSolicitud(id: string) {
-    console.log(`Aprobar solicitud ${id}`);
+  openDialog(modalTitle: string, modalText: string) {
+    this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+  }
+
+  openDialogSiNo(modalTitle: string, modalText: string, e: number) {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result===true) {
+        this.eliminarSolicitud(e);
+      }
+    });
+  }
+
+  eliminarSolicitud(id: number) {
+    this.contratoServices.eliminarNovedadContractual( id )
+      .subscribe(respuesta => {
+        this.openDialog('', `<b>${respuesta.message}</b>`);
+        this.ngAfterViewInit();
+      });
   }
 
 }
