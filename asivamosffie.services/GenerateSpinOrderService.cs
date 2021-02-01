@@ -115,19 +115,13 @@ namespace asivamosffie.services
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
 
             try
-            {
-
+            { 
                 if(pOrdenGiro.OrdenGiroId == 0)
                 { 
                     pOrdenGiro.FechaCreacion = DateTime.Now;
-                    pOrdenGiro.Eliminado = false;
-
-
-
+                    pOrdenGiro.Eliminado = false; 
                 }
-
-
-
+                 
                 return
                      new Respuesta
                      {
