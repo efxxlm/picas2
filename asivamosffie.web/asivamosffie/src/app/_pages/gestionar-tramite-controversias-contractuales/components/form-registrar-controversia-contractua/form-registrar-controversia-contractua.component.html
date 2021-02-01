@@ -5,74 +5,48 @@
     </a>
   </div>
   <h1 class="title-menu--h1">Registrar controversia contractual</h1>
-  <div
-    *ngIf="addressForm.invalid && addressForm.touched"
-    class="animateDown my-1em color-secondaryColor d-flex align-items-center justify-content-center"
-  >
+  <div *ngIf="addressForm.invalid && addressForm.touched"
+    class="animateDown my-1em color-secondaryColor d-flex align-items-center justify-content-center">
     <img class="icon-incompleto--img mr-05em" src="assets/img/icon/incompleto.svg" alt="este campo es requerido" />
     Debe ingresar la información en el campo para continuar
   </div>
-  -->
   <form [formGroup]="addressForm">
     <div class="row" style="margin-top: 2em; justify-content: center">
       <div class="col-md-6">
         <div class="row">
           <div class="pr-1">
-            <label
-              class="label-left"
-              for="contrato"
-              [class.color-secondaryColor]="
-                (addressForm.get('contrato').invalid && addressForm.get('contrato').touched) ||
-                (addressForm.get('contrato').invalid && estaEditando)
-              "
-            >
+            <label class="label-left" for="numeroContrato" [class.color-secondaryColor]="
+                (addressForm.get('numeroContrato').invalid && addressForm.get('numeroContrato').touched) ||
+                (addressForm.get('numeroContrato').invalid && estaEditando)
+              ">
               Número de contrato
             </label>
           </div>
           <div class="col d-flex">
             <mat-form-field class="full-width">
-              <input matInput #contrato type="text" maxlength="100" required [matAutocomplete]="auto" />
-              <mat-autocomplete #auto="matAutocomplete">
-                <mat-option
-                  (click)="seleccionAutocomplete(contr.contratoId)"
-                  *ngFor="let contr of contratosArray"
-                  [value]="contr.numeroContrato"
-                >
-                  {{ contr.numeroContrato }}
+              <input matInput #nombre2 type="text" maxlength="10" [formControl]="myFilter" required
+                [matAutocomplete]="auto2" />
+              <mat-autocomplete #auto2="matAutocomplete">
+                <mat-option (click)="seleccionAutocomplete(nombres)" *ngFor="let nombres of filteredContrato | async"
+                  [value]="nombres">
+                  {{ nombres }}
                 </mat-option>
               </mat-autocomplete>
-              <input type="hidden" formControlName="contrato" />
             </mat-form-field>
             <button mat-button color="primary" class="busqueda--img">
               <img src="assets/img/icon/lupa.svg" alt="Buscar" />
             </button>
           </div>
           <span class="icon-incompleto">
-            <img
-              class="icon-incompleto--img"
-              src="assets/img/icon/incompleto.svg"
-              alt="este campo es requerido"
-              *ngIf="
-                (addressForm.get('contrato').invalid && addressForm.get('contrato').touched) ||
-                (addressForm.get('contrato').invalid && estaEditando)
-              "
-            />
+            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido" *ngIf="
+                (addressForm.get('numeroContrato').invalid && addressForm.get('numeroContrato').touched) ||
+                (addressForm.get('numeroContrato').invalid && estaEditando)
+              " />
           </span>
-          <!--
-                    <div class="col">
-                        <mat-form-field class="select-width">
-                            <mat-select formControlName="contrato" required>
-                                <mat-option *ngFor="let contr of contratosArray" [value]="contr.value">
-                                    {{ contr.name }}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    -->
         </div>
       </div>
     </div>
-    <div *ngIf="addressForm.value.contrato !== null">
+    <div *ngIf="this.selectedContract!=''">
       <mat-card class="shipping-card mainGris">
         <mat-card-header class="header-card">
           <mat-card-title class="header-card--text textoGris"> Datos del contrato </mat-card-title>
@@ -116,10 +90,8 @@
           <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title sin-diligenciar"> Registrar controversias </mat-panel-title>
           </mat-expansion-panel-header>
-          <app-form-registrar-controvrs-accord
-            [isEditable]="false"
-            [contratoId]="this.contratoId"
-          ></app-form-registrar-controvrs-accord>
+          <app-form-registrar-controvrs-accord [isEditable]="false" [contratoId]="this.contratoId">
+          </app-form-registrar-controvrs-accord>
         </mat-expansion-panel>
       </mat-accordion>
       <mat-accordion>

@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { forkJoin, Observable } from 'rxjs';
+import { startWith, map } from 'rxjs/operators';
+import { BudgetAvailabilityService } from 'src/app/core/_services/budgetAvailability/budget-availability.service';
 import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
 import { PolizaGarantiaService } from 'src/app/core/_services/polizaGarantia/poliza-garantia.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -12,8 +15,9 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class FormRegistrarControversiaContractuaComponent implements OnInit {
   addressForm = this.fb.group({
-    contrato: null,
+    numeroContrato: [ null, Validators.compose( [ Validators.minLength(3), Validators.maxLength(10) ] ) ],
   });
+  myFilter = new FormControl();
   contratosArray:any = [];
   nombreContratista: any;
   tipoIdentificacion: any;
@@ -25,11 +29,24 @@ export class FormRegistrarControversiaContractuaComponent implements OnInit {
   fechaFinalizacionContrato: any;
   contratoId: any;
   estaEditando = false;
-
-  constructor(  private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private polizaService: PolizaGarantiaService) { }
+  selectedContract: any = '';
+  filteredContrato: Observable<string[]>;
+  constructor(  private fb: FormBuilder, 
+    public dialog: MatDialog, 
+    private services: ContractualControversyService, 
+    private polizaService: PolizaGarantiaService,
+    private budgetAvailabilityService: BudgetAvailabilityService) {
+    this.services.GetListContratos().subscribe(
+      result=>{ this.contratosArray=result;}
+    );
+    this.filteredContrato = this.myFilter.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value))
+    );
+   }
 
   ngOnInit(): void {
-    this.loadContractList();
+    //this.loadContractList();
   }
 
   loadContractList(){
@@ -37,22 +54,50 @@ export class FormRegistrarControversiaContractuaComponent implements OnInit {
       this.contratosArray = data;
     });
   }
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();    
+    if(value!="")
+    {      
+      let filtroportipo:string[]=[];
+      this.contratosArray.forEach(element => {        
+        if(!filtroportipo.includes(element.numeroContrato))
+        {
+          filtroportipo.push(element.numeroContrato);
+        }
+      });
+      let ret= filtroportipo.filter(x=> x.toLowerCase().indexOf(filterValue) === 0);      
+      return ret;
+    }
+    else
+    {
+      return [];
+    }
+    
+  }
   // evalua tecla a tecla
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;
     const inputChar = String.fromCharCode(event.charCode);
     return alphanumeric.test(inputChar) ? true : false;
   }
-  seleccionAutocomplete(id:any){
-    this.contratoId = id;
-    this.addressForm.value.contrato = id;
-    this.polizaService.GetListVistaContratoGarantiaPoliza(id).subscribe(resp_0=>{
+  seleccionAutocomplete(nombre: string){
+    this.selectedContract = nombre;
+    let lista: any[] = [];
+    this.contratosArray.forEach(element => {
+      if (element.numeroContrato) {
+        lista.push(element);
+      }
+    });
+    let ret = lista.filter(x => x.numeroContrato.toLowerCase() === nombre.toLowerCase());
+    console.log(ret);
+    this.contratoId = ret[0].contratoId;
+    this.polizaService.GetListVistaContratoGarantiaPoliza(ret[0].contratoId).subscribe(resp_0=>{
       this.nombreContratista = resp_0[0].nombreContratista;
       this.tipoIdentificacion = resp_0[0].tipoDocumento;
       this.numIdentificacion = resp_0[0].numeroIdentificacion;
       this.valorContrato = resp_0[0].valorContrato;
     });
-    this.services.GetVistaContratoContratista(id).subscribe((resp_1:any)=>{
+    this.services.GetVistaContratoContratista(ret[0].contratoId).subscribe((resp_1:any)=>{
       this.tipoIntervencion = resp_1.tipoIntervencion;
       this.plazoContrato = resp_1.plazoFormat;
       this.fechaInicioContrato = resp_1.fechaInicioContrato;
