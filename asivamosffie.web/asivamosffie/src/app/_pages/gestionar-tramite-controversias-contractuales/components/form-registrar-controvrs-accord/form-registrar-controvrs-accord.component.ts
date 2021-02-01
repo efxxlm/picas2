@@ -544,12 +544,14 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
         this.estaCompleto = false;
       }
       let motivosList1;
+      /*
       if (this.addressForm.value.motivosSolicitud != undefined || this.addressForm.value.motivosSolicitud != null) {
         motivosList1 = [this.addressForm.value.motivosSolicitud[0].codigo];
         for (let i = 1; i < this.addressForm.value.motivosSolicitud.length; i++) {
           const motivoAux1 = motivosList1.push(this.addressForm.value.motivosSolicitud[i].codigo);
         }
       }
+      */
       let formArrayNoTaiContratista;
       let estadoControversiaContratista = '1';
       let motivosArrayCollectedNoTaiContratista;
@@ -753,12 +755,14 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
         this.estaCompleto = false;
       }
       let motivosList2;
+      /*
       if (this.addressForm.value.motivosSolicitud != undefined || this.addressForm.value.motivosSolicitud != null) {
         motivosList2 = [this.addressForm.value.motivosSolicitud[0].codigo];
         for (let i = 1; i < this.addressForm.value.motivosSolicitud.length; i++) {
           const motivoAux2 = motivosList2.push(this.addressForm.value.motivosSolicitud[i].codigo);
         }
       }
+      */
       let formArrayNoTaiContratante;
       let estadoControversiaContratante = '1';
       let motivosArrayCollectedNoTaiContratante;
