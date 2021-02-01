@@ -104,8 +104,7 @@ namespace asivamosffie.services
             }
             catch (Exception ex)
             {
-
-                throw;
+                 
             }
 
             return SolicitudPago;
@@ -117,6 +116,15 @@ namespace asivamosffie.services
 
             try
             {
+
+                if(pOrdenGiro.OrdenGiroId == 0)
+                { 
+                    pOrdenGiro.FechaCreacion = DateTime.Now;
+                    pOrdenGiro.Eliminado = false;
+
+
+
+                }
 
 
 
