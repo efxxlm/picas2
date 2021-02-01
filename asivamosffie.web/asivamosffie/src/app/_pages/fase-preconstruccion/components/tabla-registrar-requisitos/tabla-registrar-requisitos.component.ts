@@ -47,46 +47,35 @@ export class TablaRegistrarRequisitosComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  constructor ( private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService,
-                private commonSvc: CommonService,
-                private dialog: MatDialog,
-                private routes: Router ) 
+  constructor(
+    private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService,
+    private commonSvc: CommonService,
+    private dialog: MatDialog,
+    private routes: Router )
   {
     faseUnoPreconstruccionSvc.listaEstadosVerificacionContrato()
       .subscribe(
         response => {
           this.estadosPreconstruccion = response;
           this.faseUnoPreconstruccionSvc.getListContratacion()
-          .subscribe( listas => {
-            const dataTable = [];
-    
-            listas.forEach( value => {
-              if (  value[ 'estadoCodigo' ] === this.estadosPreconstruccion.sinAprobacionReqTecnicos.codigo
-                    || value[ 'estadoCodigo' ] === this.estadosPreconstruccion.enProcesoAprobacionReqTecnicos.codigo
-                    || value[ 'estadoCodigo' ] === this.estadosPreconstruccion.conReqTecnicosAprobados.codigo
-                    || value[ 'estadoCodigo' ] === this.estadosPreconstruccion.enviadoAlInterventor.codigo ) 
-              {
-                dataTable.push( value );
+            .subscribe( listas => {
+              this.dataSource = new MatTableDataSource( listas );
+              this.dataSource.sort = this.sort;
+              this.dataSource.paginator = this.paginator;
+              this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+              this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
+                if (length === 0 || pageSize === 0) {
+                  return '0 de ' + length;
+                }
+                length = Math.max(length, 0);
+                const startIndex = page * pageSize;
+                // If the start index exceeds the list length, do not try and fix the end index to the end.
+                const endIndex = startIndex < length ?
+                  Math.min(startIndex + pageSize, length) :
+                  startIndex + pageSize;
+                return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
               };
             } );
-            console.log( dataTable, this.estadosPreconstruccion );
-            this.dataSource = new MatTableDataSource( dataTable );
-            this.dataSource.sort = this.sort;
-            this.dataSource.paginator = this.paginator;
-            this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-            this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
-              if (length === 0 || pageSize === 0) {
-                return '0 de ' + length;
-              }
-              length = Math.max(length, 0);
-              const startIndex = page * pageSize;
-              // If the start index exceeds the list length, do not try and fix the end index to the end.
-              const endIndex = startIndex < length ?
-                Math.min(startIndex + pageSize, length) :
-                startIndex + pageSize;
-              return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
-            };
-          } );
         }
       );
   }
@@ -94,14 +83,14 @@ export class TablaRegistrarRequisitosComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  openDialog (modalTitle: string, modalText: string) {
-    let dialogRef =this.dialog.open(ModalDialogComponent, {
+  openDialog(modalTitle: string, modalText: string) {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
-    });   
-  };
+    });
+  }
 
-  aprobarInicio ( contratoId: number ) {
+  aprobarInicio( contratoId: number ) {
     this.faseUnoPreconstruccionSvc.changeStateContrato( contratoId, this.estadosPreconstruccion.conReqTecnicosAprobados.codigo )
       .subscribe(
         response => {
@@ -114,8 +103,8 @@ export class TablaRegistrarRequisitosComponent implements OnInit {
       );
   }
 
-  getForm ( id: number, fechaPoliza: string, estado: string ) {
-    this.routes.navigate( [ '/preconstruccion/gestionarRequisitos', id ], { state: { fechaPoliza, estado } } )
-  };
+  getForm( id: number, fechaPoliza: string, estado: string ) {
+    this.routes.navigate( [ '/preconstruccion/gestionarRequisitos', id ], { state: { fechaPoliza, estado } } );
+  }
 
 }

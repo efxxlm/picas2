@@ -19,6 +19,7 @@ using DinkToPdf.Contracts;
 using DinkToPdf;
 using System.IO;
 using asivamosffie.api.Helpers;
+using asivamosffie.api.Controllers;
 
 namespace asivamosffie.api
 {
@@ -158,13 +159,16 @@ namespace asivamosffie.api
             services.AddTransient<IRegisterContractsAndContractualModificationsService, RegisterContractsAndContractualModificationsService>();
             services.AddTransient<IManagePreContructionActPhase1Service, ManagePreContructionActPhase1Service>(); 
             services.AddTransient<IVerifyPreConstructionRequirementsPhase1Service, VerifyPreConstructionRequirementsPhase1Service>();
-            services.AddTransient<IContractualControversy, ContractualControversyService>();
+            services.AddTransient<IJudicialDefense, JudicialDefenseService>();
             services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>(); 
             services.AddTransient<IManageContractualProcessesService, ManageContractualProcessesService>();
             services.AddTransient<ITechnicalRequirementsConstructionPhaseService, TechnicalRequirementsConstructionPhaseService>();
             services.AddTransient<ITechnicalCheckConstructionPhase2Service, TechnicalCheckConstructionPhase2Service>();
             services.AddTransient<IActBeginService, ActBeginService>();
             services.AddTransient<IResourceControlService, ResourceControlService>();
+            services.AddTransient<IContractualModification, ContractualModificationService>();
+            services.AddTransient<IDerivativeActionService, DerivativeActionService>();
+            services.AddTransient<IMonitoringURL, MonitoringURLService>();
             
         }
 

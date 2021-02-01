@@ -50,6 +50,7 @@ export class FormPerfilComponent {
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
 
   get numeroRadicado() {
     return this.addressForm.get('numeroRadicado') as FormArray;
@@ -74,8 +75,8 @@ export class FormPerfilComponent {
 
   textoLimpio(texto: string) {
     let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
 
     if ( texto ){
       const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
@@ -107,5 +108,6 @@ export class FormPerfilComponent {
 
   onSubmit() {
     console.log(this.addressForm.value);
+    this.estaEditando = true;
   }
 }

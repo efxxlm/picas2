@@ -77,7 +77,7 @@ namespace asivamosffie.services
         public async Task<List<MenuPerfil>> GetMenuByRol(int pUserId)
         {
             int IdPerfil = await _context.UsuarioPerfil.Where(r => r.UsuarioId == pUserId).Select(r => r.PerfilId).FirstOrDefaultAsync();
-            return _context.MenuPerfil.Where(r => r.PerfilId == IdPerfil && (bool)r.Activo).IncludeFilter(r => r.Menu).ToList();
+            return _context.MenuPerfil.Where(r => r.PerfilId == IdPerfil && (bool)r.Activo).IncludeFilter(r => r.Menu).OrderBy(z=>z.Menu.Posicion).ToList();
         }
 
         public string GetNombreDepartamentoByIdMunicipio(string pIdMunicipio)
@@ -130,7 +130,7 @@ namespace asivamosffie.services
         {
             var retorno = await _context.MensajesValidaciones.Where(r => (bool)r.Activo && r.MenuId == pMenu && r.Codigo.Equals(pCodigo)).FirstOrDefaultAsync();
             /*almaceno auditoria*/
-            _context.Auditoria.Add(new Auditoria { AccionId = pAccionId, MensajesValidacionesId = retorno.MensajesValidacionesId, Usuario = pUsuario.ToUpper(), Observacion = pObservaciones.ToUpper(), Fecha = DateTime.Now });
+            _context.Auditoria.Add(new Auditoria { AccionId = pAccionId, MensajesValidacionesId = retorno.MensajesValidacionesId, Usuario = pUsuario==null?"":pUsuario.ToUpper(), Observacion = pObservaciones.ToUpper(), Fecha = DateTime.Now });
             _context.SaveChanges();
             return retorno.Mensaje;
         }
@@ -139,9 +139,7 @@ namespace asivamosffie.services
         {
             return await _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(pCodigo) && r.TipoDominioId == pTipoDominioId).Select(r => r.DominioId).FirstOrDefaultAsync();
         }
-
-
-
+         
         public async Task<List<Localicacion>> GetListDepartamento()
         {
             
@@ -303,9 +301,7 @@ namespace asivamosffie.services
         {
             return await _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(pCodigo) && r.TipoDominioId == pTipoDominioId).FirstOrDefaultAsync();
         }
-
-
-
+         
         public async Task<List<InstitucionEducativaSede>> ListIntitucionEducativaByMunicipioId(string pIdMunicipio)
         {
             return await _context.InstitucionEducativaSede.Where(r => (bool)r.Activo && r.PadreId == null && r.LocalizacionIdMunicipio.Trim().Equals(pIdMunicipio.Trim())).ToListAsync();
@@ -342,9 +338,7 @@ namespace asivamosffie.services
                  IdPadre = x.IdPadre
              }).ToListAsync();
         }
-
-
-
+         
         public async Task<List<Localicacion>> GetListDepartamentoByIdMunicipio(string idMunicipio)
         {
             var munactual = _context.Localizacion.Find(idMunicipio);
@@ -373,7 +367,7 @@ namespace asivamosffie.services
             }
             return fechaRetorno;
         }
-
+        
         public static DateTime[] DiasFestivosAnio(int anio)
         {
             List<DateTime> fechas = new List<DateTime>
@@ -473,6 +467,8 @@ namespace asivamosffie.services
 
             return new DateTime(anyo, mes, dia);
         }
+        
+        
 
         /// <summary>
         /// Julian Martinez

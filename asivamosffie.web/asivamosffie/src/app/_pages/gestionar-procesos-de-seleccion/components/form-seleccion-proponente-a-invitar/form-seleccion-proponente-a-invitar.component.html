@@ -1,38 +1,78 @@
-<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()"
-  *ngIf="procesoSeleccion.estadoProcesoSeleccionCodigo==estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario">
+<div class="my-1em color-secondaryColor d-flex align-items-center justify-content-center">
+  <img class="icon-incompleto--img mr-05em" src="assets/img/icon/incompleto.svg" alt="este campo es requerido" />
+  Debe ingresar la información en el campo para continuar
+</div>
+<form
+  [formGroup]="addressForm"
+  novalidate
+  (ngSubmit)="onSubmit()"
+  *ngIf="procesoSeleccion.estadoProcesoSeleccionCodigo == estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario"
+>
   <mat-card class="shipping-card">
     <mat-card-content>
       <div class="row">
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
-              <label for="cuantosProponentes" class="label-left">
-                ¿Cuántos proponentes serán seleccionados en el proceso?</label>
+              <label
+                for="cuantosProponentes"
+                class="label-left"
+                [class.color-secondaryColor]="
+                  (addressForm.get('cuantosProponentes').invalid && addressForm.get('cuantosProponentes').touched) ||
+                  (addressForm.get('cuantosProponentes').invalid && estaEditando)
+                "
+              >
+                ¿Cuántos proponentes serán seleccionados en el proceso?</label
+              >
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput #cuantosProponentes type="number" min="1" max="99" maxlength="2"
+                <input
+                  matInput
+                  #cuantosProponentes
+                  type="number"
+                  min="1"
+                  max="99"
+                  maxlength="2"
                   (keypress)="validateNumberKeypress($event)"
-                  onKeyPress="if(this.value.length>=this.maxLength) return false;" formControlName="cuantosProponentes" required>
+                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  formControlName="cuantosProponentes"
+                  required
+                />
               </mat-form-field>
-              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
-              matTooltipClass="info-tooltip">{{2 - cuantosProponentes.value.length}}</span>
+              <span
+                class="contador"
+                [matTooltipPosition]="'above'"
+                matTooltip="Campo numérico"
+                matTooltipClass="info-tooltip"
+              >
+                {{ 2 - cuantosProponentes.value.length }}
+              </span>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  *ngIf="
+                    (addressForm.get('cuantosProponentes').invalid && addressForm.get('cuantosProponentes').touched) ||
+                    (addressForm.get('cuantosProponentes').invalid && estaEditando)
+                  "
+                />
+              </span>
             </div>
           </div>
         </div>
       </div>
-      <div class="margin-tabla"
-        *ngIf="addressForm.controls.cuantosProponentes.value > 0 && addressForm.controls.cuantosProponentes.value < 100">
+      <div
+        class="margin-tabla"
+        *ngIf="addressForm.controls.cuantosProponentes.value > 0 && addressForm.controls.cuantosProponentes.value < 100"
+      >
         <div class="table-responsive p-2px">
           <table class="text-center mat-table cdk-table mat-sort mat-table-style table-form table-form--2 spacing-0">
             <thead>
               <tr class="mat-header-row cdk-header-row ng-star-inserted">
-                <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                  Nombres de los proponentes
-                </th>
-                <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                  Seleccionar
-                </th>
+                <th class="mat-header-cell cdk-header-cell ng-star-inserted">Nombres de los proponentes</th>
+                <th class="mat-header-cell cdk-header-cell ng-star-inserted">Seleccionar</th>
               </tr>
             </thead>
             <tbody>
@@ -42,8 +82,12 @@
                 </td>
                 <td class="mat-cell cdk-cell ng-star-inserted">
                   <section class="table-checkbox">
-                    <mat-checkbox type="checkbox" [checked]="validateSel(proponente.nombreProponente)"
-                      (change)="changeSeleccion($event, proponente)" [id]="proponente.procesoSeleccionProponenteId">
+                    <mat-checkbox
+                      type="checkbox"
+                      [checked]="validateSel(proponente.nombreProponente)"
+                      (change)="changeSeleccion($event, proponente)"
+                      [id]="proponente.procesoSeleccionProponenteId"
+                    >
                     </mat-checkbox>
                   </section>
                 </td>
@@ -51,26 +95,47 @@
             </tbody>
           </table>
         </div>
-
       </div>
       <div class="row mt-2em">
         <div class="pr-1">
-          <label for="url" class="label-left">URL con soporte</label>
+          <label
+            for="url"
+            class="label-left"
+            [class.color-secondaryColor]="
+              (addressForm.get('url').invalid && addressForm.get('url').touched) ||
+              (addressForm.get('url').invalid && estaEditando)
+            "
+          >
+            URL con soporte
+          </label>
         </div>
-        <div class="col pr-3em">
+        <div class="col">
           <mat-form-field class="full-width">
-            <input matInput type="url" formControlName="url">
+            <input matInput type="url" formControlName="url" />
           </mat-form-field>
-          <p class="text-center cursivayeso ">Indique la ruta del soporte de esta información</p>
+          <span class="info-url">Indique la ruta del soporte de esta información</span>
         </div>
+        <span class="icon-incompleto pr-3em">
+          <img
+            class="icon-incompleto--img"
+            src="assets/img/icon/incompleto.svg"
+            alt="este campo es requerido"
+            *ngIf="
+              (addressForm.get('url').invalid && addressForm.get('url').touched) ||
+              (addressForm.get('url').invalid && estaEditando)
+            "
+          />
+        </span>
       </div>
     </mat-card-content>
   </mat-card>
 
-  <div class="text-center"
-    *ngIf="addressForm.controls.cuantosProponentes.value > 0 && addressForm.controls.cuantosProponentes.value < 100">
+  <div
+    class="text-center"
+    *ngIf="addressForm.controls.cuantosProponentes.value > 0 && addressForm.controls.cuantosProponentes.value < 100"
+  >
     <button *ngIf="editar" mat-button color="warn" class="btn-guardar" type="button" (click)="onSaveContractors()">
-      <img src="assets/img/icon/guardar.svg" alt="Guardar">
+      <img src="assets/img/icon/guardar.svg" alt="Guardar" />
     </button>
   </div>
 </form>

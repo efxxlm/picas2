@@ -251,8 +251,8 @@ export class HojaVidaContratistaComponent implements OnInit {
     }
   }
 
-  disabledDate( cantidadHvAprobadas: string, cantidadHvRequeridas: string, index: number ) {
-    if ( cantidadHvAprobadas != null && cantidadHvRequeridas != null){
+  disabledDate( cantidadHvAprobadas: string, cantidadHvRequeridas: string, cantidadHvRecibidas: string, index: number ) {
+    if ( cantidadHvAprobadas != null && cantidadHvRequeridas != null && cantidadHvRecibidas != null){
       if ( cantidadHvAprobadas >= cantidadHvRequeridas ) {
         this.perfiles.controls[index].get( 'fechaAprobacion' ).enable();
       } else {
@@ -261,6 +261,10 @@ export class HojaVidaContratistaComponent implements OnInit {
       if ( cantidadHvRequeridas.length === 0 ) {
         this.perfiles.controls[index].get( 'fechaAprobacion' ).disable();
         this.perfiles.controls[index].get( 'fechaAprobacion' ).setValue(null);
+      }
+      if (Number( cantidadHvAprobadas ) > Number( cantidadHvRecibidas )){
+        this.perfiles.controls[index].get( 'fechaAprobacion' ).disable();
+        this.perfiles.controls[index].get( 'fechaAprobacion' ).setValue( null );
       }
     }else{
       this.perfiles.controls[index].get( 'fechaAprobacion' ).disable();
@@ -291,8 +295,8 @@ export class HojaVidaContratistaComponent implements OnInit {
 
   textoLimpio(texto: string) {
     let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
 
     if ( texto ){
       const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');

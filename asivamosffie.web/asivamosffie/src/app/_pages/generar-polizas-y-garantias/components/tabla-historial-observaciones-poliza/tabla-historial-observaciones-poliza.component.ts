@@ -19,7 +19,7 @@ export class TablaHistorialObservacionesPolizaComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
-  public dataTable;
+  dataTable: any[] = [];
   loadTableObservaciones: Subscription;
   constructor(private polizaService: PolizaGarantiaService) { }
 
@@ -28,9 +28,9 @@ export class TablaHistorialObservacionesPolizaComponent implements OnInit {
   }
   cargarTablaDeDatos(){
     this.loadTableObservaciones = this.polizaService.loadTableObservaciones.subscribe((loadTableObservaciones: any) => {
+      console.log( loadTableObservaciones );
       if(loadTableObservaciones!=''){
       this.dataTable=loadTableObservaciones;
-      }
       this.dataSource = new MatTableDataSource(this.dataTable);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
@@ -47,6 +47,7 @@ export class TablaHistorialObservacionesPolizaComponent implements OnInit {
           startIndex + pageSize;
         return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
       };
+      }
     }); 
   }
 }

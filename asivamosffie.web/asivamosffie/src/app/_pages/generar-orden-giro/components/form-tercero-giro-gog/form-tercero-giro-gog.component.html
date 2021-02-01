@@ -1,0 +1,123 @@
+<div align="center">
+    <p class="info-sub-title" style="font-size: 14px;">
+        <span><b>Nombre del contratista: Interventores S.A.</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Número de
+                identificación: 900.879.765-2</b></span>
+    </p>
+</div>
+<form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+    <mat-card class="shipping-card">
+        <mat-card-content style="text-align: left;">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="medioPagoGiroContrato">¿Cuál es el medio de pago para los
+                                giros del contrato?</label>
+                        </div>
+                        <div class="col">
+                            <mat-form-field class="select-width">
+                                <mat-select formControlName="medioPagoGiroContrato" required>
+                                    <mat-option *ngFor="let contr of medioPagoArray" [value]="contr.value">
+                                        {{ contr.name }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="addressForm.value.medioPagoGiroContrato!=null">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label for="titularCuenta" class="label-left">Titular de la cuenta</label>
+                            </div>
+                            <div class="col d-flex">
+                                <mat-form-field class="full-width">
+                                    <input matInput #titularCuenta type="text" maxlength="100"
+                                        formControlName="titularCuenta" required>
+                                </mat-form-field>
+                                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico"
+                                    matTooltipClass="info-tooltip">{{100 - titularCuenta.value.length}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label for="numIdentificacionTitular" class="label-left">Número de identificación del titular</label>
+                            </div>
+                            <div class="col d-flex">
+                                <mat-form-field class="full-width">
+                                    <input matInput #numIdentificacionTitular type="text" maxlength="10"
+                                        formControlName="numIdentificacionTitular" required>
+                                </mat-form-field>
+                                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico"
+                                    matTooltipClass="info-tooltip">{{10 - numIdentificacionTitular.value.length}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label for="numeroCuenta" class="label-left">Número de cuenta</label>
+                            </div>
+                            <div class="col d-flex">
+                                <mat-form-field class="full-width">
+                                    <input matInput #numeroCuenta type="text" maxlength="50"
+                                        formControlName="numeroCuenta" required>
+                                </mat-form-field>
+                                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico"
+                                    matTooltipClass="info-tooltip">{{50 - numeroCuenta.value.length}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left" for="banco">Banco</label>
+                            </div>
+                            <div class="col">
+                                <mat-form-field class="select-width">
+                                    <mat-select formControlName="banco" required>
+                                        <mat-option *ngFor="let contr of bancosArray" [value]="contr.value">
+                                            {{ contr.name }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                      <div class="row">
+                        <div class="pr-1">
+                          <label class="label-left" for="tipoCuenta">Tipo de cuenta</label>
+                        </div>
+                        <div class="col">
+                          <mat-radio-group class="radioInput" formControlName="tipoCuenta" required>
+                            <mat-radio-button [value]="true">Ahorros</mat-radio-button>
+                            <mat-radio-button [value]="false">Corriente</mat-radio-button>
+                          </mat-radio-group>
+                          <span class="required-form-group" style="margin-left: 1px;">*</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+    <div class="text-center mb-2em">
+        <button mat-button color="warn" class="btn-guardar" type="submit">
+            <img src="assets/img/icon/guardar.svg" alt="Regresar">
+        </button>
+    </div>
+</form>

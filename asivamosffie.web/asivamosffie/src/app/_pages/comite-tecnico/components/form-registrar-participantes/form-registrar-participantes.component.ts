@@ -26,6 +26,8 @@ export class FormRegistrarParticipantesComponent implements OnInit {
     invitados: this.fb.array([])
   });
 
+  estaEditando = false;
+
   estadoFormulario = {
     sinDiligenciar: 'info-text sin-diligenciar',
     enProceso: 'info-text en-proceso',
@@ -86,7 +88,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
           response[0].sesionParticipante = response[1];
           this.objetoComiteTecnico = response[0];
 
-          console.log(this.objetoComiteTecnico)
+          // console.log(this.objetoComiteTecnico)
 
 
           setTimeout(() => {
@@ -285,7 +287,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
 
     }
 
-    console.log(cantidadTemas, this.estadoOtrosTemas, this.estadoProposiciones)
+    // console.log(cantidadTemas, this.estadoOtrosTemas, this.estadoProposiciones)
 
   }
 
@@ -319,7 +321,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
 
   onDelete(i: number) {
     let grupo = this.invitados.controls[i] as FormGroup;
-    console.log(grupo, this.invitados, i)
+    // console.log(grupo, this.invitados, i)
     let idInvitado = grupo.get('sesionInvitadoId').value ? grupo.get('sesionInvitadoId').value : 0;
     this.technicalCommitteSessionService.deleteSesionInvitado(idInvitado)
       .subscribe(respuesta => {
@@ -356,7 +358,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
   }
 
   onSubmit() {
-
+    this.estaEditando = true;
     if (this.addressForm.valid) {
 
       let comite: ComiteTecnico = {
@@ -394,7 +396,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
         comite.sesionInvitado.push(sesionInvitado);
       })
 
-      console.log(comite)
+      // console.log(comite)
 
       this.technicalCommitteSessionService.createEditSesionInvitadoAndParticipante(comite)
         .subscribe(respuesta => {
@@ -403,7 +405,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
             this.ngOnInit();
         })
 
-      console.log(this.addressForm.get('miembrosParticipantes').value);
+      // console.log(this.addressForm.get('miembrosParticipantes').value);
     }
   }
 }

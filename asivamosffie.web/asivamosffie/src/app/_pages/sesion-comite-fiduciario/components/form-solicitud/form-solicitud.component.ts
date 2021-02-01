@@ -61,6 +61,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
 
   get compromisos() {
     return this.addressForm.get('compromisos') as FormArray;
@@ -109,8 +110,8 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
 
   textoLimpio(texto: string) {
     let saltosDeLinea = 0;
-    // saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
-    // saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
+    // saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
+    // saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
 
     if ( texto ){
       const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
@@ -242,7 +243,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
   }
 
   onSubmit() {
-
+    this.estaEditando = true;
     if (this.proyectos)
       this.proyectos.forEach(p => {
         let proyecto = p.proyecto

@@ -1,3 +1,4 @@
+import { FormControl, Validators } from '@angular/forms';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
@@ -22,14 +23,12 @@ export class TablaRegistroSemanasComponent implements OnInit {
     private dialog: MatDialog,
     private programacionPersonalSvc: ProgramacionPersonalObraService,
     private routes: Router )
-  {
-  }
+  {}
 
   ngOnInit(): void {
     if ( this.registroSemanas !== undefined ) {
       let numeroregistros = 0;
       this.registroSemanasTabla.push( [] );
-      console.log( this.registroSemanas );
       this.registroSemanas.forEach( registro => {
         if ( this.registroSemanasTabla[ numeroregistros ].length < 20 ) {
           if ( registro.seguimientoSemanalPersonalObra.length === 0 ) {

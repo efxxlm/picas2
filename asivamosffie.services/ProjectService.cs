@@ -440,6 +440,22 @@ namespace asivamosffie.services
                 //CREAR PROYECTO 
                 if (pProyecto.ProyectoId == 0)
                 {
+                    //agrego una condición para validar llave MEN unica, si no estalla por bd
+                    var proyectoexistetne = _context.Proyecto.Where(x=>x.LlaveMen==pProyecto.LlaveMen).ToList();
+                    if(proyectoexistetne.Count()>0)
+                    {
+                        return respuesta =
+                          new Respuesta
+                          {
+                              IsSuccessful = false,
+                              IsException = false,
+                              IsValidation = true,
+                              Code = ConstantMessagesProyecto.ErrorLLAVEMEN,
+                              Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, 
+                                ConstantMessagesProyecto.ErrorLLAVEMEN, idAccionCrearProyecto, pProyecto.UsuarioCreacion, "LLAVE MEN EXISTENTE")
+                          };
+                    }
+
                     CrearEditar = "CREAR PROYECTO";
                     int? predioid = null;
                     Predio pPredioPrincipal = new Predio();
@@ -588,10 +604,40 @@ namespace asivamosffie.services
                             valorinterventoria += proyectoAportante.ValorInterventoria != null ? Convert.ToDecimal(proyectoAportante.ValorInterventoria) : 0;
                             valortotal += valorobra + valorinterventoria;
                             _context.ProyectoAportante.Add(proyectoAportante1);
+
+                            //por cada aportante relaciono las fuentes del aportante al proyecto
+                            var fuentes = _context.FuenteFinanciacion.Where(x => x.AportanteId == proyectoAportante.AportanteId && !(bool)x.Eliminado).ToList();
+                            foreach (var fuente in fuentes)
+                            {
+                                var proyectosfuenteExiste = _context.ProyectoFuentes.Where(x => x.ProyectoId == ProyectoCreado.ProyectoId
+                                      && x.FuenteId == fuente.FuenteFinanciacionId);
+                                if(proyectosfuenteExiste.FirstOrDefault()==null)
+                                {
+                                    _context.ProyectoFuentes.Add(new ProyectoFuentes
+                                    {
+                                        Eliminado = false,
+                                        FechaCreacion = DateTime.Now,
+                                        UsuarioCreacion = ProyectoCreado.UsuarioCreacion,
+                                        FuenteId = fuente.FuenteFinanciacionId,
+                                        ProyectoId = ProyectoCreado.ProyectoId
+                                    }); ;
+                                }
+                                else
+                                {
+                                    var proyectoFuenteAEditar = proyectosfuenteExiste.FirstOrDefault();
+                                    proyectoFuenteAEditar.UsuarioModificacion = ProyectoCreado.UsuarioCreacion;
+                                    proyectoFuenteAEditar.FechaModificacion = DateTime.Now;
+                                    proyectoFuenteAEditar.Eliminado = false;
+                                    _context.ProyectoFuentes.Update(proyectoFuenteAEditar);
+                                }
+                                
+                            }
                             _context.SaveChanges();
                         }
                         
                     }
+                   
+
                     ProyectoCreado.ValorInterventoria = valorinterventoria;
                     ProyectoCreado.ValorObra = valorobra;
                     ProyectoCreado.ValorTotal = valortotal;
@@ -794,6 +840,34 @@ namespace asivamosffie.services
                             valortotal += valorobra + valorinterventoria;
 
                             _context.ProyectoAportante.Add(proyectoAportante1);
+
+                            //por cada aportante relaciono las fuentes del aportante al proyecto
+                            var fuentes = _context.FuenteFinanciacion.Where(x => x.AportanteId == proyectoAportante.AportanteId && !(bool)x.Eliminado).ToList();
+                            foreach (var fuente in fuentes)
+                            {
+                                var proyectosfuenteExiste = _context.ProyectoFuentes.Where(x => x.ProyectoId == pProyecto.ProyectoId
+                                      && x.FuenteId == fuente.FuenteFinanciacionId);
+                                if (proyectosfuenteExiste.FirstOrDefault() == null)
+                                {
+                                    _context.ProyectoFuentes.Add(new ProyectoFuentes
+                                    {
+                                        Eliminado = false,
+                                        FechaCreacion = DateTime.Now,
+                                        UsuarioCreacion = pProyecto.UsuarioCreacion,
+                                        FuenteId = fuente.FuenteFinanciacionId,
+                                        ProyectoId = pProyecto.ProyectoId
+                                    }); ;
+                                }
+                                else
+                                {
+                                    var proyectoFuenteAEditar = proyectosfuenteExiste.FirstOrDefault();
+                                    proyectoFuenteAEditar.UsuarioModificacion = pProyecto.UsuarioCreacion;
+                                    proyectoFuenteAEditar.FechaModificacion = DateTime.Now;
+                                    proyectoFuenteAEditar.Eliminado = false;
+                                    _context.ProyectoFuentes.Update(proyectoFuenteAEditar);
+                                }
+
+                            }
                             _context.SaveChanges();
                         }
 
@@ -916,7 +990,7 @@ namespace asivamosffie.services
                 //Controlar Registros
                 //Filas <=
                 //No comienza desde 0 por lo tanto el = no es necesario
-                for (int i = 2; i < worksheet.Dimension.Rows; i++)
+                for (int i = 2; i <= worksheet.Dimension.Rows; i++)
                 {
                     try
                     {
@@ -1013,7 +1087,7 @@ namespace asivamosffie.services
                             { temporalProyecto.SedeId = SedeId; }
                             else
                             {
-                                archivoCarge.CantidadRegistrosInvalidos++;
+                                CantidadRegistrosInvalidos++;
                                 break;
                             }
 
@@ -1220,7 +1294,7 @@ namespace asivamosffie.services
                 //-2 ya los registros comienzan desde esta fila
                 archivoCarge.CantidadRegistrosInvalidos = CantidadRegistrosInvalidos;
                 archivoCarge.CantidadRegistrosValidos = CantidadResgistrosValidos;
-                archivoCarge.CantidadRegistros = (worksheet.Dimension.Rows - CantidadRegistrosVacios - 2);
+                archivoCarge.CantidadRegistros = (worksheet.Dimension.Rows - CantidadRegistrosVacios - 1);
                 _context.ArchivoCargue.Update(archivoCarge);
 
 

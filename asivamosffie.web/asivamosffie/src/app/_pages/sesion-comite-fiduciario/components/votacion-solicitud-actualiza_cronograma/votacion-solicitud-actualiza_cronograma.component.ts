@@ -22,6 +22,7 @@ export class VotacionSolicitudActualizaCronogramaComponent implements OnInit {
     aprobaciones: this.fb.array([]),
     proyectos: this.fb.array([]),
   });
+  estaEditando = false;
 
   get aprobaciones() {
     return this.addressForm.get('aprobaciones') as FormArray;
@@ -50,8 +51,8 @@ export class VotacionSolicitudActualizaCronogramaComponent implements OnInit {
 
   textoLimpio(texto: string) {
     let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
 
     if ( texto ){
       const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
@@ -192,6 +193,7 @@ export class VotacionSolicitudActualizaCronogramaComponent implements OnInit {
   }
 
   onSubmit() {
+    this.estaEditando = true;
     let sesionComiteSolicitud: SesionComiteSolicitud = {
       sesionComiteSolicitudId: this.data.sesionComiteSolicitud.sesionComiteSolicitudId,
       comiteTecnicoId: this.data.sesionComiteSolicitud.comiteTecnicoId,

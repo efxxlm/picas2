@@ -63,16 +63,18 @@ export class TablaProcesosComponent implements OnInit {
         
         if(proceso.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario)
         {
+          
           //valido si esta incompleto si no tiene datos de evaluacion y proponentes seleccionados
           if(proceso.evaluacionDescripcion!="" 
           && proceso.urlSoporteEvaluacion!=""
         
         )
           {
-            //si cerrada debe tener contratista
+            //si cerrada debe tener contratista y evaluacion
             if( proceso.tipoProcesoCodigo==TiposProcesoSeleccion.Cerrada)
             {
-              if(proceso.listaContratistas?.length>0)
+              if(proceso.listaContratistas?.length>0 && proceso.urlSoporteProponentesSeleccionados!=null &&
+                proceso.evaluacionDescripcion!=null && proceso.urlSoporteEvaluacion!=null)
               {
                 proceso.esCompleto=true;                
               }              
@@ -83,7 +85,15 @@ export class TablaProcesosComponent implements OnInit {
             }
             else
             {
-              proceso.esCompleto=true;  
+              if( proceso.tipoProcesoCodigo==TiposProcesoSeleccion.Abierta)            
+              {
+                proceso.esCompleto=false;  
+              }
+              else
+              {
+                proceso.esCompleto=true;  
+              }
+              
             }            
           }
           else{

@@ -1,0 +1,270 @@
+<section class="container text-center">
+    <div class="text-right">
+        <a routerLink="/generarOrdenDeGiro" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">
+        Ver detalle orden de giro generada
+    </h1>
+    <p class="info-sub-title">
+        <span>Código orden de giro: <b>ODG_Obr 001</b></span>
+        <span>Número de contrato: <b>N801801</b></span>
+    </p>
+    <mat-card class="shipping-card var-main-gris">
+        <mat-card-content align="left">
+            <p><strong>Fecha de solicitud de pago:</strong> 05/10/2020</p>
+            <p><strong>Fecha de validación financiera:</strong> 10/10/2020</p>
+            <p><strong>Número de solicitud:</strong> Sol Pago O 001</p>
+            <p><strong>Modalidad de contrato:</strong> Mejoramiento</p>
+        </mat-card-content>
+    </mat-card>
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Información general
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-accordion>
+                <mat-expansion-panel class="expansion-style sub-expansion">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title ">
+                            Datos de la solicitud
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;">
+                        <mat-card-content style="text-align: left;">
+                            <p><strong>Código SIFI:</strong> 357233</p>
+                            <p><strong>Coordinación responsable:</strong> Andina</p>
+                            <p><strong>Grupo de contrato:</strong> Grupo 1</p>
+                            <p><strong>Tipo de contrato:</strong> Obra o interventoría</p>
+                            <p><strong>Valor de la factura:</strong> $ 15.000.000</p>
+                        </mat-card-content>
+                    </mat-card>
+                    <app-tabla-datos-solicitud-gog></app-tabla-datos-solicitud-gog>
+                </mat-expansion-panel>
+            </mat-accordion>
+            
+            <mat-accordion>
+                <mat-expansion-panel class="expansion-style sub-expansion">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title ">
+                            Datos DDP y DRP
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <div class="table-responsive">
+                        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+                            <ng-container matColumnDef="drp">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> DRP </th>
+                                <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.drp }}</b> </td>
+                            </ng-container>
+                            <ng-container matColumnDef="numDrp">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Número DRP </th>
+                                <td mat-cell *matCellDef="let element" align="center"> {{ element.numDrp }} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="valor">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor </th>
+                                <td mat-cell *matCellDef="let element" align="center"> {{ element.valor }} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="saldo">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Saldo </th>
+                                <td mat-cell *matCellDef="let element" align="center"> {{ element.saldo }} </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+                        <!--<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>-->
+                    </div>
+                    <app-tabla-datos-ddp-gog></app-tabla-datos-ddp-gog>
+                </mat-expansion-panel>
+            </mat-accordion>
+            <mat-accordion>
+                <mat-expansion-panel class="expansion-style sub-expansion">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title ">
+                            Soportes de factura
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;">
+                        <mat-card-content style="text-align: left;">
+                            <p><strong>URL con soporte:</strong>
+                                https://drive.google.com/drive/registrodecontroversiacontractual/soportedefacturaSolPagoO001-N801801
+                            </p>
+                        </mat-card-content>
+                    </mat-card>
+                </mat-expansion-panel>
+            </mat-accordion>
+            <mat-accordion>
+                <mat-expansion-panel class="expansion-style sub-expansion">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title">
+                            Tercero de giro
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <!--&nbsp; significa espacios (dbenitez)-->
+                    <p class="info-sub-title textoGris" style="font-size: 14px;">
+                        <span><b>Nombre del contratista: Interventores S.A.</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Número de
+                                identificación: 900.879.765-2</b></span>
+                    </p>
+                    <mat-card class="shipping-card var-main-gris">
+                        <mat-card-content align="left">
+                            <p><strong>¿Cuál es el medio de pago para los giros del contrato?:</strong> Transferencia electrónica</p>
+                            <p><strong>Titular de la cuenta:</strong> Depósito de pinturas SAS</p>
+                            <p><strong>Número de identificación del titular:</strong> 950.789.897-2</p>
+                            <p><strong>Número de cuenta:</strong> 4563-9876-2453-3245</p>
+                            <p><strong>Banco:</strong> Bancolombia</p>
+                            <p><strong>Tipo de cuenta:</strong> Corriente</p>
+                        </mat-card-content>
+                    </mat-card>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Detalle del giro
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-accordion>
+                <mat-expansion-panel class="expansion-style sub-expansion">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title ">
+                            Porcentajes de participación
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <app-tabla-porcntj-partic-gog></app-tabla-porcntj-partic-gog>
+                </mat-expansion-panel>
+            </mat-accordion>
+            <mat-accordion>
+                <mat-expansion-panel class="expansion-style sub-expansion">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title ">
+                            Información fuente de recursos
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <app-tabla-info-fuenterec-gog></app-tabla-info-fuenterec-gog>
+                </mat-expansion-panel>
+            </mat-accordion>
+            <mat-accordion>
+                <mat-expansion-panel class="expansion-style sub-expansion">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title ">
+                            Estrategia de pagos
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <mat-card class="shipping-card var-main-gris">
+                        <mat-card-content align="left">
+                            <p><strong>Estrategia de pagos:</strong> Entidad territorial - Tercero</p>
+                        </mat-card-content>
+                    </mat-card>
+                </mat-expansion-panel>
+            </mat-accordion>
+            <mat-accordion>
+                <mat-expansion-panel class="expansion-style sub-expansion">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title ">
+                            Descuentos Dirección Técnica
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <app-detalle-desc-dir-tecnica-gog></app-detalle-desc-dir-tecnica-gog>
+                </mat-expansion-panel>
+            </mat-accordion>
+            <mat-accordion>
+                <mat-expansion-panel class="expansion-style sub-expansion">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title ">
+                            Tercero de causación
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <app-detalle-tercero-causacion-gog></app-detalle-tercero-causacion-gog>
+                </mat-expansion-panel>
+            </mat-accordion>
+            <mat-accordion>
+                <mat-expansion-panel class="expansion-style sub-expansion">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title ">
+                            Origen
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <mat-card class="shipping-card var-main-gris">
+                        <mat-card-content align="left">
+                            <mat-card-title class="header-card--text sub-text">
+                                Aportante 1
+                            </mat-card-title>
+                            <div class="mt-1em">
+                                <p><strong>Tipo de aportante: </strong>Entidad Territorial</p>
+                                <p><strong>Nombre del aportante: </strong>Alcaldía de Susacón</p>
+                                <p><strong>Fuente: </strong>Contingencias</p>
+                                <p><strong>Nombre de la Cuenta: </strong>Alcaldía de Susacón</p>
+                                <p><strong>Número de Cuenta: </strong>778969876543257</p>
+                                <p><strong>Banco: </strong>Davivienda</p>
+                                <p><strong>Tipo de Cuenta: </strong>Corriente</p>
+                                <p><strong>Código SIFI: </strong>357314</p>
+                            </div>
+                            <mat-card-title class="header-card--text sub-text">
+                                Aportante 2
+                            </mat-card-title>
+                            <div class="mt-1em">
+                                <p><strong>Tipo de aportante: </strong>Tercero</p>
+                                <p><strong>Nombre del aportante: </strong>Fundación Pies Descalzos</p>
+                                <p><strong>Fuente: </strong>Recursos propios</p>
+                                <p><strong>Nombre de la Cuenta: </strong>Fundación Pies Descalzos</p>
+                                <p><strong>Número de Cuenta: </strong>6758-9879-98760</p>
+                                <p><strong>Banco: </strong>Bancolombia</p>
+                                <p><strong>Tipo de Cuenta: </strong>Ahorros</p>
+                                <p><strong>Código SIFI: </strong>358765</p>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                </mat-expansion-panel>
+            </mat-accordion>
+            <mat-accordion>
+                <mat-expansion-panel class="expansion-style sub-expansion">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title ">
+                            Observaciones
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <mat-card class="shipping-card var-main-gris">
+                        <mat-card-header class="header-card header-card--margin">
+                            <mat-card-title class="header-card--text textoGris">
+                                Observaciones a la orden de giro
+                            </mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content align="left">
+                            <p><strong>25/10/2020</strong></p>
+                            <p>En la revisión deben tener en cuenta la fecha de actualización del RUT.</p>
+                        </mat-card-content>
+                    </mat-card>
+                </mat-expansion-panel>
+            </mat-accordion>
+            <mat-accordion>
+                <mat-expansion-panel class="expansion-style sub-expansion">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title ">
+                            Soporte de orden de giro
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <mat-card class="shipping-card var-main-gris">
+                        <mat-card-content align="left">
+                            <p><strong>URL con soporte: </strong>https://drive.google.com/drive/registrodecontroversiacontractual/soportedeordendegiro</p>
+                        </mat-card-content>
+                    </mat-card>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <mat-card class="shipping-card var-main-gris">
+        <mat-card-header class="header-card header-card--margin">
+            <mat-card-title class="header-card--text textoGris">
+                Observaciones de la devolución
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content align="left">
+            <p><strong>25/10/2020</strong></p>
+            <p><strong>Usuario a devolver:</strong> Equipo de facturación</p>
+            <p>No se encuentran los soportes de facturación completos.</p>
+        </mat-card-content>
+    </mat-card>
+</section>

@@ -1,0 +1,97 @@
+<div class="container text-center">
+    <div class="text-right">
+        <a routerLink="/registrarActuacionesControversiasContractuales" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">
+        Actualizar trámite solicitud {{actuacion?.numeroActuacionFormat}}
+    </h1>
+    <mat-card class="shipping-card var-main-gris">
+        <mat-card-content align="left">
+            <p><strong>Fecha de solicitud: </strong><em>{{actuacion?.fechaCreacion | date: 'dd/MM/yyyy'}}</em></p>
+            <p><strong>Número del contrato: </strong><em>{{actuacion?.numeroContrato}}</em></p>
+            <p><strong>Tipo de Controversia: </strong><em>{{actuacion?.tipoControversia}}</em></p>
+            <p><strong>Fecha de la actuación adelantada: </strong><em>{{actuacion?.fechaActuacion | date: 'dd/MM/yyyy'}}</em></p>
+            <p><strong>Actuación adelantada: </strong></p>
+            <em>
+                <div [innerHtml]="actuacion?.actuacionAdelantadaOtro"></div>
+            </em>
+        </mat-card-content>
+    </mat-card>
+    <div class="tabs--actions">
+        <button mat-raised-button color="accent" class="tabs--btn" (click)="this.irARegistro()">
+            Registrar avance en actuaciones derivadas
+        </button>
+    </div>
+    <div class="busqueda mt-2em">
+        <mat-form-field appearance="outline" class="busqueda--input">
+            <mat-label>Buscador / Filtro</mat-label>
+            <input matInput #filtro (keyup)="applyFilter($event)">
+        </mat-form-field>
+        <button mat-button color="primary" class="busqueda--img" (click)="filtro.focus()">
+            <img src="assets/img/icon/lupa.svg" alt="Buscar">
+        </button>
+    </div>
+    <div class="table-responsive">
+        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+            <ng-container matColumnDef="fechaActualizacion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de la actualización </th>
+                <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.fechaActuacionDerivada | date:'dd/MM/yyyy' }}</b>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="actuacion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Actuación </th>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.descripciondeActuacionAdelantada }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="numeroActuacion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de actuación </th>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.seguimientoActuacionDerivadaId }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="estadoRegistro">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del registro </th>
+                <td mat-cell *matCellDef="let element" align="center">
+                    <span class="info-text info-text__table"
+                        [ngClass]="{'sin-diligenciar' : element.esCompleto==null, 'completo' : element.esCompleto}"
+                        style="margin-right: 0em;"></span>
+                    <br>
+                    {{ element.esCompleto?"Completo":"Incompleto" }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="estadoActuacion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la actuación </th>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.estadoActuacionString }} </td>
+            </ng-container>
+            <ng-container matColumnDef="gestion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Gestión </th>
+                <td mat-cell *matCellDef="let element" align="center">
+                    <button mat-raised-button color="accent" class="btn-table"
+                        *ngIf="element.esCompleto && element.estadoActuacionString!='Finalizada'"
+                        (click)="this.finalizarActuacionDerivada(element.seguimientoActuacionDerivadaId)">
+                        Finalizar actuación
+                    </button>
+                    <button mat-raised-button color="accent" class="btn-table"
+                        *ngIf="element.estadoActuacionString!='Finalizada'"
+                        (click)="this.verDetalleEditarActuacionDerivada(element.seguimientoActuacionDerivadaId)">
+                        Ver detalle/Editar
+                    </button>
+                    <button mat-raised-button color="accent" class="btn-table"
+                        *ngIf="element.estadoActuacionString!='Finalizada'"
+                        (click)="this.eliminarActuacionDerivada(element.seguimientoActuacionDerivadaId)">
+                        Eliminar
+                    </button>
+                    <button mat-raised-button color="accent" class="btn-table"
+                        *ngIf="element.estadoActuacionString == 'Finalizada'"
+                        (click)="this.verDetalleActuacionDerivada(element.seguimientoActuacionDerivadaId)">
+                        Ver detalle
+                    </button>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+    </div>
+</div>

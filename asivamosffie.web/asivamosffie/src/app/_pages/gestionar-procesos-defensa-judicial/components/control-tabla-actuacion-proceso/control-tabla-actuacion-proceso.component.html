@@ -1,0 +1,76 @@
+<div class="tabs--actions">
+    <button mat-raised-button color="accent" class="tabs--btn" (click)="this.irNuevo()">
+        Registrar actuación del proceso
+    </button>
+</div>
+<div class="busqueda">
+    <mat-form-field appearance="outline" class="busqueda--input">
+        <mat-label>Buscador / Filtro</mat-label>
+        <input matInput #filtro (keyup)="applyFilter($event)">
+    </mat-form-field>
+    <button mat-button color="primary" class="busqueda--img" (click)="filtro.focus()">
+        <img src="assets/img/icon/lupa.svg" alt="Buscar">
+    </button>
+</div>
+<div class="table-responsive">
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+        <ng-container matColumnDef="fecha">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de actualización </th>
+            <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.fechaCreacion | date: 'dd/MM/yyyy'}} </b> </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="numeroActuacion">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de Actuación </th>
+            <td mat-cell *matCellDef="let element" align="center">
+                {{element.id}}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="actuacion">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Actuación </th>
+            <td mat-cell *matCellDef="let element" align="center">
+                <div [innerHtml]="element.actuacionAdelantada"></div>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="estadoRegistro">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del registro </th>
+            <td mat-cell *matCellDef="let element" align="center">
+                <span class="info-text info-text__table"
+                [ngClass]="{'sin-diligenciar' : !element.esCompleto, 'completo' : element.esCompleto}"
+                style="margin-right: 0em;"></span>
+            <br>
+                {{element.esCompleto?"Completo":"Incompleto"}}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="gestion">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 16%;"> Gestión </th>
+            <td mat-cell *matCellDef="let element">                
+                <button mat-raised-button color="accent" class="btn-table"
+                (click)="finalizarActuacion(element.defensaJudicialSeguimientoId)"
+                    *ngIf="element.esCompleto">
+                    Finalizar actuación
+                </button>
+                <button mat-raised-button color="accent" class="btn-table"
+                    *ngIf="element.estadoProcesoCodigo!=3"
+                    (click)="verDetalleEditar(element.defensaJudicialSeguimientoId)">
+                    Ver detalle / Editar
+                </button>
+                <button mat-raised-button color="accent" class="btn-table"
+                (click)="eliminarActuacion(element.defensaJudicialSeguimientoId)"
+                    *ngIf="!element.esCompleto">
+                    Eliminar
+                </button>
+                <button mat-raised-button color="accent" class="btn-table"
+                    *ngIf="element.estadoProcesoCodigo==3"
+                    (click)="this.verDetalleEditar(element.defensaJudicialSeguimientoId)">
+                    Ver detalle
+                </button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+</div>

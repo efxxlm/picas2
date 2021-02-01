@@ -1,58 +1,222 @@
+<div
+  *ngIf="addressForm.invalid && addressForm.touched"
+  class="animateDown my-1em color-secondaryColor d-flex align-items-center justify-content-center"
+>
+  <img class="icon-incompleto--img mr-05em" src="assets/img/icon/incompleto.svg" alt="este campo es requerido" />
+  Debe ingresar la información en el campo para continuar
+</div>
 <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
-
   <div class="d-flex align-items-center">
-    <div class="text-area-quill">
-      <label for="objeto" class="text-area-quill--label">Objeto</label>
-      <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
-        (onContentChanged)="maxLength($event, 2000)" formControlName="objeto" required></quill-editor>
+    <div
+      class="text-area-quill"
+      [class.color-secondaryColor]="
+        (addressForm.get('objeto').invalid && addressForm.get('objeto').touched) ||
+        (addressForm.get('objeto').invalid && estaEditando)
+      "
+    >
+      <label for="objeto" class="text-area-quill--label"> Objeto </label>
+      <quill-editor
+        class="quill-editor-style"
+        [styles]="editorStyle"
+        [modules]="config"
+        (onContentChanged)="maxLength($event, 2000)"
+        formControlName="objeto"
+        required
+      ></quill-editor>
     </div>
-    <span class="contador miles" *ngIf="addressForm.get('objeto').value">
-      {{2000 - (textoLimpio(addressForm.get('objeto').value)>2000?2000:textoLimpio(addressForm.get('objeto').value))}}
+    <span
+      class="contador miles"
+      *ngIf="addressForm.get('objeto').value"
+      [matTooltipPosition]="'above'"
+      matTooltip="Registre aquí el objeto del proceso de selección"
+      matTooltipClass="info-tooltip"
+    >
+      {{
+        2000 -
+          (textoLimpio(addressForm.get('objeto').value) > 2000 ? 2000 : textoLimpio(addressForm.get('objeto').value))
+      }}
     </span>
-    <span class="contador miles" *ngIf="!addressForm.get('objeto').value">
+    <span
+      class="contador miles"
+      *ngIf="!addressForm.get('objeto').value"
+      [matTooltipPosition]="'above'"
+      matTooltip="Registre aquí el objeto del proceso de selección"
+      matTooltipClass="info-tooltip"
+    >
       2000
     </span>
+    <span class="icon-incompleto">
+      <img
+        class="icon-incompleto--img"
+        src="assets/img/icon/incompleto.svg"
+        alt="este campo es requerido"
+        *ngIf="
+          (addressForm.get('objeto').invalid && addressForm.get('objeto').touched) ||
+          (addressForm.get('objeto').invalid && estaEditando)
+        "
+      />
+    </span>
   </div>
 
   <div class="d-flex align-items-center">
-    <div class="text-area-quill">
-      <label for="alcanceParticular" class="text-area-quill--label">Alcance particular</label>
-      <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
-        (onContentChanged)="maxLength($event, 3000)" formControlName="alcanceParticular" required></quill-editor>
+    <div
+      class="text-area-quill"
+      [class.color-secondaryColor]="
+        (addressForm.get('alcanceParticular').invalid && addressForm.get('alcanceParticular').touched) ||
+        (addressForm.get('alcanceParticular').invalid && estaEditando)
+      "
+    >
+      <label for="alcanceParticular" class="text-area-quill--label"> Alcance particular </label>
+      <quill-editor
+        class="quill-editor-style"
+        [styles]="editorStyle"
+        [modules]="config"
+        (onContentChanged)="maxLength($event, 3000)"
+        formControlName="alcanceParticular"
+        required
+      ></quill-editor>
     </div>
-    <span class="contador miles" *ngIf="addressForm.get('alcanceParticular').value">
-      {{3000 - (textoLimpio(addressForm.get('alcanceParticular').value)>3000?3000:textoLimpio(addressForm.get('alcanceParticular').value))}}
+    <span
+      class="contador miles"
+      *ngIf="addressForm.get('alcanceParticular').value"
+      [matTooltipPosition]="'above'"
+      matTooltip="Registre aquí el alcance particular del proceso de selección"
+      matTooltipClass="info-tooltip"
+    >
+      {{
+        3000 -
+          (textoLimpio(addressForm.get('alcanceParticular').value) > 3000
+            ? 3000
+            : textoLimpio(addressForm.get('alcanceParticular').value))
+      }}
     </span>
-    <span class="contador miles" *ngIf="!addressForm.get('alcanceParticular').value">
+    <span
+      class="contador miles"
+      *ngIf="!addressForm.get('alcanceParticular').value"
+      [matTooltipPosition]="'above'"
+      matTooltip="Registre aquí el alcance particular del proceso de selección"
+      matTooltipClass="info-tooltip"
+    >
       3000
     </span>
+    <span class="icon-incompleto">
+      <img
+        class="icon-incompleto--img"
+        src="assets/img/icon/incompleto.svg"
+        alt="este campo es requerido"
+        *ngIf="
+          (addressForm.get('alcanceParticular').invalid && addressForm.get('alcanceParticular').touched) ||
+          (addressForm.get('alcanceParticular').invalid && estaEditando)
+        "
+      />
+    </span>
   </div>
 
   <div class="d-flex align-items-center">
-    <div class="text-area-quill">
+    <div
+      class="text-area-quill"
+      [class.color-secondaryColor]="
+        (addressForm.get('justificacion').invalid && addressForm.get('justificacion').touched) ||
+        (addressForm.get('justificacion').invalid && estaEditando)
+      "
+    >
       <label for="justificacion" class="text-area-quill--label">Justificación</label>
-      <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
-        (onContentChanged)="maxLength($event, 3000)" formControlName="justificacion" required></quill-editor>
+      <quill-editor
+        class="quill-editor-style"
+        [styles]="editorStyle"
+        [modules]="config"
+        (onContentChanged)="maxLength($event, 3000)"
+        formControlName="justificacion"
+        required
+      ></quill-editor>
     </div>
-    <span class="contador miles" *ngIf="addressForm.get('justificacion').value">
-      {{3000 - (textoLimpio(addressForm.get('justificacion').value)>3000?3000:textoLimpio(addressForm.get('justificacion').value))}}
+    <span
+      class="contador miles"
+      *ngIf="addressForm.get('justificacion').value"
+      [matTooltipPosition]="'above'"
+      matTooltip="Registre aquí la justificación del proceso de selección"
+      matTooltipClass="info-tooltip"
+    >
+      {{
+        3000 -
+          (textoLimpio(addressForm.get('justificacion').value) > 3000
+            ? 3000
+            : textoLimpio(addressForm.get('justificacion').value))
+      }}
     </span>
-    <span class="contador miles" *ngIf="addressForm.get('justificacion').value == null">
+    <span
+      class="contador miles"
+      *ngIf="addressForm.get('justificacion').value == null"
+      [matTooltipPosition]="'above'"
+      matTooltip="Registre aquí la justificación del proceso de selección"
+      matTooltipClass="info-tooltip"
+    >
       3000
+    </span>
+    <span class="icon-incompleto">
+      <img
+        class="icon-incompleto--img"
+        src="assets/img/icon/incompleto.svg"
+        alt="este campo es requerido"
+        *ngIf="
+          (addressForm.get('justificacion').invalid && addressForm.get('justificacion').touched) ||
+          (addressForm.get('justificacion').invalid && estaEditando)
+        "
+      />
     </span>
   </div>
 
   <div class="d-flex align-items-center" *ngIf="procesoSeleccion.tipoProcesoCodigo == '2'">
-    <div class="text-area-quill">
-      <label for="justificacion" class="text-area-quill--label">Criterios para la selección</label>
-      <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
-        (onContentChanged)="maxLength($event, 3000)" formControlName="criterios" required></quill-editor>
+    <div
+      class="text-area-quill"
+      [class.color-secondaryColor]="
+        (addressForm.get('criterios').invalid && addressForm.get('criterios').touched) ||
+        (addressForm.get('criterios').invalid && estaEditando)
+      "
+    >
+      <label for="criterios" class="text-area-quill--label">Criterios para la selección</label>
+      <quill-editor
+        class="quill-editor-style"
+        [styles]="editorStyle"
+        [modules]="config"
+        (onContentChanged)="maxLength($event, 3000)"
+        formControlName="criterios"
+        required
+      ></quill-editor>
     </div>
-    <span class="contador miles" *ngIf="addressForm.get('criterios').value">
-      {{3000 - (textoLimpio(addressForm.get('criterios').value)>3000?3000:textoLimpio(addressForm.get('criterios').value))}}
+    <span
+      class="contador miles"
+      *ngIf="addressForm.get('criterios').value"
+      [matTooltipPosition]="'above'"
+      matTooltip="Registre aquí los criterios para la selección del proceso"
+      matTooltipClass="info-tooltip"
+    >
+      {{
+        3000 -
+          (textoLimpio(addressForm.get('criterios').value) > 3000
+            ? 3000
+            : textoLimpio(addressForm.get('criterios').value))
+      }}
     </span>
-    <span class="contador miles" *ngIf="addressForm.get('criterios').value === null">
+    <span
+      class="contador miles"
+      *ngIf="addressForm.get('criterios').value === null"
+      [matTooltipPosition]="'above'"
+      matTooltip="Registre aquí los criterios para la selección del proceso"
+      matTooltipClass="info-tooltip"
+    >
       3000
+    </span>
+    <span class="icon-incompleto">
+      <img
+        class="icon-incompleto--img"
+        src="assets/img/icon/incompleto.svg"
+        alt="este campo es requerido"
+        *ngIf="
+          (addressForm.get('criterios').invalid && addressForm.get('criterios').touched) ||
+          (addressForm.get('criterios').invalid && estaEditando)
+        "
+      />
     </span>
   </div>
 
@@ -60,7 +224,16 @@
     <mat-card-content>
       <div class="row">
         <div class="pr-1">
-          <label for="tipoIntervencion" class="label-left">Tipo de Intervención</label>
+          <label
+            for="tipoIntervencion"
+            class="label-left"
+            [class.color-secondaryColor]="
+              (addressForm.get('tipoIntervencion').invalid && addressForm.get('tipoIntervencion').touched) ||
+              (addressForm.get('tipoIntervencion').invalid && estaEditando)
+            "
+          >
+            Tipo de Intervención
+          </label>
         </div>
         <div class="col">
           <mat-form-field class="select-width">
@@ -71,10 +244,30 @@
             </mat-select>
           </mat-form-field>
         </div>
+        <span class="icon-incompleto">
+          <img
+            class="icon-incompleto--img"
+            src="assets/img/icon/incompleto.svg"
+            alt="este campo es requerido"
+            *ngIf="
+              (addressForm.get('tipoIntervencion').invalid && addressForm.get('tipoIntervencion').touched) ||
+              (addressForm.get('tipoIntervencion').invalid && estaEditando)
+            "
+          />
+        </span>
       </div>
       <div class="row">
         <div class="pr-1">
-          <label for="tipoAlcance" class="label-left">Tipo de alcance</label>
+          <label
+            for="tipoAlcance"
+            class="label-left"
+            [class.color-secondaryColor]="
+              (addressForm.get('tipoAlcance').invalid && addressForm.get('tipoAlcance').touched) ||
+              (addressForm.get('tipoAlcance').invalid && estaEditando)
+            "
+          >
+            Tipo de alcance
+          </label>
         </div>
         <div class="col">
           <mat-form-field class="select-width">
@@ -85,10 +278,28 @@
             </mat-select>
           </mat-form-field>
         </div>
+        <span class="icon-incompleto">
+          <img
+            class="icon-incompleto--img"
+            src="assets/img/icon/incompleto.svg"
+            alt="este campo es requerido"
+            *ngIf="
+              (addressForm.get('tipoAlcance').invalid && addressForm.get('tipoAlcance').touched) ||
+              (addressForm.get('tipoAlcance').invalid && estaEditando)
+            "
+          />
+        </span>
       </div>
       <div class="row">
         <div class="pr-1">
-          <label class="label-left">
+          <label
+            for="distribucionEnGrupos"
+            class="label-left"
+            [class.color-secondaryColor]="
+              (addressForm.get('distribucionEnGrupos').invalid && addressForm.get('distribucionEnGrupos').touched) ||
+              (addressForm.get('distribucionEnGrupos').invalid && estaEditando)
+            "
+          >
             ¿En este proceso de selección se realiza distribución del territorio en grupos?
           </label>
         </div>
@@ -98,21 +309,66 @@
             <mat-radio-button value="false">No</mat-radio-button>
           </mat-radio-group>
           <span class="required-form-group">*</span>
+          <span class="icon-incompleto">
+            <img
+              class="icon-incompleto--img"
+              src="assets/img/icon/incompleto.svg"
+              alt="este campo es requerido"
+              *ngIf="
+                (addressForm.get('distribucionEnGrupos').invalid && addressForm.get('distribucionEnGrupos').touched) ||
+                (addressForm.get('distribucionEnGrupos').invalid && estaEditando)
+              "
+            />
+          </span>
         </div>
       </div>
       <div class="row" *ngIf="addressForm.get('distribucionEnGrupos').value === 'true'">
         <div class="pr-1">
-          <label for="cuantosGrupos" class="label-left">¿Cuántos grupos?</label>
+          <label
+            for="cuantosGrupos"
+            class="label-left"
+            [class.color-secondaryColor]="
+              (addressForm.get('cuantosGrupos').invalid && addressForm.get('cuantosGrupos').touched) ||
+              (addressForm.get('cuantosGrupos').invalid && estaEditando)
+            "
+            >¿Cuántos grupos?</label
+          >
         </div>
         <div class="col d-flex">
           <mat-form-field class="full-width">
-            <input matInput #cuantosGrupos type="number" min="2" max="99" maxlength="2" formControlName="cuantosGrupos"
+            <input
+              matInput
+              #cuantosGrupos
+              type="number"
+              min="2"
+              max="99"
+              maxlength="2"
+              formControlName="cuantosGrupos"
               (keypress)="validateNumberKeypress($event)"
-              onKeyPress="if(this.value.length>=this.maxLength) return false;" (keyup)="CambioNumeroAportantes()"
-              required>
+              onKeyPress="if(this.value.length>=this.maxLength) return false;"
+              (keyup)="CambioNumeroAportantes()"
+              required
+            />
           </mat-form-field>
-          <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
-          matTooltipClass="info-tooltip">{{2 - cuantosGrupos.value.length}}</span>
+          <span
+            class="contador"
+            [matTooltipPosition]="'above'"
+            matTooltip="Campo numérico"
+            matTooltipClass="info-tooltip"
+          >
+            {{ 2 - cuantosGrupos.value.length }}
+          </span>
+          <span class="icon-incompleto">
+            <img
+              class="icon-incompleto--img"
+              src="assets/img/icon/incompleto.svg"
+              alt="este campo es requerido"
+              *ngIf="
+                (addressForm.get('cuantosGrupos').invalid && addressForm.get('cuantosGrupos').touched) ||
+                (addressForm.get('cuantosGrupos').invalid && estaEditando)
+              "
+            />
+          </span>
         </div>
       </div>
 
@@ -120,25 +376,58 @@
         <h2 class="card-subTitle">Grupos</h2>
         <div *ngFor="let grupo of grupos.controls; let i = index">
           <div [formGroupName]="i">
-
-            <mat-card-title class="header-card--text sub-text">
-              Grupo {{ i + 1 }}
-            </mat-card-title>
+            <mat-card-title class="header-card--text sub-text"> Grupo {{ i + 1 }} </mat-card-title>
             <div class="row">
               <div class="pr-1">
-                <label for="nombreGrupo" class="label-left">Nombre del grupo</label>
+                <label
+                  for="nombreGrupo"
+                  class="label-left"
+                  [class.color-secondaryColor]="
+                    (grupo.get('nombreGrupo').invalid && grupo.get('nombreGrupo').touched) ||
+                    (grupo.get('nombreGrupo').invalid && estaEditando)
+                  "
+                >
+                  Nombre del grupo
+                </label>
               </div>
               <div class="col d-flex mainColor">
                 <mat-form-field class="full-width">
-                  <input matInput #nombreGrupo type="text" maxlength="100" formControlName="nombreGrupo" required>
-                  <input type="hidden" formControlName="procesoSeleccionGrupoId">
+                  <input matInput #nombreGrupo type="text" maxlength="100" formControlName="nombreGrupo" required />
+                  <input type="hidden" formControlName="procesoSeleccionGrupoId" />
                 </mat-form-field>
-                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{500 - nombreGrupo.value.length}}</span>
+                <span
+                  class="contador"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Campo alfanumérico"
+                  matTooltipClass="info-tooltip"
+                >
+                  {{ 500 - nombreGrupo.value.length }}
+                </span>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    *ngIf="
+                      (grupo.get('nombreGrupo').invalid && grupo.get('nombreGrupo').touched) ||
+                      (grupo.get('nombreGrupo').invalid && estaEditando)
+                    "
+                  />
+                </span>
               </div>
             </div>
             <div class="row">
               <div class="pr-1">
-                <label for="tipoPresupuesto" class="label-left">Tipo de presupuesto</label>
+                <label
+                  for="tipoPresupuesto"
+                  class="label-left"
+                  [class.color-secondaryColor]="
+                    (grupo.get('tipoPresupuesto').invalid && grupo.get('tipoPresupuesto').touched) ||
+                    (grupo.get('tipoPresupuesto').invalid && estaEditando)
+                  "
+                >
+                  Tipo de presupuesto
+                </label>
               </div>
               <div class="col">
                 <mat-form-field class="select-width">
@@ -149,69 +438,246 @@
                   </mat-select>
                 </mat-form-field>
               </div>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  *ngIf="
+                    (grupo.get('tipoPresupuesto').invalid && grupo.get('tipoPresupuesto').touched) ||
+                    (grupo.get('tipoPresupuesto').invalid && estaEditando)
+                  "
+                />
+              </span>
             </div>
-            <div class="row"
-              *ngIf="grupos.controls[i].get('tipoPresupuesto').value && grupos.controls[i].get('tipoPresupuesto').value.codigo == '1' ">
+            <div
+              class="row"
+              *ngIf="
+                grupos.controls[i].get('tipoPresupuesto').value &&
+                grupos.controls[i].get('tipoPresupuesto').value.codigo == '1'
+              "
+            >
               <div class="pr-1">
-                <label for="valor" class="label-left">Valor</label>
+                <label
+                  for="valor"
+                  class="label-left"
+                  [class.color-secondaryColor]="
+                    (grupo.get('valor').invalid && grupo.get('valor').touched) ||
+                    (grupo.get('valor').invalid && estaEditando)
+                  "
+                >
+                  Valor
+                </label>
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #valor currencyMask
-                    [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" maxlength="20"
-                    formControlName="valor" (focusout)="nosuperarlimite(i,1)" required>
+                  <input
+                    matInput
+                    #valor
+                    currencyMask
+                    [options]="{
+                      prefix: '$ ',
+                      thousands: '.',
+                      precision: '0',
+                      align: 'center'
+                    }"
+                    maxlength="20"
+                    formControlName="valor"
+                    (focusout)="nosuperarlimite(i, 1)"
+                    required
+                  />
                 </mat-form-field>
-                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
-                matTooltipClass="info-tooltip">{{20 - valor.value.length}}</span>
+                <span
+                  class="contador"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Valor en ($) Pesos colombianos"
+                  matTooltipClass="info-tooltip"
+                >
+                  {{ 20 - valor.value.length }}
+                </span>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    *ngIf="
+                      (grupo.get('valor').invalid && grupo.get('valor').touched) ||
+                      (grupo.get('valor').invalid && estaEditando)
+                    "
+                  />
+                </span>
               </div>
             </div>
-            <div class="row"
-              *ngIf="grupos.controls[i].get('tipoPresupuesto').value && grupos.controls[i].get('tipoPresupuesto').value.codigo == '2' ">
+            <div
+              class="row"
+              *ngIf="
+                grupos.controls[i].get('tipoPresupuesto').value &&
+                grupos.controls[i].get('tipoPresupuesto').value.codigo == '2'
+              "
+            >
               <div class="pr-1">
-                <label for="valorMinimoCategoria" class="label-left">Valor mínimo categoría de ejecución</label>
+                <label
+                  for="valorMinimoCategoria"
+                  class="label-left"
+                  [class.color-secondaryColor]="
+                    (grupo.get('valorMinimoCategoria').invalid && grupo.get('valorMinimoCategoria').touched) ||
+                    (grupo.get('valorMinimoCategoria').invalid && estaEditando)
+                  "
+                >
+                  Valor mínimo categoría de ejecución
+                </label>
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #valorMinimoCategoria currencyMask
-                    [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" maxlength="20"
-                    required formControlName="valorMinimoCategoria" (focusout)="nosuperarlimite(i,3)">
+                  <input
+                    matInput
+                    #valorMinimoCategoria
+                    currencyMask
+                    [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
+                    maxlength="20"
+                    required
+                    formControlName="valorMinimoCategoria"
+                    (focusout)="nosuperarlimite(i, 3)"
+                  />
                 </mat-form-field>
-                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
-                matTooltipClass="info-tooltip">{{20 - valorMinimoCategoria.value.length}}</span>
+                <span
+                  class="contador"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Valor en ($) Pesos colombianos"
+                  matTooltipClass="info-tooltip"
+                >
+                  {{ 20 - valorMinimoCategoria.value.length }}
+                </span>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    *ngIf="
+                      (grupo.get('valorMinimoCategoria').invalid && grupo.get('valorMinimoCategoria').touched) ||
+                      (grupo.get('valorMinimoCategoria').invalid && estaEditando)
+                    "
+                  />
+                </span>
               </div>
             </div>
-            <div class="row"
-              *ngIf="grupos.controls[i].get('tipoPresupuesto').value && grupos.controls[i].get('tipoPresupuesto').value.codigo == '2' ">
+            <div
+              class="row"
+              *ngIf="
+                grupos.controls[i].get('tipoPresupuesto').value &&
+                grupos.controls[i].get('tipoPresupuesto').value.codigo == '2'
+              "
+            >
               <div class="pr-1">
-                <label for="valorMaximoCategoria" class="label-left">Valor máximo categoría de ejecución</label>
+                <label
+                  for="valorMaximoCategoria"
+                  class="label-left"
+                  [class.color-secondaryColor]="
+                    (grupo.get('valorMaximoCategoria').invalid && grupo.get('valorMaximoCategoria').touched) ||
+                    (grupo.get('valorMaximoCategoria').invalid && estaEditando)
+                  "
+                >
+                  Valor máximo categoría de ejecución
+                </label>
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #valorMaximoCategoria currencyMask
-                    [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" maxlength="20"
-                    required formControlName="valorMaximoCategoria" (focusout)="nosuperarlimite(i,2)">
+                  <input
+                    matInput
+                    #valorMaximoCategoria
+                    currencyMask
+                    [options]="{
+                      prefix: '$ ',
+                      thousands: '.',
+                      precision: '0',
+                      align: 'center'
+                    }"
+                    maxlength="20"
+                    required
+                    formControlName="valorMaximoCategoria"
+                    (focusout)="nosuperarlimite(i, 2)"
+                  />
                 </mat-form-field>
-                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
-                matTooltipClass="info-tooltip">{{20 - valorMaximoCategoria.value.length}}</span>
+                <span
+                  class="contador"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Valor en ($) Pesos colombianos"
+                  matTooltipClass="info-tooltip"
+                >
+                  {{ 20 - valorMaximoCategoria.value.length }}
+                </span>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    *ngIf="
+                      (grupo.get('valorMaximoCategoria').invalid && grupo.get('valorMaximoCategoria').touched) ||
+                      (grupo.get('valorMaximoCategoria').invalid && estaEditando)
+                    "
+                  />
+                </span>
               </div>
             </div>
             <div class="row">
               <div class="pr-1">
-                <label for="plazoMeses" class="label-left">Plazo en meses</label>
+                <label
+                  for="plazoMeses"
+                  class="label-left"
+                  [class.color-secondaryColor]="
+                    (grupo.get('plazoMeses').invalid && grupo.get('plazoMeses').touched) ||
+                    (grupo.get('plazoMeses').invalid && estaEditando)
+                  "
+                >
+                  Plazo en meses
+                </label>
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width mainColor">
-                  <input matInput #plazoMeses type="number" min="1" max="99" maxlength="2"
+                  <input
+                    matInput
+                    #plazoMeses
+                    type="number"
+                    min="1"
+                    max="99"
+                    maxlength="2"
                     (keypress)="validateNumberKeypress($event)"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;" (keyup)="CambioNumeroMeses(i)"
-                    formControlName="plazoMeses" required>
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    (keyup)="CambioNumeroMeses(i)"
+                    formControlName="plazoMeses"
+                    required
+                  />
                 </mat-form-field>
-                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
-                matTooltipClass="info-tooltip">{{2 - plazoMeses.value.length}}</span>
+                <span
+                  class="contador"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Campo numérico"
+                  matTooltipClass="info-tooltip"
+                >
+                  {{ 2 - plazoMeses.value.length }}
+                </span>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    *ngIf="
+                      (grupo.get('plazoMeses').invalid && grupo.get('plazoMeses').touched) ||
+                      (grupo.get('plazoMeses').invalid && estaEditando)
+                    "
+                  />
+                </span>
               </div>
               <div class="col-md-4 text-right" *ngIf="addressForm.value.grupos.length > 1">
-                <button *ngIf="editar" mat-button color="warn" type="button" class="btn-eliminar" (click)="borrarArray(grupos, i)">
-                  <img src="assets/img/icon/menos.svg" alt="Eliminar grupo">
+                <button
+                  *ngIf="editar"
+                  mat-button
+                  color="warn"
+                  type="button"
+                  class="btn-eliminar"
+                  (click)="borrarArray(grupos, i)"
+                >
+                  <img src="assets/img/icon/menos.svg" alt="Eliminar grupo" />
                   Eliminar grupo
                 </button>
               </div>
@@ -219,64 +685,91 @@
           </div>
         </div>
       </div>
-      <div formGroupName="cronogramas" *ngIf="addressForm.get('grupos').status=='VALID'">
+      <div formGroupName="cronogramas" *ngIf="addressForm.get('grupos').status == 'VALID'">
         <div>
           <h2 class="card-subTitle">Cronograma</h2>
           <div class="table-responsive">
             <table class="mat-table cdk-table mat-sort mat-table-style table-form table-form--2">
               <thead>
                 <tr class="mat-header-row cdk-header-row ng-star-inserted">
-                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                    Actividad
-                  </th>
-                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                    Descripción
-                  </th>
-                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                    Fecha máxima
-                  </th>
-                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                    Etapa actual del proceso
-                  </th>
-                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-                    Gestión
-                  </th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Actividad</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Descripción</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Fecha máxima</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Etapa actual del proceso</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Gestión</th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let cronograma of cronogramas.controls; let i = index" [formGroupName]="i">
                   <td class="mat-cell cdk-cell ng-star-inserted">
                     <b class="text-1-2em d-flex justify-content-center">
-                      {{ i +1 }}
+                      {{ i + 1 }}
                     </b>
                   </td>
                   <td class="mat-cell cdk-cell ng-star-inserted">
                     <div class="d-flex justify-content-center">
-                      <span class="contador mt-1em" *ngIf="cronograma.get('descripcion').value">
-                        {{500 - (textoLimpio(cronograma.get('descripcion').value)>500?500:textoLimpio(cronograma.get('descripcion').value))}}
+                      <span
+                        class="contador mt-1em"
+                        *ngIf="cronograma.get('descripcion').value"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Registre aquí las descripción de la actividad"
+                        matTooltipClass="info-tooltip"
+                      >
+                        {{
+                          500 -
+                            (textoLimpio(cronograma.get('descripcion').value) > 500
+                              ? 500
+                              : textoLimpio(cronograma.get('descripcion').value))
+                        }}
                       </span>
-                      <span class="contador mt-1em"
-                        *ngIf="cronograma.get('descripcion').value === null || cronograma.get('descripcion').value == null">
+                      <span
+                        class="contador mt-1em"
+                        *ngIf="
+                          cronograma.get('descripcion').value === null || cronograma.get('descripcion').value == null
+                        "
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Registre aquí las descripción de la actividad"
+                        matTooltipClass="info-tooltip"
+                      >
                         500
                       </span>
                       <span class="required-quill">*</span>
                     </div>
-                    <input type="hidden" formControlName="procesoSeleccionCronogramaId">
+                    <input type="hidden" formControlName="procesoSeleccionCronogramaId" />
                     <div class="quill-ancho">
-                      <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
-                        (onContentChanged)="maxLength($event, 500)" formControlName="descripcion"></quill-editor>
+                      <quill-editor
+                        class="quill-editor-style"
+                        [styles]="editorStyle"
+                        [modules]="config"
+                        (onContentChanged)="maxLength($event, 500)"
+                        formControlName="descripcion"
+                      ></quill-editor>
                     </div>
                   </td>
                   <td class="mat-cell cdk-cell ng-star-inserted position-relative">
                     <div class="d-flex justify-content-center btn-calendario-container toptd">
-                      <button *ngIf="editar" mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">
-                        <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                      <button
+                        *ngIf="editar"
+                        mat-button
+                        color="primary"
+                        type="button"
+                        (click)="picker.open()"
+                        class="btn-calendario"
+                      >
+                        <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
                       </button>
                       <span class="required-form-group required-calendar">*</span>
                     </div>
                     <mat-form-field class="example-full-width">
-                      <input matInput [matDatepicker]="picker" placeholder="DD/MM/AAAA" class="mainColor"
-                        formControlName="fechaMaxima" (click)="picker.open()" readonly>
+                      <input
+                        matInput
+                        [matDatepicker]="picker"
+                        placeholder="DD/MM/AAAA"
+                        class="mainColor"
+                        formControlName="fechaMaxima"
+                        (click)="picker.open()"
+                        readonly
+                      />
                       <mat-datepicker #picker></mat-datepicker>
                     </mat-form-field>
                   </td>
@@ -290,24 +783,37 @@
                     </mat-form-field>
                   </td>
                   <td class="mat-cell cdk-cell ng-star-inserted">
-                    <button  *ngIf="editar" mat-raised-button color="accent" type="button"
-                      (click)="borrarActividades(cronogramas, i)">Eliminar</button>
+                    <button
+                      *ngIf="editar"
+                      mat-raised-button
+                      color="accent"
+                      type="button"
+                      (click)="borrarActividades(cronogramas, i)"
+                    >
+                      Eliminar
+                    </button>
                   </td>
-
                 </tr>
               </tbody>
             </table>
           </div>
           <div class="text-right">
-            <button *ngIf="editar" mat-button color="warn" type="button" class="btn-eliminar" (click)="agregarActividad()">
-              <img src="assets/img/icon/mas.svg" alt="Agregar otra actividad">
+            <button
+              *ngIf="editar"
+              mat-button
+              color="warn"
+              type="button"
+              class="btn-eliminar"
+              (click)="agregarActividad()"
+            >
+              <img src="assets/img/icon/mas.svg" alt="Agregar otra actividad" />
               Agregar otra actividad
             </button>
           </div>
         </div>
       </div>
 
-      <div *ngIf="addressForm.get('cronogramas').status=='VALID'">
+      <div *ngIf="addressForm.get('cronogramas').status == 'VALID'">
         <div>
           <h2 class="card-subTitle">Responsables</h2>
 
@@ -315,7 +821,17 @@
             <div class="col-md-8">
               <div class="row">
                 <div class="pr-1">
-                  <label for="responsableEquipoTecnico" class="label-left">Responsable del equipo técnico</label>
+                  <label
+                    for="responsableEquipoTecnico"
+                    class="label-left"
+                    [class.color-secondaryColor]="
+                      (addressForm.get('responsableEquipoTecnico').invalid &&
+                        addressForm.get('responsableEquipoTecnico').touched) ||
+                      (addressForm.get('responsableEquipoTecnico').invalid && estaEditando)
+                    "
+                  >
+                    Responsable del equipo técnico
+                  </label>
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
@@ -333,8 +849,17 @@
             <div class="col-md-8">
               <div class="row">
                 <div class="pr-1">
-                  <label for="responsableEquipoestructurado" class="label-left">Responsable del equipo
-                    estructurador</label>
+                  <label
+                    for="responsableEquipoestructurado"
+                    class="label-left"
+                    [class.color-secondaryColor]="
+                      (addressForm.get('responsableEquipoestructurado').invalid &&
+                        addressForm.get('responsableEquipoestructurado').touched) ||
+                      (addressForm.get('responsableEquipoestructurado').invalid && estaEditando)
+                    "
+                  >
+                    Responsable del equipo estructurador
+                  </label>
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
@@ -345,89 +870,274 @@
                     </mat-select>
                   </mat-form-field>
                 </div>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    *ngIf="
+                      (addressForm.get('responsableEquipoestructurado').invalid &&
+                        addressForm.get('responsableEquipoestructurado').touched) ||
+                      (addressForm.get('responsableEquipoestructurado').invalid && estaEditando)
+                    "
+                  />
+                </span>
               </div>
             </div>
           </div>
-          <div *ngIf="addressForm.get('responsableEquipoestructurado')!=null &&
-          addressForm.get('responsableEquipoestructurado')!=null &&
-          procesoSeleccion.tipoProcesoCodigo==tiposProceso.Abierta"><br>
+          <div
+            *ngIf="
+              addressForm.get('responsableEquipoestructurado') != null &&
+              addressForm.get('responsableEquipoestructurado') != null &&
+              procesoSeleccion.tipoProcesoCodigo == tiposProceso.Abierta
+            "
+          >
+            <br />
             <div class="d-flex align-items-center">
               <div class="text-area-quill">
-                <label for="condicionesJuridicas" class="text-area-quill--label">Condiciones jurídicas
-                  habilitantes</label>
-                <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
-                  (onContentChanged)="maxLength($event, 3000)" formControlName="condicionesJuridicas" required>
+                <label
+                  for="condicionesJuridicas"
+                  class="text-area-quill--label"
+                  [class.color-secondaryColor]="
+                    (addressForm.get('condicionesJuridicas').invalid &&
+                      addressForm.get('condicionesJuridicas').touched) ||
+                    (addressForm.get('condicionesJuridicas').invalid && estaEditando)
+                  "
+                >
+                  Condiciones jurídicas habilitantes
+                </label>
+                <quill-editor
+                  class="quill-editor-style"
+                  [styles]="editorStyle"
+                  [modules]="config"
+                  (onContentChanged)="maxLength($event, 3000)"
+                  formControlName="condicionesJuridicas"
+                  required
+                >
                 </quill-editor>
               </div>
-              <span class="contador miles" *ngIf="addressForm.get('condicionesJuridicas').value">
-                {{3000 - (textoLimpio(addressForm.get('condicionesJuridicas').value)>3000?3000:textoLimpio(addressForm.get('condicionesJuridicas').value))}}
+              <span
+                class="contador miles"
+                *ngIf="addressForm.get('condicionesJuridicas').value"
+                [matTooltipPosition]="'above'"
+                matTooltip="Registre aquí las condiciones jurídicas habilitantes"
+                matTooltipClass="info-tooltip"
+              >
+                {{
+                  3000 -
+                    (textoLimpio(addressForm.get('condicionesJuridicas').value) > 3000
+                      ? 3000
+                      : textoLimpio(addressForm.get('condicionesJuridicas').value))
+                }}
               </span>
-              <span class="contador miles" *ngIf="!addressForm.get('condicionesJuridicas').value">
+              <span
+                class="contador miles"
+                *ngIf="!addressForm.get('condicionesJuridicas').value"
+                [matTooltipPosition]="'above'"
+                matTooltip="Registre aquí las condiciones jurídicas habilitantes"
+                matTooltipClass="info-tooltip"
+              >
                 3000
+              </span>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  *ngIf="
+                    (addressForm.get('condicionesJuridicas').invalid &&
+                      addressForm.get('condicionesJuridicas').touched) ||
+                    (addressForm.get('condicionesJuridicas').invalid && estaEditando)
+                  "
+                />
               </span>
             </div>
             <div class="d-flex align-items-center">
               <div class="text-area-quill">
-                <label for="condicionesFinancieras" class="text-area-quill--label">Condiciones financieras
-                  habilitantes</label>
-                <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
-                  (onContentChanged)="maxLength($event, 3000)" formControlName="condicionesFinancieras" required>
+                <label
+                  for="condicionesFinancieras"
+                  class="text-area-quill--label"
+                  [class.color-secondaryColor]="
+                    (addressForm.get('condicionesFinancieras').invalid &&
+                      addressForm.get('condicionesFinancieras').touched) ||
+                    (addressForm.get('condicionesFinancieras').invalid && estaEditando)
+                  "
+                >
+                  Condiciones financieras habilitantes
+                </label>
+                <quill-editor
+                  class="quill-editor-style"
+                  [styles]="editorStyle"
+                  [modules]="config"
+                  (onContentChanged)="maxLength($event, 3000)"
+                  formControlName="condicionesFinancieras"
+                  required
+                >
                 </quill-editor>
               </div>
-              <span class="contador miles" *ngIf="addressForm.get('condicionesFinancieras').value">
-                {{3000 - (textoLimpio(addressForm.get('condicionesFinancieras').value)>3000?3000:textoLimpio(addressForm.get('condicionesFinancieras').value))}}
+              <span
+                class="contador miles"
+                *ngIf="addressForm.get('condicionesFinancieras').value"
+                [matTooltipPosition]="'above'"
+                matTooltip="Registre aquí las condiciones financieras habilitantes"
+                matTooltipClass="info-tooltip"
+              >
+                {{
+                  3000 -
+                    (textoLimpio(addressForm.get('condicionesFinancieras').value) > 3000
+                      ? 3000
+                      : textoLimpio(addressForm.get('condicionesFinancieras').value))
+                }}
               </span>
-              <span class="contador miles" *ngIf="!addressForm.get('condicionesFinancieras').value">
+              <span
+                class="contador miles"
+                *ngIf="!addressForm.get('condicionesFinancieras').value"
+                [matTooltipPosition]="'above'"
+                matTooltip="Registre aquí las condiciones financieras habilitantes"
+                matTooltipClass="info-tooltip"
+              >
                 3000
+              </span>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  *ngIf="
+                    (addressForm.get('condicionesFinancieras').invalid &&
+                      addressForm.get('condicionesFinancieras').touched) ||
+                    (addressForm.get('condicionesFinancieras').invalid && estaEditando)
+                  "
+                />
               </span>
             </div>
             <div class="d-flex align-items-center">
               <div class="text-area-quill">
-                <label for="condicionesTecnicas" class="text-area-quill--label">Condiciones técnicas
-                  habilitantes</label>
-                <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
-                  (onContentChanged)="maxLength($event, 3000)" formControlName="condicionesTecnicas" required>
+                <label
+                  for="condicionesTecnicas"
+                  class="text-area-quill--label"
+                  [class.color-secondaryColor]="
+                    (addressForm.get('condicionesTecnicas').invalid &&
+                      addressForm.get('condicionesTecnicas').touched) ||
+                    (addressForm.get('condicionesTecnicas').invalid && estaEditando)
+                  "
+                >
+                  Condiciones técnicas habilitantes
+                </label>
+                <quill-editor
+                  class="quill-editor-style"
+                  [styles]="editorStyle"
+                  [modules]="config"
+                  (onContentChanged)="maxLength($event, 3000)"
+                  formControlName="condicionesTecnicas"
+                  required
+                >
                 </quill-editor>
               </div>
-              <span class="contador miles" *ngIf="addressForm.get('condicionesTecnicas').value">
-                {{3000 - (textoLimpio(addressForm.get('condicionesTecnicas').value)>3000?3000:textoLimpio(addressForm.get('condicionesTecnicas').value))}}
+              <span
+                class="contador miles"
+                *ngIf="addressForm.get('condicionesTecnicas').value"
+                [matTooltipPosition]="'above'"
+                matTooltip="Registre aquí las condiciones técnicas habilitantes"
+                matTooltipClass="info-tooltip"
+              >
+                {{
+                  3000 -
+                    (textoLimpio(addressForm.get('condicionesTecnicas').value) > 3000
+                      ? 3000
+                      : textoLimpio(addressForm.get('condicionesTecnicas').value))
+                }}
               </span>
-              <span class="contador miles" *ngIf="!addressForm.get('condicionesTecnicas').value">
+              <span
+                class="contador miles"
+                *ngIf="!addressForm.get('condicionesTecnicas').value"
+                [matTooltipPosition]="'above'"
+                matTooltip="Registre aquí las condiciones técnicas habilitantes"
+                matTooltipClass="info-tooltip"
+              >
                 3000
+              </span>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  *ngIf="
+                    (addressForm.get('condicionesTecnicas').invalid &&
+                      addressForm.get('condicionesTecnicas').touched) ||
+                    (addressForm.get('condicionesTecnicas').invalid && estaEditando)
+                  "
+                />
               </span>
             </div>
             <div class="d-flex align-items-center">
               <div class="text-area-quill">
-                <label for="condicionesAsignacion" class="text-area-quill--label">
+                <label
+                  for="condicionesAsignacion"
+                  class="text-area-quill--label"
+                  [class.color-secondaryColor]="
+                    (addressForm.get('condicionesAsignacion').invalid &&
+                      addressForm.get('condicionesAsignacion').touched) ||
+                    (addressForm.get('condicionesAsignacion').invalid && estaEditando)
+                  "
+                >
                   Condiciones de asignación de puntaje
                 </label>
-                <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
-                  (onContentChanged)="maxLength($event, 3000)" formControlName="condicionesAsignacion" required>
+                <quill-editor
+                  class="quill-editor-style"
+                  [styles]="editorStyle"
+                  [modules]="config"
+                  (onContentChanged)="maxLength($event, 3000)"
+                  formControlName="condicionesAsignacion"
+                  required
+                >
                 </quill-editor>
               </div>
-              <span class="contador miles" *ngIf="addressForm.get('condicionesAsignacion').value">
-                {{3000 - (textoLimpio(addressForm.get('condicionesAsignacion').value)>3000?3000:textoLimpio(addressForm.get('condicionesAsignacion').value))}}
+              <span
+                class="contador miles"
+                *ngIf="addressForm.get('condicionesAsignacion').value"
+                [matTooltipPosition]="'above'"
+                matTooltip="Registre aquí las condiciones de asignación de puntaje"
+                matTooltipClass="info-tooltip"
+              >
+                {{
+                  3000 -
+                    (textoLimpio(addressForm.get('condicionesAsignacion').value) > 3000
+                      ? 3000
+                      : textoLimpio(addressForm.get('condicionesAsignacion').value))
+                }}
               </span>
-              <span class="contador miles" *ngIf="!addressForm.get('condicionesAsignacion').value">
+              <span
+                class="contador miles"
+                *ngIf="!addressForm.get('condicionesAsignacion').value"
+                [matTooltipPosition]="'above'"
+                matTooltip="Registre aquí las condiciones de asignación de puntaje"
+                matTooltipClass="info-tooltip"
+              >
                 3000
+              </span>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  *ngIf="
+                    (addressForm.get('condicionesAsignacion').invalid &&
+                      addressForm.get('condicionesAsignacion').touched) ||
+                    (addressForm.get('condicionesAsignacion').invalid && estaEditando)
+                  "
+                />
               </span>
             </div>
           </div>
-
-
         </div>
       </div>
-
     </mat-card-content>
   </mat-card>
 
   <div class="text-center">
     <button *ngIf="editar" mat-button color="warn" class="btn-guardar" type="submit">
-      <img src="assets/img/icon/guardar.svg" alt="Guardar">
+      <img src="assets/img/icon/guardar.svg" alt="Guardar" />
     </button>
   </div>
 </form>
-
-<!-- <pre>
-  {{ addressForm.value | json }}
-</pre> -->

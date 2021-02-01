@@ -30,7 +30,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
     tema: this.fb.array([]),
   });
 
-
+  estaEditando = false;
 
   responsablesArray = [
     { name: 'reponsable 1', value: '1' },
@@ -103,7 +103,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
 
       this.objetoComiteTecnico = response[0];
       this.listaMiembros = response[1];
-      console.log(response[0])
+      // console.log(response[0])
       this.solicitudesContractuales = response[0].sesionComiteSolicitudComiteTecnico;
 
       if (this.solicitudesContractuales) {
@@ -140,7 +140,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
 
       })
 
-      console.log(response);
+      // console.log(response);
     })
   }
 
@@ -154,7 +154,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
     let grupo = this.addressForm.get('tema') as FormArray;
     let tema = grupo.controls[i];
 
-    console.log(tema)
+    // console.log(tema)
 
     this.techicalCommitteeSessionService.deleteSesionComiteTema(tema.get('sesionTemaId').value)
       .subscribe(respuesta => {
@@ -171,7 +171,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
       data: { modalTitle, modalText, siNoBoton: true }
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+      // console.log(`Dialog result: ${result}`);
       if (result===true) {
         this.deleteTema(e)
       }
@@ -229,8 +229,8 @@ export class CrearOrdenDelDiaComponent implements OnInit {
   }
 
   onSubmit() {
-
-    console.log(this.addressForm);
+    this.estaEditando=true;
+    // console.log(this.addressForm);
     if (this.addressForm.invalid) {
       this.openDialog('', '<b>Falta registrar información</b>');
 
@@ -270,7 +270,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
         })
       }
 
-      console.log(comite)
+      // console.log(comite)
 
       this.techicalCommitteeSessionService.createEditComiteTecnicoAndSesionComiteTemaAndSesionComiteSolicitud(comite).subscribe(respuesta => {
         this.openDialog('', `<b>${respuesta.message}</b>`)

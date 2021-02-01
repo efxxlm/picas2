@@ -34,3 +34,9 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 y generamos el componente (en angular material hay algunos que podemos utilizae [Angular Material](https://material.angular.io/guide/schematics).
 
     ng generate @angular/material:address-form _pages/<module-name>/components/<component-name>
+
+modal dialog
+
+    ng g c _pages/<module-name>/components/dialog-<component-name> --skipTests
+luego en el modulo de pone
+    `entryComponents: [dialog-<component-name],`

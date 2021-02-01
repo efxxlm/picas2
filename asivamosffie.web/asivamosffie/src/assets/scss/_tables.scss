@@ -49,6 +49,37 @@ td.mat-footer-cell {
   border-bottom-color: $mainColor;
 }
 
+.table-gris {
+  th.mat-header-cell {
+    background-color: $fontColor;
+  }
+  th.mat-header-cell:first-of-type,
+  td.mat-cell:first-of-type,
+  td.mat-footer-cell:first-of-type {
+    border-left: solid 1px $fontColor;
+  }
+
+  th.mat-header-cell:last-of-type,
+  td.mat-cell:last-of-type,
+  td.mat-footer-cell:last-of-type {
+    border-right: solid 1px $fontColor;
+  }
+
+  .mat-cell,
+  .mat-footer-cell {
+    color: $fontColor;
+  }
+
+  mat-row,
+  mat-header-row,
+  mat-footer-row,
+  th.mat-header-cell,
+  td.mat-cell,
+  td.mat-footer-cell {
+    border-bottom-color: $fontColor;
+  }
+}
+
 table {
   width: 100%;
 }
@@ -86,6 +117,10 @@ table {
 div.mat-paginator {
   &-page-size {
     order: 2;
+
+    @media only screen and (max-width: 48em) {
+      margin-right: 30px;
+    }
   }
 
   &-range-actions {
@@ -163,7 +198,15 @@ div.mat-paginator {
   padding-top: 0.5em;
   padding-bottom: 0.5em;
   width: 100%;
-  min-width: 9em;
+  min-width: 10.5em;
+
+  @media only screen and (max-width: 48em) {
+    display: inherit;
+
+    &::after {
+      right: 0.4em;
+    }
+  }
 
   &.btn-table--sm {
     width: 7em;
@@ -240,6 +283,10 @@ div.mat-paginator {
 
 .mat-paginator-container {
   width: 95% !important;
+
+  @media only screen and (max-width: 28em) {
+    margin-bottom: 1em;
+  }
 }
 
 .info-table--img {
@@ -287,4 +334,8 @@ div.mat-paginator {
     background-color: $mainColor;
     color: $fontColor;
   }
+}
+
+th .mat-sort-header-button {
+  line-height: 1.25;
 }

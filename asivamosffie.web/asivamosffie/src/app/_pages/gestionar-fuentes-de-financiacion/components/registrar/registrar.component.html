@@ -1,57 +1,99 @@
-<div class="loading" *ngIf="loading">
-  <mat-spinner></mat-spinner>
-</div>
-
 <div class="container">
   <div class="text-right">
     <a routerLink="/gestionarFuentes" mat-button color="primary" class="btn-regresar">
-      <img src="assets/img/icon/regresar.svg" alt="Regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar" />
     </a>
   </div>
   <div class="text-center">
-    <h1 class="title-menu--h1">
-      Registrar aporte y fuente de recursos
-    </h1>
+    <h1 class="title-menu--h1">Registrar aporte y fuente de recursos</h1>
+  </div>
+  <div
+    *ngIf="addressForm.invalid && addressForm.touched"
+    class="animateDown my-1em color-secondaryColor d-flex align-items-center justify-content-center"
+  >
+    <img class="icon-incompleto--img mr-05em" src="assets/img/icon/incompleto.svg" alt="este campo es requerido" />
+    Debe ingresar la información en el campo para continuar
   </div>
   <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
     <mat-card class="shipping-card">
       <mat-card-header class="header-card mlmenor">
-        <mat-card-title class="header-card--text">
-          Datos del aportante
-        </mat-card-title>
+        <mat-card-title class="header-card--text"> Datos del aportante </mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <div class="row" *ngIf="tipoAportante.Tercero.includes(tipoAportanteId.toString())">
           <div class="pr-1">
-            <label class="label-left"
-            [ngClass]="{'color-secondaryColor' : addressForm.controls.nombreAportante.invalid && addressForm.controls.nombreAportante.dirty || addressForm.controls.nombreAportante.invalid && edicion}"
-            >Nombre del aportante</label>
+            <label
+              class="label-left"
+              [ngClass]="{
+                'color-secondaryColor':
+                  (addressForm.controls.nombreAportante.invalid && addressForm.controls.nombreAportante.touched) ||
+                  (addressForm.controls.nombreAportante.invalid && edicion)
+              }"
+            >
+              Nombre del aportante
+            </label>
           </div>
           <div class="col">
             <mat-form-field class="select-width">
               <mat-select formControlName="nombreAportante" (selectionChange)="changeNombreAportanteTercero()" required>
                 <mat-option *ngFor="let nombreAportantes of solonombres" [value]="nombreAportantes">
-                  {{ nombreAportantes }} 
+                  {{ nombreAportantes }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
           </div>
+          <span class="icon-incompleto">
+            <img
+              class="icon-incompleto--img"
+              src="assets/img/icon/incompleto.svg"
+              alt="este campo es requerido"
+              *ngIf="
+                (addressForm.controls.nombreAportante.invalid && addressForm.controls.nombreAportante.touched) ||
+                (addressForm.controls.nombreAportante.invalid && edicion)
+              "
+            />
+          </span>
         </div>
         <div class="row" *ngIf="tipoAportante.FFIE.includes(tipoAportanteId.toString())">
           <div class="pr-1">
-            <label class="label-left"
-            [ngClass]="{'color-secondaryColor' : addressForm.controls.nombreAportanteFFIE.invalid && addressForm.controls.nombreAportanteFFIE.dirty || addressForm.controls.nombreAportanteFFIE.invalid && edicion}"
-            >Acuerdos de cofinanciación</label>
+            <label
+              class="label-left"
+              [ngClass]="{
+                'color-secondaryColor':
+                  (addressForm.controls.nombreAportanteFFIE.invalid &&
+                    addressForm.controls.nombreAportanteFFIE.touched) ||
+                  (addressForm.controls.nombreAportanteFFIE.invalid && edicion)
+              }"
+            >
+              Acuerdos de cofinanciación
+            </label>
           </div>
           <div class="col">
             <mat-form-field class="select-width">
-              <mat-select formControlName="nombreAportanteFFIE" (selectionChange)="changeNombreAportanteFFIE()" required>
+              <mat-select
+                formControlName="nombreAportanteFFIE"
+                (selectionChange)="changeNombreAportanteFFIE()"
+                required
+              >
                 <mat-option *ngFor="let nombreAportantes of nombresAportantes" [value]="nombreAportantes">
-                  Vigencia: {{ nombreAportantes.cofinanciacion.vigenciaCofinanciacionId}} - Número del acuerdo: {{ nombreAportantes.cofinanciacion.cofinanciacionId }}
+                  Vigencia: {{ nombreAportantes.cofinanciacion.vigenciaCofinanciacionId }} - Número del acuerdo:
+                  {{ nombreAportantes.cofinanciacion.cofinanciacionId }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
           </div>
+          <span class="icon-incompleto">
+            <img
+              class="icon-incompleto--img"
+              src="assets/img/icon/incompleto.svg"
+              alt="este campo es requerido"
+              *ngIf="
+                (addressForm.controls.nombreAportanteFFIE.invalid &&
+                  addressForm.controls.nombreAportanteFFIE.touched) ||
+                (addressForm.controls.nombreAportanteFFIE.invalid && edicion)
+              "
+            />
+          </span>
         </div>
         <!--pueden ser varios documentos por acuerdo, entonces lo cambio por una lista
           <div class="row" *ngIf="tipoAportante.FFIE.includes(tipoAportanteId.toString())">
@@ -85,47 +127,77 @@
             </div>
           </div>
         </div>-->
-        <div class="row"  *ngIf="tipoAportante.FFIE.includes(tipoAportanteId.toString())">
+        <div class="row" *ngIf="tipoAportante.FFIE.includes(tipoAportanteId.toString())">
           <div class="pr-1">
-            <label class="label-left"
-            [ngClass]="{'color-secondaryColor' : addressForm.controls.tipoDocumento.invalid && addressForm.controls.tipoDocumento.dirty || addressForm.controls.tipoDocumento.invalid && edicion}"
-            >Tipo de documento</label>
+            <label
+              class="label-left"
+              [ngClass]="{
+                'color-secondaryColor':
+                  (addressForm.controls.tipoDocumento.invalid && addressForm.controls.tipoDocumento.touched) ||
+                  (addressForm.controls.tipoDocumento.invalid && edicion)
+              }"
+            >
+              Tipo de documento
+            </label>
           </div>
           <div class="col">
             <mat-form-field class="select-width">
-              <mat-select formControlName="tipoDocumento" required  (selectionChange)="filterDocumento($event.value)">
-                <mat-option *ngFor="let nombreAportantes of tipoDocumentoap"
-                [value]="nombreAportantes.dominioId">
-                  {{ nombreAportantes.nombre}}
+              <mat-select formControlName="tipoDocumento" required (selectionChange)="filterDocumento($event.value)">
+                <mat-option *ngFor="let nombreAportantes of tipoDocumentoap" [value]="nombreAportantes.dominioId">
+                  {{ nombreAportantes.nombre }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
           </div>
+          <span class="icon-incompleto">
+            <img
+              class="icon-incompleto--img"
+              src="assets/img/icon/incompleto.svg"
+              alt="este campo es requerido"
+              *ngIf="
+                (addressForm.controls.tipoDocumento.invalid && addressForm.controls.tipoDocumento.touched) ||
+                (addressForm.controls.tipoDocumento.invalid && edicion)
+              "
+            />
+          </span>
         </div>
-        <div class="row"  *ngIf="tipoAportante.FFIE.includes(tipoAportanteId.toString())">
+        <!--    <div class="row"  *ngIf="tipoAportante.FFIE.includes(tipoAportanteId.toString())">
           <div class="pr-1">
-            <label class="label-left"
-            [ngClass]="{'color-secondaryColor' : addressForm.controls.numerodocumento.dirty && addressForm.controls.numerodocumento.value==''}"
-            >Número de documento de apropiación</label>
-          </div> 
+            <label
+              class="label-left"
+              [ngClass]="{
+                'color-secondaryColor':
+                  addressForm.controls.numerodocumento.touched && addressForm.controls.numerodocumento.value == ''
+              }"
+            >
+              Número de documento de apropiación
+            </label>
+          </div>
           <div class="col">
             <mat-form-field class="select-width">
-              <mat-select formControlName="numerodocumento" required>
-                <mat-option *ngFor="let nombreAportantes of listaDocumentosApropiacion" [value]="nombreAportantes">
+              <mat-select formControlName="numerodocumento" (selectionChange)="mostrarDocumento()" required>
+                <mat-option *ngFor="let nombreAportantes of listaDocumentosApropiacion"  [value]="nombreAportantes">
                   {{ nombreAportantes.numeroAcuerdo}} {{ nombreAportantes.numeroActa}}
                 </mat-option>
               </mat-select>
             </mat-form-field>
           </div>
-        </div>
+        </div>-->
         <div class="row" *ngIf="tipoAportante.ET.includes(tipoAportanteId.toString())">
           <div class="pr-1">
-            <label class="label-left"
-            [ngClass]="{'color-secondaryColor' : addressForm.controls.departamento.invalid && addressForm.controls.departamento.dirty || addressForm.controls.departamento.invalid && edicion}"
-            >Departamento</label>
+            <label
+              class="label-left"
+              [ngClass]="{
+                'color-secondaryColor':
+                  (addressForm.controls.departamento.invalid && addressForm.controls.departamento.touched) ||
+                  (addressForm.controls.departamento.invalid && edicion)
+              }"
+            >
+              Departamento
+            </label>
           </div>
           <div class="col capitalize">
-            <mat-form-field class="select-width" >
+            <mat-form-field class="select-width">
               <mat-select formControlName="departamento" (selectionChange)="changeDepartamento()" required>
                 <mat-option *ngFor="let depto of departamentos" [value]="depto" class="capitalize">
                   {{ depto.descripcion }}
@@ -133,166 +205,329 @@
               </mat-select>
             </mat-form-field>
           </div>
+          <span class="icon-incompleto">
+            <img
+              class="icon-incompleto--img"
+              src="assets/img/icon/incompleto.svg"
+              alt="este campo es requerido"
+              *ngIf="
+                (addressForm.controls.departamento.invalid && addressForm.controls.departamento.touched) ||
+                (addressForm.controls.departamento.invalid && edicion)
+              "
+            />
+          </span>
         </div>
         <div class="row" *ngIf="tipoAportante.ET.includes(tipoAportanteId.toString())">
           <div class="pr-1">
-            <label class="label-left"
-            [ngClass]="{'color-secondaryColor' : addressForm.controls.municipio.invalid && addressForm.controls.municipio.dirty || addressForm.controls.municipio.invalid && edicion}"
-            >Municipio</label>
+            <label
+              class="label-left"
+              [ngClass]="{
+                'color-secondaryColor':
+                  (addressForm.controls.municipio.invalid && addressForm.controls.municipio.touched) ||
+                  (addressForm.controls.municipio.invalid && edicion)
+              }"
+            >
+              Municipio
+            </label>
           </div>
           <div class="col capitalize">
             <mat-form-field class="select-width">
-              <mat-select formControlName="municipio" (selectionChange)="changeMunicipio()" >
+              <mat-select formControlName="municipio" (selectionChange)="changeMunicipio()">
                 <mat-option value="0">Seleccione</mat-option>
-                <mat-option *ngFor="let mun of municipios" [value]="mun"  class="capitalize">
+                <mat-option *ngFor="let mun of municipios" [value]="mun" class="capitalize">
                   {{ mun.descripcion }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
           </div>
+          <span class="icon-incompleto">
+            <img
+              class="icon-incompleto--img"
+              src="assets/img/icon/incompleto.svg"
+              alt="este campo es requerido"
+              *ngIf="
+                (addressForm.controls.municipio.invalid && addressForm.controls.municipio.touched) ||
+                (addressForm.controls.municipio.invalid && edicion)
+              "
+            />
+          </span>
         </div>
         <div class="row" *ngIf="!tipoAportante.FFIE.includes(tipoAportanteId.toString())">
           <div class="pr-1">
-            <label class="label-left"
-            [ngClass]="{'color-secondaryColor' : addressForm.controls.vigenciaAcuerdo.invalid && addressForm.controls.vigenciaAcuerdo.dirty || addressForm.controls.vigenciaAcuerdo.invalid && edicion}"
-            >Vigencia del acuerdo de cofinanciación</label>
+            <label
+              class="label-left"
+              [ngClass]="{
+                'color-secondaryColor':
+                  (addressForm.controls.vigenciaAcuerdo.invalid && addressForm.controls.vigenciaAcuerdo.touched) ||
+                  (addressForm.controls.vigenciaAcuerdo.invalid && edicion)
+              }"
+            >
+              Vigencia del acuerdo de cofinanciación
+            </label>
           </div>
           <div class="col">
             <mat-form-field class="select-width">
-              <mat-select formControlName="vigenciaAcuerdo"  (selectionChange)="changeVigencia()" required>
+              <mat-select formControlName="vigenciaAcuerdo" (selectionChange)="changeVigencia()" required>
                 <mat-option *ngFor="let nombreAportantes of nombresAportantes2" [value]="nombreAportantes">
-                  Vigencia: {{ nombreAportantes.cofinanciacion.vigenciaCofinanciacionId}} - Número del acuerdo: {{ nombreAportantes.cofinanciacion.cofinanciacionId }} 
+                  Vigencia: {{ nombreAportantes.cofinanciacion.vigenciaCofinanciacionId }} - Número del acuerdo:
+                  {{ nombreAportantes.cofinanciacion.cofinanciacionId }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
           </div>
+          <span class="icon-incompleto">
+            <img
+              class="icon-incompleto--img"
+              src="assets/img/icon/incompleto.svg"
+              alt="este campo es requerido"
+              *ngIf="
+                (addressForm.controls.vigenciaAcuerdo.invalid && addressForm.controls.vigenciaAcuerdo.touched) ||
+                (addressForm.controls.vigenciaAcuerdo.invalid && edicion)
+              "
+            />
+          </span>
         </div>
       </mat-card-content>
     </mat-card>
 
-    <mat-card class="shipping-card"
-      *ngIf="tipoAportante.Tercero.includes(tipoAportanteId.toString()) || tipoAportante.ET.includes(tipoAportanteId.toString())">
+    <mat-card class="shipping-card">
       <mat-card-content>
         <div class="row mt-1em" *ngFor="let documento of listaDocumentos; let i = index">
           <div class="col-md-6">
-            <p><b>Documento de apropiación: </b> Documento {{ i + 1}} </p>
-            <p><b>Tipo de documento: </b>{{ documento.tipoDocumento.nombre }} </p>
-            <p><b>Fecha: </b> {{ documento.fechaAcuerdo | date:'dd/MM/yyyy' }} </p>
+            <p><b>Documento de apropiación: </b> Documento {{ i + 1 }}</p>
+            <p><b>Tipo de documento: </b>{{ documento.tipoDocumento.nombre }}</p>
+            <p><b>Fecha: </b> {{ documento.fechaAcuerdo | date: 'dd/MM/yyyy' }}</p>
           </div>
           <div class="col-md-6">
-            <p><b>Vigencia del aporte: </b> {{ documento.vigenciaAporte }} </p>
-            <p><b>Número de documento: </b> {{ documento.numeroAcuerdo }} {{ documento.numeroActa }} </p>
-            <p><b>Valor: </b> {{ documento.valorDocumento | currency }} </p>
+            <p><b>Vigencia del aporte: </b> {{ documento.vigenciaAporte }}</p>
+            <p><b>Número de documento: </b> {{ documento.numeroAcuerdo }} {{ documento.numeroActa }}</p>
+            <p><b>Valor: </b> {{ documento.valorDocumento | currency }}</p>
           </div>
         </div>
-        <h2 class="card-subTitle var-main-gris mt-2em">
-          <b>Valor total: </b> {{ valorTotal | currency }}
-        </h2>
+        <h2 class="card-subTitle var-main-gris mt-2em"><b>Valor total: </b> {{ valorTotal | currency }}</h2>
       </mat-card-content>
     </mat-card>
 
-    <mat-card class="shipping-card"
-      *ngIf="tipoAportante.Tercero.includes(tipoAportanteId.toString()) || tipoAportante.ET.includes(tipoAportanteId.toString())">
+    <mat-card
+      class="shipping-card"
+      *ngIf="
+        tipoAportante.Tercero.includes(tipoAportanteId.toString()) ||
+        tipoAportante.ET.includes(tipoAportanteId.toString())
+      "
+    >
       <mat-card-header class="header-card mlmenor">
-        <mat-card-title class="header-card--text">
-          Registros Presupuestales
-        </mat-card-title>
+        <mat-card-title class="header-card--text"> Registros Presupuestales </mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <div class="row">
           <div class="pr-1">
-            <label class="label-left"
-            [ngClass]="{'color-secondaryColor' : addressForm.controls.tieneRP.invalid && addressForm.controls.tieneRP.dirty || addressForm.controls.tieneRP.invalid && edicion}"
-            >¿Este aporte tiene RP?</label>
+            <label
+              class="label-left"
+              [ngClass]="{
+                'color-secondaryColor':
+                  (addressForm.controls.tieneRP.invalid && addressForm.controls.tieneRP.touched) ||
+                  (addressForm.controls.tieneRP.invalid && edicion)
+              }"
+            >
+              ¿Este aporte tiene RP?
+            </label>
           </div>
           <div class="col">
             <mat-radio-group class="radioInput" formControlName="tieneRP">
-              <mat-radio-button value="1" >Sí</mat-radio-button>
-              <mat-radio-button value="0">No</mat-radio-button>
+              <mat-radio-button value="1">Sí</mat-radio-button>
+              <mat-radio-button value="0" (click)="sinRPS()">No</mat-radio-button>
             </mat-radio-group>
           </div>
         </div>
-        <div class="row" *ngIf="addressForm.get('tieneRP').value==1 || registrosPresupuestales.controls.length>0"> 
+        <div class="row" *ngIf="addressForm.get('tieneRP').value == 1 || registrosPresupuestales.controls.length > 0">
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left"
-                [ngClass]="{'color-secondaryColor' : addressForm.controls.cuantosRP.invalid && addressForm.controls.cuantosRP.dirty || addressForm.controls.cuantosRP.invalid && edicion}"
-                >¿Cuántos RP tiene asociados?</label>
+                <label
+                  class="label-left"
+                  [ngClass]="{
+                    'color-secondaryColor':
+                      (addressForm.controls.cuantosRP.invalid && addressForm.controls.cuantosRP.touched) ||
+                      (addressForm.controls.cuantosRP.invalid && edicion)
+                  }"
+                >
+                  ¿Cuántos RP tiene asociados?
+                </label>
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #cuantosRP type="number" min="1" class="maincolor" max="99" formControlName="cuantosRP"
-                    maxlength="20" (keyup)="CambioNumeroRP()" (change)="CambioNumeroRP()"
+                  <input
+                    matInput
+                    #cuantosRP
+                    type="number"
+                    min="1"
+                    class="maincolor"
+                    max="99"
+                    formControlName="cuantosRP"
+                    maxlength="20"
+                    (keyup)="CambioNumeroRP()"
+                    (change)="CambioNumeroRP()"
                     (keypress)="validateNumberKeypress($event)"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  />
                 </mat-form-field>
-                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
-                matTooltipClass="info-tooltip">{{2 - cuantosRP.value.length}}</span>
+                <span
+                  class="contador"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Campo numérico"
+                  matTooltipClass="info-tooltip"
+                >
+                  {{ 2 - cuantosRP.value.length }}
+                </span>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    *ngIf="
+                      (addressForm.controls.cuantosRP.invalid && addressForm.controls.cuantosRP.touched) ||
+                      (addressForm.controls.cuantosRP.invalid && edicion)
+                    "
+                  />
+                </span>
               </div>
             </div>
             <div formGroupName="registrosPresupuestales">
               <div *ngFor="let registroPresupuestal of registrosPresupuestales.controls; let i = index">
                 <div [formGroupName]="i">
-                  <mat-card-title class="header-card--text sub-text">
-                    RP {{ i + 1 }}
-                  </mat-card-title>
+                  <mat-card-title class="header-card--text sub-text"> RP {{ i + 1 }} </mat-card-title>
                   <div class="row">
                     <div class="pr-1">
-                      <label class="label-left"
-                      [ngClass]="{'color-secondaryColor' : registroPresupuestal.controls.numeroRP.invalid && registroPresupuestal.controls.numeroRP.dirty || registroPresupuestal.controls.numeroRP.invalid && edicion}"
-                      >Número de RP</label>
+                      <label
+                        class="label-left"
+                        [ngClass]="{
+                          'color-secondaryColor':
+                            (registroPresupuestal.get('numeroRP').invalid &&
+                              registroPresupuestal.get('numeroRP').touched) ||
+                            (registroPresupuestal.get('numeroRP').invalid && edicion)
+                        }"
+                      >
+                        Número de RP
+                      </label>
                     </div>
                     <div class="col d-flex">
                       <mat-form-field class="full-width maincolor">
-                        <input matInput #numeroRP type="number" formControlName="numeroRP" maxlength="50" 
+                        <input
+                          matInput
+                          #numeroRP
+                          type="number"
+                          formControlName="numeroRP"
+                          maxlength="50"
                           (keypress)="validateNumberKeypress($event)"
-                          onKeyPress="if(this.value.length>=this.maxLength) return false;">
-                        <input type="hidden" formControlName="registroPresupuestalId">
+                          onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                        />
+                        <input type="hidden" formControlName="registroPresupuestalId" />
                       </mat-form-field>
-                      <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
-                      matTooltipClass="info-tooltip">{{50 - numeroRP.value.length}}</span>
+                      <span
+                        class="contador"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Campo numérico"
+                        matTooltipClass="info-tooltip"
+                      >
+                        {{ 50 - numeroRP.value.length }}
+                      </span>
+                      <span class="icon-incompleto">
+                        <img
+                          class="icon-incompleto--img"
+                          src="assets/img/icon/incompleto.svg"
+                          alt="este campo es requerido"
+                          *ngIf="
+                            (registroPresupuestal.get('numeroRP').invalid &&
+                              registroPresupuestal.get('numeroRP').touched) ||
+                            (registroPresupuestal.get('numeroRP').invalid && edicion)
+                          "
+                        />
+                      </span>
                     </div>
                   </div>
                   <div class="row">
                     <div class="pr-1">
-                      <label class="label-left"
-                      [ngClass]="{'color-secondaryColor' : registroPresupuestal.controls.fecha.invalid && registroPresupuestal.controls.fecha.dirty || registroPresupuestal.controls.fecha.invalid && edicion}"
-                      >Fecha</label>
+                      <label
+                        class="label-left"
+                        [ngClass]="{
+                          'color-secondaryColor':
+                            (registroPresupuestal.get('fecha').invalid && registroPresupuestal.get('fecha').touched) ||
+                            (registroPresupuestal.get('fecha').invalid && edicion)
+                        }"
+                      >
+                        Fecha
+                      </label>
                     </div>
                     <div class="col d-flex">
                       <mat-form-field class="example-full-width">
-                        <input matInput [matDatepicker]="picker" formControlName="fecha" class="maincolor" 
-                        placeholder="DD/MM/AAAA" [max]="maxDate" (click)="picker.open()" readonly >
+                        <input
+                          matInput
+                          [matDatepicker]="picker"
+                          formControlName="fecha"
+                          class="maincolor"
+                          placeholder="DD/MM/AAAA"
+                          [max]="maxDate"
+                          (click)="picker.open()"
+                          readonly
+                        />
                         <mat-datepicker #picker></mat-datepicker>
                       </mat-form-field>
                       <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">
-                        <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                        <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
                       </button>
-
+                      <span class="icon-incompleto">
+                        <img
+                          class="icon-incompleto--img"
+                          src="assets/img/icon/incompleto.svg"
+                          alt="este campo es requerido"
+                          *ngIf="
+                            (registroPresupuestal.get('fecha').invalid && registroPresupuestal.get('fecha').touched) ||
+                            (registroPresupuestal.get('fecha').invalid && edicion)
+                          "
+                        />
+                      </span>
                     </div>
                   </div>
                   <div class="row">
                     <div class="pr-1">
-                      <label class="label-left"
-                      [ngClass]="{'color-secondaryColor' : registroPresupuestal.controls.numerodocumentoRP.invalid && registroPresupuestal.controls.numerodocumentoRP.dirty || registroPresupuestal.controls.numerodocumentoRP.invalid && edicion}"
-                      >Documento de apropiación</label>
+                      <label
+                        class="label-left"
+                        [ngClass]="{
+                          'color-secondaryColor':
+                            (registroPresupuestal.get('numerodocumentoRP').invalid &&
+                              registroPresupuestal.get('numerodocumentoRP').touched) ||
+                            (registroPresupuestal.get('numerodocumentoRP').invalid && edicion)
+                        }"
+                      >
+                        Documento de apropiación
+                      </label>
                     </div>
                     <div class="col d-flex">
                       <mat-form-field class="full-width">
-                        <mat-select formControlName="numerodocumentoRP" >
+                        <mat-select formControlName="numerodocumentoRP">
                           <mat-option *ngFor="let nombreAportantes of listaDocumentos" [value]="nombreAportantes">
-                            {{ nombreAportantes.numeroAcuerdo}} {{ nombreAportantes.numeroActa}}
+                            {{ nombreAportantes.numeroAcuerdo }} {{ nombreAportantes.numeroActa }}
                           </mat-option>
                         </mat-select>
                       </mat-form-field>
                     </div>
+                    <span class="icon-incompleto">
+                      <img
+                        class="icon-incompleto--img"
+                        src="assets/img/icon/incompleto.svg"
+                        alt="este campo es requerido"
+                        *ngIf="
+                          (registroPresupuestal.get('numerodocumentoRP').invalid &&
+                            registroPresupuestal.get('numerodocumentoRP').touched) ||
+                          (registroPresupuestal.get('numerodocumentoRP').invalid && edicion)
+                        "
+                      />
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-
         </div>
       </mat-card-content>
     </mat-card>
@@ -310,40 +545,97 @@
             <mat-card-content>
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left"
-                  [ngClass]="{'color-secondaryColor' : fuente.controls.fuenteRecursos.invalid && fuente.controls.fuenteRecursos.dirty || fuente.controls.fuenteRecursos.invalid && edicion}"
-                  >Fuente de recursos</label>
+                  <label
+                    class="label-left"
+                    [ngClass]="{
+                      'color-secondaryColor':
+                        (fuente.get('fuenteRecursos').invalid && fuente.get('fuenteRecursos').touched) ||
+                        (fuente.get('fuenteRecursos').invalid && edicion)
+                    }"
+                  >
+                    Fuente de recursos
+                  </label>
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
-                    <mat-select formControlName="fuenteRecursos" required >
-                      <mat-option *ngFor="let fuenteDeRecursos1 of fuentesDeRecursosListaArr[j]" [value]="fuenteDeRecursos1">
+                    <mat-select formControlName="fuenteRecursos" required>
+                      <mat-option
+                        *ngFor="let fuenteDeRecursos1 of fuentesDeRecursosListaArr[j]"
+                        [value]="fuenteDeRecursos1"
+                      >
                         {{ fuenteDeRecursos1.nombre }}
-                        <input formControlName="fuenteFinanciacionId" type="hidden">
+                        <input formControlName="fuenteFinanciacionId" type="hidden" />
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
                 </div>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    *ngIf="
+                      (fuente.get('fuenteRecursos').invalid && fuente.get('fuenteRecursos').touched) ||
+                      (fuente.get('fuenteRecursos').invalid && edicion)
+                    "
+                  />
+                </span>
               </div>
               <div class="row">
                 <div class="col-md-8">
                   <div class="row">
                     <div class="pr-1">
-                      <label class="label-left"
-                      [ngClass]="{'color-secondaryColor' : fuente.controls.valorFuenteRecursos.invalid && fuente.controls.valorFuenteRecursos.dirty || fuente.controls.valorFuenteRecursos.invalid && edicion}"
-                      >Valor aporte fuente de recursos</label>
+                      <label
+                        class="label-left"
+                        [ngClass]="{
+                          'color-secondaryColor':
+                            (fuente.get('valorFuenteRecursos').invalid && fuente.get('valorFuenteRecursos').touched) ||
+                            (fuente.get('valorFuenteRecursos').invalid && edicion)
+                        }"
+                      >
+                        Valor aporte fuente de recursos
+                      </label>
                     </div>
                     <div class="col d-flex">
                       <mat-form-field class="full-width maincolor">
-                        <input matInput #valorAporte currencyMask formControlName="valorFuenteRecursos" maxlength="20"
-                          required (keypress)="validateNumberKeypress($event);validateonevige(j)"
+                        <input
+                          matInput
+                          #valorAporte
+                          currencyMask
+                          formControlName="valorFuenteRecursos"
+                          maxlength="20"
+                          required
+                          (keypress)="validateNumberKeypress($event); validateonevige(j)"
                           onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                          [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center', allowNegative: false }"
-                          >
+                          [options]="{
+                            prefix: '$ ',
+                            thousands: '.',
+                            precision: '0',
+                            align: 'center',
+                            allowNegative: false
+                          }"
+                        />
                       </mat-form-field>
-                      <span class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
-                      matTooltipClass="info-tooltip">{{20 - valorAporte.value.length}}</span>
+                      <span
+                        class="contador"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Valor en ($) Pesos colombianos"
+                        matTooltipClass="info-tooltip"
+                      >
+                        {{ 20 - valorAporte.value.length }}
+                      </span>
                     </div>
+                    <span class="icon-incompleto">
+                      <img
+                        class="icon-incompleto--img"
+                        src="assets/img/icon/incompleto.svg"
+                        alt="este campo es requerido"
+                        *ngIf="
+                          (fuente.get('valorFuenteRecursos').invalid && fuente.get('valorFuenteRecursos').touched) ||
+                          (fuente.get('valorFuenteRecursos').invalid && edicion)
+                        "
+                      />
+                    </span>
                   </div>
                 </div>
               </div>
@@ -352,37 +644,76 @@
                 <div class="col-md-8">
                   <div class="row">
                     <div class="pr-1">
-                      <label class="label-left"
-                      [ngClass]="{'color-secondaryColor' : fuente.controls.cuantasVigencias.invalid && fuente.controls.cuantasVigencias.dirty || fuente.controls.cuantasVigencias.invalid && edicion}"
-                      >¿De cuántas vigencias se realizará el aporte?</label>
+                      <label
+                        class="label-left"
+                        [ngClass]="{
+                          'color-secondaryColor':
+                            (fuente.get('cuantasVigencias').invalid && fuente.get('cuantasVigencias').touched) ||
+                            (fuente.get('cuantasVigencias').invalid && edicion)
+                        }"
+                      >
+                        ¿De cuántas vigencias se realizará el aporte?
+                      </label>
                     </div>
                     <div class="col d-flex">
                       <mat-form-field class="full-width">
-                        <input matInput #cuantasVigencias type="number" class="maincolor" min="1" max="99" maxlength="2"
-                          formControlName="cuantasVigencias" (keyup)="CambioNumerovigencia(j)" required
+                        <input
+                          matInput
+                          #cuantasVigencias
+                          type="number"
+                          class="maincolor"
+                          min="1"
+                          max="99"
+                          maxlength="2"
+                          formControlName="cuantasVigencias"
+                          (keyup)="CambioNumerovigencia(j)"
+                          required
                           (keypress)="validateNumberKeypress($event)"
-                          onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                          onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                        />
                       </mat-form-field>
-                      <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
-                      matTooltipClass="info-tooltip">{{2 - cuantasVigencias.value.length}}</span>
+                      <span
+                        class="contador"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Campo numérico"
+                        matTooltipClass="info-tooltip"
+                      >
+                        {{ 2 - cuantasVigencias.value.length }}
+                      </span>
+                      <span class="icon-incompleto">
+                        <img
+                          class="icon-incompleto--img"
+                          src="assets/img/icon/incompleto.svg"
+                          alt="este campo es requerido"
+                          *ngIf="
+                            (fuente.get('cuantasVigencias').invalid && fuente.get('cuantasVigencias').touched) ||
+                            (fuente.get('cuantasVigencias').invalid && edicion)
+                          "
+                        />
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
               <div formGroupName="vigencias" *ngIf="tipoAportante.FFIE.includes(tipoAportanteId.toString())">
-
                 <div *ngFor="let vigencia of vigencias1(j).controls; let i = index">
                   <div [formGroupName]="i">
-                    <mat-card-title class="header-card--text sub-text">
-                      Vigencia {{ i + 1}}
-                    </mat-card-title>
+                    <mat-card-title class="header-card--text sub-text"> Vigencia {{ i + 1 }} </mat-card-title>
                     <div class="row">
                       <div class="col-md-8">
                         <div class="row">
                           <div class="pr-1">
-                            <label class="label-left"
-                            [ngClass]="{'color-secondaryColor' : vigencia.controls.vigenciaAportante.invalid && vigencia.controls.vigenciaAportante.dirty || vigencia.controls.vigenciaAportante.invalid && edicion}"
-                            >Vigencia del aporte</label>
+                            <label
+                              class="label-left"
+                              [ngClass]="{
+                                'color-secondaryColor':
+                                  (vigencia.get('vigenciaAportante').invalid &&
+                                    vigencia.get('vigenciaAportante').touched) ||
+                                  (vigencia.get('vigenciaAportante').invalid && edicion)
+                              }"
+                            >
+                              Vigencia del aporte
+                            </label>
                           </div>
                           <div class="col">
                             <mat-form-field class="select-width">
@@ -393,6 +724,18 @@
                               </mat-select>
                             </mat-form-field>
                           </div>
+                          <span class="icon-incompleto">
+                            <img
+                              class="icon-incompleto--img"
+                              src="assets/img/icon/incompleto.svg"
+                              alt="este campo es requerido"
+                              *ngIf="
+                                (vigencia.get('vigenciaAportante').invalid &&
+                                  vigencia.get('vigenciaAportante').touched) ||
+                                (vigencia.get('vigenciaAportante').invalid && edicion)
+                              "
+                            />
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -400,28 +743,70 @@
                       <div class="col-md-8">
                         <div class="row">
                           <div class="pr-1">
-                            <label class="label-left"
-                            [ngClass]="{'color-secondaryColor' : vigencia.controls.valorVigencia.invalid && vigencia.controls.valorVigencia.dirty || vigencia.controls.valorVigencia.invalid && edicion}"
-                            >Valor aporte de la vigencia</label>
+                            <label
+                              class="label-left"
+                              [ngClass]="{
+                                'color-secondaryColor':
+                                  (vigencia.get('valorVigencia').invalid && vigencia.get('valorVigencia').touched) ||
+                                  (vigencia.get('valorVigencia').invalid && edicion)
+                              }"
+                            >
+                              Valor aporte de la vigencia
+                            </label>
                           </div>
                           <div class="col d-flex">
                             <mat-form-field class="full-width maincolor">
-                              <input matInput #valorVigencia currencyMask formControlName="valorVigencia"
-                                maxlength="20" required (keypress)="validateNumberKeypress($event)"
+                              <input
+                                matInput
+                                #valorVigencia
+                                currencyMask
+                                formControlName="valorVigencia"
+                                maxlength="20"
+                                required
+                                (keypress)="validateNumberKeypress($event)"
                                 onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                                [readonly]="vigencias1(j).controls.length==1"
-                                [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center', allowNegative: false }"
-                                >
+                                [readonly]="vigencias1(j).controls.length == 1"
+                                [options]="{
+                                  prefix: '$ ',
+                                  thousands: '.',
+                                  precision: '0',
+                                  align: 'center',
+                                  allowNegative: false
+                                }"
+                              />
                             </mat-form-field>
-                            <span class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
-                            matTooltipClass="info-tooltip">{{20 - valorVigencia.value.length}}</span>
+                            <span
+                              class="contador"
+                              [matTooltipPosition]="'above'"
+                              matTooltip="Valor en ($) Pesos colombianos"
+                              matTooltipClass="info-tooltip"
+                            >
+                              {{ 20 - valorVigencia.value.length }}
+                            </span>
+                            <span class="icon-incompleto">
+                              <img
+                                class="icon-incompleto--img"
+                                src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido"
+                                *ngIf="
+                                  (vigencia.get('valorVigencia').invalid && vigencia.get('valorVigencia').touched) ||
+                                  (vigencia.get('valorVigencia').invalid && edicion)
+                                "
+                              />
+                            </span>
                           </div>
                         </div>
                       </div>
                       <div class="col-md-4 text-right">
-                        <button mat-button color="warn" *ngIf="vigencias1(j).controls.length>1" type="button" class="btn-eliminar"
-                          (click)="borrarArrayVigencias(vigencias1(j), i,j)">
-                          <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
+                        <button
+                          mat-button
+                          color="warn"
+                          *ngIf="vigencias1(j).controls.length > 1"
+                          type="button"
+                          class="btn-eliminar"
+                          (click)="borrarArrayVigencias(vigencias1(j), i, j)"
+                        >
+                          <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia" />
                           Eliminar vigencia
                         </button>
                       </div>
@@ -434,54 +819,149 @@
                 <h2 class="card-subTitle">Cuentas bancarias</h2>
                 <div *ngFor="let cuentaBancaria of cuentasBancaria(j).controls; let i = index">
                   <div [formGroupName]="i">
-                    <mat-card-title class="header-card--text sub-text">
-                      Cuenta bancaria {{ i + 1 }}
-                    </mat-card-title>
+                    <mat-card-title class="header-card--text sub-text"> Cuenta bancaria {{ i + 1 }} </mat-card-title>
                     <div class="row">
                       <div class="pr-1">
-                        <label class="label-left"
-                        [ngClass]="{'color-secondaryColor' : cuentaBancaria.controls.numeroCuenta.invalid && cuentaBancaria.controls.numeroCuenta.dirty || cuentaBancaria.controls.numeroCuenta.invalid && edicion}"
-                        >Número de cuenta</label>
+                        <label
+                          class="label-left"
+                          [ngClass]="{
+                            'color-secondaryColor':
+                              (cuentaBancaria.get('numeroCuenta').invalid &&
+                                cuentaBancaria.get('numeroCuenta').touched) ||
+                              (cuentaBancaria.get('numeroCuenta').invalid && edicion)
+                          }"
+                        >
+                          Número de cuenta
+                        </label>
                       </div>
                       <div class="col d-flex">
                         <mat-form-field class="full-width maincolor">
-                          <input matInput #numeroCuemta type="text" formControlName="numeroCuenta" maxlength="20"
-                            required >
+                          <input
+                            matInput
+                            #numeroCuemta
+                            type="text"
+                            formControlName="numeroCuenta"
+                            maxlength="20"
+                            required
+                          />
                         </mat-form-field>
-                        <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
-                        matTooltipClass="info-tooltip">{{20 - numeroCuemta.value.length}}</span>
+                        <span
+                          class="contador"
+                          [matTooltipPosition]="'above'"
+                          matTooltip="Campo numérico"
+                          matTooltipClass="info-tooltip"
+                        >
+                          {{ 20 - numeroCuemta.value.length }}
+                        </span>
+                        <span class="icon-incompleto">
+                          <img
+                            class="icon-incompleto--img"
+                            src="assets/img/icon/incompleto.svg"
+                            alt="este campo es requerido"
+                            *ngIf="
+                              (cuentaBancaria.get('numeroCuenta').invalid &&
+                                cuentaBancaria.get('numeroCuenta').touched) ||
+                              (cuentaBancaria.get('numeroCuenta').invalid && edicion)
+                            "
+                          />
+                        </span>
                       </div>
                     </div>
                     <div class="row">
                       <div class="pr-1">
-                        <label class="label-left"
-                        [ngClass]="{'color-secondaryColor' : cuentaBancaria.controls.nombreCuenta.invalid && cuentaBancaria.controls.nombreCuenta.dirty || cuentaBancaria.controls.nombreCuenta.invalid && edicion}"
-                        >Nombre de cuenta</label>
+                        <label
+                          class="label-left"
+                          [ngClass]="{
+                            'color-secondaryColor':
+                              (cuentaBancaria.get('nombreCuenta').invalid &&
+                                cuentaBancaria.get('nombreCuenta').touched) ||
+                              (cuentaBancaria.get('nombreCuenta').invalid && edicion)
+                          }"
+                        >
+                          Nombre de cuenta
+                        </label>
                       </div>
                       <div class="col d-flex">
                         <mat-form-field class="full-width maincolor">
-                          <input matInput #nombreCuenta type="text" maxlength="100" formControlName="nombreCuenta"
-                            required>
-                          <input type="hidden" formControlName="cuentaBancariaId">
+                          <input
+                            matInput
+                            #nombreCuenta
+                            type="text"
+                            maxlength="100"
+                            formControlName="nombreCuenta"
+                            required
+                          />
+                          <input type="hidden" formControlName="cuentaBancariaId" />
                         </mat-form-field>
-                        <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico"
-                        matTooltipClass="info-tooltip">{{100 - nombreCuenta.value.length}}</span>
+                        <span
+                          class="contador"
+                          [matTooltipPosition]="'above'"
+                          matTooltip="Campo alfanumérico"
+                          matTooltipClass="info-tooltip"
+                        >
+                          {{ 100 - nombreCuenta.value.length }}
+                        </span>
+                        <span class="icon-incompleto">
+                          <img
+                            class="icon-incompleto--img"
+                            src="assets/img/icon/incompleto.svg"
+                            alt="este campo es requerido"
+                            *ngIf="
+                              (cuentaBancaria.get('nombreCuenta').invalid &&
+                                cuentaBancaria.get('nombreCuenta').touched) ||
+                              (cuentaBancaria.get('nombreCuenta').invalid && edicion)
+                            "
+                          />
+                        </span>
                       </div>
                     </div>
                     <div class="row">
                       <div class="col-md-8">
                         <div class="row">
                           <div class="pr-1">
-                            <label class="label-left"
-                            [ngClass]="{'color-secondaryColor' : cuentaBancaria.controls.codigoSIFI.invalid && cuentaBancaria.controls.codigoSIFI.dirty || cuentaBancaria.controls.codigoSIFI.invalid && edicion}"
-                            >Código SIFI</label>
+                            <label
+                              class="label-left"
+                              [ngClass]="{
+                                'color-secondaryColor':
+                                  (cuentaBancaria.get('codigoSIFI').invalid &&
+                                    cuentaBancaria.get('codigoSIFI').touched) ||
+                                  (cuentaBancaria.get('codigoSIFI').invalid && edicion)
+                              }"
+                            >
+                              Código SIFI
+                            </label>
                           </div>
                           <div class="col d-flex">
                             <mat-form-field class="full-width maincolor">
-                              <input matInput #codigoSIFI type="text" formControlName="codigoSIFI" maxlength="6" required>
+                              <input
+                                matInput
+                                #codigoSIFI
+                                type="text"
+                                formControlName="codigoSIFI"
+                                maxlength="6"
+                                required
+                              />
                             </mat-form-field>
-                            <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico"
-                            matTooltipClass="info-tooltip">{{6 - codigoSIFI.value.length}}</span>
+                            <span
+                              class="contador"
+                              [matTooltipPosition]="'above'"
+                              matTooltip="Campo alfanumérico"
+                              matTooltipClass="info-tooltip"
+                            >
+                              {{ 6 - codigoSIFI.value.length }}
+                            </span>
+                            <span class="icon-incompleto">
+                              <img
+                                class="icon-incompleto--img"
+                                src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido"
+                                *ngIf="
+                                  (cuentaBancaria.get('codigoSIFI').invalid &&
+                                    cuentaBancaria.get('codigoSIFI').touched) ||
+                                  (cuentaBancaria.get('codigoSIFI').invalid && edicion)
+                                "
+                              />
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -490,9 +970,17 @@
                       <div class="col-md-8">
                         <div class="row">
                           <div class="pr-1">
-                            <label class="label-left"
-                            [ngClass]="{'color-secondaryColor' : cuentaBancaria.controls.tipoCuenta.invalid && cuentaBancaria.controls.tipoCuenta.dirty || cuentaBancaria.controls.tipoCuenta.invalid && edicion}"
-                            >Tipo de cuenta</label>
+                            <label
+                              class="label-left"
+                              [ngClass]="{
+                                'color-secondaryColor':
+                                  (cuentaBancaria.get('tipoCuenta').invalid &&
+                                    cuentaBancaria.get('tipoCuenta').touched) ||
+                                  (cuentaBancaria.get('tipoCuenta').invalid && edicion)
+                              }"
+                            >
+                              Tipo de cuenta
+                            </label>
                           </div>
                           <div class="col">
                             <mat-radio-group class="radioInput" formControlName="tipoCuenta">
@@ -500,6 +988,18 @@
                               <mat-radio-button value="corriente">Corriente</mat-radio-button>
                             </mat-radio-group>
                             <span class="required-form-group">*</span>
+                            <span class="icon-incompleto">
+                              <img
+                                class="icon-incompleto--img"
+                                src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido"
+                                *ngIf="
+                                  (cuentaBancaria.get('tipoCuenta').invalid &&
+                                    cuentaBancaria.get('tipoCuenta').touched) ||
+                                  (cuentaBancaria.get('tipoCuenta').invalid && edicion)
+                                "
+                              />
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -508,9 +1008,16 @@
                       <div class="col-md-8">
                         <div class="row">
                           <div class="pr-1">
-                            <label class="label-left"
-                            [ngClass]="{'color-secondaryColor' : cuentaBancaria.controls.banco.invalid && cuentaBancaria.controls.banco.dirty || cuentaBancaria.controls.banco.invalid && edicion}"
-                            >Banco</label>
+                            <label
+                              class="label-left"
+                              [ngClass]="{
+                                'color-secondaryColor':
+                                  (cuentaBancaria.get('banco').invalid && cuentaBancaria.get('banco').touched) ||
+                                  (cuentaBancaria.get('banco').invalid && edicion)
+                              }"
+                            >
+                              Banco
+                            </label>
                           </div>
                           <div class="col">
                             <mat-form-field class="select-width">
@@ -521,6 +1028,17 @@
                               </mat-select>
                             </mat-form-field>
                           </div>
+                          <span class="icon-incompleto">
+                            <img
+                              class="icon-incompleto--img"
+                              src="assets/img/icon/incompleto.svg"
+                              alt="este campo es requerido"
+                              *ngIf="
+                                (cuentaBancaria.get('banco').invalid && cuentaBancaria.get('banco').touched) ||
+                                (cuentaBancaria.get('banco').invalid && edicion)
+                              "
+                            />
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -528,9 +1046,16 @@
                       <div class="col-md-8">
                         <div class="row">
                           <div class="pr-1">
-                            <label class="label-left"
-                            [ngClass]="{'color-secondaryColor' : cuentaBancaria.controls.extra.invalid && cuentaBancaria.controls.extra.dirty || cuentaBancaria.controls.extra.invalid && edicion}"
-                            >¿Exenta?</label>
+                            <label
+                              class="label-left"
+                              [ngClass]="{
+                                'color-secondaryColor':
+                                  (cuentaBancaria.get('extra').invalid && cuentaBancaria.get('extra').touched) ||
+                                  (cuentaBancaria.get('extra').invalid && edicion)
+                              }"
+                            >
+                              ¿Exenta?
+                            </label>
                           </div>
                           <div class="col">
                             <mat-radio-group class="radioInput" formControlName="extra">
@@ -538,14 +1063,30 @@
                               <mat-radio-button value="false">No</mat-radio-button>
                             </mat-radio-group>
                             <span class="required-form-group">*</span>
+                            <span class="icon-incompleto">
+                              <img
+                                class="icon-incompleto--img"
+                                src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido"
+                                *ngIf="
+                                  (cuentaBancaria.get('extra').invalid && cuentaBancaria.get('extra').touched) ||
+                                  (cuentaBancaria.get('extra').invalid && edicion)
+                                "
+                              />
+                            </span>
                           </div>
                         </div>
                       </div>
                       <div class="col-md-4 text-right">
-                        <button mat-button color="warn" type="button" class="btn-eliminar"
+                        <button
+                          mat-button
+                          color="warn"
+                          type="button"
+                          class="btn-eliminar"
                           *ngIf="addressForm.value.fuenteRecursosArray[j].cuentasBancaria.length > 1"
-                          (click)="borrarArray(cuentasBancaria(j).controls, j,3,i)">
-                          <img src="assets/img/icon/menos.svg" alt="Eliminar cuenta bancaria">
+                          (click)="borrarArray(cuentasBancaria(j).controls, j, 3, i)"
+                        >
+                          <img src="assets/img/icon/menos.svg" alt="Eliminar cuenta bancaria" />
                           Eliminar cuenta bancaria
                         </button>
                       </div>
@@ -557,16 +1098,22 @@
           </mat-card>
           <div class="text-right">
             <button mat-button color="warn" type="button" class="btn-eliminar" (click)="agregarCuentaBancaria(j)">
-              <img src="assets/img/icon/mas.svg" alt="Agregar otra cuenta bancaria">
+              <img src="assets/img/icon/mas.svg" alt="Agregar otra cuenta bancaria" />
               Agregar otra cuenta bancaria
             </button>
-            <button mat-button color="warn" type="button" class="btn-eliminar"
-              (click)="borrarArray(fuenteRecursosArray, j,2,0)" *ngIf="addressForm.value.fuenteRecursosArray.length > 1">
-              <img src="assets/img/icon/menos.svg" alt="Eliminar fuente de recursos">
+            <button
+              mat-button
+              color="warn"
+              type="button"
+              class="btn-eliminar"
+              (click)="borrarArray(fuenteRecursosArray, j, 2, 0)"
+              *ngIf="addressForm.value.fuenteRecursosArray.length > 1"
+            >
+              <img src="assets/img/icon/menos.svg" alt="Eliminar fuente de recursos" />
               Eliminar fuente de recursos
             </button>
             <button mat-button color="warn" type="button" class="btn-eliminar" (click)="agregaFuente()">
-              <img src="assets/img/icon/mas.svg" alt="Agregar otra fuente de recursos">
+              <img src="assets/img/icon/mas.svg" alt="Agregar otra fuente de recursos" />
               Agregar otra fuente de recursos
             </button>
           </div>
@@ -575,7 +1122,7 @@
     </div>
     <div class="text-center">
       <button mat-button color="warn" class="btn-guardar" type="submit">
-        <img src="assets/img/icon/guardar.svg" alt="Guardar">
+        <img src="assets/img/icon/guardar.svg" alt="Guardar" />
       </button>
     </div>
   </form>

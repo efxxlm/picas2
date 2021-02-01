@@ -16,10 +16,10 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class TablaCrearSolicitudEspecialComponent implements OnInit {
 
   displayedColumns: string[] = [
-    'fecha',
-    'numero',
-    'valorSolicitado',
-    'estadoSolicitud',
+    'fechaSolicitud',
+    'numeroSolicitud',
+    'valorSolicitud',
+    'estadoSolicitudNombre',
     'estadoRegistro',
     'id'
   ];

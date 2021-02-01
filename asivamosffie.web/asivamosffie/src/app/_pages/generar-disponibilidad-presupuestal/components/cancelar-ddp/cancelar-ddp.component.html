@@ -1,39 +1,62 @@
 <button mat-button mat-dialog-close class="modal--btn-cerrar" [mat-dialog-close]="true">
-    <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
+  <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar" />
 </button>
 
 <div class="text-center">
-    <h1 class="title-menu--h1">
-        Cancelar DDP
-    </h1>
+  <h1 class="title-menu--h1">Cancelar DDP</h1>
 
-    <p class="info-sub-title">
-        <span>Tipo de solicitud:<b>{{tipo}}</b></span>
-        <span>Número de solicitud: <b>{{nSolicitud}}</b></span>
-    </p>
+  <p class="info-sub-title">
+    <span>
+      Tipo de solicitud:
+      <b>{{ tipo }}</b>
+    </span>
+    <span>
+      Número de solicitud:
+      <b>{{ nSolicitud }}</b>
+    </span>
+  </p>
 </div>
 
+<div
+  *ngIf="observaciones.invalid && observaciones.touched"
+  class="animateDown my-1em color-secondaryColor d-flex align-items-center justify-content-center"
+>
+  <img class="icon-incompleto--img mr-05em" src="assets/img/icon/incompleto.svg" alt="este campo es requerido" />
+  Debe ingresar la información en el campo para continuar
+</div>
 <div class="d-flex align-items-center">
-    <div class="text-area-quill">
-        <label for="alcanceParticular" class="text-area-quill--label">Observaciones</label>
-        <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
-            (onContentChanged)="maxLength($event, 2000)" [formControl]="observaciones"></quill-editor>
-    </div>
-    <span class="contador miles" *ngIf="observaciones.value">
-        {{2000 - (textoLimpio(observaciones.value)>2000?2000:textoLimpio(observaciones.value))}}
-    </span>
-    <span class="contador miles" *ngIf="!observaciones.value">
-        2000
-    </span>
+  <div class="text-area-quill" [class.color-secondaryColor]="observaciones.invalid && observaciones.touched">
+    <label for="alcanceParticular" class="text-area-quill--label">Observaciones</label>
+    <quill-editor
+      class="quill-editor-style"
+      [styles]="editorStyle"
+      [modules]="config"
+      required
+      (onContentChanged)="maxLength($event, 2000)"
+      [formControl]="observaciones"
+    ></quill-editor>
+  </div>
+  <span class="contador miles" *ngIf="observaciones.value">
+    {{ 2000 - (textoLimpio(observaciones.value) > 2000 ? 2000 : textoLimpio(observaciones.value)) }}
+  </span>
+  <span class="contador miles" *ngIf="!observaciones.value"> 2000 </span>
+  <span class="icon-incompleto">
+    <img
+      class="icon-incompleto--img"
+      src="assets/img/icon/incompleto.svg"
+      alt="este campo es requerido"
+      *ngIf="observaciones.invalid && observaciones.touched"
+    />
+  </span>
 </div>
 <p class="text-center">
-    <img src="assets/img/icon/sim.svg" alt="información" class="icon">
-    Indique sobre que llave(s), aportante(s) y/o fuente(s) realiza su comentario, sea claro y específico frente a su
-    solicitud
+  <img src="assets/img/icon/sim.svg" alt="información" class="icon" />
+  Indique sobre que llave(s), aportante(s) y/o fuente(s) realiza su comentario, sea claro y específico frente a su
+  solicitud
 </p>
 
 <div class="row justify-content-center mt-1em mb-1em">
-    <button mat-raised-button color="accent" [disabled]="observaciones.invalid" (click)="devolverSolicitud()">
-        Cancelar DDP
-    </button>
+  <button mat-raised-button color="accent" [disabled]="observaciones.invalid" (click)="devolverSolicitud()">
+    Cancelar DDP
+  </button>
 </div>

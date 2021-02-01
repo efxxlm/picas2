@@ -24,24 +24,25 @@ namespace asivamosffie.services.Helpers.Enumerator
         Gestionar_Procesos_Contractuales = 31,
 
         
-       GestionarGarantias= 35,
- 
+       	GestionarGarantias= 35, 
         Generar_Registro_Presupuestal=36,
-        Gestionar_acta_inicio_fase_2 = 42,
-        Registrar_contratos_modificaciones_contractuales = 46,
-
-        Registrar_seguimiento_diario = 53,
-        Verificar_seguimiento_diario = 54,
-
-        Preconstruccion_Fase_1 = 37,   
+        Preconstruccion_Fase_1 = 37,
         Registrar_Requisitos_Tecnicos_Construccion = 41,
-     	Registrar_Programacion_Personal_Obra = 48,
-        Gestionar_controversias_contractuales=47, 
-        Gestionar_procesos_Defensa_Judicial = 52,
+        Gestionar_acta_inicio_fase_2 = 42,
+        Cargar_enlace_monitoreo=43,
+        Verificar_Requisitos_Tecnicos_Construccion = 45,
+        Registrar_contratos_modificaciones_contractuales = 46,
+		Gestionar_controversias_contractuales=47, 
+		Registrar_Programacion_Personal_Obra = 48,
+		Registrar_solicitud_novedad_contractual= 50,
+		Gestionar_procesos_Defensa_Judicial = 52,
+        Registrar_seguimiento_diario = 53,
+        Verificar_seguimiento_diario = 54,      
         Registrar_Avance_Semanal = 55,
         Verificar_Requisitos_Tecnicos_Construccion = 45,
         Registrar_Informe_Final = 64,
-    }
+        Registrar_actuaciones_controversias_contractuales=57,    
+	}
 
     public enum enumeratorAccion
     {

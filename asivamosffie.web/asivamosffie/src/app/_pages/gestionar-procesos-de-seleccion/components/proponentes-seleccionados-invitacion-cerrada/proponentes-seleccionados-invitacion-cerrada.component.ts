@@ -17,6 +17,8 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
   @Input() editar:boolean;
   @Output() guardar: EventEmitter<any> = new EventEmitter(); 
 
+  estaEditando = false;
+
   nombresProponentesList: ProcesoSeleccionProponente[] = [];
   listaDepartamentos: Localizacion[] = [];
   idProponenteExistente: string;
@@ -81,7 +83,7 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
     }
   }
   ngOnInit(){
-    return new Promise( resolve => {
+    return new Promise<void>( resolve => {
 
       forkJoin([
         this.procesoSeleccionService.getProcesoSeleccionProponentes(),
@@ -118,7 +120,7 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
           
         });
 
-        console.log(this.nombresProponentesList)
+        // console.log(this.nombresProponentesList)
         resolve();
       })
     })
@@ -126,11 +128,11 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
 
   changeProponente($event:any){
     
-    console.log(this.addressForm.get('cuantosProponentes').value);
+    // console.log(this.addressForm.get('cuantosProponentes').value);
     //this.procesoSeleccion.procesoSeleccionProponente=[];
-    console.log(this.procesoSeleccion.procesoSeleccionProponente.length);
-    console.log(this.addressForm.get('nombresProponentes').value.length);
-    console.log(this.addressForm.get('nombresProponentes').value);
+    // console.log(this.procesoSeleccion.procesoSeleccionProponente.length);
+    // console.log(this.addressForm.get('nombresProponentes').value.length);
+    // console.log(this.addressForm.get('nombresProponentes').value);
     if(this.addressForm.get('cuantosProponentes').value>0)
     {
       if(this.procesoSeleccion.procesoSeleccionProponente.length>this.addressForm.get('nombresProponentes').value.length)
@@ -141,7 +143,7 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
       && this.addressForm.get('cuantosProponentes').value>this.procesoSeleccion.procesoSeleccionProponente.length)
       {
         this.addressForm.get('nombresProponentes').value.forEach(element => {   
-          console.log(element);     
+          // console.log(element);     
           if ( element != 'Nuevo' ){
             let elemento: ProcesoSeleccionProponente = element;
             if(elemento.procesoSeleccionProponenteId!="0" && this.procesoSeleccion.procesoSeleccionId!=elemento.procesoSeleccionId)
@@ -155,7 +157,7 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
             }
             
             this.idProponenteExistente = element.procesoSeleccionProponenteId; 
-            console.log(this.procesoSeleccion.procesoSeleccionProponente);
+            // console.log(this.procesoSeleccion.procesoSeleccionProponente);
           }
           else{
             this.nuevo=true;
@@ -199,8 +201,8 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
           
           this.procesoSeleccion.procesoSeleccionProponente.forEach(element => {
             //busco 
-            console.log("busco "+element.procesoSeleccionProponenteId+" en");
-            console.log(this.nombresProponentesList);
+            // console.log("busco "+element.procesoSeleccionProponenteId+" en");
+            // console.log(this.nombresProponentesList);
             let nombre = this.nombresProponentesList.filter(x=>x.procesoSeleccionProponenteId==element.procesoSeleccionProponenteId);
             if(nombre.length>0)
             {
@@ -212,17 +214,17 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
               proceso.push(element);
             }       
           });
-          console.log(proceso)
+          // console.log(proceso)
           this.addressForm.get('nombresProponentes').setValue(proceso);
-          console.log(this.addressForm.get('nombresProponentes').value);
+          // console.log(this.addressForm.get('nombresProponentes').value);
         });
   }
 
   onSubmit() {
-    
+    this.estaEditando = true;
     this.addressForm.get('nombresProponentes').setValue( null );
     this.procesoSeleccion.cantidadProponentesInvitados = this.addressForm.get('cuantosProponentes').value;
-    console.log(this.procesoSeleccion);
+    // console.log(this.procesoSeleccion);
     this.guardar.emit(null);
   }
 

@@ -1,98 +1,159 @@
 <div class="container text-center">
   <div class="text-right">
     <a routerLink="/crearProyectoAdministrativo" mat-button color="primary" class="btn-regresar">
-      <img src="assets/img/icon/regresar.svg" alt="Regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar" />
     </a>
   </div>
-  <h1 class="title-menu--h1">
-    Administrativo
-  </h1>
-  <p class="mt1"><b>Proyecto administrativo: {{proyectoAdmin?proyectoAdmin.identificador:0}}</b></p>
+  <h1 class="title-menu--h1">Administrativo</h1>
+  <p class="mt1">
+    <b>Proyecto administrativo: {{ proyectoAdmin ? proyectoAdmin.identificador : 0 }}</b>
+  </p>
   <div *ngIf="proyectoAdmin">
-    <div *ngFor="let aportantes of proyectoAdmin.proyectoAdministrativoAportante;index as a" class="mt-3em">
+    <div
+      
+      class="animateDown my-1em color-secondaryColor d-flex align-items-center justify-content-center"
+    >
+      <img class="icon-incompleto--img mr-05em" src="assets/img/icon/incompleto.svg" alt="este campo es requerido" />
+      Debe ingresar la información en el campo para continuar
+    </div>
+    <div *ngFor="let aportantes of proyectoAdmin.proyectoAdministrativoAportante; index as a" class="mt-3em">
       <mat-card class="shipping-card">
         <mat-card-header class="header-card">
-          <mat-card-title class="header-card--text">
-            Aportante
-          </mat-card-title>
+          <mat-card-title class="header-card--text"> Aportante </mat-card-title>
         </mat-card-header>
         <mat-card-content>
           <div class="row">
             <div class="col-md-12">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left">Aportante</label>
+                  <label class="label-left" [class.color-secondaryColor]="!aportantes.aportanteId && estaEditando">
+                    Aportante
+                  </label>
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
-                    <mat-select required [(ngModel)]="aportantes.aportanteId" (selectionChange)="onchangeFont(a)">                    
+                    <mat-select required [(ngModel)]="aportantes.aportanteId" (selectionChange)="onchangeFont(a)">
                       <mat-option *ngFor="let listado of listadoAportantes" [value]="listado.dominioId">
                         {{ listado.nombre }}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
                 </div>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    *ngIf="!aportantes.aportanteId && estaEditando"
+                  />
+                </span>
               </div>
             </div>
           </div>
         </mat-card-content>
-        <div *ngIf="aportantes.proyectoAdministrativoAportanteId!=0">
+        <div *ngIf="aportantes.proyectoAdministrativoAportanteId != 0">
           <h2 _ngcontent-oba-c177="" class="card-subTitle">Fuentes</h2>
-          <div *ngFor="let fuente of aportantes.aportanteFuenteFinanciacion;index as i" class="mt3">
+          <div *ngFor="let fuente of aportantes.aportanteFuenteFinanciacion; index as i" class="mt3">
             <mat-card-header class="header-card">
-              <mat-card-title class="header-card--text">
-                Fuentes {{i+1}}
-              </mat-card-title>
+              <mat-card-title class="header-card--text"> Fuentes {{ i + 1 }} </mat-card-title>
             </mat-card-header>
             <mat-card-content>
               <div class="row mt-3em">
                 <div class="col-md-12">
                   <div class="row">
                     <div class="pr-1">
-                      <label class="label-left">Fuentes</label>
+                      <label
+                        class="label-left"
+                        [class.color-secondaryColor]="!fuente.fuenteFinanciacionId && estaEditando"
+                      >
+                        Fuentes
+                      </label>
                     </div>
                     <div class="col">
                       <mat-form-field class="select-width">
-                        <mat-select required [(ngModel)]="fuente.fuenteFinanciacionId">                        
+                        <mat-select required [(ngModel)]="fuente.fuenteFinanciacionId">
                           <mat-option *ngFor="let listado of listadoFuentes" [value]="listado.fuenteFinanciacionId">
-                            Número de acuerdo: <b>{{ listado.cofinanciacionDocumento?.numeroAcuerdo }}</b> Tipo: <b>{{ listado.fuenteRecursosString }}</b>
+                            Número de acuerdo: <b>{{ listado.cofinanciacionDocumento?.numeroAcuerdo }}</b> Tipo:
+                            <b>{{ listado.fuenteRecursosString }}</b>
                           </mat-option>
                         </mat-select>
                       </mat-form-field>
                     </div>
+                    <span class="icon-incompleto">
+                      <img
+                        class="icon-incompleto--img"
+                        src="assets/img/icon/incompleto.svg"
+                        alt="este campo es requerido"
+                        *ngIf="!fuente.fuenteFinanciacionId && estaEditando"
+                      />
+                    </span>
                   </div>
                 </div>
                 <div class="col-md-12">
                   <div class="row">
                     <div class="pr-1">
-                      <label class="label-left">Valor de la fuente</label>
+                      <label class="label-left" [class.color-secondaryColor]="!fuente.valorFuente && estaEditando">
+                        Valor de la fuente
+                      </label>
                     </div>
                     <div class="col d-flex">
                       <mat-form-field class="full-width">
-                        <input matInput [(ngModel)]="fuente.valorFuente" id="numAportes" maxlength="20" min="1"
-                          max="99999999999999999999" required
-                          currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
-                           (keypress)="blockNumber($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                        <input
+                          matInput
+                          [(ngModel)]="fuente.valorFuente"
+                          id="numAportes"
+                          maxlength="20"
+                          min="1"
+                          max="99999999999999999999"
+                          required
+                          currencyMask
+                          [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
+                          (keypress)="blockNumber($event)"
+                          onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                        />
                       </mat-form-field>
-                      <span class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
-                      matTooltipClass="info-tooltip">{{20 - (fuente.valorFuente?fuente.valorFuente.toString().length:0)}}</span>
+                      <span
+                        class="contador"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Valor en ($) Pesos colombianos"
+                        matTooltipClass="info-tooltip"
+                      >
+                        {{ 20 - (fuente.valorFuente ? fuente.valorFuente.toString().length : 0) }}
+                      </span>
+                      <span class="icon-incompleto">
+                        <img
+                          class="icon-incompleto--img"
+                          src="assets/img/icon/incompleto.svg"
+                          alt="este campo es requerido"
+                          *ngIf="!fuente.valorFuente && estaEditando"
+                        />
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
               <div class="row">
-  
                 <div class="col text-right">
-                  <button mat-button color="warn" type="button"
-                   *ngIf="aportantes.aportanteFuenteFinanciacion.length>1 && bitPuedoEditar"
-                    class="btn-eliminar" (click)="deleteFont(fuente,aportantes)">
-                    <img src="assets/img/icon/menos.svg" alt="Eliminar otra fuente">
+                  <button
+                    mat-button
+                    color="warn"
+                    type="button"
+                    *ngIf="aportantes.aportanteFuenteFinanciacion.length > 1 && bitPuedoEditar"
+                    class="btn-eliminar"
+                    (click)="deleteFont(fuente, aportantes)"
+                  >
+                    <img src="assets/img/icon/menos.svg" alt="Eliminar otra fuente" />
                     Eliminar fuente
-                  </button>  
-                  <button *ngIf="aportantes.aportanteFuenteFinanciacion.length==i+1 
-                   && bitPuedoEditar" mat-button color="warn" 
-                  type="button" class="btn-eliminar" (click)="addFont(a)">
-                    <img src="assets/img/icon/mas.svg" alt="Agregar otra fuente">
+                  </button>
+                  <button
+                    *ngIf="aportantes.aportanteFuenteFinanciacion.length == i + 1 && bitPuedoEditar"
+                    mat-button
+                    color="warn"
+                    type="button"
+                    class="btn-eliminar"
+                    (click)="addFont(a)"
+                  >
+                    <img src="assets/img/icon/mas.svg" alt="Agregar otra fuente" />
                     Agregar otra fuente
                   </button>
                 </div>
@@ -103,10 +164,15 @@
       </mat-card>
       <div class="row">
         <div class="col text-right">
-          <button mat-button color="warn" type="button" 
-          *ngIf="proyectoAdmin.proyectoAdministrativoAportante.length>1 && bitPuedoEditar" class="btn-eliminar"
-            (click)="deleteAportant(aportantes)">
-            <img src="assets/img/icon/menos.svg" alt="Eliminar otro aportante">
+          <button
+            mat-button
+            color="warn"
+            type="button"
+            *ngIf="proyectoAdmin.proyectoAdministrativoAportante.length > 1 && bitPuedoEditar"
+            class="btn-eliminar"
+            (click)="deleteAportant(aportantes)"
+          >
+            <img src="assets/img/icon/menos.svg" alt="Eliminar otro aportante" />
             Eliminar aportante
           </button>
           <!-- lo quito porque no deben haber otro aportante diferente a FFIe en proyectos administrativos
@@ -119,9 +185,8 @@
       </div>
     </div>
     <div class="text-center animatedOpacity">
-      <button mat-button color="warn" class="btn-guardar" *ngIf="bitPuedoEditar"
-         type="button" (click)="onSubmit()">
-        <img src="assets/img/icon/guardar.svg" alt="Guardar">
+      <button mat-button color="warn" class="btn-guardar" *ngIf="bitPuedoEditar" type="button" (click)="onSubmit()">
+        <img src="assets/img/icon/guardar.svg" alt="Guardar" />
       </button>
     </div>
   </div>

@@ -17,6 +17,8 @@ export class FormProposicionesYVariosComponent implements OnInit {
     compromisos: this.fb.array([])
   });
 
+  estaEditando = false;
+
   estadosArray = [
     { name: 'estado 1', value: '1' },
     { name: 'estado 2', value: '2' },
@@ -59,8 +61,8 @@ export class FormProposicionesYVariosComponent implements OnInit {
 
   textoLimpio(texto: string) {
     let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
 
     if ( texto ){
       const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
@@ -111,6 +113,7 @@ export class FormProposicionesYVariosComponent implements OnInit {
 
   onSubmit() {
     alert('Thanks!');
+    this.estaEditando = true
   }
 
 }

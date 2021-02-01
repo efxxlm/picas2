@@ -37,6 +37,8 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  observaciones: any[];
+  estaEditando = false;
 
   constructor(
     private fb: FormBuilder,
@@ -71,7 +73,7 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
         this.addressForm.get('objeto').setValue(this.objetoDisponibilidad.objeto);
         this.addressForm.get('plazoMeses').setValue(this.objetoDisponibilidad.plazoMeses);
         this.addressForm.get('plazoDias').setValue(this.objetoDisponibilidad.plazoDias);
-
+        this.observaciones=response.disponibilidadPresupuestalObservacion;
         this.projectContractingService.getContratacionByContratacionId( this.objetoDisponibilidad.contratacionId )
         .subscribe(
           contratacion => {
@@ -160,8 +162,8 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
 
   textoLimpio(texto: string) {
     let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
 
     if ( texto ){
       const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
@@ -187,7 +189,7 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
   }
 
   onSubmit() {
-
+    this.estaEditando = true;
     if ( this.addressForm.valid ){
 
     this.objetoDisponibilidad.objeto = this.addressForm.get('objeto').value;

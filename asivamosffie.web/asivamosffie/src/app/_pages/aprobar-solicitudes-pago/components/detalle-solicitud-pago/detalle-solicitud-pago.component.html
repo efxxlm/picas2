@@ -1,0 +1,216 @@
+<div class="table-responsive">
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+        <ng-container matColumnDef="faseContrato">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Fase del contrato </th>
+            <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.faseContrato }}</b> </td>
+        </ng-container>
+        <ng-container matColumnDef="pagosRealizados">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Pagos Realizados </th>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.pagosRealizados }} </td>
+        </ng-container>
+        <ng-container matColumnDef="valorFacturado">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor facturado </th>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.valorFacturado }} </td>
+        </ng-container>
+        <ng-container matColumnDef="porcentajeFacturado">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Porcentaje facturado </th>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.porcentajeFacturado }} </td>
+        </ng-container>
+        <ng-container matColumnDef="saldoPorPagar">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Saldo por pagar </th>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.saldoPorPagar }} </td>
+        </ng-container>
+        <ng-container matColumnDef="porcentajePorPagar">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Porcentaje por pagar </th>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.porcentajePorPagar }} </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <!--<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>-->
+</div>
+<mat-card class="shipping-card var-main-gris">
+    <mat-card-header class="header-card header-card--margin">
+        <mat-card-title class="header-card--text textoGris">
+            Registro
+        </mat-card-title>
+    </mat-card-header>
+    <mat-card-content style="text-align: left;">
+        <p><strong>Fecha de solicitud:</strong> 01/10/2020</p>
+        <p><strong>Número de radicado:</strong> RAD000056</p>
+        <p><strong>Fase del contrato:</strong> Fase 1 - Preconstrucción</p>
+    </mat-card-content>
+</mat-card>
+<mat-card class="shipping-card var-main-gris">
+    <mat-card-header class="header-card header-card--margin">
+        <mat-card-title class="header-card--text textoGris">
+            Observación de la supervisión
+        </mat-card-title>
+    </mat-card-header>
+    <mat-card-content style="text-align: left;">
+        <p><b>07/10/2020</b></p>
+        <p><b>¿Desde la supervisión tiene observaciones al registro de la solicitud?:</b> No</p>
+    </mat-card-content>
+</mat-card>
+<mat-accordion>
+    <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title ">
+                Fase 1 - Preconstrucción
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-accordion>
+            <mat-expansion-panel class="expansion-style sub-expansion-black">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title ">
+                        Criterios de pago incluidos en la factura
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <p class="info-sub-title supportBlack">
+                    <span><b>Monto máximo por pagar en esta factura:</b> $15.000.000</span>
+                    <span><b>Monto pendiente por pagar en la fase:</b> $30.000.000</span>
+                </p>
+                <p><b>Criterio de pago:</b> Estudios y diseños interventoria hasta 90%, Criterio 3</p>
+                <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;">
+                    <mat-card-header class="header-card header-card--margin">
+                        <mat-card-title class="header-card--text textoGris">
+                            Estudios y diseños interventoria hasta 90%
+                        </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content style="text-align: left;">
+                        <p><strong>Tipo de pago:</strong> Costo variabl3</p>
+                        <p><strong>Concepto de pago para el criterio:</strong> 718100002002- DEMOLICIONES</p>
+                        <p><strong>Valor facturado al concepto:</strong> $8.000.000</p>
+                    </mat-card-content>
+                </mat-card>
+                <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;">
+                    <mat-card-header class="header-card header-card--margin">
+                        <mat-card-title class="header-card--text textoGris">
+                            Criterio 3
+                        </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content style="text-align: left;">
+                        <p><strong>Tipo de pago:</strong> Tipo de pago 3</p>
+                        <p><strong>Concepto de pago para el criterio:</strong> 718100003001-CIMENTACIÓN</p>
+                        <p><strong>Valor facturado al concepto:</strong> $7.000.000</p>
+                    </mat-card-content>
+                </mat-card>
+                <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;">
+                    <mat-card-header class="header-card header-card--margin">
+                        <mat-card-title class="header-card--text textoGris">
+                            Observación de la supervisión
+                        </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content style="text-align: left;">
+                        <p><b>07/10/2020</b></p>
+                        <p><b>¿Desde la supervisión tiene observaciones a los criterios de pago incluidos en la factura?:</b> No</p>
+                    </mat-card-content>
+                </mat-card>
+            </mat-expansion-panel>
+            <mat-expansion-panel class="expansion-style sub-expansion-black">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title ">
+                        Detalle factura para proyectos asociados
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+               <app-view-detll-fact-proc-asociados></app-view-detll-fact-proc-asociados>
+            </mat-expansion-panel>
+            <mat-expansion-panel class="expansion-style sub-expansion-black">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title ">
+                        Datos de la factura
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-card class="shipping-card var-main-gris">
+                    <mat-card-header class="header-card header-card--margin">
+                        <mat-card-title class="header-card--text textoGris">
+                            Datos
+                        </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content style="text-align: left;">
+                        <h2 class="card-subTitle">Descripción de la factura</h2>
+                        <p><strong>Número de factura:</strong> FAC00456</p>
+                        <p><strong>Fecha de factura:</strong> 05/10/2020</p>
+                        <p><strong>Valor facturado:</strong> $15.000.000</p>
+                    </mat-card-content>
+                </mat-card>
+                <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;">
+                    <mat-card-header class="header-card header-card--margin">
+                        <mat-card-title class="header-card--text textoGris">
+                            Observación de la supervisión
+                        </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content style="text-align: left;">
+                        <p><b>07/10/2020</b></p>
+                        <p><b>¿Desde la supervisión tiene observaciones a los datos de la factura?:</b> Sí</p>
+                        <p>La factura debe ser la FAC00450</p>
+                    </mat-card-content>
+                </mat-card>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </mat-expansion-panel>
+</mat-accordion>
+<mat-accordion>
+    <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title ">
+                Descuentos Dirección Técnica
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <p style="text-align: center;"><strong>¿Aplican descuentos?:</strong> Sí</p>
+        <p style="text-align: center;"><strong>¿Cuántos descuentos se aplican sobre la factura?:</strong> 1</p>
+        <p style="text-align: center;"><strong>Valor a pagar después de descuentos:</strong> $14.940.000</p>
+        <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;">
+            <mat-card-header class="header-card header-card--margin">
+                <mat-card-title class="header-card--text textoGris">
+                    Descuento 1
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content style="text-align: left;">
+                <p><strong>Tipo de descuento:</strong> 4 x 1.000</p>
+                <p><strong>Valor del descuento:</strong> $60.000</p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;">
+            <mat-card-header class="header-card header-card--margin">
+                <mat-card-title class="header-card--text textoGris">
+                    Observación de la supervisión
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content style="text-align: left;">
+                <p><b>07/10/2020</b></p>
+                <p><b>¿Desde la supervisión tiene observaciones a los descuentos de la Dirección Técnica?:</b> No</p>
+            </mat-card-content>
+        </mat-card>
+    </mat-expansion-panel>
+</mat-accordion>
+<mat-accordion>
+    <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title ">
+                Soporte de la solicitud
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;">
+            <mat-card-header class="header-card header-card--margin">
+                <mat-card-title class="header-card--text textoGris">
+                    Soporte de la solicitud de pago
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content style="text-align: left;">
+                <p><strong>URL con soporte:</strong> https://drive.google.com/drive/registrofactura/solicituddepago0001</p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;">
+            <mat-card-header class="header-card header-card--margin">
+                <mat-card-title class="header-card--text textoGris">
+                    Observación de la supervisión
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content style="text-align: left;">
+                <p><b>07/10/2020</b></p>
+                <p><b>¿Desde la supervisión tiene observaciones a los descuentos de la Dirección Técnica?:</b> No</p>
+            </mat-card-content>
+        </mat-card>
+    </mat-expansion-panel>
+</mat-accordion>

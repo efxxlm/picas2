@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { forkJoin, timer } from 'rxjs';
@@ -22,6 +22,8 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   @Input() procesoSeleccion: ProcesoSeleccion;
   @Input() editar:boolean;
   @Output() guardar: EventEmitter<any> = new EventEmitter();
+
+  estaEditando = false;
 
   listaTipoIntervencion: Dominio[];
   listaTipoAlcance: Dominio[];
@@ -55,11 +57,27 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
               public dialog: MatDialog,
               private procesoSeleccionService: ProcesoSeleccionService,    
   ) { }
+  noGuardado=true;
+  ngOnDestroy(): void {
+    if ( this.noGuardado===true && this.addressForm.dirty) {
+      let dialogRef =this.dialog.open(ModalDialogComponent, {
+        width: '28em',
+        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
+      });   
+      dialogRef.afterClosed().subscribe(result => {
+        // console.log(`Dialog result: ${result}`);
+        if(result === true)
+        {
+            this.onSubmit();          
+        }           
+      });
+    }
+  };
 
   ngOnInit() {
     
     this.addressForm = this.crearFormulario();
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       forkJoin([
 
         this.commonService.listaTipoIntervencion(),
@@ -104,7 +122,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   }
 
   maxLength(e: any, n: number) {
-    console.log(e.editor.getLength()+" "+n);
+    
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n, e.editor.getLength());
     }
@@ -137,7 +155,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
 
   CambioNumeroMeses(i:number)
   {
-    console.log(this.addressForm.controls.grupos.value[i]);
+    // console.log(this.addressForm.controls.grupos.value[i]);
     if(this.addressForm.controls.grupos.value[i].plazoMeses!="")
     {
       if(this.addressForm.controls.grupos.value[i].plazoMeses<=0)
@@ -202,7 +220,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
     
     borrarForm.removeAt(i);
     //si tiene id lo envio al servicio de eliminar
-    console.log(borrarForm);
+    // console.log(borrarForm);
 
     if(borrarForm.value[0].procesoSeleccionGrupoId>0)
     {
@@ -237,7 +255,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   }
 
   borrarCronograma( i: number ){    
-    console.log(this.cronogramas[i].value);
+    // console.log(this.cronogramas[i].value);
     if(this.cronogramas[i].value.procesoSeleccionCronogramaId>0)
     {
       this.procesoSeleccionService.deleteProcesoSeleccionActividadesByID(this.cronogramas[i].value.procesoSeleccionCronogramaId).subscribe();
@@ -301,8 +319,8 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
 
   textoLimpio(texto: string) {
     let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
 
     if ( texto ){
       const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
@@ -321,7 +339,8 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.addressForm.value);
+    // console.log(this.addressForm.value);+
+    this.estaEditando = true;
 
     const listaGrupos = this.addressForm.get('grupos') as FormArray;
     const listaCronogramas = this.addressForm.get('cronogramas') as FormArray;
@@ -378,7 +397,8 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
       posicion++;
     });
 
-    console.log(this.procesoSeleccion);
+    // console.log(this.procesoSeleccion);
+    this.noGuardado=false;
     this.guardar.emit(null);
   }
 
@@ -446,39 +466,86 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   nosuperarlimite(i:number,caso:number)
   {
     let limite=this.listaLimite[0].nombre.split(",");
-    console.log(limite[1]);
+    // console.log(limite[1]);
     let maximo=parseInt(limite[1])*parseInt(this.listaSalarioMinimo[0].descripcion);
     let minimo=parseInt(limite[0])*parseInt(this.listaSalarioMinimo[0].descripcion);
     const listaGrupo = this.addressForm.get('grupos') as FormArray;
     if(caso==1)
     {
-      if(this.addressForm.controls.grupos.value[i].valor>maximo
-        ||
-        this.addressForm.controls.grupos.value[i].valor<minimo)
-      {        
-        
-        console.log(listaGrupo.controls[i]);
-        listaGrupo.controls[i].get("valor").setValue(0);
-        this.openDialog("","<b>El valor de salarios mínimos no corresponde con el tipo de proceso de selección. Verifique por favor.</b>");
-      }      
+      //ahora debo tener en cuenta la sumatoria de los grupos
+      let valor=0;
+      let cantidadconvalor=0;
+      let cantidadGrupos=0;
+      this.addressForm.controls.grupos.value.forEach(element => {
+        valor+=element.valor;
+        if(element.valor>0){cantidadconvalor++;}
+        cantidadGrupos++;
+      });
+      console.log(valor);
+      //antes de evaluar esto debo saber que todos los valores fueron ingresados
+      console.log(cantidadGrupos);
+      if(cantidadconvalor==cantidadGrupos)
+      {
+        if(valor>maximo
+          ||
+          valor<minimo)
+        {        
+          console.log(listaGrupo.controls[i]);
+          listaGrupo.controls[i].get("valor").setValue(0);
+          this.openDialog("","<b>El valor de salarios mínimos no corresponde con el tipo de proceso de selección. Verifique por favor.</b>");
+        } 
+      }
+           
     }
     else if(caso==2)
     {
-      if(this.addressForm.controls.grupos.value[i].valorMaximoCategoria>maximo
-        ||
-        this.addressForm.controls.grupos.value[i].valorMaximoCategoria<minimo)
+      //ahora debo tener en cuenta la sumatoria de los grupos
+      let valor=0;
+      
+      let cantidadconvalor=0;
+      let cantidadGrupos=0;
+      this.addressForm.controls.grupos.value.forEach(element => {
+        valor+=element.valorMaximoCategoria;
+        if(element.valor>0){cantidadconvalor++;}
+        cantidadGrupos++;
+      });
+      console.log(valor);
+      //antes de evaluar esto debo saber que todos los valores fueron ingresados
+      console.log(cantidadGrupos);
+      if(cantidadconvalor==cantidadGrupos)
       {
-        listaGrupo.controls[i].get("valorMaximoCategoria").setValue(0);
-        this.openDialog("","<b>El valor de salarios mínimos no corresponde con el tipo de proceso de selección. Verifique por favor.</b>");
+        console.log(valor);
+        if(valor>maximo
+          ||
+          valor<minimo)
+        {
+          listaGrupo.controls[i].get("valorMaximoCategoria").setValue(0);
+          this.openDialog("","<b>El valor de salarios mínimos no corresponde con el tipo de proceso de selección. Verifique por favor.</b>");
+        }
       }
     }
     else{
-      if(this.addressForm.controls.grupos.value[i].valorMinimoCategoria > maximo
-        ||
-        this.addressForm.controls.grupos.value[i].valorMinimoCategoria < minimo)
+      let valor=0;      
+      let cantidadconvalor=0;
+      let cantidadGrupos=0;
+      this.addressForm.controls.grupos.value.forEach(element => {
+        valor+=element.valorMaximoCategoria;
+        if(element.valor>0){cantidadconvalor++;}
+        cantidadGrupos++;
+      });
+      console.log(valor);
+      //antes de evaluar esto debo saber que todos los valores fueron ingresados
+      console.log(cantidadGrupos);
+      if(cantidadconvalor==cantidadGrupos)
       {
-        listaGrupo.controls[i].get("valorMinimoCategoria").setValue(0);
-        this.openDialog("","<b>El valor de salarios mínimos no corresponde con el tipo de proceso de selección. Verifique por favor.</b>");
+        console.log(valor);
+        if(valor > maximo
+          ||
+          valor < minimo)
+        {
+          listaGrupo.controls[i].get("valorMinimoCategoria").setValue(0);
+          this.openDialog("","<b>El valor de salarios mínimos no corresponde con el tipo de proceso de selección. Verifique por favor.</b>");
+        }
       }
     }
   }

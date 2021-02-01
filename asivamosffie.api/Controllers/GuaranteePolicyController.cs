@@ -113,8 +113,7 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                asivamosffie.model.APIModels.AppSettingsService _appSettingsService;
-
+               AppSettingsService _appSettingsService; 
                 _appSettingsService = toAppSettingsService(_settings);
                 contratoPoliza.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _guaranteePolicy.InsertContratoPoliza(contratoPoliza, _appSettingsService);
@@ -209,9 +208,16 @@ namespace asivamosffie.api.Controllers
         {
             var respuesta = await _guaranteePolicy.GetContratoPolizaByIdContratoPolizaId(pContratoPolizaId);
             return respuesta;
+        }        
+
+        [Route("ConsultarRegistroCompletoCumple")]
+        [HttpGet]        
+        public async Task<bool> ConsultarRegistroCompletoCumple(int pContratoPolizaId)
+        {
+            var respuesta = await _guaranteePolicy.ConsultarRegistroCompletoCumple(pContratoPolizaId);
+            return respuesta;
         }
 
-        
         [Route("GetContratoPolizaByIdContratoId")]
         [HttpGet]
         //public async Task<List<ContratoPoliza>> GetContratoPolizaByIdContratoPolizaId(int pContratoId)

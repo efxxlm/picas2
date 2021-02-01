@@ -479,8 +479,12 @@ namespace asivamosffie.services
                     case ConstanCodigoVariablesPlaceHolders.NUMERO_CONTRATO:
                         try
                         {
+                            string NumeroContrato = string.Empty;
+                            if (pContratacion?.Contrato.Count() > 0)
+                                NumeroContrato = pContratacion?.Contrato?.FirstOrDefault().NumeroContrato;
+
                             pPlantilla = pPlantilla
-                                          .Replace(placeholderDominio.Nombre, pContratacion.Contrato.FirstOrDefault().NumeroContrato);
+                                          .Replace(placeholderDominio.Nombre, NumeroContrato);
 
                         }
                         catch (Exception)
@@ -578,13 +582,19 @@ namespace asivamosffie.services
             return pPlantilla;
         }
 
+        public async Task<List<VListaContratacionModificacionContractual>> GetListSesionComiteSolicitudV2()
+        { 
+            return await _context.VListaContratacionModificacionContractual.OrderByDescending(v => v.SesionComiteSolicitudId).ToListAsync(); 
+        }
+
         public async Task<List<SesionComiteSolicitud>> GetListSesionComiteSolicitud()
         {
             try
             {
                 List<ComiteTecnico> ListComiteTecnicos = _context.ComiteTecnico
                     .Where(r => (bool)r.EsComiteFiduciario && r.EstadoActaCodigo == ConstantCodigoActas.Aprobada && !(bool)r.Eliminado)
-                    .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario).ToList();
+                    .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
+                    .Include(r=> r.SesionComiteSolicitudComiteTecnico).ToList();
 
                 ////ListComiteTecnicos = ListComiteTecnicos.Where(r => r.EstadoActaCodigo == ConstantCodigoActas.Aprobada).ToList();
 
@@ -605,15 +615,11 @@ namespace asivamosffie.services
                         {
                             case ConstanCodigoTipoSolicitud.Contratacion:
 
-                                Contratacion contratacion = await GetContratacionByContratacionId(sesionComiteSolicitud.SolicitudId);
-
-                                if (contratacion.DisponibilidadPresupuestal.Count() == 0)
-                                {
-                                    break;
-                                }
-                                //Jmartinez Si llegan dos Disponibilidad presupuestal error
-
-                                if (contratacion.DisponibilidadPresupuestal.Count() > 1)
+                                //    Contratacion contratacion = await GetContratacionByContratacionId(sesionComiteSolicitud.SolicitudId);
+                                Contratacion contratacion = _context.Contratacion
+                                    .Where(r => r.ContratacionId == sesionComiteSolicitud.SolicitudId)
+                                    .Include(r => r.DisponibilidadPresupuestal).FirstOrDefault();
+                                if (contratacion?.DisponibilidadPresupuestal?.Count() == 0 || contratacion?.DisponibilidadPresupuestal?.Count() > 1 || contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().NumeroDdp == null || string.IsNullOrEmpty(contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().NumeroDdp))
                                 {
                                     break;
                                 }
@@ -709,7 +715,7 @@ namespace asivamosffie.services
                      .FirstOrDefaultAsync();
 
                 List<SesionComiteSolicitud> sesionComiteSolicitud = _context.SesionComiteSolicitud
-                     .Where(r => r.SolicitudId == contratacion.ContratacionId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
+                     .Where(r => r.SolicitudId == contratacion.ContratacionId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion && !(bool)r.Eliminado)
                      .Include(r => r.ComiteTecnico)
                      .Include(r => r.ComiteTecnicoFiduciario)
                      .ToList();

@@ -1,146 +1,310 @@
+<div
+  *ngIf="dataFormulario.invalid && dataFormulario.touched"
+  class="animateDown my-1em color-secondaryColor d-flex align-items-center justify-content-center"
+>
+  <img class="icon-incompleto--img mr-05em" src="assets/img/icon/incompleto.svg" alt="este campo es requerido" />
+  Debe ingresar la información en el campo para continuar
+</div>
 <form autocomplete="off" [formGroup]="dataFormulario" (ngSubmit)="guardar()">
   <div class="container">
     <div class="d-flex mt-1em">
-        <label class="mr-label" for="numeroContrato" class="label-left"><b>Número de otrosí</b></label>
+      <label
+        class="label-left"
+        for="numeroOtroSi"
+        [class.color-secondaryColor]="
+          (dataFormulario.get('numeroOtroSi').invalid && dataFormulario.get('numeroOtroSi').touched) ||
+          (dataFormulario.get('numeroOtroSi').invalid && estaEditando)
+        "
+      >
+        <b> Número de otrosí </b>
+      </label>
       <div class="col d-flex">
         <mat-form-field class="w-38">
-          <input matInput type="text" maxlength="10" formControlName="numeroOtroSi">
+          <input matInput type="text" maxlength="10" formControlName="numeroOtroSi" />
         </mat-form-field>
-        <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{10 - dataFormulario.get( 'numeroOtroSi' ).value.length}}</span>
+        <span
+          class="contador"
+          [matTooltipPosition]="'above'"
+          matTooltip="Campo alfanumérico"
+          matTooltipClass="info-tooltip"
+        >
+          {{ 10 - dataFormulario.get('numeroOtroSi').value.length }}
+        </span>
+        <span class="icon-incompleto">
+          <img
+            class="icon-incompleto--img"
+            src="assets/img/icon/incompleto.svg"
+            alt="este campo es requerido"
+            *ngIf="
+              (dataFormulario.get('numeroOtroSi').invalid && dataFormulario.get('numeroOtroSi').touched) ||
+              (dataFormulario.get('numeroOtroSi').invalid && estaEditando)
+            "
+          />
+        </span>
       </div>
     </div>
 
-    <div class="d-flex mt-1em" *ngIf="dataFormulario.get( 'numeroOtroSi' ).value.length > 0">
-      <label class="mr-label"><b>Fecha de envío para firma del contratista</b></label>
+    <div class="d-flex mt-1em" *ngIf="dataFormulario.get('numeroOtroSi').value.length > 0">
+      <label
+        class="label-left"
+        for="fechaEnvioParaFirmaContratista"
+        [class.color-secondaryColor]="
+          (dataFormulario.get('fechaEnvioParaFirmaContratista').invalid &&
+            dataFormulario.get('fechaEnvioParaFirmaContratista').touched) ||
+          (dataFormulario.get('fechaEnvioParaFirmaContratista').invalid && estaEditando)
+        "
+      >
+        <b>Fecha de envío para firma del contratista</b>
+      </label>
       <mat-form-field class="w-21">
-        <input  matInput
-                [matDatepicker]="pickerFechaEnvioTramite"
-                formControlName="fechaEnvioParaFirmaContratista"
-                placeholder="DD/MM/AAAA" readonly
-                (click)="pickerFechaEnvioTramite.open()">
+        <input
+          matInput
+          [matDatepicker]="pickerFechaEnvioTramite"
+          formControlName="fechaEnvioParaFirmaContratista"
+          placeholder="DD/MM/AAAA"
+          readonly
+          (click)="pickerFechaEnvioTramite.open()"
+        />
         <mat-datepicker #pickerFechaEnvioTramite></mat-datepicker>
       </mat-form-field>
-      <button mat-button
-              color="primary"
-              type="button"
-              (click)="pickerFechaEnvioTramite.open()"
-              class="btn-calendario">
-        <img  class="mr-bottom-1"
-              src="assets/img/icon/calendarioCirculo.svg"
-              alt="Abrir Calendario">
+      <button mat-button color="primary" type="button" (click)="pickerFechaEnvioTramite.open()" class="btn-calendario">
+        <img class="mr-bottom-1" src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
       </button>
+      <span class="icon-incompleto">
+        <img
+          class="icon-incompleto--img"
+          src="assets/img/icon/incompleto.svg"
+          alt="este campo es requerido"
+          *ngIf="
+            (dataFormulario.get('fechaEnvioParaFirmaContratista').invalid &&
+              dataFormulario.get('fechaEnvioParaFirmaContratista').touched) ||
+            (dataFormulario.get('fechaEnvioParaFirmaContratista').invalid && estaEditando)
+          "
+        />
+      </span>
     </div>
 
-    <div class="d-flex mt-1em" *ngIf="dataFormulario.get( 'fechaEnvioParaFirmaContratista' ).value !== null">
-      <label class="mr-label"><b>Fecha de firma por parte del contratista</b></label>
+    <div class="d-flex mt-1em" *ngIf="dataFormulario.get('fechaEnvioParaFirmaContratista').value !== null">
+      <label
+        class="label-left"
+        for="fechaFirmaPorParteContratista"
+        [class.color-secondaryColor]="
+          (dataFormulario.get('fechaFirmaPorParteContratista').invalid &&
+            dataFormulario.get('fechaFirmaPorParteContratista').touched) ||
+          (dataFormulario.get('fechaFirmaPorParteContratista').invalid && estaEditando)
+        "
+      >
+        <b> Fecha de firma por parte del contratista </b>
+      </label>
       <mat-form-field class="w-22">
-        <input  matInput
-                [matDatepicker]="pickerFechaFirmaContratista"
-                formControlName="fechaFirmaPorParteContratista"
-                placeholder="DD/MM/AAAA"readonly
-                (click)="pickerFechaFirmaContratista.open()">
+        <input
+          matInput
+          [matDatepicker]="pickerFechaFirmaContratista"
+          formControlName="fechaFirmaPorParteContratista"
+          placeholder="DD/MM/AAAA"
+          readonly
+          (click)="pickerFechaFirmaContratista.open()"
+        />
         <mat-datepicker #pickerFechaFirmaContratista></mat-datepicker>
       </mat-form-field>
-      <button mat-button
-              color="primary"
-              type="button"
-              (click)="pickerFechaFirmaContratista.open()"
-              class="btn-calendario">
-        <img  class="mr-bottom-1"
-              src="assets/img/icon/calendarioCirculo.svg"
-              alt="Abrir Calendario">
+      <button
+        mat-button
+        color="primary"
+        type="button"
+        (click)="pickerFechaFirmaContratista.open()"
+        class="btn-calendario"
+      >
+        <img class="mr-bottom-1" src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
       </button>
+      <span class="icon-incompleto">
+        <img
+          class="icon-incompleto--img"
+          src="assets/img/icon/incompleto.svg"
+          alt="este campo es requerido"
+          *ngIf="
+            (dataFormulario.get('fechaFirmaPorParteContratista').invalid &&
+              dataFormulario.get('fechaFirmaPorParteContratista').touched) ||
+            (dataFormulario.get('fechaFirmaPorParteContratista').invalid && estaEditando)
+          "
+        />
+      </span>
     </div>
 
-    <div class="d-flex mt-1em" *ngIf="dataFormulario.get( 'fechaFirmaPorParteContratista' ).value !== null">
-      <label class="mr-label"><b>Fecha de envío para la firma de la fiduciaria</b></label>
+    <div class="d-flex mt-1em" *ngIf="dataFormulario.get('fechaFirmaPorParteContratista').value !== null">
+      <label
+        class="label-left"
+        for="fechaEnvioParaFirmaFiduciaria"
+        [class.color-secondaryColor]="
+          (dataFormulario.get('fechaEnvioParaFirmaFiduciaria').invalid &&
+            dataFormulario.get('fechaEnvioParaFirmaFiduciaria').touched) ||
+          (dataFormulario.get('fechaEnvioParaFirmaFiduciaria').invalid && estaEditando)
+        "
+      >
+        <b> Fecha de envío para la firma de la fiduciaria </b>
+      </label>
       <mat-form-field class="w-20">
-        <input  matInput
-                [matDatepicker]="pickerFechaEnvioFirmaFiduciaria"
-                formControlName="fechaEnvioParaFirmaFiduciaria"
-                placeholder="DD/MM/AAAA" readonly
-                (click)="pickerFechaEnvioFirmaFiduciaria.open()">
+        <input
+          matInput
+          [matDatepicker]="pickerFechaEnvioFirmaFiduciaria"
+          formControlName="fechaEnvioParaFirmaFiduciaria"
+          placeholder="DD/MM/AAAA"
+          readonly
+          (click)="pickerFechaEnvioFirmaFiduciaria.open()"
+        />
         <mat-datepicker #pickerFechaEnvioFirmaFiduciaria></mat-datepicker>
       </mat-form-field>
-      <button mat-button
-              color="primary"
-              type="button"
-              (click)="pickerFechaEnvioFirmaFiduciaria.open()"
-              class="btn-calendario">
-        <img  class="mr-bottom-1"
-              src="assets/img/icon/calendarioCirculo.svg"
-              alt="Abrir Calendario">
+      <button
+        mat-button
+        color="primary"
+        type="button"
+        (click)="pickerFechaEnvioFirmaFiduciaria.open()"
+        class="btn-calendario"
+      >
+        <img class="mr-bottom-1" src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
       </button>
+      <span class="icon-incompleto">
+        <img
+          class="icon-incompleto--img"
+          src="assets/img/icon/incompleto.svg"
+          alt="este campo es requerido"
+          *ngIf="
+            (dataFormulario.get('fechaEnvioParaFirmaFiduciaria').invalid &&
+              dataFormulario.get('fechaEnvioParaFirmaFiduciaria').touched) ||
+            (dataFormulario.get('fechaEnvioParaFirmaFiduciaria').invalid && estaEditando)
+          "
+        />
+      </span>
     </div>
 
-    <div class="d-flex mt-1em" *ngIf="dataFormulario.get( 'fechaEnvioParaFirmaFiduciaria' ).value !== null">
-      <label class="mr-label"><b>Fecha de firma por parte de la fiduciaria</b></label>
+    <div class="d-flex mt-1em" *ngIf="dataFormulario.get('fechaEnvioParaFirmaFiduciaria').value !== null">
+      <label
+        class="label-left"
+        for="fechaEnvioParaFirmaFiduciaria"
+        [class.color-secondaryColor]="
+          (dataFormulario.get('fechaEnvioParaFirmaFiduciaria').invalid &&
+            dataFormulario.get('fechaEnvioParaFirmaFiduciaria').touched) ||
+          (dataFormulario.get('fechaEnvioParaFirmaFiduciaria').invalid && estaEditando)
+        "
+      >
+        <b> Fecha de firma por parte de la fiduciaria </b>
+      </label>
       <mat-form-field class="w-22">
-        <input  matInput
-                [matDatepicker]="pickerFechaFirmaFiduciaria"
-                formControlName="fechaFirmaPorParteFiduciaria"
-                placeholder="DD/MM/AAAA" readonly
-                (click)="pickerFechaFirmaFiduciaria.open()">
+        <input
+          matInput
+          [matDatepicker]="pickerFechaFirmaFiduciaria"
+          formControlName="fechaFirmaPorParteFiduciaria"
+          placeholder="DD/MM/AAAA"
+          readonly
+          (click)="pickerFechaFirmaFiduciaria.open()"
+        />
         <mat-datepicker #pickerFechaFirmaFiduciaria></mat-datepicker>
       </mat-form-field>
-      <button mat-button
-              color="primary"
-              type="button"
-              (click)="pickerFechaFirmaFiduciaria.open()"
-              class="btn-calendario">
-        <img  class="mr-bottom-1"
-              src="assets/img/icon/calendarioCirculo.svg"
-              alt="Abrir Calendario">
+      <button
+        mat-button
+        color="primary"
+        type="button"
+        (click)="pickerFechaFirmaFiduciaria.open()"
+        class="btn-calendario"
+      >
+        <img class="mr-bottom-1" src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
       </button>
+      <span class="icon-incompleto">
+        <img
+          class="icon-incompleto--img"
+          src="assets/img/icon/incompleto.svg"
+          alt="este campo es requerido"
+          *ngIf="
+            (dataFormulario.get('fechaEnvioParaFirmaFiduciaria').invalid &&
+              dataFormulario.get('fechaEnvioParaFirmaFiduciaria').touched) ||
+            (dataFormulario.get('fechaEnvioParaFirmaFiduciaria').invalid && estaEditando)
+          "
+        />
+      </span>
     </div>
 
     <div class="d-flex mt-1em">
-      <label class="mr-label"><b>Observaciones</b></label>
-      <quill-editor class="quill-editor-style w-65"
-                    [styles]="editorStyle"
-                    [modules]="config"
-                    (onContentChanged)="maxLength($event, 2000)"
-                    formControlName="observaciones"></quill-editor>
+      <label class="label-left" for="observaciones">
+        <b> Observaciones </b>
+      </label>
+      <quill-editor
+        class="quill-editor-style w-65"
+        [styles]="editorStyle"
+        [modules]="config"
+        (onContentChanged)="maxLength($event, 2000)"
+        formControlName="observaciones"
+        [class.invalid]="
+          (dataFormulario.get('observaciones').invalid && dataFormulario.get('observaciones').touched) ||
+          (dataFormulario.get('observaciones').invalid && estaEditando)
+        "
+      ></quill-editor>
       <span class="contador miles" *ngIf="dataFormulario.get('observaciones').value !== null">
-        {{2000 - (textoLimpio(dataFormulario.get('observaciones').value)>2000?2000:textoLimpio(dataFormulario.get('observaciones').value))}}
+        {{
+          2000 -
+            (textoLimpio(dataFormulario.get('observaciones').value) > 2000
+              ? 2000
+              : textoLimpio(dataFormulario.get('observaciones').value))
+        }}
       </span>
-      <span class="contador miles" *ngIf="dataFormulario.get('observaciones').value === null">
-        2000
+      <span class="contador miles" *ngIf="dataFormulario.get('observaciones').value === null"> 2000 </span>
+      <span class="icon-incompleto">
+        <img
+          class="icon-incompleto--img"
+          src="assets/img/icon/incompleto.svg"
+          alt="este campo es requerido"
+          *ngIf="
+            (dataFormulario.get('observaciones').invalid && dataFormulario.get('observaciones').touched) ||
+            (dataFormulario.get('observaciones').invalid && estaEditando)
+          "
+        />
       </span>
     </div>
 
-    <div class="d-flex" *ngIf="dataFormulario.get( 'fechaFirmaPorParteFiduciaria' ).value !== null">
-      <label class="mr-3em"><b>Adjuntar documento suscrito</b></label>
+    <div class="d-flex" *ngIf="dataFormulario.get('fechaFirmaPorParteFiduciaria').value !== null">
+      <label
+        class="label-left"
+        for="documento"
+        [class.color-secondaryColor]="
+          (dataFormulario.get('documento').invalid && dataFormulario.get('documento').touched) ||
+          (dataFormulario.get('documento').invalid && estaEditando)
+        "
+      >
+        <b> Adjuntar documento suscrito </b>
+      </label>
       <div class="input w-65">
-        <span class="input-file-text text-center">{{archivo}}</span>
-        <button mat-raised-button
-                color="primary"
-                type="button"
-                (click)="fileInput.click()"
-                class="input-file--btn">
-                Adjuntar
+        <span class="input-file-text text-center">{{ archivo }}</span>
+        <button mat-raised-button color="primary" type="button" (click)="fileInput.click()" class="input-file--btn">
+          Adjuntar
         </button>
-        <input  hidden
-                (change)="fileName( $event )"
-                #fileInput
-                type="file"
-                id="file"
-                formControlName="documento"
-                accept=".pdf">
+        <input
+          hidden
+          (change)="fileName($event)"
+          #fileInput
+          type="file"
+          id="file"
+          formControlName="documento"
+          accept=".pdf"
+        />
       </div>
+      <span class="icon-incompleto">
+        <img
+          class="icon-incompleto--img"
+          src="assets/img/icon/incompleto.svg"
+          alt="este campo es requerido"
+          *ngIf="
+            (dataFormulario.get('documento').invalid && dataFormulario.get('documento').touched) ||
+            (dataFormulario.get('documento').invalid && estaEditando)
+          "
+        />
+      </span>
     </div>
 
-    <div class="container text-center" *ngIf="dataFormulario.get( 'fechaFirmaPorParteFiduciaria' ).value !== null">
+    <div class="container text-center" *ngIf="dataFormulario.get('fechaFirmaPorParteFiduciaria').value !== null">
       <p class="align-text"><small>Adjunte el documento que contenga la minuta del contrato</small></p>
     </div>
 
     <div class="text-center w-90">
-      <button mat-button
-              color="warn"
-              class="btn-guardar"
-              type="submit">
-              <img  src="assets/img/icon/guardar.svg"
-                    alt="Regresar">
+      <button mat-button color="warn" class="btn-guardar" type="submit">
+        <img src="assets/img/icon/guardar.svg" alt="Regresar" />
       </button>
     </div>
   </div>

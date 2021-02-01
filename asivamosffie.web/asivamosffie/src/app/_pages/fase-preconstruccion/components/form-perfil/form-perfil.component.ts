@@ -36,6 +36,7 @@ export class FormPerfilComponent implements OnInit {
     ]
   };
   perfilesCv: Dominio[] = [];
+  estaEditando = false;
 
   get perfiles() {
     return this.formContratista.get( 'perfiles' ) as FormArray;
@@ -266,10 +267,14 @@ export class FormPerfilComponent implements OnInit {
     }
   }
 
-  disabledDate( cantidadHvAprobadas: string, cantidadHvRequeridas: string, index: number ) {
+  disabledDate( cantidadHvAprobadas: string, cantidadHvRequeridas: string, cantidadHvRecibidas: string, index: number ) {
     if ( Number( cantidadHvAprobadas ) >= Number( cantidadHvRequeridas ) ) {
       this.perfiles.controls[index].get( 'fechaAprobacion' ).enable();
     } else {
+      this.perfiles.controls[index].get( 'fechaAprobacion' ).disable();
+      this.perfiles.controls[index].get( 'fechaAprobacion' ).setValue( null );
+    }
+    if (Number( cantidadHvAprobadas ) > Number( cantidadHvRecibidas )){
       this.perfiles.controls[index].get( 'fechaAprobacion' ).disable();
       this.perfiles.controls[index].get( 'fechaAprobacion' ).setValue( null );
     }
@@ -301,8 +306,8 @@ export class FormPerfilComponent implements OnInit {
 
   textoLimpio(texto: string) {
     let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
 
     if ( texto ){
       const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
@@ -423,6 +428,7 @@ export class FormPerfilComponent implements OnInit {
   }
 
   guardar() {
+    this.estaEditando = true;
     const perfiles: ContratoPerfil[] = this.formContratista.get( 'perfiles' ).value;
 
     if ( this.perfilProyecto.length === 0 ) {

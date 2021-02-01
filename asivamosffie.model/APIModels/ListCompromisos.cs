@@ -25,5 +25,6 @@ namespace asivamosffie.model.APIModels
         public string FechaCumplimiento { get; set; }
 
         public List<dynamic> Seguimiento { get; set; }
+        public Boolean? EsCumplido { get; set; }
     }
 }

@@ -1,6 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -11,15 +13,36 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class FormRegistrarControvrsSopSolComponent implements OnInit {
 
   @Input() isEditable;
-
+  @Input() idControversia;
+  @Output() estadoSemaforo1 = new EventEmitter<string>();
   addressForm = this.fb.group({
     urlSoporte: [null, Validators.required]
   });
-  constructor(  private fb: FormBuilder, public dialog: MatDialog) { }
+  constructor(private router: Router, private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService) { }
 
   ngOnInit(): void {
-    if(this.isEditable==true){
-      this.addressForm.get('urlSoporte').setValue('http://www.prueba1444.com');
+    if (this.isEditable == true) {
+      this.services.GetControversiaContractualById(this.idControversia).subscribe((resp: any) => {
+        console.log(resp.rutaSoporte);
+        this.addressForm.get('urlSoporte').setValue(resp.rutaSoporte);
+        this.loadSemaforo();
+      });
+    }
+  }
+
+  loadSemaforo() {
+
+    if (this.addressForm.value.urlSoporte != null) {  
+      this.estadoSemaforo1.emit('completo');
+    }
+    if (this.addressForm.value.urlSoporte != "") {  
+      this.estadoSemaforo1.emit('completo');
+    }
+    if (this.addressForm.value.urlSoporte == null) {
+      this.estadoSemaforo1.emit('sin-diligenciar');
+    }
+    if (this.addressForm.value.urlSoporte == "") {
+      this.estadoSemaforo1.emit('sin-diligenciar');
     }
   }
 
@@ -32,6 +55,19 @@ export class FormRegistrarControvrsSopSolComponent implements OnInit {
 
   onSubmit() {
     console.log(this.addressForm.value);
-    this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+    this.services.ActualizarRutaSoporteControversiaContractual(this.idControversia, this.addressForm.value.urlSoporte).subscribe(resp => {
+      if (resp.isSuccessful == true) {
+        this.openDialog('', 'La información ha sido guardada exitosamente.');
+        if (this.isEditable == true) {
+          this.router.navigate(['/gestionarTramiteControversiasContractuales']);
+        }
+        else {
+          this.router.navigate(['/gestionarTramiteControversiasContractuales']);
+        }
+      }
+      else {
+        this.openDialog('', resp.message);
+      }
+    });
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators, FormArray, ControlValueAccessor, FormGroup, FormControl } from '@angular/forms';
 import { CommonService, Dominio, Localizacion, TiposAportante } from 'src/app/core/_services/common/common.service';
 import { CofinanciacionService, CofinanciacionAportante, CofinanciacionDocumento } from 'src/app/core/_services/Cofinanciacion/cofinanciacion.service';
@@ -19,7 +19,7 @@ import { Aportante } from 'src/app/core/_services/project/project.service';
 })
 export class RegistrarComponent implements OnInit {
 
-  loading = false;
+  estaEditando = false;
 
   addressForm: FormGroup;
 
@@ -46,6 +46,8 @@ export class RegistrarComponent implements OnInit {
   solonombres: any[]=[];
   edicion: boolean;
   fuentesDeRecursosListaArr: any[]=[];
+  listaBase: CofinanciacionDocumento[];
+  documentoFFIEID=0;
 
   constructor(private fb: FormBuilder,
               private commonService: CommonService,
@@ -58,6 +60,21 @@ export class RegistrarComponent implements OnInit {
     this.maxDate = new Date();
   }
 
+  noGuardado=true;
+  ngOnDestroy(): void {
+    if ( this.addressForm.dirty && this.noGuardado==true) {
+      let dialogRef =this.dialog.open(ModalDialogComponent, {
+        width: '28em',
+        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
+      });   
+      dialogRef.afterClosed().subscribe(result => {
+        if(result === true)
+        {
+            this.onSubmit();          
+        }           
+      });
+    }
+  };
 
   openDialog(modalTitle: string, modalText: string,redirect?:boolean) {
     let dialogRef =this.dialog.open(ModalDialogComponent, {
@@ -79,7 +96,6 @@ export class RegistrarComponent implements OnInit {
       data: { modalTitle, modalText,siNoBoton:true }
     });   
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
       if(result === true)
       {
         if(event==1)
@@ -89,8 +105,20 @@ export class RegistrarComponent implements OnInit {
         else{
           if(event==3)
           {
-            this.cuentasBancaria(i).removeAt(j);  
-            this.openDialog("","<b>La información a sido eliminada correctamente.</b>",false);
+            if(this.cuentasBancaria(i).value[j].cuentaBancariaId!=null)
+            {
+              this.fuenteFinanciacionService.eliminarCuentaBancaria(this.cuentasBancaria(i).value[j].cuentaBancariaId).
+              subscribe( response =>{
+                this.cuentasBancaria(i).removeAt(j);                
+                this.openDialog("","<b>La información a sido eliminada correctamente.</b>",false);
+              });
+              
+            }
+            else{
+              this.cuentasBancaria(i).removeAt(j);  
+              this.openDialog("","<b>La información a sido eliminada correctamente.</b>",false);
+            }
+            
           }
           else{
             this.borrarVigencia(borrarForm,i);
@@ -105,9 +133,12 @@ export class RegistrarComponent implements OnInit {
 
     this.fuenteRecursosArray.clear();
     const aportante = this.nombresAportantes.find(nom => nom.cofinanciacionAportanteId == this.idAportante);
-    console.log("este es el apo");
-    console.log(aportante);
-    this.addressForm.get('tieneRP').setValue(aportante.cuentaConRp==true?"1":"0");
+    
+    if(aportante)
+    {
+      this.addressForm.get('tieneRP').setValue(aportante.cuentaConRp==true?"1":"0");
+    }
+    
     if(this.tipoAportante.FFIE.includes(this.tipoAportanteId.toString()))
     {
       this.addressForm.get('nombreAportanteFFIE').setValue(aportante);  
@@ -148,18 +179,20 @@ export class RegistrarComponent implements OnInit {
 
     
     this.fuenteFinanciacionService.listaFuenteFinanciacionByAportante(this.idAportante).subscribe(lista => {
-      
-      console.log("esta es la lista de fuentes");
-      console.log(lista);
+            
       let i=0;
       lista.forEach(ff => {          
         this.fuentesDeRecursosListaArr.push(this.fuentesDeRecursosLista);
         if(this.tipoAportante.FFIE.includes(this.tipoAportanteId.toString()))
-        {
-          
+        {          
           const tipo = this.tipoDocumentoap.filter(x=>x.dominioId==ff.cofinanciacionDocumento.tipoDocumentoId);      
           this.addressForm.get('tipoDocumento').setValue(tipo[0].dominioId);        
-          const numerodoc = this.listaDocumentosApropiacion.filter(x=>x.cofinanciacionDocumentoId==ff.cofinanciacionDocumentoId);        
+          const numerodoc = this.listaDocumentosApropiacion.filter(x=>x.cofinanciacionDocumentoId==ff.cofinanciacionDocumentoId);
+          this.listaDocumentos=this.listaDocumentosApropiacion.filter(x=>x.cofinanciacionDocumentoId==ff.cofinanciacionDocumentoId);        
+          //this.listaDocumentos.forEach(element => {
+            this.valorTotal=numerodoc[0].valorDocumento;
+          //});
+          this.documentoFFIEID=ff.cofinanciacionDocumentoId;
           this.addressForm.get('numerodocumento').setValue(numerodoc[0]);
         }
         const grupo: FormGroup = this.crearFuenteEdit(ff.valorFuente);
@@ -209,11 +242,8 @@ export class RegistrarComponent implements OnInit {
 
         grupoRegistroP.get('registroPresupuestalId').setValue(rp.registroPresupuestalId);
         grupoRegistroP.get('numeroRP').setValue(rp.numeroRp);
-        grupoRegistroP.get('fecha').setValue(rp.fechaRp);
-        console.log("busco "+rp.cofinanciacionDocumentoId);
-        console.log(this.listaDocumentos);
+        grupoRegistroP.get('fecha').setValue(rp.fechaRp);        
         let documentose=this.listaDocumentos.filter(x=>x.cofinanciacionDocumentoId==rp.cofinanciacionDocumentoId);
-        console.log(documentose);
         grupoRegistroP.get('numerodocumentoRP').setValue(documentose[0]);
 
         this.addressForm.get('cuantosRP').setValue(lista[0].aportante.registroPresupuestal.length);
@@ -244,7 +274,6 @@ export class RegistrarComponent implements OnInit {
 
   changeMunicipio(){    
     const idMunicipio = this.addressForm.get('municipio').value.localizacionId;
-    console.log(idMunicipio);
     this.nombresAportantes2=this.nombresAportantes.filter(z=>z.municipioId==idMunicipio);
     if(this.nombresAportantes2.length==0)
     {
@@ -255,7 +284,6 @@ export class RegistrarComponent implements OnInit {
   changeVigencia()
   {
     const vigencia = this.addressForm.get('vigenciaAcuerdo').value;
-    console.log(vigencia);
     this.idAportante=vigencia.cofinanciacionAportanteId;
     this.cargarDocumentos();
   }
@@ -352,8 +380,6 @@ export class RegistrarComponent implements OnInit {
     } else if (FormNumRP <= this.registrosPresupuestales.length && FormNumRP >= 0) {
       let i=this.registrosPresupuestales.length;
       while (this.registrosPresupuestales.length > FormNumRP) {
-        console.log(this.registrosPresupuestales.length);
-        console.log(FormNumRP)
         this.registrosPresupuestales.removeAt(i);
         i--;
       }
@@ -361,8 +387,6 @@ export class RegistrarComponent implements OnInit {
   }
 
   changeDepartamento() {
-    console.log("change departamento");
-    console.log(this.nombresAportantes);
     const idDepartamento = this.addressForm.get('departamento').value.localizacionId;
     this.nombresAportantes2=this.nombresAportantes.filter(z=>z.departamentoId==idDepartamento && z.municipioId==null);
     this.commonService.listaMunicipiosByIdDepartamento(idDepartamento).subscribe(mun => {
@@ -463,7 +487,7 @@ export class RegistrarComponent implements OnInit {
   changeNombreAportanteFFIE()
   {
     if (this.addressForm.get('nombreAportanteFFIE').value) {
-
+      this.tipoDocumentoap=[];
       this.idAportante = 
         this.addressForm.get('nombreAportanteFFIE').value.cofinanciacionAportanteId;
 
@@ -474,13 +498,14 @@ export class RegistrarComponent implements OnInit {
             //this.addressForm.get('numerodocumento').setValue(listDoc[0].numeroActa);
             //this.addressForm.get('documentoApropiacion').setValue(listDoc[0].tipoDocumento.nombre);
             this.listaDocumentosApropiacion=listDoc;
+            this.listaBase=this.listaDocumentosApropiacion;
             listDoc.forEach(element => {
               let m = this.tipoDocumentoap.some(function(item) {
                 return item.dominioId === element.tipoDocumentoId
               });
               if(m)
               {
-                console.log("ya lo tiene");
+                // console.log("ya lo tiene");
               }
               else
               {
@@ -558,7 +583,7 @@ export class RegistrarComponent implements OnInit {
         }
         else{
           this.openDialog("","<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>");
-          //this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1(j).length);
+          this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1(j).length);
         }
       }          
     }
@@ -573,7 +598,7 @@ export class RegistrarComponent implements OnInit {
 
   
   agregaFuente() {
-    console.log("es edición"+this.edicion);         
+           
     if(this.addressForm.value.fuenteRecursosArray.length==2)
     {
       this.openDialog("","<b>Ya cuenta con los dos tipos de fuente de financiación disponibles.</b>");
@@ -581,8 +606,7 @@ export class RegistrarComponent implements OnInit {
     }
       this.addressForm.value.fuenteRecursosArray.forEach(element => {      
         this.fuentesDeRecursosListaArr.push(this.fuentesDeRecursosLista.filter(x=>x!=element.fuenteRecursos));
-      });              
-    console.log(this.fuentesDeRecursosListaArr);
+      });
     this.fuenteRecursosArray.push(this.crearFuente());
   }
 
@@ -655,23 +679,49 @@ export class RegistrarComponent implements OnInit {
       
   }
   borrarVigencia(borrarForm: any, i: number)
-  {
-    console.log(borrarForm);console.log(i);
-    borrarForm.removeAt(i);  
-    this.openDialog("","<b>La información a sido eliminada correctamente.</b>",false);
+  {    
+    if(borrarForm.value[i].fuenteFinanciacionId!=null)
+    {
+      this.fuenteFinanciacionService.eliminarFuentesFinanciacion(borrarForm.value[i].fuenteFinanciacionId).subscribe(response=>
+        {
+          borrarForm.removeAt(i);
+          this.openDialog("","<b>La información a sido eliminada correctamente.</b>",false);  
+        });
+      
+    }
+    else
+    {
+      borrarForm.removeAt(i);  
+      this.openDialog("","<b>La información a sido eliminada correctamente.</b>",false);
+    }
+    
   }
   borrarArrayVigencias(borrarForm: any, i: number,j:number) {    
     this.openDialogSiNo("","<b>¿Está seguro de eliminar este registro?</b>",borrarForm,i,j,1);
   }
   removeItemVigencia(borrarForm: any, i: number,j:number,mensaje=true)
-  {
-    borrarForm.removeAt(i);
-    console.log(this.vigencias1(j).length);
-    this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1(j).length);    
-    if(mensaje)
+  {    
+    if(borrarForm.value[i].vigenciaAporteId!=null)
     {
-      this.openDialog("","<b>La información a sido eliminada correctamente.</b>",false);
+      this.cofinanciacionService.eliminarVigencia(borrarForm.value[i].vigenciaAporteId).subscribe(response=>
+        {
+          borrarForm.removeAt(i);
+          this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1(j).length);    
+      
+          this.openDialog("","<b>La información a sido eliminada correctamente.</b>",false);  
+        });
+      
     }
+    else
+    {
+      borrarForm.removeAt(i);
+      this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1(j).length);    
+      if(mensaje)
+      {
+        this.openDialog("","<b>La información a sido eliminada correctamente.</b>",false);
+      }
+    }
+    
     
   }
   // evalua tecla a tecla
@@ -683,11 +733,25 @@ export class RegistrarComponent implements OnInit {
 
   filterDocumento(variable)
   {
-    console.log(variable);
-    this.listaDocumentosApropiacion=this.listaDocumentosApropiacion.filter(x=>x.tipoDocumentoId==variable);
+    this.listaDocumentosApropiacion=this.listaBase.filter(x=>x.tipoDocumentoId==variable);
+    this.listaDocumentos=this.listaDocumentosApropiacion;
+    this.documentoFFIEID=this.listaDocumentos[0].cofinanciacionDocumentoId;
+    if(this.tipoAportante.FFIE.includes(this.tipoAportanteId.toString()))
+    {
+      this.valorTotal+=this.listaDocumentos[0].valorDocumento;  
+    }
+    else
+    {
+      this.listaDocumentos.forEach(element => {
+        this.valorTotal+=element.valorDocumento;  
+      });
+    }
+    
+    
   }
 
   onSubmit() {
+    this.edicion=true; 
     //no puedo validarlo, porque puede ser parcial
     //if (this.addressForm.valid) {
       
@@ -700,9 +764,9 @@ export class RegistrarComponent implements OnInit {
         usuario = localStorage.getItem('actualUser');
         usuario = JSON.parse(usuario).email;
       }
-      console.log(this.addressForm.get('numerodocumento'));
       let valortotla=0;
       let valorBase=this.valorTotal;
+      let valorBase2=0;
       this.fuenteRecursosArray.controls.forEach(controlFR => {      
         const vigencias = controlFR.get('vigencias') as FormArray;
         if (vigencias.controls.length==0) {          
@@ -716,7 +780,7 @@ export class RegistrarComponent implements OnInit {
           cantVigencias: controlFR.get('cuantasVigencias').value,
           cuentaBancaria: [],
           vigenciaAporte: [],
-          cofinanciacionDocumentoId:this.addressForm.get('numerodocumento').value==null?0:this.addressForm.get('numerodocumento').value.cofinanciacionDocumentoId,
+          cofinanciacionDocumentoId:this.documentoFFIEID,
           aportante:{
             cofinanciacionAportanteId:this.idAportante,
             cuentaConRp:this.addressForm.get('tieneRP').value=="1"?true:false,
@@ -727,9 +791,6 @@ export class RegistrarComponent implements OnInit {
             cofinanciacionDocumento:null,
           }
         };
-
-        
-        console.log("vigencias "+vigencias.controls.length);
         if (vigencias.controls.length>0) {
 
           let totalaportes=0;
@@ -748,7 +809,7 @@ export class RegistrarComponent implements OnInit {
             
           });     
             //si tengo vigencias mi valor base es la fuente
-            valorBase+=controlFR.get('valorFuenteRecursos').value;
+            valorBase2+=controlFR.get('valorFuenteRecursos').value;
 
         }
         
@@ -785,13 +846,37 @@ export class RegistrarComponent implements OnInit {
 
         lista.push(fuente);
       });
-      if(valorBase!=valortotla)
+      //si tengo vigencias
+      
+      if(valorBase2>0)
+      {
+        if(valorBase2!=valortotla)
+        {            
+          this.openDialog("","<b>Los valores de aporte de las vigencias son diferentes al valor de aporte de la fuente.</b>");
+          bitValorok=false;
+          return false;
+        }  
+        //aunque tenga vigencias, valido sobre el documento para ffie
+        if(this.tipoAportante.FFIE.includes(this.tipoAportanteId.toString()))
+        {
+          if(valorBase!=valortotla)
           {            
-            console.log(valorBase+" vs "+valortotla);
-            this.openDialog("","<b>Los valores de aporte de las vigencias son diferentes al valor de aporte de la fuente.</b>");
+           this.openDialog("","<b>Los valores de aporte de las vigencias son diferentes al valor de aporte de la fuente.</b>");
             bitValorok=false;
             return false;
           }
+        }
+      }
+      else
+      {
+        if(valorBase!=valortotla)
+        {            
+          this.openDialog("","<b>Los valores de aporte de las vigencias son diferentes al valor de aporte de la fuente.</b>");
+          bitValorok=false;
+          return false;
+        }
+      }
+      
       if(bitValorok)
       {
         forkJoin([
@@ -814,8 +899,8 @@ export class RegistrarComponent implements OnInit {
             const res = respuesta[0][0] as Respuesta;
             if (res.code === '200') {
               this.openDialog('', `<b>${res.message}</b>`,true);
+              this.noGuardado=false;
             }
-            console.log(respuesta);
           });      
         this.data = lista;    
       }
@@ -824,12 +909,9 @@ export class RegistrarComponent implements OnInit {
   }
   
   validateonevige(j){
-    console.log(this.addressForm.get("valorFuenteRecursos"));
-    console.log(this.vigencias1(j).controls.length);
     const FormNumvigencias = this.addressForm.value.fuenteRecursosArray[j];
     if(FormNumvigencias.cuantasVigencias==1)
     {
-      console.log("lo seteo");
       this.vigencias1(j).controls[0].get("valorVigencia").setValue(FormNumvigencias.valorFuenteRecursos);
     }
   }
@@ -837,7 +919,6 @@ export class RegistrarComponent implements OnInit {
   {
     let fuentes=[];
     this.addressForm.value.fuenteRecursosArray.forEach(element => {
-      console.log(element.fuenteRecursos);
       if(fuentes.includes(element.fuenteRecursos))
       {
         this.openDialog("","<b>No puedes tener dos tipos de fuentes iguales por aportante</b>");
@@ -847,6 +928,19 @@ export class RegistrarComponent implements OnInit {
         fuentes.push(element.fuenteRecursos);
       }      
     });
-    console.log();
+    
+  }
+  mostrarDocumento()
+  {       
+    var documento=this.addressForm.get("numerodocumento").value;
+    
+    this.valorTotal=documento.valorDocumento;
+    this.listaDocumentos.push(documento);
+  }
+
+  sinRPS()
+  {
+    this.registrosPresupuestales.clear();
+    this.addressForm.get("cuantosRP").setValue(0);    
   }
 }

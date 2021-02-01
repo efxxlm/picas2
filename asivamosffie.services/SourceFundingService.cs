@@ -9,19 +9,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using asivamosffie.services.Helpers.Enumerator;
+using Z.EntityFramework.Plus;
+
 namespace asivamosffie.services
 {
     public class SourceFundingService : ISourceFundingService
     {
         private readonly ICommonService _commonService;
-        private readonly ICofinancingContributorService _contributor;
         private readonly devAsiVamosFFIEContext _context;
 
-        public SourceFundingService(devAsiVamosFFIEContext context, ICommonService commonService, ICofinancingContributorService contributor)
+        public SourceFundingService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
             _context = context;
             _commonService = commonService;
-            _contributor = contributor;
         }
 
         public async Task<List<FuenteFinanciacion>> GetISourceFunding()
@@ -31,7 +31,7 @@ namespace asivamosffie.services
 
         public async Task<FuenteFinanciacion> GetISourceFundingById(int id)
         {
-            var retorno= await _context.FuenteFinanciacion.Where(r => r.FuenteFinanciacionId == id)
+            var retorno = await _context.FuenteFinanciacion.Where(r => r.FuenteFinanciacionId == id)
                         .Include(r => r.ControlRecurso)
                         .Include(r => r.CuentaBancaria)
                         .Include(r => r.VigenciaAporte)
@@ -42,7 +42,7 @@ namespace asivamosffie.services
                         .Include(r => r.Aportante)
                         .ThenInclude(apo => apo.CofinanciacionDocumento)
                         .FirstOrDefaultAsync();
-            if(retorno.Aportante.TipoAportanteId.Equals(ConstanTipoAportante.Ffie))
+            if (retorno.Aportante.TipoAportanteId.Equals(ConstanTipoAportante.Ffie))
             {
                 retorno.Aportante.NombreAportanteString = ConstanStringTipoAportante.Ffie;
             }
@@ -50,11 +50,11 @@ namespace asivamosffie.services
             {
                 retorno.Aportante.NombreAportanteString = retorno.Aportante.NombreAportanteId == null
                     ? "" :
-                    _context.Dominio.Find(retorno.Aportante.NombreAportanteId).Nombre;                    
+                    _context.Dominio.Find(retorno.Aportante.NombreAportanteId).Nombre;
             }
             else
             {
-                if(retorno.Aportante.MunicipioId==null)
+                if (retorno.Aportante.MunicipioId == null)
                 {
                     retorno.Aportante.NombreAportanteString = retorno.Aportante.DepartamentoId == null
                     ? "" :
@@ -73,7 +73,7 @@ namespace asivamosffie.services
 
         public async Task<Respuesta> CreateEditFuentesFinanciacion(FuenteFinanciacion fuentefinanciacion)
         {
-            
+
             BankAccountService bankAccountService = new BankAccountService(_context, _commonService);
             fuentefinanciacion.CofinanciacionDocumentoId = fuentefinanciacion.CofinanciacionDocumentoId == 0 ? null : fuentefinanciacion.CofinanciacionDocumentoId;
             int idAccionCrearFuentesFinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Fuentes_Financiacion, (int)EnumeratorTipoDominio.Acciones);
@@ -81,7 +81,7 @@ namespace asivamosffie.services
             try
             {
                 //antes de guardar extraigo el aportante porque solo voy a actualizar el rp
-                if(fuentefinanciacion.Aportante!=null)
+                if (fuentefinanciacion.Aportante != null)
                 {
                     var aportante = _context.CofinanciacionAportante.Find(fuentefinanciacion.AportanteId);
                     aportante.CuentaConRp = fuentefinanciacion.Aportante.CuentaConRp;
@@ -94,7 +94,7 @@ namespace asivamosffie.services
                 {
                     fuentefinanciacion.FechaCreacion = DateTime.Now;
                     fuentefinanciacion.Eliminado = false;
-                    
+
                     _context.FuenteFinanciacion.Add(fuentefinanciacion);
                     _context.SaveChanges();
                 }
@@ -111,7 +111,7 @@ namespace asivamosffie.services
                 foreach (VigenciaAporte vi in fuentefinanciacion.VigenciaAporte)
                 {
                     vi.FuenteFinanciacionId = fuentefinanciacion.FuenteFinanciacionId;
-                    vi.UsuarioCreacion = fuentefinanciacion.UsuarioCreacion==null? fuentefinanciacion.UsuarioModificacion.ToUpper():fuentefinanciacion.UsuarioCreacion.ToUpper();
+                    vi.UsuarioCreacion = fuentefinanciacion.UsuarioCreacion == null ? fuentefinanciacion.UsuarioModificacion.ToUpper() : fuentefinanciacion.UsuarioCreacion.ToUpper();
                     vi.FechaCreacion = DateTime.Now;
                     await this.CreateEditarVigenciaAporte(vi);
                 };
@@ -120,6 +120,7 @@ namespace asivamosffie.services
                 {
                     cb.UsuarioCreacion = fuentefinanciacion.UsuarioCreacion == null ? fuentefinanciacion.UsuarioModificacion.ToUpper() : fuentefinanciacion.UsuarioCreacion.ToUpper();
                     cb.FechaCreacion = DateTime.Now;
+                    cb.Eliminado = false;
                     await bankAccountService.CreateEditarCuentasBancarias(cb);
                 };
 
@@ -127,7 +128,7 @@ namespace asivamosffie.services
                 await _context.SaveChangesAsync();
 
 
-                return 
+                return
                new Respuesta
                {
                    IsSuccessful = true,
@@ -139,7 +140,7 @@ namespace asivamosffie.services
             }
             catch (Exception ex)
             {
-                return 
+                return
                        new Respuesta
                        {
                            IsSuccessful = false,
@@ -154,23 +155,23 @@ namespace asivamosffie.services
         private bool? validarRegistroCompleto(FuenteFinanciacion fuentefinanciacion)
         {
             bool retorno = true;
-            if(fuentefinanciacion.ValorFuente==null)
+            if (fuentefinanciacion.ValorFuente == null)
             {
                 retorno = false;
             }
-            if(fuentefinanciacion.FuenteRecursosCodigo == null || fuentefinanciacion.FuenteRecursosCodigo.Equals(""))
+            if (fuentefinanciacion.FuenteRecursosCodigo == null || fuentefinanciacion.FuenteRecursosCodigo.Equals(""))
             {
                 retorno = false;
             }
-            if(fuentefinanciacion.CuentaBancaria.Count()==0)
+            if (fuentefinanciacion.CuentaBancaria.Count() == 0)
             {
                 retorno = false;
             }
             else
             {
-                foreach(var cuentas in fuentefinanciacion.CuentaBancaria)
+                foreach (var cuentas in fuentefinanciacion.CuentaBancaria)
                 {
-                    if(cuentas.BancoCodigo==null)
+                    if (cuentas.BancoCodigo == null)
                     {
                         retorno = false;
                     }
@@ -193,7 +194,7 @@ namespace asivamosffie.services
                 }
 
             }
-            if(fuentefinanciacion.AportanteId!=null)
+            if (fuentefinanciacion.AportanteId != null)
             {
                 var aportante = _context.CofinanciacionAportante.Where(x => x.CofinanciacionAportanteId == fuentefinanciacion.AportanteId).FirstOrDefault();
                 if (aportante.TipoAportanteId == ConstanTipoAportante.Ffie)
@@ -205,22 +206,22 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                    if(fuentefinanciacion.Aportante!=null)
+                    if (fuentefinanciacion.Aportante != null)
                     {
                         if (fuentefinanciacion.Aportante.RegistroPresupuestal.Count() == 0)
                         {
                             retorno = false;
                         }
-                    }   
+                    }
                     else//osea que reviso rp, si no tiene esta incompleto
                     {
-                        if(_context.RegistroPresupuestal.Where(x=>x.AportanteId==fuentefinanciacion.AportanteId).Count()==0)
+                        if (_context.RegistroPresupuestal.Where(x => x.AportanteId == fuentefinanciacion.AportanteId).Count() == 0)
                         {
                             retorno = false;
-                        }                        
+                        }
                     }
                 }
-            }   
+            }
             else
             {
                 if (fuentefinanciacion.VigenciaAporte.Count() == 0)
@@ -228,17 +229,47 @@ namespace asivamosffie.services
                     retorno = false;
                 }
             }
-            
+
             return retorno;
         }
 
         public async Task<Respuesta> EliminarFuentesFinanciacion(int id, string UsuarioModifico)
         {
-        
+
             int idAccionEliminarFinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Fuentes_Financiacion, (int)EnumeratorTipoDominio.Acciones);
 
             try
             {
+                //verifico que no tenga relación con proyectos de infraestructura
+                var proyectoFuentes = _context.ProyectoFuentes.Where(x => x.FuenteId == id && !(bool)x.Eliminado).Count();
+                if (proyectoFuentes > 0)
+                {
+                    return
+                      new Respuesta
+                      {
+                          IsSuccessful = true,
+                          IsException = false,
+                          IsValidation = false,
+                          Code = ConstantMessagesFuentesFinanciacion.EliminacionFallida,
+                          Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesFuentesFinanciacion.EliminacionFallida, idAccionEliminarFinanciacion, UsuarioModifico, "ELIMINAR FUENTE DE FINANCIACIÓN IMPOSIBLE")
+                      };
+                }
+                //verifico que no tenga relación con proyectos administrativos
+                var proyectoFuentesad = _context.AportanteFuenteFinanciacion.Where(x => x.FuenteFinanciacionId == id && !(bool)x.Eliminado).Count();
+                if (proyectoFuentesad > 0)
+                {
+                    return
+                      new Respuesta
+                      {
+                          IsSuccessful = true,
+                          IsException = false,
+                          IsValidation = false,
+                          Code = ConstantMessagesFuentesFinanciacion.EliminacionFallida,
+                          Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesFuentesFinanciacion.EliminacionFallida, idAccionEliminarFinanciacion, UsuarioModifico, "ELIMINAR FUENTE DE FINANCIACIÓN IMPOSIBLE")
+                      };
+                }
+
+
                 var entity = await _context.FuenteFinanciacion.FindAsync(id);
                 entity.FechaModificacion = DateTime.Now;
                 entity.UsuarioModificacion = UsuarioModifico;
@@ -247,7 +278,7 @@ namespace asivamosffie.services
                 _context.Update(entity);
                 await _context.SaveChangesAsync();
 
-                return 
+                return
                       new Respuesta
                       {
                           IsSuccessful = true,
@@ -259,7 +290,7 @@ namespace asivamosffie.services
             }
             catch (Exception ex)
             {
-                return 
+                return
                  new Respuesta
                  {
                      IsSuccessful = false,
@@ -273,7 +304,7 @@ namespace asivamosffie.services
 
         public async Task<Respuesta> EditFuentesFinanciacion(FuenteFinanciacion fuentefinanciacion)
         {
-        
+
             int idAccionCrearFuentesFinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Fuentes_Financiacion, (int)EnumeratorTipoDominio.Acciones);
 
             try
@@ -287,7 +318,7 @@ namespace asivamosffie.services
                 _context.Update(updateObj);
                 await _context.SaveChangesAsync();
 
-                return 
+                return
                     new Respuesta
                     {
                         IsSuccessful = true,
@@ -299,7 +330,7 @@ namespace asivamosffie.services
             }
             catch (Exception ex)
             {
-                return 
+                return
                     new Respuesta
                     {
                         IsSuccessful = false,
@@ -313,75 +344,31 @@ namespace asivamosffie.services
 
         public async Task<List<FuenteFinanciacion>> GetFuentesFinanciacionByAportanteId(int AportanteId)
         {
-            return await _context.FuenteFinanciacion.Where(r => !(bool)r.Eliminado)
+            var res = await _context.FuenteFinanciacion.Where(r => !(bool)r.Eliminado)
                         .Where(r => r.AportanteId == AportanteId)
                         .Include(r => r.ControlRecurso)
-                        .Include(r => r.CuentaBancaria)
-                        .Include(r => r.VigenciaAporte)
                         .Include(r => r.CofinanciacionDocumento)
-                        .Include(r => r.Aportante)                        
+                        .Include(r => r.Aportante)
                         .ThenInclude(r => r.RegistroPresupuestal)
+                        .IncludeFilter(r => r.CuentaBancaria.Where(r => !(bool)r.Eliminado))
+                        .IncludeFilter(r => r.VigenciaAporte.Where(r => !(bool)r.Eliminado))
                         .ToListAsync();
+            return res;
         }
 
         public async Task<List<FuenteFinanciacion>> GetListFuentesFinanciacion()
         {
             //jflorez, cambio esto para tener el retorno con todas las variables
 
-            var retorno= await _context.FuenteFinanciacion.
+            var retorno = await _context.FuenteFinanciacion.
                 Where(r => !(bool)r.Eliminado).Distinct().Include(r => r.ControlRecurso).
                 Include(r => r.CuentaBancaria).
-                Include(r => r.VigenciaAporte).
+                IncludeFilter(r => r.VigenciaAporte.Where(r => !(bool)r.Eliminado)).
                 Include(r => r.Aportante).
                 ThenInclude(r => r.RegistroPresupuestal).ToListAsync();
-            foreach(var ret in retorno)
-            {
-                ret.Aportante.Cofinanciacion = _context.Cofinanciacion.Find(ret.Aportante.CofinanciacionId);
-                if (ret.Aportante.TipoAportanteId == ConstanTipoAportante.Ffie)
-                {
-                    ret.Aportante.NombreAportanteString = ConstanStringTipoAportante.Ffie;
-                }
-                else if (ret.Aportante.TipoAportanteId == ConstanTipoAportante.ET)
-                {
-                    //verifico si tiene municipio
-                    if (ret.Aportante.MunicipioId != null)
-                    {
-                        ret.Aportante.NombreAportanteString = ret.Aportante.MunicipioId==null?
-                            "":"Alcaldía de "+_context.Localizacion.Find(ret.Aportante.MunicipioId).Descripcion;
-                    }
-                    else//solo departamento
-                    {
-                        ret.Aportante.NombreAportanteString = ret.Aportante.DepartamentoId == null ?
-                            "" : "Gobernación de " + _context.Localizacion.Find(ret.Aportante.DepartamentoId).Descripcion;
-                    }
-                }
-                else
-                {
-                    ret.Aportante.NombreAportanteString = _context.Dominio.Find(ret.Aportante.NombreAportanteId).Nombre;
-                }
-                ret.Aportante.TipoAportanteString = _context.Dominio.Find(ret.Aportante.TipoAportanteId).Nombre;
-                ret.FuenteRecursosString = ret.FuenteRecursosCodigo == null ? "" : _context.Dominio.Where(x => x.Codigo == ret.FuenteRecursosCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
-            }
-            return retorno.OrderByDescending(x=>x.FechaCreacion).ToList();
-        }
-
-        public async Task<List<FuenteFinanciacion>> GetListFuentesFinanciacionshort()
-        {
-            //jflorez, cambio esto para tener el retorno con todas las variables
-
-            var retorno = await _context.FuenteFinanciacion.
-                Where(r => !(bool)r.Eliminado).
-                Include(r => r.Aportante).ToListAsync();
             foreach (var ret in retorno)
             {
-                ret.ControlRecurso = _context.ControlRecurso.Where(x=>x.FuenteFinanciacionId==ret.FuenteFinanciacionId && !(bool)x.Eliminado).ToList();
-                foreach(var control in ret.ControlRecurso)
-                {
-                    control.FuenteFinanciacion = null;
-                }
                 ret.Aportante.Cofinanciacion = _context.Cofinanciacion.Find(ret.Aportante.CofinanciacionId);
-                ret.Aportante.Cofinanciacion.CofinanciacionAportante = null;
-                ret.Aportante.FuenteFinanciacion = null;
                 if (ret.Aportante.TipoAportanteId == ConstanTipoAportante.Ffie)
                 {
                     ret.Aportante.NombreAportanteString = ConstanStringTipoAportante.Ffie;
@@ -410,9 +397,72 @@ namespace asivamosffie.services
             return retorno.OrderByDescending(x => x.FechaCreacion).ToList();
         }
 
+        public async Task<List<FuenteFinanciacion>> GetListFuentesFinanciacionshort()
+        {
+            //jflorez, cambio esto para tener el retorno con todas las variables
+
+            var retorno = await _context.FuenteFinanciacion.
+                Where(r => !(bool)r.Eliminado).
+                Include(r => r.Aportante)
+                    .ThenInclude(r => r.Cofinanciacion)
+                    .ToListAsync();
+
+            List<ControlRecurso> controlRecursos = _context.ControlRecurso.Where(x => !(bool)x.Eliminado).ToList();
+            List<Localizacion> localizacions = _context.Localizacion.ToList();
+            List<Dominio> dominiosFuentes = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).ToList();
+            //List<Dominio> dominiosTipoAportante = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_aportante).ToList();
+            List<Dominio> dominiosNombreAportante = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Nombre_Aportante_Aportante).ToList();
+
+            foreach (var ret in retorno)
+            {
+                ret.ControlRecurso = controlRecursos.Where(x => x.FuenteFinanciacionId == ret.FuenteFinanciacionId).ToList();
+                foreach (var control in ret.ControlRecurso)
+                {
+                    control.FuenteFinanciacion = null;
+                }
+                //ret.Aportante.Cofinanciacion = _context.Cofinanciacion.Find(ret.Aportante.CofinanciacionId);
+                ret.Aportante.Cofinanciacion.CofinanciacionAportante = null;
+                ret.Aportante.FuenteFinanciacion = null;
+                if (ret.Aportante.TipoAportanteId == ConstanTipoAportante.Ffie)
+                {
+                    ret.Aportante.NombreAportanteString = ConstanStringTipoAportante.Ffie;
+                }
+                else if (ret.Aportante.TipoAportanteId == ConstanTipoAportante.ET)
+                {
+                    //verifico si tiene municipio
+                    if (ret.Aportante.MunicipioId != null)
+                    {
+                        ret.Aportante.NombreAportanteString = ret.Aportante.MunicipioId == null ?
+                            "" : "Alcaldía de " + localizacions.Where(r => r.LocalizacionId == ret.Aportante.MunicipioId)?.FirstOrDefault()?.Descripcion;
+                    }
+                    else//solo departamento
+                    {
+                        ret.Aportante.NombreAportanteString = ret.Aportante.DepartamentoId == null ?
+                            "" : "Gobernación de " + localizacions.Where(r => r.LocalizacionId == ret.Aportante.DepartamentoId)?.FirstOrDefault()?.Descripcion;
+                    }
+                }
+                else
+                {
+                    ret.Aportante.NombreAportanteString = dominiosNombreAportante.Where(r => r.DominioId == ret.Aportante.NombreAportanteId)?.FirstOrDefault()?.Nombre;
+                }
+
+                // Diego, se quema por que la consulta se demora mucho
+                if (ret.Aportante.TipoAportanteId == 6)
+                    ret.Aportante.TipoAportanteString = "FFIE";
+                else if (ret.Aportante.TipoAportanteId == 9)
+                    ret.Aportante.TipoAportanteString = "ET";
+                else if (ret.Aportante.TipoAportanteId == 10)
+                    ret.Aportante.TipoAportanteString = "Tercero";
+
+                //ret.Aportante.TipoAportanteString = dominiosTipoAportante.Where(r => r.DominioId == ret.Aportante.TipoAportanteId)?.FirstOrDefault()?.Nombre;
+                ret.FuenteRecursosString = ret.FuenteRecursosCodigo == null ? "" : dominiosFuentes.Where(x => x.Codigo == ret.FuenteRecursosCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
+            }
+            return retorno.OrderByDescending(x => x.FechaCreacion).ToList();
+        }
+
         public async Task<Respuesta> CreateEditarVigenciaAporte(VigenciaAporte vigenciaAporte)
         {
- 
+
             int idAccionCrearVigenciaAporte = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Vigencia_Aporte, (int)EnumeratorTipoDominio.Acciones);
             try
             {
@@ -442,7 +492,7 @@ namespace asivamosffie.services
                 }
                 //await _context.SaveChangesAsync();
 
-                return 
+                return
                new Respuesta
                {
                    IsSuccessful = true,
@@ -454,7 +504,7 @@ namespace asivamosffie.services
             }
             catch (Exception ex)
             {
-                return 
+                return
                        new Respuesta
                        {
                            IsSuccessful = false,
@@ -468,40 +518,40 @@ namespace asivamosffie.services
 
         public async Task<List<GrillaFuentesFinanciacion>> GetListFuentesFinanciacionByAportanteId(int aportanteId)
         {
-            List<GrillaFuentesFinanciacion> ListaRetorno = new List<GrillaFuentesFinanciacion>(); 
-            var financiaciones = _context.FuenteFinanciacion.Where(x=>x.AportanteId==aportanteId && x.Eliminado==false).ToList();
-            foreach(var financiacion in financiaciones)
+            List<GrillaFuentesFinanciacion> ListaRetorno = new List<GrillaFuentesFinanciacion>();
+            var financiaciones = _context.FuenteFinanciacion.Where(x => x.AportanteId == aportanteId && x.Eliminado == false).ToList();
+            foreach (var financiacion in financiaciones)
             {
                 ListaRetorno.Add(new GrillaFuentesFinanciacion
                 {
                     FuenteFinanciacionID = financiacion.FuenteFinanciacionId,
                     Fuente = _context.Dominio.Where(x => x.Codigo == financiacion.FuenteRecursosCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre,
                     Nuevo_saldo_de_la_fuente = 0,
-                    Saldo_actual_de_la_fuente= (decimal)financiacion.ValorFuente,
-                    Valor_solicitado_de_la_fuente=0
-                }); 
+                    Saldo_actual_de_la_fuente = (decimal)financiacion.ValorFuente,
+                    Valor_solicitado_de_la_fuente = 0
+                });
             }
             return ListaRetorno;
         }
 
-        public async Task<List<GrillaFuentesFinanciacion>> GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid(int disponibilidadPresupuestalProyectoid,int aportanteID)
+        public async Task<List<GrillaFuentesFinanciacion>> GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid(int disponibilidadPresupuestalProyectoid, int aportanteID)
         {
-            List<GrillaFuentesFinanciacion> ListaRetorno = new List<GrillaFuentesFinanciacion>();            
+            List<GrillaFuentesFinanciacion> ListaRetorno = new List<GrillaFuentesFinanciacion>();
             var gestion = _context.FuenteFinanciacion.Where(x => x.AportanteId == aportanteID && x.Eliminado == false).Select(x => x.FuenteFinanciacionId).ToList();
-            
+
             var financiaciones = _context.FuenteFinanciacion.Where(x => gestion.Contains(x.FuenteFinanciacionId) && x.Eliminado == false).ToList();
             foreach (var financiacion in financiaciones)
             {
-                var valorDisponible = (decimal)financiacion.ValorFuente-_context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalProyectoId != disponibilidadPresupuestalProyectoid).Sum(x => x.ValorSolicitado);
+                var valorDisponible = (decimal)financiacion.ValorFuente - _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalProyectoId != disponibilidadPresupuestalProyectoid).Sum(x => x.ValorSolicitado);
                 var valorsolicitado = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId
                      && x.DisponibilidadPresupuestalProyectoId == disponibilidadPresupuestalProyectoid).Sum(x => x.ValorSolicitado);
                 ListaRetorno.Add(new GrillaFuentesFinanciacion
                 {
                     FuenteFinanciacionID = financiacion.FuenteFinanciacionId,
                     Fuente = _context.Dominio.Where(x => x.Codigo == financiacion.FuenteRecursosCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre,
-                    Nuevo_saldo_de_la_fuente = valorDisponible-valorsolicitado,
+                    Nuevo_saldo_de_la_fuente = valorDisponible - valorsolicitado,
                     Saldo_actual_de_la_fuente = valorDisponible,
-                    Valor_solicitado_de_la_fuente =valorsolicitado,
+                    Valor_solicitado_de_la_fuente = valorsolicitado,
                     GestionFuenteFinanciacionID = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId
                      && x.DisponibilidadPresupuestalProyectoId == disponibilidadPresupuestalProyectoid).Select(x => x.GestionFuenteFinanciacionId).FirstOrDefault(),
                 });
@@ -511,11 +561,11 @@ namespace asivamosffie.services
 
         public async Task GetConsignationValue(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
-            var fuentes = _context.FuenteFinanciacion.Where(x => (bool)x.RegistroCompleto).Include(x=>x.ControlRecurso).Include(x=>x.Aportante).ThenInclude(x=>x.Cofinanciacion).ToList();
-            foreach(var fuente in fuentes)
+            var fuentes = _context.FuenteFinanciacion.Where(x => (bool)x.RegistroCompleto).Include(x => x.ControlRecurso).Include(x => x.Aportante).ThenInclude(x => x.Cofinanciacion).ToList();
+            foreach (var fuente in fuentes)
             {
                 decimal valoracompara = 0;
-                foreach(var control in fuente.ControlRecurso)
+                foreach (var control in fuente.ControlRecurso)
                 {
                     valoracompara += control.ValorConsignacion;
                 }
@@ -527,7 +577,7 @@ namespace asivamosffie.services
                     string nombre = getNameAportante(fuente.Aportante);
                     string template = TemplateRecoveryPassword.Contenido.Replace("[vigencia]", fuente.Aportante.Cofinanciacion.VigenciaCofinanciacionId.ToString()).Replace("_LinkF_", pDominioFront).Replace("[aportante]", nombre).Replace("[valor1]", string.Format("{0:c}", valoracompara.ToString())).Replace("[valor2]", string.Format("{0:c}", fuente.ValorFuente.ToString()));
                     bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuariosadmin.FirstOrDefault().Usuario.Email, "Fuentes de financiación", template, pSender, pPassword, pMailServer, pMailPort);
-                }       
+                }
             }
         }
 
@@ -558,7 +608,7 @@ namespace asivamosffie.services
             }
             return nombre;
         }
-        
+
         public async Task<List<GrillaFuentesFinanciacion>> GetListFuentesFinanciacionByDisponibilidadPresupuestald(int disponibilidadPresupuestaId)
         {
             List<GrillaFuentesFinanciacion> ListaRetorno = new List<GrillaFuentesFinanciacion>();
@@ -569,12 +619,12 @@ namespace asivamosffie.services
                     Include(x => x.ProyectoAdministrativo).
                         ThenInclude(x => x.ProyectoAdministrativoAportante).
                             ThenInclude(x => x.AportanteFuenteFinanciacion).
-                   Include(x=>x.Proyecto).
+                   Include(x => x.Proyecto).
                     ThenInclude(x => x.ProyectoAportante).
                         ThenInclude(x => x.Aportante).
                             ThenInclude(x => x.FuenteFinanciacion).ToList();
-                if(_context.DisponibilidadPresupuestal.Where(x=>x.DisponibilidadPresupuestalId==disponibilidadPresupuestaId).
-                    FirstOrDefault().TipoSolicitudCodigo==ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Especial)//entonces es una disponivlidad espacial
+                if (_context.DisponibilidadPresupuestal.Where(x => x.DisponibilidadPresupuestalId == disponibilidadPresupuestaId).
+                    FirstOrDefault().TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Especial)//entonces es una disponivlidad espacial
                 {
                     var ddp = _context.DisponibilidadPresupuestal.Where(x => x.DisponibilidadPresupuestalId == disponibilidadPresupuestaId).
                         Include(x => x.Aportante).
@@ -592,7 +642,7 @@ namespace asivamosffie.services
                 }
                 foreach (var dDisponibilidadProyecto in disponibilidad)
                 {
-                    if(dDisponibilidadProyecto.ProyectoAdministrativoId!=null)
+                    if (dDisponibilidadProyecto.ProyectoAdministrativoId != null)
                     {
                         foreach (var pAdminsitrativoApo in dDisponibilidadProyecto.ProyectoAdministrativo.ProyectoAdministrativoAportante)
                         {
@@ -618,21 +668,21 @@ namespace asivamosffie.services
                             }
                         }
                     }
-                    
-                }                
+
+                }
             }
             var financiaciones = _context.FuenteFinanciacion.Where(x => gestion.Contains(x.FuenteFinanciacionId) && x.Eliminado == false).ToList();
-            
+
             foreach (var financiacion in financiaciones)
             {
-                var gestionfienteid= _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == disponibilidadPresupuestaId).Select(x => x.GestionFuenteFinanciacionId);
+                var gestionfienteid = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == disponibilidadPresupuestaId).Select(x => x.GestionFuenteFinanciacionId);
                 int gestionid = 0;
-                if(gestionfienteid!=null)
+                if (gestionfienteid != null)
                 {
                     gestionid = gestionfienteid.FirstOrDefault();
                 }
                 decimal valor = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == disponibilidadPresupuestaId).Sum(x => x.ValorSolicitado);
-                if(valor==0)//si es disponibilidad especial entonces la relacion es diferente
+                if (valor == 0)//si es disponibilidad especial entonces la relacion es diferente
                 {
                     var gestionfiente = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalId == disponibilidadPresupuestaId).Select(x => x.GestionFuenteFinanciacionId);
                     if (gestionfiente != null)
@@ -642,18 +692,60 @@ namespace asivamosffie.services
                     valor = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalId == disponibilidadPresupuestaId).Sum(x => x.ValorSolicitado);
                 }
                 var saldoFuente = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId != disponibilidadPresupuestaId).Sum(x => x.ValorSolicitado);
-                
+                //si no he gestionado fuentes, soy especial y mi saldo es el total de la fuente
+                if (saldoFuente == 0)
+                {
+                    saldoFuente = Convert.ToDecimal(financiacion.ValorFuente);
+                }
                 ListaRetorno.Add(new GrillaFuentesFinanciacion
                 {
-                    GestionFuenteFinanciacionID= gestionid,
+                    GestionFuenteFinanciacionID = gestionid,
                     FuenteFinanciacionID = financiacion.FuenteFinanciacionId,
                     Fuente = _context.Dominio.Where(x => x.Codigo == financiacion.FuenteRecursosCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre,
-                    Nuevo_saldo_de_la_fuente = saldoFuente-valor,
+                    Nuevo_saldo_de_la_fuente = saldoFuente - valor,
                     Saldo_actual_de_la_fuente = saldoFuente,
                     Valor_solicitado_de_la_fuente = valor
                 });
             }
             return ListaRetorno;
+        }
+
+        public async Task<Respuesta> EliminarCuentaBancaria(int id, string UsuarioModifico)
+        {
+            int idAccionEliminarFinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Fuentes_Financiacion, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                var entity = await _context.CuentaBancaria.FindAsync(id);
+                entity.FechaModificacion = DateTime.Now;
+                entity.UsuarioModificacion = UsuarioModifico;
+                entity.Eliminado = true;
+
+                _context.Update(entity);
+                await _context.SaveChangesAsync();
+
+                return
+                      new Respuesta
+                      {
+                          IsSuccessful = true,
+                          IsException = false,
+                          IsValidation = false,
+                          Code = ConstantMessagesFuentesFinanciacion.OperacionExitosa,
+                          Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesFuentesFinanciacion.EliminacionExitosa, idAccionEliminarFinanciacion, UsuarioModifico, "ELIMINAR FUENTE DE FINANCIACIÓN")
+                      };
+            }
+            catch (Exception ex)
+            {
+                return
+                 new Respuesta
+                 {
+                     IsSuccessful = false,
+                     IsException = true,
+                     IsValidation = false,
+                     Code = ConstantMessagesFuentesFinanciacion.Error,
+                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesFuentesFinanciacion.Error, idAccionEliminarFinanciacion, UsuarioModifico, ex.InnerException.ToString().Substring(0, 500))
+                 };
+            }
         }
     }
 }

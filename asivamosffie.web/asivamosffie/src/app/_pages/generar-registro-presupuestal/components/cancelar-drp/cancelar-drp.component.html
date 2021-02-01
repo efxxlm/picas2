@@ -1,33 +1,62 @@
 <button mat-button mat-dialog-close class="modal--btn-cerrar">
-    <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
+  <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar" />
 </button>
 <div class="text-center">
-  <h1 class="title-menu--h1">
-      Cancelar DRP
-  </h1>
+  <h1 class="title-menu--h1">Cancelar DRP</h1>
   <p class="info-sub-title">
-      <span>{{fecha| date:'dd/MM/yyyy'}}</span>
-      <span>{{nSolicitud}}</span>
-      <span>{{tipo}}</span>
+    <span>{{ fecha | date: 'dd/MM/yyyy' }}</span>
+    <span>{{ nSolicitud }}</span>
+    <span>{{ tipo }}</span>
   </p>
 </div>
+<div
+  *ngIf="addressForm.invalid && addressForm.touched"
+  class="animateDown my-1em color-secondaryColor d-flex align-items-center justify-content-center"
+>
+  <img class="icon-incompleto--img mr-05em" src="assets/img/icon/incompleto.svg" alt="este campo es requerido" />
+  Debe ingresar la información en el campo para continuar
+</div>
 <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
-    <div class="d-flex align-items-center">
-        <div class="text-area-quill izqTitle">
-          <label for="objeto" class="text-area-quill--label grayTitle">Observaciones</label>
-          <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
-            (onContentChanged)="maxLength($event, 2000)" formControlName="objeto"></quill-editor>
-        </div>
-        <span class="contador miles" *ngIf="addressForm.get('objeto').value">
-          {{2000 - (textoLimpio(addressForm.get('objeto').value)>2000?2000:textoLimpio(addressForm.get('objeto').value))}}
-        </span>
-        <span class="contador miles" *ngIf="addressForm.get('objeto').value === null">
-          2000
-        </span>
-      </div>
-      <div class="text-center botones">
-        <button mat-raised-button color="accent" [disabled]="true" *ngIf="addressForm.get('objeto').value === null">Cancelar DRP</button>
-        <button mat-raised-button color="accent" *ngIf="addressForm.get('objeto').value" type="submit">Cancelar DRP</button>
-      </div>
+  <div class="d-flex align-items-center">
+    <div
+      class="text-area-quill izqTitle"
+      [class.color-secondaryColor]="
+        (addressForm.get('objeto').invalid && addressForm.get('objeto').touched) ||
+        (addressForm.get('objeto').invalid && estaEditando)
+      "
+    >
+      <label for="objeto" class="text-area-quill--label grayTitle">Observaciones</label>
+      <quill-editor
+        class="quill-editor-style"
+        [styles]="editorStyle"
+        [modules]="config"
+        (onContentChanged)="maxLength($event, 2000)"
+        formControlName="objeto"
+      ></quill-editor>
+    </div>
+    <span class="contador miles" *ngIf="addressForm.get('objeto').value">
+      {{
+        2000 -
+          (textoLimpio(addressForm.get('objeto').value) > 2000 ? 2000 : textoLimpio(addressForm.get('objeto').value))
+      }}
+    </span>
+    <span class="contador miles" *ngIf="addressForm.get('objeto').value === null"> 2000 </span>
+    <span class="icon-incompleto">
+      <img
+        class="icon-incompleto--img"
+        src="assets/img/icon/incompleto.svg"
+        alt="este campo es requerido"
+        *ngIf="
+          (addressForm.get('objeto').invalid && addressForm.get('objeto').touched) ||
+          (addressForm.get('objeto').invalid && estaEditando)
+        "
+      />
+    </span>
+  </div>
+  <div class="text-center botones">
+    <button mat-raised-button color="accent" [disabled]="true" *ngIf="addressForm.get('objeto').value === null">
+      Cancelar DRP
+    </button>
+    <button mat-raised-button color="accent" *ngIf="addressForm.get('objeto').value" type="submit">Cancelar DRP</button>
+  </div>
 </form>
-

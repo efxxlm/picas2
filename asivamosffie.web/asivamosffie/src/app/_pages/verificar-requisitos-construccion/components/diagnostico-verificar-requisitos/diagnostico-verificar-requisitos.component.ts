@@ -37,6 +37,7 @@ export class DiagnosticoVerificarRequisitosComponent implements OnInit, OnChange
   @Input() observacionesCompleted
   
   @Output() createEditDiagnostico = new EventEmitter();
+  estaEditando = false;
 
   constructor(
     private dialog: MatDialog,
@@ -112,7 +113,7 @@ export class DiagnosticoVerificarRequisitosComponent implements OnInit, OnChange
   };
 
   guardarDiagnostico() {
-
+    this.estaEditando = true;
     let construccion = {
       contratoConstruccionId: this.contratoConstruccionId,
       tieneObservacionesDiagnosticoApoyo: this.addressForm.value.tieneObservaciones,

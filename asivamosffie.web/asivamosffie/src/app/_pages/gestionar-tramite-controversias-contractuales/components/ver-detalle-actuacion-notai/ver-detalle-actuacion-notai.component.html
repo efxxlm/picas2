@@ -5,42 +5,46 @@
         </a>
     </div>
     <h1 class="title-menu--h1">
-        Ver detalle ACT_controversia_0003
+        Ver detalle {{this.actuacionNum}}
     </h1>
     <p class="info-sub-title">
-        <span>Solicitud: <b>CO00002</b> Número del contrato: <b>C223456789</b> Tipo de controversia: <b>Terminación anticipada por imposibilidad de ejecución (TAIE)</b></span>
+        <span>Solicitud: <b>{{this.numSolicitud}}</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Número del contrato: <b>{{this.numContrato}}</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tipo de controversia: <b>{{this.tipoControversia}}</b></span>
     </p>
-    <mat-card class="shipping-card mainGris">
-        <mat-card-content style="text-align: left;">
-            <p><strong>Estado de avance del trámite:</strong> Remisión de Comunicación de decisión por Alianza Fiduciaria a la Aseguradora</p>
-            <p><strong>Fecha de la actuación adelantada:</strong> 28/08/2020</p>
-            <p><strong>Actuación adelantada:</strong> Otro</p>
-            <p><strong>¿Cuál?:</strong></p>
-            <p>Otro</p>
-            <p><strong>Próxima actuación requerida:</strong> Firmas</p>
-            <p><strong>Días de vencimiento de términos para la próxima actuación requerida:</strong> 9</p>
-            <p><strong>Fecha de vencimiento de términos para la próxima actuación requerida:</strong> 15/09/2020</p>
-            <p><strong>¿Está actuación requiere la participación o insumo del contratista?:</strong> Sí</p>
-            <p><strong>¿Está actuación requiere la participación o insumo del interventor del contrato?:</strong> Sí</p>
-            <p><strong>¿Está actuación requiere la participación o insumo del supervisor del contrato?:</strong> Sí</p>
-            <p><strong>¿Está actuación requiere la participación o insumo de la fiduciaria?:</strong> Sí</p>
-            <p><strong>¿Está actuación requiere comité técnico?:</strong> No</p>
-            <p><strong>Observaciones:</strong></p>
-            <p>Observaciones</p>
-            <p><strong>¿El proceso requiere mesas de trabajo?:</strong> Sí</p>
-            <p><strong>¿El proceso tiene resultado definitivo y se considera cerrado el proceso?:</strong> Sí</p>
-        </mat-card-content>
-    </mat-card>
-    <mat-card class="shipping-card mainGris">
-        <mat-card-header class="header-card">
-            <mat-card-title class="header-card--text textoGris">
-                Soporte de la actuación
-            </mat-card-title>
-        </mat-card-header>
-        <mat-card-content style="text-align: left;">
-            <p><strong>URL con soporte:</strong>
-                https://drive.google.com/drive/registrodecontroversiacontractual/registronuevaactualizaciondelareclamacion
-            </p>
-        </mat-card-content>
-    </mat-card>
+    <div align="left">
+        <mat-card class="shipping-card mainGris">
+            <mat-card-content>
+                <p><b>Estado de avance del trámite:</b> {{this.estadoAvanceTramite}}</p>
+                <p><b>Fecha de la actuación adelantada:</b> {{this.fechaActuacionAdelantada | date:'dd/MM/yyyy'}}</p>
+                <p><b>Actuación adelantada:</b> {{this.actuacionAdelantada}}</p>
+                <p><b>Próxima actuación requerida:</b>{{this.actuacionRequerida}}</p>
+                <p *ngIf="this.actuacionRequerida=='Otra'"><b>Cual:</b></p>
+                <div *ngIf="this.actuacionRequerida=='Otra'">
+                    <div [innerHtml]="this.detalleOtra"></div>
+                </div>
+                <p><b>Días de vencimiento de términos para la próxima actuación requerida:</b> {{this.diasVencimiento}}</p>
+                <p><b>Fecha de vencimiento de términos para la próxima actuación requerida:</b> {{this.fechaVencimiento | date:'dd/MM/yyyy'}}</p>
+                <p><b>¿Está actuación requiere la participación o insumo del contratista?:</b> {{this.requiereContratista}}</p>
+                <p><b>¿Está actuación requiere la participación o insumo del interventor del contrato?:</b> {{this.requiereInterventor}}</p>
+                <p><b>¿Está actuación requiere la participación o insumo del supervisor del contrato?:</b> {{this.requiereSupervisor}}</p>
+                <p><b>¿Está actuación requiere la participación o insumo de la fiduciaria?:</b> {{ this.requiereFiduciaria}}</p>
+                <p><b>¿Está actuación requiere comité técnico?:</b> {{ this.requiereComite}}</p>
+                <p><b>Observaciones:</b></p>
+                <div [innerHtml]="this.observaciones"></div> 
+                <p><strong>¿El proceso requiere mesas de trabajo?:</strong> {{this.requiereMT}}</p>
+                <p><strong>¿El proceso tiene resultado definitivo y se considera cerrado el proceso?:</strong> {{ this.procesoResultadoYDefinitivo}}</p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div align="left">
+        <mat-card class="shipping-card mainGris">
+            <mat-card-header class="header-card header-card--margin">
+                <mat-card-title class="header-card--text textoGris">
+                    Soporte de la actuación
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <p><b>URL con soporte:</b> {{this.rutaSoporte}}</p>
+            </mat-card-content>
+        </mat-card>
+    </div>
 </div>

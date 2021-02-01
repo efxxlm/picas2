@@ -81,6 +81,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
 
   realizoPeticion: boolean = false;
   esRojo: boolean = false;
+  estaEditando = false;
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, public datepipe: DatePipe, private services: ActBeginService, private service: GestionarActPreConstrFUnoService) {
     this.maxDate = new Date();
@@ -279,7 +280,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
     }
   }
   onSubmit() {
-
+    this.estaEditando = true;
 
     let meses: number = this.plazoEjecucionPreConstruccionMeses === undefined ? 0 : this.plazoEjecucionPreConstruccionMeses;
     meses = meses + (this.addressForm.get('mesPlazoEjFase2').value === undefined ? 0 : this.addressForm.get('mesPlazoEjFase2').value);

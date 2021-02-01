@@ -14,7 +14,7 @@
             
             <button mat-raised-button color="primary" type="button" (click)="fileInput.click()" class="input-file--btn">Explorar</button>
             <input required hidden (change)="fileName()" #fileInput type="file" id="file" [formControl]="fileListaProyectos"
-                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                accept=".xlsx, .csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
         </div>
         <p>
             Explore en su computador o dispositivo y seleccione el documento que desea cargar los formatos permitidos son: cvs, xls

@@ -34,8 +34,8 @@ export class TablaResultadosContratistasComponent implements OnInit, OnChanges {
   ];
   dataSource = new MatTableDataSource();
 
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: false}) sort: MatSort;
 
   elementosSelecciondos: any[] = [];
 
@@ -76,20 +76,8 @@ export class TablaResultadosContratistasComponent implements OnInit, OnChanges {
           idContratista: this.contratacion.contratistaId,
 
         }
-        this.dataSource = new MatTableDataSource( [ this.contratacion[ 'contratista' ] ] );
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
-        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-        this.paginator._intl.nextPageLabel = 'Siguiente';
-        this.paginator._intl.previousPageLabel = 'Anterior';
       }
     }, 2000);
-
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-    this.paginator._intl.nextPageLabel = 'Siguiente';
-    this.paginator._intl.previousPageLabel = 'Anterior';
   }
 
   selectElement(elemento: ContratistaGrilla) {
@@ -107,6 +95,18 @@ export class TablaResultadosContratistasComponent implements OnInit, OnChanges {
   }
 
   buscar(){
+
+    if ( this.unionTemporal.value !== true && this.unionTemporal.value !== false ){
+      this.openDialog( '', '<b>No se encontraron registros asociados al criterio de búsqueda seleccionado.</b>' );
+      return false;
+    }
+
+    if (this.contratista)
+      this.contratista.idContratista = 0;
+    
+    if (this.contratacion[ 'contratista' ] !== undefined)
+      this.contratacion[ 'contratista' ].numeroIdentificacion = '';
+
     let nombre = this.nombreContratista.value;
     let numero = this.numeroDocumento.value;
     let esConsorcio = this.unionTemporal.value;
@@ -118,8 +118,25 @@ export class TablaResultadosContratistasComponent implements OnInit, OnChanges {
           return;
         }
         this.dataSource = new MatTableDataSource(response);
+        setTimeout(() => {
+          this.dataSource.sort = this.sort;
+          this.dataSource.paginator = this.paginator;
+          this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+          this.paginator._intl.nextPageLabel = 'Siguiente';
+          this.paginator._intl.previousPageLabel = 'Anterior';
+        }, 10);
       })
 
+  }
+
+  changeUnionTemporal(){
+    this.nombreContratista.setValue('');
+    this.numeroDocumento.setValue('');
+    if (this.contratista)
+      this.contratista.idContratista = 0;
+    if (this.contratacion[ 'contratista' ] !== undefined)
+      this.contratacion[ 'contratista' ].numeroIdentificacion = '';
+    this.dataSource = new MatTableDataSource();
   }
 
   cargarRegistros(){
@@ -127,6 +144,12 @@ export class TablaResultadosContratistasComponent implements OnInit, OnChanges {
   }
 
   onSave(){
+    console.log( this.contratista.idContratista )
+    if (!this.contratista.idContratista || this.contratista.idContratista == 0)
+    {
+      this.openDialog('', 'No se ha seleccionado ningun contratista');
+      return false;
+    }
     this.contratacion.contratistaId = this.contratista.idContratista;
     this.guardar.emit(null);
   }

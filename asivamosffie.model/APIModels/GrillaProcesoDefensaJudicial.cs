@@ -5,7 +5,9 @@ using System.Text;
 namespace asivamosffie.model.APIModels
 {
    public class GrillaProcesoDefensaJudicial
-    {        
+    {
+        public bool? VaAProcesoJudicial { get; set; }
+
         public int DefensaJudicialId { get; set; }
         public string FechaRegistro { get; set; }
         public string LegitimacionPasivaActiva { get; set; }
@@ -19,6 +21,7 @@ namespace asivamosffie.model.APIModels
         public string TipoProceso { get; set; }
         public string TipoProcesoCodigo { get; set; }
 
+        public DateTime FechaCreacion { get; set; }
 
     }
 }

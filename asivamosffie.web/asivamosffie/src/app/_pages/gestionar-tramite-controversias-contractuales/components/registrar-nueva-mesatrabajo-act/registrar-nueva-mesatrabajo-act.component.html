@@ -8,7 +8,7 @@
         Registrar nueva mesa de trabajo
     </h1>
     <p class="info-sub-title">
-        <span>Solicitud: <b>CO0002</b> Número del contrato: <b>C887754324</b> Tipo de controversia: <b>Terminación anticipada por imposibilidad de ejecución (TAIE)</b></span>
+        <span>Solicitud: <b>{{this.codigoSolicitud }}</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Número del contrato: <b>{{this.numeroContrato}}</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tipo de controversia: <b>{{this.tipoControversia}}</b></span>
     </p>
-    <app-form-registrar-mesa-de-trabajo></app-form-registrar-mesa-de-trabajo>
+    <app-form-registrar-mesa-de-trabajo-act [isEditable]=false></app-form-registrar-mesa-de-trabajo-act>
 </div>

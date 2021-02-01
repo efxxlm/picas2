@@ -1,1 +1,21 @@
-<svg id="Capa_1" data-name="Capa 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16.74 16.74"><defs><style>.cls-1{fill:none;stroke:#174193;stroke-miterlimit:10;stroke-width:0.2px;}.cls-2{fill:#174193;}.cls-3{fill:#fff;}</style></defs><title>calendarioCirculo</title><circle class="cls-1" cx="8.37" cy="8.37" r="8.27"/><rect class="cls-2" x="3.2" y="4.27" width="10.34" height="8.08" rx="1.62"/><rect class="cls-3" x="3.9" y="5.05" width="8.96" height="6.65" rx="0.77"/><rect class="cls-2" x="5.88" y="2.99" width="1.46" height="3.09" rx="0.73"/><rect class="cls-2" x="9.7" y="2.99" width="1.46" height="3.09" rx="0.73"/><rect class="cls-2" x="5.67" y="7.14" width="1.73" height="0.96" rx="0.48"/><rect class="cls-2" x="9.48" y="7.14" width="1.73" height="0.96" rx="0.48"/><rect class="cls-2" x="7.57" y="7.14" width="1.73" height="0.96" rx="0.48"/><rect class="cls-2" x="5.67" y="9.29" width="1.73" height="0.96" rx="0.48"/><rect class="cls-2" x="9.48" y="9.29" width="1.73" height="0.96" rx="0.48"/><rect class="cls-2" x="7.57" y="9.29" width="1.73" height="0.96" rx="0.48"/></svg>
+<svg id="Capa_1" data-name="Capa 1"
+    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16.74 16.74">
+    <defs>
+        <style>
+        <!-- .cls-1{fill:none;stroke:#174193;stroke-miterlimit:10;stroke-width:0.2px;} -->
+        .cls-2{fill:#174193;}.cls-3{fill:#fff;}
+        </style>
+    </defs>
+    <title>calendarioCirculo</title>
+    <!-- <circle class="cls-1" cx="8.37" cy="8.37" r="8.27"/> -->
+    <rect class="cls-2" x="3.2" y="4.27" width="10.34" height="8.08" rx="1.62"/>
+    <rect class="cls-3" x="3.9" y="5.05" width="8.96" height="6.65" rx="0.77"/>
+    <rect class="cls-2" x="5.88" y="2.99" width="1.46" height="3.09" rx="0.73"/>
+    <rect class="cls-2" x="9.7" y="2.99" width="1.46" height="3.09" rx="0.73"/>
+    <rect class="cls-2" x="5.67" y="7.14" width="1.73" height="0.96" rx="0.48"/>
+    <rect class="cls-2" x="9.48" y="7.14" width="1.73" height="0.96" rx="0.48"/>
+    <rect class="cls-2" x="7.57" y="7.14" width="1.73" height="0.96" rx="0.48"/>
+    <rect class="cls-2" x="5.67" y="9.29" width="1.73" height="0.96" rx="0.48"/>
+    <rect class="cls-2" x="9.48" y="9.29" width="1.73" height="0.96" rx="0.48"/>
+    <rect class="cls-2" x="7.57" y="9.29" width="1.73" height="0.96" rx="0.48"/>
+</svg>

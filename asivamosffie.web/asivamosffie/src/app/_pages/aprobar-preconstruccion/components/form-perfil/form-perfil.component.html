@@ -1,9 +1,25 @@
+<div
+  *ngIf="addressForm.invalid && addressForm.touched"
+  class="animateDown my-1em color-secondaryColor d-flex align-items-center justify-content-center"
+>
+  <img class="icon-incompleto--img mr-05em" src="assets/img/icon/incompleto.svg" alt="este campo es requerido" />
+  Debe ingresar la información en el campo para continuar
+</div>
 <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
   <mat-card class="shipping-card">
     <mat-card-content>
       <div class="row">
         <div class="pr-1">
-          <label class="label-left">Perfil</label>
+          <label
+            class="label-left"
+            for="perfil"
+            [class.color-secondaryColor]="
+              (addressForm.get('perfil').invalid && addressForm.get('perfil').touched) ||
+              (addressForm.get('perfil').invalid && estaEditando)
+            "
+          >
+            Perfil
+          </label>
         </div>
         <div class="col">
           <mat-form-field class="select-width">
@@ -14,21 +30,67 @@
             </mat-select>
           </mat-form-field>
         </div>
+        <span class="icon-incompleto">
+          <img
+            class="icon-incompleto--img"
+            src="assets/img/icon/incompleto.svg"
+            alt="este campo es requerido"
+            *ngIf="
+              (addressForm.get('perfil').invalid && addressForm.get('perfil').touched) ||
+              (addressForm.get('perfil').invalid && estaEditando)
+            "
+          />
+        </span>
       </div>
       <div class="row">
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
-              <label class="label-left">Cantidad de hojas de vida requeridas para el perfil</label>
+              <label
+                class="label-left"
+                for="hvRequeridas"
+                [class.color-secondaryColor]="
+                  (addressForm.get('hvRequeridas').invalid && addressForm.get('hvRequeridas').touched) ||
+                  (addressForm.get('hvRequeridas').invalid && estaEditando)
+                "
+              >
+                Cantidad de hojas de vida requeridas para el perfil
+              </label>
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput #hvRequeridas type="number" formControlName="hvRequeridas" maxlength="3" min="1"
-                  max="999" required (keypress)="validateNumberKeypress($event)"
-                  onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                <input
+                  matInput
+                  #hvRequeridas
+                  type="number"
+                  formControlName="hvRequeridas"
+                  maxlength="3"
+                  min="1"
+                  max="999"
+                  required
+                  (keypress)="validateNumberKeypress($event)"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                />
               </mat-form-field>
-              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
-              matTooltipClass="info-tooltip">{{3 - hvRequeridas.value.length}}</span>
+              <span
+                class="contador"
+                [matTooltipPosition]="'above'"
+                matTooltip="Campo numérico"
+                matTooltipClass="info-tooltip"
+              >
+                {{ 3 - hvRequeridas.value.length }}
+              </span>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  *ngIf="
+                    (addressForm.get('hvRequeridas').invalid && addressForm.get('hvRequeridas').touched) ||
+                    (addressForm.get('hvRequeridas').invalid && estaEditando)
+                  "
+                />
+              </span>
             </div>
           </div>
         </div>
@@ -37,16 +99,51 @@
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
-              <label class="label-left">Cantidad de hojas de vida requeridas para el perfil</label>
+              <label
+                class="label-left"
+                for="hvRecibidas"
+                [class.color-secondaryColor]="
+                  (addressForm.get('hvRecibidas').invalid && addressForm.get('hvRecibidas').touched) ||
+                  (addressForm.get('hvRecibidas').invalid && estaEditando)
+                "
+              >
+                Cantidad de hojas de vida requeridas para el perfil
+              </label>
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput #hvRecibidas type="number" formControlName="hvRecibidas" maxlength="3" min="1" max="999"
-                  required (keypress)="validateNumberKeypress($event)"
-                  onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                <input
+                  matInput
+                  #hvRecibidas
+                  type="number"
+                  formControlName="hvRecibidas"
+                  maxlength="3"
+                  min="1"
+                  max="999"
+                  required
+                  (keypress)="validateNumberKeypress($event)"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                />
               </mat-form-field>
-              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
-              matTooltipClass="info-tooltip">{{3 - hvRecibidas.value.length}}</span>
+              <span
+                class="contador"
+                [matTooltipPosition]="'above'"
+                matTooltip="Campo numérico"
+                matTooltipClass="info-tooltip"
+              >
+                {{ 3 - hvRecibidas.value.length }}
+              </span>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  *ngIf="
+                    (addressForm.get('hvRecibidas').invalid && addressForm.get('hvRecibidas').touched) ||
+                    (addressForm.get('hvRecibidas').invalid && estaEditando)
+                  "
+                />
+              </span>
             </div>
           </div>
         </div>
@@ -55,16 +152,51 @@
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
-              <label class="label-left">Cantidad de hojas de vida requeridas para el perfil</label>
+              <label
+                class="label-left"
+                for="miembrosParticipantes"
+                [class.color-secondaryColor]="
+                  (addressForm.get('hvAprovadas').invalid && addressForm.get('hvAprovadas').touched) ||
+                  (addressForm.get('hvAprovadas').invalid && estaEditando)
+                "
+              >
+                Cantidad de hojas de vida requeridas para el perfil
+              </label>
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput #hvAprovadas type="number" formControlName="hvAprovadas" maxlength="3" min="1" max="999"
-                  required (keypress)="validateNumberKeypress($event)"
-                  onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                <input
+                  matInput
+                  #hvAprovadas
+                  type="number"
+                  formControlName="hvAprovadas"
+                  maxlength="3"
+                  min="1"
+                  max="999"
+                  required
+                  (keypress)="validateNumberKeypress($event)"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                />
               </mat-form-field>
-              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
-              matTooltipClass="info-tooltip">{{3 - hvAprovadas.value.length}}</span>
+              <span
+                class="contador"
+                [matTooltipPosition]="'above'"
+                matTooltip="Campo numérico"
+                matTooltipClass="info-tooltip"
+              >
+                {{ 3 - hvAprovadas.value.length }}
+              </span>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  *ngIf="
+                    (addressForm.get('hvAprovadas').invalid && addressForm.get('hvAprovadas').touched) ||
+                    (addressForm.get('hvAprovadas').invalid && estaEditando)
+                  "
+                />
+              </span>
             </div>
           </div>
         </div>
@@ -73,34 +205,90 @@
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
-              <label class="label-left">Fecha de aprobación de la totalidad de las hojas de vida</label>
+              <label
+                class="label-left"
+                for="fecha"
+                [class.color-secondaryColor]="
+                  (addressForm.get('fecha').invalid && addressForm.get('fecha').touched) ||
+                  (addressForm.get('fecha').invalid && estaEditando)
+                "
+              >
+                Fecha de aprobación de la totalidad de las hojas de vida
+              </label>
             </div>
             <div class="col d-flex align-items-center">
               <mat-form-field class="example-full-width">
-                <input matInput [matDatepicker]="picker" required formControlName="fecha" [min]="minDate" readonly
-                  (click)="picker.open()">
+                <input
+                  matInput
+                  [matDatepicker]="picker"
+                  required
+                  formControlName="fecha"
+                  [min]="minDate"
+                  readonly
+                  (click)="picker.open()"
+                />
                 <mat-datepicker #picker></mat-datepicker>
               </mat-form-field>
               <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">
-                <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
               </button>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  *ngIf="
+                    (addressForm.get('fecha').invalid && addressForm.get('fecha').touched) ||
+                    (addressForm.get('fecha').invalid && estaEditando)
+                  "
+                />
+              </span>
             </div>
           </div>
         </div>
       </div>
       <div class="row">
         <div class="pr-1">
-          <label class="label-left" for="observaciones">Descripción</label>
+          <label
+            class="label-left"
+            for="observaciones"
+            [class.color-secondaryColor]="
+              (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+              (addressForm.get('observaciones').invalid && estaEditando)
+            "
+          >
+            Descripción
+          </label>
         </div>
         <div class="col d-flex">
-          <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config" required
-            (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" required></quill-editor>
+          <quill-editor
+            class="quill-editor-style card"
+            [styles]="editorStyle"
+            [modules]="config"
+            required
+            (onContentChanged)="maxLength($event, 1000)"
+            formControlName="observaciones"
+            [class.invalid]="
+              (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+              (addressForm.get('observaciones').invalid && estaEditando)
+            "
+            required
+          ></quill-editor>
           <div class="d-flex align-items-center">
             <span class="contador miles" *ngIf="addressForm.get('observaciones').value !== null">
-              {{1000 - textoLimpio(addressForm.get('observaciones').value)}}
+              {{ 1000 - textoLimpio(addressForm.get('observaciones').value) }}
             </span>
-            <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null">
-              1000
+            <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null"> 1000 </span>
+            <span class="icon-incompleto">
+              <img
+                class="icon-incompleto--img"
+                src="assets/img/icon/incompleto.svg"
+                alt="este campo es requerido"
+                *ngIf="
+                  (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                  (addressForm.get('observaciones').invalid && estaEditando)
+                "
+              />
             </span>
           </div>
         </div>
@@ -110,52 +298,104 @@
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left">Número de radicado en FFIE de aprobación de hojas de vida {{ i + 1 }} </label>
+                <label
+                  class="label-left"
+                  [for]="i"
+                  [class.color-secondaryColor]="
+                    (control.get(i).invalid && control.get(i).touched) || (control.get(i).invalid && estaEditando)
+                  "
+                >
+                  Número de radicado en FFIE de aprobación de hojas de vida {{ i + 1 }}
+                </label>
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #numeroRadicadoInput type="text" [formControlName]="i" maxlength="20" required>
+                  <input matInput #numeroRadicadoInput type="text" [formControlName]="i" maxlength="20" required />
                 </mat-form-field>
-                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{20 - numeroRadicadoInput.value.length}}</span>
+                <span
+                  class="contador"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Campo alfanumérico"
+                  matTooltipClass="info-tooltip"
+                >
+                  {{ 20 - numeroRadicadoInput.value.length }}
+                </span>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    *ngIf="
+                      (control.get(i).invalid && control.get(i).touched) || (control.get(i).invalid && estaEditando)
+                    "
+                  />
+                </span>
               </div>
             </div>
           </div>
           <div class="col-md-4 text-right" *ngIf="numeroRadicado.controls.length > 1">
             <button mat-button color="warn" type="button" class="btn-eliminar" (click)="eliminarRadicado(i)">
-              <img src="assets/img/icon/menos.svg" alt="Eliminar radicado">
+              <img src="assets/img/icon/menos.svg" alt="Eliminar radicado" />
               Eliminar número de radicado
             </button>
           </div>
         </div>
         <div class="text-right">
           <button mat-button color="warn" type="button" class="btn-eliminar" (click)="agregaRadicado()">
-            <img src="assets/img/icon/mas.svg" alt="Agregar otra fuente de recursos">
+            <img src="assets/img/icon/mas.svg" alt="Agregar otra fuente de recursos" />
             Agregar un nuevo tema
           </button>
         </div>
       </div>
       <div class="row">
         <div class="pr-1">
-          <label class="label-left">URL con soporte </label>
+          <label
+            class="label-left"
+            for="url"
+            [class.color-secondaryColor]="
+              (addressForm.get('url').invalid && addressForm.get('url').touched) ||
+              (addressForm.get('url').invalid && estaEditando)
+            "
+          >
+            URL con soporte
+          </label>
         </div>
         <div class="col">
           <mat-form-field class="full-width">
-            <input matInput #numeroRadicadoInput type="text" formControlName="url" maxlength="20" required>
+            <input matInput #numeroRadicadoInput type="text" formControlName="url" maxlength="20" required />
           </mat-form-field>
-          <span class="text-center d-block" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">Indique la ruta en la que se encuentra el soporte de las hojas de vida y el Acta de aprobación de personal.</span>
+          <span
+            class="info-url"
+            [matTooltipPosition]="'above'"
+            matTooltip="Campo alfanumérico"
+            matTooltipClass="info-tooltip"
+            >Indique la ruta en la que se encuentra el soporte de las hojas de vida y el Acta de aprobación de
+            personal.</span
+          >
         </div>
+        <span class="icon-incompleto">
+          <img
+            class="icon-incompleto--img"
+            src="assets/img/icon/incompleto.svg"
+            alt="este campo es requerido"
+            *ngIf="
+              (addressForm.get('url').invalid && addressForm.get('url').touched) ||
+              (addressForm.get('url').invalid && estaEditando)
+            "
+          />
+        </span>
       </div>
     </mat-card-content>
   </mat-card>
   <div class="text-right">
     <button mat-button color="warn" type="button" class="btn-eliminar">
-      <img src="assets/img/icon/menos.svg" alt="Eliminar perfil">
+      <img src="assets/img/icon/menos.svg" alt="Eliminar perfil" />
       Eliminar perfil
     </button>
   </div>
   <div class="text-center">
     <button mat-button color="warn" class="btn-guardar" type="submit">
-      <img src="assets/img/icon/guardar.svg" alt="Guardar">
+      <img src="assets/img/icon/guardar.svg" alt="Guardar" />
     </button>
   </div>
 </form>

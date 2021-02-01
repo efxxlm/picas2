@@ -31,12 +31,7 @@ export class GestionCalidadComponent implements OnInit {
         height: '45px'
     };
     config = {
-      toolbar: [
-        ['bold', 'italic', 'underline'],
-        [{ list: 'ordered' }, { list: 'bullet' }],
-        [{ indent: '-1' }, { indent: '+1' }],
-        [{ align: [] }],
-      ]
+      toolbar: []
     };
 
     get ensayosLaboratorio() {

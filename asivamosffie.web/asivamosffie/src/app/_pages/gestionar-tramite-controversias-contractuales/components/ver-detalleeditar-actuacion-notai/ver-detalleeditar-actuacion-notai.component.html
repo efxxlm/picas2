@@ -1,14 +1,14 @@
 <div class="container text-center">
     <div class="text-right">
-        <a routerLink="/gestionarTramiteControversiasContractuales/actualizarReclamoAseguradora" mat-button color="primary" class="btn-regresar">
+        <a routerLink="/gestionarTramiteControversiasContractuales/actualizarTramiteControversia" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
         </a>
     </div>
     <h1 class="title-menu--h1">
-        Ver detalle/Editar actuacion ACT controversia 17/08/2020 0003
+        Ver detalle/Editar actuacion {{this.actuacionNum}}
     </h1>
     <p class="info-sub-title">
-        <span>Solicitud: <b>CO00002</b> Número del contrato: <b>C223456789</b> Tipo de controversia: <b>Terminación anticipada por imposibilidad de ejecución (TAIE)</b></span>
+        <span>Solicitud: <b>{{this.codigoSolicitud}}</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Número del contrato: <b>{{this.numeroContrato}}</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tipo de controversia: <b>{{this.tipoControversia}}</b></span>
     </p>
-    <app-form-registar-actuacion-notai [isEditable]="true"></app-form-registar-actuacion-notai>
+    <app-form-registar-actuacion-notai [isEditable]="true" [idActuacionFromEdit]="this.idActuacion"></app-form-registar-actuacion-notai>
 </div>

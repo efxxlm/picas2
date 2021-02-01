@@ -1,0 +1,36 @@
+<section class="container text-center">
+    <div class="text-right">
+        <a routerLink="/gestionarProcesoDefensaJudicial" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">
+        Actualizar proceso {{defensaJudicial?.numeroProceso}}
+    </h1>
+    <p class="info-sub-title">
+        <span>Fecha de registro del proceso: <b>{{defensaJudicial?.fechaCreacion}}</b></span>
+        <span>Legitimación: <b>{{defensaJudicial?.esLegitimacionActiva?'Activa':'Pasiva'}}</b></span>
+    </p>
+</section>
+<section class="container">
+    <mat-card class="shipping-card var-main-gris">
+        <mat-card-content *ngFor="let contratacionp of defensaJudicial?.defensaJudicialContratacionProyecto;index as i">
+            <p> <strong>Número de contrato:</strong> {{contratacionp?.numeroContrato}} </p>
+            <p> <strong>Nombre de la entidad contratista:</strong> {{defensaJudicial?.entidadContratista}} </p>
+            <p> <strong>Departamento donde se inició el proceso:</strong> {{defensaJudicial?.departamento}} </p>
+            <p> <strong>Municipio donde se inició el proceso:</strong> {{defensaJudicial?.municipio}} </p>
+            <p> <strong>Tipo de acción:</strong> {{defensaJudicial?.tipoAccionCodigoNombre}} </p>
+            <p> <strong>Jurisdicción:</strong> {{defensaJudicial?.jurisdiccionCodigoNombre}} </p>
+            <h2 class="card-subTitle">Instituciones Educativas asociadas al proceso</h2>
+            <div>
+                <p class="mb1-em" style="font-size: 1.2em;"><b>Institución Educativa {{i+1}}</b></p>
+                <p> <strong>Institución Educativa asociada al proceso:</strong> {{contratacionp.contratacionProyecto.proyecto.institucionEducativa.nombre}} </p>
+                <p> <strong>Código DANE IE:</strong> {{contratacionp.contratacionProyecto.proyecto.institucionEducativa.codigoDane}} </p>
+                <p> <strong>Sede asociada al proceso:</strong>  {{contratacionp.contratacionProyecto.proyecto.sede.nombre}}</p>
+                <p> <strong>Código DANE SEDE:</strong>  {{contratacionp.contratacionProyecto.proyecto.sede.codigoDane}} </p>
+            </div>
+            
+        </mat-card-content>
+    </mat-card>
+    <app-control-tabla-actuacion-proceso [defensaJudicialID]="controlJudicialId"></app-control-tabla-actuacion-proceso>
+</section>

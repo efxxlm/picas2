@@ -449,10 +449,12 @@ namespace asivamosffie.services
                     procesoSeleccionCronogramaAntiguo.Descripcion = procesoSeleccionCronograma.Descripcion;
                     procesoSeleccionCronogramaAntiguo.FechaMaxima = procesoSeleccionCronograma.FechaMaxima;
                     procesoSeleccionCronogramaAntiguo.EstadoActividadCodigo = procesoSeleccionCronograma.EstadoActividadCodigo;
+                    procesoSeleccionCronogramaAntiguo.EtapaActualProcesoCodigo = procesoSeleccionCronograma.EtapaActualProcesoCodigo;
                     //procesoSeleccionCronogramaAntiguo.FechaCreacion = procesoSeleccionCronograma.FechaCreacion;
                     //procesoSeleccionCronogramaAntiguo.UsuarioCreacion = "forozco"; ////HttpContext.User.FindFirst("User").Value
                     procesoSeleccionCronogramaAntiguo.Eliminado = false;
                     procesoSeleccionCronogramaAntiguo.FechaModificacion = DateTime.Now;
+
 
                     _context.ProcesoSeleccionCronograma.Update(procesoSeleccionCronogramaAntiguo);
                 }
@@ -988,10 +990,17 @@ namespace asivamosffie.services
                     contratista.Activo = true;
                     contratista.FechaCreacion = DateTime.Now;
                     contratista.UsuarioCreacion = pUsuarioCreo.ToUpper();
+                    contratista.ProcesoSeleccionProponenteId = p.ProcesoSeleccionProponenteId;
 
                     _context.Contratista.Add(contratista);
 
                 });
+
+                var procesosel = _context.ProcesoSeleccion.Where(x=>x.NumeroProceso==pProcesoSeleccion.NumeroProceso).FirstOrDefault();
+                procesosel.CantidadProponentes = pProcesoSeleccion.CantidadProponentes;
+                procesosel.UrlSoporteProponentesSeleccionados = pProcesoSeleccion.UrlSoporteProponentesSeleccionados;
+                _context.ProcesoSeleccion.Update(procesosel);
+
 
                 await _context.SaveChangesAsync();
 
@@ -1490,7 +1499,10 @@ namespace asivamosffie.services
                             TelefonoProponente = tempOrdenLegibilidad.Telefono,
                             EmailProponente = tempOrdenLegibilidad.Correo,
                             NombreRepresentanteLegal = tempOrdenLegibilidad.RepresentanteLegal,
-                            CedulaRepresentanteLegal = tempOrdenLegibilidad.CedulaRepresentanteLegal.ToString()
+                            CedulaRepresentanteLegal = tempOrdenLegibilidad.CedulaRepresentanteLegal.ToString(),
+                            Eliminado = false,
+                            FechaCreacion = DateTime.Now,
+                            UsuarioCreacion= pUsuarioModifico
                         };
 
                         _context.ProcesoSeleccionProponente.Add(procesoSeleccionProponente);

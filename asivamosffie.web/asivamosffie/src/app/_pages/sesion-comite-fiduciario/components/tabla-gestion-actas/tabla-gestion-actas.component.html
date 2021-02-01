@@ -41,7 +41,7 @@
         <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
             <td mat-cell *matCellDef="let element">
-                <a *ngIf="!element.registroCompleto && element.estadoActa == 'Sin Acta'"
+                <a *ngIf="!element.registroCompleto && element.estadoActa == 'Sin Acta' && element.estadoActaCodigo != '0' "
                     [routerLink]="['crearActa', element.id]" mat-raised-button color="accent" class="btn-table">
                     Crear acta</a>
 

@@ -3,6 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
 
 @Component({
   selector: 'app-control-y-tabla-reclamacion-cc',
@@ -10,6 +11,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./control-y-tabla-reclamacion-cc.component.scss']
 })
 export class ControlYTablaReclamacionCcComponent implements OnInit {
+  public controversiaID = parseInt(localStorage.getItem("controversiaID"));
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -21,58 +23,45 @@ export class ControlYTablaReclamacionCcComponent implements OnInit {
     'estadoReclamacion',
     'gestion'
   ];
-  dataTable: any[] = [
-    {
-      fechaActualizacion: '10/08/2020',
-      actuacion: "Actuacion 1",
-      numActuacion: "ACT Controversia 0001",
-      numReclamacion: "---",
-      estadoReclamacion: 'Sin registro',
-      id: 1
-    },
-    {
-      fechaActualizacion: '10/08/2020',
-      actuacion: "Actuacion 2",
-      numActuacion: "ACT Controversia 0002",
-      numReclamacion: "REC 002",
-      estadoReclamacion: 'Enviado a comité técnico',
-      id: 2
-    },
-    {
-      fechaActualizacion: '10/08/2020',
-      actuacion: "Actuacion 3",
-      numActuacion: "ACT Controversia 0003",
-      numReclamacion: "REC 003",
-      estadoReclamacion: 'Aprobada por comité técnico',
-      id: 3
-    }
-  ]; 
-  constructor(private router: Router) { }
+  dataTable: any[] = [];
+  constructor(private router: Router, private services: ContractualControversyService) { }
 
   ngOnInit(): void {
-    this.dataSource = new MatTableDataSource(this.dataTable);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+    this.services.GetListGrillaControversiaReclamacion(this.controversiaID).subscribe((data:any)=>{
+      this.dataTable = data;
+      this.dataSource = new MatTableDataSource(this.dataTable);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+      this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+    });
   }
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
-  actualizarReclamacionAseguradora(id){
+  actualizarReclamacionAseguradora(id,numReclamacion){
     localStorage.setItem("reclamacionID",id);
+    localStorage.setItem("codReclamacion",numReclamacion);
     this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarReclamoAseguradora']);
   }
-  registrarReclamacionAseguradora(id){
+  registrarReclamacionAseguradora(id,actuacion,numeroActuacion){
+    localStorage.setItem("actuacion",actuacion);
+    localStorage.setItem("numeroActuacion",numeroActuacion);
     this.router.navigate(['/gestionarTramiteControversiasContractuales/registrarReclamacionAseguradora',id]);
   }
-  verDetalleEditarReclamacion(id){
-    this.router.navigate(['/gestionarTramiteControversiasContractuales/registrarReclamacionAseguradora',id]);
+  verDetalleEditarReclamacion(id,actuacion,numReclamacion){
+    localStorage.setItem("actuacion",actuacion);
+    localStorage.setItem("numReclamacion",numReclamacion);
+    this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarReclamacionAseguradora',id]);
   }
   enviarReclamacionComiteTecnico(id){
-
+    this.services.CambiarEstadoActuacionReclamacion(id,'3').subscribe((data:any)=>{
+      this.ngOnInit();
+    });
   }
-  verDetalleReclamacion(id){
+  verDetalleReclamacion(id,actuacion,numReclamacion){
     this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleReclamacionAseguradora',id]);
+    localStorage.setItem("actuacion",actuacion);
+    localStorage.setItem("numReclamacion",numReclamacion);
   }
 }

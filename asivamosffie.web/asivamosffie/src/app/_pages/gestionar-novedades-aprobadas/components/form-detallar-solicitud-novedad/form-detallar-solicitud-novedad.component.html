@@ -1,0 +1,163 @@
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+  <mat-card class="shipping-card">
+    <mat-card-content>
+      <div class="row">
+        <div class="col-md-8">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left" for="nombreAportante" [class.color-secondaryColor]="
+              addressForm.get('nombreAportante').invalid && addressForm.get('nombreAportante').touched ||
+              addressForm.get('nombreAportante').invalid && estaEditando">
+                Nombre del aportante
+              </label>
+            </div>
+            <div class="col d-flex">
+              <mat-form-field class="full-width">
+                <input matInput type="text" formControlName="nombreAportante" #nombreAportante maxlength="50" required>
+              </mat-form-field>
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                matTooltipClass="info-tooltip">
+                {{50 - nombreAportante.value.length}}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-8">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left" for="valorAportante" [class.color-secondaryColor]="
+              addressForm.get('valorAportante').invalid && addressForm.get('valorAportante').touched ||
+              addressForm.get('valorAportante').invalid && estaEditando">
+                Valor del aporte
+              </label>
+            </div>
+            <div class="col d-flex">
+              <mat-form-field class="full-width">
+                <input matInput formControlName="valorAportante" #valorAportante currencyMask required maxLength="20"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }">
+              </mat-form-field>
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
+                matTooltipClass="info-tooltip">{{20 - valorAportante.value.length}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <h2 class="card-subTitle">Usos</h2>
+      <div formArrayName="componente" *ngFor="let componente of componenteField.controls; let i = index">
+        <div [formGroupName]="i">
+          <mat-card-title class="header-card--text pl-0">
+            Componente {{ i + 1 }}
+          </mat-card-title>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left" for="fase" [class.color-secondaryColor]="
+                    componente.get('fase').invalid && componente.get('fase').touched ||
+                    componente.get('fase').invalid && estaEditando">
+                    Fase
+                  </label>
+                </div>
+                <div class="col">
+                  <mat-form-field class="select-width">
+                    <mat-select required formControlName="fase">
+                      <mat-option *ngFor="let instancia of faseArray" [value]="instancia.value">
+                        {{ instancia.name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left" for="componente" [class.color-secondaryColor]="
+                    componente.get('componente').invalid && componente.get('componente').touched ||
+                    componente.get('componente').invalid && estaEditando">
+                    Componente
+                  </label>
+                </div>
+                <div class="col">
+                  <mat-form-field class="select-width">
+                    <mat-select required formControlName="componente">
+                      <mat-option *ngFor="let instancia of componenteArray" [value]="instancia.value">
+                        {{ instancia.name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left" for="uso" [class.color-secondaryColor]="
+                  componente.get('uso').invalid && componente.get('uso').touched ||
+                  componente.get('uso').invalid && estaEditando">
+                    Uso {{ i + 1 }}
+                  </label>
+                </div>
+                <div class="col">
+                  <mat-form-field class="select-width">
+                    <mat-select required formControlName="uso">
+                      <mat-option *ngFor="let instancia of usosArray" [value]="instancia.value">
+                        {{ instancia.name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left" for="valorUso" [class.color-secondaryColor]="
+                  componente.get('valorUso').invalid && componente.get('valorUso').touched ||
+                  componente.get('valorUso').invalid && estaEditando">
+                    Valor del uso
+                  </label>
+                </div>
+                <div class="col d-flex">
+                  <mat-form-field class="full-width">
+                    <input matInput formControlName="valorUso" #valorUso currencyMask required maxLength="20"
+                      onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                      [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }">
+                  </mat-form-field>
+                  <span class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
+                    matTooltipClass="info-tooltip">{{20 - valorUso.value.length}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="text-right">
+          <button mat-button color="warn" type="button" class="btn-eliminar" (click)="eliminarComponente(i)"
+            *ngIf="componenteField.controls.length > 0">
+            <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
+            Eliminar tema
+          </button>
+          <button mat-button color="warn" type="button" class="btn-eliminar" (click)="agregarComponente()"
+            *ngIf="i + 1 === componenteField.controls.length">
+            <img src="assets/img/icon/mas.svg" alt="Agregar otra claúsula">
+            Agregar otra claúsula
+          </button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <div class="text-center">
+    <button mat-button color="warn" class="btn-guardar" type="submit">
+      <img src="assets/img/icon/guardar.svg" alt="Guardar">
+    </button>
+  </div>
+</form>

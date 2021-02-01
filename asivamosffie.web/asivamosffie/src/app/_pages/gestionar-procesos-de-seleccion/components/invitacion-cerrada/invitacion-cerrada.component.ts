@@ -238,7 +238,7 @@ export class InvitacionCerradaComponent implements OnInit {
       {
         if(pProceso.evaluacionDescripcion!="" || pProceso.urlSoporteEvaluacion!="")
         {
-         if(pProceso.evaluacionDescripcion!="" && pProceso.urlSoporteEvaluacion!="")
+         if(pProceso.evaluacionDescripcion!=undefined && pProceso.evaluacionDescripcion!="" && pProceso.urlSoporteEvaluacion!="" && pProceso.urlSoporteEvaluacion!=undefined)
          {
            retorno=2;
          }  
@@ -259,7 +259,7 @@ export class InvitacionCerradaComponent implements OnInit {
     }
     else
     {
-      if(pProceso.listaContratistas.length>0)
+      if(pProceso.cantidadProponentes>0 && pProceso.urlSoporteProponentesSeleccionados!=null)
       {
         return 2;
       }

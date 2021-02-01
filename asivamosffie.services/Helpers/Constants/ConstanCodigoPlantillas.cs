@@ -65,10 +65,13 @@
         Ficha_DRP = 52,
         DRP_TABLA_FUENTES = 53,
         DRP_TABLA_USOS = 54,
-        DDP_Cabecera_Proyecto = 55,
+        DDP_Cabecera_Proyecto=55,
+        Controversia_Contractual = 59,
+        Ficha_Estudio_Defensa_Judicial = 60,
         Registro_Proyectos_Acta = 61,
-
+        Ficha_estudio_tr_contratos=62,
         Contrato_Acta_Interventoria_Construccion = 63,
-        Contrato_Acta_Obra_Construccion = 64
+        Contrato_Acta_Obra_Construccion = 64,
+        Proponentes_Proceso_Seleccion = 65
     }
 }

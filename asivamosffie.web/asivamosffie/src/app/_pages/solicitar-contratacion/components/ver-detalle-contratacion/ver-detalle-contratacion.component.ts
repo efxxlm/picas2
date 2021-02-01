@@ -100,7 +100,9 @@ export class VerDetalleContratacionComponent implements OnInit {
               componente: componenteSeleccionado[0].nombre,
               fase: faseSeleccionado[0].nombre,
               tipoUso: [], 
-              valorUso: []
+              valorUso: [],
+              contratacionProyectoAportanteId: cont.contratacionProyectoAportanteId,
+              
             }
             apor.tipoUso.push( usoSeleccionado[0].nombre );
             apor.valorUso.push( uso.valorUso  );

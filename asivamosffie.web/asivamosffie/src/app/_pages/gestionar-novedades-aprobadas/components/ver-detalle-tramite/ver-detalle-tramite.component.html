@@ -1,0 +1,253 @@
+<section class="container">
+  <div class="container text-center">
+    <div class="text-right">
+      <a routerLink="../.." mat-button color="primary" class="btn-regresar">
+        <img src="assets/img/icon/regresar.svg" alt="Regresar">
+      </a>
+    </div>
+    <h1 class="title-menu--h1">
+      Ver detalle registro revisión jurídica solicitud de novedad NOV-001
+    </h1>
+    <p class="info-sub-title">
+      Número de contrato <b>C223456789</b>
+    </p>
+  </div>
+
+  <mat-card class="shipping-card var-main-gris">
+    <mat-card-content>
+      <p>
+        <strong>
+          Fecha de solicitud:
+        </strong>
+        20/10/2020
+      </p>
+      <p>
+        <strong>
+          Fecha de aprobación del supervisor:
+        </strong>
+        23/10/2020
+      </p>
+      <p>
+        <strong>
+          Tipo de solicitud:
+        </strong>
+        Reinicio
+      </p>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="mb-2em">
+    <mat-accordion>
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header">
+          <mat-panel-title class="expansion-style--title">
+            Solicitud de novedad
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-solicitud-novedad></app-solicitud-novedad>
+      </mat-expansion-panel>
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header">
+          <mat-panel-title class="expansion-style--title">
+            Soporte de la solicitud
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <mat-card class="shipping-card var-main-gris">
+          <mat-card-header class="header-card header-card--margin">
+            <mat-card-title class="header-card--text">
+              Soporte del registro del proceso
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>
+              <strong>
+                URL con soporte:
+              </strong>
+              https://drive.google.com/drive/registrodecontroversiacontractual/registrosolicituddenovedad
+            </p>
+          </mat-card-content>
+        </mat-card>
+
+      </mat-expansion-panel>
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header">
+          <mat-panel-title class="expansion-style--title">
+            Detallar solicitud
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div class="table-responsive mb-2em px-table">
+          <table class="mat-table cdk-table mat-sort mat-table-style table-form table-form--2 table-gris">
+            <thead>
+              <tr class="mat-header-row cdk-header-row ng-star-inserted">
+                <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                  Aportante
+                </th>
+                <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                  Valor del aportante
+                </th>
+                <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                  Componente
+                </th>
+                <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                  Fase
+                </th>
+                <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                  Uso
+                </th>
+                <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                  Valor de uso
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let observacion of detallarSolicitud">
+                <td class="mat-cell cdk-cell ng-star-inserted">
+                  {{ observacion.aportante }}
+                </td>
+                <td class="mat-cell cdk-cell ng-star-inserted">
+                  {{ observacion.valorAportante }}
+                </td>
+                <td class="mat-cell cdk-cell ng-star-inserted">
+                  {{ observacion.componente }}
+                </td>
+                <td class="mat-cell cdk-cell ng-star-inserted">
+                  {{ observacion.fase }}
+                </td>
+                <td class="mat-cell cdk-cell ng-star-inserted">
+                  {{ observacion.uso }}
+                </td>
+                <td class="mat-cell cdk-cell ng-star-inserted">
+                  {{ observacion.valorUso }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </mat-expansion-panel>
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header">
+          <mat-panel-title class="expansion-style--title">
+            Registrar revisión jurídica de la novedad
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <mat-card class="shipping-card var-main-gris">
+          <mat-card-content>
+            <p>
+              <strong>
+                Fecha de envío de solicitud al grupo de Gestión Contractual:
+              </strong>
+              29/10/2020
+            </p>
+            <p>
+              <strong>
+                Estado del proceso:
+              </strong>
+              Aprobada
+            </p>
+            <p>
+              <strong>
+                Fecha de aprobación del grupo de Gestión Contractual:
+              </strong>
+              30/10/2020
+            </p>
+            <p>
+              <strong>
+                Fecha de aprobación del grupo de Gestión Contractual:
+              </strong>
+              Laura Andrea Osorio Martínez
+            </p>
+          </mat-card-content>
+        </mat-card>
+
+      </mat-expansion-panel>
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header">
+          <mat-panel-title class="expansion-style--title">
+            Registrar firmas
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <mat-card class="shipping-card var-main-gris">
+          <mat-card-content>
+            <p class="mb-1em">
+              <strong>
+                ¿Desea continuar con el proceso?:
+              </strong>
+              Si
+            </p>
+            <p>
+              <strong>
+                Fecha de envió de acta para firma del contratista de obra:
+              </strong>
+              15/06/2020
+            </p>
+            <p>
+              <strong>
+                Fecha de firma del contratista de obra:
+              </strong>
+              30/06/2020
+            </p>
+            <p>
+              <strong>
+                Fecha de envió del acta para firma del contratista de interventoría:
+              </strong>
+              08/07/2020
+            </p>
+            <p>
+              <strong>
+                Fecha de firma del contratista de interventoría:
+              </strong>
+              10/07/2020
+            </p>
+            <p>
+              <strong>
+                Fecha de envío del acta para firma del apoyo a la supervisión:
+              </strong>
+              15/07/2020
+            </p>
+            <p>
+              <strong>
+                Fecha de firma del apoyo a la supervisión:
+              </strong>
+              05/08/2020
+            </p>
+            <p>
+              <strong>
+                Fecha de envío para firma del supervisor:
+              </strong>
+              15/08/2020
+            </p>
+            <p>
+              <strong>
+                Fecha de firma del supervisor:
+              </strong>
+              10/05/2020
+            </p>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="shipping-card var-main-gris">
+          <mat-card-header class="header-card header-card--margin">
+            <mat-card-title class="header-card--text">
+              Soporte del registro de firmas
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>
+              <strong>
+                URL con soporte:
+              </strong>
+              https://drive.google.com/drive/registrodecontroversiacontractual/registrodefirmas
+            </p>
+          </mat-card-content>
+        </mat-card>
+
+      </mat-expansion-panel>
+    </mat-accordion>
+
+  </div>
+</section>

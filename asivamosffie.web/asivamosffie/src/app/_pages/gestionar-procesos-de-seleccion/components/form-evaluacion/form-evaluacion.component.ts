@@ -1,6 +1,8 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { EstadosProcesoSeleccion, ProcesoSeleccion } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-form-evaluacion',
@@ -32,8 +34,25 @@ export class FormEvaluacionComponent {
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder,public dialog: MatDialog) {}
+  noGuardado=true;
+  ngOnDestroy(): void {
+    if ( this.noGuardado===true && this.addressForm.dirty) {
+      let dialogRef =this.dialog.open(ModalDialogComponent, {
+        width: '28em',
+        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
+      });   
+      dialogRef.afterClosed().subscribe(result => {
+        // console.log(`Dialog result: ${result}`);
+        if(result === true)
+        {
+            this.onSubmit();          
+        }           
+      });
+    }
+  };
 
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
@@ -43,8 +62,8 @@ export class FormEvaluacionComponent {
 
   textoLimpio(texto: string) {
     let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
 
     if ( texto ){
       const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
@@ -63,13 +82,15 @@ export class FormEvaluacionComponent {
   }
 
   onSubmit() {
-    console.log(this.addressForm.value);
+    this.estaEditando = true;
+    // console.log(this.addressForm.value);
 
     this.procesoSeleccion.procesoSeleccionId = this.addressForm.get('procesoSeleccionId').value,
     this.procesoSeleccion.evaluacionDescripcion = this.addressForm.get('descricion').value,
     this.procesoSeleccion.urlSoporteEvaluacion = this.addressForm.get('url').value,
     
     //console.log(procesoS);
+    this.noGuardado=false;
     this.guardar.emit(null);
   }
 

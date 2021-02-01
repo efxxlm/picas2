@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ActBeginService } from 'src/app/core/_services/actBegin/act-begin.service';
 import { CommonService } from 'src/app/core/_services/common/common.service';
+import { GestionarActPreConstrFUnoService } from 'src/app/core/_services/GestionarActPreConstrFUno/gestionar-act-pre-constr-funo.service';
 import { Contrato } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
 
 @Component({
@@ -50,7 +51,7 @@ export class VerDetalleTecnicoFdosConstrComponent implements OnInit {
   numeroIdentificacionRepresentanteContratistaInterventoria: any;
   valorProponente: any;
   rutaActaSuscrita: any;
-  constructor(private activatedRoute: ActivatedRoute,private services: ActBeginService, private commonSvc: CommonService) { }
+  constructor(private activatedRoute: ActivatedRoute,private services: ActBeginService, private commonSvc: CommonService, private gestionarActaSvc: GestionarActPreConstrFUnoService) { }
 
   ngOnInit(): void {
     this.cargarRol();
@@ -139,5 +140,17 @@ export class VerDetalleTecnicoFdosConstrComponent implements OnInit {
       },
       err => console.log( `<b>${err.message}</b>` )
     );
+  }
+  descargarActaDesdeTabla() {
+    this.gestionarActaSvc.GetActaByIdPerfil(this.idContrato, 'True').subscribe(resp => {
+      const documento = `${this.contratoCode}.pdf`; // Valor de prueba
+      const text = documento,
+        blob = new Blob([resp], { type: 'application/pdf' }),
+        anchor = document.createElement('a');
+      anchor.download = documento;
+      anchor.href = window.URL.createObjectURL(blob);
+      anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+      anchor.click();
+    });
   }
 }

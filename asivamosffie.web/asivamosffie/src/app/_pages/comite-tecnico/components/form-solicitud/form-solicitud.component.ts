@@ -25,7 +25,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
   @Output() validar: EventEmitter<boolean> = new EventEmitter();
 
   minDate: Date;
-
+  estaEditando = false;
   tiposSolicitud = TiposSolicitud;
 
   fechaSolicitud: Date;
@@ -117,8 +117,8 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
 
   textoLimpio(texto: string) {
     let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
 
     if ( texto ){
       const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
@@ -129,9 +129,11 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
   private contarSaltosDeLinea(cadena: string, subcadena: string) {
     let contadorConcurrencias = 0;
     let posicion = 0;
-    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
-      ++contadorConcurrencias;
-      posicion += subcadena.length;
+    if ( cadena ){
+      while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
+        ++contadorConcurrencias;
+        posicion += subcadena.length;
+      }
     }
     return contadorConcurrencias;
   }
@@ -153,7 +155,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
       data: { modalTitle, modalText, siNoBoton: true }
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+      // console.log(`Dialog result: ${result}`);
       if (result === true) {
         this.eliminarCompromisos(e);
       }
@@ -230,7 +232,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
   changeCompromisos(requiereCompromisos) {
 
     if (requiereCompromisos.value === false) {
-      console.log(requiereCompromisos.value);
+      // console.log(requiereCompromisos.value);
       this.technicalCommitteSessionService.eliminarCompromisosSolicitud(this.sesionComiteSolicitud.sesionComiteSolicitudId)
         .subscribe(respuesta => {
           if (respuesta.code == "200") {
@@ -256,7 +258,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
   }
 
   onSubmit() {
-
+    this.estaEditando = true;
     if (this.proyectos)
       this.proyectos.forEach(p => {
         let proyecto = p.proyecto
@@ -299,12 +301,12 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
       Solicitud.sesionSolicitudCompromiso.push(sesionSolicitudCompromiso);
     })
 
-    console.log(Solicitud)
+    // console.log(Solicitud)
 
     this.technicalCommitteSessionService.createEditActasSesionSolicitudCompromiso(Solicitud)
       .subscribe(respuesta => {
         this.openDialog('', `<b>${respuesta.message}</b>`)
-        console.log(respuesta.data)
+        // console.log(respuesta.data)
         this.validar.emit(respuesta.data);
         if (respuesta.code == "200" && !respuesta.data)
           this.router.navigate(['/comiteTecnico/crearActa', this.sesionComiteSolicitud.comiteTecnicoId])
@@ -314,7 +316,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
 
   cargarRegistro() {
 
-    console.log(this.sesionComiteSolicitud)
+    // console.log(this.sesionComiteSolicitud)
 
     let estados: string[] = ['1', '3', '5']
 
@@ -342,6 +344,17 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
           }else if ( this.cantidadAprobado <= this.cantidadNoAprobado ){
             this.resultadoVotacion = 'No Aprobó'
           }
+
+          this.estadosArray.sort(function (a, b) {
+            if (a.codigo > b.codigo) {
+              return 1;
+            }
+            if (a.codigo < b.codigo) {
+              return -1;
+            }
+            // a must be equal to b
+            return 0;
+          });
         }
         
       })

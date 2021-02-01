@@ -29,7 +29,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
   personaNaturalForm = this.fb.group({
     procesoSeleccionProponenteId: [],
     nombre: [null, Validators.compose([
-      Validators.required, Validators.minLength(2), Validators.maxLength(1000)])
+      Validators.minLength(2), Validators.maxLength(1000)])
     ],
     numeroIdentificacion: [null, Validators.compose([
       Validators.required, Validators.minLength(10), Validators.maxLength(12)])
@@ -55,7 +55,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
   personaJuridicaIndividualForm = this.fb.group({
     procesoSeleccionProponenteId: [],
     nombre: [null, Validators.compose([
-      Validators.required, Validators.minLength(2), Validators.maxLength(1000)])
+       Validators.minLength(2), Validators.maxLength(1000)])
     ],
     numeroIdentificacion: [null, Validators.compose([
       Validators.required, Validators.minLength(10), Validators.maxLength(12)])
@@ -90,11 +90,11 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
       Validators.required, ])
     ],
     nombreConsorcio: [null, Validators.compose([
-      Validators.required, Validators.minLength(2), Validators.maxLength(1000)])
+       Validators.minLength(2), Validators.maxLength(1000)])
     ],
     entidades: this.fb.array([]),
     nombre: [null, Validators.compose([
-      Validators.required, Validators.minLength(2), Validators.maxLength(100)])
+      Validators.minLength(2), Validators.maxLength(100)])
     ],
     numeroIdentificacion: [null, Validators.compose([
       Validators.required,  Validators.maxLength(12)])
@@ -122,6 +122,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
   listaProponentesNombres: any[]=[];
   nombresapo: string[]=[];
   filteredNameJuridica2: Observable<string[]>;
+  estaEditando = false;
 
   get entidades() {
     return this.unionTemporalForm.get('entidades') as FormArray;
@@ -140,7 +141,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
   }
   ngOnInit() {
     
-    return new Promise( resolve => {
+    return new Promise<void>( resolve => {
       forkJoin([
         
         this.commonService.listaTipoProponente(),
@@ -346,6 +347,15 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
   }
 
   onSubmitPersonaNatural() {
+    console.log(this.personaNaturalForm);
+    if(this.personaNaturalForm.invalid)
+    {
+     this.openDialog("","<b>Por favor diligencie completamente el formulario</b>");
+     return false; 
+    }
+
+
+    this.estaEditando = true;
     if(!this.noTanNuevo)
     {
       this.procesoSeleccion.procesoSeleccionProponente = [];
@@ -372,6 +382,12 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
 
   onSubmitPersonaJuridicaIndividual() {
 
+    if(this.personaJuridicaIndividualForm.invalid)
+    {
+     this.openDialog("","<b>Por favor diligencie completamente el formulario</b>");
+     return false; 
+    }
+    this.estaEditando = true;
     if(!this.noTanNuevo)
     {
       this.procesoSeleccion.procesoSeleccionProponente = [];
@@ -416,6 +432,26 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
 
   onSubmitUnionTemporal() {
 
+    console.log(this.unionTemporalForm);
+    if(this.unionTemporalForm.get('nombreConsorcio').value=="" ||
+    this.unionTemporalForm.get('telefono').value==""||
+    this.unionTemporalForm.get('cedulaRepresentanteLegal').value==""||
+    this.unionTemporalForm.get('municipio').value==""||
+    this.unionTemporalForm.get('direccion').value==""||
+    this.unionTemporalForm.get('correoElectronico').value==""||
+    this.unionTemporalForm.get('nombreConsorcio').value==null ||
+    this.unionTemporalForm.get('telefono').value==null||
+    this.unionTemporalForm.get('cedulaRepresentanteLegal').value==null||
+    this.unionTemporalForm.get('municipio').value==null||
+    this.unionTemporalForm.get('direccion').value==null||
+    this.unionTemporalForm.get('correoElectronico').value==null
+
+    )
+    {
+     this.openDialog("","<b>Por favor diligencie completamente el formulario</b>");
+     return false; 
+    }
+    this.estaEditando = true;
     let porcentaje: number = 0;
 
     if(!this.noTanNuevo)
