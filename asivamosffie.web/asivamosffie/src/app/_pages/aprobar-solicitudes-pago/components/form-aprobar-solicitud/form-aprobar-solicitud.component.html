@@ -133,37 +133,6 @@
                 <p><strong>Tipo de pago:</strong> {{ otrosCostosForm.get( 'tipoPago' ).value.nombre }} </p>
             </mat-card-content>
         </mat-card>
-        <form [formGroup]="otrosCostosForm">
-            <div class="row mtop justCenter">
-                <div class="col-md-5">
-                    <label class="label-left">¿Desde la supervisión tiene observaciones a otros costos y servicios?</label>
-                </div>
-                <div class="col-md-2">
-                    <mat-radio-group aria-labelledby="example-radio-group-label" class="radioInput"
-                        formControlName="tieneObservaciones">
-                        <mat-radio-button class="radio-button" [value]="true">Sí</mat-radio-button>
-                        <mat-radio-button class="radio-button" [value]="false">No</mat-radio-button>
-                    </mat-radio-group>
-                    <span class="required-form-group" style="margin-left: 1px;">*</span>
-                </div>
-            </div>
-            <div class="d-flex align-items-center mtop" *ngIf="otrosCostosForm.get('tieneObservaciones').value === true">
-                <div class="text-area-quill izqTitle">
-                    <label for="observaciones" class="text-area-quill--label" style="color: #174193;">Observaciones a otros costos y servicios</label>
-                    <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
-                        (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observaciones></quill-editor>
-                </div>
-                <span class="contador miles" *ngIf="otrosCostosForm.get('observaciones').value">
-                    {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
-                </span>
-                <span class="contador miles" *ngIf="otrosCostosForm.get('observaciones').value === null">
-                    1000
-                </span>
-            </div>
-            <button mat-button color="warn" class="btn-guardar" type="button" (click)="guardarOtrosCostos()">
-                <img src="assets/img/icon/guardar.svg" alt="Guardar">
-            </button>
-        </form>
     </ng-template>
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
@@ -217,46 +186,4 @@
             </form>
         </mat-expansion-panel>
     </mat-accordion>
-
-    <!-- Expensas se creara un componente nuevo -->
-    <p style="margin-top: 0.5em;" *ngIf="this.idGestion==2">
-        <span class="mx-1em"><b>Tipo de solicitud: </b>Expensas</span>
-        <span class="mx-1em"><b>Número de contrato: </b>N326326</span>
-    </p>
-    <div *ngIf="this.idGestion==2">
-        <mat-card class="shipping-card var-main-gris">
-            <mat-card-header class="header-card header-card--margin">
-                <mat-card-title class="header-card--text textoGris">
-                    Expensas
-                </mat-card-title>
-            </mat-card-header>
-            <mat-card-content style="text-align: left;">
-                <p><strong>Llave MEN:</strong> LL990088</p>
-                <p><strong>Número de radicado SAC:</strong> 00987652</p>
-                <p><strong>Número de factura:</strong> FAC00983</p>
-                <p><strong>Valor facturado:</strong> $35.000.000</p>
-                <p><strong>Tipo de pago:</strong> Costo variable</p>
-                <p><strong>Concepto de pago para el criterio:</strong> Derribar arbol de 45 mtrs</p>
-                <p><strong>Valor facturado al concepto:</strong> $2.115.000</p>
-            </mat-card-content>
-        </mat-card>
-        <div class="text-center">
-            <p class="info-container">
-                <span class="info-text sin-diligenciar">Sin diligenciar</span>
-                <span class="info-text en-proceso">En proceso</span>
-                <span class="info-text completo">Completo</span>
-            </p>
-        </div>
-        <mat-accordion>
-            <mat-expansion-panel class="expansion-style">
-                <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title sin-diligenciar">
-                        Lista de chequeo    
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-                <!-- dbenitez, Este componente puesto es provisional mientras se define al momento de la integracion-->
-                <app-obs-valid-listachequeo></app-obs-valid-listachequeo>
-            </mat-expansion-panel>
-        </mat-accordion>
-    </div>
 </section>

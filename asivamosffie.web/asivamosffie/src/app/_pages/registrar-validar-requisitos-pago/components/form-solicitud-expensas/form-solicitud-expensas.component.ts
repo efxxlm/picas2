@@ -44,11 +44,11 @@ export class FormSolicitudExpensasComponent implements OnInit {
 
     ngOnInit(): void {
         this.commonSvc.tiposDePagoExpensas()
-            .subscribe( response => {
-                this.tipoPagoArray = response;
+            .subscribe( tipoPago => {
+                this.tipoPagoArray = tipoPago;
                 this.commonSvc.conceptosDePagoExpensas()
-                    .subscribe( response => {
-                        this.conceptoPagoCriterioArray = response;
+                    .subscribe( conceptoPago => {
+                        this.conceptoPagoCriterioArray = conceptoPago;
                         if ( this.solicitudPago !== undefined ) {
                             this.solicitudPagoId = this.solicitudPago.solicitudPagoId;
                             const solicitudPagoExpensas = this.solicitudPago.solicitudPagoExpensas[0];

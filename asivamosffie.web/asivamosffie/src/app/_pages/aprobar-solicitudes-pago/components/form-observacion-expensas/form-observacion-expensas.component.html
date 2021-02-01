@@ -1,1 +1,86 @@
-<p>form-observacion-expensas works!</p>
+<section class="container text-center mb-2em" *ngIf="solicitudPago !== undefined">
+    <mat-card class="shipping-card">
+        <mat-card-header class="header-card header-card--margin">
+            <mat-card-title class="header-card--text">
+                Expensas
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content style="text-align: left;">
+            <p><strong>Llave MEN:</strong> {{ detalleForm.get( 'llaveMen' ).value }} </p>
+            <p><strong>Número de radicado SAC:</strong> {{ detalleForm.get( 'numeroRadicadoSAC' ).value }} </p>
+            <p><strong>Número de factura:</strong> {{ detalleForm.get( 'numeroFactura' ).value }} </p>
+            <p><strong>Valor facturado:</strong> ${{ detalleForm.get( 'valorFacturado' ).value | currency:' ':'symbol-narrow':'.0-0' }} </p>
+            <p><strong>Tipo de pago:</strong> {{ detalleForm.get( 'tipoPago' ).value.nombre }} </p>
+            <p><strong>Concepto de pago para el criterio:</strong> {{ detalleForm.get( 'conceptoPagoCriterio' ).value.nombre }} </p>
+            <p><strong>Valor facturado al concepto:</strong> ${{ detalleForm.get( 'valorFacturadoConcepto' ).value | currency:' ':'symbol-narrow':'.0-0' }} </p>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title en-alerta">
+                    Lista de chequeo
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div style="margin-top: 1em;">
+                <div class="d-flex align-items-center solbloq ml8 info-text en-alertaLibre mb-2em">
+                    Este acordeón consume información de la funcionalidad Listas de chequeó.
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                    Soporte de la solicitud
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-card class="shipping-card var-main-gris">
+                <mat-card-header class="header-card header-card--margin">
+                    <mat-card-title class="header-card--text textoGris">
+                        Soporte de la solicitud de pago
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content style="text-align: left;">
+                    <p><strong>URL con soporte:</strong> {{ solicitudPago.solicitudPagoSoporteSolicitud[0].urlSoporte }} </p>
+                </mat-card-content>
+            </mat-card>
+
+            <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+                <div class="row mtop justCenter">
+                    <div class="col-md-5">
+                        <label class="label-left">¿Desde la supervisión tiene observaciones a el soporte de la solicitud?</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-radio-group aria-labelledby="example-radio-group-label" class="radioInput"
+                            formControlName="tieneObservaciones">
+                            <mat-radio-button class="radio-button" [value]="true">Sí</mat-radio-button>
+                            <mat-radio-button class="radio-button" [value]="false">No</mat-radio-button>
+                        </mat-radio-group>
+                        <span class="required-form-group" style="margin-left: 1px;">*</span>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mtop" *ngIf="addressForm.get('tieneObservaciones').value === true">
+                    <div class="text-area-quill izqTitle">
+                        <label for="observaciones" class="text-area-quill--label" style="color: #174193;">Observaciones a el soporte de la solicitud</label>
+                        <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
+                            (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observaciones></quill-editor>
+                    </div>
+                    <span class="contador miles" *ngIf="addressForm.get('observaciones').value">
+                        {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
+                    </span>
+                    <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null">
+                        1000
+                    </span>
+                </div>
+                <button mat-button color="warn" class="btn-guardar"
+                    type="submit">
+                    <img src="assets/img/icon/guardar.svg" alt="Guardar">
+                </button>
+            </form>
+        </mat-expansion-panel>
+    </mat-accordion>
+</section>

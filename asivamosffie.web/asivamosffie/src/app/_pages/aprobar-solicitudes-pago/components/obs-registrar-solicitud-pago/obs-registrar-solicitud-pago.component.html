@@ -45,38 +45,53 @@
     </mat-card>
     
     <!-- Observacion a la solicitud -->
-    <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
-        <div class="row mtop justCenter">
-            <div class="col-md-5">
-                <label class="label-left">¿Desde la supervisión tiene observaciones al registro de la solicitud?</label>
+    <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+        <mat-card class="shipping-card var-main-gris">
+            <mat-card-header class="header-card header-card--margin">
+                <mat-card-title class="header-card--text textoGris">
+                    Observación de la supervisión
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content style="text-align: left;">
+                <p><b>07/10/2020</b></p>
+                <p><b>¿Desde la supervisión tiene observaciones al registro de la solicitud?:</b> No</p>
+            </mat-card-content>
+        </mat-card>
+    </ng-container>
+    <ng-template #noEsVerDetalle>
+        <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+            <div class="row mtop justCenter">
+                <div class="col-md-5">
+                    <label class="label-left">¿Desde la supervisión tiene observaciones al registro de la solicitud?</label>
+                </div>
+                <div class="col-md-2">
+                    <mat-radio-group aria-labelledby="example-radio-group-label" class="radioInput"
+                        formControlName="tieneObservaciones">
+                        <mat-radio-button class="radio-button" [value]="true">Sí</mat-radio-button>
+                        <mat-radio-button class="radio-button" [value]="false">No</mat-radio-button>
+                    </mat-radio-group>
+                    <span class="required-form-group" style="margin-left: 1px;">*</span>
+                </div>
             </div>
-            <div class="col-md-2">
-                <mat-radio-group aria-labelledby="example-radio-group-label" class="radioInput"
-                    formControlName="tieneObservaciones">
-                    <mat-radio-button class="radio-button" [value]="true">Sí</mat-radio-button>
-                    <mat-radio-button class="radio-button" [value]="false">No</mat-radio-button>
-                </mat-radio-group>
-                <span class="required-form-group" style="margin-left: 1px;">*</span>
+            <div class="d-flex align-items-center mtop" *ngIf="addressForm.get('tieneObservaciones').value === true">
+                <div class="text-area-quill izqTitle">
+                    <label for="observaciones" class="text-area-quill--label" style="color: #174193;">Observaciones al registro de la solicitud</label>
+                    <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
+                        (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observaciones></quill-editor>
+                </div>
+                <span class="contador miles" *ngIf="addressForm.get('observaciones').value">
+                    {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
+                </span>
+                <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null">
+                    1000
+                </span>
             </div>
-        </div>
-        <div class="d-flex align-items-center mtop" *ngIf="addressForm.get('tieneObservaciones').value === true">
-            <div class="text-area-quill izqTitle">
-                <label for="observaciones" class="text-area-quill--label" style="color: #174193;">Observaciones al registro de la solicitud</label>
-                <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
-                    (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observaciones></quill-editor>
-            </div>
-            <span class="contador miles" *ngIf="addressForm.get('observaciones').value">
-                {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
-            </span>
-            <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null">
-                1000
-            </span>
-        </div>
-        <button mat-button color="warn" class="btn-guardar"
-            type="submit">
-            <img src="assets/img/icon/guardar.svg" alt="Guardar">
-        </button>
-    </form>
+            <button mat-button color="warn" class="btn-guardar"
+                type="submit">
+                <img src="assets/img/icon/guardar.svg" alt="Guardar">
+            </button>
+        </form>
+    </ng-template>
     
     <mat-accordion *ngIf="solicitudPagoFase.esPreconstruccion === true">
         <mat-expansion-panel class="expansion-style sub-expansion">
@@ -92,15 +107,18 @@
                             Criterios de pago incluidos en la factura
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-obs-criterio-pagos [solicitudPago]="solicitudPago"></app-obs-criterio-pagos>
+
+                    <app-obs-criterio-pagos [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"></app-obs-criterio-pagos>
                 </mat-expansion-panel>
+
                 <mat-expansion-panel class="expansion-style sub-expansion-black">
                     <mat-expansion-panel-header class="expansion-style--header">
                         <mat-panel-title class="expansion-style--title sin-diligenciar">
                             Detalle factura para proyectos asociados
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                   <app-obs-detll-fact-proc-asociados [solicitudPago]="solicitudPago"></app-obs-detll-fact-proc-asociados>
+
+                   <app-obs-detll-fact-proc-asociados [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"></app-obs-detll-fact-proc-asociados>
                 </mat-expansion-panel>
             </mat-accordion>
         </mat-expansion-panel>
@@ -120,15 +138,28 @@
                             Criterios de pago incluidos en la factura
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-obs-criterio-pagos [solicitudPago]="solicitudPago"></app-obs-criterio-pagos>
+
+                    <app-obs-criterio-pagos [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"></app-obs-criterio-pagos>
                 </mat-expansion-panel>
+
+                <mat-expansion-panel class="expansion-style sub-expansion-black">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title sin-diligenciar">
+                            Amortización del anticipo
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+                    <app-form-amortizacion></app-form-amortizacion>
+                </mat-expansion-panel>
+
                 <mat-expansion-panel class="expansion-style sub-expansion-black">
                     <mat-expansion-panel-header class="expansion-style--header">
                         <mat-panel-title class="expansion-style--title sin-diligenciar">
                             Detalle factura para proyectos asociados
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-obs-detll-fact-proc-asociados [solicitudPago]="solicitudPago"></app-obs-detll-fact-proc-asociados>
+
+                    <app-obs-detll-fact-proc-asociados [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"></app-obs-detll-fact-proc-asociados>
                 </mat-expansion-panel>
             </mat-accordion>
         </mat-expansion-panel>
@@ -142,7 +173,7 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
     
-            <app-obs-datos-factura [solicitudPago]="solicitudPago"></app-obs-datos-factura>
+            <app-obs-datos-factura [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"></app-obs-datos-factura>
         </mat-expansion-panel>
     </mat-accordion>
 </section>

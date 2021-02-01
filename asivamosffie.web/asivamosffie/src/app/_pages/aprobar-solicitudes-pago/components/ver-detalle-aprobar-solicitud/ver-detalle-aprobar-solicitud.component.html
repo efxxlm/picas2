@@ -1,48 +1,50 @@
-<section class="container text-center">
+<section class="container text-center" *ngIf="contrato !== undefined">
     <div class="text-right">
         <a routerLink="/aprobarSolicitudesPago" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
         </a>
     </div>
     <h1 class="title-menu--h1">
-        Ver detalle de aprobación solicitud {{this.solicitud}}
+        Aprobar solicitud {{ contrato.solicitudPagoOnly.numeroSolicitud }}
     </h1>
-    <p style="margin-top: 0.5em;" *ngIf="this.idGestion==1">
-        <span class="mx-1em"><b>Tipo de solicitud: </b>Contratos de obra</span>
-    </p>
-    <p style="margin-top: 0.5em;" *ngIf="this.idGestion==2">
-        <span class="mx-1em"><b>Tipo de solicitud: </b>Expensas</span>
-        <span class="mx-1em"><b>Número de contrato: </b>N326326</span>
-    </p>
-    <div *ngIf="this.idGestion==1">
+    <ng-container *ngIf="contrato.solicitudPagoOnly.tipoSolicitudCodigo === this.tipoSolicitudCodigo.contratoInterventoria || contrato.solicitudPagoOnly.tipoSolicitudCodigo === this.tipoSolicitudCodigo.contratoObra; else esOtrosCostos">
+        <p style="margin-top: 0.5em;" *ngIf="this.idGestion==1">
+            <span *ngIf="contrato.solicitudPagoOnly.tipoSolicitudCodigo === tipoSolicitudCodigo.contratoObra">Tipo de solicitud: <b>Contratos de obra</b></span>
+            <span *ngIf="contrato.solicitudPagoOnly.tipoSolicitudCodigo === tipoSolicitudCodigo.contratoInterventoria">Tipo de solicitud: <b>Contratos de interventoria</b></span>
+        </p>
+
         <mat-card class="shipping-card var-main-gris">
             <mat-card-header class="header-card header-card--margin">
                 <mat-card-title class="header-card--text textoGris">
-                    Contratos de obra
+                    <span *ngIf="contrato.solicitudPagoOnly.tipoSolicitudCodigo === tipoSolicitudCodigo.contratoObra">Contratos de obra</span>
+                    <span *ngIf="contrato.solicitudPagoOnly.tipoSolicitudCodigo === tipoSolicitudCodigo.contratoInterventoria">Contratos de interventoria</span>
                 </mat-card-title>
             </mat-card-header>
             <mat-card-content style="text-align: left;">
-                <p><strong>Modalidad del contrato:</strong> Tipo B</p>
-                <p><strong>Número de contrato:</strong> N801801</p>
+                <p><strong>Modalidad del contrato:</strong> {{ getModalidadContrato( contrato.modalidadCodigo ) }} </p>
+                <p><strong>Número de contrato:</strong> {{ contrato.numeroContrato }} </p>
             </mat-card-content>
         </mat-card>
+
         <mat-card class="shipping-card var-main-gris">
             <mat-card-header class="header-card header-card--margin">
                 <mat-card-title class="header-card--text textoGris">
-                    N801801
+                    {{ contrato.numeroContrato }}
                 </mat-card-title>
             </mat-card-header>
             <mat-card-content style="text-align: left;">
                 <div class="chartGen">
                     <div class="chart1">
-                        <p><strong>Nombre de entidad contratista:</strong> Interventores S.A</p>
-                        <p><strong>Fecha de inicio del contrato:</strong> 26/09/2020</p>
-                        <p><strong>Plazo fase 1 - Preconstruccion: Meses:</strong> 02 <strong>Días:</strong> 00</p>
+                        <p><strong>Nombre de entidad contratista:</strong> {{ contrato.contratacion.contratista.nombre }} </p>
+                        <p><strong>Fecha de inicio del contrato:</strong> {{ contrato.contratoPoliza[0]?.fechaAprobacion | date: 'dd/MM/yyyy' }} </p>
+                        <p *ngIf="contrato.plazoFase1PreDias !== undefined"><strong>Plazo fase 1 - Preconstruccion: Meses:</strong> {{ contrato.plazoFase1PreMeses }} <strong>Días:</strong> {{ contrato.plazoFase1PreDias }} </p>
+                        <p *ngIf="contrato.plazoFase1PreDias === undefined"><strong>Plazo fase 2 - Construccion: Meses:</strong> {{ contrato.plazoFase2ConstruccionMeses }} <strong>Días:</strong> {{ contrato.plazoFase2ConstruccionDias }} </p>
                     </div>
                     <div class="chart2">
-                        <p><strong>Plazo: Meses:</strong> 06 <strong>Días:</strong> 13</p>
-                        <p><strong>Fecha fin del contrato:</strong> 14/11/2021</p>
-                        <p><strong>Plazo fase 2 - Construccion: Meses:</strong> 05 <strong>Días:</strong> 28</p>
+                        <p *ngIf="contrato.plazoFase1PreDias !== undefined"><strong>Plazo: Meses:</strong> {{ contrato.plazoFase2ConstruccionMeses + contrato.plazoFase1PreMeses }} <strong>Días:</strong> {{ contrato.plazoFase1PreDias + contrato.plazoFase2ConstruccionDias }} </p>
+                        <p *ngIf="contrato.plazoFase1PreDias === undefined"><strong>Plazo: Meses:</strong> {{ contrato.plazoFase2ConstruccionMeses }} <strong>Días:</strong> {{ contrato.plazoFase2ConstruccionDias }} </p>
+                        <p><strong>Fecha fin del contrato:</strong> {{ contrato.fechaTerminacionFase2 | date: 'dd/MM/yyyy' }} </p>
+                        <p *ngIf="contrato.plazoFase1PreDias !== undefined"><strong>Plazo fase 2 - Construccion: Meses:</strong> {{ contrato.plazoFase2ConstruccionMeses }} <strong>Días:</strong> {{ contrato.plazoFase2ConstruccionDias }} </p>
                     </div>
                 </div>
                 <h2 class="card-subTitle">DRP</h2>
@@ -50,98 +52,111 @@
                     <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
                         <ng-container matColumnDef="drp">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> DRP </th>
-                            <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.drp }}</b> </td>
+                            <td mat-cell *matCellDef="let element; index as i" align="center"> <b> {{ i + 1 }} </b> </td>
                         </ng-container>
                         <ng-container matColumnDef="numDrp">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Número DRP </th>
-                            <td mat-cell *matCellDef="let element" align="center"> {{ element.numDrp }} </td>
+                            <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroDrp }} </td>
                         </ng-container>
                         <ng-container matColumnDef="valor">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor </th>
-                            <td mat-cell *matCellDef="let element" align="center"> {{ element.valor }} </td>
+                            <td mat-cell *matCellDef="let element" align="center"> {{ element.valorSolicitud }} </td>
                         </ng-container>
                         <ng-container matColumnDef="saldo">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Saldo </th>
-                            <td mat-cell *matCellDef="let element" align="center"> {{ element.saldo }} </td>
+                            <td mat-cell *matCellDef="let element" align="center"> Viene del CU Generar documento de registro presupuestal de alli viene el saldo inicial </td>
                         </ng-container>
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                     </table>
-                    <!--<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>-->
                 </div>
-                <div class="tabs--actions" style="margin-top: 1em;">
+                <div class="tabs--actions"  style="margin-top: 1em;">
                     <button mat-raised-button color="accent" class="tabs--btn auxBtn"
-                        (click)="this.openProyectosAsociados()">
+                        (click)="openProyectosAsociados()">
                         Ver proyectos asociados
                     </button>
                 </div>
             </mat-card-content>
         </mat-card>
+
         <mat-accordion>
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title ">
+                    <mat-panel-title class="expansion-style--title">
                         Cargar forma de pago
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-obs-cargar-forma-pago [esVerDetalle]="true"></app-obs-cargar-forma-pago>
+                <app-obs-cargar-forma-pago [solicitudPago]="contrato.solicitudPagoOnly" [esVerDetalle]="esVerDetalle"></app-obs-cargar-forma-pago>
             </mat-expansion-panel>
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title ">
+                    <mat-panel-title class="expansion-style--title">
                         Registrar solicitud de pago
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-detalle-solicitud-pago></app-detalle-solicitud-pago>
+
+                <app-obs-registrar-solicitud-pago [contrato]="contrato" [esVerDetalle]="esVerDetalle"></app-obs-registrar-solicitud-pago>
             </mat-expansion-panel>
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title ">
+                    <mat-panel-title class="expansion-style--title en-alerta">
                         Validar lista de chequeo
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-detalle-validar-listchequeo></app-detalle-validar-listchequeo>
+                <div style="margin-top: 1em;">
+                    <div class="d-flex align-items-center solbloq ml8 info-text en-alertaLibre mb-2em">
+                        Este acordeón consume información de la funcionalidad Listas de chequeó.
+                    </div>
+                </div>
             </mat-expansion-panel>
         </mat-accordion>
-    </div>
-    <div *ngIf="this.idGestion==2">
-        <mat-card class="shipping-card var-main-gris">
+    </ng-container>
+    <ng-template #esOtrosCostos>
+        <mat-card class="shipping-card">
             <mat-card-header class="header-card header-card--margin">
-                <mat-card-title class="header-card--text textoGris">
-                    Expensas
+                <mat-card-title class="header-card--text">
+                    Otros costos y servicios
                 </mat-card-title>
             </mat-card-header>
             <mat-card-content style="text-align: left;">
-                <p><strong>Llave MEN:</strong> LL990088</p>
-                <p><strong>Número de radicado SAC:</strong> 00987652</p>
-                <p><strong>Número de factura:</strong> FAC00983</p>
-                <p><strong>Valor facturado:</strong> $35.000.000</p>
-                <p><strong>Tipo de pago:</strong> Costo variable</p>
-                <p><strong>Concepto de pago para el criterio:</strong> Derribar arbol de 45 mtrs</p>
-                <p><strong>Valor facturado al concepto:</strong> $2.115.000</p>
+                <p><strong>Número de contrato:</strong> {{ contrato.numeroContrato }} </p>
+                <p><strong>Número de radicado SAC:</strong> {{ otrosCostosForm.get( 'numeroRadicadoSAC' ).value }} </p>
+                <p><strong>Número de factura:</strong> {{ otrosCostosForm.get( 'numeroFactura' ).value }} </p>
+                <p><strong>Valor facturado:</strong> ${{ otrosCostosForm.get( 'valorFacturado' ).value | currency:' ':'symbol-narrow':'.0-0' }} </p>
+                <p><strong>Tipo de pago:</strong> {{ otrosCostosForm.get( 'tipoPago' ).value.nombre }} </p>
             </mat-card-content>
         </mat-card>
-        <mat-accordion>
-            <mat-expansion-panel class="expansion-style">
-                <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title ">
-                        Lista de chequeo
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-                <!--dbenitez, componente provisional mientras se hace el montaje de la integracion-->
-                <app-detalle-validar-listchequeo></app-detalle-validar-listchequeo>
-            </mat-expansion-panel>
-        </mat-accordion>
-        <mat-accordion>
-            <mat-expansion-panel class="expansion-style">
-                <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title ">
-                        Soporte
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-                <app-obs-registrar-solicitud-pago></app-obs-registrar-solicitud-pago>
-            </mat-expansion-panel>
-        </mat-accordion>
-    </div>
+    </ng-template>
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Soporte de la solicitud
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-card class="shipping-card var-main-gris">
+                <mat-card-header class="header-card header-card--margin">
+                    <mat-card-title class="header-card--text textoGris">
+                        Soporte de la solicitud de pago
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content style="text-align: left;">
+                    <p><strong>URL con soporte:</strong> {{ contrato.solicitudPagoOnly.solicitudPagoSoporteSolicitud[0].urlSoporte }} </p>
+                </mat-card-content>
+            </mat-card>
+
+            <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;">
+                <mat-card-header class="header-card header-card--margin">
+                    <mat-card-title class="header-card--text textoGris">
+                        Observación de la supervisión
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content style="text-align: left;">
+                    <p><b>07/10/2020</b></p>
+                    <p><b>¿Desde la supervisión tiene observaciones a los descuentos de la Dirección Técnica?:</b> No</p>
+                </mat-card-content>
+            </mat-card>
+        </mat-expansion-panel>
+    </mat-accordion>
 </section>

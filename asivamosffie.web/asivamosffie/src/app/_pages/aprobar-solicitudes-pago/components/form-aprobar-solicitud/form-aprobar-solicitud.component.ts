@@ -183,10 +183,6 @@ export class FormAprobarSolicitudComponent implements OnInit {
         console.log(this.addressForm.value);
     }
 
-    guardarOtrosCostos() {
-        console.log( this.otrosCostosForm.value );
-    }
-
 }
 
 

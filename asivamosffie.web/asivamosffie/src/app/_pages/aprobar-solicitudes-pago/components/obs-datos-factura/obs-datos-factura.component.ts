@@ -11,6 +11,7 @@ import { Dominio } from 'src/app/core/_services/common/common.service';
 export class ObsDatosFacturaComponent implements OnInit {
 
     @Input() solicitudPago: any;
+    @Input() esVerDetalle = false;
     detalleForm = this.fb.group({
         numeroFactura: [null, Validators.required],
         fechaFactura: [null, Validators.required],

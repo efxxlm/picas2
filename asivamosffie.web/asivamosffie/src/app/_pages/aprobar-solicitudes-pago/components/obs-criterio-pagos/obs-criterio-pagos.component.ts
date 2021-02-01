@@ -11,6 +11,7 @@ import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrar
 export class ObsCriterioPagosComponent implements OnInit {
 
     @Input() solicitudPago: any;
+    @Input() esVerDetalle = false;
     listaCriterios: Dominio[] = [];
     criteriosArraySeleccionados: Dominio[] = [];
     addressForm: FormGroup;

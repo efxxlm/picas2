@@ -14,6 +14,7 @@ import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrar
 export class ObsDetllFactProcAsociadosComponent implements OnInit {
 
     @Input() solicitudPago: any;
+    @Input() esVerDetalle = false;
     esMultiProyecto = false;
     proyectos: any;
     listaCriterios: Dominio[] = [];
