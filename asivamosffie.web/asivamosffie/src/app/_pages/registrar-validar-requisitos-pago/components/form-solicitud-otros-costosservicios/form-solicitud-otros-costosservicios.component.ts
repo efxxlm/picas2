@@ -42,25 +42,25 @@ export class FormSolicitudOtrosCostosserviciosComponent implements OnInit {
 
     ngOnInit(): void {
         this.commonSvc.tiposDePagoExpensas()
-        .subscribe( response => {
-            this.tipoPagoArray = response;
-            if ( this.solicitudPago !== undefined ) {
-                this.solicitudPagoId = this.solicitudPago.solicitudPagoId;
-                this.contratoId = this.contrato.contratoId;
-                const solicitudPagoOtrosCostosServicios = this.solicitudPago.solicitudPagoOtrosCostosServicios[0];
-                this.solicitudPagosOtrosCostosServiciosId = solicitudPagoOtrosCostosServicios.solicitudPagoOtrosCostosServiciosId;
-                this.addressForm.get( 'numeroContrato' ).setValue( this.contrato.numeroContrato );
-                this.addressForm.setValue(
-                    {
-                        numeroContrato: this.contrato.numeroContrato,
-                        numeroRadicadoSAC: solicitudPagoOtrosCostosServicios.numeroRadicadoSac !== undefined ? solicitudPagoOtrosCostosServicios.numeroRadicadoSac : null,
-                        numeroFactura: solicitudPagoOtrosCostosServicios.numeroFactura !== undefined ? solicitudPagoOtrosCostosServicios.numeroFactura : null,
-                        valorFacturado: solicitudPagoOtrosCostosServicios.valorFacturado !== undefined ? solicitudPagoOtrosCostosServicios.valorFacturado : null,
-                        tipoPago: solicitudPagoOtrosCostosServicios.tipoPagoCodigo !== undefined ? this.tipoPagoArray.filter( tipoPago => tipoPago.codigo === solicitudPagoOtrosCostosServicios.tipoPagoCodigo )[0] : null
-                    }
-                );
-            }
-        } );
+            .subscribe( response => {
+                this.tipoPagoArray = response;
+                if ( this.solicitudPago !== undefined ) {
+                    this.solicitudPagoId = this.solicitudPago.solicitudPagoId;
+                    this.contratoId = this.contrato.contratoId;
+                    const solicitudPagoOtrosCostosServicios = this.solicitudPago.solicitudPagoOtrosCostosServicios[0];
+                    this.solicitudPagosOtrosCostosServiciosId = solicitudPagoOtrosCostosServicios.solicitudPagoOtrosCostosServiciosId;
+                    this.addressForm.get( 'numeroContrato' ).setValue( this.contrato.numeroContrato );
+                    this.addressForm.setValue(
+                        {
+                            numeroContrato: this.contrato.numeroContrato,
+                            numeroRadicadoSAC: solicitudPagoOtrosCostosServicios.numeroRadicadoSac !== undefined ? solicitudPagoOtrosCostosServicios.numeroRadicadoSac : null,
+                            numeroFactura: solicitudPagoOtrosCostosServicios.numeroFactura !== undefined ? solicitudPagoOtrosCostosServicios.numeroFactura : null,
+                            valorFacturado: solicitudPagoOtrosCostosServicios.valorFacturado !== undefined ? solicitudPagoOtrosCostosServicios.valorFacturado : null,
+                            tipoPago: solicitudPagoOtrosCostosServicios.tipoPagoCodigo !== undefined ? this.tipoPagoArray.filter( tipoPago => tipoPago.codigo === solicitudPagoOtrosCostosServicios.tipoPagoCodigo )[0] : null
+                        }
+                    );
+                }
+            } );
     }
 
     seleccionAutocomplete( contrato: any ){

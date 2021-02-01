@@ -1,9 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
+import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
+import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
 import { DialogProyectosAsociadosAprobComponent } from '../dialog-proyectos-asociados-aprob/dialog-proyectos-asociados-aprob.component';
 
 @Component({
@@ -12,64 +15,178 @@ import { DialogProyectosAsociadosAprobComponent } from '../dialog-proyectos-asoc
   styleUrls: ['./form-aprobar-solicitud.component.scss']
 })
 export class FormAprobarSolicitudComponent implements OnInit {
-  idGestion: any;
-  solicitud: string;
-  dataSource = new MatTableDataSource();
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-  displayedColumns: string[] = [
-    'drp',
-    'numDrp',
-    'valor',
-    'saldo'
-  ];
-  dataTable: any[] = [
-    {
-      drp: '1',
-      numDrp: 'IP_00090',
-      valor: '$100.000.000',
-      saldo: '$100.000.000'
-    },
-    {
-      drp: '2',
-      numDrp: 'IP_00123',
-      valor: '$5.000.000',
-      saldo: '$5.000.000'
-    }
-  ];
-  constructor(private activatedRoute: ActivatedRoute, public dialog: MatDialog) { }
 
-  ngOnInit(): void {
-    this.activatedRoute.params.subscribe(param => {
-      this.idGestion = param.id;
-      this.loadData(param.id);
+    contrato: any;
+    idGestion: any;
+    solicitud: string;
+    tipoSolicitudCodigo: any = {};
+    modalidadContratoArray: Dominio[] = [];
+    tipoPagoArray: Dominio[] = [];
+    addressForm: FormGroup;
+    dataSource = new MatTableDataSource();
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild(MatSort, { static: true }) sort: MatSort;
+    otrosCostosForm = this.fb.group({
+        numeroContrato: [null, Validators.required],
+        numeroRadicadoSAC: [null, Validators.required],
+        numeroFactura: [null, Validators.required],
+        valorFacturado: [null, Validators.required],
+        tipoPago: [null, Validators.required],
+        tieneObservaciones: [null, Validators.required],
+        observaciones:[null, Validators.required]
     });
-    this.dataSource = new MatTableDataSource(this.dataTable);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-  }
-  loadData(id){
-    this.idGestion=id;
-    //Prueba de versión maquetada
-    if(this.idGestion==1){
-      this.solicitud = 'SolPagoO0001';
+    editorStyle = {
+        height: '45px',
+        overflow: 'auto'
+    };
+    config = {
+      toolbar: [
+        ['bold', 'italic', 'underline'],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        [{ indent: '-1' }, { indent: '+1' }],
+        [{ align: [] }],
+      ]
+    };
+    displayedColumns: string[] = [
+        'drp',
+        'numDrp',
+        'valor',
+        'saldo'
+    ];
+    dataTable: any[] = [
+        {
+          drp: '1',
+          numDrp: 'IP_00090',
+          valor: '$100.000.000',
+          saldo: '$100.000.000'
+        },
+        {
+          drp: '2',
+          numDrp: 'IP_00123',
+          valor: '$5.000.000',
+          saldo: '$5.000.000'
+        }
+    ];
+
+    constructor(
+        private activatedRoute: ActivatedRoute,
+        private dialog: MatDialog,
+        private registrarPagosSvc: RegistrarRequisitosPagoService,
+        private fb: FormBuilder,
+        private commonSvc: CommonService )
+    {
+        this.getContrato();
+        this.addressForm = this.crearFormulario();
     }
-    else{
-      this.solicitud = 'SolPagoEspecialO0001';
+
+    ngOnInit(): void {
     }
-  }
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  };
-  openProyectosAsociados(){
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.height = 'auto';
-    dialogConfig.width = '1020px';
-    //dialogConfig.data = { id: id, idRol: idRol, numContrato: numContrato, fecha1Titulo: fecha1Titulo, fecha2Titulo: fecha2Titulo };
-    const dialogRef = this.dialog.open(DialogProyectosAsociadosAprobComponent, dialogConfig);
-    //dialogRef.afterClosed().subscribe(value => {});
-  }
+
+    getContrato() {
+        this.registrarPagosSvc.getContratoByContratoId( 13, 3 )
+            .subscribe(
+                response => {
+                    this.commonSvc.tiposDeSolicitudes()
+                        .subscribe(
+                            solicitudes => {
+                                this.commonSvc.modalidadesContrato()
+                                    .subscribe( response => this.modalidadContratoArray = response );
+                                for ( const solicitud of solicitudes ) {
+                                    if ( solicitud.codigo === '1' ) {
+                                      this.tipoSolicitudCodigo.contratoObra = solicitud.codigo;
+                                    }
+                                    if ( solicitud.codigo === '2' ) {
+                                      this.tipoSolicitudCodigo.contratoInterventoria = solicitud.codigo;
+                                    }
+                                    if ( solicitud.codigo === '3' ) {
+                                      this.tipoSolicitudCodigo.expensas = solicitud.codigo;
+                                    }
+                                    if ( solicitud.codigo === '4' ) {
+                                      this.tipoSolicitudCodigo.otrosCostos = solicitud.codigo;
+                                    }
+                                }
+                                this.contrato = response;
+                                console.log( this.contrato );
+                                if ( this.contrato.solicitudPagoOnly.tipoSolicitudCodigo === this.tipoSolicitudCodigo.otrosCostos ) {
+                                    this.commonSvc.tiposDePagoExpensas()
+                                    .subscribe( response => {
+                                        this.tipoPagoArray = response;
+                                        if ( this.contrato !== undefined ) {
+                                            const solicitudPagoOtrosCostosServicios = this.contrato.solicitudPagoOnly.solicitudPagoOtrosCostosServicios[0];
+                                            this.otrosCostosForm.setValue(
+                                                {
+                                                    numeroContrato: this.contrato.numeroContrato,
+                                                    numeroRadicadoSAC: solicitudPagoOtrosCostosServicios.numeroRadicadoSac !== undefined ? solicitudPagoOtrosCostosServicios.numeroRadicadoSac : null,
+                                                    numeroFactura: solicitudPagoOtrosCostosServicios.numeroFactura !== undefined ? solicitudPagoOtrosCostosServicios.numeroFactura : null,
+                                                    valorFacturado: solicitudPagoOtrosCostosServicios.valorFacturado !== undefined ? solicitudPagoOtrosCostosServicios.valorFacturado : null,
+                                                    tipoPago: solicitudPagoOtrosCostosServicios.tipoPagoCodigo !== undefined ? this.tipoPagoArray.filter( tipoPago => tipoPago.codigo === solicitudPagoOtrosCostosServicios.tipoPagoCodigo )[0] : null
+                                                }
+                                            );
+                                        }
+                                    } );
+                                } else {
+                                    this.dataSource = new MatTableDataSource( this.contrato.contratacion.disponibilidadPresupuestal );
+                                    this.dataSource.paginator = this.paginator;
+                                    this.dataSource.sort = this.sort;
+                                }
+                            }
+                        );
+                }
+            );
+    }
+
+    getModalidadContrato( modalidadCodigo: string ) {
+        if ( this.modalidadContratoArray.length > 0 ) {
+            const modalidad = this.modalidadContratoArray.filter( modalidad => modalidad.codigo === modalidadCodigo );
+            return modalidad[0].nombre;
+        }
+    }
+
+    crearFormulario() {
+        return this.fb.group({
+          tieneObservaciones: [null, Validators.required],
+          observaciones:[null, Validators.required]
+        })
+    }
+
+    applyFilter(event: Event) {
+      const filterValue = (event.target as HTMLInputElement).value;
+      this.dataSource.filter = filterValue.trim().toLowerCase();
+    }
+
+    maxLength(e: any, n: number) {
+        if (e.editor.getLength() > n) {
+            e.editor.deleteText(n - 1, e.editor.getLength());
+        }
+    }
+
+    textoLimpio( evento: any, n: number ) {
+        if ( evento !== undefined ) {
+            return evento.getLength() > n ? n : evento.getLength();
+        } else {
+            return 0;
+        }
+    }
+
+    openProyectosAsociados() {
+        if ( this.contrato === undefined ) {
+            return;
+        }
+
+        const dialogRef = this.dialog.open( DialogProyectosAsociadosAprobComponent, {
+            width: '80em',
+            data: { contrato: this.contrato }
+        });
+    }
+
+    onSubmit() {
+        console.log(this.addressForm.value);
+    }
+
+    guardarOtrosCostos() {
+        console.log( this.otrosCostosForm.value );
+    }
+
 }
 
 

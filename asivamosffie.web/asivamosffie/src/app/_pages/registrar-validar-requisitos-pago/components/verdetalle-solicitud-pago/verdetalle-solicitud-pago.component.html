@@ -73,7 +73,7 @@
                     </div>
                     <div class="tabs--actions"  style="margin-top: 1em;">
                         <button mat-raised-button color="accent" class="tabs--btn auxBtn"
-                            (click)="this.openProyectosAsociados()">
+                            (click)="openProyectosAsociados()">
                             Ver proyectos asociados
                         </button>
                     </div>
@@ -130,7 +130,8 @@
                         <mat-card-content style="text-align: left;">
                             <p><strong>Fecha de solicitud:</strong> {{ solicitudPagoRegistrarSolicitudPago.fechaSolicitud | date: 'dd/MM/yyyy' }} </p>
                             <p><strong>Número de radicado SAC:</strong> {{ solicitudPagoRegistrarSolicitudPago.numeroRadicadoSac }} </p>
-                            <p><strong>Fase del contrato:</strong> Fase 1 - Preconstrucción</p>
+                            <p *ngIf="solicitudPagoRegistrarSolicitudPago.solicitudPagoFase[0].esPreconstruccion === true"><strong>Fase del contrato:</strong> Fase 1 - Preconstrucción</p>
+                            <p *ngIf="solicitudPagoRegistrarSolicitudPago.solicitudPagoFase[0].esPreconstruccion === false"><strong>Fase del contrato:</strong> Fase 2 - Construcción</p>
                         </mat-card-content>
                     </mat-card>
                     <mat-accordion>

@@ -29,56 +29,125 @@
     </table>
     <!--<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>-->
 </div>
-<div style="margin-top: 3em;">
-    <mat-card class="shipping-card var-main-gris">
-        <mat-card-header class="header-card header-card--margin">
-            <mat-card-title class="header-card--text">
-                LL457326
-            </mat-card-title>
-        </mat-card-header>
-        <mat-card-content style="text-align: left;">
-            <p><strong>Monto máximo a pagar en el proyecto:</strong> $30.000.000</p>
-            <p><strong>Monto pendiente a pagar en el proyecto:</strong> $30.000.000</p>
-            <br>
-            <p><strong>Criterio:</strong> Estudios y diseños interventoria hasta 90%, Criterio 3</p>
-            <br>
-            <h1><b>Estudios y diseños interventoria hasta 90%</b></h1>
-            <p><strong>Valor facturado para el proyecto en el criterio:</strong> $8.000.000</p>
-            <br>
-            <h1><b>Criterio 3</b></h1>
-            <p><strong>Valor facturado para el proyecto en el criterio:</strong> $7.000.000</p>
-        </mat-card-content>
-    </mat-card>
-</div>
-<form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
-    <div class="row mtop justCenter">
-        <div class="col-md-7">
-            <label class="label-left">¿Desde la supervisión tiene observaciones a los detalles de la factura para proyectos asociados?</label>
+
+<ng-container *ngIf="esMultiProyecto === true; else noEsMultiProyecto">
+    <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+        <div formArrayName="projects" style="margin-top: 3em;" *ngIf="projects.length > 0">
+            <div *ngFor="let project of projects.controls; index as i" [formGroup]="project">
+                <mat-card class="shipping-card var-main-gris">
+                    <mat-card-header class="header-card header-card--margin">
+                        <mat-card-title class="header-card--text">
+                            {{ project.get( 'llaveMen' ).value }}
+                        </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content style="text-align: left;">
+                        <p><strong>Monto máximo a pagar en el proyecto:</strong> $30.000.000</p>
+                        <p><strong>Monto pendiente a pagar en el proyecto:</strong> $30.000.000</p>
+                        <br>
+                        <br>
+                        <div class="d-flex">
+                            <strong>Criterios:</strong>
+                            <p *ngFor="let criterio of criteriosArraySeleccionados; index as i" style="margin-left: .4em;"> {{ filterCriterios( criterio.codigo ) }}<span *ngIf="criteriosArraySeleccionados.length - 1 !== i">,</span><span *ngIf="criteriosArraySeleccionados.length - 1 === i">.</span> </p>
+                        </div>
+                        <section formArrayName="criteriosProyecto" class="mt-1em" *ngIf="criteriosProyecto( i ).length > 0">
+                            <div *ngFor="let criterioProyecto of criteriosProyecto( i ).controls; index as j" [formGroup]="criterioProyecto">
+                                <h2>
+                                    <b> {{ criterioProyecto.get( 'nombre' ).value }} </b>
+                                </h2>
+                                <p><strong>Valor facturado para el proyecto en el criterio:</strong> ${{ criterioProyecto.get( 'valorFacturado' ).value | currency:' ':'symbol-narrow':'.0-0' }} </p>
+                            </div>
+                        </section>
+                    </mat-card-content>
+                </mat-card>
+                <div class="row mtop justCenter">
+                    <div class="col-md-7">
+                        <label class="label-left">¿Desde la supervisión tiene observaciones a los detalles de la factura para proyectos asociados?</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-radio-group aria-labelledby="example-radio-group-label" class="radioInput"
+                            formControlName="tieneObservaciones">
+                            <mat-radio-button class="radio-button" [value]="true">Sí</mat-radio-button>
+                            <mat-radio-button class="radio-button" [value]="false">No</mat-radio-button>
+                        </mat-radio-group>
+                        <span class="required-form-group" style="margin-left: 1px;">*</span>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mtop" *ngIf="project.get('tieneObservaciones').value === true">
+                    <div class="text-area-quill izqTitle">
+                        <label for="observaciones" class="text-area-quill--label"  style="color: #174193;">Observaciones a los detalles de la factura para proyectos asociados</label>
+                        <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
+                            (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observaciones></quill-editor>
+                    </div>
+                    <span class="contador" *ngIf="project.get('observaciones').value">
+                        {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
+                    </span>
+                    <span class="contador" *ngIf="project.get('observaciones').value === null">
+                        1000
+                    </span>
+                </div>
+                <button mat-button color="warn" class="btn-guardar"
+                    type="submit">
+                    <img src="assets/img/icon/guardar.svg" alt="Guardar">
+                </button>
+            </div>
         </div>
-        <div class="col-md-2">
-            <mat-radio-group aria-labelledby="example-radio-group-label" class="radioInput"
-                formControlName="tieneObservaciones">
-                <mat-radio-button class="radio-button" [value]="true">Sí</mat-radio-button>
-                <mat-radio-button class="radio-button" [value]="false">No</mat-radio-button>
-            </mat-radio-group>
-            <span class="required-form-group" style="margin-left: 1px;">*</span>
-        </div>
+    </form>
+</ng-container>
+<ng-template #noEsMultiProyecto>
+    <div style="margin-top: 3em;" *ngIf="proyectos !== undefined">
+        <mat-card class="shipping-card var-main-gris" *ngFor="let proyecto of proyectos">
+            <mat-card-header class="header-card header-card--margin">
+                <mat-card-title class="header-card--text">
+                    {{ proyecto.llaveMen }}
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content style="text-align: left;">
+                <p><strong>Monto máximo a pagar en el proyecto:</strong> $30.000.000</p>
+                <p><strong>Monto pendiente a pagar en el proyecto:</strong> $30.000.000</p>
+                <br>
+                <div class="d-flex">
+                    <strong>Criterio:</strong>
+                    <p *ngFor="let criterio of criteriosArraySeleccionados; index as i" style="margin-left: .4em;"> {{ filterCriterios( criterio.codigo ) }}<span *ngIf="criteriosArraySeleccionados.length - 1 !== i">,</span><span *ngIf="criteriosArraySeleccionados.length - 1 === i">.</span> </p>
+                </div>
+                <br>
+                <div *ngFor="let criterio of solicitudPagoFaseCriterio">
+                    <h1><b> {{ filterCriterios( criterio.tipoCriterioCodigo ) }} </b></h1>
+                    <p><strong>Valor facturado para el proyecto en el criterio:</strong> ${{ criterio.valorFacturado | currency:' ':'symbol-narrow':'.0-0' }} </p>
+                    <br>
+                </div>
+            </mat-card-content>
+        </mat-card>
     </div>
-    <div class="d-flex align-items-center mtop" *ngIf="addressForm.get('tieneObservaciones').value === true">
-        <div class="text-area-quill izqTitle">
-            <label for="observaciones" class="text-area-quill--label"  style="color: #174193;">Observaciones a los detalles de la factura para proyectos asociados</label>
-            <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
-                (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observaciones></quill-editor>
+    <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+        <div class="row mtop justCenter">
+            <div class="col-md-7">
+                <label class="label-left">¿Desde la supervisión tiene observaciones a los detalles de la factura para proyectos asociados?</label>
+            </div>
+            <div class="col-md-2">
+                <mat-radio-group aria-labelledby="example-radio-group-label" class="radioInput"
+                    formControlName="tieneObservaciones">
+                    <mat-radio-button class="radio-button" [value]="true">Sí</mat-radio-button>
+                    <mat-radio-button class="radio-button" [value]="false">No</mat-radio-button>
+                </mat-radio-group>
+                <span class="required-form-group" style="margin-left: 1px;">*</span>
+            </div>
         </div>
-        <span class="contador" *ngIf="addressForm.get('observaciones').value">
-            {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
-        </span>
-        <span class="contador" *ngIf="addressForm.get('observaciones').value === null">
-            1000
-        </span>
-    </div>
-    <button mat-button color="warn" class="btn-guardar"
-        type="submit">
-        <img src="assets/img/icon/guardar.svg" alt="Guardar">
-    </button>
-</form>
+        <div class="d-flex align-items-center mtop" *ngIf="addressForm.get('tieneObservaciones').value === true">
+            <div class="text-area-quill izqTitle">
+                <label for="observaciones" class="text-area-quill--label"  style="color: #174193;">Observaciones a los detalles de la factura para proyectos asociados</label>
+                <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
+                    (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observaciones></quill-editor>
+            </div>
+            <span class="contador" *ngIf="addressForm.get('observaciones').value">
+                {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
+            </span>
+            <span class="contador" *ngIf="addressForm.get('observaciones').value === null">
+                1000
+            </span>
+        </div>
+        <button mat-button color="warn" class="btn-guardar"
+            type="submit">
+            <img src="assets/img/icon/guardar.svg" alt="Guardar">
+        </button>
+    </form>
+</ng-template>

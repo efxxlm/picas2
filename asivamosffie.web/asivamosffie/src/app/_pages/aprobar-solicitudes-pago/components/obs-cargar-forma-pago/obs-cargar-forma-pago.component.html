@@ -1,49 +1,70 @@
-<mat-card class="shipping-card var-main-gris">
-    <mat-card-header class="header-card header-card--margin">
-        <mat-card-title class="header-card--text textoGris">
-            Forma de pago
-        </mat-card-title>
-    </mat-card-header>
-    <mat-card-content style="text-align: left;">
-        <mat-card-title class="header-card--text alineacion-titulos2" style="padding-left: 0px;">
-            Fase 1 - Preconstrucción
-        </mat-card-title>
-        <p><strong>Forma de pago:</strong> Forma 1 (50/50)</p>
-        <mat-card-title class="header-card--text alineacion-titulos2 mt-1em"
-            style="padding-left: 0px; margin-top: 1em;">
-            Fase 2 - Construcción
-        </mat-card-title>
-        <p><strong>Forma de pago:</strong> Forma 3 (90/10)</p>
-    </mat-card-content>
-</mat-card>
-<form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
-    <div class="row mtop justCenter">
-        <div class="col-md-5">
-            <label class="label-left">¿Desde la supervisión tiene observaciones a la forma de pago?</label>
-        </div>
-        <div class="col-md-2">
-            <mat-radio-group aria-labelledby="example-radio-group-label" class="radioInput"
-                formControlName="tieneObservaciones" required>
-                <mat-radio-button class="radio-button" [value]="true">Sí</mat-radio-button>
-                <mat-radio-button class="radio-button" [value]="false">No</mat-radio-button>
-            </mat-radio-group>
-            <span class="required-form-group" style="margin-left: 1px;">*</span>
-        </div>
-    </div>
-    <div class="d-flex align-items-center mtop" *ngIf="addressForm.get('tieneObservaciones').value === true">
-        <div class="text-area-quill izqTitle">
-            <label for="observaciones" class="text-area-quill--label" style="color: #174193;">Observaciones a la forma de pago</label>
-            <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
-                (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observaciones></quill-editor>
-        </div>
-        <span class="contador miles" *ngIf="addressForm.get('observaciones').value">
-            {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
-        </span>
-        <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null">
-            1000
-        </span>
-    </div>
-    <button mat-button color="warn" class="btn-guardar" type="submit">
-        <img src="assets/img/icon/guardar.svg" alt="Guardar">
-    </button>
-</form>
+<section *ngIf="solicitudPagoCargarFormaPago !== undefined">
+    <mat-card class="shipping-card var-main-gris">
+        <mat-card-header class="header-card header-card--margin">
+            <mat-card-title class="header-card--text textoGris">
+                Forma de pago
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content style="text-align: left;">
+            <mat-card-title class="header-card--text alineacion-titulos2" style="padding-left: 0px;" *ngIf="solicitudPagoCargarFormaPago.fasePreConstruccionFormaPagoCodigo !== undefined">
+                Fase 1 - Preconstrucción
+            </mat-card-title>
+            <p *ngIf="solicitudPagoCargarFormaPago.fasePreConstruccionFormaPagoCodigo !== undefined"><strong>Forma de pago:</strong> {{ getFormaPago( solicitudPagoCargarFormaPago.fasePreConstruccionFormaPagoCodigo ) }} </p>
+            <mat-card-title class="header-card--text alineacion-titulos2 mt-1em"
+                style="padding-left: 0px; margin-top: 1em;" *ngIf="solicitudPagoCargarFormaPago.faseConstruccionFormaPagoCodigo !== undefined">
+                Fase 2 - Construcción
+            </mat-card-title>
+            <p *ngIf="solicitudPagoCargarFormaPago.faseConstruccionFormaPagoCodigo !== undefined"><strong>Forma de pago:</strong> {{ getFormaPago( solicitudPagoCargarFormaPago.faseConstruccionFormaPagoCodigo ) }} </p>
+        </mat-card-content>
+    </mat-card>
+    
+    <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+        <mat-card class="shipping-card var-main-gris">
+            <mat-card-header class="header-card header-card--margin">
+                <mat-card-title class="header-card--text textoGris">
+                    Observación de la supervisión
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content style="text-align: left;">
+                <p><b>07/10/2020</b></p>
+                <p><b>¿Desde la supervisión tiene observaciones a la forma de pago?:</b> Sí</p>
+                <p>La forma de pago de la fase 2 construcción también es 50/50, ajuste este dato ya que una vez
+                    aprobamos este primer pago queda predeterminado para el
+                    resto de las facturas y pagos.</p>
+            </mat-card-content>
+        </mat-card>
+    </ng-container>
+    <ng-template #noEsVerDetalle>
+        <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+            <div class="row mtop justCenter">
+                <div class="col-md-5">
+                    <label class="label-left">¿Desde la supervisión tiene observaciones a la forma de pago?</label>
+                </div>
+                <div class="col-md-2">
+                    <mat-radio-group aria-labelledby="example-radio-group-label" class="radioInput"
+                        formControlName="tieneObservaciones" required>
+                        <mat-radio-button class="radio-button" [value]="true">Sí</mat-radio-button>
+                        <mat-radio-button class="radio-button" [value]="false">No</mat-radio-button>
+                    </mat-radio-group>
+                    <span class="required-form-group" style="margin-left: 1px;">*</span>
+                </div>
+            </div>
+            <div class="d-flex align-items-center mtop" *ngIf="addressForm.get('tieneObservaciones').value === true">
+                <div class="text-area-quill izqTitle">
+                    <label for="observaciones" class="text-area-quill--label" style="color: #174193;">Observaciones a la forma de pago</label>
+                    <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
+                        (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observaciones></quill-editor>
+                </div>
+                <span class="contador miles" *ngIf="addressForm.get('observaciones').value">
+                    {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
+                </span>
+                <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null">
+                    1000
+                </span>
+            </div>
+            <button mat-button color="warn" class="btn-guardar" type="submit">
+                <img src="assets/img/icon/guardar.svg" alt="Guardar">
+            </button>
+        </form>
+    </ng-template>
+</section>

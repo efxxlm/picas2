@@ -1,14 +1,30 @@
-<mat-card class="shipping-card var-main-gris">
+<mat-card class="shipping-card">
     <mat-card-header class="header-card header-card--margin">
-        <mat-card-title class="header-card--text textoGris">
-            Datos
-        </mat-card-title>
+      <mat-card-title class="header-card--text">
+        Datos
+      </mat-card-title>
     </mat-card-header>
     <mat-card-content style="text-align: left;">
-        <h2 class="card-subTitle">Descripción de la factura</h2>
-        <p><strong>Número de factura:</strong> FAC00456</p>
-        <p><strong>Fecha de factura:</strong> 05/10/2020</p>
-        <p><strong>Valor facturado:</strong> $15.000.000</p>
+      <h2 class="card-subTitle">Descripción de la factura</h2>
+      <p><strong>Número de factura:</strong> {{ detalleForm.get( 'numeroFactura' ).value }} </p>
+      <p><strong>Fecha de factura:</strong> {{ detalleForm.get( 'fechaFactura' ).value | date: 'dd/MM/yyyy' }} </p>
+      <p style="margin-top: 10px;"><strong>Valor facturado: </strong> ${{ valorFacturado | currency:' ':'symbol-narrow':'.0-0' }} </p>
+
+      <h2 class="card-subTitle">Descuentos dirección técnica asociados a la factura</h2>
+
+      <p style="margin-top: 10px;" *ngIf="detalleForm.get( 'aplicaDescuento' ).value === true"><strong>¿Aplican descuentos?: </strong> Si </p>
+      <p style="margin-top: 10px;" *ngIf="detalleForm.get( 'aplicaDescuento' ).value === false"><strong>¿Aplican descuentos?: </strong> No </p>
+      <p *ngIf="detalleForm.get( 'aplicaDescuento' ).value === true"><strong>¿Cuántos descuentos se aplican sobre la factura?:</strong> {{ descuentos.length }} </p>
+      <section *ngIf="descuentos.length > 0">
+        <div *ngFor="let descuento of descuentos.controls; index as i" [formGroup]="descuento">
+          <mat-card-title class="header-card--text alineacion-titulos2 mt-1em" style="padding-left: 0px; margin-top: 1em;">
+            Descuento {{ i + 1 }}
+          </mat-card-title>
+          <p><strong>Tipo de descuento:</strong> {{ getTipoDescuento( descuento.get( 'tipoDescuentoCodigo' ).value ) }} </p>
+          <p><strong>Valor del descuento:</strong> ${{ descuento.get( 'valorDescuento' ).value | currency:' ':'symbol-narrow':'.0-0' }} </p>
+        </div>
+        <p><strong>Valor a pagar después de descuentos:</strong> ${{ detalleForm.get( 'valorAPagarDespues' ).value | currency:' ':'symbol-narrow':'.0-0' }} </p>
+      </section>
     </mat-card-content>
 </mat-card>
 <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">

@@ -84,38 +84,8 @@
                         Cargar forma de pago
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <mat-card class="shipping-card var-main-gris">
-                    <mat-card-header class="header-card header-card--margin">
-                        <mat-card-title class="header-card--text textoGris">
-                            Forma de pago
-                        </mat-card-title>
-                    </mat-card-header>
-                    <mat-card-content style="text-align: left;">
-                        <mat-card-title class="header-card--text alineacion-titulos2" style="padding-left: 0px;">
-                            Fase 1 - Preconstrucción
-                        </mat-card-title>
-                        <p><strong>Forma de pago:</strong> Forma 1 (50/50)</p>
-                        <mat-card-title class="header-card--text alineacion-titulos2 mt-1em"
-                            style="padding-left: 0px; margin-top: 1em;">
-                            Fase 2 - Construcción
-                        </mat-card-title>
-                        <p><strong>Forma de pago:</strong> Forma 3 (90/10)</p>
-                    </mat-card-content>
-                </mat-card>
-                <mat-card class="shipping-card var-main-gris">
-                    <mat-card-header class="header-card header-card--margin">
-                        <mat-card-title class="header-card--text textoGris">
-                            Observación de la supervisión
-                        </mat-card-title>
-                    </mat-card-header>
-                    <mat-card-content style="text-align: left;">
-                        <p><b>07/10/2020</b></p>
-                        <p><b>¿Desde la supervisión tiene observaciones a la forma de pago?:</b> Sí</p>
-                        <p>La forma de pago de la fase 2 construcción también es 50/50, ajuste este dato ya que una vez
-                            aprobamos este primer pago queda predeterminado para el
-                            resto de las facturas y pagos.</p>
-                    </mat-card-content>
-                </mat-card>
+
+                <app-obs-cargar-forma-pago [esVerDetalle]="true"></app-obs-cargar-forma-pago>
             </mat-expansion-panel>
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header">
