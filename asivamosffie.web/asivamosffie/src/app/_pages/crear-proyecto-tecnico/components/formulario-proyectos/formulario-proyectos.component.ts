@@ -1065,6 +1065,18 @@ export class FormularioProyectosComponent implements OnInit {
     return patron.test(te);
   }
 
+  codigoDaneVacio() {
+    if(this.proyecto.tipoIntervencionCodigo == 1) {
+      this.CodigoDaneIE = '';
+    }
+  }
+
+  valueVacioLatitud() {
+    if (this.proyecto.predioPrincipal.ubicacionLatitud === '°') this.proyecto.predioPrincipal.ubicacionLatitud = ''
+  }
+  valueVacioLongitud() {
+    if (this.proyecto.predioPrincipal.ubicacionLongitud === '°') this.proyecto.predioPrincipal.ubicacionLongitud = ''
+  }
 
   validateKeypressLlave(event: KeyboardEvent) {
     const alphanumeric = /[A-Za-z0-9-]/;

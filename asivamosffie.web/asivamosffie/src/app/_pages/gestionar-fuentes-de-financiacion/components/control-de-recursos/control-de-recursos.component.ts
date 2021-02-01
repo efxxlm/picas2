@@ -115,6 +115,7 @@ export class ControlDeRecursosComponent implements OnInit {
         //this.listaVigencias = this.fuente.vigenciaAporte;
 
         if (this.idControl > 0 )
+        this.estaEditando = true;
           this.editMode();
 
       })
