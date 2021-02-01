@@ -2290,6 +2290,7 @@ namespace asivamosffie.services
             int CantidadRegistrosVacios = 0;
             int CantidadResgistrosValidos = 0;
             int CantidadRegistrosInvalidos = 0;
+            int cantidadRutaCritica = 0;
 
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
@@ -2342,6 +2343,14 @@ namespace asivamosffie.services
                                 worksheet.Cells[i, 1].AddComment("Dato Obligatorio", "Admin");
                                 worksheet.Cells[i, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
                                 worksheet.Cells[i, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                tieneErrores = true;
+                            }
+                            else if ( new string[3] { "C", "SC", "I" }.Where( r => r == worksheet.Cells[i, 1].Text).Count() == 0)
+                            {
+                                worksheet.Cells[i, 1].AddComment("Tipo de actividad invalido", "Admin");
+                                worksheet.Cells[i, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                worksheet.Cells[i, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                tieneErrores = true;
                             }
                             else
                             {
@@ -2374,6 +2383,7 @@ namespace asivamosffie.services
                                 if (temp.TipoActividadCodigo == "I" && worksheet.Cells[i, 3].Text == "1")
                                 {
                                     temp.EsRutaCritica = true;
+                                    cantidadRutaCritica++;
                                 }
                                 else if (temp.TipoActividadCodigo != "I" && worksheet.Cells[i, 3].Text == "1")
                                 {
@@ -2479,6 +2489,15 @@ namespace asivamosffie.services
                         {
                             CantidadRegistrosInvalidos++;
                         }
+                    }
+
+                    if (cantidadRutaCritica == 0 && worksheet.Cells[1, 1].Comment == null)
+                    {
+                        worksheet.Cells[1, 1].AddComment("Debe existir por lo menos una ruta critica", "Admin");
+                        worksheet.Cells[1, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                        worksheet.Cells[1, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                        CantidadRegistrosInvalidos++;
+                        CantidadResgistrosValidos--;
                     }
 
                     //Actualizo el archivoCarge con la cantidad de registros validos , invalidos , y el total;
