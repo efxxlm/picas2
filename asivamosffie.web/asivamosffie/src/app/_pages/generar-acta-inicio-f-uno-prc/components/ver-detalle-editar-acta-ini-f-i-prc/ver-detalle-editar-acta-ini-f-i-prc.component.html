@@ -96,7 +96,10 @@
   </mat-card>
   <div>
     <div *ngIf="addressForm.invalid && addressForm.touched" class="animateDown my-1em color-secondaryColor d-flex align-items-center justify-content-center">
-      <img class="icon-incompleto--img mr-05em" src="assets/img/icon/incompleto.svg" alt="este campo es requerido" />
+      <img class="icon-incompleto--img mr-05em" src="assets/img/icon/incompleto.svg"               alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip" />
       Debe ingresar la información en el campo para continuar
     </div>
     <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
@@ -138,7 +141,10 @@
                     <img
                       class="icon-incompleto--img"
                       src="assets/img/icon/incompleto.svg"
-                      alt="este campo es requerido"
+                                    alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                       *ngIf="
                         (addressForm.get('fechaActaInicioFUnoPreconstruccion').invalid &&
                           addressForm.get('fechaActaInicioFUnoPreconstruccion').touched) ||
@@ -180,7 +186,10 @@
                   <img
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
-                    alt="este campo es requerido"
+                                  alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                     *ngIf="
                       (addressForm.get('fechaPrevistaTerminacion').invalid &&
                         addressForm.get('fechaPrevistaTerminacion').touched) ||
@@ -239,7 +248,10 @@
                     <img
                       class="icon-incompleto--img"
                       src="assets/img/icon/incompleto.svg"
-                      alt="este campo es requerido"
+                                    alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                       *ngIf="
                         (addressForm.get('mesPlazoEjFase1').invalid && addressForm.get('mesPlazoEjFase1').touched) ||
                         (addressForm.get('mesPlazoEjFase1').invalid && estaEditando)
@@ -284,7 +296,10 @@
                     <img
                       class="icon-incompleto--img"
                       src="assets/img/icon/incompleto.svg"
-                      alt="este campo es requerido"
+                                    alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                       *ngIf="
                         (addressForm.get('diasPlazoEjFase1').invalid && addressForm.get('diasPlazoEjFase1').touched) ||
                         (addressForm.get('diasPlazoEjFase1').invalid && estaEditando)
@@ -344,7 +359,10 @@
                     <img
                       class="icon-incompleto--img"
                       src="assets/img/icon/incompleto.svg"
-                      alt="este campo es requerido"
+                                    alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                       *ngIf="
                         (addressForm.get('mesPlazoEjFase2').invalid && addressForm.get('mesPlazoEjFase2').touched) ||
                         (addressForm.get('mesPlazoEjFase2').invalid && estaEditando)
@@ -389,7 +407,10 @@
                     <img
                       class="icon-incompleto--img"
                       src="assets/img/icon/incompleto.svg"
-                      alt="este campo es requerido"
+                                    alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                       *ngIf="
                         (addressForm.get('diasPlazoEjFase2').invalid && addressForm.get('diasPlazoEjFase2').touched) ||
                         (addressForm.get('diasPlazoEjFase2').invalid && estaEditando)
@@ -434,7 +455,10 @@
               <img
                 class="icon-incompleto--img"
                 src="assets/img/icon/incompleto.svg"
-                alt="este campo es requerido"
+                              alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                 *ngIf="
                   (addressForm.get('observacionesEspeciales').invalid &&
                     addressForm.get('observacionesEspeciales').touched) ||

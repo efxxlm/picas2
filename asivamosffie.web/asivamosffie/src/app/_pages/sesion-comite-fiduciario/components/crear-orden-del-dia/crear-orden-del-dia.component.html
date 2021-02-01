@@ -103,7 +103,10 @@
                     <img
                       class="icon-incompleto--img"
                       src="assets/img/icon/incompleto.svg"
-                      alt="este campo es requerido"
+                                    alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                       *ngIf="
                         (registroPresupuestal.get('tema').invalid && registroPresupuestal.get('tema').touched) ||
                         (registroPresupuestal.get('tema').invalid && estaEditando)
@@ -141,7 +144,10 @@
                       <img
                         class="icon-incompleto--img"
                         src="assets/img/icon/incompleto.svg"
-                        alt="este campo es requerido"
+                                      alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                         *ngIf="
                           (registroPresupuestal.get('responsable').invalid &&
                             registroPresupuestal.get('responsable').touched) ||
@@ -195,7 +201,10 @@
                         <img
                           class="icon-incompleto--img"
                           src="assets/img/icon/incompleto.svg"
-                          alt="este campo es requerido"
+                                        alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                           *ngIf="
                             (registroPresupuestal.get('tiempoIntervencion').invalid &&
                               registroPresupuestal.get('tiempoIntervencion').touched) ||
@@ -230,7 +239,10 @@
                   <img
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
-                    alt="este campo es requerido"
+                                  alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                     *ngIf="
                       (registroPresupuestal.get('url').invalid && registroPresupuestal.get('url').touched) ||
                       (registroPresupuestal.get('url').invalid && estaEditando)

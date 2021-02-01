@@ -11,7 +11,10 @@
     *ngIf="addressForm.invalid && addressForm.touched"
     class="animateDown my-1em color-secondaryColor d-flex align-items-center justify-content-center"
   >
-    <img class="icon-incompleto--img mr-05em" src="assets/img/icon/incompleto.svg" alt="este campo es requerido" />
+    <img class="icon-incompleto--img mr-05em" src="assets/img/icon/incompleto.svg"               alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip" />
     Debe ingresar la información en el campo para continuar
   </div>
   <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
@@ -66,7 +69,13 @@
             <img
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
-              alt="este campo es requerido"
+                            alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
               *ngIf="
                 (addressForm.get('nombreCuenta').invalid && addressForm.get('nombreCuenta').touched) ||
                 (addressForm.get('nombreCuenta').invalid && estaEditando)
@@ -97,7 +106,13 @@
             <img
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
-              alt="este campo es requerido"
+                            alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
               *ngIf="
                 (addressForm.get('numeroCuenta').invalid && addressForm.get('numeroCuenta').touched) ||
                 (addressForm.get('numeroCuenta').invalid && estaEditando)
@@ -135,7 +150,13 @@
             <img
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
-              alt="este campo es requerido"
+                            alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
               *ngIf="
                 (addressForm.get('rp').invalid && addressForm.get('rp').touched) ||
                 (addressForm.get('rp').invalid && estaEditando)
@@ -169,7 +190,13 @@
             <img
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
-              alt="este campo es requerido"
+                            alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
               *ngIf="
                 (addressForm.get('vigencia').invalid && addressForm.get('vigencia').touched) ||
                 (addressForm.get('vigencia').invalid && estaEditando)
@@ -239,7 +266,10 @@
               <img
                 class="icon-incompleto--img"
                 src="assets/img/icon/incompleto.svg"
-                alt="este campo es requerido"
+                              alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                 *ngIf="
                   (addressForm.get('valorConsignacion').invalid && addressForm.get('valorConsignacion').touched) ||
                   (addressForm.get('valorConsignacion').invalid && estaEditando)

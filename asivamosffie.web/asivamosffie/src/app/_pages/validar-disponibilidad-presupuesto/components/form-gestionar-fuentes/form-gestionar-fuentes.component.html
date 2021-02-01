@@ -109,7 +109,10 @@
                   <img
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
-                    alt="este campo es requerido"
+                                  alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                     *ngIf="
                       (fuente.get('fuentecampo').invalid && fuente.get('fuentecampo').touched) ||
                       (fuente.get('fuentecampo').invalid && estaEditando)
@@ -147,7 +150,10 @@
                       <img
                         class="icon-incompleto--img"
                         src="assets/img/icon/incompleto.svg"
-                        alt="este campo es requerido"
+                                      alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                         *ngIf="
                           (fuente.get('saldoActual').invalid && fuente.get('saldoActual').touched) ||
                           (fuente.get('saldoActual').invalid && estaEditando)
@@ -198,7 +204,10 @@
                         <img
                           class="icon-incompleto--img"
                           src="assets/img/icon/incompleto.svg"
-                          alt="este campo es requerido"
+                                        alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                           *ngIf="
                             (fuente.get('valorSolicitado').invalid && fuente.get('valorSolicitado').touched) ||
                             (fuente.get('valorSolicitado').invalid && estaEditando)
@@ -239,7 +248,10 @@
                       <img
                         class="icon-incompleto--img"
                         src="assets/img/icon/incompleto.svg"
-                        alt="este campo es requerido"
+                                      alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                         *ngIf="
                           (fuente.get('nuevoSaldo').invalid && fuente.get('nuevoSaldo').touched) ||
                           (fuente.get('nuevoSaldo').invalid && estaEditando)

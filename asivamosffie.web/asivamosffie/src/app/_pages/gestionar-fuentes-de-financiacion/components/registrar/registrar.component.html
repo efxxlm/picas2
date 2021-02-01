@@ -11,7 +11,10 @@
     *ngIf="addressForm.invalid && addressForm.touched"
     class="animateDown my-1em color-secondaryColor d-flex align-items-center justify-content-center"
   >
-    <img class="icon-incompleto--img mr-05em" src="assets/img/icon/incompleto.svg" alt="este campo es requerido" />
+    <img class="icon-incompleto--img mr-05em" src="assets/img/icon/incompleto.svg"               alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip" />
     Debe ingresar la información en el campo para continuar
   </div>
   <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
@@ -46,7 +49,13 @@
             <img
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
-              alt="este campo es requerido"
+                            alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
               *ngIf="
                 (addressForm.controls.nombreAportante.invalid && addressForm.controls.nombreAportante.touched) ||
                 (addressForm.controls.nombreAportante.invalid && edicion)
@@ -86,7 +95,13 @@
             <img
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
-              alt="este campo es requerido"
+                            alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
               *ngIf="
                 (addressForm.controls.nombreAportanteFFIE.invalid &&
                   addressForm.controls.nombreAportanteFFIE.touched) ||
@@ -153,7 +168,13 @@
             <img
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
-              alt="este campo es requerido"
+                            alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
               *ngIf="
                 (addressForm.controls.tipoDocumento.invalid && addressForm.controls.tipoDocumento.touched) ||
                 (addressForm.controls.tipoDocumento.invalid && edicion)
@@ -209,7 +230,13 @@
             <img
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
-              alt="este campo es requerido"
+                            alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
               *ngIf="
                 (addressForm.controls.departamento.invalid && addressForm.controls.departamento.touched) ||
                 (addressForm.controls.departamento.invalid && edicion)
@@ -244,7 +271,13 @@
             <img
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
-              alt="este campo es requerido"
+                            alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
               *ngIf="
                 (addressForm.controls.municipio.invalid && addressForm.controls.municipio.touched) ||
                 (addressForm.controls.municipio.invalid && edicion)
@@ -279,7 +312,13 @@
             <img
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
-              alt="este campo es requerido"
+                            alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
               *ngIf="
                 (addressForm.controls.vigenciaAcuerdo.invalid && addressForm.controls.vigenciaAcuerdo.touched) ||
                 (addressForm.controls.vigenciaAcuerdo.invalid && edicion)
@@ -383,7 +422,10 @@
                   <img
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
-                    alt="este campo es requerido"
+                                  alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                     *ngIf="
                       (addressForm.controls.cuantosRP.invalid && addressForm.controls.cuantosRP.touched) ||
                       (addressForm.controls.cuantosRP.invalid && edicion)
@@ -435,7 +477,10 @@
                         <img
                           class="icon-incompleto--img"
                           src="assets/img/icon/incompleto.svg"
-                          alt="este campo es requerido"
+                                        alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                           *ngIf="
                             (registroPresupuestal.get('numeroRP').invalid &&
                               registroPresupuestal.get('numeroRP').touched) ||
@@ -479,7 +524,10 @@
                         <img
                           class="icon-incompleto--img"
                           src="assets/img/icon/incompleto.svg"
-                          alt="este campo es requerido"
+                                        alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                           *ngIf="
                             (registroPresupuestal.get('fecha').invalid && registroPresupuestal.get('fecha').touched) ||
                             (registroPresupuestal.get('fecha').invalid && edicion)
@@ -515,7 +563,10 @@
                       <img
                         class="icon-incompleto--img"
                         src="assets/img/icon/incompleto.svg"
-                        alt="este campo es requerido"
+                                      alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                         *ngIf="
                           (registroPresupuestal.get('numerodocumentoRP').invalid &&
                             registroPresupuestal.get('numerodocumentoRP').touched) ||
@@ -573,7 +624,10 @@
                   <img
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
-                    alt="este campo es requerido"
+                                  alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                     *ngIf="
                       (fuente.get('fuenteRecursos').invalid && fuente.get('fuenteRecursos').touched) ||
                       (fuente.get('fuenteRecursos').invalid && edicion)
@@ -629,7 +683,10 @@
                       <img
                         class="icon-incompleto--img"
                         src="assets/img/icon/incompleto.svg"
-                        alt="este campo es requerido"
+                                      alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                         *ngIf="
                           (fuente.get('valorFuenteRecursos').invalid && fuente.get('valorFuenteRecursos').touched) ||
                           (fuente.get('valorFuenteRecursos').invalid && edicion)
@@ -684,7 +741,10 @@
                         <img
                           class="icon-incompleto--img"
                           src="assets/img/icon/incompleto.svg"
-                          alt="este campo es requerido"
+                                        alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                           *ngIf="
                             (fuente.get('cuantasVigencias').invalid && fuente.get('cuantasVigencias').touched) ||
                             (fuente.get('cuantasVigencias').invalid && edicion)
@@ -728,7 +788,10 @@
                             <img
                               class="icon-incompleto--img"
                               src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
+                                            alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                               *ngIf="
                                 (vigencia.get('vigenciaAportante').invalid &&
                                   vigencia.get('vigenciaAportante').touched) ||
@@ -787,7 +850,10 @@
                               <img
                                 class="icon-incompleto--img"
                                 src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido"
+                                              alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                                 *ngIf="
                                   (vigencia.get('valorVigencia').invalid && vigencia.get('valorVigencia').touched) ||
                                   (vigencia.get('valorVigencia').invalid && edicion)
@@ -857,7 +923,10 @@
                           <img
                             class="icon-incompleto--img"
                             src="assets/img/icon/incompleto.svg"
-                            alt="este campo es requerido"
+                                          alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                             *ngIf="
                               (cuentaBancaria.get('numeroCuenta').invalid &&
                                 cuentaBancaria.get('numeroCuenta').touched) ||
@@ -905,7 +974,10 @@
                           <img
                             class="icon-incompleto--img"
                             src="assets/img/icon/incompleto.svg"
-                            alt="este campo es requerido"
+                                          alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                             *ngIf="
                               (cuentaBancaria.get('nombreCuenta').invalid &&
                                 cuentaBancaria.get('nombreCuenta').touched) ||
@@ -954,7 +1026,10 @@
                               <img
                                 class="icon-incompleto--img"
                                 src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido"
+                                              alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                                 *ngIf="
                                   (cuentaBancaria.get('codigoSIFI').invalid &&
                                     cuentaBancaria.get('codigoSIFI').touched) ||
@@ -992,7 +1067,10 @@
                               <img
                                 class="icon-incompleto--img"
                                 src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido"
+                                              alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                                 *ngIf="
                                   (cuentaBancaria.get('tipoCuenta').invalid &&
                                     cuentaBancaria.get('tipoCuenta').touched) ||
@@ -1032,7 +1110,10 @@
                             <img
                               class="icon-incompleto--img"
                               src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
+                                            alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                               *ngIf="
                                 (cuentaBancaria.get('banco').invalid && cuentaBancaria.get('banco').touched) ||
                                 (cuentaBancaria.get('banco').invalid && edicion)
@@ -1067,7 +1148,10 @@
                               <img
                                 class="icon-incompleto--img"
                                 src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido"
+                                              alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                                 *ngIf="
                                   (cuentaBancaria.get('extra').invalid && cuentaBancaria.get('extra').touched) ||
                                   (cuentaBancaria.get('extra').invalid && edicion)

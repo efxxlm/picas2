@@ -128,7 +128,10 @@
     *ngIf="addressForm.invalid && addressForm.touched"
     class="animateDown my-1em color-secondaryColor d-flex align-items-center justify-content-center"
   >
-    <img class="icon-incompleto--img mr-05em" src="assets/img/icon/incompleto.svg" alt="este campo es requerido" />
+    <img class="icon-incompleto--img mr-05em" src="assets/img/icon/incompleto.svg"               alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip" />
     Debe ingresar la información en el campo para continuar
   </div>
   <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
@@ -158,7 +161,10 @@
         <img
           class="icon-incompleto--img"
           src="assets/img/icon/incompleto.svg"
-          alt="este campo es requerido"
+                        alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
           *ngIf="
             (addressForm.get('tieneObservaciones').invalid && addressForm.get('tieneObservaciones').touched) ||
             (addressForm.get('tieneObservaciones').invalid && estaEditando)
@@ -208,7 +214,10 @@
         <img
           class="icon-incompleto--img"
           src="assets/img/icon/incompleto.svg"
-          alt="este campo es requerido"
+                        alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
           *ngIf="
             (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
             (addressForm.get('observaciones').invalid && estaEditando)

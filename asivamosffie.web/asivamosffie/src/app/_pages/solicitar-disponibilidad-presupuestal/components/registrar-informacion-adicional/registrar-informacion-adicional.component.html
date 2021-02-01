@@ -126,7 +126,10 @@
               <img
                 class="icon-incompleto--img"
                 src="assets/img/icon/incompleto.svg"
-                alt="este campo es requerido"
+                              alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                 *ngIf="
                   (addressForm.get('plazoMeses').invalid && addressForm.get('plazoMeses').touched) ||
                   (addressForm.get('plazoMeses').invalid && estaEditando)
@@ -179,7 +182,10 @@
               <img
                 class="icon-incompleto--img"
                 src="assets/img/icon/incompleto.svg"
-                alt="este campo es requerido"
+                              alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                 *ngIf="
                   (addressForm.get('plazoDias').invalid && addressForm.get('plazoDias').touched) ||
                   (addressForm.get('plazoDias').invalid && estaEditando)
@@ -219,7 +225,10 @@
         <img
           class="icon-incompleto--img"
           src="assets/img/icon/incompleto.svg"
-          alt="este campo es requerido"
+                        alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
           *ngIf="
             (addressForm.get('objeto').invalid && addressForm.get('objeto').touched) ||
             (addressForm.get('objeto').invalid && estaEditando)

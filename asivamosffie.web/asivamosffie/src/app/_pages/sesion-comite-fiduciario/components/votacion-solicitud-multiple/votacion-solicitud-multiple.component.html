@@ -43,7 +43,10 @@
                   <img
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
-                    alt="este campo es requerido"
+                                  alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                     *ngIf="
                       (temas.get('aprobacion').invalid && temas.get('aprobacion').touched) ||
                       (temas.get('aprobacion').invalid && estaEditando)
@@ -117,7 +120,10 @@
                             <img
                               class="icon-incompleto--img"
                               src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
+                                            alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                               *ngIf="
                                 (observacion.get('observacion').invalid && observacion.get('observacion').touched) ||
                                 (observacion.get('observacion').invalid && estaEditando)

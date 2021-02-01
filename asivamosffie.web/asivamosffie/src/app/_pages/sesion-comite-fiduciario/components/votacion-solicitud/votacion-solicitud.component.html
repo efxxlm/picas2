@@ -79,7 +79,10 @@
                         <img
                           class="icon-incompleto--img"
                           src="assets/img/icon/incompleto.svg"
-                          alt="este campo es requerido"
+                                        alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                           *ngIf="
                             (temas.get('observaciones').invalid && temas.get('observaciones').touched) ||
                             (temas.get('observaciones').invalid && estaEditando)

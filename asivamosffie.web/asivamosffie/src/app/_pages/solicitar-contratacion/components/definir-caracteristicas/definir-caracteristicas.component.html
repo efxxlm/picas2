@@ -53,7 +53,13 @@
             <img
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
-              alt="este campo es requerido"
+                            alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
               *ngIf="
                 (addressForm.get('completada').invalid && addressForm.get('completada').touched) ||
                 (addressForm.get('completada').invalid && estaEditando)
@@ -87,7 +93,10 @@
                 <img
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
-                  alt="este campo es requerido"
+                                alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                   *ngIf="
                     (addressForm.get('reasignacion').invalid && addressForm.get('reasignacion').touched) ||
                     (addressForm.get('reasignacion').invalid && estaEditando)
@@ -123,7 +132,10 @@
                 <img
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
-                  alt="este campo es requerido"
+                                alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                   *ngIf="
                     (addressForm.get('avanceObra').invalid && addressForm.get('avanceObra').touched) ||
                     (addressForm.get('avanceObra').invalid && estaEditando)
@@ -165,7 +177,10 @@
                   <img
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
-                    alt="este campo es requerido"
+                                  alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                     *ngIf="
                       (addressForm.get('porcentajeAvanceObra').invalid &&
                         addressForm.get('porcentajeAvanceObra').touched) ||
@@ -215,7 +230,10 @@
                 <img
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
-                  alt="este campo es requerido"
+                                alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                   *ngIf="
                     (addressForm.get('requiereLicencias').invalid && addressForm.get('requiereLicencias').touched) ||
                     (addressForm.get('requiereLicencias').invalid && estaEditando)
@@ -251,7 +269,10 @@
                 <img
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
-                  alt="este campo es requerido"
+                                alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                   *ngIf="
                     (addressForm.get('licenciaVigente').invalid && addressForm.get('licenciaVigente').touched) ||
                     (addressForm.get('licenciaVigente').invalid && estaEditando)
@@ -299,7 +320,10 @@
                   <img
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
-                    alt="este campo es requerido"
+                                  alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                     *ngIf="
                       (addressForm.get('numeroLicencia').invalid && addressForm.get('numeroLicencia').touched) ||
                       (addressForm.get('numeroLicencia').invalid && estaEditando)
@@ -345,7 +369,10 @@
                   <img
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
-                    alt="este campo es requerido"
+                                  alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                     *ngIf="
                       (addressForm.get('fechaVigencia').invalid && addressForm.get('fechaVigencia').touched) ||
                       (addressForm.get('fechaVigencia').invalid && estaEditando)
