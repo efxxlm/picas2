@@ -132,6 +132,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<ProyectoPredio> ProyectoPredio { get; set; }
         public virtual DbSet<ProyectoRequisitoTecnico> ProyectoRequisitoTecnico { get; set; }
         public virtual DbSet<RegistroPresupuestal> RegistroPresupuestal { get; set; }
+        public virtual DbSet<RendimientosIncorporados> RendimientosIncorporados { get; set; }
         public virtual DbSet<RequisitoTecnicoRadicado> RequisitoTecnicoRadicado { get; set; }
         public virtual DbSet<SeguimientoActuacionDerivada> SeguimientoActuacionDerivada { get; set; }
         public virtual DbSet<SeguimientoDiario> SeguimientoDiario { get; set; }
@@ -3279,12 +3280,10 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaVerificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.InstanciaCodigo)
-                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.MotivoNovedadCodigo)
-                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
@@ -3297,19 +3296,16 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.NumeroSolicitud)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.PresupuestoAdicionalSolicitado).HasColumnType("numeric(18, 2)");
 
                 entity.Property(e => e.ResumenJustificacion)
-                    .IsRequired()
-                    .HasMaxLength(1000)
+                    .HasMaxLength(1100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.TipoNovedadCodigo)
-                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
@@ -4571,6 +4567,40 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.RegistroPresupuestal)
                     .HasForeignKey(d => d.CofinanciacionDocumentoId)
                     .HasConstraintName("FK_RegistroPresupuestalDocumento");
+            });
+
+            modelBuilder.Entity<RendimientosIncorporados>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.Property(e => e.CuentaBancaria)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ProvisionGravamenFinanciero).HasColumnType("decimal(25, 3)");
+
+                entity.Property(e => e.RendimientoIncorporar).HasColumnType("decimal(25, 3)");
+
+                entity.Property(e => e.RendimientosIncorporados1)
+                    .HasColumnName("RendimientosIncorporados")
+                    .HasColumnType("decimal(25, 3)");
+
+                entity.Property(e => e.RendimientosIncorporadosId).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.TotalGastosBancarios).HasColumnType("decimal(25, 3)");
+
+                entity.Property(e => e.TotalGravamenFinancieroDescontado).HasColumnType("decimal(25, 3)");
+
+                entity.Property(e => e.TotalRendimientosGenerados).HasColumnType("decimal(25, 3)");
+
+                entity.Property(e => e.Visitas).HasColumnType("decimal(25, 3)");
+
+                entity.HasOne(d => d.CarguePagosRendimientos)
+                    .WithMany()
+                    .HasForeignKey(d => d.CarguePagosRendimientosId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_RendimientosIncorporados_CarguePagosRendimientos");
             });
 
             modelBuilder.Entity<RequisitoTecnicoRadicado>(entity =>
@@ -6810,6 +6840,10 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.EstadoInforme)
                     .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EstadoInformeCod)
+                    .HasMaxLength(2)
                     .IsUnicode(false);
 
                 entity.Property(e => e.FechaTerminacionProyecto)

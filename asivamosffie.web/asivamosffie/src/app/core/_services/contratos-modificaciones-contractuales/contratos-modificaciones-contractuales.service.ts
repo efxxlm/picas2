@@ -53,7 +53,7 @@ export class ContratosModificacionesContractualesService {
   
   getListGrillaNovedadContractual()
   {
-    return this.http.get( `${ this.url }/ContractualModification/GetListGrillaNovedadContractual` ); 
+    return this.http.get<any[]>( `${ this.url }/ContractualModification/GetListGrillaNovedadContractual` ); 
   }
 
   getProyectosContrato(ncontrato) {

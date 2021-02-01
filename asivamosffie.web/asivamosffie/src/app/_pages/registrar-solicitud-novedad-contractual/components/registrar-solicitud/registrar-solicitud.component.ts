@@ -18,8 +18,8 @@ export class RegistrarSolicitudComponent implements OnInit {
   options: string[] = [];
 
   novedadesArray = [
-    { name: 'Contrato', value: '1' },
-    { name: 'Proyecto', value: '0' }
+    { name: 'Contrato', value: true },
+    { name: 'Proyecto', value: false }
   ];
 
   constructor(public contratoServices: ContratosModificacionesContractualesService) { 

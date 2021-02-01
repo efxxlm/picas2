@@ -12,9 +12,9 @@
   <table mat-table [dataSource]="dataSource" matSort>
 
     <!-- fechaSolicitud Column -->
-    <ng-container matColumnDef="fechaSolicitud">
+    <ng-container matColumnDef="fechaSolictud">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha de solicitud de la novedad</th>
-      <td mat-cell *matCellDef="let element"><b>{{element.fechaSolicitud}}</b></td>
+      <td mat-cell *matCellDef="let element"><b>{{element.fechaSolictud | date: 'dd/MM/yyyy'}}</b></td>
     </ng-container>
 
     <!-- numeroSolicitud Column -->
@@ -24,50 +24,50 @@
     </ng-container>
 
     <!-- tipoNovedad Column -->
-    <ng-container matColumnDef="tipoNovedad">
+    <ng-container matColumnDef="tipoNovedadNombre">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo de novedad</th>
-      <td mat-cell *matCellDef="let element">{{element.tipoNovedad}}</td>
+      <td mat-cell *matCellDef="let element">{{element.tipoNovedadNombre}}</td>
     </ng-container>
 
     <!-- estadoNovedad Column -->
-    <ng-container matColumnDef="estadoNovedad">
+    <ng-container matColumnDef="estadoNovedadNombre">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado de la novedad</th>
-      <td mat-cell *matCellDef="let element">{{element.estadoNovedad}}</td>
+      <td mat-cell *matCellDef="let element">{{element.estadoNovedadNombre}}</td>
     </ng-container>
 
     <!-- estadoRegistro Column -->
-    <ng-container matColumnDef="estadoRegistro">
+    <ng-container matColumnDef="registroCompleto">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado del registro</th>
       <td mat-cell *matCellDef="let element">
-        <span class="info-text d-block m-0" [class.sin-diligenciar]="element.estadoRegistro === 'Sin diligenciar'"
-          [class.en-proceso]="element.estadoRegistro === 'En proceso'"
-          [class.completo]="element.estadoRegistro === 'Completo'"></span>
-        {{element.estadoRegistro}}
+        <span class="info-text d-block m-0" 
+          [class.sin-diligenciar]="element.registroCompleto !== true"
+          [class.completo]="element.registroCompleto === true"></span>
+        {{element.registroCompleto === true ? 'Completo' : 'Incompleto'}}
       </td>
     </ng-container>
 
     <!-- Id Column -->
-    <ng-container matColumnDef="id">
+    <ng-container matColumnDef="novedadContractualId">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Gestión</th>
       <td mat-cell *matCellDef="let element">
         <a mat-button color="warn" mat-raised-button color="accent" class="btn-table"
-          [routerLink]="[ 'verDetalle', element.id ]">
+          [routerLink]="[ 'verDetalle', element.novedadContractualId ]">
           Ver detalle
         </a>
         <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
-          (click)="aprobarSolicitud(element.id)">
+          (click)="aprobarSolicitud(element.novedadContractualId)">
           Aprobar solicitud
         </button>
         <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
-          (click)="rechazarSolicitud(element.id)">
+          (click)="rechazarSolicitud(element.novedadContractualId)">
           Rechazar solicitud
         </button>
         <a mat-button color="warn" mat-raised-button color="accent" class="btn-table"
-          [routerLink]="[ 'qwerty', element.id ]">
+          [routerLink]="[ 'qwerty', element.novedadContractualId ]">
           Ver detalle/Editar
         </a>
         <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
-          (click)="eliminarSolicitud(element.id)">
+          (click)="eliminarSolicitud(element.novedadContractualId)">
           Eliminar
         </button>
       </td>

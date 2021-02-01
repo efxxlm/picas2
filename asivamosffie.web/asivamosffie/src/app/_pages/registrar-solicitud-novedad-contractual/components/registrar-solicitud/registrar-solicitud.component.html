@@ -52,11 +52,11 @@
     </div>
   </div>
 
-  <div class="pt-3em animatedDown" *ngIf="novedadAplicada.value === '0' && proyectos.length>0">
+  <div class="pt-3em animatedDown" *ngIf="novedadAplicada.value === false" >
     <app-tabla-proyectos-registrar-novedad></app-tabla-proyectos-registrar-novedad>
   </div>
 
-  <mat-card class="shipping-card var-main-gris animatedDown" *ngIf="novedadAplicada.value && contrato ">
+  <mat-card class="shipping-card var-main-gris animatedDown" *ngIf="novedadAplicada.value !== undefined && contrato ">
     <mat-card-header class="header-card header-card--margin">
       <mat-card-title class="header-card--text">
         Datos del contrato

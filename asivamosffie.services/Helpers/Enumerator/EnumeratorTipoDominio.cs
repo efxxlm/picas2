@@ -176,12 +176,14 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Estado_Reporte_Semanal_Y_Muestras = 112,
 
+        Tipo_Novedad_Modificacion_Contractual = 113,
+
         Tipo_Observacion_Seguimiento_Semanal = 123,
         
         Jurisdiccion =116,
         Actuaciones_Recomendadas=119,
         Estados_Defensa_Judicial=120,
-
-        Estados_Reclamacion = 126,
+        Estados_Reclamacion     = 126,
+        Estado_Novedad_Contractual = 157,
     }
 }
