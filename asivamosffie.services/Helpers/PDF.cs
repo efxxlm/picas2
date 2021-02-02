@@ -122,7 +122,7 @@ namespace asivamosffie.services.Helpers
                 this.Pie = pie;
                 if (!string.IsNullOrEmpty(encabezado))
                 {
-                    encabezado = encabezado.Replace("[RUTA_ICONO]", Path.Combine(Directory.GetCurrentDirectory(), "assets", "pdf-styles.css"));
+                    encabezado = encabezado.Replace("[RUTA_ICONO]", Path.Combine(Directory.GetCurrentDirectory(), "assets", "img-FFIE.png"));
                     header = XMLWorkerHelper.ParseToElementList(encabezado, null);
                 }
                 if (!string.IsNullOrEmpty(pie))
