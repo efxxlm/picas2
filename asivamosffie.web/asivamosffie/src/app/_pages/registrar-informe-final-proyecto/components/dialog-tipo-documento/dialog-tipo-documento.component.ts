@@ -32,7 +32,7 @@ export class DialogTipoDocumentoComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log(this.data);
+    console.log("1:",this.data);
     if (this.data.informe.informeFinalAnexoId > 0 && this.data.informe.informeFinalAnexoId != null) {
       this.getInformeFinalAnexoByInformeFinalAnexoId(
         this.data.informe.informeFinalAnexoId
@@ -81,6 +81,8 @@ export class DialogTipoDocumentoComponent implements OnInit {
       )
       .subscribe((respuesta: Respuesta) => {
         this.openDialog('', respuesta.message);
+        this.dialog.getDialogById('dialogTipoDocumento').close();
+        return;
       });
   }
 
@@ -96,7 +98,6 @@ export class DialogTipoDocumentoComponent implements OnInit {
     this.registrarInformeFinalProyectoService
       .getInformeFinalAnexoByInformeFinalAnexoId(id)
       .subscribe((responseData) => {
-        console.log("cuando entra aquí: ",responseData);
         this.addressForm.patchValue(responseData);
       });
   }

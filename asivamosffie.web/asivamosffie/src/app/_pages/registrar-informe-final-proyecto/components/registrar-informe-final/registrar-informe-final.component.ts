@@ -23,15 +23,15 @@ export class RegistrarInformeFinalComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
       this.id = params.id;
-      this.getInformeFinalByContratacionProyecto(this.id);
+      this.getInformeFinalByProyecto(this.id);
     })
   }
-  getInformeFinalByContratacionProyecto (id:string) {
-    this.registrarInformeFinalProyectoService.getInformeFinalByContratacionProyecto(id)
+  getInformeFinalByProyecto(id:string) {
+    this.registrarInformeFinalProyectoService.getInformeFinalByProyecto(id)
     .subscribe(report => {
       this.report = report[0];
-      if(report[0].informeFinal.length>0){
-        this.estadoInforme = report[0].informeFinal[0].estadoInforme;
+      if(report[0].proyecto.informeFinal.length>0){
+        this.estadoInforme = report[0].proyecto.informeFinal[0].estadoInforme;
       }else{
         this.estadoInforme = '0';
       }

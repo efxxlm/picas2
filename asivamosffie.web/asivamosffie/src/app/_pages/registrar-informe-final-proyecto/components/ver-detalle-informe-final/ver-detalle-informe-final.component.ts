@@ -23,11 +23,11 @@ export class VerDetalleInformeFinalComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
       this.id = params.id;
-      this.getInformeFinalByContratacionProyecto(this.id);
+      this.getInformeFinalByProyecto(this.id);
     })
   }
-  getInformeFinalByContratacionProyecto (id:string) {
-    this.registrarInformeFinalProyectoService.getInformeFinalByContratacionProyecto(id)
+  getInformeFinalByProyecto (id:string) {
+    this.registrarInformeFinalProyectoService.getInformeFinalByProyecto(id)
     .subscribe(report => {
       this.report = report[0];
       console.log(this.report);

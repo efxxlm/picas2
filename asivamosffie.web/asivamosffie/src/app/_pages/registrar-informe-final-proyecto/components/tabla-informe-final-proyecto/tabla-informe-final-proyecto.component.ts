@@ -12,10 +12,7 @@ export interface RegistrarInterface {
   tipoIntervencion: string,
   institucionEducativa: string,
   sedeEducativa: string,
-  contratoId: number,
   proyectoId: number,
-  contratacionId: number,
-  contratacionProyectoId: number,
   registroCompleto: boolean;
   estadoInforme: string,
   estadoInformeCod: string
@@ -38,7 +35,7 @@ export class TablaInformeFinalProyectoComponent implements OnInit, AfterViewInit
     'sedeEducativa',
     'estadoInforme',
     'registroCompleto',
-    'contratacionProyectoId'
+    'proyectoId'
   ];
   dataSource = new MatTableDataSource<RegistrarInterface>(this.ELEMENT_DATA);
 

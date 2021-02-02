@@ -33,16 +33,16 @@ export class FormReciboASatisfaccionComponent implements OnInit {
 
   private buildForm() {
     this.addressForm = this.fb.group({
-      InformeFinalId: [null, Validators.required],
-      ContratacionProyectoId: [
-        this.report.contratacionProyectoId,
+      informeFinalId: [null, Validators.required],
+      proyectoId: [
+        this.report.proyecto.proyectoId,
         Validators.required,
       ],
       urlActa: [null, Validators.required],
       fechaSuscripcion: [null, Validators.required],
     });
-    if(this.report.informeFinal.length>0){
-      this.addressForm.patchValue(this.report.informeFinal[0]);
+    if(this.report.proyecto.informeFinal.length>0){
+      this.addressForm.patchValue(this.report.proyecto.informeFinal[0]);
     }
   }
 
@@ -54,7 +54,8 @@ export class FormReciboASatisfaccionComponent implements OnInit {
   }
 
   onSubmit() {
-    // console.log(this.addressForm.value);
+    //[disabled]="addressForm.invalid"
+    //console.log(this.addressForm.value);
     this.addressForm.markAllAsTouched();
     this.estaEditando = true;
     this.createInformeFinal(this.addressForm.value);
@@ -65,6 +66,7 @@ export class FormReciboASatisfaccionComponent implements OnInit {
     this.registrarInformeFinalProyectoService.createInformeFinal(informeFinal)
     .subscribe((respuesta: Respuesta) => {
       this.openDialog('', respuesta.message)
+      location.reload();//esto debería ir? 
     });
   }
 }

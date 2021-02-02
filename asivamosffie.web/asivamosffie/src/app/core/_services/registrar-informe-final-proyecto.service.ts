@@ -16,8 +16,8 @@ export class RegistrarInformeFinalProyectoService {
     return this.http.get(`${environment.apiUrl}/${this.final_report}/gridRegisterFinalReport`);
   }
 
-  getInformeFinalByContratacionProyecto( pContratacionProyectoId: string ){
-    return this.http.get(`${environment.apiUrl}/${this.final_report}/GetInformeFinalByContratacionProyectoId?pContratacionProyectoId=${ pContratacionProyectoId }`);
+  getInformeFinalByProyecto( pProyectoId: string ){
+    return this.http.get(`${environment.apiUrl}/${this.final_report}/GetInformeFinalByProyectoId?pProyectoId=${ pProyectoId }`);
   }
 
   createInformeFinal( informeFinal: any ){
@@ -28,8 +28,8 @@ export class RegistrarInformeFinalProyectoService {
     return this.http.put(`${environment.apiUrl}/${this.final_report}/CreateEditInformeFinal`, informeFinal );
   }
 
-  getInformeFinalListaChequeo(pContratacionProyectoId: string){
-    return this.http.get<Anexo[]>(`${environment.apiUrl}/${this.final_report}/GetInformeFinalListaChequeoByContratacionProyectoId?pContratacionProyectoId=${ pContratacionProyectoId }`);
+  getInformeFinalListaChequeo(pProyectoId: string){
+    return this.http.get<Anexo[]>(`${environment.apiUrl}/${this.final_report}/GetInformeFinalListaChequeoByProyectoId?pProyectoId=${ pProyectoId }`);
   }
 
   createEditInformeFinalInterventoria( informeFinalInterventoria: any ){
@@ -52,4 +52,11 @@ export class RegistrarInformeFinalProyectoService {
     return this.http.get(`${environment.apiUrl}/${this.final_report}/GetInformeFinalAnexoByInformeFinalAnexoId?pInformeFinalAnexoId=${ pInformeFinalAnexoId }`);
   }
 
+  getInformeFinalByInformeFinalId(pInformeFinalId: number){
+    return this.http.get(`${environment.apiUrl}/${this.final_report}/GetInformeFinalByInformeFinalId?pInformeFinalId=${ pInformeFinalId }`);
+  }
+
+  getInformeFinalInterventoriaObservacionByInformeFinalObservacion(pObservacionId: number){
+    return this.http.get(`${environment.apiUrl}/${this.final_report}/GetInformeFinalInterventoriaObservacionByInformeFinalObservacion?pObservacionId=${ pObservacionId }`);
+  }
 }

@@ -96,11 +96,14 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
       data:{
         informe: informe,
         llaveMen: this.llaveMen
-      }
+      },
+      id:'dialogTipoDocumento'
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
+      this.ngOnInit();
+      return;
     });
   }
 
@@ -110,11 +113,14 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
       data: {
         informe: informe,
         llaveMen: this.llaveMen
-      }
+      },
+      id:'dialogObservaciones'
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
+      this.ngOnInit();
+      return;
     });
   }
 
@@ -146,6 +152,9 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     this.registrarInformeFinalProyectoService.createEditInformeFinalInterventoria(informeFinalInterventoria)
     .subscribe((respuesta: Respuesta) => {
         console.log(respuesta.message);
+        this.ngOnInit();
+        return;
+        //this.router.navigate(['/crearProyecto']);
       },
       err => {
         console.log( err );

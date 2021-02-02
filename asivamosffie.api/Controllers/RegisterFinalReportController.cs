@@ -41,12 +41,12 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
-        [Route("GetInformeFinalByContratacionProyectoId")]
-        public async Task<List<ContratacionProyecto>> GetInformeFinalByContratacionProyectoId([FromQuery] int pContratacionProyectoId)
+        [Route("GetInformeFinalByProyectoId")]
+        public async Task<List<dynamic>> GetInformeFinalByProyectoId([FromQuery] int pProyectoId)
         {
             try
             {
-                return await _registerFinalReport.GetInformeFinalByContratacionProyectoId(pContratacionProyectoId);
+                return await _registerFinalReport.GetInformeFinalByProyectoId(pProyectoId);
             }
 
             catch (Exception ex)
@@ -73,12 +73,12 @@ namespace asivamosffie.api.Controllers
 
 
         [HttpGet]
-        [Route("GetInformeFinalListaChequeoByContratacionProyectoId")]
-        public async Task<List<dynamic>> GetInformeFinalListaChequeoByContratacionProyectoId([FromQuery] int pContratacionProyectoId)
+        [Route("GetInformeFinalListaChequeoByProyectoId")]
+        public async Task<List<dynamic>> GetInformeFinalListaChequeoByContratacionProyectoId([FromQuery] int pProyectoId)
         {
             try
             {
-                return await _registerFinalReport.GetInformeFinalListaChequeoByContratacionProyectoId(pContratacionProyectoId);
+                return await _registerFinalReport.GetInformeFinalListaChequeoByProyectoId(pProyectoId);
             }
 
             catch (Exception ex)
@@ -109,6 +109,36 @@ namespace asivamosffie.api.Controllers
             try
             {
                 return await _registerFinalReport.GetInformeFinalAnexoByInformeFinalAnexoId(pInformeFinalAnexoId);
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpGet]
+        [Route("GetInformeFinalByInformeFinalId")]
+        public async Task<InformeFinal> GetInformeFinalByInformeFinalId([FromQuery] int pInformeFinalId)
+        {
+            try
+            {
+                return await _registerFinalReport.GetInformeFinalByInformeFinalId(pInformeFinalId);
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpGet]
+        [Route("GetInformeFinalInterventoriaObservacionByInformeFinalObservacion")]
+        public async Task<InformeFinalInterventoriaObservaciones> GetInformeFinalInterventoriaObservacionByInformeFinalObservacion([FromQuery] int pObservacionId)
+        {
+            try
+            {
+                return await _registerFinalReport.GetInformeFinalInterventoriaObservacionByInformeFinalObservacion(pObservacionId);
             }
 
             catch (Exception ex)

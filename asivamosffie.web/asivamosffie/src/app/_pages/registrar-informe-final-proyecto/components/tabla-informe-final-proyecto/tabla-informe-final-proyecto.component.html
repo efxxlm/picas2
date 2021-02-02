@@ -80,8 +80,8 @@
       </td>
     </ng-container>
 
-    <!-- contratacionProyectoId Column -->
-    <ng-container matColumnDef="contratacionProyectoId">
+    <!-- proyectoId Column -->
+    <ng-container matColumnDef="proyectoId">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Gestión</th>
       <td mat-cell *matCellDef="let element">
         <a
@@ -90,7 +90,7 @@
           mat-raised-button
           color="accent"
           class="btn-table"
-          [routerLink]="['registrar', element.contratacionProyectoId]"
+          [routerLink]="['registrar', element.proyectoId]"
         >
           <span *ngIf="!element.registroCompleto && element.estadoInformeCod === '0'">Registrar informe final {{element.EstadoInformeCod}}</span>
           <span *ngIf="element.estadoInformeCod === '1' || element.estadoInformeCod === '2'">Ver detalle / Editar</span>
@@ -105,7 +105,7 @@
           color="accent"
           class="btn-table"
           type="button"
-          [routerLink]="['registrar', element.contratacionProyectoId]"
+          [routerLink]="['registrar', element.proyectoId]"
         >
         Ver detalle / Editar
         </a> -->
@@ -118,7 +118,7 @@
           color="accent"
           class="btn-table"
           type="button"
-          [routerLink]="['verDetalle', element.contratacionProyectoId]"
+          [routerLink]="['verDetalle', element.proyectoId]"
         >
           Ver detalle
         </a>
