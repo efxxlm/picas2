@@ -658,9 +658,15 @@ namespace asivamosffie.services
                         .ThenInclude(r => r.SesionSolicitudCompromiso)
                             .ThenInclude(r => r.ResponsableSesionParticipante)
                                 .ThenInclude(r => r.Usuario)
+
                     .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
                         .ThenInclude(r => r.SesionSolicitudCompromiso)
                             .ThenInclude(r => r.ResponsableSesionParticipante)
+                                .ThenInclude(r => r.Usuario)
+
+                    .Include(r => r.SesionComiteTema)
+                        .ThenInclude(r => r.TemaCompromiso)
+                            .ThenInclude(r => r.ResponsableNavigation)
                                 .ThenInclude(r => r.Usuario)
                     .FirstOrDefault();
 
@@ -708,6 +714,27 @@ namespace asivamosffie.services
                                 .Replace("[FECHA_CUMPLIMIENTO]", sesionSolicitudCompromiso.FechaCumplimiento.HasValue ? sesionSolicitudCompromiso.FechaCumplimiento.Value.ToString("dd-MM-yyyy") : null);
 
                             blEnvioCorreo = Helpers.Helpers.EnviarCorreo(sesionSolicitudCompromiso?.ResponsableSesionParticipante?.Usuario?.Email, "Notificación Compromisos", template, pSender, pPassword, pMailServer, pMailPort);
+                        }
+                    }
+                }
+
+                foreach (var tema in comiteTecnico.SesionComiteTema)
+                {
+                    //tema.SesionSolicitudCompromiso = sesionComiteSolicitud.SesionSolicitudCompromiso.Where(r => r.EsFiduciario != true).ToList();
+                    foreach (var compromiso in tema.TemaCompromiso)
+                    {
+                        if (!string.IsNullOrEmpty(compromiso?.ResponsableNavigation?.Usuario?.Email))
+                        {
+                            Template TemplateNotificacionCompromisos = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificacionCompromisos);
+                            string template =
+                                TemplateNotificacionCompromisos.Contenido
+                                .Replace("_LinkF_", pDominioFront)
+                                .Replace("[URL]", pDominioFront + "compromisosActasComite")
+                                .Replace("[NUMERO_COMITE]", comiteTecnico.NumeroComite)
+                                .Replace("[COMPROMISO]", compromiso.Tarea)
+                                .Replace("[FECHA_CUMPLIMIENTO]", compromiso.FechaCumplimiento.HasValue ? compromiso.FechaCumplimiento.Value.ToString("dd-MM-yyyy") : null);
+
+                            blEnvioCorreo = Helpers.Helpers.EnviarCorreo(compromiso?.ResponsableNavigation?.Usuario?.Email, "Notificación Compromisos", template, pSender, pPassword, pMailServer, pMailPort);
                         }
                     }
                 }
