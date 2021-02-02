@@ -199,6 +199,8 @@ namespace asivamosffie.services.Helpers.Enumerator
         Concepto_Pago_Criterio_Expensas = 148,
         Tipo_Perfil_Observacion_Solicitud_Pago = 149,
         Tipo_Observacion_Solicitud_Pago = 150,
-        Estado_Orden_Giro = 156
+        Estado_Orden_Giro = 156, 
+
+        Medio_Pago_Giro_Tercero = 158
     }
 }
