@@ -120,9 +120,7 @@ export class ObsCriterioPagosComponent implements OnInit {
                                             tipoPago: [ tipoDePago[0], Validators.required ],
                                             conceptosDePago: [ conceptosDePago, Validators.required ],
                                             conceptoPago: [ conceptoDePago[0], Validators.required ],
-                                            valorFacturado: [ criterio.valorFacturado, Validators.required ],
-                                            tieneObservaciones: [null, Validators.required],
-                                            observaciones:[null, Validators.required]
+                                            valorFacturado: [ criterio.valorFacturado, Validators.required ]
                                         }
                                     )
                                 );
@@ -135,6 +133,8 @@ export class ObsCriterioPagosComponent implements OnInit {
 
     crearFormulario() {
       return this.fb.group({
+        tieneObservaciones: [null, Validators.required],
+        observaciones:[null, Validators.required],
         criterios: this.fb.array( [] )
       })
     }
