@@ -1,4 +1,4 @@
-<form autocomplete="off" [formGroup]="dataFormulario" (ngSubmit)="guardar()">
+<form *ngIf="modalidadContratoArray.length > 0" autocomplete="off" [formGroup]="dataFormulario" (ngSubmit)="guardar()">
   <div class="row">
     <div class="col-md-8">
       <div class="row">
@@ -52,7 +52,45 @@
     </div>
   </div>
 
-  <div class="row" *ngIf="dataFormulario.get('numeroContrato').value.length > 0">
+  <div class="row">
+    <div class="col-md-8">
+        <div class="row">
+            <div class="pr-1">
+                <label class="label-left" for="modalidadContrato">Modalidad del contrato</label>
+            </div>
+            <div class="col d-flex">
+                <mat-form-field class="select-width">
+                    <mat-select formControlName="modalidadContrato" required>
+                        <mat-option *ngFor="let modalidad of modalidadContratoArray" [value]="modalidad.codigo">
+                            {{ modalidad.nombre }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <span [matTooltipPosition]="'above'"
+                      matTooltip="Campo de selección unica"
+                      matTooltipClass="info-tooltip"></span>
+
+                <span class="icon-incompleto" style="margin-left: 3.2em;">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                                  alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
+                    *ngIf="
+                      (dataFormulario.get('numeroContrato').invalid && dataFormulario.get('numeroContrato').touched) ||
+                      (dataFormulario.get('numeroContrato').invalid && estaEditando)
+                    "
+                  />
+                </span>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="dataFormulario.get('modalidadContrato').value !== null && dataFormulario.get('numeroContrato').value.length > 0">
     <div class="col-md-8">
       <div class="row">
         <div class="pr-1">
