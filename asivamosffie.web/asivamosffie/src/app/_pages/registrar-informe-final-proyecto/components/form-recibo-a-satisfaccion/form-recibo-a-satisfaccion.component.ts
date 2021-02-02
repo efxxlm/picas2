@@ -41,7 +41,9 @@ export class FormReciboASatisfaccionComponent implements OnInit {
       urlActa: [null, Validators.required],
       fechaSuscripcion: [null, Validators.required],
     });
-    this.addressForm.patchValue(this.report.informeFinal[0]);
+    if(this.report.informeFinal.length>0){
+      this.addressForm.patchValue(this.report.informeFinal[0]);
+    }
   }
 
   openDialog(modalTitle: string, modalText: string) {

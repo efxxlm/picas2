@@ -12,7 +12,7 @@ export class RegistrarInformeFinalComponent implements OnInit {
 
   id: string;
   report: Report;
-  
+  estadoInforme: string;
 
   constructor(
     private router: Router,
@@ -30,6 +30,11 @@ export class RegistrarInformeFinalComponent implements OnInit {
     this.registrarInformeFinalProyectoService.getInformeFinalByContratacionProyecto(id)
     .subscribe(report => {
       this.report = report[0];
+      if(report[0].informeFinal.length>0){
+        this.estadoInforme = report[0].informeFinal[0].estadoInforme;
+      }else{
+        this.estadoInforme = '0';
+      }
     });
   }
   

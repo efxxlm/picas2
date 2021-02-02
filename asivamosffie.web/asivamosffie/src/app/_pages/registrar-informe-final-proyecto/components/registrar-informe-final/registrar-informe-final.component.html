@@ -19,5 +19,5 @@
 
   <app-datos-del-proyecto *ngIf="report" [report]="report"></app-datos-del-proyecto>
   <app-form-recibo-a-satisfaccion *ngIf="report" [report]="report"></app-form-recibo-a-satisfaccion>
-  <app-informe-final-anexos *ngIf="report" [id]="id" [llaveMen]="report.proyecto.llaveMen"></app-informe-final-anexos>
+  <app-informe-final-anexos *ngIf="report" [id]="id" [llaveMen]="report.proyecto.llaveMen" [estadoInforme]="estadoInforme"></app-informe-final-anexos>
 </section>
