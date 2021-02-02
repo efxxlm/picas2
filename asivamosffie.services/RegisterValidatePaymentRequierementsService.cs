@@ -254,27 +254,27 @@ namespace asivamosffie.services
             var resultContrato = _context.Contrato
                 .Where(r => r.ContratoId == pContratoId)
                 .Include(cp => cp.ContratoPoliza)
-                            .Select(c => new
-                            {
-                                c.NumeroContrato,
-                                c.ContratoPoliza.FirstOrDefault().FechaAprobacion,
-                                PlazoDias = c.PlazoFase1PreDias + c.PlazoFase2ConstruccionDias,
-                                PlazoMeses = c.PlazoFase1PreMeses + c.PlazoFase2ConstruccionMeses
-                            }).FirstOrDefault();
+                                                .Select(c => new
+                                                {
+                                                    c.NumeroContrato,
+                                                    c.ContratoPoliza.FirstOrDefault().FechaAprobacion,
+                                                    PlazoDias = c.PlazoFase1PreDias + c.PlazoFase2ConstruccionDias,
+                                                    PlazoMeses = c.PlazoFase1PreMeses + c.PlazoFase2ConstruccionMeses
+                                                }).FirstOrDefault();
 
             var resultProyectos = await _context.VProyectosXcontrato
-                        .Where(p => p.ContratoId == pContratoId)
-                                                                .Select(p => new
-                                                                {
-                                                                    p.LlaveMen,
-                                                                    p.TipoIntervencion,
-                                                                    p.Departamento,
-                                                                    p.Municipio,
-                                                                    p.InstitucionEducativa,
-                                                                    p.Sede,
-                                                                    p.ContratacionProyectoId,
-                                                                    p.ValorTotal
-                                                                }).ToListAsync();
+                                                                    .Where(p => p.ContratoId == pContratoId)
+                                                                                                            .Select(p => new
+                                                                                                            {
+                                                                                                                p.LlaveMen,
+                                                                                                                p.TipoIntervencion,
+                                                                                                                p.Departamento,
+                                                                                                                p.Municipio,
+                                                                                                                p.InstitucionEducativa,
+                                                                                                                p.Sede,
+                                                                                                                p.ContratacionProyectoId,
+                                                                                                                p.ValorTotal
+                                                                                                            }).ToListAsync();
             dynamics.Add(resultContrato);
             dynamics.Add(resultProyectos);
 
@@ -349,14 +349,14 @@ namespace asivamosffie.services
                 SolicitudPagoDelete.FechaModificacion = DateTime.Now;
 
                 return
-                     new Respuesta
-                     {
-                         IsSuccessful = true,
-                         IsException = false,
-                         IsValidation = false,
-                         Code = GeneralCodes.OperacionExitosa,
-                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.OperacionExitosa, idAccion, pUsuarioModificacion, "ELIMINAR SOLICITUD PAGO")
-                     };
+                         new Respuesta
+                         {
+                             IsSuccessful = true,
+                             IsException = false,
+                             IsValidation = false,
+                             Code = GeneralCodes.OperacionExitosa,
+                             Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.OperacionExitosa, idAccion, pUsuarioModificacion, "ELIMINAR SOLICITUD PAGO")
+                         };
             }
             catch (Exception ex)
             {

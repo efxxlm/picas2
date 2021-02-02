@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Z.EntityFramework.Plus;
 
 namespace asivamosffie.services
 {
@@ -47,12 +48,11 @@ namespace asivamosffie.services
                                                                                 s.SolicitudPagoId,
                                                                                 s.OrdenGiro
                                                                             }).OrderByDescending(r => r.SolicitudPagoId).ToListAsync();
-
             List<dynamic> grind = new List<dynamic>();
             List<Dominio> ListParametricas = _context.Dominio.Where(
-                                                                     d => d.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato
-                                                                  || d.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Registro_Pago
-                                                                  || d.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Orden_Giro
+                                                                         d => d.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato
+                                                                      || d.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Registro_Pago
+                                                                      || d.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Orden_Giro
                                                               ).ToList();
 
             result.ForEach(r =>
@@ -104,7 +104,7 @@ namespace asivamosffie.services
             }
             catch (Exception ex)
             {
-                 
+
             }
 
             return SolicitudPago;
@@ -115,13 +115,26 @@ namespace asivamosffie.services
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
 
             try
-            { 
-                if(pOrdenGiro.OrdenGiroId == 0)
-                { 
+            {
+                if (pOrdenGiro.OrdenGiroId == 0)
+                {
                     pOrdenGiro.FechaCreacion = DateTime.Now;
-                    pOrdenGiro.Eliminado = false; 
+                    pOrdenGiro.Eliminado = false;
+                    pOrdenGiro.EstadoCodigo = ConstanCodigoEstadoOrdenGiro.En_proceso_de_generacion;
+                    pOrdenGiro.RegistroCompleto = ValidarRegistroCompletoOrdenGiro(pOrdenGiro);
+
                 }
-                 
+                else
+                {
+                    await _context.Set<OrdenGiro>()
+                                                    .Where(o => o.OrdenGiroId == pOrdenGiro.OrdenGiroId)
+                                                                                                .UpdateAsync(r => new OrdenGiro()
+                                                                                                {
+                                                                                                    FechaModificacion = DateTime.Now,
+                                                                                                    UsuarioModificacion = pOrdenGiro.UsuarioModificacion,
+                                                                                                    RegistroCompleto = ValidarRegistroCompletoOrdenGiro(pOrdenGiro)
+                                                                                                });
+                }
                 return
                      new Respuesta
                      {
@@ -147,5 +160,11 @@ namespace asivamosffie.services
         }
 
 
+
+
+        private bool ValidarRegistroCompletoOrdenGiro(OrdenGiro pOrdenGiro)
+        {
+            return false;
+        }
     }
 }

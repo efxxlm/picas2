@@ -49,5 +49,25 @@ namespace asivamosffie.api.Controllers
             return result;
         }
 
+
+        [HttpPost]
+        [Route("CreateEditOrdenGiro")]
+        public async Task<IActionResult> CreateEditOrdenGiro([FromBody] OrdenGiro pOrdenGiro)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            { 
+                pOrdenGiro.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _generateSpinOrderService.CreateEditOrdenGiro(pOrdenGiro);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+
     }
 }

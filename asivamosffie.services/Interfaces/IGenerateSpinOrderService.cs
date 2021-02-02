@@ -12,5 +12,7 @@ namespace asivamosffie.services.Interfaces
         Task<SolicitudPago> GetSolicitudPagoBySolicitudPagoId(int pOrdenGiroId);
 
         Task<dynamic> GetListSolicitudPago();
+
+        Task<Respuesta> CreateEditOrdenGiro(OrdenGiro pOrdenGiro);
     }
 }
