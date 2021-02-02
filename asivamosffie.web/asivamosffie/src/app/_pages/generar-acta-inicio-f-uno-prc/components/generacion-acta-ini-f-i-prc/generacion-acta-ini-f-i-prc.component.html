@@ -141,9 +141,9 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
                     *ngIf="
-                      (addressForm.get('fechaActaInicioFUnoPreconstruccion').invalid &&
+                      (addressForm.get('fechaActaInicioFUnoPreconstruccion')?.invalid &&
                         addressForm.get('fechaActaInicioFUnoPreconstruccion').touched) ||
-                      (addressForm.get('fechaActaInicioFUnoPreconstruccion').invalid && estaEditando)
+                      (addressForm.get('fechaActaInicioFUnoPreconstruccion')?.invalid && estaEditando)
                     "
                   />
                 </span>
@@ -159,9 +159,9 @@
                   class="label-left"
                   for="fechaPrevistaTerminacion"
                   [class.color-secondaryColor]="
-                    (addressForm.get('fechaPrevistaTerminacion').invalid &&
+                    (addressForm.get('fechaPrevistaTerminacion')?.invalid &&
                       addressForm.get('fechaPrevistaTerminacion').touched) ||
-                    (addressForm.get('fechaPrevistaTerminacion').invalid && estaEditando)
+                    (addressForm.get('fechaPrevistaTerminacion')?.invalid && estaEditando)
                   "
                   >Fecha prevista de terminación</label
                 >
@@ -198,7 +198,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-9" style="padding-left: 0px">
+          <div class="col-md-12" style="padding-left: 0px">
             <div class="row">
               <div class="pr-1">
                 <label class="label-left" [ngClass]="{ 'color-secondaryColor': this.esRojo == true }"
@@ -424,8 +424,8 @@
           <div
             class="text-area-quill noDecorated"
             [class.color-secondaryColor]="
-              (addressForm.get('objeto').invalid && addressForm.get('objeto').touched) ||
-              (addressForm.get('objeto').invalid && estaEditando)
+              (addressForm.get('objeto')?.invalid && addressForm.get('objeto').touched) ||
+              (addressForm.get('objeto')?.invalid && estaEditando)
             "
           >
             <label class="label-left" for="observacionesEspeciales">Observaciones o consideraciones especiales</label>

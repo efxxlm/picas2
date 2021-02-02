@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
 import { EditContrato, GestionarActPreConstrFUnoService } from 'src/app/core/_services/GestionarActPreConstrFUno/gestionar-act-pre-constr-funo.service';
@@ -27,7 +27,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
   public mesPlazoIni: number;
   public diasPlazoIni: number;
   public observacionesOn: boolean;
-  addressForm = this.fb.group({});
+  addressForm: FormGroup;
   dataDialog: {
     modalTitle: string,
     modalText: string
@@ -60,6 +60,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
   nomRepresentanteLegalContrInterventoria: any;
   estaEditando = false;
   constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, private service: GestionarActPreConstrFUnoService) {
+    this.addressForm = this.crearFormulario();
     this.maxDate = new Date();
     this.maxDate2 = new Date();
   }
@@ -70,7 +71,6 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
   }
   ngOnInit(): void {
     this.cargarRol();
-    this.addressForm = this.crearFormulario();
     this.activatedRoute.params.subscribe(param => {
       this.loadData(param.id);
     });
