@@ -14,7 +14,7 @@ export class DialogTipoDocumentoComponent implements OnInit {
   addressForm = this.fb.group({
     informeFinalAnexoId: [null, Validators.required],
     tipoAnexo: [null, Validators.required],
-    URLSoporte: [null, Validators.required],
+    urlSoporte: [null, Validators.required],
     numRadicadoSac: [null, Validators.required],
     fechaRadicado: [null, Validators.required]
   });
@@ -32,9 +32,10 @@ export class DialogTipoDocumentoComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (this.data.pInformeFinalInterventoriaId) {
-      this.getInformeFinalAnexoByInformeFinalInterventoriaId(
-        this.data.getInformeFinalAnexoByInformeFinalInterventoriaId
+    console.log(this.data);
+    if (this.data.informe.informeFinalAnexoId > 0 && this.data.informe.informeFinalAnexoId != null) {
+      this.getInformeFinalAnexoByInformeFinalAnexoId(
+        this.data.informe.informeFinalAnexoId
       );
     }
   }
@@ -88,6 +89,15 @@ export class DialogTipoDocumentoComponent implements OnInit {
       .getInformeFinalAnexoByInformeFinalInterventoriaId(id)
       .subscribe((data) => {
         this.addressForm.patchValue(data);
+      });
+  }
+
+  getInformeFinalAnexoByInformeFinalAnexoId(id: string) {
+    this.registrarInformeFinalProyectoService
+      .getInformeFinalAnexoByInformeFinalAnexoId(id)
+      .subscribe((responseData) => {
+        console.log("cuando entra aquí: ",responseData);
+        this.addressForm.patchValue(responseData);
       });
   }
 }

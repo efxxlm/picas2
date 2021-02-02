@@ -13,11 +13,10 @@
   </h1>
   <p>
     Estado del requisito:
-    <b> Cumple </b>
+    <b> {{ data.informe.calificacionCodigoString }} </b>
   </p>
   <p>
-    <b> {{ data.informeFinalListaChequeoId }}. </b>
-    {{ data.nombre }}
+    <b> {{ data.informe.nombre }}</b>
   </p>
 </div>
 
@@ -69,11 +68,11 @@
         <div class="pr-1">
           <label
             class="label-left"
-            for="URLSoporte"
+            for="urlSoporte"
             [class.color-secondaryColor]="
-              (addressForm.get('URLSoporte').invalid &&
-                addressForm.get('URLSoporte').touched) ||
-              (addressForm.get('URLSoporte').invalid && estaEditando)
+              (addressForm.get('urlSoporte').invalid &&
+                addressForm.get('urlSoporte').touched) ||
+              (addressForm.get('urlSoporte').invalid && estaEditando)
             "
           >
           Url con soporte
@@ -85,7 +84,7 @@
               matInput
               #numeroRadicadoInput
               type="url"
-              formControlName="URLSoporte"
+              formControlName="urlSoporte"
               maxlength="20"
               required
             />
@@ -105,8 +104,8 @@
             src="assets/img/icon/incompleto.svg"
             alt="este campo es requerido"
             *ngIf="
-              (addressForm.get('URLSoporte').invalid && addressForm.get('URLSoporte').touched) ||
-              (addressForm.get('URLSoporte').invalid && estaEditando)
+              (addressForm.get('urlSoporte').invalid && addressForm.get('urlSoporte').touched) ||
+              (addressForm.get('urlSoporte').invalid && estaEditando)
             "
           />
         </span>
@@ -135,7 +134,6 @@
                   formControlName="numRadicadoSac"
                   #numRadicadoSac
                   maxlength="10"
-                  required(keypress)="validateNumberKeypress($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
                 />
               </mat-form-field>

@@ -76,7 +76,7 @@
           [class.sin-diligenciar]="element.registroCompleto === false"
           [class.completo]="element.registroCompleto === true"
         ></span>
-        {{ element.registroCompleto ? "Completo" : "Sin diligenciar" }}
+        {{ element.registroCompleto ? "Completo" : "Incompleto" }}
       </td>
     </ng-container>
 
@@ -92,8 +92,8 @@
           class="btn-table"
           [routerLink]="['registrar', element.contratacionProyectoId]"
         >
-          <span *ngIf="!element.registroCompleto">Registrar informe final</span>
-          <span *ngIf="element.registroCompleto">Ver detalle / Editar</span>
+          <span *ngIf="!element.registroCompleto && element.estadoInformeCod === '0'">Registrar informe final {{element.EstadoInformeCod}}</span>
+          <span *ngIf="element.estadoInformeCod === '1' || element.estadoInformeCod === '2'">Ver detalle / Editar</span>
         </a>
         <!-- <a
           *ngIf="
@@ -111,7 +111,7 @@
         </a> -->
         <a
           *ngIf="
-            element.EstadoInformeCod === 'Con informe enviado para validación'
+            element.estadoInformeCod === '3'
           "
           mat-button
           mat-raised-button
@@ -122,7 +122,8 @@
         >
           Ver detalle
         </a>
-        <!-- <button
+        <button
+        *ngIf="element.estadoInformeCod === '2'"
           mat-button
           mat-raised-button
           color="accent"
@@ -130,8 +131,9 @@
           type="button"
         >
         Enviar informe a validación
-      </button> -->
-        <!-- <button
+      </button>
+       <button
+       *ngIf="element.estadoInformeCod === '4'"
           mat-button
           mat-raised-button
           color="accent"
@@ -139,7 +141,7 @@
           type="button"
         >
         Ver observaciones de supervisor
-      </button> -->
+      </button>
       </td>
     </ng-container>
 

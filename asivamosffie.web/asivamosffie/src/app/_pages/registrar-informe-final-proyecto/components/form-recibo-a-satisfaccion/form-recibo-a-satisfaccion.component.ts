@@ -32,26 +32,16 @@ export class FormReciboASatisfaccionComponent implements OnInit {
   }
 
   private buildForm() {
-    if(this.report.informeFinal.length>0){
-      if(this.report.informeFinal[0].informeFinalId != null){
-        this.informeFinalId = this.report.informeFinal[0].informeFinalId;
-      }
-      if(this.report.informeFinal[0].urlActa != null){
-        this.urlActa = this.report.informeFinal[0].urlActa;
-      }
-      if(this.report.informeFinal[0].fechaSuscripcion != null){
-        this.fechaSuscripcion = this.report.informeFinal[0].fechaSuscripcion;
-      }
-    }
     this.addressForm = this.fb.group({
-      InformeFinalId: [this.informeFinalId, Validators.required],
+      InformeFinalId: [null, Validators.required],
       ContratacionProyectoId: [
         this.report.contratacionProyectoId,
         Validators.required,
       ],
-      UrlActa: [this.urlActa, Validators.required],
-      FechaSuscripcion: [this.fechaSuscripcion, Validators.required],
+      urlActa: [null, Validators.required],
+      fechaSuscripcion: [null, Validators.required],
     });
+    this.addressForm.patchValue(this.report.informeFinal[0]);
   }
 
   openDialog(modalTitle: string, modalText: string) {

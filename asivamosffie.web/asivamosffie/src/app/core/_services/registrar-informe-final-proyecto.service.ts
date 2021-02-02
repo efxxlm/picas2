@@ -48,4 +48,8 @@ export class RegistrarInformeFinalProyectoService {
     return this.http.get(`${environment.apiUrl}/${this.final_report}/GetInformeFinalAnexoByInformeFinalInterventoriaId?pInformeFinalInterventoriaId=${ pInformeFinalInterventoriaId }`);
   }
 
+  getInformeFinalAnexoByInformeFinalAnexoId(pInformeFinalAnexoId: string){
+    return this.http.get(`${environment.apiUrl}/${this.final_report}/GetInformeFinalAnexoByInformeFinalAnexoId?pInformeFinalAnexoId=${ pInformeFinalAnexoId }`);
+  }
+
 }

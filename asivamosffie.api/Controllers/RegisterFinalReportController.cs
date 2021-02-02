@@ -102,6 +102,21 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetInformeFinalAnexoByInformeFinalAnexoId")]
+        public async Task<InformeFinalAnexo> GetInformeFinalAnexoByInformeFinalAnexoId([FromQuery] int pInformeFinalAnexoId)
+        {
+            try
+            {
+                return await _registerFinalReport.GetInformeFinalAnexoByInformeFinalAnexoId(pInformeFinalAnexoId);
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         //Creaciones y modificaciones
 
         [HttpPost]

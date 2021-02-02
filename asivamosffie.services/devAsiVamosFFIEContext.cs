@@ -93,6 +93,8 @@ namespace asivamosffie.model.Models
         public virtual DbSet<MenuPerfil> MenuPerfil { get; set; }
         public virtual DbSet<MesEjecucion> MesEjecucion { get; set; }
         public virtual DbSet<NovedadContractual> NovedadContractual { get; set; }
+        public virtual DbSet<NovedadContractualClausula> NovedadContractualClausula { get; set; }
+        public virtual DbSet<NovedadContractualObservaciones> NovedadContractualObservaciones { get; set; }
         public virtual DbSet<OrdenGiro> OrdenGiro { get; set; }
         public virtual DbSet<OrdenGiroDetalle> OrdenGiroDetalle { get; set; }
         public virtual DbSet<OrdenGiroDetalleDescuentoTecnica> OrdenGiroDetalleDescuentoTecnica { get; set; }
@@ -130,6 +132,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<ProyectoPredio> ProyectoPredio { get; set; }
         public virtual DbSet<ProyectoRequisitoTecnico> ProyectoRequisitoTecnico { get; set; }
         public virtual DbSet<RegistroPresupuestal> RegistroPresupuestal { get; set; }
+        public virtual DbSet<RendimientosIncorporados> RendimientosIncorporados { get; set; }
         public virtual DbSet<RequisitoTecnicoRadicado> RequisitoTecnicoRadicado { get; set; }
         public virtual DbSet<SeguimientoActuacionDerivada> SeguimientoActuacionDerivada { get; set; }
         public virtual DbSet<SeguimientoDiario> SeguimientoDiario { get; set; }
@@ -202,7 +205,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValidarSeguimientoSemanal> VValidarSeguimientoSemanal { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -3278,12 +3280,10 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaVerificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.InstanciaCodigo)
-                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.MotivoNovedadCodigo)
-                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
@@ -3296,19 +3296,16 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.NumeroSolicitud)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.PresupuestoAdicionalSolicitado).HasColumnType("numeric(18, 2)");
 
                 entity.Property(e => e.ResumenJustificacion)
-                    .IsRequired()
-                    .HasMaxLength(1000)
+                    .HasMaxLength(1100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.TipoNovedadCodigo)
-                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
@@ -3329,6 +3326,52 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.NovedadContractual)
                     .HasForeignKey(d => d.ProyectoId)
                     .HasConstraintName("FK_NovedadContractual_Proyecto");
+            });
+
+            modelBuilder.Entity<NovedadContractualClausula>(entity =>
+            {
+                entity.Property(e => e.AjusteSolicitadoAclausula).HasColumnName("AjusteSolicitadoAClausula");
+
+                entity.Property(e => e.ClausulaAmodificar).HasColumnName("ClausulaAModificar");
+
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.NovedadContractual)
+                    .WithMany(p => p.NovedadContractualClausula)
+                    .HasForeignKey(d => d.NovedadContractualId)
+                    .HasConstraintName("FK_NovedadContractualClausula_NovedadContractual");
+            });
+
+            modelBuilder.Entity<NovedadContractualObservaciones>(entity =>
+            {
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.NovedadContractual)
+                    .WithMany(p => p.NovedadContractualObservaciones)
+                    .HasForeignKey(d => d.NovedadContractualId)
+                    .HasConstraintName("FK_NovedadContractualObservaciones_NovedadContractual");
             });
 
             modelBuilder.Entity<OrdenGiro>(entity =>
@@ -4524,6 +4567,40 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.RegistroPresupuestal)
                     .HasForeignKey(d => d.CofinanciacionDocumentoId)
                     .HasConstraintName("FK_RegistroPresupuestalDocumento");
+            });
+
+            modelBuilder.Entity<RendimientosIncorporados>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.Property(e => e.CuentaBancaria)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ProvisionGravamenFinanciero).HasColumnType("decimal(25, 3)");
+
+                entity.Property(e => e.RendimientoIncorporar).HasColumnType("decimal(25, 3)");
+
+                entity.Property(e => e.RendimientosIncorporados1)
+                    .HasColumnName("RendimientosIncorporados")
+                    .HasColumnType("decimal(25, 3)");
+
+                entity.Property(e => e.RendimientosIncorporadosId).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.TotalGastosBancarios).HasColumnType("decimal(25, 3)");
+
+                entity.Property(e => e.TotalGravamenFinancieroDescontado).HasColumnType("decimal(25, 3)");
+
+                entity.Property(e => e.TotalRendimientosGenerados).HasColumnType("decimal(25, 3)");
+
+                entity.Property(e => e.Visitas).HasColumnType("decimal(25, 3)");
+
+                entity.HasOne(d => d.CarguePagosRendimientos)
+                    .WithMany()
+                    .HasForeignKey(d => d.CarguePagosRendimientosId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_RendimientosIncorporados_CarguePagosRendimientos");
             });
 
             modelBuilder.Entity<RequisitoTecnicoRadicado>(entity =>
@@ -6763,6 +6840,10 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.EstadoInforme)
                     .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EstadoInformeCod)
+                    .HasMaxLength(2)
                     .IsUnicode(false);
 
                 entity.Property(e => e.FechaTerminacionProyecto)

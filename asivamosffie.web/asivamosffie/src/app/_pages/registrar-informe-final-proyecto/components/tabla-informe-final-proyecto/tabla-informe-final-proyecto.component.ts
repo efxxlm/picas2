@@ -17,7 +17,8 @@ export interface RegistrarInterface {
   contratacionId: number,
   contratacionProyectoId: number,
   registroCompleto: boolean;
-  estadoInforme: string
+  estadoInforme: string,
+  estadoInformeCod: string
   
 }
 
