@@ -224,28 +224,21 @@ namespace asivamosffie.services
         }
 
         //Detalle gestion de actas
-        public async Task<ActionResult<List<ComiteTecnico>>> GetManagementReportById(int comiteTecnicoId)
+        public async Task<List<ComiteTecnico>> GetManagementReportById(int comiteTecnicoId)
         {
             try
             {
                 List<ComiteTecnico> ListComiteTecnico = await _context.ComiteTecnico
-                      .Where(r => r.ComiteTecnicoId == comiteTecnicoId)
-                            .Include(r => r.SesionComentario)
-                            .Include(r => r.SesionComiteTema)
-                               .ThenInclude(r => r.TemaCompromiso)
-                            .Include(r => r.SesionParticipante)
-                               .ThenInclude(r => r.Usuario)
-                             .Include(r => r.SesionComiteTecnicoCompromiso)
-                               .ThenInclude(r => r.CompromisoSeguimiento)
-                                       .Include(r => r.SesionComiteSolicitudComiteTecnico)
-                                                 .ThenInclude(r => r.SesionSolicitudVoto)
-                             .Include(r => r.SesionComiteSolicitudComiteTecnico)
-                               .ThenInclude(r => r.SesionSolicitudCompromiso)
-                             .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
-                              .ThenInclude(r => r.SesionSolicitudCompromiso)
-                               .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
-                              .ThenInclude(r => r.SesionSolicitudVoto)
-                             .ToListAsync();
+                                                                              .Where(r => r.ComiteTecnicoId == comiteTecnicoId)
+                                                                                    .Include(r => r.SesionComentario)
+                                                                                    .Include(r => r.SesionComiteTema).ThenInclude(r => r.TemaCompromiso)
+                                                                                    .Include(r => r.SesionParticipante).ThenInclude(r => r.Usuario)
+                                                                                    .Include(r => r.SesionComiteTecnicoCompromiso).ThenInclude(r => r.CompromisoSeguimiento)
+                                                                                    .Include(r => r.SesionComiteSolicitudComiteTecnico).ThenInclude(r => r.SesionSolicitudVoto)
+                                                                                    .Include(r => r.SesionComiteSolicitudComiteTecnico).ThenInclude(r => r.SesionSolicitudCompromiso)
+                                                                                    .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario).ThenInclude(r => r.SesionSolicitudCompromiso)
+                                                                                    .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario).ThenInclude(r => r.SesionSolicitudVoto)
+                                                                                    .ToListAsync();
 
                 List<Dominio> ListParametricas = _context.Dominio.ToList();
                 List<Contratacion> ListContratacion = _context.Contratacion.ToList();
@@ -282,8 +275,7 @@ namespace asivamosffie.services
                             SesionComiteTema.EstadoTemaCodigo = ListParametricas
                                 .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Sesion_Comite_Solicitud && r.Codigo == SesionComiteTema.EstadoTemaCodigo)
                                 .FirstOrDefault().Nombre;
-                        }
-
+                        } 
                     }
                     foreach (var SesionComiteSolicitudComiteTecnico in item.SesionComiteSolicitudComiteTecnico)
                     {
@@ -334,6 +326,7 @@ namespace asivamosffie.services
                         }
                     }
                 }
+
                 return ListComiteTecnico;
             }
             catch (Exception ex)

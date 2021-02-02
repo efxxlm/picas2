@@ -85,7 +85,7 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetManagementReportById")]
         [HttpGet]
-        public async Task<ActionResult<List<ComiteTecnico>>> GetManagementReportById(int comiteTecnicoId)
+        public async Task<List<ComiteTecnico>> GetManagementReportById(int comiteTecnicoId)
         {
             try
             {
