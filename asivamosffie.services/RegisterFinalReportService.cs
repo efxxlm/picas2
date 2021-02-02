@@ -192,6 +192,7 @@ namespace asivamosffie.services
                     CreateEdit = "CREAR INFORME FINAL";
                     pInformeFinal.FechaCreacion = DateTime.Now;
                     pInformeFinal.Eliminado = false;
+                    pInformeFinal.EstadoInforme = ConstantCodigoEstadoInformeFinal.En_proceso_de_registro;
                     _context.InformeFinal.Add(pInformeFinal);
                 }
                 else
