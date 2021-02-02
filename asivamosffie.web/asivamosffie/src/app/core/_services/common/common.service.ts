@@ -287,6 +287,14 @@ listaEstadoRevision(){
   conceptosDePagoExpensas() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=148`);
   }
+  listaTipoSolicitudContrato() {
+    // Lista tipo solicitudes del contrato CU generar orden de giro.
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=52`);
+  }
+  listaMediosPago() {
+    // Lista de medios de pago CU Generar orden de giro.
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=158`);
+  }
 
   public listaUsuarios(){
 

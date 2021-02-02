@@ -27,7 +27,7 @@ export class FormGenerarOrdenGiroComponent implements OnInit {
                     response => {
                         this.solicitudPago = response;
                         this.contrato = response[ 'contratoSon' ];
-                        console.log( this.solicitudPago, this.contrato );
+                        console.log( this.solicitudPago );
                     }
                 );
         } );

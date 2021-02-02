@@ -30,6 +30,7 @@ export class VerdetalleSolicitudPagoComponent implements OnInit {
     });
     listaCriterios: Dominio[] = [];
     formaPagoArray: Dominio[] = [];
+    modalidadContratoArray: Dominio[] = [];
     criteriosArraySeleccionados: Dominio[] = [];
     tipoSolicitudCodigo: any = {};
     contrato: any;
@@ -80,6 +81,8 @@ export class VerdetalleSolicitudPagoComponent implements OnInit {
                     this.commonSvc.tiposDeSolicitudes()
                         .subscribe(
                           solicitudes => {
+                            this.commonSvc.modalidadesContrato()
+                                .subscribe( response => this.modalidadContratoArray = response );
                             for ( const solicitud of solicitudes ) {
                                 if ( solicitud.codigo === '1' ) {
                                   this.tipoSolicitudCodigo.contratoObra = solicitud.codigo;
@@ -200,6 +203,13 @@ export class VerdetalleSolicitudPagoComponent implements OnInit {
         if ( this.formaPagoArray.length > 0 ) {
             const forma = this.formaPagoArray.filter( forma => forma.codigo === formaPagoCodigo );
             return forma[0].nombre;
+        }
+    }
+
+    getModalidadContrato( modalidadCodigo: string ) {
+        if ( this.modalidadContratoArray.length > 0 ) {
+            const modalidad = this.modalidadContratoArray.filter( modalidad => modalidad.codigo === modalidadCodigo );
+            return modalidad[0].nombre;
         }
     }
 

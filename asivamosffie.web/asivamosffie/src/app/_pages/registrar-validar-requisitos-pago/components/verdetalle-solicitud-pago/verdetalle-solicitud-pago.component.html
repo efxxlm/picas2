@@ -22,7 +22,7 @@
                     </mat-card-title>
                 </mat-card-header>
                 <mat-card-content style="text-align: left;">
-                    <p><strong>Modalidad del contrato:</strong> No se ha implementado el campo en el contrato</p>
+                    <p><strong>Modalidad del contrato:</strong> {{ getModalidadContrato( contrato.modalidadCodigo ) }} </p>
                     <p><strong>Número de contrato:</strong> {{ contrato.numeroContrato }} </p>
                 </mat-card-content>
             </mat-card>
