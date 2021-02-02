@@ -34,10 +34,10 @@
         <img
           class="icon-incompleto--img"
           src="assets/img/icon/incompleto.svg"
-                        alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+          alt="este campo es requerido"
+          [matTooltipPosition]="'above'"
+          matTooltip="Debe ingresar la información en el campo para continuar"
+          matTooltipClass="info-tooltip"
           *ngIf="
             (addressForm.get('miembrosParticipantes').invalid && addressForm.get('miembrosParticipantes').touched) ||
             (addressForm.get('miembrosParticipantes').invalid && estaEditando)
@@ -60,7 +60,7 @@
                     class="label-left"
                     for="nombre"
                     [class.color-secondaryColor]="
-                      (invitado.get('nombre').invalid && addressForm.get('nombre').touched) ||
+                      (invitado.get('nombre').invalid && invitado.get('nombre').touched) ||
                       (invitado.get('nombre').invalid && estaEditando)
                     "
                   >
@@ -84,12 +84,12 @@
                     <img
                       class="icon-incompleto--img"
                       src="assets/img/icon/incompleto.svg"
-                                    alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                      alt="este campo es requerido"
+                      [matTooltipPosition]="'above'"
+                      matTooltip="Debe ingresar la información en el campo para continuar"
+                      matTooltipClass="info-tooltip"
                       *ngIf="
-                        (invitado.get('nombre').invalid && addressForm.get('nombre').touched) ||
+                        (invitado.get('nombre').invalid && invitado.get('nombre').touched) ||
                         (invitado.get('nombre').invalid && estaEditando)
                       "
                     />
@@ -102,7 +102,7 @@
                     class="label-left"
                     for="cargo"
                     [class.color-secondaryColor]="
-                      (invitado.get('cargo').invalid && addressForm.get('cargo').touched) ||
+                      (invitado.get('cargo').invalid && invitado.get('cargo').touched) ||
                       (invitado.get('cargo').invalid && estaEditando)
                     "
                   >
@@ -125,12 +125,12 @@
                     <img
                       class="icon-incompleto--img"
                       src="assets/img/icon/incompleto.svg"
-                                    alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                      alt="este campo es requerido"
+                      [matTooltipPosition]="'above'"
+                      matTooltip="Debe ingresar la información en el campo para continuar"
+                      matTooltipClass="info-tooltip"
                       *ngIf="
-                        (invitado.get('cargo').invalid && addressForm.get('cargo').touched) ||
+                        (invitado.get('cargo').invalid && invitado.get('cargo').touched) ||
                         (invitado.get('cargo').invalid && estaEditando)
                       "
                     />
@@ -143,7 +143,7 @@
                     class="label-left"
                     for="entidad"
                     [class.color-secondaryColor]="
-                      (invitado.get('entidad').invalid && addressForm.get('entidad').touched) ||
+                      (invitado.get('entidad').invalid && invitado.get('entidad').touched) ||
                       (invitado.get('entidad').invalid && estaEditando)
                     "
                   >
@@ -166,12 +166,12 @@
                     <img
                       class="icon-incompleto--img"
                       src="assets/img/icon/incompleto.svg"
-                                    alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                      alt="este campo es requerido"
+                      [matTooltipPosition]="'above'"
+                      matTooltip="Debe ingresar la información en el campo para continuar"
+                      matTooltipClass="info-tooltip"
                       *ngIf="
-                        (invitado.get('entidad').invalid && addressForm.get('entidad').touched) ||
+                        (invitado.get('entidad').invalid && invitado.get('entidad').touched) ||
                         (invitado.get('entidad').invalid && estaEditando)
                       "
                     />

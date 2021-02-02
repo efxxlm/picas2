@@ -79,7 +79,7 @@ export class VotacionSolicitudComponent implements OnInit {
       sesionParticipanteId: [],
       sesionComiteSolicitudId: [],
       aprobacion: [null, Validators.required],
-      observaciones: [null, Validators.required]
+      observaciones: []
     });
   }
 

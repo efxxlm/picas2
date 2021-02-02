@@ -66,7 +66,7 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
       console.log(this.procesoSeleccion.procesoSeleccionProponente.length);
       if(this.procesoSeleccion.procesoSeleccionProponente.length>0)
       {
-        this.addressForm.get('cuantosProponentes').setValue(this.procesoSeleccion.cantidadProponentes);
+        this.addressForm.get('cuantosProponentes').setValue(this.procesoSeleccion.procesoSeleccionProponente.length);
       }      
       this.addressForm.get('url').setValue(this.procesoSeleccion.urlSoporteProponentesSeleccionados);
     });

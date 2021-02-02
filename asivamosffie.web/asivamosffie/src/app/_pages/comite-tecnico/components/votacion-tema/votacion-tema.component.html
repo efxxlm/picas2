@@ -67,20 +67,6 @@
                         }}
                       </span>
                       <span class="contador miles" *ngIf="!temas.get('observaciones').value"> 1000 </span>
-                      <span class="icon-incompleto">
-                        <img
-                          class="icon-incompleto--img"
-                          src="assets/img/icon/incompleto.svg"
-                                        alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
-                          *ngIf="
-                            (temas.get('observaciones').invalid && temas.get('observaciones').touched) ||
-                            (temas.get('observaciones').invalid && estaEditando)
-                          "
-                        />
-                      </span>
                     </div>
                   </div>
                 </section>
@@ -93,7 +79,7 @@
       <!-- <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
                   (onContentChanged)="maxLength($event, 500)" formControlName="i"></quill-editor> -->
 
-      <button mat-button color="warn" class="btn-guardar" type="submit">
+      <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="addressForm.invalid">
         <img src="assets/img/icon/guardar.svg" alt="guardar" />
       </button>
     </form>

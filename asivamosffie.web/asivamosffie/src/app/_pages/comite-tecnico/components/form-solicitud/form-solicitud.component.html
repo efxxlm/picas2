@@ -97,7 +97,7 @@
             required
           ></quill-editor>
           <div class="d-flex align-items-center mt-3em">
-            <span class="contador miles" *ngIf="addressForm.get('desarrolloSolicitud').value !== null">
+            <span class="contador miles" *ngIf="addressForm.get('desarrolloSolicitud').value">
               {{
                 5000 -
                   (textoLimpio(addressForm.get('desarrolloSolicitud').value) > 5000
@@ -105,7 +105,7 @@
                     : textoLimpio(addressForm.get('desarrolloSolicitud').value))
               }}
             </span>
-            <span class="contador miles" *ngIf="addressForm.get('desarrolloSolicitud').value === null"> 5000 </span>
+            <span class="contador miles" *ngIf="!addressForm.get('desarrolloSolicitud').value"> 5000 </span>
             <span class="icon-incompleto">
               <img
                 class="icon-incompleto--img"

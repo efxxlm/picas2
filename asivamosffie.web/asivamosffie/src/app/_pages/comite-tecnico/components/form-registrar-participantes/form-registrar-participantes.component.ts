@@ -21,10 +21,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
   objetoComiteTecnico: ComiteTecnico = {};
   estaTodo: boolean = false;
 
-  addressForm = this.fb.group({
-    miembrosParticipantes: [null, Validators.required],
-    invitados: this.fb.array([])
-  });
+  addressForm: FormGroup;
 
   estaEditando = false;
 
@@ -58,7 +55,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
     private router: Router,
 
   ) {
-
+    this.buildForm();
   }
 
   ngOnInit(): void {
@@ -135,7 +132,12 @@ export class FormRegistrarParticipantesComponent implements OnInit {
     return this.addressForm.get('invitados') as FormArray;
   }
 
-
+  private buildForm() {
+    this.addressForm = this.fb.group({
+      miembrosParticipantes: [null, Validators.required],
+      invitados: this.fb.array([])
+    });
+  }
 
   borrarArray(borrarForm: any, i: number) {
     borrarForm.removeAt(i);
@@ -359,53 +361,55 @@ export class FormRegistrarParticipantesComponent implements OnInit {
 
   onSubmit() {
     this.estaEditando = true;
-    if (this.addressForm.valid) {
 
-      let comite: ComiteTecnico = {
-        comiteTecnicoId: this.objetoComiteTecnico.comiteTecnicoId,
-        sesionParticipante: [],
-        sesionInvitado: [],
+    console.log(this.addressForm.controls)
+    // if (this.addressForm.valid) {
 
-      }
+    //   let comite: ComiteTecnico = {
+    //     comiteTecnicoId: this.objetoComiteTecnico.comiteTecnicoId,
+    //     sesionParticipante: [],
+    //     sesionInvitado: [],
 
-      let miembros = this.addressForm.get('miembrosParticipantes').value;
+    //   }
 
-      if (miembros) {
-        miembros.forEach(m => {
-          let sesionParticipante: SesionParticipante = {
-            sesionParticipanteId: m.sesionParticipanteId,
-            comiteTecnicoId: comite.comiteTecnicoId,
-            usuarioId: m.usuarioId,
+    //   let miembros = this.addressForm.get('miembrosParticipantes').value;
 
-          }
+    //   if (miembros) {
+    //     miembros.forEach(m => {
+    //       let sesionParticipante: SesionParticipante = {
+    //         sesionParticipanteId: m.sesionParticipanteId,
+    //         comiteTecnicoId: comite.comiteTecnicoId,
+    //         usuarioId: m.usuarioId,
 
-          comite.sesionParticipante.push(sesionParticipante);
-        });
-      }
+    //       }
 
-      this.invitados.controls.forEach(control => {
-        let sesionInvitado: SesionInvitado = {
-          comiteTecnicoId: this.objetoComiteTecnico.comiteTecnicoId,
-          sesionInvitadoId: control.get('sesionInvitadoId').value,
-          nombre: control.get('nombre').value,
-          cargo: control.get('cargo').value,
-          entidad: control.get('entidad').value,
+    //       comite.sesionParticipante.push(sesionParticipante);
+    //     });
+    //   }
 
-        }
+    //   this.invitados.controls.forEach(control => {
+    //     let sesionInvitado: SesionInvitado = {
+    //       comiteTecnicoId: this.objetoComiteTecnico.comiteTecnicoId,
+    //       sesionInvitadoId: control.get('sesionInvitadoId').value,
+    //       nombre: control.get('nombre').value,
+    //       cargo: control.get('cargo').value,
+    //       entidad: control.get('entidad').value,
 
-        comite.sesionInvitado.push(sesionInvitado);
-      })
+    //     }
 
-      // console.log(comite)
+    //     comite.sesionInvitado.push(sesionInvitado);
+    //   })
 
-      this.technicalCommitteSessionService.createEditSesionInvitadoAndParticipante(comite)
-        .subscribe(respuesta => {
-          this.openDialog('', `<b>${respuesta.message}</b>`)
-          if (respuesta.code == "200")
-            this.ngOnInit();
-        })
+    //   // console.log(comite)
 
-      // console.log(this.addressForm.get('miembrosParticipantes').value);
-    }
+    //   this.technicalCommitteSessionService.createEditSesionInvitadoAndParticipante(comite)
+    //     .subscribe(respuesta => {
+    //       this.openDialog('', `<b>${respuesta.message}</b>`)
+    //       if (respuesta.code == "200")
+    //         this.ngOnInit();
+    //     })
+
+    //   // console.log(this.addressForm.get('miembrosParticipantes').value);
+    // }
   }
 }

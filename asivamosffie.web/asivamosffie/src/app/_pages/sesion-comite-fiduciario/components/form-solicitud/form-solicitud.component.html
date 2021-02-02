@@ -189,10 +189,14 @@
             [modules]="config"
             (onContentChanged)="maxLength($event, 5000)"
             formControlName="observaciones"
+            [class.invalid]="
+              (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+              (addressForm.get('observaciones').invalid && estaEditando)
+            "
             required
           ></quill-editor>
           <div class="d-flex align-items-center">
-            <span class="contador miles" *ngIf="addressForm.get('observaciones').value !== null">
+            <span class="contador miles" *ngIf="addressForm.get('observaciones').value">
               {{
                 5000 -
                   (textoLimpio(addressForm.get('observaciones').value) > 5000
@@ -200,7 +204,7 @@
                     : textoLimpio(addressForm.get('observaciones').value))
               }}
             </span>
-            <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null"> 5000 </span>
+            <span class="contador miles" *ngIf="!addressForm.get('observaciones').value"> 5000 </span>
             <span class="icon-incompleto">
               <img
                 class="icon-incompleto--img"
@@ -237,7 +241,7 @@
           </mat-form-field>
           <span class="info-url">Indique la ruta del soporte de esta información</span>
         </div>
-        <span class="icon-incompleto">
+        <span class="icon-incompleto pr-3em">
           <img
             class="icon-incompleto--img"
             src="assets/img/icon/incompleto.svg"
@@ -361,8 +365,8 @@
                   class="label-left"
                   for="tarea"
                   [class.color-secondaryColor]="
-                    (addressForm.get('tarea').invalid && addressForm.get('tarea').touched) ||
-                    (addressForm.get('tarea').invalid && estaEditando)
+                    (compromiso.get('tarea').invalid && compromiso.get('tarea').touched) ||
+                    (compromiso.get('tarea').invalid && estaEditando)
                   "
                 >
                   Tarea
@@ -391,8 +395,8 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
                     *ngIf="
-                      (addressForm.get('tarea').invalid && addressForm.get('tarea').touched) ||
-                      (addressForm.get('tarea').invalid && estaEditando)
+                      (compromiso.get('tarea').invalid && compromiso.get('tarea').touched) ||
+                      (compromiso.get('tarea').invalid && estaEditando)
                     "
                   />
                 </span>
@@ -405,8 +409,8 @@
                 class="label-left"
                 for="responsable"
                 [class.color-secondaryColor]="
-                  (addressForm.get('responsable').invalid && addressForm.get('responsable').touched) ||
-                  (addressForm.get('responsable').invalid && estaEditando)
+                  (compromiso.get('responsable').invalid && compromiso.get('responsable').touched) ||
+                  (compromiso.get('responsable').invalid && estaEditando)
                 "
               >
                 Responsable
@@ -430,8 +434,8 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
                 *ngIf="
-                  (addressForm.get('responsable').invalid && addressForm.get('responsable').touched) ||
-                  (addressForm.get('responsable').invalid && estaEditando)
+                  (compromiso.get('responsable').invalid && compromiso.get('responsable').touched) ||
+                  (compromiso.get('responsable').invalid && estaEditando)
                 "
               />
             </span>
@@ -444,8 +448,8 @@
                     class="label-left"
                     for="fecha"
                     [class.color-secondaryColor]="
-                      (addressForm.get('fecha').invalid && addressForm.get('fecha').touched) ||
-                      (addressForm.get('fecha').invalid && estaEditando)
+                      (compromiso.get('fecha').invalid && compromiso.get('fecha').touched) ||
+                      (compromiso.get('fecha').invalid && estaEditando)
                     "
                   >
                     Fecha de cumplimiento
@@ -476,8 +480,8 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
                       *ngIf="
-                        (addressForm.get('fecha').invalid && addressForm.get('fecha').touched) ||
-                        (addressForm.get('fecha').invalid && estaEditando)
+                        (compromiso.get('fecha').invalid && compromiso.get('fecha').touched) ||
+                        (compromiso.get('fecha').invalid && estaEditando)
                       "
                     />
                   </span>
