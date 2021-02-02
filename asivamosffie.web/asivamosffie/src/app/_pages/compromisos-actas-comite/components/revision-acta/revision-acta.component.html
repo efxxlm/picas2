@@ -324,7 +324,7 @@
           </p>
           <div class="d-flex align-items-center">
             <quill-editor
-              class="quill-editor-style card"
+              class="quill-editor-style card position-relative"
               [styles]="editorStyle"
               [modules]="config"
               (onContentChanged)="maxLength($event, 1000)"
@@ -332,10 +332,10 @@
               required
             >
             </quill-editor>
-            <span class="contador" *ngIf="form.get('comentarioActa').value !== null">
+            <span class="contador" *ngIf="form.get('comentarioActa').value !== null" style="margin-top: 2em;">
               {{ 1000 - textoLimpio(form.get('comentarioActa').value, 1000) }}
             </span>
-            <span class="contador" *ngIf="form.get('comentarioActa').value === null"> 1000 </span>
+            <span class="contador" *ngIf="form.get('comentarioActa').value === null" style="margin-top: 2em;"> 1000 </span>
             <span class="icon-incompleto">
               <img
                 class="icon-incompleto--img"
