@@ -14,11 +14,11 @@
     <div class="text-area-quill">
       <label for="alcanceParticular" class="text-area-quill--label">Descripción</label>
       <quill-editor class="quill-editor-style" [modules]="config"
-        (onContentChanged)="maxLength($event, 2000)" formControlName="descripcion" required>
+        (onContentChanged)="maxLength($event, 2000)" formControlName="descripcion" required #obsConsireacionesEspeciales>
       </quill-editor>
     </div>
     <span class="contador miles" *ngIf="addressForm.get('descripcion').value !== null">
-      {{2000 - (textoLimpio(addressForm.get('descripcion').value)>2000?2000:textoLimpio(addressForm.get('descripcion').value))}}
+      {{2000 - textoLimpio( obsConsireacionesEspeciales.quillEditor, 2000 ) }}
     </span>
     <span class="contador miles" *ngIf="addressForm.get('descripcion').value === null">
       2000

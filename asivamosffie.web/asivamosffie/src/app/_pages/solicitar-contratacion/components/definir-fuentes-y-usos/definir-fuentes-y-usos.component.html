@@ -94,11 +94,7 @@
                     <label
                       class="label-left"
                       for="valorAportanteProyecto"
-                      [class.color-secondaryColor]="
-                        (addressForm.get('valorAportanteProyecto').invalid &&
-                          addressForm.get('valorAportanteProyecto').touched) ||
-                        (addressForm.get('valorAportanteProyecto').invalid && estaEditando)
-                      "
+                      [class.color-secondaryColor]="(addressForm.get('valorAportanteProyecto')?.invalid && addressForm.get('valorAportanteProyecto').touched) || (addressForm.get('valorAportanteProyecto')?.invalid && estaEditando)"
                     >
                       Valor del aportante al proyecto
                     </label>
@@ -144,9 +140,9 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
                         *ngIf="
-                          (addressForm.get('valorAportanteProyecto').invalid &&
+                          (addressForm.get('valorAportanteProyecto')?.invalid &&
                             addressForm.get('valorAportanteProyecto').touched) ||
-                          (addressForm.get('valorAportanteProyecto').invalid && estaEditando)
+                          (addressForm.get('valorAportanteProyecto')?.invalid && estaEditando)
                         "
                       />
                     </span>

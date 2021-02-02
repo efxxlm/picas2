@@ -27,7 +27,7 @@ namespace asivamosffie.services
             _commonService = commonService;
             _context = context;
         }
-      
+
         public async Task<List<SesionComiteSolicitud>> GetListSesionComiteSolicitud()
         {
             List<SesionComiteSolicitud> ListSesionComiteSolicitud = await _context.SesionComiteSolicitud
@@ -123,7 +123,7 @@ namespace asivamosffie.services
         {
             return await _context.VListaContratacionModificacionContractual.OrderByDescending(v => v.SesionComiteSolicitudId).ToListAsync();
         }
-         
+
 
 
         public async Task<Respuesta> RegistrarTramiteContrato(Contrato pContrato, string pPatchfile, string pEstadoCodigo, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
@@ -135,6 +135,7 @@ namespace asivamosffie.services
                 Contrato contratoOld = _context.Contrato.Where(r => r.ContratoId == pContrato.ContratoId)
                     .Include(r => r.Contratacion)
                     .FirstOrDefault();
+                contratoOld.ModalidadCodigo = pContrato.ModalidadCodigo;
                 //contratacion
                 Contratacion contratacionOld = _context.Contratacion.Find(contratoOld.ContratacionId);
 
@@ -302,6 +303,7 @@ namespace asivamosffie.services
                string.IsNullOrEmpty(contratoOld.FechaTramite.ToString())
                || string.IsNullOrEmpty(contratoOld.TipoContratoCodigo)
                || string.IsNullOrEmpty(contratoOld.NumeroContrato)
+               || string.IsNullOrEmpty(contratoOld.ModalidadCodigo)
                || string.IsNullOrEmpty(contratoOld.EstadoDocumentoCodigo)
                || string.IsNullOrEmpty(contratoOld.FechaEnvioFirma.ToString())
                || string.IsNullOrEmpty(contratoOld.FechaFirmaContratista.ToString())
@@ -311,7 +313,7 @@ namespace asivamosffie.services
                || string.IsNullOrEmpty(contratoOld.RutaDocumento)
                //|| string.IsNullOrEmpty(contratoOld.Objeto)
                || string.IsNullOrEmpty(contratoOld.Valor.ToString())
-               //|| string.IsNullOrEmpty(contratoOld.Plazo.ToString())
+                //|| string.IsNullOrEmpty(contratoOld.Plazo.ToString())
                 || string.IsNullOrEmpty(contratoOld.CantidadPerfiles.ToString())
                 || string.IsNullOrEmpty(contratoOld.EstadoVerificacionCodigo.ToString())
                 //|| string.IsNullOrEmpty(contratoOld.EstadoFase1Diagnostico.ToString())
