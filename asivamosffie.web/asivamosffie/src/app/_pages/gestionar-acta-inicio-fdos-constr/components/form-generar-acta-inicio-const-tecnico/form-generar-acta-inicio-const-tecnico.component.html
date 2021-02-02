@@ -88,9 +88,9 @@
                   class="label-left"
                   for="fechaActaInicioFDosConstruccion"
                   [class.color-secondaryColor]="
-                    (addressForm.get('fechaActaInicioFDosConstruccion').invalid &&
+                    (addressForm.get('fechaActaInicioFDosConstruccion')?.invalid &&
                       addressForm.get('fechaActaInicioFDosConstruccion').touched) ||
-                    (addressForm.get('fechaActaInicioFDosConstruccion').invalid && estaEditando)
+                    (addressForm.get('fechaActaInicioFDosConstruccion')?.invalid && estaEditando)
                   "
                 >
                   Fecha del acta de inicio de la fase 2 - Construcción
@@ -123,9 +123,9 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
                     *ngIf="
-                      (addressForm.get('fechaActaInicioFDosConstruccion').invalid &&
+                      (addressForm.get('fechaActaInicioFDosConstruccion')?.invalid &&
                         addressForm.get('fechaActaInicioFDosConstruccion').touched) ||
-                      (addressForm.get('fechaActaInicioFDosConstruccion').invalid && estaEditando)
+                      (addressForm.get('fechaActaInicioFDosConstruccion')?.invalid && estaEditando)
                     "
                   />
                 </span>
@@ -141,9 +141,9 @@
                   class="label-left"
                   for="fechaPrevistaTerminacion"
                   [class.color-secondaryColor]="
-                    (addressForm.get('fechaPrevistaTerminacion').invalid &&
+                    (addressForm.get('fechaPrevistaTerminacion')?.invalid &&
                       addressForm.get('fechaPrevistaTerminacion').touched) ||
-                    (addressForm.get('fechaPrevistaTerminacion').invalid && estaEditando)
+                    (addressForm.get('fechaPrevistaTerminacion')?.invalid && estaEditando)
                   "
                 >
                   Fecha prevista de terminación
@@ -171,9 +171,9 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
                   *ngIf="
-                    (addressForm.get('fechaPrevistaTerminacion').invalid &&
+                    (addressForm.get('fechaPrevistaTerminacion')?.invalid &&
                       addressForm.get('fechaPrevistaTerminacion').touched) ||
-                    (addressForm.get('fechaPrevistaTerminacion').invalid && estaEditando)
+                    (addressForm.get('fechaPrevistaTerminacion')?.invalid && estaEditando)
                   "
                 />
               </span>
@@ -221,8 +221,8 @@
                   class="label-left sub-label"
                   for="mesPlazoEjFase2"
                   [class.color-secondaryColor]="
-                    (addressForm.get('mesPlazoEjFase2').invalid && addressForm.get('mesPlazoEjFase2').touched) ||
-                    (addressForm.get('mesPlazoEjFase2').invalid && estaEditando)
+                    (addressForm.get('mesPlazoEjFase2')?.invalid && addressForm.get('mesPlazoEjFase2').touched) ||
+                    (addressForm.get('mesPlazoEjFase2')?.invalid && estaEditando)
                   "
                 >
                   Meses
@@ -258,8 +258,8 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
                     *ngIf="
-                      (addressForm.get('mesPlazoEjFase2').invalid && addressForm.get('mesPlazoEjFase2').touched) ||
-                      (addressForm.get('mesPlazoEjFase2').invalid && estaEditando)
+                      (addressForm.get('mesPlazoEjFase2')?.invalid && addressForm.get('mesPlazoEjFase2').touched) ||
+                      (addressForm.get('mesPlazoEjFase2')?.invalid && estaEditando)
                     "
                   />
                 </span>
@@ -267,8 +267,8 @@
                   class="label-left sub-label"
                   for="diasPlazoEjFase2"
                   [class.color-secondaryColor]="
-                    (addressForm.get('diasPlazoEjFase2').invalid && addressForm.get('diasPlazoEjFase2').touched) ||
-                    (addressForm.get('diasPlazoEjFase2').invalid && estaEditando)
+                    (addressForm.get('diasPlazoEjFase2')?.invalid && addressForm.get('diasPlazoEjFase2').touched) ||
+                    (addressForm.get('diasPlazoEjFase2')?.invalid && estaEditando)
                   "
                 >
                   Días
@@ -304,8 +304,8 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
                     *ngIf="
-                      (addressForm.get('diasPlazoEjFase2').invalid && addressForm.get('diasPlazoEjFase2').touched) ||
-                      (addressForm.get('diasPlazoEjFase2').invalid && estaEditando)
+                      (addressForm.get('diasPlazoEjFase2')?.invalid && addressForm.get('diasPlazoEjFase2').touched) ||
+                      (addressForm.get('diasPlazoEjFase2')?.invalid && estaEditando)
                     "
                   />
                 </span>
@@ -319,9 +319,9 @@
               class="label-left"
               for="observacionesEspeciales"
               [class.color-secondaryColor]="
-                (addressForm.get('observacionesEspeciales').invalid &&
+                (addressForm.get('observacionesEspeciales')?.invalid &&
                   addressForm.get('observacionesEspeciales').touched) ||
-                (addressForm.get('observacionesEspeciales').invalid && estaEditando)
+                (addressForm.get('observacionesEspeciales')?.invalid && estaEditando)
               "
             >
               Observaciones o consideraciones especiales
@@ -356,9 +356,9 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
                   *ngIf="
-                    (addressForm.get('observacionesEspeciales').invalid &&
+                    (addressForm.get('observacionesEspeciales')?.invalid &&
                       addressForm.get('observacionesEspeciales').touched) ||
-                    (addressForm.get('observacionesEspeciales').invalid && estaEditando)
+                    (addressForm.get('observacionesEspeciales')?.invalid && estaEditando)
                   "
                 />
               </span>
