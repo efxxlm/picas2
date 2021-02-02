@@ -160,6 +160,12 @@ namespace asivamosffie.services
                     .ThenInclude(cp => cp.DisponibilidadPresupuestal)
                  .Include(r => r.SolicitudPago)
                     .ThenInclude(r => r.SolicitudPagoCargarFormaPago)
+                 .Include(c => c.Contratacion)
+                    .ThenInclude(c=> c.ContratacionProyecto)
+                        .ThenInclude(t=> t.ContratacionProyectoAportante)
+                            .ThenInclude(t => t.CofinanciacionAportante)
+                               .ThenInclude(t => t.FuenteFinanciacion)
+                                  .ThenInclude(t => t.CuentaBancaria)
                  .FirstOrDefaultAsync();
 
             if (pSolicitudPago > 0)
@@ -260,20 +266,19 @@ namespace asivamosffie.services
                                                     c.ContratoPoliza.FirstOrDefault().FechaAprobacion,
                                                     PlazoDias = c.PlazoFase1PreDias + c.PlazoFase2ConstruccionDias,
                                                     PlazoMeses = c.PlazoFase1PreMeses + c.PlazoFase2ConstruccionMeses
-                                                }).FirstOrDefault();
-
+                                                }).FirstOrDefault(); 
             var resultProyectos = await _context.VProyectosXcontrato
                                                                     .Where(p => p.ContratoId == pContratoId)
                                                                                                             .Select(p => new
                                                                                                             {
-                                                                                                                p.LlaveMen,
-                                                                                                                p.TipoIntervencion,
-                                                                                                                p.Departamento,
-                                                                                                                p.Municipio,
-                                                                                                                p.InstitucionEducativa,
-                                                                                                                p.Sede,
-                                                                                                                p.ContratacionProyectoId,
-                                                                                                                p.ValorTotal
+                                                                                                                            p.LlaveMen,
+                                                                                                                            p.TipoIntervencion,
+                                                                                                                            p.Departamento,
+                                                                                                                            p.Municipio,
+                                                                                                                            p.InstitucionEducativa,
+                                                                                                                            p.Sede,
+                                                                                                                            p.ContratacionProyectoId,
+                                                                                                                            p.ValorTotal
                                                                                                             }).ToListAsync();
             dynamics.Add(resultContrato);
             dynamics.Add(resultProyectos);
