@@ -808,6 +808,8 @@ namespace asivamosffie.services
 
             foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario)
             {
+                SesionComiteSolicitud.RegistroCompletoActa = ValidarRegistroCompletoSesionComiteSolicitudActa(SesionComiteSolicitud);
+
                 SesionComiteSolicitud.SesionSolicitudVoto = SesionComiteSolicitud.SesionSolicitudVoto.Where(r => !(bool)r.Eliminado).ToList();
                 SesionComiteSolicitud.SesionSolicitudCompromiso = _context.SesionSolicitudCompromiso
                                                                             .Where(r => r.SesionComiteSolicitudId == SesionComiteSolicitud.SesionComiteSolicitudId &&
@@ -3041,6 +3043,24 @@ namespace asivamosffie.services
                 return false;
             }
             return true;
+        }
+
+        private bool? ValidarRegistroCompletoSesionComiteSolicitudActa(SesionComiteSolicitud sesionComiteSolicitud)
+        {
+            if (
+                (sesionComiteSolicitud.RequiereVotacionFiduciario == true && string.IsNullOrEmpty(sesionComiteSolicitud.RutaSoporteVotacionFiduciario)) &&
+               sesionComiteSolicitud.GeneraCompromisoFiduciario == null &&
+               sesionComiteSolicitud.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_tecnico &&
+               string.IsNullOrEmpty(sesionComiteSolicitud.ObservacionesFiduciario) &&
+               string.IsNullOrEmpty(sesionComiteSolicitud.DesarrolloSolicitudFiduciario)
+                )
+            {
+                return null;
+            }
+            else
+            {
+                return ValidarRegistroCompletoSesionComiteSolicitud(sesionComiteSolicitud);
+            }
         }
 
         private bool ValidarRegistroCompletoSesionComiteTema(SesionComiteTema sesionComiteTemaOld)

@@ -105,15 +105,22 @@ export class CrearActaComponent implements OnInit {
   }
 
   validarCompletos() {
-    this.solicitudesCompletas = true;
+    this.solicitudesCompletas = null;
     this.temasCompletos = true;
     this.proposicionesCompletos = true;
 
-    if (this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico) {
+    if (this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico && this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico.length > 0 ) {
       this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico.forEach(cs => {
-        if (!cs.registroCompleto)
+        if (cs.registroCompletoActa === true)
+          this.solicitudesCompletas = true;
+      })
+
+      this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico.forEach(cs => {
+        if (cs.registroCompletoActa === false)
           this.solicitudesCompletas = false;
       })
+    }else{
+      this.solicitudesCompletas = true;
     }
 
     this.listaTemas.forEach(t => {

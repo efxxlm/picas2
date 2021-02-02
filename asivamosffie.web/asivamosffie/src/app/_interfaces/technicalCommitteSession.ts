@@ -103,6 +103,7 @@ export interface SesionComiteSolicitud {
 
     comiteTecnicoFiduciarioId?: number,
     registroCompletoFiduciaria?: boolean,
+    registroCompletoActa?: boolean,
     desarrolloSolicitudFiduciario?: string,
     estadoActaCodigoFiduciario?: string,
     observacionesFiduciario?: string,
