@@ -9,4 +9,30 @@
         <span>Número de contrato de obra: <b>N801801</b></span>
         <span>Número de contrato de interventoría: <b>A513513</b></span>
     </p>
+    <mat-card class="shipping-card var-main-gris">
+        <mat-card-content align="left">
+            <p><strong>Tipo de intervención: </strong><em>Remodelación</em></p>
+            <p><strong>Institución Educativa: </strong><em>I.E Nuestra Señora Del Carmen</em></p>
+            <p><strong>Sede: </strong><em>Única Sede</em></p>
+            <p><strong>Departamento: </strong><em>Boyacá</em></p>
+            <p><strong>Municipio: </strong><em>Susacón</em></p>
+        </mat-card-content>
+    </mat-card>
+    <div class="tabs--actions">
+        <button mat-raised-button color="accent" class="tabs--btn" [ngClass]="{'active': opcion1 === true}"
+            (click)="opcion1 = true; opcion2 = false; opcion3 = false;">
+            Recursos comprometidos y pagados
+        </button>
+        <button mat-raised-button color="accent" class="tabs--btn" [ngClass]="{'active': opcion2 === true}"
+            (click)="opcion2 = true; opcion1 = false;  opcion3 = false;">
+            Ejecución financiera por componente
+        </button>
+        <button mat-raised-button color="accent" class="tabs--btn" [ngClass]="{'active': opcion3 === true}"
+            (click)="opcion3 = true; opcion1 = false;  opcion2 = false;">
+            Traslados de recursos
+        </button>
+    </div>
+    <app-recursos-comprom-pagados-gbftrec *ngIf="opcion1"></app-recursos-comprom-pagados-gbftrec>
+    <app-ejecucion-financiera-gbftrec *ngIf="opcion2"></app-ejecucion-financiera-gbftrec>
+    <app-traslado-recursos-gbftrec *ngIf="opcion3"></app-traslado-recursos-gbftrec>
 </section>
