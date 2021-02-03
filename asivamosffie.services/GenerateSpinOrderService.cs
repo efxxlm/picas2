@@ -143,9 +143,7 @@ namespace asivamosffie.services
                     pOrdenGiro.OrdenGiroTerceroId = OrdenGiroTerceroId;
                     pOrdenGiro.OrdenGiroDetalleId = OrdenGiroDetalleId;
 
-
                     _context.OrdenGiro.Add(pOrdenGiro);
-
 
                     await _context.Set<SolicitudPago>()
                                     .Where(o => o.SolicitudPagoId == pOrdenGiro.SolicitudPagoId)
@@ -166,12 +164,11 @@ namespace asivamosffie.services
                                                                                                             FechaModificacion = DateTime.Now,
                                                                                                             UsuarioModificacion = pOrdenGiro.UsuarioModificacion,
                                                                                                             RegistroCompleto = ValidarRegistroCompletoOrdenGiro(pOrdenGiro),
-                                                                                                       
+
                                                                                                             OrdenGiroTerceroId = OrdenGiroTerceroId,
                                                                                                             OrdenGiroDetalleId = OrdenGiroDetalleId
                                                                                                         });
                 }
-
 
                 return
                      new Respuesta
@@ -199,6 +196,19 @@ namespace asivamosffie.services
 
         private async Task<int> CreateEditOrdenGiroDetalle(OrdenGiroDetalle pOrdenGiroDetalle, string pUsuarioCreacion)
         {
+            int? OrdenGiroDetalleEstrategiaPagoId = null;
+            int? OrdenGiroDetalleDescuentoTecnicaId = null;
+            int? OrdenGiroDetalleTerceroCausacionId = null;
+
+            if (pOrdenGiroDetalle.OrdenGiroDetalleEstrategiaPago != null)
+                OrdenGiroDetalleEstrategiaPagoId = await CreateEditOrdenGiroDetalleEstrategiaPago(pOrdenGiroDetalle.OrdenGiroDetalleEstrategiaPago, pUsuarioCreacion);
+
+            if (pOrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica != null)
+                OrdenGiroDetalleDescuentoTecnicaId = await CreateEditOrdenGiroDetalleDescuentoTecnica(pOrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica, pUsuarioCreacion);
+
+            if (pOrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion != null)
+                OrdenGiroDetalleTerceroCausacionId = await CreateEditOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion, pUsuarioCreacion);
+
             if (pOrdenGiroDetalle.OrdenGiroDetalleId == 0)
             {
                 pOrdenGiroDetalle.UsuarioCreacion = pUsuarioCreacion;
@@ -219,14 +229,7 @@ namespace asivamosffie.services
                                                                                                                                 RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalle(pOrdenGiroDetalle)
                                                                                                                             });
             }
-            if (pOrdenGiroDetalle.OrdenGiroDetalleEstrategiaPago != null)
-                CreateEditOrdenGiroDetalleEstrategiaPago(pOrdenGiroDetalle.OrdenGiroDetalleEstrategiaPago, pUsuarioCreacion);
 
-            if (pOrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica != null)
-                CreateEditOrdenGiroDetalleDescuentoTecnica(pOrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica, pUsuarioCreacion);
-
-            if (pOrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion != null)
-                CreateEditOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion, pUsuarioCreacion);
 
             return pOrdenGiroDetalle.OrdenGiroDetalleId;
         }
@@ -253,7 +256,6 @@ namespace asivamosffie.services
                                                                                                                                 RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalleTerceroCausacion)
                                                                                                                             });
             }
-
             return pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionId;
         }
 
@@ -339,7 +341,7 @@ namespace asivamosffie.services
                                                                                                                                 EstrategiaPagoCodigo = pOrdenGiroDetalleEstrategiaPago.EstrategiaPagoCodigo
                                                                                                                             });
             }
-
+            _context.SaveChanges();
             return pOrdenGiroDetalleEstrategiaPago.OrdenGiroDetalleEstrategiaPagoId;
         }
 
