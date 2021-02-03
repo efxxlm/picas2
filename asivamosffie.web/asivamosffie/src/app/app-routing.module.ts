@@ -398,6 +398,11 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/aprobar-incorporacion-rendimientos/aprobar-incorporacion-rendimientos.module')
         .then(m => m.AprobarIncorporacionRendimientosModule)
       },
+      {
+        path: 'gestionarBalanceFinancieroTrasladoRecursos',
+        loadChildren: () => import('./_pages/gestionar-balan-financ-trasl-recursos/gestionar-balan-financ-trasl-recursos.module')
+        .then(m => m.GestionarBalanFinancTraslRecursosModule)
+      },
     ]
 
   },
