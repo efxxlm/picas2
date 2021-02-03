@@ -78,6 +78,7 @@ namespace asivamosffie.services.Helpers
 
                 document.Open();
 
+                
                 HtmlPipelineContext htmlContext = new HtmlPipelineContext(null);
 
                 htmlContext.SetTagFactory(Tags.GetHtmlTagProcessorFactory());
@@ -120,59 +121,51 @@ namespace asivamosffie.services.Helpers
                 this.MargenSuperior = margenSuperior;
                 this.MargenInferior = margenInferior;
                 this.Pie = pie;
-                if (!string.IsNullOrEmpty(encabezado))
-                {
-                    encabezado = encabezado.Replace("[RUTA_ICONO]", Path.Combine(Directory.GetCurrentDirectory(), "assets", "img-FFIE.png"));
-                    header = XMLWorkerHelper.ParseToElementList(encabezado, null);
-                }
-                if (!string.IsNullOrEmpty(pie))
-                {
-                    footer = XMLWorkerHelper.ParseToElementList(pie, null);
-                }
-            }
-
-            public override void OnStartPage(PdfWriter writer, Document document)
-            {
-
-                if (Encabezado != null)
-                {
-
-                }
             }
 
             public override void OnEndPage(PdfWriter writer, Document document)
             {
                 try
                 {
-                    //PdfPTable tbHeader = new PdfPTable(1);
-                    //tbHeader.AddCell(new Paragraph("sad asd asde"));
+                    //header = XMLWorkerHelper.ParseToElementList(this.Encabezado, null);
+                    PdfPTable tbHeader = new PdfPTable(1);
+                    tbHeader.TotalWidth = document.PageSize.Width - document.LeftMargin - document.RightMargin;
+                    tbHeader.DefaultCell.Border = 0;
 
-                    //PdfPCell _cell = new PdfPCell(new Paragraph("asdsad"));
+                    //tbHeader.AddCell(new Paragraph());
+                    
+                    PdfPCell _cell = new PdfPCell(new Paragraph("FONDO DE FINANCIAMIENTO DE INFRAESTRUCTURA EDUCATIVA - FFIE \n MINISTERIO DE EDUCACIÓN"));
+                    _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                    _cell.Border = 0;
 
-                    //_cell = new PdfPCell(new Paragraph("Página " + writer.PageNumber));
+                    tbHeader.AddCell(_cell);
 
-                     ColumnText ct = new ColumnText(writer.DirectContent);
-                     
-                    if (header != null)
-                    {
-                        ct.SetSimpleColumn(new Rectangle(36, 0, 559, document.Top + document.TopMargin - 10));
+                    tbHeader.WriteSelectedRows(0, -1, document.LeftMargin, writer.PageSize.GetTop(document.TopMargin) + this.MargenSuperior + 40 , writer.DirectContent);
 
-                        foreach (IElement e in header)
-                        {
-                            ct.AddElement(e);
-                        }
-                        ct.Go();
-                    }
-                    if (footer != null)
-                    {
-                        ct.SetSimpleColumn(new Rectangle(36, 0, 559, 80));
+                    PdfPTable tbFooter = new PdfPTable(3);
+                    tbFooter.TotalWidth = document.PageSize.Width - document.LeftMargin - document.RightMargin;
+                    tbFooter.DefaultCell.Border = 0;
 
-                        foreach (IElement e in footer)
-                        {
-                            ct.AddElement(e);
-                        }
-                        ct.Go();
-                    }
+                    tbFooter.AddCell(new Paragraph());
+                    _cell = new PdfPCell(new Paragraph());
+                    _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                    _cell.Border = 0;
+                    tbFooter.AddCell(_cell);
+
+                    _cell = new PdfPCell(new Paragraph("Página " + writer.PageNumber));
+                    _cell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                    _cell.Border = 0;
+
+                    tbFooter.AddCell(_cell);
+
+                    tbFooter.WriteSelectedRows(0, -1, document.LeftMargin, writer.PageSize.GetBottom(document.BottomMargin) - this.MargenInferior -10 , writer.DirectContent);
+
+                    string pathImage = Path.Combine(Directory.GetCurrentDirectory(), "assets", "img-FFIE.png");
+
+                    iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(pathImage);
+                    logo.SetAbsolutePosition(writer.PageSize.GetRight(document.RightMargin), writer.PageSize.GetTop(document.TopMargin));
+                    logo.ScaleAbsolute(50f, 50f);
+                    document.Add(logo);
                 }
                 catch (Exception de)
                 {
