@@ -12,9 +12,15 @@ import { EjecucionFinancieraGbftrecComponent } from './components/ejecucion-fina
 import { TrasladoRecursosGbftrecComponent } from './components/traslado-recursos-gbftrec/traslado-recursos-gbftrec.component';
 import { RecursosCompromAccordGbftrecComponent } from './components/recursos-comprom-accord-gbftrec/recursos-comprom-accord-gbftrec.component';
 import { FuentesUsosGbftrecComponent } from './components/fuentes-usos-gbftrec/fuentes-usos-gbftrec.component';
+import { ContratistasGbftrecComponent } from './components/contratistas-gbftrec/contratistas-gbftrec.component';
+import { TablaValorTotalOgGbftrecComponent } from './components/tabla-valor-total-og-gbftrec/tabla-valor-total-og-gbftrec.component';
+import { DetalleOgGbftrecComponent } from './components/detalle-og-gbftrec/detalle-og-gbftrec.component';
+import { TablaFacturadoOgGbftrecComponent } from './components/tabla-facturado-og-gbftrec/tabla-facturado-og-gbftrec.component';
+import { TablaDescuentosOgGbftrecComponent } from './components/tabla-descuentos-og-gbftrec/tabla-descuentos-og-gbftrec.component';
+import { TablaOtrosDescuentosOgGbftrecComponent } from './components/tabla-otros-descuentos-og-gbftrec/tabla-otros-descuentos-og-gbftrec.component';
 
 @NgModule({
-  declarations: [GestionarBalanFinancTraslRecComponent, ValidarBalanceGbftrecComponent, RecursosCompromPagadosGbftrecComponent, EjecucionFinancieraGbftrecComponent, TrasladoRecursosGbftrecComponent, RecursosCompromAccordGbftrecComponent, FuentesUsosGbftrecComponent],
+  declarations: [GestionarBalanFinancTraslRecComponent, ValidarBalanceGbftrecComponent, RecursosCompromPagadosGbftrecComponent, EjecucionFinancieraGbftrecComponent, TrasladoRecursosGbftrecComponent, RecursosCompromAccordGbftrecComponent, FuentesUsosGbftrecComponent, ContratistasGbftrecComponent, TablaValorTotalOgGbftrecComponent, DetalleOgGbftrecComponent, TablaFacturadoOgGbftrecComponent, TablaDescuentosOgGbftrecComponent, TablaOtrosDescuentosOgGbftrecComponent],
   imports: [
     CommonModule,
     MaterialModule,
