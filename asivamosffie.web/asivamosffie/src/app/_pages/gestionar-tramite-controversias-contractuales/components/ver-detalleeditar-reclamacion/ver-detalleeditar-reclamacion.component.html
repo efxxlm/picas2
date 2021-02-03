@@ -8,7 +8,7 @@
         Ver detalle/Editar reclamación {{this.numReclamacion}}
     </h1>
     <p class="info-sub-title">
-        <span>Actuación: <b>{{this.actuacion}}</b> Número de actuación: <b>{{this.numActuacion}}</b></span>
+        <span>Actuación: <b>{{this.actuacion}}</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Número de actuación: <b>{{this.numActuacion}}</b></span>
     </p>
     <app-form-reclamacion-aseguradora-actuacion [controversiaAct]=this.idControversia [isEditable]="true" 
     (numReclamacion)="this.numReclamacion=$event" (actuacion)="this.actuacion=$event"

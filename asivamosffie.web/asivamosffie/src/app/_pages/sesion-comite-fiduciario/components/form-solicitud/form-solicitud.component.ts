@@ -61,6 +61,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
 
   get compromisos() {
     return this.addressForm.get('compromisos') as FormArray;
@@ -242,7 +243,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
   }
 
   onSubmit() {
-
+    this.estaEditando = true;
     if (this.proyectos)
       this.proyectos.forEach(p => {
         let proyecto = p.proyecto

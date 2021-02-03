@@ -21,10 +21,9 @@ export class FormRegistrarParticipantesComponent implements OnInit {
   objetoComiteTecnico: ComiteTecnico = {};
   estaTodo: boolean = false;
 
-  addressForm = this.fb.group({
-    miembrosParticipantes: [null, Validators.required],
-    invitados: this.fb.array([])
-  });
+  addressForm: FormGroup;
+
+  estaEditando = false;
 
   estadoFormulario = {
     sinDiligenciar: 'info-text sin-diligenciar',
@@ -56,7 +55,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
     private router: Router,
 
   ) {
-
+    this.buildForm();
   }
 
   ngOnInit(): void {
@@ -86,7 +85,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
           response[0].sesionParticipante = response[1];
           this.objetoComiteTecnico = response[0];
 
-          console.log(this.objetoComiteTecnico)
+          // console.log(this.objetoComiteTecnico)
 
 
           setTimeout(() => {
@@ -133,7 +132,12 @@ export class FormRegistrarParticipantesComponent implements OnInit {
     return this.addressForm.get('invitados') as FormArray;
   }
 
-
+  private buildForm() {
+    this.addressForm = this.fb.group({
+      miembrosParticipantes: [null, Validators.required],
+      invitados: this.fb.array([])
+    });
+  }
 
   borrarArray(borrarForm: any, i: number) {
     borrarForm.removeAt(i);
@@ -285,7 +289,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
 
     }
 
-    console.log(cantidadTemas, this.estadoOtrosTemas, this.estadoProposiciones)
+    // console.log(cantidadTemas, this.estadoOtrosTemas, this.estadoProposiciones)
 
   }
 
@@ -319,7 +323,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
 
   onDelete(i: number) {
     let grupo = this.invitados.controls[i] as FormGroup;
-    console.log(grupo, this.invitados, i)
+    // console.log(grupo, this.invitados, i)
     let idInvitado = grupo.get('sesionInvitadoId').value ? grupo.get('sesionInvitadoId').value : 0;
     this.technicalCommitteSessionService.deleteSesionInvitado(idInvitado)
       .subscribe(respuesta => {
@@ -356,54 +360,56 @@ export class FormRegistrarParticipantesComponent implements OnInit {
   }
 
   onSubmit() {
+    this.estaEditando = true;
 
-    if (this.addressForm.valid) {
+    console.log(this.addressForm.controls)
+    // if (this.addressForm.valid) {
 
-      let comite: ComiteTecnico = {
-        comiteTecnicoId: this.objetoComiteTecnico.comiteTecnicoId,
-        sesionParticipante: [],
-        sesionInvitado: [],
+    //   let comite: ComiteTecnico = {
+    //     comiteTecnicoId: this.objetoComiteTecnico.comiteTecnicoId,
+    //     sesionParticipante: [],
+    //     sesionInvitado: [],
 
-      }
+    //   }
 
-      let miembros = this.addressForm.get('miembrosParticipantes').value;
+    //   let miembros = this.addressForm.get('miembrosParticipantes').value;
 
-      if (miembros) {
-        miembros.forEach(m => {
-          let sesionParticipante: SesionParticipante = {
-            sesionParticipanteId: m.sesionParticipanteId,
-            comiteTecnicoId: comite.comiteTecnicoId,
-            usuarioId: m.usuarioId,
+    //   if (miembros) {
+    //     miembros.forEach(m => {
+    //       let sesionParticipante: SesionParticipante = {
+    //         sesionParticipanteId: m.sesionParticipanteId,
+    //         comiteTecnicoId: comite.comiteTecnicoId,
+    //         usuarioId: m.usuarioId,
 
-          }
+    //       }
 
-          comite.sesionParticipante.push(sesionParticipante);
-        });
-      }
+    //       comite.sesionParticipante.push(sesionParticipante);
+    //     });
+    //   }
 
-      this.invitados.controls.forEach(control => {
-        let sesionInvitado: SesionInvitado = {
-          comiteTecnicoId: this.objetoComiteTecnico.comiteTecnicoId,
-          sesionInvitadoId: control.get('sesionInvitadoId').value,
-          nombre: control.get('nombre').value,
-          cargo: control.get('cargo').value,
-          entidad: control.get('entidad').value,
+    //   this.invitados.controls.forEach(control => {
+    //     let sesionInvitado: SesionInvitado = {
+    //       comiteTecnicoId: this.objetoComiteTecnico.comiteTecnicoId,
+    //       sesionInvitadoId: control.get('sesionInvitadoId').value,
+    //       nombre: control.get('nombre').value,
+    //       cargo: control.get('cargo').value,
+    //       entidad: control.get('entidad').value,
 
-        }
+    //     }
 
-        comite.sesionInvitado.push(sesionInvitado);
-      })
+    //     comite.sesionInvitado.push(sesionInvitado);
+    //   })
 
-      console.log(comite)
+    //   // console.log(comite)
 
-      this.technicalCommitteSessionService.createEditSesionInvitadoAndParticipante(comite)
-        .subscribe(respuesta => {
-          this.openDialog('', `<b>${respuesta.message}</b>`)
-          if (respuesta.code == "200")
-            this.ngOnInit();
-        })
+    //   this.technicalCommitteSessionService.createEditSesionInvitadoAndParticipante(comite)
+    //     .subscribe(respuesta => {
+    //       this.openDialog('', `<b>${respuesta.message}</b>`)
+    //       if (respuesta.code == "200")
+    //         this.ngOnInit();
+    //     })
 
-      console.log(this.addressForm.get('miembrosParticipantes').value);
-    }
+    //   // console.log(this.addressForm.get('miembrosParticipantes').value);
+    // }
   }
 }

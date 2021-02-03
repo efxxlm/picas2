@@ -97,6 +97,7 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
   listaUsuarios: any[] = [];
   realizoPeticion: boolean = false;
   estadosPoliza: any;
+  estaEditando = false;
 
   constructor(
     private router: Router,
@@ -308,7 +309,7 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
     return alphanumeric.test(inputChar) ? true : false;
   }
   clickedOption() {
-    console.log(this.selected)
+    // console.log(this.selected)
   }
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
@@ -342,6 +343,7 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
+    this.estaEditando = true;
     let polizasList;
     if (this.addressForm.value.polizasYSeguros != undefined || this.addressForm.value.polizasYSeguros != null) {
       polizasList = [this.addressForm.value.polizasYSeguros[0].codigo];
@@ -376,8 +378,8 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
     else {
       completo = false;
     }
-    console.log(this.addressForm.value);
-    console.log(nombreAprobado);
+    // console.log(this.addressForm.value);
+    // console.log(nombreAprobado);
     const contratoArray = {
       'contratoId': this.idContrato,
       "contratoPolizaId": this.idPoliza,
@@ -480,7 +482,7 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
         this.openDialog('', `<b>${data.message}</b>`);
       }
     });
-    console.log(this.addressForm.value);
+    // console.log(this.addressForm.value);
   }
 
 }

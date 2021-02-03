@@ -1,7 +1,7 @@
 import { GestionarAcuerdoCofinanciacionRoutingModule } from './_pages/gestionar-acuerdo-cofinanciacion/gestionar-acuerdo-cofinanciacion-routing.module';
 import { CambiarContrasenaModule } from './_pages/cambiar-contrasena/cambiar-contrasena.module';
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule, PreloadAllModules, PreloadingStrategy } from '@angular/router';
+import { Routes, RouterModule, PreloadAllModules, PreloadingStrategy, NoPreloading } from '@angular/router';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import {
@@ -287,6 +287,12 @@ const routes: Routes = [
           .then( module => module.RequisitosTecnicosConstruccionModule )
       }, 
       {
+        path: 'registrarInformeFinalProyecto',
+        loadChildren: () => import( './_pages/registrar-informe-final-proyecto/registrar-informe-final-proyecto.module' )
+          .then( module => module.RegistrarInformeFinalProyectoModule )
+      },
+    { 
+      
         path: 'verificarSolicitudDeNovedades',
         loadChildren: () => import('./_pages/verificar-solicitud-de-novedades/verificar-solicitud-de-novedades.module')
         .then(m => m.VerificarSolicitudDeNovedadesModule)
@@ -403,7 +409,7 @@ const routes: Routes = [
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes, {
-    preloadingStrategy: PreloadAllModules
+    preloadingStrategy: NoPreloading
   }),
   MatMomentDateModule,
   MatDatepickerModule],

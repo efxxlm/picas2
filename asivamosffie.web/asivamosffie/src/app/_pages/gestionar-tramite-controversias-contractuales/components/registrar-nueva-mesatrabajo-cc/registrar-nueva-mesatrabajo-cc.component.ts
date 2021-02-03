@@ -9,7 +9,7 @@ import { ContractualControversyService } from 'src/app/core/_services/Contractua
 })
 export class RegistrarNuevaMesatrabajoCcComponent implements OnInit {
 
-  idControversia: any;
+  idActuacion: any;
   solicitud: any;
   numContrato: any;
   tipoControversia: string;
@@ -18,8 +18,8 @@ export class RegistrarNuevaMesatrabajoCcComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(param => {
-      this.idControversia = param.id;
-      this.loadBasicData(this.idControversia);
+      this.idActuacion = param.id;
+      this.loadBasicData(this.idActuacion);
     });
   }
   loadBasicData(id){

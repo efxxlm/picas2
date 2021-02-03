@@ -39,6 +39,7 @@ export class ManejoAnticipoVerificarRequisitosComponent implements OnInit, OnCha
   @Input() contratoConstruccionId: any;
 
   @Output() createEdit = new EventEmitter();
+  estaEditando = false;
 
   constructor(
     private dialog: MatDialog,
@@ -109,7 +110,7 @@ export class ManejoAnticipoVerificarRequisitosComponent implements OnInit, OnCha
   }
 
   guardarManejo() {
-
+    this.estaEditando = true;
     let construccion = {
       contratoConstruccionId: this.contratoConstruccionId,
       tieneObservacionesManejoAnticipoApoyo: this.addressForm.value.tieneObservaciones,

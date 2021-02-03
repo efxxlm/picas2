@@ -20,6 +20,7 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
   observacionesUltimas: any;
   contratoObservacionId: any;
   realizoPeticion: boolean = false;
+  estaEditando = false;
   constructor(private router: Router,public dialog: MatDialog, private fb: FormBuilder, private service: GestionarActPreConstrFUnoService) { }
 
   ngOnInit(): void {
@@ -70,7 +71,7 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
     })
   }
   maxLength(e: any, n: number) {
-    console.log(e.editor.getLength()+" "+n);
+    // console.log(e.editor.getLength()+" "+n);
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n-1, e.editor.getLength());
     }
@@ -98,12 +99,13 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
       }
     });
   }
-  generarActaSuscrita(){
-    this.service.GetActaByIdPerfil(8,this.contratoId).subscribe((resp:any)=>{
+
+  descargarActaDesdeTabla(){
+    this.service.GetActaByIdPerfil(this.contratoId, 'False').subscribe(resp => {
       const documento = `Acta contrato ${this.numContrato}.pdf`; // Valor de prueba
       const text = documento,
-      blob = new Blob([resp], { type: 'application/pdf' }),
-      anchor = document.createElement('a');
+        blob = new Blob([resp], { type: 'application/pdf' }),
+        anchor = document.createElement('a');
       anchor.download = documento;
       anchor.href = window.URL.createObjectURL(blob);
       anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
@@ -111,6 +113,7 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
     });
   }
   onSubmit() {
+    this.estaEditando = true;
     let dataObsrvacionWrite;
     if(this.addressForm.value.observaciones==null){
       dataObsrvacionWrite = "";
@@ -230,6 +233,6 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
 
       })
     }
-    console.log(this.addressForm.value);
+    // console.log(this.addressForm.value);
   }
 }

@@ -42,6 +42,7 @@ export class FormContratacionComponent implements OnInit {
   crearFormulario () {
     this.form = this.fb.group({
       numeroContrato                : [ '', Validators.required ],
+      modalidadContrato             : [ null ],
       fechaEnvioParaFirmaContratista: [ null ],
       fechaFirmaPorParteContratista : [ null ],
       fechaEnvioParaFirmaFiduciaria : [ null ],
@@ -66,26 +67,32 @@ export class FormContratacionComponent implements OnInit {
   getContratacionId ( id ) {
     this.contratosContractualesSvc.getContratacionId( id )
       .subscribe( ( resp: any ) => {
-        this.contratacion = resp;
-        if ( resp.contrato.length > 0 ) {
-          let rutaDocumento;
-          if ( resp.contrato[0].rutaDocumento !== undefined ) {
-            rutaDocumento = resp.contrato[0].rutaDocumento.split( /[^\w\s]/gi );
-            rutaDocumento = `${ rutaDocumento[ rutaDocumento.length -2 ] }.${ rutaDocumento[ rutaDocumento.length -1 ] }`;
-          } else {
-            rutaDocumento = null;
+        this.commonSvc.modalidadesContrato()
+        .subscribe( modalidadContrato => {
+          this.contratacion = resp;
+          if ( resp.contrato.length > 0 ) {
+            let rutaDocumento;
+            if ( resp.contrato[0].rutaDocumento !== undefined ) {
+              rutaDocumento = resp.contrato[0].rutaDocumento.split( /[^\w\s]/gi );
+              rutaDocumento = `${ rutaDocumento[ rutaDocumento.length -2 ] }.${ rutaDocumento[ rutaDocumento.length -1 ] }`;
+            } else {
+              rutaDocumento = null;
+            };
+            console.log( resp.contrato[0] );
+            this.form.reset({
+              numeroContrato: resp.contrato[0].numeroContrato || '',
+              modalidadContrato: resp.contrato[0].modalidadCodigo !== undefined ? modalidadContrato.filter( modalidad => modalidad.codigo === resp.contrato[0].modalidadCodigo )[0].codigo : null,
+              fechaEnvioParaFirmaContratista: resp.contrato[0].fechaEnvioFirma || null,
+              fechaFirmaPorParteContratista: resp.contrato[0].fechaFirmaContratista || null,
+              fechaEnvioParaFirmaFiduciaria: resp.contrato[0].fechaFirmaFiduciaria || null,
+              fechaFirmaPorParteFiduciaria: resp.contrato[0].fechaFirmaContrato || null,
+              observaciones: resp.contrato[0].observaciones || null,
+              documento: rutaDocumento,
+              rutaDocumento: resp.contrato[0].rutaDocumento !== undefined ? resp.contrato[0].rutaDocumento : null
+            });
+            console.log( this.form.value );
           };
-          this.form.reset({
-            numeroContrato: resp.contrato[0].numeroContrato || '',
-            fechaEnvioParaFirmaContratista: resp.contrato[0].fechaEnvioFirma || null,
-            fechaFirmaPorParteContratista: resp.contrato[0].fechaFirmaContratista || null,
-            fechaEnvioParaFirmaFiduciaria: resp.contrato[0].fechaFirmaFiduciaria || null,
-            fechaFirmaPorParteFiduciaria: resp.contrato[0].fechaFirmaContrato || null,
-            observaciones: resp.contrato[0].observaciones || null,
-            documento: rutaDocumento,
-            rutaDocumento: resp.contrato[0].rutaDocumento !== undefined ? resp.contrato[0].rutaDocumento : null
-          });
-        };
+        } );
       } );
   };
 

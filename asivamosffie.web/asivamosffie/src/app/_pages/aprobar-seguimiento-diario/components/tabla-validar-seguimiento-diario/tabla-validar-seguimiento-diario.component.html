@@ -12,21 +12,21 @@
   <table mat-table [dataSource]="dataSource" matSort>
 
     <!-- fechaReporte Column -->
-    <ng-container matColumnDef="fechaReporte">
+    <ng-container matColumnDef="fechaUltimoSeguimientoDiario">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha del reporte</th>
-      <td mat-cell *matCellDef="let element"><b>{{element.fechaReporte}}</b></td>
+      <td mat-cell *matCellDef="let element">{{element.fechaUltimoSeguimientoDiario | date: 'dd/MM/yyyy'}}</td>
     </ng-container>
 
     <!-- llaveMEN Column -->
-    <ng-container matColumnDef="llaveMEN">
+    <ng-container matColumnDef="llaveMen">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Llave MEN</th>
-      <td mat-cell *matCellDef="let element">{{element.llaveMEN}}</td>
+      <td mat-cell *matCellDef="let element">{{element.llaveMen}}</td>
     </ng-container>
 
     <!-- tipoInterventor Column -->
-    <ng-container matColumnDef="tipoInterventor">
+    <ng-container matColumnDef="tipoIntervencion">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo de intervención</th>
-      <td mat-cell *matCellDef="let element">{{element.tipoInterventor}}</td>
+      <td mat-cell *matCellDef="let element">{{element.tipoIntervencion}}</td>
     </ng-container>
 
     <!-- institucionEducativa Column -->
@@ -44,32 +44,86 @@
     <!-- Alertas Column -->
     <ng-container matColumnDef="alertas">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>¿Tiene alertas?</th>
-      <td mat-cell *matCellDef="let element">{{element.alertas}}</td>
+      <td mat-cell *matCellDef="let element">{{element.tieneAlertas == true ? 'Si' : 'No'}}</td>
     </ng-container>
 
     <!-- estadoVerificacion Column -->
-    <ng-container matColumnDef="estadoVerificacion">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado de la verificacion</th>
-      <td mat-cell *matCellDef="let element">{{element.estadoVerificacion}}</td>
+    <ng-container matColumnDef="estadoCodigo">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado de la validación</th>
+      <td mat-cell *matCellDef="let element">{{element.estadoNombre}}</td>
     </ng-container>
 
     <!-- Id Column -->
-    <ng-container matColumnDef="id">
+    <ng-container matColumnDef="seguimientoDiarioId">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Gestión</th>
       <td mat-cell *matCellDef="let element">
-        <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
-          [routerLink]="[ 'validarSeguimiento', element.id ]">
-          Validar <br> seguimiento diario
+
+        <a mat-button 
+                      color="warn" 
+                      mat-raised-button 
+                      color="accent" 
+                      class="btn-table" 
+                      type="button"
+                      (click)="Registrar( element )"
+                      *ngIf="element.estadoCodigo == '4'"
+          >
+          Validar seguimiento diario
         </a>
-        <!-- <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
-          [routerLink]="[ 'verDetalle', element.id ]">
+        
+        <a mat-button 
+                      color="warn" 
+                      mat-raised-button 
+                      color="accent" 
+                      class="btn-table" 
+                      type="button"
+                      (click)="Validar( element )"
+                      *ngIf="element.estadoCodigo == '5' && element.tieneObservaciones === false"
+          >
+          Validar
+        </a>
+
+        <a mat-button 
+                      color="warn" 
+                      mat-raised-button 
+                      color="accent" 
+                      class="btn-table" 
+                      type="button"
+                      (click)="Enviar( element )"
+                      *ngIf="element.estadoCodigo == '5' && element.tieneObservaciones === true && element.registroCompleto"
+          >
+          Enviar observaciones
+        </a>
+        
+        <a mat-button 
+                      color="warn" 
+                      mat-raised-button 
+                      color="accent" 
+                      class="btn-table" 
+                      type="button"
+                      (click)="Registrar( element )"
+                      *ngIf="element.estadoCodigo == '5'"
+          >
+          Ver detalle/Editar
+        </a>
+        
+        <a mat-button 
+                      color="warn" 
+                      mat-raised-button 
+                      color="accent" 
+                      class="btn-table" 
+                      type="button"
+                      (click)="Registrar( element )"
+                      *ngIf="element.estadoCodigo == '6' || element.estadoCodigo == '7'"
+          >
           Ver detalle
-        </a> -->
+        </a>
+        
       </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
   </table>
 
   <mat-paginator #paginator [length]="dataSource?.data.length" [pageIndex]="0" [pageSize]="5"

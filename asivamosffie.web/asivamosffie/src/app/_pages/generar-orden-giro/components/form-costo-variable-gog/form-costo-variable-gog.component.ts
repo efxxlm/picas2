@@ -22,6 +22,7 @@ export class FormCostoVariableGogComponent implements OnInit {
     fuenteRecursos: [null, Validators.required],
     valorDescuento: [null, Validators.required]
   });
+  estaEditando = false;
   
   constructor( private fb: FormBuilder) { }
 
@@ -33,6 +34,7 @@ export class FormCostoVariableGogComponent implements OnInit {
     return alphanumeric.test(inputChar) ? true : false;
   }
   onSubmit() {
+    this.estaEditando = true;
     console.log(this.addressForm.value);
   }
 }

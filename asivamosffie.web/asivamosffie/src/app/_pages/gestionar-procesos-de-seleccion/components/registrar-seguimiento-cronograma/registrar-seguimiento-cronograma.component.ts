@@ -57,6 +57,7 @@ export class RegistrarSeguimientoCronogramaComponent implements OnInit {
   descripciones: string[]=[];
   activo: boolean[]=[];
   pasado: boolean[]=[];
+  estaEditando = false;
   
 
   constructor(
@@ -185,7 +186,7 @@ export class RegistrarSeguimientoCronogramaComponent implements OnInit {
   }
 
   onSubmit() {
-
+    this.estaEditando = true;
     let listaActividades = this.addressForm.get('actividades') as FormArray;
     this.listaCronograma = [];
 

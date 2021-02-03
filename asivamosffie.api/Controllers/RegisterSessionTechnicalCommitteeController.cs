@@ -433,9 +433,9 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetCompromisosByComiteTecnicoId")]
-        public async Task<ComiteTecnico> GetCompromisosByComiteTecnicoId([FromQuery] int ComiteTecnicoId)
+        public async Task<ComiteTecnico> GetCompromisosByComiteTecnicoId([FromQuery] int ComiteTecnicoId, bool pEsFiduciario)
         {
-            return await _registerSessionTechnicalCommitteeService.GetCompromisosByComiteTecnicoId(ComiteTecnicoId);
+            return await _registerSessionTechnicalCommitteeService.GetCompromisosByComiteTecnicoId(ComiteTecnicoId, pEsFiduciario);
         }
          
         [Route("GetComiteTecnicoByComiteTecnicoId")]

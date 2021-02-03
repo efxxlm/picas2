@@ -38,6 +38,7 @@ export class InversionFljrecursosVerificarRequisitosComponent implements OnInit,
   @Input() contratoConstruccionId: any;
 
   @Output() createEdit = new EventEmitter();
+  estaEditando = false;
 
   constructor(
               private dialog: MatDialog, 
@@ -112,6 +113,7 @@ export class InversionFljrecursosVerificarRequisitosComponent implements OnInit,
   };
 
   descargar() {
+    this.estaEditando = true;
     this.commonService.getFileById(this.contratoConstruccion.archivoCargueIdFlujoInversion)
       .subscribe(respuesta => {
         let documento = "FlujoInversion.xlsx";

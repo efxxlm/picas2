@@ -25,7 +25,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> VerificarTemasCompromisos(ComiteTecnico pComiteTecnico);
 
-        Task<ComiteTecnico> GetCompromisosByComiteTecnicoId(int ComiteTecnicoId);
+        Task<ComiteTecnico> GetCompromisosByComiteTecnicoId(int ComiteTecnicoId, bool pEsFiduciario);
 
         Task<Respuesta> DeleteComiteTecnicoByComiteTecnicoId(int pComiteTecnicoId, string pUsuarioModifico);
 

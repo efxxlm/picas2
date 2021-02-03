@@ -17,6 +17,8 @@ export class FormProposicionesYVariosComponent implements OnInit {
     compromisos: this.fb.array([])
   });
 
+  estaEditando = false;
+
   estadosArray = [
     { name: 'estado 1', value: '1' },
     { name: 'estado 2', value: '2' },
@@ -111,6 +113,7 @@ export class FormProposicionesYVariosComponent implements OnInit {
 
   onSubmit() {
     alert('Thanks!');
+    this.estaEditando = true
   }
 
 }

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
 import { EditContrato, GestionarActPreConstrFUnoService } from 'src/app/core/_services/GestionarActPreConstrFUno/gestionar-act-pre-constr-funo.service';
@@ -27,7 +27,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
   public mesPlazoIni: number;
   public diasPlazoIni: number;
   public observacionesOn: boolean;
-  addressForm = this.fb.group({});
+  addressForm: FormGroup;
   dataDialog: {
     modalTitle: string,
     modalText: string
@@ -58,7 +58,9 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
   tipoCodigo: any;
   numIdentificacionRepLegalInterventoria: any;
   nomRepresentanteLegalContrInterventoria: any;
+  estaEditando = false;
   constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, private service: GestionarActPreConstrFUnoService) {
+    this.addressForm = this.crearFormulario();
     this.maxDate = new Date();
     this.maxDate2 = new Date();
   }
@@ -69,7 +71,6 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
   }
   ngOnInit(): void {
     this.cargarRol();
-    this.addressForm = this.crearFormulario();
     this.activatedRoute.params.subscribe(param => {
       this.loadData(param.id);
     });
@@ -145,10 +146,10 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
   generarFechaRestante() {
     let newdate = new Date(this.addressForm.value.fechaActaInicioFUnoPreconstruccion);
     newdate.setDate(newdate.getDate() + (this.mesPlazoIni * 30.44));
-    console.log(newdate);
+    // console.log(newdate);
     let newDateFinal = new Date(newdate);
     newDateFinal.setDate(newDateFinal.getDate() + this.diasPlazoIni)
-    console.log(newDateFinal);
+    // console.log(newDateFinal);
     this.addressForm.get('fechaPrevistaTerminacion').setValue(newDateFinal);
 
   }
@@ -230,6 +231,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
     return patron.test(te);
   }
   onSubmit() {
+    this.estaEditando = true;
     let mesPlazoFase2;
     let diasPlazoFase2;
     let esSupervisionBool;

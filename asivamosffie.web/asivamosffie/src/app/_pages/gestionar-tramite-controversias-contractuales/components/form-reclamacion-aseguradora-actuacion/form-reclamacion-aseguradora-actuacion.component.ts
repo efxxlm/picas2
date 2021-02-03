@@ -33,6 +33,7 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
   constructor(private router: Router, private services: ContractualControversyService, private fb: FormBuilder, public dialog: MatDialog) { }
   ngOnInit(): void {
     if(this.isEditable==true){
@@ -88,6 +89,7 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
   }
 
   onSubmit() {
+    this.estaEditando = true;
     console.log(this.addressForm.value);
     let arrayReclam;
     let codeState;

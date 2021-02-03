@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit,AfterViewInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -30,6 +30,8 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
   tiposIdentificacionArray = [
   ];
 
+  textoConvocantes="demandante";
+
   constructor (private fb: FormBuilder,public commonService:CommonService,
     public defensaService:DefensaJudicialService,
     public dialog: MatDialog, private router: Router  ) {
@@ -39,6 +41,9 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
   @Input() legitimacion:boolean;
   @Input() tipoProceso:string;
   @Input() defensaJudicial:DefensaJudicial;
+  ngAfterViewInit(){
+    this.cargarRegistro();
+  }
   cargarRegistro() {
      
 
@@ -58,7 +63,8 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
     this.formContratista.get("numeroContratos").setValue(this.defensaJudicial.numeroDemandantes);
     let i=0;
     console.log(this.perfiles);
-    this.defensaJudicial.demandanteConvocante.forEach(element => {
+    this.defensaJudicial.demandadoConvocado.forEach(element => {
+      console.log(this.perfiles.controls[i].get("nomConvocado"));
       this.perfiles.controls[i].get("nomConvocado").setValue(element.nombre);
       this.perfiles.controls[i].get("tipoIdentificacion").setValue(element.tipoIdentificacionCodigo);
       this.perfiles.controls[i].get("numIdentificacion").setValue(element.numeroIdentificacion);
@@ -76,20 +82,42 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
     });
     this.formContratista.get( 'numeroContratos' ).valueChanges
       .subscribe( value => {
-        this.perfiles.clear();
-        for ( let i = 0; i < Number(value); i++ ) {
-          this.perfiles.push( 
-            this.fb.group(
+        console.log(this.perfiles.length);
+        console.log(value);
+        if(this.perfiles.length>Number(value))
+        {
+          //verifico si tiene datos para mandar la alerta
+          this.perfiles.value.forEach(element => {
+            if(element.nomConvocado!= null || element.correo!= null ||
+              element.direccion!=null || element.numIdentificacion != null ||
+              element.tipoIdentificacion!=null)
               {
-                nomConvocado: [ null ],
-                tipoIdentificacion: [ null ],
-                numIdentificacion: [ null ],
-                direccion: [ null ],
-                correo: [ null ]
+                this.openDialog("","<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>");
               }
-            ) 
-          )
+              else
+              {
+                this.perfiles.removeAt(this.perfiles.length-1);
+              }
+          });
         }
+        else
+        {
+          for ( let i = this.perfiles.length; i < Number(value); i++ ) {
+            this.perfiles.push( 
+              this.fb.group(
+                {
+                  nomConvocado: [ null ],
+                  tipoIdentificacion: [ null ],
+                  numIdentificacion: [ null ],
+                  direccion: [ null ],
+                  correo: [ null ]
+                }
+              ) 
+            )
+          }
+        }
+        
+        
       } )
   };
 
@@ -204,6 +232,11 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
       });
     }
   
+  }
+
+  cambioTipoTexto()
+  {    
+    this.textoConvocantes=this.addressForm.value.demandaContraFFIE?"demandante":"convocante";
   }
 
 }

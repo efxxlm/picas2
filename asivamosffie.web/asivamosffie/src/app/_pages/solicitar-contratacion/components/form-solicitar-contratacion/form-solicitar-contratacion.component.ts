@@ -40,6 +40,7 @@ export class FormSolicitarContratacionComponent implements OnInit {
   selectSede: InstitucionEducativa[] = [];
 
   listaResultado: ProyectoGrilla[] = [];
+  estaEditando = false;
 
   constructor(
     private fb: FormBuilder,
@@ -125,7 +126,7 @@ export class FormSolicitarContratacionComponent implements OnInit {
   }
 
   onSubmit() {
-
+    this.estaEditando = true;
     const pTipoIntervencion: Dominio = this.addressForm.get('tipoInterventor').value;
     const pLlaveMen: string = this.addressForm.get('llaveMEN').value;
     const pRegion: Localizacion = this.addressForm.get('region').value;

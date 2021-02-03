@@ -29,6 +29,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
   realizoPeticion: boolean = false;
   esSaldoPermitido: boolean = false;
   listaFaseUsosComponentes: any[] = [];
+  estaEditando = false;
 
   createFormulario() {
     return this.fb.group({
@@ -397,7 +398,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-
+    this.estaEditando = true;
     let valoresCorrectos = true;
     let valorTotalSumado = 0;
     let totalAportantes = 0;

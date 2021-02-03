@@ -32,6 +32,7 @@ export class HojasVidaVerificarRequisitosComponent implements OnInit {
 
   @Input() observacionesCompleted;
   @Input() perfil: any;
+  estaEditando = false;
 
   constructor(
       private dialog: MatDialog,
@@ -92,7 +93,7 @@ export class HojasVidaVerificarRequisitosComponent implements OnInit {
   }
 
   onSubmit(){
-
+    this.estaEditando = true;
     const ConstraccionPerfil = {
       construccionPerfilId: this.perfil.construccionPerfilId,
       tieneObservacionesApoyo: this.addressForm.value.tieneObservaciones,

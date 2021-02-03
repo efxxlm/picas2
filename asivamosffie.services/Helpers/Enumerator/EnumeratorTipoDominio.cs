@@ -177,6 +177,11 @@ namespace asivamosffie.services.Helpers.Enumerator
         Estado_Reporte_Semanal_Y_Muestras = 112,
 
         Tipo_Observacion_Seguimiento_Semanal = 123,
+
+        Calificacion_Informe_Final = 151,
+
+        Estado_Informe_Final = 154,
+
         
         Jurisdiccion =116,
         Actuaciones_Recomendadas=119,

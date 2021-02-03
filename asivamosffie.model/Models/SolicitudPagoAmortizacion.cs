@@ -5,7 +5,7 @@ namespace asivamosffie.model.Models
 {
     public partial class SolicitudPagoAmortizacion
     {
-        public int SolicitudPagoFaseAmortizacionAnticipoId { get; set; }
+        public int SolicitudPagoFaseAmortizacionId { get; set; }
         public int? SolicitudPagoFaseId { get; set; }
         public int? PorcentajeAmortizacion { get; set; }
         public decimal? ValorAmortizacion { get; set; }

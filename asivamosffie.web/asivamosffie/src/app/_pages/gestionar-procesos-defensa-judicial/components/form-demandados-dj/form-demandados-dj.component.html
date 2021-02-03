@@ -5,14 +5,16 @@
             <mat-form-field class="w-70">
                 <input matInput type="text" maxlength="2" formControlName="numeroContratos" required>
             </mat-form-field>
-            <span class="contador">{{2 - formContratista.get( 'numeroContratos' ).value.length}}</span>
+            <span class="contador">{{2 - formContratista.get( 'numeroContratos' ).value?.toString().length}}</span>
         </div>
     </div>
 
     <mat-accordion formArrayName="perfiles" *ngIf="formContratista.get( 'numeroContratos' ).value !== null">
         <mat-expansion-panel class="expansion-style sub-expansion" *ngFor="let perfil of perfiles.controls; index as i">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                <mat-panel-title class="expansion-style--title " [ngClass]="{'sin-diligenciar': nomConvocado.value==''
+                 && nomConvocado.tipoIdentificacion =='' && nomConvocado.numIdentificacion==''
+                , 'completo': nomConvocado.value!=''&& nomConvocado.tipoIdentificacion !='' && nomConvocado.numIdentificacion!=''}">
                     Demandado {{ i+1 }}
                 </mat-panel-title>
             </mat-expansion-panel-header>

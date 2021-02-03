@@ -187,7 +187,7 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
             ProductividadObservaciones:           seguimiento.productividadObservaciones !== undefined ? seguimiento.productividadObservaciones : null,
           }
         )
-        //console.log(typeof new Date( this.addressForm.value.fechaSeguimiento ), );
+        console.log(this.diasPermitidos, new Date( this.addressForm.value.fechaSeguimiento ).toLocaleDateString());
         this.diasPermitidos.push( new Date( this.addressForm.value.fechaSeguimiento ).toLocaleDateString() )
 
       });
@@ -198,7 +198,7 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
   filtroCalendario = (d: Date | null): boolean => {
     const day = (d || new Date()).getDay();
     // Bloquea sabado y domingos
-    //console.log( d.toLocaleString(), d.toLocaleDateString())
+    console.log( new Intl.DateTimeFormat(['ban', 'id']).format(d), d.toLocaleDateString())
     return ( this.diasPermitidos.includes( d.toLocaleDateString()) && day !== 0 && day !== 6 ); // day !== 0 && day !== 6;
   }
 

@@ -61,7 +61,7 @@ export class TablaVerificarCumplimientosComponent implements OnInit {
     this.activatedRoute.params.subscribe(parametros => {
 
       forkJoin([
-        this.technicalCommitteeSessionService.getCompromisosByComiteTecnicoId(parametros.id),
+        this.technicalCommitteeSessionService.getCompromisosByComiteTecnicoId(parametros.id, true),
         this.commonService.listaEstadoCompromisos()
       ]).subscribe(respuesta => {
         console.log( respuesta[0] );

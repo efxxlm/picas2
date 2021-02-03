@@ -18,6 +18,7 @@ export class VotacionSolicitudComponent implements OnInit {
   miembros: any[] =  ['Juan Lizcano Garcia', 'Fernando José Aldemar Rojas', 'Gonzalo Díaz Mesa'];
 
   addressForm = this.fb.array([]);
+  estaEditando = false;
 
   get listaVotacion() {
     return this.addressForm as FormArray;
@@ -78,7 +79,7 @@ export class VotacionSolicitudComponent implements OnInit {
       sesionParticipanteId: [],
       sesionComiteSolicitudId: [],
       aprobacion: [null, Validators.required],
-      observaciones: [null, Validators.required]
+      observaciones: []
     });
   }
 
@@ -130,7 +131,7 @@ export class VotacionSolicitudComponent implements OnInit {
   }
 
   onSubmit() {
-
+    this.estaEditando = true;
     console.log(this.data.sesionComiteSolicitud);
 
     let sesionComiteSolicitud: SesionComiteSolicitud = {

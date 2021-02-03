@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit,AfterViewInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -36,12 +36,22 @@ export class FormDemandadosDjComponent implements OnInit {
   @Input() legitimacion:boolean;
   @Input() tipoProceso:string;
   @Input() defensaJudicial:DefensaJudicial;
+
+  ngAfterViewInit(){
+    this.cargarRegistro();
+  }
+
   cargarRegistro() {
-    //this.ngOnInit().then(() => {
-      console.log("form");
-      console.log(this.defensaJudicial);
-      console.log(this.legitimacion);
-      console.log(this.tipoProceso);      
+      this.formContratista.get("numeroContratos").setValue(this.defensaJudicial.numeroDemandados);
+      let i=0;      
+      this.defensaJudicial.demandanteConvocante.forEach(element => {
+        console.log(this.perfiles.controls[i].get("nomConvocado"));
+        this.perfiles.controls[i].get("nomConvocado").setValue(element.nombre);
+        this.perfiles.controls[i].get("tipoIdentificacion").setValue(element.tipoIdentificacionCodigo);
+        this.perfiles.controls[i].get("numIdentificacion").setValue(element.numeroIdentificacion);
+        
+        i++;
+      });
   }
 
   ngOnInit(): void {
@@ -146,6 +156,7 @@ export class FormDemandadosDjComponent implements OnInit {
         esCompleto:false,      
       };
     }
+    defensaJudicial.numeroDemandados=this.formContratista.get("numeroContratos").value;
     defensaJudicial.demandadoConvocado=defContraProyecto;
     
       console.log(defensaJudicial);

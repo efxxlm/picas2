@@ -23,6 +23,7 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
         public string NumeroActuacionSeguimiento { get; set; }
+        public string EstadoRegistroCodigo { get; set; }
 
         public virtual ControversiaActuacionMesa ControversiaActuacionMesa { get; set; }
     }

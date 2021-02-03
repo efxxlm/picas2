@@ -256,9 +256,15 @@
         public const string Ver_Inconsistencias = "203";
 
         public const string Tramitar_Rendimientos = "200";
-        public const string Notificar_Inconsistencias = "195";
-        public const string Notificar_Solicitud_Aprobacion = "196";
+        public const string Notificar_Inconsistencias = "2001";
+        public const string Notificar_Solicitud_Aprobacion = "2002";
         
+        //Informe final
+        public const string Crear_Informe_Final = "192";
+        public const string Crear_Editar_Informe_Final_Interventoria = "193";
+        public const string Crear_Editar_Informe_Final_Anexo = "194";
+        public const string Crear_Editar_Informe_Final_Interventoria_Observacion = "195";
+        public const string Enviar_A_supervisor_Informe_Final_Interventoria = "196";
 
     }
 }   

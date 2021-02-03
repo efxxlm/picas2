@@ -10,15 +10,11 @@
     "module": "esnext",
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "ES2015",
+    "target": "ES6",
     "lib": [
       "es2018",
       "dom"
     ],
     "allowSyntheticDefaultImports":true
-  },
-  "angularCompilerOptions": {
-    "fullTemplateTypeCheck": true,
-    "strictInjectionParameters": true
   }
 }

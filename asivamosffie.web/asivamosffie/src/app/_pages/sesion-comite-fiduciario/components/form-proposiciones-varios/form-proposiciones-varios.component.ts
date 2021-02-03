@@ -29,6 +29,7 @@ export class FormProposicionesVariosComponent {
     { name: 'reponsable 2', value: '2' },
     { name: 'reponsable 3', value: '3' }
   ];
+  estaEditando = false;
 
   constructor(
               private fb: FormBuilder,
@@ -91,8 +92,8 @@ export class FormProposicionesVariosComponent {
   }
 
   onSubmit() {
-
-    console.log(this.addressForm)
+    this.estaEditando = true;
+    // console.log(this.addressForm)
 
     let temas: SesionComiteTema[] = []
 

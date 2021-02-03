@@ -45,6 +45,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
 
 
   responsablesArray: Dominio[] = [];
+  estaEditando: boolean;
 
   constructor(private fb: FormBuilder,
     public dialog: MatDialog,
@@ -373,7 +374,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
   }
 
   onSubmit() {
-
+    this.estaEditando = true;
     console.log(this.solicitudesSeleccionadas);
     if (this.addressForm.invalid) {
       this.openDialog('', '<b>Falta registrar información</b>');

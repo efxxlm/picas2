@@ -5,7 +5,7 @@
         </a>
     </div>
     <h1 class="title-menu--h1">
-        Actualizar trámite solicitud {{actuacion?.controversiaContractualId}}
+        Actualizar trámite solicitud {{actuacion?.numeroActuacionFormat}}
     </h1>
     <mat-card class="shipping-card var-main-gris">
         <mat-card-content align="left">
@@ -15,7 +15,7 @@
             <p><strong>Fecha de la actuación adelantada: </strong><em>{{actuacion?.fechaActuacion | date: 'dd/MM/yyyy'}}</em></p>
             <p><strong>Actuación adelantada: </strong></p>
             <em>
-                <div [innerHtml]="actuacion?.estadoActuacionReclamacionString"></div>
+                <div [innerHtml]="actuacion?.actuacionAdelantadaOtro"></div>
             </em>
         </mat-card-content>
     </mat-card>

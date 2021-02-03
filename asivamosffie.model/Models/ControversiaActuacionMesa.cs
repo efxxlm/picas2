@@ -11,7 +11,7 @@ namespace asivamosffie.model.Models
         }
 
         public int ControversiaActuacionMesaId { get; set; }
-        public int ControversiaActuacionlId { get; set; }
+        public int ControversiaActuacionId { get; set; }
         public string EstadoAvanceMesaCodigo { get; set; }
         public DateTime? FechaActuacionAdelantada { get; set; }
         public string ActuacionAdelantada { get; set; }
@@ -27,8 +27,9 @@ namespace asivamosffie.model.Models
         public string UsuarioCreacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
+        public string EstadoRegistroCodigo { get; set; }
 
-        public virtual ControversiaActuacion ControversiaActuacionl { get; set; }
+        public virtual ControversiaActuacion ControversiaActuacion { get; set; }
         public virtual ICollection<ControversiaActuacionMesaSeguimiento> ControversiaActuacionMesaSeguimiento { get; set; }
     }
 }

@@ -21,6 +21,7 @@ export class VotacionSolicitudMultipleComponent implements OnInit {
     aprobaciones: this.fb.array([]),
     proyectos: this.fb.array([]),
   });
+  estaEditando = false;
 
   get aprobaciones() {
     return this.addressForm.get('aprobaciones') as FormArray;
@@ -189,6 +190,7 @@ export class VotacionSolicitudMultipleComponent implements OnInit {
   }
 
   onSubmit() {
+    this.estaEditando = true;
     let sesionComiteSolicitud: SesionComiteSolicitud = {
       sesionComiteSolicitudId: this.data.sesionComiteSolicitud.sesionComiteSolicitudId,
       comiteTecnicoId: this.data.sesionComiteSolicitud.comiteTecnicoId,

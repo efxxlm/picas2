@@ -313,6 +313,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
     this.validarRegistros();
 
     this.dataSource = new MatTableDataSource(this.ObjetoComiteTecnico.sesionComiteSolicitudComiteTecnico);
+    //console.log( this.ObjetoComiteTecnico.sesionComiteSolicitudComiteTecnico );
   }
 
 }

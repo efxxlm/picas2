@@ -12,6 +12,7 @@ namespace asivamosffie.model.Models
             ContratoPerfil = new HashSet<ContratoPerfil>();
             ContratoPoliza = new HashSet<ContratoPoliza>();
             ControversiaContractual = new HashSet<ControversiaContractual>();
+            NovedadContractual = new HashSet<NovedadContractual>();
             ProgramacionPersonalContrato = new HashSet<ProgramacionPersonalContrato>();
             SolicitudPago = new HashSet<SolicitudPago>();
         }
@@ -78,6 +79,7 @@ namespace asivamosffie.model.Models
         public bool? RegistroCompletoConstruccion { get; set; }
         public bool? ConObervacionesActaFase2 { get; set; }
         public DateTime? FechaCambioEstadoFase2 { get; set; }
+        public string ModalidadCodigo { get; set; }
 
         public virtual Contratacion Contratacion { get; set; }
         public virtual ICollection<ContratoConstruccion> ContratoConstruccion { get; set; }
@@ -85,6 +87,7 @@ namespace asivamosffie.model.Models
         public virtual ICollection<ContratoPerfil> ContratoPerfil { get; set; }
         public virtual ICollection<ContratoPoliza> ContratoPoliza { get; set; }
         public virtual ICollection<ControversiaContractual> ControversiaContractual { get; set; }
+        public virtual ICollection<NovedadContractual> NovedadContractual { get; set; }
         public virtual ICollection<ProgramacionPersonalContrato> ProgramacionPersonalContrato { get; set; }
         public virtual ICollection<SolicitudPago> SolicitudPago { get; set; }
     }

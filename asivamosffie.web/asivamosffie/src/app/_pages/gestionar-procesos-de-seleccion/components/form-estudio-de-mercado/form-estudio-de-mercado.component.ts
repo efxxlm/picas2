@@ -18,6 +18,8 @@ export class FormEstudioDeMercadoComponent implements OnInit {
 
   addressForm: FormGroup = this.fb.group({});
 
+  estaEditando = false;
+
   get cotizaciones() {
     return this.addressForm.get('cotizaciones') as FormArray;
   }
@@ -40,10 +42,10 @@ export class FormEstudioDeMercadoComponent implements OnInit {
     if (this.noGuardado===true &&  this.addressForm.dirty) {
       let dialogRef =this.dialog.open(ModalDialogComponent, {
         width: '28em',
-        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
+        data: { modalTitle:"", modalText:"ï¿½Desea guardar la informaciï¿½n registrada?",siNoBoton:true }
       });   
       dialogRef.afterClosed().subscribe(result => {
-        console.log(`Dialog result: ${result}`);
+        // console.log(`Dialog result: ${result}`);
         if(result === true)
         {
             this.onSubmit();          
@@ -161,10 +163,10 @@ export class FormEstudioDeMercadoComponent implements OnInit {
 
   textoLimpio(texto: string) {
     let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
-
+    
     if ( texto ){
+      saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
+      saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
       const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
       return textolimpio.length + saltosDeLinea;
     }
@@ -182,6 +184,7 @@ export class FormEstudioDeMercadoComponent implements OnInit {
 
   onSubmit() {
     //console.log(this.procesoSeleccion);return;
+    this.estaEditando = true;
     const listaCotizaciones = this.addressForm.get('cotizaciones') as FormArray;
 
     this.procesoSeleccion.procesoSeleccionCotizacion = [];

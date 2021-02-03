@@ -58,6 +58,7 @@ export class FormOtrosTemasComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
 
   get compromisos() {
     return this.addressForm.get('compromisos') as FormArray;
@@ -79,7 +80,7 @@ export class FormOtrosTemasComponent implements OnInit {
 
     let estados: string[] = ['2', '4', '6', '8']
 
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
 
       forkJoin([
         this.commonService.listaEstadoSolicitud(),
@@ -246,6 +247,7 @@ export class FormOtrosTemasComponent implements OnInit {
   }
 
   onSubmit() {
+    this.estaEditando = true;
     let tema: SesionComiteTema = {
 
       sesionTemaId: this.sesionComiteTema.sesionTemaId,

@@ -22,10 +22,11 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
     tipoControversia: [null, Validators.required],
     fechaSolicitud: [null, Validators.required],
     motivosSolicitud: [null, Validators.required],
+    cualOtroMotivo: [null],
     fechaComitePretecnico: [null, Validators.required],
     conclusionComitePretecnico: ['', Validators.required],
     procedeSolicitud: [null, Validators.required],
-    motivosRechazo: ['', Validators.required],
+    motivosRechazo: [null, Validators.required],
     requeridoComite: [null, Validators.required],
     fechaRadicadoSAC: ['', Validators.required],
     numeroRadicadoSAC: ['', Validators.required],
@@ -48,6 +49,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
   idContrato: any;
   numeroSolicitud: any;
   userCreation: any;
@@ -55,6 +57,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
   idMotivo2: number;
   idMotivo3: number;
   idMotivo4: number;
+  listaMotivos = {};
   arrayMotivosLoaded: any[] = [];
   estaCompleto: boolean;
 
@@ -68,6 +71,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
   fechaSesion3: Date;
 
   sucessInfo: string = 'La información ha sido guardada exitosamente.';
+  obj1: boolean;
 
   constructor(private router: Router, private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private common: CommonService) {
     this.common.listaTiposDeControversiaContractual().subscribe(data => {
@@ -79,6 +83,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
   }
   ngOnInit(): void {
     //this.loadMotivosList();
+    let lista: any[] = [];
     if (this.isEditable == true) {
       //this.loadtipoControversias();
       this.services.GetControversiaContractualById(this.idControversia).subscribe((resp: any) => {
@@ -101,6 +106,18 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
         this.idContrato = resp.contratoId;
         this.userCreation = resp.usuarioCreacion;
         this.services.GetMotivosSolicitudByControversiaId(this.idControversia).subscribe((data: any) => {
+          //inicio modificacion
+          this.arrayMotivosLoaded = data;
+          let listaSeleccionados = [];
+          let motivoAuxS: any = {}
+          data.forEach(p => {
+            motivoAuxS = this.motivosSolicitudArray.find(m => m.codigo == p.motivoSolicitudCodigo);
+            listaSeleccionados.push(motivoAuxS);
+            console.log(listaSeleccionados);
+          });
+          this.addressForm.get('motivosSolicitud').setValue(listaSeleccionados);
+          //fin modificacion
+          /*
           const motivoSolicitudCod = [];
           this.arrayMotivosLoaded = data;
           if (this.arrayMotivosLoaded.length > 0) {
@@ -127,7 +144,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
                   break;
               }
             }
-          }
+          }*/
           this.loadSemaforos();
         });
       });
@@ -135,6 +152,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
     else {
       //this.loadtipoControversias();
     }
+    console.log(this.arrayMotivosLoaded);
   }
   loadtipoControversias() {
 
@@ -148,7 +166,9 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
     switch (this.addressForm.value.tipoControversia.codigo) {
       case '1':
         if (this.addressForm.value.tipoControversia.codigo == '1' && this.addressForm.value.fechaSolicitud != null && this.addressForm.value.motivosSolicitud != null
-          && this.addressForm.value.fechaComitePretecnico != null && this.addressForm.value.conclusionComitePretecnico != null && this.addressForm.value.procedeSolicitud != null) {
+          && this.addressForm.value.fechaComitePretecnico != null && this.addressForm.value.conclusionComitePretecnico != null
+          && ((this.addressForm.value.procedeSolicitud == true && this.addressForm.value.motivosRechazo == null) || (this.addressForm.value.procedeSolicitud == false && this.addressForm.value.motivosRechazo != null))
+          && this.addressForm.value.requeridoComite != null) {
           this.estadoSemaforo.emit('completo');
           this.estaCompleto = true;
         }
@@ -231,9 +251,8 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
     const buenManejo = values.find(value => value.codigo == "1");
     const garantiaObra = values.find(value => value.codigo == "2");
     const pCumplimiento = values.find(value => value.codigo == "3");
-    const polizasYSeguros = values.find(value => value.codigo == "4");
-
-
+    const cualOtro = values.find(value => value.codigo == "4");
+    cualOtro ? this.obj1 = true : this.obj1 = false;
   }
   // evalua tecla a tecla
   validateNumberKeypress(event: KeyboardEvent) {
@@ -254,7 +273,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
     saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
     saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
 
-    if ( texto ){
+    if (texto) {
       const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
       return textolimpio.length + saltosDeLinea;
     }
@@ -279,6 +298,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
 
   onSubmit() {
     console.log(this.addressForm.value);
+    this.estaEditando = true;
 
     let fecha1 = Date.parse(this.addressForm.get('fechaSolicitud').value);
     this.fechaSesion = new Date(fecha1);
@@ -292,6 +312,9 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
     this.fechaSesion3 = new Date(fecha3);
     this.fechaSesionString3 = `${this.fechaSesion3.getFullYear()}-${this.fechaSesion3.getMonth() + 1}-${this.fechaSesion3.getDate()}`;
 
+    let motivosDeSolicitud = this.addressForm.get('motivosSolicitud').value;
+    console.log(motivosDeSolicitud);
+
     if (this.addressForm.value.tipoControversia.codigo == '1') {
       if (this.addressForm.value.tipoControversia.codigo == '1' && this.addressForm.value.fechaSolicitud != null && this.addressForm.value.motivosSolicitud != null
         && this.addressForm.value.fechaComitePretecnico != null && this.addressForm.value.conclusionComitePretecnico != null && this.addressForm.value.procedeSolicitud != null) {
@@ -300,16 +323,19 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       else {
         this.estaCompleto = false;
       }
-      const motivosList = [this.addressForm.value.motivosSolicitud[0].codigo];
+      let motivosList;
+      /*
       if (this.addressForm.value.motivosSolicitud != undefined || this.addressForm.value.motivosSolicitud != null) {
+        motivosList = [this.addressForm.value.motivosSolicitud[0].codigo];
         for (let i = 1; i < this.addressForm.value.motivosSolicitud.length; i++) {
           const motivoAux = motivosList.push(this.addressForm.value.motivosSolicitud[i].codigo);
         }
       }
+      */
       let formArrayTai;
       let motivosArrayCollected;
-      let estadoControversia;
-      if (this.estaCompleto == true && this.addressForm.value.procedeSolicitud == false && this.addressForm.value.requeridoComite) {
+      let estadoControversia = "1";
+      if (this.estaCompleto == true && this.addressForm.value.procedeSolicitud == false && this.addressForm.value.motivosRechazo != null) {
         estadoControversia = "2";
       }
       if (this.estaCompleto == false && this.addressForm.value.procedeSolicitud == true && this.addressForm.value.requeridoComite == null) {
@@ -325,7 +351,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       if (this.isEditable == true) {
         formArrayTai = {
           "TipoControversiaCodigo": this.addressForm.value.tipoControversia.codigo,
-          "FechaSolicitud": this.fechaSesionString,
+          "FechaSolicitud": this.addressForm.value.fechaSolicitud,
           "NumeroSolicitud": this.numeroSolicitud,
           "SolicitudId": 0,
           "NumeroRadicadoSac": 0,
@@ -337,7 +363,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
           "MotivoJustificacionRechazo": this.addressForm.value.motivosRechazo,
           //"UsuarioCreacion": "us cre",
           //"UsuarioModificacion": "us mod",
-          "FechaComitePreTecnico": this.fechaSesionString2,
+          "FechaComitePreTecnico": this.addressForm.value.fechaComitePretecnico,
           "EsProcede": this.addressForm.value.procedeSolicitud,
           "EsRequiereComite": this.addressForm.value.requeridoComite,
           "ControversiaContractualId": parseInt(this.idControversia),
@@ -348,7 +374,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       else {
         formArrayTai = {
           "TipoControversiaCodigo": this.addressForm.value.tipoControversia.codigo,
-          "FechaSolicitud": this.fechaSesionString,
+          "FechaSolicitud": this.addressForm.value.fechaSolicitud,
           "NumeroSolicitud": "",
           "SolicitudId": 0,
           "NumeroRadicadoSac": 0,
@@ -360,7 +386,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
           "ConclusionComitePreTecnico": this.addressForm.value.conclusionComitePretecnico,
           "MotivoJustificacionRechazo": this.addressForm.value.motivosRechazo,
           //"UsuarioModificacion": "us mod",
-          "FechaComitePreTecnico": this.fechaSesionString2,
+          "FechaComitePreTecnico": this.addressForm.value.fechaComitePretecnico,
           "EsProcede": this.addressForm.value.procedeSolicitud,
           "EsRequiereComite": this.addressForm.value.requeridoComite,
           //"FechaCreacion":this.fechaSesionString2
@@ -373,6 +399,21 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
           });
           this.openDialog('', `<b>${this.sucessInfo}</b>`);
           if (this.isEditable == true) {
+            if (motivosDeSolicitud) {
+              this.arrayMotivosLoaded.forEach(k => {
+                motivosDeSolicitud.forEach(m => {
+                  console.log(m);
+                  let motivoGen = {
+                    ControversiaContractualId: this.idControversia,
+                    MotivoSolicitudCodigo: m.codigo,
+                    ControversiaMotivoId: k.controversiaMotivoId,
+                  }
+                  this.services.CreateEditarControversiaMotivo(motivoGen).subscribe(r => {
+                  });
+                });
+              });
+            }
+            /*
             if (this.addressForm.value.motivosSolicitud != undefined || this.addressForm.value.motivosSolicitud != null) {
               for (let i = 0; i < motivosList.length; i++) {
                 switch (motivosList[i]) {
@@ -423,9 +464,21 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
                 }
               }
             }
+            */
             this.router.navigate(['/gestionarTramiteControversiasContractuales']);
           }
           else {
+            if (motivosDeSolicitud) {
+              motivosDeSolicitud.forEach(m => {
+                let motivoGen = {
+                  ControversiaContractualId: resp_0.data.controversiaContractualId,
+                  MotivoSolicitudCodigo: m.codigo
+                }
+                this.services.CreateEditarControversiaMotivo(motivoGen).subscribe(r => {
+                });
+              });
+            }
+            /*
             if (this.addressForm.value.motivosSolicitud != undefined || this.addressForm.value.motivosSolicitud != null) {
               for (let i = 0; i < motivosList.length; i++) {
                 switch (motivosList[i]) {
@@ -472,6 +525,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
                 }
               }
             }
+            */
             this.router.navigate(['/gestionarTramiteControversiasContractuales']);
           }
         }
@@ -489,12 +543,17 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       else {
         this.estaCompleto = false;
       }
-      const motivosList1 = [this.addressForm.value.motivosSolicitud[0].codigo];
-      for (let i = 1; i < this.addressForm.value.motivosSolicitud.length; i++) {
-        const motivoAux = motivosList1.push(this.addressForm.value.motivosSolicitud[i].codigo);
+      let motivosList1;
+      /*
+      if (this.addressForm.value.motivosSolicitud != undefined || this.addressForm.value.motivosSolicitud != null) {
+        motivosList1 = [this.addressForm.value.motivosSolicitud[0].codigo];
+        for (let i = 1; i < this.addressForm.value.motivosSolicitud.length; i++) {
+          const motivoAux1 = motivosList1.push(this.addressForm.value.motivosSolicitud[i].codigo);
+        }
       }
+      */
       let formArrayNoTaiContratista;
-      let estadoControversiaContratista;
+      let estadoControversiaContratista = '1';
       let motivosArrayCollectedNoTaiContratista;
       if (this.estaCompleto == false) {
         estadoControversiaContratista = '1';
@@ -505,7 +564,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       if (this.isEditable == true) {
         formArrayNoTaiContratista = {
           "TipoControversiaCodigo": this.addressForm.value.tipoControversia.codigo,
-          "FechaSolicitud": this.fechaSesionString3,
+          "FechaSolicitud": this.addressForm.value.fechaRadicadoSAC,
           "NumeroSolicitud": this.numeroSolicitud,
           "SolicitudId": 0,
           "NumeroRadicadoSac": this.addressForm.value.numeroRadicadoSAC,
@@ -527,7 +586,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       else {
         formArrayNoTaiContratista = {
           "TipoControversiaCodigo": this.addressForm.value.tipoControversia.codigo,
-          "FechaSolicitud": this.fechaSesionString3,
+          "FechaSolicitud": this.addressForm.value.fechaRadicadoSAC,
           "NumeroSolicitud": "",
           "SolicitudId": 0,
           "NumeroRadicadoSac": this.addressForm.value.numeroRadicadoSAC,
@@ -552,6 +611,21 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
           });
           this.openDialog('', `<b>${this.sucessInfo}</b>`);
           if (this.isEditable == true) {
+            if (motivosDeSolicitud) {
+              this.arrayMotivosLoaded.forEach(k => {
+                motivosDeSolicitud.forEach(m => {
+                  console.log(m);
+                  let motivoGen = {
+                    ControversiaContractualId: this.idControversia,
+                    MotivoSolicitudCodigo: m.codigo,
+                    ControversiaMotivoId: k.controversiaMotivoId,
+                  }
+                  this.services.CreateEditarControversiaMotivo(motivoGen).subscribe(r => {
+                  });
+                });
+              });
+            }
+            /*
             if (this.addressForm.value.motivosSolicitud != undefined || this.addressForm.value.motivosSolicitud != null) {
               for (let i = 0; i < motivosList1.length; i++) {
                 switch (motivosList1[i]) {
@@ -602,9 +676,21 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
                 }
               }
             }
+            */
             this.router.navigate(['/gestionarTramiteControversiasContractuales']);
           }
           else {
+            if (motivosDeSolicitud) {
+              motivosDeSolicitud.forEach(m => {
+                let motivoGen = {
+                  ControversiaContractualId: resp_0.data.controversiaContractualId,
+                  MotivoSolicitudCodigo: m.codigo
+                }
+                this.services.CreateEditarControversiaMotivo(motivoGen).subscribe(r => {
+                });
+              });
+            }
+            /*
             if (this.addressForm.value.motivosSolicitud != undefined || this.addressForm.value.motivosSolicitud != null) {
               for (let i = 0; i < motivosList1.length; i++) {
                 switch (motivosList1[i]) {
@@ -651,6 +737,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
                 }
               }
             }
+            */
             this.router.navigate(['/gestionarTramiteControversiasContractuales']);
           }
         }
@@ -667,12 +754,17 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       else {
         this.estaCompleto = false;
       }
-      const motivosList2 = [this.addressForm.value.motivosSolicitud[0].codigo];
-      for (let i = 1; i < this.addressForm.value.motivosSolicitud.length; i++) {
-        const motivoAux = motivosList2.push(this.addressForm.value.motivosSolicitud[i].codigo);
+      let motivosList2;
+      /*
+      if (this.addressForm.value.motivosSolicitud != undefined || this.addressForm.value.motivosSolicitud != null) {
+        motivosList2 = [this.addressForm.value.motivosSolicitud[0].codigo];
+        for (let i = 1; i < this.addressForm.value.motivosSolicitud.length; i++) {
+          const motivoAux2 = motivosList2.push(this.addressForm.value.motivosSolicitud[i].codigo);
+        }
       }
+      */
       let formArrayNoTaiContratante;
-      let estadoControversiaContratante;
+      let estadoControversiaContratante = '1';
       let motivosArrayCollectedNoTaiContratante;
       if (this.estaCompleto == false) {
         estadoControversiaContratante = '1';
@@ -683,7 +775,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       if (this.isEditable == true) {
         formArrayNoTaiContratante = {
           "TipoControversiaCodigo": this.addressForm.value.tipoControversia.codigo,
-          "FechaSolicitud": this.fechaSesionString,
+          "FechaSolicitud": this.addressForm.value.fechaSolicitud,
           "NumeroSolicitud": this.numeroSolicitud,
           "SolicitudId": 0,
           "NumeroRadicadoSac": 0,
@@ -705,7 +797,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       else {
         formArrayNoTaiContratante = {
           "TipoControversiaCodigo": this.addressForm.value.tipoControversia.codigo,
-          "FechaSolicitud": this.fechaSesionString,
+          "FechaSolicitud": this.addressForm.value.fechaSolicitud,
           "NumeroSolicitud": "",
           "SolicitudId": 0,
           "NumeroRadicadoSac": 0,
@@ -730,6 +822,21 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
 
           });
           if (this.isEditable == true) {
+            if (motivosDeSolicitud) {
+              this.arrayMotivosLoaded.forEach(k => {
+                motivosDeSolicitud.forEach(m => {
+                  console.log(m);
+                  let motivoGen = {
+                    ControversiaContractualId: this.idControversia,
+                    MotivoSolicitudCodigo: m.codigo,
+                    ControversiaMotivoId: k.controversiaMotivoId,
+                  }
+                  this.services.CreateEditarControversiaMotivo(motivoGen).subscribe(r => {
+                  });
+                });
+              });
+            }
+            /*
             if (this.addressForm.value.motivosSolicitud != undefined || this.addressForm.value.motivosSolicitud != null) {
               for (let i = 0; i < motivosList2.length; i++) {
                 switch (motivosList2[i]) {
@@ -780,9 +887,21 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
                 }
               }
             }
+            */
             this.router.navigate(['/gestionarTramiteControversiasContractuales']);
           }
           else {
+            if (motivosDeSolicitud) {
+              motivosDeSolicitud.forEach(m => {
+                let motivoGen = {
+                  ControversiaContractualId: resp_0.data.controversiaContractualId,
+                  MotivoSolicitudCodigo: m.codigo
+                }
+                this.services.CreateEditarControversiaMotivo(motivoGen).subscribe(r => {
+                });
+              });
+            }
+            /*
             if (this.addressForm.value.motivosSolicitud != undefined || this.addressForm.value.motivosSolicitud != null) {
               for (let i = 0; i < motivosList2.length; i++) {
                 switch (motivosList2[i]) {
@@ -829,6 +948,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
                 }
               }
             }
+            */
             this.router.navigate(['/gestionarTramiteControversiasContractuales']);
           }
         }

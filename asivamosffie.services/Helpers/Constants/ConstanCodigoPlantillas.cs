@@ -71,6 +71,7 @@
         Registro_Proyectos_Acta = 61,
         Ficha_estudio_tr_contratos=62,
         Contrato_Acta_Interventoria_Construccion = 63,
-        Contrato_Acta_Obra_Construccion = 64
+        Contrato_Acta_Obra_Construccion = 64,
+        Proponentes_Proceso_Seleccion = 65
     }
 }

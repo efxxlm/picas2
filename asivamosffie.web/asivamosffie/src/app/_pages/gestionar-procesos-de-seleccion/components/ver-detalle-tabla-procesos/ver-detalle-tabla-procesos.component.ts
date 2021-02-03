@@ -61,6 +61,7 @@ export class VerDetalleTablaProcesosComponent implements OnInit{
     
     this.solicitarApertura=this.data.esCompleto 
       && (this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario &&
+        this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.AprobadaAperturaPorComiteTecnico &&
         this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaAperturaPorComiteFiduciario &&
         this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaAperturaPorComiteTecnico &&
         this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaSeleccionPorComiteFiduciario &&
@@ -70,6 +71,9 @@ export class VerDetalleTablaProcesosComponent implements OnInit{
         this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.AprobacionDeSeleccionEnTramite &&
         this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.AperturaEntramite)
         ;
+
+        console.log(this.data.estadoProcesoSeleccionCodigo)
+    
     
     this.presentarEvaluacion=
       this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario

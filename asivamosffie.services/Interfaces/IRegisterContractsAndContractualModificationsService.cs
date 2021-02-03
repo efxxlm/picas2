@@ -10,6 +10,8 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IRegisterContractsAndContractualModificationsService
     {
+        Task<List<VListaContratacionModificacionContractual>> GetListSesionComiteSolicitudV2();
+
         Task<List<SesionComiteSolicitud>> GetListSesionComiteSolicitud();
 
         Task<Contratacion> GetContratacionByContratacionId(int pContratacionId);

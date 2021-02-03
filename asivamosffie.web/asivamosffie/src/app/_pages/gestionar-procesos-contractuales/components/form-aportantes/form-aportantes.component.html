@@ -21,16 +21,21 @@
             </mat-card-title>
           </mat-card-header>
           <mat-card-content>
-            <section *ngIf="proyectoAportante.aportante.tipoAportanteId === 6" style="margin-top: .5em;">
+            <section *ngIf="proyectoAportante.aportante.tipoAportanteId === tiposAportante.ffie" style="margin-top: .5em;">
                 <p><b>Tipo de aportante</b>: {{ proyectoAportante.aportante.tipoAportanteString }}</p>
                 <p><b>Nombre del aportante</b>: {{ proyectoAportante.aportante.tipoAportanteString }}</p>
                 <p><b>Valor del aportante al proyecto</b>: {{ proyectoAportante.valorTotalAportante | currency:'COP':'symbol-narrow':'.0-0' }}</p>
             </section>
-            <section *ngIf="proyectoAportante.aportante.tipoAportanteId === 9" style="margin-top: .5em;">
+            <section *ngIf="proyectoAportante.aportante.tipoAportanteId === tiposAportante.et" style="margin-top: .5em;">
               <p><b>Tipo de aportante</b>: {{ proyectoAportante.aportante.tipoAportanteString }}</p>
-              <p><b>Nombre del aportante</b>: {{ proyectoAportante.aportante.departamento.descripcion }} / {{ proyectoAportante.aportante.municipio.descripcion }}</p>
+              <p><b>Nombre del aportante</b>: {{ proyectoAportante.aportante.departamento.descripcion }} / {{ proyectoAportante.aportante.municipio?.descripcion }}</p>
               <p><b>Valor del aportante al proyecto</b>: {{ proyectoAportante.valorTotalAportante | currency:'COP':'symbol-narrow':'.0-0' }}</p>
           </section>
+          <section *ngIf="proyectoAportante.aportante.tipoAportanteId === tiposAportante.tercero" style="margin-top: .5em;">
+            <p><b>Tipo de aportante</b>: {{ proyectoAportante.aportante.tipoAportanteString }}</p>
+            <p><b>Nombre del aportante</b>: {{ proyectoAportante.aportante.nombreAportante.nombre }}</p>
+            <p><b>Valor del aportante al proyecto</b>: {{ proyectoAportante.valorTotalAportante | currency:'COP':'symbol-narrow':'.0-0' }}</p>
+        </section>
             <section *ngFor="let fuente of proyectoAportante.aportante.fuenteFinanciacion; let j = index">
               <h3 style="margin-bottom: .2em;margin-top: 1em;"><b>Fuente {{ j+1 }}</b></h3>
               <div>

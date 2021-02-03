@@ -449,10 +449,12 @@ namespace asivamosffie.services
                     procesoSeleccionCronogramaAntiguo.Descripcion = procesoSeleccionCronograma.Descripcion;
                     procesoSeleccionCronogramaAntiguo.FechaMaxima = procesoSeleccionCronograma.FechaMaxima;
                     procesoSeleccionCronogramaAntiguo.EstadoActividadCodigo = procesoSeleccionCronograma.EstadoActividadCodigo;
+                    procesoSeleccionCronogramaAntiguo.EtapaActualProcesoCodigo = procesoSeleccionCronograma.EtapaActualProcesoCodigo;
                     //procesoSeleccionCronogramaAntiguo.FechaCreacion = procesoSeleccionCronograma.FechaCreacion;
                     //procesoSeleccionCronogramaAntiguo.UsuarioCreacion = "forozco"; ////HttpContext.User.FindFirst("User").Value
                     procesoSeleccionCronogramaAntiguo.Eliminado = false;
                     procesoSeleccionCronogramaAntiguo.FechaModificacion = DateTime.Now;
+
 
                     _context.ProcesoSeleccionCronograma.Update(procesoSeleccionCronogramaAntiguo);
                 }
@@ -993,6 +995,12 @@ namespace asivamosffie.services
                     _context.Contratista.Add(contratista);
 
                 });
+
+                var procesosel = _context.ProcesoSeleccion.Where(x=>x.NumeroProceso==pProcesoSeleccion.NumeroProceso).FirstOrDefault();
+                procesosel.CantidadProponentes = pProcesoSeleccion.CantidadProponentes;
+                procesosel.UrlSoporteProponentesSeleccionados = pProcesoSeleccion.UrlSoporteProponentesSeleccionados;
+                _context.ProcesoSeleccion.Update(procesosel);
+
 
                 await _context.SaveChangesAsync();
 

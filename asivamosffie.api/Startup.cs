@@ -123,6 +123,7 @@ namespace asivamosffie.api
               => options.UseSqlServer(Configuration.GetConnectionString("asivamosffieDatabase")));
 
             //Agregar Interfaces y clases
+            services.AddTransient<IRegisterFinalReportService, RegisterFinalReportService>();
             services.AddTransient<IValidateWeeklyProgressService, ValidateWeeklyProgressService>();
             services.AddTransient<ICheckWeeklyProgressService, CheckWeeklyProgressService>();
             services.AddTransient<IRegisterWeeklyProgressService, RegisterWeeklyProgressService>();
@@ -159,7 +160,6 @@ namespace asivamosffie.api
             services.AddTransient<IRegisterContractsAndContractualModificationsService, RegisterContractsAndContractualModificationsService>();
             services.AddTransient<IManagePreContructionActPhase1Service, ManagePreContructionActPhase1Service>(); 
             services.AddTransient<IVerifyPreConstructionRequirementsPhase1Service, VerifyPreConstructionRequirementsPhase1Service>();
-            services.AddTransient<IContractualControversy, ContractualControversyService>();
             services.AddTransient<IJudicialDefense, JudicialDefenseService>();
             services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>(); 
             services.AddTransient<IManageContractualProcessesService, ManageContractualProcessesService>();

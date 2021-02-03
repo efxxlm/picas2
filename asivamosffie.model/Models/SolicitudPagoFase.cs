@@ -7,7 +7,7 @@ namespace asivamosffie.model.Models
     {
         public SolicitudPagoFase()
         {
-            SolicitudPagoAmortizacion = new HashSet<SolicitudPagoAmortizacion>();
+            SolicitudPagoFaseAmortizacion = new HashSet<SolicitudPagoFaseAmortizacion>();
             SolicitudPagoFaseCriterio = new HashSet<SolicitudPagoFaseCriterio>();
             SolicitudPagoFaseFactura = new HashSet<SolicitudPagoFaseFactura>();
         }
@@ -21,9 +21,10 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public bool? Eliminado { get; set; }
         public bool? RegistroCompleto { get; set; }
+        public bool? RegistroCompletoCriterio { get; set; }
 
         public virtual SolicitudPagoRegistrarSolicitudPago SolicitudPagoRegistrarSolicitudPago { get; set; }
-        public virtual ICollection<SolicitudPagoAmortizacion> SolicitudPagoAmortizacion { get; set; }
+        public virtual ICollection<SolicitudPagoFaseAmortizacion> SolicitudPagoFaseAmortizacion { get; set; }
         public virtual ICollection<SolicitudPagoFaseCriterio> SolicitudPagoFaseCriterio { get; set; }
         public virtual ICollection<SolicitudPagoFaseFactura> SolicitudPagoFaseFactura { get; set; }
     }

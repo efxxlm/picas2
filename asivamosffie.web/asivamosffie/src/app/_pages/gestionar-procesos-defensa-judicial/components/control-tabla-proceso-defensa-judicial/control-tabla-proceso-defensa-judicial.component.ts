@@ -26,6 +26,9 @@ export class ControlTablaProcesoDefensaJudicialComponent implements OnInit {
     this.defensaServices.GetListGrillaProcesosDefensaJudicial().subscribe(
       response=>{
         console.log(response);
+        /*response.forEach(element => {
+          element.fechaRegistro=new Date(element.fechaRegistro);
+        });*/
         this.dataSource = new MatTableDataSource(response);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;

@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Z.EntityFramework.Plus;
+using asivamosffie.services.Helpers;
 
 namespace asivamosffie.services
 {
@@ -808,6 +809,8 @@ namespace asivamosffie.services
 
             foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario)
             {
+                SesionComiteSolicitud.RegistroCompletoActa = ValidarRegistroCompletoSesionComiteSolicitudActa(SesionComiteSolicitud);
+
                 SesionComiteSolicitud.SesionSolicitudVoto = SesionComiteSolicitud.SesionSolicitudVoto.Where(r => !(bool)r.Eliminado).ToList();
                 SesionComiteSolicitud.SesionSolicitudCompromiso = _context.SesionSolicitudCompromiso
                                                                             .Where(r => r.SesionComiteSolicitudId == SesionComiteSolicitud.SesionComiteSolicitudId &&
@@ -1488,7 +1491,10 @@ namespace asivamosffie.services
 
             Plantilla Plantilla = _context.Plantilla.Where(r => r.Codigo == TipoPlantilla).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
             Plantilla.Contenido = ReemplazarDatosPlantillaContratacion(Plantilla.Contenido, contratacion);
-            return ConvertirPDF(Plantilla);
+            //return ConvertirPDF(Plantilla);
+            PDF pdf = new PDF(_context, _converter);
+
+            return PDF.Convertir(Plantilla);
 
         }
 
@@ -1519,6 +1525,10 @@ namespace asivamosffie.services
             string TipoPlantillaProcesoSeleccionAbierta = ((int)ConstanCodigoPlantillas.Proceso_de_seleccion_Abierta).ToString();
             string ProcesoSeleccionAbierta = _context.Plantilla.Where(r => r.Codigo == TipoPlantillaProcesoSeleccionAbierta).Select(r => r.Contenido).FirstOrDefault();
             string ProcesosSeleccionAbierta = " ";
+
+            string TipoPlantillaProponentes = ((int)ConstanCodigoPlantillas.Proponentes_Proceso_Seleccion).ToString();
+            string ProponenteProcesoSeleccion = _context.Plantilla.Where(r => r.Codigo == TipoPlantillaProponentes).Select(r => r.Contenido).FirstOrDefault();
+            string ProponentesProcesosSeleccion = " ";
 
             List<Dominio> ListaParametricas = _context.Dominio.ToList();
 
@@ -1671,20 +1681,29 @@ namespace asivamosffie.services
 
                             case ConstanCodigoVariablesPlaceHolders.NOMBRE_ORGANIZACION_CERRADA_PS:
 
-                                pProcesoSeleccion.ProcesoSeleccionCotizacion.ToList().ForEach( c => {
-                                    ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
-                                  Replace(placeholderDominio.Nombre, c.NombreOrganizacion);                
+                                string proponentes = "";
+
+                                pProcesoSeleccion.ProcesoSeleccionCotizacion.ToList().ForEach(c =>
+                                {
+                                    proponentes = proponentes + ProponenteProcesoSeleccion;
+                                    proponentes = proponentes.Replace(placeholderDominio.Nombre, c.NombreOrganizacion)
+                                    .Replace("[VALOR_CONTIZACION_CERRADA_PS]", "$" + String.Format("{0:n0}", c.ValorCotizacion));
+
+
                                 });
 
-                                break; 
+                                ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
+                                  Replace("[PROPONENTES]", proponentes);
 
-                            case ConstanCodigoVariablesPlaceHolders.VALOR_CONTIZACION_CERRADA_PS:
-                                pProcesoSeleccion.ProcesoSeleccionCotizacion.ToList().ForEach( c => {
-                                    ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
-                                  Replace(placeholderDominio.Nombre,"$" + String.Format("{0:n0}", c.ValorCotizacion) );                
-                                });
+                                break;
 
-                               break;
+                            //case ConstanCodigoVariablesPlaceHolders.VALOR_CONTIZACION_CERRADA_PS:
+                            //    pProcesoSeleccion.ProcesoSeleccionCotizacion.ToList().ForEach( c => {
+                            //        ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
+                            //      Replace(placeholderDominio.Nombre,"$" + String.Format("{0:n0}", c.ValorCotizacion) );                
+                            //    });
+
+                            //   break;
 
 
                             case ConstanCodigoVariablesPlaceHolders.EVALUACION_DESCRIPCION_CERRADA_PS:
@@ -1856,7 +1875,8 @@ namespace asivamosffie.services
 
             Plantilla Plantilla = _context.Plantilla.Where(r => r.Codigo == TipoPlantilla).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
             Plantilla.Contenido = ReemplazarDatosPlantillaProcesosSeleccion(Plantilla.Contenido, procesoSeleccion);
-            return ConvertirPDF(Plantilla);
+            //return ConvertirPDF(Plantilla);
+            return PDF.Convertir(Plantilla);
 
         }
 
@@ -2329,7 +2349,7 @@ namespace asivamosffie.services
             try
             {
                 SesionComiteSolicitud sesionComiteSolicitudOld = _context.SesionComiteSolicitud.Find(pSesionComiteSolicitud.SesionComiteSolicitudId);
-                sesionComiteSolicitudOld.EstadoCodigo = pSesionComiteSolicitud.EstadoCodigo;
+                //sesionComiteSolicitudOld.EstadoCodigo = pSesionComiteSolicitud.EstadoCodigo;
                 sesionComiteSolicitudOld.RequiereVotacionFiduciario = true;
                 sesionComiteSolicitudOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
                 sesionComiteSolicitudOld.FechaModificacion = DateTime.Now;
@@ -2843,7 +2863,7 @@ namespace asivamosffie.services
                 SesionComiteTema sesionComiteTemaOld = _context.SesionComiteTema.Find(pSesionComiteTema.SesionTemaId);
                 string CrearEditar = "";
                 sesionComiteTemaOld.RequiereVotacion = true;
-                sesionComiteTemaOld.EstadoTemaCodigo = pSesionComiteTema.EstadoTemaCodigo;
+                //sesionComiteTemaOld.EstadoTemaCodigo = pSesionComiteTema.EstadoTemaCodigo;
                 sesionComiteTemaOld.EsAprobado = (pSesionComiteTema.EstadoTemaCodigo == "1") ? true : false;
                 sesionComiteTemaOld.UsuarioModificacion = pSesionComiteTema.UsuarioCreacion;
                 sesionComiteTemaOld.FechaModificacion = DateTime.Now;
@@ -3021,12 +3041,31 @@ namespace asivamosffie.services
                sesionComiteSolicitud.GeneraCompromisoFiduciario == null ||
                sesionComiteSolicitud.RequiereVotacionFiduciario == null ||
                sesionComiteSolicitud.EstadoCodigo == null ||
-               string.IsNullOrEmpty(sesionComiteSolicitud.ObservacionesFiduciario)
+               string.IsNullOrEmpty(sesionComiteSolicitud.ObservacionesFiduciario) ||
+               string.IsNullOrEmpty(sesionComiteSolicitud.DesarrolloSolicitudFiduciario)
                 )
             {
                 return false;
             }
             return true;
+        }
+
+        private bool? ValidarRegistroCompletoSesionComiteSolicitudActa(SesionComiteSolicitud sesionComiteSolicitud)
+        {
+            if (
+                (sesionComiteSolicitud.RequiereVotacionFiduciario == true && string.IsNullOrEmpty(sesionComiteSolicitud.RutaSoporteVotacionFiduciario)) &&
+               sesionComiteSolicitud.GeneraCompromisoFiduciario == null &&
+               sesionComiteSolicitud.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_tecnico &&
+               string.IsNullOrEmpty(sesionComiteSolicitud.ObservacionesFiduciario) &&
+               string.IsNullOrEmpty(sesionComiteSolicitud.DesarrolloSolicitudFiduciario)
+                )
+            {
+                return null;
+            }
+            else
+            {
+                return ValidarRegistroCompletoSesionComiteSolicitud(sesionComiteSolicitud);
+            }
         }
 
         private bool ValidarRegistroCompletoSesionComiteTema(SesionComiteTema sesionComiteTemaOld)
@@ -3130,6 +3169,9 @@ namespace asivamosffie.services
                 List<int> ListContratacionId = pComiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion).Select(r => r.SolicitudId).ToList();
 
                 List<Contratacion> ListContratacion = new List<Contratacion>();
+                List<ProcesoSeleccion> ListProcesoSeleccion = new List<ProcesoSeleccion>();
+
+                #region consulta Contratacion
 
                 foreach (var ContratacionId in ListContratacionId)
                 {
@@ -3142,16 +3184,24 @@ namespace asivamosffie.services
                     ListContratacion.Add(contratacion);
                 }
 
-                List<ProcesoSeleccion> ListProcesoSeleccion = new List<ProcesoSeleccion>();
+                #endregion consulta Contratacion
+
+                #region consulta Proceso Seleccion
 
                 foreach (var idProcesoSeleccion in ListProcesoSeleccionIdSolicitudId)
                 {
                     ListProcesoSeleccion.Add(_context.ProcesoSeleccion.Find(idProcesoSeleccion));
                 }
+
+                #endregion consulta Proceso Seleccion
+
+                #region Listas
+
                 List<Localizacion> localizacions = _context.Localizacion.ToList();
                 List<Dominio> ListParametricas = _context.Dominio.Where(r => r.TipoDominioId != (int)EnumeratorTipoDominio.PlaceHolder).ToList();
                 List<Dominio> placeholders = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.PlaceHolder).ToList();
                 List<InstitucionEducativaSede> ListIntitucionEducativa = _context.InstitucionEducativaSede.ToList();
+
                 List<SesionParticipante> ListSesionParticipante = _context.SesionParticipante
                     .Where(r => r.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId)
                     .Include(r => r.Usuario)
@@ -3159,7 +3209,10 @@ namespace asivamosffie.services
 
                 List<SesionInvitado> ListInvitados = _context.SesionInvitado
                     .Where(r => r.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId).ToList();
-                //Tablas Dinamicas
+
+                #endregion Listas
+
+                #region plantillas
 
                 //Plantilla orden dia
                 string PlantillaSolicitudesContractuales = _context.Plantilla
@@ -3242,10 +3295,13 @@ namespace asivamosffie.services
                     .ToString()).FirstOrDefault()
                  .Contenido;
 
+                #endregion plantillas
+
                 string RegistrosFirmas = string.Empty;
 
                 string registrosProcesosSelecccion = string.Empty;
 
+                #region Orden del dia 
                 //Orden del dia 
 
                 if (pComiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario.Count() == 0)
@@ -3337,6 +3393,9 @@ namespace asivamosffie.services
                     PlantillaSolicitudesContractuales = PlantillaSolicitudesContractuales.Replace("[REGISTROS_SOLICITUDES_CONTRACTUALES]", RegistrosSolicitudesContractuales);
                 }
 
+                #endregion Orden del dia 
+
+                #region Tabla Invitados
                 //Tabla Invitados
                 foreach (var invitado in ListInvitados.Where(r => !(bool)r.Eliminado).ToList())
                 {
@@ -3362,6 +3421,11 @@ namespace asivamosffie.services
                         }
                     }
                 }
+
+                #endregion Tabla Invitados
+
+                #region Logica Orden Del Dia
+
                 //Logica Orden Del Dia
                 int enumOrdenDelDia = 1;
                 foreach (var SesionComiteSolicitud in pComiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario)
@@ -3688,7 +3752,7 @@ namespace asivamosffie.services
                                         {
                                             TextoResultadoVotacion = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Votacion_Unanime).ToString()).FirstOrDefault().Nombre;
                                         }
-                                        registrosProcesosSelecccion = registrosContratacion
+                                        registrosProcesosSelecccion = registrosProcesosSelecccion
                                         .Replace(placeholderDominio.Nombre, TextoResultadoVotacion);
                                         break;
 
@@ -3735,6 +3799,10 @@ namespace asivamosffie.services
                     }
 
                 }
+
+                #endregion Logica Orden Del Dia
+
+                #region Nuevos Temas
 
                 //Nuevos Temas
                 int EnumTema = 1;
@@ -3837,6 +3905,10 @@ namespace asivamosffie.services
                     }
                 }
 
+                #endregion Nuevos Temas
+
+                #region Temas para ordel del dia
+
                 //Temas para ordel del dia
                 int enumTemaOrdelDia = 1;
                 foreach (var Tema in pComiteTecnico.SesionComiteTema.Where(r => r.EsProposicionesVarios == null).ToList())
@@ -3882,6 +3954,10 @@ namespace asivamosffie.services
                     }
                 }
 
+                #endregion Temas para ordel del dia
+
+                #region Proposiciones y varios para ordel del dia
+
                 //Proposiciones y varios para ordel del dia
                 int enumPropisicionesVarios = 1;
                 foreach (var Tema in pComiteTecnico.SesionComiteTema.Where(r => r.EsProposicionesVarios != null).ToList())
@@ -3926,6 +4002,10 @@ namespace asivamosffie.services
                         }
                     }
                 }
+
+                #endregion Proposiciones y varios para ordel del dia
+
+                #region Proposiciones y varios
 
                 //Proposiciones y varios
                 int EnumProposiciones = 1;
@@ -4031,6 +4111,10 @@ namespace asivamosffie.services
                     }
                 }
 
+                #endregion Proposiciones y varios
+
+                #region Firmas
+
                 //Firmas 
                 int enumFirmar = 1;
                 foreach (var SesionParticipante in ListSesionParticipante)
@@ -4063,6 +4147,10 @@ namespace asivamosffie.services
 
                     }
                 }
+
+                #endregion Firmas
+
+                #region Anexos 
 
                 //Anexos
                 string Anexos = string.Empty;
@@ -4102,6 +4190,10 @@ namespace asivamosffie.services
                 }
                 //Suma de las fichas 
                 RegistrosFichaContratacion += RegistrosFichaProcesosSeleccion;
+
+                #endregion Anexos
+
+                #region Plantilla Principal 
 
                 //Plantilla Principal 
                 foreach (Dominio placeholderDominio in placeholders)
@@ -4215,6 +4307,8 @@ namespace asivamosffie.services
                             break;
                     }
                 }
+
+                #endregion Plantilla Principal 
 
                 return strContenido;
             }

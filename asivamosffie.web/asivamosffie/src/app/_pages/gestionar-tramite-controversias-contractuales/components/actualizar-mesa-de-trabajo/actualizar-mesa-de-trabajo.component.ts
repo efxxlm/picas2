@@ -27,6 +27,7 @@ export class ActualizarMesaDeTrabajoComponent implements OnInit {
   numPoliza: any;
   numRadicacionAseguradora: any;
   fechaRadicacion: any;
+  public nomMesaTrabajo = localStorage.getItem("nomMesaTrabajo");
   constructor(private activatedRoute: ActivatedRoute, private services: ContractualControversyService, private polService: PolizaGarantiaService) { }
 
   ngOnInit(): void {

@@ -42,7 +42,9 @@ export class ControlYTablaMesasTrabajoCcComponent implements OnInit {
   registrarNuevaMesa(id){
     this.router.navigate(['/gestionarTramiteControversiasContractuales/registrarNuevaMesaTrabajo',id]);
   }
-  verDetalleEditar(id){
+  verDetalleEditar(id,codeMT,idMesa){
+    localStorage.setItem("idMesa",idMesa);
+    localStorage.setItem("nomMesaTrabajo",codeMT);
     this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarMesaTrabajo',id]);
   }
   finalizarMesaTrabajo(id){
@@ -50,11 +52,15 @@ export class ControlYTablaMesasTrabajoCcComponent implements OnInit {
       this.ngOnInit();
     });
   }
-  verDetalleMesaTrabajo(id){
+  verDetalleMesaTrabajo(id,codeMT,idMesa){
+    localStorage.setItem("idMesa",idMesa);
+    localStorage.setItem("nomMesaTrabajo",codeMT);
     this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleMesaTrabajo',id]);
   }
-  actualizarMesaTrabajo(id){
+  actualizarMesaTrabajo(id,codeMT,idMesa){
     localStorage.setItem("idMesaTrabajo",id);
+    localStorage.setItem("nomMesaTrabajo",codeMT);
+    localStorage.setItem("idMesa",idMesa);
     this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarMesaTrabajo']);
   } 
 }

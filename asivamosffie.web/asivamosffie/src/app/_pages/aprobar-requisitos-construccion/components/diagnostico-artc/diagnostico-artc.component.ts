@@ -44,6 +44,7 @@ export class DiagnosticoArtcComponent implements OnInit {
     'fechaRevision',
     'observacionesSupervision'
   ];
+  estaEditando = false;
 
   constructor(
     private dialog: MatDialog,
@@ -117,7 +118,7 @@ export class DiagnosticoArtcComponent implements OnInit {
   }
 
   guardarDiagnostico() {
-
+    this.estaEditando = true;
     const construccion = {
       contratoConstruccionId: this.contratoConstruccionId,
       tieneObservacionesDiagnosticoSupervisor: this.addressForm.value.tieneObservaciones,
@@ -133,18 +134,18 @@ export class DiagnosticoArtcComponent implements OnInit {
       ]
     };
 
-    console.log(construccion);
+    // console.log(construccion);
 
     if (  this.addressForm.value.tieneObservaciones === false
           && this.totalGuardados === 0
           && this.construccion.tieneObservacionesDiagnosticoApoyo === true ) {
       this.openDialog( '', '<b>Le recomendamos verificar su respuesta; tenga en cuenta que el apoyo a la supervisión si tuvo observaciones.</b>' );
       this.totalGuardados++;
-      console.log( 'condicion 1' );
+      // console.log( 'condicion 1' );
       return;
     }
     if ( this.totalGuardados === 1 || this.addressForm.value.tieneObservaciones !== null ) {
-      console.log( 'condicion 2' );
+      // console.log( 'condicion 2' );
       this.faseDosAprobarConstruccionSvc.createEditObservacionDiagnosticoSupervisor( construccion )
         .subscribe(
           response => {

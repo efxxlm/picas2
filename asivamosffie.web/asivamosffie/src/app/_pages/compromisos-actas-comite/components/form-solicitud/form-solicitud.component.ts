@@ -30,6 +30,13 @@ export class FormSolicitudComponent implements OnInit {
     }
   ];
   tipoSolicitud: any[] = [];
+  tipoSolicitudCodigo = {
+    procesoSeleccion: '1',
+    contratacion: '2',
+    modificacionContractual: '3',
+    controversiaContractual: '4',
+    defensaJudicial: '5'
+  }
 
   get compromisos() {
     return this.addressForm.get('compromisos') as FormArray;

@@ -70,10 +70,11 @@ export class TablaProcesosComponent implements OnInit {
         
         )
           {
-            //si cerrada debe tener contratista
+            //si cerrada debe tener contratista y evaluacion
             if( proceso.tipoProcesoCodigo==TiposProcesoSeleccion.Cerrada)
             {
-              if(proceso.listaContratistas?.length>0)
+              if(proceso.listaContratistas?.length>0 && proceso.urlSoporteProponentesSeleccionados!=null &&
+                proceso.evaluacionDescripcion!=null && proceso.urlSoporteEvaluacion!=null)
               {
                 proceso.esCompleto=true;                
               }              
