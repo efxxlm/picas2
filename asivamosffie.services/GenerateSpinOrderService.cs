@@ -22,6 +22,7 @@ namespace asivamosffie.services
         private readonly ICommonService _commonService;
         private readonly IDocumentService _documentService;
         private readonly IRegisterValidatePaymentRequierementsService _registerValidatePayment;
+
         public GenerateSpinOrderService(IDocumentService documentService, IRegisterValidatePaymentRequierementsService registerValidatePaymentRequierementsService, devAsiVamosFFIEContext context, ICommonService commonService)
         {
             _documentService = documentService;
@@ -92,13 +93,13 @@ namespace asivamosffie.services
             {
                 if (SolicitudPago.ContratoId > 0)
                 {
-                    SolicitudPago.ContratoSon = await _registerValidatePayment.GetContratoByContratoId((int)SolicitudPago.ContratoId, 0); 
+                    SolicitudPago.ContratoSon = await _registerValidatePayment.GetContratoByContratoId((int)SolicitudPago.ContratoId, 0);
                     SolicitudPago.ContratoSon.ListProyectos = await _registerValidatePayment.GetProyectosByIdContrato((int)SolicitudPago.ContratoId);
                 }
                 if (SolicitudPago.OrdenGiroId != null)
                 {
                     SolicitudPago.OrdenGiro = _context.OrdenGiro.Where(o => o.OrdenGiroId == SolicitudPago.OrdenGiroId)
-                        .Include(t => t.OrdenGiroTercero).ThenInclude(o=> o.OrdenGiroTerceroChequeGerencia)
+                        .Include(t => t.OrdenGiroTercero).ThenInclude(o => o.OrdenGiroTerceroChequeGerencia)
                         .Include(t => t.OrdenGiroTercero).ThenInclude(o => o.OrdenGiroTerceroTransferenciaElectronica)
                         .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleEstrategiaPago)
                         .Include(d => d.SolicitudPago).FirstOrDefault();
@@ -140,6 +141,7 @@ namespace asivamosffie.services
                 }
 
                 CreateEditOrdenGiroTercero(pOrdenGiro.OrdenGiroTercero, pOrdenGiro.UsuarioCreacion);
+                CreateEditOrdenGiroDetalle(pOrdenGiro.OrdenGiroDetalle, pOrdenGiro.UsuarioCreacion);
 
                 return
                      new Respuesta
@@ -163,6 +165,70 @@ namespace asivamosffie.services
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Orden_de_giro, GeneralCodes.Error, idAccion, "", ex.InnerException.ToString())
                     };
             }
+        }
+
+        private async void CreateEditOrdenGiroDetalle(OrdenGiroDetalle pOrdenGiroDetalle, string pUsuarioCreacion)
+        {
+            if (pOrdenGiroDetalle.OrdenGiroDetalleId == 0)
+            {
+                pOrdenGiroDetalle.UsuarioCreacion = pUsuarioCreacion;
+                pOrdenGiroDetalle.FechaCreacion = DateTime.Now;
+                pOrdenGiroDetalle.Eliminado = false;
+                pOrdenGiroDetalle.RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalle(pOrdenGiroDetalle);
+
+                _context.OrdenGiroDetalle.Add(pOrdenGiroDetalle);
+            }
+            else
+            {
+                await _context.Set<OrdenGiroDetalle>()
+                                                    .Where(o => o.OrdenGiroDetalleId == pOrdenGiroDetalle.OrdenGiroDetalleId)
+                                                                                                                            .UpdateAsync(r => new OrdenGiroDetalle()
+                                                                                                                            {
+                                                                                                                                FechaModificacion = DateTime.Now,
+                                                                                                                                UsuarioModificacion = pUsuarioCreacion,
+                                                                                                                                RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalle(pOrdenGiroDetalle)
+                                                                                                                            });
+            }
+
+            CreateEditOrdenGiroDetalleEstrategiaPago(pOrdenGiroDetalle.OrdenGiroDetalleEstrategiaPago, pUsuarioCreacion);
+
+        }
+
+        private async void CreateEditOrdenGiroDetalleEstrategiaPago(OrdenGiroDetalleEstrategiaPago pOrdenGiroDetalleEstrategiaPago, string pUsuarioCreacion)
+        {
+            if (pOrdenGiroDetalleEstrategiaPago.OrdenGiroDetalleEstrategiaPagoId == 0)
+            {
+                pOrdenGiroDetalleEstrategiaPago.UsuarioCreacion = pUsuarioCreacion;
+                pOrdenGiroDetalleEstrategiaPago.FechaCreacion = DateTime.Now;
+                pOrdenGiroDetalleEstrategiaPago.Eliminado = false;
+                pOrdenGiroDetalleEstrategiaPago.RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleEstrategiaPago(pOrdenGiroDetalleEstrategiaPago);
+
+                _context.OrdenGiroDetalleEstrategiaPago.Add(pOrdenGiroDetalleEstrategiaPago);
+            }
+            else
+            {
+                await _context.Set<OrdenGiroDetalleEstrategiaPago>()
+                                                    .Where(o => o.OrdenGiroDetalleEstrategiaPagoId == pOrdenGiroDetalleEstrategiaPago.OrdenGiroDetalleEstrategiaPagoId)
+                                                                                                                            .UpdateAsync(r => new OrdenGiroDetalleEstrategiaPago()
+                                                                                                                            {
+                                                                                                                                FechaModificacion = DateTime.Now,
+                                                                                                                                UsuarioModificacion = pUsuarioCreacion,
+                                                                                                                                RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleEstrategiaPago(pOrdenGiroDetalleEstrategiaPago),
+
+                                                                                                                                EstrategiaPagoCodigo = pOrdenGiroDetalleEstrategiaPago.EstrategiaPagoCodigo 
+                                                                                                                            });
+            }
+
+        }
+
+        private bool? ValidarRegistroCompletoOrdenGiroDetalleEstrategiaPago(OrdenGiroDetalleEstrategiaPago pOrdenGiroDetalleEstrategiaPago)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool ValidarRegistroCompletoOrdenGiroDetalle(OrdenGiroDetalle pOrdenGiroDetalle)
+        {
+            return false;
         }
 
         private async void CreateEditOrdenGiroTercero(OrdenGiroTercero pOrdenGiroTercero, string pUsuarioCreacion)
@@ -232,7 +298,7 @@ namespace asivamosffie.services
                 pOrdenGiroTerceroTransferenciaElectronica.FechaCreacion = DateTime.Now;
                 pOrdenGiroTerceroTransferenciaElectronica.Eliminado = false;
                 pOrdenGiroTerceroTransferenciaElectronica.RegistroCompleto = ValidarRegistroCompletoOrdenGiroTerceroTransferenciaElectronica(pOrdenGiroTerceroTransferenciaElectronica);
-              
+
                 _context.OrdenGiroTerceroTransferenciaElectronica.Add(pOrdenGiroTerceroTransferenciaElectronica);
             }
             else
@@ -246,11 +312,11 @@ namespace asivamosffie.services
                                                                                                                 RegistroCompleto = ValidarRegistroCompletoOrdenGiroTerceroTransferenciaElectronica(pOrdenGiroTerceroTransferenciaElectronica),
 
                                                                                                                 TitularCuenta = pOrdenGiroTerceroTransferenciaElectronica.TitularCuenta,
-                                                                                                                TitularNumeroIdentificacion = pOrdenGiroTerceroTransferenciaElectronica.TitularNumeroIdentificacion, 
+                                                                                                                TitularNumeroIdentificacion = pOrdenGiroTerceroTransferenciaElectronica.TitularNumeroIdentificacion,
                                                                                                                 NumeroCuenta = pOrdenGiroTerceroTransferenciaElectronica.NumeroCuenta,
                                                                                                                 BancoCodigo = pOrdenGiroTerceroTransferenciaElectronica.BancoCodigo,
-                                                                                                                EsCuentaAhorros = pOrdenGiroTerceroTransferenciaElectronica.EsCuentaAhorros, 
-                                                                                                            }); 
+                                                                                                                EsCuentaAhorros = pOrdenGiroTerceroTransferenciaElectronica.EsCuentaAhorros,
+                                                                                                            });
             }
         }
 
@@ -263,7 +329,7 @@ namespace asivamosffie.services
         {
             return false;
         }
-  
+
         private bool ValidarRegistroCompletoOrdenGiroTercero(OrdenGiroTercero pOrdenGiroTercero)
         {
             return false;
