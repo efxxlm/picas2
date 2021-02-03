@@ -295,6 +295,10 @@ listaEstadoRevision(){
     // Lista de medios de pago CU Generar orden de giro.
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=158`);
   }
+  listaEstrategiasPago() {
+    // Lista estrategias de pago CU orden de giro
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=159`);
+  }
 
   public listaUsuarios(){
 
