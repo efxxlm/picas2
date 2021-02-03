@@ -150,8 +150,8 @@ namespace asivamosffie.services
                                                                                                             RegistroCompleto = ValidarRegistroCompletoOrdenGiro(pOrdenGiro)
                                                                                                         });
                 }
-
-                CreateEditOrdenGiroTercero(pOrdenGiro.OrdenGiroTercero, pOrdenGiro.UsuarioCreacion);
+                if (pOrdenGiro.OrdenGiroTercero != null)
+                    CreateEditOrdenGiroTercero(pOrdenGiro.OrdenGiroTercero, pOrdenGiro.UsuarioCreacion);
                 CreateEditOrdenGiroDetalle(pOrdenGiro.OrdenGiroDetalle, pOrdenGiro.UsuarioCreacion);
 
                 return
@@ -200,10 +200,11 @@ namespace asivamosffie.services
                                                                                                                                 RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalle(pOrdenGiroDetalle)
                                                                                                                             });
             }
+            if (pOrdenGiroDetalle.OrdenGiroDetalleEstrategiaPago != null)
+                CreateEditOrdenGiroDetalleEstrategiaPago(pOrdenGiroDetalle.OrdenGiroDetalleEstrategiaPago, pUsuarioCreacion);
 
-            CreateEditOrdenGiroDetalleEstrategiaPago(pOrdenGiroDetalle.OrdenGiroDetalleEstrategiaPago, pUsuarioCreacion);
-
-            CreateEditOrdenGiroDetalleDescuentoTecnica(pOrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica, pUsuarioCreacion);
+            if (pOrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica != null)
+                CreateEditOrdenGiroDetalleDescuentoTecnica(pOrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica, pUsuarioCreacion);
         }
 
         private async void CreateEditOrdenGiroDetalleDescuentoTecnica(OrdenGiroDetalleDescuentoTecnica pOrdenGiroDetalleDescuentoTecnica, string pUsuarioCreacion)
