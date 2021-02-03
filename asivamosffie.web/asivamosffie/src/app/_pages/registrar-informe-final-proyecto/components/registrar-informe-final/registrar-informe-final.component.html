@@ -10,9 +10,15 @@
       <b *ngIf="report"> {{ report.proyecto.llaveMen }} </b>
     </h1>
     <p class="colorMainColor mt-05em"> 
-      Fecha de terminación del proyecto
+      Fecha de terminación del proyecto obra
       <b *ngIf="report">
-        {{ report.proyecto.contratacionProyecto[0].contratacion.contrato[0].fechaTerminacion  | date:'dd/MM/yyyy' }}
+        {{ report.fechaTerminacionObra  | date:'dd/MM/yyyy' }}
+      </b>
+    </p>
+    <p class="colorMainColor mt-05em"> 
+      Fecha de terminación del proyecto interventoría
+      <b *ngIf="report">
+        {{ report.fechaTerminacionInterventoria  | date:'dd/MM/yyyy' }}
       </b>
     </p>
   </div>

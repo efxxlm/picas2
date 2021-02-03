@@ -26,12 +26,15 @@ namespace asivamosffie.services
 
         public async Task<List<VProyectosCierre>> gridRegisterFinalReport()
         {
-            return await _context.VProyectosCierre.OrderByDescending(r => r.FechaTerminacionProyecto).ToListAsync();
+            return await _context.VProyectosCierre.OrderByDescending(r => r.ProyectoId).ToListAsync();
         }
 
-        public async Task<List<dynamic>> GetInformeFinalByProyectoId(int pProyectoId)
+            public async Task<List<dynamic>> GetInformeFinalByProyectoId(int pProyectoId)
         {
             String numeroContratoObra = "", nombreContratistaObra = "", numeroContratoInterventoria = "", nombreContratistaInterventoria = "";
+            String  fechaTerminacionInterventoria = "";
+            String fechaTerminacionObra = "";
+
             List<dynamic> ProyectoAjustado = new List<dynamic>();
             List<Dominio> TipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).ToList();
             List<InstitucionEducativaSede> ListInstitucionEducativaSede = _context.InstitucionEducativaSede.ToList();
@@ -75,16 +78,22 @@ namespace asivamosffie.services
             {
                 Contrato contrato = await _context.Contrato.Where(r => r.ContratacionId == item.ContratacionId).FirstOrDefaultAsync();
                 Contratacion contratacion = await _context.Contratacion.Where(r => r.ContratacionId == item.ContratacionId).FirstOrDefaultAsync();
-
-                if (contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra) {
-
-                    nombreContratistaObra = contratacion.Contratista.Nombre;
-                    numeroContratoObra = contrato.NumeroContrato;
-
-                }else if (contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria)
+                if (contrato != null)
                 {
-                    nombreContratistaInterventoria = contratacion.Contratista.Nombre;
-                    numeroContratoInterventoria = contrato.NumeroContrato;
+                    if (contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra)
+                    {
+
+                        nombreContratistaObra = contratacion.Contratista != null ? contratacion.Contratista.Nombre : "";
+                        numeroContratoObra = contrato.NumeroContrato != null ? contrato.NumeroContrato : "";
+                        fechaTerminacionObra = contrato.FechaTerminacionFase2 != null ? Convert.ToDateTime(contrato.FechaTerminacionFase2).ToString("yyyy-MM-dd") : "";
+                    }
+                    else if (contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria)
+                    {
+                        nombreContratistaInterventoria = contratacion.Contratista != null ? contratacion.Contratista.Nombre : "";
+                        numeroContratoInterventoria = contrato.NumeroContrato != null ? contrato.NumeroContrato : "";
+                        fechaTerminacionInterventoria = contrato.FechaTerminacionFase2 != null ? Convert.ToDateTime(contrato.FechaTerminacionFase2).ToString("yyyy-MM-dd") : "";
+
+                    }
                 }
             }
             ProyectoAjustado.Add(new
@@ -93,7 +102,9 @@ namespace asivamosffie.services
                 numeroContratoObra = numeroContratoObra,
                 nombreContratistaObra = nombreContratistaObra,
                 numeroContratoInterventoria = numeroContratoInterventoria,
-                nombreContratistaInterventoria = nombreContratistaInterventoria
+                nombreContratistaInterventoria = nombreContratistaInterventoria,
+                fechaTerminacionInterventoria  = fechaTerminacionInterventoria,
+                fechaTerminacionObra = fechaTerminacionObra
             });
 
                 /* List<ContratacionProyecto> ListContratacionByProjectId = await _context.ContratacionProyecto.Where(r => r.ProyectoId == ListInfomeFinal[0].ProyectoId).

@@ -213,5 +213,7 @@ export interface Report {
     numeroContratoObra: string,
     nombreContratistaObra: string,
     numeroContratoInterventoria: string,
-    nombreContratistaInterventoria: string
+    nombreContratistaInterventoria: string,
+    fechaTerminacionObra: string,
+    fechaTerminacionInterventoria: string
 }

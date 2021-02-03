@@ -6,8 +6,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { RegistrarInformeFinalProyectoService } from 'src/app/core/_services/registrar-informe-final-proyecto.service';
 
 export interface RegistrarInterface {
-  
-  fechaTerminacionProyecto: Date,
+  fechaTerminacionObra: Date,
+  fechaTerminacionInterventoria: Date,
   llaveMen: string,
   tipoIntervencion: string,
   institucionEducativa: string,
@@ -16,7 +16,6 @@ export interface RegistrarInterface {
   registroCompleto: boolean;
   estadoInforme: string,
   estadoInformeCod: string
-  
 }
 
 @Component({
@@ -28,7 +27,8 @@ export interface RegistrarInterface {
 export class TablaInformeFinalProyectoComponent implements OnInit, AfterViewInit {
   ELEMENT_DATA : RegistrarInterface[] = [];
   displayedColumns: string[] = [
-    'fechaTerminacionProyecto',
+    'fechaTerminacionInterventoria',
+    'fechaTerminacionObra',
     'llaveMen',
     'tipoIntervencion',
     'institucionEducativa',

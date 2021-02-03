@@ -206,7 +206,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -3477,7 +3476,7 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.OrdenGiroDetalleDescuentoTecnicaAportante)
                     .HasForeignKey(d => d.SolicitudPagoFaseFacturaDescuentoId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_OrdenGiroDetalleDescuentoTecnicaAportante_SolicitudPagoFaseFacturaDescuento");
+                    .HasConstraintName("FK_OrdenGiroDetalleDescuentoTecnicaAportante_SolicitudPagoFaseFacturaDescuentoId");
             });
 
             modelBuilder.Entity<OrdenGiroDetalleEstrategiaPago>(entity =>
@@ -6843,8 +6842,12 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(2)
                     .IsUnicode(false);
 
-                entity.Property(e => e.FechaTerminacionProyecto)
-                    .HasColumnName("fechaTerminacionProyecto")
+                entity.Property(e => e.FechaTerminacionInterventoria)
+                    .HasColumnName("fechaTerminacionInterventoria")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.FechaTerminacionObra)
+                    .HasColumnName("fechaTerminacionObra")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.InstitucionEducativa)
