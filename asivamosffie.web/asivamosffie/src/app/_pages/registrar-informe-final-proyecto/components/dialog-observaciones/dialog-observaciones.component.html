@@ -36,9 +36,15 @@
     </span>
   </div>
 
-  <div class="row justify-content-center mt-1em mb-1em">
-    <button mat-raised-button color="accent" type="submit" [disabled]="observaciones.get('observaciones').invalid">
-      Guardar
+  <div class="text-center">
+    <button
+      mat-button
+      color="warn"
+      class="btn-guardar"
+      type="submit"
+      [disabled]="observaciones.get('observaciones').invalid"
+    >
+      <img src="assets/img/icon/guardar.svg" alt="Guardar" />
     </button>
   </div>
 </form>

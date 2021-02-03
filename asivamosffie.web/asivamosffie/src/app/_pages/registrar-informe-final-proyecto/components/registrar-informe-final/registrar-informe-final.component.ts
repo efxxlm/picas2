@@ -13,6 +13,7 @@ export class RegistrarInformeFinalComponent implements OnInit {
   id: string;
   report: Report;
   estadoInforme: string;
+  mostrarInforme: boolean;
 
   constructor(
     private router: Router,
@@ -38,4 +39,7 @@ export class RegistrarInformeFinalComponent implements OnInit {
     });
   }
   
+  updateForm(data) {
+    if(data) this.mostrarInforme = data;
+  }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -15,6 +15,7 @@ import { Respuesta } from 'src/app/core/_services/common/common.service';
 })
 export class FormReciboASatisfaccionComponent implements OnInit {
   @Input() report: Report;
+  @Output() formCompleto = new EventEmitter();
   estaEditando = false;
   informeFinalId = 0;
   urlActa = null;
@@ -44,6 +45,7 @@ export class FormReciboASatisfaccionComponent implements OnInit {
     if(this.report.proyecto.informeFinal.length>0){
       this.addressForm.patchValue(this.report.proyecto.informeFinal[0]);
     }
+    this.formCompleto.emit(this.respuestaFormCompleto());
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -66,7 +68,13 @@ export class FormReciboASatisfaccionComponent implements OnInit {
     this.registrarInformeFinalProyectoService.createInformeFinal(informeFinal)
     .subscribe((respuesta: Respuesta) => {
       this.openDialog('', respuesta.message)
-      location.reload();//esto debería ir? 
+      this.formCompleto.emit(this.respuestaFormCompleto());
     });
+  }
+
+  respuestaFormCompleto() {
+    if (this.addressForm.get('urlActa').valid) return true
+    else if (this.addressForm.get('fechaSuscripcion').valid) return true
+    else false
   }
 }

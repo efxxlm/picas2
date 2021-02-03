@@ -84,7 +84,7 @@ export class DialogObservacionesComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.data.informe);
+    // console.log(this.data.informe);
     this.observaciones.value.informeFinalInterventoriaId = this.data.informe.informeFinalInterventoriaId;
     this.observaciones.value.esCalificacion = true;
     if(this.data.informe.informeFinalInterventoriaObservacionesId != null){

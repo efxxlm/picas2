@@ -77,7 +77,6 @@
           <mat-form-field class="full-width">
             <input
               matInput
-              #numeroRadicadoInput
               type="url"
               formControlName="urlSoporte"
               maxlength="20"
@@ -128,6 +127,7 @@
                   #numRadicadoSac
                   maxlength="10"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  required
                 />
               </mat-form-field>
               <span
@@ -214,7 +214,16 @@
     </mat-card-content>
   </mat-card>
   <div class="text-center">
-    <button mat-button color="warn" class="btn-guardar" type="submit">
+    <button
+      mat-button
+      color="warn"
+      class="btn-guardar"
+      type="submit"
+      [disabled]="
+        (addressForm.get('tipoAnexo').invalid && addressForm.get('numRadicadoSac').invalid && addressForm.get('fechaRadicado').invalid) &&
+        (addressForm.get('tipoAnexo').invalid && addressForm.get('urlSoporte').invalid)
+      "
+    >
       <img src="assets/img/icon/guardar.svg" alt="Guardar" />
     </button>
   </div>
