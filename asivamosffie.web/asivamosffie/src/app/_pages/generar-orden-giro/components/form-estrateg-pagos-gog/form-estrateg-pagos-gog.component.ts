@@ -15,6 +15,7 @@ export class FormEstrategPagosGogComponent implements OnInit {
 
     @Input() solicitudPago: any;
     ordenGiroId = 0;
+    ordenGiroDetalleId = 0;
     estrategiaPagoArray: Dominio[] = [];
     addressForm: FormGroup;
 
@@ -33,6 +34,10 @@ export class FormEstrategPagosGogComponent implements OnInit {
     ngOnInit(): void {
         if ( this.solicitudPago.ordenGiro !== undefined ) {
             this.ordenGiroId = this.solicitudPago.ordenGiro.ordenGiroId;
+
+            if ( this.solicitudPago.ordenGiro.ordenGiroDetalle !== undefined ) {
+                this.ordenGiroDetalleId = this.solicitudPago.ordenGiro.ordenGiroDetalle.ordenGiroDetalleId;
+            }
         }
     }
 
@@ -56,7 +61,7 @@ export class FormEstrategPagosGogComponent implements OnInit {
             solicitudPagoId: this.solicitudPago.solicitudPagoId,
             ordenGiroId: this.ordenGiroId,
             ordenGiroDetalle: {
-                ordenGiroDetalleId: 0,
+                ordenGiroDetalleId: this.ordenGiroDetalleId,
                 ordenGiroDetalleEstrategiaPago: this.addressForm.value
             }
         }

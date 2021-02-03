@@ -98,7 +98,7 @@
                     Observaciones
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-observaciones-orden-giro-gog></app-observaciones-orden-giro-gog>
+            <app-observaciones-orden-giro-gog [solicitudPago]="solicitudPago"></app-observaciones-orden-giro-gog>
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion>
@@ -108,7 +108,7 @@
                     Soporte de orden de giro
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-soporte-orden-giro-gog></app-soporte-orden-giro-gog>
+            <app-soporte-orden-giro-gog [solicitudPago]="solicitudPago"></app-soporte-orden-giro-gog>
         </mat-expansion-panel>
     </mat-accordion>
 </section>

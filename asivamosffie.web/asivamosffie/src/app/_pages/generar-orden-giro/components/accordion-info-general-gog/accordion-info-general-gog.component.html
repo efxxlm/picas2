@@ -10,9 +10,8 @@
                 <mat-card-content style="text-align: left;">
                     <p><strong>Código SIFI:</strong> 357233</p>
                     <p><strong>Coordinación responsable:</strong> Andina</p>
-                    <p><strong>Grupo de contrato:</strong> Grupo 1</p>
                     <p><strong>Tipo de contrato:</strong> {{ getTipoSolicitudContrato( solicitudPago.contratoSon.contratacion.tipoSolicitudCodigo ) }} </p>
-                    <p><strong>Valor de la factura:</strong> ${{ solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseFactura[0].valorFacturadoConDescuento | currency:' ':'symbol-narrow':'.0-0' }} </p>
+                    <p><strong>Valor de la factura:</strong> ${{ solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseFactura[0].valorFacturado | currency:' ':'symbol-narrow':'.0-0' }} </p>
                 </mat-card-content>
             </mat-card>
             <app-tabla-datos-solicitud-gog [listProyectos]="solicitudPago.contratoSon.listProyectos[1]"></app-tabla-datos-solicitud-gog>
@@ -61,7 +60,7 @@
             <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;">
                 <mat-card-content style="text-align: left;">
                     <p><strong>URL con soporte:</strong>
-                        https://drive.google.com/drive/registrodecontroversiacontractual/soportedefacturaSolPagoO001-N801801
+                        {{ solicitudPago.solicitudPagoSoporteSolicitud[0].urlSoporte }}
                     </p>
                 </mat-card-content>
             </mat-card>
