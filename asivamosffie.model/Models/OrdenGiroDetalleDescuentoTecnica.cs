@@ -8,7 +8,6 @@ namespace asivamosffie.model.Models
         public OrdenGiroDetalleDescuentoTecnica()
         {
             OrdenGiroDetalle = new HashSet<OrdenGiroDetalle>();
-            OrdenGiroDetalleDescuentoTecnicaAportante = new HashSet<OrdenGiroDetalleDescuentoTecnicaAportante>();
         }
 
         public int OrdenGiroDetalleDescuentoTecnicaId { get; set; }
@@ -20,6 +19,5 @@ namespace asivamosffie.model.Models
         public bool? RegistroCompleto { get; set; }
 
         public virtual ICollection<OrdenGiroDetalle> OrdenGiroDetalle { get; set; }
-        public virtual ICollection<OrdenGiroDetalleDescuentoTecnicaAportante> OrdenGiroDetalleDescuentoTecnicaAportante { get; set; }
     }
 }

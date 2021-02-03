@@ -11,7 +11,7 @@ namespace asivamosffie.model.Models
         }
 
         public int InformeFinalId { get; set; }
-        public int ProyectoId { get; set; }
+        public int ContratacionProyectoId { get; set; }
         public string UsuarioCreacion { get; set; }
         public DateTime? FechaCreacion { get; set; }
         public string UsuarioModificacion { get; set; }
@@ -22,7 +22,7 @@ namespace asivamosffie.model.Models
         public string UrlActa { get; set; }
         public bool Eliminado { get; set; }
 
-        public virtual Proyecto Proyecto { get; set; }
+        public virtual ContratacionProyecto ContratacionProyecto { get; set; }
         public virtual ICollection<InformeFinalInterventoria> InformeFinalInterventoria { get; set; }
     }
 }
