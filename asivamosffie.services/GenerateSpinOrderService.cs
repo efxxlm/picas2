@@ -127,6 +127,17 @@ namespace asivamosffie.services
                     pOrdenGiro.RegistroCompleto = ValidarRegistroCompletoOrdenGiro(pOrdenGiro);
 
                     _context.OrdenGiro.Add(pOrdenGiro);
+
+
+                    await _context.Set<SolicitudPago>()
+                                    .Where(o => o.SolicitudPagoId == pOrdenGiro.SolicitudPagoId)
+                                                                                        .UpdateAsync(r => new SolicitudPago()
+                                                                                        {
+                                                                                            FechaModificacion = DateTime.Now,
+                                                                                            UsuarioModificacion = pOrdenGiro.UsuarioModificacion,
+                                                                                      
+                                                                                            OrdenGiroId = pOrdenGiro.OrdenGiroId
+                                                                                        });
                 }
                 else
                 {
