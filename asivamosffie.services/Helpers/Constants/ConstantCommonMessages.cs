@@ -20,6 +20,7 @@ namespace asivamosffie.services.Helpers.Constant
             public const string TRAMITAR_RENDIMIENTOS = "TRAMITAR RENDIMIENTOS";
             public const string ENVIAR_INCONSISTENCIAS = "ENVIAR INCONSISTENCIAS RENDIMIENTOS";
             public const string VER_INCONSISTENCIAS = "VER INCONSISTENCIAS RENDIMIENTOS";
+            public const string VER_CONSISTENCIAS = "VER CONSISTENCIAS RENDIMIENTOS";
             public const string DESCARGAR_RESULTADO = "DESCARGAR RESULTADO RENDIMIENTOS";
 
             public const string NOTIFICAR_INCONSISTENCIAS = "NOTIFICAR INCONSISTENCIAS";

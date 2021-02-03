@@ -105,6 +105,20 @@ export class GestionarRendimientosComponent implements OnInit {
     })
   }
 
+  downloadManagedPerformances(uploadedOrderId: number){
+    this.faseDosPagosRendimientosSvc.downloadManagedPerformances(uploadedOrderId, null)
+    .subscribe((content)=>{
+      // if(result.isSuccessful){
+      //   console.log("Succss")
+      // }
+      // if(typeof result  != "string"){
+      //   console.log("typeof", typeof result)
+      // }
+      FileDownloader.exportExcel("file", content)
+      
+    })
+  }
+
   downloadInconsistencies(uploadedOrderId: number){
     this.faseDosPagosRendimientosSvc.downloadPerformancesInconsistencies(uploadedOrderId)
     .subscribe((content)=>{

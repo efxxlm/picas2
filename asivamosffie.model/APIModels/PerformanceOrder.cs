@@ -138,13 +138,7 @@ namespace asivamosffie.model.APIModels
         }
 
 
-        private string status;
-
-        public string Status
-        {
-            get { return status; }
-            set { status = value; }
-        }
+        public string Status { get; set; }
 
 
         // TODO calculate rows here or in other inherited class
@@ -178,16 +172,68 @@ namespace asivamosffie.model.APIModels
     }
 
 
-    public class ManagedPerformancesOrder : PerformanceOrder{
-       
+    public class ManagedPerformancesOrder: PerformanceOrder{
+        public  new string Status { get; set; }
+
+        //[JsonProperty(PropertyName = "Fecha de rendimientos")]
+        //public string PerformancesDate { get; set; }
+
+        //[JsonProperty(PropertyName = "Número de Cuenta")]
+        //public string AccountNumber { get; set; }
+
+        ///// <summary>
+        ///// Acumulado de aportes de recursos exentos
+        ///// </summary>
+        //[JsonProperty(PropertyName = "Acumulado de aportes de recursos exentos")]
+
+        //public decimal ExemptResources { get; set; }
+
+        ///// <summary>
+        ///// Acumulado de rendimientos exentos
+        ///// </summary>
+        //[JsonProperty(PropertyName = "Acumulado de rendimientos exentos")]
+        //public decimal ExemptPerformances { get; set; }
+
+        ///// <summary>
+        ///// Acumulado de gastos Bancarios exentos
+        ///// </summary>
+        //[JsonProperty(PropertyName = "Acumulado de gastos Bancarios exentos")]
+        //public decimal ExemptBankCharges { get; set; }
+
+        ///// <summary>
+        ///// Acumulado de gravamen financiero descontado exentos
+        ///// </summary>
+        //[JsonProperty(PropertyName = "Acumulado de gravamen financiero descontado exentos")]
+        //public decimal ExemptDiscountedCharge { get; set; }
+
+        ///// <summary>
+        ///// Acumulado de aportes de recursos no exentos
+        ///// </summary>
+        //[JsonProperty(PropertyName = "Acumulado de aportes de recursos no exentos")]
+        //public decimal LiableContributtions { get; set; }
+
+        ///// <summary>
+        ///// Acumulado de rendimientos no exentos
+        ///// </summary>
+        //[JsonProperty(PropertyName = "Acumulado de rendimientos no exentos")]
+        //public decimal LiablePerformances { get; set; }
+
+        ///// <summary>
+        ///// Acumulado de gastos Bancarios no exentos
+        ///// </summary>
+        //[JsonProperty(PropertyName = "Acumulado de gastos Bancarios no exentos")]
+        //public decimal LiableBankCharges { get; set; }
+
+        ///// <summary>
+        ///// Acumulado de gravamen financiero descontado no exentos
+        ///// </summary>
+        //[JsonProperty(PropertyName = "Acumulado de gravamen financiero descontado no exentos")]
+        public new decimal LiableDiscountedCharge { get; set; }
         public new decimal GeneratedPerformances { get; }
-
         public new decimal FinancialLienProvision { get; }
-
         public new decimal BankCharges { get; }
-
         public new decimal DiscountedCharge { get; }
         public new decimal PerformancesToAdd { get; }
-        public new string Status { get; }
+        public bool? BuiltIn { get; set; } 
     }
 }

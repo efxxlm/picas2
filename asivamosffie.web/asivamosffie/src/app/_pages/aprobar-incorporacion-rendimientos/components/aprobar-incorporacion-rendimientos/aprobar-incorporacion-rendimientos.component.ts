@@ -3,6 +3,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Respuesta } from 'src/app/core/_services/common/common.service';
 import { FaseDosPagosRendimientosService } from 'src/app/core/_services/faseDosPagosRendimientos/fase-dos-pagosRendimientos.service';
 import { DialogCargarActaFirmadaAirComponent } from '../dialog-cargar-acta-firmada-air/dialog-cargar-acta-firmada-air.component';
 
@@ -19,7 +20,7 @@ export class AprobarIncorporacionRendimientosComponent implements OnInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   displayedColumns: string[] = [
     'fechaCargue',
-    'totalRegistros',
+    'registrosIncorporados',
     'gestion'
   ];
   
@@ -62,10 +63,40 @@ export class AprobarIncorporacionRendimientosComponent implements OnInit {
   };
 
   
-  cargarActaFirmada(){
+  cargarActaFirmada(uploadedOrderId: number){
     const dialogConfig = new MatDialogConfig();
     dialogConfig.height = 'auto';
     dialogConfig.width = '50%';
+    dialogConfig.data = uploadedOrderId
     const dialogRef = this.dialog.open(DialogCargarActaFirmadaAirComponent, dialogConfig);
   }
+
+  includePerformances(uploadedOrder: any){
+    this.faseDosPagosRendimientosSvc.includePerformances(uploadedOrder.carguePagosRendimientosId)
+      .subscribe((response: Respuesta)=>{
+        if(response.isSuccessful){
+          uploadedOrder.registrosIncorporados = response.data;
+        }
+      });
+  }
+
+  downloadConsistencies(uploadedOrderId: number){
+    this.faseDosPagosRendimientosSvc.downloadManagedPerformances(uploadedOrderId, true)
+    .subscribe((response: Respuesta)=>{
+      // if(response.isSuccessful){
+      //   uploadedOrder.registrosIncorporados = response.data;
+      // }
+    });
+  }
+
+  uploadSignedMinutes(){
+
+  }
+
+  downloadTemplateMinutes(){
+
+  }
+
+
+
 }

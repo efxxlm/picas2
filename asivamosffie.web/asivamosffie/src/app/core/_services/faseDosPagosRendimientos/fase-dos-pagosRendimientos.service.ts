@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment'
 import { CarguePagosRendimientos } from '../../../_interfaces/faseDosPagosRendimientos'
 import exportFromJSON from 'export-from-json'
 import { deprecate } from 'util'
+import { Respuesta } from '../common/common.service'
 
 @Injectable({
   providedIn: 'root'
@@ -60,9 +61,9 @@ export class FaseDosPagosRendimientosService {
     return this.http.get<any>(`${this.urlApi}/requestApproval?uploadedOrderId=${uploadedOrderId}`)
   }
 
-  downloadManagedPerformances(uploadedOrderId :number, statusType: number){
+  downloadManagedPerformances(uploadedOrderId :number, queryConsistentOrders?: boolean){
     return this.http.get<any>(
-      `${this.urlApi}/downloadManagedPerformances?uploadedOrderId=${uploadedOrderId}&status=${statusType}`)
+      `${this.urlApi}/downloadManagedPerformances?uploadedOrderId=${uploadedOrderId}&queryConsistentOrders=${queryConsistentOrders}`)
   }
 
   downloadPerformancesInconsistencies(uploadedOrderId :number){
@@ -76,4 +77,15 @@ export class FaseDosPagosRendimientosService {
       `${this.urlApi}/requestedApprovalPerformances`
     )
   }
+
+  includePerformances(uploadedOrderId :number){
+    return this.http.post(`${this.urlApi}/includePerformances?uploadedOrderId=${uploadedOrderId}`, {});
+  }
+
+  uploadMinutes(uploadedOrderId :number, formData: FormData){
+    // const formData = new FormData()
+    // formData.append('file', documento, documento.name)
+    return this.http.post<Respuesta>(`${this.urlApi}/uploadMinutes?uploadedOrderId=${uploadedOrderId}`, formData);
+  }
+  
 }
