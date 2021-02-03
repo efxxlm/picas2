@@ -13,8 +13,8 @@
                 <label
                   class="label-left"
                   [class.color-secondaryColor]="
-                    (addressForm.get('numeroPerfiles').invalid && addressForm.get('numeroPerfiles').touched) ||
-                    (addressForm.get('numeroPerfiles').invalid && esRojo)
+                    (addressForm.get('numeroPerfiles')?.invalid && addressForm.get('numeroPerfiles').touched) ||
+                    (addressForm.get('numeroPerfiles')?.invalid && esRojo)
                   "
                 >
                   {{ this.fecha1Titulo }}
@@ -46,8 +46,8 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
                     *ngIf="
-                      (addressForm.get('numeroPerfiles').invalid && addressForm.get('numeroPerfiles').touched) ||
-                      (addressForm.get('numeroPerfiles').invalid && esRojo)
+                      (addressForm.get('numeroPerfiles')?.invalid && addressForm.get('numeroPerfiles').touched) ||
+                      (addressForm.get('numeroPerfiles')?.invalid && esRojo)
                     "
                   />
                 </span>
@@ -62,9 +62,9 @@
                 <label
                   class="label-left"
                   [class.color-secondaryColor]="
-                    (addressForm.get('fechaFirmaContratistaInterventoria').invalid &&
+                    (addressForm.get('fechaFirmaContratistaInterventoria')?.invalid &&
                       addressForm.get('fechaFirmaContratistaInterventoria').touched) ||
-                    (addressForm.get('fechaFirmaContratistaInterventoria').invalid && esRojo)
+                    (addressForm.get('fechaFirmaContratistaInterventoria')?.invalid && esRojo)
                   "
                 >
                   {{ this.fecha2Titulo }}
@@ -102,9 +102,9 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
                     *ngIf="
-                      (addressForm.get('fechaFirmaContratistaInterventoria').invalid &&
+                      (addressForm.get('fechaFirmaContratistaInterventoria')?.invalid &&
                         addressForm.get('fechaFirmaContratistaInterventoria').touched) ||
-                      (addressForm.get('fechaFirmaContratistaInterventoria').invalid && esRojo)
+                      (addressForm.get('fechaFirmaContratistaInterventoria')?.invalid && esRojo)
                     "
                   />
                 </span>
