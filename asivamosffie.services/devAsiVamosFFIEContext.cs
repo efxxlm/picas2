@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -206,8 +207,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
-
-
+     
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -846,10 +846,6 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<Contratacion>(entity =>
             {
-                entity.Property(e => e.ConsideracionDescripcion)
-                    .HasMaxLength(2500)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.EstadoSolicitudCodigo)
                     .HasMaxLength(100)
                     .IsUnicode(false);
@@ -2742,11 +2738,11 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.ContratacionProyecto)
+                entity.HasOne(d => d.Proyecto)
                     .WithMany(p => p.InformeFinal)
-                    .HasForeignKey(d => d.ContratacionProyectoId)
+                    .HasForeignKey(d => d.ProyectoId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__InformeFinal");
+                    .HasConstraintName("FK_informe_final_proyecto");
             });
 
             modelBuilder.Entity<InformeFinalAnexo>(entity =>
@@ -3482,7 +3478,7 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.OrdenGiroDetalleDescuentoTecnicaAportante)
                     .HasForeignKey(d => d.SolicitudPagoFaseFacturaDescuentoId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_OrdenGiroDetalleDescuentoTecnicaAportante_SolicitudPagoFaseFacturaDescuento");
+                    .HasConstraintName("FK_OrdenGiroDetalleDescuentoTecnicaAportante_SolicitudPagoFaseFacturaDescuentoId");
             });
 
             modelBuilder.Entity<OrdenGiroDetalleEstrategiaPago>(entity =>
