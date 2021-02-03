@@ -16,12 +16,12 @@ using iTextSharp.text.pdf;
 using iTextSharp.tool.xml;
 using iTextSharp.tool.xml.pipeline;
 using DinkToPdf;
-using DinkToPdf.Contracts; 
+using DinkToPdf.Contracts;
 using iTextSharp.tool.xml.html;
 using iTextSharp.tool.xml.pipeline.html;
 using iTextSharp.tool.xml.pipeline.css;
 using iTextSharp.tool.xml.pipeline.end;
- 
+
 namespace asivamosffie.services.Helpers
 {
     public class PDF
@@ -32,17 +32,17 @@ namespace asivamosffie.services.Helpers
         public PDF(devAsiVamosFFIEContext context, IConverter converter)
         {
             _context = context;
-            _converter = converter; 
+            _converter = converter;
         }
 
 
 
         public static byte[] Convertir(Plantilla pPlantilla)
         {
-            string contenido = pPlantilla.Contenido ?? " "; 
-            string encabezado = pPlantilla.Encabezado != null ? pPlantilla.Encabezado.Contenido : " "; 
-            string pie = pPlantilla.PieDePagina != null ? pPlantilla.PieDePagina.Contenido :" ";
-        
+            string contenido = pPlantilla.Contenido ?? " ";
+            string encabezado = pPlantilla.Encabezado != null ? pPlantilla.Encabezado.Contenido : " ";
+            string pie = pPlantilla.PieDePagina != null ? pPlantilla.PieDePagina.Contenido : " ";
+
             Margenes margenes = new Margenes
             {
                 Arriba = (float)pPlantilla.MargenArriba,
@@ -142,13 +142,19 @@ namespace asivamosffie.services.Helpers
 
             public override void OnEndPage(PdfWriter writer, Document document)
             {
-
                 try
                 {
-                    ColumnText ct = new ColumnText(writer.DirectContent);
+                    //PdfPTable tbHeader = new PdfPTable(1);
+                    //tbHeader.AddCell(new Paragraph("sad asd asde"));
+
+                    //PdfPCell _cell = new PdfPCell(new Paragraph("asdsad"));
+
+                    //_cell = new PdfPCell(new Paragraph("Página " + writer.PageNumber));
+
+                     ColumnText ct = new ColumnText(writer.DirectContent);
+                     
                     if (header != null)
                     {
-
                         ct.SetSimpleColumn(new Rectangle(36, 0, 559, document.Top + document.TopMargin - 10));
 
                         foreach (IElement e in header)
@@ -173,7 +179,6 @@ namespace asivamosffie.services.Helpers
                     throw de;
                 }
             }
-
         }
 
         public class ColumnTextElementHandler : IElementHandler
