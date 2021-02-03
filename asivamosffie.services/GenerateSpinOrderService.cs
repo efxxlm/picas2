@@ -104,30 +104,45 @@ namespace asivamosffie.services
                             .Include(t => t.OrdenGiroTercero).ThenInclude(o => o.OrdenGiroTerceroTransferenciaElectronica)
                             .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleEstrategiaPago)
                             .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleDescuentoTecnica).ThenInclude(r => r.OrdenGiroDetalleDescuentoTecnicaAportante)
-                            .Include(d => d.SolicitudPago) 
+                            .Include(d => d.SolicitudPago)
                         .FirstOrDefault();
                 }
             }
             catch (Exception ex)
             {
-
             }
-
             return SolicitudPago;
         }
 
+
+        /// <summary>
+        /// create edit
+        /// </summary>
+        /// <param name="pOrdenGiro"></param>
+        /// <returns></returns>
         public async Task<Respuesta> CreateEditOrdenGiro(OrdenGiro pOrdenGiro)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
 
             try
             {
+                int? OrdenGiroTerceroId = null;
+                int? OrdenGiroDetalleId = null;
+
+                if (pOrdenGiro.OrdenGiroTercero != null)
+                    OrdenGiroTerceroId = await CreateEditOrdenGiroTercero(pOrdenGiro.OrdenGiroTercero, pOrdenGiro.UsuarioCreacion);
+                if (pOrdenGiro.OrdenGiroDetalle != null)
+                    OrdenGiroDetalleId = await CreateEditOrdenGiroDetalle(pOrdenGiro.OrdenGiroDetalle, pOrdenGiro.UsuarioCreacion);
+
                 if (pOrdenGiro.OrdenGiroId == 0)
                 {
                     pOrdenGiro.FechaCreacion = DateTime.Now;
                     pOrdenGiro.Eliminado = false;
                     pOrdenGiro.EstadoCodigo = ConstanCodigoEstadoOrdenGiro.En_proceso_de_generacion;
                     pOrdenGiro.RegistroCompleto = ValidarRegistroCompletoOrdenGiro(pOrdenGiro);
+                    pOrdenGiro.OrdenGiroTerceroId = OrdenGiroTerceroId;
+                    pOrdenGiro.OrdenGiroDetalleId = OrdenGiroDetalleId;
+
 
                     _context.OrdenGiro.Add(pOrdenGiro);
 
@@ -150,12 +165,13 @@ namespace asivamosffie.services
                                                                                                         {
                                                                                                             FechaModificacion = DateTime.Now,
                                                                                                             UsuarioModificacion = pOrdenGiro.UsuarioModificacion,
-                                                                                                            RegistroCompleto = ValidarRegistroCompletoOrdenGiro(pOrdenGiro)
+                                                                                                            RegistroCompleto = ValidarRegistroCompletoOrdenGiro(pOrdenGiro),
+                                                                                                       
+                                                                                                            OrdenGiroTerceroId = OrdenGiroTerceroId,
+                                                                                                            OrdenGiroDetalleId = OrdenGiroDetalleId
                                                                                                         });
                 }
-                if (pOrdenGiro.OrdenGiroTercero != null)
-                    CreateEditOrdenGiroTercero(pOrdenGiro.OrdenGiroTercero, pOrdenGiro.UsuarioCreacion);
-                CreateEditOrdenGiroDetalle(pOrdenGiro.OrdenGiroDetalle, pOrdenGiro.UsuarioCreacion);
+
 
                 return
                      new Respuesta
@@ -181,7 +197,7 @@ namespace asivamosffie.services
             }
         }
 
-        private async void CreateEditOrdenGiroDetalle(OrdenGiroDetalle pOrdenGiroDetalle, string pUsuarioCreacion)
+        private async Task<int> CreateEditOrdenGiroDetalle(OrdenGiroDetalle pOrdenGiroDetalle, string pUsuarioCreacion)
         {
             if (pOrdenGiroDetalle.OrdenGiroDetalleId == 0)
             {
@@ -208,9 +224,40 @@ namespace asivamosffie.services
 
             if (pOrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica != null)
                 CreateEditOrdenGiroDetalleDescuentoTecnica(pOrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica, pUsuarioCreacion);
+
+            if (pOrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion != null)
+                CreateEditOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion, pUsuarioCreacion);
+
+            return pOrdenGiroDetalle.OrdenGiroDetalleId;
         }
 
-        private async void CreateEditOrdenGiroDetalleDescuentoTecnica(OrdenGiroDetalleDescuentoTecnica pOrdenGiroDetalleDescuentoTecnica, string pUsuarioCreacion)
+        private async Task<int> CreateEditOrdenGiroDetalleTerceroCausacion(OrdenGiroDetalleTerceroCausacion pOrdenGiroDetalleTerceroCausacion, string pUsuarioCreacion)
+        {
+            if (pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionId == 0)
+            {
+                pOrdenGiroDetalleTerceroCausacion.UsuarioCreacion = pUsuarioCreacion;
+                pOrdenGiroDetalleTerceroCausacion.FechaCreacion = DateTime.Now;
+                pOrdenGiroDetalleTerceroCausacion.Eliminado = false;
+                pOrdenGiroDetalleTerceroCausacion.RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalleTerceroCausacion);
+
+                _context.OrdenGiroDetalleTerceroCausacion.Add(pOrdenGiroDetalleTerceroCausacion);
+            }
+            else
+            {
+                await _context.Set<OrdenGiroDetalleTerceroCausacion>()
+                                                    .Where(o => o.OrdenGiroDetalleTerceroCausacionId == pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionId)
+                                                                                                                            .UpdateAsync(r => new OrdenGiroDetalleTerceroCausacion()
+                                                                                                                            {
+                                                                                                                                FechaModificacion = DateTime.Now,
+                                                                                                                                UsuarioModificacion = pUsuarioCreacion,
+                                                                                                                                RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalleTerceroCausacion)
+                                                                                                                            });
+            }
+
+            return pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionId;
+        }
+
+        private async Task<int> CreateEditOrdenGiroDetalleDescuentoTecnica(OrdenGiroDetalleDescuentoTecnica pOrdenGiroDetalleDescuentoTecnica, string pUsuarioCreacion)
         {
             if (pOrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaId == 0)
             {
@@ -234,6 +281,8 @@ namespace asivamosffie.services
             }
 
             CreateEditOrdenGiroDetalleDescuentoTecnicaAportante(pOrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaAportante, pUsuarioCreacion);
+
+            return pOrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaId;
         }
 
         private async void CreateEditOrdenGiroDetalleDescuentoTecnicaAportante(ICollection<OrdenGiroDetalleDescuentoTecnicaAportante> pOrdenGiroDetalleDescuentoTecnicaAportanteList, string pUsuarioCreacion)
@@ -257,25 +306,16 @@ namespace asivamosffie.services
                                                                                                                                 {
                                                                                                                                     FechaModificacion = DateTime.Now,
                                                                                                                                     UsuarioModificacion = pUsuarioCreacion,
-                                                                                                                                    RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnicaAportante(pOrdenGiroDetalleDescuentoTecnicaAportante)
+                                                                                                                                    RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnicaAportante(pOrdenGiroDetalleDescuentoTecnicaAportante),
 
-
+                                                                                                                                    ValorDescuento = pOrdenGiroDetalleDescuentoTecnicaAportante.ValorDescuento
                                                                                                                                 });
                 }
             }
+
         }
 
-        private bool? ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnicaAportante(OrdenGiroDetalleDescuentoTecnicaAportante pOrdenGiroDetalleDescuentoTecnicaAportante)
-        {
-            throw new NotImplementedException();
-        }
-
-        private bool ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnica(OrdenGiroDetalleDescuentoTecnica pOrdenGiroDetalleDescuentoTecnica)
-        {
-            return false;
-        }
-
-        private async void CreateEditOrdenGiroDetalleEstrategiaPago(OrdenGiroDetalleEstrategiaPago pOrdenGiroDetalleEstrategiaPago, string pUsuarioCreacion)
+        private async Task<int> CreateEditOrdenGiroDetalleEstrategiaPago(OrdenGiroDetalleEstrategiaPago pOrdenGiroDetalleEstrategiaPago, string pUsuarioCreacion)
         {
             if (pOrdenGiroDetalleEstrategiaPago.OrdenGiroDetalleEstrategiaPagoId == 0)
             {
@@ -299,19 +339,11 @@ namespace asivamosffie.services
                                                                                                                                 EstrategiaPagoCodigo = pOrdenGiroDetalleEstrategiaPago.EstrategiaPagoCodigo
                                                                                                                             });
             }
+
+            return pOrdenGiroDetalleEstrategiaPago.OrdenGiroDetalleEstrategiaPagoId;
         }
 
-        private bool? ValidarRegistroCompletoOrdenGiroDetalleEstrategiaPago(OrdenGiroDetalleEstrategiaPago pOrdenGiroDetalleEstrategiaPago)
-        {
-            return false;
-        }
-
-        private bool ValidarRegistroCompletoOrdenGiroDetalle(OrdenGiroDetalle pOrdenGiroDetalle)
-        {
-            return false;
-        }
-
-        private async void CreateEditOrdenGiroTercero(OrdenGiroTercero pOrdenGiroTercero, string pUsuarioCreacion)
+        private async Task<int> CreateEditOrdenGiroTercero(OrdenGiroTercero pOrdenGiroTercero, string pUsuarioCreacion)
         {
             if (pOrdenGiroTercero.OrdenGiroTerceroId == 0)
             {
@@ -340,9 +372,12 @@ namespace asivamosffie.services
 
             if (pOrdenGiroTercero.MedioPagoGiroCodigo == ConstanCodigoMedioPagoGiroTercero.Cheque_de_gerencia)
                 CreateEditOrdenGiroTerceroChequeGerencia(pOrdenGiroTercero.OrdenGiroTerceroChequeGerencia, pUsuarioCreacion);
+
+
+            return pOrdenGiroTercero.OrdenGiroTerceroId;
         }
 
-        private async void CreateEditOrdenGiroTerceroChequeGerencia(OrdenGiroTerceroChequeGerencia pOrdenGiroTerceroChequeGerencia, string pUsuarioCreacion)
+        private async Task<int> CreateEditOrdenGiroTerceroChequeGerencia(OrdenGiroTerceroChequeGerencia pOrdenGiroTerceroChequeGerencia, string pUsuarioCreacion)
         {
             if (pOrdenGiroTerceroChequeGerencia.OrdenGiroTerceroChequeGerenciaId == 0)
             {
@@ -367,10 +402,10 @@ namespace asivamosffie.services
                                                                                                                           NumeroIdentificacionBeneficiario = pOrdenGiroTerceroChequeGerencia.NumeroIdentificacionBeneficiario,
                                                                                                                       });
             }
-
+            return pOrdenGiroTerceroChequeGerencia.OrdenGiroTerceroChequeGerenciaId;
         }
 
-        private async void CreateEditOrdenGiroTerceroTransferenciaElectronica(OrdenGiroTerceroTransferenciaElectronica pOrdenGiroTerceroTransferenciaElectronica, string pUsuarioCreacion)
+        private async Task<int> CreateEditOrdenGiroTerceroTransferenciaElectronica(OrdenGiroTerceroTransferenciaElectronica pOrdenGiroTerceroTransferenciaElectronica, string pUsuarioCreacion)
         {
             if (pOrdenGiroTerceroTransferenciaElectronica.OrdenGiroTerceroTransferenciaElectronicaId == 0)
             {
@@ -398,8 +433,20 @@ namespace asivamosffie.services
                                                                                                                 EsCuentaAhorros = pOrdenGiroTerceroTransferenciaElectronica.EsCuentaAhorros,
                                                                                                             });
             }
+
+            return pOrdenGiroTerceroTransferenciaElectronica.OrdenGiroTerceroTransferenciaElectronicaId;
         }
 
+        /// <summary>
+        /// Validate
+        /// </summary>
+        /// <param name="pOrdenGiroTerceroTransferenciaElectronica"></param>
+        /// <returns></returns>
+        /// 
+        private bool? ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(OrdenGiroDetalleTerceroCausacion pOrdenGiroDetalleTerceroCausacion)
+        {
+            throw new NotImplementedException();
+        }
         private bool ValidarRegistroCompletoOrdenGiroTerceroTransferenciaElectronica(OrdenGiroTerceroTransferenciaElectronica pOrdenGiroTerceroTransferenciaElectronica)
         {
             return false;
@@ -419,5 +466,26 @@ namespace asivamosffie.services
         {
             return false;
         }
+
+        private bool ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnicaAportante(OrdenGiroDetalleDescuentoTecnicaAportante pOrdenGiroDetalleDescuentoTecnicaAportante)
+        {
+            return false;
+        }
+
+        private bool ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnica(OrdenGiroDetalleDescuentoTecnica pOrdenGiroDetalleDescuentoTecnica)
+        {
+            return false;
+        }
+
+        private bool ValidarRegistroCompletoOrdenGiroDetalleEstrategiaPago(OrdenGiroDetalleEstrategiaPago pOrdenGiroDetalleEstrategiaPago)
+        {
+            return false;
+        }
+
+        private bool ValidarRegistroCompletoOrdenGiroDetalle(OrdenGiroDetalle pOrdenGiroDetalle)
+        {
+            return false;
+        }
+
     }
 }
