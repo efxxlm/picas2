@@ -98,7 +98,8 @@ namespace asivamosffie.services
                 if (SolicitudPago.OrdenGiroId != null)
                 {
                     SolicitudPago.OrdenGiro = _context.OrdenGiro.Where(o => o.OrdenGiroId == SolicitudPago.OrdenGiroId)
-                        .Include(t => t.OrdenGiroTercero)
+                        .Include(t => t.OrdenGiroTercero).ThenInclude(o=> o.OrdenGiroTerceroChequeGerencia)
+                        .Include(t => t.OrdenGiroTercero).ThenInclude(o => o.OrdenGiroTerceroTransferenciaElectronica)
                         .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleEstrategiaPago)
                         .Include(d => d.SolicitudPago).FirstOrDefault();
                 }

@@ -165,7 +165,14 @@ namespace asivamosffie.services
                         .ThenInclude(t=> t.ContratacionProyectoAportante)
                             .ThenInclude(t => t.CofinanciacionAportante)
                                .ThenInclude(t => t.FuenteFinanciacion)
-                                  .ThenInclude(t => t.CuentaBancaria)
+                                  .ThenInclude(t => t.CuentaBancaria) 
+                 .Include(c => c.Contratacion)
+                    .ThenInclude(c => c.ContratacionProyecto)
+                        .ThenInclude(t => t.ContratacionProyectoAportante)
+                            .ThenInclude(t => t.ComponenteAportante)
+                   .Include(c => c.Contratacion)
+                    .ThenInclude(c => c.ContratacionProyecto)
+                       
                  .FirstOrDefaultAsync();
 
             if (pSolicitudPago > 0)
