@@ -649,16 +649,16 @@ namespace asivamosffie.services
                 .OrderByDescending(r => r.FechaAprobacionRequisitosSupervisor)
                 .ToListAsync();
 
-            List<Dominio> Listdominios = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_actas_inicio_obra || r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_acta_Interventoria_319 || r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Contrato).ToList();
+            List<Dominio> Listdominios = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_actas_inicio_obra || r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Del_Acta_Contrato || r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Contrato).ToList();
 
             foreach (var Contrato in lstContratos)
             {
                 if (string.IsNullOrEmpty(Contrato.EstadoActa))
                     Contrato.EstadoActa = ConstanCodigoEstadoActaContrato.Sin_Revision;
 
-                string EstadoActa = !string.IsNullOrEmpty(Contrato.EstadoActa) ? Listdominios.Where(r => r.Codigo == Contrato.EstadoActa && (r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_actas_inicio_obra || r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_acta_Interventoria_319)).FirstOrDefault().Nombre : " ";
+                string EstadoActa = !string.IsNullOrEmpty(Contrato.EstadoActa) ? Listdominios.Where(r => r.Codigo == Contrato.EstadoActa && (r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_actas_inicio_obra || r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Del_Acta_Contrato)).FirstOrDefault().Nombre : " ";
                 if (pPerfilId != (int)EnumeratorPerfil.Tecnica)
-                    EstadoActa = !string.IsNullOrEmpty(Contrato.EstadoActa) ? Listdominios.Where(r => r.Codigo == Contrato.EstadoActa && (r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_actas_inicio_obra || r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_acta_Interventoria_319)).FirstOrDefault().Descripcion : " ";
+                    EstadoActa = !string.IsNullOrEmpty(Contrato.EstadoActa) ? Listdominios.Where(r => r.Codigo == Contrato.EstadoActa && (r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_actas_inicio_obra || r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Del_Acta_Contrato)).FirstOrDefault().Descripcion : " ";
 
                 lstActaInicio.Add(new GrillaActaInicio
                 {
