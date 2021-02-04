@@ -46,19 +46,6 @@ namespace asivamosffie.services
 
             int idAccionCrearcontroversiaActuacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Controversia_Actuacion, (int)EnumeratorTipoDominio.Acciones);
 
-            //try
-            //{
-            //    Respuesta respuesta = new Respuesta();
-            //    string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
-            //    respuesta = await _Cofinancing.EliminarCofinanciacionByCofinanciacionId(pCofinancicacionId, pUsuarioModifico);
-
-            //    return Ok(respuesta);
-            //}
-            //catch (Exception ex)
-            //{
-            //    return BadRequest(ex.ToString());
-            //}
-
             string strCrearEditar = string.Empty;
 
             try
@@ -1368,13 +1355,21 @@ namespace asivamosffie.services
 
         private bool ValidarRegistroCompletoControversiaActuacion(ControversiaActuacion controversiaActuacion)
         {
-            if (string.IsNullOrEmpty(controversiaActuacion.EstadoAvanceTramiteCodigo)
-             || string.IsNullOrEmpty(controversiaActuacion.ActuacionAdelantadaCodigo)
-            || string.IsNullOrEmpty(controversiaActuacion.CantDiasVencimiento.ToString())
-                || (controversiaActuacion.EsRequiereContratista == null)
-                || (controversiaActuacion.EsRequiereInterventor == null)
-              // || (controversiaActuacion.EsRequiereJuridico == null)
-                || (controversiaActuacion.EsRequiereSupervisor == null))
+            if (
+                    string.IsNullOrEmpty(controversiaActuacion.EstadoAvanceTramiteCodigo)|| 
+                    controversiaActuacion.FechaActuacion == null ||
+                    string.IsNullOrEmpty(controversiaActuacion.ActuacionAdelantadaCodigo) ||
+                    string.IsNullOrEmpty(controversiaActuacion.ProximaActuacionCodigo) ||
+                    (controversiaActuacion.ProximaActuacionCodigo == "4" && string.IsNullOrEmpty(controversiaActuacion.ProximaActuacionOtro))||
+                    controversiaActuacion.CantDiasVencimiento == null ||
+                    controversiaActuacion.FechaVencimiento == null ||
+                    controversiaActuacion.EsRequiereContratista == null ||
+                    controversiaActuacion.EsRequiereInterventor == null ||
+                    controversiaActuacion.EsRequiereSupervisor == null ||
+                    controversiaActuacion.EsRequiereFiduciaria == null ||
+                    controversiaActuacion.EsRequiereComite == null ||
+                    string.IsNullOrEmpty(controversiaActuacion.Observaciones)
+                )
             {
                 return false;
             }
