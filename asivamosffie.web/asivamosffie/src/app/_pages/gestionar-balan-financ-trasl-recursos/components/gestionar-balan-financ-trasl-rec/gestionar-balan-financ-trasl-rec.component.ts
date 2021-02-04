@@ -64,4 +64,10 @@ export class GestionarBalanFinancTraslRecComponent implements OnInit {
   validarBalance(id){
     this.routes.navigate(['/gestionarBalanceFinancieroTrasladoRecursos/validarBalance', id]);
   }
+  verDetalleEditarBalance(id){
+    this.routes.navigate(['/gestionarBalanceFinancieroTrasladoRecursos/verDetalleEditarBalance', id]);
+  }
+  verDetalleBalance(id){
+    this.routes.navigate(['/gestionarBalanceFinancieroTrasladoRecursos/verDetalleBalance', id]);
+  }
 }

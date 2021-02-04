@@ -3,6 +3,7 @@ import { Routes, RouterModule } from "@angular/router";
 import { DetalleOgGbftrecComponent } from "./components/detalle-og-gbftrec/detalle-og-gbftrec.component";
 import { GestionarBalanFinancTraslRecComponent } from "./components/gestionar-balan-financ-trasl-rec/gestionar-balan-financ-trasl-rec.component";
 import { ValidarBalanceGbftrecComponent } from "./components/validar-balance-gbftrec/validar-balance-gbftrec.component";
+import { VerdetalleeditarBalanceGbftrecComponent } from "./components/verdetalleeditar-balance-gbftrec/verdetalleeditar-balance-gbftrec.component";
 
 const routes: Routes = [
   {
@@ -17,6 +18,10 @@ const routes: Routes = [
     path: 'detalleOrdengiro',
     component: DetalleOgGbftrecComponent
   },
+  {
+    path: 'verDetalleEditarBalance/:id',
+    component:VerdetalleeditarBalanceGbftrecComponent
+  }
 ];
 @NgModule({
   imports: [RouterModule.forChild(routes)],

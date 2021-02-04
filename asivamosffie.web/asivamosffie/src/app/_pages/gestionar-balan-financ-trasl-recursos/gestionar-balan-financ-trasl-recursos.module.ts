@@ -20,9 +20,10 @@ import { TablaDescuentosOgGbftrecComponent } from './components/tabla-descuentos
 import { TablaOtrosDescuentosOgGbftrecComponent } from './components/tabla-otros-descuentos-og-gbftrec/tabla-otros-descuentos-og-gbftrec.component';
 import { TablaEjpresupuestalGbftrecComponent } from './components/tabla-ejpresupuestal-gbftrec/tabla-ejpresupuestal-gbftrec.component';
 import { TablaEjfinancieraGbftrecComponent } from './components/tabla-ejfinanciera-gbftrec/tabla-ejfinanciera-gbftrec.component';
+import { VerdetalleeditarBalanceGbftrecComponent } from './components/verdetalleeditar-balance-gbftrec/verdetalleeditar-balance-gbftrec.component';
 
 @NgModule({
-  declarations: [GestionarBalanFinancTraslRecComponent, ValidarBalanceGbftrecComponent, RecursosCompromPagadosGbftrecComponent, EjecucionFinancieraGbftrecComponent, TrasladoRecursosGbftrecComponent, RecursosCompromAccordGbftrecComponent, FuentesUsosGbftrecComponent, ContratistasGbftrecComponent, TablaValorTotalOgGbftrecComponent, DetalleOgGbftrecComponent, TablaFacturadoOgGbftrecComponent, TablaDescuentosOgGbftrecComponent, TablaOtrosDescuentosOgGbftrecComponent, TablaEjpresupuestalGbftrecComponent, TablaEjfinancieraGbftrecComponent],
+  declarations: [GestionarBalanFinancTraslRecComponent, ValidarBalanceGbftrecComponent, RecursosCompromPagadosGbftrecComponent, EjecucionFinancieraGbftrecComponent, TrasladoRecursosGbftrecComponent, RecursosCompromAccordGbftrecComponent, FuentesUsosGbftrecComponent, ContratistasGbftrecComponent, TablaValorTotalOgGbftrecComponent, DetalleOgGbftrecComponent, TablaFacturadoOgGbftrecComponent, TablaDescuentosOgGbftrecComponent, TablaOtrosDescuentosOgGbftrecComponent, TablaEjpresupuestalGbftrecComponent, TablaEjfinancieraGbftrecComponent, VerdetalleeditarBalanceGbftrecComponent],
   imports: [
     CommonModule,
     MaterialModule,
