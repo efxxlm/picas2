@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { environment } from 'src/environments/environment'
 import { CarguePagosRendimientos } from '../../../_interfaces/faseDosPagosRendimientos'
-import exportFromJSON from 'export-from-json'
 import { deprecate } from 'util'
 import { Respuesta } from '../common/common.service'
 
