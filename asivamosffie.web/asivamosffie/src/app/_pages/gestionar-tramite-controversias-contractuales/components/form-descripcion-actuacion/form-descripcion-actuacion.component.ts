@@ -141,16 +141,43 @@ export class FormDescripcionActuacionComponent implements OnInit {
   onSubmit() {
     let actuacionTaiArray;
     this.estaEditando = true;
+    let estadoAvanTramite;
+    if (this.addressForm.value.estadoAvanceTramite != undefined || this.addressForm.value.estadoAvanceTramite != null) {
+      if (!this.addressForm.value.estadoAvanceTramite.codigo) {
+        estadoAvanTramite = "pendiente";
+      }
+      else {
+        estadoAvanTramite = this.addressForm.value.estadoAvanceTramite.codigo;
+      }
+    }
+    let actuacionAdelantada;
+    if (this.addressForm.value.actuacionAdelantada != undefined || this.addressForm.value.actuacionAdelantada != null) {
+      if (!this.addressForm.value.actuacionAdelantada.codigo) {
+        actuacionAdelantada = "pendiente";
+      }
+      else {
+        actuacionAdelantada = this.addressForm.value.actuacionAdelantada.codigo;
+      }
+    }
+    let proxActuacion;
+    if (this.addressForm.value.proximaActuacionRequerida != undefined || this.addressForm.value.proximaActuacionRequerida != null) {
+      if (!this.addressForm.value.proximaActuacionRequerida.codigo) {
+        proxActuacion = "pendiente";
+      }
+      else {
+        proxActuacion = this.addressForm.value.proximaActuacionRequerida.codigo;
+      }
+    }
     if (this.isEditable == true) {
       actuacionTaiArray = {
         "ControversiaContractualId": this.controversiaID,
-        "ActuacionAdelantadaCodigo": this.addressForm.value.actuacionAdelantada.codigo,
+        "ActuacionAdelantadaCodigo": actuacionAdelantada,
         "ActuacionAdelantadaOtro": "",
-        "ProximaActuacionCodigo": this.addressForm.value.proximaActuacionRequerida.codigo,
+        "ProximaActuacionCodigo": proxActuacion,
         "ProximaActuacionOtro": this.addressForm.value.cualOtro,
         "Observaciones": this.addressForm.value.observaciones,
         "RutaSoporte": this.addressForm.value.urlSoporte,
-        "EstadoAvanceTramiteCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
+        "EstadoAvanceTramiteCodigo": estadoAvanTramite,
         "CantDiasVencimiento": this.addressForm.value.diasVencimientoTerminos,
         "FechaVencimiento": this.addressForm.value.fechaVencimientoTerminos,
         "FechaActuacion":this.addressForm.value.fechaActuacionAdelantada,
@@ -170,13 +197,13 @@ export class FormDescripcionActuacionComponent implements OnInit {
     else {
       actuacionTaiArray = {
         "ControversiaContractualId": this.controversiaID,
-        "ActuacionAdelantadaCodigo": this.addressForm.value.actuacionAdelantada.codigo,
+        "ActuacionAdelantadaCodigo": actuacionAdelantada,
         "ActuacionAdelantadaOtro": "",
-        "ProximaActuacionCodigo": this.addressForm.value.proximaActuacionRequerida.codigo,
+        "ProximaActuacionCodigo": proxActuacion,
         "ProximaActuacionOtro": this.addressForm.value.cualOtro,
         "Observaciones": this.addressForm.value.observaciones,
         "RutaSoporte": this.addressForm.value.urlSoporte,
-        "EstadoAvanceTramiteCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
+        "EstadoAvanceTramiteCodigo": estadoAvanTramite,
         "CantDiasVencimiento": this.addressForm.value.diasVencimientoTerminos,
         "FechaVencimiento": this.addressForm.value.fechaVencimientoTerminos,
         "FechaActuacion":this.addressForm.value.fechaActuacionAdelantada,
