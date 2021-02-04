@@ -64,7 +64,7 @@
                                 </div>
                                 <div class="col d-flex">
                                     <mat-form-field class="full-width" #desplegable>
-                                        <input matInput #numeroContrato type="text" maxlength="100" required
+                                        <input matInput #numeroContrato="matAutocompleteTrigger" type="text" maxlength="100" required
                                             [matAutocomplete]="auto" formControlName="searchContrato">
                                         <mat-autocomplete #auto="matAutocomplete">
                                             <mat-option *ngFor="let contrato of contratosArray" (click)="seleccionAutocomplete( contrato )" [value]="contrato.numeroContrato">
@@ -73,7 +73,7 @@
                                         </mat-autocomplete>
                                         <input type="hidden" formControlName="numeroContrato">
                                     </mat-form-field>
-                                    <button mat-button color="primary" class="busqueda--img" (click)="getContratos()">
+                                    <button mat-button color="primary" class="busqueda--img" (click)="getContratos( numeroContrato ); $event.stopPropagation()">
                                         <img src="assets/img/icon/lupa.svg" alt="Buscar">
                                     </button>
                                 </div>
@@ -175,12 +175,11 @@
                             </ng-container>
                             <ng-container matColumnDef="saldo">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Saldo </th>
-                                <td mat-cell *matCellDef="let element" align="center"> Por integrar </td>
+                                <td mat-cell *matCellDef="let element" align="center"> Viene del CU Generar documento de registro presupuestal de alli viene el saldo inicial </td>
                             </ng-container>
                             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                         </table>
-                        <!--<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>-->
                     </div>
                     <div class="tabs--actions" style="margin-top: 1em;">
                         <button mat-raised-button color="accent" class="tabs--btn auxBtn" (click)="openProyectosAsociados()">

@@ -1,6 +1,8 @@
 import { Dominio, CommonService } from './../../../../core/_services/common/common.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-obs-cargar-forma-pago',
@@ -29,6 +31,7 @@ export class ObsCargarFormaPagoComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
+        private dialog: MatDialog,
         private commonSvc: CommonService )
     {
         this.addressForm = this.crearFormulario();
@@ -61,6 +64,13 @@ export class ObsCargarFormaPagoComponent implements OnInit {
         } else {
             return 0;
         }
+    }
+
+    openDialog(modalTitle: string, modalText: string) {
+        const dialogRef = this.dialog.open(ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle, modalText }
+        });
     }
 
     getFormaPago( formaPagoCodigo: string ) {

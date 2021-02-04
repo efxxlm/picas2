@@ -1,10 +1,12 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Dominio } from 'src/app/core/_services/common/common.service';
 import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-obs-detll-fact-proc-asociados',
@@ -34,22 +36,11 @@ export class ObsDetllFactProcAsociadosComponent implements OnInit {
       'institucionEducativa',
       'sede'
     ];
-    dataTable: any[] = [
-      {
-        llaveMen: 'LL457326',
-        tipoIntervencion: 'Remodelación',
-        departamento: 'Boyacá',
-        municipio: 'Susacón',
-        institucionEducativa: 'I.E Nuestra Señora Del Carmen',
-        sede: 'Única sede',
-      }
-    ];
     addressForm: FormGroup;
     editorStyle = {
       height: '45px',
       overflow: 'auto'
     };
-
     config = {
       toolbar: [
         ['bold', 'italic', 'underline'],
@@ -65,7 +56,8 @@ export class ObsDetllFactProcAsociadosComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
-        private registrarPagosSvc: RegistrarRequisitosPagoService )
+        private registrarPagosSvc: RegistrarRequisitosPagoService,
+        private dialog: MatDialog )
     {
         this.addressForm = this.crearFormulario();
     }
@@ -310,6 +302,13 @@ export class ObsDetllFactProcAsociadosComponent implements OnInit {
         } else {
             return 0;
         }
+    }
+
+    openDialog(modalTitle: string, modalText: string) {
+        const dialogRef = this.dialog.open(ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle, modalText }
+        });
     }
 
     onSubmit() {

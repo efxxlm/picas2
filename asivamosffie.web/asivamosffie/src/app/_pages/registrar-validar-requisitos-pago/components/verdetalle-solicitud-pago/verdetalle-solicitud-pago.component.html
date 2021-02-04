@@ -179,6 +179,14 @@
                                     </mat-expansion-panel-header>
                                     <app-detalle-factura-proyectos-asociados [solicitudPago]="contrato.solicitudPagoOnly" [esVerDetalle]="true"></app-detalle-factura-proyectos-asociados>
                                 </mat-expansion-panel>
+                                <mat-expansion-panel class="expansion-style sub-expansion-black">
+                                    <mat-expansion-panel-header class="expansion-style--header">
+                                        <mat-panel-title class="expansion-style--title ">
+                                            Datos de la factura
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
+                                    <app-datos-factura-construccion-rvrp [solicitudPago]="contrato.solicitudPagoOnly" [esVerDetalle]="true"></app-datos-factura-construccion-rvrp>
+                                </mat-expansion-panel>
                             </mat-accordion>
                         </mat-expansion-panel>
     
@@ -234,6 +242,14 @@
                                     </mat-expansion-panel-header>
                                     <app-detalle-factura-proyectos-asociados [solicitudPago]="contrato.solicitudPagoOnly" [esVerDetalle]="true"></app-detalle-factura-proyectos-asociados>
                                 </mat-expansion-panel>
+                                <mat-expansion-panel class="expansion-style sub-expansion-black">
+                                    <mat-expansion-panel-header class="expansion-style--header">
+                                        <mat-panel-title class="expansion-style--title ">
+                                            Datos de la factura
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
+                                    <app-datos-factura-construccion-rvrp [solicitudPago]="contrato.solicitudPagoOnly" [esVerDetalle]="true"></app-datos-factura-construccion-rvrp>
+                                </mat-expansion-panel>
                             </mat-accordion>
                         </mat-expansion-panel>
                     </mat-accordion>
@@ -241,10 +257,11 @@
                         <mat-expansion-panel class="expansion-style sub-expansion">
                             <mat-expansion-panel-header class="expansion-style--header">
                                 <mat-panel-title class="expansion-style--title ">
-                                    Datos de la factura
+                                    Descuentos Dirección Técnica
                                 </mat-panel-title>
                             </mat-expansion-panel-header>
-                            <app-datos-factura-construccion-rvrp [solicitudPago]="contrato.solicitudPagoOnly" [esVerDetalle]="true"></app-datos-factura-construccion-rvrp>
+
+                            <app-form-descuentos-direccion-tecnica [solicitudPago]="contrato.solicitudPagoOnly" [esVerDetalle]="true"></app-form-descuentos-direccion-tecnica>
                         </mat-expansion-panel>
                     </mat-accordion>
                 </mat-expansion-panel>

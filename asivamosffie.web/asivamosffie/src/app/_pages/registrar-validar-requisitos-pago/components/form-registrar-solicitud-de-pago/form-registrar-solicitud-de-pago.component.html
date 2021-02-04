@@ -28,7 +28,6 @@
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
-        <!--<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>-->
     </div>
     <form [formGroup]="addressForm" novalidate (ngSubmit)="guardar()">
         <mat-card class="shipping-card" style="margin-top: 3em;">
@@ -109,6 +108,7 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
                 <mat-accordion *ngIf="estadoRegistroCompleto.formRegistroCompleto === true">
+
                     <mat-expansion-panel class="expansion-style sub-expansion-black">
                         <mat-expansion-panel-header class="expansion-style--header">
                             <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeonSubFase( 'criterioDePago', true )">
@@ -117,6 +117,7 @@
                         </mat-expansion-panel-header>
                         <app-form-criterios-pago [solicitudPago]="contrato.solicitudPagoOnly" [contratacionProyectoId]="contratacionProyectoId"></app-form-criterios-pago>
                     </mat-expansion-panel>
+
                     <mat-expansion-panel class="expansion-style sub-expansion-black">
                         <mat-expansion-panel-header class="expansion-style--header">
                             <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeonSubFase( 'detalleFactura', true )">
@@ -124,6 +125,15 @@
                             </mat-panel-title>
                         </mat-expansion-panel-header>
                         <app-detalle-factura-proyectos-asociados [solicitudPago]="contrato.solicitudPagoOnly" *ngIf="estadoRegistroCompletoSubAcordeon.amortizacionRegistroCompleto === true"></app-detalle-factura-proyectos-asociados>
+                    </mat-expansion-panel>
+
+                    <mat-expansion-panel class="expansion-style sub-expansion-black">
+                        <mat-expansion-panel-header class="expansion-style--header">
+                            <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeonSubFase( 'datosFactura', true )">
+                                Datos de la factura
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <app-datos-factura-construccion-rvrp [solicitudPago]="contrato.solicitudPagoOnly" *ngIf="estadoRegistroCompletoSubAcordeon.detalleFacturaRegistroCompleto === true"></app-datos-factura-construccion-rvrp>
                     </mat-expansion-panel>
                 </mat-accordion>
             </mat-expansion-panel>
@@ -146,6 +156,7 @@
                         </mat-expansion-panel-header>
                         <app-form-criterios-pago [solicitudPago]="contrato.solicitudPagoOnly" [esPreconstruccion]="false" [contratacionProyectoId]="contratacionProyectoId"></app-form-criterios-pago>
                     </mat-expansion-panel>
+
                     <mat-expansion-panel class="expansion-style sub-expansion-black">
                         <mat-expansion-panel-header class="expansion-style--header">
                             <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeonSubFase( 'amortizacion', false )">
@@ -154,6 +165,7 @@
                         </mat-expansion-panel-header>
                         <app-form-amortizacion-anticipo [solicitudPago]="contrato.solicitudPagoOnly" [contrato]="contrato" *ngIf="estadoRegistroCompletoSubAcordeon.criterioRegistroCompleto === true"></app-form-amortizacion-anticipo>
                     </mat-expansion-panel>
+
                     <mat-expansion-panel class="expansion-style sub-expansion-black">
                         <mat-expansion-panel-header class="expansion-style--header">
                             <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeonSubFase( 'detalleFactura', false )">
@@ -161,6 +173,15 @@
                             </mat-panel-title>
                         </mat-expansion-panel-header>
                         <app-detalle-factura-proyectos-asociados [solicitudPago]="contrato.solicitudPagoOnly" *ngIf="estadoRegistroCompletoSubAcordeon.amortizacionRegistroCompleto === true"></app-detalle-factura-proyectos-asociados>
+                    </mat-expansion-panel>
+
+                    <mat-expansion-panel class="expansion-style sub-expansion-black">
+                        <mat-expansion-panel-header class="expansion-style--header">
+                            <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeonSubFase( 'datosFactura', false )">
+                                Datos de la factura
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <app-datos-factura-construccion-rvrp [solicitudPago]="contrato.solicitudPagoOnly" *ngIf="estadoRegistroCompletoSubAcordeon.detalleFacturaRegistroCompleto === true"></app-datos-factura-construccion-rvrp>
                     </mat-expansion-panel>
                 </mat-accordion>
             </mat-expansion-panel>
@@ -170,10 +191,11 @@
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeonFase( estadoRegistroCompleto.solicitudPagoFaseRegistroCompleto )">
-                    Datos de la factura
+                    Descuentos Dirección Técnica
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-datos-factura-construccion-rvrp [solicitudPago]="contrato.solicitudPagoOnly" *ngIf="estadoRegistroCompleto.solicitudPagoFaseRegistroCompleto === true"></app-datos-factura-construccion-rvrp>
+            
+            <app-form-descuentos-direccion-tecnica [solicitudPago]="contrato.solicitudPagoOnly" *ngIf="estadoRegistroCompleto.solicitudPagoFaseRegistroCompleto === true"></app-form-descuentos-direccion-tecnica>
         </mat-expansion-panel>
     </mat-accordion>
 </section>

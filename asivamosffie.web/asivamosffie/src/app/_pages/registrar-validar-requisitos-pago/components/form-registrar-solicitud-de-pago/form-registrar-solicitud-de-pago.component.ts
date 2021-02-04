@@ -58,7 +58,8 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
     }
     estadoRegistroCompletoSubAcordeon = {
         criterioRegistroCompleto: false,
-        amortizacionRegistroCompleto: false
+        amortizacionRegistroCompleto: false,
+        detalleFacturaRegistroCompleto: false
     }
     
 
@@ -77,17 +78,20 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                     if ( this.contrato.contratacion.contratacionProyecto.length  > 0 && this.contrato.contratacion.contratacionProyecto.length < 2 ) {
                         this.contratacionProyectoId = this.contrato.contratacion.contratacionProyecto[0].contratacionProyectoId;
                     }
-                    response.forEach( ( fase, index ) => {
-                        if ( fase.codigo === this.postConstruccion ) {
-                            response.splice( index, 1 );
-                        }
-                    } );
                     response.forEach( fase => {
                         if ( fase.codigo === '1' ) {
                             this.faseContrato.preConstruccion = fase.codigo;
                         }
                         if ( fase.codigo === '2' ) {
                             this.faseContrato.construccion = fase.codigo;
+                        }
+                    } );
+                    response.forEach( ( fase, index ) => {
+                        if ( fase.codigo === this.postConstruccion ) {
+                            response.splice( index, 1 );
+                        }
+                        if ( this.contrato.solicitudPagoOnly.solicitudPagoCargarFormaPago[0].tieneFase1 === false && this.faseContrato.preConstruccion === fase.codigo ) {
+                            response.splice( index, 1 );
                         }
                     } );
                     this.fasesArray = response;
@@ -143,6 +147,11 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
     };
 
     enabledAcordeonFase( registroCompleto: boolean, esPreconstruccion?: boolean ) {
+
+        if ( registroCompleto === false && esPreconstruccion === false ) {
+            return 'en-alerta';
+        }
+
         if ( registroCompleto === undefined || registroCompleto === null ) {
             return 'en-alerta';
         }
@@ -157,8 +166,17 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                     semaforoPreConstruccion = 'en-proceso';
                 }
                 if ( this.solicitudPagoFase.registroCompleto === true ) {
-                    semaforoPreConstruccion = 'completo';
-                    this.estadoRegistroCompleto.solicitudPagoFaseRegistroCompleto = true;
+                    
+                    if ( this.solicitudPagoFase.solicitudPagoFaseFactura.length === 0 ) {
+                        semaforoPreConstruccion = 'en-proceso';
+                    } else {
+                        if ( this.solicitudPagoFase.solicitudPagoFaseFactura[0].numero !== undefined && this.solicitudPagoFase.solicitudPagoFaseFactura[0].fecha !== undefined ) {
+                            semaforoPreConstruccion = 'completo';
+                            this.estadoRegistroCompleto.solicitudPagoFaseRegistroCompleto = true;
+                        } else {
+                            semaforoPreConstruccion = 'en-proceso';
+                        }
+                    }
                 }
             }
 
@@ -175,8 +193,17 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                     semaforoConstruccion = 'en-proceso';
                 }
                 if ( this.solicitudPagoFase.registroCompleto === true ) {
-                    semaforoConstruccion = 'completo';
-                    this.estadoRegistroCompleto.solicitudPagoFaseRegistroCompleto = true;
+                    
+                    if ( this.solicitudPagoFase.solicitudPagoFaseFactura.length === 0 ) {
+                        semaforoConstruccion = 'en-proceso';
+                    } else {
+                        if ( this.solicitudPagoFase.solicitudPagoFaseFactura[0].numero !== undefined && this.solicitudPagoFase.solicitudPagoFaseFactura[0].fecha !== undefined ) {
+                            semaforoConstruccion = 'completo';
+                            this.estadoRegistroCompleto.solicitudPagoFaseRegistroCompleto = true;
+                        } else {
+                            semaforoConstruccion = 'en-proceso';
+                        }
+                    }
                 }
             }
 
@@ -242,6 +269,7 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                                     }
                 
                                     if ( totalCriterioRegistroCompleto > 0 && totalCriterioRegistroCompleto === this.solicitudPagoFase.solicitudPagoFaseCriterio.length ) {
+                                        this.estadoRegistroCompletoSubAcordeon.detalleFacturaRegistroCompleto = true;
                                         return 'completo';
                                     }
                                     if ( totalCriterioRegistroCompleto > 0 && totalCriterioRegistroCompleto !== this.solicitudPagoFase.solicitudPagoFaseCriterio.length ) {
@@ -254,11 +282,31 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                                 }
 
                             } else {
+                                this.estadoRegistroCompletoSubAcordeon.detalleFacturaRegistroCompleto = true;
                                 return '';
                             }
                         }
                     } else {
                         return 'en-alerta';
+                    }
+                }
+
+                if ( tipoAcordeon === 'datosFactura' ) {
+                    if ( this.estadoRegistroCompletoSubAcordeon.detalleFacturaRegistroCompleto === false ) {
+                        return 'en-alerta';
+                    }
+
+                    if ( this.estadoRegistroCompletoSubAcordeon.detalleFacturaRegistroCompleto === true ) {
+                        if ( this.solicitudPagoFase.solicitudPagoFaseFactura.length === 0 ) {
+                            return 'sin-diligenciar';
+                        }
+
+                        if ( this.solicitudPagoFase.solicitudPagoFaseFactura[0].numero !== undefined && this.solicitudPagoFase.solicitudPagoFaseFactura[0].fecha !== undefined ) {
+                            this.estadoRegistroCompleto.solicitudPagoFaseRegistroCompleto = true;
+                            return 'completo';
+                        } else {
+                            return 'en-proceso';
+                        }
                     }
                 }
             }
@@ -319,6 +367,7 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                                     }
                 
                                     if ( totalCriterioRegistroCompleto > 0 && totalCriterioRegistroCompleto === this.solicitudPagoFase.solicitudPagoFaseCriterio.length ) {
+                                        this.estadoRegistroCompletoSubAcordeon.detalleFacturaRegistroCompleto = true;
                                         return 'completo';
                                     }
                                     if ( totalCriterioRegistroCompleto > 0 && totalCriterioRegistroCompleto !== this.solicitudPagoFase.solicitudPagoFaseCriterio.length ) {
@@ -331,11 +380,31 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                                 }
 
                             } else {
+                                this.estadoRegistroCompletoSubAcordeon.detalleFacturaRegistroCompleto = true;
                                 return '';
                             }
                         }
                     } else {
                         return 'en-alerta';
+                    }
+                }
+
+                if ( tipoAcordeon === 'datosFactura' ) {
+                    if ( this.estadoRegistroCompletoSubAcordeon.detalleFacturaRegistroCompleto === false ) {
+                        return 'en-alerta';
+                    }
+
+                    if ( this.estadoRegistroCompletoSubAcordeon.detalleFacturaRegistroCompleto === true ) {
+                        if ( this.solicitudPagoFase.solicitudPagoFaseFactura.length === 0 ) {
+                            return 'sin-diligenciar';
+                        }
+
+                        if ( this.solicitudPagoFase.solicitudPagoFaseFactura[0].numero !== undefined && this.solicitudPagoFase.solicitudPagoFaseFactura[0].fecha !== undefined ) {
+                            this.estadoRegistroCompleto.solicitudPagoFaseRegistroCompleto = true;
+                            return 'completo';
+                        } else {
+                            return 'en-proceso';
+                        }
                     }
                 }
 

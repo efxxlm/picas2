@@ -1,8 +1,10 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-obs-registrar-solicitud-pago',
@@ -58,7 +60,9 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
       ]
     };
 
-    constructor(private fb: FormBuilder)
+    constructor(
+        private fb: FormBuilder,
+        private dialog: MatDialog )
     {
         this.addressForm = this.crearFormulario();
     }
@@ -68,9 +72,10 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
             this.solicitudPago = this.contrato.solicitudPagoOnly;
             this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
         }
-      this.dataSource = new MatTableDataSource(this.dataTable);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+
+        this.dataSource = new MatTableDataSource(this.dataTable);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
     };
 
     applyFilter(event: Event) {
@@ -97,6 +102,13 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
         } else {
             return 0;
         }
+    }
+
+    openDialog(modalTitle: string, modalText: string) {
+        const dialogRef = this.dialog.open(ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle, modalText }
+        });
     }
 
     onSubmit() {

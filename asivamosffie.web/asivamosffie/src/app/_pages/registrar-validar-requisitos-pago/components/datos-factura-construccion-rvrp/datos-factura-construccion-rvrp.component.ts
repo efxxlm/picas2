@@ -17,11 +17,7 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
     @Input() esVerDetalle = false;
     addressForm = this.fb.group({
         numeroFactura: [null, Validators.required],
-        fechaFactura: [null, Validators.required],
-        aplicaDescuento: [null, Validators.required],
-        numeroDescuentos: [ '' ],
-        descuentos: this.fb.array( [] ),
-        valorAPagarDespues: [null, Validators.required]
+        fechaFactura: [null, Validators.required]
     });
     valorFacturado = 0;
     tiposDescuentoArray: Dominio[] = [];
@@ -29,10 +25,6 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
     solicitudPagoFaseFacturaId = 0;
     solicitudPagoFaseFactura: any;
     solicitudPagoFase: any;
-
-    get descuentos() {
-        return this.addressForm.get( 'descuentos' ) as FormArray;
-    }
 
     constructor(
         private fb: FormBuilder,
@@ -57,66 +49,10 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
             this.solicitudPagoFaseFacturaDescuento = this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaDescuento;
             this.addressForm.get( 'numeroFactura' ).setValue( this.solicitudPagoFaseFactura.numero !== undefined ? this.solicitudPagoFaseFactura.numero : null );
             this.addressForm.get( 'fechaFactura' ).setValue( this.solicitudPagoFaseFactura.fecha !== undefined ? new Date( this.solicitudPagoFaseFactura.fecha ) : null );
-            this.addressForm.get( 'aplicaDescuento' ).setValue( this.solicitudPagoFaseFactura.tieneDescuento !== undefined ? this.solicitudPagoFaseFactura.tieneDescuento : null );
-            this.addressForm.get( 'numeroDescuentos' ).setValue( `${ this.solicitudPagoFaseFacturaDescuento.length }` );
-            this.addressForm.get( 'valorAPagarDespues' ).setValue( this.solicitudPagoFaseFactura.valorFacturadoConDescuento !== undefined ? this.solicitudPagoFaseFactura.valorFacturadoConDescuento : null );
-            for ( const descuento of this.solicitudPagoFaseFacturaDescuento ) {
-                this.descuentos.push(
-                    this.fb.group(
-                        {
-                            solicitudPagoFaseFacturaDescuentoId: [ descuento.solicitudPagoFaseFacturaDescuentoId ],
-                            solicitudPagoFaseFacturaId: [ descuento.solicitudPagoFaseFacturaId ],
-                            tipoDescuentoCodigo: [ descuento.tipoDescuentoCodigo ],
-                            valorDescuento: [ descuento.valorDescuento ]
-                        }
-                    )
-                );
-            }
         }
         for ( const criterio of this.solicitudPagoFase.solicitudPagoFaseCriterio ) {
             this.valorFacturado += criterio.valorFacturado;
         }
-        this.addressForm.get( 'numeroDescuentos' ).valueChanges
-            .subscribe(
-                value => {
-                    value = Number( value );
-                    if ( this.solicitudPagoFaseFactura !== undefined && this.solicitudPagoFaseFacturaDescuento.length > 0 ) {
-                        if ( value > 0 ) {
-                            this.descuentos.clear();
-                            for ( const descuento of this.solicitudPagoFaseFacturaDescuento ) {
-                                this.descuentos.push(
-                                    this.fb.group(
-                                        {
-                                            solicitudPagoFaseFacturaDescuentoId: [ descuento.solicitudPagoFaseFacturaDescuentoId ],
-                                            solicitudPagoFaseFacturaId: [ descuento.solicitudPagoFaseFacturaId ],
-                                            tipoDescuentoCodigo: [ descuento.tipoDescuentoCodigo ],
-                                            valorDescuento: [ descuento.valorDescuento ]
-                                        }
-                                    )
-                                );
-                            }
-                        }
-                    } else {
-                        if ( value > 0 ) {
-                            if ( this.descuentos.dirty === false ) {
-                                this.descuentos.clear();
-                                for ( let i = 0; i < value; i++ ) {
-                                    this.descuentos.push(
-                                        this.fb.group(
-                                            {
-                                                solicitudPagoFaseFacturaDescuentoId: [ 0 ],
-                                                solicitudPagoFaseFacturaId: [ this.solicitudPagoFaseFacturaId ],
-                                                tipoDescuentoCodigo: [ null ],
-                                                valorDescuento: [ null ]
-                                            }
-                                        )
-                                    );
-                                }
-                            }
-                        }
-                    }
-                }
-            );
     }
 
     validateNumberKeypress(event: KeyboardEvent) {
@@ -131,40 +67,10 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
         }
     }
 
-    maxLength(e: any, n: number) {
-        if (e.editor.getLength() > n) {
-          e.editor.deleteText(n, e.editor.getLength());
-        }
-    }
-
     getTipoDescuento( tipoDescuentoCodigo: string ) {
         if ( this.tiposDescuentoArray.length > 0 ) {
             const descuento = this.tiposDescuentoArray.filter( descuento => descuento.codigo === tipoDescuentoCodigo );
             return descuento[0].nombre;
-        }
-    }
-
-    totalPagoDescuentos() {
-        let totalDescuentos = 0;
-        let valorDespuesDescuentos = 0;
-        this.descuentos.controls.forEach( control => {
-            if ( control.value.valorDescuento !== null ) {
-                totalDescuentos += control.value.valorDescuento;
-            }
-        } );
-        if ( totalDescuentos > 0 ) {
-            if ( totalDescuentos > this.valorFacturado ) {
-                this.openDialog( '', '<b>El valor total de los descuentos es mayor al valor facturado.</b>' );
-                this.addressForm.get( 'valorAPagarDespues' ).setValue( null );
-                return;
-            } else {
-                valorDespuesDescuentos = this.valorFacturado - totalDescuentos;
-                this.addressForm.get( 'valorAPagarDespues' ).setValue( valorDespuesDescuentos );
-                return;
-            }
-        } else {
-            this.addressForm.get( 'valorAPagarDespues' ).setValue( null );
-            return;
         }
     }
 
@@ -185,43 +91,11 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
         return dialogRef.afterClosed();
     }
 
-    addDescuento() {
-        this.descuentos.push(
-            this.fb.group(
-                {
-                    solicitudPagoFaseFacturaDescuentoId: [ 0 ],
-                    solicitudPagoFaseFacturaId: [ this.solicitudPagoFaseFacturaId ],
-                    tipoDescuentoCodigo: [ null ],
-                    valorDescuento: [ null ]
-                }
-            )
-        );
-    }
-
-    deleteDescuento( index: number, descuentoId: number ) {
-        this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
-            .subscribe(
-                response => {
-                    if ( response === true ) {
-                        if ( descuentoId === 0 ) {
-                            this.descuentos.removeAt( index );
-                            this.addressForm.get( 'numeroDescuentos' ).setValue( `${ this.descuentos.length }` );
-                            this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
-                        } else {
-                            this.descuentos.removeAt( index );
-                            this.addressForm.get( 'numeroDescuentos' ).setValue( `${ this.descuentos.length }` );
-                            this.registrarPagosSvc.deleteSolicitudPagoFaseFacturaDescuento( descuentoId )
-                                .subscribe(
-                                    () => this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' ),
-                                    err => this.openDialog( '', `<b>${ err.message }</b>` )
-                                );
-                        }
-                    }
-                }
-            );
-    }
-
     onSubmit() {
+
+        /*
+        Se comenta metodo para obtener descuentos por novedad diseño
+
         const getSolicitudPagoFaseFacturaDescuento = () => {
             if ( this.descuentos.length > 0 ) {
                 if ( this.addressForm.get( 'aplicaDescuento' ).value === true ) {
@@ -233,17 +107,18 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
                 return [];
             }
         }
+        */
 
         const solicitudPagoFaseFactura = [
             {
                 solicitudPagoFaseFacturaId: this.solicitudPagoFaseFacturaId,
                 solicitudPagoFaseId: this.solicitudPagoFase.solicitudPagoFaseId,
-                fecha: new Date( this.addressForm.get( 'fechaFactura' ).value ).toISOString(),
+                fecha: this.addressForm.get( 'fechaFactura' ).value !== null ? new Date( this.addressForm.get( 'fechaFactura' ).value ).toISOString() : this.addressForm.get( 'fechaFactura' ).value,
                 valorFacturado: this.valorFacturado,
                 numero: this.addressForm.get( 'numeroFactura' ).value,
-                tieneDescuento: this.addressForm.get( 'aplicaDescuento' ).value,
-                valorFacturadoConDescuento: this.addressForm.get( 'valorAPagarDespues' ).value,
-                solicitudPagoFaseFacturaDescuento: getSolicitudPagoFaseFacturaDescuento()
+                tieneDescuento: null,
+                valorFacturadoConDescuento: null,
+                solicitudPagoFaseFacturaDescuento: null
             }
         ]
         console.log( solicitudPagoFaseFactura );

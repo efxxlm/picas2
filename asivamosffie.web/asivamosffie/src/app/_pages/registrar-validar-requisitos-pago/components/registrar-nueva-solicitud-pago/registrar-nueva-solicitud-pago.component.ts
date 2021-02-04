@@ -8,6 +8,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DialogProyectosAsociadosComponent } from '../dialog-proyectos-asociados/dialog-proyectos-asociados.component';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { MatAutocomplete, MatAutocompleteTrigger } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-registrar-nueva-solicitud-pago',
@@ -90,14 +92,20 @@ export class RegistrarNuevaSolicitudPagoComponent implements OnInit {
         this.dataSource.filter = filterValue.trim().toLowerCase();
     };
 
-    getContratos() {
+    getContratos( trigger: MatAutocompleteTrigger ) {
         if ( this.addressForm.get( 'searchContrato' ).value !== null ) {
             if ( this.addressForm.get( 'searchContrato' ).value.length > 0 ) {
                 this.contratosArray = [];
                 this.registrarPagosSvc.getContratos( this.addressForm.get( 'tipoSolicitud' ).value.codigo, this.addressForm.get( 'modalidadContrato' ).value.codigo, this.addressForm.get( 'searchContrato' ).value )
                     .subscribe( response => {
-                      this.contratosArray = response;
-                      console.log( response );
+                        this.contratosArray = response;
+                        console.log( response );
+                        if ( response.length === 0 ) {
+                            this.openDialog( '', '<b>No se encontraron proyectos relacionados.</b>' );
+                            this.addressForm.get( 'searchContrato' ).setValue( null );
+                        } else {
+                            trigger.openPanel();
+                        }
                     } );
             }
         }
@@ -110,6 +118,9 @@ export class RegistrarNuevaSolicitudPagoComponent implements OnInit {
             contrato => {
                 this.contrato = contrato;
                 console.log( this.contrato );
+                this.dataSource = new MatTableDataSource( this.contrato.contratacion.disponibilidadPresupuestal );
+                this.dataSource.paginator = this.paginator;
+                this.dataSource.sort = this.sort;
             }
         );
     }
@@ -118,6 +129,13 @@ export class RegistrarNuevaSolicitudPagoComponent implements OnInit {
         const dialogRef = this.dialog.open( DialogProyectosAsociadosComponent, {
             width: '80em',
             data: { contrato: this.addressForm.get( 'contratoSeleccionado' ).value }
+        });
+    }
+
+    openDialog(modalTitle: string, modalText: string) {
+        const dialogRef = this.dialog.open(ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle, modalText }
         });
     }
 

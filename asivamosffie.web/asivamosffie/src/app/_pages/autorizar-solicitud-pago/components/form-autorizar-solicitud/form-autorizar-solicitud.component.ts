@@ -7,6 +7,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { DialogProyectosAsociadosAutorizComponent } from '../dialog-proyectos-asociados-autoriz/dialog-proyectos-asociados-autoriz.component';
 
 @Component({
@@ -15,7 +16,6 @@ import { DialogProyectosAsociadosAutorizComponent } from '../dialog-proyectos-as
   styleUrls: ['./form-autorizar-solicitud.component.scss']
 })
 export class FormAutorizarSolicitudComponent implements OnInit {
-
 
     contrato: any;
     idGestion: any;
@@ -36,26 +36,25 @@ export class FormAutorizarSolicitudComponent implements OnInit {
         tieneObservaciones: [null, Validators.required],
         observaciones:[null, Validators.required]
     });
+    editorStyle = {
+        height: '45px',
+        overflow: 'auto'
+    };
+    config = {
+      toolbar: [
+        ['bold', 'italic', 'underline'],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        [{ indent: '-1' }, { indent: '+1' }],
+        [{ align: [] }],
+      ]
+    };
     displayedColumns: string[] = [
-      'drp',
-      'numDrp',
-      'valor',
-      'saldo'
+        'drp',
+        'numDrp',
+        'valor',
+        'saldo'
     ];
-    dataTable: any[] = [
-      {
-        drp: '1',
-        numDrp: 'IP_00090',
-        valor: '$100.000.000',
-        saldo: '$100.000.000'
-      },
-      {
-        drp: '2',
-        numDrp: 'IP_00123',
-        valor: '$5.000.000',
-        saldo: '$5.000.000'
-      }
-    ];
+
     constructor(
         private activatedRoute: ActivatedRoute,
         private dialog: MatDialog,
@@ -64,6 +63,7 @@ export class FormAutorizarSolicitudComponent implements OnInit {
         private commonSvc: CommonService )
     {
         this.getContrato();
+        this.addressForm = this.crearFormulario();
     }
 
     ngOnInit(): void {
@@ -122,18 +122,59 @@ export class FormAutorizarSolicitudComponent implements OnInit {
             );
     }
 
+    getModalidadContrato( modalidadCodigo: string ) {
+        if ( this.modalidadContratoArray.length > 0 ) {
+            const modalidad = this.modalidadContratoArray.filter( modalidad => modalidad.codigo === modalidadCodigo );
+            return modalidad[0].nombre;
+        }
+    }
+
+    crearFormulario() {
+        return this.fb.group({
+          tieneObservaciones: [null, Validators.required],
+          observaciones:[null, Validators.required]
+        })
+    }
+
     applyFilter(event: Event) {
       const filterValue = (event.target as HTMLInputElement).value;
       this.dataSource.filter = filterValue.trim().toLowerCase();
-    };
+    }
 
-    openProyectosAsociados(){
-      const dialogConfig = new MatDialogConfig();
-      dialogConfig.height = 'auto';
-      dialogConfig.width = '1020px';
-      //dialogConfig.data = { id: id, idRol: idRol, numContrato: numContrato, fecha1Titulo: fecha1Titulo, fecha2Titulo: fecha2Titulo };
-      const dialogRef = this.dialog.open(DialogProyectosAsociadosAutorizComponent, dialogConfig);
-      //dialogRef.afterClosed().subscribe(value => {});
+    maxLength(e: any, n: number) {
+        if (e.editor.getLength() > n) {
+            e.editor.deleteText(n - 1, e.editor.getLength());
+        }
+    }
+
+    textoLimpio( evento: any, n: number ) {
+        if ( evento !== undefined ) {
+            return evento.getLength() > n ? n : evento.getLength();
+        } else {
+            return 0;
+        }
+    }
+
+    openProyectosAsociados() {
+        if ( this.contrato === undefined ) {
+            return;
+        }
+
+        const dialogRef = this.dialog.open( DialogProyectosAsociadosAutorizComponent, {
+            width: '80em',
+            data: { contrato: this.contrato }
+        });
+    }
+
+    openDialog(modalTitle: string, modalText: string) {
+        const dialogRef = this.dialog.open(ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle, modalText }
+        });
+    }
+
+    onSubmit() {
+        console.log(this.addressForm.value);
     }
 
 }

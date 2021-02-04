@@ -1,7 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-obs-criterio-pagos',
@@ -36,12 +38,17 @@ export class ObsCriterioPagosComponent implements OnInit {
     constructor(
         private fb: FormBuilder,
         private registrarPagosSvc: RegistrarRequisitosPagoService,
+        private dialog: MatDialog,
         private commonSvc: CommonService )
     {
         this.addressForm = this.crearFormulario();
     }
 
     ngOnInit(): void {
+        this.getCriterios();
+    }
+
+    getCriterios() {
         if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].esPreconstruccion === true ) {
             this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
             const fasePreConstruccionFormaPagoCodigo = this.solicitudPago.solicitudPagoCargarFormaPago[0].fasePreConstruccionFormaPagoCodigo;
@@ -158,6 +165,13 @@ export class ObsCriterioPagosComponent implements OnInit {
             const criterio = this.listaCriterios.filter( criterio => criterio.codigo === tipoCriterioCodigo );
             return criterio[0].nombre;
         }
+    }
+
+    openDialog(modalTitle: string, modalText: string) {
+        const dialogRef = this.dialog.open(ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle, modalText }
+        });
     }
 
     onSubmit() {

@@ -7,6 +7,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { DialogProyectosAsociadosAprobComponent } from '../dialog-proyectos-asociados-aprob/dialog-proyectos-asociados-aprob.component';
 
 @Component({
@@ -52,20 +53,6 @@ export class FormAprobarSolicitudComponent implements OnInit {
         'numDrp',
         'valor',
         'saldo'
-    ];
-    dataTable: any[] = [
-        {
-          drp: '1',
-          numDrp: 'IP_00090',
-          valor: '$100.000.000',
-          saldo: '$100.000.000'
-        },
-        {
-          drp: '2',
-          numDrp: 'IP_00123',
-          valor: '$5.000.000',
-          saldo: '$5.000.000'
-        }
     ];
 
     constructor(
@@ -176,6 +163,13 @@ export class FormAprobarSolicitudComponent implements OnInit {
         const dialogRef = this.dialog.open( DialogProyectosAsociadosAprobComponent, {
             width: '80em',
             data: { contrato: this.contrato }
+        });
+    }
+
+    openDialog(modalTitle: string, modalText: string) {
+        const dialogRef = this.dialog.open(ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle, modalText }
         });
     }
 

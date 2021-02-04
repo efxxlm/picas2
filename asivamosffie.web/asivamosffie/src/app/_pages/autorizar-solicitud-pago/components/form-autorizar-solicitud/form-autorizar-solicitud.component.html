@@ -21,7 +21,7 @@
                 </mat-card-title>
             </mat-card-header>
             <mat-card-content style="text-align: left;">
-                <!-- <p><strong>Modalidad del contrato:</strong> {{ getModalidadContrato( contrato.modalidadCodigo ) }} </p> -->
+                <p><strong>Modalidad del contrato:</strong> {{ getModalidadContrato( contrato.modalidadCodigo ) }} </p>
                 <p><strong>Número de contrato:</strong> {{ contrato.numeroContrato }} </p>
             </mat-card-content>
         </mat-card>
@@ -96,9 +96,6 @@
                 </mat-expansion-panel-header>
 
                 <app-obs-cargar-formpago-autoriz [solicitudPago]="contrato.solicitudPagoOnly"></app-obs-cargar-formpago-autoriz>
-                <!--
-                    <app-obs-cargar-forma-pago [solicitudPago]="contrato.solicitudPagoOnly"></app-obs-cargar-forma-pago>
-                -->
             </mat-expansion-panel>
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header">
@@ -106,9 +103,8 @@
                         Registrar solicitud de pago
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <!--
-                    <app-obs-registrar-solicitud-pago [contrato]="contrato"></app-obs-registrar-solicitud-pago>
-                -->
+
+                <app-obs-registrar-sol-pago-autoriz [contrato]="contrato"></app-obs-registrar-sol-pago-autoriz>
             </mat-expansion-panel>
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header">
@@ -158,11 +154,10 @@
                 </mat-card-content>
             </mat-card>
 
-            <!--
             <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
                 <div class="row mtop justCenter">
                     <div class="col-md-5">
-                        <label class="label-left">¿Desde la supervisión tiene observaciones a el soporte de la solicitud?</label>
+                        <label class="label-left">¿Desde la coordinación tiene observaciones a el soporte de la solicitud?</label>
                     </div>
                     <div class="col-md-2">
                         <mat-radio-group aria-labelledby="example-radio-group-label" class="radioInput"
@@ -191,14 +186,11 @@
                     <img src="assets/img/icon/guardar.svg" alt="Guardar">
                 </button>
             </form>
-            -->
         </mat-expansion-panel>
     </mat-accordion>
 </section>
 
 <!--
-    A partir de la linea 194 se eliminara el bloque de codigo
--->
 <section class="container text-center">
     <div class="text-right">
         <a routerLink="/autorizarSolicitudDePago" mat-button color="primary" class="btn-regresar">
@@ -268,7 +260,6 @@
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                     </table>
-                    <!--<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>-->
                 </div>
                 <div class="tabs--actions" style="margin-top: 1em;">
                     <button mat-raised-button color="accent" class="tabs--btn auxBtn" (click)="this.openProyectosAsociados()">
@@ -350,7 +341,6 @@
                         Lista de chequeo    
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <!-- dbenitez, Este componente puesto es provisional mientras se define al momento de la integracion-->
                 <app-obs-valid-listchqeo-autoriz></app-obs-valid-listchqeo-autoriz>
             </mat-expansion-panel>
         </mat-accordion>
@@ -366,3 +356,4 @@
         </mat-accordion>
     </div>
 </section>
+-->
