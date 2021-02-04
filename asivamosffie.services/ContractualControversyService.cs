@@ -2462,12 +2462,6 @@ namespace asivamosffie.services
             //await AprobarContratoByIdContrato(1);
 
             List<GrillaControversiaActuacionEstado> ListControversiaContractualGrilla = new List<GrillaControversiaActuacionEstado>();
-            //Fecha de firma del contrato ??? FechaFirmaContrato , [Contrato] -(dd / mm / aaaa)
-
-            //Tipo de solicitud ??? ContratoPoliza - TipoSolicitudCodigo      
-
-            //List<ControversiaContractual> ListControversiaContractualGrilla = await _context.ControversiaContractual.Where(r => !(bool)r.EstadoCodigo).Distinct().ToListAsync();
-
             List<ControversiaActuacion> lstControversiaActuacion = await _context.ControversiaActuacion.
                 Where(r => !(bool)r.Eliminado).Include(r => r.ActuacionSeguimiento).Distinct().ToListAsync();
 
@@ -2583,45 +2577,30 @@ namespace asivamosffie.services
 
                     if (lstActuacionSeguimientoId.Count() > 0)
                         ActuacionSeguimientoIdTmp = lstActuacionSeguimientoId[0];
-                    //EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
-                    //if (EstadoSolicitudCodigoContratoPoliza != null)
-                    //    strEstadoSolicitudCodigoContratoPoliza = EstadoSolicitudCodigoContratoPoliza.Nombre;
 
-                    //Dominio EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
+                    List<Dominio> listaDominioActuacionActualizada = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Actuacion_adelantada).ToList();
+                    List<Dominio> listaDominioAvanceTramiteActuacion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_controversia_contractual_TAI).ToList();
+
+
                     GrillaControversiaActuacionEstado RegistroControversiaContractual = new GrillaControversiaActuacionEstado
                     {
                         ControversiaContractualId = controversia.ControversiaContractualId,
                         FechaActualizacion = controversia.FechaActuacion != null ? Convert.ToDateTime(controversia.FechaActuacion).ToString("dd/MM/yyyy") : "",// controversia.FechaModificacion.ToString("dd/MM/yyyy"),
-                        DescripcionActuacion = "Actuación " + controversia.ControversiaActuacionId.ToString(),
-                        //DescripcionActuacion = "ACT" + controversia.ControversiaActuacionId.ToString(),
+                        DescripcionActuacion = listaDominioActuacionActualizada.Where(r => r.Codigo == controversia.ActuacionAdelantadaCodigo)?.FirstOrDefault()?.Nombre,
                         ActuacionId = controversia.ControversiaActuacionId,
-
-                        EstadoActuacion = strEstadoAvanceTramite,//controversia.EstadoAvanceTramiteCodigo
-                        EstadoActuacionCodigo = strEstadoAvanceTramiteCodigo,//controversia.EstadoAvanceTramiteCodigo
-
-                        NumeroActuacion = "ACT controversia " + controversia.ControversiaActuacionId.ToString("000"),
-
+                        EstadoActuacion = strEstadoAvanceTramite,
+                        EstadoActuacionCodigo = strEstadoAvanceTramiteCodigo,
+                        NumeroActuacion = "ACT Controversia " + controversia.ControversiaActuacionId.ToString("000"),
                         NumeroActuacionReclamacion = "ACT_REC " + controversia.ControversiaActuacionId.ToString("0000"),
-
                         RegistroCompletoActuacion = (bool)controversia.EsCompleto ? "Completo" : "Incompleto",
-
                         ProximaActuacionCodigo = strProximaActuacionCodigo,
                         ProximaActuacionNombre = strProximaActuacionNombre,
                         EstadoActuacionReclamacionCodigo = (controversia.EstadoActuacionReclamacionCodigo != null) ? controversia.EstadoActuacionReclamacionCodigo : "",
                         EstadoActuacionReclamacion = EstadoActuacionReclamacionTmp,
-
                         RegistroCompletoReclamacion = controversia.EsCompletoReclamacion == null ? "Incompleto" : (bool)controversia.EsCompletoReclamacion ? "Completo" : "Incompleto",
                         ActuacionSeguimientoId = ActuacionSeguimientoIdTmp,
-                        //ActuacionSeguimientoId =controversia.ActuacionSeguimientoId,
-                        //ControversiaContractualId = controversia.ControversiaContractualId,
-                        //NumeroSolicitud = controversia.NumeroSolicitud,
-                        ////FechaSolicitud=controversia.FechaSolicitud,
-                        //FechaSolicitud = controversia.FechaSolicitud != null ? Convert.ToDateTime(controversia.FechaSolicitud).ToString("dd/MM/yyyy") : controversia.FechaSolicitud.ToString(),
-                        //TipoControversia = strTipoControversia,
-                        //TipoControversiaCodigo = strTipoControversiaCodigo,
-                        //ContratoId = contrato.ContratoId,
-                        //EstadoControversia = "PENDIENTE",
-                        //RegistroCompletoNombre = (bool)controversia.EsCompleto ? "Completo" : "Incompleto",
+                        EstadoAvanceTramite = listaDominioAvanceTramiteActuacion.Where(r => r.Codigo == controversia.EstadoAvanceTramiteCodigo)?.FirstOrDefault()?.Nombre,
+                        EstadoAvanceTramiteCodigo = controversia.EstadoAvanceTramiteCodigo,
 
                     };
 

@@ -164,7 +164,9 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Proxima_actuacion_requerida =103,
 
-        Procesos_judiciales=105,
+        Actuacion_adelantada = 104,
+
+        Procesos_judiciales =105,
 
         Tipo_accion_judicial = 106,
         Estados_Actuacion=110,
