@@ -1,23 +1,18 @@
-<button
-  mat-button
-  mat-dialog-close
-  class="modal--btn-cerrar"
-  [mat-dialog-close]="null"
->
+<button mat-button mat-dialog-close class="modal--btn-cerrar" [mat-dialog-close]="null">
   <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar" />
 </button>
 
 <div class="text-center">
-  <h1 class="title-menu--h1">Tipo de documento 
+  <h1 class="title-menu--h1">
+    Tipo de documento
     {{ data.llaveMen }}
   </h1>
   <p>
     Estado del requisito:
-    <b> Cumple </b>
+    <b> {{ data.informe.calificacionCodigoString }} </b>
   </p>
   <p>
-    <b> {{ data.informeFinalListaChequeoId }}. </b>
-    {{ data.nombre }}
+    <b> {{ data.informe.nombre }}</b>
   </p>
 </div>
 
@@ -42,10 +37,7 @@
             <div class="col">
               <mat-form-field class="select-width">
                 <mat-select required formControlName="tipoAnexo">
-                  <mat-option
-                    *ngFor="let tipo of tipoAnexoArray"
-                    [value]="tipo.value"
-                  >
+                  <mat-option *ngFor="let tipo of tipoAnexoArray" [value]="tipo.value">
                     {{ tipo.name }}
                   </mat-option>
                 </mat-select>
@@ -56,6 +48,9 @@
                 class="icon-incompleto--img"
                 src="assets/img/icon/incompleto.svg"
                 alt="este campo es requerido"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
                 *ngIf="
                   (addressForm.get('tipoAnexo').invalid && addressForm.get('tipoAnexo').touched) ||
                   (addressForm.get('tipoAnexo').invalid && estaEditando)
@@ -69,44 +64,41 @@
         <div class="pr-1">
           <label
             class="label-left"
-            for="URLSoporte"
+            for="urlSoporte"
             [class.color-secondaryColor]="
-              (addressForm.get('URLSoporte').invalid &&
-                addressForm.get('URLSoporte').touched) ||
-              (addressForm.get('URLSoporte').invalid && estaEditando)
+              (addressForm.get('urlSoporte').invalid && addressForm.get('urlSoporte').touched) ||
+              (addressForm.get('urlSoporte').invalid && estaEditando)
             "
           >
-          Url con soporte
+            Url con soporte
           </label>
         </div>
         <div class="col">
           <mat-form-field class="full-width">
             <input
               matInput
-              #numeroRadicadoInput
               type="url"
-              formControlName="URLSoporte"
+              formControlName="urlSoporte"
               maxlength="20"
               required
+              [matTooltipPosition]="'above'"
+              matTooltip="Campo alfanumérico"
+              matTooltipClass="info-tooltip"
             />
           </mat-form-field>
-          <span
-            class="info-url"
-            [matTooltipPosition]="'above'"
-            matTooltip="Campo alfanumérico"
-            matTooltipClass="info-tooltip"
-          >
-            Indique la ruta en la que se encuentra el soporte del documento
-          </span>
+          <span class="info-url"> Indique la ruta en la que se encuentra el soporte del documento </span>
         </div>
         <span class="icon-incompleto mr-05em">
           <img
             class="icon-incompleto--img"
             src="assets/img/icon/incompleto.svg"
             alt="este campo es requerido"
+            [matTooltipPosition]="'above'"
+            matTooltip="Debe ingresar la información en el campo para continuar"
+            matTooltipClass="info-tooltip"
             *ngIf="
-              (addressForm.get('URLSoporte').invalid && addressForm.get('URLSoporte').touched) ||
-              (addressForm.get('URLSoporte').invalid && estaEditando)
+              (addressForm.get('urlSoporte').invalid && addressForm.get('urlSoporte').touched) ||
+              (addressForm.get('urlSoporte').invalid && estaEditando)
             "
           />
         </span>
@@ -119,22 +111,22 @@
                 class="label-left"
                 for="numRadicadoSac"
                 [class.color-secondaryColor]="
-                  (addressForm.get('numRadicadoSac').invalid &&
-                    addressForm.get('numRadicadoSac').touched) ||
+                  (addressForm.get('numRadicadoSac').invalid && addressForm.get('numRadicadoSac').touched) ||
                   (addressForm.get('numRadicadoSac').invalid && estaEditando)
                 "
-              > 
-              Número de radicado en SAC
+              >
+                Número de radicado en SAC
               </label>
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
                 <input
                   matInput
-                  type="text"
+                  type="number"
                   formControlName="numRadicadoSac"
                   #numRadicadoSac
                   maxlength="10"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
                   required
                 />
               </mat-form-field>
@@ -151,6 +143,9 @@
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
                   alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
                   *ngIf="
                     (addressForm.get('numRadicadoSac').invalid && addressForm.get('numRadicadoSac').touched) ||
                     (addressForm.get('numRadicadoSac').invalid && estaEditando)
@@ -169,12 +164,11 @@
                 class="label-left"
                 for="fechaRadicado"
                 [class.color-secondaryColor]="
-                  (addressForm.get('fechaRadicado').invalid &&
-                    addressForm.get('fechaRadicado').touched) ||
+                  (addressForm.get('fechaRadicado').invalid && addressForm.get('fechaRadicado').touched) ||
                   (addressForm.get('fechaRadicado').invalid && estaEditando)
                 "
               >
-              Fecha de radicado
+                Fecha de radicado
               </label>
             </div>
             <div class="col d-flex">
@@ -197,16 +191,16 @@
                 (click)="pickerFechaDeRadicado.open()"
                 class="btn-calendario"
               >
-                <img
-                  src="assets/img/icon/calendarioCirculo.svg"
-                  alt="Abrir Calendario"
-                />
+                <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
               </button>
               <span class="icon-incompleto">
                 <img
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
                   alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
                   *ngIf="
                     (addressForm.get('fechaRadicado').invalid && addressForm.get('fechaRadicado').touched) ||
                     (addressForm.get('fechaRadicado').invalid && estaEditando)
@@ -220,7 +214,16 @@
     </mat-card-content>
   </mat-card>
   <div class="text-center">
-    <button mat-button color="warn" class="btn-guardar" type="submit">
+    <button
+      mat-button
+      color="warn"
+      class="btn-guardar"
+      type="submit"
+      [disabled]="
+        (addressForm.get('tipoAnexo').invalid && addressForm.get('numRadicadoSac').invalid && addressForm.get('fechaRadicado').invalid) &&
+        (addressForm.get('tipoAnexo').invalid && addressForm.get('urlSoporte').invalid)
+      "
+    >
       <img src="assets/img/icon/guardar.svg" alt="Guardar" />
     </button>
   </div>

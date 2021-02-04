@@ -26,16 +26,20 @@
       {{ report.proyecto.municipioObj.descripcion }}
     </p>
     <p>
-      <strong> Tipo de contratación: </strong>
-      {{ report.contratacion.tipoContratacionCodigo }}
+      <strong> Número de contrato de obra: </strong>
+      {{ report.numeroContratoObra }}
     </p>
     <p>
-      <strong> Número de contrato: </strong>
-      {{ report.contratacion.contrato[0].numeroContrato }}
+      <strong> Nombre de Contratista de obra: </strong>
+      {{ report.nombreContratistaObra }}
     </p>
     <p>
-      <strong> Nombre del contratista: </strong>
-      {{ report.contratacion.contratista.nombre }}
+      <strong> Número de contrato de interventoría: </strong>
+      {{ report.numeroContratoInterventoria }}
+    </p>
+    <p>
+      <strong> Nombre de Contratista de interventoría: </strong>
+      {{ report.nombreContratistaInterventoria }}
     </p>
   </mat-card-content>
 </mat-card>

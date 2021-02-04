@@ -13,11 +13,10 @@
   </h1>
   <p>
     Estado del requisito:
-    <b> No Cumple </b>
+    <b> {{ data.informe.calificacionCodigoString }} </b>
   </p>
   <p>
-    <b> 3. </b>
-    Informe final de Obra del contratista de obra
+    <b>{{ data.informe.nombre }}</b>  
   </p>
 </div>
 
@@ -26,19 +25,25 @@
     <div class="text-area-quill">
         <label for="alcanceParticular" class="text-area-quill--label">Observaciones</label>
         <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
-            (onContentChanged)="maxLength($event, 500)" formControlName="observaciones"></quill-editor>
+            (onContentChanged)="maxLength($event, 500)" formControlName="Observaciones"></quill-editor>
     </div>
-    <span class="contador miles" *ngIf="observaciones.get('observaciones').value">
-        {{500 - (textoLimpio(observaciones.get('observaciones').value)>500?500:textoLimpio(observaciones.get('observaciones').value))}}
+    <span class="contador miles" *ngIf="observaciones.get('Observaciones').value">
+        {{500 - (textoLimpio(observaciones.get('Observaciones').value)>500?500:textoLimpio(observaciones.get('Observaciones').value))}}
     </span>
-    <span class="contador miles" *ngIf="!observaciones.get('observaciones').value">
+    <span class="contador miles" *ngIf="!observaciones.get('Observaciones').value">
         500
     </span>
   </div>
 
-  <div class="row justify-content-center mt-1em mb-1em">
-    <button mat-raised-button color="accent" type="submit" [disabled]="observaciones.get('observaciones').invalid">
-      Guardar
+  <div class="text-center">
+    <button
+      mat-button
+      color="warn"
+      class="btn-guardar"
+      type="submit"
+      [disabled]="observaciones.get('observaciones').invalid"
+    >
+      <img src="assets/img/icon/guardar.svg" alt="Guardar" />
     </button>
   </div>
 </form>

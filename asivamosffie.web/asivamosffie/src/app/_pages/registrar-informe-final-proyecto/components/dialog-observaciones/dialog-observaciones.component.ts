@@ -42,6 +42,11 @@ export class DialogObservacionesComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (this.data.informe.informeFinalInterventoriaObservacionesId > 0 && this.data.informe.informeFinalInterventoriaObservacionesId != null) {
+      this.getInformeFinalInterventoriaObservacionByInformeFinalObservacion(
+        this.data.informe.informeFinalInterventoriaObservacionesId
+      );
+    }
   }
 
   maxLength(e: any, n: number) {
@@ -79,7 +84,7 @@ export class DialogObservacionesComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.data.informe);
+    // console.log(this.data.informe);
     this.observaciones.value.informeFinalInterventoriaId = this.data.informe.informeFinalInterventoriaId;
     this.observaciones.value.esCalificacion = true;
     if(this.data.informe.informeFinalInterventoriaObservacionesId != null){
@@ -93,8 +98,18 @@ export class DialogObservacionesComponent implements OnInit {
   createEditInformeFinalInterventoriaObservacion( pObservaciones: any) {
     this.registrarInformeFinalProyectoService.createEditInformeFinalInterventoriaObservacion(pObservaciones)
     .subscribe((respuesta: Respuesta) => {
-      this.openDialog('', respuesta.message)
+      this.openDialog('', respuesta.message);
+      this.dialog.getDialogById('dialogObservaciones').close();
+      return;
     });
+  }
+
+  getInformeFinalInterventoriaObservacionByInformeFinalObservacion(id: number) {
+    this.registrarInformeFinalProyectoService
+      .getInformeFinalInterventoriaObservacionByInformeFinalObservacion(id)
+      .subscribe((responseData) => {
+        this.observaciones.patchValue(responseData);
+      });
   }
 
 }

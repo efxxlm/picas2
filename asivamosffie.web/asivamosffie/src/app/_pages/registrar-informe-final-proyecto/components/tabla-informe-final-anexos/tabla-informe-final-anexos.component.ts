@@ -67,7 +67,16 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
     this.paginator._intl.nextPageLabel = 'Siguiente';
     this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
-      return (page + 1).toString() + ' de ' + length.toString();
+      if (length === 0 || pageSize === 0) {
+        return '0 de ' + length;
+      }
+      length = Math.max(length, 0);
+      const startIndex = page * pageSize;
+      // If the start index exceeds the list length, do not try and fix the end index to the end.
+      const endIndex = startIndex < length ?
+        Math.min(startIndex + pageSize, length) :
+        startIndex + pageSize;
+      return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
     };
     this.paginator._intl.previousPageLabel = 'Anterior';
   }
@@ -87,11 +96,14 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
       data:{
         informe: informe,
         llaveMen: this.llaveMen
-      }
+      },
+      id:'dialogTipoDocumento'
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
+      this.ngOnInit();
+      return;
     });
   }
 
@@ -101,11 +113,14 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
       data: {
         informe: informe,
         llaveMen: this.llaveMen
-      }
+      },
+      id:'dialogObservaciones'
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
+      this.ngOnInit();
+      return;
     });
   }
 
@@ -137,6 +152,9 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     this.registrarInformeFinalProyectoService.createEditInformeFinalInterventoria(informeFinalInterventoria)
     .subscribe((respuesta: Respuesta) => {
         console.log(respuesta.message);
+        this.ngOnInit();
+        return;
+        //this.router.navigate(['/crearProyecto']);
       },
       err => {
         console.log( err );

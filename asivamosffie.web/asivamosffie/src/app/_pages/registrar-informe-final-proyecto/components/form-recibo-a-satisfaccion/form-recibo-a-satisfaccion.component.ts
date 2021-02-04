@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -15,6 +15,7 @@ import { Respuesta } from 'src/app/core/_services/common/common.service';
 })
 export class FormReciboASatisfaccionComponent implements OnInit {
   @Input() report: Report;
+  @Output() formCompleto = new EventEmitter();
   estaEditando = false;
   informeFinalId = 0;
   urlActa = null;
@@ -32,26 +33,19 @@ export class FormReciboASatisfaccionComponent implements OnInit {
   }
 
   private buildForm() {
-    if(this.report.informeFinal.length>0){
-      if(this.report.informeFinal[0].informeFinalId != null){
-        this.informeFinalId = this.report.informeFinal[0].informeFinalId;
-      }
-      if(this.report.informeFinal[0].urlActa != null){
-        this.urlActa = this.report.informeFinal[0].urlActa;
-      }
-      if(this.report.informeFinal[0].fechaSuscripcion != null){
-        this.fechaSuscripcion = this.report.informeFinal[0].fechaSuscripcion;
-      }
-    }
     this.addressForm = this.fb.group({
-      InformeFinalId: [this.informeFinalId, Validators.required],
-      ContratacionProyectoId: [
-        this.report.contratacionProyectoId,
+      informeFinalId: [null, Validators.required],
+      proyectoId: [
+        this.report.proyecto.proyectoId,
         Validators.required,
       ],
-      UrlActa: [this.urlActa, Validators.required],
-      FechaSuscripcion: [this.fechaSuscripcion, Validators.required],
+      urlActa: [null, Validators.required],
+      fechaSuscripcion: [null, Validators.required],
     });
+    if(this.report.proyecto.informeFinal.length>0){
+      this.addressForm.patchValue(this.report.proyecto.informeFinal[0]);
+    }
+    this.formCompleto.emit(this.respuestaFormCompleto());
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -62,7 +56,8 @@ export class FormReciboASatisfaccionComponent implements OnInit {
   }
 
   onSubmit() {
-    // console.log(this.addressForm.value);
+    //[disabled]="addressForm.invalid"
+    //console.log(this.addressForm.value);
     this.addressForm.markAllAsTouched();
     this.estaEditando = true;
     this.createInformeFinal(this.addressForm.value);
@@ -73,6 +68,13 @@ export class FormReciboASatisfaccionComponent implements OnInit {
     this.registrarInformeFinalProyectoService.createInformeFinal(informeFinal)
     .subscribe((respuesta: Respuesta) => {
       this.openDialog('', respuesta.message)
+      this.formCompleto.emit(this.respuestaFormCompleto());
     });
+  }
+
+  respuestaFormCompleto() {
+    if (this.addressForm.get('urlActa').valid) return true
+    else if (this.addressForm.get('fechaSuscripcion').valid) return true
+    else false
   }
 }

@@ -1,9 +1,7 @@
 <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
   <mat-card class="shipping-card">
     <mat-card-header class="header-card header-card--margin">
-      <mat-card-title class="mat-card-title header-card--text">
-        Recibo a satisfacción
-      </mat-card-title>
+      <mat-card-title class="mat-card-title header-card--text"> Recibo a satisfacción </mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <div class="row">
@@ -12,8 +10,8 @@
             class="label-left"
             for="UrlActa"
             [class.color-secondaryColor]="
-              (addressForm.get('UrlActa').invalid && addressForm.get('UrlActa').touched) ||
-              (addressForm.get('UrlActa').invalid && estaEditando)
+              (addressForm.get('urlActa').invalid && addressForm.get('urlActa').touched) ||
+              (addressForm.get('urlActa').invalid && estaEditando)
             "
           >
             URL Acta de recibo a satisfaccion - Obra
@@ -25,29 +23,27 @@
               matInput
               #numeroRadicadoInput
               type="url"
-              formControlName="UrlActa"
+              formControlName="urlActa"
               maxlength="20"
+              [matTooltipPosition]="'above'"
+              matTooltip="Campo alfanumérico"
+              matTooltipClass="info-tooltip"
               required
             />
           </mat-form-field>
-          <span
-            class="info-url"
-            [matTooltipPosition]="'above'"
-            matTooltip="Campo alfanumérico"
-            matTooltipClass="info-tooltip"
-          >
-            Indique la ruta en la que se encuentra el Acta de recibo a
-            satisfacción - Obra
-          </span>
+          <span class="info-url"> Indique la ruta en la que se encuentra el Acta de recibo a satisfacción - Obra </span>
         </div>
         <span class="icon-incompleto">
           <img
             class="icon-incompleto--img"
             src="assets/img/icon/incompleto.svg"
             alt="este campo es requerido"
+            [matTooltipPosition]="'above'"
+            matTooltip="Debe ingresar la información en el campo para continuar"
+            matTooltipClass="info-tooltip"
             *ngIf="
-              (addressForm.get('UrlActa').invalid && addressForm.get('UrlActa').touched) ||
-              (addressForm.get('UrlActa').invalid && estaEditando)
+              (addressForm.get('urlActa').invalid && addressForm.get('urlActa').touched) ||
+              (addressForm.get('urlActa').invalid && estaEditando)
             "
           />
         </span>
@@ -58,13 +54,13 @@
             <div class="pr-1">
               <label
                 class="label-left"
-                for="FechaSuscripcion"
+                for="fechaSuscripcion"
                 [class.color-secondaryColor]="
-                  (addressForm.get('FechaSuscripcion').invalid && addressForm.get('FechaSuscripcion').touched) ||
-                  (addressForm.get('FechaSuscripcion').invalid && estaEditando)
+                  (addressForm.get('fechaSuscripcion').invalid && addressForm.get('fechaSuscripcion').touched) ||
+                  (addressForm.get('fechaSuscripcion').invalid && estaEditando)
                 "
               >
-                Fecha
+                Fecha de suscripción
               </label>
             </div>
             <div class="col d-flex">
@@ -72,7 +68,7 @@
                 <input
                   matInput
                   [matDatepicker]="pickerSolicitudNovedad"
-                  formControlName="FechaSuscripcion"
+                  formControlName="fechaSuscripcion"
                   readonly
                   (click)="pickerSolicitudNovedad.open()"
                   placeholder="DD/MM/AAAA"
@@ -87,19 +83,19 @@
                 (click)="pickerSolicitudNovedad.open()"
                 class="btn-calendario"
               >
-                <img
-                  src="assets/img/icon/calendarioCirculo.svg"
-                  alt="Abrir Calendario"
-                />
+                <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
               </button>
               <span class="icon-incompleto">
                 <img
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
                   alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
                   *ngIf="
-                    (addressForm.get('FechaSuscripcion').invalid && addressForm.get('FechaSuscripcion').touched) ||
-                    (addressForm.get('FechaSuscripcion').invalid && estaEditando)
+                    (addressForm.get('fechaSuscripcion').invalid && addressForm.get('fechaSuscripcion').touched) ||
+                    (addressForm.get('fechaSuscripcion').invalid && estaEditando)
                   "
                 />
               </span>
@@ -110,8 +106,7 @@
     </mat-card-content>
   </mat-card>
   <div class="text-center mb-2em">
-    <button mat-button color="warn" class="btn-guardar" type="submit"
-    [disabled]="addressForm.invalid">
+    <button mat-button color="warn" class="btn-guardar" type="submit">
       <img src="assets/img/icon/guardar.svg" alt="Guardar" />
     </button>
   </div>

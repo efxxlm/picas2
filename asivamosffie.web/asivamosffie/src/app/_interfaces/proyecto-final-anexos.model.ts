@@ -4,10 +4,7 @@ export interface Anexo {
   tipoIntervencion: string,
   institucionEducativa: string,
   sedeEducativa: string,
-  contratoId: number,
   proyectoId: number,
-  contratacionId: number,
-  contratacionProyectoId: number,
   registroCompleto: boolean,
   estadoInforme: string
 }

@@ -1,1 +1,20 @@
-<p>home works!</p>
+<div class="container text-center">
+  <div class="text-right">
+    <a routerLink="/.." mat-button color="primary" class="btn-regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar" />
+    </a>
+  </div>
+  <h1 class="title-menu--h1">Verificar informe final del proyecto</h1>
+  <button mat-mini-fab color="primary" class="btn-info" (click)="verAyuda = !verAyuda">?</button>
+
+  <div class="text-info" *ngIf="verAyuda">
+    <button mat-icon-button (click)="verAyuda = false" class="text-info--close">
+      <img src="assets/img/icon/cerrar-gris.svg" alt="cerrar ayuda" />
+    </button>
+    Bienvenida/o, aquí podrá realizar la verificación de los informes técnicos finales de los proyectos de
+    infraestructura que han terminado, que han sido registrados por el interventor y que se han ejecutado en el marco de
+    la gestión del FFIE.
+  </div>
+
+  <app-tabla-informe-final></app-tabla-informe-final>
+</div>
