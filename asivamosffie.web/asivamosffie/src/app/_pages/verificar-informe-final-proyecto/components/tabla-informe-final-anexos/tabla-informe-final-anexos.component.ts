@@ -6,18 +6,9 @@ import { MatDialog } from '@angular/material/dialog'
 import { FormBuilder, Validators, FormArray, FormGroup } from '@angular/forms'
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component'
 import { DialogObservacionesComponent } from '../dialog-observaciones/dialog-observaciones.component';
-
-const ELEMENT_DATA = [
-  {
-    No: '1',
-    item: 'Acta de recibo a satisfacción de la fase 2 - Interventoría',
-    calificacionInterventoria: 'Cumple',
-    tipoAnexo: 'Cumple',
-    Ubicacion: 'https://drive.google.com/drive/actadereciboasatisfaccion',
-    verificacion: 'No cumple',
-    id: '1'
-  }
-]
+import { ValidarInformeFinalService } from 'src/app/core/_services/validarInformeFinal/validar-informe-final.service'
+import { Anexo } from 'src/app/_interfaces/proyecto-final-anexos.model'
+import { Respuesta } from 'src/app/core/_services/common/common.service'
 
 @Component({
   selector: 'app-tabla-informe-final-anexos',
@@ -25,33 +16,51 @@ const ELEMENT_DATA = [
   styleUrls: ['./tabla-informe-final-anexos.component.scss']
 })
 export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
-  ELEMENT_DATA: any[]
-  llaveMen = "LJ77654";
+  ELEMENT_DATA : Anexo[] = [];
+  @Input() id: number;
+  @Input() llaveMen: string;
+  anexos: any;
   displayedColumns: string[] = [
+    'No',
     'item',
     'calificacionInterventoria',
     'tipoAnexo',
     'Ubicacion',
     'verificacion',
     'id'
-  ]
-  dataSource = new MatTableDataSource(ELEMENT_DATA)
+  ];
+  addressForm: FormGroup;
+  dataSource = new MatTableDataSource<Anexo>(this.ELEMENT_DATA);
 
   @ViewChild(MatPaginator) paginator: MatPaginator
   @ViewChild(MatSort) sort: MatSort
   constructor(
-    public dialog: MatDialog
+    private fb: FormBuilder,
+    public dialog: MatDialog,
+    private validarInformeFinalService: ValidarInformeFinalService
   ) {}
 
   estaEditando = false
 
   estadoArray = [
-    { name: 'Cumple', value: 'Cumple' },
-    { name: 'No cumple', value: 'No cumple' },
-    { name: 'No aplica', value: 'No aplica' }
+    { name: 'Cumple', value: 1 },
+    { name: 'No cumple', value: 2 },
+    { name: 'No aplica', value: 3 }
   ]
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log("Què datos estan entrando? : ",this.id);
+    this.getInformeFinalListaChequeoByInformeFinalId(this.id);
+  }
+
+  getInformeFinalListaChequeoByInformeFinalId (id:number) {
+    this.validarInformeFinalService.getInformeFinalListaChequeoByInformeFinalId(id)
+    .subscribe(anexos => {
+      this.dataSource.data = anexos as Anexo[];
+      this.anexos = anexos;
+      console.log("Aquí:",this.anexos);
+    });
+  }
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort
@@ -71,6 +80,23 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     this.paginator._intl.previousPageLabel = 'Anterior'
   }
 
+  openDialogObservaciones(informe:any) {
+    let dialogRef = this.dialog.open(DialogObservacionesComponent, {
+      width: '70em',
+      data: {
+        informe: informe,
+        llaveMen: this.llaveMen
+      },
+      id:'dialogObservacionesSupervisor'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      this.ngOnInit();
+      return;
+    });
+  }
+
   openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
       width: '28em',
@@ -78,37 +104,35 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     });
   }
 
-  openDialogTipoDocumento(informe:any) {
-    // let dialogRef = this.dialog.open(DialogTipoDocumentoComponent, {
-    //   width: '70em',
-    //   data:{
-    //     informe: informe,
-    //     llaveMen: this.llaveMen
-    //   }
-    // });
-
-    // dialogRef.afterClosed().subscribe(result => {
-    //   console.log(`Dialog result: ${result}`);
-    // });
-  }
-
-  openDialogObservaciones(informe:any) {
-    let dialogRef = this.dialog.open(DialogObservacionesComponent, {
-      width: '70em',
-      data: {
-        informe: informe,
-        llaveMen: this.llaveMen
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-    });
-  }
-
   onSubmit() {
-    console.log(ELEMENT_DATA);
+    // console.log(this.addressForm.value);
     this.estaEditando = true;
     this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+  }
+  //Actualizar validación
+  select(element) {
+    console.log("antes de: ",element);
+    this.addressForm = this.fb.group({
+      calificacionCodigo:  [element.calificacionCodigo, Validators.required],
+      informeFinalId:  [element.informeFinalId, Validators.required],
+      informeFinalInterventoriaId:  [element.informeFinalInterventoriaId, Validators.required],
+      informeFinalListaChequeoId:  [element.informeFinalListaChequeoId, Validators.required],
+      validacionCodigo: [element.verificacion, Validators.required]
+    });
+    console.log("Autosave test: ",this.addressForm.value);
+    this.updateStateValidateInformeFinalInterventoria(this.addressForm.value.informeFinalInterventoriaId, this.addressForm.value.validacionCodigo);
+  }
+
+
+  updateStateValidateInformeFinalInterventoria( id: number, code: string ) {
+    this.validarInformeFinalService.updateStateValidateInformeFinalInterventoria(id, code)
+    .subscribe((respuesta: Respuesta) => {
+        console.log(respuesta.message);
+        this.ngOnInit();
+        return;
+      },
+      err => {
+        console.log( err );
+      });
   }
 }

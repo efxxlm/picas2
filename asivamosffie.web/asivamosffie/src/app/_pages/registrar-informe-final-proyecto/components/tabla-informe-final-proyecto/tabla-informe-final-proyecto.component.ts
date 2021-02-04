@@ -2,7 +2,8 @@ import { Component, AfterViewInit, ViewChild, OnInit } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { RegistrarInformeFinalProyectoService } from 'src/app/core/_services/registrar-informe-final-proyecto.service';
 
 export interface RegistrarInterface {
@@ -43,7 +44,8 @@ export class TablaInformeFinalProyectoComponent implements OnInit, AfterViewInit
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
-    private registrarInformeFinalProyectoService: RegistrarInformeFinalProyectoService
+    private registrarInformeFinalProyectoService: RegistrarInformeFinalProyectoService,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -55,6 +57,13 @@ export class TablaInformeFinalProyectoComponent implements OnInit, AfterViewInit
     .subscribe(report => {
       this.dataSource.data = report as RegistrarInterface[];
       console.log("Aquí:",this.dataSource.data);
+    });
+  }
+
+  openDialog(modalTitle: string, modalText: string) {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
     });
   }
 
@@ -85,6 +94,15 @@ export class TablaInformeFinalProyectoComponent implements OnInit, AfterViewInit
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  enviarRegistroFinal(pProyectoId: number) {
+    console.log("Antes: ",pProyectoId);
+    this.registrarInformeFinalProyectoService.sendFinalReportToSupervision(pProyectoId)
+      .subscribe(respuesta => {
+        this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>');
+        this.ngOnInit();
+      });
   }
 
 }

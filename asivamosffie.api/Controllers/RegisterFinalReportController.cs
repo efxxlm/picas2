@@ -225,5 +225,23 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
+
+        [HttpPost]
+        [Route("SendFinalReportToSupervision")]
+        public async Task<IActionResult> SendFinalReportToSupervision([FromQuery] int pProyectoId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                //pObservacion.UsuarioCreacion = "LCT";
+                respuesta = await _registerFinalReport.SendFinalReportToSupervision(pProyectoId, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
     }
 }

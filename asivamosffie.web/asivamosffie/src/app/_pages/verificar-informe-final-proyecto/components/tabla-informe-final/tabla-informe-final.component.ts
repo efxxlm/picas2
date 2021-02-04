@@ -2,19 +2,21 @@ import { Component, AfterViewInit, ViewChild, OnInit } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { ValidarInformeFinalService } from 'src/app/core/_services/validarInformeFinal/validar-informe-final.service';
 
-const ELEMENT_DATA = [
-  {
-    contratacionProyectoId: '1',
-    fechaEnvio: '22/11/2020',
-    llaveMen: 'LJ776554',
-    tipoIntervencion: 'Remodelación',
-    institucionEducativa: 'I.E. María Villa Campo',
-    sedeEducativa: 'Única Sede',
-    estadoVerificacion: 'Sin verificación',
-    registroCompleto: 'Incompleto',
-  }
-];
+export interface RegistrarInterface {
+  fechaCreacion: Date,
+  llaveMen: string,
+  tipoIntervencion: string,
+  institucionEducativa: string,
+  sedeEducativa: string,
+  proyectoId: number,
+  estadoValidacion: string,
+  registroCompletoValidacion: boolean;
+}
+
 @Component({
   selector: 'app-tabla-informe-final',
   templateUrl: './tabla-informe-final.component.html',
@@ -22,24 +24,45 @@ const ELEMENT_DATA = [
 })
 export class TablaInformeFinalComponent implements OnInit {
 
-  ELEMENT_DATA: any[];
+  ELEMENT_DATA : RegistrarInterface[] = [];
   displayedColumns: string[] = [
-    'fechaEnvio',
+    'fechaCreacion',
     'llaveMen',
     'tipoIntervencion',
     'institucionEducativa',
     'sedeEducativa',
-    'estadoVerificacion',
-    'registroCompleto',
-    'contratacionProyectoId'
+    'estadoValidacion',
+    'registroCompletoValidacion',
+    'proyectoId'
   ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource<RegistrarInterface>(this.ELEMENT_DATA);
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  constructor() { }
+  constructor(
+    private verificarInformeFinalProyectoService: ValidarInformeFinalService,
+    public dialog: MatDialog
+
+    ) { 
+  }
 
   ngOnInit(): void {
+    this.getListInformeFinal();
+  }
+
+  getListInformeFinal(){
+    this.verificarInformeFinalProyectoService.getListInformeFinal()
+    .subscribe(report => {
+      this.dataSource.data = report as RegistrarInterface[];
+      console.log("Aquí:",this.dataSource.data);
+    });
+  }
+
+  openDialog(modalTitle: string, modalText: string) {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
   }
 
   ngAfterViewInit() {
@@ -69,6 +92,14 @@ export class TablaInformeFinalComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+  enviarRegistroFinal(pProyectoId: number) {
+    console.log("Antes: ",pProyectoId);
+    this.verificarInformeFinalProyectoService.sendFinalReportToSupervision(pProyectoId)
+      .subscribe(respuesta => {
+        this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>');
+        this.ngOnInit();
+      });
   }
 
 }

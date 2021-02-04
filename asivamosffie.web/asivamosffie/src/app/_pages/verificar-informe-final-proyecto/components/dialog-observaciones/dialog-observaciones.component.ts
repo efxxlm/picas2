@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core'
 import { FormBuilder, Validators } from '@angular/forms'
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog'
 import { Respuesta } from 'src/app/core/_services/common/common.service'
-import { RegistrarInformeFinalProyectoService } from 'src/app/core/_services/registrar-informe-final-proyecto.service'
+import { ValidarInformeFinalService } from 'src/app/core/_services/validarInformeFinal/validar-informe-final.service'
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component'
 
 @Component({
@@ -34,12 +34,18 @@ export class DialogObservacionesComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private registrarInformeFinalProyectoService: RegistrarInformeFinalProyectoService,
+    private validarInformeFinalService: ValidarInformeFinalService,
     @Inject(MAT_DIALOG_DATA) public data,
     public dialog: MatDialog
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (this.data.informe.informeFinalInterventoriaObservacionesId > 0 && this.data.informe.informeFinalInterventoriaObservacionesId != null) {
+      this.getInformeFinalInterventoriaObservacionByInformeFinalObservacion(
+        this.data.informe.informeFinalInterventoriaObservacionesId
+      );
+    }
+  }
 
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
@@ -73,5 +79,35 @@ export class DialogObservacionesComponent implements OnInit {
       width: '28em',
       data: { modalTitle, modalText }
     })
+  }
+
+  onSubmit() {
+    // console.log(this.data.informe);
+    this.observaciones.value.informeFinalInterventoriaId = this.data.informe.informeFinalInterventoriaId;
+    this.observaciones.value.esSupervision = true;
+    if(this.data.informe.informeFinalInterventoriaObservacionesId != null){
+      this.observaciones.value.informeFinalInterventoriaObservacionesId = this.data.informe.informeFinalInterventoriaObservacionesId;
+    }
+    console.log("Enviar:",this.observaciones.value);
+    this.createEditInformeFinalInterventoriaObservacion(this.observaciones.value);
+    //this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+  }
+
+  createEditInformeFinalInterventoriaObservacion( pObservaciones: any) {
+    this.validarInformeFinalService.createEditInformeFinalInterventoriaObservacion(pObservaciones)
+    .subscribe((respuesta: Respuesta) => {
+      this.openDialog('', respuesta.message);
+      this.dialog.getDialogById('dialogObservacionesSupervisor').close();
+      return;
+    });
+  }
+
+  
+  getInformeFinalInterventoriaObservacionByInformeFinalObservacion(id: number) {
+    this.validarInformeFinalService
+      .getInformeFinalInterventoriaObservacionByInformeFinalObservacion(id)
+      .subscribe((responseData) => {
+        this.observaciones.patchValue(responseData);
+      });
   }
 }

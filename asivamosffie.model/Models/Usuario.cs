@@ -8,6 +8,7 @@ namespace asivamosffie.model.Models
         public Usuario()
         {
             CompromisoSeguimiento = new HashSet<CompromisoSeguimiento>();
+            NovedadContractual = new HashSet<NovedadContractual>();
             SesionComentario = new HashSet<SesionComentario>();
             SesionParticipante = new HashSet<SesionParticipante>();
         }
@@ -34,6 +35,7 @@ namespace asivamosffie.model.Models
         public string NumeroIdentificacion { get; set; }
 
         public virtual ICollection<CompromisoSeguimiento> CompromisoSeguimiento { get; set; }
+        public virtual ICollection<NovedadContractual> NovedadContractual { get; set; }
         public virtual ICollection<SesionComentario> SesionComentario { get; set; }
         public virtual ICollection<SesionParticipante> SesionParticipante { get; set; }
     }

@@ -7,6 +7,7 @@ namespace asivamosffie.model.Models
     {
         public NovedadContractual()
         {
+            ComponenteAportanteNovedad = new HashSet<ComponenteAportanteNovedad>();
             NovedadContractualClausula = new HashSet<NovedadContractualClausula>();
             NovedadContractualObservaciones = new HashSet<NovedadContractualObservaciones>();
         }
@@ -50,9 +51,27 @@ namespace asivamosffie.model.Models
         public bool? RegistroCompletoVerificacion { get; set; }
         public string EstadoCodigo { get; set; }
         public string CausaRechazo { get; set; }
+        public bool? RegistroCompletoTramiteNovedades { get; set; }
+        public DateTime? FechaEnvioGestionContractual { get; set; }
+        public string EstadoProcesoCodigo { get; set; }
+        public int? AbogadoRevisionId { get; set; }
+        public bool? DeseaContinuar { get; set; }
+        public DateTime? FechaEnvioActaContratistaObra { get; set; }
+        public DateTime? FechaFirmaActaContratistaObra { get; set; }
+        public DateTime? FechaEnvioActaContratistaInterventoria { get; set; }
+        public DateTime? FechaFirmaContratistaInterventoria { get; set; }
+        public DateTime? FechaEnvioActaApoyo { get; set; }
+        public DateTime? FechaFirmaApoyo { get; set; }
+        public DateTime? FechaEnvioActaSupervisor { get; set; }
+        public DateTime? FechaFirmaSupervisor { get; set; }
+        public string UrlSoporteFirmas { get; set; }
+        public int? ObservacionesDevolucionId { get; set; }
+        public string RazonesNoContinuaProceso { get; set; }
 
+        public virtual Usuario AbogadoRevision { get; set; }
         public virtual Contrato Contrato { get; set; }
         public virtual Proyecto Proyecto { get; set; }
+        public virtual ICollection<ComponenteAportanteNovedad> ComponenteAportanteNovedad { get; set; }
         public virtual ICollection<NovedadContractualClausula> NovedadContractualClausula { get; set; }
         public virtual ICollection<NovedadContractualObservaciones> NovedadContractualObservaciones { get; set; }
     }

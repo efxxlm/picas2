@@ -7,17 +7,18 @@
   <div class="text-center">
     <h1 class="title-menu--h1">
       Verificar informe final
-      LJ776554
+      <b *ngIf="report"> {{ report.proyecto.llaveMen }} </b>
     </h1>
     <p class="colorMainColor mt-05em"> 
       Fecha de envío del informe final
-      <b>
-        22/11/2020
+      <b *ngIf="report">
+        {{ report.proyecto.informeFinal[0].fechaCreacion  | date:'dd/MM/yyyy' }}
       </b>
     </p>
   </div>
 
-  <app-datos-del-proyecto></app-datos-del-proyecto>
-  <app-recibo-satisfaccion></app-recibo-satisfaccion>
-  <app-tabla-informe-final-anexos></app-tabla-informe-final-anexos>
+  <app-datos-del-proyecto *ngIf="report" [report]="report"></app-datos-del-proyecto>
+  <app-recibo-satisfaccion *ngIf="report" [report]="report"></app-recibo-satisfaccion>
+  <app-tabla-informe-final-anexos *ngIf="report" [id]="report.proyecto.informeFinal[0].informeFinalId" [llaveMen]="report.proyecto.llaveMen"></app-tabla-informe-final-anexos>
+
 </section>

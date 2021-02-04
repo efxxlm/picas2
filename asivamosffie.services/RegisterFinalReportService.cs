@@ -29,7 +29,7 @@ namespace asivamosffie.services
             return await _context.VProyectosCierre.OrderByDescending(r => r.ProyectoId).ToListAsync();
         }
 
-            public async Task<List<dynamic>> GetInformeFinalByProyectoId(int pProyectoId)
+        public async Task<List<dynamic>> GetInformeFinalByProyectoId(int pProyectoId)
         {
             String numeroContratoObra = "", nombreContratistaObra = "", numeroContratoInterventoria = "", nombreContratistaInterventoria = "";
             String  fechaTerminacionInterventoria = "";
@@ -166,16 +166,15 @@ namespace asivamosffie.services
                     }
                     else
                     {
-                        foreach (InformeFinalInterventoria item in ListInformeTotalInterventoria)
+                        InformeFinalInterventoria existe_no_cumple = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == pInformeFinalId && r.CalificacionCodigo == ConstantCodigoCalificacionInformeFinal.No_Cumple).FirstOrDefault();
+                        InformeFinalInterventoria existe_cumple_no_data = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == pInformeFinalId && r.CalificacionCodigo == ConstantCodigoCalificacionInformeFinal.Cumple && (r.InformeFinalAnexoId == null || r.InformeFinalAnexoId == 0)).FirstOrDefault();
+                        if (existe_no_cumple != null)
                         {
-                            if (item.CalificacionCodigo == "2")
-                            {
-                                return false;
-                            }
-                            else if (item.InformeFinalAnexoId == null || item.InformeFinalAnexoId == 0)
-                            {
-                                return false;
-                            }
+                            return false;
+                        }
+                        if (existe_cumple_no_data != null)
+                        {
+                            return false;
                         }
                     }
                 }
@@ -203,7 +202,9 @@ namespace asivamosffie.services
                     CreateEdit = "CREAR INFORME FINAL";
                     pInformeFinal.FechaCreacion = DateTime.Now;
                     pInformeFinal.Eliminado = false;
+                    pInformeFinal.EstadoValidacion = "0";
                     pInformeFinal.EstadoInforme = ConstantCodigoEstadoInformeFinal.En_proceso_de_registro;
+                    pInformeFinal.RegistroCompletoValidacion = false;
                     _context.InformeFinal.Add(pInformeFinal);
                 }
                 else
@@ -347,7 +348,6 @@ namespace asivamosffie.services
                     _context.InformeFinalInterventoria.Add(pInformeFinalInterventoriaId);
                     informeFinal.EstadoInforme = ConstantCodigoEstadoInformeFinal.En_proceso_de_registro;
                     _context.SaveChanges();
-                    await VerificarInformeFinalEstadoCompleto(pInformeFinalInterventoriaId.InformeFinalId);
                 }
                 else
                 {
@@ -367,6 +367,7 @@ namespace asivamosffie.services
                         CreateEdit = "NO SE PUDO ACTUALIZAR EL INFORME FINAL INTERVENTORIA";
                     }
                 }
+                await VerificarInformeFinalEstadoCompleto(pInformeFinalInterventoriaId.InformeFinalId);
 
                 _context.SaveChanges();
                 return
@@ -548,18 +549,19 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<Respuesta> SendFinalReportToSupervision(int pId, string pUsuario)
+        public async Task<Respuesta> SendFinalReportToSupervision(int pProyectoId, string pUsuario)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Enviar_A_supervisor_Informe_Final_Interventoria, (int)EnumeratorTipoDominio.Acciones);
 
             try
             {
-                InformeFinalInterventoria informeFinalInterventoria = _context.InformeFinalInterventoria.Find(pId);
-                InformeFinal informeFinal = _context.InformeFinal.Find(informeFinalInterventoria.InformeFinalId);
-
-                informeFinalInterventoria.UsuarioModificacion = pUsuario;
-                informeFinalInterventoria.FechaModificacion = DateTime.Now;
-                informeFinal.EstadoInforme = ConstantCodigoEstadoInformeFinal.Con_informe_enviado_para_validación;
+                InformeFinal informeFinal = _context.InformeFinal.Where(r => r.ProyectoId == pProyectoId).FirstOrDefault();
+                if (informeFinal!= null)
+                {
+                    informeFinal.EstadoInforme = ConstantCodigoEstadoInformeFinal.Con_informe_enviado_para_validación;
+                    informeFinal.UsuarioModificacion = pUsuario;
+                    informeFinal.FechaModificacion = DateTime.Now;
+                }
 
                 _context.SaveChanges();
 

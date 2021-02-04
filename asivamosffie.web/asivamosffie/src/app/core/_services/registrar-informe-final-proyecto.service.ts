@@ -59,4 +59,8 @@ export class RegistrarInformeFinalProyectoService {
   getInformeFinalInterventoriaObservacionByInformeFinalObservacion(pObservacionId: number){
     return this.http.get(`${environment.apiUrl}/${this.final_report}/GetInformeFinalInterventoriaObservacionByInformeFinalObservacion?pObservacionId=${ pObservacionId }`);
   }
+  sendFinalReportToSupervision(pProyectoId: number){
+    return this.http.post(`${environment.apiUrl}/${this.final_report}/SendFinalReportToSupervision?pProyectoId=${ pProyectoId }`,null);
+  }
+  
 }

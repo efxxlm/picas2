@@ -9,13 +9,13 @@
       <strong>
         URL Acta de recibo a satisfaccion - Obra:
       </strong>
-      https://drive.google.com/drive/LJ776554/actadereciboasatisfaccion-obra
+      {{ report.proyecto.informeFinal[0].urlActa }}
     </p>
     <p>
       <strong>
         Fecha de suscripción:
       </strong>
-      30/06/2020
+      {{ report.proyecto.informeFinal[0].fechaSuscripcion  | date:'dd/MM/yyyy' }}
     </p>
   </mat-card-content>
 </mat-card>
