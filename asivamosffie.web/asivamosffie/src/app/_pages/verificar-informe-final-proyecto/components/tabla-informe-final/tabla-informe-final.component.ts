@@ -22,7 +22,7 @@ export interface RegistrarInterface {
   templateUrl: './tabla-informe-final.component.html',
   styleUrls: ['./tabla-informe-final.component.scss']
 })
-export class TablaInformeFinalComponent implements OnInit {
+export class TablaInformeFinalComponent implements OnInit, AfterViewInit {
 
   ELEMENT_DATA : RegistrarInterface[] = [];
   displayedColumns: string[] = [

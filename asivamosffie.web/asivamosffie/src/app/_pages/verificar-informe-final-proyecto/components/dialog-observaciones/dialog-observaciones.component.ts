@@ -82,32 +82,6 @@ export class DialogObservacionesComponent implements OnInit {
   }
 
   onSubmit() {
-    // console.log(this.data.informe);
-    this.observaciones.value.informeFinalInterventoriaId = this.data.informe.informeFinalInterventoriaId;
-    this.observaciones.value.esSupervision = true;
-    if(this.data.informe.informeFinalInterventoriaObservacionesId != null){
-      this.observaciones.value.informeFinalInterventoriaObservacionesId = this.data.informe.informeFinalInterventoriaObservacionesId;
-    }
-    console.log("Enviar:",this.observaciones.value);
-    this.createEditInformeFinalInterventoriaObservacion(this.observaciones.value);
-    //this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
-  }
-
-  createEditInformeFinalInterventoriaObservacion( pObservaciones: any) {
-    this.validarInformeFinalService.createEditInformeFinalInterventoriaObservacion(pObservaciones)
-    .subscribe((respuesta: Respuesta) => {
-      this.openDialog('', respuesta.message);
-      this.dialog.getDialogById('dialogObservacionesSupervisor').close();
-      return;
-    });
-  }
-
-  
-  getInformeFinalInterventoriaObservacionByInformeFinalObservacion(id: number) {
-    this.validarInformeFinalService
-      .getInformeFinalInterventoriaObservacionByInformeFinalObservacion(id)
-      .subscribe((responseData) => {
-        this.observaciones.patchValue(responseData);
-      });
+    console.log(this.observaciones.value);
   }
 }
