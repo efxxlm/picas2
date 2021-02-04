@@ -7,7 +7,6 @@ import { DialogCargarReportPagosRprComponent } from '../dialog-cargar-report-pag
 import { ObservacionesReportPagoRprComponent } from '../observaciones-report-pago-rpr/observaciones-report-pago-rpr.component'
 import { FaseDosPagosRendimientosService } from '../../../../core/_services/faseDosPagosRendimientos/fase-dos-pagosRendimientos.service'
 import { FileDownloader } from 'src/app/_helpers/file-downloader'
-import exportFromJSON from 'export-from-json'
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component'
 import { filter } from 'rxjs/internal/operators/filter'
 import { switchMap } from 'rxjs/operators'

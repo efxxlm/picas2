@@ -1,3 +1,4 @@
+import { Respuesta } from 'src/app/core/_services/common/common.service';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -112,16 +113,11 @@ export class CargarActaSuscritaActaIniFIPreconstruccionComponent implements OnIn
         this.esRojo = true;
       }
       else {
-        this.service.LoadActa(pContrato).subscribe((data: any) => {
-
-          if (data.code == "200") {
-            this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
-            this.close();
-          }
-          else {
-            this.openDialog("", data.message);
-          }
-        });
+        this.service.LoadActa(pContrato)
+          .subscribe(
+            response => this.openDialog( '', `<b>${ response.message }</b>` ),
+            err => this.openDialog( '', `<b>${ err.message }</b>` )
+          );
       }
     } else {
       this.openDialog('', '<b>El tipo de archivo que esta intentando cargar no es permitido en la plataforma.<br>El tipo de documento soportado es .pdf</b>');
