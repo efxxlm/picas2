@@ -41,9 +41,9 @@ export class DialogObservacionesComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.data.informe.informeFinalInterventoriaObservacionesId > 0 && this.data.informe.informeFinalInterventoriaObservacionesId != null) {
-      this.getInformeFinalInterventoriaObservacionByInformeFinalObservacion(
+      /*this.getInformeFinalInterventoriaObservacionByInformeFinalObservacion(
         this.data.informe.informeFinalInterventoriaObservacionesId
-      );
+      );*/
     }
   }
 

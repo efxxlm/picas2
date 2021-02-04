@@ -113,9 +113,19 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
           data.forEach(p => {
             motivoAuxS = this.motivosSolicitudArray.find(m => m.codigo == p.motivoSolicitudCodigo);
             listaSeleccionados.push(motivoAuxS);
-            console.log(listaSeleccionados);
           });
           this.addressForm.get('motivosSolicitud').setValue(listaSeleccionados);
+          console.log(listaSeleccionados);
+          for (let n = 0; n < listaSeleccionados.length; n++) {
+            switch (listaSeleccionados[n].codigo) {
+              case '4':
+                this.obj1 = true;
+                if (this.obj1 == true) {
+                  this.addressForm.get('cualOtroMotivo').setValue(resp.cualOtroMotivo);
+                }
+                break;
+            }
+          }
           //fin modificacion
           /*
           const motivoSolicitudCod = [];
@@ -359,7 +369,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
           "EstadoCodigo": estadoControversia,
           "EsCompleto": this.estaCompleto,
           "ContratoId": this.idContrato,
-          "CualOtroMotivo":this.addressForm.value.cualOtroMotivo,
+          "CualOtroMotivo": this.addressForm.value.cualOtroMotivo,
           "ConclusionComitePreTecnico": this.addressForm.value.conclusionComitePretecnico,
           "MotivoJustificacionRechazo": this.addressForm.value.motivosRechazo,
           //"UsuarioCreacion": "us cre",
@@ -384,7 +394,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
           "EstadoCodigo": estadoControversia,
           "EsCompleto": this.estaCompleto,
           "ContratoId": this.contratoId,
-          "CualOtroMotivo":this.addressForm.value.cualOtroMotivo,
+          "CualOtroMotivo": this.addressForm.value.cualOtroMotivo,
           "ConclusionComitePreTecnico": this.addressForm.value.conclusionComitePretecnico,
           "MotivoJustificacionRechazo": this.addressForm.value.motivosRechazo,
           //"UsuarioModificacion": "us mod",
@@ -574,7 +584,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
           "EstadoCodigo": estadoControversiaContratista,
           "EsCompleto": this.estaCompleto,
           "ContratoId": this.idContrato,
-          "CualOtroMotivo":this.addressForm.value.cualOtroMotivo,
+          "CualOtroMotivo": this.addressForm.value.cualOtroMotivo,
           "ConclusionComitePreTecnico": '',
           "MotivoJustificacionRechazo": this.addressForm.value.resumenJustificacionSolicitud,
           //"UsuarioCreacion": "us cre",
@@ -597,7 +607,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
           "EstadoCodigo": estadoControversiaContratista,
           "EsCompleto": this.estaCompleto,
           "ContratoId": this.contratoId,
-          "CualOtroMotivo":this.addressForm.value.cualOtroMotivo,
+          "CualOtroMotivo": this.addressForm.value.cualOtroMotivo,
           "ConclusionComitePreTecnico": '',
           "MotivoJustificacionRechazo": this.addressForm.value.resumenJustificacionSolicitud,
           //"UsuarioCreacion": "us cre",
@@ -787,7 +797,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
           "EstadoCodigo": estadoControversiaContratante,
           "EsCompleto": this.estaCompleto,
           "ContratoId": this.idContrato,
-          "CualOtroMotivo":this.addressForm.value.cualOtroMotivo,
+          "CualOtroMotivo": this.addressForm.value.cualOtroMotivo,
           "ConclusionComitePreTecnico": '',
           "MotivoJustificacionRechazo": this.addressForm.value.resumenJustificacionSolicitud,
           //"UsuarioCreacion": "us cre",
@@ -810,7 +820,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
           "EstadoCodigo": estadoControversiaContratante,
           "EsCompleto": this.estaCompleto,
           "ContratoId": this.contratoId,
-          "CualOtroMotivo":this.addressForm.value.cualOtroMotivo,
+          "CualOtroMotivo": this.addressForm.value.cualOtroMotivo,
           "ConclusionComitePreTecnico": '',
           "MotivoJustificacionRechazo": this.addressForm.value.resumenJustificacionSolicitud,
           //"UsuarioCreacion": "us cre",
