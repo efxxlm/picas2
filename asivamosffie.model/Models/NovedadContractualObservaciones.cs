@@ -15,6 +15,7 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
         public bool? Eliminado { get; set; }
         public bool? Archivado { get; set; }
+        public bool? EsTramiteNovedades { get; set; }
 
         public virtual NovedadContractual NovedadContractual { get; set; }
     }

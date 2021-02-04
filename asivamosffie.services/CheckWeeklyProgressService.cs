@@ -33,369 +33,6 @@ namespace asivamosffie.services
             _context = context;
         }
         #endregion region 
-
-        #region Business
-        public async Task<bool> GetValidarRegistroCompletoObservaciones(int pSeguimientoSemanalId, bool esSupervisor)
-        {
-            try
-            { 
-                SeguimientoSemanal seguimientoSemanal = _context.SeguimientoSemanal.Find(pSeguimientoSemanalId);
-                _context.SeguimientoSemanal.Attach(seguimientoSemanal);
-                if (esSupervisor)
-                {
-                    seguimientoSemanal.RegistroCompletoAvalar = await ValidarRegistroCompletoObservacion(seguimientoSemanal, esSupervisor);
-                    _context.Entry(seguimientoSemanal).Property(x => x.RegistroCompletoAvalar).IsModified = true;
-                }
-                else
-                {
-                    seguimientoSemanal.RegistroCompletoVerificar = await ValidarRegistroCompletoObservacion(seguimientoSemanal, esSupervisor);
-                    _context.Entry(seguimientoSemanal).Property(x => x.RegistroCompletoVerificar).IsModified = true;
-                }
-
-                _context.SaveChanges();
-
-                return true;
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
-        }
-
-        private async Task<bool> ValidarRegistroCompletoObservacion(SeguimientoSemanal pSeguimientoSemanal, bool pEsSupervisor)
-        {
-            bool RegistroCompleto = true;
-
-            SeguimientoSemanal seguimientoSemanal = GetSeguimientoSemanalBySeguimientoSemanalIdClean(pSeguimientoSemanal.SeguimientoSemanalId);
-            //Validar Avance Financiero
-            if (seguimientoSemanal.NumeroSemana % 5 == 0)
-            {
-                RegistroCompleto = ValidateCompleteObservationAvanceFinanciero(seguimientoSemanal.SeguimientoSemanalAvanceFinanciero.FirstOrDefault(), pEsSupervisor);
-                if (!RegistroCompleto)
-                    return RegistroCompleto;
-            }
-            //Validar Avance Fisico
-            RegistroCompleto = ValidateCompleteObservationAvanceFisico(seguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault(), pEsSupervisor);
-            if (!RegistroCompleto)
-                return RegistroCompleto;
-
-            //Validar Gestion Obra  Ambiental
-            RegistroCompleto = ValidateCompleteObservationGestionObraGestionAmbiental(seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental, pEsSupervisor);
-            if (!RegistroCompleto)
-                return RegistroCompleto;
-
-            //Validar Gestion Obra Calidad Ensayo  Laboratorio y Muestras
-            RegistroCompleto = ValidateCompleteObservationGestionObraGestionCalidadMuestras(seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraCalidad, pEsSupervisor);
-            if (!RegistroCompleto)
-                return RegistroCompleto;
-
-            //Validar Gestion Obra Calidad
-            //RegistroCompleto = ValidateCompleteObservationGestionObraGestionCalidad(seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraCalidad, pEsSupervisor);
-            //if (!RegistroCompleto)
-            //    return RegistroCompleto;
-
-            //Validar Gestion Obra Seguridad Salud
-            RegistroCompleto = ValidateCompleteObservationGestionObraGestionSeguridadSalud(seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraSeguridadSalud, pEsSupervisor);
-            if (!RegistroCompleto)
-                return RegistroCompleto;
-
-            //Validar Gestion Obra Gestion Social
-            RegistroCompleto = ValidateCompleteObservationGestionObraGestionSocial(seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraSocial, pEsSupervisor);
-            if (!RegistroCompleto)
-                return RegistroCompleto;
-
-            //Validar Gestion Obra Alertas Relevantes
-            RegistroCompleto = ValidateCompleteObservationGestionObraAlertasRelevantes(seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAlerta, pEsSupervisor);
-            if (!RegistroCompleto)
-                return RegistroCompleto;
-
-            //Validar Reporte Actividades
-            RegistroCompleto = ValidateCompleteObservationValidarReporteActividades(seguimientoSemanal.SeguimientoSemanalReporteActividad.FirstOrDefault(), pEsSupervisor);
-            if (!RegistroCompleto)
-                return RegistroCompleto;
-
-            //Validar Registro Registro Fotografico
-            RegistroCompleto = ValidateCompleteObservationValidarRegistroFotografico(seguimientoSemanal.SeguimientoSemanalRegistroFotografico.FirstOrDefault(), pEsSupervisor);
-            if (!RegistroCompleto)
-                return RegistroCompleto;
-
-            //Validar Registro Comite Obra
-            RegistroCompleto = ValidateCompleteObservationValidarComiteObra(seguimientoSemanal.SeguimientoSemanalRegistrarComiteObra.FirstOrDefault(), pEsSupervisor);
-            if (!RegistroCompleto)
-                return RegistroCompleto;
-
-            return RegistroCompleto;
-        }
-
-        private bool ValidateCompleteObservationValidarComiteObra(SeguimientoSemanalRegistrarComiteObra seguimientoSemanalRegistrarComiteObra, bool pEsSupervisor)
-        {
-            if (pEsSupervisor)
-            {
-                if (seguimientoSemanalRegistrarComiteObra.RegistroCompletoObservacionSupervisor != true)
-                    return false;
-            }
-            else
-            {
-                if (seguimientoSemanalRegistrarComiteObra.RegistroCompletoObservacionApoyo != true)
-                    return false;
-            }
-
-            return true;
-        }
-
-        private bool ValidateCompleteObservationValidarRegistroFotografico(SeguimientoSemanalRegistroFotografico seguimientoSemanalRegistroFotografico, bool pEsSupervisor)
-        {
-            if (pEsSupervisor)
-            {
-                if (seguimientoSemanalRegistroFotografico.RegistroCompletoObservacionSupervisor != true)
-                    return false;
-            }
-            else
-            {
-                if (seguimientoSemanalRegistroFotografico.RegistroCompletoObservacionApoyo != true)
-                    return false;
-
-            }
-            return true;
-        }
-
-        private bool ValidateCompleteObservationValidarReporteActividades(SeguimientoSemanalReporteActividad seguimientoSemanalReporteActividad, bool pEsSupervisor)
-        {
-            if (pEsSupervisor)
-            {
-                if (seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividad != true)
-                    return false;
-
-                if (seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividadSiguiente != true)
-                    return false;
-
-                if (seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorEstadoContrato != true)
-                    return false;
-            }
-            else
-            {
-                if (seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividad != true)
-                    return false;
-
-                if (seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividadSiguiente != true)
-                    return false;
-
-                if (seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoEstadoContrato != true)
-                    return false;
-            }
-            return true;
-        }
-
-        private bool ValidateCompleteObservationGestionObraAlertasRelevantes(ICollection<SeguimientoSemanalGestionObraAlerta> seguimientoSemanalGestionObraAlerta, bool pEsSupervisor)
-        {
-            if (pEsSupervisor)
-            {
-                foreach (var item in seguimientoSemanalGestionObraAlerta)
-                {
-                    if (item.RegistroCompletoObservacionSupervisor != true)
-                        return false;
-                }
-            }
-            else
-            {
-                foreach (var item in seguimientoSemanalGestionObraAlerta)
-                {
-                    if (item.RegistroCompletoObservacionApoyo != true)
-                        return false;
-                }
-            }
-            return true;
-        }
-
-        private bool ValidateCompleteObservationGestionObraGestionSocial(ICollection<SeguimientoSemanalGestionObraSocial> seguimientoSemanalGestionObraSocial, bool pEsSupervisor)
-        {
-            if (pEsSupervisor)
-            {
-                foreach (var item in seguimientoSemanalGestionObraSocial)
-                {
-                    if (item.RegistroCompletoObservacionSupervisor != true)
-                        return false;
-                }
-            }
-            else
-            {
-                foreach (var item in seguimientoSemanalGestionObraSocial)
-                {
-                    if (item.RegistroCompletoObservacionApoyo != true)
-                        return false;
-                }
-            }
-            return true;
-        }
-
-        private bool ValidateCompleteObservationGestionObraGestionSeguridadSalud(ICollection<SeguimientoSemanalGestionObraSeguridadSalud> seguimientoSemanalGestionObraSeguridadSalud, bool pEsSupervisor)
-        {
-            if (pEsSupervisor)
-            {
-                foreach (var item in seguimientoSemanalGestionObraSeguridadSalud)
-                {
-                    if (item.RegistroCompletoObservacionSupervisor != true)
-                        return false;
-                }
-            }
-            else
-            {
-                foreach (var item in seguimientoSemanalGestionObraSeguridadSalud)
-                {
-                    if (item.RegistroCompletoObservacionApoyo != true)
-                        return false;
-                }
-            }
-            return true;
-        }
-
-        private bool ValidateCompleteObservationGestionObraGestionCalidadMuestras(ICollection<SeguimientoSemanalGestionObraCalidad> seguimientoSemanalGestionObraCalidad, bool pEsSupervisor)
-        {
-            if (pEsSupervisor)
-            {
-                foreach (var item2 in seguimientoSemanalGestionObraCalidad)
-                {
-                    foreach (var item3 in item2.GestionObraCalidadEnsayoLaboratorio)
-                    {
-                        if (item3.TieneObservacionSupervisor != true)
-                            return false;
-
-                        //foreach (var item in item3.EnsayoLaboratorioMuestra)
-                        //{
-                        //    if (item.TieneObservacionSupervisor != true)
-                        //        return false;
-                        //}
-                    }
-                }
-            }
-            else
-            {
-                foreach (var item2 in seguimientoSemanalGestionObraCalidad)
-                {
-                    foreach (var item3 in item2.GestionObraCalidadEnsayoLaboratorio)
-                    {
-                        if (item3.TieneObservacionApoyo != true)
-                            return false;
-
-                        //foreach (var item in item3.EnsayoLaboratorioMuestra)
-                        //{
-                        //    if (item.TieneObservacionApoyo != true)
-                        //        return false;
-                        //}
-                    }
-                }
-            }
-            return true;
-        }
-
-        private bool ValidateCompleteObservationGestionObraGestionCalidad(ICollection<SeguimientoSemanalGestionObraCalidad> seguimientoSemanalGestionObraCalidad, bool pEsSupervisor)
-        {
-            if (pEsSupervisor)
-            {
-                foreach (var item in seguimientoSemanalGestionObraCalidad)
-                {
-                    if (item.RegistroCompletoObservacionSupervisor != true)
-                        return false;
-                }
-            }
-            else
-            {
-                foreach (var item in seguimientoSemanalGestionObraCalidad)
-                {
-                    if (item.RegistroCompletoObservacionApoyo != true)
-                        return false;
-                }
-            }
-            return true;
-        }
-
-        private bool ValidateCompleteObservationGestionObraGestionAmbiental(ICollection<SeguimientoSemanalGestionObraAmbiental> seguimientoSemanalGestionObraAmbiental, bool pEsSupervisor)
-        {
-            if (pEsSupervisor)
-            {
-                foreach (var item in seguimientoSemanalGestionObraAmbiental)
-                {
-                    if (item.ManejoMaterialesInsumoId == 0
-                     && item.ManejoResiduosConstruccionDemolicionId == 0
-                     && item.ManejoResiduosPeligrososEspecialesId == 0
-                     && item.ManejoOtroId == 0)
-                    {
-                        if (item.RegistroCompletoObservacionSupervisor != true)
-                            return false;
-                    }
-                    else
-                    {
-                        if (item.ManejoMaterialesInsumoId > 0 && item.ManejoMaterialesInsumo.RegistroCompletoObservacionSupervisor != true)
-                            return false;
-                        if (item.ManejoResiduosConstruccionDemolicionId > 0 && item.ManejoResiduosConstruccionDemolicion.RegistroCompletoObservacionSupervisor != true)
-                            return false;
-                        if (item.ManejoResiduosPeligrososEspecialesId > 0 && item.ManejoResiduosPeligrososEspeciales.RegistroCompletoObservacionSupervisor != true)
-                            return false;
-                        if (item.ManejoOtroId > 0 && item.ManejoOtro.RegistroCompletoObservacionSupervisor != true)
-                            return false;
-                    }
-                }
-            }
-            else
-            {
-                foreach (var item in seguimientoSemanalGestionObraAmbiental)
-                {
-                    if (item.ManejoMaterialesInsumoId == 0
-                        && item.ManejoResiduosConstruccionDemolicionId == 0
-                        && item.ManejoResiduosPeligrososEspecialesId == 0
-                        && item.ManejoOtroId == 0)
-                    {
-                        if (item.RegistroCompletoObservacionApoyo != true)
-                            return false;
-                    }
-                    else
-                    {
-                        if (item.ManejoMaterialesInsumoId > 0 && item.ManejoMaterialesInsumo.RegistroCompletoObservacionApoyo != true)
-                            return false;
-                        if (item.ManejoResiduosConstruccionDemolicionId > 0 && item.ManejoResiduosConstruccionDemolicion.RegistroCompletoObservacionApoyo != true)
-                            return false;
-                        if (item.ManejoResiduosPeligrososEspecialesId > 0 && item.ManejoResiduosPeligrososEspeciales.RegistroCompletoObservacionApoyo != true)
-                            return false;
-                        if (item.ManejoOtroId > 0 && item.ManejoOtro.RegistroCompletoObservacionApoyo != true)
-                            return false;
-                    }
-                }
-            }
-            return true;
-        }
-
-        private bool ValidateCompleteObservationAvanceFinanciero(SeguimientoSemanalAvanceFinanciero seguimientoSemanalAvanceFinanciero, bool pEsSupervisor)
-        {
-            if (pEsSupervisor)
-            {
-                if (seguimientoSemanalAvanceFinanciero.RegistroCompletoObservacionSupervisor != true)
-                    return false;
-            }
-            else
-            {
-                if (seguimientoSemanalAvanceFinanciero.RegistroCompletoObservacionApoyo != true)
-                    return false;
-            }
-            return true;
-        }
-
-        private bool ValidateCompleteObservationAvanceFisico(SeguimientoSemanalAvanceFisico seguimientoSemanalAvanceFisico, bool pEsSupervisor)
-        {
-            if (pEsSupervisor)
-            {
-                if (seguimientoSemanalAvanceFisico.RegistroCompletoObservacionSupervisor != true)
-                    return false;
-            }
-            else
-            {
-                if (seguimientoSemanalAvanceFisico.RegistroCompletoObservacionApoyo != true)
-                    return false;
-            }
-            return true;
-        }
-
-        #endregion
-
         #region List
         public async Task<SeguimientoSemanal> GetSeguimientoSemanalBySeguimientoSemanalId(int pSeguimientoSemanalId)
         {
@@ -870,6 +507,369 @@ namespace asivamosffie.services
         }
 
         #endregion
+        #region Business
+        public async Task<bool> GetValidarRegistroCompletoObservaciones(int pSeguimientoSemanalId, bool esSupervisor)
+        {
+            try
+            { 
+                SeguimientoSemanal seguimientoSemanal = _context.SeguimientoSemanal.Find(pSeguimientoSemanalId);
+                _context.SeguimientoSemanal.Attach(seguimientoSemanal);
+                if (esSupervisor)
+                {
+                    seguimientoSemanal.RegistroCompletoAvalar = await ValidarRegistroCompletoObservacion(seguimientoSemanal, esSupervisor);
+                    _context.Entry(seguimientoSemanal).Property(x => x.RegistroCompletoAvalar).IsModified = true;
+                }
+                else
+                {
+                    seguimientoSemanal.RegistroCompletoVerificar = await ValidarRegistroCompletoObservacion(seguimientoSemanal, esSupervisor);
+                    _context.Entry(seguimientoSemanal).Property(x => x.RegistroCompletoVerificar).IsModified = true;
+                }
+
+                _context.SaveChanges();
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        private async Task<bool> ValidarRegistroCompletoObservacion(SeguimientoSemanal pSeguimientoSemanal, bool pEsSupervisor)
+        {
+            bool RegistroCompleto = true;
+
+            SeguimientoSemanal seguimientoSemanal = GetSeguimientoSemanalBySeguimientoSemanalIdClean(pSeguimientoSemanal.SeguimientoSemanalId);
+            //Validar Avance Financiero
+            if (seguimientoSemanal.NumeroSemana % 5 == 0)
+            {
+                RegistroCompleto = ValidateCompleteObservationAvanceFinanciero(seguimientoSemanal.SeguimientoSemanalAvanceFinanciero.FirstOrDefault(), pEsSupervisor);
+                if (!RegistroCompleto)
+                    return RegistroCompleto;
+            }
+            //Validar Avance Fisico
+            RegistroCompleto = ValidateCompleteObservationAvanceFisico(seguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault(), pEsSupervisor);
+            if (!RegistroCompleto)
+                return RegistroCompleto;
+
+            //Validar Gestion Obra  Ambiental
+            RegistroCompleto = ValidateCompleteObservationGestionObraGestionAmbiental(seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental, pEsSupervisor);
+            if (!RegistroCompleto)
+                return RegistroCompleto;
+
+            //Validar Gestion Obra Calidad Ensayo  Laboratorio y Muestras
+            RegistroCompleto = ValidateCompleteObservationGestionObraGestionCalidadMuestras(seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraCalidad, pEsSupervisor);
+            if (!RegistroCompleto)
+                return RegistroCompleto;
+
+            //Validar Gestion Obra Calidad
+            //RegistroCompleto = ValidateCompleteObservationGestionObraGestionCalidad(seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraCalidad, pEsSupervisor);
+            //if (!RegistroCompleto)
+            //    return RegistroCompleto;
+
+            //Validar Gestion Obra Seguridad Salud
+            RegistroCompleto = ValidateCompleteObservationGestionObraGestionSeguridadSalud(seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraSeguridadSalud, pEsSupervisor);
+            if (!RegistroCompleto)
+                return RegistroCompleto;
+
+            //Validar Gestion Obra Gestion Social
+            RegistroCompleto = ValidateCompleteObservationGestionObraGestionSocial(seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraSocial, pEsSupervisor);
+            if (!RegistroCompleto)
+                return RegistroCompleto;
+
+            //Validar Gestion Obra Alertas Relevantes
+            RegistroCompleto = ValidateCompleteObservationGestionObraAlertasRelevantes(seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAlerta, pEsSupervisor);
+            if (!RegistroCompleto)
+                return RegistroCompleto;
+
+            //Validar Reporte Actividades
+            RegistroCompleto = ValidateCompleteObservationValidarReporteActividades(seguimientoSemanal.SeguimientoSemanalReporteActividad.FirstOrDefault(), pEsSupervisor);
+            if (!RegistroCompleto)
+                return RegistroCompleto;
+
+            //Validar Registro Registro Fotografico
+            RegistroCompleto = ValidateCompleteObservationValidarRegistroFotografico(seguimientoSemanal.SeguimientoSemanalRegistroFotografico.FirstOrDefault(), pEsSupervisor);
+            if (!RegistroCompleto)
+                return RegistroCompleto;
+
+            //Validar Registro Comite Obra
+            RegistroCompleto = ValidateCompleteObservationValidarComiteObra(seguimientoSemanal.SeguimientoSemanalRegistrarComiteObra.FirstOrDefault(), pEsSupervisor);
+            if (!RegistroCompleto)
+                return RegistroCompleto;
+
+            return RegistroCompleto;
+        }
+
+        private bool ValidateCompleteObservationValidarComiteObra(SeguimientoSemanalRegistrarComiteObra seguimientoSemanalRegistrarComiteObra, bool pEsSupervisor)
+        {
+            if (pEsSupervisor)
+            {
+                if (seguimientoSemanalRegistrarComiteObra.RegistroCompletoObservacionSupervisor != true)
+                    return false;
+            }
+            else
+            {
+                if (seguimientoSemanalRegistrarComiteObra.RegistroCompletoObservacionApoyo != true)
+                    return false;
+            }
+
+            return true;
+        }
+
+        private bool ValidateCompleteObservationValidarRegistroFotografico(SeguimientoSemanalRegistroFotografico seguimientoSemanalRegistroFotografico, bool pEsSupervisor)
+        {
+            if (pEsSupervisor)
+            {
+                if (seguimientoSemanalRegistroFotografico.RegistroCompletoObservacionSupervisor != true)
+                    return false;
+            }
+            else
+            {
+                if (seguimientoSemanalRegistroFotografico.RegistroCompletoObservacionApoyo != true)
+                    return false;
+
+            }
+            return true;
+        }
+
+        private bool ValidateCompleteObservationValidarReporteActividades(SeguimientoSemanalReporteActividad seguimientoSemanalReporteActividad, bool pEsSupervisor)
+        {
+            if (pEsSupervisor)
+            {
+                if (seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividad != true)
+                    return false;
+
+                if (seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorActividadSiguiente != true)
+                    return false;
+
+                if (seguimientoSemanalReporteActividad.RegistroCompletoObservacionSupervisorEstadoContrato != true)
+                    return false;
+            }
+            else
+            {
+                if (seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividad != true)
+                    return false;
+
+                if (seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoActividadSiguiente != true)
+                    return false;
+
+                if (seguimientoSemanalReporteActividad.RegistroCompletoObservacionApoyoEstadoContrato != true)
+                    return false;
+            }
+            return true;
+        }
+
+        private bool ValidateCompleteObservationGestionObraAlertasRelevantes(ICollection<SeguimientoSemanalGestionObraAlerta> seguimientoSemanalGestionObraAlerta, bool pEsSupervisor)
+        {
+            if (pEsSupervisor)
+            {
+                foreach (var item in seguimientoSemanalGestionObraAlerta)
+                {
+                    if (item.RegistroCompletoObservacionSupervisor != true)
+                        return false;
+                }
+            }
+            else
+            {
+                foreach (var item in seguimientoSemanalGestionObraAlerta)
+                {
+                    if (item.RegistroCompletoObservacionApoyo != true)
+                        return false;
+                }
+            }
+            return true;
+        }
+
+        private bool ValidateCompleteObservationGestionObraGestionSocial(ICollection<SeguimientoSemanalGestionObraSocial> seguimientoSemanalGestionObraSocial, bool pEsSupervisor)
+        {
+            if (pEsSupervisor)
+            {
+                foreach (var item in seguimientoSemanalGestionObraSocial)
+                {
+                    if (item.RegistroCompletoObservacionSupervisor != true)
+                        return false;
+                }
+            }
+            else
+            {
+                foreach (var item in seguimientoSemanalGestionObraSocial)
+                {
+                    if (item.RegistroCompletoObservacionApoyo != true)
+                        return false;
+                }
+            }
+            return true;
+        }
+
+        private bool ValidateCompleteObservationGestionObraGestionSeguridadSalud(ICollection<SeguimientoSemanalGestionObraSeguridadSalud> seguimientoSemanalGestionObraSeguridadSalud, bool pEsSupervisor)
+        {
+            if (pEsSupervisor)
+            {
+                foreach (var item in seguimientoSemanalGestionObraSeguridadSalud)
+                {
+                    if (item.RegistroCompletoObservacionSupervisor != true)
+                        return false;
+                }
+            }
+            else
+            {
+                foreach (var item in seguimientoSemanalGestionObraSeguridadSalud)
+                {
+                    if (item.RegistroCompletoObservacionApoyo != true)
+                        return false;
+                }
+            }
+            return true;
+        }
+
+        private bool ValidateCompleteObservationGestionObraGestionCalidadMuestras(ICollection<SeguimientoSemanalGestionObraCalidad> seguimientoSemanalGestionObraCalidad, bool pEsSupervisor)
+        {
+            if (pEsSupervisor)
+            {
+                foreach (var item2 in seguimientoSemanalGestionObraCalidad)
+                {
+                    foreach (var item3 in item2.GestionObraCalidadEnsayoLaboratorio)
+                    {
+                        if (item3.TieneObservacionSupervisor != true)
+                            return false;
+
+                        //foreach (var item in item3.EnsayoLaboratorioMuestra)
+                        //{
+                        //    if (item.TieneObservacionSupervisor != true)
+                        //        return false;
+                        //}
+                    }
+                }
+            }
+            else
+            {
+                foreach (var item2 in seguimientoSemanalGestionObraCalidad)
+                {
+                    foreach (var item3 in item2.GestionObraCalidadEnsayoLaboratorio)
+                    {
+                        if (item3.TieneObservacionApoyo != true)
+                            return false;
+
+                        //foreach (var item in item3.EnsayoLaboratorioMuestra)
+                        //{
+                        //    if (item.TieneObservacionApoyo != true)
+                        //        return false;
+                        //}
+                    }
+                }
+            }
+            return true;
+        }
+
+        private bool ValidateCompleteObservationGestionObraGestionCalidad(ICollection<SeguimientoSemanalGestionObraCalidad> seguimientoSemanalGestionObraCalidad, bool pEsSupervisor)
+        {
+            if (pEsSupervisor)
+            {
+                foreach (var item in seguimientoSemanalGestionObraCalidad)
+                {
+                    if (item.RegistroCompletoObservacionSupervisor != true)
+                        return false;
+                }
+            }
+            else
+            {
+                foreach (var item in seguimientoSemanalGestionObraCalidad)
+                {
+                    if (item.RegistroCompletoObservacionApoyo != true)
+                        return false;
+                }
+            }
+            return true;
+        }
+
+        private bool ValidateCompleteObservationGestionObraGestionAmbiental(ICollection<SeguimientoSemanalGestionObraAmbiental> seguimientoSemanalGestionObraAmbiental, bool pEsSupervisor)
+        {
+            if (pEsSupervisor)
+            {
+                foreach (var item in seguimientoSemanalGestionObraAmbiental)
+                {
+                    if (item.ManejoMaterialesInsumoId == 0
+                     && item.ManejoResiduosConstruccionDemolicionId == 0
+                     && item.ManejoResiduosPeligrososEspecialesId == 0
+                     && item.ManejoOtroId == 0)
+                    {
+                        if (item.RegistroCompletoObservacionSupervisor != true)
+                            return false;
+                    }
+                    else
+                    {
+                        if (item.ManejoMaterialesInsumoId > 0 && item.ManejoMaterialesInsumo.RegistroCompletoObservacionSupervisor != true)
+                            return false;
+                        if (item.ManejoResiduosConstruccionDemolicionId > 0 && item.ManejoResiduosConstruccionDemolicion.RegistroCompletoObservacionSupervisor != true)
+                            return false;
+                        if (item.ManejoResiduosPeligrososEspecialesId > 0 && item.ManejoResiduosPeligrososEspeciales.RegistroCompletoObservacionSupervisor != true)
+                            return false;
+                        if (item.ManejoOtroId > 0 && item.ManejoOtro.RegistroCompletoObservacionSupervisor != true)
+                            return false;
+                    }
+                }
+            }
+            else
+            {
+                foreach (var item in seguimientoSemanalGestionObraAmbiental)
+                {
+                    if (item.ManejoMaterialesInsumoId == 0
+                        && item.ManejoResiduosConstruccionDemolicionId == 0
+                        && item.ManejoResiduosPeligrososEspecialesId == 0
+                        && item.ManejoOtroId == 0)
+                    {
+                        if (item.RegistroCompletoObservacionApoyo != true)
+                            return false;
+                    }
+                    else
+                    {
+                        if (item.ManejoMaterialesInsumoId > 0 && item.ManejoMaterialesInsumo.RegistroCompletoObservacionApoyo != true)
+                            return false;
+                        if (item.ManejoResiduosConstruccionDemolicionId > 0 && item.ManejoResiduosConstruccionDemolicion.RegistroCompletoObservacionApoyo != true)
+                            return false;
+                        if (item.ManejoResiduosPeligrososEspecialesId > 0 && item.ManejoResiduosPeligrososEspeciales.RegistroCompletoObservacionApoyo != true)
+                            return false;
+                        if (item.ManejoOtroId > 0 && item.ManejoOtro.RegistroCompletoObservacionApoyo != true)
+                            return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        private bool ValidateCompleteObservationAvanceFinanciero(SeguimientoSemanalAvanceFinanciero seguimientoSemanalAvanceFinanciero, bool pEsSupervisor)
+        {
+            if (pEsSupervisor)
+            {
+                if (seguimientoSemanalAvanceFinanciero.RegistroCompletoObservacionSupervisor != true)
+                    return false;
+            }
+            else
+            {
+                if (seguimientoSemanalAvanceFinanciero.RegistroCompletoObservacionApoyo != true)
+                    return false;
+            }
+            return true;
+        }
+
+        private bool ValidateCompleteObservationAvanceFisico(SeguimientoSemanalAvanceFisico seguimientoSemanalAvanceFisico, bool pEsSupervisor)
+        {
+            if (pEsSupervisor)
+            {
+                if (seguimientoSemanalAvanceFisico.RegistroCompletoObservacionSupervisor != true)
+                    return false;
+            }
+            else
+            {
+                if (seguimientoSemanalAvanceFisico.RegistroCompletoObservacionApoyo != true)
+                    return false;
+            }
+            return true;
+        }
+
+        #endregion
+
+       
 
         #region Create update
         public async Task<Respuesta> CreateEditSeguimientoSemanalObservacion(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion)

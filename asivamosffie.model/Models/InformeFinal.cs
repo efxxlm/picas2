@@ -21,6 +21,7 @@ namespace asivamosffie.model.Models
         public DateTime? FechaSuscripcion { get; set; }
         public string UrlActa { get; set; }
         public bool Eliminado { get; set; }
+        public string EstadoValidacion { get; set; }
 
         public virtual Proyecto Proyecto { get; set; }
         public virtual ICollection<InformeFinalInterventoria> InformeFinalInterventoria { get; set; }
