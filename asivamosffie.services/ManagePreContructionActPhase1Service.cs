@@ -228,17 +228,20 @@ namespace asivamosffie.services
                 ContratoOld.FechaTerminacion = pContrato.FechaTerminacion;
                 ContratoOld.EstadoActa = ConstanCodigoEstadoActaContrato.Con_acta_suscrita_y_cargada;
 
-
                 _context.SaveChanges();
+
+                string strCorreo = string.Empty;
+
+                if (!string.IsNullOrEmpty(ContratoOld.Contratacion.Contratista?.ProcesoSeleccionProponente?.EmailProponente))
+                    strCorreo = ContratoOld.Contratacion.Contratista?.ProcesoSeleccionProponente?.EmailProponente;
 
                 //deboenviarcorreoal contratista
                 Template TemplateMail = await _commonService.GetTemplateById((int)enumeratorTemplate.EnviarActaCargada319);
                 string template = TemplateMail.Contenido
                                 .Replace("_LinkF_", appSettingsService.DominioFront)
                                 .Replace("[NUMERO_CONTRATO]", ContratoOld.NumeroContrato);
-                Helpers.Helpers.EnviarCorreo(ContratoOld.Contratacion.Contratista.ProcesoSeleccionProponente.EmailProponente,
+                Helpers.Helpers.EnviarCorreo(strCorreo,
                 "Acta suscrita cargada", template, appSettingsService.Sender, appSettingsService.Password, appSettingsService.MailServer, appSettingsService.MailPort, false, ContratoOld.RutaActaFase1);
-
 
                 return
                      new Respuesta
@@ -412,7 +415,7 @@ namespace asivamosffie.services
             plantilla.Contenido = plantilla.Contenido.Replace("[NUMERO_CONTRATO_OBRA]", contrato.NumeroContrato);
             plantilla.Contenido = plantilla.Contenido.Replace("[REGISTROS_PROYECTOS]", RegistrosProyectos);
             plantilla.Contenido = plantilla.Contenido.Replace("[FECHA_ACTA_INICIO_OBRA]", contrato.FechaActaInicioFase1.HasValue ? ((DateTime)contrato.FechaActaInicioFase1).ToString("dd-MM-yyyy") : " ");
-            
+
             plantilla.Contenido = plantilla.Contenido.Replace("[REPRESENTANTE_LEGAL_CONTRATISTA_INTERVENTORIA]", Supervisor?.Nombres + " " + Supervisor.Apellidos);
             plantilla.Contenido = plantilla.Contenido.Replace("[ENTIDAD_CONTRATISTA_INTERVENTORIA]", " - ");
             plantilla.Contenido = plantilla.Contenido.Replace("[NIT_CONTRATISTA_INTERVENTORIA]", Supervisor?.NumeroIdentificacion);
@@ -429,11 +432,11 @@ namespace asivamosffie.services
             plantilla.Contenido = plantilla.Contenido.Replace("[FECHA_APROBACION_POLIZAS]", (((DateTime)contrato.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MM-yyyy")));
             plantilla.Contenido = plantilla.Contenido.Replace("[OBJETO]", contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().Objeto);
             decimal ValorInicialContrato = !string.IsNullOrEmpty(contrato.Contratacion.DisponibilidadPresupuestal.Sum(r => r.ValorSolicitud).ToString()) ? contrato.Contratacion.DisponibilidadPresupuestal.Sum(r => r.ValorSolicitud) : 0;
-            plantilla.Contenido = plantilla.Contenido.Replace("[VALOR_INICIAL_CONTRATO]", "$" + (String.Format("{0:n}", ValorInicialContrato))  +"( "+ CultureInfo.InvariantCulture.TextInfo.ToTitleCase(Helpers.Conversores.NumeroALetras(ValorInicialContrato).ToLower()) + " ) ");
-            plantilla.Contenido = plantilla.Contenido.Replace("[VALOR_FASE1_PREC]", !string.IsNullOrEmpty(contrato.ValorFase1.ToString()) ? ("$" + (String.Format("{0:n}", contrato.ValorFase1))  +"( " + CultureInfo.InvariantCulture.TextInfo.ToTitleCase(Helpers.Conversores.NumeroALetras(contrato.ValorFase1).ToLower())  + " ) ") : " "); 
-            plantilla.Contenido = plantilla.Contenido.Replace("[VALOR_FASE2_CONST]", !string.IsNullOrEmpty(contrato.ValorFase2.ToString()) ? ("$" + (String.Format("{0:n}", contrato.ValorFase2)) + "( " + CultureInfo.InvariantCulture.TextInfo.ToTitleCase(Helpers.Conversores.NumeroALetras(contrato.ValorFase2).ToLower())  + " )") : " ");
-            plantilla.Contenido = plantilla.Contenido.Replace("[VALOR_FASE_1]", !string.IsNullOrEmpty(contrato.ValorFase1.ToString()) ? ("$" + (String.Format("{0:n}", contrato.ValorFase1))) + "( " + CultureInfo.InvariantCulture.TextInfo.ToTitleCase(Helpers.Conversores.NumeroALetras(contrato.ValorFase1).ToLower())  + " )" : " ");
-            plantilla.Contenido = plantilla.Contenido.Replace("[VALOR_FASE_2]", !string.IsNullOrEmpty(contrato.ValorFase2.ToString()) ? ("$" + (String.Format("{0:n}", contrato.ValorFase2))) + "( " + CultureInfo.InvariantCulture.TextInfo.ToTitleCase(Helpers.Conversores.NumeroALetras(contrato.ValorFase2).ToLower())  + " )" : " ");
+            plantilla.Contenido = plantilla.Contenido.Replace("[VALOR_INICIAL_CONTRATO]", "$" + (String.Format("{0:n}", ValorInicialContrato)) + "( " + CultureInfo.InvariantCulture.TextInfo.ToTitleCase(Helpers.Conversores.NumeroALetras(ValorInicialContrato).ToLower()) + " ) ");
+            plantilla.Contenido = plantilla.Contenido.Replace("[VALOR_FASE1_PREC]", !string.IsNullOrEmpty(contrato.ValorFase1.ToString()) ? ("$" + (String.Format("{0:n}", contrato.ValorFase1)) + "( " + CultureInfo.InvariantCulture.TextInfo.ToTitleCase(Helpers.Conversores.NumeroALetras(contrato.ValorFase1).ToLower()) + " ) ") : " ");
+            plantilla.Contenido = plantilla.Contenido.Replace("[VALOR_FASE2_CONST]", !string.IsNullOrEmpty(contrato.ValorFase2.ToString()) ? ("$" + (String.Format("{0:n}", contrato.ValorFase2)) + "( " + CultureInfo.InvariantCulture.TextInfo.ToTitleCase(Helpers.Conversores.NumeroALetras(contrato.ValorFase2).ToLower()) + " )") : " ");
+            plantilla.Contenido = plantilla.Contenido.Replace("[VALOR_FASE_1]", !string.IsNullOrEmpty(contrato.ValorFase1.ToString()) ? ("$" + (String.Format("{0:n}", contrato.ValorFase1))) + "( " + CultureInfo.InvariantCulture.TextInfo.ToTitleCase(Helpers.Conversores.NumeroALetras(contrato.ValorFase1).ToLower()) + " )" : " ");
+            plantilla.Contenido = plantilla.Contenido.Replace("[VALOR_FASE_2]", !string.IsNullOrEmpty(contrato.ValorFase2.ToString()) ? ("$" + (String.Format("{0:n}", contrato.ValorFase2))) + "( " + CultureInfo.InvariantCulture.TextInfo.ToTitleCase(Helpers.Conversores.NumeroALetras(contrato.ValorFase2).ToLower()) + " )" : " ");
             decimal ValorActualDelContrato = !string.IsNullOrEmpty(contrato.Contratacion.DisponibilidadPresupuestal.Sum(r => r.ValorSolicitud).ToString()) ? contrato.Contratacion.DisponibilidadPresupuestal.Sum(r => r.ValorSolicitud) : 0;
             plantilla.Contenido = plantilla.Contenido.Replace("[VALOR_ACTUAL_CONTRATO]", "$" + (String.Format("{0:n}", ValorInicialContrato)) + "( " + CultureInfo.InvariantCulture.TextInfo.ToTitleCase(Helpers.Conversores.NumeroALetras(ValorInicialContrato).ToLower()) + " ) ");
             plantilla.Contenido = plantilla.Contenido.Replace("[PLAZO_INICIAL_CONTRATO]", MesesFase1Contrato + DiasFase1Contrato);
@@ -541,14 +544,14 @@ namespace asivamosffie.services
             plantilla.Contenido = plantilla.Contenido.Replace("[FECHA_GENERACION_DRP]", (bool)contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().FechaDrp.HasValue ? ((DateTime)contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().FechaDrp).ToString("dd-MM-yyyy") : " "); plantilla.Contenido = plantilla.Contenido.Replace("[FECHA_APROBACION_POLIZAS]", (((DateTime)contrato.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MM-yyyy")));
             plantilla.Contenido = plantilla.Contenido.Replace("[OBJETO]", contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().Objeto);
             decimal ValorInicialContrato = !string.IsNullOrEmpty(contrato.Contratacion.DisponibilidadPresupuestal.Sum(r => r.ValorSolicitud).ToString()) ? contrato.Contratacion.DisponibilidadPresupuestal.Sum(r => r.ValorSolicitud) : 0;
-            plantilla.Contenido = plantilla.Contenido.Replace("[VALOR_INICIAL_CONTRATO]", "$" + (String.Format("{0:n}", ValorInicialContrato)) + "( " + CultureInfo.InvariantCulture.TextInfo.ToTitleCase(Helpers.Conversores.NumeroALetras(ValorInicialContrato).ToLower())  + " ) ");
-            plantilla.Contenido = plantilla.Contenido.Replace("[VALOR_ACTUAL_CONTRATO]", "$" + (String.Format("{0:n}", ValorInicialContrato)) + "( " + CultureInfo.InvariantCulture.TextInfo.ToTitleCase(Helpers.Conversores.NumeroALetras(ValorInicialContrato).ToLower())  + " ) "); 
+            plantilla.Contenido = plantilla.Contenido.Replace("[VALOR_INICIAL_CONTRATO]", "$" + (String.Format("{0:n}", ValorInicialContrato)) + "( " + CultureInfo.InvariantCulture.TextInfo.ToTitleCase(Helpers.Conversores.NumeroALetras(ValorInicialContrato).ToLower()) + " ) ");
+            plantilla.Contenido = plantilla.Contenido.Replace("[VALOR_ACTUAL_CONTRATO]", "$" + (String.Format("{0:n}", ValorInicialContrato)) + "( " + CultureInfo.InvariantCulture.TextInfo.ToTitleCase(Helpers.Conversores.NumeroALetras(ValorInicialContrato).ToLower()) + " ) ");
             plantilla.Contenido = plantilla.Contenido.Replace("[VALOR_FASE1_PREC]", !string.IsNullOrEmpty(contrato.ValorFase1.ToString()) ? ("$" + (String.Format("{0:n}", contrato.ValorFase1)) + "( " + CultureInfo.InvariantCulture.TextInfo.ToTitleCase(Helpers.Conversores.NumeroALetras(contrato.ValorFase1).ToLower()) + " ) ") : " ");
             plantilla.Contenido = plantilla.Contenido.Replace("[VALOR_FASE2_CONST]", !string.IsNullOrEmpty(contrato.ValorFase2.ToString()) ? ("$" + (String.Format("{0:n}", contrato.ValorFase2)) + "( " + CultureInfo.InvariantCulture.TextInfo.ToTitleCase(Helpers.Conversores.NumeroALetras(contrato.ValorFase2).ToLower()) + " )") : " ");
             plantilla.Contenido = plantilla.Contenido.Replace("[VALOR_FASE_1]", !string.IsNullOrEmpty(contrato.ValorFase1.ToString()) ? ("$" + (String.Format("{0:n}", contrato.ValorFase1))) + "( " + CultureInfo.InvariantCulture.TextInfo.ToTitleCase(Helpers.Conversores.NumeroALetras(contrato.ValorFase1).ToLower()) + " )" : " ");
             plantilla.Contenido = plantilla.Contenido.Replace("[VALOR_FASE_2]", !string.IsNullOrEmpty(contrato.ValorFase2.ToString()) ? ("$" + (String.Format("{0:n}", contrato.ValorFase2))) + "( " + CultureInfo.InvariantCulture.TextInfo.ToTitleCase(Helpers.Conversores.NumeroALetras(contrato.ValorFase2).ToLower()) + " )" : " ");
             decimal ValorActualDelContrato = !string.IsNullOrEmpty(contrato.Contratacion.DisponibilidadPresupuestal.Sum(r => r.ValorSolicitud).ToString()) ? contrato.Contratacion.DisponibilidadPresupuestal.Sum(r => r.ValorSolicitud) : 0;
-             plantilla.Contenido = plantilla.Contenido.Replace("[PLAZO_INICIAL_CONTRATO]", MesesFase1Contrato + DiasFase1Contrato);
+            plantilla.Contenido = plantilla.Contenido.Replace("[PLAZO_INICIAL_CONTRATO]", MesesFase1Contrato + DiasFase1Contrato);
             plantilla.Contenido = plantilla.Contenido.Replace("[PLAZO_EJECUCION_FASE_1]", MesesFase1 + DiasFase1);
             plantilla.Contenido = plantilla.Contenido.Replace("[PLAZO_EJECUCION_FASE_2]", MesesFase2 + DiasFase2);
             plantilla.Contenido = plantilla.Contenido.Replace("[FECHA_PREVISTA_TERMINACION]", contrato.FechaTerminacionFase2.HasValue ? ((DateTime)contrato.FechaTerminacionFase2).ToString("dd-MM-yyyy") : ((DateTime)contrato.FechaTerminacion).ToString("dd-MM-yyyy"));
@@ -559,7 +562,7 @@ namespace asivamosffie.services
             plantilla.Contenido = plantilla.Contenido.Replace("[CARGO]", " ");
             plantilla.Contenido = plantilla.Contenido.Replace("[CEDULA_REPRESENTANTE_LEGAL_CONTRATISTA_OBRA]", contrato?.Contratacion?.Contratista?.RepresentanteLegalNumeroIdentificacion);
             plantilla.Contenido = plantilla.Contenido.Replace("[CC_REPRESENTANTE_LEGAL]", contrato?.Contratacion?.Contratista?.RepresentanteLegalNumeroIdentificacion ?? " ");
-             
+
             //   return Helpers.PDF.Convertir(plantilla);
             return _registerSessionTechnicalCommitteeService.ConvertirPDF(plantilla);
         }
