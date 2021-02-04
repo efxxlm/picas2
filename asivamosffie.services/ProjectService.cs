@@ -151,7 +151,7 @@ namespace asivamosffie.services
                        //|| string.IsNullOrEmpty(Predio.Predio.Direccion)
                        string.IsNullOrEmpty(Predio.Predio.DocumentoAcreditacionCodigo)
                         || string.IsNullOrEmpty(Predio.Predio.NumeroDocumento)
-                        || string.IsNullOrEmpty(Predio.Predio.CedulaCatastral)
+                        || (Predio.Predio.DocumentoAcreditacionCodigo == "1" && string.IsNullOrEmpty(Predio.Predio.CedulaCatastral))
                        )
                     {
                         return false;
