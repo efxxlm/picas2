@@ -1805,6 +1805,8 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(3000)
                     .IsUnicode(false);
 
+                entity.Property(e => e.CualOtroMotivo).IsUnicode(false);
+
                 entity.Property(e => e.EstadoCodigo)
                     .IsRequired()
                     .HasMaxLength(100)
