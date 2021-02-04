@@ -82,7 +82,7 @@ export class FormDescripcionActuacionComponent implements OnInit {
         this.addressForm.get('actuacionAdelantada').setValue(actuacionAdelantadaSelected);
         const actuacionRequeridaSelected = this.proximaActuacionRequeridaArrayDom.find(t => t.codigo === data.proximaActuacionCodigo);
         this.addressForm.get('proximaActuacionRequerida').setValue(actuacionRequeridaSelected);
-        this.addressForm.get('cualOtro').setValue(data.actuacionAdelantadaOtro);
+        this.addressForm.get('cualOtro').setValue(data.proximaActuacionOtro);
         this.addressForm.get('diasVencimientoTerminos').setValue(data.cantDiasVencimiento.toString());
         this.addressForm.get('fechaVencimientoTerminos').setValue(data.fechaVencimiento);
         this.addressForm.get('participacionContratista').setValue(data.esRequiereContratista);
