@@ -18,8 +18,9 @@ export class FormDescripcionActuacionComponent implements OnInit {
     estadoAvanceTramite: [null, Validators.required],
     fechaActuacionAdelantada: [null, Validators.required],
     actuacionAdelantada: [null, Validators.required],
+    cualOtroActuacionAdelantada: [null],
     proximaActuacionRequerida: [null, Validators.required],
-    cualOtro: [null],
+    cualOtroActuacionRequerida: [null],
     diasVencimientoTerminos: [null, Validators.required],
     fechaVencimientoTerminos: [null, Validators.required],
     participacionContratista: [null, Validators.required],
@@ -82,7 +83,7 @@ export class FormDescripcionActuacionComponent implements OnInit {
         this.addressForm.get('actuacionAdelantada').setValue(actuacionAdelantadaSelected);
         const actuacionRequeridaSelected = this.proximaActuacionRequeridaArrayDom.find(t => t.codigo === data.proximaActuacionCodigo);
         this.addressForm.get('proximaActuacionRequerida').setValue(actuacionRequeridaSelected);
-        this.addressForm.get('cualOtro').setValue(data.proximaActuacionOtro);
+        this.addressForm.get('cualOtroActuacionRequerida').setValue(data.proximaActuacionOtro);
         this.addressForm.get('diasVencimientoTerminos').setValue(data.cantDiasVencimiento.toString());
         this.addressForm.get('fechaVencimientoTerminos').setValue(data.fechaVencimiento);
         this.addressForm.get('participacionContratista').setValue(data.esRequiereContratista);
@@ -174,7 +175,7 @@ export class FormDescripcionActuacionComponent implements OnInit {
         "ActuacionAdelantadaCodigo": actuacionAdelantada,
         "ActuacionAdelantadaOtro": "",
         "ProximaActuacionCodigo": proxActuacion,
-        "ProximaActuacionOtro": this.addressForm.value.cualOtro,
+        "ProximaActuacionOtro": this.addressForm.value.cualOtroActuacionRequerida,
         "Observaciones": this.addressForm.value.observaciones,
         "RutaSoporte": this.addressForm.value.urlSoporte,
         "EstadoAvanceTramiteCodigo": estadoAvanTramite,
@@ -200,7 +201,7 @@ export class FormDescripcionActuacionComponent implements OnInit {
         "ActuacionAdelantadaCodigo": actuacionAdelantada,
         "ActuacionAdelantadaOtro": "",
         "ProximaActuacionCodigo": proxActuacion,
-        "ProximaActuacionOtro": this.addressForm.value.cualOtro,
+        "ProximaActuacionOtro": this.addressForm.value.cualOtroActuacionRequerida,
         "Observaciones": this.addressForm.value.observaciones,
         "RutaSoporte": this.addressForm.value.urlSoporte,
         "EstadoAvanceTramiteCodigo": estadoAvanTramite,

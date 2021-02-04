@@ -64,6 +64,37 @@
                     </div>
                 </div>
             </div>
+            <div class="row"
+            *ngIf="addressForm.controls.proximaActuacionRequerida.value && addressForm.controls.proximaActuacionRequerida.value.codigo == '4'">
+            <div class="col-md-12" style="padding-left: 0;">
+                <div class="row">
+                    <div class="pr-1">
+                        <label class="label-left" for="cualOtroActuacionAdelantada">¿Cuál?</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row"
+            *ngIf="addressForm.controls.proximaActuacionRequerida.value && addressForm.controls.proximaActuacionRequerida.value.codigo == '4'">
+            <div class="col-md-12" style="padding-left: 0;">
+                <div>
+                    <div class="d-flex align-items-center">
+                        <div class="text-area-quill auxBox">
+                            <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
+                                required (onContentChanged)="maxLength($event, 500)" formControlName="cualOtroActuacionAdelantada"
+                                #cualOtroActuacionAdelantada>
+                            </quill-editor>
+                        </div>
+                        <span class="contador miles" *ngIf="addressForm.controls.cualOtroActuacionAdelantada.value">
+                            {{500 - (textoLimpio(addressForm.get('cualOtroActuacionAdelantada').value))}}
+                        </span>
+                        <span class="contador miles" *ngIf="!addressForm.controls.cualOtroActuacionAdelantada.value">
+                            500
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
             <div class="row">
                 <div class="col-md-12">
                     <div class="row">
@@ -90,7 +121,7 @@
                 <div class="col-md-12" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="cualOtro">¿Cuál?</label>
+                            <label class="label-left" for="cualOtroActuacionRequerida">¿Cuál?</label>
                         </div>
                     </div>
                 </div>
@@ -102,14 +133,14 @@
                         <div class="d-flex align-items-center">
                             <div class="text-area-quill auxBox">
                                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
-                                    required (onContentChanged)="maxLength($event, 500)" formControlName="cualOtro"
-                                    #cualOtro>
+                                    required (onContentChanged)="maxLength($event, 500)" formControlName="cualOtroActuacionRequerida"
+                                    #cualOtroActuacionRequerida>
                                 </quill-editor>
                             </div>
-                            <span class="contador miles" *ngIf="addressForm.controls.cualOtro.value">
-                                {{500 - (textoLimpio(addressForm.get('cualOtro').value))}}
+                            <span class="contador miles" *ngIf="addressForm.controls.cualOtroActuacionRequerida.value">
+                                {{500 - (textoLimpio(addressForm.get('cualOtroActuacionRequerida').value))}}
                             </span>
-                            <span class="contador miles" *ngIf="!addressForm.controls.cualOtro.value">
+                            <span class="contador miles" *ngIf="!addressForm.controls.cualOtroActuacionRequerida.value">
                                 500
                             </span>
                         </div>
