@@ -1597,6 +1597,7 @@ namespace asivamosffie.services
                         controversiaeditar.FechaSolicitud = controversiaContractual.FechaSolicitud;
                         controversiaeditar.FechaComitePreTecnico = controversiaContractual.FechaComitePreTecnico;
                         controversiaeditar.EsProcede = controversiaContractual.EsProcede;
+                        controversiaeditar.CualOtroMotivo = controversiaContractual.CualOtroMotivo;
                         //NumeroRadicadoSac { get; set; }
                         controversiaeditar.EsRequiereComite = controversiaContractual.EsRequiereComite;
                         controversiaeditar.RutaSoporte = controversiaContractual.RutaSoporte;
