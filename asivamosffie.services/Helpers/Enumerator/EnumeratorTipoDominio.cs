@@ -160,9 +160,9 @@ namespace asivamosffie.services.Helpers.Enumerator
         Estado_Actuacion_Derivada_r_4_4_1 = 125,
 
 
-        //Estado_avance_reclamacion = 91,
+        Tipos_Controversia = 100,
 
-        Proxima_actuacion_requerida =103,
+        Proxima_actuacion_requerida = 103,
 
         Actuacion_adelantada = 104,
 

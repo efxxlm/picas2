@@ -2028,16 +2028,17 @@ namespace asivamosffie.services
             {
                 ListControversiaContractual = await _context.ControversiaContractual
                                                                 .Where(r => r.ControversiaContractualId == pControversiaContractualId)
-                                                                .Include(r => r.Contrato)
+                                                                //.Include(r => r.Contrato)
                                                                 .ToListAsync();
 
             }
 
-            List<Dominio> listDominioTipoControversia = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_controversia).ToList();
+            List<Dominio> listDominioTipoControversia = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipos_Controversia).ToList();
             List<Dominio> listDominioEstado = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_controversia).ToList();
 
             foreach (var controversia in ListControversiaContractual)
             {
+                controversia.Contrato = _context.Contrato.Find(controversia.ContratoId);
                 try
                 {
                     string strEstadoCodigoControversia = "sin definir";
