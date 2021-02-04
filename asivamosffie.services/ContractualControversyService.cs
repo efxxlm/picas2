@@ -2021,81 +2021,63 @@ namespace asivamosffie.services
 
         public async Task<List<GrillaTipoSolicitudControversiaContractual>> ListGrillaTipoSolicitudControversiaContractual(int pControversiaContractualId = 0)
         {
-            //await AprobarContratoByIdContrato(1);
-
             List<GrillaTipoSolicitudControversiaContractual> ListControversiaContractualGrilla = new List<GrillaTipoSolicitudControversiaContractual>();
-            //Fecha de firma del contrato ??? FechaFirmaContrato , [Contrato] -(dd / mm / aaaa)
-
-            //Tipo de solicitud ??? ContratoPoliza - TipoSolicitudCodigo      
-
-            //List<ControversiaContractual> ListControversiaContractualGrilla = await _context.ControversiaContractual.Where(r => !(bool)r.EstadoCodigo).Distinct().ToListAsync();
             List<ControversiaContractual> ListControversiaContractual = await _context.ControversiaContractual.Where(r => r.Eliminado == false).Distinct().ToListAsync();
 
             if (pControversiaContractualId != 0)
             {
-                ListControversiaContractual = await _context.ControversiaContractual.Where(r => r.ControversiaContractualId == pControversiaContractualId).ToListAsync();
+                ListControversiaContractual = await _context.ControversiaContractual
+                                                                .Where(r => r.ControversiaContractualId == pControversiaContractualId)
+                                                                .Include(r => r.Contrato)
+                                                                .ToListAsync();
 
             }
+
+            List<Dominio> listDominioTipoControversia = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_controversia).ToList();
+            List<Dominio> listDominioEstado = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_controversia).ToList();
 
             foreach (var controversia in ListControversiaContractual)
             {
                 try
                 {
-                    Contrato contrato = null;
-
-                    //contrato = await _commonService.GetContratoPolizaByContratoId(controversia.ContratoId);
-                    contrato = _context.Contrato.Where(r => r.ContratoId == controversia.ContratoId).FirstOrDefault();
-
-                    //tiposol contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
                     string strEstadoCodigoControversia = "sin definir";
                     string strEstadoControversia = "sin definir";
                     string strTipoControversiaCodigo = "sin definir";
                     string strTipoControversia = "sin definir";
 
-                    //Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
                     Dominio EstadoCodigoControversia;
                     Dominio TipoControversiaCodigo;
 
                     string prefijo = "";
 
-                    if (contrato != null)
+                    if ( controversia.Contrato != null)
                     {
-                        TipoControversiaCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipo_de_controversia);
+                        //poControversiaCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipo_de_controversia);
+                        TipoControversiaCodigo = listDominioTipoControversia.Where( r => r.Codigo == controversia.TipoControversiaCodigo).FirstOrDefault();
                         if (TipoControversiaCodigo != null)
                         {
                             strTipoControversiaCodigo = TipoControversiaCodigo.Codigo;
                             strTipoControversia = TipoControversiaCodigo.Nombre;
-
                         }
 
-                        EstadoCodigoControversia = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.EstadoCodigo, (int)EnumeratorTipoDominio.Estado_controversia);
+                        //EstadoCodigoControversia = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.EstadoCodigo, (int)EnumeratorT//ipoDominio.Estado_controversia);
+                        EstadoCodigoControversia = listDominioEstado.Where(r => r.Codigo == controversia.EstadoCodigo).FirstOrDefault();
                         if (EstadoCodigoControversia != null)
                         {
                             strEstadoControversia = EstadoCodigoControversia.Nombre;
                             strEstadoCodigoControversia = EstadoCodigoControversia.Codigo;
                         }
-
-
-
-                        //EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
-                        //if (EstadoSolicitudCodigoContratoPoliza != null)
-                        //    strEstadoSolicitudCodigoContratoPoliza = EstadoSolicitudCodigoContratoPoliza.Nombre;
-
                     }
 
-                    //Dominio EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
                     GrillaTipoSolicitudControversiaContractual RegistroControversiaContractual = new GrillaTipoSolicitudControversiaContractual
                     {
                         ControversiaContractualId = controversia.ControversiaContractualId,
-                        //NumeroSolicitud=controversia.NumeroSolicitud,
-                        //NumeroSolicitud = string.Format("0000"+ controversia.ControversiaContractualId.ToString()),
                         NumeroSolicitud = controversia.NumeroSolicitud,
-                        //FechaSolicitud=controversia.FechaSolicitud,
                         FechaSolicitud = controversia.FechaSolicitud != null ? Convert.ToDateTime(controversia.FechaSolicitud).ToString("dd/MM/yyyy") : controversia.FechaSolicitud.ToString(),
                         TipoControversia = strTipoControversia,
                         TipoControversiaCodigo = strTipoControversiaCodigo,
-                        ContratoId = contrato.ContratoId,
-                        NumeroContrato = contrato.NumeroContrato,
+                        ContratoId = controversia.Contrato == null ? 0 : controversia.Contrato.ContratoId,
+                        NumeroContrato = controversia?.Contrato?.NumeroContrato,
                         EstadoControversia = strEstadoControversia,
                         EstadoControversiaCodigo = strEstadoCodigoControversia,
                         RegistroCompletoNombre = (bool)controversia.EsCompleto ? "Completo" : "Incompleto",
@@ -2110,10 +2092,6 @@ namespace asivamosffie.services
 
                     };
 
-                    //if (!(bool)proyecto.RegistroCompleto)
-                    //{
-                    //    proyectoGrilla.EstadoRegistro = "INCOMPLETO";
-                    //}
                     ListControversiaContractualGrilla.Add(RegistroControversiaContractual);
                 }
                 catch (Exception e)
@@ -2122,7 +2100,6 @@ namespace asivamosffie.services
                     {
                         ControversiaContractualId = controversia.ControversiaContractualId,
                         NumeroSolicitud = controversia.NumeroSolicitud + " - " + e.InnerException.ToString(),
-                        //FechaSolicitud=controversia.FechaSolicitud,
                         FechaSolicitud = controversia.FechaSolicitud != null ? Convert.ToDateTime(controversia.FechaSolicitud).ToString("dd/MM/yyyy") : controversia.FechaSolicitud.ToString(),
                         TipoControversia = e.ToString(),
                         TipoControversiaCodigo = "ERROR",
