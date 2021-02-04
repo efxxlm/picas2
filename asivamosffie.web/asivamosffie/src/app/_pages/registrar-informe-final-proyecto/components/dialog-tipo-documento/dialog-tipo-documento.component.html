@@ -7,16 +7,17 @@
     Tipo de documento
     {{ data.llaveMen }}
   </h1>
-  <p>
+  <p class="mt-05em">
     Estado del requisito:
     <b> {{ data.informe.calificacionCodigoString }} </b>
   </p>
   <p>
-    <b> {{ data.informe.nombre }}</b>
+    <b> {{ data.informe.informeFinalListaChequeoId }}. </b>
+    {{ data.informe.nombre }}
   </p>
 </div>
 
-<form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="addressForm" (ngSubmit)="onSubmit()" *ngIf="!data.verDetalle">
   <mat-card class="shipping-card">
     <mat-card-content>
       <div class="row">
@@ -220,11 +221,41 @@
       class="btn-guardar"
       type="submit"
       [disabled]="
-        (addressForm.get('tipoAnexo').invalid && addressForm.get('numRadicadoSac').invalid && addressForm.get('fechaRadicado').invalid) &&
-        (addressForm.get('tipoAnexo').invalid && addressForm.get('urlSoporte').invalid)
+        addressForm.get('tipoAnexo').invalid &&
+        addressForm.get('numRadicadoSac').invalid &&
+        addressForm.get('fechaRadicado').invalid &&
+        addressForm.get('tipoAnexo').invalid &&
+        addressForm.get('urlSoporte').invalid
       "
     >
       <img src="assets/img/icon/guardar.svg" alt="Guardar" />
     </button>
   </div>
 </form>
+
+<mat-card class="shipping-card var-main-gris" *ngIf="data.verDetalle">
+  <mat-card-content *ngIf="addressForm.get('tipoAnexo').value === '1'">
+    <p>
+      <strong> Tipo de anexo: </strong>
+      Físico
+    </p>
+    <p>
+      <strong> Número de radicado en SAC: </strong>
+      {{ addressForm.get('numRadicadoSac').value }}
+    </p>
+    <p>
+      <strong> Fecha de radicado: </strong>
+      {{ addressForm.get('fechaRadicado').value | date: 'dd/MM/yyyy' }}
+    </p>
+  </mat-card-content>
+  <mat-card-content *ngIf="addressForm.get('tipoAnexo').value === '2'">
+    <p>
+      <strong> Tipo de anexo: </strong>
+      Digital
+    </p>
+    <p>
+      <strong> Url con soporte: </strong>
+      {{ addressForm.get('urlSoporte').value }}
+    </p>
+  </mat-card-content>
+</mat-card>

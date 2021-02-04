@@ -72,11 +72,12 @@ export class TablaDetalleInformeAnexosComponent implements OnInit, AfterViewInit
     }
   }
 
-  openDialogTipoDocumento(informe:any) {
+  openDialogTipoDocumento(informe:any, verDetalle: boolean) {
     let dialogRef = this.dialog.open(DialogTipoDocumentoComponent, {
       width: '70em',
       data:{
-        informe: informe
+        informe: informe,
+        verDetalle: verDetalle
       }
     });
 
