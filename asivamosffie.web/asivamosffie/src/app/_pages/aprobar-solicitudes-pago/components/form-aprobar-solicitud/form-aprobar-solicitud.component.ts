@@ -1,3 +1,4 @@
+import { ObservacionesMultiplesCuService } from './../../../../core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
@@ -25,6 +26,8 @@ export class FormAprobarSolicitudComponent implements OnInit {
     tipoPagoArray: Dominio[] = [];
     addressForm: FormGroup;
     dataSource = new MatTableDataSource();
+    menusIdPath: any; // Se obtienen los ID de los respectivos PATH de cada caso de uso que se implementaran observaciones.
+    listaTipoObservacionSolicitudes: any; // Interfaz lista tipos de observaciones.
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     otrosCostosForm = this.fb.group({
@@ -58,10 +61,15 @@ export class FormAprobarSolicitudComponent implements OnInit {
     constructor(
         private activatedRoute: ActivatedRoute,
         private dialog: MatDialog,
+        private obsMultipleSvc: ObservacionesMultiplesCuService,
         private registrarPagosSvc: RegistrarRequisitosPagoService,
         private fb: FormBuilder,
         private commonSvc: CommonService )
     {
+        this.obsMultipleSvc.listaMenu()
+            .subscribe( response => this.menusIdPath = response );
+        this.obsMultipleSvc.listaTipoObservacionSolicitudes()
+            .subscribe( response => this.listaTipoObservacionSolicitudes = response );
         this.getContrato();
         this.addressForm = this.crearFormulario();
     }

@@ -33,7 +33,7 @@
                             </div>
                             <div class="col d-flex">
                                 <mat-form-field class="full-width">
-                                    <input matInput #llaveMen type="text" maxlength="100" required [matAutocomplete]="auto" formControlName="llaveMen">
+                                    <input matInput #llaveMen="matAutocompleteTrigger" type="text" maxlength="100" required [matAutocomplete]="auto" formControlName="llaveMen">
                                     <mat-autocomplete #auto="matAutocomplete">
                                         <mat-option *ngFor="let llave of llavesMenArray" (click)="seleccionAutocomplete(llave)" [value]="llave.llaveMen">
                                             {{llave.llaveMen}}
@@ -41,7 +41,7 @@
                                     </mat-autocomplete>
                                     <input type="hidden" formControlName="llaveMenSeleccionada">
                                 </mat-form-field>
-                                <button type="button" mat-button color="primary" class="busqueda--img" (click)="getLlaveMen()">
+                                <button type="button" mat-button color="primary" class="busqueda--img" (click)="getLlaveMen( llaveMen ); $event.stopPropagation()">
                                     <img src="assets/img/icon/lupa.svg" alt="Buscar" style="width: 20px; height: 20px;">
                                 </button>
                             </div>

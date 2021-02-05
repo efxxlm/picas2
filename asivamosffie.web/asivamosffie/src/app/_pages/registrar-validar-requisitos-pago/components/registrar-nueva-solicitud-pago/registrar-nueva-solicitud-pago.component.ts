@@ -101,7 +101,7 @@ export class RegistrarNuevaSolicitudPagoComponent implements OnInit {
                         this.contratosArray = response;
                         console.log( response );
                         if ( response.length === 0 ) {
-                            this.openDialog( '', '<b>No se encontraron proyectos relacionados.</b>' );
+                            this.openDialog( '', '<b>No se encontraron contratos relacionados.</b>' );
                             this.addressForm.get( 'searchContrato' ).setValue( null );
                         } else {
                             trigger.openPanel();

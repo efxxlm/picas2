@@ -5,6 +5,7 @@ import { Validators, FormBuilder } from '@angular/forms';
 import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-form-solicitud-expensas',
@@ -77,14 +78,18 @@ export class FormSolicitudExpensasComponent implements OnInit {
         this.addressForm.get( 'llaveMenSeleccionada' ).setValue( llaveMen );
     }
 
-    getLlaveMen() {
+    getLlaveMen( trigger: MatAutocompleteTrigger ) {
         if ( this.addressForm.get( 'llaveMen' ).value !== null ) {
             if ( this.addressForm.get( 'llaveMen' ).value.length > 0 ) {
                 this.registrarPagosSvc.getListProyectosByLlaveMen( this.addressForm.get( 'llaveMen' ).value )
                     .subscribe(
                         response => {
                             this.llavesMenArray = response;
-                            console.log( 'respuesta', response );
+                            if ( response.length === 0 ) {
+                                this.openDialog( '', '<b>No se encontro Llave Men relacionada.</b>' );
+                            } else {
+                                trigger.openPanel();
+                            }
                         }
                     );
             }

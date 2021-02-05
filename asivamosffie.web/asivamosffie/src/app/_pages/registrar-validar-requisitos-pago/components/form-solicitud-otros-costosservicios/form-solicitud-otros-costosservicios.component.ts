@@ -5,6 +5,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-form-solicitud-otros-costosservicios',
@@ -67,13 +68,17 @@ export class FormSolicitudOtrosCostosserviciosComponent implements OnInit {
         this.contratoId = contrato.contratoId;
     }
 
-    getContratos() {
+    getContratos( trigger: MatAutocompleteTrigger ) {
         if ( this.addressForm.get( 'numeroContrato' ).value !== null ) {
             if ( this.addressForm.get( 'numeroContrato' ).value.length > 0 ) {
                 this.registrarPagosSvc.getContratos( '', '', this.addressForm.get( 'numeroContrato' ).value )
                     .subscribe( response => {
                         this.contratosArray = response;
-                        console.log( response );
+                        if ( response.length === 0 ) {
+                            this.openDialog( '', '<b>No se encontraron contratos relacionados.</b>' );
+                        } else {
+                            trigger.openPanel();
+                        }
                     } );
             }
         }

@@ -3,6 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
 
 @Component({
   selector: 'app-obs-cargar-forma-pago',
@@ -13,6 +14,9 @@ export class ObsCargarFormaPagoComponent implements OnInit {
 
     @Input() solicitudPago: any;
     @Input() esVerDetalle = false;
+    @Input() aprobarSolicitudPagoId: any;
+    @Input() cargarFormaPagoCodigo: string;
+    solicitudPagoObservacionId = 0;
     addressForm: FormGroup;
     solicitudPagoCargarFormaPago: any;
     formaPagoArray: Dominio[] = [];
@@ -32,6 +36,7 @@ export class ObsCargarFormaPagoComponent implements OnInit {
     constructor(
         private fb: FormBuilder,
         private dialog: MatDialog,
+        private obsMultipleSvc: ObservacionesMultiplesCuService,
         private commonSvc: CommonService )
     {
         this.addressForm = this.crearFormulario();
@@ -42,14 +47,29 @@ export class ObsCargarFormaPagoComponent implements OnInit {
     ngOnInit(): void {
         if ( this.solicitudPago !== undefined ) {
             this.solicitudPagoCargarFormaPago = this.solicitudPago.solicitudPagoCargarFormaPago[0];
+            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.aprobarSolicitudPagoId, this.solicitudPago.solicitudPagoId, this.solicitudPagoCargarFormaPago.solicitudPagoCargarFormaPagoId )
+                .subscribe(
+                    response => {
+                        const obsSupervisor = response.filter( obs => obs.archivada === false )[0];
+                        console.log( obsSupervisor );
+                        this.addressForm.setValue(
+                            {
+                                fechaCreacion: obsSupervisor.fechaCreacion,
+                                tieneObservaciones: obsSupervisor.tieneObservacion !== undefined ? obsSupervisor.tieneObservacion : null,
+                                observaciones: obsSupervisor.observacion !== undefined ? ( obsSupervisor.observacion.length > 0 ? obsSupervisor.observacion : null ) : null
+                            }
+                        );
+                    }
+                );
         }
     }
 
     crearFormulario() {
-      return this.fb.group({
-        tieneObservaciones: [null, Validators.required],
-        observaciones:[null, Validators.required],
-      })
+        return this.fb.group({
+            fechaCreacion: [ null ],
+            tieneObservaciones: [null, Validators.required],
+            observaciones:[null, Validators.required],
+        })
     }
 
     maxLength(e: any, n: number) {
@@ -82,6 +102,31 @@ export class ObsCargarFormaPagoComponent implements OnInit {
 
     onSubmit() {
       console.log(this.addressForm.value);
+      /*
+        SolicitudPagoObservacionId
+        SolicitudPagoId
+        Observacion
+        TipoObservacionCodigo
+        MenuId
+        IdPadre
+        TieneObservacion
+      */
+
+      const pSolicitudPagoObservacion = {
+        solicitudPagoObservacionId: this.solicitudPagoObservacionId,
+        solicitudPagoId: this.solicitudPago.solicitudPagoId,
+        observacion: this.addressForm.get( 'observaciones' ).value !== null ? this.addressForm.get( 'observaciones' ).value : this.addressForm.get( 'observaciones' ).value,
+        tipoObservacionCodigo: this.cargarFormaPagoCodigo,
+        menuId: this.aprobarSolicitudPagoId,
+        idPadre: this.solicitudPagoCargarFormaPago.solicitudPagoCargarFormaPagoId,
+        tieneObservacion: this.addressForm.get( 'tieneObservaciones' ).value !== null ? this.addressForm.get( 'tieneObservaciones' ).value : this.addressForm.get( 'tieneObservaciones' ).value
+      };
+
+        this.obsMultipleSvc.createUpdateSolicitudPagoObservacion( pSolicitudPagoObservacion )
+            .subscribe(
+                response => this.openDialog( '', `<b>${ response.message }</b>` ),
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            )
     }
 
 }

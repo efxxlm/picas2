@@ -1,4 +1,4 @@
-<section class="container text-center" *ngIf="contrato !== undefined">
+<section class="container text-center" *ngIf="contrato !== undefined && menusIdPath !== undefined && listaTipoObservacionSolicitudes !== undefined">
     <div class="text-right">
         <a routerLink="/aprobarSolicitudesPago" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
@@ -94,7 +94,7 @@
                         Cargar forma de pago
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-obs-cargar-forma-pago [solicitudPago]="contrato.solicitudPagoOnly"></app-obs-cargar-forma-pago>
+                <app-obs-cargar-forma-pago [solicitudPago]="contrato.solicitudPagoOnly" [aprobarSolicitudPagoId]="menusIdPath.aprobarSolicitudPagoId" [cargarFormaPagoCodigo]="listaTipoObservacionSolicitudes.cargarFormaPagoCodigo"></app-obs-cargar-forma-pago>
             </mat-expansion-panel>
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header">

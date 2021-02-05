@@ -31,14 +31,14 @@
                             </div>
                             <div class="col d-flex">
                                 <mat-form-field class="full-width">
-                                    <input matInput #numeroContrato type="text" maxlength="100" required [matAutocomplete]="auto" formControlName="numeroContrato">
+                                    <input matInput #numeroContrato="matAutocompleteTrigger" type="text" maxlength="100" required [matAutocomplete]="auto" formControlName="numeroContrato">
                                     <mat-autocomplete #auto="matAutocomplete">
                                         <mat-option *ngFor="let contrato of contratosArray" [value]="contrato.numeroContrato" (click)="seleccionAutocomplete(contrato)">
                                             {{ contrato.numeroContrato }}
                                         </mat-option>
                                     </mat-autocomplete>
                                 </mat-form-field>
-                                <button mat-button color="primary" class="busqueda--img" type="button" (click)="getContratos()">
+                                <button mat-button color="primary" class="busqueda--img" type="button" (click)="getContratos( numeroContrato ); $event.stopPropagation()">
                                     <img src="assets/img/icon/lupa.svg" alt="Buscar" style="width: 20px; height: 20px;">
                                 </button>
                             </div>

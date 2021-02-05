@@ -117,7 +117,7 @@
                                 </div>
                                 <div class="col d-flex">
                                     <mat-form-field class="full-width" #desplegable>
-                                        <input matInput #numeroContrato type="text" maxlength="100" required
+                                        <input matInput #numeroContrato="matAutocompleteTrigger" type="text" maxlength="100" required
                                             [matAutocomplete]="auto" formControlName="searchContrato">
                                         <mat-autocomplete #auto="matAutocomplete">
                                             <mat-option *ngFor="let contrato of contratosArray" (click)="seleccionAutocomplete( contrato )" [value]="contrato.numeroContrato">
@@ -126,7 +126,7 @@
                                         </mat-autocomplete>
                                         <input type="hidden" formControlName="numeroContrato">
                                     </mat-form-field>
-                                    <button mat-button color="primary" class="busqueda--img" (click)="getContratos()">
+                                    <button mat-button color="primary" class="busqueda--img" (click)="getContratos( numeroContrato ); $event.stopPropagation()">
                                         <img src="assets/img/icon/lupa.svg" alt="Buscar">
                                     </button>
                                 </div>

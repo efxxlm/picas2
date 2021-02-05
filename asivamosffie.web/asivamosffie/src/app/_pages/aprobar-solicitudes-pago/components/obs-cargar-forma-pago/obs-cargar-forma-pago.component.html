@@ -26,11 +26,10 @@
                 </mat-card-title>
             </mat-card-header>
             <mat-card-content style="text-align: left;">
-                <p><b>07/10/2020</b></p>
-                <p><b>¿Desde la supervisión tiene observaciones a la forma de pago?:</b> Sí</p>
-                <p>La forma de pago de la fase 2 construcción también es 50/50, ajuste este dato ya que una vez
-                    aprobamos este primer pago queda predeterminado para el
-                    resto de las facturas y pagos.</p>
+                <p><b> {{ addressForm.get( 'fechaCreacion' ).value | date: 'dd/MM/yyyy' }} </b></p>
+                <p *ngIf="addressForm.get( 'observaciones' ).value === true"><b>¿Desde la supervisión tiene observaciones a la forma de pago?:</b> Si </p>
+                <p *ngIf="addressForm.get( 'observaciones' ).value === false"><b>¿Desde la supervisión tiene observaciones a la forma de pago?:</b> No</p>
+                <section [innerHTML]="addressForm.get( 'observaciones' ).value" *ngIf="addressForm.get( 'observaciones' ).value === true"></section>
             </mat-card-content>
         </mat-card>
     </ng-container>
