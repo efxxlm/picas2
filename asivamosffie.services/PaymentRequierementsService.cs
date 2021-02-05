@@ -34,11 +34,26 @@ namespace asivamosffie.services
 
             try
             {
-                bool RegistroCompletoObservacion = ValidateCompleteRecordSolicitudPagoObservacion(pSolicitudPagoObservacion);
+                
+                if (pSolicitudPagoObservacion.SolicitudPagoObservacionId > 0)
+                {
+                    SolicitudPagoObservacion solicitudPagoObservacionOld = _context.SolicitudPagoObservacion.Find(pSolicitudPagoObservacion.SolicitudPagoObservacionId);
 
-                CreateOrUpdateSolicitudPagoObservacion(pSolicitudPagoObservacion);
+                    solicitudPagoObservacionOld.FechaModificacion = DateTime.Now;
+                    solicitudPagoObservacionOld.UsuarioModificacion = pSolicitudPagoObservacion.UsuarioCreacion;
 
-                ActualizarSolicitudPagoTieneObservacion(pSolicitudPagoObservacion, pSolicitudPagoObservacion.TieneObservacion);
+                    solicitudPagoObservacionOld.RegistroCompleto = ValidateCompleteRecordSolicitudPagoObservacion(pSolicitudPagoObservacion);
+                    solicitudPagoObservacionOld.TieneObservacion = pSolicitudPagoObservacion.TieneObservacion;
+                    solicitudPagoObservacionOld.Observacion = pSolicitudPagoObservacion.Observacion;
+                }
+                else
+                {
+                    pSolicitudPagoObservacion.FechaCreacion = DateTime.Now;
+                    pSolicitudPagoObservacion.Eliminado = true;
+                    pSolicitudPagoObservacion.RegistroCompleto = ValidateCompleteRecordSolicitudPagoObservacion(pSolicitudPagoObservacion);
+
+                    _context.SolicitudPagoObservacion.Add(pSolicitudPagoObservacion);
+                }
 
                 return
                     new Respuesta
@@ -63,25 +78,7 @@ namespace asivamosffie.services
                     };
             }
         }
-
-        private void CreateOrUpdateSolicitudPagoObservacion(SolicitudPagoObservacion pSolicitudPagoObservacion)
-        {
-            if (pSolicitudPagoObservacion.SolicitudPagoObservacionId > 0)
-            {
-                SolicitudPagoObservacion solicitudPagoObservacionOld = _context.SolicitudPagoObservacion.Find(pSolicitudPagoObservacion.SolicitudPagoObservacionId);
-                solicitudPagoObservacionOld.FechaModificacion = DateTime.Now;
-                solicitudPagoObservacionOld.UsuarioModificacion = pSolicitudPagoObservacion.UsuarioCreacion;
-
-                solicitudPagoObservacionOld.TieneObservacion = pSolicitudPagoObservacion.TieneObservacion;
-                solicitudPagoObservacionOld.Observacion = pSolicitudPagoObservacion.Observacion;
-            }
-            else
-            {
-                pSolicitudPagoObservacion.FechaCreacion = DateTime.Now;
-                pSolicitudPagoObservacion.Eliminado = true;
-            }
-        }
-
+ 
         private void ActualizarSolicitudPagoTieneObservacion(SolicitudPagoObservacion pSolicitudPagoObservacion, bool TieneObservacion)
         {
             SolicitudPago solicitudPago = _context.SolicitudPago.Find(pSolicitudPagoObservacion.SolicitudPagoId);
@@ -121,13 +118,12 @@ namespace asivamosffie.services
                                            .Where(s => s.MenuId == pMenuId && s.SolicitudPagoId == pSolicitudPagoId)
                                                                                                                    .Select(p => new
                                                                                                                    {
+                                                                                                                       p.TieneObservacion,
                                                                                                                        p.Archivada,
                                                                                                                        p.FechaCreacion,
                                                                                                                        p.Observacion,
                                                                                                                        p.RegistroCompleto
                                                                                                                    }).ToListAsync();
         }
-
-
     }
 }
