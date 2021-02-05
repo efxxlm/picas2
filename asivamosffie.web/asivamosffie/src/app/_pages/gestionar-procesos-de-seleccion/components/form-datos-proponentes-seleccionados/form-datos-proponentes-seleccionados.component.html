@@ -1,6 +1,13 @@
 <div class="row justify-content-center">
   <div class="pr-1">
-    <label class="label-left">Tipos de proponente</label>
+    <label class="label-left"
+    [class.color-secondaryColor]="
+      (tipoProponente.invalid && tipoProponente.touched) ||
+      (tipoProponente.invalid && estaEditando)
+    "
+    >
+    Tipos de proponente
+  </label>
   </div>
   <div class="col-md-5">
     <mat-form-field class="select-width">
@@ -11,6 +18,20 @@
       </mat-select>
     </mat-form-field>
   </div>
+  <span class="icon-incompleto">
+    <img
+      class="icon-incompleto--img"
+      src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+        [matTooltipPosition]="'above'"
+        matTooltip="Debe ingresar la información en el campo para continuar"
+        matTooltipClass="info-tooltip"
+      *ngIf="
+        (tipoProponente.invalid && tipoProponente.touched) ||
+        (tipoProponente.invalid && estaEditando)
+      "
+    />
+  </span>
 </div>
 
 <form

@@ -14,8 +14,8 @@
                   class="label-left"
                   for="tema"
                   [class.color-secondaryColor]="
-                    (temas.get('tema').invalid && temas.get('tema').touched) ||
-                    (temas.get('tema').invalid && estaEditando)
+                    (temas.get('tema')?.invalid && temas.get('tema').touched) ||
+                    (temas.get('tema')?.invalid && estaEditando)
                   "
                 >
                   Tema
@@ -43,8 +43,8 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
                     *ngIf="
-                      (temas.get('tema').invalid && temas.get('tema').touched) ||
-                      (temas.get('tema').invalid && estaEditando)
+                      (temas.get('tema')?.invalid && temas.get('tema').touched) ||
+                      (temas.get('tema')?.invalid && estaEditando)
                     "
                   />
                 </span>
@@ -58,8 +58,8 @@
                       class="label-left"
                       for="responsable"
                       [class.color-secondaryColor]="
-                        (temas.get('responsable').invalid && temas.get('responsable').touched) ||
-                        (temas.get('responsable').invalid && estaEditando)
+                        (temas.get('responsable')?.invalid && temas.get('responsable').touched) ||
+                        (temas.get('responsable')?.invalid && estaEditando)
                       "
                     >
                       Responsable
@@ -83,8 +83,8 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
                       *ngIf="
-                        (temas.get('responsable').invalid && temas.get('responsable').touched) ||
-                        (temas.get('responsable').invalid && estaEditando)
+                        (temas.get('responsable')?.invalid && temas.get('responsable').touched) ||
+                        (temas.get('responsable')?.invalid && estaEditando)
                       "
                     />
                   </span>
@@ -99,8 +99,8 @@
                       class="label-left"
                       for="tiempoIntervencion"
                       [class.color-secondaryColor]="
-                        (temas.get('tiempoIntervencion').invalid && temas.get('tiempoIntervencion').touched) ||
-                        (temas.get('tiempoIntervencion').invalid && estaEditando)
+                        (temas.get('tiempoIntervencion')?.invalid && temas.get('tiempoIntervencion').touched) ||
+                        (temas.get('tiempoIntervencion')?.invalid && estaEditando)
                       "
                     >
                       Tiempo de intervención
@@ -139,8 +139,8 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
                         *ngIf="
-                          (temas.get('tiempoIntervencion').invalid && temas.get('tiempoIntervencion').touched) ||
-                          (temas.get('tiempoIntervencion').invalid && estaEditando)
+                          (temas.get('tiempoIntervencion')?.invalid && temas.get('tiempoIntervencion').touched) ||
+                          (temas.get('tiempoIntervencion')?.invalid && estaEditando)
                         "
                       />
                     </span>
@@ -154,7 +154,7 @@
                   class="label-left"
                   for="url"
                   [class.color-secondaryColor]="
-                    (temas.get('url').invalid && temas.get('url').touched) || (temas.get('url').invalid && estaEditando)
+                    (temas.get('url')?.invalid && temas.get('url').touched) || (temas.get('url')?.invalid && estaEditando)
                   "
                 >
                   URL con soporte
@@ -175,7 +175,7 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
                   *ngIf="
-                    (temas.get('url').invalid && temas.get('url').touched) || (temas.get('url').invalid && estaEditando)
+                    (temas.get('url')?.invalid && temas.get('url').touched) || (temas.get('url')?.invalid && estaEditando)
                   "
                 />
               </span>

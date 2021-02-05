@@ -67,7 +67,7 @@ export class FormOtrosTemasComponent implements OnInit {
     private technicalCommitteSessionService: TechnicalCommitteSessionService,
     public dialog: MatDialog,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     let estados: string[] = ['1', '3', '5', '8']
@@ -95,9 +95,9 @@ export class FormOtrosTemasComponent implements OnInit {
   }
 
   textoLimpio(texto: string) {
-    let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
+    let saltosDeLinea = 0
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p')
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li')
 
     if (texto) {
       const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '')
@@ -307,5 +307,6 @@ export class FormOtrosTemasComponent implements OnInit {
 
         this.tieneVotacion = this.sesionComiteTema.requiereVotacion
       })
+      this.estaEditando = true;
   }
 }

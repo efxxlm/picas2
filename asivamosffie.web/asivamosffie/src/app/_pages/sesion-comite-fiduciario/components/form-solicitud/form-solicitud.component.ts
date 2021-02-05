@@ -368,7 +368,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     if (this.sesionComiteSolicitud.tipoSolicitudCodigo == TiposSolicitud.AperturaDeProcesoDeSeleccion) {
       this.justificacion = this.sesionComiteSolicitud.procesoSeleccion.justificacion
     }
-
+    this.estaEditando = true;
 
   }
 

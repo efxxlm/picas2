@@ -110,6 +110,7 @@ export class FormEstudioDeMercadoComponent implements OnInit {
 
           this.openDialog("","<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>");
           this.addressForm.get("cuantasCotizaciones").setValue(this.cotizaciones.length);
+          
         }
         else{
           while (this.cotizaciones.length > Formcotizaciones.cuantasCotizaciones) {
@@ -225,6 +226,8 @@ export class FormEstudioDeMercadoComponent implements OnInit {
         control.get('eliminado').setValue(cotizacion.eliminado),
         listaCotizaciones.push(control);
     });
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
   }
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;

@@ -454,7 +454,9 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
         control.get('procesoSeleccionCronogramaId').setValue(cronograma.procesoSeleccionCronogramaId);
         control.get('etapaActualProceso').setValue(etapaActualproceso),
         listaCronograma.push(control);
-      });      
+      });
+      this.estaEditando = true;
+      this.addressForm.markAllAsTouched();
     });
   }
   validateNumberKeypress(event: KeyboardEvent) {
