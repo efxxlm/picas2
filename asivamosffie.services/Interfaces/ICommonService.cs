@@ -9,6 +9,8 @@ namespace asivamosffie.services.Interfaces
 {
     public interface ICommonService
     {
+        Task<dynamic> GetListMenu();
+
         Task<string> EnumeradorSolicitudPagoExpensasAndOtros();
 
         Task<string> EnumeradorSolicitudPago(bool esObra);
