@@ -23,8 +23,8 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = [
     'No',
     'item',
-    'calificacionInterventoria',
-    'tipoAnexo',
+    'calificacionCodigoString',
+    'tipoAnexoString',
     'Ubicacion',
     'verificacion',
     'id'
@@ -49,7 +49,6 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   ]
 
   ngOnInit(): void {
-    console.log("Què datos estan entrando? : ",this.id);
     this.getInformeFinalListaChequeoByInformeFinalId(this.id);
   }
 

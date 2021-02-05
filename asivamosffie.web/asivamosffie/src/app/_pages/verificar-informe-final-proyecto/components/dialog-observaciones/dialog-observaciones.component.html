@@ -35,7 +35,7 @@
   </p>
 </div>
 
-<form [formGroup]="observaciones" novalidate (ngSubmit)="onSubmit()"  *ngIf="!data.verDetalle">
+<form [formGroup]="observaciones" novalidate (ngSubmit)="onSubmit()">
   <div class="d-flex align-items-center">
     <div class="text-area-quill">
       <label for="alcanceParticular" class="text-area-quill--label">Observaciones</label>
@@ -71,9 +71,3 @@
     </button>
   </div>
 </form>
-
-<mat-card class="shipping-card var-main-gris" *ngIf="data.verDetalle">
-  <mat-card-content>
-    <div [innerHTML]="observaciones.get('observaciones').value"></div>
-  </mat-card-content>
-</mat-card>

@@ -14,8 +14,6 @@ import { DatosDelProyectoComponent } from './components/datos-del-proyecto/datos
 import { ReciboSatisfaccionComponent } from './components/recibo-satisfaccion/recibo-satisfaccion.component';
 import { TablaInformeFinalAnexosComponent } from './components/tabla-informe-final-anexos/tabla-informe-final-anexos.component';
 import { DialogObservacionesComponent } from './components/dialog-observaciones/dialog-observaciones.component';
-import { VerDetalleInformeFinalComponent } from './components/ver-detalle-informe-final/ver-detalle-informe-final.component';
-import { TablaDetalleComponent } from './components/tabla-detalle/tabla-detalle.component';
 
 
 @NgModule({
@@ -26,9 +24,7 @@ import { TablaDetalleComponent } from './components/tabla-detalle/tabla-detalle.
     DatosDelProyectoComponent,
     ReciboSatisfaccionComponent,
     TablaInformeFinalAnexosComponent,
-    DialogObservacionesComponent,
-    VerDetalleInformeFinalComponent,
-    TablaDetalleComponent
+    DialogObservacionesComponent
   ],
   imports: [
     CommonModule,
