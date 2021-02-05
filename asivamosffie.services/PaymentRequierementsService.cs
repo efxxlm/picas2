@@ -81,8 +81,7 @@ namespace asivamosffie.services
                 pSolicitudPagoObservacion.FechaCreacion = DateTime.Now;
                 pSolicitudPagoObservacion.Eliminado = true;
             }
-        }
-
+        } 
         private void ActualizarSolicitudPagoTieneObservacion(SolicitudPagoObservacion pSolicitudPagoObservacion, bool TieneObservacion)
         {
             SolicitudPago solicitudPago = _context.SolicitudPago.Find(pSolicitudPagoObservacion.SolicitudPagoId);
@@ -98,7 +97,7 @@ namespace asivamosffie.services
                 else
                     solicitudPago.TieneObservacion = false;
             }
-
+       
         }
 
         private bool ValidateCompleteRecordSolicitudPagoObservacion(SolicitudPagoObservacion pSolicitudPagoObservacion)

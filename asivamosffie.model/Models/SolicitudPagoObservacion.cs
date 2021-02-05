@@ -18,6 +18,7 @@ namespace asivamosffie.model.Models
         public bool? Eliminado { get; set; }
         public int? IdPadre { get; set; }
         public bool TieneObservacion { get; set; }
+        public bool? RegistroCompleto { get; set; }
 
         public virtual Menu Menu { get; set; }
         public virtual SolicitudPago SolicitudPago { get; set; }

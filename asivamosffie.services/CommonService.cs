@@ -24,10 +24,10 @@ namespace asivamosffie.services
         public async Task<dynamic> GetListMenu()
         { 
             return await _context.Menu.Select(m => new
-            { 
-                m.MenuId,
-                m.Nombre 
-            }).ToListAsync();
+                                                     { 
+                                                        m.MenuId,
+                                                        m.Nombre 
+                                                     }).ToListAsync();
         }
 
         public async Task<List<dynamic>> GetUsuarioByPerfil(int idPerfil)
