@@ -85,6 +85,7 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
           this.addressForm.get('proximaActuacionRequerida').setValue(actuacionRequeridaSelected);
         }
         this.addressForm.get('cualOtroActuacionAdelantada').setValue(data.actuacionAdelantadaOtro);
+        this.addressForm.get('cualOtroActuacionRequerida').setValue(data.proximaActuacionOtro);
         this.addressForm.get('diasVencimientoTerminos').setValue(data.cantDiasVencimiento.toString());
         this.addressForm.get('fechaVencimientoTerminos').setValue(data.fechaVencimiento);
         this.addressForm.get('participacionContratista').setValue(data.esRequiereContratista);
@@ -165,9 +166,9 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
       actuacionTaiArray = {
         "ControversiaContractualId": this.controversiaID,
         "ActuacionAdelantadaCodigo": actuacionAdelantada,
-        "ActuacionAdelantadaOtro": "",
+        "ActuacionAdelantadaOtro": this.addressForm.value.cualOtroActuacionAdelantada,
         "ProximaActuacionCodigo": proxActuacion,
-        "ProximaActuacionOtro": this.addressForm.value.cualOtro,
+        "ProximaActuacionOtro": this.addressForm.value.cualOtroActuacionRequerida,
         "Observaciones": this.addressForm.value.observaciones,
         "ResumenPropuestaFiduciaria": "",
         "RutaSoporte": this.addressForm.value.urlSoporte,
@@ -193,9 +194,9 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
       actuacionTaiArray = {
         "ControversiaContractualId": this.controversiaID,
         "ActuacionAdelantadaCodigo": actuacionAdelantada,
-        "ActuacionAdelantadaOtro": "",
+        "ActuacionAdelantadaOtro": this.addressForm.value.cualOtroActuacionAdelantada,
         "ProximaActuacionCodigo": proxActuacion,
-        "ProximaActuacionOtro": this.addressForm.value.cualOtro,
+        "ProximaActuacionOtro": this.addressForm.value.cualOtroActuacionRequerida,
         "Observaciones": this.addressForm.value.observaciones,
         "ResumenPropuestaFiduciaria": "",
         "RutaSoporte": this.addressForm.value.urlSoporte,
