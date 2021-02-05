@@ -259,3 +259,18 @@
     </p>
   </mat-card-content>
 </mat-card>
+
+<mat-card class="shipping-card var-main-gris" *ngIf="data.tieneObservacionSupervisor">
+  <mat-card-header class="header-card header-card--margin">
+    <mat-card-title class="mat-card-title header-card--text">
+      Observación del supervisor
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <p>
+      <strong> 25/11/2020 </strong>
+      {{ data.tieneObservacionSupervisor }}
+    </p>
+    
+  </mat-card-content>
+</mat-card>
