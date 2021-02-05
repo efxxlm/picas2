@@ -1044,7 +1044,7 @@ namespace asivamosffie.services
                          && !(bool)x.Eliminado).ToList())
                     {
                         apor.FuenteFinanciacionString = _context.Dominio.Where(x => x.Codigo == apor.FuenteFinanciacion.FuenteRecursosCodigo 
-                            && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
+                            && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion)?.FirstOrDefault()?.Nombre;
                         if (apor.FuenteFinanciacion.Aportante.TipoAportanteId.Equals(ConstanTipoAportante.Ffie))
                         {
                             apor.NombreAportanteString = ConstanStringTipoAportante.Ffie;

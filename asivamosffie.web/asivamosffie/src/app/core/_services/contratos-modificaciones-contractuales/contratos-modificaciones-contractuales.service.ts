@@ -56,9 +56,9 @@ export class ContratosModificacionesContractualesService {
     return this.http.get<any[]>( `${ this.url }/ContractualModification/GetListGrillaNovedadContractual` ); 
   }
 
-  // getProyectosContrato(ncontrato) {
-  //   return this.http.get<any[]>( `${ this.url }/ContractualModification/GetListGrillaNovedadContractual` ); 
-  // }
+  getProyectosContrato(ncontrato) {
+    return this.http.get<any[]>( `${ this.url }/ContractualModification/GetProyectsByContract?pContratoId=${ncontrato}` ); 
+  }
 
   eliminarNovedadContractual(id) {
     return this.http.delete<Respuesta>( `${ this.url }/ContractualModification/eliminarNovedadContractual?pNovedaContractual=${ id }` ); 

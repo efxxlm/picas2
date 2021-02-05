@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -42,24 +42,38 @@ const ELEMENT_DATA: VerificacionDiaria[] = [
   templateUrl: './tabla-proyectos-registrar-novedad.component.html',
   styleUrls: ['./tabla-proyectos-registrar-novedad.component.scss']
 })
-export class TablaProyectosRegistrarNovedadComponent implements AfterViewInit {
+export class TablaProyectosRegistrarNovedadComponent implements AfterViewInit, OnChanges {
 
   displayedColumns: string[] = [
-    'llaveMEN',
+    'llaveMen',
     'institucionEducativa',
     'sede',
-    'tipoInterventor',
-    'id'
+    'tipoIntervencion',
+    'proyectoId'
   ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource();
 
+  @Input() listaProyectos: any[] = [];
+  @Output() Proyecto = new EventEmitter();
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   constructor() { }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.listaProyectos){
+      this.dataSource = new MatTableDataSource( this.listaProyectos );
+    this.dataSource.sort = this.sort;  
+    }
+  }
 
   ngAfterViewInit() {
+    this.dataSource = new MatTableDataSource( this.listaProyectos );
     this.dataSource.sort = this.sort;
+  }
+
+  seleccionarProyecto( proyecto ){
+    //console.log(proyecto);
+    this.Proyecto.emit( proyecto );
   }
 
 }

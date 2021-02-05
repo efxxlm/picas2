@@ -39,7 +39,7 @@ namespace asivamosffie.services
         {
             List<NovedadContractual> ListContratos = new List<NovedadContractual>();
             List<Dominio> ListDominioTipoDominio = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Novedad_Modificacion_Contractual).ToList();
-            List<Dominio> ListDominioEstado = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Novedad_Modificacion_Contractual).ToList();
+            List<Dominio> ListDominioEstado = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Novedad_Contractual).ToList();
 
             try
             {
@@ -91,6 +91,16 @@ namespace asivamosffie.services
             return contratos;
         }
 
+        public async Task<List<VProyectosXcontrato>> GetProyectsByContract(int pContratoId)
+        {
+            List<VProyectosXcontrato> listProyectos = _context.VProyectosXcontrato
+                                        .Where(x => x.ContratoId == pContratoId)
+                                        .ToList();
+
+            return listProyectos;
+        }
+
+
         #endregion Gets
 
         #region CreateEdit 
@@ -119,6 +129,7 @@ namespace asivamosffie.services
                         strCrearEditar = "REGISTRAR NOVEDAD CONTRACTUAL";
                         pNovedadContractual.FechaCreacion = DateTime.Now;
                         pNovedadContractual.Eliminado = false;
+                        pNovedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.En_proceso_de_registro;
                         //PENDIENTE REGISTRO COMPLETO                        
                         _context.NovedadContractual.Add(pNovedadContractual);
                     }

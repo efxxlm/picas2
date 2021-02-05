@@ -15,7 +15,8 @@ export class RegistrarSolicitudComponent implements OnInit {
   numeroContrato = new FormControl();
   novedadAplicada = new FormControl();
   filteredOptions: Observable<string[]>;
-  options: string[] = [];
+  //options: string[] = [];
+  options: any[] = [];
 
   novedadesArray = [
     { name: 'Contrato', value: true },
@@ -25,16 +26,18 @@ export class RegistrarSolicitudComponent implements OnInit {
   constructor(public contratoServices: ContratosModificacionesContractualesService) { 
     
   }
-  numeroContratoSeleccionado="";
+  numeroContratoSeleccionado: any;
   proyectos=[];
-  contrato=null;
+  proyecto:null;
   contratos=[];
+  contrato:null;
 
   ngOnInit() {
     //traigo contratos
     this.contratoServices.getContratosAutocomplete().subscribe(respuesta=>{
       this.contratos=respuesta;
-      this.options=respuesta.map(function(task,index,array){return task.numeroContrato})
+      //this.options=respuesta.map(function(task,index,array){return task.numeroContrato})
+      this.options=respuesta;
     });
     this.filteredOptions = this.numeroContrato.valueChanges.pipe(
       startWith(''),
@@ -44,9 +47,10 @@ export class RegistrarSolicitudComponent implements OnInit {
   }
 
   private _filter(value: string): string[] {
+    console.log( typeof value )
     const filterValue = value.toLowerCase();
 
-    return this.options.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
+    return this.options.filter(option => option.numeroContrato.toLowerCase().indexOf(filterValue) === 0);
   }
 
   public seleccionAutocomplete(numeroContrato)
@@ -57,17 +61,26 @@ export class RegistrarSolicitudComponent implements OnInit {
   public changeNovedadAplicada()
   {
     console.log(this.novedadAplicada.value);
-    if(!this.novedadAplicada)
+    if(this.novedadAplicada.value == false)
     {
-      this.contratoServices.getProyectosContrato(this.numeroContratoSeleccionado).subscribe(
+      this.contratoServices.getProyectosContrato(this.numeroContratoSeleccionado.contratoId).subscribe(
         response=>
         {
           this.proyectos=response;
+          console.log(this.proyectos);
+
         }
       );
+    }else{
+      this.proyecto = null;
     }
-    this.contrato=this.contratos.filter(x=>x.numeroContrato==this.numeroContratoSeleccionado)[0];
-    console.log(this.contrato);
+    this.contrato=this.contratos.filter(x=>x.numeroContrato==this.numeroContratoSeleccionado.numeroContrato)[0];
+    console.log(this.contrato, this.proyecto);
+  }
+
+  seleccionarProyecto( proy ){
+    console.log(proy, this.contrato)
+    this.proyecto = proy;
   }
 
 }

@@ -252,7 +252,7 @@ listaEstadosPoliza(){
   }
 
   listaTipoNovedadModificacionContractual(){
-    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=76`);
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=113`);
   }
   
   listaProcesosJudiciales() {
