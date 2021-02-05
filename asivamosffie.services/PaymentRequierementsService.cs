@@ -27,26 +27,12 @@ namespace asivamosffie.services
             _commonService = commonService;
             _context = context;
         }
-     
-        private bool ValidateCompleteRecordSolicitudPagoObservacion(SolicitudPagoObservacion pSolicitudPagoObservacion)
-        {
-            if (!pSolicitudPagoObservacion.TieneObservacion)
-            {
-                return true;
-            }
-            else
-            {
-                if (!string.IsNullOrEmpty(pSolicitudPagoObservacion.Observacion))
-                    return true;
-            }
 
-            return false;
-        }
-   
+
         public async Task<Respuesta> CreateUpdateSolicitudPagoObservacion(SolicitudPagoObservacion pSolicitudPagoObservacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Actualizar_Solicitud_Pago_Observacion, (int)EnumeratorTipoDominio.Acciones);
-             
+
             try
             {
                 bool RegistroCompletoObservacion = ValidateCompleteRecordSolicitudPagoObservacion(pSolicitudPagoObservacion);
@@ -55,7 +41,6 @@ namespace asivamosffie.services
 
                 ActualizarSolicitudPagoTieneObservacion(pSolicitudPagoObservacion, pSolicitudPagoObservacion.TieneObservacion);
 
-                
                 return
                     new Respuesta
                     {
@@ -79,7 +64,7 @@ namespace asivamosffie.services
                     };
             }
         }
-     
+
         private void CreateOrUpdateSolicitudPagoObservacion(SolicitudPagoObservacion pSolicitudPagoObservacion)
         {
             if (pSolicitudPagoObservacion.SolicitudPagoObservacionId > 0)
@@ -97,7 +82,7 @@ namespace asivamosffie.services
                 pSolicitudPagoObservacion.Eliminado = true;
             }
         }
-    
+
         private void ActualizarSolicitudPagoTieneObservacion(SolicitudPagoObservacion pSolicitudPagoObservacion, bool TieneObservacion)
         {
             SolicitudPago solicitudPago = _context.SolicitudPago.Find(pSolicitudPagoObservacion.SolicitudPagoId);
@@ -115,5 +100,21 @@ namespace asivamosffie.services
             }
 
         }
+
+        private bool ValidateCompleteRecordSolicitudPagoObservacion(SolicitudPagoObservacion pSolicitudPagoObservacion)
+        {
+            if (!pSolicitudPagoObservacion.TieneObservacion)
+            {
+                return true;
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(pSolicitudPagoObservacion.Observacion))
+                    return true;
+            }
+
+            return false;
+        }
+
     }
 }

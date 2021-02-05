@@ -208,6 +208,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -1805,6 +1806,8 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(3000)
                     .IsUnicode(false);
 
+                entity.Property(e => e.CualOtroMotivo).IsUnicode(false);
+
                 entity.Property(e => e.EstadoCodigo)
                     .IsRequired()
                     .HasMaxLength(100)
@@ -2788,7 +2791,8 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.EstadoValidacion)
                     .HasMaxLength(2)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
@@ -6138,10 +6142,6 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.PerfilObservacionCodigo)
-                    .HasMaxLength(2)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.TipoObservacionCodigo)
                     .HasMaxLength(2)
                     .IsUnicode(false);
@@ -6153,6 +6153,11 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(100)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.Menu)
+                    .WithMany(p => p.SolicitudPagoObservacion)
+                    .HasForeignKey(d => d.MenuId)
+                    .HasConstraintName("FK_SolicitudPagoObervacion_MenuId");
 
                 entity.HasOne(d => d.SolicitudPago)
                     .WithMany(p => p.SolicitudPagoObservacion)

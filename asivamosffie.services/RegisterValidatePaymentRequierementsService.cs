@@ -273,7 +273,8 @@ namespace asivamosffie.services
                                                     c.ContratoPoliza.FirstOrDefault().FechaAprobacion,
                                                     PlazoDias = c.PlazoFase1PreDias + c.PlazoFase2ConstruccionDias,
                                                     PlazoMeses = c.PlazoFase1PreMeses + c.PlazoFase2ConstruccionMeses
-                                                }).FirstOrDefault(); 
+                                                }).FirstOrDefault();
+        
             var resultProyectos = await _context.VProyectosXcontrato
                                                                     .Where(p => p.ContratoId == pContratoId)
                                                                                                             .Select(p => new
