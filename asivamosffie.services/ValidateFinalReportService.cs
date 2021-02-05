@@ -51,7 +51,6 @@ namespace asivamosffie.services
                 item.Proyecto.DepartamentoObj = ListLocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
                 item.Proyecto.tipoIntervencionString = TipoIntervencion.Where(r => r.Codigo == item.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
                 item.Proyecto.Sede = Sede;
-                item.EstadoValidacionString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.EstadoValidacion, 160);
             }
             return list;
         }
@@ -88,7 +87,7 @@ namespace asivamosffie.services
                                                         .Include(r => r.Contratacion)
                                                          .ThenInclude(r => r.Contrato)
                                                         .ToListAsync();
-            ListContratacion.FirstOrDefault().Contratacion.TipoContratacionCodigo = TipoObraIntervencion.Where(r => r.Codigo == ListContratacion[0].Contratacion.TipoSolicitudCodigo).Select(r => r.Nombre).FirstOrDefault();
+            ListContratacion[0].Contratacion.TipoContratacionCodigo = TipoObraIntervencion.Where(r => r.Codigo == ListContratacion[0].Contratacion.TipoSolicitudCodigo).Select(r => r.Nombre).FirstOrDefault();
 
             foreach (var item in ListContratacion)
             {
@@ -133,15 +132,7 @@ namespace asivamosffie.services
                                 .Include(r => r.InformeFinalListaChequeo)
                                 .Include(r => r.InformeFinalAnexo)
                                 .ToListAsync();
-            foreach(var item in ListInformeFinalChequeo)
-            {
-                item.CalificacionCodigoString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.CalificacionCodigo, 151);
-                item.ValidacionCodigoString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.ValidacionCodigo, 151);
-                if (item.InformeFinalAnexoId != null)
-                {
-                    item.InformeFinalAnexo.TipoAnexoString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.InformeFinalAnexo.TipoAnexo, 155);
-                }
-            }
+
             return ListInformeFinalChequeo;
         }
 

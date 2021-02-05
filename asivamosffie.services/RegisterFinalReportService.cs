@@ -72,7 +72,7 @@ namespace asivamosffie.services
                                                         .Include(r => r.Contratacion)
                                                          .ThenInclude(r => r.Contrato)
                                                         .ToListAsync();
-            ListContratacion.FirstOrDefault().Contratacion.TipoContratacionCodigo = TipoObraIntervencion.Where(r => r.Codigo == ListContratacion[0].Contratacion.TipoSolicitudCodigo).Select(r => r.Nombre).FirstOrDefault();
+            ListContratacion[0].Contratacion.TipoContratacionCodigo = TipoObraIntervencion.Where(r => r.Codigo == ListContratacion[0].Contratacion.TipoSolicitudCodigo).Select(r => r.Nombre).FirstOrDefault();
 
             foreach (var item in ListContratacion)
             {

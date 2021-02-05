@@ -9,12 +9,18 @@ import { QuillModule } from 'ngx-quill';
 
 import { HomeComponent } from './components/home/home.component';
 import { TablaInformeFinalProyectoComponent } from './components/tabla-informe-final-proyecto/tabla-informe-final-proyecto.component';
+import { ValidarInformeComponent } from './components/validar-informe/validar-informe.component';
+import { DatosDelProyectoComponent } from './components/datos-del-proyecto/datos-del-proyecto.component';
+import { TablaInformeFinalAnexosComponent } from './components/tabla-informe-final-anexos/tabla-informe-final-anexos.component';
 
 
 @NgModule({
   declarations: [
     HomeComponent,
-    TablaInformeFinalProyectoComponent
+    TablaInformeFinalProyectoComponent,
+    ValidarInformeComponent,
+    DatosDelProyectoComponent,
+    TablaInformeFinalAnexosComponent
   ],
   imports: [
     CommonModule,
