@@ -213,8 +213,8 @@
                               class="label-left"
                               for="componente"
                               [class.color-secondaryColor]="
-                                (addressForm.get('componente').invalid && addressForm.get('componente').touched) ||
-                                (addressForm.get('componente').invalid && estaEditando)
+                                (addressForm.get('componente')?.invalid && addressForm.get('componente').touched) ||
+                                (addressForm.get('componente')?.invalid && estaEditando)
                               "
                             >
                               Componente
@@ -244,8 +244,8 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
                               *ngIf="
-                                (addressForm.get('componente').invalid && addressForm.get('componente').touched) ||
-                                (addressForm.get('componente').invalid && estaEditando)
+                                (addressForm.get('componente')?.invalid && addressForm.get('componente').touched) ||
+                                (addressForm.get('componente')?.invalid && estaEditando)
                               "
                             />
                           </span>
