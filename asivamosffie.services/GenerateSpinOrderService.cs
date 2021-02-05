@@ -56,7 +56,7 @@ namespace asivamosffie.services
             List<dynamic> grind = new List<dynamic>();
             List<Dominio> ListParametricas = _context.Dominio.Where(
                                                                          d => d.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato
-                                                                      || d.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Registro_Pago
+                                                                      || d.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Solicitud_Pago
                                                                       || d.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Orden_Giro
                                                               ).ToList();
 

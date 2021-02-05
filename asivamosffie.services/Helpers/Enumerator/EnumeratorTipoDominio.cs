@@ -191,7 +191,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         //4.1.7
         Formas_Pago = 134,
         Criterios_Pago = 135,
-        Estados_Registro_Pago = 136,
+        Estados_Solicitud_Pago = 136,
         Tipo_Pago_Obra_Interventoria = 144,
         Concepto_Pago_Criterio_Obra_Interventoria = 145,
         Tipo_Descuento = 146,
