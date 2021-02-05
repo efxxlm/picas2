@@ -80,8 +80,11 @@
             <span *ngIf="element.informeFinalAnexoId == null || element.informeFinalAnexoId == 0"
               >Tipo de documento</span
             >
-            <span *ngIf="element.informeFinalAnexoId != null && element.informeFinalAnexoId > 0"
+            <span *ngIf="(element.estadoInformeFinal !== '4' && element.informeFinalAnexoId != null && element.informeFinalAnexoId > 0) || (element.estadoInformeFinal ==='4' && element.tieneObservacionSupervisor)"
               >Ver detalle/ Editar</span
+            >
+            <span *ngIf="element.estadoInformeFinal ==='4' && !element.tieneObservacionSupervisor"
+              >Ver detalle</span
             >
           </button>
           <button

@@ -10,11 +10,11 @@
   <p class="colorMainColor mt-05em">
     <span class="mx-1em">
       Estado del requisito:
-      <b *ngIf="data.informe.validacionCodigo"> {{ data.informe.validacionCodigo }} </b>
+      <b *ngIf="data.informe.validacionCodigo"> {{ data.informe.validacionCodigoString }} </b>
     </span>
     <span class="mx-1em">
       Tipo de anexo:
-      <b *ngIf="data.informe.informeFinalAnexo"> {{ data.informe.informeFinalAnexo.tipoAnexo }} </b>
+      <b *ngIf="data.informe.informeFinalAnexo"> {{ data.informe.informeFinalAnexo.tipoAnexoString }} </b>
     </span>
     <span class="mx-1em" *ngIf="data.informe.informeFinalAnexo && data.informe.informeFinalAnexo.urlSoporte">
       URL:

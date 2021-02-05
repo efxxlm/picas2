@@ -16,7 +16,7 @@ export class DialogObservacionesComponent implements OnInit {
     informeFinalInterventoriaId: [null, Validators.required],
     observaciones: [null, Validators.required],
     esSupervision: [null, Validators.required],
-    esCalificacion: [true, Validators.required]
+    esCalificacion: [null, Validators.required]
   })
 
   editorStyle = {

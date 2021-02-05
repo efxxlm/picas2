@@ -305,6 +305,7 @@ namespace asivamosffie.services
                             InformeFinalInterventoriaObservacionesId = informeFinalInterventoriaObservacionesId,
                             TieneObservacionNoCumple = tieneObservacionNoCumple,
                             CalificacionCodigoString = calificacionCodigoString,
+                            estadoInformeFinal = informeFinal.EstadoInforme
 
                     });
                     }
@@ -321,7 +322,8 @@ namespace asivamosffie.services
                             InformeFinalAnexoId = 0,
                             InformeFinalInterventoriaObservacionesId = 0,
                             TieneObservacionNoCumple = false,
-                            CalificacionCodigoString = ""
+                            CalificacionCodigoString = "",
+                            estadoInformeFinal = informeFinal.EstadoInforme
                         });
                     }
                 }
@@ -499,8 +501,10 @@ namespace asivamosffie.services
                     if (pObservacion.EsSupervision == true)
                     {
                         InformeFinalInterventoria informeFinalInterventoria = _context.InformeFinalInterventoria.Find(pObservacion.InformeFinalInterventoriaId);
-                        
-                        informeFinalInterventoria.CalificacionCodigo = ConstantCodigoEstadoInformeFinal.Con_Observaciones_del_supervisor;
+                        InformeFinal informeFinal = _context.InformeFinal.Find(informeFinalInterventoria.InformeFinalId);
+                        informeFinal.EstadoInforme = ConstantCodigoEstadoInformeFinal.Con_Observaciones_del_supervisor;
+                        informeFinal.RegistroCompleto = false;
+                        informeFinalInterventoria.TieneObservacionSupervisor = true;
                     }
                 }
                 else
