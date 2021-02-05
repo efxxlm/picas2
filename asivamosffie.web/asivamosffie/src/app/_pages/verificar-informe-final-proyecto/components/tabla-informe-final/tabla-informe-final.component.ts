@@ -13,8 +13,9 @@ export interface RegistrarInterface {
   institucionEducativa: string,
   sedeEducativa: string,
   proyectoId: number,
+  registroCompletoValidacion: boolean,
   estadoValidacion: string,
-  registroCompletoValidacion: boolean;
+  estadoValidacionString: string;
 }
 
 @Component({
@@ -31,7 +32,7 @@ export class TablaInformeFinalComponent implements OnInit, AfterViewInit {
     'tipoIntervencion',
     'institucionEducativa',
     'sedeEducativa',
-    'estadoValidacion',
+    'estadoValidacionString',
     'registroCompletoValidacion',
     'proyectoId'
   ];
