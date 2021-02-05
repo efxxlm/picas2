@@ -477,7 +477,8 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
               }
             }
             */
-            this.router.navigate(['/gestionarTramiteControversiasContractuales']);
+            this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+              () => this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarControversia', resp_0.data.controversiaContractualId]));
           }
           else {
             if (motivosDeSolicitud) {
@@ -538,7 +539,8 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
               }
             }
             */
-            this.router.navigate(['/gestionarTramiteControversiasContractuales']);
+           this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+            () => this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarControversia', resp_0.data.controversiaContractualId]));
           }
         }
         else {
@@ -691,7 +693,8 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
               }
             }
             */
-            this.router.navigate(['/gestionarTramiteControversiasContractuales']);
+           this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+            () => this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarControversia', resp_0.data.controversiaContractualId]));
           }
           else {
             if (motivosDeSolicitud) {
@@ -752,7 +755,8 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
               }
             }
             */
-            this.router.navigate(['/gestionarTramiteControversiasContractuales']);
+           this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+            () => this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarControversia', resp_0.data.controversiaContractualId]));
           }
         }
         else {
@@ -904,7 +908,8 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
               }
             }
             */
-            this.router.navigate(['/gestionarTramiteControversiasContractuales']);
+           this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+            () => this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarControversia', resp_0.data.controversiaContractualId]));
           }
           else {
             if (motivosDeSolicitud) {
@@ -965,7 +970,8 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
               }
             }
             */
-            this.router.navigate(['/gestionarTramiteControversiasContractuales']);
+           this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+            () => this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarControversia', resp_0.data.controversiaContractualId]));
           }
         }
         else {
