@@ -22,9 +22,11 @@ import { TablaEjpresupuestalGbftrecComponent } from './components/tabla-ejpresup
 import { TablaEjfinancieraGbftrecComponent } from './components/tabla-ejfinanciera-gbftrec/tabla-ejfinanciera-gbftrec.component';
 import { VerdetalleeditarBalanceGbftrecComponent } from './components/verdetalleeditar-balance-gbftrec/verdetalleeditar-balance-gbftrec.component';
 import { DetalleBalanceGbftrecComponent } from './components/detalle-balance-gbftrec/detalle-balance-gbftrec.component';
+import { RegistrarTrasladoGbftrecComponent } from './components/registrar-traslado-gbftrec/registrar-traslado-gbftrec.component';
+import { ControlSolicitudesTrasladoGbftrecComponent } from './components/control-solicitudes-traslado-gbftrec/control-solicitudes-traslado-gbftrec.component';
 
 @NgModule({
-  declarations: [GestionarBalanFinancTraslRecComponent, ValidarBalanceGbftrecComponent, RecursosCompromPagadosGbftrecComponent, EjecucionFinancieraGbftrecComponent, TrasladoRecursosGbftrecComponent, RecursosCompromAccordGbftrecComponent, FuentesUsosGbftrecComponent, ContratistasGbftrecComponent, TablaValorTotalOgGbftrecComponent, DetalleOgGbftrecComponent, TablaFacturadoOgGbftrecComponent, TablaDescuentosOgGbftrecComponent, TablaOtrosDescuentosOgGbftrecComponent, TablaEjpresupuestalGbftrecComponent, TablaEjfinancieraGbftrecComponent, VerdetalleeditarBalanceGbftrecComponent, DetalleBalanceGbftrecComponent],
+  declarations: [GestionarBalanFinancTraslRecComponent, ValidarBalanceGbftrecComponent, RecursosCompromPagadosGbftrecComponent, EjecucionFinancieraGbftrecComponent, TrasladoRecursosGbftrecComponent, RecursosCompromAccordGbftrecComponent, FuentesUsosGbftrecComponent, ContratistasGbftrecComponent, TablaValorTotalOgGbftrecComponent, DetalleOgGbftrecComponent, TablaFacturadoOgGbftrecComponent, TablaDescuentosOgGbftrecComponent, TablaOtrosDescuentosOgGbftrecComponent, TablaEjpresupuestalGbftrecComponent, TablaEjfinancieraGbftrecComponent, VerdetalleeditarBalanceGbftrecComponent, DetalleBalanceGbftrecComponent, RegistrarTrasladoGbftrecComponent, ControlSolicitudesTrasladoGbftrecComponent],
   imports: [
     CommonModule,
     MaterialModule,

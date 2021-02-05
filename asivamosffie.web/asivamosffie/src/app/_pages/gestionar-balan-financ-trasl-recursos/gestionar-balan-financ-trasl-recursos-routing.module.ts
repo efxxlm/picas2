@@ -3,6 +3,7 @@ import { Routes, RouterModule } from "@angular/router";
 import { DetalleBalanceGbftrecComponent } from "./components/detalle-balance-gbftrec/detalle-balance-gbftrec.component";
 import { DetalleOgGbftrecComponent } from "./components/detalle-og-gbftrec/detalle-og-gbftrec.component";
 import { GestionarBalanFinancTraslRecComponent } from "./components/gestionar-balan-financ-trasl-rec/gestionar-balan-financ-trasl-rec.component";
+import { RegistrarTrasladoGbftrecComponent } from "./components/registrar-traslado-gbftrec/registrar-traslado-gbftrec.component";
 import { ValidarBalanceGbftrecComponent } from "./components/validar-balance-gbftrec/validar-balance-gbftrec.component";
 import { VerdetalleeditarBalanceGbftrecComponent } from "./components/verdetalleeditar-balance-gbftrec/verdetalleeditar-balance-gbftrec.component";
 
@@ -26,6 +27,10 @@ const routes: Routes = [
   {
     path: 'verDetalleBalance/:id',
     component: DetalleBalanceGbftrecComponent
+  },
+  {
+    path: 'registrarTraslado',
+    component: RegistrarTrasladoGbftrecComponent
   }
 ];
 @NgModule({

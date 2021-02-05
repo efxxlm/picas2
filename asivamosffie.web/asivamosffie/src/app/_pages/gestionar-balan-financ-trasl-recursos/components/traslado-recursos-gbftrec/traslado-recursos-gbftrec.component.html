@@ -83,3 +83,7 @@
         </button>
     </div>
 </form>
+<!--SOLO PARA EFECTOS DE MAQUETACIÓN-->
+<div class="text-center mb-3em mt-2em" *ngIf="addressForm.get('requiereTrasladoRecursos').value === true" >
+    <a routerLink="/gestionarBalanceFinancieroTrasladoRecursos/registrarTraslado" mat-raised-button color="accent" class="btn-cargar-proyecto">Registrar traslado</a><br>  
+</div>
