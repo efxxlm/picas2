@@ -2,6 +2,8 @@ import { CommonService } from './../../../../core/_services/common/common.servic
 import { Component, Input, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Dominio } from 'src/app/core/_services/common/common.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-obs-datos-factura',
@@ -46,7 +48,8 @@ export class ObsDatosFacturaComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
-        private commonSvc: CommonService )
+        private commonSvc: CommonService,
+        private dialog: MatDialog )
     {
         this.commonSvc.tiposDescuento()
             .subscribe( response => this.tiposDescuentoArray = response );
@@ -112,6 +115,13 @@ export class ObsDatosFacturaComponent implements OnInit {
         } else {
             return 0;
         }
+    }
+
+    openDialog(modalTitle: string, modalText: string) {
+        const dialogRef = this.dialog.open(ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle, modalText }
+        });
     }
 
     onSubmit() {

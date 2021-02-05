@@ -120,6 +120,16 @@
 
                    <app-obs-detll-fact-proc-asociados [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"></app-obs-detll-fact-proc-asociados>
                 </mat-expansion-panel>
+
+                <mat-expansion-panel class="expansion-style sub-expansion-black">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title sin-diligenciar">
+                            Datos de la factura
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+            
+                    <app-obs-datos-factura [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"></app-obs-datos-factura>
+                </mat-expansion-panel>
             </mat-accordion>
         </mat-expansion-panel>
     </mat-accordion>
@@ -161,6 +171,16 @@
 
                     <app-obs-detll-fact-proc-asociados [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"></app-obs-detll-fact-proc-asociados>
                 </mat-expansion-panel>
+
+                <mat-expansion-panel class="expansion-style sub-expansion-black">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title sin-diligenciar">
+                            Datos de la factura
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+            
+                    <app-obs-datos-factura [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"></app-obs-datos-factura>
+                </mat-expansion-panel>
             </mat-accordion>
         </mat-expansion-panel>
     </mat-accordion>
@@ -169,11 +189,11 @@
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title sin-diligenciar">
-                    Datos de la factura
+                    Descuentos Dirección Técnica
                 </mat-panel-title>
             </mat-expansion-panel-header>
     
-            <app-obs-datos-factura [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"></app-obs-datos-factura>
+            <app-obs-descuentos-dir-tecnica [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"></app-obs-descuentos-dir-tecnica>
         </mat-expansion-panel>
     </mat-accordion>
 </section>

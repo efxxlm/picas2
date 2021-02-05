@@ -125,7 +125,8 @@
                             Datos de la factura
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                   <app-obs-datos-factura-autoriz></app-obs-datos-factura-autoriz>
+
+                   <app-obs-datos-factura-autoriz [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"></app-obs-datos-factura-autoriz>
                 </mat-expansion-panel>
             </mat-accordion>
         </mat-expansion-panel>
@@ -177,7 +178,8 @@
                             Datos de la factura
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                   <app-obs-datos-factura-autoriz></app-obs-datos-factura-autoriz>
+
+                   <app-obs-datos-factura-autoriz [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"></app-obs-datos-factura-autoriz>
                 </mat-expansion-panel>
             </mat-accordion>
         </mat-expansion-panel>
@@ -190,7 +192,7 @@
                     Descuentos Dirección Técnica
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-obs-desc-dir-tecnica-autoriz></app-obs-desc-dir-tecnica-autoriz>
+            <app-obs-desc-dir-tecnica-autoriz [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"></app-obs-desc-dir-tecnica-autoriz>
         </mat-expansion-panel>
     </mat-accordion>
 </section>
