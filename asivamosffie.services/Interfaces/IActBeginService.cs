@@ -11,6 +11,18 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IActBeginService
     {
+        /// Querido Programador:
+        /// Cuando camilo escribio este código, sólo Dios y el
+        /// Sabian como funcionaba.
+        /// Ahora, ¡sólo Dios lo sabe!
+        /// 
+        /// Así que si esta tratando de 'Optimizarlo'
+        /// por favor, incremente el siguiente contador
+        /// como una advertencia 
+        /// para el siguiente colega:
+        /// 
+        /// total_horas_perdidas_aqui = 1
+      
         //Task<ActionResult<List<GrillaActaInicio>>> GetListGrillaActaInicio();
 
         Task<List<GrillaActaInicio>> GetListGrillaActaInicio(int pPerfilId);
