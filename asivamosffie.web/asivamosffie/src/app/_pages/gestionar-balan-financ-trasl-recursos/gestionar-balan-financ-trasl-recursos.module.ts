@@ -24,9 +24,14 @@ import { VerdetalleeditarBalanceGbftrecComponent } from './components/verdetalle
 import { DetalleBalanceGbftrecComponent } from './components/detalle-balance-gbftrec/detalle-balance-gbftrec.component';
 import { RegistrarTrasladoGbftrecComponent } from './components/registrar-traslado-gbftrec/registrar-traslado-gbftrec.component';
 import { ControlSolicitudesTrasladoGbftrecComponent } from './components/control-solicitudes-traslado-gbftrec/control-solicitudes-traslado-gbftrec.component';
+import { DatosSolicitudGbftrecComponent } from './components/datos-solicitud-gbftrec/datos-solicitud-gbftrec.component';
+import { DatosDdpDrpGbftrecComponent } from './components/datos-ddp-drp-gbftrec/datos-ddp-drp-gbftrec.component';
+import { TablaDrpGbftrecComponent } from './components/tabla-drp-gbftrec/tabla-drp-gbftrec.component';
+import { TablaPorcParticipacionGbftrecComponent } from './components/tabla-porc-participacion-gbftrec/tabla-porc-participacion-gbftrec.component';
+import { TablaInfofrecursosGbftrecComponent } from './components/tabla-infofrecursos-gbftrec/tabla-infofrecursos-gbftrec.component';
 
 @NgModule({
-  declarations: [GestionarBalanFinancTraslRecComponent, ValidarBalanceGbftrecComponent, RecursosCompromPagadosGbftrecComponent, EjecucionFinancieraGbftrecComponent, TrasladoRecursosGbftrecComponent, RecursosCompromAccordGbftrecComponent, FuentesUsosGbftrecComponent, ContratistasGbftrecComponent, TablaValorTotalOgGbftrecComponent, DetalleOgGbftrecComponent, TablaFacturadoOgGbftrecComponent, TablaDescuentosOgGbftrecComponent, TablaOtrosDescuentosOgGbftrecComponent, TablaEjpresupuestalGbftrecComponent, TablaEjfinancieraGbftrecComponent, VerdetalleeditarBalanceGbftrecComponent, DetalleBalanceGbftrecComponent, RegistrarTrasladoGbftrecComponent, ControlSolicitudesTrasladoGbftrecComponent],
+  declarations: [GestionarBalanFinancTraslRecComponent, ValidarBalanceGbftrecComponent, RecursosCompromPagadosGbftrecComponent, EjecucionFinancieraGbftrecComponent, TrasladoRecursosGbftrecComponent, RecursosCompromAccordGbftrecComponent, FuentesUsosGbftrecComponent, ContratistasGbftrecComponent, TablaValorTotalOgGbftrecComponent, DetalleOgGbftrecComponent, TablaFacturadoOgGbftrecComponent, TablaDescuentosOgGbftrecComponent, TablaOtrosDescuentosOgGbftrecComponent, TablaEjpresupuestalGbftrecComponent, TablaEjfinancieraGbftrecComponent, VerdetalleeditarBalanceGbftrecComponent, DetalleBalanceGbftrecComponent, RegistrarTrasladoGbftrecComponent, ControlSolicitudesTrasladoGbftrecComponent, DatosSolicitudGbftrecComponent, DatosDdpDrpGbftrecComponent, TablaDrpGbftrecComponent, TablaPorcParticipacionGbftrecComponent, TablaInfofrecursosGbftrecComponent],
   imports: [
     CommonModule,
     MaterialModule,

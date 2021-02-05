@@ -18,6 +18,7 @@ export class ControlSolicitudesTrasladoGbftrecComponent implements OnInit {
   myFilter2 = new FormControl();
   var1: any;
   var2: any;
+  idContrato:any = null;
   dataSource = new MatTableDataSource();
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -37,7 +38,8 @@ export class ControlSolicitudesTrasladoGbftrecComponent implements OnInit {
       fechaPagoFiduciaria: '17/11/2020',
       numeroOrdendeGiro: 'ODG_Obra_001',
       modalidadContrato: 'Modalidad 1',
-      numeroContrato: 'N801801'
+      numeroContrato: 'N801801',
+      contratacionProyectoId: 1
     },
     {
       tipoSolicitudGiro: 'Obra',
@@ -45,7 +47,8 @@ export class ControlSolicitudesTrasladoGbftrecComponent implements OnInit {
       fechaPagoFiduciaria: '20/11/2020',
       numeroOrdendeGiro: 'ODG_Obra_326',
       modalidadContrato: 'Modalidad 1',
-      numeroContrato: 'N801801'
+      numeroContrato: 'N801801',
+      contratacionProyectoId: 2
     },
     {
       tipoSolicitudGiro: 'Obra',
@@ -53,7 +56,8 @@ export class ControlSolicitudesTrasladoGbftrecComponent implements OnInit {
       fechaPagoFiduciaria: '22/11/2020',
       numeroOrdendeGiro: 'ODG_Obra_326',
       modalidadContrato: 'Modalidad 1',
-      numeroContrato: 'N801801'
+      numeroContrato: 'N801801',
+      contratacionProyectoId: 3
     },
   ];
   constructor(private fb: FormBuilder) { }
@@ -79,5 +83,9 @@ export class ControlSolicitudesTrasladoGbftrecComponent implements OnInit {
       return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
     };
   }
-
+  
+  addProject(idproyecto:any)
+  {
+    this.idContrato = idproyecto;
+  }
 }
