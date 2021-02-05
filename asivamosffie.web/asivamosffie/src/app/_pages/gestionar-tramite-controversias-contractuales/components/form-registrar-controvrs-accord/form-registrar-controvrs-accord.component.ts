@@ -411,19 +411,32 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
           });
           this.openDialog('', `<b>${this.sucessInfo}</b>`);
           if (this.isEditable == true) {
-            if (motivosDeSolicitud) {
-              this.arrayMotivosLoaded.forEach(k => {
+            if (this.arrayMotivosLoaded.length > 0) {
+              if (motivosDeSolicitud) {
+                this.arrayMotivosLoaded.forEach(k => {
+                  motivosDeSolicitud.forEach(m => {
+                    let motivoGen = {
+                      ControversiaContractualId: this.idControversia,
+                      MotivoSolicitudCodigo: m.codigo,
+                      ControversiaMotivoId: k.controversiaMotivoId,
+                    }
+                    this.services.CreateEditarControversiaMotivo(motivoGen).subscribe(r => {
+                    });
+                  });
+                });
+              }
+            }
+            else {
+              if (motivosDeSolicitud) {
                 motivosDeSolicitud.forEach(m => {
-                  console.log(m);
                   let motivoGen = {
-                    ControversiaContractualId: this.idControversia,
-                    MotivoSolicitudCodigo: m.codigo,
-                    ControversiaMotivoId: k.controversiaMotivoId,
+                    ControversiaContractualId: resp_0.data.controversiaContractualId,
+                    MotivoSolicitudCodigo: m.codigo
                   }
                   this.services.CreateEditarControversiaMotivo(motivoGen).subscribe(r => {
                   });
                 });
-              });
+              }
             }
             /*
             if (this.addressForm.value.motivosSolicitud != undefined || this.addressForm.value.motivosSolicitud != null) {
@@ -539,8 +552,8 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
               }
             }
             */
-           this.router.navigateByUrl('/', { skipLocationChange: true }).then(
-            () => this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarControversia', resp_0.data.controversiaContractualId]));
+            this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+              () => this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarControversia', resp_0.data.controversiaContractualId]));
           }
         }
         else {
@@ -627,19 +640,33 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
           });
           this.openDialog('', `<b>${this.sucessInfo}</b>`);
           if (this.isEditable == true) {
-            if (motivosDeSolicitud) {
-              this.arrayMotivosLoaded.forEach(k => {
+            if (this.arrayMotivosLoaded.length > 0) {
+              if (motivosDeSolicitud) {
+                this.arrayMotivosLoaded.forEach(k => {
+                  motivosDeSolicitud.forEach(m => {
+                    console.log(m);
+                    let motivoGen = {
+                      ControversiaContractualId: this.idControversia,
+                      MotivoSolicitudCodigo: m.codigo,
+                      ControversiaMotivoId: k.controversiaMotivoId,
+                    }
+                    this.services.CreateEditarControversiaMotivo(motivoGen).subscribe(r => {
+                    });
+                  });
+                });
+              }
+            }
+            else {
+              if (motivosDeSolicitud) {
                 motivosDeSolicitud.forEach(m => {
-                  console.log(m);
                   let motivoGen = {
-                    ControversiaContractualId: this.idControversia,
-                    MotivoSolicitudCodigo: m.codigo,
-                    ControversiaMotivoId: k.controversiaMotivoId,
+                    ControversiaContractualId: resp_0.data.controversiaContractualId,
+                    MotivoSolicitudCodigo: m.codigo
                   }
                   this.services.CreateEditarControversiaMotivo(motivoGen).subscribe(r => {
                   });
                 });
-              });
+              }
             }
             /*
             if (this.addressForm.value.motivosSolicitud != undefined || this.addressForm.value.motivosSolicitud != null) {
@@ -693,8 +720,8 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
               }
             }
             */
-           this.router.navigateByUrl('/', { skipLocationChange: true }).then(
-            () => this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarControversia', resp_0.data.controversiaContractualId]));
+            this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+              () => this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarControversia', resp_0.data.controversiaContractualId]));
           }
           else {
             if (motivosDeSolicitud) {
@@ -755,8 +782,8 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
               }
             }
             */
-           this.router.navigateByUrl('/', { skipLocationChange: true }).then(
-            () => this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarControversia', resp_0.data.controversiaContractualId]));
+            this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+              () => this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarControversia', resp_0.data.controversiaContractualId]));
           }
         }
         else {
@@ -842,19 +869,33 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
 
           });
           if (this.isEditable == true) {
-            if (motivosDeSolicitud) {
-              this.arrayMotivosLoaded.forEach(k => {
+            if (this.arrayMotivosLoaded.length > 0) {
+              if (motivosDeSolicitud) {
+                this.arrayMotivosLoaded.forEach(k => {
+                  motivosDeSolicitud.forEach(m => {
+                    console.log(m);
+                    let motivoGen = {
+                      ControversiaContractualId: this.idControversia,
+                      MotivoSolicitudCodigo: m.codigo,
+                      ControversiaMotivoId: k.controversiaMotivoId,
+                    }
+                    this.services.CreateEditarControversiaMotivo(motivoGen).subscribe(r => {
+                    });
+                  });
+                });
+              }
+            }
+            else {
+              if (motivosDeSolicitud) {
                 motivosDeSolicitud.forEach(m => {
-                  console.log(m);
                   let motivoGen = {
-                    ControversiaContractualId: this.idControversia,
-                    MotivoSolicitudCodigo: m.codigo,
-                    ControversiaMotivoId: k.controversiaMotivoId,
+                    ControversiaContractualId: resp_0.data.controversiaContractualId,
+                    MotivoSolicitudCodigo: m.codigo
                   }
                   this.services.CreateEditarControversiaMotivo(motivoGen).subscribe(r => {
                   });
                 });
-              });
+              }
             }
             /*
             if (this.addressForm.value.motivosSolicitud != undefined || this.addressForm.value.motivosSolicitud != null) {
@@ -908,8 +949,8 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
               }
             }
             */
-           this.router.navigateByUrl('/', { skipLocationChange: true }).then(
-            () => this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarControversia', resp_0.data.controversiaContractualId]));
+            this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+              () => this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarControversia', resp_0.data.controversiaContractualId]));
           }
           else {
             if (motivosDeSolicitud) {
@@ -970,8 +1011,8 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
               }
             }
             */
-           this.router.navigateByUrl('/', { skipLocationChange: true }).then(
-            () => this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarControversia', resp_0.data.controversiaContractualId]));
+            this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+              () => this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarControversia', resp_0.data.controversiaContractualId]));
           }
         }
         else {
