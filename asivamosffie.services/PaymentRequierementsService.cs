@@ -28,7 +28,6 @@ namespace asivamosffie.services
             _context = context;
         }
 
-
         public async Task<Respuesta> CreateUpdateSolicitudPagoObservacion(SolicitudPagoObservacion pSolicitudPagoObservacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Actualizar_Solicitud_Pago_Observacion, (int)EnumeratorTipoDominio.Acciones);
@@ -81,7 +80,8 @@ namespace asivamosffie.services
                 pSolicitudPagoObservacion.FechaCreacion = DateTime.Now;
                 pSolicitudPagoObservacion.Eliminado = true;
             }
-        } 
+        }
+
         private void ActualizarSolicitudPagoTieneObservacion(SolicitudPagoObservacion pSolicitudPagoObservacion, bool TieneObservacion)
         {
             SolicitudPago solicitudPago = _context.SolicitudPago.Find(pSolicitudPagoObservacion.SolicitudPagoId);
@@ -97,7 +97,7 @@ namespace asivamosffie.services
                 else
                     solicitudPago.TieneObservacion = false;
             }
-       
+
         }
 
         private bool ValidateCompleteRecordSolicitudPagoObservacion(SolicitudPagoObservacion pSolicitudPagoObservacion)
@@ -114,6 +114,20 @@ namespace asivamosffie.services
 
             return false;
         }
+
+        public async Task<dynamic> GetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(int pMenuId, int pSolicitudPagoId)
+        {
+            return await _context.SolicitudPagoObservacion
+                                           .Where(s => s.MenuId == pMenuId && s.SolicitudPagoId == pSolicitudPagoId)
+                                                                                                                   .Select(p => new
+                                                                                                                   {
+                                                                                                                       p.Archivada,
+                                                                                                                       p.FechaCreacion,
+                                                                                                                       p.Observacion,
+                                                                                                                       p.RegistroCompleto
+                                                                                                                   }).ToListAsync();
+        }
+
 
     }
 }
