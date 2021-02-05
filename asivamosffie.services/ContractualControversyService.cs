@@ -2597,6 +2597,7 @@ namespace asivamosffie.services
                         ActuacionSeguimientoId = ActuacionSeguimientoIdTmp,
                         EstadoAvanceTramite = listaDominioAvanceTramiteActuacion.Where(r => r.Codigo == controversia.EstadoAvanceTramiteCodigo)?.FirstOrDefault()?.Nombre,
                         EstadoAvanceTramiteCodigo = controversia.EstadoAvanceTramiteCodigo,
+                        RequiereMesaTrabajo = controversia.EsRequiereMesaTrabajo,
 
                     };
 
@@ -3498,6 +3499,8 @@ namespace asivamosffie.services
                         EstadoMesa = controversiamesa == null ? "" : controversiamesa.EstadoRegistroCodigo,
                         EstadoCodigoMesa = stadomesa,
                         MesaId= controversiamesa == null ? "" : controversiamesa.ControversiaActuacionMesaId.ToString(),
+                        RequiereMesaTrabajo = controversia.EsRequiereMesaTrabajo,
+
                     };
                     ListControversiaContractualGrilla.Add(RegistroControversiaContractual);
                 }
