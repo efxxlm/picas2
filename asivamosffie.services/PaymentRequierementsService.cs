@@ -112,18 +112,18 @@ namespace asivamosffie.services
             return false;
         }
 
-        public async Task<dynamic> GetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(int pMenuId, int pSolicitudPagoId)
+        public async Task<dynamic> GetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(int pMenuId, int pSolicitudPagoId , int pPadreId)
         {
             return await _context.SolicitudPagoObservacion
-                                           .Where(s => s.MenuId == pMenuId && s.SolicitudPagoId == pSolicitudPagoId)
-                                                                                                                   .Select(p => new
-                                                                                                                   {
-                                                                                                                       p.TieneObservacion,
-                                                                                                                       p.Archivada,
-                                                                                                                       p.FechaCreacion,
-                                                                                                                       p.Observacion,
-                                                                                                                       p.RegistroCompleto
-                                                                                                                   }).ToListAsync();
+                                           .Where(s => s.MenuId == pMenuId && s.SolicitudPagoId == pSolicitudPagoId && s.IdPadre == pPadreId)
+                                                                                                                       .Select(p => new
+                                                                                                                       {
+                                                                                                                           p.TieneObservacion,
+                                                                                                                           p.Archivada,
+                                                                                                                           p.FechaCreacion,
+                                                                                                                           p.Observacion,
+                                                                                                                           p.RegistroCompleto
+                                                                                                                       }).ToListAsync();
         }
     }
 }
