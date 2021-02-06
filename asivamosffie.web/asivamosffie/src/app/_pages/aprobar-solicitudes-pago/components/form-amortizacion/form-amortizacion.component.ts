@@ -2,6 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-form-amortizacion',
@@ -10,7 +12,14 @@ import { Router } from '@angular/router';
 })
 export class FormAmortizacionComponent implements OnInit {
 
+    @Input() solicitudPago: any;
     @Input() esVerDetalle = false;
+    @Input() contrato: any;
+    @Input() aprobarSolicitudPagoId: any;
+    solicitudPagoObservacionId = 0;
+    solicitudPagoFase: any;
+    solicitudPagoFaseAmortizacionId = 0;
+    valorTotalDelContrato = 0;
     addressForm: FormGroup;
     detalleForm = this.fb.group({
         porcentajeAmortizacion: [null, Validators.required],
@@ -32,18 +41,53 @@ export class FormAmortizacionComponent implements OnInit {
     constructor(
         private fb: FormBuilder,
         private routes: Router,
-        private dialog: MatDialog )
+        private dialog: MatDialog,
+        private obsMultipleSvc: ObservacionesMultiplesCuService )
     {
         this.addressForm = this.crearFormulario();
     }
 
     ngOnInit(): void {
+        if ( this.contrato.contratacion.disponibilidadPresupuestal.length > 0 ) {
+            this.contrato.contratacion.disponibilidadPresupuestal.forEach( ddp => this.valorTotalDelContrato += ddp.valorSolicitud );
+        }
+        this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
+        if ( this.solicitudPagoFase.solicitudPagoFaseAmortizacion.length > 0 ) {
+            const solicitudPagoFaseAmortizacion = this.solicitudPagoFase.solicitudPagoFaseAmortizacion[0]
+            this.solicitudPagoFaseAmortizacionId = solicitudPagoFaseAmortizacion.solicitudPagoFaseAmortizacionId;
+            // Get observaciones
+            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.aprobarSolicitudPagoId, this.solicitudPago.solicitudPagoId, this.solicitudPagoFaseAmortizacionId )
+                .subscribe(
+                    response => {
+                        const obsSupervisor = response.filter( obs => obs.archivada === false )[0];
+
+                        if ( obsSupervisor !== undefined ) {
+                            console.log( obsSupervisor );
+                            this.addressForm.setValue(
+                                {
+                                    fechaCreacion: obsSupervisor.fechaCreacion,
+                                    tieneObservaciones: obsSupervisor.tieneObservacion !== undefined ? obsSupervisor.tieneObservacion : null,
+                                    observaciones: obsSupervisor.observacion !== undefined ? ( obsSupervisor.observacion.length > 0 ? obsSupervisor.observacion : null ) : null
+                                }
+                            );
+                        }
+                    }
+                );
+            // Get detalle amortización
+            this.detalleForm.setValue(
+                {
+                    porcentajeAmortizacion: solicitudPagoFaseAmortizacion.porcentajeAmortizacion !== undefined ? solicitudPagoFaseAmortizacion.porcentajeAmortizacion : null,
+                    valorAmortizacion: solicitudPagoFaseAmortizacion.valorAmortizacion !== undefined ? solicitudPagoFaseAmortizacion.valorAmortizacion : null
+                }
+            );
+        }
     }
 
     crearFormulario() {
         return this.fb.group({
-          tieneObservaciones: [null, Validators.required],
-          observaciones:[null, Validators.required],
+            fechaCreacion: [ null ],
+            tieneObservaciones: [null, Validators.required],
+            observaciones:[null, Validators.required],
         })
     }
 
@@ -61,8 +105,30 @@ export class FormAmortizacionComponent implements OnInit {
         }
     }
 
+    openDialog(modalTitle: string, modalText: string) {
+        const dialogRef = this.dialog.open(ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle, modalText }
+        });
+    }
+
     onSubmit() {
-      console.log(this.addressForm.value);
+        const pSolicitudPagoObservacion = {
+            solicitudPagoObservacionId: this.solicitudPagoObservacionId,
+            solicitudPagoId: this.solicitudPago.solicitudPagoId,
+            observacion: this.addressForm.get( 'observaciones' ).value !== null ? this.addressForm.get( 'observaciones' ).value : this.addressForm.get( 'observaciones' ).value,
+            tipoObservacionCodigo: 'Esta pendiente el tipoObservacionCodigo para amortizacion',
+            menuId: this.aprobarSolicitudPagoId,
+            idPadre: this.solicitudPagoFaseAmortizacionId,
+            tieneObservacion: this.addressForm.get( 'tieneObservaciones' ).value !== null ? this.addressForm.get( 'tieneObservaciones' ).value : this.addressForm.get( 'tieneObservaciones' ).value
+        };
+
+        console.log( pSolicitudPagoObservacion );
+        this.obsMultipleSvc.createUpdateSolicitudPagoObservacion( pSolicitudPagoObservacion )
+            .subscribe(
+                response => this.openDialog( '', `<b>${ response.message }</b>` ),
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            )
     }
 
 }

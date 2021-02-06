@@ -21,6 +21,7 @@ export class FormAprobarSolicitudComponent implements OnInit {
     contrato: any;
     idGestion: any;
     solicitud: string;
+    solicitudPagoObservacionId = 0;
     tipoSolicitudCodigo: any = {};
     modalidadContratoArray: Dominio[] = [];
     tipoPagoArray: Dominio[] = [];
@@ -39,6 +40,11 @@ export class FormAprobarSolicitudComponent implements OnInit {
         tieneObservaciones: [null, Validators.required],
         observaciones:[null, Validators.required]
     });
+    estadoAcordeones = {
+        estadoFormaPago: 'sin-diligenciar',
+        estadoSolicitudPago: 'sin-diligenciar',
+        soporteSolicitud: 'sin-diligenciar'
+    }
     editorStyle = {
         height: '45px',
         overflow: 'auto'
@@ -102,6 +108,25 @@ export class FormAprobarSolicitudComponent implements OnInit {
                                 }
                                 this.contrato = response;
                                 console.log( this.contrato );
+                                // Get observaciones
+                                this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.menusIdPath.aprobarSolicitudPagoId, this.contrato.solicitudPagoOnly.solicitudPagoId, this.contrato.solicitudPagoOnly.solicitudPagoSoporteSolicitud[0].solicitudPagoSoporteSolicitudId )
+                                    .subscribe(
+                                        response => {
+                                            const obsSupervisor = response.filter( obs => obs.archivada === false )[0];
+
+                                            if ( obsSupervisor !== undefined ) {
+                                                console.log( obsSupervisor );
+                                                this.addressForm.setValue(
+                                                    {
+                                                        fechaCreacion: obsSupervisor.fechaCreacion,
+                                                        tieneObservaciones: obsSupervisor.tieneObservacion !== undefined ? obsSupervisor.tieneObservacion : null,
+                                                        observaciones: obsSupervisor.observacion !== undefined ? ( obsSupervisor.observacion.length > 0 ? obsSupervisor.observacion : null ) : null
+                                                    }
+                                                );
+                                            }
+                                        }
+                                    );
+
                                 if ( this.contrato.solicitudPagoOnly.tipoSolicitudCodigo === this.tipoSolicitudCodigo.otrosCostos ) {
                                     this.commonSvc.tiposDePagoExpensas()
                                     .subscribe( response => {
@@ -137,10 +162,23 @@ export class FormAprobarSolicitudComponent implements OnInit {
         }
     }
 
+    getSemaforoAcordeon( tipoAcordeon: string, estado: string ) {
+        if ( tipoAcordeon === 'formaPago' ) {
+            this.estadoAcordeones.estadoFormaPago = estado;
+        }
+        if ( tipoAcordeon === 'solicitudPago' ) {
+            this.estadoAcordeones.estadoSolicitudPago = estado;
+        }
+        if ( tipoAcordeon === 'soporteSolicitud' ) {
+            this.estadoAcordeones.soporteSolicitud = estado;
+        }
+    }
+
     crearFormulario() {
         return this.fb.group({
-          tieneObservaciones: [null, Validators.required],
-          observaciones:[null, Validators.required]
+            fechaCreacion: [ null ],
+            tieneObservaciones: [null, Validators.required],
+            observaciones:[null, Validators.required]
         })
     }
 
@@ -182,7 +220,22 @@ export class FormAprobarSolicitudComponent implements OnInit {
     }
 
     onSubmit() {
-        console.log(this.addressForm.value);
+        const pSolicitudPagoObservacion = {
+            solicitudPagoObservacionId: this.solicitudPagoObservacionId,
+            solicitudPagoId: this.contrato.solicitudPagoOnly.solicitudPagoId,
+            observacion: this.addressForm.get( 'observaciones' ).value !== null ? this.addressForm.get( 'observaciones' ).value : this.addressForm.get( 'observaciones' ).value,
+            tipoObservacionCodigo: this.listaTipoObservacionSolicitudes.soporteSolicitudCodigo,
+            menuId: this.menusIdPath.aprobarSolicitudPagoId,
+            idPadre: this.contrato.solicitudPagoOnly.solicitudPagoSoporteSolicitud[0].solicitudPagoSoporteSolicitudId,
+            tieneObservacion: this.addressForm.get( 'tieneObservaciones' ).value !== null ? this.addressForm.get( 'tieneObservaciones' ).value : this.addressForm.get( 'tieneObservaciones' ).value
+        };
+
+        console.log( pSolicitudPagoObservacion );
+        this.obsMultipleSvc.createUpdateSolicitudPagoObservacion( pSolicitudPagoObservacion )
+            .subscribe(
+                response => this.openDialog( '', `<b>${ response.message }</b>` ),
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            )
     }
 
 }

@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
+import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
 import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
@@ -14,6 +15,9 @@ export class ObsCriterioPagosComponent implements OnInit {
 
     @Input() solicitudPago: any;
     @Input() esVerDetalle = false;
+    @Input() aprobarSolicitudPagoId: any;
+    @Input() criteriosPagoFacturaCodigo: string;
+    solicitudPagoObservacionId = 0;
     listaCriterios: Dominio[] = [];
     criteriosArraySeleccionados: Dominio[] = [];
     addressForm: FormGroup;
@@ -39,6 +43,7 @@ export class ObsCriterioPagosComponent implements OnInit {
         private fb: FormBuilder,
         private registrarPagosSvc: RegistrarRequisitosPagoService,
         private dialog: MatDialog,
+        private obsMultipleSvc: ObservacionesMultiplesCuService,
         private commonSvc: CommonService )
     {
         this.addressForm = this.crearFormulario();
@@ -46,6 +51,25 @@ export class ObsCriterioPagosComponent implements OnInit {
 
     ngOnInit(): void {
         this.getCriterios();
+        if ( this.solicitudPago !== undefined ) {
+            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.aprobarSolicitudPagoId, this.solicitudPago.solicitudPagoId, this.solicitudPagoFase.solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioId )
+                .subscribe(
+                    response => {
+                        const obsSupervisor = response.filter( obs => obs.archivada === false )[0];
+
+                        if ( obsSupervisor !== undefined ) {
+                            console.log( obsSupervisor );
+                            this.addressForm.setValue(
+                                {
+                                    fechaCreacion: obsSupervisor.fechaCreacion,
+                                    tieneObservaciones: obsSupervisor.tieneObservacion !== undefined ? obsSupervisor.tieneObservacion : null,
+                                    observaciones: obsSupervisor.observacion !== undefined ? ( obsSupervisor.observacion.length > 0 ? obsSupervisor.observacion : null ) : null
+                                }
+                            );
+                        }
+                    }
+                );
+        }
     }
 
     getCriterios() {
@@ -140,6 +164,7 @@ export class ObsCriterioPagosComponent implements OnInit {
 
     crearFormulario() {
       return this.fb.group({
+        fechaCreacion: [ null ],
         tieneObservaciones: [null, Validators.required],
         observaciones:[null, Validators.required],
         criterios: this.fb.array( [] )
@@ -175,7 +200,22 @@ export class ObsCriterioPagosComponent implements OnInit {
     }
 
     onSubmit() {
-      console.log(this.addressForm.value);
+        const pSolicitudPagoObservacion = {
+            solicitudPagoObservacionId: this.solicitudPagoObservacionId,
+            solicitudPagoId: this.solicitudPago.solicitudPagoId,
+            observacion: this.addressForm.get( 'observaciones' ).value !== null ? this.addressForm.get( 'observaciones' ).value : this.addressForm.get( 'observaciones' ).value,
+            tipoObservacionCodigo: this.criteriosPagoFacturaCodigo,
+            menuId: this.aprobarSolicitudPagoId,
+            idPadre: this.solicitudPagoFase.solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioId,
+            tieneObservacion: this.addressForm.get( 'tieneObservaciones' ).value !== null ? this.addressForm.get( 'tieneObservaciones' ).value : this.addressForm.get( 'tieneObservaciones' ).value
+        };
+
+        console.log( pSolicitudPagoObservacion );
+        this.obsMultipleSvc.createUpdateSolicitudPagoObservacion( pSolicitudPagoObservacion )
+            .subscribe(
+                response => this.openDialog( '', `<b>${ response.message }</b>` ),
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            )
     }
 
 }

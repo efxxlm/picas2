@@ -90,11 +90,15 @@
         <mat-accordion>
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title sin-diligenciar">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="estadoAcordeones.estadoFormaPago">
                         Cargar forma de pago
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-obs-cargar-forma-pago [solicitudPago]="contrato.solicitudPagoOnly" [aprobarSolicitudPagoId]="menusIdPath.aprobarSolicitudPagoId" [cargarFormaPagoCodigo]="listaTipoObservacionSolicitudes.cargarFormaPagoCodigo"></app-obs-cargar-forma-pago>
+                <app-obs-cargar-forma-pago  [solicitudPago]="contrato.solicitudPagoOnly"
+                                            [aprobarSolicitudPagoId]="menusIdPath.aprobarSolicitudPagoId"
+                                            [cargarFormaPagoCodigo]="listaTipoObservacionSolicitudes.cargarFormaPagoCodigo"
+                                            (estadoSemaforo)="getSemaforoAcordeon( 'formaPago', $event )">
+                </app-obs-cargar-forma-pago>
             </mat-expansion-panel>
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header">
@@ -102,7 +106,10 @@
                         Registrar solicitud de pago
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-obs-registrar-solicitud-pago [contrato]="contrato"></app-obs-registrar-solicitud-pago>
+                <app-obs-registrar-solicitud-pago   [contrato]="contrato"
+                                                    [aprobarSolicitudPagoId]="menusIdPath.aprobarSolicitudPagoId"
+                                                    [registrarSolicitudPago]="listaTipoObservacionSolicitudes.registrarSolicitudPago">
+                </app-obs-registrar-solicitud-pago>
             </mat-expansion-panel>
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header">

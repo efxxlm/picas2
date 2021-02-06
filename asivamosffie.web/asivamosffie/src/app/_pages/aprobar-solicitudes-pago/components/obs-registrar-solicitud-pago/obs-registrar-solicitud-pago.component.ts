@@ -1,9 +1,10 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -15,6 +16,10 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
 
     @Input() contrato: any;
     @Input() esVerDetalle = false;
+    @Input() aprobarSolicitudPagoId: any;
+    @Input() registrarSolicitudPago: any;
+    @Output() estadoSemaforo = new EventEmitter<string>();
+    solicitudPagoObservacionId = 0;
     solicitudPago: any;
     solicitudPagoFase: any;
     dataSource = new MatTableDataSource();
@@ -62,7 +67,8 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
-        private dialog: MatDialog )
+        private dialog: MatDialog,
+        private obsMultipleSvc: ObservacionesMultiplesCuService )
     {
         this.addressForm = this.crearFormulario();
     }
@@ -71,6 +77,23 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
         if ( this.contrato !== undefined ) {
             this.solicitudPago = this.contrato.solicitudPagoOnly;
             this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
+            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.aprobarSolicitudPagoId, this.solicitudPago.solicitudPagoId, this.solicitudPagoFase.solicitudPagoFaseId )
+                .subscribe(
+                    response => {
+                        const obsSupervisor = response.filter( obs => obs.archivada === false )[0];
+                        
+                        if ( obsSupervisor !== undefined ) {
+                            console.log( obsSupervisor );
+                            this.addressForm.setValue(
+                                {
+                                    fechaCreacion: obsSupervisor.fechaCreacion,
+                                    tieneObservaciones: obsSupervisor.tieneObservacion !== undefined ? obsSupervisor.tieneObservacion : null,
+                                    observaciones: obsSupervisor.observacion !== undefined ? ( obsSupervisor.observacion.length > 0 ? obsSupervisor.observacion : null ) : null
+                                }
+                            );
+                        }
+                    }
+                );
         }
 
         this.dataSource = new MatTableDataSource(this.dataTable);
@@ -85,6 +108,7 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
 
     crearFormulario() {
       return this.fb.group({
+        fechaCreacion: [ null ],
         tieneObservaciones: [null, Validators.required],
         observaciones:[null, Validators.required],
       })
@@ -111,8 +135,23 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
         });
     }
 
-    onSubmit() {
-      console.log(this.addressForm.value);
+    onSubmit() {   
+        const pSolicitudPagoObservacion = {
+            solicitudPagoObservacionId: this.solicitudPagoObservacionId,
+            solicitudPagoId: this.solicitudPago.solicitudPagoId,
+            observacion: this.addressForm.get( 'observaciones' ).value !== null ? this.addressForm.get( 'observaciones' ).value : this.addressForm.get( 'observaciones' ).value,
+            tipoObservacionCodigo: this.registrarSolicitudPago.registrarSolicitudPagoCodigo,
+            menuId: this.aprobarSolicitudPagoId,
+            idPadre: this.solicitudPagoFase.solicitudPagoFaseId,
+            tieneObservacion: this.addressForm.get( 'tieneObservaciones' ).value !== null ? this.addressForm.get( 'tieneObservaciones' ).value : this.addressForm.get( 'tieneObservaciones' ).value
+        };
+
+        console.log( pSolicitudPagoObservacion );
+        this.obsMultipleSvc.createUpdateSolicitudPagoObservacion( pSolicitudPagoObservacion )
+            .subscribe(
+                response => this.openDialog( '', `<b>${ response.message }</b>` ),
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            )
     }
 
 }
