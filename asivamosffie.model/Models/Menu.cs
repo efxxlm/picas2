@@ -9,6 +9,7 @@ namespace asivamosffie.model.Models
         {
             MensajesValidaciones = new HashSet<MensajesValidaciones>();
             MenuPerfil = new HashSet<MenuPerfil>();
+            SolicitudPagoObservacion = new HashSet<SolicitudPagoObservacion>();
         }
 
         public int MenuId { get; set; }
@@ -26,5 +27,6 @@ namespace asivamosffie.model.Models
 
         public virtual ICollection<MensajesValidaciones> MensajesValidaciones { get; set; }
         public virtual ICollection<MenuPerfil> MenuPerfil { get; set; }
+        public virtual ICollection<SolicitudPagoObservacion> SolicitudPagoObservacion { get; set; }
     }
 }

@@ -1457,19 +1457,20 @@ namespace asivamosffie.services
             ComiteTecnico comiteTecnico = await _context.ComiteTecnico
                  .Where(r => r.ComiteTecnicoId == pComiteTecnicoId)
                     .Include(r => r.SesionInvitado)
-                    //Para Comite Tecnico
                     .Include(r => r.SesionComiteSolicitudComiteTecnico)
-                    .ThenInclude(r => r.SesionSolicitudVoto)
+                        .ThenInclude(r => r.SesionSolicitudVoto)
                     .Include(r => r.SesionComiteSolicitudComiteTecnico)
-                    .ThenInclude(r => r.SesionSolicitudCompromiso)
-                       .ThenInclude(r => r.ResponsableSesionParticipante)
-                         .ThenInclude(r => r.Usuario)
+                        .ThenInclude(r => r.SesionSolicitudCompromiso)
+                   //        .ThenInclude(r => r.ResponsableSesionParticipante)
+                   //          .ThenInclude(r => r.Usuario)
                     .Include(r => r.SesionComiteTema)
                       .ThenInclude(r => r.SesionTemaVoto)
                    .Include(r => r.SesionComiteTema)
-                      .ThenInclude(r => r.TemaCompromiso)
+                       .ThenInclude(r => r.TemaCompromiso)
+                    //.Include(r => r.SesionParticipante)
                  .FirstOrDefaultAsync();
-            //    comiteTecnico.SesionParticipante = sesionParticipantes;
+
+            List<VSesionParticipante> listaParticipantes = _context.VSesionParticipante.Where(r => r.ComiteTecnicoId == comiteTecnico.ComiteTecnicoId).ToList();
 
             comiteTecnico.SesionComiteTema = comiteTecnico.SesionComiteTema.Where(r => r.Eliminado != true).ToList();
 
@@ -1491,6 +1492,28 @@ namespace asivamosffie.services
 
                 SesionComiteSolicitud.SesionSolicitudVoto = SesionComiteSolicitud.SesionSolicitudVoto.Where(r => !(bool)r.Eliminado).ToList();
                 SesionComiteSolicitud.SesionSolicitudCompromiso = SesionComiteSolicitud.SesionSolicitudCompromiso.Where(r => !(bool)r.Eliminado).ToList();
+
+                SesionComiteSolicitud.SesionSolicitudCompromiso.ToList().ForEach(ssc =>
+               {
+                   
+                   SesionParticipante participante = new SesionParticipante();
+                   participante.Usuario = new Usuario();
+
+                   VSesionParticipante vSesionParticipante = listaParticipantes.Where(r => r.SesionParticipanteId == ssc.ResponsableSesionParticipanteId).FirstOrDefault();
+
+                   participante.SesionParticipanteId = vSesionParticipante.SesionParticipanteId;
+                   participante.ComiteTecnicoId = vSesionParticipante.ComiteTecnicoId;
+                   participante.UsuarioId = vSesionParticipante.UsuarioId;
+                   participante.Eliminado = vSesionParticipante.Eliminado;
+
+                   participante.Usuario.UsuarioId = vSesionParticipante.UsuarioId;
+                   participante.Usuario.Nombres = vSesionParticipante.Nombres;
+                   participante.Usuario.Apellidos = vSesionParticipante.Apellidos;
+                   participante.Usuario.NumeroIdentificacion = vSesionParticipante.NumeroIdentificacion;
+
+
+                   ssc.ResponsableSesionParticipante = participante;
+               });
             }
             List<SesionSolicitudVoto> ListSesionSolicitudVotos = _context.SesionSolicitudVoto.Where(r => !(bool)r.Eliminado).ToList();
 
@@ -1558,7 +1581,7 @@ namespace asivamosffie.services
                         sesionComiteSolicitud.NumeroHijo = actualizacionCronograma.NumeroProceso;
 
                         break;
-                    
+
                     case ConstanCodigoTipoSolicitud.ControversiasContractuales:
 
                         ControversiaContractual controversiaContractual = _context.ControversiaContractual
@@ -1569,13 +1592,13 @@ namespace asivamosffie.services
 
                         sesionComiteSolicitud.NumeroSolicitud = controversiaContractual.NumeroSolicitud;
 
-                    break;
+                        break;
 
                     case ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales:
 
                         ControversiaActuacion controversiaActuacion = _context.ControversiaActuacion
                                                                                 .Where(r => r.ControversiaActuacionId == sesionComiteSolicitud.SolicitudId)
-                                                                                .Include( r => r.ControversiaContractual )
+                                                                                .Include(r => r.ControversiaContractual)
                                                                                 .FirstOrDefault();
 
                         sesionComiteSolicitud.FechaSolicitud = controversiaActuacion.FechaActuacion;
@@ -1584,7 +1607,7 @@ namespace asivamosffie.services
 
                         sesionComiteSolicitud.NumeroHijo = "ACT controversia " + controversiaActuacion.ControversiaActuacionId.ToString("000");
 
-                    break;
+                        break;
 
                 }
 

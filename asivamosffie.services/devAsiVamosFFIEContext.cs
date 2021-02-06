@@ -204,6 +204,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VRequisitosTecnicosConstruccionAprobar> VRequisitosTecnicosConstruccionAprobar { get; set; }
         public virtual DbSet<VRequisitosTecnicosInicioConstruccion> VRequisitosTecnicosInicioConstruccion { get; set; }
         public virtual DbSet<VRequisitosTecnicosPreconstruccion> VRequisitosTecnicosPreconstruccion { get; set; }
+        public virtual DbSet<VSesionParticipante> VSesionParticipante { get; set; }
         public virtual DbSet<VValidarSeguimientoSemanal> VValidarSeguimientoSemanal { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
@@ -6141,10 +6142,6 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.PerfilObservacionCodigo)
-                    .HasMaxLength(2)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.TipoObservacionCodigo)
                     .HasMaxLength(2)
                     .IsUnicode(false);
@@ -6156,6 +6153,11 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(100)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.Menu)
+                    .WithMany(p => p.SolicitudPagoObservacion)
+                    .HasForeignKey(d => d.MenuId)
+                    .HasConstraintName("FK_SolicitudPagoObervacion_MenuId");
 
                 entity.HasOne(d => d.SolicitudPago)
                     .WithMany(p => p.SolicitudPagoObservacion)
@@ -7287,6 +7289,41 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.TipoSolicitudCodigo)
                     .IsRequired()
                     .HasMaxLength(100)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VSesionParticipante>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_SesionParticipante");
+
+                entity.Property(e => e.Apellidos)
+                    .IsRequired()
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("date");
+
+                entity.Property(e => e.Nombres)
+                    .IsRequired()
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroIdentificacion)
+                    .IsRequired()
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
                     .IsUnicode(false);
             });
 
