@@ -1805,6 +1805,8 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(3000)
                     .IsUnicode(false);
 
+                entity.Property(e => e.CualOtroMotivo).IsUnicode(false);
+
                 entity.Property(e => e.EstadoCodigo)
                     .IsRequired()
                     .HasMaxLength(100)
@@ -6139,10 +6141,6 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.PerfilObservacionCodigo)
-                    .HasMaxLength(2)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.TipoObservacionCodigo)
                     .HasMaxLength(2)
                     .IsUnicode(false);
@@ -6154,6 +6152,11 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(100)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.Menu)
+                    .WithMany(p => p.SolicitudPagoObservacion)
+                    .HasForeignKey(d => d.MenuId)
+                    .HasConstraintName("FK_SolicitudPagoObervacion_MenuId");
 
                 entity.HasOne(d => d.SolicitudPago)
                     .WithMany(p => p.SolicitudPagoObservacion)

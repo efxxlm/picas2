@@ -260,17 +260,17 @@
   </mat-card-content>
 </mat-card>
 
-<mat-card class="shipping-card var-main-gris" *ngIf="data.tieneObservacionSupervisor">
+<mat-card class="shipping-card var-main-gris" *ngIf="data.informe.tieneObservacionSupervisor" [formGroup]="observacionesForm">
   <mat-card-header class="header-card header-card--margin">
     <mat-card-title class="mat-card-title header-card--text">
       Observación del supervisor
     </mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <strong> {{ data.tieneObservacionSupervisor }} </strong>
-    <p>
-      {{ data.tieneObservacionSupervisor }}
+    <strong> {{ observacionesForm.get('fechaCreacion').value | date: 'dd/MM/yyyy' }}</strong>
+    <p [innerHTML]="observacionesForm.get('observaciones').value">
     </p>
-    
   </mat-card-content>
 </mat-card>
+
+<app-tabla-observaciones *ngIf="data.informe.tieneObservacionSupervisor && anexos.informeFinalInterventoriaObservaciones.length > 0" [data]="anexos.informeFinalInterventoriaObservaciones"></app-tabla-observaciones>

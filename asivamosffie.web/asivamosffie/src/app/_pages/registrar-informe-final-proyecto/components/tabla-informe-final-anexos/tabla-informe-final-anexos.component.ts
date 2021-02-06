@@ -57,7 +57,6 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     .subscribe(anexos => {
       this.dataSource.data = anexos as Anexo[];
       this.anexos = anexos;
-      console.log("Aquí:",this.anexos);
     });
   }
 
@@ -132,7 +131,6 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   }
 
   onSubmit() {
-    // console.log(this.addressForm.value);
     this.estaEditando = true;
     this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
   }
@@ -144,7 +142,6 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
       informeFinalInterventoriaId:  [informeFinalAnexo.informeFinalInterventoriaId, Validators.required],
       informeFinalListaChequeoId:  [informeFinalAnexo.informeFinalListaChequeoId, Validators.required],
     });
-    //console.log("Autosave test: ",this.addressForm.value);
     this.createInformeFinalInterventoria(this.addressForm.value);
   }
 
@@ -152,9 +149,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     this.registrarInformeFinalProyectoService.createEditInformeFinalInterventoria(informeFinalInterventoria)
     .subscribe((respuesta: Respuesta) => {
         console.log(respuesta.message);
-        this.ngOnInit();
         return;
-        //this.router.navigate(['/crearProyecto']);
       },
       err => {
         console.log( err );

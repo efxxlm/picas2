@@ -40,13 +40,13 @@ export class DialogObservacionesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log(this.data.informe);
+    console.log("entra: ",this.data.informe);
     if (
-      this.data.informe.informeFinalInterventoriaObservacionesId > 0 &&
-      this.data.informe.informeFinalInterventoriaObservacionesId != null
+      this.data.informe.informeFinalInterventoriaId != null
     ) {
-      this.getInformeFinalInterventoriaObservacionByInformeFinalObservacion(
-        this.data.informe.informeFinalInterventoriaObservacionesId
+      console.log("Debería traer la finromacioón",this.data.informe.informeFinalInterventoriaId);
+      this.getInformeFinalInterventoriaObservacionByInformeFinalInterventoria(
+        this.data.informe.informeFinalInterventoriaId
       )
     }
   }
@@ -112,6 +112,16 @@ export class DialogObservacionesComponent implements OnInit {
       .getInformeFinalInterventoriaObservacionByInformeFinalObservacion(id)
       .subscribe(responseData => {
         this.observaciones.patchValue(responseData)
+      })
+  }
+
+  getInformeFinalInterventoriaObservacionByInformeFinalInterventoria(id: number) {
+    this.validarInformeFinalService
+      .getInformeFinalInterventoriaObservacionByInformeFinalInterventoria(id)
+      .subscribe(responseData => {
+        if(responseData != null){
+          this.observaciones.patchValue(responseData)
+        }
       })
   }
 }

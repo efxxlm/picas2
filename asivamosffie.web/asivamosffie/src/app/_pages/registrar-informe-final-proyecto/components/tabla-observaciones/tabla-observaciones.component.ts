@@ -1,7 +1,9 @@
-import { Component, AfterViewInit, ViewChild, OnInit } from '@angular/core'
+import { Component, AfterViewInit, ViewChild, OnInit, Input } from '@angular/core'
+import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { MatPaginator } from '@angular/material/paginator'
 import { MatSort } from '@angular/material/sort'
 import { MatTableDataSource } from '@angular/material/table'
+import { InformeFinalInterventoria } from 'src/app/_interfaces/proyecto-final-anexos.model';
 
 const ELEMENT_DATA = [
   {
@@ -9,20 +11,43 @@ const ELEMENT_DATA = [
     observaciones: 'LJ776554'
   }
 ]
-
 @Component({
   selector: 'app-tabla-observaciones',
   templateUrl: './tabla-observaciones.component.html',
   styleUrls: ['./tabla-observaciones.component.scss']
 })
 export class TablaObservacionesComponent implements OnInit, AfterViewInit {
+  @Input() data: any;
+  ELEMENT_DATA : InformeFinalInterventoria[] = [];
+  anexos: any[];
+  dataSourceTest = new MatTableDataSource<InformeFinalInterventoria>(this.ELEMENT_DATA);
   displayedColumns: string[] = ['fecha', 'observaciones']
   dataSource = new MatTableDataSource(ELEMENT_DATA)
+  observacionesForm: FormGroup;
 
+  constructor(
+    private fb: FormBuilder,
+  ) {}
+  
   @ViewChild(MatPaginator) paginator: MatPaginator
   @ViewChild(MatSort) sort: MatSort
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.buildForm();
+  }
+
+  private buildForm() {
+    this.observacionesForm = this.fb.group({
+      observaciones: [null, Validators.required],
+      fechaCreacion: [null,Validators.required],
+    });
+    console.log("Que esta entrando?: ",this.data);
+    if(this.data.length>0){
+      this.observacionesForm.patchValue(this.data);
+      this.dataSourceTest.data = this.data as InformeFinalInterventoria[];
+      this.anexos = this.data;
+    }
+  }
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort

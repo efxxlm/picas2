@@ -14,9 +14,9 @@ export class InformeFinalAnexosComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    if(this.estadoInforme == '2'){
+    if(this.estadoInforme === '2' || this.estadoInforme === '3'){//con informe registrado/ enviado a validación
       this.estadoInformeString = "completo";
-    }else if(this.estadoInforme=='1'){
+    }else if(this.estadoInforme === '1' || this.estadoInforme === '4'){//en proceso de registro, con observaciones
       this.estadoInformeString = "en-proceso";
     }else{
       this.estadoInformeString = "sin-diligenciar";

@@ -26,7 +26,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     'calificacionCodigoString',
     'tipoAnexoString',
     'Ubicacion',
-    'verificacion',
+    'validacionCodigo',
     'id'
   ];
   addressForm: FormGroup;
@@ -57,7 +57,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     .subscribe(anexos => {
       this.dataSource.data = anexos as Anexo[];
       this.anexos = anexos;
-      console.log("Aquí:",this.anexos);
+      console.log("Aquí: dddd",this.anexos);
     });
   }
 
@@ -80,6 +80,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   }
 
   openDialogObservaciones(informe:any) {
+    console.log("informe: ",informe);
     let dialogRef = this.dialog.open(DialogObservacionesComponent, {
       width: '70em',
       data: {
@@ -110,15 +111,13 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   }
   //Actualizar validación
   select(element) {
-    console.log("antes de: ",element);
     this.addressForm = this.fb.group({
       calificacionCodigo:  [element.calificacionCodigo, Validators.required],
       informeFinalId:  [element.informeFinalId, Validators.required],
       informeFinalInterventoriaId:  [element.informeFinalInterventoriaId, Validators.required],
       informeFinalListaChequeoId:  [element.informeFinalListaChequeoId, Validators.required],
-      validacionCodigo: [element.verificacion, Validators.required]
+      validacionCodigo: [element.validacionCodigo, Validators.required]
     });
-    console.log("Autosave test: ",this.addressForm.value);
     this.updateStateValidateInformeFinalInterventoria(this.addressForm.value.informeFinalInterventoriaId, this.addressForm.value.validacionCodigo);
   }
 

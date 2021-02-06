@@ -4,19 +4,29 @@ import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog'
 import { Respuesta } from 'src/app/core/_services/common/common.service'
 import { RegistrarInformeFinalProyectoService } from 'src/app/core/_services/registrar-informe-final-proyecto.service'
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component'
+import { InformeFinalInterventoria } from 'src/app/_interfaces/proyecto-final-anexos.model';
+import { MatTableDataSource } from '@angular/material/table';
+
 @Component({
   selector: 'app-dialog-tipo-documento',
   templateUrl: './dialog-tipo-documento.component.html',
   styleUrls: ['./dialog-tipo-documento.component.scss']
 })
 export class DialogTipoDocumentoComponent implements OnInit {
+  ELEMENT_DATA : InformeFinalInterventoria[] = [];
+  anexos: any;
+  dataSource = new MatTableDataSource<InformeFinalInterventoria>(this.ELEMENT_DATA);
   estaEditando = false
   addressForm = this.fb.group({
-    informeFinalAnexoId: [null, Validators.required],
     tipoAnexo: [null, Validators.required],
     urlSoporte: [null, Validators.required],
     numRadicadoSac: [null, Validators.required],
-    fechaRadicado: [null, Validators.required]
+    fechaRadicado: [null, Validators.required],
+  })
+
+  observacionesForm = this.fb.group({
+    observaciones: [null, Validators.required],
+    fechaCreacion: [null, Validators.required],   
   })
 
   tipoAnexoArray = [
@@ -32,9 +42,9 @@ export class DialogTipoDocumentoComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // console.log('1:', this.data)
     if (this.data.informe.informeFinalAnexoId > 0 && this.data.informe.informeFinalAnexoId != null) {
-      this.getInformeFinalAnexoByInformeFinalAnexoId(this.data.informe.informeFinalAnexoId)
+      //this.getInformeFinalAnexoByInformeFinalAnexoId(this.data.informe.informeFinalAnexoId)
+      this.getInformeFinalAnexoByInformeFinalInterventoriaId(this.data.informe.informeFinalInterventoriaId)
     }
   }
 
@@ -53,11 +63,6 @@ export class DialogTipoDocumentoComponent implements OnInit {
   }
 
   onSubmit() {
-    // console.log(
-    //   this.addressForm.value,
-    //   this.data.informe.informeFinalInterventoriaId,
-    //   this.data.informe.informeFinalAnexoId
-    // )
     this.estaEditando = true
     if (this.data.informe.informeFinalAnexoId != null) {
       this.addressForm.value.informeFinalAnexoId = this.data.informe.informeFinalAnexoId
@@ -76,9 +81,15 @@ export class DialogTipoDocumentoComponent implements OnInit {
   }
 
   getInformeFinalAnexoByInformeFinalInterventoriaId(id: string) {
-    this.registrarInformeFinalProyectoService.getInformeFinalAnexoByInformeFinalInterventoriaId(id).subscribe(data => {
-      this.addressForm.patchValue(data)
-    })
+    this.registrarInformeFinalProyectoService.getInformeFinalAnexoByInformeFinalInterventoriaId(id).subscribe(anexos => {
+        this.dataSource.data = anexos as InformeFinalInterventoria[];
+        this.anexos = anexos;
+        this.addressForm.patchValue(this.anexos.informeFinalAnexo)
+        console.log("Observaciones: ",this.anexos.informeFinalInterventoriaObservaciones.length);
+        if(this.anexos.informeFinalInterventoriaObservaciones.length>0){
+          this.observacionesForm.patchValue(this.anexos.informeFinalInterventoriaObservaciones[0])
+        }
+    });
   }
 
   getInformeFinalAnexoByInformeFinalAnexoId(id: string) {

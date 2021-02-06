@@ -40,4 +40,8 @@ export class ValidarInformeFinalService {
     getInformeFinalInterventoriaObservacionByInformeFinalObservacion(pObservacionId: number){
       return this.http.get(`${environment.apiUrl}/${this.final_report}/GetInformeFinalInterventoriaObservacionByInformeFinalObservacion?pObservacionId=${ pObservacionId }`);
     }
+
+    getInformeFinalInterventoriaObservacionByInformeFinalInterventoria(pInformeFinalInterventoriaId: number){
+      return this.http.get(`${environment.apiUrl}/${this.final_report}/GetInformeFinalInterventoriaObservacionByInformeFinalInterventoria?pInformeFinalInterventoriaId=${ pInformeFinalInterventoriaId }`);
+    }
 }

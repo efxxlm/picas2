@@ -57,7 +57,7 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("VerificarInformeFinalEstadoCompleto")]
-        public async Task<bool> VerificarInformeFinalEstadoCompleto(int pInformeFinalId)
+        public async Task<bool> VerificarInformeFinalEstadoCompleto([FromQuery] int pInformeFinalId)
         {
             try
             {

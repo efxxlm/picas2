@@ -66,7 +66,7 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("VerificarInformeFinalValidacion")]
-        public async Task<bool> VerificarInformeFinalEstadoCompleto(int pInformeFinalId)
+        public async Task<bool> VerificarInformeFinalEstadoCompleto([FromQuery] int pInformeFinalId)
         {
             try
             {
@@ -78,11 +78,25 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
+        [HttpGet]
+        [Route("GetInformeFinalInterventoriaObservacionByInformeFinalInterventoria")]
+        public async Task<InformeFinalInterventoriaObservaciones> GetInformeFinalInterventoriaObservacionByInformeFinalInterventoria([FromQuery] int pInformeFinalInterventoriaId)
+        {
+            try
+            {
+                return await _validateFinalReportService.GetInformeFinalInterventoriaObservacionByInformeFinalInterventoria(pInformeFinalInterventoriaId);
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         //Creaciones y modificaciones
 
         [HttpPost]
         [Route("UpdateStateValidateInformeFinalInterventoria")]
-        public async Task<IActionResult> UpdateStateValidateInformeFinalInterventoria([FromQuery] int pInformeFinalInterventoriaId, string code)
+        public async Task<IActionResult> UpdateStateValidateInformeFinalInterventoria([FromQuery] int pInformeFinalInterventoriaId,[FromQuery] string code)
         {
             Respuesta respuesta = new Respuesta();
             try

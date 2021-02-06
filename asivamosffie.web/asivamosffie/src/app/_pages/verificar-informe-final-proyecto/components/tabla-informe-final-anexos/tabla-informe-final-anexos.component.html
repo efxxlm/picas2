@@ -55,13 +55,13 @@
         </ng-container>
   
         <!-- verificacion Column -->
-        <ng-container matColumnDef="verificacion">
+        <ng-container matColumnDef="validacionCodigo">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Verificación</th>
           <td mat-cell *matCellDef="let element">
             <section class="slect-table-contain mt-1em">
               <mat-form-field class="select-width">
                 <mat-label *ngIf="element.validacionCodigo != null">{{ element.validacionCodigoString }}</mat-label>
-                <mat-select [(ngModel)]="element.verificacion" (selectionChange)="select(element)" required>
+                <mat-select [(ngModel)]="element.validacionCodigo" (selectionChange)="select(element)" required>
                   <mat-option *ngFor="let estado of estadoArray" [value]="estado.value">
                     {{ estado.name }}
                   </mat-option>
@@ -75,7 +75,7 @@
                   [matTooltipPosition]="'above'"
                   matTooltip="Debe ingresar la información en el campo para continuar"
                   matTooltipClass="info-tooltip"
-                  *ngIf="element.verificacion === '' && estaEditando"
+                  *ngIf="element.validacionCodigo === '' && estaEditando"
                 />
               </span>
             </section>
@@ -103,7 +103,7 @@
               </span>
             </button>-->
             <button
-              *ngIf="element.validacionCodigo === '2' || element.verificacion === '2'"
+              *ngIf="element.validacionCodigo === '2'"
               mat-button
               color="warn"
               mat-raised-button
@@ -114,7 +114,12 @@
               type="button"
               (click)="openDialogObservaciones(element)"
             >
-              Observaciones
+              <span *ngIf="element.tieneObservacionSupervisor == null || element.tieneObservacionSupervisor == false">
+                Observaciones
+              </span>
+              <span *ngIf="element.tieneObservacionSupervisor != null && element.tieneObservacionSupervisor == true">
+                Ver Observaciones
+              </span>
             </button>
           </td>
         </ng-container>

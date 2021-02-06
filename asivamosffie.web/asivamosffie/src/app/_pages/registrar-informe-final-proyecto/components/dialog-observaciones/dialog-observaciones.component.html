@@ -25,12 +25,12 @@
     <div class="text-area-quill">
         <label for="alcanceParticular" class="text-area-quill--label">Observaciones</label>
         <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
-            (onContentChanged)="maxLength($event, 500)" formControlName="Observaciones"></quill-editor>
+            (onContentChanged)="maxLength($event, 500)" formControlName="observaciones"></quill-editor>
     </div>
-    <span class="contador miles" *ngIf="observaciones.get('Observaciones').value">
-        {{500 - (textoLimpio(observaciones.get('Observaciones').value)>500?500:textoLimpio(observaciones.get('Observaciones').value))}}
+    <span class="contador miles" *ngIf="observaciones.get('observaciones').value">
+        {{500 - (textoLimpio(observaciones.get('observaciones').value)>500?500:textoLimpio(observaciones.get('observaciones').value))}}
     </span>
-    <span class="contador miles" *ngIf="!observaciones.get('Observaciones').value">
+    <span class="contador miles" *ngIf="!observaciones.get('observaciones').value">
         500
     </span>
   </div>
