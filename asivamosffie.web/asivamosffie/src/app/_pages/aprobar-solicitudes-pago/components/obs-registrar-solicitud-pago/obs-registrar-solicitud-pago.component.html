@@ -108,7 +108,11 @@
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
-                    <app-obs-criterio-pagos [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"></app-obs-criterio-pagos>
+                    <app-obs-criterio-pagos [solicitudPago]="solicitudPago"
+                                            [esVerDetalle]="esVerDetalle"
+                                            [aprobarSolicitudPagoId]="aprobarSolicitudPagoId"
+                                            [criteriosPagoFacturaCodigo]="registrarSolicitudPago.criteriosPagoFacturaCodigo">
+                    </app-obs-criterio-pagos>
                 </mat-expansion-panel>
 
                 <mat-expansion-panel class="expansion-style sub-expansion-black">
@@ -118,7 +122,11 @@
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
-                   <app-obs-detll-fact-proc-asociados [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"></app-obs-detll-fact-proc-asociados>
+                   <app-obs-detll-fact-proc-asociados   [solicitudPago]="solicitudPago"
+                                                        [esVerDetalle]="esVerDetalle"
+                                                        [aprobarSolicitudPagoId]="aprobarSolicitudPagoId"
+                                                        [criteriosPagoProyectoCodigo]="registrarSolicitudPago.criteriosPagoProyectoCodigo">
+                    </app-obs-detll-fact-proc-asociados>
                 </mat-expansion-panel>
 
                 <mat-expansion-panel class="expansion-style sub-expansion-black">
@@ -128,7 +136,11 @@
                         </mat-panel-title>
                     </mat-expansion-panel-header>
             
-                    <app-obs-datos-factura [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"></app-obs-datos-factura>
+                    <app-obs-datos-factura  [solicitudPago]="solicitudPago"
+                                            [esVerDetalle]="esVerDetalle"
+                                            [aprobarSolicitudPagoId]="aprobarSolicitudPagoId"
+                                            [datosFacturaCodigo]="registrarSolicitudPago.datosFacturaCodigo">
+                    </app-obs-datos-factura>
                 </mat-expansion-panel>
             </mat-accordion>
         </mat-expansion-panel>
@@ -149,7 +161,11 @@
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
-                    <app-obs-criterio-pagos [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"></app-obs-criterio-pagos>
+                    <app-obs-criterio-pagos [solicitudPago]="solicitudPago"
+                                            [esVerDetalle]="esVerDetalle"
+                                            [aprobarSolicitudPagoId]="aprobarSolicitudPagoId"
+                                            [criteriosPagoFacturaCodigo]="registrarSolicitudPago.criteriosPagoFacturaCodigo">
+                    </app-obs-criterio-pagos>
                 </mat-expansion-panel>
 
                 <mat-expansion-panel class="expansion-style sub-expansion-black">
@@ -159,7 +175,15 @@
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
-                    <app-form-amortizacion></app-form-amortizacion>
+                    <app-form-amortizacion  [solicitudPago]="solicitudPago"
+                                            [contrato]="contrato"
+                                            [esVerDetalle]="esVerDetalle"
+                                            [aprobarSolicitudPagoId]="aprobarSolicitudPagoId">
+                    <!--
+                        [criteriosPagoProyectoCodigo]="registrarSolicitudPago.criteriosPagoProyectoCodigo"
+                        Queda pendiente el codigo de amortización
+                    -->
+                    </app-form-amortizacion>
                 </mat-expansion-panel>
 
                 <mat-expansion-panel class="expansion-style sub-expansion-black">
@@ -169,7 +193,11 @@
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
-                    <app-obs-detll-fact-proc-asociados [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"></app-obs-detll-fact-proc-asociados>
+                    <app-obs-detll-fact-proc-asociados  [solicitudPago]="solicitudPago"
+                                                        [esVerDetalle]="esVerDetalle"
+                                                        [aprobarSolicitudPagoId]="aprobarSolicitudPagoId"
+                                                        [criteriosPagoProyectoCodigo]="registrarSolicitudPago.criteriosPagoProyectoCodigo">
+                    </app-obs-detll-fact-proc-asociados>
                 </mat-expansion-panel>
 
                 <mat-expansion-panel class="expansion-style sub-expansion-black">
@@ -179,7 +207,11 @@
                         </mat-panel-title>
                     </mat-expansion-panel-header>
             
-                    <app-obs-datos-factura [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"></app-obs-datos-factura>
+                    <app-obs-datos-factura  [solicitudPago]="solicitudPago"
+                                            [esVerDetalle]="esVerDetalle"
+                                            [aprobarSolicitudPagoId]="aprobarSolicitudPagoId"
+                                            [datosFacturaCodigo]="registrarSolicitudPago.datosFacturaCodigo">
+                    </app-obs-datos-factura>
                 </mat-expansion-panel>
             </mat-accordion>
         </mat-expansion-panel>
@@ -192,8 +224,12 @@
                     Descuentos Dirección Técnica
                 </mat-panel-title>
             </mat-expansion-panel-header>
-    
-            <app-obs-descuentos-dir-tecnica [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"></app-obs-descuentos-dir-tecnica>
+
+            <app-obs-descuentos-dir-tecnica [solicitudPago]="solicitudPago"
+                                            [esVerDetalle]="esVerDetalle"
+                                            [aprobarSolicitudPagoId]="aprobarSolicitudPagoId"
+                                            [datosFacturaDescuentoCodigo]="registrarSolicitudPago.datosFacturaDescuentoCodigo">
+            </app-obs-descuentos-dir-tecnica>
         </mat-expansion-panel>
     </mat-accordion>
 </section>

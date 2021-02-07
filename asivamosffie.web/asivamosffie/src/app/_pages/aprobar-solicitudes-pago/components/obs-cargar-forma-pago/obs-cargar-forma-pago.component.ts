@@ -1,5 +1,5 @@
 import { Dominio, CommonService } from './../../../../core/_services/common/common.service';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -16,6 +16,7 @@ export class ObsCargarFormaPagoComponent implements OnInit {
     @Input() esVerDetalle = false;
     @Input() aprobarSolicitudPagoId: any;
     @Input() cargarFormaPagoCodigo: string;
+    @Output() estadoSemaforo = new EventEmitter<string>();
     solicitudPagoObservacionId = 0;
     addressForm: FormGroup;
     solicitudPagoCargarFormaPago: any;
@@ -51,14 +52,23 @@ export class ObsCargarFormaPagoComponent implements OnInit {
                 .subscribe(
                     response => {
                         const obsSupervisor = response.filter( obs => obs.archivada === false )[0];
-                        console.log( obsSupervisor );
-                        this.addressForm.setValue(
-                            {
-                                fechaCreacion: obsSupervisor.fechaCreacion,
-                                tieneObservaciones: obsSupervisor.tieneObservacion !== undefined ? obsSupervisor.tieneObservacion : null,
-                                observaciones: obsSupervisor.observacion !== undefined ? ( obsSupervisor.observacion.length > 0 ? obsSupervisor.observacion : null ) : null
+                        
+                        if ( obsSupervisor !== undefined ) {
+
+                            if ( obsSupervisor.registroCompleto === false ) {
+                                this.estadoSemaforo.emit( 'en-proceso' );
                             }
-                        );
+                            if ( obsSupervisor.registroCompleto === true ) {
+                                this.estadoSemaforo.emit( 'completo' );
+                            }
+                            this.addressForm.setValue(
+                                {
+                                    fechaCreacion: obsSupervisor.fechaCreacion,
+                                    tieneObservaciones: obsSupervisor.tieneObservacion !== undefined ? obsSupervisor.tieneObservacion : null,
+                                    observaciones: obsSupervisor.observacion !== undefined ? ( obsSupervisor.observacion.length > 0 ? obsSupervisor.observacion : null ) : null
+                                }
+                            );
+                        }
                     }
                 );
         }
@@ -101,16 +111,6 @@ export class ObsCargarFormaPagoComponent implements OnInit {
     }
 
     onSubmit() {
-      console.log(this.addressForm.value);
-      /*
-        SolicitudPagoObservacionId
-        SolicitudPagoId
-        Observacion
-        TipoObservacionCodigo
-        MenuId
-        IdPadre
-        TieneObservacion
-      */
 
       const pSolicitudPagoObservacion = {
         solicitudPagoObservacionId: this.solicitudPagoObservacionId,

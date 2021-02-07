@@ -4,6 +4,7 @@ import { FormArray, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Dominio } from 'src/app/core/_services/common/common.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
 
 @Component({
   selector: 'app-obs-datos-factura',
@@ -14,6 +15,9 @@ export class ObsDatosFacturaComponent implements OnInit {
 
     @Input() solicitudPago: any;
     @Input() esVerDetalle = false;
+    @Input() aprobarSolicitudPagoId: any;
+    @Input() datosFacturaCodigo: string;
+    solicitudPagoObservacionId = 0;
     detalleForm = this.fb.group({
         numeroFactura: [null, Validators.required],
         fechaFactura: [null, Validators.required],
@@ -49,7 +53,8 @@ export class ObsDatosFacturaComponent implements OnInit {
     constructor(
         private fb: FormBuilder,
         private commonSvc: CommonService,
-        private dialog: MatDialog )
+        private dialog: MatDialog,
+        private obsMultipleSvc: ObservacionesMultiplesCuService )
     {
         this.commonSvc.tiposDescuento()
             .subscribe( response => this.tiposDescuentoArray = response );
@@ -58,6 +63,23 @@ export class ObsDatosFacturaComponent implements OnInit {
 
     ngOnInit(): void {
       this.getDatosFactura();
+      this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.aprobarSolicitudPagoId, this.solicitudPago.solicitudPagoId, this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaId )
+        .subscribe(
+            response => {
+                const obsSupervisor = response.filter( obs => obs.archivada === false )[0];
+
+                if ( obsSupervisor !== undefined ) {
+                    console.log( obsSupervisor );
+                    this.addressForm.setValue(
+                        {
+                            fechaCreacion: obsSupervisor.fechaCreacion,
+                            tieneObservaciones: obsSupervisor.tieneObservacion !== undefined ? obsSupervisor.tieneObservacion : null,
+                            observaciones: obsSupervisor.observacion !== undefined ? ( obsSupervisor.observacion.length > 0 ? obsSupervisor.observacion : null ) : null
+                        }
+                    );
+                }
+            }
+        );
     }
 
     getDatosFactura() {
@@ -90,10 +112,11 @@ export class ObsDatosFacturaComponent implements OnInit {
     }
 
     crearFormulario() {
-      return this.fb.group({
-        tieneObservaciones: [null, Validators.required],
-        observaciones:[null, Validators.required],
-      })
+        return this.fb.group({
+            fechaCreacion: [ null ],
+            tieneObservaciones: [null, Validators.required],
+            observaciones:[null, Validators.required],
+        })
     }
 
     getTipoDescuento( tipoDescuentoCodigo: string ) {
@@ -125,7 +148,23 @@ export class ObsDatosFacturaComponent implements OnInit {
     }
 
     onSubmit() {
-      console.log(this.addressForm.value);
+      
+        const pSolicitudPagoObservacion = {
+            solicitudPagoObservacionId: this.solicitudPagoObservacionId,
+            solicitudPagoId: this.solicitudPago.solicitudPagoId,
+            observacion: this.addressForm.get( 'observaciones' ).value !== null ? this.addressForm.get( 'observaciones' ).value : this.addressForm.get( 'observaciones' ).value,
+            tipoObservacionCodigo: this.datosFacturaCodigo,
+            menuId: this.aprobarSolicitudPagoId,
+            idPadre: this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaId,
+            tieneObservacion: this.addressForm.get( 'tieneObservaciones' ).value !== null ? this.addressForm.get( 'tieneObservaciones' ).value : this.addressForm.get( 'tieneObservaciones' ).value
+        };
+
+        console.log( pSolicitudPagoObservacion );
+        this.obsMultipleSvc.createUpdateSolicitudPagoObservacion( pSolicitudPagoObservacion )
+            .subscribe(
+                response => this.openDialog( '', `<b>${ response.message }</b>` ),
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            )
     }
 
 }

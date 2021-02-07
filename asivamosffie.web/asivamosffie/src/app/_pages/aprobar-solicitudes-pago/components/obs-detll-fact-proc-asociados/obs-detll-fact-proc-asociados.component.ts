@@ -5,6 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Dominio } from 'src/app/core/_services/common/common.service';
+import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
 import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
@@ -17,6 +18,9 @@ export class ObsDetllFactProcAsociadosComponent implements OnInit {
 
     @Input() solicitudPago: any;
     @Input() esVerDetalle = false;
+    @Input() aprobarSolicitudPagoId: any
+    @Input() criteriosPagoProyectoCodigo: string;
+    solicitudPagoObservacionId = 0;
     esMultiProyecto = false;
     proyectos: any;
     listaCriterios: Dominio[] = [];
@@ -57,13 +61,17 @@ export class ObsDetllFactProcAsociadosComponent implements OnInit {
     constructor(
         private fb: FormBuilder,
         private registrarPagosSvc: RegistrarRequisitosPagoService,
-        private dialog: MatDialog )
+        private dialog: MatDialog,
+        private obsMultipleSvc: ObservacionesMultiplesCuService )
     {
         this.addressForm = this.crearFormulario();
     }
 
     ngOnInit(): void {
         this.getProyectos();
+        if ( this.solicitudPago !== undefined ) {
+
+        }
     };
 
     getProyectos() {
@@ -71,6 +79,24 @@ export class ObsDetllFactProcAsociadosComponent implements OnInit {
             this.solicitudPagoCargarFormaPago = this.solicitudPago.solicitudPagoCargarFormaPago[0];
             this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
             this.solicitudPagoFaseCriterio = this.solicitudPagoFase.solicitudPagoFaseCriterio;
+            // Get observaciones
+            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.aprobarSolicitudPagoId, this.solicitudPago.solicitudPagoId, this.solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioProyecto[0].solicitudPagoFaseCriterioProyectoId )
+                .subscribe(
+                    response => {
+                        const obsSupervisor = response.filter( obs => obs.archivada === false )[0];
+
+                        if ( obsSupervisor !== undefined ) {
+                            console.log( obsSupervisor );
+                            this.addressForm.setValue(
+                                {
+                                    fechaCreacion: obsSupervisor.fechaCreacion,
+                                    tieneObservaciones: obsSupervisor.tieneObservacion !== undefined ? obsSupervisor.tieneObservacion : null,
+                                    observaciones: obsSupervisor.observacion !== undefined ? ( obsSupervisor.observacion.length > 0 ? obsSupervisor.observacion : null ) : null
+                                }
+                            );
+                        }
+                    }
+                );
 
             if ( this.solicitudPagoFase.esPreconstruccion === true ) {
                 this.registrarPagosSvc.getCriterioByFormaPagoCodigo( this.solicitudPagoCargarFormaPago.fasePreConstruccionFormaPagoCodigo )
@@ -273,6 +299,7 @@ export class ObsDetllFactProcAsociadosComponent implements OnInit {
 
     crearFormulario() {
       return this.fb.group({
+        fechaCreacion: [ null ],
         tieneObservaciones: [null, Validators.required],
         observaciones:[null, Validators.required],
         projects: this.fb.array( [] )
@@ -312,7 +339,22 @@ export class ObsDetllFactProcAsociadosComponent implements OnInit {
     }
 
     onSubmit() {
-      console.log(this.addressForm.value);
+        const pSolicitudPagoObservacion = {
+            solicitudPagoObservacionId: this.solicitudPagoObservacionId,
+            solicitudPagoId: this.solicitudPago.solicitudPagoId,
+            observacion: this.addressForm.get( 'observaciones' ).value !== null ? this.addressForm.get( 'observaciones' ).value : this.addressForm.get( 'observaciones' ).value,
+            tipoObservacionCodigo: this.criteriosPagoProyectoCodigo,
+            menuId: this.aprobarSolicitudPagoId,
+            idPadre: this.solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioProyecto[0].solicitudPagoFaseCriterioProyectoId,
+            tieneObservacion: this.addressForm.get( 'tieneObservaciones' ).value !== null ? this.addressForm.get( 'tieneObservaciones' ).value : this.addressForm.get( 'tieneObservaciones' ).value
+        };
+
+        console.log( pSolicitudPagoObservacion );
+        this.obsMultipleSvc.createUpdateSolicitudPagoObservacion( pSolicitudPagoObservacion )
+            .subscribe(
+                response => this.openDialog( '', `<b>${ response.message }</b>` ),
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            )
     }
 
 }

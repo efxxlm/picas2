@@ -3,6 +3,7 @@ import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
+import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
 import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
@@ -15,6 +16,9 @@ export class ObsDescuentosDirTecnicaComponent implements OnInit {
 
     @Input() solicitudPago: any;
     @Input() esVerDetalle = false;
+    @Input() aprobarSolicitudPagoId: any;
+    @Input() datosFacturaDescuentoCodigo: string;
+    solicitudPagoObservacionId = 0;
     addressForm: FormGroup;
     formDescuentos: FormGroup;
     valorFacturado = 0;
@@ -45,6 +49,7 @@ export class ObsDescuentosDirTecnicaComponent implements OnInit {
         private dialog: MatDialog,
         private commonSvc: CommonService,
         private routes: Router,
+        private obsMultipleSvc: ObservacionesMultiplesCuService,
         private registrarPagosSvc: RegistrarRequisitosPagoService)
     {
         this.commonSvc.tiposDescuento()
@@ -62,6 +67,24 @@ export class ObsDescuentosDirTecnicaComponent implements OnInit {
         if ( this.solicitudPagoFaseFactura !== undefined ) {
             this.solicitudPagoFaseFacturaId = this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaId;
             this.solicitudPagoFaseFacturaDescuento = this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaDescuento;
+
+            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.aprobarSolicitudPagoId, this.solicitudPago.solicitudPagoId, this.solicitudPagoFaseFacturaDescuento[0].solicitudPagoFaseFacturaDescuentoId )
+                .subscribe(
+                    response => {
+                        const obsSupervisor = response.filter( obs => obs.archivada === false )[0];
+
+                        if ( obsSupervisor !== undefined ) {
+                            console.log( obsSupervisor );
+                            this.addressForm.setValue(
+                                {
+                                    fechaCreacion: obsSupervisor.fechaCreacion,
+                                    tieneObservaciones: obsSupervisor.tieneObservacion !== undefined ? obsSupervisor.tieneObservacion : null,
+                                    observaciones: obsSupervisor.observacion !== undefined ? ( obsSupervisor.observacion.length > 0 ? obsSupervisor.observacion : null ) : null
+                                }
+                            );
+                        }
+                    }
+                );
 
             if ( this.solicitudPagoFaseFacturaDescuento !== null ) {
                 this.formDescuentos.get( 'aplicaDescuento' ).setValue( this.solicitudPagoFaseFactura.tieneDescuento !== undefined ? this.solicitudPagoFaseFactura.tieneDescuento : null );
@@ -94,8 +117,9 @@ export class ObsDescuentosDirTecnicaComponent implements OnInit {
             descuentos: this.fb.array( [] )
           });
         return this.fb.group({
-          tieneObservaciones: [null, Validators.required],
-          observaciones:[null, Validators.required],
+            fechaCreacion: [ null ],
+            tieneObservaciones: [null, Validators.required],
+            observaciones:[null, Validators.required],
         })
     }
 
@@ -128,7 +152,22 @@ export class ObsDescuentosDirTecnicaComponent implements OnInit {
     }
 
     onSubmit() {
-      console.log(this.addressForm.value);
+        const pSolicitudPagoObservacion = {
+            solicitudPagoObservacionId: this.solicitudPagoObservacionId,
+            solicitudPagoId: this.solicitudPago.solicitudPagoId,
+            observacion: this.addressForm.get( 'observaciones' ).value !== null ? this.addressForm.get( 'observaciones' ).value : this.addressForm.get( 'observaciones' ).value,
+            tipoObservacionCodigo: this.datosFacturaDescuentoCodigo,
+            menuId: this.aprobarSolicitudPagoId,
+            idPadre: this.solicitudPagoFaseFacturaDescuento[0].solicitudPagoFaseFacturaDescuentoId,
+            tieneObservacion: this.addressForm.get( 'tieneObservaciones' ).value !== null ? this.addressForm.get( 'tieneObservaciones' ).value : this.addressForm.get( 'tieneObservaciones' ).value
+        };
+
+        console.log( pSolicitudPagoObservacion );
+        this.obsMultipleSvc.createUpdateSolicitudPagoObservacion( pSolicitudPagoObservacion )
+            .subscribe(
+                response => this.openDialog( '', `<b>${ response.message }</b>` ),
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            )
     }
 
 }
