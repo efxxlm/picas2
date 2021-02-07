@@ -125,5 +125,79 @@ namespace asivamosffie.services
                                                                                                                            p.RegistroCompleto
                                                                                                                        }).ToListAsync();
         }
+          
+        public async Task<dynamic> GetListSolicitudPago(int pMenuId)
+        {
+            var result = await _context.SolicitudPago.Where(s => s.Eliminado != true)
+                .Include(r => r.Contrato)
+                             .Select(s => new
+                             {
+                                 s.TipoSolicitudCodigo,
+                                 s.FechaCreacion,
+                                 s.NumeroSolicitud,
+                                 s.Contrato.ModalidadCodigo,
+                                 s.Contrato.NumeroContrato,
+                                 s.EstadoCodigo,
+                                 s.ContratoId,
+                                 s.SolicitudPagoId,
+                                 RegistroCompleto = s.RegistroCompleto ?? false
+                             }).OrderByDescending(r => r.SolicitudPagoId).ToListAsync();
+
+            List<dynamic> grind = new List<dynamic>();
+            List<Dominio> ListParametricas = _context.Dominio.Where(d => d.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato || d.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Solicitud_Pago).ToList();
+
+            result.ForEach(r =>
+            {
+                grind.Add(new
+                {
+                    r.RegistroCompleto,
+                    r.TipoSolicitudCodigo,
+                    r.ContratoId,
+                    r.SolicitudPagoId,
+                    r.FechaCreacion,
+                    r.NumeroSolicitud,
+                    NumeroContrato = r.NumeroContrato ?? "No Aplica",
+                    Estado = !string.IsNullOrEmpty(r.EstadoCodigo) ? ListParametricas.Where(l => l.Codigo == r.EstadoCodigo && l.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Solicitud_Pago).FirstOrDefault().Nombre : " - ",
+                    Modalidad = !string.IsNullOrEmpty(r.ModalidadCodigo) ? ListParametricas.Where(l => l.Codigo == r.ModalidadCodigo && l.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato).FirstOrDefault().Nombre : "No aplica"
+                });
+            });
+            return grind;
+        }
+
+
+        public async Task<Respuesta> ChangueStatusSolicitudPago(SolicitudPago pSolicitudPago)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Solicitud_Pago, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+
+
+                
+
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = GeneralCodes.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.OperacionExitosa, idAccion, pSolicitudPagoObservacion.UsuarioCreacion, "CREAR OBSERVACION SOLICITUD PAGO")
+                    };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.Error, idAccion, pSolicitudPagoObservacion.UsuarioCreacion, ex.InnerException.ToString())
+                    };
+            }
+        }
+
     }
 }
