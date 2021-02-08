@@ -37,6 +37,7 @@ export class ExpansionInterValidarRequisitosComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
 
   constructor(
     private fb: FormBuilder,
@@ -119,6 +120,7 @@ export class ExpansionInterValidarRequisitosComponent implements OnInit {
                     perfil[ 'contratoPerfilObservacionId' ] = observacionTipo3[ observacionTipo3.length - 1 ].contratoPerfilObservacionId;
                     // tslint:disable-next-line: no-string-literal
                     perfil[ 'verificarObservacion' ] = observacionTipo3[ observacionTipo3.length - 1 ].observacion;
+                    this.estaEditando = true;
                     completo++;
                   }
                 }
@@ -201,6 +203,7 @@ export class ExpansionInterValidarRequisitosComponent implements OnInit {
   }
 
   onSubmit( perfil: ContratoPerfil ) {
+    this.estaEditando = true
     const observacionPerfil: ObservacionPerfil = {
       contratoPerfilId: perfil.contratoPerfilId,
       observacion: perfil[ 'verificarObservacion' ] === null || perfil[ 'verificarObservacion' ].length === 0 ? null : perfil[ 'verificarObservacion' ],

@@ -42,7 +42,7 @@ export class FormEvaluacionComponent {
     if ( this.noGuardado===true && this.addressForm.dirty) {
       let dialogRef =this.dialog.open(ModalDialogComponent, {
         width: '28em',
-        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
+        data: { modalTitle:"", modalText:"Â¿Desea guardar la informaciÃ³n registrada?",siNoBoton:true }
       });   
       dialogRef.afterClosed().subscribe(result => {
         // console.log(`Dialog result: ${result}`);

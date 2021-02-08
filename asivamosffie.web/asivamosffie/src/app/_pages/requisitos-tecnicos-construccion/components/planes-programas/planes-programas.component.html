@@ -142,7 +142,10 @@
               [matTooltipPosition]="'above'"
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
-              *ngIf="!element.requiereObservacion && estaEditando"
+              *ngIf="
+                (element.requiereObservacion === null && estaEditando) ||
+                (element.requiereObservacion === undefined && estaEditando)
+              "
             />
           </span>
         </section>
