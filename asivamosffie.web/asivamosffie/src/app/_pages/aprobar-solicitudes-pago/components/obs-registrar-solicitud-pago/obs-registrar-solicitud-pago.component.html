@@ -1,4 +1,4 @@
-<section *ngIf="solicitudPago !== undefined">
+<section *ngIf="solicitudPago !== undefined && registrarSolicitudPago !== undefined">
     <div class="table-responsive">
         <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
             <ng-container matColumnDef="faseContrato">

@@ -22,10 +22,12 @@ export class FormAprobarSolicitudComponent implements OnInit {
     idGestion: any;
     solicitud: string;
     solicitudPagoObservacionId = 0;
+    solicitudPagoObsOtrosCostosId = 0;
     tipoSolicitudCodigo: any = {};
     modalidadContratoArray: Dominio[] = [];
     tipoPagoArray: Dominio[] = [];
     addressForm: FormGroup;
+    otrosCostosObsForm: FormGroup;
     dataSource = new MatTableDataSource();
     menusIdPath: any; // Se obtienen los ID de los respectivos PATH de cada caso de uso que se implementaran observaciones.
     listaTipoObservacionSolicitudes: any; // Interfaz lista tipos de observaciones.
@@ -78,6 +80,7 @@ export class FormAprobarSolicitudComponent implements OnInit {
             .subscribe( response => this.listaTipoObservacionSolicitudes = response );
         this.getContrato();
         this.addressForm = this.crearFormulario();
+        this.otrosCostosObsForm = this.crearFormulario();
     }
 
     ngOnInit(): void {
@@ -228,6 +231,25 @@ export class FormAprobarSolicitudComponent implements OnInit {
             menuId: this.menusIdPath.aprobarSolicitudPagoId,
             idPadre: this.contrato.solicitudPagoOnly.solicitudPagoSoporteSolicitud[0].solicitudPagoSoporteSolicitudId,
             tieneObservacion: this.addressForm.get( 'tieneObservaciones' ).value !== null ? this.addressForm.get( 'tieneObservaciones' ).value : this.addressForm.get( 'tieneObservaciones' ).value
+        };
+
+        console.log( pSolicitudPagoObservacion );
+        this.obsMultipleSvc.createUpdateSolicitudPagoObservacion( pSolicitudPagoObservacion )
+            .subscribe(
+                response => this.openDialog( '', `<b>${ response.message }</b>` ),
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            )
+    }
+
+    guardar() {
+        const pSolicitudPagoObservacion = {
+            solicitudPagoObservacionId: this.solicitudPagoObsOtrosCostosId,
+            solicitudPagoId: this.contrato.solicitudPagoOnly.solicitudPagoId,
+            observacion: this.otrosCostosObsForm.get( 'observaciones' ).value !== null ? this.otrosCostosObsForm.get( 'observaciones' ).value : this.otrosCostosObsForm.get( 'observaciones' ).value,
+            tipoObservacionCodigo: this.listaTipoObservacionSolicitudes.otrosCostosCodigo,
+            menuId: this.menusIdPath.aprobarSolicitudPagoId,
+            idPadre: this.contrato.solicitudPagoOnly.solicitudPagoOtrosCostosServicios[0].solicitudPagoOtrosCostosServiciosId,
+            tieneObservacion: this.otrosCostosObsForm.get( 'tieneObservaciones' ).value !== null ? this.otrosCostosObsForm.get( 'tieneObservaciones' ).value : this.otrosCostosObsForm.get( 'tieneObservaciones' ).value
         };
 
         console.log( pSolicitudPagoObservacion );

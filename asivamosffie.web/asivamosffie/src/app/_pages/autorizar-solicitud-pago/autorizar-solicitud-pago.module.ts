@@ -1,3 +1,4 @@
+import { FormObservacionExpensasComponent } from './components/form-observacion-expensas/form-observacion-expensas.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -28,7 +29,7 @@ import { DialogEnvSolicitudAutorizComponent } from './components/dialog-env-soli
 
 
 @NgModule({
-  declarations: [AutorizarSolicitudPagoComponent, FormAutorizarSolicitudComponent, ObsCargarFormpagoAutorizComponent, ObsRegistrarSolPagoAutorizComponent, ObsCriterioPagosAutorizComponent, ObsDetllfactProcasocAutorizComponent, ObsDatosFacturaAutorizComponent, ObsDescDirTecnicaAutorizComponent, ObsSoporteurlAutorizComponent, ObsValidListchqeoAutorizComponent, ObsCertAutorizacionAutorizComponent, FormEditAutorizarSolicitudComponent, DialogProyectosAsociadosAutorizComponent, TablaObservacionesAutorizComponent, VerDetalleAutorizarSolicitudComponent, DetalleSoliPagoAutorizComponent, DetalleValidListchqAutorizComponent, DetalleFacturaProcasAutorizComponent, DialogEnvSolicitudAutorizComponent],
+  declarations: [AutorizarSolicitudPagoComponent, FormAutorizarSolicitudComponent, ObsCargarFormpagoAutorizComponent, ObsRegistrarSolPagoAutorizComponent, ObsCriterioPagosAutorizComponent, ObsDetllfactProcasocAutorizComponent, ObsDatosFacturaAutorizComponent, ObsDescDirTecnicaAutorizComponent, ObsSoporteurlAutorizComponent, ObsValidListchqeoAutorizComponent, ObsCertAutorizacionAutorizComponent, FormEditAutorizarSolicitudComponent, DialogProyectosAsociadosAutorizComponent, TablaObservacionesAutorizComponent, VerDetalleAutorizarSolicitudComponent, DetalleSoliPagoAutorizComponent, DetalleValidListchqAutorizComponent, DetalleFacturaProcasAutorizComponent, DialogEnvSolicitudAutorizComponent, FormObservacionExpensasComponent],
   imports: [
     CommonModule,
     MaterialModule,
