@@ -80,7 +80,6 @@
               matInput
               type="url"
               formControlName="urlSoporte"
-              maxlength="20"
               required
               [matTooltipPosition]="'above'"
               matTooltip="Campo alfanumérico"
@@ -127,6 +126,7 @@
                   formControlName="numRadicadoSac"
                   #numRadicadoSac
                   maxlength="10"
+                  (keypress)="validateNumberKeypress($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
                   required
                 />

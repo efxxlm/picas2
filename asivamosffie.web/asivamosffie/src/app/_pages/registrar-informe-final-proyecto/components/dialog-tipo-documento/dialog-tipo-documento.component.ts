@@ -20,7 +20,9 @@ export class DialogTipoDocumentoComponent implements OnInit {
   addressForm = this.fb.group({
     tipoAnexo: [null, Validators.required],
     urlSoporte: [null, Validators.required],
-    numRadicadoSac: [null, Validators.required],
+    numRadicadoSac: [null, Validators.compose([
+      Validators.required, Validators.minLength(1), Validators.maxLength(10)])
+    ],
     fechaRadicado: [null, Validators.required],
   })
 
@@ -48,16 +50,16 @@ export class DialogTipoDocumentoComponent implements OnInit {
     }
   }
 
-  // evalua tecla a tecla
-  validateNumberKeypress(event: KeyboardEvent) {
-    const alphanumeric = /[0-9]/
-    const inputChar = String.fromCharCode(event.charCode)
-    return alphanumeric.test(inputChar) ? true : false
+   // evalua tecla a tecla
+   validateNumberKeypress(event: KeyboardEvent) {
+    const alphanumeric = /[0-9]/;
+    const inputChar = String.fromCharCode(event.charCode);
+    return alphanumeric.test(inputChar) ? true : false;
   }
 
   openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
-      width: '40em',
+      width: '28em',
       data: { modalTitle, modalText }
     })
   }

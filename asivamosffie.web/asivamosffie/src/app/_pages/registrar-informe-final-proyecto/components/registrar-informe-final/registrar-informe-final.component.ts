@@ -9,7 +9,6 @@ import { Report } from 'src/app/_interfaces/proyecto-final.model';
   styleUrls: ['./registrar-informe-final.component.scss']
 })
 export class RegistrarInformeFinalComponent implements OnInit {
-
   id: string;
   report: Report;
   estadoInforme: string;
@@ -25,21 +24,22 @@ export class RegistrarInformeFinalComponent implements OnInit {
     this.route.params.subscribe((params: Params) => {
       this.id = params.id;
       this.getInformeFinalByProyecto(this.id);
-    })
+    });
   }
-  getInformeFinalByProyecto(id:string) {
-    this.registrarInformeFinalProyectoService.getInformeFinalByProyecto(id)
-    .subscribe(report => {
+
+  getInformeFinalByProyecto(id: string) {
+    this.registrarInformeFinalProyectoService.getInformeFinalByProyecto(id).subscribe(report => {
       this.report = report[0];
-      if(report[0].proyecto.informeFinal.length>0){
+      if (report[0].proyecto.informeFinal.length > 0) {
         this.estadoInforme = report[0].proyecto.informeFinal[0].estadoInforme;
-      }else{
+      } else {
         this.estadoInforme = '0';
       }
     });
   }
-  
+
   updateForm(data) {
-    if(data) this.mostrarInforme = data;
+    if (data) this.mostrarInforme = data;
+    else this.mostrarInforme = false;
   }
 }

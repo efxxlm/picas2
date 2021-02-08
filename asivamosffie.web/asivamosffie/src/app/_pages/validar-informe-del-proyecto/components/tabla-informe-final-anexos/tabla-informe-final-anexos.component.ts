@@ -5,12 +5,13 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { FormBuilder, Validators, FormArray, FormGroup } from '@angular/forms';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-import { DialogTipoDocumentoComponent } from '../dialog-tipo-documento/dialog-tipo-documento.component';
-import { DialogObservacionesComponent } from '../dialog-observaciones/dialog-observaciones.component';
+// import { DialogTipoDocumentoComponent } from '../dialog-tipo-documento/dialog-tipo-documento.component';
+// import { DialogObservacionesComponent } from '../dialog-observaciones/dialog-observaciones.component';
 
 import { Anexo } from 'src/app/_interfaces/proyecto-final-anexos.model';
 import { RegistrarInformeFinalProyectoService } from 'src/app/core/_services/registrar-informe-final-proyecto.service';
 import { Respuesta } from 'src/app/core/_services/common/common.service';
+
 
 @Component({
   selector: 'app-tabla-informe-final-anexos',
@@ -21,7 +22,6 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   ELEMENT_DATA : Anexo[] = [];
   @Input() id: string;
   @Input() llaveMen: string;
-  @Input() estaEditando: boolean;
   anexos: any;
   displayedColumns: string[] = [
     'informeFinalListaChequeoId',
@@ -34,6 +34,8 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+
+  estaEditando = false;
 
   estadoArray = [
     { name: 'Cumple', value: 1 },
@@ -56,6 +58,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     .subscribe(anexos => {
       this.dataSource.data = anexos as Anexo[];
       this.anexos = anexos;
+      console.log("Aquí:",this.anexos);
     });
   }
 
@@ -88,39 +91,39 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     }
   }
 
-  openDialogTipoDocumento(informe:any) {
-    let dialogRef = this.dialog.open(DialogTipoDocumentoComponent, {
-      width: '70em',
-      data:{
-        informe: informe,
-        llaveMen: this.llaveMen
-      },
-      id:'dialogTipoDocumento'
-    });
+  // openDialogTipoDocumento(informe:any) {
+  //   let dialogRef = this.dialog.open(DialogTipoDocumentoComponent, {
+  //     width: '70em',
+  //     data:{
+  //       informe: informe,
+  //       llaveMen: this.llaveMen
+  //     },
+  //     id:'dialogTipoDocumento'
+  //   });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-      this.ngOnInit();
-      return;
-    });
-  }
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     console.log(`Dialog result: ${result}`);
+  //     this.ngOnInit();
+  //     return;
+  //   });
+  // }
 
-  openDialogObservaciones(informe:any) {
-    let dialogRef = this.dialog.open(DialogObservacionesComponent, {
-      width: '70em',
-      data: {
-        informe: informe,
-        llaveMen: this.llaveMen
-      },
-      id:'dialogObservaciones'
-    });
+  // openDialogObservaciones(informe:any) {
+  //   let dialogRef = this.dialog.open(DialogObservacionesComponent, {
+  //     width: '70em',
+  //     data: {
+  //       informe: informe,
+  //       llaveMen: this.llaveMen
+  //     },
+  //     id:'dialogObservaciones'
+  //   });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-      this.ngOnInit();
-      return;
-    });
-  }
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     console.log(`Dialog result: ${result}`);
+  //     this.ngOnInit();
+  //     return;
+  //   });
+  // }
 
   openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
@@ -130,6 +133,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   }
 
   onSubmit() {
+    // console.log(this.addressForm.value);
     this.estaEditando = true;
     this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
   }
@@ -141,6 +145,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
       informeFinalInterventoriaId:  [informeFinalAnexo.informeFinalInterventoriaId, Validators.required],
       informeFinalListaChequeoId:  [informeFinalAnexo.informeFinalListaChequeoId, Validators.required],
     });
+    //console.log("Autosave test: ",this.addressForm.value);
     this.createInformeFinalInterventoria(this.addressForm.value);
   }
 
@@ -148,7 +153,9 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     this.registrarInformeFinalProyectoService.createEditInformeFinalInterventoria(informeFinalInterventoria)
     .subscribe((respuesta: Respuesta) => {
         console.log(respuesta.message);
+        this.ngOnInit();
         return;
+        //this.router.navigate(['/crearProyecto']);
       },
       err => {
         console.log( err );
