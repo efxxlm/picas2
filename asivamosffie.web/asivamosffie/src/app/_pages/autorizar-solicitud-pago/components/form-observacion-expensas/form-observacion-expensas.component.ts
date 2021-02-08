@@ -114,7 +114,7 @@ export class FormObservacionExpensasComponent implements OnInit {
             solicitudPagoId: this.solicitudPago.solicitudPagoId,
             observacion: this.addressForm.get( 'observaciones' ).value !== null ? this.addressForm.get( 'observaciones' ).value : this.addressForm.get( 'observaciones' ).value,
             tipoObservacionCodigo: this.listaTipoObservacionSolicitudes.expensasCodigo,
-            menuId: this.menusIdPath.aprobarSolicitudPagoId,
+            menuId: this.menusIdPath.autorizarSolicitudPagoId,
             idPadre: this.solicitudPago.solicitudPagoExpensas[0].solicitudPagoExpensasId,
             tieneObservacion: this.addressForm.get( 'tieneObservaciones' ).value !== null ? this.addressForm.get( 'tieneObservaciones' ).value : this.addressForm.get( 'tieneObservaciones' ).value
         };
