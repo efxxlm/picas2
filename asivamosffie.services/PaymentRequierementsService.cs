@@ -33,14 +33,14 @@ namespace asivamosffie.services
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Actualizar_Solicitud_Pago_Observacion, (int)EnumeratorTipoDominio.Acciones);
 
             try
-            {
-                
+            { 
                 if (pSolicitudPagoObservacion.SolicitudPagoObservacionId > 0)
                 {
                     SolicitudPagoObservacion solicitudPagoObservacionOld = _context.SolicitudPagoObservacion.Find(pSolicitudPagoObservacion.SolicitudPagoObservacionId);
 
                     solicitudPagoObservacionOld.FechaModificacion = DateTime.Now;
                     solicitudPagoObservacionOld.UsuarioModificacion = pSolicitudPagoObservacion.UsuarioCreacion;
+                    solicitudPagoObservacionOld.Archivada = false;
 
                     solicitudPagoObservacionOld.RegistroCompleto = ValidateCompleteRecordSolicitudPagoObservacion(pSolicitudPagoObservacion);
                     solicitudPagoObservacionOld.TieneObservacion = pSolicitudPagoObservacion.TieneObservacion;
@@ -78,7 +78,7 @@ namespace asivamosffie.services
                     };
             }
         }
- 
+
         private void ActualizarSolicitudPagoTieneObservacion(SolicitudPagoObservacion pSolicitudPagoObservacion, bool TieneObservacion)
         {
             SolicitudPago solicitudPago = _context.SolicitudPago.Find(pSolicitudPagoObservacion.SolicitudPagoId);
@@ -112,7 +112,7 @@ namespace asivamosffie.services
             return false;
         }
 
-        public async Task<dynamic> GetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(int pMenuId, int pSolicitudPagoId , int pPadreId)
+        public async Task<dynamic> GetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(int pMenuId, int pSolicitudPagoId, int pPadreId)
         {
             return await _context.SolicitudPagoObservacion
                                            .Where(s => s.MenuId == pMenuId && s.SolicitudPagoId == pSolicitudPagoId && s.IdPadre == pPadreId)
@@ -125,7 +125,7 @@ namespace asivamosffie.services
                                                                                                                            p.RegistroCompleto
                                                                                                                        }).ToListAsync();
         }
-          
+
         public async Task<dynamic> GetListSolicitudPago(int pMenuId)
         {
             var result = await _context.SolicitudPago.Where(s => s.Eliminado != true)
@@ -163,8 +163,7 @@ namespace asivamosffie.services
             });
             return grind;
         }
-
-
+          
         public async Task<Respuesta> ChangueStatusSolicitudPago(SolicitudPago pSolicitudPago)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Solicitud_Pago, (int)EnumeratorTipoDominio.Acciones);
@@ -173,7 +172,7 @@ namespace asivamosffie.services
             {
 
 
-                
+
 
                 return
                     new Respuesta
@@ -182,7 +181,7 @@ namespace asivamosffie.services
                         IsException = false,
                         IsValidation = false,
                         Code = GeneralCodes.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.OperacionExitosa, idAccion, pSolicitudPagoObservacion.UsuarioCreacion, "CREAR OBSERVACION SOLICITUD PAGO")
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.OperacionExitosa, idAccion, pSolicitudPago.UsuarioCreacion, "CREAR OBSERVACION SOLICITUD PAGO")
                     };
             }
             catch (Exception ex)
@@ -194,7 +193,7 @@ namespace asivamosffie.services
                         IsException = true,
                         IsValidation = false,
                         Code = GeneralCodes.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.Error, idAccion, pSolicitudPagoObservacion.UsuarioCreacion, ex.InnerException.ToString())
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.Error, idAccion, pSolicitudPago.UsuarioCreacion, ex.InnerException.ToString())
                     };
             }
         }
