@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ViewChild, OnInit, Input } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -22,6 +22,8 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   @Input() id: string;
   @Input() llaveMen: string;
   @Input() estaEditando: boolean;
+  @Output() estadoInforme = new EventEmitter<boolean>(true);
+
   anexos: any;
   displayedColumns: string[] = [
     'informeFinalListaChequeoId',
@@ -56,6 +58,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     .subscribe(anexos => {
       this.dataSource.data = anexos as Anexo[];
       this.anexos = anexos;
+      this.estadoInforme.emit();//
     });
   }
 
@@ -159,11 +162,12 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
         console.log( err );
       });
   }
+  
 
   verificarInformeFinalEstadoCompleto( informeFinalId: number ) {
     this.registrarInformeFinalProyectoService.verificarInformeFinalEstadoCompleto(informeFinalId)
     .subscribe(respuesta => {
-        if(respuesta === true){
+        if(respuesta != null){
           this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
         }
         return;
