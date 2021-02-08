@@ -30,9 +30,11 @@ import { TablaDrpGbftrecComponent } from './components/tabla-drp-gbftrec/tabla-d
 import { TablaPorcParticipacionGbftrecComponent } from './components/tabla-porc-participacion-gbftrec/tabla-porc-participacion-gbftrec.component';
 import { TablaInfofrecursosGbftrecComponent } from './components/tabla-infofrecursos-gbftrec/tabla-infofrecursos-gbftrec.component';
 import { FormCostoVariableGbftrecComponent } from './components/form-costo-variable-gbftrec/form-costo-variable-gbftrec.component';
+import { CurrencyMaskModule } from 'ng2-currency-mask';
+import { FormTipoPagoGbftrecComponent } from './components/form-tipo-pago-gbftrec/form-tipo-pago-gbftrec.component';
 
 @NgModule({
-  declarations: [GestionarBalanFinancTraslRecComponent, ValidarBalanceGbftrecComponent, RecursosCompromPagadosGbftrecComponent, EjecucionFinancieraGbftrecComponent, TrasladoRecursosGbftrecComponent, RecursosCompromAccordGbftrecComponent, FuentesUsosGbftrecComponent, ContratistasGbftrecComponent, TablaValorTotalOgGbftrecComponent, DetalleOgGbftrecComponent, TablaFacturadoOgGbftrecComponent, TablaDescuentosOgGbftrecComponent, TablaOtrosDescuentosOgGbftrecComponent, TablaEjpresupuestalGbftrecComponent, TablaEjfinancieraGbftrecComponent, VerdetalleeditarBalanceGbftrecComponent, DetalleBalanceGbftrecComponent, RegistrarTrasladoGbftrecComponent, ControlSolicitudesTrasladoGbftrecComponent, DatosSolicitudGbftrecComponent, DatosDdpDrpGbftrecComponent, TablaDrpGbftrecComponent, TablaPorcParticipacionGbftrecComponent, TablaInfofrecursosGbftrecComponent, FormCostoVariableGbftrecComponent],
+  declarations: [GestionarBalanFinancTraslRecComponent, ValidarBalanceGbftrecComponent, RecursosCompromPagadosGbftrecComponent, EjecucionFinancieraGbftrecComponent, TrasladoRecursosGbftrecComponent, RecursosCompromAccordGbftrecComponent, FuentesUsosGbftrecComponent, ContratistasGbftrecComponent, TablaValorTotalOgGbftrecComponent, DetalleOgGbftrecComponent, TablaFacturadoOgGbftrecComponent, TablaDescuentosOgGbftrecComponent, TablaOtrosDescuentosOgGbftrecComponent, TablaEjpresupuestalGbftrecComponent, TablaEjfinancieraGbftrecComponent, VerdetalleeditarBalanceGbftrecComponent, DetalleBalanceGbftrecComponent, RegistrarTrasladoGbftrecComponent, ControlSolicitudesTrasladoGbftrecComponent, DatosSolicitudGbftrecComponent, DatosDdpDrpGbftrecComponent, TablaDrpGbftrecComponent, TablaPorcParticipacionGbftrecComponent, TablaInfofrecursosGbftrecComponent, FormCostoVariableGbftrecComponent, FormTipoPagoGbftrecComponent],
   imports: [
     CommonModule,
     MaterialModule,
@@ -40,6 +42,7 @@ import { FormCostoVariableGbftrecComponent } from './components/form-costo-varia
     MatAutocompleteModule,
     FormsModule,
     QuillModule.forRoot(),
+    CurrencyMaskModule,
     GestionarBalanFinancTraslRecursosRoutingModule
   ]
 })

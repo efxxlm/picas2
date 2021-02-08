@@ -1,16 +1,186 @@
-<mat-card class="shipping-card var-main-gris">
-    <mat-card-header class="header-card header-card--margin">
-        <mat-card-title class="header-card--text textoGris">
-            Demolición
-        </mat-card-title>
-    </mat-card-header>
-    <mat-card-content align="left">
-        <p><strong>¿Valor facturado por concepto: </strong><em>$ 8.000.000</em></p>
-        <mat-card-title class="header-card--text textoGris">
-            Aportante 1
-        </mat-card-title>
-        <p><strong>Tipo de aportante: </strong><em>Entidad territorial</em></p>
-        <p><strong>Nombre del aportante: </strong><em>Alcaldía de Susacón</em></p>
-        <p><strong>Fuente de recursos: </strong><em>Contingencias</em></p>
-    </mat-card-content>
-</mat-card>
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+    <mat-card class="shipping-card var-main-gris">
+        <mat-card-header class="header-card header-card--margin">
+            <mat-card-title class="header-card--text textoGris">
+                Demolición
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content align="left">
+            <p><strong>¿Valor facturado por concepto: </strong><em>$ 8.000.000</em></p>
+            <div class="mt-2em">
+                <mat-card-title class="header-card--text textoGris ">
+                    Aportante 1
+                </mat-card-title>
+                <p><strong>Tipo de aportante: </strong><em>Entidad territorial</em></p>
+                <p><strong>Nombre del aportante: </strong><em>Alcaldía de Susacón</em></p>
+                <p><strong>Fuente de recursos: </strong><em>Contingencias</em></p>
+                <p><strong>Valor facturado por el concepto para el aportante después del descuento: </strong><em>$
+                        7.880.000</em></p>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left" for="nuevoValorAportante1">
+                                    Nuevo valor por el concepto para el aportante
+                                </label>
+                            </div>
+                            <div class="col d-flex">
+                                <mat-form-field class="full-width">
+                                    <input matInput #nuevoValorAportante1 currencyMask maxlength="20" required
+                                        formControlName="nuevoValorAportante1" (keypress)="validateNumberKeypress($event)"
+                                        onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                        [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" />
+                                </mat-form-field>
+                                <span class="contador" [matTooltipPosition]="'above'"
+                                    matTooltip="Valor en ($) Pesos colombianos" matTooltipClass="info-tooltip">
+                                    {{ 20 - nuevoValorAportante1.value.length }}
+                                </span>
+                                <span class="icon-incompleto">
+                                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip" *ngIf="
+                                (addressForm.get('nuevoValorAportante1').invalid && addressForm.get('nuevoValorAportante1').touched) ||
+                                (addressForm.get('nuevoValorAportante1').invalid && estaEditando)
+                              " />
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h2 class="card-subTitle">Descuentos Dirección financiera</h2>
+            <div class="mt-2em">
+                <p><strong>¿Se requieren aplicar descuentos sobre el concepto de pago?: </strong><em>Sí</em></p>
+                <p><strong>¿Cuántos descuentos se aplican sobre el concepto de pago?: </strong><em>2</em></p>
+            </div>
+            <div class="mt-2em">
+                <mat-card-title class="header-card--text textoGris ">
+                    Descuento 1
+                </mat-card-title>
+                <p><strong>Tipo de descuento: </strong><em>Retefuente</em></p>
+                <p><strong>Valor de descuento: </strong><em>$ 50.000</em></p>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left" for="nuevoValorAportante2">
+                                    Nuevo valor por el concepto para el aportante
+                                </label>
+                            </div>
+                            <div class="col d-flex">
+                                <mat-form-field class="full-width">
+                                    <input matInput #nuevoValorAportante2 currencyMask maxlength="20" required
+                                        formControlName="nuevoValorAportante2" (keypress)="validateNumberKeypress($event)"
+                                        onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                        [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" />
+                                </mat-form-field>
+                                <span class="contador" [matTooltipPosition]="'above'"
+                                    matTooltip="Valor en ($) Pesos colombianos" matTooltipClass="info-tooltip">
+                                    {{ 20 - nuevoValorAportante2.value.length }}
+                                </span>
+                                <span class="icon-incompleto">
+                                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip" *ngIf="
+                                (addressForm.get('nuevoValorAportante2').invalid && addressForm.get('nuevoValorAportante2').touched) ||
+                                (addressForm.get('nuevoValorAportante2').invalid && estaEditando)
+                              " />
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-2em">
+                <mat-card-title class="header-card--text textoGris ">
+                    Descuento 2
+                </mat-card-title>
+                <p><strong>Tipo de descuento: </strong><em>Rete ICA</em></p>
+                <p><strong>Valor de descuento: </strong><em>$ 38.000</em></p>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left" for="nuevoValorAportante3">
+                                    Nuevo valor por el concepto para el aportante
+                                </label>
+                            </div>
+                            <div class="col d-flex">
+                                <mat-form-field class="full-width">
+                                    <input matInput #nuevoValorAportante3 currencyMask maxlength="20" required
+                                        formControlName="nuevoValorAportante3" (keypress)="validateNumberKeypress($event)"
+                                        onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                        [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" />
+                                </mat-form-field>
+                                <span class="contador" [matTooltipPosition]="'above'"
+                                    matTooltip="Valor en ($) Pesos colombianos" matTooltipClass="info-tooltip">
+                                    {{ 20 - nuevoValorAportante3.value.length }}
+                                </span>
+                                <span class="icon-incompleto">
+                                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip" *ngIf="
+                                (addressForm.get('nuevoValorAportante3').invalid && addressForm.get('nuevoValorAportante3').touched) ||
+                                (addressForm.get('nuevoValorAportante3').invalid && estaEditando)
+                              " />
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h2 class="card-subTitle">Descuentos Dirección técnica</h2>
+            <div class="mt-2em">
+                <p><strong>¿Se requieren aplicar descuentos sobre el concepto de pago?: </strong><em>Sí</em></p>
+                <p><strong>¿Cuántos descuentos se aplican sobre el concepto de pago?: </strong><em>1</em></p>
+            </div>
+            <div class="mt-2em">
+                <mat-card-title class="header-card--text textoGris ">
+                    Descuento 1
+                </mat-card-title>
+                <p><strong>Tipo de descuento: </strong><em>4X1.000</em></p>
+                <p><strong>Valor de descuento: </strong><em>$ 32.000</em></p>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left" for="nuevoValorAportante4">
+                                    Nuevo valor por el concepto para el aportante
+                                </label>
+                            </div>
+                            <div class="col d-flex">
+                                <mat-form-field class="full-width">
+                                    <input matInput #nuevoValorAportante4 currencyMask maxlength="20" required
+                                        formControlName="nuevoValorAportante4" (keypress)="validateNumberKeypress($event)"
+                                        onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                        [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" />
+                                </mat-form-field>
+                                <span class="contador" [matTooltipPosition]="'above'"
+                                    matTooltip="Valor en ($) Pesos colombianos" matTooltipClass="info-tooltip">
+                                    {{ 20 - nuevoValorAportante4.value.length }}
+                                </span>
+                                <span class="icon-incompleto">
+                                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip" *ngIf="
+                                (addressForm.get('nuevoValorAportante4').invalid && addressForm.get('nuevoValorAportante4').touched) ||
+                                (addressForm.get('nuevoValorAportante4').invalid && estaEditando)
+                              " />
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+    <div class="text-center mb-2em">
+        <button mat-button color="warn" class="btn-guardar" type="submit">
+          <img src="assets/img/icon/guardar.svg" alt="Regresar" />
+        </button>
+      </div>
+</form>

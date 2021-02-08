@@ -4,17 +4,14 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
-  selector: 'app-form-costo-variable-gbftrec',
-  templateUrl: './form-costo-variable-gbftrec.component.html',
-  styleUrls: ['./form-costo-variable-gbftrec.component.scss']
+  selector: 'app-form-tipo-pago-gbftrec',
+  templateUrl: './form-tipo-pago-gbftrec.component.html',
+  styleUrls: ['./form-tipo-pago-gbftrec.component.scss']
 })
-export class FormCostoVariableGbftrecComponent implements OnInit {
+export class FormTipoPagoGbftrecComponent implements OnInit {
   //El formulario se construyó con base a maquetación (dbenitez)
   addressForm = this.fb.group({
     nuevoValorAportante1: [null, Validators.required],
-    nuevoValorAportante2: [null, Validators.required],
-    nuevoValorAportante3: [null, Validators.required],
-    nuevoValorAportante4: [null, Validators.required],
   });
   estaEditando = false;
   constructor(private fb: FormBuilder,public dialog: MatDialog) { }
@@ -63,4 +60,5 @@ export class FormCostoVariableGbftrecComponent implements OnInit {
   onSubmit() {
     this.estaEditando = true;
   }
+
 }
