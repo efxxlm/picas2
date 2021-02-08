@@ -90,7 +90,7 @@ namespace asivamosffie.api.Controllers
         }
 
        
-        [Route("GetContratacionByContratacionId")]
+        [Route("GetListContratacionObservacion")]
         [HttpGet]
         public async Task<Contratacion> GetListContratacionObservacion(int pContratacionId)
         {
