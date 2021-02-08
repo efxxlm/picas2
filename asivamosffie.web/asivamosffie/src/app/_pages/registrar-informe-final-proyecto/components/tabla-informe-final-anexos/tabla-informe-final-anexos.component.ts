@@ -132,7 +132,11 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
 
   onSubmit() {
     this.estaEditando = true;
-    this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+    if(this.addressForm !== undefined){
+      this.verificarInformeFinalEstadoCompleto(this.addressForm.value.informeFinalId);
+    }else{
+      this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+    }
   }
 
   select(informeFinalAnexo) {
@@ -141,6 +145,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
       informeFinalId:  [informeFinalAnexo.informeFinalId, Validators.required],
       informeFinalInterventoriaId:  [informeFinalAnexo.informeFinalInterventoriaId, Validators.required],
       informeFinalListaChequeoId:  [informeFinalAnexo.informeFinalListaChequeoId, Validators.required],
+      posicion:  [informeFinalAnexo.posicion, Validators.required],
     });
     this.createInformeFinalInterventoria(this.addressForm.value);
   }
@@ -149,6 +154,19 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     this.registrarInformeFinalProyectoService.createEditInformeFinalInterventoria(informeFinalInterventoria)
     .subscribe((respuesta: Respuesta) => {
         console.log(respuesta.message);
+        return;
+      },
+      err => {
+        console.log( err );
+      });
+  }
+
+  verificarInformeFinalEstadoCompleto( informeFinalId: number ) {
+    this.registrarInformeFinalProyectoService.verificarInformeFinalEstadoCompleto(informeFinalId)
+    .subscribe(respuesta => {
+        if(respuesta === true){
+          this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+        }
         return;
       },
       err => {

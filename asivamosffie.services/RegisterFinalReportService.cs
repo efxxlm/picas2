@@ -141,10 +141,12 @@ namespace asivamosffie.services
             //Validación # 1
             if (informeFinal!= null)
             {
-                if (!informeFinal.RegistroCompleto)
+                if (!informeFinal.RegistroCompleto || informeFinal.EstadoInforme == ConstantCodigoEstadoInformeFinal.Con_informe_Registrado)
                 {
                     if (ListInformeTotalInterventoria.Count() < phrasesCount)
                     {
+                        informeFinal.EstadoInforme = ConstantCodigoEstadoInformeFinal.En_proceso_de_registro;
+                        informeFinal.RegistroCompleto = false;
                         return false;
                     }
                     else
@@ -153,10 +155,14 @@ namespace asivamosffie.services
                         InformeFinalInterventoria existe_cumple_no_data = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == pInformeFinalId && r.CalificacionCodigo == ConstantCodigoCalificacionInformeFinal.Cumple && (r.InformeFinalAnexoId == null || r.InformeFinalAnexoId == 0)).FirstOrDefault();
                         if (existe_no_cumple != null)
                         {
+                            informeFinal.EstadoInforme = ConstantCodigoEstadoInformeFinal.En_proceso_de_registro;
+                            informeFinal.RegistroCompleto = false;
                             return false;
                         }
                         if (existe_cumple_no_data != null)
                         {
+                            informeFinal.EstadoInforme = ConstantCodigoEstadoInformeFinal.En_proceso_de_registro;
+                            informeFinal.RegistroCompleto = false;
                             return false;
                         }
                     }
@@ -165,6 +171,8 @@ namespace asivamosffie.services
                     InformeFinalInterventoria no_actualizada = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == pInformeFinalId && r.ObservacionNueva == true).FirstOrDefault();
                     if (no_actualizada == null)
                     {
+                        informeFinal.EstadoInforme = ConstantCodigoEstadoInformeFinal.En_proceso_de_registro;
+                        informeFinal.RegistroCompleto = false;
                         return false;
                     }
                 }
@@ -299,8 +307,8 @@ namespace asivamosffie.services
                             InformeFinalInterventoriaObservacionesId = informeFinalInterventoriaObservacionesId,
                             TieneObservacionNoCumple = tieneObservacionNoCumple,
                             CalificacionCodigoString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.CalificacionCodigo, 151),
-                            estadoInformeFinal = informeFinal.EstadoInforme
-
+                            EstadoInformeFinal = informeFinal.EstadoInforme,
+                            posicion = item.InformeFinalListaChequeo.Posicion
                         });
                     }
                 }
@@ -346,8 +354,8 @@ namespace asivamosffie.services
                                 InformeFinalInterventoriaObservacionesId = informeFinalInterventoriaObservacionesId,
                                 TieneObservacionNoCumple = tieneObservacionNoCumple,
                                 CalificacionCodigoString = calificacionCodigoString,
-                                estadoInformeFinal = informeFinal.EstadoInforme
-
+                                EstadoInformeFinal = informeFinal.EstadoInforme,
+                                posicion = item.Posicion
                             });
                         }
                         else
@@ -364,7 +372,8 @@ namespace asivamosffie.services
                                 InformeFinalInterventoriaObservacionesId = 0,
                                 TieneObservacionNoCumple = false,
                                 CalificacionCodigoString = string.Empty,
-                                estadoInformeFinal = informeFinal.EstadoInforme
+                                EstadoInformeFinal = informeFinal.EstadoInforme,
+                                Posicion = item.Posicion
                             });
                         }
                     }
@@ -411,9 +420,9 @@ namespace asivamosffie.services
                         CreateEdit = "NO SE PUDO ACTUALIZAR EL INFORME FINAL INTERVENTORIA";
                     }
                 }
-                await VerificarInformeFinalEstadoCompleto(pInformeFinalInterventoriaId.InformeFinalId);
-
                 _context.SaveChanges();
+
+                await VerificarInformeFinalEstadoCompleto(pInformeFinalInterventoriaId.InformeFinalId);
                 return
                 new Respuesta
                 {
