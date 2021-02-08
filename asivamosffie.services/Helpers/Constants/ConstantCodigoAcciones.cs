@@ -244,13 +244,14 @@
         //4.1.7 Registrar y validar requisitos de pago
         public const string Crear_Editar_Solicitud_De_Pago = "184";
         public const string Eliminar_Criterio_Pago = "185";
-        public const string Eliminar_Criterio_Proyecto = "186"; 
+        public const string Eliminar_Criterio_Proyecto = "186";
         public const string Eliminar_Llave_Criterio_Proyecto = "187";
         public const string Eliminar_Solicitud_Pago = "188";
-        public const string Eliminar_Descuento = "189";  
+        public const string Eliminar_Descuento = "189";
         public const string Crear_Actualizar_Solicitud_Pago_Observacion = "190";
         public const string Cambiar_Estado_Solicitud_Pago = "204";
-
+        public const string Devolver_Solicitud_Pago = "205";
+        	
 
         //4.3.3 Generar Orden Giro
         public const string Crear_Editar_Orden_Giro = "201";

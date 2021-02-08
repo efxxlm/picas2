@@ -61,6 +61,13 @@ namespace asivamosffie.api.Controllers
         {
             return Ok(await _registerValidatePaymentRequierementsService.DeleteSolicitudPago(pSolicitudPagoId, HttpContext.User.FindFirst("User").Value));
         }
+         
+        [HttpPost]
+        [Route("ReturnSolicitdPago")]
+        public async Task<IActionResult> ReturnSolicitdPago([FromQuery] SolicitudPago pSolicitudPago)
+        { 
+            return Ok(await _registerValidatePaymentRequierementsService.ReturnSolicitdPago(pSolicitudPago));
+        }
 
         [HttpPost]
         [Route("DeleteSolicitudPagoFaseFacturaDescuento")]

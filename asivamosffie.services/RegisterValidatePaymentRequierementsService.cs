@@ -161,18 +161,18 @@ namespace asivamosffie.services
                  .Include(r => r.SolicitudPago)
                     .ThenInclude(r => r.SolicitudPagoCargarFormaPago)
                  .Include(c => c.Contratacion)
-                    .ThenInclude(c=> c.ContratacionProyecto)
-                        .ThenInclude(t=> t.ContratacionProyectoAportante)
+                    .ThenInclude(c => c.ContratacionProyecto)
+                        .ThenInclude(t => t.ContratacionProyectoAportante)
                             .ThenInclude(t => t.CofinanciacionAportante)
                                .ThenInclude(t => t.FuenteFinanciacion)
-                                  .ThenInclude(t => t.CuentaBancaria) 
+                                  .ThenInclude(t => t.CuentaBancaria)
                  .Include(c => c.Contratacion)
                     .ThenInclude(c => c.ContratacionProyecto)
                         .ThenInclude(t => t.ContratacionProyectoAportante)
                             .ThenInclude(t => t.ComponenteAportante)
                    .Include(c => c.Contratacion)
                     .ThenInclude(c => c.ContratacionProyecto)
-                       
+
                  .FirstOrDefaultAsync();
 
             if (pSolicitudPago > 0)
@@ -274,19 +274,19 @@ namespace asivamosffie.services
                                                     PlazoDias = c.PlazoFase1PreDias + c.PlazoFase2ConstruccionDias,
                                                     PlazoMeses = c.PlazoFase1PreMeses + c.PlazoFase2ConstruccionMeses
                                                 }).FirstOrDefault();
-        
+
             var resultProyectos = await _context.VProyectosXcontrato
                                                                     .Where(p => p.ContratoId == pContratoId)
                                                                                                             .Select(p => new
                                                                                                             {
-                                                                                                                            p.LlaveMen,
-                                                                                                                            p.TipoIntervencion,
-                                                                                                                            p.Departamento,
-                                                                                                                            p.Municipio,
-                                                                                                                            p.InstitucionEducativa,
-                                                                                                                            p.Sede,
-                                                                                                                            p.ContratacionProyectoId,
-                                                                                                                            p.ValorTotal
+                                                                                                                p.LlaveMen,
+                                                                                                                p.TipoIntervencion,
+                                                                                                                p.Departamento,
+                                                                                                                p.Municipio,
+                                                                                                                p.InstitucionEducativa,
+                                                                                                                p.Sede,
+                                                                                                                p.ContratacionProyectoId,
+                                                                                                                p.ValorTotal
                                                                                                             }).ToListAsync();
             dynamics.Add(resultContrato);
             dynamics.Add(resultProyectos);
@@ -400,6 +400,48 @@ namespace asivamosffie.services
                   });
         }
 
+
+        public async Task<Respuesta> ReturnSolicitdPago(SolicitudPago pSolicitudPago)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Devolver_Solicitud_Pago, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            { 
+                await _context.Set<SolicitudPago>()
+                      .Where(s => s.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
+                      .UpdateAsync(r => new SolicitudPago()
+                      {
+                          UsuarioModificacion = pSolicitudPago.UsuarioModificacion,
+                          FechaModificacion = pSolicitudPago.FechaModificacion,
+                          EstadoCodigo = pSolicitudPago.EstadoCodigo,
+                          FechaRadicacionSacContratista = pSolicitudPago.FechaRadicacionSacContratista,
+                          NumeroRadicacionSacContratista = pSolicitudPago.NumeroRadicacionSacContratista 
+                      });
+
+
+                return
+                     new Respuesta
+                     {
+                         IsSuccessful = true,
+                         IsException = false,
+                         IsValidation = false,
+                         Code = GeneralCodes.OperacionExitosa,
+                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.OperacionExitosa, idAccion, pSolicitudPago.UsuarioCreacion, "DEVOLVER SOLICITUD DE PAGO")
+                     };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.Error, idAccion, pSolicitudPago.UsuarioCreacion, ex.InnerException.ToString())
+                    };
+            }
+        }
 
         public async Task<Respuesta> DeleteSolicitudPagoFaseFacturaDescuento(int pSolicitudPagoFaseFacturaDescuentoId, string pUsuarioModificacion)
         {

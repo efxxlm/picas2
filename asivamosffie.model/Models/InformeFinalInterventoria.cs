@@ -23,6 +23,7 @@ namespace asivamosffie.model.Models
         public DateTime? FechaAprobacion { get; set; }
         public bool? TieneObservacionSupervisor { get; set; }
         public string ValidacionCodigo { get; set; }
+        public bool? ObservacionNueva { get; set; }
 
         public virtual InformeFinal InformeFinal { get; set; }
         public virtual InformeFinalAnexo InformeFinalAnexo { get; set; }

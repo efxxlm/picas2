@@ -32,6 +32,8 @@ namespace asivamosffie.model.Models
         public bool? RegistroCompletoCoordinador { get; set; }
         public int? OrdenGiroId { get; set; }
         public DateTime? FechaAprobacionFinanciera { get; set; }
+        public DateTime? FechaRadicacionSacContratista { get; set; }
+        public string NumeroRadicacionSacContratista { get; set; }
 
         public virtual ContratacionProyecto ContratacionProyecto { get; set; }
         public virtual Contrato Contrato { get; set; }
