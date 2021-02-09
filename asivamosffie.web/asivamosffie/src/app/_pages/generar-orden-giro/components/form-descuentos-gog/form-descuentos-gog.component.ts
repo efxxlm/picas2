@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormBuilder, FormArray } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-form-descuentos-gog',
@@ -51,7 +53,7 @@ export class FormDescuentosGogComponent implements OnInit {
   obj2: boolean;
   objD1: boolean;
   objD2: boolean;
-  constructor(public common: CommonService, private fb: FormBuilder) {
+  constructor(public dialog: MatDialog, public common: CommonService, private fb: FormBuilder) {
     this.common.criteriosDePago().subscribe((data0: any) => {
       this.listaCriterios = data0;
     });
@@ -90,6 +92,21 @@ export class FormDescuentosGogComponent implements OnInit {
     const ej2 = values.find(value => value.codigo == "2");
     ej1 ? this.objD1 = true : this.objD1 = false;
     ej2 ? this.objD2 = true : this.objD2 = false;
+  }
+  eliminarCriterio(){
+    this.openDialogSiNo("","¿Está seguro de eliminar esta información?",0);
+  }
+  openDialogSiNo(modalTitle: string, modalText: string, e: number) {
+    let dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if (result === true) {
+       console.log("eliminacion funcionando")
+      }
+    });
   }
   onSubmit() {
 

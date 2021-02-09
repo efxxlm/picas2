@@ -56,8 +56,10 @@
               </div>
               <div class="col">
                 <mat-form-field class="select-width">
-                  <mat-select formControlName="conceptoPago" required>
-                    <mat-option *ngFor="let conceptoPago of criterio.get( 'conceptosDePago' ).value" [value]="conceptoPago">
+                  <mat-select formControlName="conceptoPago" multiple required
+                    (selectionChange)="getvaluesConcepto($event.value)">
+                    <mat-option *ngFor="let conceptoPago of criterio.get( 'conceptosDePago' ).value"
+                      [value]="conceptoPago">
                       {{ conceptoPago.nombre }}
                     </mat-option>
                   </mat-select>
@@ -66,12 +68,64 @@
             </div>
           </div>
         </div>
+        <div *ngIf="this.obj1 == true">
+          <mat-card-title class="header-card--text alineacion-titulos2" style="padding-left: 0em; margin-top: 0.5em;">
+            718100000002002-DEMOLICIONES
+          </mat-card-title>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left" for="valorFacturado">
+                    Valor facturado al concepto
+                  </label>
+                </div>
+                <div class="col d-flex">
+                  <mat-form-field class="full-width">
+                    <input matInput #valorFacturado currencyMask maxlength="20" required
+                      formControlName="valorFacturado" (keypress)="validateNumberKeypress($event)"
+                      onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                      [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
+                  </mat-form-field>
+                  <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                    matTooltipClass="info-tooltip">{{20 - valorFacturado.value.length}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="this.obj2 == true">
+          <mat-card-title class="header-card--text alineacion-titulos2" style="padding-left: 0em; margin-top: 0.5em;">
+            654231654879877-CONSTRUCCION
+          </mat-card-title>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left" for="valorFacturado">
+                    Valor facturado al concepto
+                  </label>
+                </div>
+                <div class="col d-flex">
+                  <mat-form-field class="full-width">
+                    <input matInput #valorFacturado currencyMask maxlength="20" required
+                      formControlName="valorFacturado" (keypress)="validateNumberKeypress($event)"
+                      onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                      [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
+                  </mat-form-field>
+                  <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                    matTooltipClass="info-tooltip">{{20 - valorFacturado.value.length}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="row">
           <div class="col-md-8">
-            <div class="row">
+            <div class="row" style=" margin-top: 10px;">
               <div class="pr-1">
-                <label class="label-left" for="valorFacturado">
-                  Valor facturado al concepto
+                <label class="header-card--text" for="valorFacturado" style="padding-left: 0em;">
+                  <b> Valor total de los conceptos</b>
                 </label>
               </div>
               <div class="col d-flex">
@@ -90,7 +144,8 @@
       </mat-card-content>
     </mat-card>
     <div class="text-right">
-      <button mat-button color="warn" type="button" class="btn-eliminar" (click)="deleteCriterio( i, criterio.get( 'solicitudPagoFaseCriterioId' ).value, criterio.get( 'tipoCriterioCodigo' ).value )">
+      <button mat-button color="warn" type="button" class="btn-eliminar"
+        (click)="deleteCriterio( i, criterio.get( 'solicitudPagoFaseCriterioId' ).value, criterio.get( 'tipoCriterioCodigo' ).value )">
         <img src="assets/img/icon/menos.svg">
         Eliminar criterio
       </button>

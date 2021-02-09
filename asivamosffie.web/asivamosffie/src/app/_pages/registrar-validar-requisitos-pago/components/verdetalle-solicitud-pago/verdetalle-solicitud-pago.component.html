@@ -163,10 +163,15 @@
                                                     {{ criterio.get( 'nombreCriterio' ).value }}
                                                 </mat-card-title>
                                             </mat-card-header>
+                                            <!--Hay variables quemadas porque se tuvo que hacer un ajuste en el CU-->
                                             <mat-card-content style="text-align: left;">
                                                 <p><strong>Tipo de pago:</strong> {{ criterio.get( 'tipoPago' ).value.nombre }} </p>
                                                 <p><strong>Concepto de pago para el criterio:</strong> {{ criterio.get( 'conceptoPago' ).value.nombre }} </p>
+                                                <mat-card-title class="header-card--text alineacion-titulos2" style="padding-left: 0em; margin-top: 0.7em;">
+                                                    {{ criterio.get( 'conceptoPago' ).value.nombre }}
+                                                </mat-card-title>
                                                 <p><strong>Valor facturado al concepto:</strong> $ {{ criterio.get( 'valorFacturado' ).value | currency:' ':'symbol-narrow':'.0-0' }} </p>
+                                                <p style="margin-top: 1em;"><strong style="font-size: 16px;">Valor total de los conceptos:</strong> $7.000.000</p>
                                             </mat-card-content>
                                         </mat-card>
                                     </div>

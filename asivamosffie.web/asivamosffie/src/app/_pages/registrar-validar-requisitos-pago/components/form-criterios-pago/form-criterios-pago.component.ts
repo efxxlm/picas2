@@ -24,6 +24,7 @@ export class FormCriteriosPagoComponent implements OnInit {
     });
     criteriosArray: { codigo: string, nombre: string }[] = [];
     obj1: boolean;
+    obj2: boolean;
 
     get criterios() {
         return this.addressForm.get( 'criterios' ) as FormArray;
@@ -234,7 +235,13 @@ export class FormCriteriosPagoComponent implements OnInit {
             this.criterios.clear();
         }
     }
-
+    //Para efectos de maquetación getvaluesConcepto()
+    getvaluesConcepto( values:any[]){
+        const var1 = values.find(value => value.codigo == "1");
+        const var2 = values.find(value => value.codigo == "2");
+        var1 ? this.obj1 = true : this.obj1 = false;
+        var2 ? this.obj2 = true : this.obj2 = false;
+    }
     async getConceptosDePago( index: number, tipoPago: any ) {
         const conceptosDePago = await this.registrarPagosSvc.getConceptoPagoCriterioCodigoByTipoPagoCodigo( tipoPago.codigo );
         console.log( conceptosDePago );
