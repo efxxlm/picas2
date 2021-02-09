@@ -100,7 +100,7 @@ export class TablaInformeFinalProyectoComponent implements OnInit, AfterViewInit
     console.log("Antes: ",pProyectoId);
     this.registrarInformeFinalProyectoService.sendFinalReportToSupervision(pProyectoId)
       .subscribe(respuesta => {
-        this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>');
+        this.openDialog('', '<b>La información ha sido guardada correctamente.</b>');
         this.ngOnInit();
       });
   }
