@@ -6,7 +6,9 @@ import { DetalleOgGbftrecComponent } from "./components/detalle-og-gbftrec/detal
 import { GestionarBalanFinancTraslRecComponent } from "./components/gestionar-balan-financ-trasl-rec/gestionar-balan-financ-trasl-rec.component";
 import { RegistrarTrasladoGbftrecComponent } from "./components/registrar-traslado-gbftrec/registrar-traslado-gbftrec.component";
 import { ValidarBalanceGbftrecComponent } from "./components/validar-balance-gbftrec/validar-balance-gbftrec.component";
+import { VerdetalleTrasladoGbftrecComponent } from "./components/verdetalle-traslado-gbftrec/verdetalle-traslado-gbftrec.component";
 import { VerdetalleeditarBalanceGbftrecComponent } from "./components/verdetalleeditar-balance-gbftrec/verdetalleeditar-balance-gbftrec.component";
+import { VerdetalleeditarTrasladoGbftrecComponent } from "./components/verdetalleeditar-traslado-gbftrec/verdetalleeditar-traslado-gbftrec.component";
 export const customCurrencyMaskConfig = {
   align: "right",
   allowNegative: true,
@@ -46,6 +48,14 @@ const routes: Routes = [
   {
     path: 'registrarTraslado',
     component: RegistrarTrasladoGbftrecComponent
+  },
+  {
+    path: 'verDetalleEditarTraslado/:id',
+    component:VerdetalleeditarTrasladoGbftrecComponent
+  },
+  {
+    path: 'verDetalleTraslado/:id',
+    component:VerdetalleTrasladoGbftrecComponent
   }
 ];
 @NgModule({

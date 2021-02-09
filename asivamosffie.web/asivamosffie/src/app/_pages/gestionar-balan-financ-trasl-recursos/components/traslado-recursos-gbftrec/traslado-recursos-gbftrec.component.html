@@ -87,3 +87,4 @@
 <div class="text-center mb-3em mt-2em" *ngIf="addressForm.get('requiereTrasladoRecursos').value === true" >
     <a routerLink="/gestionarBalanceFinancieroTrasladoRecursos/registrarTraslado" mat-raised-button color="accent" class="btn-cargar-proyecto">Registrar traslado</a><br>  
 </div>
+<app-tabla-traslados-gbftrec *ngIf="addressForm.get('requiereTrasladoRecursos').value === true"></app-tabla-traslados-gbftrec>

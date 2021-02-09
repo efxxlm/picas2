@@ -1,1 +1,54 @@
-<p>verdetalleeditar-traslado-gbftrec works!</p>
+<section class="container text-center">
+    <div class="text-right">
+        <a routerLink="/gestionarBalanceFinancieroTrasladoRecursos/validarBalance/1" mat-button color="primary"
+            class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">Ver detalle/Editar Tras_001</h1>
+    <p class="info-sub-title">
+        <span>Llave MEN: <b>LL000000</b></span>
+        <span>Número de contrato de obra: <b>N801801</b></span>
+        <span>Número de contrato de interventoría: <b>A513513</b></span>
+    </p>
+    <mat-card class="shipping-card var-main-gris">
+        <mat-card-content align="left">
+            <p><strong>Tipo de intervención: </strong><em>Remodelación</em></p>
+            <p><strong>Institución Educativa: </strong><em>I.E Nuestra Señora Del Carmen</em></p>
+            <p><strong>Sede: </strong><em>Única Sede</em></p>
+            <p><strong>Departamento: </strong><em>Boyacá</em></p>
+            <p><strong>Municipio: </strong><em>Susacón</em></p>
+            <p><strong>Número DDP: </strong><em>DDP_0001</em></p>
+            <p><strong>Valor DDP: </strong><em>$100.000.000</em></p>
+            <p><strong>Justificación del traslado entre aportantes y fuentes del proyecto: </strong></p>
+            <p><em>Se requiere el traslados ya que el aportante Gobernación de Boyacá No cuenta con los recursos
+                    necesarios y seran solventados por la Alcaldía de
+                    Susacón</em></p>
+            <p><strong>Url con soporte: </strong><em>http//:onedrive/traslado0001</em></p>
+            <h2 class="card-subTitle">DRP</h2>
+            <div class="table-responsive">
+                <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+                    <ng-container matColumnDef="drp">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>DRP </th>
+                        <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.drp }}</b> </td>
+                    </ng-container>
+                    <ng-container matColumnDef="numDRP">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Número DRP </th>
+                        <td mat-cell *matCellDef="let element" align="center"> {{ element.numDRP }} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="valor">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor </th>
+                        <td mat-cell *matCellDef="let element" align="center"> {{ element.valor }} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="saldo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Saldo </th>
+                        <td mat-cell *matCellDef="let element" align="center"> {{ element.saldo }} </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+            </div>
+        </mat-card-content>
+    </mat-card>
+    <app-control-solicitudes-traslado-gbftrec></app-control-solicitudes-traslado-gbftrec>
+</section>
