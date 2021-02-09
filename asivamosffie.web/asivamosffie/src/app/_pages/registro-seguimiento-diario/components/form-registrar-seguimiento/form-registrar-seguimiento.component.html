@@ -89,7 +89,8 @@
                   <input matInput #cantidadPersonalOperativoProgramado type="number"
                     formControlName="cantidadPersonalOperativoProgramado" maxlength="3" min="1" max="999" required
                     (keypress)="validateNumberKeypress($event)"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                 </mat-form-field>
                 <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
                   matTooltipClass="info-tooltip">{{3 - cantidadPersonalOperativoProgramado.value.length}}</span>
@@ -111,7 +112,8 @@
                   <input matInput #cantidadPersonalOperativoTrabajando type="number"
                     formControlName="cantidadPersonalOperativoTrabajando" maxlength="3" min="1" max="999" required
                     (keypress)="validateNumberKeypress($event)"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                 </mat-form-field>
                 <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
                   matTooltipClass="info-tooltip">{{3 - cantidadPersonalOperativoTrabajando.value.length}}</span>
@@ -152,7 +154,8 @@
                 <mat-form-field class="full-width">
                   <input matInput #horasRetrasoPersonal type="number" formControlName="horasRetrasoPersonal"
                     maxlength="1" min="1" max="9" required (keypress)="validateNumberKeypress($event)"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                 </mat-form-field>
                 <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
                   matTooltipClass="info-tooltip">{{1 - horasRetrasoPersonal.value.length}}</span>
@@ -262,7 +265,8 @@
                 <mat-form-field class="full-width">
                   <input matInput #horasRetrasoMaterial type="number" formControlName="horasRetrasoMaterial"
                     maxlength="1" min="1" max="9" required (keypress)="validateNumberKeypress($event)"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                 </mat-form-field>
                 <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
                   matTooltipClass="info-tooltip">{{1 - horasRetrasoMaterial.value.length}}</span>
@@ -372,7 +376,8 @@
                 <mat-form-field class="full-width">
                   <input matInput #horasRetrasoEquipo type="number" formControlName="horasRetrasoEquipo"
                     maxlength="1" min="1" max="9" required (keypress)="validateNumberKeypress($event)"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                 </mat-form-field>
                 <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
                   matTooltipClass="info-tooltip">{{1 - horasRetrasoEquipo.value.length}}</span>
@@ -482,7 +487,8 @@
                 <mat-form-field class="full-width">
                   <input matInput #horasRetrasoProductividad type="number" formControlName="horasRetrasoProductividad"
                     maxlength="1" min="1" max="9" required (keypress)="validateNumberKeypress($event)"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                 </mat-form-field>
                 <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
                   matTooltipClass="info-tooltip">{{1 - horasRetrasoProductividad.value.length}}</span>

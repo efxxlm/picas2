@@ -37,6 +37,7 @@
               <mat-form-field class="full-width">
                 <input matInput formControlName="valorAportante" #valorAportante currencyMask required maxLength="20"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }">
               </mat-form-field>
               <span class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
@@ -131,6 +132,7 @@
                   <mat-form-field class="full-width">
                     <input matInput formControlName="valorUso" #valorUso currencyMask required maxLength="20"
                       onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                       [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }">
                   </mat-form-field>
                   <span class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"

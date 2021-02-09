@@ -34,6 +34,7 @@
                   max="99"
                   maxlength="2"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   required
                   formControlName="cuantasCotizaciones"
                   (keyup)="CambioNumeroCotizantes()"

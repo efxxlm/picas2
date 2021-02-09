@@ -4,6 +4,7 @@
         <div class="col d-flex">
             <mat-form-field class="w-70">
                 <input matInput (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 type="number" maxlength="2" formControlName="numeroContratos" required>
             </mat-form-field>
             <span class="contador">{{2 - formContratista.get( 'numeroContratos' ).value.toString().length}}</span>

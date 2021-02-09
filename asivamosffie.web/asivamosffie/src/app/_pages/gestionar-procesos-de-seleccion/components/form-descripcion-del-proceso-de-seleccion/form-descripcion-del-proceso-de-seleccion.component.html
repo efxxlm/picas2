@@ -346,6 +346,7 @@
               formControlName="cuantosGrupos"
               (keypress)="validateNumberKeypress($event)"
               onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               (keyup)="CambioNumeroAportantes()"
               required
             />
@@ -643,6 +644,7 @@
                     maxlength="2"
                     (keypress)="validateNumberKeypress($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     (keyup)="CambioNumeroMeses(i)"
                     formControlName="plazoMeses"
                     required

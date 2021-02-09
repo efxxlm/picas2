@@ -75,6 +75,7 @@
                                 <input matInput #valorFacturado currencyMask maxlength="20" required
                                     formControlName="valorFacturado" (keypress)="validateNumberKeypress($event)"
                                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                     [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                             </mat-form-field>
                             <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
@@ -134,6 +135,7 @@
                                 <input matInput #valorFacturadoConcepto currencyMask maxlength="20" required
                                     formControlName="valorFacturadoConcepto" (keypress)="validateNumberKeypress($event)"
                                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                     [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                             </mat-form-field>
                             <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"

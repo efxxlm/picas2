@@ -116,6 +116,7 @@
                                 <input matInput #cuantiaPerjuicios currencyMask maxlength="20"
                                     formControlName="cuantiaPerjuicios" (keypress)="validateNumberKeypress($event)"
                                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                     [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                             </mat-form-field>
                             <span class="contador">{{20 - cuantiaPerjuicios.value.length}}</span>
