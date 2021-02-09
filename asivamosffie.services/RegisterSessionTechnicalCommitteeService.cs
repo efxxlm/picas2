@@ -3447,6 +3447,7 @@ namespace asivamosffie.services
                     contratacionProyecto.EsReasignacion = true;
                     strPregunta_2 = ContenidoPregunta2 + ConstanStringRespuestasBool.SI;
 
+                    strPregunta_3 = ContenidoPregunta3 + (contratacionProyecto.EsAvanceobra != true ? "No" : "Si");
                 }
                 else
                 {
@@ -3483,7 +3484,9 @@ namespace asivamosffie.services
                 {
 
                     contratacionProyecto.RequiereLicencia = true;
-                    strPregunta_4 = ContenidoPregunta4 + ConstanStringRespuestasBool.SI;
+                    strPregunta_5 = ContenidoPregunta5 + ConstanStringRespuestasBool.SI;
+
+                    strPregunta_6 = ContenidoPregunta6 + (contratacionProyecto.LicenciaVigente != true ? "No" : "Si");
 
                     //strPregunta_4 = ContenidoPregunta4 + contratacionProyecto.PorcentajeAvanceObra;
 

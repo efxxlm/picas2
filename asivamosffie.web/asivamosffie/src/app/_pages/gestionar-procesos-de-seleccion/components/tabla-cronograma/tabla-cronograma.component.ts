@@ -81,6 +81,8 @@ export class TablaCronogramaComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.addressForm = this.fb.array([]);
+
     this.commonService.listaEtapaActualProceso().subscribe(result=>{
       this.listaetapaActualProceso=result; 
     });
@@ -152,7 +154,9 @@ export class TablaCronogramaComponent implements OnInit {
             /*if (nombreTipo)   proceso.procesoSeleccion.tipoProcesoNombre = nombreTipo.nombre;
             if (nombreEstado) proceso.procesoSeleccion.estadoProcesoSeleccionNombre = nombreEstado.nombre;
             if (nombreEtapa)  proceso.procesoSeleccion.etapaProcesoSeleccionNombre = nombreTipo.nombre;
-*/
+
+            */
+
             listaProcesos.push( {estadoDelSolicitud:nombreEstado.nombre,
               fechaSolicitud:proceso.fechaCreacion,
               id:{estadoActividadCodigo:proceso.estadoActividadCodigo,
@@ -170,6 +174,8 @@ export class TablaCronogramaComponent implements OnInit {
           });
           
           this.dataSource = new MatTableDataSource( listaProcesos );
+
+          console.log(listaProcesos)
 
           this.dataSource.sort = this.sort;
           this.dataSource.paginator = this.paginator;
@@ -256,24 +262,6 @@ export class TablaCronogramaComponent implements OnInit {
       if (respuesta.code == "200")
         this.openDialog("", respuesta.message,true);
     });
-
-    /*from(this.listaCronograma)
-      .pipe(mergeMap(cronograma => this.procesoSeleccionService.createEditarProcesoSeleccionCronogramaMonitoreo(cronograma)
-        .pipe(
-          tap()
-        )
-      ),
-        toArray())
-      .subscribe(respuesta => {
-        let res = respuesta[0] as Respuesta
-        if (res.code == "200")
-          this.openDialog("", res.message);
-        console.log(respuesta);
-
-        //jflorez deshabilito el modo visualización
-        //this.editMode.valor = false; 
-      })
-    */
   }
 
   openDialog(modalTitle: string, modalText: string,refrescar:boolean=false) {

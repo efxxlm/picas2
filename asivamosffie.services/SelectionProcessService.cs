@@ -46,9 +46,13 @@ namespace asivamosffie.services
                                             .Include(r => r.ProcesoSeleccionGrupo).Where(r => !(bool)r.Eliminado)
                                             .OrderByDescending(x => x.FechaCreacion)
                                             .ToListAsync();
+
+
+                List<Contratista> ListaContratistas = _context.Contratista.ToList();// Where(x => x.NumeroInvitacion == proceso.NumeroProceso).ToList();
+
                 foreach (var proceso in procesosSeleccion)
                 {
-                    proceso.ListaContratistas = _context.Contratista.Where(x => x.NumeroInvitacion == proceso.NumeroProceso).ToList();
+                    proceso.ListaContratistas = ListaContratistas.Where(x => x.NumeroInvitacion == proceso.NumeroProceso).ToList();
                 }
                 return procesosSeleccion;
             }
@@ -90,7 +94,7 @@ namespace asivamosffie.services
             ProcesoSeleccion ProcesoSeleccionAntiguo = null;
             try
             {
-
+                
                 if (string.IsNullOrEmpty(procesoSeleccion.ProcesoSeleccionId.ToString()) || procesoSeleccion.ProcesoSeleccionId == 0)
                 {
 
