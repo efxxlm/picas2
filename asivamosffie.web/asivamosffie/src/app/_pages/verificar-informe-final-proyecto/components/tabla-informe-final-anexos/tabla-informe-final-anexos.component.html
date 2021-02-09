@@ -1,145 +1,163 @@
-<section class="text-center">
+<div class="text-center">
+  <p class="info-container">
+    <span class="info-text sin-diligenciar">Sin diligenciar</span>
+    <span class="info-text en-proceso">En proceso</span>
+    <span class="info-text completo">Completo</span>
+  </p>
 
-  <div class="d-flex align-items-center info-text en-alertaLibre">
-    Seleccione si el item Cumple, No cumple o No aplica
-  </div>
-  
-  <div>
-    <div class="table-responsive">
-      <table mat-table [dataSource]="dataSource" matSort>
-        <!-- No Column -->
-        <ng-container matColumnDef="No">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>No.</th>
-          <td mat-cell *matCellDef="let element">
-            <b>{{ element.informeFinalListaChequeoId }}</b>
-          </td>
-        </ng-container>
-  
-        <!-- item Column -->
-        <ng-container matColumnDef="item">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Ítem</th>
-          <td mat-cell *matCellDef="let element">
-            {{ element.informeFinalListaChequeo.nombre }}
-          </td>
-        </ng-container>
-  
-        <!-- calificacionInterventoria Column -->
-        <ng-container matColumnDef="calificacionCodigoString">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Calificación interventoría</th>
-          <td mat-cell *matCellDef="let element">
-            {{ element.calificacionCodigoString }}
-          </td>
-        </ng-container>
-  
-        <!-- tipoAnexo Column -->
-        <ng-container matColumnDef="tipoAnexoString">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo de anexo</th>
-          <td mat-cell *matCellDef="let element">
-            <div *ngIf="element.calificacionCodigo === '1'">
-              {{ element.informeFinalAnexo.tipoAnexoString }}
-            </div>
-          </td>
-        </ng-container>
-  
-        <!-- Ubicacion Column -->
-        <ng-container matColumnDef="Ubicacion">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Ubicación (url/radicado)</th>
-          <td mat-cell *matCellDef="let element">
-            <div *ngIf="element.calificacionCodigo === '1'">
-              <!--Físico-->
-              <span *ngIf="element.informeFinalAnexo.tipoAnexo === '1'">{{ element.informeFinalAnexo.numRadicadoSac }} / {{ element.informeFinalAnexo.fechaRadicado | date:'dd/MM/yyyy'}} </span>
-              <!--Digital-->
-              <span *ngIf="element.informeFinalAnexo.tipoAnexo === '2'">{{ element.informeFinalAnexo.urlSoporte }}</span>
-            </div>
-          </td>
-        </ng-container>
-  
-        <!-- verificacion Column -->
-        <ng-container matColumnDef="validacionCodigo">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Verificación</th>
-          <td mat-cell *matCellDef="let element">
-            <section class="slect-table-contain mt-1em">
-              <mat-form-field class="select-width">
-                <mat-label *ngIf="element.validacionCodigo != null">{{ element.validacionCodigoString }}</mat-label>
-                <mat-select [(ngModel)]="element.validacionCodigo" (selectionChange)="select(element)" required>
-                  <mat-option *ngFor="let estado of estadoArray" [value]="estado.value">
-                    {{ estado.name }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-              <span class="icon-incompleto">
-                <img
-                  class="icon-incompleto--img"
-                  src="assets/img/icon/incompleto.svg"
-                  alt="este campo es requerido"
-                  [matTooltipPosition]="'above'"
-                  matTooltip="Debe ingresar la información en el campo para continuar"
-                  matTooltipClass="info-tooltip"
-                  *ngIf="element.validacionCodigo === '' && estaEditando"
-                />
-              </span>
-            </section>
-          </td>
-        </ng-container>
-  
-        <!-- Id Column -->
-        <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Gestionar</th>
-          <td mat-cell *matCellDef="let element">
-            <!--<button
-              *ngIf="element.verificacion === 'Cumple' || element.verificacion === 1"
-              mat-button
-              color="warn"
-              mat-raised-button
-              color="accent"
-              class="btn-table animatedOpacity"
-              type="button"
-            >
-              <span *ngIf="element.informeFinalAnexoId == null || element.informeFinalAnexoId == 0">
-                Tipo de documento
-              </span>
-              <span *ngIf="element.informeFinalAnexoId != null && element.informeFinalAnexoId > 0">
-                Ver detalle/ Editar
-              </span>
-            </button>-->
-            <button
-              *ngIf="element.validacionCodigo === '2'"
-              mat-button
-              color="warn"
-              mat-raised-button
-              color="accent"
-              class="btn-table animatedOpacity info-button min-w-11em"
-              [class.completo]="element.tieneObservacionNoCumple"
-              [class.sin-diligenciar]="!element.tieneObservacionNoCumple"
-              type="button"
-              (click)="openDialogObservaciones(element)"
-            >
-              <span *ngIf="element.tieneObservacionSupervisor == null || element.tieneObservacionSupervisor == false">
-                Observaciones
-              </span>
-              <span *ngIf="element.tieneObservacionSupervisor != null && element.tieneObservacionSupervisor == true">
-                Ver Observaciones
-              </span>
-            </button>
-          </td>
-        </ng-container>
-  
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-      </table>
-    </div>
-    <mat-paginator
-      #paginator
-      [length]="dataSource?.data.length"
-      [pageIndex]="0"
-      [pageSize]="5"
-      [pageSizeOptions]="[5, 10, 25, 100]"
-    ></mat-paginator>
-  </div>
-  
-  <div class="text-center">
-    <button mat-button color="warn" class="btn-guardar" (click)="onSubmit()">
-      <img src="assets/img/icon/guardar.svg" alt="Guardar" />
-    </button>
-  </div>
-</section>
+  <mat-accordion>
+    <mat-expansion-panel class="expansion-style">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title ngClass="expansion-style--title">
+          Informe final y anexos
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <section class="text-center">
+
+        <div class="d-flex align-items-center info-text en-alertaLibre">
+          Seleccione si el item Cumple, No cumple o No aplica
+        </div>
+        
+        <div>
+          <div class="table-responsive">
+            <table mat-table [dataSource]="dataSource" matSort>
+              <!-- No Column -->
+              <ng-container matColumnDef="No">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>No.</th>
+                <td mat-cell *matCellDef="let element">
+                  <b>{{ element.informeFinalListaChequeoId }}</b>
+                </td>
+              </ng-container>
+        
+              <!-- item Column -->
+              <ng-container matColumnDef="item">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Ítem</th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.informeFinalListaChequeo.nombre }}
+                </td>
+              </ng-container>
+        
+              <!-- calificacionInterventoria Column -->
+              <ng-container matColumnDef="calificacionCodigoString">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Calificación interventoría</th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.calificacionCodigoString }}
+                </td>
+              </ng-container>
+        
+              <!-- tipoAnexo Column -->
+              <ng-container matColumnDef="tipoAnexoString">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo de anexo</th>
+                <td mat-cell *matCellDef="let element">
+                  <div *ngIf="element.calificacionCodigo === '1'">
+                    {{ element.informeFinalAnexo.tipoAnexoString }}
+                  </div>
+                </td>
+              </ng-container>
+        
+              <!-- Ubicacion Column -->
+              <ng-container matColumnDef="Ubicacion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Ubicación (url/radicado)</th>
+                <td mat-cell *matCellDef="let element">
+                  <div *ngIf="element.calificacionCodigo === '1'">
+                    <!--Físico-->
+                    <span *ngIf="element.informeFinalAnexo.tipoAnexo === '1'">{{ element.informeFinalAnexo.numRadicadoSac }} / {{ element.informeFinalAnexo.fechaRadicado | date:'dd/MM/yyyy'}} </span>
+                    <!--Digital-->
+                    <span *ngIf="element.informeFinalAnexo.tipoAnexo === '2'">{{ element.informeFinalAnexo.urlSoporte }}</span>
+                  </div>
+                </td>
+              </ng-container>
+        
+              <!-- verificacion Column -->
+              <ng-container matColumnDef="validacionCodigo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Verificación</th>
+                <td mat-cell *matCellDef="let element">
+                  <section class="slect-table-contain mt-1em">
+                    <mat-form-field class="select-width">
+                      <mat-label *ngIf="element.validacionCodigo != null">{{ element.validacionCodigoString }}</mat-label>
+                      <mat-select [(ngModel)]="element.validacionCodigo" (selectionChange)="select(element)" required>
+                        <mat-option *ngFor="let estado of estadoArray" [value]="estado.value">
+                          {{ estado.name }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    <span class="icon-incompleto">
+                      <img
+                        class="icon-incompleto--img"
+                        src="assets/img/icon/incompleto.svg"
+                        alt="este campo es requerido"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Debe ingresar la información en el campo para continuar"
+                        matTooltipClass="info-tooltip"
+                        *ngIf="element.validacionCodigo === '' && estaEditando"
+                      />
+                    </span>
+                  </section>
+                </td>
+              </ng-container>
+        
+              <!-- Id Column -->
+              <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Gestionar</th>
+                <td mat-cell *matCellDef="let element">
+                  <!--<button
+                    *ngIf="element.verificacion === 'Cumple' || element.verificacion === 1"
+                    mat-button
+                    color="warn"
+                    mat-raised-button
+                    color="accent"
+                    class="btn-table animatedOpacity"
+                    type="button"
+                  >
+                    <span *ngIf="element.informeFinalAnexoId == null || element.informeFinalAnexoId == 0">
+                      Tipo de documento
+                    </span>
+                    <span *ngIf="element.informeFinalAnexoId != null && element.informeFinalAnexoId > 0">
+                      Ver detalle/ Editar
+                    </span>
+                  </button>-->
+                  <button
+                    *ngIf="element.validacionCodigo === '2'"
+                    mat-button
+                    color="warn"
+                    mat-raised-button
+                    color="accent"
+                    class="btn-table animatedOpacity info-button min-w-11em"
+                    [class.completo]="element.tieneObservacionNoCumple"
+                    [class.sin-diligenciar]="!element.tieneObservacionNoCumple"
+                    type="button"
+                    (click)="openDialogObservaciones(element)"
+                  >
+                    <span *ngIf="element.tieneObservacionSupervisor == null || element.tieneObservacionSupervisor == false">
+                      Observaciones
+                    </span>
+                    <span *ngIf="element.tieneObservacionSupervisor != null && element.tieneObservacionSupervisor == true">
+                      Ver Observaciones
+                    </span>
+                  </button>
+                </td>
+              </ng-container>
+        
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+          </div>
+          <mat-paginator
+            #paginator
+            [length]="dataSource?.data.length"
+            [pageIndex]="0"
+            [pageSize]="5"
+            [pageSizeOptions]="[5, 10, 25, 100]"
+          ></mat-paginator>
+        </div>
+        
+        <div class="text-center">
+          <button mat-button color="warn" class="btn-guardar" (click)="onSubmit()">
+            <img src="assets/img/icon/guardar.svg" alt="Guardar" />
+          </button>
+        </div>
+      </section>
+      
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
