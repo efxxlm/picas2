@@ -53,7 +53,7 @@ namespace asivamosffie.services
                 item.Proyecto.Sede = Sede;
                 if (String.IsNullOrEmpty(item.EstadoValidacion)|| item.EstadoValidacion == "0")
                 {
-                    item.EstadoValidacionString = "Sin validación";
+                    item.EstadoValidacionString = "Sin verificación";
                 }
                 else
                 {
@@ -475,7 +475,7 @@ namespace asivamosffie.services
             {
                 return null;
             }
-             return await _context.InformeFinalInterventoriaObservaciones.Where(r => r.InformeFinalInterventoriaId == pInformeFinalInterventoriaId).OrderByDescending(r => r.FechaCreacion).FirstOrDefaultAsync();
+             return await _context.InformeFinalInterventoriaObservaciones.Where(r => r.InformeFinalInterventoriaId == pInformeFinalInterventoriaId && r.EsSupervision == true).OrderByDescending(r => r.FechaCreacion).FirstOrDefaultAsync();
         }
     }
 }
