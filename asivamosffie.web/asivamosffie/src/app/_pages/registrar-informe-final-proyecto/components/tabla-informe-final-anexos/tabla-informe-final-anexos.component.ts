@@ -156,6 +156,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     this.registrarInformeFinalProyectoService.createEditInformeFinalInterventoria(informeFinalInterventoria)
     .subscribe((respuesta: Respuesta) => {
         console.log(respuesta.message);
+        this.ngOnInit();
         return;
       },
       err => {
