@@ -54,7 +54,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<ControversiaActuacionMesaSeguimiento> ControversiaActuacionMesaSeguimiento { get; set; }
         public virtual DbSet<ControversiaContractual> ControversiaContractual { get; set; }
         public virtual DbSet<ControversiaMotivo> ControversiaMotivo { get; set; }
-        public virtual DbSet<CriterioCodigoTipoPagoCodigo> CriterioCodigoTipoPagoCodigo { get; set; }
+        public virtual DbSet<CriterioTipoPago> CriterioTipoPago { get; set; }
         public virtual DbSet<CronogramaSeguimiento> CronogramaSeguimiento { get; set; }
         public virtual DbSet<CuentaBancaria> CuentaBancaria { get; set; }
         public virtual DbSet<DefensaJudicial> DefensaJudicial { get; set; }
@@ -71,7 +71,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<FaseComponenteUso> FaseComponenteUso { get; set; }
         public virtual DbSet<FichaEstudio> FichaEstudio { get; set; }
         public virtual DbSet<FlujoInversion> FlujoInversion { get; set; }
-        public virtual DbSet<FormaPagoCodigoCriterioPagoCodigo> FormaPagoCodigoCriterioPagoCodigo { get; set; }
+        public virtual DbSet<FormaPagoCriterioPago> FormaPagoCriterioPago { get; set; }
         public virtual DbSet<FuenteFinanciacion> FuenteFinanciacion { get; set; }
         public virtual DbSet<GestionFuenteFinanciacion> GestionFuenteFinanciacion { get; set; }
         public virtual DbSet<GestionObraCalidadEnsayoLaboratorio> GestionObraCalidadEnsayoLaboratorio { get; set; }
@@ -191,7 +191,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<TemporalProyecto> TemporalProyecto { get; set; }
         public virtual DbSet<TipoActividadGestionObra> TipoActividadGestionObra { get; set; }
         public virtual DbSet<TipoDominio> TipoDominio { get; set; }
-        public virtual DbSet<TipoPagoCodigoConceptoPagoCriterioCodigo> TipoPagoCodigoConceptoPagoCriterioCodigo { get; set; }
+        public virtual DbSet<TipoPagoConceptoPagoCriterio> TipoPagoConceptoPagoCriterio { get; set; }
         public virtual DbSet<Usuario> Usuario { get; set; }
         public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
         public virtual DbSet<VGestionarGarantiasPolizas> VGestionarGarantiasPolizas { get; set; }
@@ -1884,8 +1884,11 @@ namespace asivamosffie.model.Models
                     .HasConstraintName("FK_ControversiaMotivo_ControversiaContractual");
             });
 
-            modelBuilder.Entity<CriterioCodigoTipoPagoCodigo>(entity =>
+            modelBuilder.Entity<CriterioTipoPago>(entity =>
             {
+                entity.HasKey(e => e.CriterioCodigoTipoPagoCodigoId)
+                    .HasName("PK__Criterio__218FBC9DE3818948");
+
                 entity.Property(e => e.CriterioCodigo)
                     .IsRequired()
                     .HasMaxLength(2)
@@ -2252,9 +2255,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaSolicitud).HasColumnType("datetime");
 
-                entity.Property(e => e.LimitacionEspecial)
-                    .HasMaxLength(1000)
-                    .IsUnicode(false);
+                entity.Property(e => e.LimitacionEspecial).HasMaxLength(4000);
 
                 entity.Property(e => e.NumeroContrato)
                     .HasMaxLength(10)
@@ -2279,9 +2280,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Objeto)
-                    .HasMaxLength(2000)
-                    .IsUnicode(false);
+                entity.Property(e => e.Objeto).HasMaxLength(4000);
 
                 entity.Property(e => e.OpcionContratarCodigo)
                     .HasMaxLength(100)
@@ -2301,7 +2300,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.UrlSoporte).HasMaxLength(1000);
+                entity.Property(e => e.UrlSoporte).HasMaxLength(3000);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
@@ -2621,8 +2620,11 @@ namespace asivamosffie.model.Models
                     .HasConstraintName("FK_FlujoInversion_SeguimientoSemanal");
             });
 
-            modelBuilder.Entity<FormaPagoCodigoCriterioPagoCodigo>(entity =>
+            modelBuilder.Entity<FormaPagoCriterioPago>(entity =>
             {
+                entity.HasKey(e => e.FormaPagoCodigoCriterioPagoCodigoId)
+                    .HasName("PK__FormaPag__DFCDB1CEC4ACB432");
+
                 entity.Property(e => e.CriterioPagoCodigo)
                     .IsRequired()
                     .HasMaxLength(2)
@@ -3973,10 +3975,6 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.EtapaProcesoSeleccionCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.EvaluacionDescripcion)
-                    .HasMaxLength(4000)
                     .IsUnicode(false);
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
@@ -6695,8 +6693,11 @@ namespace asivamosffie.model.Models
                     .HasComment("Usuario que realizo la modificación de los datos no de auditoria");
             });
 
-            modelBuilder.Entity<TipoPagoCodigoConceptoPagoCriterioCodigo>(entity =>
+            modelBuilder.Entity<TipoPagoConceptoPagoCriterio>(entity =>
             {
+                entity.HasKey(e => e.TipoPagoCodigoConceptoPagoCriterioCodigoId)
+                    .HasName("PK__TipoPago__3164A8D53DE1BDFB");
+
                 entity.Property(e => e.ConceptoPagoCriterioCodigo)
                     .IsRequired()
                     .HasMaxLength(2)
