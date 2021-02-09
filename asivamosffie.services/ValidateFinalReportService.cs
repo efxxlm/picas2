@@ -33,7 +33,7 @@ namespace asivamosffie.services
         public async Task<List<InformeFinal>> GetListInformeFinal()
         {
             List<InformeFinal> list = await _context.InformeFinal
-                            .Where(r=> r.EstadoInforme != ConstantCodigoEstadoInformeFinal.En_proceso_de_registro)
+                            .Where(r=> r.EstadoInforme == ConstantCodigoEstadoInformeFinal.Con_informe_enviado_para_validación)
                             .Include(r=> r.Proyecto)
                                 .ThenInclude(r => r.InstitucionEducativa)
                             .ToListAsync();
@@ -51,7 +51,14 @@ namespace asivamosffie.services
                 item.Proyecto.DepartamentoObj = ListLocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
                 item.Proyecto.tipoIntervencionString = TipoIntervencion.Where(r => r.Codigo == item.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
                 item.Proyecto.Sede = Sede;
-                item.EstadoValidacionString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.EstadoValidacion, 160);
+                if (String.IsNullOrEmpty(item.EstadoValidacion)|| item.EstadoValidacion == "0")
+                {
+                    item.EstadoValidacionString = "Sin validación";
+                }
+                else
+                {
+                    item.EstadoValidacionString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.EstadoValidacion, 160);
+                }
             }
             return list;
         }
