@@ -145,7 +145,7 @@
     </span>
     <span
       class="contador miles"
-      *ngIf="addressForm.get('justificacion').value == null"
+      *ngIf="!addressForm.get('justificacion').value"
       [matTooltipPosition]="'above'"
       matTooltip="Registre aquí la justificación del proceso de selección"
       matTooltipClass="info-tooltip"
@@ -202,7 +202,7 @@
     </span>
     <span
       class="contador miles"
-      *ngIf="addressForm.get('criterios').value === null"
+      *ngIf="!addressForm.get('criterios').value"
       [matTooltipPosition]="'above'"
       matTooltip="Registre aquí los criterios para la selección del proceso"
       matTooltipClass="info-tooltip"
@@ -760,7 +760,7 @@
                       <span
                         class="contador mt-1em"
                         *ngIf="
-                          cronograma.get('descripcion').value === null || cronograma.get('descripcion').value == null
+                          !cronograma.get('descripcion').value || cronograma.get('descripcion').value == null
                         "
                         [matTooltipPosition]="'above'"
                         matTooltip="Registre aquí las descripción de la actividad"

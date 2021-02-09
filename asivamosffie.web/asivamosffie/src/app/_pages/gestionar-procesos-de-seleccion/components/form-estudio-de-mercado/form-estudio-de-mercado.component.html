@@ -196,7 +196,7 @@
                 <div class="d-flex align-items-center mt-3em">
                   <span
                     class="contador miles"
-                    *ngIf="cotizacion.get('descripcion').value !== null"
+                    *ngIf="cotizacion.get('descripcion').value"
                     [matTooltipPosition]="'above'"
                     matTooltip="Registre la descripción del proceso que desarrolló para adelantar su estudio de mercado"
                     matTooltipClass="info-tooltip"
@@ -210,7 +210,7 @@
                   </span>
                   <span
                     class="contador miles"
-                    *ngIf="cotizacion.get('descripcion').value === null"
+                    *ngIf="!cotizacion.get('descripcion').value"
                     [matTooltipPosition]="'above'"
                     matTooltip="Registre la descripción del proceso que desarrolló para adelantar su estudio de mercado"
                     matTooltipClass="info-tooltip"

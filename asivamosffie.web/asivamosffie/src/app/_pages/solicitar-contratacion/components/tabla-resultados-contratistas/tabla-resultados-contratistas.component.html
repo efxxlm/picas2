@@ -19,7 +19,20 @@
                     <input matInput type="text" [formControl]="numeroDocumento" required>
                 </mat-form-field>
             </div>
-
+            <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
+                  *ngIf="
+                    (numeroDocumento.invalid && numeroDocumento.touched) ||
+                    (numeroDocumento.invalid && edicion)
+                  "
+                />
+            </span>
         </div>
         <div class="row mt-1em">
             <div class="pr-1">
@@ -30,6 +43,20 @@
                     <input matInput type="text" [formControl]="nombreContratista"  required>
                 </mat-form-field>
             </div>
+            <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
+                  *ngIf="
+                    (nombreContratista.invalid && nombreContratista.touched) ||
+                    (nombreContratista.invalid && edicion)
+                  "
+                />
+              </span>
             <button mat-button color="primary" class="btn-guardar guardar-transform" type="submit" (click)="buscar()" >
                 <img src="assets/img/icon/lupa.svg" alt="Regresar" > <strong>Buscar</strong>
             </button>
