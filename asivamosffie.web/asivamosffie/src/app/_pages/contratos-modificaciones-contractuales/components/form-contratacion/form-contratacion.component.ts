@@ -3,7 +3,7 @@ import { Component, Inject, Input, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CommonService } from 'src/app/core/_services/common/common.service';
+import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { ContratosModificacionesContractualesService } from '../../../../core/_services/contratos-modificaciones-contractuales/contratos-modificaciones-contractuales.service';
 
@@ -22,6 +22,7 @@ export class FormContratacionComponent implements OnInit {
     firmado: '6'
   }
   contratacion: any;
+  modalidadContratoArray: Dominio[] = [];
   fechaTramite: Date = new Date();
 
   constructor ( private fb: FormBuilder,
@@ -79,6 +80,7 @@ export class FormContratacionComponent implements OnInit {
               rutaDocumento = null;
             };
             console.log( resp.contrato[0] );
+            this.modalidadContratoArray = modalidadContrato;
             this.form.reset({
               numeroContrato: resp.contrato[0].numeroContrato || '',
               modalidadContrato: resp.contrato[0].modalidadCodigo !== undefined ? modalidadContrato.filter( modalidad => modalidad.codigo === resp.contrato[0].modalidadCodigo )[0].codigo : null,
@@ -95,6 +97,13 @@ export class FormContratacionComponent implements OnInit {
         } );
       } );
   };
+
+  getModalidadContrato( modalidadCodigo: string ) {
+    if ( this.modalidadContratoArray.length > 0 ) {
+        const modalidad = this.modalidadContratoArray.filter( modalidad => modalidad.codigo === modalidadCodigo );
+        return modalidad[0].nombre;
+    }
+  }
 
   openDialog (modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {

@@ -135,21 +135,16 @@
                 [modules]="config"
                 (onContentChanged)="maxLength($event, 1000)"
                 [(ngModel)]="perfil['verificarObservacion']"
+                #observaciones
                 required
               >
               </quill-editor>
             </div>
-            <span
-              class="contador miles"
-              *ngIf="perfil['verificarObservacion'] !== null && perfil['verificarObservacion'].length > 0"
-            >
-              {{ 1000 - textoLimpio(perfil['verificarObservacion']) }}
+            <span class="contador miles" *ngIf="perfil['verificarObservacion'] !== null">
+              {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
             </span>
-            <span
-              class="contador miles"
-              *ngIf="perfil['verificarObservacion'] === null || perfil['verificarObservacion'].length === 0"
-            >
-              1000
+            <span class="contador miles" *ngIf="perfil['verificarObservacion'] === null">
+                1000
             </span>
             <span class="icon-incompleto">
               <img

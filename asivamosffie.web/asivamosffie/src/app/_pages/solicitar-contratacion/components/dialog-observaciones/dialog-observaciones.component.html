@@ -2,13 +2,13 @@
   <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
 </button>
 
-<div class="text-center">
+<div class="text-center" *ngIf="contratacionProyecto !== undefined">
   <h1 class="title-menu--h1" style="margin-bottom: 1em;">
     Observaciones de la solicitud {{ data.numeroSolicitud }}
   </h1>
 
   <mat-accordion>
-    <mat-expansion-panel class="expansion-style" *ngFor="let contratacion of data.contratacionProyecto">
+    <mat-expansion-panel class="expansion-style" *ngFor="let contratacion of contratacionProyecto">
         <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title">
                 {{ contratacion.proyecto.llaveMen }} - {{ contratacion.proyecto.institucionEducativa.nombre }} - {{ contratacion.proyecto.sede.nombre }}
@@ -27,7 +27,7 @@
           <mat-card class="shipping-card w-80" *ngFor="let observacionesProyecto of contratacion.sesionSolicitudObservacionProyecto; index as i">
             <mat-card-content>
         
-              <section [innerHTML]="innerObservacion( observacionesProyecto.observacion )" align="left" class="padding-section">
+              <section [innerHTML]="observacionesProyecto.observacion" align="left" class="padding-section">
               </section>
         
             </mat-card-content>

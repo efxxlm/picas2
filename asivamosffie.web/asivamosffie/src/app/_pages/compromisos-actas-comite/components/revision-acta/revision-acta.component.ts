@@ -177,11 +177,14 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
   aprobarActa(comiteTecnicoId) {
     //Al aprobar acta redirige al componente principal
     this.compromisoSvc.aprobarActa(comiteTecnicoId)
-      .subscribe((resp: any) => {
-        this.seRealizoPeticion = true;
-        this.openDialog('', `<b>${resp.message}</b>`);
-        this.routes.navigate(['/compromisosActasComite']);
-      })
+      .subscribe(
+        response => {
+          this.seRealizoPeticion = true;
+          this.openDialog('', `<b>${response.message}</b>`);
+          this.routes.navigate(['/compromisosActasComite']);
+        },
+        err => this.openDialog('', `<b>${err.message}</b>`)
+      )
   };
 
   //Descargar acta en formato pdf

@@ -386,6 +386,8 @@
                 <div class="col d-flex">
                   <quill-editor
                     class="quill-editor-style w-65 card position-relative"
+                    style="max-width: 60em;"
+                    #observaciones
                     [styles]="editorStyle"
                     [modules]="config"
                     (onContentChanged)="maxLength($event, 1000)"
@@ -398,7 +400,7 @@
                   ></quill-editor>
                   <div class="d-flex" style="align-items: flex-end; margin-bottom: 0.6em">
                     <span class="contador miles" *ngIf="perfil.get('observacion').value !== null">
-                      {{ 1000 - textoLimpio(perfil.get('observacion').value) }}
+                      {{ 1000 - textoLimpio( observaciones.quillEditor, 1000 ) }}
                     </span>
                     <span class="contador miles" *ngIf="perfil.get('observacion').value === null"> 1000 </span>
                     <span class="icon-incompleto">
@@ -550,6 +552,7 @@
                     <input
                       matInput
                       type="text"
+                      maxlength="400"
                       formControlName="rutaSoporte"
                       required
                       [class.invalid]="
