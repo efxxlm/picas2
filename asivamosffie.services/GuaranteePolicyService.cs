@@ -414,72 +414,42 @@ namespace asivamosffie.services
 
         public async Task<Respuesta> EditarContratoPoliza(ContratoPoliza contratoPoliza)
         {
-            Respuesta _response = new Respuesta();
-
-            //int idAccionCrearContratoPoliza = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantMessagesContratoPoliza.EditarContratoPolizaCorrrectamente, (int)EnumeratorTipoDominio.Acciones);
             int idAccionCrearContratoPoliza = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Editar_Contrato_Poliza, (int)EnumeratorTipoDominio.Acciones);
-
-
-            //try
-            //{
-            //    Respuesta respuesta = new Respuesta();
-            //    string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
-            //    respuesta = await _Cofinancing.EliminarCofinanciacionByCofinanciacionId(pCofinancicacionId, pUsuarioModifico);
-
-            //    return Ok(respuesta);
-            //}
-            //catch (Exception ex)
-            //{
-            //    return BadRequest(ex.ToString());
-            //}
-
 
             try
             {
                 if (contratoPoliza != null)
                 {
-
                     ContratoPoliza contratoPolizaBD = null;
                     contratoPolizaBD = _context.ContratoPoliza.Where(r => r.ContratoPolizaId == contratoPoliza.ContratoPolizaId).FirstOrDefault();
 
-                    Contrato contrato = null;
                     bool ContratoEsDevuelto = false;
-
 
                     if (contratoPolizaBD != null)
                     {
-
-                        contratoPolizaBD.FechaModificacion = DateTime.Now;
-
-                        //_context.Add(contratoPoliza);
-                        contrato = _context.Contrato.Where(r => r.ContratoId == contratoPoliza.ContratoId).FirstOrDefault();
+                         
+                        Contrato contrato = _context.Contrato.Where(r => r.ContratoId == contratoPoliza.ContratoId).FirstOrDefault();
 
                         if (contrato != null)
-                        {
                             if (contrato.EstaDevuelto != null)
-                            {
                                 ContratoEsDevuelto = Convert.ToBoolean(contrato.EstaDevuelto);
 
-                            }
-
-                        }
-
-                        contratoPolizaBD.RegistroCompleto = ValidarRegistroCompletoContratoPoliza(contratoPoliza, ContratoEsDevuelto);
+           
                         if (contratoPolizaBD.RegistroCompleto == true)
                             contratoPolizaBD.RegistroCompleto = await ValidarRegistroCompletoSeguros(contratoPoliza);
 
-                        //contratoPoliza.ObservacionesRevisionGeneral = ValidarRegistroCompleto(cofinanciacion);
+                        contratoPolizaBD.FechaModificacion = DateTime.Now;
+                        contratoPolizaBD.UsuarioModificacion = contratoPoliza.UsuarioCreacion;
+                        contratoPolizaBD.RegistroCompleto = ValidarRegistroCompletoContratoPoliza(contratoPoliza, ContratoEsDevuelto);
+
                         contratoPolizaBD.NombreAseguradora = contratoPoliza.NombreAseguradora;
                         contratoPolizaBD.Observaciones = contratoPoliza.Observaciones;
                         contratoPolizaBD.NumeroPoliza = contratoPoliza.NumeroPoliza;
-
                         contratoPolizaBD.NumeroCertificado = contratoPoliza.NumeroCertificado;
                         contratoPolizaBD.ObservacionesRevisionGeneral = contratoPoliza.ObservacionesRevisionGeneral;
                         contratoPolizaBD.ResponsableAprobacion = contratoPoliza.ResponsableAprobacion;
                         contratoPolizaBD.EstadoPolizaCodigo = contratoPoliza.EstadoPolizaCodigo;
-                        //contratoPolizaBD.UsuarioCreacion = contratoPoliza.UsuarioModificacion;
                         contratoPolizaBD.FechaExpedicion = contratoPoliza.FechaExpedicion;
-
                         contratoPolizaBD.Vigencia = contratoPoliza.Vigencia;
                         contratoPolizaBD.VigenciaAmparo = contratoPoliza.VigenciaAmparo;
                         contratoPolizaBD.ValorAmparo = contratoPoliza.ValorAmparo;
@@ -490,17 +460,10 @@ namespace asivamosffie.services
                         contratoPolizaBD.IncluyeCondicionesGenerales = contratoPoliza.IncluyeCondicionesGenerales;
                         contratoPolizaBD.FechaAprobacion = contratoPoliza.FechaAprobacion;
                         contratoPolizaBD.Estado = contratoPoliza.Estado;
-
                         LimpiarEntradasContratoPoliza(ref contratoPolizaBD);
-
-
-                        //_context.ContratoPoliza.Add(contratoPoliza);
                         _context.ContratoPoliza.Update(contratoPolizaBD);
-                        //await _context.SaveChangesAsync();
+
                     }
-
-
-
                     return
                         new Respuesta
                         {
@@ -509,30 +472,25 @@ namespace asivamosffie.services
                             IsValidation = false,
                             Code = ConstantMessagesContratoPoliza.OperacionExitosa,
                             Message =
-                            await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias,
-                            ConstantMessagesContratoPoliza.EditarContratoPolizaCorrrectamente,
-                            //contratoPoliza
-                            idAccionCrearContratoPoliza
-                            , contratoPoliza.UsuarioCreacion
-                            //"UsuarioCreacion"
-                            , "EDITAR CONTRATO POLIZA"
-                            //contratoPoliza.UsuarioCreacion, "REGISTRAR CONTRATO POLIZA"
-                            )
+                            await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                                                                                            (int)enumeratorMenu.GestionarGarantias,
+                                                                                            ConstantMessagesContratoPoliza.EditarContratoPolizaCorrrectamente,
+                                                                                            idAccionCrearContratoPoliza,
+                                                                                            contratoPoliza.UsuarioCreacion,
+                                                                                            "EDITAR CONTRATO POLIZA"
+                                                                                          )
                         };
 
-                    //return _response = new Respuesta { IsSuccessful = true,
-                    //    IsValidation = false, Data = cuentaBancaria,
-                    //    Code = ConstantMessagesBankAccount.OperacionExitosa };
                 }
                 else
                 {
-                    return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContratoPoliza.RecursoNoEncontrado };
+                    return new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContratoPoliza.RecursoNoEncontrado };
                 }
 
             }
             catch (Exception ex)
             {
-                return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContratoPoliza.ErrorInterno, Message = ex.InnerException.ToString().Substring(0, 500) };
+                return new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContratoPoliza.ErrorInterno, Message = ex.InnerException.ToString().Substring(0, 500) };
             }
 
         }
@@ -555,8 +513,10 @@ namespace asivamosffie.services
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, ConstantMessagesContratoPoliza.Error, idAccion, contratoPoliza.UsuarioCreacion, "ERROR PETICIÓN SERVICIO")
                     };
                 }
+
+
                 //Validar Contrato Poliza Duplicado
-                if (_context.ContratoPoliza.Where(r => r.ContratoId == contratoPoliza.ContratoId).ToList().Count() > 0)
+                if (_context.ContratoPoliza.Where(r => r.ContratoId == contratoPoliza.ContratoId).ToList().Count() > 1)
                 {
                     return new Respuesta
                     {
@@ -949,7 +909,7 @@ namespace asivamosffie.services
                                     template = template.Replace("_NumeroDRP_", msjNotificacion.NumeroDRP);
 
                             }
-                             
+
                             //1   Administrador  - 
                             //2   Técnica
                             //3   Financiera - 
@@ -962,12 +922,12 @@ namespace asivamosffie.services
                             List<UsuarioPerfil> lstUsuariosPerfil = _context.UsuarioPerfil
                                 .Where(r => r.Activo == true && r.PerfilId == (int)EnumeratorPerfil.Supervisor)
                                 .Include(u => u.Usuario)
-                                .ToList(); 
+                                .ToList();
                             lstUsuariosPerfil.ForEach(user =>
                             {
                                 blEnvioCorreo = Helpers.Helpers.EnviarCorreo(user.Usuario.Email, "Gestión Poliza", template, sender, password, mailServer, mailPort);
 
-                            }); 
+                            });
                             if (blEnvioCorreo)
                                 respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesContratoPoliza.CorreoEnviado };
 
