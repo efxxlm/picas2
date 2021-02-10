@@ -100,6 +100,7 @@ export interface SesionComiteSolicitud {
     requiereVotacion?: boolean,
     registroCompleto?: boolean,
     desarrolloSolicitud?: string,
+    estadoActaCodigo?: string,
 
     comiteTecnicoFiduciarioId?: number,
     registroCompletoFiduciaria?: boolean,

@@ -1,3 +1,4 @@
+import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { ContratosModificacionesContractualesService } from './../../../../core/_services/contratos-modificaciones-contractuales/contratos-modificaciones-contractuales.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -12,6 +13,7 @@ export class FormContratacionRegistradosComponent implements OnInit {
 
   form: FormGroup;
   estadoCodigo: string;
+  modalidadContratoArray: Dominio[] = [];
   estadoCodigos = {
     enRevision: '2',
     enFirmaFiduciaria: '5',
@@ -23,10 +25,14 @@ export class FormContratacionRegistradosComponent implements OnInit {
   constructor ( private fb: FormBuilder,
                 private activatedRoute: ActivatedRoute,
                 private routes: Router,
-                private contratosContractualesSvc: ContratosModificacionesContractualesService ) {
+                private commonSvc: CommonService,
+                private contratosContractualesSvc: ContratosModificacionesContractualesService )
+  {
     this.crearFormulario();
     this.getContratacionId( this.activatedRoute.snapshot.params.id );
     this.getEstadoCodigo();
+    this.commonSvc.modalidadesContrato()
+      .subscribe( response => this.modalidadContratoArray = response );
   };
 
   ngOnInit(): void {
@@ -47,11 +53,18 @@ export class FormContratacionRegistradosComponent implements OnInit {
     });
   };
 
+  getModalidadContrato( modalidadCodigo: string ) {
+    if ( this.modalidadContratoArray.length > 0 ) {
+      const modalidad = this.modalidadContratoArray.filter( modalidad => modalidad.codigo === modalidadCodigo );
+      return modalidad[0].nombre;
+    }
+  }
+
   getContratacionId ( id ) {
     this.contratosContractualesSvc.getContratacionId( id )
       .subscribe( ( resp: any ) => {
         if ( resp.contrato.length === 0 ) {
-          this.routes.navigate( [ '/contratosModificacionesContractuales' ] );
+          this.routes.navigate( [ '/procesosContractuales' ] );
         };
         this.contratacion = resp;
         console.log( resp );

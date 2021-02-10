@@ -249,9 +249,7 @@ namespace asivamosffie.services
         }
 
         public async Task<Respuesta> CreateEditContratoPerfil(Contrato pContrato)
-        {
-
-            string CreateEdit = "";
+        { 
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Contrato_Perfil, (int)EnumeratorTipoDominio.Acciones);
 
             try
@@ -260,8 +258,7 @@ namespace asivamosffie.services
                 foreach (var ContratoPerfil in pContrato.ContratoPerfil)
                 {
                     if (ContratoPerfil.ContratoPerfilId > 0)
-                    {
-                        CreateEdit = "CREAR CONTRATO PERFIL";
+                    {  
                         ContratoPerfil contratoPerfilOld = _context.ContratoPerfil.Find(ContratoPerfil.ContratoPerfilId);
                         contratoPerfilOld.ContratoPerfilId = ContratoPerfil.ContratoPerfilId;
                         contratoPerfilOld.PerfilCodigo = ContratoPerfil.PerfilCodigo;
@@ -295,8 +292,7 @@ namespace asivamosffie.services
                         }
                     }
                     else
-                    {
-                        CreateEdit = "EDITAR CONTRATO PERFIL";
+                    { 
                         ContratoPerfil.UsuarioCreacion = pContrato.UsuarioCreacion;
                         ContratoPerfil.FechaCreacion = DateTime.Now;
                         ContratoPerfil.Eliminado = false;
@@ -330,7 +326,7 @@ namespace asivamosffie.services
                         IsException = false,
                         IsValidation = false,
                         Code = RegisterPreContructionPhase1.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Preconstruccion_Fase_1, RegisterPreContructionPhase1.OperacionExitosa, idAccion, pContrato.UsuarioCreacion, CreateEdit)
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Preconstruccion_Fase_1, RegisterPreContructionPhase1.OperacionExitosa, idAccion, pContrato.UsuarioCreacion, "CREAR EDITAR CONTRATO")
                     };
             }
             catch (Exception ex)

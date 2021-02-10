@@ -53,7 +53,7 @@ export class RegistrarSesionComiteFiduciarioComponent implements OnInit {
     this.fiduciaryCommitteeSessionService.cambiarEstadoComiteTecnico( comite )
       .subscribe( respuesta => {
         this.openDialog('', '<b>No se cuenta con el Quorum necesario para realizar la sesión.</b>');
-        this.router.navigate(["/comiteTecnico"]);
+        this.router.navigate(["/comiteFiduciario"]);
       })
   }
   

@@ -896,9 +896,9 @@ namespace asivamosffie.services
                         .Replace("[TIPO_SOLICITUD]", ListDominio.Where(r=> r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud && r.Codigo == pSesionComiteSolicitud.TipoSolicitudCodigo).FirstOrDefault().Nombre)
                         .Replace("[NUMERO_DDP]", pSesionComiteSolicitud.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().NumeroDdp ?? " ")
                         .Replace("[OBJETO]", pSesionComiteSolicitud.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().Objeto ?? " ")
-                        .Replace("[FECHA_COMITE_FIDUCIARIO]", pSesionComiteSolicitud.ComiteTecnico.FechaOrdenDia.HasValue ? ((DateTime)pSesionComiteSolicitud.ComiteTecnico.FechaOrdenDia).ToString("dd-MMMM-yy") : " ")
-                        .Replace("[FECHA_TRAMITE]", pSesionComiteSolicitud.Contratacion.FechaTramite.HasValue ? ((DateTime)pSesionComiteSolicitud.Contratacion.FechaTramite).ToString("dd-MMMM-yy") : " ")
-                        .Replace("[FECHA_ENVIO_TRAMITE]", pSesionComiteSolicitud.Contratacion.Contrato.FirstOrDefault().FechaEnvioFirma.HasValue ? ((DateTime)pSesionComiteSolicitud.Contratacion.Contrato.FirstOrDefault().FechaEnvioFirma).ToString("dd-MMMM-yy") : " ")
+                        .Replace("[FECHA_COMITE_FIDUCIARIO]", pSesionComiteSolicitud.ComiteTecnico.FechaOrdenDia.HasValue ? ((DateTime)pSesionComiteSolicitud.ComiteTecnico.FechaOrdenDia).ToString("dd-MM-yy") : " ")
+                        .Replace("[FECHA_TRAMITE]", pSesionComiteSolicitud.Contratacion.FechaTramite.HasValue ? ((DateTime)pSesionComiteSolicitud.Contratacion.FechaTramite).ToString("dd-MM-yy") : " ")
+                        .Replace("[FECHA_ENVIO_TRAMITE]", pSesionComiteSolicitud.Contratacion.Contrato.FirstOrDefault().FechaEnvioFirma.HasValue ? ((DateTime)pSesionComiteSolicitud.Contratacion.Contrato.FirstOrDefault().FechaEnvioFirma).ToString("dd-MM-yy") : " ")
                         .Replace("[NUMERO_SOLICITUD]", pSesionComiteSolicitud.Contratacion.NumeroSolicitud ?? " ");
                     blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario, "Minuta contractual para revisi�n", template, pSender, pPassword, pMailServer, pMailPort);
                 }

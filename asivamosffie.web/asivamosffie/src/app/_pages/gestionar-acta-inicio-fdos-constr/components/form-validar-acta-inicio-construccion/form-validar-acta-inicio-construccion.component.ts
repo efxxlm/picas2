@@ -267,14 +267,14 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
             if (localStorage.getItem("origin") == "interventoria") {
               this.services.CambiarEstadoActa(this.contratoId, "8", "usr2").subscribe(data0 => {
                 this.realizoPeticion = true;
-                this.openDialog("", resp.message);
+                this.openDialog("", `<b>${resp.message}</b>`);
                 this.router.navigate(['/generarActaInicioConstruccion']);
               });
             }
             else {
               this.services.CambiarEstadoActa(this.contratoId, "16", "usr2").subscribe(data0 => {
                 this.realizoPeticion = true;
-                this.openDialog("", resp.message);
+                this.openDialog("", `<b>${resp.message}</b>`);
                 this.router.navigate(['/generarActaInicioConstruccion']);
               });
             }
@@ -283,21 +283,21 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
             if (localStorage.getItem("origin") == "interventoria") {
               this.services.CambiarEstadoActa(this.contratoId, "5", "usr2").subscribe(data1 => {
                 this.realizoPeticion = true;
-                this.openDialog("", resp.message);
+                this.openDialog("", `<b>${resp.message}</b>`);
                 this.router.navigate(['/generarActaInicioConstruccion']);
               });
             }
             else {
               this.services.CambiarEstadoActa(this.contratoId, "15", "usr2").subscribe(data1 => {
                 this.realizoPeticion = true;
-                this.openDialog("", resp.message);
+                this.openDialog("", `<b>${resp.message}</b>`);
                 this.router.navigate(['/generarActaInicioConstruccion']);
               });
             }
           }
         }
         else {
-          this.openDialog("", resp.message);
+          this.openDialog("",`<b>${resp.message}</b>`);
         }
       });
     }
@@ -308,14 +308,14 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
             if (localStorage.getItem("origin") == "interventoria") {
               this.services.CambiarEstadoActa(this.contratoId, "8", "usr2").subscribe(data0 => {
                 this.realizoPeticion = true;
-                this.openDialog("", resp.message);
+                this.openDialog("", `<b>${resp.message}</b>`);
                 this.router.navigate(['/generarActaInicioConstruccion']);
               });
             }
             else {
               this.services.CambiarEstadoActa(this.contratoId, "16", "usr2").subscribe(data0 => {
                 this.realizoPeticion = true;
-                this.openDialog("", resp.message);
+                this.openDialog("", `<b>${resp.message}</b>`);
                 this.router.navigate(['/generarActaInicioConstruccion']);
               });
             }
@@ -324,26 +324,25 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
             if (localStorage.getItem("origin") == "interventoria") {
               this.services.CambiarEstadoActa(this.contratoId, "5", "usr2").subscribe(data1 => {
                 this.realizoPeticion = true;
-                this.openDialog("", resp.message);
+                this.openDialog("",`<b>${resp.message}</b>`);
                 this.router.navigate(['/generarActaInicioConstruccion']);
               });
             }
             else {
               this.services.CambiarEstadoActa(this.contratoId, "15", "usr2").subscribe(data1 => {
                 this.realizoPeticion = true;
-                this.openDialog("", resp.message);
+                this.openDialog("", `<b>${resp.message}</b>`);
                 this.router.navigate(['/generarActaInicioConstruccion']);
               });
             }
           }
         }
         else {
-          this.openDialog("", resp.message);
+          this.openDialog("", `<b>${resp.message}</b>`);
         }
       });
     }
     console.log(this.addressForm.value);
-    this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
   }
 
 }

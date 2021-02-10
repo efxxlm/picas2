@@ -289,7 +289,7 @@ namespace asivamosffie.services
                             .Replace("_LinkF_", pDominioFront)
                             .Replace("[TIPO_CONTRATO]", pContrato.Contratacion.NumeroSolicitud)
                             .Replace("[NUMERO_CONTRATO]", pContrato.NumeroContrato)
-                            .Replace("[FECHA_FIRMA_CONTRATO]", FechaFirmaFiduciaria.HasValue ? ((DateTime)FechaFirmaFiduciaria).ToString("dd-MMMM-yy") : " ")
+                            .Replace("[FECHA_FIRMA_CONTRATO]", FechaFirmaFiduciaria.HasValue ? ((DateTime)FechaFirmaFiduciaria).ToString("dd-MM-yy") : " ")
                             .Replace("[Observaciones]", pContrato.Observaciones);
                 blEnvioCorreo = Helpers.Helpers.EnviarCorreo(email, "Solicitud de contratación en trámite en la Fiduciaria", template, pSender, pPassword, pMailServer, pMailPort);
 

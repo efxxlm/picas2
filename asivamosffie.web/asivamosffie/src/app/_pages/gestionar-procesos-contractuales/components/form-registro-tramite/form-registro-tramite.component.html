@@ -59,11 +59,12 @@
           required
           (onContentChanged)="maxLength($event, 2000)"
           formControlName="observaciones"
+          #observaciones
         >
         </quill-editor>
       </div>
       <span class="contador miles" *ngIf="dataFormulario.get('observaciones').value !== null" style="margin-top: 2.2em">
-        {{ 2000 - textoLimpio(dataFormulario.get('observaciones').value) }}
+        {{ 2000 - textoLimpio( observaciones.quillEditor,1000 ) }}
       </span>
       <span class="contador miles" *ngIf="dataFormulario.get('observaciones').value === null" style="margin-top: 2.2em">
         2000
@@ -95,7 +96,7 @@
           URL con soporte</label
         >
       </div>
-      <div class="input" style="width: 90%">
+      <div class="input" style="width: 88%">
         <div class="col">
           <mat-form-field class="full-width">
             <input matInput type="url" required formControlName="rutaDocumento" maxlength="300" />

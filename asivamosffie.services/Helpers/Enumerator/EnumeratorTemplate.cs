@@ -51,5 +51,6 @@ namespace asivamosffie.services.Helpers.Enumerator
         Alerta5Dias4_1_10 = 55,
         NotificacionInconsistencias = 56,
         NotificacionAprobacion = 59,
+        AprobadoInterventoriaObra3_1_8_ = 60,
     }
 }

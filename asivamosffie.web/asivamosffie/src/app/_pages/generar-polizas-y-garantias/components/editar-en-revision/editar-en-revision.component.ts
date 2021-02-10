@@ -326,16 +326,6 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
     }
   }
 
-  private contarSaltosDeLinea(cadena: string, subcadena: string) {
-    let contadorConcurrencias = 0;
-    let posicion = 0;
-    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
-      ++contadorConcurrencias;
-      posicion += subcadena.length;
-    }
-    return contadorConcurrencias;
-  }
-
   openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
       width: '28em',
@@ -430,7 +420,7 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
               'EsIncluidaPoliza': this.addressForm.value.buenManejoCorrectaInversionAnticipo
             };
             this.polizaService.CreatePolizaGarantia(garantiaArray).subscribe(r => {
-            });
+            }, err => this.openDialog( '', `<b>${ err.message }</b>` ) );
             break;
           case '2':
             garantiaArray = {
@@ -439,7 +429,7 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
               'EsIncluidaPoliza': this.addressForm.value.estabilidadYCalidad
             };
             this.polizaService.CreatePolizaGarantia(garantiaArray).subscribe(r1 => {
-            });
+            }, err => this.openDialog( '', `<b>${ err.message }</b>` ) );
             break;
           case '3':
             garantiaArray = {
@@ -448,7 +438,7 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
               'EsIncluidaPoliza': this.addressForm.value.polizaYCoumplimiento
             };
             this.polizaService.CreatePolizaGarantia(garantiaArray).subscribe(r2 => {
-            });
+            }, err => this.openDialog( '', `<b>${ err.message }</b>` ) );
             break;
           case '4':
             garantiaArray = {
@@ -457,7 +447,7 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
               'EsIncluidaPoliza': this.addressForm.value.polizasYSegurosCompleto
             };
             this.polizaService.CreatePolizaGarantia(garantiaArray).subscribe(r3 => {
-            });
+            }, err => this.openDialog( '', `<b>${ err.message }</b>` ) );
             break;
         }
       }
@@ -482,7 +472,7 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
       else {
         this.openDialog('', `<b>${data.message}</b>`);
       }
-    });
+    }, err => this.openDialog( '', `<b>${ err.message }</b>` ) );
     // console.log(this.addressForm.value);
   }
 

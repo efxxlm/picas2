@@ -91,8 +91,8 @@ export class TablaGeneralActaFdosConstComponent implements OnInit {
   verDetalleActaFDos(id){
     this.router.navigate(['/generarActaInicioConstruccion/verDetalleActaConstruccion',id]);
   }
-  enviarActaParaFirma(id){
-    this.descargarActaDesdeTabla(id);
+  enviarActaParaFirma(id,numContrato){
+    this.descargarActaDesdeTabla(id,numContrato);
     this.services.CambiarEstadoActa(id,"19","usr2").subscribe(data=>{
       this.router.navigateByUrl('/', { skipLocationChange: true }).then(
         () => this.router.navigate(['/generarActaInicioConstruccion'])

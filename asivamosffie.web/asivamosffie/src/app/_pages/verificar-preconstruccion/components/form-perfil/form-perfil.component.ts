@@ -180,7 +180,7 @@ export class FormPerfilComponent implements OnInit {
         const numeroRadicados     = [];
         let observaciones         = null;
         let fechaObservacion      = null;
-        let observacionSupervisor = null;
+        let observacionSupervisor = undefined;
         let semaforo;
         if ( perfil.contratoPerfilNumeroRadicado.length === 0 ) {
           numeroRadicados.push(
@@ -216,7 +216,7 @@ export class FormPerfilComponent implements OnInit {
           }
         }
 
-        if ( perfil.registroCompleto ) {
+        if ( perfil.registroCompleto === true && observacionSupervisor === undefined || perfil.registroCompleto === true && observacionSupervisor === null ) {
           this.perfilesCompletos++;
           semaforo = 'completo';
         }
@@ -225,11 +225,15 @@ export class FormPerfilComponent implements OnInit {
               && (  perfil.contratoPerfilId !== undefined
                     || perfil.cantidadHvRequeridas > 0
                     || perfil.cantidadHvRecibidas > 0
-                    || perfil.cantidadHvAprobadas > 0) ) {
+                    || perfil.cantidadHvAprobadas > 0 ) ) {
           semaforo = 'en-proceso';
           this.perfilesEnProceso++;
         }
-
+        if ( observacionSupervisor !== undefined ) {
+          semaforo = 'en-proceso';
+          this.perfilesEnProceso++;
+        }
+        console.log( semaforo );
         this.perfiles.push(
           this.fb.group(
             {
@@ -312,37 +316,17 @@ export class FormPerfilComponent implements OnInit {
     return this.perfiles.controls[i].get( 'contratoPerfilNumeroRadicado' ) as FormArray;
   }
 
-  textoLimpio(texto: string) {
-    let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
-
-    if ( texto ){
-      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
-      return textolimpio.length + saltosDeLinea;
-    }
-  }
-
-  private contarSaltosDeLinea(cadena: string, subcadena: string) {
-    let contadorConcurrencias = 0;
-    let posicion = 0;
-    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
-      ++contadorConcurrencias;
-      posicion += subcadena.length;
-    }
-    return contadorConcurrencias;
-  }
-
-  textoLimpioMessage(texto: string) {
-    if ( texto ){
-      const textolimpio = texto.replace(/<[^>]*>/g, '');
-      return textolimpio;
-    }
-  }
-
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
-      e.editor.deleteText(n, e.editor.getLength());
+      e.editor.deleteText(n - 1, e.editor.getLength());
+    }
+  }
+
+  textoLimpio( evento: any, n: number ) {
+    if ( evento !== undefined ) {
+      return evento.getLength() > n ? n : evento.getLength();
+    } else {
+      return 0;
     }
   }
 

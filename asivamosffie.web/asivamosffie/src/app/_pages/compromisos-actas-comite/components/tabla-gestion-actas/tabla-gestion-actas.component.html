@@ -38,6 +38,7 @@
                 color="accent" 
                 class="btn-table"
                 *ngIf="element.estadoActaCodigo === estadoActa.revisarActa"
+                [disabled]="element.esVotoAprobado === true"
                 (click)="revisarActa( element )">
                 Revisar acta
         </button>

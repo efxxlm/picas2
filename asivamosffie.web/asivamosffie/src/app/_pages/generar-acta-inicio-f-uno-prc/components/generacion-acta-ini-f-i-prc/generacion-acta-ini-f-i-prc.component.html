@@ -124,7 +124,6 @@
                     readonly
                     (click)="picker.open()"
                     formControlName="fechaActaInicioFUnoPreconstruccion"
-                    (dateInput)="generarFechaRestante()"
                     placeholder="DD/MM/AAAA"
                   />
                   <mat-datepicker #picker></mat-datepicker>
@@ -219,7 +218,7 @@
                 <mat-form-field class="w-8em">
                   <input
                     matInput
-                    maxlength="2"
+                    maxlength="3"
                     min="1"
                     max="99"
                     required
@@ -236,7 +235,7 @@
                   matTooltipClass="info-tooltip"
                 >
                   {{
-                    2 -
+                    3 -
                       (addressForm.get('mesPlazoEjFase1').value
                         ? addressForm.get('mesPlazoEjFase1').value.toString().length
                         : 0)
@@ -435,20 +434,15 @@
               [modules]="config"
               (onContentChanged)="maxLength($event, 500)"
               formControlName="observacionesEspeciales"
+              #observaciones
             >
             </quill-editor>
           </div>
-          <span class="contador auxMarg" *ngIf="addressForm.get('observacionesEspeciales').value">
-            {{ 500 - textoLimpio(addressForm.get('observacionesEspeciales').value) }}
+          <span class="contador auxMarg" *ngIf="addressForm.get('observacionesEspeciales').value !== null">
+            {{500 - (textoLimpio(observaciones.quillEditor,500))}}
           </span>
-          <span
-            class="contador auxMarg"
-            *ngIf="
-              addressForm.get('observacionesEspeciales').value === null ||
-              addressForm.get('observacionesEspeciales').value === ''
-            "
-          >
-            500
+          <span class="contador auxMarg" *ngIf="addressForm.get('observacionesEspeciales').value === null">
+              500
           </span>
           <span class="icon-incompleto">
             <img

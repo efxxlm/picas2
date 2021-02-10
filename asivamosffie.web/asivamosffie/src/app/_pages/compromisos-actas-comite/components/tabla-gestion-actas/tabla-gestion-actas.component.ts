@@ -28,10 +28,12 @@ export class TablaGestionActasComponent implements OnInit {
     private routes: Router,
     private compromisoSvc: CompromisosActasComiteService,
     private fiduciaryCommitteeSessionService: FiduciaryCommitteeSessionService,
-    private comiteTecnicoSvc: TechnicalCommitteSessionService ) { }
+    private comiteTecnicoSvc: TechnicalCommitteSessionService )
+  {
+    this.getData();
+  }
 
   ngOnInit(): void {
-    this.getData();
   }
 
   applyFilter(event: Event) {
@@ -54,7 +56,7 @@ export class TablaGestionActasComponent implements OnInit {
             dataTable.push( value );
           }
         } );
-
+        console.log( dataTable );
         this.dataSource = new MatTableDataSource( dataTable );
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;

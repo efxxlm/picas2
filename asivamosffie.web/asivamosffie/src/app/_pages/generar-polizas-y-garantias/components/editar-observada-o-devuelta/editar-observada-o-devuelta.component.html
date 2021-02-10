@@ -990,18 +990,16 @@
           [modules]="config"
           (onContentChanged)="maxLength($event, 2000)"
           formControlName="observacionesGenerales"
+          #observaciones
         >
         </quill-editor>
       </div>
-      <span class="contador miles" *ngIf="addressForm.controls.observacionesGenerales.value">
-        {{
-          2000 -
-            (textoLimpio(addressForm.controls.observacionesGenerales.value) > 2000
-              ? 2000
-              : textoLimpio(addressForm.controls.observacionesGenerales.value))
-        }}
+      <span class="contador miles" *ngIf="addressForm.get('observacionesGenerales').value !== null">
+        {{2000 - ( textoLimpio( observaciones.quillEditor,2000 ) ) }}
       </span>
-      <span class="contador miles" *ngIf="!addressForm.controls.observacionesGenerales.value"> 2000 </span>
+      <span class="contador miles" *ngIf="addressForm.get('observacionesGenerales').value === null">
+          2000
+      </span>
       <span class="icon-incompleto">
         <img
           class="icon-incompleto--img"
