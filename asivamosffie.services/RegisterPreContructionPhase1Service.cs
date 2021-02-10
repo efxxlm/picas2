@@ -462,7 +462,8 @@ namespace asivamosffie.services
                     await EnviarCorreo(contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
                     contratoMod.FechaAprobacionRequisitosInterventor = DateTime.Now;
                 }
-                //Enviar Correo Botón “Enviar al supervisor”
+              
+                //Enviar Correo Botón aprobar inicio 3.1.7
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_supervisor && contratoMod.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
                 {
                     await EnviarCorreoSupervisor(ConstanCodigoTipoContratacionSTRING.Interventoria, contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
@@ -497,23 +498,19 @@ namespace asivamosffie.services
                             contratoPerfilOld.RegistroCompleto = false;
                             contratoPerfilOld.UsuarioModificacion = UsuarioModificacion;
                         }
-
                         _context.Update(contratoPerfilOld);
                     }
                     await EnviarCorreoSupervisor(ConstanCodigoTipoContratacionSTRING.Obra, contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
                 }
-
-
+                 
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_apoyo)
                 {
                     //se reinicia los contadores 
                     contratoMod.RegistroCompleto = false;
                     await EnviarCorreoSupervisor(ConstanCodigoTipoContratacionSTRING.Obra, contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
-                }
+                } 
 
-
-                ///Logica para devoluciones
-                ///
+                //Logica para devoluciones 
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_supervisor)
                 {
                     foreach (var ContratoPerfil in contratoMod.ContratoPerfil)
@@ -563,7 +560,12 @@ namespace asivamosffie.services
                     };
             }
         }
-
+        /// <summary>
+        /// Correos  Automaticos
+        /// </summary>
+        /// <param name="pContratoId"></param>
+        /// <param name="UsuarioModificacion"></param>
+        /// <returns></returns>
         public async Task<Respuesta> AprobarInicio(int pContratoId, string UsuarioModificacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Aprobar_Inicio_Contrato, (int)EnumeratorTipoDominio.Acciones);
@@ -599,6 +601,7 @@ namespace asivamosffie.services
                     };
             }
         }
+   
         private async Task<bool> EnviarCorreoSupervisorAprobar(string pTipoContrato, Contrato contratoMod, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
             var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Supervisor).Include(y => y.Usuario);
@@ -620,6 +623,7 @@ namespace asivamosffie.services
             }
             return blEnvioCorreo;
         }
+  
         private async Task<bool> EnviarCorreo(Contrato contratoMod, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
             var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Tecnica).Include(y => y.Usuario);
@@ -664,7 +668,7 @@ namespace asivamosffie.services
         }
 
         /// <summary>
-        /// Notificar Cuando pasen 4 dias despues de la aprobacion de la poliza 
+        /// Notificaciones Automaticas
         /// </summary>
         /// 
         //3.1.6
