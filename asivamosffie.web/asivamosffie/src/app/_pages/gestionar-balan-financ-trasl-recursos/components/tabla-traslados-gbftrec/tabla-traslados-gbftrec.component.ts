@@ -61,11 +61,11 @@ export class TablaTrasladosGbftrecComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
   anularTraslado(id){
-    this.openDialogSiNo("","¿Está seguro de eliminar este registro?",id);
+    this.openDialogSiNo("","<b>¿Esta seguro que desea anular el traslado?,<br>Tenga en cuenta que puede afectar el balance</b>",id);
   }
   openDialogSiNo(modalTitle: string, modalText: string, e: number) {
     let dialogRef = this.dialog.open(ModalDialogComponent, {
-      width: '28em',
+      width: '32em',
       data: { modalTitle, modalText, siNoBoton: true }
     });
     dialogRef.afterClosed().subscribe(result => {
