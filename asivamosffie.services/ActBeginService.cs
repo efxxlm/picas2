@@ -22,11 +22,21 @@ namespace asivamosffie.services
 {
     public class ActBeginService : IActBeginService
     {
+        /// Querido colega Programador:
+        /// Cuando camilo escribio este código, sólo Dios y el
+        /// Sabian como funcionaba.
+        /// Ahora, ¡sólo Dios lo sabe!
+        /// 
+        /// Así que si esta tratando de 'Optimizarlo'
+        /// por favor, incremente el siguiente contador
+        /// como una advertencia 
+        /// para el siguiente colega:
+        /// 
+        /// total_horas_perdidas_aqui = 2
+
         private readonly ICommonService _commonService;
-        private readonly devAsiVamosFFIEContext _context;
-
-        private readonly IOptions<AppSettingsService> _settings;
-
+        private readonly devAsiVamosFFIEContext _context; 
+        private readonly IOptions<AppSettingsService> _settings; 
         private readonly IDocumentService _documentService;
         public readonly IConverter _converter;
 
@@ -49,7 +59,7 @@ namespace asivamosffie.services
             VistaGenerarActaInicioContrato actaInicio;
 
             int pTipoContrato = Int32.Parse(ConstanCodigoTipoContrato.Interventoria);
-
+            
             ////DOM 14 1   Obra            
             //pTipoContrato = 1;
 

@@ -897,7 +897,7 @@ namespace asivamosffie.services
             {
                 RangoFechaConDiasHabiles = await _commonService.CalculardiasLaboralesTranscurridos(4, DateTime.Now);
 
-                FechaFirmaContrato_dt = contratoPoliza != null ? contratoPoliza.FechaModificacion : null;
+                FechaFirmaContrato_dt = contratoPoliza?.FechaModificacion;
 
                 if (FechaFirmaContrato_dt != null)
 
