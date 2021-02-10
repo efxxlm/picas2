@@ -1406,25 +1406,40 @@ namespace asivamosffie.services
             //depende del tipo
             if (procesoSeleccion.TipoProcesoCodigo == ConstanCodigoTipoProcesoSeleccion.Invitacion_Abierta)
             {
+                bool esCompleto = true;
+
                 if (
-                 !string.IsNullOrEmpty(procesoSeleccion.Objeto)
-                 && !string.IsNullOrEmpty(procesoSeleccion.AlcanceParticular)
-                 && !string.IsNullOrEmpty(procesoSeleccion.Justificacion)
-                 && !string.IsNullOrEmpty(procesoSeleccion.TipoIntervencionCodigo)
-                 && !string.IsNullOrEmpty(procesoSeleccion.TipoAlcanceCodigo)
-                 && !string.IsNullOrEmpty(procesoSeleccion.TipoProcesoCodigo)
-                 && !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.EsDistribucionGrupos))
-                 && !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableTecnicoUsuarioId))
-                 && !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableEstructuradorUsuarioid))
-                 && !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesAsignacionPuntaje))
-                 && !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesFinancierasHabilitantes))
-                 && !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesJuridicasHabilitantes))
-                 && !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesTecnicasHabilitantes))
+                     string.IsNullOrEmpty(procesoSeleccion.Objeto) ||
+                     string.IsNullOrEmpty(procesoSeleccion.AlcanceParticular) ||
+                     string.IsNullOrEmpty(procesoSeleccion.Justificacion) ||
+                     string.IsNullOrEmpty(procesoSeleccion.TipoIntervencionCodigo) ||
+                     string.IsNullOrEmpty(procesoSeleccion.TipoAlcanceCodigo) ||
+                     string.IsNullOrEmpty(procesoSeleccion.TipoProcesoCodigo) ||
+                     string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.EsDistribucionGrupos)) ||
+                     string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableTecnicoUsuarioId)) ||
+                     string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableEstructuradorUsuarioid)) ||
+                     string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesAsignacionPuntaje)) ||
+                     string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesFinancierasHabilitantes)) ||
+                     string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesJuridicasHabilitantes)) ||
+                     string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesTecnicasHabilitantes)) 
 
                 )
-                    return true;
-                else
-                    return false;
+                    esCompleto = false;
+
+                if (procesoSeleccion.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.AprobadaAperturaPorComiteFiduciario)
+                {
+                    if (
+                     string.IsNullOrEmpty(procesoSeleccion.EvaluacionDescripcion) ||
+                     string.IsNullOrEmpty(procesoSeleccion.UrlSoporteEvaluacion) ||
+                     procesoSeleccion.ProcesoSeleccionProponente == null || 
+                     procesoSeleccion.ProcesoSeleccionProponente.Count() == 0
+                     
+
+                )
+                        esCompleto = false;
+                }
+
+                return esCompleto;
             }
             else if (procesoSeleccion.TipoProcesoCodigo == ConstanCodigoTipoProcesoSeleccion.Invitacion_Privada)
             {

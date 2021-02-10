@@ -521,7 +521,7 @@ namespace asivamosffie.services
                                 //obtengo el proponente y lo convierto en contratista
                                 var proponentes = _context.ProcesoSeleccionProponente.Where(x => x.ProcesoSeleccionId == pses.SolicitudId).Include(x => x.ProcesoSeleccion).ToList();
                                 //solo si no es invitación cerrada
-                                if (proponentes.FirstOrDefault().ProcesoSeleccion.TipoProcesoCodigo != ConstanCodigoTipoProcesoSeleccion.Invitacion_Cerrada)
+                                if (proponentes?.FirstOrDefault()?.ProcesoSeleccion?.TipoProcesoCodigo != ConstanCodigoTipoProcesoSeleccion.Invitacion_Cerrada)
                                 {
                                     foreach (var p in proponentes)
                                     {

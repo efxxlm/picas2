@@ -3652,7 +3652,7 @@ namespace asivamosffie.services
 
                         //TIPO SOLICITUD PROCESOS DE SELECCION
                         case ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion:
-                            registrosProcesosSelecccion += PlantillaProcesosSelecccion;
+                            registrosContratacion += PlantillaProcesosSelecccion;
                             ProcesoSeleccion procesoSeleccion = ListProcesoSeleccion.Where(r => r.ProcesoSeleccionId == SesionComiteSolicitud.SolicitudId).FirstOrDefault();
 
                             foreach (Dominio placeholderDominio in placeholders)
@@ -3661,12 +3661,12 @@ namespace asivamosffie.services
                                 switch (placeholderDominio.Codigo)
                                 {
                                     case ConstanCodigoVariablesPlaceHolders.NUMERO_SOLICITUD:
-                                        registrosProcesosSelecccion = registrosProcesosSelecccion
+                                        registrosContratacion = registrosContratacion
                                             .Replace(placeholderDominio.Nombre, enumOrdenDelDia++.ToString());
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.TIPO_SOLICITUD:
-                                        registrosProcesosSelecccion = registrosProcesosSelecccion
+                                        registrosContratacion = registrosContratacion
                                             .Replace(placeholderDominio.Nombre,
                                             ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud
                                             && r.Codigo == SesionComiteSolicitud.TipoSolicitudCodigo).FirstOrDefault().Nombre);
@@ -3676,55 +3676,55 @@ namespace asivamosffie.services
                                         string FechaSolicitud = string.Empty;
                                             FechaSolicitud = procesoSeleccion.FechaCreacion.ToString("dd-MM-yyyy");
                                         
-                                        registrosProcesosSelecccion = registrosProcesosSelecccion
+                                        registrosContratacion = registrosContratacion
                                             .Replace(placeholderDominio.Nombre, FechaSolicitud);
                                         break;
 
 
                                     case ConstanCodigoVariablesPlaceHolders.NUMERO_SOLICITUD_PROCESO:
-                                        registrosProcesosSelecccion = registrosProcesosSelecccion
+                                        registrosContratacion = registrosContratacion
                                           .Replace(placeholderDominio.Nombre, procesoSeleccion.NumeroProceso);
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.TIPO_PROCESO:
-                                        registrosProcesosSelecccion = registrosProcesosSelecccion
+                                        registrosContratacion = registrosContratacion
                                           .Replace(placeholderDominio.Nombre,
                                           ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Proceso_Seleccion
                                           && r.Codigo == procesoSeleccion.TipoProcesoCodigo).FirstOrDefault().Nombre);
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.OBJETO_PROCESO:
-                                        registrosProcesosSelecccion = registrosProcesosSelecccion
+                                        registrosContratacion = registrosContratacion
                                           .Replace(placeholderDominio.Nombre, procesoSeleccion.Objeto);
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.ALCANCE_PARTICULAR_PROCESO:
-                                        registrosProcesosSelecccion = registrosProcesosSelecccion
+                                        registrosContratacion = registrosContratacion
                                           .Replace(placeholderDominio.Nombre, procesoSeleccion.AlcanceParticular);
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.JUSTIFICACION_PROCESO:
-                                        registrosProcesosSelecccion = registrosProcesosSelecccion
+                                        registrosContratacion = registrosContratacion
                                           .Replace(placeholderDominio.Nombre, procesoSeleccion.Justificacion);
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.TIPO_INTERVENCION_PROCESO:
 
-                                        registrosProcesosSelecccion = registrosProcesosSelecccion
+                                        registrosContratacion = registrosContratacion
                                         .Replace(placeholderDominio.Nombre,
                                         ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion
                                         && r.Codigo == procesoSeleccion.TipoIntervencionCodigo).FirstOrDefault().Nombre);
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.TIPO_ALCANCE_PROCESO:
-                                        registrosProcesosSelecccion = registrosProcesosSelecccion
+                                        registrosContratacion = registrosContratacion
                                         .Replace(placeholderDominio.Nombre,
                                         ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_alcance
                                         && r.Codigo == procesoSeleccion.TipoAlcanceCodigo).FirstOrDefault().Nombre);
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.DESARROLLO_SOLICITUD:
-                                        registrosProcesosSelecccion = registrosProcesosSelecccion
+                                        registrosContratacion = registrosContratacion
                                             .Replace(placeholderDominio.Nombre, SesionComiteSolicitud.DesarrolloSolicitudFiduciario);
                                         break;
 
@@ -3748,12 +3748,12 @@ namespace asivamosffie.services
                                         {
                                             strRequiereVotacion = "No fue requerida";
                                         }
-                                        registrosProcesosSelecccion = registrosProcesosSelecccion
+                                        registrosContratacion = registrosContratacion
                                         .Replace(placeholderDominio.Nombre, strRequiereVotacion);
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.OBSERVACIONES_SOLICITUD:
-                                        registrosProcesosSelecccion = registrosProcesosSelecccion
+                                        registrosContratacion = registrosContratacion
                                         .Replace(placeholderDominio.Nombre, SesionComiteSolicitud.ObservacionesFiduciario);
                                         break;
 
@@ -3768,7 +3768,7 @@ namespace asivamosffie.services
                                         {
                                             TextoResultadoVotacion = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Votacion_Unanime).ToString()).FirstOrDefault().Nombre;
                                         }
-                                        registrosProcesosSelecccion = registrosProcesosSelecccion
+                                        registrosContratacion = registrosContratacion
                                         .Replace(placeholderDominio.Nombre, TextoResultadoVotacion);
                                         break;
 
@@ -3801,8 +3801,8 @@ namespace asivamosffie.services
                                                 }
                                             }
                                         }
-
-                                        registrosProcesosSelecccion = registrosProcesosSelecccion
+                                        
+                                        registrosContratacion = registrosContratacion
                                         .Replace(placeholderDominio.Nombre, registrosCompromisosSolicitud);
                                         break;
 
