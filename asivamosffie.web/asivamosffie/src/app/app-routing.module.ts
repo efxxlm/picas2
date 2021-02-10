@@ -403,6 +403,11 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/gestionar-balan-financ-trasl-recursos/gestionar-balan-financ-trasl-recursos.module')
         .then(m => m.GestionarBalanFinancTraslRecursosModule)
       },
+      {
+        path: 'registrarActualizacionesPolizasYGarantias',
+        loadChildren: () => import('./_pages/registrar-actualiz-polizas-garantias/registrar-actualiz-polizas-garantias.module')
+        .then(m => m.RegistrarActualizPolizasGarantiasModule)
+      },
     ]
 
   },
