@@ -13,7 +13,7 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
- 
+    [Authorize]
     public class ManagePreContructionActPhase1Controller : Controller
     {
         private readonly IManagePreContructionActPhase1Service _managePreContruction;

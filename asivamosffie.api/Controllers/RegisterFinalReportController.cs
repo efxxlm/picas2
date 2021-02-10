@@ -10,11 +10,13 @@ using Microsoft.Extensions.Options;
 using lalupa.Authorization.JwtHelpers;
 using asivamosffie.services.Exceptions;
 using asivamosffie.model.APIModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class RegisterFinalReportController : ControllerBase
     {
         public readonly IRegisterFinalReportService _registerFinalReport;

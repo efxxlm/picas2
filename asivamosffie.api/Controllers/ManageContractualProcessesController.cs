@@ -11,11 +11,13 @@ using System.IO;
 using Microsoft.Extensions.Options; 
 using System.Reflection;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ManageContractualProcessesController : ControllerBase
     {
         public readonly IManageContractualProcessesService _manageContractualProcessesService;

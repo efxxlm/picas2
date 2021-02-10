@@ -15,7 +15,7 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-
+    [Authorize]
     public class VerifyPreConstructionRequirementsPhase1Controller : ControllerBase
     {
         public readonly IVerifyPreConstructionRequirementsPhase1Service _verifyPreConstruction;
