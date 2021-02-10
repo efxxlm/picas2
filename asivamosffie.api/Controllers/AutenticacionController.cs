@@ -15,8 +15,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
-    [Authorize]
+    [ApiController] 
     public class AutenticacionController : ControllerBase
     {
         public readonly IAutenticacionService  autenticacion;
