@@ -1365,7 +1365,7 @@ namespace asivamosffie.services
         private bool? ValidarRegistroCompletoSesionComiteSolicitudActa(SesionComiteSolicitud sesionComiteSolicitud)
         {
             if (
-               (sesionComiteSolicitud.RequiereVotacion == true && string.IsNullOrEmpty(sesionComiteSolicitud.RutaSoporteVotacion)) &&
+               ((sesionComiteSolicitud.RequiereVotacion == false) || (sesionComiteSolicitud.RequiereVotacion == true && string.IsNullOrEmpty(sesionComiteSolicitud.RutaSoporteVotacion))) &&
                sesionComiteSolicitud.GeneraCompromiso == null &&
                sesionComiteSolicitud.EstadoCodigo == null &&
                string.IsNullOrEmpty(sesionComiteSolicitud.Observaciones) &&
@@ -1501,18 +1501,20 @@ namespace asivamosffie.services
 
                    VSesionParticipante vSesionParticipante = listaParticipantes.Where(r => r.SesionParticipanteId == ssc.ResponsableSesionParticipanteId).FirstOrDefault();
 
-                   participante.SesionParticipanteId = vSesionParticipante.SesionParticipanteId;
-                   participante.ComiteTecnicoId = vSesionParticipante.ComiteTecnicoId;
-                   participante.UsuarioId = vSesionParticipante.UsuarioId;
-                   participante.Eliminado = vSesionParticipante.Eliminado;
+                   if (vSesionParticipante != null)
+                   {
+                       participante.SesionParticipanteId = vSesionParticipante.SesionParticipanteId;
+                       participante.ComiteTecnicoId = vSesionParticipante.ComiteTecnicoId;
+                       participante.UsuarioId = vSesionParticipante.UsuarioId;
+                       participante.Eliminado = vSesionParticipante.Eliminado;
 
-                   participante.Usuario.UsuarioId = vSesionParticipante.UsuarioId;
-                   participante.Usuario.Nombres = vSesionParticipante.Nombres;
-                   participante.Usuario.Apellidos = vSesionParticipante.Apellidos;
-                   participante.Usuario.NumeroIdentificacion = vSesionParticipante.NumeroIdentificacion;
+                       participante.Usuario.UsuarioId = vSesionParticipante.UsuarioId;
+                       participante.Usuario.Nombres = vSesionParticipante.Nombres;
+                       participante.Usuario.Apellidos = vSesionParticipante.Apellidos;
+                       participante.Usuario.NumeroIdentificacion = vSesionParticipante.NumeroIdentificacion;
 
-
-                   ssc.ResponsableSesionParticipante = participante;
+                       ssc.ResponsableSesionParticipante = participante;
+                   }
                });
             }
             List<SesionSolicitudVoto> ListSesionSolicitudVotos = _context.SesionSolicitudVoto.Where(r => !(bool)r.Eliminado).ToList();
@@ -2498,6 +2500,7 @@ namespace asivamosffie.services
             Plantilla Plantilla = _context.Plantilla.Where(r => r.Codigo == TipoPlantilla).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
             Plantilla.Contenido = ReemplazarDatosPlantillaContratacion(Plantilla.Contenido, contratacion);
             return ConvertirPDF(Plantilla);
+            //return PDF.Convertir(Plantilla);
 
         }
 
@@ -3606,6 +3609,20 @@ namespace asivamosffie.services
                 }
 
                 foreach (var SesionComiteSolicitud in pComiteTecnico.SesionComiteSolicitudComiteTecnico)
+                {
+                    foreach (var pSesionSolicitudCompromiso in SesionComiteSolicitud.SesionSolicitudCompromiso)
+                    {
+                        SesionSolicitudCompromiso SesionSolicitudCompromisoOld = _context.SesionSolicitudCompromiso.Find(pSesionSolicitudCompromiso.SesionSolicitudCompromisoId);
+                        SesionSolicitudCompromisoOld.FechaModificacion = DateTime.Now;
+                        SesionSolicitudCompromisoOld.UsuarioModificacion = pComiteTecnico.UsuarioCreacion;
+                        SesionSolicitudCompromisoOld.EsCumplido = pSesionSolicitudCompromiso.EsCumplido;
+                        if (!(bool)SesionSolicitudCompromisoOld.EsCumplido)
+                            if (SesionSolicitudCompromisoOld.EstadoCodigo == ConstantCodigoCompromisos.Finalizado)
+                                SesionSolicitudCompromisoOld.EstadoCodigo = ConstantCodigoCompromisos.En_proceso;
+                    }
+                }
+
+                foreach (var SesionComiteSolicitud in pComiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario)
                 {
                     foreach (var pSesionSolicitudCompromiso in SesionComiteSolicitud.SesionSolicitudCompromiso)
                     {

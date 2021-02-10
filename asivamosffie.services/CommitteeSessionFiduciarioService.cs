@@ -1991,6 +1991,7 @@ namespace asivamosffie.services
                 //Plantilla
                 string TipoPlantilla = ((int)ConstanCodigoPlantillas.Aplazar_Comite_Tecnico).ToString();
                 Plantilla plantilla = _context.Plantilla.Where(r => r.Codigo == TipoPlantilla).Include(r => r.Encabezado).FirstOrDefault();
+                string strContenido = plantilla.Contenido;
 
                 List<Dominio> ListaParametricas = _context.Dominio.ToList();
 
@@ -1999,15 +2000,15 @@ namespace asivamosffie.services
                     switch (placeholderDominio.Codigo)
                     {
                         case ConstanCodigoVariablesPlaceHolders.COMITE_NUMERO:
-                            plantilla.Contenido = plantilla.Contenido.Replace(placeholderDominio.Nombre, comiteTecnicoOld.NumeroComite);
+                            strContenido = strContenido.Replace(placeholderDominio.Nombre, comiteTecnicoOld.NumeroComite);
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.COMITE_FECHA:
-                            plantilla.Contenido = plantilla.Contenido.Replace(placeholderDominio.Nombre, fechaAnterior.ToString("dd-MM-yyyy"));
+                            strContenido = strContenido.Replace(placeholderDominio.Nombre, fechaAnterior.ToString("dd-MM-yyyy"));
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.COMITE_FECHA_APLAZAMIENTO:
-                            plantilla.Contenido = plantilla.Contenido.Replace(placeholderDominio.Nombre, ((DateTime)comiteTecnicoOld.FechaAplazamiento).ToString("dd-MM-yyyy"));
+                            strContenido = strContenido.Replace(placeholderDominio.Nombre, ((DateTime)comiteTecnicoOld.FechaAplazamiento).ToString("dd-MM-yyyy"));
                             break;
                     }
                 }
@@ -2023,7 +2024,7 @@ namespace asivamosffie.services
                 {
                     if (!string.IsNullOrEmpty(Usuario.Email))
                     {
-                        if (!(bool)Helpers.Helpers.EnviarCorreo(Usuario.Email, "Aplazar sesión comité fiduciario", plantilla.Contenido, pSentender, pPassword, pMailServer, pMailPort))
+                        if (!(bool)Helpers.Helpers.EnviarCorreo(Usuario.Email, "Aplazar sesión comité fiduciario", strContenido, pSentender, pPassword, pMailServer, pMailPort))
                         {
 
                             UsuarioNoNotificados.Add(Usuario);
@@ -3068,7 +3069,7 @@ namespace asivamosffie.services
         private bool? ValidarRegistroCompletoSesionComiteSolicitudActa(SesionComiteSolicitud sesionComiteSolicitud)
         {
             if (
-                (sesionComiteSolicitud.RequiereVotacionFiduciario == true && string.IsNullOrEmpty(sesionComiteSolicitud.RutaSoporteVotacionFiduciario)) &&
+                ((sesionComiteSolicitud.RequiereVotacionFiduciario == false) || (sesionComiteSolicitud.RequiereVotacionFiduciario == true && string.IsNullOrEmpty(sesionComiteSolicitud.RutaSoporteVotacionFiduciario))) &&
                sesionComiteSolicitud.GeneraCompromisoFiduciario == null &&
                sesionComiteSolicitud.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_tecnico &&
                string.IsNullOrEmpty(sesionComiteSolicitud.ObservacionesFiduciario) &&
@@ -3565,7 +3566,7 @@ namespace asivamosffie.services
 
                                     case ConstanCodigoVariablesPlaceHolders.DESARROLLO_SOLICITUD:
                                         registrosContratacion = registrosContratacion
-                                            .Replace(placeholderDominio.Nombre, SesionComiteSolicitud.DesarrolloSolicitud);
+                                            .Replace(placeholderDominio.Nombre, SesionComiteSolicitud.DesarrolloSolicitudFiduciario);
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.DECISIONES_SOLICITUD:
@@ -3573,7 +3574,7 @@ namespace asivamosffie.services
                                         string strRequiereVotacion = "";
                                         int cantidadAprobadas = SesionComiteSolicitud.SesionSolicitudVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value == true && r.ComiteTecnicoFiduciarioId == null).Count();
                                         int cantidadNoAprobadas = SesionComiteSolicitud.SesionSolicitudVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value != true && r.ComiteTecnicoFiduciarioId == null).Count();
-                                        if (SesionComiteSolicitud.RequiereVotacion == true)
+                                        if (SesionComiteSolicitud.RequiereVotacionFiduciario == true)
                                         {
                                             if (cantidadAprobadas > cantidadNoAprobadas)
                                             {
@@ -3594,18 +3595,18 @@ namespace asivamosffie.services
 
                                     case ConstanCodigoVariablesPlaceHolders.OBSERVACIONES_SOLICITUD:
                                         registrosContratacion = registrosContratacion
-                                        .Replace(placeholderDominio.Nombre, SesionComiteSolicitud.Observaciones);
+                                        .Replace(placeholderDominio.Nombre, SesionComiteSolicitud.ObservacionesFiduciario);
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.RESULTADO_VOTACION:
                                         string TextoResultadoVotacion = PlantillaVotacionUnanime;
 
-                                        if (SesionComiteSolicitud.RequiereVotacion == null || !(bool)SesionComiteSolicitud.RequiereVotacion)
+                                        if (SesionComiteSolicitud.RequiereVotacionFiduciario == null || !(bool)SesionComiteSolicitud.RequiereVotacionFiduciario)
                                         {
 
                                             TextoResultadoVotacion = PlantillaNoVotacionUnanime;
                                         }
-                                        TextoResultadoVotacion = TextoResultadoVotacion.Replace("[URL_SOPORTES_VOTO]", SesionComiteSolicitud.RutaSoporteVotacion);
+                                        TextoResultadoVotacion = TextoResultadoVotacion.Replace("[URL_SOPORTES_VOTO]", SesionComiteSolicitud.RutaSoporteVotacionFiduciario);
 
                                         registrosContratacion = registrosContratacion
                                         .Replace(placeholderDominio.Nombre, TextoResultadoVotacion);
@@ -3724,7 +3725,7 @@ namespace asivamosffie.services
 
                                     case ConstanCodigoVariablesPlaceHolders.DESARROLLO_SOLICITUD:
                                         registrosProcesosSelecccion = registrosProcesosSelecccion
-                                            .Replace(placeholderDominio.Nombre, SesionComiteSolicitud.DesarrolloSolicitud);
+                                            .Replace(placeholderDominio.Nombre, SesionComiteSolicitud.DesarrolloSolicitudFiduciario);
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.DECISIONES_SOLICITUD:
@@ -3753,13 +3754,13 @@ namespace asivamosffie.services
 
                                     case ConstanCodigoVariablesPlaceHolders.OBSERVACIONES_SOLICITUD:
                                         registrosProcesosSelecccion = registrosProcesosSelecccion
-                                        .Replace(placeholderDominio.Nombre, SesionComiteSolicitud.Observaciones);
+                                        .Replace(placeholderDominio.Nombre, SesionComiteSolicitud.ObservacionesFiduciario);
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.RESULTADO_VOTACION:
                                         string TextoResultadoVotacion = string.Empty;
 
-                                        if (SesionComiteSolicitud.RequiereVotacion == null || !(bool)SesionComiteSolicitud.RequiereVotacion)
+                                        if (SesionComiteSolicitud.RequiereVotacionFiduciario == null || !(bool)SesionComiteSolicitud.RequiereVotacionFiduciario)
                                         {
                                             TextoResultadoVotacion = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Votacion_No_Unanime).ToString()).FirstOrDefault().Nombre;
                                         }

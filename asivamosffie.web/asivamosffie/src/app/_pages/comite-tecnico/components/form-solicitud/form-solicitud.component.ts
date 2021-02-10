@@ -21,6 +21,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
   @Input() sesionComiteSolicitud: SesionComiteSolicitud;
   @Input() listaMiembros: SesionParticipante[];
   @Input() fechaComite: Date;
+  @Input() EstadosolicitudActa: any;
 
   @Output() validar: EventEmitter<boolean> = new EventEmitter();
 
@@ -315,8 +316,6 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
   }
 
   cargarRegistro() {
-
-    // console.log(this.sesionComiteSolicitud)
 
     let estados: string[] = ['1', '3', '5']
 

@@ -262,6 +262,8 @@ namespace asivamosffie.services
                     item.Proyecto.LocalizacionIdMunicipio = item.Proyecto.LocalizacionIdMunicipioNavigation.Descripcion + " / " + departamento.Descripcion;
                     item.Proyecto.UsuarioModificacion = ListRegiones.Find(r => r.LocalizacionId == departamento.IdPadre).Descripcion;
                     item.Proyecto.TipoIntervencionCodigo = ListTipoIntervencion.Find(r => r.Codigo == item.Proyecto.TipoIntervencionCodigo).Nombre;
+
+                    item.Proyecto.ProyectoAportante = item.Proyecto.ProyectoAportante.Where(r => r.Eliminado != true).ToList();
                 }
                 foreach (var praportante in item.ContratacionProyectoAportante)
                 {

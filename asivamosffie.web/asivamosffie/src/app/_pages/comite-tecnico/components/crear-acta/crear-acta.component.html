@@ -59,6 +59,7 @@
                         [listaMiembros]="objetoComiteTecnico.sesionParticipante" 
                         (validar)="habilitar($event)"
                         [style.pointer-events]="getStyle()"
+                        [EstadosolicitudActa]="objetoComiteTecnico.estadoActaCodigo"
                         [fechaComite]="objetoComiteTecnico.fechaOrdenDia">
 
                     </app-form-solicitud>
