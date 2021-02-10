@@ -110,45 +110,48 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
         err => {
           console.log( err );
         }
+
+        this.projectContractingService.getContratacionByContratacionId( this.objetoDisponibilidad.contratacionId )
+        .subscribe(
+          contratacion => {
+            this.objetoDisponibilidad.fechaComiteTecnicoNotMapped=contratacion.fechaComiteTecnicoNotMapped;
+          contratacion.contratacionProyecto.forEach(cp => {
+            cp.proyecto.contratacionProyectoAportante=cp.contratacionProyectoAportante;
+            
+            this.listaProyectos.push(cp.proyecto);
+          });
+          console.log(this.listaProyectos);
+          },
+          err => {
+            console.log( err );
+          }
+        );
+      
+        if(this.objetoDisponibilidad.tipoSolicitudCodigo=='2')//modificacionContractual
+        {
+          this.budgetAvailabilityService.getNovedadContractual(this.objetoDisponibilidad.contratacionId).subscribe( 
+            res => {
+              console.log(res);
+              this.ddpsolicitud=res[0].contrato.contratacion.disponibilidadPresupuestal[0].numeroDdp;
+              this.ddpvalor=res[0].contrato.contratacion.disponibilidadPresupuestal[0].valorSolicitud;
+              this.ddpdetalle=res[0].novedadContractualDescripcion[0].resumenJustificacion;
+              this.objetoDisponibilidad.novedadContractualId = res[0].novedadContractualId;
+              this.objetoDisponibilidad.esNovedadContractual = true;          
+              this.objetoDisponibilidad.numeroSolicitud = res[0].numeroSolicitud;
+              this.objetoDisponibilidad.tipoSolicitudCodigo = '1';//tradicional
+              this.objetoDisponibilidad.valorSolicitud = res[0].novedadContractualDescripcion[0].presupuestoAdicionalSolicitado;
+              this.addressForm.get("plazoMeses").setValue(res[0].novedadContractualDescripcion[0].plazoAdicionalMeses);
+              this.addressForm.get("plazoDias").setValue(res[0].novedadContractualDescripcion[0].plazoAdicionalDias);
+              this.addressForm.get("objeto").setValue(res[0].novedadContractualDescripcion[0].resumenJustificacion);
+            },
+            err => {
+              console.log( err );
+            }
+          )
+        }  
       })
 
-    this.projectContractingService.getContratacionByContratacionId( this.objetoDisponibilidad.contratacionId )
-      .subscribe(
-        contratacion => {
-          this.objetoDisponibilidad.fechaComiteTecnicoNotMapped=contratacion.fechaComiteTecnicoNotMapped;
-        contratacion.contratacionProyecto.forEach(cp => {
-          cp.proyecto.contratacionProyectoAportante=cp.contratacionProyectoAportante;
-          
-          this.listaProyectos.push(cp.proyecto);
-        });
-        console.log(this.listaProyectos);
-        },
-        err => {
-          console.log( err );
-        }
-      );
     
-    if(this.objetoDisponibilidad.tipoSolicitudCodigo=='2')//modificacionContractual
-    {
-      this.budgetAvailabilityService.getNovedadContractual(this.objetoDisponibilidad.contratacionId).subscribe( 
-        res => {
-          console.log(res);
-          this.ddpsolicitud=res[0].contrato.contratacion.disponibilidadPresupuestal[0].numeroDdp;
-          this.ddpvalor=res[0].contrato.contratacion.disponibilidadPresupuestal[0].valorSolicitud;
-          this.ddpdetalle=res[0].novedadContractualDescripcion[0].resumenJustificacion;
-          this.objetoDisponibilidad.novedadContractualId = res[0].novedadContractualId;
-          this.objetoDisponibilidad.esNovedadContractual = '1';          
-          this.objetoDisponibilidad.numeroSolicitud = res[0].numeroSolicitud;
-          this.objetoDisponibilidad.valorSolicitud = res[0].novedadContractualDescripcion[0].presupuestoAdicionalSolicitado;
-          this.addressForm.get("plazoMeses").setValue(res[0].novedadContractualDescripcion[0].plazoAdicionalMeses);
-          this.addressForm.get("plazoDias").setValue(res[0].novedadContractualDescripcion[0].plazoAdicionalDias);
-          this.addressForm.get("objeto").setValue(res[0].novedadContractualDescripcion[0].resumenJustificacion);
-        },
-        err => {
-          console.log( err );
-        }
-      )
-    }  
 
   }
 

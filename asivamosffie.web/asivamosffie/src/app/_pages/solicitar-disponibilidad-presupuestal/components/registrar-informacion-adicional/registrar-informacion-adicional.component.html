@@ -14,10 +14,10 @@
   </div>
 
   <div class="d-flex justify-content-center">
-    <p class="solicitud" *ngIf="objetoDisponibilidad.tipoSolicitudCodigo === '1'">
+    <p class="solicitud" *ngIf="objetoDisponibilidad.tipoSolicitudCodigo === '1' && !objetoDisponibilidad.esNovedadContractual">
       <strong>Contratación</strong>
     </p>
-    <p class="solicitud" *ngIf="objetoDisponibilidad.tipoSolicitudCodigo === '3'">
+    <p class="solicitud" *ngIf="objetoDisponibilidad.tipoSolicitudCodigo === '1' && objetoDisponibilidad.esNovedadContractual">
       <strong>Modificación Contractual</strong>
     </p>
     <p class="solicitud" *ngIf="objetoDisponibilidad.fechaComiteTecnicoNotMapped">

@@ -56,7 +56,7 @@ export interface DisponibilidadPresupuestal{
     disponibilidadPresupuestalProyecto?: DisponibilidadPresupuestalProyecto[],
     stringAportante?:string
     novedadContractualId?: any;
-    esNovedadContractual?: string;
+    esNovedadContractual?: boolean;
 }
 
 export interface DisponibilidadPresupuestalProyecto{

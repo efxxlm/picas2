@@ -457,7 +457,8 @@ namespace asivamosffie.services
                 {
                     tipo = "ESP";
                 }
-                DisponibilidadCancelar.NumeroDdp = "DDP_" + tipo + "_" + consecutivo.ToString();
+                DisponibilidadCancelar.NumeroDdp = "DDP_" + tipo + "_" + consecutivo.ToString();                
+
                 //
                 //guardar el tema de platas
                 //
@@ -935,7 +936,7 @@ namespace asivamosffie.services
                         Replace("[TOTAL_DE_RECURSOSLETRAS]", CultureInfo.CurrentCulture.TextInfo
                                         .ToTitleCase(Helpers.Conversores
                                         .NumeroALetras(total).ToLower()));
-                    
+                   
 
                 }
                 else if (pDisponibilidad.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo)
@@ -1042,6 +1043,21 @@ namespace asivamosffie.services
                 contrato = _context.Contrato.Where(x => x.ContratacionId == pDisponibilidad.ContratacionId).FirstOrDefault();
             }
 
+            //SI ES NOVEDAD
+            var contratotd = "";
+            var novedadtd = "";
+            var objetotd = _context.Plantilla.Where(x => x.Codigo == ((int)ConstanCodigoPlantillas.DDP_objeto).ToString()).FirstOrDefault().Contenido;
+            objetotd = objetotd.Replace("[OBJETOINNER]", Helpers.Helpers.HtmlStringLimpio(pDisponibilidad.Objeto));
+            if (pDisponibilidad.EsNovedadContractual != null && Convert.ToBoolean(pDisponibilidad.EsNovedadContractual))
+            {
+                contratotd = _context.Plantilla.Where(x => x.Codigo == ((int)ConstanCodigoPlantillas.DDP_contrato).ToString()).FirstOrDefault().Contenido;
+                contratotd = contratotd.Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato);
+                novedadtd = _context.Plantilla.Where(x => x.Codigo == ((int)ConstanCodigoPlantillas.DDP_novedad).ToString()).FirstOrDefault().Contenido;
+                objetotd = objetotd.Replace("colspan=10", "colspan=7");
+
+            }
+            
+
             foreach (var place in placeholders)
             {
                 switch (place.Codigo)
@@ -1072,7 +1088,7 @@ namespace asivamosffie.services
                         
                     case ConstanCodigoVariablesPlaceHolders.DDP_FECHA_COMITE_TECNICO: pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.FechaCreacion.ToString("dd/MM/yyyy")); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_NUMERO_COMITE: pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.NumeroSolicitud); break;
-                    case ConstanCodigoVariablesPlaceHolders.DDP_OBJETO: pStrContenido = pStrContenido.Replace(place.Nombre, Helpers.Helpers.HtmlStringLimpio(pDisponibilidad.Objeto)); break;
+                    
                     case ConstanCodigoVariablesPlaceHolders.DDP_TABLAAPORTANTES: pStrContenido = pStrContenido.Replace(place.Nombre, tablaaportantes); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_TOTAL_DE_RECURSOS: pStrContenido = pStrContenido.Replace(place.Nombre, ""); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_TOTAL_DE_RECURSOSLETRAS: pStrContenido = pStrContenido.Replace(place.Nombre, ""); break;
@@ -1102,7 +1118,11 @@ namespace asivamosffie.services
                         pStrContenido = pStrContenido.Replace(place.Nombre, tablafuentes); break;
                     case ConstanCodigoVariablesPlaceHolders.TABLAUSOS:
                         pStrContenido = pStrContenido.Replace(place.Nombre, tablauso); break;
-
+                    case ConstanCodigoVariablesPlaceHolders.CONTRATOTD:
+                        pStrContenido = pStrContenido.Replace(place.Nombre, contratotd);break;
+                    case ConstanCodigoVariablesPlaceHolders.TIPONOVEDADTD:
+                        pStrContenido = pStrContenido.Replace(place.Nombre, novedadtd); break;
+                    case ConstanCodigoVariablesPlaceHolders.DDP_OBJETO: pStrContenido = pStrContenido.Replace(place.Nombre, objetotd); break;
                 }
             }
             return Helpers.Helpers.HtmlEntities(pStrContenido);

@@ -45,6 +45,8 @@
         public const string  REGISTROS_USOS = "178";
         public const string  ROWSPAN_CANTIDAD_USOS = "179";
         public const string  ROWSPAN_CANTIDAD_USOS_COMPONENTES = "193";
+        public const string CONTRATOTD = "194";
+        public const string TIPONOVEDADTD = "195";
 
         #endregion
 
