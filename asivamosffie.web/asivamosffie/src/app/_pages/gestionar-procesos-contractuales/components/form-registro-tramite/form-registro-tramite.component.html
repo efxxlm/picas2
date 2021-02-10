@@ -69,7 +69,7 @@
       <span class="contador miles" *ngIf="dataFormulario.get('observaciones').value === null" style="margin-top: 2.2em">
         2000
       </span>
-      <span class="icon-incompleto">
+      <span class="icon-incompleto" style="margin-top: 2.3em">
         <img
           class="icon-incompleto--img"
           src="assets/img/icon/incompleto.svg"
@@ -89,8 +89,8 @@
         <label
           class="label-left"
           [class.color-secondaryColor]="
-            (dataFormulario.get('minuta').invalid && dataFormulario.get('minuta').touched) ||
-            (dataFormulario.get('minuta').invalid && camposFaltantes)
+            (dataFormulario.get('rutaDocumento').invalid && dataFormulario.get('rutaDocumento').touched) ||
+            (dataFormulario.get('rutaDocumento').invalid && camposFaltantes)
           "
           >
           URL con soporte</label
@@ -112,8 +112,8 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
             *ngIf="
-              (dataFormulario.get('minuta').invalid && dataFormulario.get('minuta').touched) ||
-              (dataFormulario.get('minuta').invalid && camposFaltantes)
+              (dataFormulario.get('rutaDocumento').invalid && dataFormulario.get('rutaDocumento').touched) ||
+              (dataFormulario.get('rutaDocumento').invalid && camposFaltantes)
             "
           />
         </span>
