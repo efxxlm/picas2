@@ -39,6 +39,9 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
   };
   observaciones: any[];
   estaEditando = false;
+  ddpsolicitud: any;
+  ddpvalor: any;
+  ddpdetalle: any;
 
   constructor(
     private fb: FormBuilder,
@@ -55,6 +58,7 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
       this.objetoDisponibilidad.contratacionId = params.idContratacion;
       this.objetoDisponibilidad.disponibilidadPresupuestalId = params.idDisponibilidadPresupuestal;
       this.objetoDisponibilidad.tipoSolicitudCodigo=params.idTipoSolicitud;
+      console.log(this.objetoDisponibilidad);
       if (this.objetoDisponibilidad.disponibilidadPresupuestalId > 0) {
         this.cargarDisponibilidadPre();
 
@@ -116,16 +120,6 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
           cp.proyecto.contratacionProyectoAportante=cp.contratacionProyectoAportante;
           
           this.listaProyectos.push(cp.proyecto);
-          /*this.projectService.getProjectById(cp.proyectoId)
-            .subscribe(proyecto => {
-              let aporntantes=cp.contratacionProyectoAportante;
-              cp.proyecto = proyecto;
-              cp.proyecto.apo
-              console.log(proyecto);
-        
-              
-        
-            })*/
         });
         console.log(this.listaProyectos);
         },
@@ -133,6 +127,28 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
           console.log( err );
         }
       );
+    
+    if(this.objetoDisponibilidad.tipoSolicitudCodigo=='2')//modificacionContractual
+    {
+      this.budgetAvailabilityService.getNovedadContractual(this.objetoDisponibilidad.contratacionId).subscribe( 
+        res => {
+          console.log(res);
+          this.ddpsolicitud=res[0].contrato.contratacion.disponibilidadPresupuestal[0].numeroDdp;
+          this.ddpvalor=res[0].contrato.contratacion.disponibilidadPresupuestal[0].valorSolicitud;
+          this.ddpdetalle=res[0].novedadContractualDescripcion[0].resumenJustificacion;
+          this.objetoDisponibilidad.novedadContractualId = res[0].novedadContractualId;
+          this.objetoDisponibilidad.esNovedadContractual = '1';          
+          this.objetoDisponibilidad.numeroSolicitud = res[0].numeroSolicitud;
+          this.objetoDisponibilidad.valorSolicitud = res[0].novedadContractualDescripcion[0].presupuestoAdicionalSolicitado;
+          this.addressForm.get("plazoMeses").setValue(res[0].novedadContractualDescripcion[0].plazoAdicionalMeses);
+          this.addressForm.get("plazoDias").setValue(res[0].novedadContractualDescripcion[0].plazoAdicionalDias);
+          this.addressForm.get("objeto").setValue(res[0].novedadContractualDescripcion[0].resumenJustificacion);
+        },
+        err => {
+          console.log( err );
+        }
+      )
+    }  
 
   }
 
@@ -194,7 +210,7 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
 
     this.objetoDisponibilidad.objeto = this.addressForm.get('objeto').value;
     this.objetoDisponibilidad.plazoMeses = this.addressForm.get('plazoMeses').value;
-    this.objetoDisponibilidad.plazoDias = this.addressForm.get('plazoDias').value;
+    this.objetoDisponibilidad.plazoDias = this.addressForm.get('plazoDias').value;    
       console.log(this.objetoDisponibilidad);
     this.budgetAvailabilityService.createOrEditInfoAdditional(this.objetoDisponibilidad)
       .subscribe(respuesta => {

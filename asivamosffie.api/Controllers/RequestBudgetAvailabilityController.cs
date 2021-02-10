@@ -351,5 +351,12 @@ namespace asivamosffie.api.Controllers
             return await _managementCommitteeReportService.GetContratos();
         }
 
+        
+        [Route("getNovedadContractualByContratacionId")]
+        public async Task<dynamic> getNovedadContractualByContratacionId(int contratacionId)
+        {
+            return await _managementCommitteeReportService.getNovedadContractualByContratacionId(contratacionId);
+        }
+
     }
 }

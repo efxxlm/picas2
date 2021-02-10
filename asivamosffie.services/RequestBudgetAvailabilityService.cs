@@ -2105,5 +2105,15 @@ namespace asivamosffie.services
         {
             return _context.Contrato.Where(x => !(bool)x.Eliminado).ToList();
         }
+
+        public async Task<dynamic> getNovedadContractualByContratacionId(int contratacionId)
+        {
+            return _context.NovedadContractual.Where(x => x.Contrato.ContratacionId == contratacionId).
+                Include(x => x.Contrato).
+                    ThenInclude(x => x.Contratacion).
+                    ThenInclude(x=>x.DisponibilidadPresupuestal).
+                Include(x=>x.NovedadContractualDescripcion).
+                Include(x=>x.ComponenteAportanteNovedad).ToList();
+        }
     }
 }

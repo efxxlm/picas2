@@ -26,12 +26,12 @@
     </p>
   </div>
 
-  <mat-card class="shipping-card var-main-gris mt-1em" style="display: none">
+  <mat-card class="shipping-card var-main-gris mt-1em" *ngIf="objetoDisponibilidad.esNovedadContractual">
     <mat-card-content>
-      <p><b>DDP:</b>DDP_PI_007</p>
-      <p><b>Valor DDP:</b> $60.000.000</p>
+      <p><b>DDP:</b>{{ddpsolicitud}}</p>
+      <p><b>Valor DDP:</b> {{ddpvalor|currency:'':'symbol':'3.0'}}</p>
       <p><b>Detalle de la modificación:</b></p>
-      <p>Se realiza adición de recursos para obras complementarias</p>
+      <p>{{ddpdetalle}}</p>
     </mat-card-content>
   </mat-card>
 
@@ -112,6 +112,7 @@
                 name="plazoMeses"
                 (keypress)="validateNumberKeypress($event)"
                 onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                [readonly]="ddpsolicitud"
               />
             </mat-form-field>
             <span
@@ -168,6 +169,7 @@
                 (change)="validatenomore30()"
                 (keypress)="validateNumberKeypress($event)"
                 onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                [readonly]="ddpsolicitud"
               />
             </mat-form-field>
             <span
@@ -212,6 +214,7 @@
           (onContentChanged)="maxLength($event, 1000)"
           formControlName="objeto"
           required
+          [readonly]="ddpsolicitud"
         ></quill-editor>
       </div>
       <span class="contador miles" *ngIf="addressForm.get('objeto').value !== null">

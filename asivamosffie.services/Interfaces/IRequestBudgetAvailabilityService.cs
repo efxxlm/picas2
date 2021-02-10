@@ -36,6 +36,7 @@ namespace asivamosffie.services.Interfaces
         Task<List<DisponibilidadPresupuestal>> GetDDPAdministrativa();
         Task<Respuesta> EliminarDisponibilidad(int disponibilidadPresupuestalId);
         Task<dynamic> GetContratos();
+        Task<dynamic> getNovedadContractualByContratacionId(int contratacionId);
     }
     
 }

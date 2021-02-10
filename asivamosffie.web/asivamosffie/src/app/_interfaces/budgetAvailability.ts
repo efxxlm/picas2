@@ -18,9 +18,9 @@ export interface GrillaDisponibilidadPresupuestal{
 }
 
 export interface DisponibilidadPresupuestal{
-    disponibilidadPresupuestalObservacion?: any[];
     
     
+    disponibilidadPresupuestalObservacion?: any[];    
     disponibilidadPresupuestalId?: number,
     fechaSolicitud?: Date,
     tipoSolicitudCodigo?: string,//tradicional, especial o administrativo
@@ -55,7 +55,8 @@ export interface DisponibilidadPresupuestal{
     aportante?: any;
     disponibilidadPresupuestalProyecto?: DisponibilidadPresupuestalProyecto[],
     stringAportante?:string
-
+    novedadContractualId?: any;
+    esNovedadContractual?: string;
 }
 
 export interface DisponibilidadPresupuestalProyecto{
