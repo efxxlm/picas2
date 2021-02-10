@@ -105,7 +105,7 @@ export class ValidarActaDeInicioFIPreconstruccionComponent implements OnInit {
       for(let i=0; i<data.length;i++){ 
         if(data[i].esSupervision==false){
           this.tieneObservacionesBool = this.dataElements[i].esActaFase1;
-          this.observacionesUltimas = this.dataElements[i].observaciones;
+          this.observacionesUltimas = this.dataElements[i].observaciones !== undefined && this.dataElements[i].observaciones.length > 0 ? this.dataElements[i].observaciones : undefined;
           this.fechaCreacionObs = this.dataElements[i].fechaCreacion;
         }
       }

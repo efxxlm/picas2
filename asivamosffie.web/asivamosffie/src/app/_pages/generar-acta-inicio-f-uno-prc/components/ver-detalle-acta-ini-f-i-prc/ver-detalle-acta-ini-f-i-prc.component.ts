@@ -50,7 +50,7 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
   tieneObservacionesBool: any;
   tieneObservacionesBool2: any;
   observacionesUltimas: any;
-  dataElements: any;
+  obsSupervisor: any;
   contratoObservacionId: any;
   fechaCreacionObs: any;
   numIdRepresentanteLegal: any;
@@ -104,18 +104,37 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
   }
   loadService(id){
     this.service.GetListContratoObservacionByContratoId(id).subscribe((data:any)=>{
-      this.dataElements = data;
-      for(let i=0; i<data.length;i++){ 
-        if(data[i].esSupervision==false){
-          this.tieneObservacionesBool = this.dataElements[i].esActaFase1;
-          this.observacionesUltimas = this.dataElements[i].observaciones;
-          this.fechaCreacionObs = this.dataElements[i].fechaCreacion;
+      console.log( data );
+      const obsArraySupervisor = [];
+      const obsArrayConsideraciones = [];
+      data.forEach( obs => {
+        if ( obs.esSupervision === true ) {
+          obsArraySupervisor.push( obs );
         }
-        else{
-          this.observacionesUltimasSup = this.dataElements[i].observaciones;
-          this.tieneObservacionesBool2 = this.dataElements[i].esActaFase1;
+        if ( obs.esSupervision === false ) {
+          obsArrayConsideraciones.push( obs );
         }
+      } );
+
+      if ( obsArraySupervisor.length > 0 ) {
+        this.obsSupervisor = obsArraySupervisor[ obsArraySupervisor.length - 1 ];
       }
+
+      if ( obsArrayConsideraciones.length > 0 ) {
+        this.observacionesUltimas = obsArrayConsideraciones[ obsArrayConsideraciones.length - 1 ];
+      }
+
+      // for(let i=0; i<data.length;i++){ 
+      //   if(data[i].esSupervision==false){
+      //     this.tieneObservacionesBool = this.dataElements[i].esActaFase1;
+      //     this.observacionesUltimas = this.dataElements[i].observaciones;
+      //     this.fechaCreacionObs = this.dataElements[i].fechaCreacion;
+      //   }
+      //   else{
+      //     this.observacionesUltimasSup = this.dataElements[i].observaciones;
+      //     this.tieneObservacionesBool2 = this.dataElements[i].esActaFase1;
+      //   }
+      // }
     });
   }
   cargarDataParaInsercion(data){
