@@ -563,8 +563,6 @@ namespace asivamosffie.services
         /// <summary>
         /// Correos  Automaticos
         /// </summary>
-        /// <param name="pContratoId"></param>
-        /// <param name="UsuarioModificacion"></param>
         /// <returns></returns>
         public async Task<Respuesta> AprobarInicio(int pContratoId, string UsuarioModificacion)
         {

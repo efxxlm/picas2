@@ -5,31 +5,17 @@ using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.services.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
-
-//using asivamosffie.model.APIModels;
-//using asivamosffie.model.Models;
-
-using asivamosffie.api;
-
-using asivamosffie.services.Helpers;
-
 
 namespace asivamosffie.services
 {
     public class GuaranteePolicyService : IGuaranteePolicyService
     {
         private readonly ICommonService _commonService;
-        private readonly devAsiVamosFFIEContext _context;
 
-        //private readonly IOptions<AppSettings> _settings;
+        private readonly devAsiVamosFFIEContext _context;
 
         public GuaranteePolicyService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
@@ -38,7 +24,7 @@ namespace asivamosffie.services
             _context = context;
             //_settings = settings;
         }
-        //public async Task<ActionResult<List<PolizaGarantia>>> GetListPolizaGarantiaByContratoPolizaId(int pContratoPolizaId)
+
         public async Task<List<PolizaGarantia>> GetListPolizaGarantiaByContratoPolizaId(int pContratoPolizaId)
         {
             return await _context.PolizaGarantia.Where(r => r.ContratoPolizaId == pContratoPolizaId).ToListAsync();
@@ -214,7 +200,6 @@ namespace asivamosffie.services
                         strCrearEditar = "REGISTRAR POLIZA GARANTIA";
                         polizaGarantia.FechaCreacion = DateTime.Now;
                         _context.PolizaGarantia.Add(polizaGarantia);
-                        //await _context.SaveChangesAsync();
                         _context.SaveChanges();
 
                     }
@@ -226,24 +211,13 @@ namespace asivamosffie.services
 
                         if (polizaGarantiaBD != null)
                         {
-                            //PolizaGarantia poli
                             polizaGarantia.FechaModificacion = DateTime.Now;
                             polizaGarantiaBD.TipoGarantiaCodigo = polizaGarantia.TipoGarantiaCodigo;
                             polizaGarantiaBD.EsIncluidaPoliza = polizaGarantia.EsIncluidaPoliza;
                             _context.PolizaGarantia.Update(polizaGarantiaBD);
 
                         }
-
-                        //_context.CuentaBancaria.Update(cuentaBancariaAntigua);
                     }
-                    //contratoPoliza.FechaCreacion = DateTime.Now;
-                    //contratoPoliza.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
-
-
-                    //_context.Add(contratoPoliza);
-
-                    //contratoPoliza.ObservacionesRevisionGeneral = ValidarRegistroCompleto(cofinanciacion);
-
 
                     return
                         new Respuesta
@@ -253,25 +227,17 @@ namespace asivamosffie.services
                             IsValidation = false,
                             Code = ConstantMessagesContratoPoliza.CreadoCorrrectamente,
                             Message =
-                            await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias,
-                            ConstantMessagesContratoPoliza.OperacionExitosa,
-                            //contratoPoliza
-                            idAccionCrearContratoPoliza
-                            , polizaGarantia.UsuarioCreacion
-                            //"UsuarioCreacion"
-                            , strCrearEditar
-                            //contratoPoliza.UsuarioCreacion, "REGISTRAR POLIZA GARANTIA"
-                            )
+                            await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                                                                                            (int)enumeratorMenu.GestionarGarantias,
+                                                                                            ConstantMessagesContratoPoliza.OperacionExitosa,
+                                                                                            idAccionCrearContratoPoliza,
+                                                                                            polizaGarantia.UsuarioCreacion,
+                                                                                            strCrearEditar
+                                                                                        )
                         };
-
-                    //return _response = new Respuesta { IsSuccessful = true,
-                    //    IsValidation = false, Data = cuentaBancaria,
-                    //    Code = ConstantMessagesBankAccount.OperacionExitosa };
                 }
                 else
-                {
                     return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContratoPoliza.RecursoNoEncontrado };
-                }
 
             }
             catch (Exception ex)
@@ -427,17 +393,16 @@ namespace asivamosffie.services
 
                     if (contratoPolizaBD != null)
                     {
-                         
                         Contrato contrato = _context.Contrato.Where(r => r.ContratoId == contratoPoliza.ContratoId).FirstOrDefault();
 
                         if (contrato != null)
                             if (contrato.EstaDevuelto != null)
                                 ContratoEsDevuelto = Convert.ToBoolean(contrato.EstaDevuelto);
 
-           
-                        if (contratoPolizaBD.RegistroCompleto == true)
-                            contratoPolizaBD.RegistroCompleto = await ValidarRegistroCompletoSeguros(contratoPoliza);
-
+                        ///No entiendo ni entedere ese codigo Julian Martinez Castañeda 10/02/2021
+                        //if (contratoPolizaBD.RegistroCompleto == true)
+                        //    contratoPolizaBD.RegistroCompleto = await ValidarRegistroCompletoSeguros(contratoPoliza);
+ 
                         contratoPolizaBD.FechaModificacion = DateTime.Now;
                         contratoPolizaBD.UsuarioModificacion = contratoPoliza.UsuarioCreacion;
                         contratoPolizaBD.RegistroCompleto = ValidarRegistroCompletoContratoPoliza(contratoPoliza, ContratoEsDevuelto);
