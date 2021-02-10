@@ -1086,22 +1086,9 @@ namespace asivamosffie.services
         }
 
         public async Task<bool> ValidarRegistroCompletoSeguros(ContratoPoliza contratoPoliza)
-        {
-            PolizaGarantia polizaGarantiaSeguro;
-            List<PolizaGarantia> lstPolizaGarantia;
-
-            lstPolizaGarantia = _context.PolizaGarantia.Where(r => r.ContratoPolizaId == contratoPoliza.ContratoPolizaId).ToList();
-
-            List<Dominio> TipoGarantiaSeguroContratoPoliza = null;
-
-            if (contratoPoliza.TipoSolicitudCodigo != null)
-            {
-                TipoGarantiaSeguroContratoPoliza = await _commonService.GetListDominioByIdTipoDominio(Convert.ToInt32(EnumeratorTipoDominio.Tipo_Garantia_Poliza));
-
-            }
-            int cntSi = 0;
-
-
+        { 
+            List<PolizaGarantia> lstPolizaGarantia = _context.PolizaGarantia.Where(r => r.ContratoPolizaId == contratoPoliza.ContratoPolizaId).ToList();
+             
             //jflorez, las polizas pueden estar en no, lo importante es que tenga almenos una
             if (lstPolizaGarantia.Count() > 0)
             {
@@ -1133,11 +1120,11 @@ namespace asivamosffie.services
                 || string.IsNullOrEmpty(contratoPoliza.Vigencia.ToString())
                 || string.IsNullOrEmpty(contratoPoliza.VigenciaAmparo.ToString())
                 || string.IsNullOrEmpty(contratoPoliza.ValorAmparo.ToString())
-                || contratoPoliza.CumpleDatosAsegurado.HasValue
-                || contratoPoliza.CumpleDatosBeneficiario.HasValue
-                || contratoPoliza.CumpleDatosTomador.HasValue
-                || contratoPoliza.IncluyeReciboPago.HasValue
-                || contratoPoliza.IncluyeCondicionesGenerales.HasValue
+                || !contratoPoliza.CumpleDatosAsegurado.HasValue
+                || !contratoPoliza.CumpleDatosBeneficiario.HasValue
+                || !contratoPoliza.CumpleDatosTomador.HasValue
+                || !contratoPoliza.IncluyeReciboPago.HasValue
+                || !contratoPoliza.IncluyeCondicionesGenerales.HasValue
                 || string.IsNullOrEmpty(contratoPoliza.EstadoPolizaCodigo.ToString())
                 )
                 return false;
