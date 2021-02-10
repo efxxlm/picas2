@@ -612,7 +612,7 @@ namespace asivamosffie.services
             string template = TemplateRecoveryPassword.Contenido
                 .Replace("_LinkF_", pDominioFront)
                 .Replace("[NUMERO_CONTRATO]", contratoMod.NumeroContrato)
-                .Replace("[FECHA_POLIZA]", ((DateTime)contratoMod.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MMMM-yy"))
+                .Replace("[FECHA_POLIZA]", ((DateTime)contratoMod.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MM-yy"))
                 .Replace("[CANTIDAD_PROYECTOS]", contratoMod.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
 
             bool blEnvioCorreo = false;
@@ -634,7 +634,7 @@ namespace asivamosffie.services
                 .Replace("_LinkF_", pDominioFront)
                 .Replace("[TIPO_CONTRATO]", pTipoContrato)
                 .Replace("[NUMERO_CONTRATO]", contratoMod.NumeroContrato)
-                .Replace("[FECHA_VERIFICACION]", ((DateTime.Now)).ToString("dd-MMMM-yy"))
+                .Replace("[FECHA_VERIFICACION]", ((DateTime.Now)).ToString("dd-MM-yy"))
                 .Replace("[CANTIDAD_PROYECTOS]", contratoMod.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
 
             bool blEnvioCorreo = false;
@@ -780,7 +780,7 @@ namespace asivamosffie.services
                         string template = TemplateRecoveryPassword.Contenido
                                     .Replace("_LinkF_", pDominioFront)
                                     .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
-                                    .Replace("[FECHA_REQUISITOS]", fechaValidacion.ToString("dd-MMMM-yy"))
+                                    .Replace("[FECHA_REQUISITOS]", fechaValidacion.ToString("dd-MM-yy"))
                                     .Replace("[CANTIDAD_PROYECTOS]", contrato.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
 
                         foreach (var item in usuarios)
@@ -819,7 +819,7 @@ namespace asivamosffie.services
                         string template = TemplateRecoveryPassword.Contenido
                                  .Replace("_LinkF_", pDominioFront)
                                  .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
-                                 .Replace("[FECHA_REQUISITOS]", fechaValidacion.ToString("dd-MMMM-yy"))
+                                 .Replace("[FECHA_REQUISITOS]", fechaValidacion.ToString("dd-MM-yy"))
                                  .Replace("[CANTIDAD_PROYECTOS]", contrato.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
                         foreach (var item in usuarios)
                         {
