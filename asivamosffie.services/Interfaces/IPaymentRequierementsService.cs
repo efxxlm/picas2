@@ -14,5 +14,7 @@ namespace asivamosffie.services.Interfaces
         Task<dynamic> GetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(int pMenuId, int pSolicitudPagoId, int pPadreId);
 
         Task<dynamic> GetListSolicitudPago(int pMenuId);
+
+        Task<Respuesta> ChangueStatusSolicitudPago(SolicitudPago pSolicitudPago);
     }
 }

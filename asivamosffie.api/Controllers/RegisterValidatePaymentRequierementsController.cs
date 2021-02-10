@@ -63,10 +63,10 @@ namespace asivamosffie.api.Controllers
         }
          
         [HttpPost]
-        [Route("ReturnSolicitdPago")]
-        public async Task<IActionResult> ReturnSolicitdPago([FromQuery] SolicitudPago pSolicitudPago)
+        [Route("ReturnSolicitudPago")]
+        public async Task<IActionResult> ReturnSolicitudPago([FromBody] SolicitudPago pSolicitudPago)
         { 
-            return Ok(await _registerValidatePaymentRequierementsService.ReturnSolicitdPago(pSolicitudPago));
+            return Ok(await _registerValidatePaymentRequierementsService.ReturnSolicitudPago(pSolicitudPago));
         }
 
         [HttpPost]

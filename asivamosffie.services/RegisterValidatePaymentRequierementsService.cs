@@ -390,18 +390,17 @@ namespace asivamosffie.services
         public async Task GetValidateSolicitudPagoId(int SolicitudPagoId)
         {
             SolicitudPago solicitudPago = await GetSolicitudPago(SolicitudPagoId);
-            bool CompleteRecord = ValidateCompleteRecordSolicitudPago(solicitudPago);
-
-            await _context.Set<SolicitudPago>()
-                  .Where(s => s.SolicitudPagoId == SolicitudPagoId)
-                  .UpdateAsync(r => new SolicitudPago()
-                  {
-                      RegistroCompleto = CompleteRecord
-                  });
+            bool CompleteRecord = ValidateCompleteRecordSolicitudPago(solicitudPago); 
+                                                                                await _context.Set<SolicitudPago>()
+                                                                                                      .Where(s => s.SolicitudPagoId == SolicitudPagoId)
+                                                                                                      .UpdateAsync(r => new SolicitudPago()
+                                                                                                      {
+                                                                                                          RegistroCompleto = CompleteRecord
+                                                                                                      });
         }
 
 
-        public async Task<Respuesta> ReturnSolicitdPago(SolicitudPago pSolicitudPago)
+        public async Task<Respuesta> ReturnSolicitudPago(SolicitudPago pSolicitudPago)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Devolver_Solicitud_Pago, (int)EnumeratorTipoDominio.Acciones);
 

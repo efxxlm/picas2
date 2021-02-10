@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-
+using Z.EntityFramework.Plus;
 
 namespace asivamosffie.services
 {
@@ -118,11 +118,11 @@ namespace asivamosffie.services
                                            .Where(s => s.MenuId == pMenuId && s.SolicitudPagoId == pSolicitudPagoId && s.IdPadre == pPadreId)
                                                                                                                        .Select(p => new
                                                                                                                        {
-                                                                                                                           p.TieneObservacion,
-                                                                                                                           p.Archivada,
-                                                                                                                           p.FechaCreacion,
-                                                                                                                           p.Observacion,
-                                                                                                                           p.RegistroCompleto
+                                                                                                                               p.TieneObservacion,
+                                                                                                                               p.Archivada,
+                                                                                                                               p.FechaCreacion,
+                                                                                                                               p.Observacion,
+                                                                                                                               p.RegistroCompleto
                                                                                                                        }).ToListAsync();
         }
 
@@ -170,10 +170,16 @@ namespace asivamosffie.services
 
             try
             {
+                await _context.Set<SolicitudPago>()
+                                       .Where(o => o.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
+                                                                                           .UpdateAsync(r => new SolicitudPago()
+                                                                                           {
+                                                                                               FechaModificacion = DateTime.Now,
+                                                                                               UsuarioModificacion = pSolicitudPago.UsuarioCreacion, 
+                                                                                               EstadoCodigo = pSolicitudPago.EstadoCodigo
+                                                                                           });
 
-
-
-
+         //       string strEstadoSolicitudPago = _context.
                 return
                     new Respuesta
                     {
@@ -181,7 +187,7 @@ namespace asivamosffie.services
                         IsException = false,
                         IsValidation = false,
                         Code = GeneralCodes.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.OperacionExitosa, idAccion, pSolicitudPago.UsuarioCreacion, "CREAR OBSERVACION SOLICITUD PAGO")
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.OperacionExitosa, idAccion, pSolicitudPago.UsuarioCreacion, "CAMBIAR ESTADO SOLICITUD PAGO")
                     };
             }
             catch (Exception ex)

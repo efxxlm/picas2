@@ -44,6 +44,23 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
+ 
+        [Route("ChangueStatusSolicitudPago")]
+        public async Task<IActionResult> ChangueStatusSolicitudPago([FromBody] SolicitudPago pSolicitudPago)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pSolicitudPago.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _paymentRequierementsService.ChangueStatusSolicitudPago(pSolicitudPago);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
 
         [Route("GetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId")]
         [HttpGet]

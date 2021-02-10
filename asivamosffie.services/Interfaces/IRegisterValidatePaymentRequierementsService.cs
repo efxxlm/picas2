@@ -9,7 +9,7 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IRegisterValidatePaymentRequierementsService
     {
-        Task<Respuesta>  ReturnSolicitdPago(SolicitudPago pSolicitudPago);
+        Task<Respuesta> ReturnSolicitudPago(SolicitudPago pSolicitudPago);
 
         Task  GetValidateSolicitudPagoId(int SolicitudPagoId);
 
