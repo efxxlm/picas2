@@ -307,6 +307,6 @@ export class FormOtrosTemasComponent implements OnInit {
 
         this.tieneVotacion = this.sesionComiteTema.requiereVotacion
       })
-      this.estaEditando = true;
+    this.estaEditando = true
   }
 }

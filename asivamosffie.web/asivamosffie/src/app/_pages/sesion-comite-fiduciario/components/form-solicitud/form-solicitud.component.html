@@ -161,6 +161,8 @@
                 class="label-left"
                 for="estadoSolicitud"
                 [class.color-secondaryColor]="
+                  (addressForm.get('estadoSolicitud').value === '1' && addressForm.get('estadoSolicitud').touched) ||
+                  (addressForm.get('estadoSolicitud').value === '1' && estaEditando) ||
                   (addressForm.get('estadoSolicitud').invalid && addressForm.get('estadoSolicitud').touched) ||
                   (addressForm.get('estadoSolicitud').invalid && estaEditando)
                 "
@@ -186,6 +188,8 @@
                 matTooltip="Debe ingresar la información en el campo para continuar"
                 matTooltipClass="info-tooltip"
                 *ngIf="
+                  (addressForm.get('estadoSolicitud').value === '1' && addressForm.get('estadoSolicitud').touched) ||
+                  (addressForm.get('estadoSolicitud').value === '1' && estaEditando) ||
                   (addressForm.get('estadoSolicitud').invalid && addressForm.get('estadoSolicitud').touched) ||
                   (addressForm.get('estadoSolicitud').invalid && estaEditando)
                 "

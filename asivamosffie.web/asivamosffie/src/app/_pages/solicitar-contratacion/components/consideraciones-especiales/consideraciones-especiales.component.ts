@@ -24,10 +24,20 @@ export class ConsideracionesEspecialesComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
 
   constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
+    this.cargarEdicion()
+  }
+  
+  private cargarEdicion() {
+    setTimeout(() => {
+      if ( this.contratacion[ 'contratista' ] !== undefined ) {
+        this.estaEditando = true;
+      }
+    }, 2000);
   }
 
   maxLength(e: any, n: number) {
