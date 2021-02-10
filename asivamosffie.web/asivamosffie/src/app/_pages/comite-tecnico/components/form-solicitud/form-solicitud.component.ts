@@ -407,6 +407,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
       this.justificacion = this.sesionComiteSolicitud.procesoSeleccion.justificacion
     }
 
+    this.estaEditando = true;
 
   }
 

@@ -194,6 +194,7 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
         this.addressForm.get('responsableAprob').setValue(responAprob);
       }
       this.dataLoad2(data);
+      if (data.nombreAseguradora) this.estaEditando = true
     });
   }
   dataLoad2(data) {
