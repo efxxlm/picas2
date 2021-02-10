@@ -86,7 +86,8 @@ namespace asivamosffie.services
                     ConstanStringTipoSolicitudContratacion.contratacion,
                     TipoSolicitud = strTipoSolicitud,
                     DisponibilidadPresupuestalId = DisponibilidadPresupuestal.DisponibilidadPresupuestalId,
-                    NumeroSolicitud = DisponibilidadPresupuestal.NumeroSolicitud
+                    NumeroSolicitud = DisponibilidadPresupuestal.NumeroSolicitud,
+                    //NovedadContractual = DisponibilidadPresupuestal.NovedadContractualId != null ? _context.NovedadContractual.Where(x => x.NovedadContractualId == DisponibilidadPresupuestal.NovedadContractualId).Include(x => x.NovedadContractualDescripcion).FirstOrDefault() : null
                 };
 
                 ListDisponibilidadPresupuestalGrilla.Add(disponibilidadPresupuestalGrilla);
@@ -345,7 +346,7 @@ namespace asivamosffie.services
                     TipoSolicitudEspecial = DisponibilidadPresupuestal.TipoSolicitudEspecialCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(DisponibilidadPresupuestal.TipoSolicitudEspecialCodigo, (int)EnumeratorTipoDominio.Tipo_DDP_Espacial) :
                     //si no viene el campo puede ser contratación
                     DisponibilidadPresupuestal.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo ? ConstanStringTipoSolicitudContratacion.proyectoAdministrativo :
-                    ConstanStringTipoSolicitudContratacion.contratacion,
+                    DisponibilidadPresupuestal.EsNovedadContractual == null ? ConstanStringTipoSolicitudContratacion.contratacion : !Convert.ToBoolean(DisponibilidadPresupuestal.EsNovedadContractual) ? ConstanStringTipoSolicitudContratacion.contratacion : ConstanStringTipoSolicitudContratacion.novedadContractual,
                     DisponibilidadPresupuestalId = DisponibilidadPresupuestal.DisponibilidadPresupuestalId,
                     NumeroSolicitud = DisponibilidadPresupuestal.NumeroSolicitud,
                     FechaFirmaContrato = fechaContrato == null ? "" : Convert.ToDateTime(fechaContrato).ToString("dd/MM/yyyy"),
@@ -1048,13 +1049,12 @@ namespace asivamosffie.services
             var novedadtd = "";
             var objetotd = _context.Plantilla.Where(x => x.Codigo == ((int)ConstanCodigoPlantillas.DDP_objeto).ToString()).FirstOrDefault().Contenido;
             objetotd = objetotd.Replace("[OBJETOINNER]", Helpers.Helpers.HtmlStringLimpio(pDisponibilidad.Objeto));
-            if (pDisponibilidad.EsNovedadContractual != null && Convert.ToBoolean(pDisponibilidad.EsNovedadContractual))
+            if (pDisponibilidad.EsNovedadContractual != null && Convert.ToBoolean(pDisponibilidad.EsNovedadContractual) && !drp)
             {
                 contratotd = _context.Plantilla.Where(x => x.Codigo == ((int)ConstanCodigoPlantillas.DDP_contrato).ToString()).FirstOrDefault().Contenido;
                 contratotd = contratotd.Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato);
                 novedadtd = _context.Plantilla.Where(x => x.Codigo == ((int)ConstanCodigoPlantillas.DDP_novedad).ToString()).FirstOrDefault().Contenido;
                 objetotd = objetotd.Replace("colspan=10", "colspan=7");
-
             }
             
 
@@ -1079,7 +1079,7 @@ namespace asivamosffie.services
                             pStrContenido.Replace(place.Nombre, pDisponibilidad.TipoSolicitudEspecialCodigo != null ? _context.Dominio.Where(x=>x.Codigo==pDisponibilidad.TipoSolicitudEspecialCodigo && x.TipoDominioId==(int)EnumeratorTipoDominio.Tipo_DDP_Espacial).FirstOrDefault().Nombre :
                     //si no viene el campo puede ser contratación
                     pDisponibilidad.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo ? ConstanStringTipoSolicitudContratacion.proyectoAdministrativo :
-                    ConstanStringTipoSolicitudContratacion.contratacion); break;
+                    pDisponibilidad.EsNovedadContractual == null ? ConstanStringTipoSolicitudContratacion.contratacion : !Convert.ToBoolean(pDisponibilidad.EsNovedadContractual) ? ConstanStringTipoSolicitudContratacion.contratacion : ConstanStringTipoSolicitudContratacion.novedadContractual); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_OPCION_CONTRATAR: pStrContenido =
                             pStrContenido.Replace(place.Nombre, opcionContratarCodigo); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_TABLA_LIMITACION_ESPECIAL:
@@ -1516,7 +1516,7 @@ namespace asivamosffie.services
                 template = template.Replace("_LinkF_", urlDestino);
                 template = template.Replace("[NUMEROCONTRATO]", DisponibilidadCancelar.Contratacion.Contrato.FirstOrDefault().NumeroContrato);
                 template = template.Replace("[FECHACONTRATO]", DisponibilidadCancelar.Contratacion.Contrato.FirstOrDefault().FechaFirmaContrato!=null?Convert.ToDateTime(DisponibilidadCancelar.Contratacion.Contrato.FirstOrDefault().FechaFirmaContrato).ToString("dd/MM/yyyy"):"");
-                template = template.Replace("[TIPOSOLICITUD]", ConstanStringTipoSolicitudContratacion.contratacion);//esto va a cambiar
+                template = template.Replace("[TIPOSOLICITUD]", DisponibilidadCancelar.EsNovedadContractual == null ? ConstanStringTipoSolicitudContratacion.contratacion : !Convert.ToBoolean(DisponibilidadCancelar.EsNovedadContractual) ? ConstanStringTipoSolicitudContratacion.contratacion : ConstanStringTipoSolicitudContratacion.novedadContractual);//esto va a cambiar
                 template = template.Replace("[NUMERODRP]", DisponibilidadCancelar.NumeroDrp);
                 template = template.Replace("[NUMERODISPONIBILIDAD]", DisponibilidadCancelar.NumeroDdp);
                 /*busco usuario Juridico*/
