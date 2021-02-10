@@ -407,15 +407,15 @@ namespace asivamosffie.services
             try
             { 
                 await _context.Set<SolicitudPago>()
-                      .Where(s => s.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
-                      .UpdateAsync(r => new SolicitudPago()
-                      {
-                          UsuarioModificacion = pSolicitudPago.UsuarioModificacion,
-                          FechaModificacion = pSolicitudPago.FechaModificacion,
-                          EstadoCodigo = pSolicitudPago.EstadoCodigo,
-                          FechaRadicacionSacContratista = pSolicitudPago.FechaRadicacionSacContratista,
-                          NumeroRadicacionSacContratista = pSolicitudPago.NumeroRadicacionSacContratista 
-                      });
+                                                  .Where(s => s.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
+                                                                      .UpdateAsync(r => new SolicitudPago()
+                                                                          {
+                                                                              UsuarioModificacion = pSolicitudPago.UsuarioModificacion,
+                                                                              FechaModificacion = pSolicitudPago.FechaModificacion,
+                                                                              EstadoCodigo = pSolicitudPago.EstadoCodigo,
+                                                                              FechaRadicacionSacContratista = pSolicitudPago.FechaRadicacionSacContratista,
+                                                                              NumeroRadicacionSacContratista = pSolicitudPago.NumeroRadicacionSacContratista 
+                                                                          });
 
 
                 return
