@@ -1535,7 +1535,6 @@ namespace asivamosffie.services
             try
             {
 
-
                 int OrigenId = await _commonService.GetDominioIdByCodigoAndTipoDominio(OrigenArchivoCargue.OrdeELegibilidad, (int)EnumeratorTipoDominio.Origen_Documento_Cargue);
 
                 ArchivoCargue archivoCargue = _context.ArchivoCargue.Where(r => r.OrigenId == 2 && r.Nombre.Trim().ToUpper().Equals(pIdDocument.ToUpper().Trim())).FirstOrDefault();
@@ -1611,6 +1610,11 @@ namespace asivamosffie.services
                         _context.TempOrdenLegibilidad.Update(tempOrdenLegibilidad);
                         _context.SaveChanges();
                     }
+
+                    ProcesoSeleccion procesoSeleccion = _context.ProcesoSeleccion.Find(procesoSeleccionId);
+                    procesoSeleccion.EsCompleto = EsCompleto(procesoSeleccion);
+
+                    _context.SaveChanges();
 
 
                     return respuesta =

@@ -39,6 +39,7 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
   };
   observaciones: any[];
   estaEditando = false;
+  tipoSolicitudCodigo;  
 
   constructor(
     private fb: FormBuilder,
@@ -77,6 +78,8 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
         this.projectContractingService.getContratacionByContratacionId( this.objetoDisponibilidad.contratacionId )
         .subscribe(
           contratacion => {
+          console.log(contratacion)
+          this.tipoSolicitudCodigo = contratacion.tipoSolicitudCodigo;
           contratacion.contratacionProyecto.forEach(cp => {
             cp.proyecto.contratacionProyectoAportante=cp.contratacionProyectoAportante;
             this.listaProyectos.push(cp.proyecto);
@@ -111,6 +114,8 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
     this.projectContractingService.getContratacionByContratacionId( this.objetoDisponibilidad.contratacionId )
       .subscribe(
         contratacion => {
+          console.log(contratacion)
+          this.tipoSolicitudCodigo = contratacion.tipoSolicitudCodigo;
           this.objetoDisponibilidad.fechaComiteTecnicoNotMapped=contratacion.fechaComiteTecnicoNotMapped;
         contratacion.contratacionProyecto.forEach(cp => {
           cp.proyecto.contratacionProyectoAportante=cp.contratacionProyectoAportante;

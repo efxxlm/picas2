@@ -65,7 +65,7 @@
                 <p style="margin-top: 0.5em">
                   <b>Tipo de aportante:</b>
 
-                  {{ aportante.aportante.tipoAportanteString | json }}
+                  {{ aportante.aportante.tipoAportanteString }}
                 </p>
                 <p>
                   <b>Aportante:</b>
@@ -73,7 +73,11 @@
                 </p>
                 <p>
                   <b>Valor del aportante:</b>
-                  {{ aportante.valorInterventoria | currency }}
+                  <!-- obra -->
+                  <span *ngIf="tipoSolicitudCodigo==='1'">{{ aportante.valorObra | currency }}</span>
+
+                  <!-- interventoria -->
+                  <span *ngIf="tipoSolicitudCodigo==='2'">{{ aportante.valorInterventoria | currency }}</span>
                 </p>
               </div>
             </div>
