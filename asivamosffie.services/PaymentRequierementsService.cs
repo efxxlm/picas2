@@ -36,18 +36,20 @@ namespace asivamosffie.services
             {
                 if (pSolicitudPagoObservacion.SolicitudPagoObservacionId > 0)
                 {
-                    SolicitudPagoObservacion solicitudPagoObservacionOld = _context.SolicitudPagoObservacion.Find(pSolicitudPagoObservacion.SolicitudPagoObservacionId);
-
-                    solicitudPagoObservacionOld.FechaModificacion = DateTime.Now;
-                    solicitudPagoObservacionOld.UsuarioModificacion = pSolicitudPagoObservacion.UsuarioCreacion;
-                    solicitudPagoObservacionOld.Archivada = false;
-
-                    solicitudPagoObservacionOld.RegistroCompleto = ValidateCompleteRecordSolicitudPagoObservacion(pSolicitudPagoObservacion);
-                    solicitudPagoObservacionOld.TieneObservacion = pSolicitudPagoObservacion.TieneObservacion;
-                    solicitudPagoObservacionOld.Observacion = pSolicitudPagoObservacion.Observacion;
+                    await _context.Set<SolicitudPagoObservacion>()
+                                                  .Where(o => o.SolicitudPagoObservacionId == pSolicitudPagoObservacion.SolicitudPagoObservacionId)
+                                                                                                                                            .UpdateAsync(r => new SolicitudPagoObservacion()
+                                                                                                                                            {
+                                                                                                                                                FechaModificacion = DateTime.Now,
+                                                                                                                                                UsuarioModificacion = pSolicitudPagoObservacion.UsuarioCreacion,
+                                                                                                                                                RegistroCompleto = ValidateCompleteRecordSolicitudPagoObservacion(pSolicitudPagoObservacion),
+                                                                                                                                                TieneObservacion = pSolicitudPagoObservacion.TieneObservacion,
+                                                                                                                                                Observacion = pSolicitudPagoObservacion.Observacion,
+                                                                                                                                            });
                 }
                 else
                 {
+                    pSolicitudPagoObservacion.Archivada = false;
                     pSolicitudPagoObservacion.FechaCreacion = DateTime.Now;
                     pSolicitudPagoObservacion.Eliminado = true;
                     pSolicitudPagoObservacion.RegistroCompleto = ValidateCompleteRecordSolicitudPagoObservacion(pSolicitudPagoObservacion);
@@ -77,24 +79,6 @@ namespace asivamosffie.services
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.Error, idAccion, pSolicitudPagoObservacion.UsuarioCreacion, ex.InnerException.ToString())
                     };
             }
-        }
-
-        private void ActualizarSolicitudPagoTieneObservacion(SolicitudPagoObservacion pSolicitudPagoObservacion, bool TieneObservacion)
-        {
-            SolicitudPago solicitudPago = _context.SolicitudPago.Find(pSolicitudPagoObservacion.SolicitudPagoId);
-            solicitudPago.FechaModificacion = DateTime.Now;
-            solicitudPago.UsuarioModificacion = pSolicitudPagoObservacion.UsuarioCreacion;
-
-            if (TieneObservacion)
-                solicitudPago.TieneObservacion = true;
-            else
-            {
-                if (_context.SolicitudPagoObservacion.Where(r => r.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId && (bool)r.TieneObservacion).Count() > 0)
-                    solicitudPago.TieneObservacion = true;
-                else
-                    solicitudPago.TieneObservacion = false;
-            }
-
         }
 
         private bool ValidateCompleteRecordSolicitudPagoObservacion(SolicitudPagoObservacion pSolicitudPagoObservacion)
@@ -136,7 +120,7 @@ namespace asivamosffie.services
                 result = await _context.VSolicitudPago.Where(s => Int32.Parse(s.EstadoCodigo) > 0)
                                                       .OrderByDescending(r => r.FechaModificacion)
                                                       .ToListAsync();
-            } 
+            }
 
             List<dynamic> grind = new List<dynamic>();
 
@@ -205,6 +189,26 @@ namespace asivamosffie.services
                     };
             }
         }
+
+
+        private void ActualizarSolicitudPagoTieneObservacion(SolicitudPagoObservacion pSolicitudPagoObservacion, bool TieneObservacion)
+        {
+            SolicitudPago solicitudPago = _context.SolicitudPago.Find(pSolicitudPagoObservacion.SolicitudPagoId);
+            solicitudPago.FechaModificacion = DateTime.Now;
+            solicitudPago.UsuarioModificacion = pSolicitudPagoObservacion.UsuarioCreacion;
+
+            if (TieneObservacion)
+                solicitudPago.TieneObservacion = true;
+            else
+            {
+                if (_context.SolicitudPagoObservacion.Where(r => r.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId && (bool)r.TieneObservacion).Count() > 0)
+                    solicitudPago.TieneObservacion = true;
+                else
+                    solicitudPago.TieneObservacion = false;
+            }
+
+        }
+
 
     }
 }
