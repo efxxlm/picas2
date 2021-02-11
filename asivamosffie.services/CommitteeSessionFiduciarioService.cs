@@ -2520,10 +2520,10 @@ namespace asivamosffie.services
                         pSesionComiteSolicitud.Contratacion.ContratacionProyecto.ToList().ForEach(ct =>
                         {
                             Proyecto proy = _context.Proyecto.Find(ct.Proyecto.ProyectoId);
-                            if (pSesionComiteSolicitud.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+                            if (pSesionComiteSolicitud.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
                             {
                                 if (ct.Proyecto.EstadoProyectoObraCodigo != null)
-                                    if (ct.Proyecto.EstadoProyectoObraCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteTecnico)
+                                    if (ct.Proyecto.EstadoProyectoObraCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteFiduciario)
                                         proy.EstadoProyectoObraCodigo = ConstantCodigoEstadoProyecto.Disponible;
                                     else
                                         proy.EstadoProyectoObraCodigo = ct.Proyecto.EstadoProyectoObraCodigo;
@@ -2531,10 +2531,10 @@ namespace asivamosffie.services
                                 {
                                     sesionComiteSolicitudOld.RegistroCompletoFiduciaria = false;
                                 }
-                            }else if (pSesionComiteSolicitud.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
+                            }else if (pSesionComiteSolicitud.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
                             {
                                 if (ct.Proyecto.EstadoProyectoInterventoriaCodigo != null)
-                                    if (ct.Proyecto.EstadoProyectoInterventoriaCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteTecnico)
+                                    if (ct.Proyecto.EstadoProyectoInterventoriaCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteFiduciario)
                                         proy.EstadoProyectoInterventoriaCodigo = ConstantCodigoEstadoProyecto.Disponible;
                                     else
                                         proy.EstadoProyectoInterventoriaCodigo = ct.Proyecto.EstadoProyectoInterventoriaCodigo;

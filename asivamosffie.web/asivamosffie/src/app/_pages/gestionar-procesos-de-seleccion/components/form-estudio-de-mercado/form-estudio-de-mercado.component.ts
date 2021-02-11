@@ -152,11 +152,12 @@ export class FormEstudioDeMercadoComponent implements OnInit {
   }
 
   borrarArray(borrarForm: any, i: number) {    
-    borrarForm.removeAt(i);
+    
     //consumo servicio
-    if(borrarForm.value[0].procesoSeleccionCotizacionId>0)
+    console.log(borrarForm.value[i]);
+    if(borrarForm.value[i].procesoSeleccionCotizacionId>0)
     {
-      this.procesoSeleccionService.deleteProcesoSeleccionCotizacionByID(borrarForm.value[0].procesoSeleccionCotizacionId).subscribe();
+      this.procesoSeleccionService.deleteProcesoSeleccionCotizacionByID(borrarForm.value[i].procesoSeleccionCotizacionId).subscribe(borrarForm.removeAt(i));
     }
     //ajusto el contador  
     this.addressForm.get('cuantasCotizaciones').setValue(borrarForm.length);    
