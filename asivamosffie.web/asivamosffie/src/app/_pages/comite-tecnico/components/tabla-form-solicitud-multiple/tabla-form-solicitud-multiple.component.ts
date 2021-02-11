@@ -5,7 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { SesionComiteSolicitud } from 'src/app/_interfaces/technicalCommitteSession';
 import { ProjectService, Proyecto, ProyectoGrilla } from 'src/app/core/_services/project/project.service';
 import { Dominio, CommonService } from 'src/app/core/_services/common/common.service';
-import { ContratacionObservacion, ContratacionProyecto, EstadosProyecto, EstadosSolicitud } from 'src/app/_interfaces/project-contracting';
+import { Contratacion, ContratacionObservacion, ContratacionProyecto, EstadosProyecto, EstadosSolicitud } from 'src/app/_interfaces/project-contracting';
 import { Router } from '@angular/router';
 import { ProjectContractingService } from 'src/app/core/_services/projectContracting/project-contracting.service';
 import { Observable } from 'rxjs';
@@ -31,6 +31,7 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
   estadosSolicitud = EstadosSolicitud;
   estadosProyecto = EstadosProyecto;
   proyectos: ContratacionProyecto[] = []
+  contratacion: Contratacion;
 
   displayedColumns: string[] = [
     'idMen',
@@ -70,6 +71,7 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
 
   cambiarEstados(estado: string) {
 
+
     this.onChangeEstado();
     if (this.EstadosolicitudActa === undefined || this.EstadosolicitudActa === "1") {
       if (estado) {
@@ -77,15 +79,32 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
           switch (estado) {
             case EstadosSolicitud.AprobadaPorComiteTecnico:
               this.listaEstados = this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.AprobadoComiteTecnico);
-              this.proyectos.forEach(p => { p.proyecto.estadoProyectoCodigo = EstadosProyecto.AprobadoComiteTecnico; })
+              this.proyectos.forEach(p => {
+                console.log(p.proyecto.estadoProyectoInterventoriaCodigo, p)
+
+                                            if (p.contratacion.tipoSolicitudCodigo === '1')
+                                              p.proyecto.estadoProyectoObraCodigo = EstadosProyecto.AprobadoComiteTecnico;
+                                            if (p.contratacion.tipoSolicitudCodigo === '2')
+                                              p.proyecto.estadoProyectoInterventoriaCodigo = EstadosProyecto.AprobadoComiteTecnico;
+              })
               break;
             case this.estadosSolicitud.RechazadaPorComiteTecnico:
               this.listaEstados = this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.RechazadoComiteTecnico);
-              this.proyectos.forEach(p => { p.proyecto.estadoProyectoCodigo = EstadosProyecto.RechazadoComiteTecnico; })
+              this.proyectos.forEach(p => {
+                                            if (p.contratacion.tipoSolicitudCodigo === '1')
+                                              p.proyecto.estadoProyectoObraCodigo = EstadosProyecto.RechazadoComiteTecnico;
+                                            if (p.contratacion.tipoSolicitudCodigo === '2')
+                                              p.proyecto.estadoProyectoInterventoriaCodigo = EstadosProyecto.RechazadoComiteTecnico;
+              })
               break;
             case this.estadosSolicitud.DevueltaPorComiteTecnico:
               this.listaEstados = this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.DevueltoComiteTecnico);
-              this.proyectos.forEach(p => { p.proyecto.estadoProyectoCodigo = EstadosProyecto.DevueltoComiteTecnico; })
+              this.proyectos.forEach(p => { 
+                                            if (p.contratacion.tipoSolicitudCodigo === '1')
+                                              p.proyecto.estadoProyectoObraCodigo = EstadosProyecto.DevueltoComiteTecnico; 
+                                            if (p.contratacion.tipoSolicitudCodigo === '2')
+                                              p.proyecto.estadoProyectoInterveCodigo = EstadosProyecto.DevueltoComiteTecnico; 
+              })
               break;
           }
         } else if (this.cantidadProyecto > 1) {
@@ -94,16 +113,19 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
               this.listaEstados = this.listaEstadosCompleta.filter(e => e.codigo == EstadosProyecto.AprobadoComiteTecnico);
               break;
             default:
-            this.listaEstados = this.listaEstadosCompleta.filter(e => ["3", "5", "7"].includes(e.codigo));
+              this.listaEstados = this.listaEstadosCompleta.filter(e => ["3", "5", "7"].includes(e.codigo));
           }
 
         }
         this.proyectos.forEach(p => {
-          let estado = this.listaEstados.find(e => e.codigo == p.proyecto.estadoProyectoCodigo);
-          p.proyecto.estadoProyectoCodigo = estado ? estado.codigo : null;
+          console.log(this.listaEstados,p)
+          let estadoObra = this.listaEstados.find(e => e.codigo == p.proyecto.estadoProyectoObraCodigo);
+          let estadoInterventoria = this.listaEstados.find(e => e.codigo == p.proyecto.estadoProyectoInterventoriaCodigo);
+          p.proyecto.estadoProyectoObraCodigo = estadoObra ? estadoObra.codigo : null;
+          p.proyecto.estadoProyectoInterventoriaCodigo = estadoInterventoria ? estadoInterventoria.codigo : null;
         });
       }
-    }else{
+    } else {
       this.listaEstados = this.listaEstadosCompleta;
     }
 
@@ -148,7 +170,8 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
     contratacionid: number,
     contratacionObservacion: ContratacionObservacion[],
     proyectoId: number,
-    estadoProyectoCodigo: number) {
+    estadoProyectoObraCodigo: number,
+    estadoProyectoInterventoriaCodigo: number,) {
 
     let idsesionComiteSolicitud = this.sesionComiteSolicitud.sesionComiteSolicitudId;
     let idcomiteTecnico = this.sesionComiteSolicitud.comiteTecnicoId;
@@ -162,8 +185,8 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
         idcomiteTecnico,
         contratacionObservacion,
         proyectoId,
-        estadoProyectoCodigo
-
+        estadoProyectoObraCodigo,
+        estadoProyectoInterventoriaCodigo
       }
     });
 
@@ -182,11 +205,19 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
       let promesa = new Promise(resolve => {
         this.projectContractingService.getContratacionByContratacionIdWithGrillaProyecto(this.sesionComiteSolicitud.contratacion.contratacionId)
           .subscribe(contra => {
+            this.contratacion = contra;
             this.cantidadProyecto = contra.contratacionProyecto.length;
+
+            contra.contratacionProyecto.forEach(cp => {
+
+              cp.contratacion = JSON.parse(JSON.stringify(contra));
+              cp.contratacion.contratacionProyecto = null;
+            })
 
             this.proyectos = contra.contratacionProyecto;
             this.ActualizarProyectos.emit(this.proyectos);
             this.dataSource = new MatTableDataSource(contra.contratacionProyecto);
+
             this.cambiarEstados(this.sesionComiteSolicitud.estadoCodigo);
             resolve();
           })

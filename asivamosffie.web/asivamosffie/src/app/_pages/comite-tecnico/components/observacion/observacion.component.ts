@@ -118,6 +118,8 @@ export class ObservacionComponent implements OnInit {
 
   enviarObservacion() {
 
+    console.log( this.data);
+
     let contraracionObservacion: ContratacionObservacion = {
       contratacionObservacionId: this.contratacionObservacionId,
       contratacionProyectoid: this.contratacionProyectoId,
@@ -129,7 +131,8 @@ export class ObservacionComponent implements OnInit {
       contratacionProyecto:{
         proyecto:{
           proyectoId: this.data.proyectoId,
-          estadoProyectoCodigo: this.data.estadoProyectoCodigo,
+          estadoProyectoObraCodigo: this.data.estadoProyectoObraCodigo,
+          estadoProyectoInterventoriaCodigo: this.data.estadoProyectoInterventoriaCodigo,
           
         }
       }

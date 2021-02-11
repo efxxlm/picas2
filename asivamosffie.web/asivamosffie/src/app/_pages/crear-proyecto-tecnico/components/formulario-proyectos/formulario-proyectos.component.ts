@@ -64,7 +64,8 @@ export class FormularioProyectosComponent implements OnInit {
       this.proyecto.valorObra!=null ||  
       this.proyecto.valorInterventoria!=null ||  
       this.proyecto.valorTotal!=null ||  
-      this.proyecto.estadoProyectoCodigo!=''||
+      this.proyecto.estadoProyectoObraCodigo!=''||
+      this.proyecto.estadoProyectoInterventoriaCodigo!=''||
       this.proyecto.eliminado!=null ||  
       this.proyecto.fechaCreacion!=null || 
       this.proyecto.fechaModificacion!=null ||  
@@ -116,7 +117,8 @@ export class FormularioProyectosComponent implements OnInit {
     valorObra: null,
     valorInterventoria: null,
     valorTotal: null,
-    estadoProyectoCodigo: '',
+    estadoProyectoObraCodigo: '',
+    estadoProyectoInterventoriaCodigo: '',
     eliminado: null,
     fechaCreacion: null,
     usuarioCreacion: '',

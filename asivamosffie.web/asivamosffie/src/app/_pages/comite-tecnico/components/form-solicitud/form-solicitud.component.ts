@@ -57,7 +57,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
   };
 
   config = {
-    toolbar: [
+    toolbar: [  
       ['bold', 'italic', 'underline'],
       [{ list: 'ordered' }, { list: 'bullet' }],
       [{ indent: '-1' }, { indent: '+1' }],
@@ -85,6 +85,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
   }
 
   ActualizarProyectos(lista) {
+    console.log(lista)
     this.proyectos = lista;
   }
 
@@ -260,16 +261,23 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
 
   onSubmit() {
     this.estaEditando = true;
+    let tipoSolicitudCodigo: string;
+
+    
+
     if (this.proyectos)
       this.proyectos.forEach(p => {
         let proyecto = p.proyecto
+        tipoSolicitudCodigo = p.contratacion.tipoSolicitudCodigo;
         p.proyecto = {
-          EstadoProyectoCodigo: proyecto.estadoProyectoCodigo,
           proyectoId: proyecto.proyectoId,
+          estadoProyectoObraCodigo: proyecto.estadoProyectoObraCodigo,
+          estadoProyectoInterventoriaCodigo: proyecto.estadoProyectoInterventoriaCodigo,
 
 
         }
-        p.proyecto.estadoProyecto = p.proyecto.estadoProyecto ? p.proyecto.estadoProyecto.codigo : null
+        //p.proyecto.estadoProyectoObraCodigo = p.proyecto.estadoProyectoObraCodigo ? p.proyecto.estadoProyectoObraCodigo.codigo : null
+        //p.proyecto.estadoProyectoInterventoriaCodigo = p.proyecto.estadoProyectoInterventoriaCodigo ? p.proyecto.estadoProyectoInterventoriaCodigo.codigo : null
       })
 
     let Solicitud: SesionComiteSolicitud = {
@@ -284,7 +292,9 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
       tipoSolicitud: this.sesionComiteSolicitud.tipoSolicitudCodigo,
       sesionSolicitudCompromiso: [],
       contratacion: {
-        contratacionProyecto: this.proyectos ? this.proyectos : null
+        contratacionProyecto: this.proyectos ? this.proyectos : null,
+        tipoSolicitudCodigo: tipoSolicitudCodigo,
+
       }
 
     }
