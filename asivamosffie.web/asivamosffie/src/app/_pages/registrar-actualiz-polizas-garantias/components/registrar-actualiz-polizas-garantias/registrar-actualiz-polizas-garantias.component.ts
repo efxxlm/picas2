@@ -107,15 +107,7 @@ export class RegistrarActualizPolizasGarantiasComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
   }
-
-  validarBalance(id){
-    this.routes.navigate(['/gestionarBalanceFinancieroTrasladoRecursos/validarBalance', id]);
+  actualizarPoliza(id){
+    this.routes.navigate(['/registrarActualizacionesPolizasYGarantias/actualizarPoliza', id]);
   }
-  verDetalleEditarBalance(id){
-    this.routes.navigate(['/gestionarBalanceFinancieroTrasladoRecursos/verDetalleEditarBalance', id]);
-  }
-  verDetalleBalance(id){
-    this.routes.navigate(['/gestionarBalanceFinancieroTrasladoRecursos/verDetalleBalance', id]);
-  }
-
 }

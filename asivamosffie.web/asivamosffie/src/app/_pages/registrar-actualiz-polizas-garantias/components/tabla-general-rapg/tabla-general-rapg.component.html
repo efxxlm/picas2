@@ -1,0 +1,41 @@
+<div class="table-responsive">
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+        <ng-container matColumnDef="fechaActualizacion">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de actualización </th>
+            <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.fechaActualizacion }}</b> </td>
+        </ng-container>
+        <ng-container matColumnDef="numContrato">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de contrato </th>
+            <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.numContrato }}</b> </td>
+        </ng-container>
+        <ng-container matColumnDef="contratista">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Contratista </th>
+            <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.contratista }}</b> </td>
+        </ng-container>
+        <ng-container matColumnDef="numeroPoliza">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de póliza </th>
+            <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.numeroPoliza }}</b> </td>
+        </ng-container>
+        <ng-container matColumnDef="numeroActualizacion">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de actualización </th>
+            <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.numeroActualizacion }}</b> </td>
+        </ng-container>
+        <ng-container matColumnDef="estadoActualizacionPoliza">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la actualización de póliza </th>
+            <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.estadoActualizacionPoliza }}</b> </td>
+        </ng-container>
+        <ng-container matColumnDef="estadoRegistro">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del registro </th>
+            <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.estadoRegistro }}</b> </td>
+        </ng-container>
+        <ng-container matColumnDef="gestion">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
+            <td mat-cell *matCellDef="let element" align="center">
+                */*/*/
+            </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+</div>

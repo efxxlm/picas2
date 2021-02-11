@@ -7,9 +7,11 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { QuillModule } from 'ngx-quill';
+import { TablaGeneralRapgComponent } from './components/tabla-general-rapg/tabla-general-rapg.component';
+import { ActualizarPolizaRapgComponent } from './components/actualizar-poliza-rapg/actualizar-poliza-rapg.component';
 
 @NgModule({
-  declarations: [RegistrarActualizPolizasGarantiasComponent],
+  declarations: [RegistrarActualizPolizasGarantiasComponent, TablaGeneralRapgComponent, ActualizarPolizaRapgComponent],
   imports: [
     CommonModule,
     RegistrarActualizPolizasGarantiasRoutingModule,
