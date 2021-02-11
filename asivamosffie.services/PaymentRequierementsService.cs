@@ -128,9 +128,10 @@ namespace asivamosffie.services
 
         public async Task<dynamic> GetListSolicitudPago(int pMenuId)
         {
-            var result = await _context.VSolicitudPago.ToListAsync();
+            var result = await _context.VSolicitudPago.OrderByDescending(r=> r.SolicitudPagoId) .ToListAsync();
 
             List<dynamic> grind = new List<dynamic>();
+
             List<Dominio> ListParametricas = _context.Dominio.Where(d => d.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato || d.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Solicitud_Pago).ToList();
 
             result.ForEach(r =>
