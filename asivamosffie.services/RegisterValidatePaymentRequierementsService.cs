@@ -84,6 +84,7 @@ namespace asivamosffie.services
                     r.FechaCreacion,
                     r.NumeroSolicitud,
                     NumeroContrato = r.NumeroContrato ?? "No Aplica",
+                    r.EstadoCodigo,
                     Estado = !string.IsNullOrEmpty(r.EstadoCodigo) ? ListParametricas.Where(l => l.Codigo == r.EstadoCodigo && l.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Solicitud_Pago).FirstOrDefault().Nombre : " - ",
                     Modalidad = !string.IsNullOrEmpty(r.ModalidadCodigo) ? ListParametricas.Where(l => l.Codigo == r.ModalidadCodigo && l.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato).FirstOrDefault().Nombre : "No aplica"
                 });
@@ -1267,8 +1268,7 @@ namespace asivamosffie.services
                     };
             }
         }
-
-
+         
         private void CreateEditNewOtrosCostosServicios(ICollection<SolicitudPagoOtrosCostosServicios> pSolicitudPagoOtrosCostosServiciosList, string usuarioCreacion)
         {
             foreach (var SolicitudPagoOtrosCostosServicios in pSolicitudPagoOtrosCostosServiciosList)
