@@ -54,6 +54,7 @@ export class DialogDevolverSolicitudComponent implements OnInit {
         .subscribe(
           response => {
             this.openDialog( '', `<b>${ response.message }</b>` );
+            this.matDialogRef.close();
           },
           err => this.openDialog( '', `<b>${ err.message }</b>` )
         );
