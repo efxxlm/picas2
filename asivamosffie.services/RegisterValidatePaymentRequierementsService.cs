@@ -356,11 +356,15 @@ namespace asivamosffie.services
 
             try
             {
-                SolicitudPago SolicitudPagoDelete = _context.SolicitudPago.Find(pSolicitudPagoId);
-                SolicitudPagoDelete.Eliminado = true;
-                SolicitudPagoDelete.UsuarioModificacion = pUsuarioModificacion;
-                SolicitudPagoDelete.FechaModificacion = DateTime.Now;
-
+                await _context.Set<SolicitudPago>()
+                                             .Where(o => o.SolicitudPagoId == pSolicitudPagoId)
+                                                                                            .UpdateAsync(r => new SolicitudPago()
+                                                                                            {
+                                                                                                Eliminado = true,
+                                                                                                UsuarioModificacion = pUsuarioModificacion,
+                                                                                                FechaModificacion = DateTime.Now,
+                                                                                            });
+                  
                 return
                          new Respuesta
                          {
@@ -398,7 +402,7 @@ namespace asivamosffie.services
                                       RegistroCompleto = CompleteRecord
                                   });
         }
-         
+
         public async Task<Respuesta> ReturnSolicitudPago(SolicitudPago pSolicitudPago)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Devolver_Solicitud_Pago, (int)EnumeratorTipoDominio.Acciones);
@@ -453,9 +457,9 @@ namespace asivamosffie.services
                                                                    {
                                                                        Eliminado = true,
                                                                        UsuarioModificacion = pUsuarioModificacion,
-                                                                       FechaModificacion = DateTime.Now 
+                                                                       FechaModificacion = DateTime.Now
                                                                    });
-                 
+
                 return
                      new Respuesta
                      {
@@ -465,8 +469,8 @@ namespace asivamosffie.services
                          Code = GeneralCodes.OperacionExitosa,
                          Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
                                                                                                  (int)enumeratorMenu.Registrar_validar_requisitos_de_pago,
-                                                                                                 GeneralCodes.OperacionExitosa, 
-                                                                                                 idAccion, 
+                                                                                                 GeneralCodes.OperacionExitosa,
+                                                                                                 idAccion,
                                                                                                  pUsuarioModificacion,
                                                                                                  "ELIMINAR SOLICITUD PAGO FASE CRITERIO PROYECTO"
                                                                                                 )
@@ -1302,13 +1306,13 @@ namespace asivamosffie.services
         {
             return true;
         }
-         
+
         #endregion
 
         #endregion
 
         #region Validate 
-         
+
         #endregion
 
     }
