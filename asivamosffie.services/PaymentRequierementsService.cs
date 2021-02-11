@@ -99,19 +99,20 @@ namespace asivamosffie.services
                                                               && r.MenuId == pSolicitudPagoObservacion.MenuId
                                                               && r.Eliminado != true
                                                               && r.Archivada != true).Count();
+
+
                 if (pSolicitudPagoObservacion.TieneObservacion == true)
                 {
                     await _context.Set<SolicitudPago>()
                                           .Where(o => o.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId)
-                                                                                                                             .UpdateAsync(r => new SolicitudPago()
-                                                                                                                             {
-                                                                                                                                 FechaModificacion = DateTime.Now,
-                                                                                                                                 UsuarioModificacion = pSolicitudPagoObservacion.UsuarioCreacion,
-                                                                                                                                 TieneObservacion = true,
-                                                                                                                             });
+                                                                                                                    .UpdateAsync(r => new SolicitudPago()
+                                                                                                                    {
+                                                                                                                        FechaModificacion = DateTime.Now,
+                                                                                                                        UsuarioModificacion = pUsuarioMod,
+                                                                                                                        TieneObservacion = true,
+                                                                                                                    });
                 }
-                //Valida si la cantidad de relaciones de solicitud Pago es igual a la cantidad de observaciones de esa Solicitud pago
-
+                //Valida si la cantidad de relaciones de solicitud Pago es igual a la cantidad de observaciones de esa Solicitud pago 
                 bool blRegistroCompleto = false;
                 if (intCantidadObservacionesSolicitudPago == intCantidadDependenciasSolicitudPago)
                     blRegistroCompleto = true;
@@ -125,7 +126,7 @@ namespace asivamosffie.services
                                                                                                                         .UpdateAsync(r => new SolicitudPago()
                                                                                                                         {
                                                                                                                             FechaModificacion = DateTime.Now,
-                                                                                                                            UsuarioModificacion = pSolicitudPagoObservacion.UsuarioCreacion,
+                                                                                                                            UsuarioModificacion = pUsuarioMod,
                                                                                                                             RegistroCompletoVerificar = blRegistroCompleto,
                                                                                                                         });
                         break;
@@ -136,7 +137,7 @@ namespace asivamosffie.services
                                                                                                                         .UpdateAsync(r => new SolicitudPago()
                                                                                                                         {
                                                                                                                             FechaModificacion = DateTime.Now,
-                                                                                                                            UsuarioModificacion = pSolicitudPagoObservacion.UsuarioCreacion,
+                                                                                                                            UsuarioModificacion = pUsuarioMod,
                                                                                                                             RegistroCompletoAutorizar = blRegistroCompleto,
                                                                                                                         });
                         break;
@@ -144,7 +145,7 @@ namespace asivamosffie.services
                 return true;
             }
             catch (Exception ex)
-            { 
+            {
                 return false;
             }
         }
@@ -226,6 +227,7 @@ namespace asivamosffie.services
                                            .Where(s => s.MenuId == pMenuId && s.SolicitudPagoId == pSolicitudPagoId && s.IdPadre == pPadreId)
                                                                                                                        .Select(p => new
                                                                                                                        {
+                                                                                                                           p.SolicitudPagoObservacionId,
                                                                                                                            p.TieneObservacion,
                                                                                                                            p.Archivada,
                                                                                                                            p.FechaCreacion,
