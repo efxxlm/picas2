@@ -45,9 +45,7 @@ export class DialogTipoDocumentoComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log("en dialog tipo documento-estado: ",this.estaEditando);
     if(this.data.informeFinalAnexo != null){
-      console.log("en dialog tipo documento modificado: ",this.data.informeFinalAnexo);
       this.addressForm.patchValue(this.data.informeFinalAnexo)
     }else{
       this.getInformeFinalAnexoByInformeFinalInterventoriaId(this.data.informe.informeFinalInterventoriaId)
@@ -71,6 +69,7 @@ export class DialogTipoDocumentoComponent implements OnInit {
   onSubmit() {
     this.estaEditando = true;
     this.dialog.getDialogById('dialogTipoDocumento').close({ anexo: this.addressForm.value, id: this.data.informe.informeFinalInterventoriaId });
+    this.openDialog('', '<b>La información ha sido guardada correctamente.</b>');
   }
 
   createEditInformeFinalAnexo(informeFinalAnexo: any, informeFinalInterventoriaid: number) {

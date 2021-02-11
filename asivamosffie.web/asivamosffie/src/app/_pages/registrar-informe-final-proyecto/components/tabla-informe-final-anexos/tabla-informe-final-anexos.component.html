@@ -8,8 +8,11 @@
   <mat-accordion>
     <mat-expansion-panel class="expansion-style">
       <mat-expansion-panel-header class="expansion-style--header">
-        <mat-panel-title [ngClass]="'expansion-style--title ' + estadoInformeString">
-          Informe final y anexos
+        <mat-panel-title class="expansion-style--title 
+        {{estadoInforme == '0' || estadoInforme == null ? 
+          'sin-diligenciar' : estadoInforme == '1' || registroCompleto == false ? 
+                'en-proceso' : 'completo' }}">
+                Informe final y anexos
         </mat-panel-title>
       </mat-expansion-panel-header>
       <div class="d-flex align-items-center info-text en-alertaLibre">
@@ -24,7 +27,7 @@
           <ng-container matColumnDef="informeFinalListaChequeoId">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>No.</th>
             <td mat-cell *matCellDef="let element">
-              <span [class.color-secondaryColor]="element.calificacionCodigo === '' && estaEditando">
+              <span [class.color-secondaryColor]="(element.calificacionCodigo === '' || element.calificacionCodigo === '0') && estaEditando">
                 <b>{{ element.posicion }}</b>
               </span>
             </td>
@@ -34,7 +37,7 @@
           <ng-container matColumnDef="nombre">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Ítem</th>
             <td mat-cell *matCellDef="let element">
-              <span [class.color-secondaryColor]="element.calificacionCodigo === '' && estaEditando">
+              <span [class.color-secondaryColor]="(element.calificacionCodigo === '' || element.calificacionCodigo === '0') && estaEditando">
                 {{ element.nombre }}
               </span>
             </td>
@@ -61,7 +64,7 @@
                     [matTooltipPosition]="'above'"
                     matTooltip="Debe ingresar la información en el campo para continuar"
                     matTooltipClass="info-tooltip"
-                    *ngIf="element.calificacionCodigo === '' && estaEditando"
+                    *ngIf="(element.calificacionCodigo === '' || element.calificacionCodigo === '0') && estaEditando"
                   />
                 </span>
               </section>

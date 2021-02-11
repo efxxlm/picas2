@@ -58,23 +58,6 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
-        [Route("VerificarInformeFinalEstadoCompleto")]
-        public async Task<bool> VerificarInformeFinalEstadoCompleto([FromQuery] int pInformeFinalId)
-        {
-            try
-            {
-                return await _registerFinalReport.VerificarInformeFinalEstadoCompleto(pInformeFinalId);
-            }
-
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-
-
-        [HttpGet]
         [Route("GetInformeFinalListaChequeoByProyectoId")]
         public async Task<List<dynamic>> GetInformeFinalListaChequeoByContratacionProyectoId([FromQuery] int pProyectoId)
         {

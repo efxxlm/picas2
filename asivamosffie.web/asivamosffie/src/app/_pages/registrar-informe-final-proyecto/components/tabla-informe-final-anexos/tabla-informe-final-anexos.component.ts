@@ -23,10 +23,11 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   ELEMENT_DATA : ListaChequeo[] = [];
   @Input() id: string;
   @Input() llaveMen: string;
-  @Input() estadoInforme: string;
   @Input() report: Report;
-  estadoInformeString: string;  
   estaEditando: boolean;
+
+  estadoInforme = '0';
+  registroCompleto = false;
 
   listChequeo: any;
   displayedColumns: string[] = [
@@ -57,27 +58,23 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit(): void {
-    if (this.estadoInforme === '2' || this.estadoInforme === '3') { //con informe registrado/ enviado a validación
-      this.estadoInformeString = 'completo';
-    } else if (this.estadoInforme === '1' || this.estadoInforme === '4') { //en proceso de registro, con observaciones
-      this.estadoInformeString = 'en-proceso';
-    } else {
-      this.estadoInformeString = 'sin-diligenciar';
-    }
-
-    //this.stateEstaEditando();
+    this.stateEstaEditando();
     this.getInformeFinalListaChequeo(this.id);
+  }
+
+  stateEstaEditando() {
+    this.report.proyecto.informeFinal.length > 0 ? (this.estaEditando = true) : (this.estaEditando = false);
   }
   
   getInformeFinalListaChequeo (id:string) {
     this.registrarInformeFinalProyectoService.getInformeFinalListaChequeo(id)
     .subscribe(listChequeo => {
+      if(listChequeo != null){
+        this.estadoInforme = listChequeo[0].estadoInforme;
+        this.registroCompleto = listChequeo[0].registroCompleto;
+      }
       this.dataSource.data = listChequeo as ListaChequeo[];
       this.listChequeo = listChequeo;
-
-      /*stateEstaEditando() {
-        this.report.proyecto.informeFinal.length > 0 ? (this.estaEditando = true) : (this.estaEditando = false);
-      }*/
     });
   }
 

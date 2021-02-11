@@ -63,10 +63,6 @@ export class RegistrarInformeFinalProyectoService {
   sendFinalReportToSupervision(pProyectoId: number){
     return this.http.post(`${environment.apiUrl}/${this.final_report}/SendFinalReportToSupervision?pProyectoId=${ pProyectoId }`,null);
   }
-
-  verificarInformeFinalEstadoCompleto(pInformeFinalId: number){
-    return this.http.get(`${environment.apiUrl}/${this.final_report}/VerificarInformeFinalEstadoCompleto?pInformeFinalId=${ pInformeFinalId }`);
-  }
   
   createEditInformeFinalInterventoriabyInformeFinal( informeFinal: any ){
     return this.http.post(`${environment.apiUrl}/${this.final_report}/createEditInformeFinalInterventoriabyInformeFinal`, informeFinal );

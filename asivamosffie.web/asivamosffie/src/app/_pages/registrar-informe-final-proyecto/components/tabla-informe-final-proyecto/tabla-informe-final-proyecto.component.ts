@@ -56,7 +56,6 @@ export class TablaInformeFinalProyectoComponent implements OnInit, AfterViewInit
     this.registrarInformeFinalProyectoService.getListReportGrilla()
     .subscribe(report => {
       this.dataSource.data = report as RegistrarInterface[];
-      console.log("Aquí:",this.dataSource.data);
     });
   }
 
@@ -97,7 +96,6 @@ export class TablaInformeFinalProyectoComponent implements OnInit, AfterViewInit
   }
 
   enviarRegistroFinal(pProyectoId: number) {
-    console.log("Antes: ",pProyectoId);
     this.registrarInformeFinalProyectoService.sendFinalReportToSupervision(pProyectoId)
       .subscribe(respuesta => {
         this.openDialog('', '<b>La información ha sido guardada correctamente.</b>');

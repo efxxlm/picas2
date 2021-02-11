@@ -18,7 +18,7 @@ namespace asivamosffie.services.Interfaces
         //POST
         Task<Respuesta> UpdateStateValidateInformeFinalInterventoriaByInformeFinal(InformeFinal informeFinal, string user);
         Task<Respuesta> UpdateStateValidateInformeFinalInterventoria(int pInformeFinalInterventoriaId, string code, string user);
-        Task<Respuesta> EditObservacionInformeFinal(InformeFinal pInformeFinal);
+        Task<Respuesta> CreateEditObservacionInformeFinal(InformeFinalObservaciones pObseravacion);
         Task<Respuesta> CreateEditInformeFinalInterventoriaObservacion(InformeFinalInterventoriaObservaciones pObservacion);
         Task<Respuesta> SendFinalReportToSupervision(int pInformeFinalId, string pUsuario);
         Task<Respuesta> ApproveInformeFinal(int pInformeFinalId, string pUsuario);

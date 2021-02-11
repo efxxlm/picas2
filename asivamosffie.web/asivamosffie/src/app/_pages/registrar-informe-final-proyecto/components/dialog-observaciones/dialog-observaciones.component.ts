@@ -94,7 +94,7 @@ export class DialogObservacionesComponent implements OnInit {
     }
     this.dialog.getDialogById('dialogObservaciones').close({ observaciones: this.observaciones.value, id: this.data.informe.informeFinalInterventoriaId });
     //this.createEditInformeFinalInterventoriaObservacion(this.observaciones.value)
-    //this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+    this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
   }
 
   createEditInformeFinalInterventoriaObservacion(pObservaciones: any) {

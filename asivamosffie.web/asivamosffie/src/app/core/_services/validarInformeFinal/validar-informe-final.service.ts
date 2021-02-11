@@ -49,7 +49,7 @@ export class ValidarInformeFinalService {
       return this.http.post(`${environment.apiUrl}/${this.final_report}/UpdateStateValidateInformeFinalInterventoriaByInformeFinal`, informeFinal );
     }
 
-    editObservacionInformeFinal( informeFinal: any ){
-      return this.http.post(`${environment.apiUrl}/${this.final_report}/EditObservacionInformeFinal`, informeFinal );
+    createEditObservacionInformeFinal( informeFinalObservacion: any ){
+      return this.http.post(`${environment.apiUrl}/${this.final_report}/CreateEditObservacionInformeFinal`, informeFinalObservacion );
     }
 }

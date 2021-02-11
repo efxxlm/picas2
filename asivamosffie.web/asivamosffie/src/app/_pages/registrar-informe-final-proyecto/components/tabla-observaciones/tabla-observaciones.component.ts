@@ -41,11 +41,12 @@ export class TablaObservacionesComponent implements OnInit, AfterViewInit {
       observaciones: [null, Validators.required],
       fechaCreacion: [null,Validators.required],
     });
-    console.log("Que esta entrando?: ",this.data);
-    if(this.data.length>0){
-      this.observacionesForm.patchValue(this.data);
-      this.dataSourceTest.data = this.data as InformeFinalInterventoria[];
-      this.anexos = this.data;
+    if(this.data.informeFinalInterventoriaObservaciones != null){
+      if(this.data.informeFinalInterventoriaObservaciones.length > 0){
+        this.observacionesForm.patchValue(this.data.informeFinalInterventoriaObservaciones);
+        this.dataSourceTest.data = this.data.informeFinalInterventoriaObservaciones as InformeFinalInterventoria[];
+        this.anexos = this.data.informeFinalInterventoriaObservaciones;
+      }      
     }
   }
 

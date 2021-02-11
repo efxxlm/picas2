@@ -77,9 +77,9 @@ namespace asivamosffie.services
             List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
             Proyecto proyecto = await _context.Proyecto.Where(r => r.ProyectoId == pProyectoId)
                                                         .Include(r => r.InformeFinal)
+                                                            .ThenInclude(r => r.InformeFinalObservaciones)
                                                          .Include(r => r.InstitucionEducativa)
                                                          .FirstOrDefaultAsync();
-
             InstitucionEducativaSede Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == proyecto.SedeId).FirstOrDefault();
             Localizacion Municipio = ListLocalizacion.Where(r => r.LocalizacionId == proyecto.LocalizacionIdMunicipio).FirstOrDefault();
             proyecto.MunicipioObj = Municipio;
@@ -273,6 +273,56 @@ namespace asivamosffie.services
                       IsValidation = false,
                       Code = GeneralCodes.Error,
                       Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Informe_Final, GeneralCodes.Error, idAccion, user, ex.InnerException.ToString())
+                  };
+            }
+        }
+
+        public async Task<Respuesta> CreateEditObservacionInformeFinal(InformeFinalObservaciones pObservacion)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Informe_Final_Observacion, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = string.Empty;
+            try
+            {
+                if (pObservacion.InformeFinalObservacionesId == 0)
+                {
+                    strCrearEditar = "CREAR INFORME FINAL OBSERVACIONES";
+                    pObservacion.FechaCreacion = DateTime.Now;
+                    _context.InformeFinalObservaciones.Add(pObservacion);
+                }
+                else
+                {
+                    strCrearEditar = "ACTUALIZAR INFORME FINAL OBSERVACION";
+
+                    await _context.Set<InformeFinalObservaciones>().Where(r => r.InformeFinalObservacionesId == pObservacion.InformeFinalObservacionesId)
+                                                                   .UpdateAsync(r => new InformeFinalObservaciones()
+                                                                   {
+                                                                       FechaModificacion = DateTime.Now,
+                                                                       UsuarioModificacion = pObservacion.UsuarioCreacion,
+                                                                       Observaciones = pObservacion.Observaciones,
+                                                                   });
+                }
+                _context.SaveChanges();
+
+                return
+                new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Informe_Final, GeneralCodes.OperacionExitosa, idAccion, pObservacion.UsuarioCreacion, strCrearEditar)
+                };
+            }
+            catch (Exception ex)
+            {
+                return
+                  new Respuesta
+                  {
+                      IsSuccessful = false,
+                      IsException = true,
+                      IsValidation = false,
+                      Code = GeneralCodes.Error,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Informe_Final, GeneralCodes.Error, idAccion, pObservacion.UsuarioCreacion, ex.InnerException.ToString())
                   };
             }
         }

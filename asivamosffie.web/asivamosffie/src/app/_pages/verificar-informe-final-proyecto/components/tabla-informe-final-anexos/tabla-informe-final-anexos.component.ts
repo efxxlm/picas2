@@ -59,7 +59,6 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   getInformeFinalListaChequeoByInformeFinalId (id:number) {
     this.validarInformeFinalService.getInformeFinalListaChequeoByInformeFinalId(id)
     .subscribe(listChequeo => {
-      console.log(listChequeo);
       if(listChequeo != null){
         this.estadoValidacion = listChequeo[0].estadoValidacion;
         this.registroCompletoValidacion = listChequeo[0].registroCompletoValidacion;

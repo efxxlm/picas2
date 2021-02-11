@@ -31,7 +31,9 @@ export interface ListaChequeo {
   },
   tieneAnexo: boolean,
   informeFinalInterventoriaObservaciones?: InformeFinalInterventoriaObservaciones[],
-  validacionCodigo: string
+  validacionCodigo: string,
+  estadoInforme: string,
+  registroCompleto: boolean,
 }
 
 export interface InformeFinalInterventoria {

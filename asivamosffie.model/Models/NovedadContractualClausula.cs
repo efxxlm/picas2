@@ -6,7 +6,7 @@ namespace asivamosffie.model.Models
     public partial class NovedadContractualClausula
     {
         public int NovedadContractualClausulaId { get; set; }
-        public int? NovedadContractualId { get; set; }
+        public int? NovedadContractualDescripcionId { get; set; }
         public string ClausulaAmodificar { get; set; }
         public string AjusteSolicitadoAclausula { get; set; }
         public DateTime FechaCreacion { get; set; }
@@ -15,6 +15,6 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
         public bool? Eliminado { get; set; }
 
-        public virtual NovedadContractual NovedadContractual { get; set; }
+        public virtual NovedadContractualDescripcion NovedadContractualDescripcion { get; set; }
     }
 }
