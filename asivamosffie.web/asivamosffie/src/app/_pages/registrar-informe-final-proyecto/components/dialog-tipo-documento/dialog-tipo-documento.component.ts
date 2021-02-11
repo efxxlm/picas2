@@ -16,8 +16,9 @@ export class DialogTipoDocumentoComponent implements OnInit {
   ELEMENT_DATA : InformeFinalInterventoria[] = [];
   anexos: any;
   dataSource = new MatTableDataSource<InformeFinalInterventoria>(this.ELEMENT_DATA);
-  estaEditando = false
+  estaEditando = false;
   addressForm = this.fb.group({
+    informeFinalAnexoId: [null, Validators.required],
     tipoAnexo: [null, Validators.required],
     urlSoporte: [null, Validators.required],
     numRadicadoSac: [null, Validators.compose([
@@ -44,8 +45,11 @@ export class DialogTipoDocumentoComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (this.data.informe.informeFinalAnexoId > 0 && this.data.informe.informeFinalAnexoId != null) {
-      //this.getInformeFinalAnexoByInformeFinalAnexoId(this.data.informe.informeFinalAnexoId)
+    console.log("en dialog tipo documento-estado: ",this.estaEditando);
+    if(this.data.informeFinalAnexo != null){
+      console.log("en dialog tipo documento modificado: ",this.data.informeFinalAnexo);
+      this.addressForm.patchValue(this.data.informeFinalAnexo)
+    }else{
       this.getInformeFinalAnexoByInformeFinalInterventoriaId(this.data.informe.informeFinalInterventoriaId)
     }
   }
@@ -65,11 +69,8 @@ export class DialogTipoDocumentoComponent implements OnInit {
   }
 
   onSubmit() {
-    this.estaEditando = true
-    if (this.data.informe.informeFinalAnexoId != null) {
-      this.addressForm.value.informeFinalAnexoId = this.data.informe.informeFinalAnexoId
-    }
-    this.createEditInformeFinalAnexo(this.addressForm.value, this.data.informe.informeFinalInterventoriaId)
+    this.estaEditando = true;
+    this.dialog.getDialogById('dialogTipoDocumento').close({ anexo: this.addressForm.value, id: this.data.informe.informeFinalInterventoriaId });
   }
 
   createEditInformeFinalAnexo(informeFinalAnexo: any, informeFinalInterventoriaid: number) {
@@ -86,8 +87,10 @@ export class DialogTipoDocumentoComponent implements OnInit {
     this.registrarInformeFinalProyectoService.getInformeFinalAnexoByInformeFinalInterventoriaId(id).subscribe(anexos => {
         this.dataSource.data = anexos as InformeFinalInterventoria[];
         this.anexos = anexos;
-        this.addressForm.patchValue(this.anexos.informeFinalAnexo)
-        console.log("Observaciones: ",this.anexos.informeFinalInterventoriaObservaciones.length);
+        if(this.anexos.informeFinalAnexo != null){
+          this.addressForm.patchValue(this.anexos.informeFinalAnexo)
+          console.log("Observaciones: ",this.anexos.informeFinalInterventoriaObservaciones.length);
+        }
         if(this.anexos.informeFinalInterventoriaObservaciones.length>0){
           this.observacionesForm.patchValue(this.anexos.informeFinalInterventoriaObservaciones[0])
         }

@@ -8,7 +8,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 // import { DialogTipoDocumentoComponent } from '../dialog-tipo-documento/dialog-tipo-documento.component';
 // import { DialogObservacionesComponent } from '../dialog-observaciones/dialog-observaciones.component';
 
-import { Anexo } from 'src/app/_interfaces/proyecto-final-anexos.model';
+import { ListaChequeo } from 'src/app/_interfaces/proyecto-final-anexos.model';
 import { RegistrarInformeFinalProyectoService } from 'src/app/core/_services/registrar-informe-final-proyecto.service';
 import { Respuesta } from 'src/app/core/_services/common/common.service';
 
@@ -19,7 +19,7 @@ import { Respuesta } from 'src/app/core/_services/common/common.service';
   styleUrls: ['./tabla-informe-final-anexos.component.scss']
 })
 export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
-  ELEMENT_DATA : Anexo[] = [];
+  ELEMENT_DATA : ListaChequeo[] = [];
   @Input() id: string;
   @Input() llaveMen: string;
   anexos: any;
@@ -30,7 +30,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     'informeFinalInterventoriaId'
   ];
   addressForm: FormGroup;
-  dataSource = new MatTableDataSource<Anexo>(this.ELEMENT_DATA);
+  dataSource = new MatTableDataSource<ListaChequeo>(this.ELEMENT_DATA);
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -56,7 +56,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   getInformeFinalListaChequeo (id:string) {
     this.registrarInformeFinalProyectoService.getInformeFinalListaChequeo(id)
     .subscribe(anexos => {
-      this.dataSource.data = anexos as Anexo[];
+      this.dataSource.data = anexos as ListaChequeo[];
       this.anexos = anexos;
       console.log("Aquí:",this.anexos);
     });

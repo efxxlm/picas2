@@ -48,7 +48,7 @@
           <section class="slect-table-contain mt-1em">
             <mat-form-field class="select-width">
               <mat-label>{{ element.calificacionCodigoString }}</mat-label>
-              <mat-select [(ngModel)]="element.calificacionCodigo" (selectionChange)="select(element)" required>
+              <mat-select [(ngModel)]="element.calificacionCodigo" required>
                 <mat-option *ngFor="let estado of estadoArray" [value]="estado.value">
                   {{ estado.name }}
                 </mat-option>
@@ -83,17 +83,10 @@
             type="button"
             (click)="openDialogTipoDocumento(element)"
           >
-            <span *ngIf="element.informeFinalAnexoId == null || element.informeFinalAnexoId == 0">
+            <span *ngIf="(element.informeFinalAnexoId == null || element.informeFinalAnexoId == 0) && (element.tieneAnexo == null || !element.tieneAnexo)">
               Tipo de documento
             </span>
-            <span
-              *ngIf="
-                (element.estadoInformeFinal !== '4' &&
-                  element.informeFinalAnexoId != null &&
-                  element.informeFinalAnexoId > 0) ||
-                (element.estadoInformeFinal === '4' && element.tieneObservacionSupervisor)
-              "
-            >
+            <span *ngIf="(element.estadoInformeFinal !== '4' && element.informeFinalAnexoId != null && element.informeFinalAnexoId > 0) || (element.estadoInformeFinal ==='4' && element.tieneObservacionSupervisor) || element.tieneAnexo">
               Ver detalle/ Editar
             </span>
             <span *ngIf="element.estadoInformeFinal === '4' && !element.tieneObservacionSupervisor"> Ver detalle </span>

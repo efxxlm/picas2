@@ -8,7 +8,12 @@
   <mat-accordion>
     <mat-expansion-panel class="expansion-style">
       <mat-expansion-panel-header class="expansion-style--header">
-        <mat-panel-title ngClass="expansion-style--title"> Informe final y anexos </mat-panel-title>
+          <mat-panel-title class="expansion-style--title 
+          {{estadoValidacion == '0' || estadoValidacion == null ? 
+            'sin-diligenciar' : estadoValidacion == '1' && registroCompletoValidacion == false ? 
+                  'en-proceso' : 'completo' }}">
+                  Informe final y anexos
+          </mat-panel-title>
       </mat-expansion-panel-header>
       <section class="text-center">
         <div class="d-flex align-items-center info-text en-alertaLibre">
@@ -92,7 +97,7 @@
                       <mat-label *ngIf="element.validacionCodigo != null">{{
                         element.validacionCodigoString
                       }}</mat-label>
-                      <mat-select [(ngModel)]="element.validacionCodigo" (selectionChange)="select(element)" required>
+                      <mat-select [(ngModel)]="element.validacionCodigo" required>
                         <mat-option *ngFor="let estado of estadoArray" [value]="estado.value">
                           {{ estado.name }}
                         </mat-option>
@@ -134,7 +139,7 @@
                     </span>
                   </button>-->
                   <button
-                    *ngIf="element.validacionCodigo === '2'"
+                    *ngIf="element.validacionCodigo == '2'"
                     mat-button
                     color="warn"
                     mat-raised-button

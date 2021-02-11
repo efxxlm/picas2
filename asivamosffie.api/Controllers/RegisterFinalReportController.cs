@@ -10,11 +10,13 @@ using Microsoft.Extensions.Options;
 using lalupa.Authorization.JwtHelpers;
 using asivamosffie.services.Exceptions;
 using asivamosffie.model.APIModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class RegisterFinalReportController : ControllerBase
     {
         public readonly IRegisterFinalReportService _registerFinalReport;
@@ -169,6 +171,24 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpPost]
+        [Route("CreateEditInformeFinalInterventoriabyInformeFinal")]
+
+        public async Task<IActionResult> CreateEditInformeFinalInterventoriabyInformeFinal([FromBody] InformeFinal pInformeFinal)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _registerFinalReport.CreateEditInformeFinalInterventoriabyInformeFinal(pInformeFinal, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [HttpPost]
         [Route("CreateEditInformeFinalInterventoria")]
         public async Task<IActionResult> CreateEditInformeFinalInterventoria([FromBody] InformeFinalInterventoria pInformeFinalInterventoriaId)
         {
@@ -235,6 +255,8 @@ namespace asivamosffie.api.Controllers
             {
                 //pObservacion.UsuarioCreacion = "LCT";
                 respuesta = await _registerFinalReport.SendFinalReportToSupervision(pProyectoId, HttpContext.User.FindFirst("User").Value);
+                //await _registerFinalReport.SendMailToSupervision(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+
                 return Ok(respuesta);
             }
             catch (Exception ex)

@@ -7,7 +7,8 @@ import { FormBuilder, Validators, FormArray, FormGroup } from '@angular/forms'
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component'
 import { DialogObservacionesComponent } from '../dialog-observaciones/dialog-observaciones.component';
 import { ValidarInformeFinalService } from 'src/app/core/_services/validarInformeFinal/validar-informe-final.service'
-import { Anexo } from 'src/app/_interfaces/proyecto-final-anexos.model'
+import { ListaChequeo } from 'src/app/_interfaces/proyecto-final-anexos.model'
+import { InformeFinal, InformeFinalAnexo, InformeFinalInterventoria, InformeFinalInterventoriaObservaciones } from 'src/app/_interfaces/informe-final';
 import { Respuesta } from 'src/app/core/_services/common/common.service'
 
 @Component({
@@ -16,10 +17,10 @@ import { Respuesta } from 'src/app/core/_services/common/common.service'
   styleUrls: ['./tabla-informe-final-anexos.component.scss']
 })
 export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
-  ELEMENT_DATA : Anexo[] = [];
+  ELEMENT_DATA : ListaChequeo[] = [];
   @Input() id: number;
   @Input() llaveMen: string;
-  anexos: any;
+  listChequeo: any;
   displayedColumns: string[] = [
     'No',
     'item',
@@ -29,8 +30,11 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     'validacionCodigo',
     'id'
   ];
+  estadoValidacion = '0';
+  registroCompletoValidacion = false;
   addressForm: FormGroup;
-  dataSource = new MatTableDataSource<Anexo>(this.ELEMENT_DATA);
+  informeFinalObservacion : InformeFinalInterventoriaObservaciones[] = [];
+  dataSource = new MatTableDataSource<ListaChequeo>(this.ELEMENT_DATA);
 
   @ViewChild(MatPaginator) paginator: MatPaginator
   @ViewChild(MatSort) sort: MatSort
@@ -54,10 +58,14 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
 
   getInformeFinalListaChequeoByInformeFinalId (id:number) {
     this.validarInformeFinalService.getInformeFinalListaChequeoByInformeFinalId(id)
-    .subscribe(anexos => {
-      this.dataSource.data = anexos as Anexo[];
-      this.anexos = anexos;
-      console.log("Aquí: dddd",this.anexos);
+    .subscribe(listChequeo => {
+      console.log(listChequeo);
+      if(listChequeo != null){
+        this.estadoValidacion = listChequeo[0].estadoValidacion;
+        this.registroCompletoValidacion = listChequeo[0].registroCompletoValidacion;
+      }
+      this.dataSource.data = listChequeo as ListaChequeo[];
+      this.listChequeo = listChequeo;
     });
   }
 
@@ -80,19 +88,41 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   }
 
   openDialogObservaciones(informe:any) {
-    console.log("informe: ",informe);
+    this.informeFinalObservacion = null;
+    this.dataSource.data.forEach(control => {
+      if ( informe !== null && informe.informeFinalInterventoriaId === control.informeFinalInterventoriaId ) {
+        if(control.informeFinalInterventoriaObservaciones != null && control.informeFinalInterventoriaObservaciones.length > 0){
+          this.informeFinalObservacion = control.informeFinalInterventoriaObservaciones;
+        }
+        return;
+      }
+    });
     let dialogRef = this.dialog.open(DialogObservacionesComponent, {
       width: '70em',
       data: {
         informe: informe,
-        llaveMen: this.llaveMen
+        llaveMen: this.llaveMen,
+        informeFinalObservacion: this.informeFinalObservacion,
       },
-      id:'dialogObservacionesSupervisor'
+      id:'dialogObservaciones'
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-      this.ngOnInit();
+      this.dataSource.data.forEach(control => {
+        if ( result !== null && result.id === control.informeFinalInterventoriaId ) {
+          control.informeFinalInterventoriaObservaciones = [];
+          const informeFinalInterventoriaObservaciones: InformeFinalInterventoriaObservaciones = {
+            informeFinalInterventoriaObservacionesId:result.observaciones.informeFinalInterventoriaObservacionesId,
+            informeFinalInterventoriaId:result.observaciones.informeFinalInterventoriaId,
+            observaciones: result.observaciones.observaciones,
+            esSupervision: result.observaciones.esSupervision,
+            esCalificacion: result.observaciones.esCalificacion
+          };
+          control.tieneObservacionSupervisor = true;
+          control.informeFinalInterventoriaObservaciones.push(informeFinalInterventoriaObservaciones);
+          return;
+        }
+      });
       return;
     });
   }
@@ -105,32 +135,43 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   }
 
   onSubmit() {
-    // console.log(this.addressForm.value);
     this.estaEditando = true;
-    this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
-  }
-  //Actualizar validación
-  select(element) {
-    this.addressForm = this.fb.group({
-      calificacionCodigo:  [element.calificacionCodigo, Validators.required],
-      informeFinalId:  [element.informeFinalId, Validators.required],
-      informeFinalInterventoriaId:  [element.informeFinalInterventoriaId, Validators.required],
-      informeFinalListaChequeoId:  [element.informeFinalListaChequeoId, Validators.required],
-      validacionCodigo: [element.validacionCodigo, Validators.required]
+    //recorre el datasource y crea modelo
+    const listaInformeFinalInterventoria = [] as InformeFinal;
+    listaInformeFinalInterventoria.informeFinalInterventoria = [];
+    this.dataSource.data.forEach(control => {
+        const informeFinalInterventoria: InformeFinalInterventoria = {
+          informeFinalInterventoriaId: control.informeFinalInterventoriaId,
+          informeFinalId: control.informeFinalId,
+          calificacionCodigo: control.calificacionCodigo,
+          informeFinalListaChequeoId: control.informeFinalListaChequeoId,
+          informeFinalAnexo: null,
+          informeFinalInterventoriaObservaciones: control.informeFinalInterventoriaObservaciones,
+          validacionCodigo: control.validacionCodigo
+        };
+        listaInformeFinalInterventoria.informeFinalInterventoria.push(informeFinalInterventoria);
     });
-    this.updateStateValidateInformeFinalInterventoria(this.addressForm.value.informeFinalInterventoriaId, this.addressForm.value.validacionCodigo);
+    const informeFinal: InformeFinal = {
+      informeFinalId: this.dataSource.data[0].informeFinalId,
+      //proyectoId: Number(this.id),
+      informeFinalInterventoria: listaInformeFinalInterventoria.informeFinalInterventoria,
+    };
+    this.updateStateValidateInformeFinalInterventoriaByInformeFinal(informeFinal);
   }
 
-
-  updateStateValidateInformeFinalInterventoria( id: number, code: string ) {
-    this.validarInformeFinalService.updateStateValidateInformeFinalInterventoria(id, code)
+  updateStateValidateInformeFinalInterventoriaByInformeFinal( informeFinal: any ) {
+    this.validarInformeFinalService.updateStateValidateInformeFinalInterventoriaByInformeFinal(informeFinal)
     .subscribe((respuesta: Respuesta) => {
-        console.log(respuesta.message);
+        console.log(respuesta);
+        this.openDialog('', respuesta.message);
         this.ngOnInit();
         return;
       },
       err => {
-        console.log( err );
+        this.openDialog('', err.message);
+        this.ngOnInit();
+        return;
       });
   }
+
 }

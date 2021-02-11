@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 
-import { Anexo } from 'src/app/_interfaces/proyecto-final-anexos.model';
+import { ListaChequeo } from 'src/app/_interfaces/proyecto-final-anexos.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -29,7 +29,7 @@ export class RegistrarInformeFinalProyectoService {
   }
 
   getInformeFinalListaChequeo(pProyectoId: string){
-    return this.http.get<Anexo[]>(`${environment.apiUrl}/${this.final_report}/GetInformeFinalListaChequeoByProyectoId?pProyectoId=${ pProyectoId }`);
+    return this.http.get<ListaChequeo[]>(`${environment.apiUrl}/${this.final_report}/GetInformeFinalListaChequeoByProyectoId?pProyectoId=${ pProyectoId }`);
   }
 
   createEditInformeFinalInterventoria( informeFinalInterventoria: any ){
@@ -68,4 +68,8 @@ export class RegistrarInformeFinalProyectoService {
     return this.http.get(`${environment.apiUrl}/${this.final_report}/VerificarInformeFinalEstadoCompleto?pInformeFinalId=${ pInformeFinalId }`);
   }
   
+  createEditInformeFinalInterventoriabyInformeFinal( informeFinal: any ){
+    return this.http.post(`${environment.apiUrl}/${this.final_report}/createEditInformeFinalInterventoriabyInformeFinal`, informeFinal );
+  }
+
 }

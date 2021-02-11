@@ -18,5 +18,12 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public string ValidacionCodigoString { get; set; }
+
+
+        [NotMapped]
+        public string EstadoValidacion { get; set; }
+
+        [NotMapped]
+        public bool RegistroCompletoValidacion { get; set; }
     }
 }

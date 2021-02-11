@@ -95,6 +95,24 @@ namespace asivamosffie.api.Controllers
         //Creaciones y modificaciones
 
         [HttpPost]
+        [Route("UpdateStateValidateInformeFinalInterventoriaByInformeFinal")]
+        public async Task<IActionResult> UpdateStateValidateInformeFinalInterventoriaByInformeFinal([FromBody] InformeFinal informeFinal)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                string user = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _validateFinalReportService.UpdateStateValidateInformeFinalInterventoriaByInformeFinal(informeFinal, user);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [HttpPost]
         [Route("UpdateStateValidateInformeFinalInterventoria")]
         public async Task<IActionResult> UpdateStateValidateInformeFinalInterventoria([FromQuery] int pInformeFinalInterventoriaId,[FromQuery] string code)
         {
@@ -114,15 +132,16 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpPost]
-        [Route("CreateEditInformeFinalInterventoriaObservacion")]
-        public async Task<IActionResult> CreateEditInformeFinalInterventoriaObservacion([FromBody] InformeFinalInterventoriaObservaciones pObservacion)
+        [Route("EditObservacionInformeFinal")]
+
+        public async Task<IActionResult> EditObservacionInformeFinal([FromBody] InformeFinal pInformeFinal)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
-                pObservacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                pInformeFinal.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 //pObservacion.UsuarioCreacion = "LCT";
-                respuesta = await _validateFinalReportService.CreateEditInformeFinalInterventoriaObservacion(pObservacion);
+                respuesta = await _validateFinalReportService.EditObservacionInformeFinal(pInformeFinal);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -133,8 +152,8 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpPost]
-        [Route("UpdateInformeFinalObservacion")]
-        public async Task<IActionResult> UpdateInformeFinalObservacion([FromBody] InformeFinalInterventoriaObservaciones pObservacion)
+        [Route("CreateEditInformeFinalInterventoriaObservacion")]
+        public async Task<IActionResult> CreateEditInformeFinalInterventoriaObservacion([FromBody] InformeFinalInterventoriaObservaciones pObservacion)
         {
             Respuesta respuesta = new Respuesta();
             try

@@ -8,7 +8,8 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 import { DialogTipoDocumentoComponent } from '../dialog-tipo-documento/dialog-tipo-documento.component';
 import { DialogObservacionesComponent } from '../dialog-observaciones/dialog-observaciones.component';
 
-import { Anexo } from 'src/app/_interfaces/proyecto-final-anexos.model';
+import { ListaChequeo } from 'src/app/_interfaces/proyecto-final-anexos.model';
+import { InformeFinal, InformeFinalAnexo, InformeFinalInterventoria, InformeFinalInterventoriaObservaciones } from 'src/app/_interfaces/informe-final';
 import { RegistrarInformeFinalProyectoService } from 'src/app/core/_services/registrar-informe-final-proyecto.service';
 import { Respuesta } from 'src/app/core/_services/common/common.service';
 
@@ -18,21 +19,24 @@ import { Respuesta } from 'src/app/core/_services/common/common.service';
   styleUrls: ['./tabla-informe-final-anexos.component.scss']
 })
 export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
-  ELEMENT_DATA : Anexo[] = [];
+  ELEMENT_DATA : ListaChequeo[] = [];
   @Input() id: string;
   @Input() llaveMen: string;
   @Input() estaEditando: boolean;
   @Output() estadoInforme = new EventEmitter<boolean>(true);
 
-  anexos: any;
+  listChequeo: any;
   displayedColumns: string[] = [
     'informeFinalListaChequeoId',
     'nombre',
     'calificacionCodigo',
     'informeFinalInterventoriaId'
   ];
-  addressForm: FormGroup;
-  dataSource = new MatTableDataSource<Anexo>(this.ELEMENT_DATA);
+  informeFinalObservacion : InformeFinalInterventoriaObservaciones[] = [];
+  informeFinalAnexo : InformeFinalAnexo;
+  //addressForm: FormGroup;
+  addressForm = this.fb.group({});
+  dataSource = new MatTableDataSource<ListaChequeo>(this.ELEMENT_DATA);
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -52,13 +56,12 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.getInformeFinalListaChequeo(this.id);
   }
-
+  
   getInformeFinalListaChequeo (id:string) {
     this.registrarInformeFinalProyectoService.getInformeFinalListaChequeo(id)
-    .subscribe(anexos => {
-      this.dataSource.data = anexos as Anexo[];
-      this.anexos = anexos;
-      this.estadoInforme.emit();//
+    .subscribe(listChequeo => {
+      this.dataSource.data = listChequeo as ListaChequeo[];
+      this.listChequeo = listChequeo;
     });
   }
 
@@ -92,35 +95,80 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   }
 
   openDialogTipoDocumento(informe:any) {
+    this.informeFinalAnexo = null;
+    this.dataSource.data.forEach(control => {
+      if ( informe !== null && informe.informeFinalInterventoriaId === control.informeFinalInterventoriaId ) {
+        if(control.informeFinalAnexo != null){
+          this.informeFinalAnexo = control.informeFinalAnexo;
+        }
+        return;
+      }
+    });
     let dialogRef = this.dialog.open(DialogTipoDocumentoComponent, {
       width: '70em',
       data:{
         informe: informe,
-        llaveMen: this.llaveMen
+        llaveMen: this.llaveMen,
+        informeFinalAnexo: this.informeFinalAnexo,
       },
       id:'dialogTipoDocumento'
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-      this.ngOnInit();
+      this.dataSource.data.forEach(control => {
+        if ( result !== null && result.id === control.informeFinalInterventoriaId ) {
+          const informeFinalAnexo: InformeFinalAnexo = {
+            informeFinalAnexoId: result.anexo.informeFinalAnexoId,
+            tipoAnexo: result.anexo.tipoAnexo,
+            numRadicadoSac: result.anexo.numRadicadoSac,
+            fechaRadicado: result.anexo.fechaRadicado,
+            urlSoporte: result.anexo.urlSoporte,
+          };
+          control.tieneAnexo = true;
+          control.informeFinalAnexo = informeFinalAnexo;
+          return;
+        }
+      });
       return;
     });
   }
 
   openDialogObservaciones(informe:any) {
+    this.informeFinalObservacion = null;
+    this.dataSource.data.forEach(control => {
+      if ( informe !== null && informe.informeFinalInterventoriaId === control.informeFinalInterventoriaId ) {
+        if(control.informeFinalInterventoriaObservaciones != null && control.informeFinalInterventoriaObservaciones.length > 0){
+          this.informeFinalObservacion = control.informeFinalInterventoriaObservaciones;
+        }
+        return;
+      }
+    });
     let dialogRef = this.dialog.open(DialogObservacionesComponent, {
       width: '70em',
       data: {
         informe: informe,
-        llaveMen: this.llaveMen
+        llaveMen: this.llaveMen,
+        informeFinalObservacion: this.informeFinalObservacion,
       },
       id:'dialogObservaciones'
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-      this.ngOnInit();
+      this.dataSource.data.forEach(control => {
+        if ( result !== null && result.id === control.informeFinalInterventoriaId ) {
+          control.informeFinalInterventoriaObservaciones = [];
+          const informeFinalInterventoriaObservaciones: InformeFinalInterventoriaObservaciones = {
+            informeFinalInterventoriaObservacionesId:result.observaciones.informeFinalInterventoriaObservacionesId,
+            informeFinalInterventoriaId:result.observaciones.informeFinalInterventoriaId,
+            observaciones: result.observaciones.observaciones,
+            esSupervision: result.observaciones.esSupervision,
+            esCalificacion: result.observaciones.esCalificacion
+          };
+          control.tieneObservacionNoCumple = true;
+          control.informeFinalInterventoriaObservaciones.push(informeFinalInterventoriaObservaciones);
+          return;
+        }
+      });
       return;
     });
   }
@@ -134,48 +182,41 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
 
   onSubmit() {
     this.estaEditando = true;
-    if(this.addressForm !== undefined){
-      this.verificarInformeFinalEstadoCompleto(this.addressForm.value.informeFinalId);
-    }else{
-      this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
-    }
-  }
+    //recorre el datasource y crea modelo
+    const listaInformeFinalInterventoria = [] as InformeFinal;
+    listaInformeFinalInterventoria.informeFinalInterventoria = [];
 
-  select(informeFinalAnexo) {
-    this.addressForm = this.fb.group({
-      calificacionCodigo:  [informeFinalAnexo.calificacionCodigo, Validators.required],
-      informeFinalId:  [informeFinalAnexo.informeFinalId, Validators.required],
-      informeFinalInterventoriaId:  [informeFinalAnexo.informeFinalInterventoriaId, Validators.required],
-      informeFinalListaChequeoId:  [informeFinalAnexo.informeFinalListaChequeoId, Validators.required],
-      posicion:  [informeFinalAnexo.posicion, Validators.required],
+    this.dataSource.data.forEach(control => {
+        const informeFinalInterventoria: InformeFinalInterventoria = {
+          informeFinalInterventoriaId: control.informeFinalInterventoriaId,
+          informeFinalId: control.informeFinalId,
+          calificacionCodigo: control.calificacionCodigo,
+          informeFinalListaChequeoId: control.informeFinalListaChequeoId,
+          informeFinalAnexo: control.informeFinalAnexo,
+          informeFinalInterventoriaObservaciones: control.informeFinalInterventoriaObservaciones,
+        };
+        listaInformeFinalInterventoria.informeFinalInterventoria.push(informeFinalInterventoria);
     });
-    this.createInformeFinalInterventoria(this.addressForm.value);
+    const informeFinal: InformeFinal = {
+      informeFinalId: this.dataSource.data[0].informeFinalId,
+      proyectoId: Number(this.id),
+      informeFinalInterventoria: listaInformeFinalInterventoria.informeFinalInterventoria,
+    };
+    this.createEditInformeFinalInterventoriabyInformeFinal(informeFinal);
   }
 
-  createInformeFinalInterventoria( informeFinalInterventoria: any ) {
-    this.registrarInformeFinalProyectoService.createEditInformeFinalInterventoria(informeFinalInterventoria)
+  createEditInformeFinalInterventoriabyInformeFinal( informeFinal: any ) {
+    this.registrarInformeFinalProyectoService.createEditInformeFinalInterventoriabyInformeFinal(informeFinal)
     .subscribe((respuesta: Respuesta) => {
-        console.log(respuesta.message);
+        console.log(respuesta);
+        this.openDialog('', respuesta.message);
         this.ngOnInit();
         return;
       },
       err => {
-        console.log( err );
-      });
-  }
-  
-
-  verificarInformeFinalEstadoCompleto( informeFinalId: number ) {
-    this.registrarInformeFinalProyectoService.verificarInformeFinalEstadoCompleto(informeFinalId)
-    .subscribe(respuesta => {
-        if(respuesta != null){
-          this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
-        }
+        this.openDialog('', err.message);
+        this.ngOnInit();
         return;
-      },
-      err => {
-        console.log( err );
       });
   }
-
 }

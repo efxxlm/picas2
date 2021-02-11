@@ -16,7 +16,7 @@ export class DialogObservacionesComponent implements OnInit {
     informeFinalInterventoriaId: [null, Validators.required],
     observaciones: [null, Validators.required],
     esSupervision: [null, Validators.required],
-    esCalificacion: [null, Validators.required]
+    esCalificacion: [null, Validators.required],
   })
 
   editorStyle = {
@@ -40,11 +40,9 @@ export class DialogObservacionesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log("entra: ",this.data.informe);
-    if (
-      this.data.informe.informeFinalInterventoriaId != null
-    ) {
-      console.log("Debería traer la finromacioón",this.data.informe.informeFinalInterventoriaId);
+    if(this.data.informeFinalObservacion != null){
+      this.observaciones.patchValue(this.data.informeFinalObservacion[0])
+    }else{
       this.getInformeFinalInterventoriaObservacionByInformeFinalInterventoria(
         this.data.informe.informeFinalInterventoriaId
       )
@@ -86,15 +84,12 @@ export class DialogObservacionesComponent implements OnInit {
   }
 
   onSubmit() {
-    // console.log(this.data.informe);
     this.observaciones.value.informeFinalInterventoriaId = this.data.informe.informeFinalInterventoriaId
     this.observaciones.value.esSupervision = true
     if (this.data.informe.informeFinalInterventoriaObservacionesId != null) {
       this.observaciones.value.informeFinalInterventoriaObservacionesId = this.data.informe.informeFinalInterventoriaObservacionesId
     }
-    console.log('Enviar:', this.observaciones.value)
-    this.createEditInformeFinalInterventoriaObservacion(this.observaciones.value)
-    //this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+    this.dialog.getDialogById('dialogObservaciones').close({ observaciones: this.observaciones.value, id: this.data.informe.informeFinalInterventoriaId });
   }
 
   createEditInformeFinalInterventoriaObservacion(pObservaciones: any) {

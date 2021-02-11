@@ -23,6 +23,7 @@ namespace asivamosffie.services.Interfaces
         //Creación y edición
         Task<Respuesta> CreateEditInformeFinal(InformeFinal pInformeFinal);
         Task<Respuesta> CreateEditInformeFinalInterventoria(InformeFinalInterventoria pInformeFinalInterventoriaId);
+        Task<Respuesta> CreateEditInformeFinalInterventoriabyInformeFinal(InformeFinal pInformeFinal,string user);
         Task<Respuesta> CreateEditInformeFinalAnexo(InformeFinalAnexo pInformeFinalAnexoId, int pInformeFinalInterventoriaId);
         Task<Respuesta> CreateEditInformeFinalInterventoriaObservacion(InformeFinalInterventoriaObservaciones pObservacion);
         Task<Respuesta> SendFinalReportToSupervision(int pProyectoId, string pUsuario);

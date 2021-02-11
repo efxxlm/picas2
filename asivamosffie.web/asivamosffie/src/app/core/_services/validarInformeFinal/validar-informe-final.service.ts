@@ -44,4 +44,12 @@ export class ValidarInformeFinalService {
     getInformeFinalInterventoriaObservacionByInformeFinalInterventoria(pInformeFinalInterventoriaId: number){
       return this.http.get(`${environment.apiUrl}/${this.final_report}/GetInformeFinalInterventoriaObservacionByInformeFinalInterventoria?pInformeFinalInterventoriaId=${ pInformeFinalInterventoriaId }`);
     }
+
+    updateStateValidateInformeFinalInterventoriaByInformeFinal( informeFinal: any ){
+      return this.http.post(`${environment.apiUrl}/${this.final_report}/UpdateStateValidateInformeFinalInterventoriaByInformeFinal`, informeFinal );
+    }
+
+    editObservacionInformeFinal( informeFinal: any ){
+      return this.http.post(`${environment.apiUrl}/${this.final_report}/EditObservacionInformeFinal`, informeFinal );
+    }
 }
