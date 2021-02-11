@@ -128,7 +128,15 @@ namespace asivamosffie.services
 
         public async Task<dynamic> GetListSolicitudPago(int pMenuId)
         {
-            var result = await _context.VSolicitudPago.OrderByDescending(r=> r.SolicitudPagoId) .ToListAsync();
+            List<VSolicitudPago> result = new List<VSolicitudPago>();
+
+
+            if (pMenuId == (int)enumeratorMenu.Verificar_solicitud_de_pago)
+            {
+                result = await _context.VSolicitudPago.Where(s => Int32.Parse(s.EstadoCodigo) > 0)
+                                                      .OrderByDescending(r => r.FechaModificacion)
+                                                      .ToListAsync();
+            } 
 
             List<dynamic> grind = new List<dynamic>();
 

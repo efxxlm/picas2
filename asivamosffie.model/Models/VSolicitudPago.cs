@@ -7,6 +7,7 @@ namespace asivamosffie.model.Models
     {
         public string TipoSolicitudCodigo { get; set; }
         public DateTime FechaCreacion { get; set; }
+        public DateTime? FechaModificacion { get; set; }
         public string NumeroSolicitud { get; set; }
         public int? ContratoId { get; set; }
         public int SolicitudPagoId { get; set; }
