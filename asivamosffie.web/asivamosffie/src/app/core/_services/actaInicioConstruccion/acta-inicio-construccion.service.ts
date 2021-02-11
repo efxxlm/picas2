@@ -58,13 +58,12 @@ export class ActaInicioConstruccionService {
   }
   EnviarCorreoSupervisorContratista(pContratoId: number, pPerfilId: number){
     return this.http.post<Respuesta>(`${environment.apiUrl}/actBegin/EnviarCorreoSupervisorContratista?pContratoId=${pContratoId}&pPerfilId=${pPerfilId}`,null);
-
   }
-  CreateTieneObservacionesActaInicioConstruccion(){
-
+  CreateEditObservacionesActaInicioConstruccion(pContratoConstraccion: any){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/actBegin/CreateEditObservacionesActaInicioConstruccion`, pContratoConstraccion);
   }
-  GetConstruccionObservacionByIdContratoConstruccionId(){
-    
+  GetConstruccionObservacionByIdContratoConstruccionId(pContratoConstruccionId:number, pEsSupervisor: boolean){
+    return this.http.get<any[]>(`${environment.apiUrl}/actBegin/GetConstruccionObservacionByIdContratoConstruccionId?pContratoConstruccionId=${pContratoConstruccionId}&pEsSupervisor=${pEsSupervisor}`);
   }
 }
 

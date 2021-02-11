@@ -69,7 +69,6 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
     this.addressForm = this.crearFormulario();
     this.activatedRoute.params.subscribe(param => {
       this.loadData(param.id);
-      this.loadDataObservaciones(param.id);
     });
     this.loadConditionals();
   }
@@ -134,21 +133,26 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
       this.obsConEspeciales = data.observacionOConsideracionesEspeciales;
       this.plazoEjecucionConstrM = data.plazoFase2ConstruccionDias;
       this.plazoEjecucionConstrD = data.plazoFase2ConstruccionMeses;
-
       this.contrato = data.contrato;
-      this.addressForm.get('tieneObservaciones').setValue(data.contrato.conObervacionesActaFase2);
-      
+      this.loadDataObservaciones(data.contrato.contratoConstruccion[0].contratoConstruccionId);
     });
     this.contratoId = id;
   }
   loadDataObservaciones(id) {
     if (localStorage.getItem("editable") == "true") {
+      this.services.GetConstruccionObservacionByIdContratoConstruccionId(id,true).subscribe((data0:any)=>{
+        this.addressForm.get('observaciones').setValue(data0.observaciones);
+        this.addressForm.get('tieneObservaciones').setValue(data0.esActa);
+        this.loadData2(data0);
+      });
+      /* Versión Anterior
       this.services.GetContratoObservacionByIdContratoId(id, true).subscribe(data0 => {
         //this.addressForm.get('tieneObservaciones').setValue(data0.esActa);
         this.addressForm.get('observaciones').setValue(data0.observaciones);
         this.loadData2(data0);
         this.fechaCreacion = data0.fechaCreacion;
       });
+      */
     }
     else {
       this.services.GetContratoObservacionByIdContratoId(id, true).subscribe(data2 => {
@@ -157,12 +161,13 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
     }
   }
   loadData2(data) {
+    this.contratoConstruccionId = data.contratoConstruccionId;
     this.contratoObservacionId = data.contratoObservacionId;
     this.esActa = data.esActa;
     this.esSupervision = data.esSupervision;
     this.fechaCreacion = data.fechaCreacion;
     this.tipoObservacionConstruccion = data.tipoObservacionConstruccion;
-
+    this.construccionObservacionId = data.construccionObservacionId;
   }
   openDialog(modalTitle: string, modalText: string) {
     let dialogRef = this.dialog.open(ModalDialogComponent, {
@@ -259,9 +264,25 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
 
       }]
     }
-        
+    let crearObservacionArreglo;
+    let editarObservacionArreglo;
+    crearObservacionArreglo={
+      'contratoId':parseInt(this.contratoId),
+      'contratoConstruccionId': this.contratoConstruccionId,
+      'observaciones': this.addressForm.value.observaciones,
+      'esSupervision':true,
+      'esActa': true
+    };
+    editarObservacionArreglo={
+      'contratoId':parseInt(this.contratoId),
+      'contratoConstruccionId': this.contratoConstruccionId,
+      'construccionObservacionId':this.construccionObservacionId,
+      'observaciones': this.addressForm.value.observaciones,
+      'esSupervision':true,
+      'esActa': true
+    }
     if (localStorage.getItem("editable") == "false") {
-      this.services.CreateTieneObservacionesActaInicio(this.contratoId, this.addressForm.value.observaciones, "usr3", true, this.addressForm.value.tieneObservaciones).subscribe(resp => {
+      this.services.CreateEditObservacionesActaInicioConstruccion(crearObservacionArreglo).subscribe(resp => {
         if (resp.code == "200") {
           if (this.addressForm.value.tieneObservaciones == true) {
             if (localStorage.getItem("origin") == "interventoria") {
@@ -302,7 +323,7 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
       });
     }
     else {
-      this.services.CreateEditContratoObservacion(objetoContrato).subscribe(resp => {
+      this.services.CreateEditObservacionesActaInicioConstruccion(editarObservacionArreglo).subscribe(resp => {
         if (resp.code == "200") {
           if (this.addressForm.value.tieneObservaciones == true) {
             if (localStorage.getItem("origin") == "interventoria") {
