@@ -54,10 +54,10 @@ namespace asivamosffie.services
                     pSolicitudPagoObservacion.Eliminado = false;
                     pSolicitudPagoObservacion.RegistroCompleto = ValidateCompleteRecordSolicitudPagoObservacion(pSolicitudPagoObservacion);
 
-                    _context.SolicitudPagoObservacion.Add(pSolicitudPagoObservacion);
+                    _context.Entry(pSolicitudPagoObservacion).State = EntityState.Added;
+                    _context.SaveChanges();
                 }
-                _context.SaveChanges();
-
+          
                 Respuesta respuesta =
                    new Respuesta
                    {
