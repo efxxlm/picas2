@@ -820,19 +820,7 @@ namespace asivamosffie.services
             }
         }
 
-        private bool ValidateCompleteRecordSolicitudPagoFaseCriterio2(ICollection<SolicitudPagoFaseCriterio> ListsolicitudPagoFaseCriterio)
-        {
-            foreach (var solicitudPagoFaseCriterio in ListsolicitudPagoFaseCriterio)
-            {
-                if (string.IsNullOrEmpty(solicitudPagoFaseCriterio.TipoCriterioCodigo)
-                      || string.IsNullOrEmpty(solicitudPagoFaseCriterio.ConceptoPagoCriterio)
-                      || string.IsNullOrEmpty(solicitudPagoFaseCriterio.ValorFacturado.ToString())
-                      ) return false;
-            }
-
-            return true;
-        }
-
+ 
         private void CreateEditSolicitudPagoSolicitudPagoAmortizacion(ICollection<SolicitudPagoFaseAmortizacion> pSolicitudPagoAmortizacionList, string pUsuarioCreacion)
         {
             foreach (var SolicitudPagoAmortizacion in pSolicitudPagoAmortizacionList)
@@ -1098,6 +1086,20 @@ namespace asivamosffie.services
 
             return true;
         }
+
+        private bool ValidateCompleteRecordSolicitudPagoFaseCriterio2(ICollection<SolicitudPagoFaseCriterio> ListsolicitudPagoFaseCriterio)
+        {
+            foreach (var solicitudPagoFaseCriterio in ListsolicitudPagoFaseCriterio)
+            {
+                if (string.IsNullOrEmpty(solicitudPagoFaseCriterio.TipoCriterioCodigo)
+                      || string.IsNullOrEmpty(solicitudPagoFaseCriterio.ConceptoPagoCriterio)
+                      || string.IsNullOrEmpty(solicitudPagoFaseCriterio.ValorFacturado.ToString())
+                      ) return false;
+            }
+
+            return true;
+        }
+
         #endregion
 
         #region Tipo Create Expensas 

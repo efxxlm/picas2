@@ -20,9 +20,11 @@ namespace asivamosffie.services
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
         private readonly IDocumentService _documentService;
+        private readonly IRegisterValidatePaymentRequierementsService _registerValidatePaymentRequierementsService;
 
-        public PaymentRequierementsService(IDocumentService documentService, devAsiVamosFFIEContext context, ICommonService commonService)
+        public PaymentRequierementsService(IRegisterValidatePaymentRequierementsService registerValidatePaymentRequierementsService, IDocumentService documentService, devAsiVamosFFIEContext context, ICommonService commonService)
         {
+            _registerValidatePaymentRequierementsService = registerValidatePaymentRequierementsService;
             _documentService = documentService;
             _commonService = commonService;
             _context = context;
@@ -56,6 +58,10 @@ namespace asivamosffie.services
 
                     _context.SolicitudPagoObservacion.Add(pSolicitudPagoObservacion);
                 }
+                _context.SaveChanges();
+
+
+                await ValidateCompleteObservation(pSolicitudPagoObservacion);
 
                 return
                     new Respuesta
@@ -79,6 +85,89 @@ namespace asivamosffie.services
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.Error, idAccion, pSolicitudPagoObservacion.UsuarioCreacion, ex.InnerException.ToString())
                     };
             }
+        }
+
+        private async Task<bool> ValidateCompleteObservation(SolicitudPagoObservacion pSolicitudPagoObservacion)
+        {
+            bool blRegistroCompleto = false;
+
+            SolicitudPago solicitudPago = await _registerValidatePaymentRequierementsService.GetSolicitudPago(pSolicitudPagoObservacion.SolicitudPagoId);
+            solicitudPago.FechaModificacion = DateTime.Now;
+
+            int intCantidadDependenciasSolicitudPago = CantidadDependenciasSolicitudPago(solicitudPago);
+             
+            if (_context.SolicitudPagoObservacion.Where(r => r.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId
+                                                        && r.Eliminado != true
+                                                        && r.Archivada != true).Count() == intCantidadDependenciasSolicitudPago)
+                blRegistroCompleto = true;
+
+            switch (pSolicitudPagoObservacion.MenuId)
+            {
+                case (int)enumeratorMenu.Verificar_solicitud_de_pago:
+                    solicitudPago.RegistroCompletoVerificar = blRegistroCompleto;
+                    break;
+
+                case (int)enumeratorMenu.Autorizar_solicitud_de_pago:
+                    solicitudPago.RegistroCompletoAutorizar = blRegistroCompleto;
+                    break; 
+            }
+            return false;
+        }
+
+        private int CantidadDependenciasSolicitudPago(SolicitudPago solicitudPago)
+        {
+            switch (solicitudPago.TipoSolicitudCodigo)
+            {
+                case ConstanCodigoTipoSolicitudContratoSolicitudPago.Contratos_Interventoria:
+                case ConstanCodigoTipoSolicitudContratoSolicitudPago.Contratos_Obra:
+
+                    return CantidadDependenciasTipoInterventoriaObra(solicitudPago);
+
+                case ConstanCodigoTipoSolicitudContratoSolicitudPago.Expensas:
+
+                    return CantidadDependenciasTipoInterventoriaObra(solicitudPago);
+
+                case ConstanCodigoTipoSolicitudContratoSolicitudPago.Otros_Costos_Servicios:
+
+                    return CantidadDependenciasTipoInterventoriaObra(solicitudPago);
+
+                default: return 0;
+            }
+
+        }
+
+        private int CantidadDependenciasTipoInterventoriaObra(SolicitudPago pSolicitudPago)
+        {
+            //#1 pSolicitudPago.SolicitudPagoCargarFormaPago
+            //#2 pSolicitudPago.SolicitudPagoSoporteSolicitud  
+            int intCantidadDependenciasSolicitudPago = 2;
+
+            foreach (var SolicitudPagoRegistrarSolicitudPago in pSolicitudPago.SolicitudPagoRegistrarSolicitudPago.Where(r => r.Eliminado != true))
+            {
+                //#4 Registro De la Solicituud
+                intCantidadDependenciasSolicitudPago++;
+
+                foreach (var SolicitudPagoFase in SolicitudPagoRegistrarSolicitudPago.SolicitudPagoFase.Where(r => r.Eliminado != true))
+                {
+                    //#5 Criterios de pago
+                    intCantidadDependenciasSolicitudPago++;
+
+                    foreach (var SolicitudPagoFaseAmortizacion in SolicitudPagoFase.SolicitudPagoFaseAmortizacion.Where(r => r.Eliminado != true))
+                    {
+                        //#6 Observacion Amortizacion
+                        intCantidadDependenciasSolicitudPago++;
+                    }
+                    foreach (var SolicitudPagoFaseFactura in SolicitudPagoFase.SolicitudPagoFaseFactura.Where(r => r.Eliminado != true))
+                    {
+                        //#7 Factura para proyectos asociados
+                        intCantidadDependenciasSolicitudPago++;
+
+                        //#7 Factura Descuentos de la Dirección Técnica
+                        intCantidadDependenciasSolicitudPago++;
+                    }
+                }
+            }
+            return intCantidadDependenciasSolicitudPago;
         }
 
         private bool ValidateCompleteRecordSolicitudPagoObservacion(SolicitudPagoObservacion pSolicitudPagoObservacion)
@@ -189,7 +278,6 @@ namespace asivamosffie.services
                     };
             }
         }
-
 
         private void ActualizarSolicitudPagoTieneObservacion(SolicitudPagoObservacion pSolicitudPagoObservacion, bool TieneObservacion)
         {
