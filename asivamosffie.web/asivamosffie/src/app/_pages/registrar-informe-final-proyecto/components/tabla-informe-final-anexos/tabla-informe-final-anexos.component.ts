@@ -12,6 +12,7 @@ import { ListaChequeo } from 'src/app/_interfaces/proyecto-final-anexos.model';
 import { InformeFinal, InformeFinalAnexo, InformeFinalInterventoria, InformeFinalInterventoriaObservaciones } from 'src/app/_interfaces/informe-final';
 import { RegistrarInformeFinalProyectoService } from 'src/app/core/_services/registrar-informe-final-proyecto.service';
 import { Respuesta } from 'src/app/core/_services/common/common.service';
+import { Report } from 'src/app/_interfaces/proyecto-final.model';
 
 @Component({
   selector: 'app-tabla-informe-final-anexos',
@@ -22,8 +23,10 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   ELEMENT_DATA : ListaChequeo[] = [];
   @Input() id: string;
   @Input() llaveMen: string;
-  @Input() estaEditando: boolean;
-  @Output() estadoInforme = new EventEmitter<boolean>(true);
+  @Input() estadoInforme: string;
+  @Input() report: Report;
+  estadoInformeString: string;  
+  estaEditando: boolean;
 
   listChequeo: any;
   displayedColumns: string[] = [
@@ -54,6 +57,15 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit(): void {
+    if (this.estadoInforme === '2' || this.estadoInforme === '3') { //con informe registrado/ enviado a validación
+      this.estadoInformeString = 'completo';
+    } else if (this.estadoInforme === '1' || this.estadoInforme === '4') { //en proceso de registro, con observaciones
+      this.estadoInformeString = 'en-proceso';
+    } else {
+      this.estadoInformeString = 'sin-diligenciar';
+    }
+
+    //this.stateEstaEditando();
     this.getInformeFinalListaChequeo(this.id);
   }
   
@@ -62,6 +74,10 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     .subscribe(listChequeo => {
       this.dataSource.data = listChequeo as ListaChequeo[];
       this.listChequeo = listChequeo;
+
+      /*stateEstaEditando() {
+        this.report.proyecto.informeFinal.length > 0 ? (this.estaEditando = true) : (this.estaEditando = false);
+      }*/
     });
   }
 
