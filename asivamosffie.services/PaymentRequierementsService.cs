@@ -92,29 +92,30 @@ namespace asivamosffie.services
             solicitudPago.FechaModificacion = DateTime.Now;
             solicitudPago.UsuarioModificacion = pUsuarioMod;
 
-
-
             int intCantidadDependenciasSolicitudPago = CantidadDependenciasSolicitudPago(solicitudPago);
 
             if (pSolicitudPagoObservacion.TieneObservacion == true)
                 solicitudPago.TieneObservacion = pSolicitudPagoObservacion.TieneObservacion;
-             
+
+            //Valida si la cantidad de relaciones de solicitud Pago es igual a la cantidad de observaciones de esa Solicitud pago
+
+            bool blRegistroCompleto = false;
             if (_context.SolicitudPagoObservacion.Where(r => r.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId
-                                                        && r.Eliminado != true
-                                                        && r.Archivada != true).Count() == intCantidadDependenciasSolicitudPago)
-            { 
-                switch (pSolicitudPagoObservacion.MenuId)
-                {
-                    case (int)enumeratorMenu.Verificar_solicitud_de_pago:
-                        solicitudPago.RegistroCompletoVerificar = true;
-                        break;
+                                                          && r.MenuId == pSolicitudPagoObservacion.MenuId
+                                                          && r.Eliminado != true
+                                                          && r.Archivada != true).Count() == intCantidadDependenciasSolicitudPago)
+                blRegistroCompleto = true;
 
-                    case (int)enumeratorMenu.Autorizar_solicitud_de_pago:
-                        solicitudPago.RegistroCompletoAutorizar = true;
-                        break;
-                } 
+            switch (pSolicitudPagoObservacion.MenuId)
+            {
+                case (int)enumeratorMenu.Verificar_solicitud_de_pago:
+                    solicitudPago.RegistroCompletoVerificar = blRegistroCompleto;
+                    break;
+
+                case (int)enumeratorMenu.Autorizar_solicitud_de_pago:
+                    solicitudPago.RegistroCompletoAutorizar = blRegistroCompleto;
+                    break;
             }
-
             return false;
         }
 
