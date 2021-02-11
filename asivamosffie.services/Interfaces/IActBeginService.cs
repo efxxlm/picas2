@@ -47,6 +47,9 @@ namespace asivamosffie.services.Interfaces
 
         Task GetDiasHabilesActaConstruccionEnviada(AppSettingsService appSettingsService);
         Task GetDiasHabilesActaRegistrada(AppSettingsService appSettingsService);
+
+        Task<Respuesta> CreateEditObservacionesActaInicioConstruccion(ContratoConstruccion pContratoConstruccion, string pUsuarioCreacion);
+        Task<ConstruccionObservacion> GetConstruccionObservacionByIdContratoConstruccionId(int pContratoConstruccionId, bool pEsSupervisor);
     }
 
 }

@@ -2245,15 +2245,32 @@ namespace asivamosffie.services
                         pSesionComiteSolicitud.Contratacion.ContratacionProyecto.ToList().ForEach(ct =>
                         {
                             Proyecto proy = _context.Proyecto.Find(ct.Proyecto.ProyectoId);
-                            if (ct.Proyecto.EstadoProyectoCodigo != null)
-                                if (ct.Proyecto.EstadoProyectoCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteTecnico)
-                                    proy.EstadoProyectoCodigo = ConstantCodigoEstadoProyecto.Disponible;
-                                else
-                                    proy.EstadoProyectoCodigo = ct.Proyecto.EstadoProyectoCodigo;
-                            else
+                            if (pSesionComiteSolicitud.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
                             {
-                                sesionComiteSolicitudOld.RegistroCompleto = false;
+                                if (ct.Proyecto.EstadoProyectoObraCodigo != null)
+                                    if (ct.Proyecto.EstadoProyectoObraCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteTecnico)
+                                        proy.EstadoProyectoObraCodigo = ConstantCodigoEstadoProyecto.Disponible;
+                                    else
+                                        proy.EstadoProyectoObraCodigo = ct.Proyecto.EstadoProyectoObraCodigo;
+                                else
+                                {
+                                    sesionComiteSolicitudOld.RegistroCompleto = false;
+                                }
                             }
+
+                            if (pSesionComiteSolicitud.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
+                            {
+                                if (ct.Proyecto.EstadoProyectoInterventoriaCodigo != null)
+                                    if (ct.Proyecto.EstadoProyectoInterventoriaCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteTecnico)
+                                        proy.EstadoProyectoInterventoriaCodigo = ConstantCodigoEstadoProyecto.Disponible;
+                                    else
+                                        proy.EstadoProyectoInterventoriaCodigo = ct.Proyecto.EstadoProyectoInterventoriaCodigo;
+                                else
+                                {
+                                    sesionComiteSolicitudOld.RegistroCompleto = false;
+                                }
+                            }
+                             
                         });
 
                     }
@@ -3853,11 +3870,17 @@ namespace asivamosffie.services
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Observacion_Contratacion, (int)EnumeratorTipoDominio.Acciones);
 
+            Contratacion contratacion = _context.Contratacion.Find(pContratacionObservacion.ContratacionId);
+
             try
             {
                 Proyecto proyecto = _context.Proyecto.Find(pContratacionObservacion.ContratacionProyecto.Proyecto.ProyectoId);
 
-                proyecto.EstadoProyectoCodigo = pContratacionObservacion.ContratacionProyecto.Proyecto.EstadoProyectoCodigo;
+                if ( contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+                    proyecto.EstadoProyectoObraCodigo = pContratacionObservacion.ContratacionProyecto.Proyecto.EstadoProyectoObraCodigo;
+
+                if (contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
+                    proyecto.EstadoProyectoInterventoriaCodigo = pContratacionObservacion.ContratacionProyecto.Proyecto.EstadoProyectoInterventoriaCodigo;
 
                 pContratacionObservacion.ContratacionProyecto = null;
 

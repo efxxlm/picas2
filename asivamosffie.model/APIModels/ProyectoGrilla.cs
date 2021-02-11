@@ -19,8 +19,11 @@ namespace asivamosffie.model.APIModels
         public string TipoIntervencion { get; set; }
         public string LlaveMen { get; set; }
         public string Region { get; set; }
-        public string EstadoProyecto { get; set; }
-        public string EstadoProyectoCodigo { get; set; }
+        public string EstadoProyectoObra { get; set; }
+        public string EstadoProyectoInterventoria { get; set; }
+        public string EstadoProyectoObraCodigo { get; set; }
+
+        public string EstadoProyectoInterventoriaCodigo { get; set; }
         public bool TieneObra { get; set; }
         public bool TieneInterventoria { get; set; }
         public string NombreAportante { get; set; }

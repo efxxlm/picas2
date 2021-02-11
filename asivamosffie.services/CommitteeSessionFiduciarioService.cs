@@ -2520,15 +2520,30 @@ namespace asivamosffie.services
                         pSesionComiteSolicitud.Contratacion.ContratacionProyecto.ToList().ForEach(ct =>
                         {
                             Proyecto proy = _context.Proyecto.Find(ct.Proyecto.ProyectoId);
-                            if (ct.Proyecto.EstadoProyectoCodigo != null)
-                                if (ct.Proyecto.EstadoProyectoCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteTecnico)
-                                    proy.EstadoProyectoCodigo = ConstantCodigoEstadoProyecto.Disponible;
-                                else
-                                    proy.EstadoProyectoCodigo = ct.Proyecto.EstadoProyectoCodigo;
-                            else
+                            if (pSesionComiteSolicitud.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
                             {
-                                sesionComiteSolicitudOld.RegistroCompletoFiduciaria = false;
+                                if (ct.Proyecto.EstadoProyectoObraCodigo != null)
+                                    if (ct.Proyecto.EstadoProyectoObraCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteTecnico)
+                                        proy.EstadoProyectoObraCodigo = ConstantCodigoEstadoProyecto.Disponible;
+                                    else
+                                        proy.EstadoProyectoObraCodigo = ct.Proyecto.EstadoProyectoObraCodigo;
+                                else
+                                {
+                                    sesionComiteSolicitudOld.RegistroCompletoFiduciaria = false;
+                                }
+                            }else if (pSesionComiteSolicitud.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
+                            {
+                                if (ct.Proyecto.EstadoProyectoInterventoriaCodigo != null)
+                                    if (ct.Proyecto.EstadoProyectoInterventoriaCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteTecnico)
+                                        proy.EstadoProyectoInterventoriaCodigo = ConstantCodigoEstadoProyecto.Disponible;
+                                    else
+                                        proy.EstadoProyectoInterventoriaCodigo = ct.Proyecto.EstadoProyectoInterventoriaCodigo;
+                                else
+                                {
+                                    sesionComiteSolicitudOld.RegistroCompletoFiduciaria = false;
+                                }
                             }
+                            
                         });
 
                     }

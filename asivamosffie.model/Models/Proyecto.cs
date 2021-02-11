@@ -55,6 +55,8 @@ namespace asivamosffie.model.Models
         public int? PlazoMesesInterventoria { get; set; }
         public int? PlazoDiasInterventoria { get; set; }
         public string CoordinacionResponsableCodigo { get; set; }
+        public string EstadoProyectoObraCodigo { get; set; }
+        public string EstadoProyectoInterventoriaCodigo { get; set; }
 
         public virtual InstitucionEducativaSede InstitucionEducativa { get; set; }
         public virtual Localizacion LocalizacionIdMunicipioNavigation { get; set; }
