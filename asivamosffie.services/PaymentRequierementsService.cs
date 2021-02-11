@@ -117,7 +117,7 @@ namespace asivamosffie.services
 
             if (pMenuId == (int)enumeratorMenu.Verificar_solicitud_de_pago)
             {
-                result = await _context.VSolicitudPago.Where(s => Int32.Parse(s.EstadoCodigo) > 0)
+                result = await _context.VSolicitudPago//.Where(s => Int32.Parse(s.EstadoCodigo) > 0)
                                                       .OrderByDescending(r => r.FechaModificacion)
                                                       .ToListAsync();
             }
