@@ -266,23 +266,29 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
     }
     let crearObservacionArreglo;
     let editarObservacionArreglo;
-    crearObservacionArreglo={
+    crearObservacionArreglo=[{
       'contratoId':parseInt(this.contratoId),
       'contratoConstruccionId': this.contratoConstruccionId,
       'observaciones': this.addressForm.value.observaciones,
       'esSupervision':true,
       'esActa': true
-    };
-    editarObservacionArreglo={
+    }];
+    editarObservacionArreglo=[{
       'contratoId':parseInt(this.contratoId),
       'contratoConstruccionId': this.contratoConstruccionId,
       'construccionObservacionId':this.construccionObservacionId,
       'observaciones': this.addressForm.value.observaciones,
       'esSupervision':true,
       'esActa': true
+    }];
+    const arrayCrearContratoObservacion = {
+      construccionObservacion : crearObservacionArreglo
+    }
+    const arrayEditarContratoObservacion = {
+      construccionObservacion : editarObservacionArreglo
     }
     if (localStorage.getItem("editable") == "false") {
-      this.services.CreateEditObservacionesActaInicioConstruccion(crearObservacionArreglo).subscribe(resp => {
+      this.services.CreateEditObservacionesActaInicioConstruccion(arrayCrearContratoObservacion).subscribe(resp => {
         if (resp.code == "200") {
           if (this.addressForm.value.tieneObservaciones == true) {
             if (localStorage.getItem("origin") == "interventoria") {
@@ -323,7 +329,7 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
       });
     }
     else {
-      this.services.CreateEditObservacionesActaInicioConstruccion(editarObservacionArreglo).subscribe(resp => {
+      this.services.CreateEditObservacionesActaInicioConstruccion(arrayEditarContratoObservacion).subscribe(resp => {
         if (resp.code == "200") {
           if (this.addressForm.value.tieneObservaciones == true) {
             if (localStorage.getItem("origin") == "interventoria") {
