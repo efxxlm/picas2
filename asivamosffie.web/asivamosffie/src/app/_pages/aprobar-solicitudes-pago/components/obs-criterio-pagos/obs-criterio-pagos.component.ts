@@ -59,13 +59,10 @@ export class ObsCriterioPagosComponent implements OnInit {
 
                         if ( obsSupervisor !== undefined ) {
                             console.log( obsSupervisor );
-                            this.addressForm.setValue(
-                                {
-                                    fechaCreacion: obsSupervisor.fechaCreacion,
-                                    tieneObservaciones: obsSupervisor.tieneObservacion !== undefined ? obsSupervisor.tieneObservacion : null,
-                                    observaciones: obsSupervisor.observacion !== undefined ? ( obsSupervisor.observacion.length > 0 ? obsSupervisor.observacion : null ) : null
-                                }
-                            );
+                            this.solicitudPagoObservacionId = obsSupervisor.solicitudPagoObservacionId;
+                            this.addressForm.get( 'fechaCreacion' ).setValue( obsSupervisor.fechaCreacion );
+                            this.addressForm.get( 'tieneObservaciones' ).setValue( obsSupervisor.tieneObservacion !== undefined ? obsSupervisor.tieneObservacion : null );
+                            this.addressForm.get( 'observaciones' ).setValue( obsSupervisor.observacion !== undefined ? ( obsSupervisor.observacion.length > 0 ? obsSupervisor.observacion : null ) : null );
                         }
                     }
                 );

@@ -119,6 +119,7 @@ export class FormAprobarSolicitudComponent implements OnInit {
 
                                             if ( obsSupervisor !== undefined ) {
                                                 console.log( obsSupervisor );
+                                                this.solicitudPagoObservacionId = obsSupervisor.solicitudPagoObservacionId;
                                                 this.addressForm.setValue(
                                                     {
                                                         fechaCreacion: obsSupervisor.fechaCreacion,
@@ -131,22 +132,40 @@ export class FormAprobarSolicitudComponent implements OnInit {
                                     );
 
                                 if ( this.contrato.solicitudPagoOnly.tipoSolicitudCodigo === this.tipoSolicitudCodigo.otrosCostos ) {
-                                    this.commonSvc.tiposDePagoExpensas()
-                                    .subscribe( response => {
-                                        this.tipoPagoArray = response;
-                                        if ( this.contrato !== undefined ) {
-                                            const solicitudPagoOtrosCostosServicios = this.contrato.solicitudPagoOnly.solicitudPagoOtrosCostosServicios[0];
-                                            this.otrosCostosForm.setValue(
-                                                {
-                                                    numeroContrato: this.contrato.numeroContrato,
-                                                    numeroRadicadoSAC: solicitudPagoOtrosCostosServicios.numeroRadicadoSac !== undefined ? solicitudPagoOtrosCostosServicios.numeroRadicadoSac : null,
-                                                    numeroFactura: solicitudPagoOtrosCostosServicios.numeroFactura !== undefined ? solicitudPagoOtrosCostosServicios.numeroFactura : null,
-                                                    valorFacturado: solicitudPagoOtrosCostosServicios.valorFacturado !== undefined ? solicitudPagoOtrosCostosServicios.valorFacturado : null,
-                                                    tipoPago: solicitudPagoOtrosCostosServicios.tipoPagoCodigo !== undefined ? this.tipoPagoArray.filter( tipoPago => tipoPago.codigo === solicitudPagoOtrosCostosServicios.tipoPagoCodigo )[0] : null
+                                    this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.menusIdPath.aprobarSolicitudPagoId, this.contrato.solicitudPagoOnly.solicitudPagoId, this.contrato.solicitudPagoOnly.solicitudPagoOtrosCostosServicios[0].solicitudPagoOtrosCostosServiciosId )
+                                        .subscribe(
+                                            response => {
+                                                const obsSupervisor = response.filter( obs => obs.archivada === false )[0];
+
+                                                if ( obsSupervisor !== undefined ) {
+                                                    console.log( obsSupervisor );
+                                                    this.solicitudPagoObsOtrosCostosId = obsSupervisor.solicitudPagoObservacionId;
+                                                    this.otrosCostosObsForm.setValue(
+                                                        {
+                                                            fechaCreacion: obsSupervisor.fechaCreacion,
+                                                            tieneObservaciones: obsSupervisor.tieneObservacion !== undefined ? obsSupervisor.tieneObservacion : null,
+                                                            observaciones: obsSupervisor.observacion !== undefined ? ( obsSupervisor.observacion.length > 0 ? obsSupervisor.observacion : null ) : null
+                                                        }
+                                                    );
                                                 }
-                                            );
-                                        }
-                                    } );
+                                            }
+                                        );
+                                    this.commonSvc.tiposDePagoExpensas()
+                                        .subscribe( response => {
+                                            this.tipoPagoArray = response;
+                                            if ( this.contrato !== undefined ) {
+                                                const solicitudPagoOtrosCostosServicios = this.contrato.solicitudPagoOnly.solicitudPagoOtrosCostosServicios[0];
+                                                this.otrosCostosForm.setValue(
+                                                    {
+                                                        numeroContrato: this.contrato.numeroContrato,
+                                                        numeroRadicadoSAC: solicitudPagoOtrosCostosServicios.numeroRadicadoSac !== undefined ? solicitudPagoOtrosCostosServicios.numeroRadicadoSac : null,
+                                                        numeroFactura: solicitudPagoOtrosCostosServicios.numeroFactura !== undefined ? solicitudPagoOtrosCostosServicios.numeroFactura : null,
+                                                        valorFacturado: solicitudPagoOtrosCostosServicios.valorFacturado !== undefined ? solicitudPagoOtrosCostosServicios.valorFacturado : null,
+                                                        tipoPago: solicitudPagoOtrosCostosServicios.tipoPagoCodigo !== undefined ? this.tipoPagoArray.filter( tipoPago => tipoPago.codigo === solicitudPagoOtrosCostosServicios.tipoPagoCodigo )[0] : null
+                                                    }
+                                                );
+                                            }
+                                        } );
                                 } else {
                                     this.dataSource = new MatTableDataSource( this.contrato.contratacion.disponibilidadPresupuestal );
                                     this.dataSource.paginator = this.paginator;

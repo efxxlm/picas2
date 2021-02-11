@@ -70,6 +70,7 @@ export class ObsDatosFacturaComponent implements OnInit {
 
                 if ( obsSupervisor !== undefined ) {
                     console.log( obsSupervisor );
+                    this.solicitudPagoObservacionId = obsSupervisor.solicitudPagoObservacionId;
                     this.addressForm.setValue(
                         {
                             fechaCreacion: obsSupervisor.fechaCreacion,

@@ -68,6 +68,9 @@ export class ObservacionesMultiplesCuService {
             if ( tipoObservacion.codigo === '9' ) {
               tiposObservaciones.otrosCostosCodigo = tipoObservacion.codigo
             }
+            if ( tipoObservacion.codigo === '10' ) {
+              tiposObservaciones.registrarSolicitudPago.amortizacionAnticipoCodigo = tipoObservacion.codigo
+            }
           } );
 
           return tiposObservaciones;

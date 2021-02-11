@@ -16,6 +16,7 @@ export class FormAmortizacionComponent implements OnInit {
     @Input() esVerDetalle = false;
     @Input() contrato: any;
     @Input() aprobarSolicitudPagoId: any;
+    @Input() amortizacionAnticipoCodigo: string;
     solicitudPagoObservacionId = 0;
     solicitudPagoFase: any;
     solicitudPagoFaseAmortizacionId = 0;
@@ -63,6 +64,7 @@ export class FormAmortizacionComponent implements OnInit {
 
                         if ( obsSupervisor !== undefined ) {
                             console.log( obsSupervisor );
+                            this.solicitudPagoObservacionId = obsSupervisor.solicitudPagoObservacionId;
                             this.addressForm.setValue(
                                 {
                                     fechaCreacion: obsSupervisor.fechaCreacion,
@@ -117,7 +119,7 @@ export class FormAmortizacionComponent implements OnInit {
             solicitudPagoObservacionId: this.solicitudPagoObservacionId,
             solicitudPagoId: this.solicitudPago.solicitudPagoId,
             observacion: this.addressForm.get( 'observaciones' ).value !== null ? this.addressForm.get( 'observaciones' ).value : this.addressForm.get( 'observaciones' ).value,
-            tipoObservacionCodigo: 'Esta pendiente el tipoObservacionCodigo para amortizacion',
+            tipoObservacionCodigo: this.amortizacionAnticipoCodigo,
             menuId: this.aprobarSolicitudPagoId,
             idPadre: this.solicitudPagoFaseAmortizacionId,
             tieneObservacion: this.addressForm.get( 'tieneObservaciones' ).value !== null ? this.addressForm.get( 'tieneObservaciones' ).value : this.addressForm.get( 'tieneObservaciones' ).value

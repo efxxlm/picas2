@@ -57,19 +57,25 @@
                         <button mat-raised-button color="accent" class="btn-table" (click)="this.verDetalle(element.gestion)">
                             Ver detalle
                         </button>
+                        <button mat-raised-button color="accent" class="btn-table">
+                            Devolver solicitud
+                        </button>
                     </ng-container>
                     <ng-template #esExpensas>
-                        <button mat-raised-button color="accent" class="btn-table" [routerLink]="[ 'aprobacionSolicitud', element ]">
+                        <button mat-raised-button color="accent" class="btn-table" [routerLink]="[ 'observacionExpensas', element.solicitudPagoId ]">
                             Verificar solicitud
                         </button>
                         <button mat-raised-button color="accent" class="btn-table" (click)="this.openCertificate()">
                             Enviar para autorizar solicitud
                         </button>
-                        <button mat-raised-button color="accent" class="btn-table" (click)="this.verDetalleEditar(element.gestion)">
+                        <button mat-raised-button color="accent" class="btn-table" [routerLink]="[ 'observacionExpensas', element.solicitudPagoId ]">
                             Ver detalle/Editar
                         </button>
                         <button mat-raised-button color="accent" class="btn-table" (click)="this.verDetalle(element.gestion)">
                             Ver detalle
+                        </button>
+                        <button mat-raised-button color="accent" class="btn-table">
+                            Devolver solicitud
                         </button>
                     </ng-template>
                 </td>

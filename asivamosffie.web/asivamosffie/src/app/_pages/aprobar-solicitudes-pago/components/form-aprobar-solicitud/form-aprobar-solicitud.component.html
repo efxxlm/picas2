@@ -5,10 +5,10 @@
         </a>
     </div>
     <h1 class="title-menu--h1">
-        Aprobar solicitud {{ contrato.solicitudPagoOnly.numeroSolicitud }}
+        Verificar solicitud {{ contrato.solicitudPagoOnly.numeroSolicitud }}
     </h1>
     <ng-container *ngIf="contrato.solicitudPagoOnly.tipoSolicitudCodigo === this.tipoSolicitudCodigo.contratoInterventoria || contrato.solicitudPagoOnly.tipoSolicitudCodigo === this.tipoSolicitudCodigo.contratoObra; else esOtrosCostos">
-        <p style="margin-top: 0.5em;" *ngIf="this.idGestion==1">
+        <p style="margin-top: 0.5em;">
             <span *ngIf="contrato.solicitudPagoOnly.tipoSolicitudCodigo === tipoSolicitudCodigo.contratoObra">Tipo de solicitud: <b>Contratos de obra</b></span>
             <span *ngIf="contrato.solicitudPagoOnly.tipoSolicitudCodigo === tipoSolicitudCodigo.contratoInterventoria">Tipo de solicitud: <b>Contratos de interventoria</b></span>
         </p>

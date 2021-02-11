@@ -61,6 +61,7 @@ export class ObsCargarFormaPagoComponent implements OnInit {
                             if ( obsSupervisor.registroCompleto === true ) {
                                 this.estadoSemaforo.emit( 'completo' );
                             }
+                            this.solicitudPagoObservacionId = obsSupervisor.solicitudPagoObservacionId;
                             this.addressForm.setValue(
                                 {
                                     fechaCreacion: obsSupervisor.fechaCreacion,
