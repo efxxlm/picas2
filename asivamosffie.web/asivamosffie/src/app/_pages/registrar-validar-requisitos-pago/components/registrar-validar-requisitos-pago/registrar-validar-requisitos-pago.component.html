@@ -78,7 +78,7 @@
                             ng-container para obra, interventoria, otros costos
                             etiqueta "Section" condicionada para el estadoCodigo enProcesoRegistro === '1'
                         -->
-                        <section *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoRegistro">
+                        <section *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoRegistro || element.estadoCodigo === listaEstadoSolicitudPago.solicitudDevueltaEquipoFacturacion">
                             <button mat-raised-button color="accent" class="btn-table" (click)="devolverSolicitudDialog( element )" *ngIf="element.registroCompleto === false">
                                 Devolver solicitud
                             </button>
@@ -106,7 +106,7 @@
                             ng-template para expensas
                             etiqueta "Section" condicionada para el estadoCodigo enProcesoRegistro === '1'
                         -->
-                        <section *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoRegistro">
+                        <section *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoRegistro || element.estadoCodigo === listaEstadoSolicitudPago.solicitudDevueltaEquipoFacturacion">
                             <button mat-raised-button color="accent" class="btn-table" (click)="devolverSolicitudDialog( element )" *ngIf="element.registroCompleto === false">
                                 Devolver solicitud
                             </button>

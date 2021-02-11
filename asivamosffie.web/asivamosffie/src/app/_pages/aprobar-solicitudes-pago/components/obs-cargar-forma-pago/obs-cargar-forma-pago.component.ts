@@ -104,9 +104,11 @@ export class ObsCargarFormaPagoComponent implements OnInit {
     }
 
     getFormaPago( formaPagoCodigo: string ) {
-        if ( this.formaPagoArray.length > 0 ) {
+        if ( this.formaPagoArray.length > 0 && formaPagoCodigo !== undefined ) {
             const forma = this.formaPagoArray.filter( forma => forma.codigo === formaPagoCodigo );
-            return forma[0].nombre;
+            if ( forma.length > 0 ) {
+                return forma[0].nombre;
+            }
         }
     }
 

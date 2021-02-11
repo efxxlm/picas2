@@ -43,19 +43,35 @@
             </ng-container>
             <ng-container matColumnDef="gestion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
-                <td mat-cell *matCellDef="let element" align="center"> 
-                    <button mat-raised-button color="accent" class="btn-table" (click)="this.aprobarSolicitud(element.gestion)">
-                        Aprobar solicitud
-                    </button>
-                    <button mat-raised-button color="accent" class="btn-table" (click)="this.openCertificate()">
-                        Enviar para autorizar solicitud
-                    </button>
-                    <button mat-raised-button color="accent" class="btn-table" (click)="this.verDetalleEditar(element.gestion)">
-                        Ver detalle/Editar
-                    </button>
-                    <button mat-raised-button color="accent" class="btn-table" (click)="this.verDetalle(element.gestion)">
-                        Ver detalle
-                    </button>
+                <td mat-cell *matCellDef="let element" align="center">
+                    <ng-container *ngIf="element.tipoSolicitudCodigo !== tipoSolicitudCodigo.expensas; else esExpensas">
+                        <button mat-raised-button color="accent" class="btn-table" [routerLink]="[ 'aprobacionSolicitud', element.contratoId, element.solicitudPagoId ]">
+                            Verificar solicitud
+                        </button>
+                        <button mat-raised-button color="accent" class="btn-table" (click)="this.openCertificate()">
+                            Enviar para autorizar solicitud
+                        </button>
+                        <button mat-raised-button color="accent" class="btn-table" [routerLink]="[ 'aprobacionSolicitud', element.contratoId, element.solicitudPagoId ]">
+                            Ver detalle/Editar
+                        </button>
+                        <button mat-raised-button color="accent" class="btn-table" (click)="this.verDetalle(element.gestion)">
+                            Ver detalle
+                        </button>
+                    </ng-container>
+                    <ng-template #esExpensas>
+                        <button mat-raised-button color="accent" class="btn-table" [routerLink]="[ 'aprobacionSolicitud', element ]">
+                            Verificar solicitud
+                        </button>
+                        <button mat-raised-button color="accent" class="btn-table" (click)="this.openCertificate()">
+                            Enviar para autorizar solicitud
+                        </button>
+                        <button mat-raised-button color="accent" class="btn-table" (click)="this.verDetalleEditar(element.gestion)">
+                            Ver detalle/Editar
+                        </button>
+                        <button mat-raised-button color="accent" class="btn-table" (click)="this.verDetalle(element.gestion)">
+                            Ver detalle
+                        </button>
+                    </ng-template>
                 </td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

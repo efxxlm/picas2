@@ -39,7 +39,7 @@ export class RegistrarValidarRequisitosPagoComponent implements OnInit {
         private routes: Router,
         private commonSvc: CommonService,
         private obsMultipleSvc: ObservacionesMultiplesCuService,
-        private registrarPagosSvc: RegistrarRequisitosPagoService, )
+        private registrarPagosSvc: RegistrarRequisitosPagoService )
     {
         this.commonSvc.listaEstadoSolicitudPago()
             .subscribe(

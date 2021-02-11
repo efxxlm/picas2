@@ -84,8 +84,8 @@ export class FormCargarFormaDePagoComponent implements OnInit {
             {
                 solicitudPagoId: this.solicitudPagoId,
                 solicitudPagoCargarFormaPagoId: this.solicitudPagoCargarFormaPagoId,
-                fasePreConstruccionFormaPagoCodigo: this.addressForm.get( 'formaPagoPreconstruccion' ).value !== null ?  this.addressForm.get( 'formaPagoPreconstruccion' ).value.codigo : '',
-                faseConstruccionFormaPagoCodigo: this.addressForm.get( 'formaPagoConstruccion' ).value !== null ?  this.addressForm.get( 'formaPagoConstruccion' ).value.codigo : '',
+                fasePreConstruccionFormaPagoCodigo: this.addressForm.get( 'formaPagoPreconstruccion' ).value !== null ?  this.addressForm.get( 'formaPagoPreconstruccion' ).value.codigo : null,
+                faseConstruccionFormaPagoCodigo: this.addressForm.get( 'formaPagoConstruccion' ).value !== null ?  this.addressForm.get( 'formaPagoConstruccion' ).value.codigo : null,
                 tieneFase1: this.tieneFase1
             }
         ]

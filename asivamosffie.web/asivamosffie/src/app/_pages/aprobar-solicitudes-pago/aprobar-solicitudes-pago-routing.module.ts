@@ -11,7 +11,7 @@ const routes: Routes = [
     component: AprobarSolicitudesPagoComponent
   },
   {
-    path: 'aprobacionSolicitud/:id',
+    path: 'aprobacionSolicitud/:idContrato/:idSolicitudPago',
     component: FormAprobarSolicitudComponent
   },
   {
