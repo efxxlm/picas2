@@ -3,12 +3,9 @@ using asivamosffie.model.Models;
 using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.services.Interfaces;
-using DocumentFormat.OpenXml.InkML;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Z.EntityFramework.Plus;
@@ -51,6 +48,7 @@ namespace asivamosffie.services
                 }
                 else
                 {
+                    
                     pSolicitudPagoObservacion.Archivada = false;
                     pSolicitudPagoObservacion.FechaCreacion = DateTime.Now;
                     pSolicitudPagoObservacion.Eliminado = false;
