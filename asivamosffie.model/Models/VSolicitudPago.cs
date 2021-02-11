@@ -17,5 +17,6 @@ namespace asivamosffie.model.Models
         public string ModalidadNombre { get; set; }
         public bool? RegistroCompletoVerificar { get; set; }
         public bool? RegistroCompletoAutorizar { get; set; }
+        public bool? TieneObservacion { get; set; }
     }
 }

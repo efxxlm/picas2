@@ -60,8 +60,7 @@ namespace asivamosffie.services
                 }
                 _context.SaveChanges();
 
-
-                await ValidateCompleteObservation(pSolicitudPagoObservacion);
+                await ValidateCompleteObservation(pSolicitudPagoObservacion, pSolicitudPagoObservacion.UsuarioCreacion);
 
                 return
                     new Respuesta
@@ -87,30 +86,35 @@ namespace asivamosffie.services
             }
         }
 
-        private async Task<bool> ValidateCompleteObservation(SolicitudPagoObservacion pSolicitudPagoObservacion)
+        private async Task<bool> ValidateCompleteObservation(SolicitudPagoObservacion pSolicitudPagoObservacion, string pUsuarioMod)
         {
-            bool blRegistroCompleto = false;
-
             SolicitudPago solicitudPago = await _registerValidatePaymentRequierementsService.GetSolicitudPago(pSolicitudPagoObservacion.SolicitudPagoId);
             solicitudPago.FechaModificacion = DateTime.Now;
+            solicitudPago.UsuarioModificacion = pUsuarioMod;
+
+
 
             int intCantidadDependenciasSolicitudPago = CantidadDependenciasSolicitudPago(solicitudPago);
+
+            if (pSolicitudPagoObservacion.TieneObservacion == true)
+                solicitudPago.TieneObservacion = pSolicitudPagoObservacion.TieneObservacion;
              
             if (_context.SolicitudPagoObservacion.Where(r => r.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId
                                                         && r.Eliminado != true
                                                         && r.Archivada != true).Count() == intCantidadDependenciasSolicitudPago)
-                blRegistroCompleto = true;
+            { 
+                switch (pSolicitudPagoObservacion.MenuId)
+                {
+                    case (int)enumeratorMenu.Verificar_solicitud_de_pago:
+                        solicitudPago.RegistroCompletoVerificar = true;
+                        break;
 
-            switch (pSolicitudPagoObservacion.MenuId)
-            {
-                case (int)enumeratorMenu.Verificar_solicitud_de_pago:
-                    solicitudPago.RegistroCompletoVerificar = blRegistroCompleto;
-                    break;
-
-                case (int)enumeratorMenu.Autorizar_solicitud_de_pago:
-                    solicitudPago.RegistroCompletoAutorizar = blRegistroCompleto;
-                    break; 
+                    case (int)enumeratorMenu.Autorizar_solicitud_de_pago:
+                        solicitudPago.RegistroCompletoAutorizar = true;
+                        break;
+                } 
             }
+
             return false;
         }
 
@@ -202,7 +206,6 @@ namespace asivamosffie.services
         public async Task<dynamic> GetListSolicitudPago(int pMenuId)
         {
             List<VSolicitudPago> result = new List<VSolicitudPago>();
-
 
             if (pMenuId == (int)enumeratorMenu.Verificar_solicitud_de_pago)
             {

@@ -618,9 +618,11 @@ namespace asivamosffie.services
             {
                 pSolicitudPago.UsuarioModificacion = pSolicitudPago.UsuarioCreacion;
                 pSolicitudPago.FechaModificacion = DateTime.Now;
+                pSolicitudPago.TieneObservacion = false;
             }
             else
             {
+                pSolicitudPago.TieneObservacion = false;
                 pSolicitudPago.NumeroSolicitud = Int32.Parse(strInterventoriaCodigo) == ConstanCodigoTipoContratacion.Obra ? await _commonService.EnumeradorSolicitudPago(true) : await _commonService.EnumeradorSolicitudPago(false);
                 pSolicitudPago.EstadoCodigo = ConstanCodigoEstadoSolicitudPago.En_proceso_de_registro;
                 pSolicitudPago.Eliminado = false;
