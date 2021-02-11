@@ -11,11 +11,13 @@ using System.IO;
 using Microsoft.Extensions.Options;
 using System.Reflection;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class RegisterValidatePaymentRequierementsController : Controller
     {
         public readonly IRegisterValidatePaymentRequierementsService _registerValidatePaymentRequierementsService;
@@ -65,7 +67,8 @@ namespace asivamosffie.api.Controllers
         [HttpPost]
         [Route("ReturnSolicitudPago")]
         public async Task<IActionResult> ReturnSolicitudPago([FromBody] SolicitudPago pSolicitudPago)
-        { 
+        {
+            pSolicitudPago.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
             return Ok(await _registerValidatePaymentRequierementsService.ReturnSolicitudPago(pSolicitudPago));
         }
 
@@ -75,12 +78,14 @@ namespace asivamosffie.api.Controllers
         {
             return Ok(await _registerValidatePaymentRequierementsService.DeleteSolicitudPagoFaseFacturaDescuento(pSolicitudPagoFaseFacturaDescuentoId, HttpContext.User.FindFirst("User").Value));
         }
+
         [HttpPost]
         [Route("DeleteSolicitudPagoFaseCriterio")]
         public async Task<IActionResult> DeleteSolicitudPagoFaseCriterio([FromQuery] int pSolicitudPagoFaseCriterioId)
         {
             return Ok(await _registerValidatePaymentRequierementsService.DeleteSolicitudPagoFaseCriterio(pSolicitudPagoFaseCriterioId, HttpContext.User.FindFirst("User").Value));
         }
+
         [HttpPost]
         [Route("DeleteSolicitudPagoFaseCriterioProyecto")]
         public async Task<IActionResult> DeleteSolicitudPagoFaseCriterioProyecto([FromQuery] int pSolicitudPagoFaseCriterioId)
@@ -159,9 +164,6 @@ namespace asivamosffie.api.Controllers
         public async Task<IActionResult> GetContratoByContratoId([FromQuery] int pContratoId, int pSolicitudPago)
         {
             return Ok(await _registerValidatePaymentRequierementsService.GetContratoByContratoId(pContratoId, pSolicitudPago));
-        }
-
-
-
+        } 
     }
 }
