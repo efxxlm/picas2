@@ -401,8 +401,8 @@ namespace asivamosffie.services
                 controversiaActuacion = _context.ControversiaActuacion
                     .Where(r => r.ControversiaContractualId == controversiaContractual.ControversiaContractualId).FirstOrDefault();
 
-                novedadContractual = _context.NovedadContractual
-                    .Where(r => r.SolicitudId == controversiaContractual.SolicitudId).FirstOrDefault();
+                //novedadContractual = _context.NovedadContractual
+                //    .Where(r => r.SolicitudId == controversiaContractual.SolicitudId).FirstOrDefault();
 
             }
 
@@ -637,19 +637,19 @@ namespace asivamosffie.services
 
             if (novedadContractual != null)
             {
-                strContenido = strContenido.Replace("_Tipo_Novedad_", novedadContractual.TipoNovedadCodigo);
+                //strContenido = strContenido.Replace("_Tipo_Novedad_", novedadContractual.TipoNovedadCodigo);
 
-                strContenido = strContenido.Replace(">>>>> SECCION_SUSPENSION_PRORROGA_REINICIO >>>>>>>>", "");
-                strContenido = strContenido.Replace("_Plazo_solicitado_", Convert.ToInt32(novedadContractual.PlazoAdicionalMeses).ToString());
-                //strContenido = strContenido.Replace("_Plazo_solicitado_", novedadContractual.PlazoAdicionalDias);
+                //strContenido = strContenido.Replace(">>>>> SECCION_SUSPENSION_PRORROGA_REINICIO >>>>>>>>", "");
+                //strContenido = strContenido.Replace("_Plazo_solicitado_", Convert.ToInt32(novedadContractual.PlazoAdicionalMeses).ToString());
+                ////strContenido = strContenido.Replace("_Plazo_solicitado_", novedadContractual.PlazoAdicionalDias);
 
-                fechaNull = novedadContractual != null ? novedadContractual.FechaInicioSuspension : null;
-                //strContenido = strContenido.Replace("_Fecha_Inicio_", novedadContractual.FechaInicioSuspension != null ? Convert.ToDateTime(novedadContractual.FechaInicioSuspension).ToString("dd/MM/yyyy") : novedadContractual.FechaInicioSuspension.ToString());
-                strContenido = strContenido.Replace("_Fecha_Inicio_", fechaNull == null ? "" : Convert.ToDateTime(fechaNull).ToString("dd/MM/yyyy"));
+                //fechaNull = novedadContractual != null ? novedadContractual.FechaInicioSuspension : null;
+                ////strContenido = strContenido.Replace("_Fecha_Inicio_", novedadContractual.FechaInicioSuspension != null ? Convert.ToDateTime(novedadContractual.FechaInicioSuspension).ToString("dd/MM/yyyy") : novedadContractual.FechaInicioSuspension.ToString());
+                //strContenido = strContenido.Replace("_Fecha_Inicio_", fechaNull == null ? "" : Convert.ToDateTime(fechaNull).ToString("dd/MM/yyyy"));
 
-                fechaNull = novedadContractual != null ? novedadContractual.FechaFinSuspension : null;
-                //strContenido = strContenido.Replace("_Fecha_Fin_", novedadContractual.FechaFinSuspension != null ? Convert.ToDateTime(novedadContractual.FechaFinSuspension).ToString("dd/MM/yyyy") : novedadContractual.FechaFinSuspension.ToString());
-                strContenido = strContenido.Replace("_Fecha_Fin_", fechaNull == null ? "" : Convert.ToDateTime(fechaNull).ToString("dd/MM/yyyy"));
+                //fechaNull = novedadContractual != null ? novedadContractual.FechaFinSuspension : null;
+                ////strContenido = strContenido.Replace("_Fecha_Fin_", novedadContractual.FechaFinSuspension != null ? Convert.ToDateTime(novedadContractual.FechaFinSuspension).ToString("dd/MM/yyyy") : novedadContractual.FechaFinSuspension.ToString());
+                //strContenido = strContenido.Replace("_Fecha_Fin_", fechaNull == null ? "" : Convert.ToDateTime(fechaNull).ToString("dd/MM/yyyy"));
                 //ContratacionProyecto ComiteTecnicoProyecto  ComiteTecnico
             }
             strContenido = strContenido.Replace("_Numero_Comite_Tecnico_", "PENDIENTE");
@@ -760,8 +760,8 @@ namespace asivamosffie.services
 
             if (novedadContractual != null)
             {
-                strContenido = strContenido.Replace("_Clausula_modificar_", novedadContractual.ClausulaModificar);
-                strContenido = strContenido.Replace("_Ajuste_solicitado_clausula_", novedadContractual.AjusteClausula);
+                //strContenido = strContenido.Replace("_Clausula_modificar_", novedadContractual.ClausulaModificar);
+                //strContenido = strContenido.Replace("_Ajuste_solicitado_clausula_", novedadContractual.AjusteClausula);
             }
             strContenido = strContenido.Replace("_Numero_Comite_Tecnico_", "PENDIENTE");
             strContenido = strContenido.Replace("_Numero_Comite_Fiduciario_", "PENDIENTE");

@@ -128,20 +128,7 @@ namespace asivamosffie.services
 
         public async Task<dynamic> GetListSolicitudPago(int pMenuId)
         {
-            var result = await _context.SolicitudPago.Where(s => s.Eliminado != true)
-                .Include(r => r.Contrato)
-                             .Select(s => new
-                             {
-                                 s.TipoSolicitudCodigo,
-                                 s.FechaCreacion,
-                                 s.NumeroSolicitud,
-                                 s.Contrato.ModalidadCodigo,
-                                 s.Contrato.NumeroContrato,
-                                 s.EstadoCodigo,
-                                 s.ContratoId,
-                                 s.SolicitudPagoId,
-                                 RegistroCompleto = s.RegistroCompleto ?? false
-                             }).OrderByDescending(r => r.SolicitudPagoId).ToListAsync();
+            var result = await _context.VSolicitudPago.ToListAsync();
 
             List<dynamic> grind = new List<dynamic>();
             List<Dominio> ListParametricas = _context.Dominio.Where(d => d.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato || d.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Solicitud_Pago).ToList();
@@ -150,15 +137,17 @@ namespace asivamosffie.services
             {
                 grind.Add(new
                 {
-                    r.RegistroCompleto,
+                    r.RegistroCompletoAutorizar,
+                    r.RegistroCompletoVerificar,
                     r.TipoSolicitudCodigo,
                     r.ContratoId,
                     r.SolicitudPagoId,
                     r.FechaCreacion,
                     r.NumeroSolicitud,
-                    NumeroContrato = r.NumeroContrato ?? "No Aplica",
-                    Estado = !string.IsNullOrEmpty(r.EstadoCodigo) ? ListParametricas.Where(l => l.Codigo == r.EstadoCodigo && l.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Solicitud_Pago).FirstOrDefault().Nombre : " - ",
-                    Modalidad = !string.IsNullOrEmpty(r.ModalidadCodigo) ? ListParametricas.Where(l => l.Codigo == r.ModalidadCodigo && l.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato).FirstOrDefault().Nombre : "No aplica"
+                    r.NumeroContrato,
+                    r.EstadoNombre,
+                    r.EstadoCodigo,
+                    r.ModalidadNombre
                 });
             });
             return grind;

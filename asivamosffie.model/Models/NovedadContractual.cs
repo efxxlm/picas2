@@ -8,7 +8,6 @@ namespace asivamosffie.model.Models
         public NovedadContractual()
         {
             ComponenteAportanteNovedad = new HashSet<ComponenteAportanteNovedad>();
-            NovedadContractualClausula = new HashSet<NovedadContractualClausula>();
             NovedadContractualDescripcion = new HashSet<NovedadContractualDescripcion>();
             NovedadContractualObservaciones = new HashSet<NovedadContractualObservaciones>();
         }
@@ -18,20 +17,6 @@ namespace asivamosffie.model.Models
         public string NumeroSolicitud { get; set; }
         public string InstanciaCodigo { get; set; }
         public DateTime? FechaSesionInstancia { get; set; }
-        public string TipoNovedadCodigo { get; set; }
-        public string MotivoNovedadCodigo { get; set; }
-        public string ResumenJustificacion { get; set; }
-        public bool? EsDocumentacionSoporte { get; set; }
-        public string ConceptoTecnico { get; set; }
-        public DateTime? FechaConcepto { get; set; }
-        public DateTime? FechaInicioSuspension { get; set; }
-        public DateTime? FechaFinSuspension { get; set; }
-        public decimal? PresupuestoAdicionalSolicitado { get; set; }
-        public int? PlazoAdicionalDias { get; set; }
-        public int? PlazoAdicionalMeses { get; set; }
-        public string ClausulaModificar { get; set; }
-        public string AjusteClausula { get; set; }
-        public int? SolicitudId { get; set; }
         public DateTime? FechaCreacion { get; set; }
         public string UsuarioCreacion { get; set; }
         public bool? Eliminado { get; set; }
@@ -41,8 +26,6 @@ namespace asivamosffie.model.Models
         public bool? EsAplicadaAcontrato { get; set; }
         public int? ContratoId { get; set; }
         public int? ProyectoId { get; set; }
-        public string NumeroRadicad { get; set; }
-        public string NumeroRadicado { get; set; }
         public string UrlSoporte { get; set; }
         public int? ObervacionSupervisorId { get; set; }
         public bool? TieneObservacionesApoyo { get; set; }
@@ -73,7 +56,6 @@ namespace asivamosffie.model.Models
         public virtual Contrato Contrato { get; set; }
         public virtual Proyecto Proyecto { get; set; }
         public virtual ICollection<ComponenteAportanteNovedad> ComponenteAportanteNovedad { get; set; }
-        public virtual ICollection<NovedadContractualClausula> NovedadContractualClausula { get; set; }
         public virtual ICollection<NovedadContractualDescripcion> NovedadContractualDescripcion { get; set; }
         public virtual ICollection<NovedadContractualObservaciones> NovedadContractualObservaciones { get; set; }
     }
