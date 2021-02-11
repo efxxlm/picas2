@@ -282,9 +282,13 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
       'esActa': true
     }];
     const arrayCrearContratoObservacion = {
+      contratoId: parseInt(this.contratoId),
+      contratoConstruccionId: this.contratoConstruccionId,
       construccionObservacion : crearObservacionArreglo
     }
     const arrayEditarContratoObservacion = {
+      contratoId: parseInt(this.contratoId),
+      contratoConstruccionId: this.contratoConstruccionId,
       construccionObservacion : editarObservacionArreglo
     }
     if (localStorage.getItem("editable") == "false") {

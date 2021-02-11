@@ -738,7 +738,8 @@ namespace asivamosffie.services
                 .Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
 
             plantilla.Contenido = ReemplazarDatosDDP(plantilla.Contenido, disponibilidad,false);
-            return ConvertirPDF(plantilla);
+            //return ConvertirPDF(plantilla);
+            return Helpers.PDF.Convertir(plantilla);
         }
 
         private byte[] ConvertirPDF(Plantilla pPlantilla)
@@ -1582,7 +1583,8 @@ namespace asivamosffie.services
             Plantilla plantilla = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Ficha_DRP).ToString()).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
             string contenido = ReemplazarDatosDDP(plantilla.Contenido, disponibilidad, true);
             plantilla.Contenido = contenido;
-            return ConvertirPDF(plantilla);
+            //return ConvertirPDF(plantilla);
+            return Helpers.PDF.Convertir(plantilla);
         }
 
         private string getNombreAportante(CofinanciacionAportante confinanciacion)

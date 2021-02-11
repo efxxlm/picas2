@@ -237,7 +237,7 @@ export class FormularioProyectosComponent implements OnInit {
         this.projectServices.getProjectById(Number(id)).subscribe(respuesta => {
           
           this.proyecto = respuesta;
-          if(this.proyecto.estadoProyectoCodigo!='1')
+          if(this.proyecto.estadoProyectoObraCodigo !='1' || this.proyecto.estadoProyectoInterventoriaCodigo !='1')
           {
             this.bitPuedoEditar=false;
           }

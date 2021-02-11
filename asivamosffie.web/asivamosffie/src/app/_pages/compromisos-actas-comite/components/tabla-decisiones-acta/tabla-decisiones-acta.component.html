@@ -50,11 +50,21 @@
           <button mat-raised-button 
                   color="accent" 
                   class="btn-table"
-                  [disabled]="estadoObservaciones( element.contratacion.estadoProyectoCodigo )"
+                  *ngIf="contratacion.tipoSolicitudCodigo === '1'"
+                  [disabled]="estadoObservaciones( element.contratacion.estadoProyectoObraCodigo )"
                   (click)="openDialogObservacion( element )">
                   Observaciones
           </button>
-    
+
+          <button mat-raised-button 
+                  color="accent" 
+                  class="btn-table"
+                  *ngIf="contratacion.tipoSolicitudCodigo === '2'"
+                  [disabled]="estadoObservaciones( element.contratacion.estadoProyectoInterventoriaCodigo )"
+                  (click)="openDialogObservacion( element )">
+                  Observaciones
+          </button>
+
         </td>
       </ng-container>
     
