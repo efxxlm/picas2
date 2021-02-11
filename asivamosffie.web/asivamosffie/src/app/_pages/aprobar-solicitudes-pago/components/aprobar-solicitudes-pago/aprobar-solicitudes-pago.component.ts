@@ -1,10 +1,10 @@
-import { ObservacionesMultiplesCuService } from './../../../../core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
 import { DialogEnvioAutorizacionComponent } from '../dialog-envio-autorizacion/dialog-envio-autorizacion.component';
 
 @Component({
@@ -25,24 +25,6 @@ export class AprobarSolicitudesPagoComponent implements OnInit {
       'estadoAprobacion',
       'gestion'
     ];
-    dataTable: any[] = [
-      {
-        fechaSolicitud: '05/10/2020',
-        numeroSolicitud: 'SolPagoO0001',
-        modalidadContrato: 'Tipo B',
-        numeroContrato: 'N801801',
-        estadoAprobacion: 'Con solicitud aprobada por el supervisor',
-        gestion: 1
-      },
-      {
-        fechaSolicitud: '08/10/2020',
-        numeroSolicitud: 'SolPagoEspecial0001',
-        modalidadContrato: 'No Aplica',
-        numeroContrato: 'N326326',
-        estadoAprobacion: 'Sin aprobación',
-        gestion: 2
-      },
-    ];
 
     constructor(
         private routes: Router,
@@ -56,6 +38,10 @@ export class AprobarSolicitudesPagoComponent implements OnInit {
                         .subscribe(
                             getListSolicitudPago => {
                                 console.log( getListSolicitudPago );
+                                this.dataSource = new MatTableDataSource(getListSolicitudPago);
+                                this.dataSource.paginator = this.paginator;
+                                this.dataSource.sort = this.sort;
+                                this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
                             }
                         );
                 }
@@ -63,22 +49,6 @@ export class AprobarSolicitudesPagoComponent implements OnInit {
     }
 
     ngOnInit(): void {
-      this.dataSource = new MatTableDataSource(this.dataTable);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-      this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-      this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
-        if (length === 0 || pageSize === 0) {
-          return '0 de ' + length;
-        }
-        length = Math.max(length, 0);
-        const startIndex = page * pageSize;
-        // If the start index exceeds the list length, do not try and fix the end index to the end.
-        const endIndex = startIndex < length ?
-          Math.min(startIndex + pageSize, length) :
-          startIndex + pageSize;
-        return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
-      };
     }
 
     applyFilter(event: Event) {

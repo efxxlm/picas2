@@ -1,3 +1,4 @@
+import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
 import { CommonService } from './../../../../core/_services/common/common.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
@@ -28,13 +29,16 @@ export class RegistrarValidarRequisitosPagoComponent implements OnInit {
         'modalidadContrato',
         'numeroContrato',
         'estadoRegistroPago',
+        'estadoRegistro',
         'gestion'
     ];
 
     constructor(
         private router: Router,
         private dialog: MatDialog,
+        private routes: Router,
         private commonSvc: CommonService,
+        private obsMultipleSvc: ObservacionesMultiplesCuService,
         private registrarPagosSvc: RegistrarRequisitosPagoService, )
     {
         this.commonSvc.listaEstadoSolicitudPago()
@@ -94,6 +98,15 @@ export class RegistrarValidarRequisitosPagoComponent implements OnInit {
         });
     }
 
+    openDialogTrueFalse(modalTitle: string, modalText: string) {
+        const dialogRef = this.dialog.open(ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle, modalText, siNoBoton: true }
+        });
+
+        return dialogRef.afterClosed();
+    }
+
     devolverSolicitudDialog( registro: any ) {
         const dialogRef = this.dialog.open( DialogDevolverSolicitudComponent , {
           width: '65em',
@@ -101,11 +114,39 @@ export class RegistrarValidarRequisitosPagoComponent implements OnInit {
         });
     }
 
-    devolverSolictud( pSolicitudPagoId: number ){
-        this.registrarPagosSvc.deleteSolicitudPago( pSolicitudPagoId )
+    deleteSolicitudPago( pSolicitudPagoId: number ) {
+        this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
             .subscribe(
-                response => this.openDialog( '', `<b>${ response.message }</b>` ),
-                err => this.openDialog( '', `<b>${ err.message }</b>` )
+                value => {
+                    if ( value === true ) {
+                        this.registrarPagosSvc.deleteSolicitudPago( pSolicitudPagoId )
+                            .subscribe(
+                                response => {
+                                    this.openDialog( '', `<b>${ response.message }</b>` );
+                                    this.routes.navigateByUrl( '/', {skipLocationChange: true} )
+                                        .then( () => this.routes.navigate( ['/registrarValidarRequisitosPago'] )
+                                    );
+                                }, err => this.openDialog( '', `<b>${ err.message }</b>` )
+                            );
+                    }
+                }
+            );
+    }
+
+    changueStatusSolicitudPago( pSolicitudPagoId: number ) {
+        const pSolicitudPago = {
+            solicitudPagoId: pSolicitudPagoId,
+            estadoCodigo: this.listaEstadoSolicitudPago.solicitudRevisadaEquipoFacturacion
+        };
+
+        this.obsMultipleSvc.changueStatusSolicitudPago( pSolicitudPago )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} )
+                        .then( () => this.routes.navigate( ['/registrarValidarRequisitosPago'] )
+                    );
+                }, err => this.openDialog( '', `<b>${ err.message }</b>` )
             );
     }
 

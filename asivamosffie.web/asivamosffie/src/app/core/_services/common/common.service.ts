@@ -318,7 +318,7 @@ listaEstadoRevision(){
                 estadoSolicitudPago.solicitudDevueltaEquipoFacturacion = solicitud.codigo;
               }
               if ( solicitud.codigo === '4' ) {
-                estadoSolicitudPago.devueltaPorSupervisor = solicitud.codigo;
+                estadoSolicitudPago.devueltaPorApoyoSupervisor = solicitud.codigo;
               }
               if ( solicitud.codigo === '5' ) {
                 estadoSolicitudPago.enviadaAutorizacion = solicitud.codigo;

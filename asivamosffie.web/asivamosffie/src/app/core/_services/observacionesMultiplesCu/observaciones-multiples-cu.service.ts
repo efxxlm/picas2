@@ -15,7 +15,11 @@ export class ObservacionesMultiplesCuService {
   constructor( private http: HttpClient ) { }
 
   getListSolicitudPago( pMenuId: number ) {
-    return this.http.get( `${ this.apiUrl }/GetListSolicitudPago?pMenuId=${ pMenuId }` );
+    return this.http.get<any[]>( `${ this.apiUrl }/GetListSolicitudPago?pMenuId=${ pMenuId }` );
+  }
+
+  changueStatusSolicitudPago( pSolicitudPago: any ) {
+    return this.http.post<Respuesta>( `${ this.apiUrl }/ChangueStatusSolicitudPago`, pSolicitudPago );
   }
 
   getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( pMenuId: number, pSolicitudPagoId: number, pPadreId: number ) {

@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Component, Inject, OnInit } from '@angular/core';
 import { Validators, FormBuilder } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -19,6 +20,7 @@ export class DialogDevolverSolicitudComponent implements OnInit {
     constructor(
         private fb: FormBuilder,
         private dialog: MatDialog,
+        private routes: Router,
         private registrarPagosSvc: RegistrarRequisitosPagoService,
         private matDialogRef: MatDialogRef<DialogDevolverSolicitudComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any )
@@ -55,6 +57,9 @@ export class DialogDevolverSolicitudComponent implements OnInit {
           response => {
             this.openDialog( '', `<b>${ response.message }</b>` );
             this.matDialogRef.close();
+            this.routes.navigateByUrl( '/', {skipLocationChange: true} )
+              .then( () => this.routes.navigate( ['/registrarValidarRequisitosPago'] )
+          );
           },
           err => this.openDialog( '', `<b>${ err.message }</b>` )
         );

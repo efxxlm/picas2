@@ -50,39 +50,84 @@
                 <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroContrato }} </td>
             </ng-container>
             <ng-container matColumnDef="estadoRegistroPago">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del registro de pago </th>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"> Estado del registro de pago </th>
                 <td mat-cell *matCellDef="let element" align="center"> {{ element.estado }} </td>
             </ng-container>
+            <ng-container matColumnDef="estadoRegistro">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del registro </th>
+                <td mat-cell *matCellDef="let element" align="center">
+                    <div class="flex-span" *ngIf="element.registroCompleto === true">
+                        <span class="info-text completo mr-auto"></span>
+                        <span>
+                          {{ 'Completo' }}
+                        </span>
+                      </div>
+                      <div class="flex-span" *ngIf="element.registroCompleto === false">
+                        <span class="info-text sin-diligenciar mr-auto"></span>
+                        <span>
+                          {{ 'Incompleto' }}
+                        </span>
+                      </div>
+                </td>
+            </ng-container>
             <ng-container matColumnDef="gestion">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Gestión </th>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 16%;"> Gestión </th>
                 <td mat-cell *matCellDef="let element" align="center">
                     <ng-container *ngIf="element.tipoSolicitudCodigo !== tipoSolicitudCodigo.expensas; else esExpensas">
-                        <button mat-raised-button color="accent" class="btn-table" (click)="devolverSolicitudDialog( element )">
-                            Devolver solicitud
-                        </button>
-                        <button mat-raised-button color="accent" class="btn-table" [routerLink]="[ 'verDetalleEditar', element.contratoId, element.solicitudPagoId ]"> 
-                            Ver detalle/Editar
-                        </button>
-                        <button mat-raised-button color="accent" class="btn-table" [routerLink]="[ 'verDetalle', element.contratoId, element.solicitudPagoId ]"> 
-                            Ver detalle
-                        </button>
-                        <button mat-raised-button color="accent" class="btn-table">
-                            Eliminar
-                        </button>
+                        <!--
+                            ng-container para obra, interventoria, otros costos
+                            etiqueta "Section" condicionada para el estadoCodigo enProcesoRegistro === '1'
+                        -->
+                        <section *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoRegistro">
+                            <button mat-raised-button color="accent" class="btn-table" (click)="devolverSolicitudDialog( element )" *ngIf="element.registroCompleto === false">
+                                Devolver solicitud
+                            </button>
+                            <button mat-raised-button color="accent" class="btn-table" [routerLink]="[ 'verDetalleEditar', element.contratoId, element.solicitudPagoId ]" *ngIf="element.registroCompleto === false"> 
+                                Ver detalle/Editar
+                            </button>
+                            <button mat-raised-button color="accent" class="btn-table" (click)="deleteSolicitudPago( element.solicitudPagoId )" *ngIf="element.registroCompleto === false">
+                                Eliminar
+                            </button>
+                            <button mat-raised-button color="accent" class="btn-table" (click)="changueStatusSolicitudPago( element.solicitudPagoId )" *ngIf="element.registroCompleto === true">
+                                Enviar para verificación
+                            </button>
+                        </section>
+                        <!--
+                            etiqueta "Section" condicionada para el estadoCodigo solicitudRevisadaEquipoFacturacion === '2'
+                        -->
+                        <section *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.solicitudRevisadaEquipoFacturacion">
+                            <button mat-raised-button color="accent" class="btn-table" [routerLink]="[ 'verDetalle', element.contratoId, element.solicitudPagoId ]"> 
+                                Ver detalle
+                            </button>
+                        </section>
                     </ng-container>
                     <ng-template #esExpensas>
-                        <button mat-raised-button color="accent" class="btn-table" (click)="devolverSolicitudDialog( element )">
-                            Devolver solicitud
-                        </button>
-                        <button mat-raised-button color="accent" class="btn-table" [routerLink]="[ 'verDetalleEditarExpensas', element.solicitudPagoId ]"> 
-                            Ver detalle/Editar
-                        </button>
-                        <button mat-raised-button color="accent" class="btn-table" [routerLink]="[ 'verDetalleExpensas', element.solicitudPagoId ]">
-                            Ver detalle
-                        </button>
-                        <button mat-raised-button color="accent" class="btn-table">
-                            Eliminar
-                        </button>
+                        <!--
+                            ng-template para expensas
+                            etiqueta "Section" condicionada para el estadoCodigo enProcesoRegistro === '1'
+                        -->
+                        <section *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoRegistro">
+                            <button mat-raised-button color="accent" class="btn-table" (click)="devolverSolicitudDialog( element )" *ngIf="element.registroCompleto === false">
+                                Devolver solicitud
+                            </button>
+                            <button mat-raised-button color="accent" class="btn-table" [routerLink]="[ 'verDetalleEditarExpensas', element.solicitudPagoId ]"> 
+                                Ver detalle/Editar
+                            </button>
+                            <button mat-raised-button color="accent" class="btn-table" (click)="deleteSolicitudPago( element.solicitudPagoId )" *ngIf="element.registroCompleto === false">
+                                Eliminar
+                            </button>
+                            <button mat-raised-button color="accent" class="btn-table" (click)="changueStatusSolicitudPago( element.solicitudPagoId )" *ngIf="element.registroCompleto === true">
+                                Enviar para verificación
+                            </button>
+                        </section>
+                        <!--
+                            etiqueta "Section" condicionada para el estadoCodigo solicitudRevisadaEquipoFacturacion === '2'
+                        -->
+                        <section *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.solicitudRevisadaEquipoFacturacion">
+                            <button mat-raised-button color="accent" class="btn-table" [routerLink]="[ 'verDetalleExpensas', element.solicitudPagoId ]">
+                                Ver detalle
+                            </button>
+                        </section>
                     </ng-template>
                     
                 </td>
