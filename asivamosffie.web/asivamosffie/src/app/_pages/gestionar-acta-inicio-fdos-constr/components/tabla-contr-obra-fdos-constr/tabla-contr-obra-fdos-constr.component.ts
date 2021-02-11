@@ -4,7 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { ActBeginService } from 'src/app/core/_services/actBegin/act-begin.service';
+import { ActaInicioConstruccionService } from 'src/app/core/_services/actaInicioConstruccion/acta-inicio-construccion.service';
 import { GestionarActPreConstrFUnoService } from 'src/app/core/_services/GestionarActPreConstrFUno/gestionar-act-pre-constr-funo.service';
 import { DialogCargarActaSuscritaConstComponent } from '../dialog-cargar-acta-suscrita-const/dialog-cargar-acta-suscrita-const.component';
 export interface Contrato {
@@ -97,7 +97,7 @@ export class TablaContrObraFdosConstrComponent implements OnInit {
 
   dataTable: any[] = [];
   public noValidate = "Sin Validar";
-  constructor(private router: Router, public dialog: MatDialog, private services: ActBeginService, private gestionarActaSvc: GestionarActPreConstrFUnoService) { }
+  constructor(private router: Router, public dialog: MatDialog, private services: ActaInicioConstruccionService, private gestionarActaSvc: GestionarActPreConstrFUnoService) { }
 
   ngOnInit(): void {
     this.services.GetListGrillaActaInicio(8).subscribe((data:any)=>{

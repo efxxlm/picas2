@@ -1,4 +1,4 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Respuesta } from '../autenticacion/autenticacion.service';
 import { environment } from 'src/environments/environment';
@@ -8,7 +8,7 @@ import { Subject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class ActBeginService {
+export class ActaInicioConstruccionService {
   loadDataItems= new Subject();
   constructor(private http: HttpClient) { }
   GetVistaGenerarActaInicio(pContratoId: number) {
@@ -67,6 +67,7 @@ export class ActBeginService {
     
   }
 }
+
 export interface GetVistaGenerarActaInicio {
   cantidadProyectosAsociados: number;
   departamentoYMunicipioLlaveMEN: string;

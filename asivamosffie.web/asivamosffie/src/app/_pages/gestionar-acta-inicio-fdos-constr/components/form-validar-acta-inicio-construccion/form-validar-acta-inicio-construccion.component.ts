@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ActBeginService, ConstruccionObservacion, ContratoObservacion } from 'src/app/core/_services/actBegin/act-begin.service';
+import { ActaInicioConstruccionService } from 'src/app/core/_services/actaInicioConstruccion/acta-inicio-construccion.service';
 import { GestionarActPreConstrFUnoService } from 'src/app/core/_services/GestionarActPreConstrFUno/gestionar-act-pre-constr-funo.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { Contrato } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
@@ -64,7 +64,7 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
   valorProponente: any;
   numeroIdentificacionRepresentanteContratistaInterventoria: any;
   estaEditando = false;
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, private services: ActBeginService, private gestionarActaSvc: GestionarActPreConstrFUnoService) { }
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, private services: ActaInicioConstruccionService, private gestionarActaSvc: GestionarActPreConstrFUnoService) { }
   ngOnInit(): void {
     this.addressForm = this.crearFormulario();
     this.activatedRoute.params.subscribe(param => {
