@@ -17,6 +17,7 @@ import { DialogDevolverSolicitudComponent } from '../dialog-devolver-solicitud/d
 export class RegistrarValidarRequisitosPagoComponent implements OnInit {
 
     tipoSolicitudCodigo: any = {};
+    listaEstadoSolicitudPago: any = {};
     verAyuda = false;
     dataSource = new MatTableDataSource();
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -36,35 +37,42 @@ export class RegistrarValidarRequisitosPagoComponent implements OnInit {
         private commonSvc: CommonService,
         private registrarPagosSvc: RegistrarRequisitosPagoService, )
     {
-        this.commonSvc.tiposDeSolicitudes()
-        .subscribe(
-          solicitudes => {
-            for ( const solicitud of solicitudes ) {
-              if ( solicitud.codigo === '1' ) {
-                this.tipoSolicitudCodigo.contratoObra = solicitud.codigo;
-              }
-              if ( solicitud.codigo === '2' ) {
-                this.tipoSolicitudCodigo.contratoInterventoria = solicitud.codigo;
-              }
-              if ( solicitud.codigo === '3' ) {
-                this.tipoSolicitudCodigo.expensas = solicitud.codigo;
-              }
-              if ( solicitud.codigo === '4' ) {
-                this.tipoSolicitudCodigo.otrosCostos = solicitud.codigo;
-              }
-            }
-            this.registrarPagosSvc.getListSolicitudPago()
-                .subscribe(
-                    response => {
-                        console.log( response );
-                        this.dataSource = new MatTableDataSource( response );
-                        this.dataSource.paginator = this.paginator;
-                        this.dataSource.sort = this.sort;
-                        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-                    }
-                );
-          }
-        );
+        this.commonSvc.listaEstadoSolicitudPago()
+            .subscribe(
+                listaEstadoSolicitudPago => {
+                    this.listaEstadoSolicitudPago = listaEstadoSolicitudPago;
+                    console.log( this.listaEstadoSolicitudPago );
+                    this.commonSvc.tiposDeSolicitudes()
+                        .subscribe(
+                            solicitudes => {
+                                for ( const solicitud of solicitudes ) {
+                                    if ( solicitud.codigo === '1' ) {
+                                        this.tipoSolicitudCodigo.contratoObra = solicitud.codigo;
+                                    }
+                                    if ( solicitud.codigo === '2' ) {
+                                        this.tipoSolicitudCodigo.contratoInterventoria = solicitud.codigo;
+                                    }
+                                    if ( solicitud.codigo === '3' ) {
+                                        this.tipoSolicitudCodigo.expensas = solicitud.codigo;
+                                    }
+                                    if ( solicitud.codigo === '4' ) {
+                                        this.tipoSolicitudCodigo.otrosCostos = solicitud.codigo;
+                                    }
+                                }
+                                this.registrarPagosSvc.getListSolicitudPago()
+                                    .subscribe(
+                                        response => {
+                                            console.log( response );
+                                            this.dataSource = new MatTableDataSource( response );
+                                            this.dataSource.paginator = this.paginator;
+                                            this.dataSource.sort = this.sort;
+                                            this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+                                        }
+                                    );
+                            }
+                        );
+                }
+            );
     }
 
     ngOnInit(): void {
@@ -89,7 +97,7 @@ export class RegistrarValidarRequisitosPagoComponent implements OnInit {
     devolverSolicitudDialog( registro: any ) {
         const dialogRef = this.dialog.open( DialogDevolverSolicitudComponent , {
           width: '65em',
-          data: registro
+          data: { registro, solicitudDevueltaEquipoFacturacion: this.listaEstadoSolicitudPago.solicitudDevueltaEquipoFacturacion }
         });
     }
 

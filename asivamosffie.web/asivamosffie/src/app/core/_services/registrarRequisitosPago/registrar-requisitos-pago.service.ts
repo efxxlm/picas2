@@ -20,6 +20,10 @@ export class RegistrarRequisitosPagoService {
     return this.http.get( `${ this.apiUrl }/GetContratoByContratoId?pContratoId=${ pContratoId }&pSolicitudPago=${ pSolicitudPago }` );
   }
 
+  returnSolicitudPago( pSolicitudPago: any ) {
+    return this.http.post<Respuesta>( `${ this.apiUrl }/ReturnSolicitudPago`, pSolicitudPago );
+  }
+
   getSolicitudPago( pSolicitudPagoId: number ) {
     return this.http.get( `${ this.apiUrl }/GetSolicitudPago?pSolicitudPagoId=${ pSolicitudPagoId }` );
   }
