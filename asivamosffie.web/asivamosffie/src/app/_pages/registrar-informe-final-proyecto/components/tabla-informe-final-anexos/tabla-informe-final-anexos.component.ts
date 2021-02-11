@@ -11,6 +11,7 @@ import { DialogObservacionesComponent } from '../dialog-observaciones/dialog-obs
 import { Anexo } from 'src/app/_interfaces/proyecto-final-anexos.model';
 import { RegistrarInformeFinalProyectoService } from 'src/app/core/_services/registrar-informe-final-proyecto.service';
 import { Respuesta } from 'src/app/core/_services/common/common.service';
+import { Report } from 'src/app/_interfaces/proyecto-final.model';
 
 @Component({
   selector: 'app-tabla-informe-final-anexos',
@@ -21,8 +22,10 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   ELEMENT_DATA : Anexo[] = [];
   @Input() id: string;
   @Input() llaveMen: string;
-  @Input() estaEditando: boolean;
-  @Output() estadoInforme = new EventEmitter<boolean>(true);
+  @Input() estadoInforme: string;
+  @Input() report: Report;
+  estadoInformeString: string;  
+  estaEditando: boolean;
 
   anexos: any;
   displayedColumns: string[] = [
@@ -50,7 +53,20 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit(): void {
+    if (this.estadoInforme === '2' || this.estadoInforme === '3') { //con informe registrado/ enviado a validación
+      this.estadoInformeString = 'completo';
+    } else if (this.estadoInforme === '1' || this.estadoInforme === '4') { //en proceso de registro, con observaciones
+      this.estadoInformeString = 'en-proceso';
+    } else {
+      this.estadoInformeString = 'sin-diligenciar';
+    }
+
+    this.stateEstaEditando();
     this.getInformeFinalListaChequeo(this.id);
+  }
+
+  stateEstaEditando() {
+    this.report.proyecto.informeFinal.length > 0 ? (this.estaEditando = true) : (this.estaEditando = false);
   }
 
   getInformeFinalListaChequeo (id:string) {
@@ -58,7 +74,6 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     .subscribe(anexos => {
       this.dataSource.data = anexos as Anexo[];
       this.anexos = anexos;
-      this.estadoInforme.emit();//
     });
   }
 
