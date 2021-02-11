@@ -65,6 +65,7 @@ export class GestionarDrpComponent implements OnInit {
         {
           this.detailavailabilityBudget=listas[0];
           this.detailavailabilityBudget.proyectos.forEach(element => {
+            this.listacomponentes = [];
             element.componenteGrilla.forEach(element2 => {                          
               this.listacomponentes.push({
                 componente: element2.componente, uso: [

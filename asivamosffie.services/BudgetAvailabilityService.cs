@@ -169,12 +169,19 @@ namespace asivamosffie.services
         {
 
             List<DisponibilidadPresupuestal> ListDisponibilidadPresupuestal = 
-                await _context.DisponibilidadPresupuestal.Where(r => !(bool)r.Eliminado &&
-                r.EstadoSolicitudCodigo.Equals(pCodigoEstadoSolicitud))
-                .Include(x=>x.DisponibilidadPresupuestalProyecto)
-                .ToListAsync();
+                                                                                await _context.DisponibilidadPresupuestal
+                                                                                                    .Where(r => !(bool)r.Eliminado &&
+                                                                                                            r.EstadoSolicitudCodigo.Equals(pCodigoEstadoSolicitud))
+                                                                                                    .Include(x=>x.DisponibilidadPresupuestalProyecto)
+                                                                                                    .Include(x=>x.GestionFuenteFinanciacion)
+                                                                                                    .ToListAsync();
 
             List<DisponibilidadPresupuestalGrilla> ListDisponibilidadPresupuestalGrilla = new List<DisponibilidadPresupuestalGrilla>();
+
+            List<Dominio> listaDominioEstadoSolicitud = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud_Presupuestal).ToList();
+            List<Dominio> listaDominioTipoSolicitud = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Disponibilidad_Presupuestal).ToList();
+            List<Dominio> listaDominioTipoEspecial = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_DDP_Espacial).ToList();
+
             try
             {
                 foreach (var DisponibilidadPresupuestal in ListDisponibilidadPresupuestal)
@@ -183,12 +190,12 @@ namespace asivamosffie.services
                     string strTipoSolicitud = "";
                     if (!string.IsNullOrEmpty(DisponibilidadPresupuestal.EstadoSolicitudCodigo))
                     {
-                        strEstadoRegistro = await _commonService.GetNombreDominioByCodigoAndTipoDominio(DisponibilidadPresupuestal.EstadoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Solicitud_Presupuestal);
+                        strEstadoRegistro = listaDominioEstadoSolicitud.Where( r => r.Codigo == DisponibilidadPresupuestal.EstadoSolicitudCodigo)?.FirstOrDefault()?.Nombre;
                     }
 
                     if (!string.IsNullOrEmpty(DisponibilidadPresupuestal.TipoSolicitudCodigo))
                     {
-                        strTipoSolicitud = await _commonService.GetNombreDominioByCodigoAndTipoDominio(DisponibilidadPresupuestal.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Disponibilidad_Presupuestal);
+                        strTipoSolicitud = listaDominioTipoSolicitud.Where( r => r.Codigo == DisponibilidadPresupuestal.TipoSolicitudCodigo)?.FirstOrDefault()?.Nombre;
                     }
 
                     DateTime? fechaContrato = null;
@@ -246,7 +253,7 @@ namespace asivamosffie.services
                         FechaSolicitud = DisponibilidadPresupuestal.FechaSolicitud.ToString("dd/MM/yyyy"),
                         EstadoRegistro = blnEstado,
                         TipoSolicitud = strTipoSolicitud,
-                        TipoSolicitudEspecial = DisponibilidadPresupuestal.TipoSolicitudEspecialCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(DisponibilidadPresupuestal.TipoSolicitudEspecialCodigo, (int)EnumeratorTipoDominio.Tipo_DDP_Espacial) :
+                        TipoSolicitudEspecial = DisponibilidadPresupuestal.TipoSolicitudEspecialCodigo != null ? listaDominioTipoEspecial.Where(r => r.Codigo == DisponibilidadPresupuestal.TipoSolicitudEspecialCodigo)?.FirstOrDefault()?.Nombre:
                         //si no viene el campo puede ser contratación
                         DisponibilidadPresupuestal.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo ? "Proyecto administrativo" :
                         "Contratación",
@@ -368,6 +375,7 @@ namespace asivamosffie.services
         {
             List<EstadosDisponibilidad> estadosdisponibles = new List<EstadosDisponibilidad>();
             var estados = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud_Presupuestal && x.Activo == true).ToList();
+
             foreach (var estado in estados)
             {
                 estadosdisponibles.Add(new EstadosDisponibilidad { DominioId = estado.DominioId, NombreEstado = estado.Nombre, DisponibilidadPresupuestal = await this.GetListDisponibilidadPresupuestalByCodigoEstadoSolicitud(estado.Codigo) });
@@ -799,13 +807,19 @@ namespace asivamosffie.services
                 var gestionfuentes = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == pDisponibilidad.DisponibilidadPresupuestalId).
                     Include(x=>x.FuenteFinanciacion).
                         ThenInclude(x => x.Aportante).
-                        ThenInclude(x=>x.CofinanciacionDocumento).
+                            ThenInclude(x=>x.CofinanciacionDocumento).
                     Include(x => x.DisponibilidadPresupuestalProyecto).
                         ThenInclude(x => x.Proyecto).
-                            ThenInclude(x => x.Sede).
-                    ToList();
-                
+                            ThenInclude(x => x.Sede)
+                    //.Include(x => x.DisponibilidadPresupuestal).
+                    //    ThenInclude(x => x.Contratacion)
+                    .Include(x => x.DisponibilidadPresupuestalProyecto).
+                        ThenInclude(x => x.Proyecto)
+                            .ThenInclude( x => x.ProyectoAportante )
+                    .ToList();
 
+
+                Contratacion contratacion = _context.Contratacion.Find(pDisponibilidad.ContratacionId);
 
                 foreach (var gestion in gestionfuentes)
                 {
@@ -821,11 +835,16 @@ namespace asivamosffie.services
                     // Saldo_actual_de_la_fuente = (decimal)font.FuenteFinanciacion.ValorFuente - saldofuente
                     saldototal += (decimal)consignadoemnfuente - saldofuente;
                     string institucion = _context.InstitucionEducativaSede.Where(x => x.InstitucionEducativaSedeId == gestion.DisponibilidadPresupuestalProyecto.Proyecto.Sede.PadreId).FirstOrDefault().Nombre;
-                    var tr = plantilla_fuentes.Replace("[LLAVEMEN]", gestion.DisponibilidadPresupuestalProyecto.Proyecto.LlaveMen)
+
+                    ProyectoAportante proyectoAportante = gestion.DisponibilidadPresupuestalProyecto.Proyecto.ProyectoAportante.Where(r => r.AportanteId == gestion.FuenteFinanciacion.Aportante.CofinanciacionAportanteId)?.FirstOrDefault();
+
+                                var tr = plantilla_fuentes.Replace("[LLAVEMEN]", gestion.DisponibilidadPresupuestalProyecto.Proyecto.LlaveMen)
                         .Replace("[INSTITUCION]", institucion)
                         .Replace("[SEDE]", gestion.DisponibilidadPresupuestalProyecto.Proyecto.Sede.Nombre)
                         .Replace("[APORTANTE]", this.getNombreAportante(gestion.FuenteFinanciacion.Aportante))
-                        .Replace("[VALOR_APORTANTE]", "$ "+String.Format("{0:n0}", gestion.FuenteFinanciacion.Aportante.CofinanciacionDocumento.Sum(x=>x.ValorDocumento)).ToString())
+                        //.Replace("[VALOR_APORTANTE]", "$ "+String.Format("{0:n0}", gestion.FuenteFinanciacion.Aportante.CofinanciacionDocumento.Sum(x=>x.ValorDocumento)).ToString())
+
+                        .Replace("[VALOR_APORTANTE]", "$ "+String.Format("{0:n0}", contratacion.TipoSolicitudCodigo == "2" ? proyectoAportante.ValorInterventoria : proyectoAportante.ValorObra))
                         .Replace("[FUENTE]", fuenteNombre)
                         .Replace("[SALDO_FUENTE]", "$ "+String.Format("{0:n0}", saldototal).ToString())
                         .Replace("[VALOR_FUENTE]", "$ "+String.Format("{0:n0}", gestion.ValorSolicitado).ToString())
