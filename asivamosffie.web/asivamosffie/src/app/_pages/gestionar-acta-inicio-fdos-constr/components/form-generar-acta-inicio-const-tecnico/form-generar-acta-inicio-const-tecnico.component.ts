@@ -91,7 +91,6 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
     this.addressForm = this.crearFormulario();
     this.activatedRoute.params.subscribe(param => {
       this.loadData(param.id);
-      this.loadDataObservaciones(param.id);
     });
     if (localStorage.getItem("editable") == "true") {
       this.editable = true;
@@ -159,6 +158,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
       this.plazoEjecucionPreConstruccionMeses = data.plazoFase1PreMeses;
       this.plazoEjecucionPreConstruccionDias = data.plazoFase1PreDias;
       this.contrato = data.contrato;
+      this.loadDataObservaciones(data.contrato.contratoConstruccion[0].contratoConstruccionId);
       /*Campo de texto editable*/
       if (this.editable == true) {
         this.addressForm.get('fechaActaInicioFDosConstruccion').setValue(data.fechaActaInicioFase2DateTime);
@@ -185,12 +185,18 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
     this.idContrato = id;
   }
   loadDataObservaciones(id) {
+    /*
     this.services.GetContratoObservacionByIdContratoId(id, true).subscribe(data0 => {
       this.conObervacionesActa = data0.esActa;
       this.observacionesActaFase2 = data0.observaciones;
       this.fechaCreacion = data0.fechaCreacion;
     });
-
+    */
+    this.services.GetConstruccionObservacionByIdContratoConstruccionId(id,true).subscribe((data1:any)=>{
+      this.conObervacionesActa = data1.esActa;
+      this.observacionesActaFase2 = data1.observaciones;
+      this.fechaCreacion = data1.fechaCreacion;
+    });
   }
   generarFechaRestante() {
     let newdate = new Date(this.addressForm.value.fechaActaInicioFDosConstruccion);
