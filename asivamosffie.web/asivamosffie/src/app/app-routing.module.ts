@@ -408,6 +408,11 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/registrar-actualiz-polizas-garantias/registrar-actualiz-polizas-garantias.module')
         .then(m => m.RegistrarActualizPolizasGarantiasModule)
       },
+      {
+        path: 'registrarLiquidacionContrato',
+        loadChildren: () => import('./_pages/registrar-liquidacion-contrato/registrar-liquidacion-contrato.module')
+        .then(m => m.RegistrarLiquidacionContratoModule)
+      },
     ]
 
   },
