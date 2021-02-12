@@ -40,10 +40,17 @@ export class DialogObservacionesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (this.data.informe.informeFinalInterventoriaObservacionesId > 0 && this.data.informe.informeFinalInterventoriaObservacionesId != null) {
+    //if (this.data.informe.informeFinalInterventoriaObservacionesId > 0 && this.data.informe.informeFinalInterventoriaObservacionesId != null) {
       //this.getInformeFinalInterventoriaObservacionByInformeFinalObservacion(
       // this.data.informe.informeFinalInterventoriaObservacionesId
       // );
+    //}
+    if(this.data.informeFinalObservacion != null){
+      this.observaciones.patchValue(this.data.informeFinalObservacion[0])
+    }else{
+      this.getInformeFinalInterventoriaObservacionByInformeFinalObservacion(
+        this.data.informe.informeFinalInterventoriaObservacionesId
+      )
     }
   }
 
@@ -88,7 +95,9 @@ export class DialogObservacionesComponent implements OnInit {
       this.observaciones.value.informeFinalInterventoriaObservacionesId = this.data.informe.informeFinalInterventoriaObservacionesId
     }
     this.dialog.getDialogById('dialogObservaciones').close({ observaciones: this.observaciones.value, id: this.data.informe.informeFinalInterventoriaId });
+    this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
   }
+
 
   createEditInformeFinalInterventoriaObservacion(pObservaciones: any) {
     this.validarInformeFinalService
@@ -104,7 +113,9 @@ export class DialogObservacionesComponent implements OnInit {
     this.validarInformeFinalService
       .getInformeFinalInterventoriaObservacionByInformeFinalObservacion(id)
       .subscribe(responseData => {
-        this.observaciones.patchValue(responseData)
+        if(responseData != null){
+          this.observaciones.patchValue(responseData)
+        }
       })
   }
 
