@@ -10,7 +10,7 @@ import { DialogObservacionesComponent } from '../dialog-observaciones/dialog-obs
 
 import { ListaChequeo } from 'src/app/_interfaces/proyecto-final-anexos.model';
 import { InformeFinal, InformeFinalAnexo, InformeFinalInterventoria, InformeFinalInterventoriaObservaciones } from 'src/app/_interfaces/informe-final';
-import { RegistrarInformeFinalProyectoService } from 'src/app/core/_services/registrar-informe-final-proyecto.service';
+import { RegistrarInformeFinalProyectoService } from 'src/app/core/_services/registrarInformeFinal/registrar-informe-final-proyecto.service'
 import { Respuesta } from 'src/app/core/_services/common/common.service';
 import { Report } from 'src/app/_interfaces/proyecto-final.model';
 

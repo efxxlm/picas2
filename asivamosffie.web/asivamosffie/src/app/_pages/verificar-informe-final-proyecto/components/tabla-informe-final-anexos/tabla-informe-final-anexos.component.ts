@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material/dialog'
 import { FormBuilder, Validators, FormArray, FormGroup } from '@angular/forms'
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component'
 import { DialogObservacionesComponent } from '../dialog-observaciones/dialog-observaciones.component';
-import { ValidarInformeFinalService } from 'src/app/core/_services/validarInformeFinal/validar-informe-final.service'
+import { VerificarInformeFinalService } from 'src/app/core/_services/verificarInformeFinal/verificar-informe-final.service'
 import { ListaChequeo } from 'src/app/_interfaces/proyecto-final-anexos.model'
 import { InformeFinal, InformeFinalAnexo, InformeFinalInterventoria, InformeFinalInterventoriaObservaciones } from 'src/app/_interfaces/informe-final';
 import { Respuesta } from 'src/app/core/_services/common/common.service'
@@ -41,7 +41,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   constructor(
     private fb: FormBuilder,
     public dialog: MatDialog,
-    private validarInformeFinalService: ValidarInformeFinalService
+    private validarInformeFinalService: VerificarInformeFinalService
   ) {}
 
   estaEditando = false
@@ -117,7 +117,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
             esSupervision: result.observaciones.esSupervision,
             esCalificacion: result.observaciones.esCalificacion
           };
-          control.tieneObservacionSupervisor = true;
+          control.tieneObservacionNoCumple = true;
           control.informeFinalInterventoriaObservaciones.push(informeFinalInterventoriaObservaciones);
           return;
         }

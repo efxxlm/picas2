@@ -151,12 +151,12 @@
                     (click)="openDialogObservaciones(element)"
                   >
                     <span
-                      *ngIf="element.tieneObservacionSupervisor == null || element.tieneObservacionSupervisor == false"
+                      *ngIf="element.tieneObservacionNoCumple == null || element.tieneObservacionNoCumple == false"
                     >
                       Observaciones
                     </span>
                     <span
-                      *ngIf="element.tieneObservacionSupervisor != null && element.tieneObservacionSupervisor == true"
+                      *ngIf="element.tieneObservacionNoCumple != null && element.tieneObservacionNoCumple == true"
                     >
                       Ver Observaciones
                     </span>

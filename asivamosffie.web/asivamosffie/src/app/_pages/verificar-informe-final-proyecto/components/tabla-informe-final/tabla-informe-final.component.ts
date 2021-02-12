@@ -4,7 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-import { ValidarInformeFinalService } from 'src/app/core/_services/validarInformeFinal/validar-informe-final.service';
+import { VerificarInformeFinalService } from 'src/app/core/_services/verificarInformeFinal/verificar-informe-final.service';
 
 export interface RegistrarInterface {
   fechaCreacion: Date,
@@ -41,7 +41,7 @@ export class TablaInformeFinalComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   constructor(
-    private verificarInformeFinalProyectoService: ValidarInformeFinalService,
+    private verificarInformeFinalProyectoService: VerificarInformeFinalService,
     public dialog: MatDialog
 
     ) { 

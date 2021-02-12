@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core'
 import { FormBuilder, Validators } from '@angular/forms'
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog'
 import { Respuesta } from 'src/app/core/_services/common/common.service'
-import { ValidarInformeFinalService } from 'src/app/core/_services/validarInformeFinal/validar-informe-final.service'
+import { VerificarInformeFinalService } from 'src/app/core/_services/verificarInformeFinal/verificar-informe-final.service'
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component'
 
 @Component({
@@ -34,16 +34,23 @@ export class DialogObservacionesComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private validarInformeFinalService: ValidarInformeFinalService,
+    private validarInformeFinalService: VerificarInformeFinalService,
     @Inject(MAT_DIALOG_DATA) public data,
     public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
-    if (this.data.informe.informeFinalInterventoriaObservacionesId > 0 && this.data.informe.informeFinalInterventoriaObservacionesId != null) {
+    //if (this.data.informe.informeFinalInterventoriaObservacionesId > 0 && this.data.informe.informeFinalInterventoriaObservacionesId != null) {
       //this.getInformeFinalInterventoriaObservacionByInformeFinalObservacion(
       // this.data.informe.informeFinalInterventoriaObservacionesId
       // );
+    //}
+    if(this.data.informeFinalObservacion != null){
+      this.observaciones.patchValue(this.data.informeFinalObservacion[0])
+    }else{
+      this.getInformeFinalInterventoriaObservacionByInformeFinalObservacion(
+        this.data.informe.informeFinalInterventoriaObservacionesId
+      )
     }
   }
 
@@ -88,7 +95,9 @@ export class DialogObservacionesComponent implements OnInit {
       this.observaciones.value.informeFinalInterventoriaObservacionesId = this.data.informe.informeFinalInterventoriaObservacionesId
     }
     this.dialog.getDialogById('dialogObservaciones').close({ observaciones: this.observaciones.value, id: this.data.informe.informeFinalInterventoriaId });
+    this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
   }
+
 
   createEditInformeFinalInterventoriaObservacion(pObservaciones: any) {
     this.validarInformeFinalService
@@ -104,7 +113,9 @@ export class DialogObservacionesComponent implements OnInit {
     this.validarInformeFinalService
       .getInformeFinalInterventoriaObservacionByInformeFinalObservacion(id)
       .subscribe(responseData => {
-        this.observaciones.patchValue(responseData)
+        if(responseData != null){
+          this.observaciones.patchValue(responseData)
+        }
       })
   }
 

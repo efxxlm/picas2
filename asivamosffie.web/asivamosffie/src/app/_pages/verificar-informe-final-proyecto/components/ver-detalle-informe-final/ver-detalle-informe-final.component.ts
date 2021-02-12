@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { ValidarInformeFinalService } from 'src/app/core/_services/validarInformeFinal/validar-informe-final.service';
+import { VerificarInformeFinalService } from 'src/app/core/_services/verificarInformeFinal/verificar-informe-final.service';
 import { Report } from 'src/app/_interfaces/proyecto-final.model';
 
 @Component({
@@ -15,7 +15,7 @@ export class VerDetalleInformeFinalComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private validarInformeFinalProyectoService: ValidarInformeFinalService
+    private validarInformeFinalProyectoService: VerificarInformeFinalService
   ) { }
 
   ngOnInit(): void {

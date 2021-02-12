@@ -25,5 +25,11 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public bool RegistroCompletoValidacion { get; set; }
+
+        [NotMapped]
+        public int InformeFinalInterventoriaObservacionesId { get; set; }
+
+        [NotMapped]
+        public bool TieneObservacionNoCumple { get; set; }
     }
 }

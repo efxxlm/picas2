@@ -19,12 +19,12 @@ using asivamosffie.services.Helpers.Constants;
 
 namespace asivamosffie.services
 {
-    public class ValidateFinalReportService : IValidateFinalReportService
+    public class VerifyFinalReportService : IVerifyFinalReportService
     {
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
 
-        public ValidateFinalReportService(devAsiVamosFFIEContext context, ICommonService commonService)
+        public VerifyFinalReportService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
             _commonService = commonService;
             _context = context;
@@ -133,6 +133,9 @@ namespace asivamosffie.services
 
         public async Task<List<InformeFinalInterventoria>> GetInformeFinalListaChequeoByInformeFinalId(int pInformeFinalId)
         {
+            int informeFinalInterventoriaObservacionesId = 0;
+            bool tieneObservacionNoCumple = false;
+
             List<InformeFinalInterventoria> ListInformeFinalChequeo = await _context.InformeFinalInterventoria
                                 .Where(r => r.InformeFinalId == pInformeFinalId)
                                 .Include(r => r.InformeFinalListaChequeo)
@@ -150,6 +153,29 @@ namespace asivamosffie.services
                 }
                 item.EstadoValidacion = informeFinal.EstadoValidacion;
                 item.RegistroCompletoValidacion = (bool) informeFinal.RegistroCompletoValidacion;
+                if (item.ValidacionCodigo == ConstantCodigoCalificacionInformeFinal.No_Cumple)
+                {
+                    //Validar si tiene observaciones
+                    InformeFinalInterventoriaObservaciones informeFinalInterventoriaObservaciones = _context.InformeFinalInterventoriaObservaciones.Where(r => r.InformeFinalInterventoriaId == item.InformeFinalInterventoriaId && r.EsSupervision == true).FirstOrDefault();
+                    if (informeFinalInterventoriaObservaciones != null)
+                    {
+                        informeFinalInterventoriaObservacionesId = informeFinalInterventoriaObservaciones.InformeFinalInterventoriaObservacionesId;
+                        tieneObservacionNoCumple = true;
+                    }
+                    else
+                    {
+                        informeFinalInterventoriaObservacionesId = 0;
+                        tieneObservacionNoCumple = false;
+                    }
+                }
+                else
+                {
+                    informeFinalInterventoriaObservacionesId = 0;
+                    tieneObservacionNoCumple = false;
+                }
+
+                item.InformeFinalInterventoriaObservacionesId = informeFinalInterventoriaObservacionesId;
+                item.TieneObservacionNoCumple = tieneObservacionNoCumple;
             }
             return ListInformeFinalChequeo;
         }

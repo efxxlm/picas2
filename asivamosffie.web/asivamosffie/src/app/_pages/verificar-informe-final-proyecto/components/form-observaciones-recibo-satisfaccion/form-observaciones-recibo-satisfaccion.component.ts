@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { Respuesta } from 'src/app/core/_services/common/common.service';
-import { ValidarInformeFinalService } from 'src/app/core/_services/validarInformeFinal/validar-informe-final.service'
+import { VerificarInformeFinalService } from 'src/app/core/_services/verificarInformeFinal/verificar-informe-final.service'
 import { Report } from 'src/app/_interfaces/proyecto-final.model';
 
 @Component({
@@ -32,7 +32,7 @@ export class FormObservacionesReciboSatisfaccionComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog, private fb: FormBuilder,
-    private validarInformeFinalService: ValidarInformeFinalService
+    private validarInformeFinalService: VerificarInformeFinalService
     ) {}
 
   ngOnInit(): void {
