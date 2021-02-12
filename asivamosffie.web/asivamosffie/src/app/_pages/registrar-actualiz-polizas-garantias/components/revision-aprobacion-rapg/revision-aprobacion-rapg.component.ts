@@ -19,6 +19,17 @@ export class RevisionAprobacionRapgComponent implements OnInit {
     responsableAprob: ['', Validators.required],
     observacionesGenerales: ['']
   });
+  editorStyle = {
+    height: '50px'
+  };
+  config = {
+    toolbar: [
+      ['bold', 'italic', 'underline'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      [{ indent: '-1' }, { indent: '+1' }],
+      [{ align: [] }],
+    ]
+  };
   estaEditando = false;
 
   //parametricas

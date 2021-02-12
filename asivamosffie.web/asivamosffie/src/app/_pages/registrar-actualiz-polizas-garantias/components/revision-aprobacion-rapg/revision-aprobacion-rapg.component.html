@@ -11,7 +11,7 @@
                             <div class="pr-1">
                                 <label class="label-left" for="fechaRevision"
                                     [ngClass]="{ 'color-secondaryColor': addressForm.controls.fechaRevision.invalid }">Fecha
-                                    de la revisión</label>
+                                    de la revisión 2</label>
                             </div>
                             <div class="col d-flex align-items-center">
                                 <mat-form-field class="example-full-width">
@@ -43,7 +43,7 @@
                             <div class="pr-1">
                                 <label class="label-left" for="estadoRevision"
                                     [ngClass]="{ 'color-secondaryColor': addressForm.controls.estadoRevision.invalid }">Estado
-                                    de la revisión</label>
+                                    de la revisión 2</label>
                             </div>
                             <div class="col">
                                 <mat-form-field class="select-width">
@@ -137,7 +137,49 @@
             </div>
         </mat-card-content>
     </mat-card>
-    <app-tabla-observaciones-rev-aprob-rapg></app-tabla-observaciones-rev-aprob-rapg>
+    <div class="d-flex align-items-center">
+        <div
+          class="text-area-quill  izqTitle helperWidthText"
+          [class.color-secondaryColor]="
+            (addressForm.get('observacionesGenerales').invalid && addressForm.get('observacionesGenerales').touched) ||
+            (addressForm.get('observacionesGenerales').invalid && estaEditando)
+          "
+        >
+          <label for="observacionesGenerales" class="text-area-quill--label">Observaciones generales</label>
+          <quill-editor
+            class="quill-editor-style"
+            [styles]="editorStyle"
+            [modules]="config"
+            (onContentChanged)="maxLength($event, 2000)"
+            formControlName="observacionesGenerales"
+          >
+          </quill-editor>
+        </div>
+        <span class="contador miles" *ngIf="addressForm.controls.observacionesGenerales.value">
+          {{
+            2000 -
+              (textoLimpio(addressForm.controls.observacionesGenerales.value) > 2000
+                ? 2000
+                : textoLimpio(addressForm.controls.observacionesGenerales.value))
+          }}
+        </span>
+        <span class="contador miles" *ngIf="!addressForm.controls.observacionesGenerales.value"> 2000 </span>
+        <span class="icon-incompleto">
+          <img
+            class="icon-incompleto--img"
+            src="assets/img/icon/incompleto.svg"
+                          alt="este campo es requerido"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
+            *ngIf="
+              (addressForm.get('observacionesGenerales').invalid && addressForm.get('observacionesGenerales').touched) ||
+              (addressForm.get('observacionesGenerales').invalid && estaEditando)
+            "
+          />
+        </span>
+      </div>
+   <app-tabla-observaciones-rev-aprob-rapg></app-tabla-observaciones-rev-aprob-rapg>
     <div class="text-center mb-2em">
         <button mat-button color="warn" class="btn-guardar" type="submit">
           <img src="assets/img/icon/guardar.svg" alt="Regresar" />

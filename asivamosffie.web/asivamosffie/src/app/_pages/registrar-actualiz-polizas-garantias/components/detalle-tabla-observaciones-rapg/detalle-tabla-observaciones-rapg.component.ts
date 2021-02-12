@@ -3,17 +3,17 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
-  selector: 'app-tabla-observaciones-rev-aprob-rapg',
-  templateUrl: './tabla-observaciones-rev-aprob-rapg.component.html',
-  styleUrls: ['./tabla-observaciones-rev-aprob-rapg.component.scss']
+  selector: 'app-detalle-tabla-observaciones-rapg',
+  templateUrl: './detalle-tabla-observaciones-rapg.component.html',
+  styleUrls: ['./detalle-tabla-observaciones-rapg.component.scss']
 })
-export class TablaObservacionesRevAprobRapgComponent implements OnInit {
+export class DetalleTablaObservacionesRapgComponent implements OnInit {
   displayedColumns: string[] = ['fechaRevision', 'observacion', 'estadoRevisionCodigo'];
   dataSource = new MatTableDataSource();
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   dataTable: any[] = [{
     fechaRevision: '20/01/2021',
-    observacion: 'Se devuelve la solicitud porque no se cuenta con la aprobación de la vigencia por parte del responsable',
+    observacion: '<em> Se devuelve la solicitud porque no se cuenta con la aprobación de la vigencia por parte del responsable </em>',
     estadoRevisionCodigo: '1'
   }];
 
@@ -22,8 +22,9 @@ export class TablaObservacionesRevAprobRapgComponent implements OnInit {
   ngOnInit(): void {
     this.cargarTablaDeDatos();
   }
-  cargarTablaDeDatos() {
+  cargarTablaDeDatos(){
     this.dataSource = new MatTableDataSource(this.dataTable);
     this.dataSource.sort = this.sort;
-  }
+}
+
 }
