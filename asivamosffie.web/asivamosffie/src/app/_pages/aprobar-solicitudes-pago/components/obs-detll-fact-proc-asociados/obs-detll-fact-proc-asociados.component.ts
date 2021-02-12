@@ -1,3 +1,4 @@
+import { Router, ActivatedRoute } from '@angular/router';
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -61,6 +62,8 @@ export class ObsDetllFactProcAsociadosComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
+        private routes: Router,
+        private activatedRoute: ActivatedRoute,
         private registrarPagosSvc: RegistrarRequisitosPagoService,
         private dialog: MatDialog,
         private obsMultipleSvc: ObservacionesMultiplesCuService )
@@ -359,7 +362,16 @@ export class ObsDetllFactProcAsociadosComponent implements OnInit {
         console.log( pSolicitudPagoObservacion );
         this.obsMultipleSvc.createUpdateSolicitudPagoObservacion( pSolicitudPagoObservacion )
             .subscribe(
-                response => this.openDialog( '', `<b>${ response.message }</b>` ),
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () => this.routes.navigate(
+                            [
+                                '/verificarSolicitudPago/aprobacionSolicitud',  this.activatedRoute.snapshot.params.idContrato, this.activatedRoute.snapshot.params.idSolicitudPago
+                            ]
+                        )
+                    );
+                },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
             )
     }

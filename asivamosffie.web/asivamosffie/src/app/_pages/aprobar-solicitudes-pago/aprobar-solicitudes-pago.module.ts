@@ -25,9 +25,10 @@ import { DetalleValidarListchequeoComponent } from './components/detalle-validar
 import { DialogEnvioAutorizacionComponent } from './components/dialog-envio-autorizacion/dialog-envio-autorizacion.component';
 import { FormObservacionExpensasComponent } from './components/form-observacion-expensas/form-observacion-expensas.component';
 import { FormAmortizacionComponent } from './components/form-amortizacion/form-amortizacion.component';
+import { VerDetalleExpensasComponent } from './components/ver-detalle-expensas/ver-detalle-expensas.component';
 
 @NgModule({
-  declarations: [AprobarSolicitudesPagoComponent, FormAprobarSolicitudComponent, DialogProyectosAsociadosAprobComponent, ObsCargarFormaPagoComponent, ObsRegistrarSolicitudPagoComponent, ObsCriterioPagosComponent, ObsDetllFactProcAsociadosComponent, ObsDatosFacturaComponent, ObsDescuentosDirTecnicaComponent, ObsSoporteSolicitudComponent, ObsValidListachequeoComponent, FormEditAprobarSolicitudComponent, TablaHistorialObservacionesSolpagoComponent, VerDetalleAprobarSolicitudComponent, DetalleSolicitudPagoComponent, ViewDetllFactProcAsociadosComponent, DetalleValidarListchequeoComponent, DialogEnvioAutorizacionComponent, FormObservacionExpensasComponent, FormAmortizacionComponent],
+  declarations: [AprobarSolicitudesPagoComponent, FormAprobarSolicitudComponent, DialogProyectosAsociadosAprobComponent, ObsCargarFormaPagoComponent, ObsRegistrarSolicitudPagoComponent, ObsCriterioPagosComponent, ObsDetllFactProcAsociadosComponent, ObsDatosFacturaComponent, ObsDescuentosDirTecnicaComponent, ObsSoporteSolicitudComponent, ObsValidListachequeoComponent, FormEditAprobarSolicitudComponent, TablaHistorialObservacionesSolpagoComponent, VerDetalleAprobarSolicitudComponent, DetalleSolicitudPagoComponent, ViewDetllFactProcAsociadosComponent, DetalleValidarListchequeoComponent, DialogEnvioAutorizacionComponent, FormObservacionExpensasComponent, FormAmortizacionComponent, VerDetalleExpensasComponent],
   imports: [
     CommonModule,
     AprobarSolicitudesPagoRoutingModule,

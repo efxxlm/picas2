@@ -90,18 +90,6 @@ export class AprobarSolicitudesPagoComponent implements OnInit {
       this.dataSource.filter = filterValue.trim().toLowerCase();
     }
 
-    aprobarSolicitud(id){
-      this.routes.navigate(['/aprobarSolicitudesPago/aprobacionSolicitud',id]);
-    }
-
-    verDetalleEditar(id){
-      this.routes.navigate(['/aprobarSolicitudesPago/verDetalleEditarAprobarSolicitud',id]);
-    }
-
-    verDetalle(id){
-      this.routes.navigate(['/aprobarSolicitudesPago/verDetalleAprobarSolicitud',id]);
-    }
-
     openCertificate(){
       const dialogConfig = new MatDialogConfig();
       dialogConfig.height = 'auto';

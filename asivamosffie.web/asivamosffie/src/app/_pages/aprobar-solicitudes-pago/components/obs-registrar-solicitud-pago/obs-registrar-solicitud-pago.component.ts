@@ -1,3 +1,4 @@
+import { Router, ActivatedRoute } from '@angular/router';
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -65,6 +66,7 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
       ]
     };
     estadoSemaforosAcordeonesPrincipales = {
+        estadoSemaforoObsPrincipal: 'sin-diligenciar',
         semaforoAcordeonFase: 'sin-diligenciar',
         semaforoAcordeonDescuentosTecnica: 'sin-diligenciar'
     }
@@ -77,6 +79,8 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
+        private routes: Router,
+        private activatedRoute: ActivatedRoute,
         private dialog: MatDialog,
         private obsMultipleSvc: ObservacionesMultiplesCuService )
     {
@@ -98,6 +102,12 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
                         
                         if ( obsSupervisor !== undefined ) {
                             this.solicitudPagoObservacionId = obsSupervisor.solicitudPagoObservacionId;
+                            if ( obsSupervisor.registroCompleto === false ) {
+                                this.estadoSemaforosAcordeonesPrincipales.estadoSemaforoObsPrincipal = 'en-proceso';
+                            }
+                            if ( obsSupervisor.registroCompleto === true ) {
+                                this.estadoSemaforosAcordeonesPrincipales.estadoSemaforoObsPrincipal = 'completo';
+                            }
                             this.addressForm.setValue(
                                 {
                                     fechaCreacion: obsSupervisor.fechaCreacion,
@@ -171,6 +181,23 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
             if ( tipoAcordeon === 'descuentosTecnica' ) {
                 this.estadoSemaforosAcordeonesPrincipales.semaforoAcordeonDescuentosTecnica = estadoAcordeon;
             }
+            // Get semaforo registrar solicitud de pago
+            const sinDiligenciarPrincipal = Object.values( this.estadoSemaforosAcordeonesPrincipales ).includes( 'sin-diligenciar' );
+            const enProcesoPrincipal = Object.values( this.estadoSemaforosAcordeonesPrincipales ).includes( 'en-proceso' );
+            const completoPrincipal = Object.values( this.estadoSemaforosAcordeonesPrincipales ).includes( 'completo' );
+
+            if ( sinDiligenciarPrincipal === true && enProcesoPrincipal === false && completoPrincipal === false ) {
+                this.estadoSemaforoRegistroSolicitud.emit( 'sin-diligenciar' );
+            }
+            if ( enProcesoPrincipal === true ) {
+                this.estadoSemaforoRegistroSolicitud.emit( 'en-proceso' );
+            }
+            if ( sinDiligenciarPrincipal === true && completoPrincipal === true ) {
+                this.estadoSemaforoRegistroSolicitud.emit( 'en-proceso' );
+            }
+            if ( sinDiligenciarPrincipal === false && enProcesoPrincipal === false && completoPrincipal === true ) {
+                this.estadoSemaforoRegistroSolicitud.emit( 'completo' );
+            }
         }
     }
 
@@ -213,7 +240,16 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
         console.log( pSolicitudPagoObservacion );
         this.obsMultipleSvc.createUpdateSolicitudPagoObservacion( pSolicitudPagoObservacion )
             .subscribe(
-                response => this.openDialog( '', `<b>${ response.message }</b>` ),
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () => this.routes.navigate(
+                            [
+                                '/verificarSolicitudPago/aprobacionSolicitud',  this.activatedRoute.snapshot.params.idContrato, this.activatedRoute.snapshot.params.idSolicitudPago
+                            ]
+                        )
+                    );
+                },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
             )
     }

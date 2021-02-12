@@ -48,13 +48,13 @@
                         <button mat-raised-button color="accent" class="btn-table" [routerLink]="[ 'aprobacionSolicitud', element.contratoId, element.solicitudPagoId ]">
                             Verificar solicitud
                         </button>
-                        <button mat-raised-button color="accent" class="btn-table" (click)="this.openCertificate()">
+                        <button mat-raised-button color="accent" class="btn-table">
                             Enviar para autorizar solicitud
                         </button>
                         <button mat-raised-button color="accent" class="btn-table" [routerLink]="[ 'aprobacionSolicitud', element.contratoId, element.solicitudPagoId ]">
                             Ver detalle/Editar
                         </button>
-                        <button mat-raised-button color="accent" class="btn-table" (click)="this.verDetalle(element.gestion)">
+                        <button mat-raised-button color="accent" class="btn-table" [routerLink]="[ 'verDetalleAprobarSolicitud', element.contratoId, element.solicitudPagoId ]">
                             Ver detalle
                         </button>
                         <button mat-raised-button color="accent" class="btn-table">
@@ -65,13 +65,13 @@
                         <button mat-raised-button color="accent" class="btn-table" [routerLink]="[ 'observacionExpensas', element.solicitudPagoId ]">
                             Verificar solicitud
                         </button>
-                        <button mat-raised-button color="accent" class="btn-table" (click)="this.openCertificate()">
+                        <button mat-raised-button color="accent" class="btn-table">
                             Enviar para autorizar solicitud
                         </button>
                         <button mat-raised-button color="accent" class="btn-table" [routerLink]="[ 'observacionExpensas', element.solicitudPagoId ]">
                             Ver detalle/Editar
                         </button>
-                        <button mat-raised-button color="accent" class="btn-table" (click)="this.verDetalle(element.gestion)">
+                        <button mat-raised-button color="accent" class="btn-table" [routerLink]="[ 'verDetalleExpensas', element.solicitudPagoId ]">
                             Ver detalle
                         </button>
                         <button mat-raised-button color="accent" class="btn-table">

@@ -19,7 +19,9 @@
                             </mat-card-header>
                             <mat-card-content style="text-align: left;">
                                 <p><strong>Tipo de pago:</strong> {{ criterio.get( 'tipoPago' ).value.nombre }} </p>
-                                <p><strong>Concepto de pago para el criterio:</strong> {{ criterio.get( 'conceptoPago' ).value.nombre }} </p>
+                                <!--
+                                    <p><strong>Concepto de pago para el criterio:</strong> {{ criterio.get( 'conceptoPago' ).value.nombre }} </p>
+                                -->
                                 <p><strong>Valor facturado al concepto:</strong> $ {{ criterio.get( 'valorFacturado' ).value | currency:' ':'symbol-narrow':'.0-0' }} </p>
                             </mat-card-content>
                         </mat-card>
@@ -33,8 +35,10 @@
                             </mat-card-title>
                         </mat-card-header>
                         <mat-card-content style="text-align: left;">
-                            <p><b>07/10/2020</b></p>
-                            <p><b>¿Desde la supervisión tiene observaciones a los criterios de pago incluidos en la factura?:</b> No</p>
+                            <p><b> {{ addressForm.get( 'fechaCreacion' ).value | date: 'dd/MM/yyyy' }} </b></p>
+                            <p *ngIf="addressForm.get( 'tieneObservaciones' ).value === true"><b>¿Desde la supervisión tiene observaciones a los criterios de pago incluidos en la factura?:</b> Si</p>
+                            <p *ngIf="addressForm.get( 'tieneObservaciones' ).value === false"><b>¿Desde la supervisión tiene observaciones a los criterios de pago incluidos en la factura?:</b> No</p>
+                            <section [innerHTML]="addressForm.get( 'observaciones' ).value" *ngIf="addressForm.get( 'tieneObservaciones' ).value === true"></section>
                         </mat-card-content>
                     </mat-card>
                 </ng-container>

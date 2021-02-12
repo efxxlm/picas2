@@ -1,3 +1,4 @@
+import { VerDetalleExpensasComponent } from './components/ver-detalle-expensas/ver-detalle-expensas.component';
 import { FormObservacionExpensasComponent } from './components/form-observacion-expensas/form-observacion-expensas.component';
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
@@ -20,11 +21,15 @@ const routes: Routes = [
     component: FormObservacionExpensasComponent
   },
   {
+    path: 'verDetalleExpensas/:id',
+    component: VerDetalleExpensasComponent
+  },
+  {
     path: 'verDetalleEditarAprobarSolicitud/:id',
     component: FormEditAprobarSolicitudComponent
   },
   {
-    path: 'verDetalleAprobarSolicitud/:id',
+    path: 'verDetalleAprobarSolicitud/:idContrato/:idSolicitudPago',
     component: VerDetalleAprobarSolicitudComponent
   }
 ];

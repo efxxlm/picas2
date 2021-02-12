@@ -28,7 +28,7 @@
         </mat-card-content>
     </mat-card>
 
-    <form [formGroup]="addressForm">
+    <form [formGroup]="expensasForm">
         <div class="row mtop justCenter">
             <div class="col-md-5">
                 <label class="label-left">¿Tiene observaciones a la solicitud de pago?</label>
@@ -42,16 +42,16 @@
                 <span class="required-form-group" style="margin-left: 1px;">*</span>
             </div>
         </div>
-        <div class="d-flex align-items-center mtop" *ngIf="addressForm.get('tieneObservaciones').value === true">
+        <div class="d-flex align-items-center mtop" *ngIf="expensasForm.get('tieneObservaciones').value === true">
             <div class="text-area-quill izqTitle">
                 <label for="observaciones" class="text-area-quill--label" style="color: #174193;">Observaciones a la solicitud de pago</label>
                 <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
                     (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observaciones></quill-editor>
             </div>
-            <span class="contador miles" *ngIf="addressForm.get('observaciones').value">
+            <span class="contador miles" *ngIf="expensasForm.get('observaciones').value">
                 {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
             </span>
-            <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null">
+            <span class="contador miles" *ngIf="expensasForm.get('observaciones').value === null">
                 1000
             </span>
         </div>
@@ -63,7 +63,7 @@
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title en-alerta">
+                <mat-panel-title class="expansion-style--title" [ngClass]="estadoAcordeones.listaChequeo">
                     Lista de chequeo
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -78,7 +78,7 @@
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                <mat-panel-title class="expansion-style--title" [ngClass]="estadoAcordeones.soporteSolicitud">
                     Soporte de la solicitud
                 </mat-panel-title>
             </mat-expansion-panel-header>

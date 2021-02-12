@@ -1,3 +1,4 @@
+import { Router, ActivatedRoute } from '@angular/router';
 import { Dominio, CommonService } from './../../../../core/_services/common/common.service';
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
@@ -37,6 +38,8 @@ export class ObsCargarFormaPagoComponent implements OnInit {
     constructor(
         private fb: FormBuilder,
         private dialog: MatDialog,
+        private routes: Router,
+        private activatedRoute: ActivatedRoute,
         private obsMultipleSvc: ObservacionesMultiplesCuService,
         private commonSvc: CommonService )
     {
@@ -61,6 +64,7 @@ export class ObsCargarFormaPagoComponent implements OnInit {
                             if ( obsSupervisor.registroCompleto === true ) {
                                 this.estadoSemaforo.emit( 'completo' );
                             }
+                            console.log( obsSupervisor );
                             this.solicitudPagoObservacionId = obsSupervisor.solicitudPagoObservacionId;
                             this.addressForm.setValue(
                                 {
@@ -130,7 +134,16 @@ export class ObsCargarFormaPagoComponent implements OnInit {
 
         this.obsMultipleSvc.createUpdateSolicitudPagoObservacion( pSolicitudPagoObservacion )
             .subscribe(
-                response => this.openDialog( '', `<b>${ response.message }</b>` ),
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () => this.routes.navigate(
+                            [
+                                '/verificarSolicitudPago/aprobacionSolicitud',  this.activatedRoute.snapshot.params.idContrato, this.activatedRoute.snapshot.params.idSolicitudPago
+                            ]
+                        )
+                    );
+                },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
             )
     }

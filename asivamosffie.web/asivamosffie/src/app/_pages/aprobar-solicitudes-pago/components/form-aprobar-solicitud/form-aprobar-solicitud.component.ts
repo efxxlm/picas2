@@ -4,7 +4,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
 import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
@@ -38,9 +38,7 @@ export class FormAprobarSolicitudComponent implements OnInit {
         numeroRadicadoSAC: [null, Validators.required],
         numeroFactura: [null, Validators.required],
         valorFacturado: [null, Validators.required],
-        tipoPago: [null, Validators.required],
-        tieneObservaciones: [null, Validators.required],
-        observaciones:[null, Validators.required]
+        tipoPago: [null, Validators.required]
     });
     estadoAcordeones = {
         estadoFormaPago: 'sin-diligenciar',
@@ -69,6 +67,7 @@ export class FormAprobarSolicitudComponent implements OnInit {
     constructor(
         private activatedRoute: ActivatedRoute,
         private dialog: MatDialog,
+        private routes: Router,
         private obsMultipleSvc: ObservacionesMultiplesCuService,
         private registrarPagosSvc: RegistrarRequisitosPagoService,
         private fb: FormBuilder,
@@ -78,9 +77,9 @@ export class FormAprobarSolicitudComponent implements OnInit {
             .subscribe( response => this.menusIdPath = response );
         this.obsMultipleSvc.listaTipoObservacionSolicitudes()
             .subscribe( response => this.listaTipoObservacionSolicitudes = response );
-        this.getContrato();
         this.addressForm = this.crearFormulario();
         this.otrosCostosObsForm = this.crearFormulario();
+        this.getContrato();
     }
 
     ngOnInit(): void {
@@ -111,14 +110,19 @@ export class FormAprobarSolicitudComponent implements OnInit {
                                 }
                                 this.contrato = response;
                                 console.log( this.contrato );
-                                // Get observaciones
-                                this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.menusIdPath.aprobarSolicitudPagoId, this.contrato.solicitudPagoOnly.solicitudPagoId, this.contrato.solicitudPagoOnly.solicitudPagoSoporteSolicitud[0].solicitudPagoSoporteSolicitudId )
+                                // Get observaciones Soporte de la solicitud
+                                this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.menusIdPath.aprobarSolicitudPagoId, this.activatedRoute.snapshot.params.idSolicitudPago, this.contrato.solicitudPagoOnly.solicitudPagoSoporteSolicitud[0].solicitudPagoSoporteSolicitudId )
                                     .subscribe(
                                         response => {
                                             const obsSupervisor = response.filter( obs => obs.archivada === false )[0];
 
                                             if ( obsSupervisor !== undefined ) {
-                                                console.log( obsSupervisor );
+                                                if ( obsSupervisor.registroCompleto === false ) {
+                                                    this.estadoAcordeones.soporteSolicitud = 'en-proceso';
+                                                }
+                                                if ( obsSupervisor.registroCompleto === true ) {
+                                                    this.estadoAcordeones.soporteSolicitud = 'completo';
+                                                }
                                                 this.solicitudPagoObservacionId = obsSupervisor.solicitudPagoObservacionId;
                                                 this.addressForm.setValue(
                                                     {
@@ -132,7 +136,8 @@ export class FormAprobarSolicitudComponent implements OnInit {
                                     );
 
                                 if ( this.contrato.solicitudPagoOnly.tipoSolicitudCodigo === this.tipoSolicitudCodigo.otrosCostos ) {
-                                    this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.menusIdPath.aprobarSolicitudPagoId, this.contrato.solicitudPagoOnly.solicitudPagoId, this.contrato.solicitudPagoOnly.solicitudPagoOtrosCostosServicios[0].solicitudPagoOtrosCostosServiciosId )
+                                    // Get observaciones otros costos
+                                    this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.menusIdPath.aprobarSolicitudPagoId, this.activatedRoute.snapshot.params.idSolicitudPago, this.contrato.solicitudPagoOnly.solicitudPagoOtrosCostosServicios[0].solicitudPagoOtrosCostosServiciosId )
                                         .subscribe(
                                             response => {
                                                 const obsSupervisor = response.filter( obs => obs.archivada === false )[0];
@@ -242,9 +247,13 @@ export class FormAprobarSolicitudComponent implements OnInit {
     }
 
     onSubmit() {
+        if ( this.addressForm.get( 'tieneObservaciones' ).value !== null && this.addressForm.get( 'tieneObservaciones' ).value === false ) {
+            this.addressForm.get( 'observaciones' ).setValue( '' );
+        }
+
         const pSolicitudPagoObservacion = {
             solicitudPagoObservacionId: this.solicitudPagoObservacionId,
-            solicitudPagoId: this.contrato.solicitudPagoOnly.solicitudPagoId,
+            solicitudPagoId: this.activatedRoute.snapshot.params.idSolicitudPago,
             observacion: this.addressForm.get( 'observaciones' ).value !== null ? this.addressForm.get( 'observaciones' ).value : this.addressForm.get( 'observaciones' ).value,
             tipoObservacionCodigo: this.listaTipoObservacionSolicitudes.soporteSolicitudCodigo,
             menuId: this.menusIdPath.aprobarSolicitudPagoId,
@@ -255,15 +264,28 @@ export class FormAprobarSolicitudComponent implements OnInit {
         console.log( pSolicitudPagoObservacion );
         this.obsMultipleSvc.createUpdateSolicitudPagoObservacion( pSolicitudPagoObservacion )
             .subscribe(
-                response => this.openDialog( '', `<b>${ response.message }</b>` ),
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () => this.routes.navigate(
+                            [
+                                '/verificarSolicitudPago/aprobacionSolicitud',  this.activatedRoute.snapshot.params.idContrato, this.activatedRoute.snapshot.params.idSolicitudPago
+                            ]
+                        )
+                    );
+                },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
             )
     }
 
     guardar() {
+        if ( this.otrosCostosObsForm.get( 'tieneObservaciones' ).value !== null && this.otrosCostosObsForm.get( 'tieneObservaciones' ).value === false ) {
+            this.otrosCostosObsForm.get( 'observaciones' ).setValue( '' );
+        }
+
         const pSolicitudPagoObservacion = {
             solicitudPagoObservacionId: this.solicitudPagoObsOtrosCostosId,
-            solicitudPagoId: this.contrato.solicitudPagoOnly.solicitudPagoId,
+            solicitudPagoId: this.activatedRoute.snapshot.params.idSolicitudPago,
             observacion: this.otrosCostosObsForm.get( 'observaciones' ).value !== null ? this.otrosCostosObsForm.get( 'observaciones' ).value : this.otrosCostosObsForm.get( 'observaciones' ).value,
             tipoObservacionCodigo: this.listaTipoObservacionSolicitudes.otrosCostosCodigo,
             menuId: this.menusIdPath.aprobarSolicitudPagoId,
@@ -274,7 +296,16 @@ export class FormAprobarSolicitudComponent implements OnInit {
         console.log( pSolicitudPagoObservacion );
         this.obsMultipleSvc.createUpdateSolicitudPagoObservacion( pSolicitudPagoObservacion )
             .subscribe(
-                response => this.openDialog( '', `<b>${ response.message }</b>` ),
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () => this.routes.navigate(
+                            [
+                                '/verificarSolicitudPago/aprobacionSolicitud',  this.activatedRoute.snapshot.params.idContrato, this.activatedRoute.snapshot.params.idSolicitudPago
+                            ]
+                        )
+                    );
+                },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
             )
     }

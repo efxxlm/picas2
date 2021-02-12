@@ -27,9 +27,9 @@
             </mat-card-header>
             <mat-card-content style="text-align: left;">
                 <p><b> {{ addressForm.get( 'fechaCreacion' ).value | date: 'dd/MM/yyyy' }} </b></p>
-                <p *ngIf="addressForm.get( 'observaciones' ).value === true"><b>¿Desde la supervisión tiene observaciones a la forma de pago?:</b> Si </p>
-                <p *ngIf="addressForm.get( 'observaciones' ).value === false"><b>¿Desde la supervisión tiene observaciones a la forma de pago?:</b> No</p>
-                <section [innerHTML]="addressForm.get( 'observaciones' ).value" *ngIf="addressForm.get( 'observaciones' ).value === true"></section>
+                <p *ngIf="addressForm.get( 'tieneObservaciones' ).value === true"><b>¿Desde la supervisión tiene observaciones a la forma de pago?:</b> Si </p>
+                <p *ngIf="addressForm.get( 'tieneObservaciones' ).value === false"><b>¿Desde la supervisión tiene observaciones a la forma de pago?:</b> No</p>
+                <section [innerHTML]="addressForm.get( 'observaciones' ).value" *ngIf="addressForm.get( 'tieneObservaciones' ).value === true"></section>
             </mat-card-content>
         </mat-card>
     </ng-container>

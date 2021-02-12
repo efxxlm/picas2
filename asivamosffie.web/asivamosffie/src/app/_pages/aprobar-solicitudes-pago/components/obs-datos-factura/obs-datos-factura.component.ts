@@ -1,3 +1,4 @@
+import { Router, ActivatedRoute } from '@angular/router';
 import { CommonService } from './../../../../core/_services/common/common.service';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, Validators, FormGroup } from '@angular/forms';
@@ -53,6 +54,8 @@ export class ObsDatosFacturaComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
+        private routes: Router,
+        private activatedRoute: ActivatedRoute,
         private commonSvc: CommonService,
         private dialog: MatDialog,
         private obsMultipleSvc: ObservacionesMultiplesCuService )
@@ -172,7 +175,16 @@ export class ObsDatosFacturaComponent implements OnInit {
         console.log( pSolicitudPagoObservacion );
         this.obsMultipleSvc.createUpdateSolicitudPagoObservacion( pSolicitudPagoObservacion )
             .subscribe(
-                response => this.openDialog( '', `<b>${ response.message }</b>` ),
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () => this.routes.navigate(
+                            [
+                                '/verificarSolicitudPago/aprobacionSolicitud',  this.activatedRoute.snapshot.params.idContrato, this.activatedRoute.snapshot.params.idSolicitudPago
+                            ]
+                        )
+                    );
+                },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
             )
     }

@@ -4,8 +4,9 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
+import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
 import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
 import { DialogProyectosAsociadosAprobComponent } from '../dialog-proyectos-asociados-aprob/dialog-proyectos-asociados-aprob.component';
 
@@ -24,6 +25,9 @@ export class VerDetalleAprobarSolicitudComponent implements OnInit {
     modalidadContratoArray: Dominio[] = [];
     tipoPagoArray: Dominio[] = [];
     addressForm: FormGroup;
+    otrosCostosObsForm: FormGroup;
+    menusIdPath: any; // Se obtienen los ID de los respectivos PATH de cada caso de uso que se implementaran observaciones.
+    listaTipoObservacionSolicitudes: any; // Interfaz lista tipos de observaciones.
     dataSource = new MatTableDataSource();
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -32,9 +36,7 @@ export class VerDetalleAprobarSolicitudComponent implements OnInit {
         numeroRadicadoSAC: [null, Validators.required],
         numeroFactura: [null, Validators.required],
         valorFacturado: [null, Validators.required],
-        tipoPago: [null, Validators.required],
-        tieneObservaciones: [null, Validators.required],
-        observaciones:[null, Validators.required]
+        tipoPago: [null, Validators.required]
     });
     displayedColumns: string[] = [
       'drp',
@@ -59,11 +61,19 @@ export class VerDetalleAprobarSolicitudComponent implements OnInit {
 
     constructor(
         private activatedRoute: ActivatedRoute,
+        private dialog: MatDialog,
+        private routes: Router,
+        private obsMultipleSvc: ObservacionesMultiplesCuService,
         private registrarPagosSvc: RegistrarRequisitosPagoService,
         private fb: FormBuilder,
-        private commonSvc: CommonService,
-        private dialog: MatDialog )
+        private commonSvc: CommonService )
     {
+        this.obsMultipleSvc.listaMenu()
+            .subscribe( response => this.menusIdPath = response );
+        this.obsMultipleSvc.listaTipoObservacionSolicitudes()
+            .subscribe( response => this.listaTipoObservacionSolicitudes = response );
+        this.addressForm = this.crearFormulario();
+        this.otrosCostosObsForm = this.crearFormulario();
         this.getContrato();
     }
 
@@ -71,7 +81,7 @@ export class VerDetalleAprobarSolicitudComponent implements OnInit {
     }
 
     getContrato() {
-        this.registrarPagosSvc.getContratoByContratoId( 13, 3 )
+        this.registrarPagosSvc.getContratoByContratoId( this.activatedRoute.snapshot.params.idContrato, this.activatedRoute.snapshot.params.idSolicitudPago )
             .subscribe(
                 response => {
                     this.commonSvc.tiposDeSolicitudes()
@@ -95,7 +105,42 @@ export class VerDetalleAprobarSolicitudComponent implements OnInit {
                                 }
                                 this.contrato = response;
                                 console.log( this.contrato );
+                                // Get observaciones Soporte de la solicitud
+                                this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.menusIdPath.aprobarSolicitudPagoId, this.activatedRoute.snapshot.params.idSolicitudPago, this.contrato.solicitudPagoOnly.solicitudPagoSoporteSolicitud[0].solicitudPagoSoporteSolicitudId )
+                                    .subscribe(
+                                        response => {
+                                            const obsSupervisor = response.filter( obs => obs.archivada === false )[0];
+
+                                            if ( obsSupervisor !== undefined ) {
+                                                this.addressForm.setValue(
+                                                    {
+                                                        fechaCreacion: obsSupervisor.fechaCreacion,
+                                                        tieneObservaciones: obsSupervisor.tieneObservacion !== undefined ? obsSupervisor.tieneObservacion : null,
+                                                        observaciones: obsSupervisor.observacion !== undefined ? ( obsSupervisor.observacion.length > 0 ? obsSupervisor.observacion : null ) : null
+                                                    }
+                                                );
+                                            }
+                                        }
+                                    );
+
                                 if ( this.contrato.solicitudPagoOnly.tipoSolicitudCodigo === this.tipoSolicitudCodigo.otrosCostos ) {
+                                    // Get observaciones otros costos
+                                    this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.menusIdPath.aprobarSolicitudPagoId, this.activatedRoute.snapshot.params.idSolicitudPago, this.contrato.solicitudPagoOnly.solicitudPagoOtrosCostosServicios[0].solicitudPagoOtrosCostosServiciosId )
+                                        .subscribe(
+                                            response => {
+                                                const obsSupervisor = response.filter( obs => obs.archivada === false )[0];
+
+                                                if ( obsSupervisor !== undefined ) {
+                                                    this.otrosCostosObsForm.setValue(
+                                                        {
+                                                            fechaCreacion: obsSupervisor.fechaCreacion,
+                                                            tieneObservaciones: obsSupervisor.tieneObservacion !== undefined ? obsSupervisor.tieneObservacion : null,
+                                                            observaciones: obsSupervisor.observacion !== undefined ? ( obsSupervisor.observacion.length > 0 ? obsSupervisor.observacion : null ) : null
+                                                        }
+                                                    );
+                                                }
+                                            }
+                                        );
                                     this.commonSvc.tiposDePagoExpensas()
                                     .subscribe( response => {
                                         this.tipoPagoArray = response;
@@ -128,6 +173,14 @@ export class VerDetalleAprobarSolicitudComponent implements OnInit {
             const modalidad = this.modalidadContratoArray.filter( modalidad => modalidad.codigo === modalidadCodigo );
             return modalidad[0].nombre;
         }
+    }
+
+    crearFormulario() {
+        return this.fb.group({
+            fechaCreacion: [ null ],
+            tieneObservaciones: [null, Validators.required],
+            observaciones:[null, Validators.required]
+        })
     }
 
     applyFilter(event: Event) {

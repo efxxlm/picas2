@@ -47,7 +47,9 @@
                             <br>
                             <div class="d-flex">
                                 <strong>Criterios:</strong>
-                                <p *ngFor="let criterio of criteriosArraySeleccionados; index as i" style="margin-left: .4em;"> {{ filterCriterios( criterio.codigo ) }}<span *ngIf="criteriosArraySeleccionados.length - 1 !== i">,</span><span *ngIf="criteriosArraySeleccionados.length - 1 === i">.</span> </p>
+                                <section>
+                                    <p *ngFor="let criterio of criteriosArraySeleccionados; index as i" style="margin-left: .4em;"> {{ filterCriterios( criterio.codigo ) }}<span *ngIf="criteriosArraySeleccionados.length - 1 !== i">,</span><span *ngIf="criteriosArraySeleccionados.length - 1 === i">.</span> </p>
+                                </section>
                             </div>
                             <section formArrayName="criteriosProyecto" class="mt-1em" *ngIf="criteriosProyecto( i ).length > 0">
                                 <div *ngFor="let criterioProyecto of criteriosProyecto( i ).controls; index as j" [formGroup]="criterioProyecto">
@@ -77,7 +79,9 @@
                     <br>
                     <div class="d-flex">
                         <strong>Criterio:</strong>
-                        <p *ngFor="let criterio of criteriosArraySeleccionados; index as i" style="margin-left: .4em;"> {{ filterCriterios( criterio.codigo ) }}<span *ngIf="criteriosArraySeleccionados.length - 1 !== i">,</span><span *ngIf="criteriosArraySeleccionados.length - 1 === i">.</span> </p>
+                        <section>
+                            <p *ngFor="let criterio of criteriosArraySeleccionados; index as i" style="margin-left: .4em;"> {{ filterCriterios( criterio.codigo ) }}<span *ngIf="criteriosArraySeleccionados.length - 1 !== i">,</span><span *ngIf="criteriosArraySeleccionados.length - 1 === i">.</span> </p>
+                        </section>
                     </div>
                     <br>
                     <div *ngFor="let criterio of solicitudPagoFaseCriterio">
@@ -97,8 +101,10 @@
                 </mat-card-title>
             </mat-card-header>
             <mat-card-content style="text-align: left;">
-                <p><b>07/10/2020</b></p>
-                <p><b>¿Desde la supervisión tiene observaciones a los detalles de la factura para proyectos asociados?:</b> No</p>
+                <p><b> {{ addressForm.get( 'fechaCreacion' ).value | date: 'dd/MM/yyyy' }} </b></p>
+                <p *ngIf="addressForm.get( 'tieneObservaciones' ).value === true"><b>¿Desde la supervisión tiene observaciones a los detalles de la factura para proyectos asociados?:</b> Si</p>
+                <p *ngIf="addressForm.get( 'tieneObservaciones' ).value === false"><b>¿Desde la supervisión tiene observaciones a los detalles de la factura para proyectos asociados?:</b> No</p>
+                <section [innerHTML]="addressForm.get( 'observaciones' ).value" *ngIf="addressForm.get( 'tieneObservaciones' ).value === true"></section>
             </mat-card-content>
         </mat-card>
     </ng-container>
