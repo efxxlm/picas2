@@ -12,7 +12,8 @@ export interface Report {
                 usuarioCreacion: string,
                 urlActa: string,
                 fechaSuscripcion: string
-                informeFinalObservaciones: InformeFinalObservaciones[]
+                informeFinalObservaciones: InformeFinalObservaciones[],
+                tieneObservacionesValidacion: boolean
             }
         ],
         departamentoObj: {

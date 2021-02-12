@@ -277,7 +277,7 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<Respuesta> CreateEditObservacionInformeFinal(InformeFinalObservaciones pObservacion)
+        public async Task<Respuesta> CreateEditObservacionInformeFinal(InformeFinalObservaciones pObservacion, bool tieneOBservaciones)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Informe_Final_Observacion, (int)EnumeratorTipoDominio.Acciones);
             string strCrearEditar = string.Empty;
@@ -301,6 +301,13 @@ namespace asivamosffie.services
                                                                        Observaciones = pObservacion.Observaciones,
                                                                    });
                 }
+                await _context.Set<InformeFinal>().Where(r => r.InformeFinalId == pObservacion.InformeFinalId)
+                                               .UpdateAsync(r => new InformeFinal()
+                                               {
+                                                   FechaModificacion = DateTime.Now,
+                                                   UsuarioModificacion = pObservacion.UsuarioCreacion,
+                                                   TieneObservacionesValidacion = tieneOBservaciones,
+                                               });
                 _context.SaveChanges();
 
                 return

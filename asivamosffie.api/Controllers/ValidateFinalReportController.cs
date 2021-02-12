@@ -137,14 +137,14 @@ namespace asivamosffie.api.Controllers
         [HttpPost]
         [Route("CreateEditObservacionInformeFinal")]
 
-        public async Task<IActionResult> EditObservacionInformeFinal([FromBody] InformeFinalObservaciones pObservacion)
+        public async Task<IActionResult> EditObservacionInformeFinal([FromQuery] bool tieneObservacion, [FromBody] InformeFinalObservaciones pObservacion)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
                 pObservacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 //pObservacion.UsuarioCreacion = "LCT";
-                respuesta = await _validateFinalReportService.CreateEditObservacionInformeFinal(pObservacion);
+                respuesta = await _validateFinalReportService.CreateEditObservacionInformeFinal(pObservacion, tieneObservacion);
                 return Ok(respuesta);
             }
             catch (Exception ex)

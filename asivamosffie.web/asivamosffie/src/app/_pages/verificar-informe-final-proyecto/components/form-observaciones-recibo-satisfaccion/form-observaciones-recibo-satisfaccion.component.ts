@@ -16,7 +16,7 @@ export class FormObservacionesReciboSatisfaccionComponent implements OnInit {
   @Output() formCompleto = new EventEmitter<boolean>(true);
   estaEditando = false;
   informeFinalId = 0;
-  tieneObservaciones = null;
+  tieneObservacionesValidacion = null;
   observaciones: FormGroup;
   editorStyle = {
     height: '100px'
@@ -47,15 +47,19 @@ export class FormObservacionesReciboSatisfaccionComponent implements OnInit {
       esSupervision: [null, Validators.required],
       eliminado: [null, Validators.required],
       archivado: [null, Validators.required],
-      tieneObservaciones: [null, Validators.required],
+      tieneObservacionesValidacion: [null, Validators.required],
     });
     console.log("ue paso? ",this.report.proyecto);
     if (this.report.proyecto.informeFinal.length > 0) {
       this.observaciones.get("informeFinalId").setValue(this.report.proyecto.informeFinal[0].informeFinalId);
       this.observaciones.get("esSupervision").setValue(true);
+      if(this.report.proyecto.informeFinal[0].tieneObservacionesValidacion == null){
+        this.observaciones.get("tieneObservacionesValidacion").setValue(false);
+      }else{
+        this.observaciones.get("tieneObservacionesValidacion").setValue(this.report.proyecto.informeFinal[0].tieneObservacionesValidacion);
+      }
       //this.observaciones.value.setValue({informeFinalId: (this.report.proyecto.informeFinal[0].informeFinalId), esSupervision: true});
       if(this.report.proyecto.informeFinal[0].informeFinalObservaciones.length>0){
-        this.observaciones.get("tieneObservaciones").setValue(true);
         this.observaciones.patchValue(this.report.proyecto.informeFinal[0].informeFinalObservaciones[0]);
       }
       this.estaEditando = true;
@@ -88,11 +92,12 @@ export class FormObservacionesReciboSatisfaccionComponent implements OnInit {
     this.estaEditando = true;
     this.observaciones.markAllAsTouched();
     this.estaEditando = true;
-    this.createEditObservacionInformeFinal(this.observaciones.value);
+    this.createEditObservacionInformeFinal(this.observaciones.value, this.observaciones.value.tieneObservacionesValidacion);
   }
 
-  createEditObservacionInformeFinal(informeFinalObservacion: any) {
-    this.validarInformeFinalService.createEditObservacionInformeFinal(informeFinalObservacion).subscribe((respuesta: Respuesta) => {
+  createEditObservacionInformeFinal(informeFinalObservacion: any, tieneObservaciones: boolean) {
+    console.log("esta enviando: ",tieneObservaciones);
+    this.validarInformeFinalService.createEditObservacionInformeFinal(informeFinalObservacion, tieneObservaciones).subscribe((respuesta: Respuesta) => {
       this.openDialog('', respuesta.message);
     });
   }
