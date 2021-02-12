@@ -1,1 +1,146 @@
-<p>revision-aprobacion-rapg works!</p>
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+    <mat-card class="shipping-card">
+        <mat-card-header class="header-card" style="margin-left: -27px">
+            <mat-card-title class="header-card--text"> Revisión </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div >
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left" for="fechaRevision"
+                                    [ngClass]="{ 'color-secondaryColor': addressForm.controls.fechaRevision.invalid }">Fecha
+                                    de la revisión</label>
+                            </div>
+                            <div class="col d-flex align-items-center">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput formControlName="fechaRevision"
+                                        [matDatepicker]="pickerFechaRevision" [min]="minDate" readonly
+                                        (click)="pickerFechaRevision.open()" required placeholder="DD/MM/AAAA" />
+                                    <mat-datepicker #pickerFechaRevision></mat-datepicker>
+                                </mat-form-field>
+                                <button mat-button color="primary" type="button" (click)="pickerFechaRevision.open()"
+                                    class="btn-calendario">
+                                    <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
+                                </button>
+                            </div>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                      (addressForm.get('fechaRevision').invalid && addressForm.get('fechaRevision').touched) ||
+                      (addressForm.get('fechaRevision').invalid && estaEditando)
+                    " />
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left" for="estadoRevision"
+                                    [ngClass]="{ 'color-secondaryColor': addressForm.controls.estadoRevision.invalid }">Estado
+                                    de la revisión</label>
+                            </div>
+                            <div class="col">
+                                <mat-form-field class="select-width">
+                                    <mat-select formControlName="estadoRevision" required>
+                                        <mat-option *ngFor="let estadoRevision of estadoArray" [value]="estadoRevision">
+                                            {{ estadoRevision.nombre }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                      (addressForm.get('estadoRevision').invalid && addressForm.get('estadoRevision').touched) ||
+                      (addressForm.get('estadoRevision').invalid && estaEditando)
+                    " />
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="
+              addressForm.controls.estadoRevision.value && addressForm.controls.estadoRevision.value.codigo == '2'
+            ">
+                    <h2 class="card-subTitle">Aprobación</h2>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label class="label-left" for="fechaAprob"
+                                        [ngClass]="{ 'color-secondaryColor': addressForm.controls.fechaAprob.invalid }">Fecha
+                                        de aprobación</label>
+                                </div>
+                                <div class="col d-flex align-items-center">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput formControlName="fechaAprob" [matDatepicker]="pickerFecha22"
+                                            [min]="minDate" readonly (click)="pickerFecha22.open()" required
+                                            placeholder="DD/MM/AAAA" />
+                                        <mat-datepicker #pickerFecha22></mat-datepicker>
+                                    </mat-form-field>
+                                    <button mat-button color="primary" type="button" (click)="pickerFecha22.open()"
+                                        class="btn-calendario">
+                                        <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
+                                    </button>
+                                </div>
+                                <span class="icon-incompleto">
+                                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip" *ngIf="
+                        (addressForm.get('fechaAprob').invalid && addressForm.get('fechaAprob').touched) ||
+                        (addressForm.get('fechaAprob').invalid && estaEditando)
+                      " />
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label class="label-left" for="responsableAprob"
+                                        [ngClass]="{ 'color-secondaryColor': addressForm.controls.responsableAprob.invalid }">Responsable
+                                        de aprobación</label>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field class="select-width">
+                                        <mat-select formControlName="responsableAprob" required>
+                                            <mat-option *ngFor="let responsableAprob of listaUsuarios"
+                                                [value]="responsableAprob">
+                                                {{ responsableAprob.nombres }} {{ responsableAprob.apellidos }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <span class="icon-incompleto">
+                                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip" *ngIf="
+                        (addressForm.get('responsableAprob').invalid &&
+                          addressForm.get('responsableAprob').touched) ||
+                        (addressForm.get('responsableAprob').invalid && estaEditando)
+                      " />
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+    <app-tabla-observaciones-rev-aprob-rapg></app-tabla-observaciones-rev-aprob-rapg>
+    <div class="text-center mb-2em">
+        <button mat-button color="warn" class="btn-guardar" type="submit">
+          <img src="assets/img/icon/guardar.svg" alt="Regresar" />
+        </button>
+    </div>
+</form>

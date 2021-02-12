@@ -14,9 +14,10 @@ import { VigenciasValorRapgComponent } from './components/vigencias-valor-rapg/v
 import { ObservacionesEspecificasRapgComponent } from './components/observaciones-especificas-rapg/observaciones-especificas-rapg.component';
 import { ListaChequeoRapgComponent } from './components/lista-chequeo-rapg/lista-chequeo-rapg.component';
 import { RevisionAprobacionRapgComponent } from './components/revision-aprobacion-rapg/revision-aprobacion-rapg.component';
+import { TablaObservacionesRevAprobRapgComponent } from './components/tabla-observaciones-rev-aprob-rapg/tabla-observaciones-rev-aprob-rapg.component';
 
 @NgModule({
-  declarations: [RegistrarActualizPolizasGarantiasComponent, TablaGeneralRapgComponent, ActualizarPolizaRapgComponent, RazonTipoActualizacionRapgComponent, VigenciasValorRapgComponent, ObservacionesEspecificasRapgComponent, ListaChequeoRapgComponent, RevisionAprobacionRapgComponent],
+  declarations: [RegistrarActualizPolizasGarantiasComponent, TablaGeneralRapgComponent, ActualizarPolizaRapgComponent, RazonTipoActualizacionRapgComponent, VigenciasValorRapgComponent, ObservacionesEspecificasRapgComponent, ListaChequeoRapgComponent, RevisionAprobacionRapgComponent, TablaObservacionesRevAprobRapgComponent],
   imports: [
     CommonModule,
     RegistrarActualizPolizasGarantiasRoutingModule,

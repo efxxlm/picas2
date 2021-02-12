@@ -56,6 +56,13 @@ export class RazonTipoActualizacionRapgComponent implements OnInit {
     polizasYSeguros ? this.obj4 = true : this.obj4 = false;
 
   }
+  // evalua tecla a tecla
+  validateNumberKeypress(event: KeyboardEvent) {
+    const alphanumeric = /[0-9]/;
+    const inputChar = String.fromCharCode(event.charCode);
+    return alphanumeric.test(inputChar) ? true : false;
+  }
+
   eliminarobjeto(obj){
     obj = false;
   }
