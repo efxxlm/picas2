@@ -47,7 +47,16 @@ export class TablaGeneralRapgComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
   }
-  actualizarPoliza(id){
-    
+  verDetalleEditar(id){
+    this.routes.navigate(['/registrarActualizacionesPolizasYGarantias/verDetalleEditarPoliza',id]);
+  }
+  eliminar(id){
+
+  }
+  aprobarActuazliacion(id){
+
+  }
+  verDetalle(id){
+    this.routes.navigate(['/registrarActualizacionesPolizasYGarantias/verDetallePoliza',id]);
   }
 }

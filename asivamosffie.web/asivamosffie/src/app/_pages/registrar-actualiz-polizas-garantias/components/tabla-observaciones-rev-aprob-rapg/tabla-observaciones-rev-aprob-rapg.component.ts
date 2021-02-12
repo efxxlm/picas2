@@ -11,7 +11,11 @@ export class TablaObservacionesRevAprobRapgComponent implements OnInit {
   displayedColumns: string[] = ['fechaRevision', 'observacion', 'estadoRevisionCodigo'];
   dataSource = new MatTableDataSource();
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  dataTable: any[] = [];
+  dataTable: any[] = [{
+    fechaRevision: '20/01/2021',
+    observacion: 'Se devuelve la solicitud porque no se cuenta con la aprobación de la vigencia por parte del responsable',
+    estadoRevisionCodigo: '1'
+  }];
 
   constructor() { }
 
