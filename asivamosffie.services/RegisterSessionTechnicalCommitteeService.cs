@@ -2167,19 +2167,19 @@ namespace asivamosffie.services
                 {
                     if (pSesionComiteSolicitud.Contratacion.ContratacionProyecto != null)
                     {
-                        pSesionComiteSolicitud.Contratacion.ContratacionProyecto.ToList().ForEach(ct =>
-                        {
-                            Proyecto proy = _context.Proyecto.Find(ct.Proyecto.ProyectoId);
-                            if (ct.Proyecto.EstadoProyectoCodigo != null)
-                                if (ct.Proyecto.EstadoProyectoCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteTecnico)
-                                    proy.EstadoProyectoCodigo = ConstantCodigoEstadoProyecto.Disponible;
-                                else
-                                    proy.EstadoProyectoCodigo = ct.Proyecto.EstadoProyectoCodigo;
-                            else
-                            {
-                                sesionComiteSolicitudOld.RegistroCompleto = false;
-                            }
-                        });
+                        //pSesionComiteSolicitud.Contratacion.ContratacionProyecto.ToList().ForEach(ct =>
+                        //{
+                        //  //  Proyecto proy = _context.Proyecto.Find(ct.Proyecto.ProyectoId);
+                        //    //if (ct.Proyecto.EstadoProyectoCodigo != null)
+                        //    //    if (ct.Proyecto.EstadoProyectoCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteTecnico)
+                        //    //        proy.EstadoProyectoCodigo = ConstantCodigoEstadoProyecto.Disponible;
+                        //    //    else
+                        //    //        proy.EstadoProyectoCodigo = ct.Proyecto.EstadoProyectoCodigo;
+                        //    else
+                        //    {
+                        //        sesionComiteSolicitudOld.RegistroCompleto = false;
+                        //    }
+                        //});
 
                     }
                     Contratacion contratacion = _context.Contratacion.Find(sesionComiteSolicitudOld.SolicitudId);
@@ -3722,7 +3722,7 @@ namespace asivamosffie.services
             {
                 Proyecto proyecto = _context.Proyecto.Find(pContratacionObservacion.ContratacionProyecto.Proyecto.ProyectoId);
 
-                proyecto.EstadoProyectoCodigo = pContratacionObservacion.ContratacionProyecto.Proyecto.EstadoProyectoCodigo;
+               // proyecto.EstadoProyectoCodigo = pContratacionObservacion.ContratacionProyecto.Proyecto.EstadoProyectoCodigo;
 
                 pContratacionObservacion.ContratacionProyecto = null;
 

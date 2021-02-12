@@ -2470,15 +2470,15 @@ namespace asivamosffie.services
                         pSesionComiteSolicitud.Contratacion.ContratacionProyecto.ToList().ForEach(ct =>
                         {
                             Proyecto proy = _context.Proyecto.Find(ct.Proyecto.ProyectoId);
-                            if (ct.Proyecto.EstadoProyectoCodigo != null)
-                                if (ct.Proyecto.EstadoProyectoCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteTecnico)
-                                    proy.EstadoProyectoCodigo = ConstantCodigoEstadoProyecto.Disponible;
-                                else
-                                    proy.EstadoProyectoCodigo = ct.Proyecto.EstadoProyectoCodigo;
-                            else
-                            {
-                                sesionComiteSolicitudOld.RegistroCompletoFiduciaria = false;
-                            }
+                            //if (ct.Proyecto.EstadoProyectoCodigo != null)
+                            //    if (ct.Proyecto.EstadoProyectoCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteTecnico)
+                            //        proy.EstadoProyectoCodigo = ConstantCodigoEstadoProyecto.Disponible;
+                            //    else
+                            //        proy.EstadoProyectoCodigo = ct.Proyecto.EstadoProyectoCodigo;
+                            //else
+                            //{
+                            //    sesionComiteSolicitudOld.RegistroCompletoFiduciaria = false;
+                            //}
                         });
 
                     }

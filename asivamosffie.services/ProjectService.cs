@@ -68,10 +68,10 @@ namespace asivamosffie.services
                         Sede = _context.InstitucionEducativaSede.Find(pProyecto.SedeId).Nombre,
                         EstadoJuridicoPredios = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Estado_Juridico_Predios) && r.Codigo == pProyecto.EstadoJuridicoCodigo).FirstOrDefault().Nombre,
                         TipoIntervencion = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Tipo_de_Intervencion) && r.Codigo == pProyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre,
-                        EstadoProyecto = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Estado_Proyecto) && r.Codigo == pProyecto.EstadoProyectoCodigo).FirstOrDefault().Nombre,
+                       // EstadoProyecto = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Estado_Proyecto) && r.Codigo == pProyecto.EstadoProyectoCodigo).FirstOrDefault().Nombre,
                         Fecha = pProyecto.FechaCreacion != null ? Convert.ToDateTime(pProyecto.FechaCreacion).ToString("yyyy-MM-dd") : pProyecto.FechaCreacion.ToString(),
                         EstadoRegistro = "COMPLETO",
-                        EstadoProyectoCodigo = pProyecto.EstadoProyectoCodigo,
+                     //   EstadoProyectoCodigo = pProyecto.EstadoProyectoCodigo,
 
                     };
 
@@ -308,12 +308,12 @@ namespace asivamosffie.services
 
                     Localizacion municipio = ListLocalizacion.Where(r => r.LocalizacionId == proyecto.LocalizacionIdMunicipio).FirstOrDefault();
                     Localizacion departamento = municipio==null?null:ListLocalizacion.Where(r => r.LocalizacionId == municipio.IdPadre).FirstOrDefault();
-                    var estado = proyecto.EstadoProyectoCodigo;
+                   // var estado = proyecto.EstadoProyectoCodigo;
                     var estaso = "";
-                    if (estado != null)
-                    {
-                        estaso = _context.Dominio.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Estado_Proyecto) && r.Codigo == proyecto.EstadoProyectoCodigo).FirstOrDefault().Nombre;
-                    }
+                    //if (estado != null)
+                    //{
+                    //    estaso = _context.Dominio.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Estado_Proyecto) && r.Codigo == proyecto.EstadoProyectoCodigo).FirstOrDefault().Nombre;
+                    //}
 
                     ProyectoGrilla proyectoGrilla = new ProyectoGrilla
                     {
@@ -374,7 +374,7 @@ namespace asivamosffie.services
                         Sede = _context.InstitucionEducativaSede.Find(pProyecto.SedeId).Nombre,
                         EstadoJuridicoPredios = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Estado_Juridico_Predios) && r.Codigo == pProyecto.EstadoJuridicoCodigo).FirstOrDefault().Nombre,
                         TipoIntervencion = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Tipo_de_Intervencion) && r.Codigo == pProyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre,
-                        EstadoProyecto = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Estado_Proyecto) && r.Codigo == pProyecto.EstadoProyectoCodigo).FirstOrDefault().Nombre,
+                      //  EstadoProyecto = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Estado_Proyecto) && r.Codigo == pProyecto.EstadoProyectoCodigo).FirstOrDefault().Nombre,
                         Fecha = pProyecto.FechaCreacion != null ? Convert.ToDateTime(pProyecto.FechaCreacion).ToString("yyyy-MM-dd") : pProyecto.FechaCreacion.ToString(),
                         EstadoRegistro = "COMPLETO"
                     };
@@ -526,7 +526,7 @@ namespace asivamosffie.services
                             proyecto.EstadoJuridicoCodigo = ConstantCodigoEstadoJuridico.Aprobado;
                         }*/
                         proyecto.EstadoJuridicoCodigo = ConstantCodigoEstadoJuridico.Aprobado;
-                        proyecto.EstadoProyectoCodigo = ConstantCodigoEstadoProyecto.Disponible;
+                      //  proyecto.EstadoProyectoCodigo = ConstantCodigoEstadoProyecto.Disponible;
                         proyecto.RegistroCompleto = ValidarRegistroCREAR(pProyecto, pPredioPrincipal);
                         _context.Proyecto.Add(proyecto);
                         _context.SaveChanges();

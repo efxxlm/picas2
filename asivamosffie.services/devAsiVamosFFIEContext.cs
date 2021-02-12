@@ -81,8 +81,12 @@ namespace asivamosffie.model.Models
         public virtual DbSet<InformeFinalInterventoria> InformeFinalInterventoria { get; set; }
         public virtual DbSet<InformeFinalInterventoriaObservaciones> InformeFinalInterventoriaObservaciones { get; set; }
         public virtual DbSet<InformeFinalListaChequeo> InformeFinalListaChequeo { get; set; }
+        public virtual DbSet<InformeFinalObservaciones> InformeFinalObservaciones { get; set; }
         public virtual DbSet<InfraestructuraIntervenirProyecto> InfraestructuraIntervenirProyecto { get; set; }
         public virtual DbSet<InstitucionEducativaSede> InstitucionEducativaSede { get; set; }
+        public virtual DbSet<ListaChequeo> ListaChequeo { get; set; }
+        public virtual DbSet<ListaChequeoItem> ListaChequeoItem { get; set; }
+        public virtual DbSet<ListaChequeoListaChequeoItem> ListaChequeoListaChequeoItem { get; set; }
         public virtual DbSet<Localizacion> Localizacion { get; set; }
         public virtual DbSet<ManejoMaterialesInsumos> ManejoMaterialesInsumos { get; set; }
         public virtual DbSet<ManejoMaterialesInsumosProveedor> ManejoMaterialesInsumosProveedor { get; set; }
@@ -210,6 +214,8 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValidarSeguimientoSemanal> VValidarSeguimientoSemanal { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -2896,7 +2902,6 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
-                    .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
@@ -2928,6 +2933,27 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<InformeFinalObservaciones>(entity =>
+            {
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.InformeFinal)
+                    .WithMany(p => p.InformeFinalObservaciones)
+                    .HasForeignKey(d => d.InformeFinalId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__InformeFinalObservacion");
             });
 
             modelBuilder.Entity<InfraestructuraIntervenirProyecto>(entity =>
@@ -2979,6 +3005,89 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<ListaChequeo>(entity =>
+            {
+                entity.Property(e => e.CriterioPagoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EstadoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.Nombre)
+                    .IsRequired()
+                    .HasMaxLength(500);
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<ListaChequeoItem>(entity =>
+            {
+                entity.HasIndex(e => e.Nombre)
+                    .HasName("Index_Nombre")
+                    .IsUnique();
+
+                entity.Property(e => e.Estado)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.Nombre)
+                    .IsRequired()
+                    .HasMaxLength(1000);
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<ListaChequeoListaChequeoItem>(entity =>
+            {
+                entity.HasIndex(e => new { e.ListaChequeoId, e.ListaChequeoItemId })
+                    .HasName("Index_ListaChequeo_ListaChequeoItem")
+                    .IsUnique();
+
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.Orden)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.ListaChequeo)
+                    .WithMany(p => p.ListaChequeoListaChequeoItem)
+                    .HasForeignKey(d => d.ListaChequeoId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ListaChequeoListaChequeoItem_ListaChequeo");
+
+                entity.HasOne(d => d.ListaChequeoItem)
+                    .WithMany(p => p.ListaChequeoListaChequeoItem)
+                    .HasForeignKey(d => d.ListaChequeoItemId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ListaChequeoListaChequeoItem_ListaChequeoItem");
             });
 
             modelBuilder.Entity<Localizacion>(entity =>
@@ -4393,9 +4502,13 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.EstadoProyectoCodigo)
+                entity.Property(e => e.EstadoProyectoCodigoOld)
                     .HasMaxLength(100)
                     .IsUnicode(false);
+
+                entity.Property(e => e.EstadoProyectoInterventoriaCodigo).HasMaxLength(100);
+
+                entity.Property(e => e.EstadoProyectoObraCodigo).HasMaxLength(100);
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 

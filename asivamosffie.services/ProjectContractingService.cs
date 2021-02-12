@@ -108,7 +108,7 @@ namespace asivamosffie.services
                     proyectoCambiarEstadoEliminado.UsuarioModificacion = pUsusarioElimino;
                     proyectoCambiarEstadoEliminado.FechaModificacion = DateTime.Now;
 
-                    proyectoCambiarEstadoEliminado.EstadoProyectoCodigo = ConstantCodigoEstadoProyecto.Disponible;
+                 //   proyectoCambiarEstadoEliminado.EstadoProyectoCodigo = ConstantCodigoEstadoProyecto.Disponible;
                 }
                 contratacionOld.Eliminado = true;
                 contratacionOld.UsuarioModificacion = pUsusarioElimino;
@@ -1126,7 +1126,7 @@ namespace asivamosffie.services
                     //Se cambia el estado del proyecto cuando se asigna a una contratación
 
                     Proyecto proyectoCambiarEstado = _context.Proyecto.Find(c.ProyectoId);
-                    proyectoCambiarEstado.EstadoProyectoCodigo = ConstantCodigoEstadoProyecto.AsignadoSolicitudContratacion;
+                 //   proyectoCambiarEstado.EstadoProyectoCodigo = ConstantCodigoEstadoProyecto.AsignadoSolicitudContratacion;
                     proyectoCambiarEstado.FechaModificacion = DateTime.Now;
                     proyectoCambiarEstado.UsuarioModificacion = pUsuarioCreacion;
 
