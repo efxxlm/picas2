@@ -38,6 +38,7 @@ export class ExpansionVerificarRequisitosComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
 
   constructor(
     private fb: FormBuilder,
@@ -55,6 +56,7 @@ export class ExpansionVerificarRequisitosComponent implements OnInit {
     }
     if ( this.routes.getCurrentNavigation().extras.state ) {
       this.fechaPoliza = this.routes.getCurrentNavigation().extras.state.fechaPoliza;
+      this.estaEditando = true;
     }
   }
 
@@ -81,7 +83,7 @@ export class ExpansionVerificarRequisitosComponent implements OnInit {
                 // tslint:disable-next-line: no-string-literal
                 perfil[ 'tieneObservaciones' ] = null;
                 // tslint:disable-next-line: no-string-literal
-                perfil[ 'verificarObservacion' ] = '';
+                perfil[ 'verificarObservacion' ] = null;
 
                 const tipoPerfil = this.perfilesCv.filter( value => value.codigo === perfil.perfilCodigo );
                 // tslint:disable-next-line: no-string-literal
@@ -126,6 +128,7 @@ export class ExpansionVerificarRequisitosComponent implements OnInit {
                     perfil[ 'tieneObservaciones' ] = true;
                     // tslint:disable-next-line: no-string-literal
                     perfil[ 'verificarObservacion' ] = observacionTipo2[ observacionTipo2.length - 1 ].observacion;
+                    this.estaEditando = true;
                     completo++;
                   }
                 }
@@ -156,12 +159,6 @@ export class ExpansionVerificarRequisitosComponent implements OnInit {
     return observacionHtml;
   }
 
-  maxLength(e: any, n: number) {
-    if (e.editor.getLength() > n) {
-      e.editor.deleteText(n, e.editor.getLength());
-    }
-  }
-
   openDialog(modalTitle: string, modalText: string) {
     const dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
@@ -169,35 +166,22 @@ export class ExpansionVerificarRequisitosComponent implements OnInit {
     });
   }
 
-  textoLimpio(texto: string) {
-    let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
-
-    if ( texto ){
-      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
-      return textolimpio.length + saltosDeLinea;
+  maxLength(e: any, n: number) {
+    if (e.editor.getLength() > n) {
+      e.editor.deleteText(n - 1, e.editor.getLength());
     }
   }
 
-  private contarSaltosDeLinea(cadena: string, subcadena: string) {
-    let contadorConcurrencias = 0;
-    let posicion = 0;
-    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
-      ++contadorConcurrencias;
-      posicion += subcadena.length;
-    }
-    return contadorConcurrencias;
-  }
-
-  textoLimpioObservacion(texto: string) {
-    if ( texto ){
-      const textolimpio = texto.replace(/<[^>]*>/g, '');
-      return textolimpio;
+  textoLimpio( evento: any, n: number ) {
+    if ( evento !== undefined ) {
+      return evento.getLength() > n ? n : evento.getLength();
+    } else {
+      return 0;
     }
   }
 
   onSubmit( perfil: ContratoPerfil ) {
+    this.estaEditando = true;
     const observacionPerfil: ObservacionPerfil = {
       contratoPerfilId: perfil.contratoPerfilId,
       // tslint:disable-next-line: no-string-literal

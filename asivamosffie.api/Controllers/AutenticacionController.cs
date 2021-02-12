@@ -10,11 +10,12 @@ using Microsoft.Extensions.Options;
 using lalupa.Authorization.JwtHelpers;
 using asivamosffie.services.Exceptions;
 using asivamosffie.model.APIModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [ApiController] 
     public class AutenticacionController : ControllerBase
     {
         public readonly IAutenticacionService  autenticacion;

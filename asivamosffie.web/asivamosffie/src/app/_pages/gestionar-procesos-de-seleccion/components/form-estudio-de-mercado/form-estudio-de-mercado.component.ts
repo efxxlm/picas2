@@ -42,7 +42,7 @@ export class FormEstudioDeMercadoComponent implements OnInit {
     if (this.noGuardado===true &&  this.addressForm.dirty) {
       let dialogRef =this.dialog.open(ModalDialogComponent, {
         width: '28em',
-        data: { modalTitle:"", modalText:"�Desea guardar la informaci�n registrada?",siNoBoton:true }
+        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
       });   
       dialogRef.afterClosed().subscribe(result => {
         // console.log(`Dialog result: ${result}`);
@@ -110,6 +110,7 @@ export class FormEstudioDeMercadoComponent implements OnInit {
 
           this.openDialog("","<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>");
           this.addressForm.get("cuantasCotizaciones").setValue(this.cotizaciones.length);
+          
         }
         else{
           while (this.cotizaciones.length > Formcotizaciones.cuantasCotizaciones) {
@@ -151,11 +152,12 @@ export class FormEstudioDeMercadoComponent implements OnInit {
   }
 
   borrarArray(borrarForm: any, i: number) {    
-    borrarForm.removeAt(i);
+    
     //consumo servicio
-    if(borrarForm.value[0].procesoSeleccionCotizacionId>0)
+    console.log(borrarForm.value[i]);
+    if(borrarForm.value[i].procesoSeleccionCotizacionId>0)
     {
-      this.procesoSeleccionService.deleteProcesoSeleccionCotizacionByID(borrarForm.value[0].procesoSeleccionCotizacionId).subscribe();
+      this.procesoSeleccionService.deleteProcesoSeleccionCotizacionByID(borrarForm.value[i].procesoSeleccionCotizacionId).subscribe(borrarForm.removeAt(i));
     }
     //ajusto el contador  
     this.addressForm.get('cuantasCotizaciones').setValue(borrarForm.length);    
@@ -225,6 +227,8 @@ export class FormEstudioDeMercadoComponent implements OnInit {
         control.get('eliminado').setValue(cotizacion.eliminado),
         listaCotizaciones.push(control);
     });
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
   }
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;

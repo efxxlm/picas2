@@ -80,6 +80,7 @@
             <mat-card-content>
               <p><b>Fecha del trámite</b>: {{ contratacion?.fechaTramite | date: 'dd/MM/yyyy' }} </p>
               <p><b>Número del contrato</b>: {{ form.get( 'numeroContrato' ).value }} </p>
+              <p><b>Modalidad del contrato</b>: {{ getModalidadContrato( form.get( 'modalidadContrato' ).value ) }} </p>
               <p><b>Fecha de envío para firma del contratista</b>: {{ form.get( 'fechaEnvioParaFirmaContratista' ).value | date: 'dd/MM/yyyy' }} </p>
               <p><b>Fecha de firma por parte del contratista</b>: {{ form.get( 'fechaFirmaPorParteContratista' ).value | date: 'dd/MM/yyyy' }} </p>
               <p><b>Fecha de envío para la firma de la fiduciaria</b>: {{ form.get( 'fechaEnvioParaFirmaFiduciaria' ).value | date: 'dd/MM/yyyy' }} </p>

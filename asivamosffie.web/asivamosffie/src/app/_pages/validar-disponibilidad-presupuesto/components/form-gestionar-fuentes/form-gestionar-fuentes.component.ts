@@ -15,11 +15,11 @@ export class FormGestionarFuentesComponent implements OnInit {
     fuentes: this.fb.array([
       this.fb.group({
         fuentecampo: [null, Validators.required],
-        saldoActual: [null, Validators.required],
+        saldoActual: [null],
         valorSolicitado: [null, Validators.compose([
           Validators.required, Validators.minLength(1), Validators.maxLength(20)])
         ],
-        nuevoSaldo: [null, Validators.required],
+        nuevoSaldo: [null],
         gestionid:[null]
       })
     ])
@@ -88,7 +88,8 @@ export class FormGestionarFuentesComponent implements OnInit {
             fuent.get('nuevoSaldo').setValue(element.nuevo_saldo_de_la_fuente);
             fuent.get('gestionid').setValue(element.gestionFuenteFinanciacionID);
             fuentesarray.push(fuent);
-             console.log(fuentesarray);
+            // console.log(fuentesarray);
+            this.estaEditando = true;
           }
         });
       }

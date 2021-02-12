@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ProcesoSeleccionService, ProcesoSeleccionProponente, ProcesoSeleccion, ProcesoSeleccionIntegrante } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
 import { Localizacion, CommonService } from 'src/app/core/_services/common/common.service';
 import { forkJoin } from 'rxjs';
@@ -23,40 +23,7 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
   listaDepartamentos: Localizacion[] = [];
   idProponenteExistente: string;
   
-  addressForm = this.fb.group({
-    cuantosProponentes: [null, Validators.compose([
-      Validators.required, Validators.minLength(1), Validators.maxLength(2)])
-    ],
-    nombresProponentes: [null, Validators.required],
-    tipoProponente: [null, Validators.required],
-    nombre: [null, Validators.compose([
-      Validators.required, Validators.minLength(1), Validators.maxLength(100)])
-    ],
-    numeroIdentificacon: [null, Validators.compose([
-      Validators.required, Validators.minLength(10), Validators.maxLength(12)])
-    ],
-    representanteLegal: [null, Validators.compose([
-      Validators.required, Validators.minLength(1), Validators.maxLength(100)])
-    ],
-    cedulaRepresentanteLegal: [null, Validators.compose([
-      Validators.required, Validators.minLength(10), Validators.maxLength(12)])
-    ],
-    departamentoRepresentanteLegal: [null, Validators.required],
-    municipioRepresentanteLegal: [null, Validators.required],
-    direccionPrincipalRepresentanteLegal: [null, Validators.compose([
-      Validators.required, Validators.minLength(1), Validators.maxLength(100)])
-    ],
-    telefonoRepresentanteLegal: [null, Validators.compose([
-      Validators.required, Validators.minLength(10), Validators.maxLength(10)])
-    ],
-    correoRepresentanteLegal: [null, [
-      Validators.required,
-      Validators.minLength(4),
-      Validators.maxLength(50),
-      Validators.email,
-      Validators.pattern(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/)
-    ]],
-  });
+  addressForm: FormGroup;
   nuevo: boolean=false;
 
   constructor(
@@ -83,6 +50,7 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
     }
   }
   ngOnInit(){
+    this.initForm();
     return new Promise<void>( resolve => {
 
       forkJoin([
@@ -124,6 +92,43 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
         resolve();
       })
     })
+  }
+
+  initForm() {
+    this.addressForm = this.fb.group({
+      cuantosProponentes: [this.procesoSeleccion.procesoSeleccionProponente.length, Validators.compose([
+        Validators.required, Validators.minLength(1), Validators.maxLength(2)])
+      ],
+      nombresProponentes: [null, Validators.required],
+      tipoProponente: [null, Validators.required],
+      nombre: [null, Validators.compose([
+        Validators.required, Validators.minLength(1), Validators.maxLength(100)])
+      ],
+      numeroIdentificacon: [null, Validators.compose([
+        Validators.required, Validators.minLength(10), Validators.maxLength(12)])
+      ],
+      representanteLegal: [null, Validators.compose([
+        Validators.required, Validators.minLength(1), Validators.maxLength(100)])
+      ],
+      cedulaRepresentanteLegal: [null, Validators.compose([
+        Validators.required, Validators.minLength(10), Validators.maxLength(12)])
+      ],
+      departamentoRepresentanteLegal: [null, Validators.required],
+      municipioRepresentanteLegal: [null, Validators.required],
+      direccionPrincipalRepresentanteLegal: [null, Validators.compose([
+        Validators.required, Validators.minLength(1), Validators.maxLength(100)])
+      ],
+      telefonoRepresentanteLegal: [null, Validators.compose([
+        Validators.required, Validators.minLength(10), Validators.maxLength(10)])
+      ],
+      correoRepresentanteLegal: [null, [
+        Validators.required,
+        Validators.minLength(4),
+        Validators.maxLength(50),
+        Validators.email,
+        Validators.pattern(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/)
+      ]],
+    });
   }
 
   changeProponente($event:any){
@@ -196,7 +201,7 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
 
     this.ngOnInit().then(() =>       
         { 
-          this.addressForm.get('cuantosProponentes').setValue( this.procesoSeleccion.cantidadProponentesInvitados );      
+          this.addressForm.get('cuantosProponentes').setValue( this.procesoSeleccion.procesoSeleccionProponente.length );      
           let proceso:ProcesoSeleccionProponente[]=[];
           
           this.procesoSeleccion.procesoSeleccionProponente.forEach(element => {

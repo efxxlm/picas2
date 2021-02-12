@@ -115,7 +115,8 @@ interface Proyecto {
   cantPrediosPostulados: number;
   tipoPredioCodigo: string;
   predioPrincipalId: number;
-  estadoProyectoCodigo: string;
+  estadoProyectoObraCodigo: string;
+  estadoProyectoInterventoriaCodigo: string;
   eliminado: boolean;
   fechaCreacion: string;
   usuarioCreacion: string;

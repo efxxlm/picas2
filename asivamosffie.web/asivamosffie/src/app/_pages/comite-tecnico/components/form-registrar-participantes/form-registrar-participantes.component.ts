@@ -21,10 +21,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
   objetoComiteTecnico: ComiteTecnico = {};
   estaTodo: boolean = false;
 
-  addressForm = this.fb.group({
-    miembrosParticipantes: [null, Validators.required],
-    invitados: this.fb.array([])
-  });
+  addressForm: FormGroup;
 
   estaEditando = false;
 
@@ -58,7 +55,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
     private router: Router,
 
   ) {
-
+    this.buildForm();
   }
 
   ngOnInit(): void {
@@ -135,7 +132,12 @@ export class FormRegistrarParticipantesComponent implements OnInit {
     return this.addressForm.get('invitados') as FormArray;
   }
 
-
+  private buildForm() {
+    this.addressForm = this.fb.group({
+      miembrosParticipantes: [null, Validators.required],
+      invitados: this.fb.array([])
+    });
+  }
 
   borrarArray(borrarForm: any, i: number) {
     borrarForm.removeAt(i);
@@ -359,6 +361,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
 
   onSubmit() {
     this.estaEditando = true;
+
     if (this.addressForm.valid) {
 
       let comite: ComiteTecnico = {

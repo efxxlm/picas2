@@ -23,10 +23,10 @@
       <p><strong>Fecha de aprobación de la garantía / póliza: </strong>{{ this.fechaAprobacionGarantiaPoliza }}</p>
       <p><strong>Objeto:</strong></p>
       <div [innerHtml]="this.objeto"></div>
-      <p><strong>Valor inicial del contrato: </strong>{{ this.valorActualContrato }}</p>
-      <p><strong>Valor actual del contrato: </strong>{{ this.valorActualContrato }}</p>
-      <p><strong>Valor fase 1 - Preconstrucción (Estudios y diseños): </strong>{{ this.valorFase1Preconstruccion }}</p>
-      <p><strong>Valor fase 2 - Construcción (Obra): </strong>{{ this.valorfase2ConstruccionObra }}</p>
+      <p><strong>Valor inicial del contrato: </strong> ${{ this.valorActualContrato }}</p>
+      <p><strong>Valor actual del contrato: </strong> ${{ this.valorActualContrato }}</p>
+      <p><strong>Valor fase 1 - Preconstrucción (Estudios y diseños): </strong>${{ this.valorFase1Preconstruccion }}</p>
+      <p><strong>Valor fase 2 - Construcción (Obra): </strong>${{ this.valorfase2ConstruccionObra }}</p>
       <div *ngIf="this.valorProponente == '1'">
         <p>
           <strong>Número de identificación del representante legal del contratista de obra: </strong
@@ -124,13 +124,6 @@
     </div>
     -->
   <button mat-raised-button color="accent" (click)="descargarActaDesdeTabla()">Descargar acta de inicio</button>
-  <div
-    *ngIf="addressForm.invalid && addressForm.touched"
-    class="animateDown my-1em color-secondaryColor d-flex align-items-center justify-content-center"
-  >
-    <img class="icon-incompleto--img mr-05em" src="assets/img/icon/incompleto.svg" alt="este campo es requerido" />
-    Debe ingresar la información en el campo para continuar
-  </div>
   <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
     <div class="row mtop">
       <div class="col-md-12">
@@ -158,7 +151,10 @@
         <img
           class="icon-incompleto--img"
           src="assets/img/icon/incompleto.svg"
-          alt="este campo es requerido"
+                        alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
           *ngIf="
             (addressForm.get('tieneObservaciones').invalid && addressForm.get('tieneObservaciones').touched) ||
             (addressForm.get('tieneObservaciones').invalid && estaEditando)
@@ -208,7 +204,10 @@
         <img
           class="icon-incompleto--img"
           src="assets/img/icon/incompleto.svg"
-          alt="este campo es requerido"
+                        alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
           *ngIf="
             (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
             (addressForm.get('observaciones').invalid && estaEditando)

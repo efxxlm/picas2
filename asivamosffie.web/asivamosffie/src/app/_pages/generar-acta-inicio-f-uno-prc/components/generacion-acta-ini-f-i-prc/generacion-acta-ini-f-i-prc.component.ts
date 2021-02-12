@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
 import { EditContrato, GestionarActPreConstrFUnoService } from 'src/app/core/_services/GestionarActPreConstrFUno/gestionar-act-pre-constr-funo.service';
@@ -27,7 +27,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
   public mesPlazoIni: number;
   public diasPlazoIni: number;
   public observacionesOn: boolean;
-  addressForm = this.fb.group({});
+  addressForm: FormGroup;
   dataDialog: {
     modalTitle: string,
     modalText: string
@@ -60,6 +60,29 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
   nomRepresentanteLegalContrInterventoria: any;
   estaEditando = false;
   constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, private service: GestionarActPreConstrFUnoService) {
+    this.addressForm = this.crearFormulario();
+    this.addressForm.get( 'mesPlazoEjFase1' ).valueChanges
+      .subscribe(
+        value => {
+          this.addressForm.get( 'fechaPrevistaTerminacion' ).setValue( null );
+          this.addressForm.get( 'diasPlazoEjFase1' ).setValue( null );
+          if ( this.addressForm.get( 'fechaActaInicioFUnoPreconstruccion' ).value !== null ) {
+            let newdate = new Date( this.addressForm.get( 'fechaActaInicioFUnoPreconstruccion' ).value );
+            newdate.setDate( newdate.getDate() + ( Number( value ) * 30 ) );
+            this.addressForm.get( 'fechaPrevistaTerminacion' ).setValue( newdate );
+          }
+        }
+      );
+      this.addressForm.get( 'diasPlazoEjFase1' ).valueChanges
+      .subscribe(
+        value => {
+          if ( this.addressForm.get( 'fechaActaInicioFUnoPreconstruccion' ).value !== null && this.addressForm.get( 'mesPlazoEjFase1' ).value !== null ) {
+            let newdate = new Date( this.addressForm.get( 'fechaActaInicioFUnoPreconstruccion' ).value );
+            newdate.setDate(newdate.getDate() + ( ( this.addressForm.get( 'mesPlazoEjFase1' ).value * 30 ) + Number( value ) ));
+            this.addressForm.get( 'fechaPrevistaTerminacion' ).setValue( newdate );
+          }
+        }
+      );
     this.maxDate = new Date();
     this.maxDate2 = new Date();
   }
@@ -70,7 +93,6 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
   }
   ngOnInit(): void {
     this.cargarRol();
-    this.addressForm = this.crearFormulario();
     this.activatedRoute.params.subscribe(param => {
       this.loadData(param.id);
     });
@@ -185,34 +207,24 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
       diasPlazoEjFase1: [null, Validators.required],
       mesPlazoEjFase2: [null, Validators.required],
       diasPlazoEjFase2: [null, Validators.required],
-      observacionesEspeciales: ['']
+      observacionesEspeciales: [ null ]
     })
   }
+
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
-      e.editor.deleteText(n, e.editor.getLength());
-    }
-  }
-  textoLimpio(texto: string) {
-    let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
-
-    if ( texto ){
-      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
-      return textolimpio.length + saltosDeLinea;
+        e.editor.deleteText(n - 1, e.editor.getLength());
     }
   }
 
-  private contarSaltosDeLinea(cadena: string, subcadena: string) {
-    let contadorConcurrencias = 0;
-    let posicion = 0;
-    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
-      ++contadorConcurrencias;
-      posicion += subcadena.length;
-    }
-    return contadorConcurrencias;
+  textoLimpio( evento: any, n: number ) {
+      if ( evento !== undefined ) {
+          return evento.getLength() > n ? n : evento.getLength();
+      } else {
+          return 0;
+      }
   }
+
   number(e: { keyCode: any; }) {
     const tecla = e.keyCode;
     if (tecla === 8) { return true; } // Tecla de retroceso (para poder borrar)

@@ -308,11 +308,6 @@ namespace asivamosffie.services
                 if (contratoOld.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
                 {
                     contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.En_proceso_de_aprobacion_de_requisitos_tecnicos;
-
-                    //if (contratoOld.ContratoPerfil.Count() > 0 && RegistroCompletoContrato)
-                    //{
-                    //    contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_verificados;
-                    //}
                 }
 
                 else
@@ -397,8 +392,6 @@ namespace asivamosffie.services
                  || contratoPerfilOld.CantidadHvAprobadas == 0
                  || string.IsNullOrEmpty(contratoPerfilOld.FechaAprobacion.ToString())
                  || string.IsNullOrEmpty(contratoPerfilOld.RutaSoporte)
-
-                //|| string.IsNullOrEmpty(contratoPerfilOld.ConObervacionesSupervision.ToString() 
                 )
             {
                 return false;
@@ -469,7 +462,8 @@ namespace asivamosffie.services
                     await EnviarCorreo(contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
                     contratoMod.FechaAprobacionRequisitosInterventor = DateTime.Now;
                 }
-                //Enviar Correo Botón “Enviar al supervisor”
+              
+                //Enviar Correo Botón aprobar inicio 3.1.7
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_supervisor && contratoMod.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
                 {
                     await EnviarCorreoSupervisor(ConstanCodigoTipoContratacionSTRING.Interventoria, contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
@@ -485,8 +479,12 @@ namespace asivamosffie.services
 
                 //Enviar Correo Botón aprobar inicio 3.1.8
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_aprobados_por_supervisor)
-                    contratoMod.FechaAprobacionRequisitosSupervisor = DateTime.Now;
-
+                {
+                    string strTipoContrato = contratoMod.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString() ? ConstanCodigoTipoContratacionSTRING.Obra : ConstanCodigoTipoContratacionSTRING.Interventoria;
+                    await EnviarCorreoSupervisorAprobar(strTipoContrato, contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
+                    contratoMod.FechaAprobacionRequisitosSupervisor = DateTime.Now; 
+                }
+                 
                 //Enviar Correo Botón aprobar inicio 3.1.8
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_interventor)
                 {
@@ -500,23 +498,19 @@ namespace asivamosffie.services
                             contratoPerfilOld.RegistroCompleto = false;
                             contratoPerfilOld.UsuarioModificacion = UsuarioModificacion;
                         }
-
                         _context.Update(contratoPerfilOld);
                     }
                     await EnviarCorreoSupervisor(ConstanCodigoTipoContratacionSTRING.Obra, contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
                 }
-
-
+                 
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_apoyo)
                 {
                     //se reinicia los contadores 
                     contratoMod.RegistroCompleto = false;
                     await EnviarCorreoSupervisor(ConstanCodigoTipoContratacionSTRING.Obra, contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
-                }
-            
+                } 
 
-                ///Logica para devoluciones
-                ///
+                //Logica para devoluciones 
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_supervisor)
                 {
                     foreach (var ContratoPerfil in contratoMod.ContratoPerfil)
@@ -566,7 +560,10 @@ namespace asivamosffie.services
                     };
             }
         }
-
+        /// <summary>
+        /// Correos  Automaticos
+        /// </summary>
+        /// <returns></returns>
         public async Task<Respuesta> AprobarInicio(int pContratoId, string UsuarioModificacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Aprobar_Inicio_Contrato, (int)EnumeratorTipoDominio.Acciones);
@@ -602,7 +599,29 @@ namespace asivamosffie.services
                     };
             }
         }
+   
+        private async Task<bool> EnviarCorreoSupervisorAprobar(string pTipoContrato, Contrato contratoMod, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
+        {
+            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Supervisor).Include(y => y.Usuario);
 
+            Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.AprobadoInterventoriaObra3_1_8_);
+
+            string template = TemplateRecoveryPassword.Contenido
+                .Replace("_LinkF_", pDominioFront)
+                .Replace("[TIPO_CONTRATO]", pTipoContrato)
+                .Replace("[NUMERO_CONTRATO]", contratoMod.NumeroContrato)
+                .Replace("[FECHA_VERIFICACION]", ((DateTime.Now)).ToString("dd-MM-yy"))
+                .Replace("[CANTIDAD_PROYECTOS]", contratoMod.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
+
+            bool blEnvioCorreo = false;
+
+            foreach (var item in usuarios)
+            {
+                blEnvioCorreo = Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Requisitos de inicio para verificación", template, pSender, pPassword, pMailServer, pMailPort);
+            }
+            return blEnvioCorreo;
+        }
+  
         private async Task<bool> EnviarCorreo(Contrato contratoMod, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
             var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Tecnica).Include(y => y.Usuario);
@@ -612,7 +631,7 @@ namespace asivamosffie.services
             string template = TemplateRecoveryPassword.Contenido
                 .Replace("_LinkF_", pDominioFront)
                 .Replace("[NUMERO_CONTRATO]", contratoMod.NumeroContrato)
-                .Replace("[FECHA_POLIZA]", ((DateTime)contratoMod.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MMMM-yy"))
+                .Replace("[FECHA_POLIZA]", ((DateTime)contratoMod.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MM-yy"))
                 .Replace("[CANTIDAD_PROYECTOS]", contratoMod.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
 
             bool blEnvioCorreo = false;
@@ -634,7 +653,7 @@ namespace asivamosffie.services
                 .Replace("_LinkF_", pDominioFront)
                 .Replace("[TIPO_CONTRATO]", pTipoContrato)
                 .Replace("[NUMERO_CONTRATO]", contratoMod.NumeroContrato)
-                .Replace("[FECHA_VERIFICACION]", ((DateTime.Now)).ToString("dd-MMMM-yy"))
+                .Replace("[FECHA_VERIFICACION]", ((DateTime.Now)).ToString("dd-MM-yy"))
                 .Replace("[CANTIDAD_PROYECTOS]", contratoMod.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
 
             bool blEnvioCorreo = false;
@@ -647,7 +666,7 @@ namespace asivamosffie.services
         }
 
         /// <summary>
-        /// Notificar Cuando pasen 4 dias despues de la aprobacion de la poliza 
+        /// Notificaciones Automaticas
         /// </summary>
         /// 
         //3.1.6
@@ -780,7 +799,7 @@ namespace asivamosffie.services
                         string template = TemplateRecoveryPassword.Contenido
                                     .Replace("_LinkF_", pDominioFront)
                                     .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
-                                    .Replace("[FECHA_REQUISITOS]", fechaValidacion.ToString("dd-MMMM-yy"))
+                                    .Replace("[FECHA_REQUISITOS]", fechaValidacion.ToString("dd-MM-yy"))
                                     .Replace("[CANTIDAD_PROYECTOS]", contrato.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
 
                         foreach (var item in usuarios)
@@ -819,7 +838,7 @@ namespace asivamosffie.services
                         string template = TemplateRecoveryPassword.Contenido
                                  .Replace("_LinkF_", pDominioFront)
                                  .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
-                                 .Replace("[FECHA_REQUISITOS]", fechaValidacion.ToString("dd-MMMM-yy"))
+                                 .Replace("[FECHA_REQUISITOS]", fechaValidacion.ToString("dd-MM-yy"))
                                  .Replace("[CANTIDAD_PROYECTOS]", contrato.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
                         foreach (var item in usuarios)
                         {

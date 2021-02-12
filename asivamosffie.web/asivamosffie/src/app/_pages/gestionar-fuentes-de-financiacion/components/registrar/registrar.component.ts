@@ -830,7 +830,11 @@ export class RegistrarComponent implements OnInit {
           fuente.cuentaBancaria.push(cuentaBancaria);
         });
 
-        const registrosPresupuestales = this.addressForm.get('registrosPresupuestales') as FormArray;
+        lista.push(fuente);
+      });
+
+      // cargo los RP en la lista para guardar
+      const registrosPresupuestales = this.addressForm.get('registrosPresupuestales') as FormArray;
         if (registrosPresupuestales) {
           registrosPresupuestales.controls.forEach(controlRP => {
             const registroPresupuestal: RegistroPresupuestal = {
@@ -844,8 +848,6 @@ export class RegistrarComponent implements OnInit {
           });
         }
 
-        lista.push(fuente);
-      });
       //si tengo vigencias
       
       if(valorBase2>0)
@@ -879,14 +881,8 @@ export class RegistrarComponent implements OnInit {
       
       if(bitValorok)
       {
+        // guardo primero los RP
         forkJoin([
-          from(lista)
-            .pipe(mergeMap(ff => this.fuenteFinanciacionService.createEditFuentesFinanciacion(ff)
-              .pipe(
-                tap()
-              )
-            ),
-              toArray()),
           from(listaRP)
             .pipe(mergeMap(cb => this.fuenteFinanciacionService.createEditBudgetRecords(cb)
               .pipe(
@@ -895,12 +891,25 @@ export class RegistrarComponent implements OnInit {
             ),
               toArray()),
         ])
-          .subscribe(respuesta => {
-            const res = respuesta[0][0] as Respuesta;
-            if (res.code === '200') {
-              this.openDialog('', `<b>${res.message}</b>`,true);
-              this.noGuardado=false;
-            }
+          .subscribe(() => {
+            // despues guardo las fuentes
+            forkJoin([
+              from(lista)
+                .pipe(mergeMap(ff => this.fuenteFinanciacionService.createEditFuentesFinanciacion(ff)
+                  .pipe(
+                    tap()
+                  )
+                ),
+                  toArray()),
+            ])
+            .subscribe( respuesta => {  
+
+              const res = respuesta[0][0] as Respuesta;
+              if (res.code === '200') {
+                this.openDialog('', `<b>${res.message}</b>`,true);
+                this.noGuardado=false;
+              }
+            });
           });      
         this.data = lista;    
       }

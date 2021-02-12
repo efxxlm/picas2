@@ -6,8 +6,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { ActBeginService } from 'src/app/core/_services/actBegin/act-begin.service';
 import { DialogCargarActaSuscritaConstComponent } from '../dialog-cargar-acta-suscrita-const/dialog-cargar-acta-suscrita-const.component';
+import { ActaInicioConstruccionService } from 'src/app/core/_services/actaInicioConstruccion/acta-inicio-construccion.service';
 export interface Contrato {
   idContrato: number;
   fechaAprobacionRequisitos: string;
@@ -72,7 +72,7 @@ export class TablaContrIntrvnFdosConstrComponent implements OnInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   dataTable:any = [];
   loadDataItems: Subscription;
-  constructor(private router: Router, public dialog: MatDialog, private services: ActBeginService, private gestionarActaSvc: GestionarActPreConstrFUnoService) { }
+  constructor(private router: Router, public dialog: MatDialog, private services: ActaInicioConstruccionService, private gestionarActaSvc: GestionarActPreConstrFUnoService) { }
 
   ngOnInit(): void {
     /*

@@ -1044,7 +1044,7 @@ namespace asivamosffie.services
                          && !(bool)x.Eliminado).ToList())
                     {
                         apor.FuenteFinanciacionString = _context.Dominio.Where(x => x.Codigo == apor.FuenteFinanciacion.FuenteRecursosCodigo 
-                            && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
+                            && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion)?.FirstOrDefault()?.Nombre;
                         if (apor.FuenteFinanciacion.Aportante.TipoAportanteId.Equals(ConstanTipoAportante.Ffie))
                         {
                             apor.NombreAportanteString = ConstanStringTipoAportante.Ffie;
@@ -1674,8 +1674,10 @@ namespace asivamosffie.services
                         var sede = _context.InstitucionEducativaSede.Find(proyectospp.Proyecto.SedeId);
                         List<GrillaComponentes> grilla = new List<GrillaComponentes>();
                         int intaportante = 0;
-                        decimal valorgestionado = 0;                        
-                        
+                        decimal valorgestionado = 0;
+
+                        proyectospp.Proyecto.ProyectoAportante = proyectospp.Proyecto.ProyectoAportante.Where(r => r.Eliminado != true).ToList();
+
                         foreach (var ppapor in proyectospp.Proyecto.ProyectoAportante)
                         {
                             List<GrillaFuentesFinanciacion> fuentes = new List<GrillaFuentesFinanciacion>();

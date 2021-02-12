@@ -98,6 +98,7 @@ export class FormularioProyectosComponent implements OnInit {
           this.bitPuedoEditar=false;
         }
         console.log(this.proyectoAdmin);
+        this.estaEditando = true;
       }
       else{
         let idcontador = 0;

@@ -6,8 +6,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { ActBeginService } from 'src/app/core/_services/actBegin/act-begin.service';
 import { DialogCargarActaSuscritaConstComponent } from '../dialog-cargar-acta-suscrita-const/dialog-cargar-acta-suscrita-const.component';
+import { ActaInicioConstruccionService } from 'src/app/core/_services/actaInicioConstruccion/acta-inicio-construccion.service';
 /*
 export interface PeriodicElement {
   fechaAprobacionRequisitosSupervisor: string;
@@ -39,7 +39,7 @@ export class TablaGeneralActaFdosConstComponent implements OnInit {
   dataTable: any[]= [];
   loadDataItems: Subscription;
   @Input () dataTableAux;
-  constructor(private router: Router, public dialog: MatDialog, private services: ActBeginService, private gestionarActa: GestionarActPreConstrFUnoService) { }
+  constructor(private router: Router, public dialog: MatDialog, private services: ActaInicioConstruccionService, private gestionarActa: GestionarActPreConstrFUnoService) { }
 
   ngOnInit(): void {
     this.dataTableAux = this.dataTable;
@@ -91,8 +91,8 @@ export class TablaGeneralActaFdosConstComponent implements OnInit {
   verDetalleActaFDos(id){
     this.router.navigate(['/generarActaInicioConstruccion/verDetalleActaConstruccion',id]);
   }
-  enviarActaParaFirma(id){
-    this.descargarActaDesdeTabla(id);
+  enviarActaParaFirma(id,numContrato){
+    this.descargarActaDesdeTabla(id,numContrato);
     this.services.CambiarEstadoActa(id,"19","usr2").subscribe(data=>{
       this.router.navigateByUrl('/', { skipLocationChange: true }).then(
         () => this.router.navigate(['/generarActaInicioConstruccion'])

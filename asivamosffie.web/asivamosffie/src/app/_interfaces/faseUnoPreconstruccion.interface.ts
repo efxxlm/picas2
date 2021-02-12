@@ -184,7 +184,8 @@ interface Proyecto2 {
   valorObra: number;
   valorInterventoria: number;
   valorTotal: number;
-  estadoProyectoCodigo: string;
+  estadoProyectoObraCodigo: string;
+  estadoProyectoInterventoriaCodigo: string;
   eliminado: boolean;
   fechaCreacion: string;
   usuarioCreacion: string;
@@ -231,7 +232,8 @@ interface Proyecto {
   valorObra: number;
   valorInterventoria: number;
   valorTotal: number;
-  estadoProyectoCodigo: string;
+  estadoProyectoObraCodigo: string;
+  estadoProyectoInterventoriaCodigo: string;
   eliminado: boolean;
   fechaCreacion: string;
   usuarioCreacion: string;

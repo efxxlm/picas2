@@ -43,7 +43,6 @@ export class TableSolicitudContratacionComponent implements OnInit {
 
   ngOnInit(): void {
     this.projectContractingService.getListContratacion().subscribe(response => {
-      console.log( response );
       this.dataSource = new MatTableDataSource(response);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
@@ -81,10 +80,10 @@ export class TableSolicitudContratacionComponent implements OnInit {
     });
   }
 
-  observacionesDialog ( numeroSolicitud: string, contratacionProyecto: any[] ) {
+  observacionesDialog ( numeroSolicitud: string, contratacionId: number ) {
     const dialogRef = this.dialog.open(DialogObservacionesComponent, {
       width: '60em',
-      data: { numeroSolicitud, contratacionProyecto }
+      data: { numeroSolicitud, contratacionId }
     });
   }
 

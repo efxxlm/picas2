@@ -21,6 +21,7 @@ import { VerDetalleDdpAdministrativoComponent } from './components/ver-detalle-d
 import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSortModule } from '@angular/material/sort';
+import { TablaObservacionesComponent } from './components/tabla-observaciones/tabla-observaciones.component';
 
 
 @NgModule({
@@ -36,7 +37,8 @@ import { MatSortModule } from '@angular/material/sort';
     TablaCrearSolicitudadministrativaComponent,
     DetalleDisponibilidadPresupuestalComponent,
     VerDetalleDdpEspecialComponent,
-    VerDetalleDdpAdministrativoComponent
+    VerDetalleDdpAdministrativoComponent,
+    TablaObservacionesComponent
   ],
   imports: [
     CommonModule,

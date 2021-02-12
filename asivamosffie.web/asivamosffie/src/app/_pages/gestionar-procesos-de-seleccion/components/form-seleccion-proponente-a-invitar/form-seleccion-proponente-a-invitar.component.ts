@@ -43,7 +43,7 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
     if (this.noGuardado===true &&  this.addressForm.dirty) {
       let dialogRef =this.dialog.open(ModalDialogComponent, {
         width: '28em',
-        data: { modalTitle:"", modalText:"�Desea guardar la informaci�n registrada?",siNoBoton:true }
+        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
       });   
       dialogRef.afterClosed().subscribe(result => {
         console.log(`Dialog result: ${result}`);
@@ -66,7 +66,7 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
       console.log(this.procesoSeleccion.procesoSeleccionProponente.length);
       if(this.procesoSeleccion.procesoSeleccionProponente.length>0)
       {
-        this.addressForm.get('cuantosProponentes').setValue(this.procesoSeleccion.cantidadProponentes);
+        this.addressForm.get('cuantosProponentes').setValue(this.procesoSeleccion.procesoSeleccionProponente.length);
       }      
       this.addressForm.get('url').setValue(this.procesoSeleccion.urlSoporteProponentesSeleccionados);
     });

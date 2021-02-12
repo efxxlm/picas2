@@ -269,16 +269,27 @@ export class InvitacionCerradaComponent implements OnInit {
 
 
   estaIncompletoEstudio(pProceso:any):number{
+    // 0 sin diligenciar
+    // 1 en proceso
+    // 2 completo
+
     let retorno=0;
-    if(pProceso.cantidadCotizaciones ||
-      pProceso.procesoSeleccionCotizacion.length>0
-    )
+    
+    if( pProceso.cantidadCotizaciones ||  pProceso.procesoSeleccionCotizacion.length > 0 )
     {
-      if(pProceso.cantidadCotizaciones &&
-      pProceso.procesoSeleccionCotizacion.length>0
-      )
+      if( pProceso.cantidadCotizaciones && pProceso.procesoSeleccionCotizacion.length > 0 )
       {
         retorno= 2;
+        pProceso.procesoSeleccionCotizacion.forEach(cot => {
+          if (
+            cot.nombreOrganizacion === undefined ||
+            cot.valorCotizacion === undefined ||
+            cot.descripcion === undefined ||
+            cot.urlSoporte === undefined
+          )
+          retorno = 1;
+        });
+        
       } 
       else{
         retorno =1;

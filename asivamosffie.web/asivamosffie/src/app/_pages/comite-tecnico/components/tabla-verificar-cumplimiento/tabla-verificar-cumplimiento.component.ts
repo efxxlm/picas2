@@ -36,6 +36,8 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
 
   estadosArray: Dominio[] = []
 
+  estaEditando = false;
+
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
@@ -151,7 +153,7 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
   };
 
   onSave() {
-
+    this.estaEditando = true;
     const compromisosIncompletos = this.listaCompromisos.filter( value => value[ 'esCumplido' ] === null );
     console.log( compromisosIncompletos, this.listaCompromisos );
     if ( compromisosIncompletos.length > 0 ) {

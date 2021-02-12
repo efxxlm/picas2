@@ -57,9 +57,9 @@ export class DialogObservacionesComponent implements OnInit {
   }
 
   textoLimpio(texto: string) {
-    let saltosDeLinea = 0
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>')
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>')
+    let saltosDeLinea = 0;
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
 
     if (texto) {
       const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '')

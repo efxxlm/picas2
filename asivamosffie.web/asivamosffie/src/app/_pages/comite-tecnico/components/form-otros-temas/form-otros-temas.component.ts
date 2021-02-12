@@ -95,9 +95,9 @@ export class FormOtrosTemasComponent implements OnInit {
   }
 
   textoLimpio(texto: string) {
-    let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
+    let saltosDeLinea = 0
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p')
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li')
 
     if (texto) {
       const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '')
@@ -277,35 +277,49 @@ export class FormOtrosTemasComponent implements OnInit {
       }
     }
 
-    this.responsable = this.listaResponsables.find(r => r.codigo == this.sesionComiteTema.responsableCodigo)
+    let estados: string[] = ['1', '3', '5', '8']
 
-    let estadoSeleccionado = this.estadosArray.find(e => e.codigo == this.sesionComiteTema.estadoTemaCodigo)
+    this.commonService.listaEstadoSolicitud().subscribe(
+      response => {
+        this.estadosArray = response.filter(s => estados.includes(s.codigo))
 
-    this.addressForm.get('observaciones').setValue(this.sesionComiteTema.observaciones),
-      this.addressForm.get('estadoSolicitud').setValue(estadoSeleccionado),
-      this.addressForm.get('observacionesDecision').setValue(this.sesionComiteTema.observacionesDecision),
-      this.addressForm.get('tieneCompromisos').setValue(this.sesionComiteTema.generaCompromiso),
-      this.addressForm.get('cuantosCompromisos').setValue(this.sesionComiteTema.cantCompromisos),
-      this.commonService.listaUsuarios().then(respuesta => {
-        this.listaMiembros.forEach(m => {
-          let usuario: Usuario = respuesta.find(u => u.usuarioId == m.usuarioId)
-          m.nombre = `${usuario.nombres} ${usuario.apellidos}`
-        })
+        this.responsable = this.listaResponsables.find(r => r.codigo == this.sesionComiteTema.responsableCodigo)
 
-        this.sesionComiteTema.temaCompromiso.forEach(c => {
-          let grupoCompromiso = this.crearCompromiso()
-          let responsableSeleccionado = this.listaMiembros.find(m => m.sesionParticipanteId.toString() == c.responsable)
+        let estadoSeleccionado = this.estadosArray.find(e => e.codigo == this.sesionComiteTema.estadoTemaCodigo)
+        console.log(estadoSeleccionado, this.estadosArray)
 
-          grupoCompromiso.get('tarea').setValue(c.tarea)
-          grupoCompromiso.get('responsable').setValue(responsableSeleccionado)
-          grupoCompromiso.get('fecha').setValue(c.fechaCumplimiento)
-          grupoCompromiso.get('temaCompromisoId').setValue(c.temaCompromisoId)
-          grupoCompromiso.get('sesionTemaId').setValue(this.sesionComiteTema.sesionTemaId)
+        this.addressForm.get('observaciones').setValue(this.sesionComiteTema.observaciones),
+          this.addressForm.get('estadoSolicitud').setValue(estadoSeleccionado),
+          this.addressForm.get('observacionesDecision').setValue(this.sesionComiteTema.observacionesDecision),
+          this.addressForm.get('tieneCompromisos').setValue(this.sesionComiteTema.generaCompromiso),
+          this.addressForm.get('cuantosCompromisos').setValue(this.sesionComiteTema.cantCompromisos),
+          this.commonService.listaUsuarios().then(respuesta => {
+            this.listaMiembros.forEach(m => {
+              let usuario: Usuario = respuesta.find(u => u.usuarioId == m.usuarioId)
+              m.nombre = `${usuario.nombres} ${usuario.apellidos}`
+            })
 
-          this.compromisos.push(grupoCompromiso)
-        })
+            this.sesionComiteTema.temaCompromiso.forEach(c => {
+              let grupoCompromiso = this.crearCompromiso()
+              let responsableSeleccionado = this.listaMiembros.find(m => m.sesionParticipanteId.toString() == c.responsable)
 
-        this.tieneVotacion = this.sesionComiteTema.requiereVotacion
-      })
+              grupoCompromiso.get('tarea').setValue(c.tarea)
+              grupoCompromiso.get('responsable').setValue(responsableSeleccionado)
+              grupoCompromiso.get('fecha').setValue(c.fechaCumplimiento)
+              grupoCompromiso.get('temaCompromisoId').setValue(c.temaCompromisoId)
+              grupoCompromiso.get('sesionTemaId').setValue(this.sesionComiteTema.sesionTemaId)
+
+              this.compromisos.push(grupoCompromiso)
+            })
+
+            this.tieneVotacion = this.sesionComiteTema.requiereVotacion
+          })
+        this.estaEditando = true;
+        console.log(this.sesionComiteTema.estadoTemaCodigo);
+
+      }
+    )
+
+
   }
 }

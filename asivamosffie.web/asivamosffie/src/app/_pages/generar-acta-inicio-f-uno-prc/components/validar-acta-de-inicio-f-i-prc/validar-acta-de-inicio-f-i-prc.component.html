@@ -94,8 +94,8 @@
             <div *ngIf="this.valorFDos!=0">
                 <p><strong>Plazo de ejecución fase 2 – Construcción:</strong> {{this.mesesFase2}} <strong>Días: </strong>{{this.diasFase2}}</p>
             </div>
-            <p><strong>Observaciones o consideraciones especiales: </strong></p>
-            <div [innerHtml]="this.observacionesUltimas"></div>
+            <p *ngIf="observacionesUltimas !== undefined"><strong>Observaciones o consideraciones especiales: </strong></p>
+            <div [innerHtml]="this.observacionesUltimas" *ngIf="observacionesUltimas !== undefined"></div>
         </mat-card-content>
     </mat-card>
     <app-formulario-tiene-observaciones [contratoId]="this.contratoId" [numContrato]="this.numContrato"></app-formulario-tiene-observaciones>

@@ -224,28 +224,21 @@ namespace asivamosffie.services
         }
 
         //Detalle gestion de actas
-        public async Task<ActionResult<List<ComiteTecnico>>> GetManagementReportById(int comiteTecnicoId)
+        public async Task<List<ComiteTecnico>> GetManagementReportById(int comiteTecnicoId)
         {
             try
             {
                 List<ComiteTecnico> ListComiteTecnico = await _context.ComiteTecnico
-                      .Where(r => r.ComiteTecnicoId == comiteTecnicoId)
-                            .Include(r => r.SesionComentario)
-                            .Include(r => r.SesionComiteTema)
-                               .ThenInclude(r => r.TemaCompromiso)
-                            .Include(r => r.SesionParticipante)
-                               .ThenInclude(r => r.Usuario)
-                             .Include(r => r.SesionComiteTecnicoCompromiso)
-                               .ThenInclude(r => r.CompromisoSeguimiento)
-                                       .Include(r => r.SesionComiteSolicitudComiteTecnico)
-                                                 .ThenInclude(r => r.SesionSolicitudVoto)
-                             .Include(r => r.SesionComiteSolicitudComiteTecnico)
-                               .ThenInclude(r => r.SesionSolicitudCompromiso)
-                             .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
-                              .ThenInclude(r => r.SesionSolicitudCompromiso)
-                               .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
-                              .ThenInclude(r => r.SesionSolicitudVoto)
-                             .ToListAsync();
+                                                                              .Where(r => r.ComiteTecnicoId == comiteTecnicoId)
+                                                                                    .Include(r => r.SesionComentario)
+                                                                                    .Include(r => r.SesionComiteTema).ThenInclude(r => r.TemaCompromiso)
+                                                                                    .Include(r => r.SesionParticipante).ThenInclude(r => r.Usuario)
+                                                                                    .Include(r => r.SesionComiteTecnicoCompromiso).ThenInclude(r => r.CompromisoSeguimiento)
+                                                                                    .Include(r => r.SesionComiteSolicitudComiteTecnico).ThenInclude(r => r.SesionSolicitudVoto)
+                                                                                    .Include(r => r.SesionComiteSolicitudComiteTecnico).ThenInclude(r => r.SesionSolicitudCompromiso)
+                                                                                    .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario).ThenInclude(r => r.SesionSolicitudCompromiso)
+                                                                                    .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario).ThenInclude(r => r.SesionSolicitudVoto)
+                                                                                    .ToListAsync();
 
                 List<Dominio> ListParametricas = _context.Dominio.ToList();
                 List<Contratacion> ListContratacion = _context.Contratacion.ToList();
@@ -282,8 +275,7 @@ namespace asivamosffie.services
                             SesionComiteTema.EstadoTemaCodigo = ListParametricas
                                 .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Sesion_Comite_Solicitud && r.Codigo == SesionComiteTema.EstadoTemaCodigo)
                                 .FirstOrDefault().Nombre;
-                        }
-
+                        } 
                     }
                     foreach (var SesionComiteSolicitudComiteTecnico in item.SesionComiteSolicitudComiteTecnico)
                     {
@@ -334,6 +326,7 @@ namespace asivamosffie.services
                         }
                     }
                 }
+
                 return ListComiteTecnico;
             }
             catch (Exception ex)
@@ -528,7 +521,7 @@ namespace asivamosffie.services
                                 //obtengo el proponente y lo convierto en contratista
                                 var proponentes = _context.ProcesoSeleccionProponente.Where(x => x.ProcesoSeleccionId == pses.SolicitudId).Include(x => x.ProcesoSeleccion).ToList();
                                 //solo si no es invitación cerrada
-                                if (proponentes.FirstOrDefault().ProcesoSeleccion.TipoProcesoCodigo != ConstanCodigoTipoProcesoSeleccion.Invitacion_Cerrada)
+                                if (proponentes?.FirstOrDefault()?.ProcesoSeleccion?.TipoProcesoCodigo != ConstanCodigoTipoProcesoSeleccion.Invitacion_Cerrada)
                                 {
                                     foreach (var p in proponentes)
                                     {
@@ -665,9 +658,15 @@ namespace asivamosffie.services
                         .ThenInclude(r => r.SesionSolicitudCompromiso)
                             .ThenInclude(r => r.ResponsableSesionParticipante)
                                 .ThenInclude(r => r.Usuario)
+
                     .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
                         .ThenInclude(r => r.SesionSolicitudCompromiso)
                             .ThenInclude(r => r.ResponsableSesionParticipante)
+                                .ThenInclude(r => r.Usuario)
+
+                    .Include(r => r.SesionComiteTema)
+                        .ThenInclude(r => r.TemaCompromiso)
+                            .ThenInclude(r => r.ResponsableNavigation)
                                 .ThenInclude(r => r.Usuario)
                     .FirstOrDefault();
 
@@ -715,6 +714,27 @@ namespace asivamosffie.services
                                 .Replace("[FECHA_CUMPLIMIENTO]", sesionSolicitudCompromiso.FechaCumplimiento.HasValue ? sesionSolicitudCompromiso.FechaCumplimiento.Value.ToString("dd-MM-yyyy") : null);
 
                             blEnvioCorreo = Helpers.Helpers.EnviarCorreo(sesionSolicitudCompromiso?.ResponsableSesionParticipante?.Usuario?.Email, "Notificación Compromisos", template, pSender, pPassword, pMailServer, pMailPort);
+                        }
+                    }
+                }
+
+                foreach (var tema in comiteTecnico.SesionComiteTema)
+                {
+                    //tema.SesionSolicitudCompromiso = sesionComiteSolicitud.SesionSolicitudCompromiso.Where(r => r.EsFiduciario != true).ToList();
+                    foreach (var compromiso in tema.TemaCompromiso)
+                    {
+                        if (!string.IsNullOrEmpty(compromiso?.ResponsableNavigation?.Usuario?.Email))
+                        {
+                            Template TemplateNotificacionCompromisos = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificacionCompromisos);
+                            string template =
+                                TemplateNotificacionCompromisos.Contenido
+                                .Replace("_LinkF_", pDominioFront)
+                                .Replace("[URL]", pDominioFront + "compromisosActasComite")
+                                .Replace("[NUMERO_COMITE]", comiteTecnico.NumeroComite)
+                                .Replace("[COMPROMISO]", compromiso.Tarea)
+                                .Replace("[FECHA_CUMPLIMIENTO]", compromiso.FechaCumplimiento.HasValue ? compromiso.FechaCumplimiento.Value.ToString("dd-MM-yyyy") : null);
+
+                            blEnvioCorreo = Helpers.Helpers.EnviarCorreo(compromiso?.ResponsableNavigation?.Usuario?.Email, "Notificación Compromisos", template, pSender, pPassword, pMailServer, pMailPort);
                         }
                     }
                 }

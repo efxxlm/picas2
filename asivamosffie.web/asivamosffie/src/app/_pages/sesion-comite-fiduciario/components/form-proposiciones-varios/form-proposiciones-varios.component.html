@@ -14,8 +14,8 @@
                   class="label-left"
                   for="tema"
                   [class.color-secondaryColor]="
-                    (temas.get('tema').invalid && temas.get('tema').touched) ||
-                    (temas.get('tema').invalid && estaEditando)
+                    (temas.get('tema')?.invalid && temas.get('tema').touched) ||
+                    (temas.get('tema')?.invalid && estaEditando)
                   "
                 >
                   Tema
@@ -38,10 +38,13 @@
                   <img
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
-                    alt="este campo es requerido"
+                                  alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                     *ngIf="
-                      (temas.get('tema').invalid && temas.get('tema').touched) ||
-                      (temas.get('tema').invalid && estaEditando)
+                      (temas.get('tema')?.invalid && temas.get('tema').touched) ||
+                      (temas.get('tema')?.invalid && estaEditando)
                     "
                   />
                 </span>
@@ -55,8 +58,8 @@
                       class="label-left"
                       for="responsable"
                       [class.color-secondaryColor]="
-                        (temas.get('responsable').invalid && temas.get('responsable').touched) ||
-                        (temas.get('responsable').invalid && estaEditando)
+                        (temas.get('responsable')?.invalid && temas.get('responsable').touched) ||
+                        (temas.get('responsable')?.invalid && estaEditando)
                       "
                     >
                       Responsable
@@ -75,10 +78,13 @@
                     <img
                       class="icon-incompleto--img"
                       src="assets/img/icon/incompleto.svg"
-                      alt="este campo es requerido"
+                                    alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                       *ngIf="
-                        (temas.get('responsable').invalid && temas.get('responsable').touched) ||
-                        (temas.get('responsable').invalid && estaEditando)
+                        (temas.get('responsable')?.invalid && temas.get('responsable').touched) ||
+                        (temas.get('responsable')?.invalid && estaEditando)
                       "
                     />
                   </span>
@@ -93,8 +99,8 @@
                       class="label-left"
                       for="tiempoIntervencion"
                       [class.color-secondaryColor]="
-                        (temas.get('tiempoIntervencion').invalid && temas.get('tiempoIntervencion').touched) ||
-                        (temas.get('tiempoIntervencion').invalid && estaEditando)
+                        (temas.get('tiempoIntervencion')?.invalid && temas.get('tiempoIntervencion').touched) ||
+                        (temas.get('tiempoIntervencion')?.invalid && estaEditando)
                       "
                     >
                       Tiempo de intervención
@@ -129,10 +135,13 @@
                       <img
                         class="icon-incompleto--img"
                         src="assets/img/icon/incompleto.svg"
-                        alt="este campo es requerido"
+                                      alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                         *ngIf="
-                          (temas.get('tiempoIntervencion').invalid && temas.get('tiempoIntervencion').touched) ||
-                          (temas.get('tiempoIntervencion').invalid && estaEditando)
+                          (temas.get('tiempoIntervencion')?.invalid && temas.get('tiempoIntervencion').touched) ||
+                          (temas.get('tiempoIntervencion')?.invalid && estaEditando)
                         "
                       />
                     </span>
@@ -146,7 +155,7 @@
                   class="label-left"
                   for="url"
                   [class.color-secondaryColor]="
-                    (temas.get('url').invalid && temas.get('url').touched) || (temas.get('url').invalid && estaEditando)
+                    (temas.get('url')?.invalid && temas.get('url').touched) || (temas.get('url')?.invalid && estaEditando)
                   "
                 >
                   URL con soporte
@@ -162,9 +171,12 @@
                 <img
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
-                  alt="este campo es requerido"
+                                alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                   *ngIf="
-                    (temas.get('url').invalid && temas.get('url').touched) || (temas.get('url').invalid && estaEditando)
+                    (temas.get('url')?.invalid && temas.get('url').touched) || (temas.get('url')?.invalid && estaEditando)
                   "
                 />
               </span>

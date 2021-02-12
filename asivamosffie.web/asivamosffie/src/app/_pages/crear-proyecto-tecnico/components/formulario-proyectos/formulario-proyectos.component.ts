@@ -64,7 +64,8 @@ export class FormularioProyectosComponent implements OnInit {
       this.proyecto.valorObra!=null ||  
       this.proyecto.valorInterventoria!=null ||  
       this.proyecto.valorTotal!=null ||  
-      this.proyecto.estadoProyectoCodigo!=''||
+      this.proyecto.estadoProyectoObraCodigo!=''||
+      this.proyecto.estadoProyectoInterventoriaCodigo!=''||
       this.proyecto.eliminado!=null ||  
       this.proyecto.fechaCreacion!=null || 
       this.proyecto.fechaModificacion!=null ||  
@@ -116,7 +117,8 @@ export class FormularioProyectosComponent implements OnInit {
     valorObra: null,
     valorInterventoria: null,
     valorTotal: null,
-    estadoProyectoCodigo: '',
+    estadoProyectoObraCodigo: '',
+    estadoProyectoInterventoriaCodigo: '',
     eliminado: null,
     fechaCreacion: null,
     usuarioCreacion: '',
@@ -235,7 +237,7 @@ export class FormularioProyectosComponent implements OnInit {
         this.projectServices.getProjectById(Number(id)).subscribe(respuesta => {
           
           this.proyecto = respuesta;
-          if(this.proyecto.estadoProyectoCodigo!='1')
+          if(this.proyecto.estadoProyectoObraCodigo !='1' || this.proyecto.estadoProyectoInterventoriaCodigo !='1')
           {
             this.bitPuedoEditar=false;
           }
@@ -1065,6 +1067,18 @@ export class FormularioProyectosComponent implements OnInit {
     return patron.test(te);
   }
 
+  codigoDaneVacio() {
+    if(this.proyecto.tipoIntervencionCodigo == 1) {
+      this.CodigoDaneIE = '';
+    }
+  }
+
+  valueVacioLatitud() {
+    if (this.proyecto.predioPrincipal.ubicacionLatitud === '°') this.proyecto.predioPrincipal.ubicacionLatitud = ''
+  }
+  valueVacioLongitud() {
+    if (this.proyecto.predioPrincipal.ubicacionLongitud === '°') this.proyecto.predioPrincipal.ubicacionLongitud = ''
+  }
 
   validateKeypressLlave(event: KeyboardEvent) {
     const alphanumeric = /[A-Za-z0-9-]/;

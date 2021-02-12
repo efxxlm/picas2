@@ -119,7 +119,7 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy(): void {
     if ( this.addressForm.dirty === true && this.realizoPeticion === false) {
-      this.openDialogConfirmar( '', '¿Desea guardar la información registrada?' );
+      this.openDialogConfirmar( '', '<b>¿Desea guardar la información registrada?</b>' );
     }
   };
 
@@ -208,29 +208,16 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
 
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
-      e.editor.deleteText(n, e.editor.getLength());
+      e.editor.deleteText(n - 1, e.editor.getLength());
     }
   }
 
-  textoLimpio(texto: string) {
-    let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
-
-    if ( texto ){
-      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
-      return textolimpio.length + saltosDeLinea;
+  textoLimpio( evento: any, n: number ) {
+    if ( evento !== undefined ) {
+      return evento.getLength() > n ? n : evento.getLength();
+    } else {
+      return 0;
     }
-  }
-
-  private contarSaltosDeLinea(cadena: string, subcadena: string) {
-    let contadorConcurrencias = 0;
-    let posicion = 0;
-    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
-      ++contadorConcurrencias;
-      posicion += subcadena.length;
-    }
-    return contadorConcurrencias;
   }
 
   getvalues(values: Dominio[]) {
@@ -338,7 +325,8 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
                     'EsIncluidaPoliza': this.addressForm.value.buenManejoCorrectaInversionAnticipo
                   };
                   this.polizaService.CreatePolizaGarantia(garantiaArray).subscribe(r => {
-                  });
+                    this.realizoPeticion = true;
+                  }, err => this.openDialog('', `<b>${err.message}</b>`) );
                   break;
                 case '2':
                   garantiaArray = {
@@ -347,7 +335,8 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
                     'EsIncluidaPoliza': this.addressForm.value.estabilidadYCalidad
                   };
                   this.polizaService.CreatePolizaGarantia(garantiaArray).subscribe(r1 => {
-                  });
+                    this.realizoPeticion = true;
+                  }, err => this.openDialog('', `<b>${err.message}</b>`) );
                   break;
                 case '3':
                   garantiaArray = {
@@ -356,7 +345,8 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
                     'EsIncluidaPoliza': this.addressForm.value.polizaYCoumplimiento
                   };
                   this.polizaService.CreatePolizaGarantia(garantiaArray).subscribe(r2 => {
-                  });
+                    this.realizoPeticion = true;
+                  }, err => this.openDialog('', `<b>${err.message}</b>`) );
                   break;
                 case '4':
                   garantiaArray = {
@@ -365,7 +355,8 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
                     'EsIncluidaPoliza': this.addressForm.value.polizasYSegurosCompleto
                   };
                   this.polizaService.CreatePolizaGarantia(garantiaArray).subscribe(r3 => {
-                  });
+                    this.realizoPeticion = true;
+                  }, err => this.openDialog('', `<b>${err.message}</b>`) );
                   break;
               }
             }
@@ -378,8 +369,8 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
             "EstadoRevisionCodigo": this.addressForm.value.estadoRevision.value
           }
           this.polizaService.CreatePolizaObservacion(observacionArray).subscribe(resp => {
-
-          });
+            this.realizoPeticion = true;
+          }, err => this.openDialog('', `<b>${err.message}</b>`) );
         });
         this.realizoPeticion = true;
         this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>',true);
@@ -388,6 +379,6 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
       else {
         this.openDialog('', `<b>${data.message}</b>`);
       }
-    });
+    }, err => this.openDialog('', `<b>${err.message}</b>`) );
   }
 }

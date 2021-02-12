@@ -454,7 +454,9 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
         control.get('procesoSeleccionCronogramaId').setValue(cronograma.procesoSeleccionCronogramaId);
         control.get('etapaActualProceso').setValue(etapaActualproceso),
         listaCronograma.push(control);
-      });      
+      });
+      this.estaEditando = true;
+      this.addressForm.markAllAsTouched();
     });
   }
   validateNumberKeypress(event: KeyboardEvent) {
@@ -506,7 +508,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
       let cantidadGrupos=0;
       this.addressForm.controls.grupos.value.forEach(element => {
         valor+=element.valorMaximoCategoria;
-        if(element.valor>0){cantidadconvalor++;}
+        if(element.valorMaximoCategoria>0){cantidadconvalor++;}
         cantidadGrupos++;
       });
       console.log(valor);
@@ -529,11 +531,11 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
       let cantidadconvalor=0;
       let cantidadGrupos=0;
       this.addressForm.controls.grupos.value.forEach(element => {
-        valor+=element.valorMaximoCategoria;
-        if(element.valor>0){cantidadconvalor++;}
+        valor+=element.valorMinimoCategoria;
+        if(element.valorMinimoCategoria>0){cantidadconvalor++;}
         cantidadGrupos++;
       });
-      console.log(valor);
+      console.log(valor, maximo);
       //antes de evaluar esto debo saber que todos los valores fueron ingresados
       console.log(cantidadGrupos);
       if(cantidadconvalor==cantidadGrupos)

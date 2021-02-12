@@ -855,6 +855,13 @@ namespace asivamosffie.services.Helpers.Constant
         #endregion Mensajes Exitoso
     }
 
+    public class ConstMessagesPerformances
+    {
+        public const string CorreoEnviado = "101";
+        public const string ErrorGuardarCambios = "109";
+        public const string ErrorEnviarCorreo = "107";
+    }
+
 
     //public class ConstantMessagesJudicialDefense
     //{
@@ -915,6 +922,7 @@ namespace asivamosffie.services.Helpers.Constant
 
         #region 
         public const string Error = "500";
+        public const string EntradaInvalida = "422";
         #endregion
     }
 

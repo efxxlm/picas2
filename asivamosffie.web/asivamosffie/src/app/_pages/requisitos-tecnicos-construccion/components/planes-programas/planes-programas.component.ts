@@ -91,6 +91,7 @@ export class PlanesProgramasComponent implements OnInit {
   }
 
   guardar () {
+    this.estaEditando = true;
     const planesProgramas = {
       dataPlanesProgramas: this.dataPlanesProgramas,
       urlSoporte: this.urlSoporte

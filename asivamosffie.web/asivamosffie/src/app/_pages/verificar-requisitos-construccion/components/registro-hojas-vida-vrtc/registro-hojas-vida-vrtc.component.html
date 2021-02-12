@@ -38,6 +38,9 @@
           class="icon-incompleto--img"
           src="assets/img/icon/incompleto.svg"
           alt="este campo es requerido"
+          [matTooltipPosition]="'above'"
+          matTooltip="Debe ingresar la información en el campo para continuar"
+          matTooltipClass="info-tooltip"
           *ngIf="
             (formContratista.get('numeroPerfiles').invalid && formContratista.get('numeroPerfiles').touched) ||
             (formContratista.get('numeroPerfiles').invalid && estaEditando)
@@ -272,8 +275,8 @@
                         (perfil.get('observaciones').invalid && estaEditando)
                     }"
                   >
-                    Observaciones</label
-                  >
+                    Observaciones
+                  </label>
                 </div>
                 <div class="col d-flex">
                   <quill-editor
@@ -290,7 +293,12 @@
                   ></quill-editor>
                   <div class="d-flex" style="align-items: flex-end; margin-bottom: 0.6em">
                     <span class="contador miles" *ngIf="perfil.get('observaciones').value !== null">
-                      {{ 1000 - textoLimpio(perfil.get('observaciones').value) }}
+                      {{
+                        1000 -
+                          (textoLimpio(perfil.get('observaciones').value) > 1000
+                            ? 1000
+                            : textoLimpio(perfil.get('observaciones').value))
+                      }}
                     </span>
                     <span class="contador miles" *ngIf="perfil.get('observaciones').value === null"> 1000 </span>
                   </div>

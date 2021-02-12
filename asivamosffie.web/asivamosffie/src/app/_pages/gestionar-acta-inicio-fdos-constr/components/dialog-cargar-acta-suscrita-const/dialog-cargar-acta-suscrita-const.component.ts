@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { ActBeginService } from 'src/app/core/_services/actBegin/act-begin.service';
+import { ActaInicioConstruccionService } from 'src/app/core/_services/actaInicioConstruccion/acta-inicio-construccion.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -43,13 +43,20 @@ export class DialogCargarActaSuscritaConstComponent implements OnInit {
   fechaSesionString2: string;
   fechaSesion2: Date;
 
+  addressForm = new FormGroup({
+    fechaFirmaContratistaObra: new FormControl(),
+    fechaFirmaContratistaInterventoria: new FormControl(),
+    documentoFile: new FormControl()
+  })
+  
   public fechaFirmaContratistaObra;
   public fechaFirmaContratistaInterventoria;
 
   public fecha1Titulo;
   public fecha2Titulo;
 
-  constructor(private router: Router,public dialog: MatDialog, public matDialogRef: MatDialogRef<DialogCargarActaSuscritaConstComponent>, @Inject(MAT_DIALOG_DATA) public data: any, private services: ActBeginService) {
+  esRojo: boolean = false;
+  constructor(private router: Router,public dialog: MatDialog, public matDialogRef: MatDialogRef<DialogCargarActaSuscritaConstComponent>, @Inject(MAT_DIALOG_DATA) public data: any, private services: ActaInicioConstruccionService) {
     this.declararInputFile();
     this.maxDate = new Date();
     this.maxDate2 = new Date();
@@ -83,29 +90,40 @@ export class DialogCargarActaSuscritaConstComponent implements OnInit {
       data: { modalTitle, modalText }
     });
   }
-  fileName() {
-    const inputNode: any = document.getElementById('file');
-    this.archivo = inputNode.files[0].name;
+  fileName(event: any) {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      this.archivo = event.target.files[0].name;
+      this.addressForm.patchValue({
+        documentoFile: file
+      });
+    }
   }
   cargarActa(){
     const inputNode: any = document.getElementById('file');
     this.archivo = inputNode.files[0].name;
-    this.fechaSesion = new Date(this.fechaFirmaContratistaObra);
+    this.fechaSesion = new Date(this.addressForm.value.fechaFirmaContratistaObra);
     this.fechaSesionString = `${this.fechaSesion.getFullYear()}-${this.fechaSesion.getMonth() + 1}-${this.fechaSesion.getDate()}`;
-    this.fechaSesion2 = new Date(this.fechaFirmaContratistaInterventoria);
+    this.fechaSesion2 = new Date(this.addressForm.value.fechaFirmaContratistaInterventoria);
     this.fechaSesionString2 = `${this.fechaSesion2.getFullYear()}-${this.fechaSesion2.getMonth() + 1}-${this.fechaSesion2.getDate()}`;
-    this.services.EditCargarActaSuscritaContrato(this.idContrato,this.fechaSesionString,this.fechaSesionString2,inputNode.files[0],"usr3").subscribe(data=>{
-      if(data.isSuccessful==true){
-        this.openDialog('', `<b>${data.message}</b>`);
-        this.close();
-        this.services.EnviarCorreoSupervisorContratista(this.idContrato,this.idRol).subscribe(resp=>{
-
-        });
-      }
-      else{
-        this.openDialog('', `<b>${data.message}</b>`);
-      }
-    });
+    if (this.fechaSesionString == 'NaN-NaN-NaN' || this.fechaSesionString2 == 'NaN-NaN-NaN' || this.archivo == undefined) {
+      this.openDialog('', '<b>Falta registrar información.</b>');
+      this.esRojo = true;
+    }
+    else{
+      this.services.EditCargarActaSuscritaContrato(this.idContrato,this.fechaSesionString,this.fechaSesionString2,inputNode.files[0],"usr3").subscribe(data=>{
+        if(data.isSuccessful==true){
+          this.openDialog('', `<b>${data.message}</b>`);
+          this.close();
+          this.services.EnviarCorreoSupervisorContratista(this.idContrato,this.idRol).subscribe(resp=>{
+  
+          });
+        }
+        else{
+          this.openDialog('', `<b>${data.message}</b>`);
+        }
+      });
+    }
   }
   close(){
     this.matDialogRef.close('aceptado');

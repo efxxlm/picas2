@@ -8,11 +8,13 @@ using Microsoft.AspNetCore.Mvc;
 using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class JudicialDefenseController : ControllerBase
     {
 

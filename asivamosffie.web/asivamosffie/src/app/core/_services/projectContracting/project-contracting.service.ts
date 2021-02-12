@@ -10,11 +10,11 @@ import { map } from 'rxjs/operators';
 })
 export class ProjectContractingService {
 
-  constructor(
-                private http: HttpClient,
-                
-             ) 
-  { }
+  constructor( private http: HttpClient ) { }
+
+  getListContratacionObservacion( pContratacionId: number ) {
+    return this.http.get( `${environment.apiUrl}/ProjectContracting/GetListContratacionObservacion?pContratacionId=${ pContratacionId }` );
+  }
 
   createContratacionProyecto( contratacion: Contratacion ){
     return this.http.post<Respuesta>(`${environment.apiUrl}/ProjectContracting/CreateContratacionProyecto`, contratacion);

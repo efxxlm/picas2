@@ -28,7 +28,11 @@ export class ControlYTablaMesasTrabajoCcComponent implements OnInit {
 
   ngOnInit(): void {
     this.services.GetListGrillMesasByControversiaId(this.controversiaID).subscribe((data:any)=>{
-      this.dataTable = data;
+      for (let mesas of data){
+        if(mesas.requiereMesaTrabajo==true){
+          this.dataTable.push(mesas);
+        }
+      }
       this.dataSource = new MatTableDataSource(this.dataTable);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;

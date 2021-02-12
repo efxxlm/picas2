@@ -78,7 +78,7 @@ export class VotacionTemaComponent implements OnInit{
       sesionTemaId: [],
       sesionParticipanteId: [],
       aprobacion: [null, Validators.required],
-      observaciones: [null, Validators.required]
+      observaciones: []
     });
   }
 
