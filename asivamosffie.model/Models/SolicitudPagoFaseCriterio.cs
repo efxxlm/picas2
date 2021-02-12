@@ -7,12 +7,12 @@ namespace asivamosffie.model.Models
     {
         public SolicitudPagoFaseCriterio()
         {
+            SolicitudPagoFaseCriterioConceptoPago = new HashSet<SolicitudPagoFaseCriterioConceptoPago>();
             SolicitudPagoFaseCriterioProyecto = new HashSet<SolicitudPagoFaseCriterioProyecto>();
         }
 
         public int SolicitudPagoFaseCriterioId { get; set; }
         public string TipoPagoCodigo { get; set; }
-        public string ConceptoPagoCriterio { get; set; }
         public decimal? ValorFacturado { get; set; }
         public int SolicitudPagoFaseId { get; set; }
         public string UsuarioCreacion { get; set; }
@@ -26,6 +26,7 @@ namespace asivamosffie.model.Models
         public bool? RegistroCompletoCoordinador { get; set; }
 
         public virtual SolicitudPagoFase SolicitudPagoFase { get; set; }
+        public virtual ICollection<SolicitudPagoFaseCriterioConceptoPago> SolicitudPagoFaseCriterioConceptoPago { get; set; }
         public virtual ICollection<SolicitudPagoFaseCriterioProyecto> SolicitudPagoFaseCriterioProyecto { get; set; }
     }
 }

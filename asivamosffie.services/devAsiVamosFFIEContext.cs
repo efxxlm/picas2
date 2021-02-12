@@ -178,6 +178,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<SolicitudPagoFase> SolicitudPagoFase { get; set; }
         public virtual DbSet<SolicitudPagoFaseAmortizacion> SolicitudPagoFaseAmortizacion { get; set; }
         public virtual DbSet<SolicitudPagoFaseCriterio> SolicitudPagoFaseCriterio { get; set; }
+        public virtual DbSet<SolicitudPagoFaseCriterioConceptoPago> SolicitudPagoFaseCriterioConceptoPago { get; set; }
         public virtual DbSet<SolicitudPagoFaseCriterioProyecto> SolicitudPagoFaseCriterioProyecto { get; set; }
         public virtual DbSet<SolicitudPagoFaseFactura> SolicitudPagoFaseFactura { get; set; }
         public virtual DbSet<SolicitudPagoFaseFacturaDescuento> SolicitudPagoFaseFacturaDescuento { get; set; }
@@ -214,7 +215,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValidarSeguimientoSemanal> VValidarSeguimientoSemanal { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
-
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -2789,6 +2789,10 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<InformeFinal>(entity =>
             {
+                entity.Property(e => e.EstadoAprobacion)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.EstadoInforme)
                     .HasMaxLength(2)
                     .IsUnicode(false)
@@ -6144,10 +6148,6 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SolicitudPagoFaseCriterio>(entity =>
             {
-                entity.Property(e => e.ConceptoPagoCriterio)
-                    .HasMaxLength(2)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
@@ -6175,6 +6175,26 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.SolicitudPagoFaseId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SolicitudPagoFase_SolicitudPagoFaseId");
+            });
+
+            modelBuilder.Entity<SolicitudPagoFaseCriterioConceptoPago>(entity =>
+            {
+                entity.Property(e => e.ConceptoPagoCriterio)
+                    .IsRequired()
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.SolicitudPagoFaseCriterio)
+                    .WithMany(p => p.SolicitudPagoFaseCriterioConceptoPago)
+                    .HasForeignKey(d => d.SolicitudPagoFaseCriterioId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SolicitudPagoFaseCriterioConceptoPago_SolicitudPagoFaseCriterio");
             });
 
             modelBuilder.Entity<SolicitudPagoFaseCriterioProyecto>(entity =>

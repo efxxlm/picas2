@@ -224,6 +224,10 @@ namespace asivamosffie.services
                            .ThenInclude(r => r.SolicitudPagoFase)
                                .ThenInclude(r => r.SolicitudPagoFaseCriterio)
                                    .ThenInclude(r => r.SolicitudPagoFaseCriterioProyecto)
+                    .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
+                           .ThenInclude(r => r.SolicitudPagoFase)
+                               .ThenInclude(r => r.SolicitudPagoFaseCriterio)
+                                   .ThenInclude(r => r.SolicitudPagoFaseCriterioConceptoPago)
                        .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
                           .ThenInclude(r => r.SolicitudPagoFase)
                               .ThenInclude(r => r.SolicitudPagoFaseAmortizacion)
@@ -365,7 +369,7 @@ namespace asivamosffie.services
                                                                                                 UsuarioModificacion = pUsuarioModificacion,
                                                                                                 FechaModificacion = DateTime.Now,
                                                                                             });
-                  
+
                 return
                          new Respuesta
                          {
@@ -822,7 +826,7 @@ namespace asivamosffie.services
             }
         }
 
- 
+
         private void CreateEditSolicitudPagoSolicitudPagoAmortizacion(ICollection<SolicitudPagoFaseAmortizacion> pSolicitudPagoAmortizacionList, string pUsuarioCreacion)
         {
             foreach (var SolicitudPagoAmortizacion in pSolicitudPagoAmortizacionList)
@@ -886,6 +890,22 @@ namespace asivamosffie.services
                 if (SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioProyecto.Count() > 0)
                     CreateEditSolicitudPagoFaseCriterioProyecto(SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioProyecto, strUsuarioCreacion);
 
+                foreach (var SolicitudPagoFaseCriterioConceptoPago in SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioConceptoPago)
+                {
+                    if (SolicitudPagoFaseCriterioConceptoPago.SolicitudPagoFaseCriterioConceptoPagoId > 0)
+                    {
+                        SolicitudPagoFaseCriterioConceptoPago SolicitudPagoFaseCriterioConceptoPagoOld = _context.SolicitudPagoFaseCriterioConceptoPago.Find(SolicitudPagoFaseCriterioConceptoPago.SolicitudPagoFaseCriterioConceptoPagoId);
+                        SolicitudPagoFaseCriterioConceptoPagoOld.SolicitudPagoFaseCriterio = SolicitudPagoFaseCriterioConceptoPago.SolicitudPagoFaseCriterio;
+                    }
+                    else
+                    {
+                        SolicitudPagoFaseCriterioConceptoPago.Eliminado = false;
+                        SolicitudPagoFaseCriterioConceptoPago.UsuarioCreacion = strUsuarioCreacion;
+                        SolicitudPagoFaseCriterioConceptoPago.FechaCreacion = DateTime.Now;
+                        _context.SolicitudPagoFaseCriterioConceptoPago.Add(SolicitudPagoFaseCriterioConceptoPago);
+                    }
+                }
+
                 if (SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioId > 0)
                 {
                     SolicitudPagoFaseCriterio SolicitudPagoFaseCriterioOld = _context.SolicitudPagoFaseCriterio.Find(SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioId);
@@ -893,8 +913,6 @@ namespace asivamosffie.services
                     SolicitudPagoFaseCriterioOld.FechaModificacion = DateTime.Now;
                     SolicitudPagoFaseCriterioOld.UsuarioModificacion = strUsuarioCreacion;
                     SolicitudPagoFaseCriterioOld.RegistroCompleto = ValidateCompleteRecordSolicitudPagoFaseCriterio(SolicitudPagoFaseCriterio);
-
-                    SolicitudPagoFaseCriterioOld.ConceptoPagoCriterio = SolicitudPagoFaseCriterio.ConceptoPagoCriterio;
                     SolicitudPagoFaseCriterioOld.ValorFacturado = SolicitudPagoFaseCriterio.ValorFacturado;
                     SolicitudPagoFaseCriterioOld.SolicitudPagoFaseId = SolicitudPagoFaseCriterio.SolicitudPagoFaseId;
                     SolicitudPagoFaseCriterioOld.TipoCriterioCodigo = SolicitudPagoFaseCriterio.TipoCriterioCodigo;
@@ -908,6 +926,8 @@ namespace asivamosffie.services
 
                     _context.SolicitudPagoFaseCriterio.Add(SolicitudPagoFaseCriterio);
                 }
+
+
             }
         }
 
@@ -1002,7 +1022,6 @@ namespace asivamosffie.services
         private bool ValidateCompleteRecordSolicitudPagoFaseCriterio(SolicitudPagoFaseCriterio solicitudPagoFaseCriterio)
         {
             if (string.IsNullOrEmpty(solicitudPagoFaseCriterio.TipoCriterioCodigo)
-                || string.IsNullOrEmpty(solicitudPagoFaseCriterio.ConceptoPagoCriterio)
                 || string.IsNullOrEmpty(solicitudPagoFaseCriterio.ValorFacturado.ToString())
                 )
                 return false;
@@ -1093,12 +1112,11 @@ namespace asivamosffie.services
         {
             foreach (var solicitudPagoFaseCriterio in ListsolicitudPagoFaseCriterio)
             {
-                if (string.IsNullOrEmpty(solicitudPagoFaseCriterio.TipoCriterioCodigo)
-                      || string.IsNullOrEmpty(solicitudPagoFaseCriterio.ConceptoPagoCriterio)
-                      || string.IsNullOrEmpty(solicitudPagoFaseCriterio.ValorFacturado.ToString())
+                if (
+                        string.IsNullOrEmpty(solicitudPagoFaseCriterio.TipoCriterioCodigo)
+                    || string.IsNullOrEmpty(solicitudPagoFaseCriterio.ValorFacturado.ToString())
                       ) return false;
-            }
-
+            } 
             return true;
         }
 
@@ -1272,7 +1290,7 @@ namespace asivamosffie.services
                     };
             }
         }
-         
+
         private void CreateEditNewOtrosCostosServicios(ICollection<SolicitudPagoOtrosCostosServicios> pSolicitudPagoOtrosCostosServiciosList, string usuarioCreacion)
         {
             foreach (var SolicitudPagoOtrosCostosServicios in pSolicitudPagoOtrosCostosServiciosList)
