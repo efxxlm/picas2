@@ -114,16 +114,19 @@ export class ObsCargarFormaPagoComponent implements OnInit {
     }
 
     onSubmit() {
+        if ( this.addressForm.get( 'tieneObservaciones' ).value !== null && this.addressForm.get( 'tieneObservaciones' ).value === false ) {
+            this.addressForm.get( 'observaciones' ).setValue( '' );
+        }
 
-      const pSolicitudPagoObservacion = {
-        solicitudPagoObservacionId: this.solicitudPagoObservacionId,
-        solicitudPagoId: this.solicitudPago.solicitudPagoId,
-        observacion: this.addressForm.get( 'observaciones' ).value !== null ? this.addressForm.get( 'observaciones' ).value : this.addressForm.get( 'observaciones' ).value,
-        tipoObservacionCodigo: this.cargarFormaPagoCodigo,
-        menuId: this.aprobarSolicitudPagoId,
-        idPadre: this.solicitudPagoCargarFormaPago.solicitudPagoCargarFormaPagoId,
-        tieneObservacion: this.addressForm.get( 'tieneObservaciones' ).value !== null ? this.addressForm.get( 'tieneObservaciones' ).value : this.addressForm.get( 'tieneObservaciones' ).value
-      };
+        const pSolicitudPagoObservacion = {
+            solicitudPagoObservacionId: this.solicitudPagoObservacionId,
+            solicitudPagoId: this.solicitudPago.solicitudPagoId,
+            observacion: this.addressForm.get( 'observaciones' ).value !== null ? this.addressForm.get( 'observaciones' ).value : this.addressForm.get( 'observaciones' ).value,
+            tipoObservacionCodigo: this.cargarFormaPagoCodigo,
+            menuId: this.aprobarSolicitudPagoId,
+            idPadre: this.solicitudPagoCargarFormaPago.solicitudPagoCargarFormaPagoId,
+            tieneObservacion: this.addressForm.get( 'tieneObservaciones' ).value !== null ? this.addressForm.get( 'tieneObservaciones' ).value : this.addressForm.get( 'tieneObservaciones' ).value
+        };
 
         this.obsMultipleSvc.createUpdateSolicitudPagoObservacion( pSolicitudPagoObservacion )
             .subscribe(

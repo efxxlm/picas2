@@ -96,14 +96,14 @@
     <mat-accordion *ngIf="solicitudPagoFase.esPreconstruccion === true">
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforosAcordeonesPrincipales.semaforoAcordeonFase">
                     Fase 1 - Preconstrucción
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <mat-accordion>
                 <mat-expansion-panel class="expansion-style sub-expansion-black">
                     <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title sin-diligenciar">
+                        <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforos.semaforoAcordeonCriterios">
                             Criterios de pago incluidos en la factura
                         </mat-panel-title>
                     </mat-expansion-panel-header>
@@ -111,13 +111,14 @@
                     <app-obs-criterio-pagos [solicitudPago]="solicitudPago"
                                             [esVerDetalle]="esVerDetalle"
                                             [aprobarSolicitudPagoId]="aprobarSolicitudPagoId"
-                                            [criteriosPagoFacturaCodigo]="registrarSolicitudPago.criteriosPagoFacturaCodigo">
+                                            [criteriosPagoFacturaCodigo]="registrarSolicitudPago.criteriosPagoFacturaCodigo"
+                                            (estadoSemaforo)="getSemaforoStatus( $event, 'criteriosPago' )">
                     </app-obs-criterio-pagos>
                 </mat-expansion-panel>
 
                 <mat-expansion-panel class="expansion-style sub-expansion-black">
                     <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title sin-diligenciar">
+                        <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforos.semaforoAcordeonDetalleFacturaProyecto">
                             Detalle factura para proyectos asociados
                         </mat-panel-title>
                     </mat-expansion-panel-header>
@@ -125,13 +126,14 @@
                    <app-obs-detll-fact-proc-asociados   [solicitudPago]="solicitudPago"
                                                         [esVerDetalle]="esVerDetalle"
                                                         [aprobarSolicitudPagoId]="aprobarSolicitudPagoId"
-                                                        [criteriosPagoProyectoCodigo]="registrarSolicitudPago.criteriosPagoProyectoCodigo">
+                                                        [criteriosPagoProyectoCodigo]="registrarSolicitudPago.criteriosPagoProyectoCodigo"
+                                                        (estadoSemaforo)="getSemaforoStatus( $event, 'detalleFactura' )">
                     </app-obs-detll-fact-proc-asociados>
                 </mat-expansion-panel>
 
                 <mat-expansion-panel class="expansion-style sub-expansion-black">
                     <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title sin-diligenciar">
+                        <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforos.semaforoAcordeonDatosFactura">
                             Datos de la factura
                         </mat-panel-title>
                     </mat-expansion-panel-header>
@@ -139,7 +141,8 @@
                     <app-obs-datos-factura  [solicitudPago]="solicitudPago"
                                             [esVerDetalle]="esVerDetalle"
                                             [aprobarSolicitudPagoId]="aprobarSolicitudPagoId"
-                                            [datosFacturaCodigo]="registrarSolicitudPago.datosFacturaCodigo">
+                                            [datosFacturaCodigo]="registrarSolicitudPago.datosFacturaCodigo"
+                                            (estadoSemaforo)="getSemaforoStatus( $event, 'datosFactura' )">
                     </app-obs-datos-factura>
                 </mat-expansion-panel>
             </mat-accordion>
@@ -149,14 +152,14 @@
     <mat-accordion *ngIf="solicitudPagoFase.esPreconstruccion === false">
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforosAcordeonesPrincipales.semaforoAcordeonFase">
                     Fase 2 - Construcción
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <mat-accordion>
                 <mat-expansion-panel class="expansion-style sub-expansion-black">
                     <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title sin-diligenciar">
+                        <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforos.semaforoAcordeonCriterios">
                             Criterios de pago incluidos en la factura
                         </mat-panel-title>
                     </mat-expansion-panel-header>
@@ -164,13 +167,14 @@
                     <app-obs-criterio-pagos [solicitudPago]="solicitudPago"
                                             [esVerDetalle]="esVerDetalle"
                                             [aprobarSolicitudPagoId]="aprobarSolicitudPagoId"
-                                            [criteriosPagoFacturaCodigo]="registrarSolicitudPago.criteriosPagoFacturaCodigo">
+                                            [criteriosPagoFacturaCodigo]="registrarSolicitudPago.criteriosPagoFacturaCodigo"
+                                            (estadoSemaforo)="getSemaforoStatus( $event, 'criteriosPago' )">
                     </app-obs-criterio-pagos>
                 </mat-expansion-panel>
 
                 <mat-expansion-panel class="expansion-style sub-expansion-black">
                     <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title sin-diligenciar">
+                        <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforos.semaforoAcordeonAmortizacion">
                             Amortización del anticipo
                         </mat-panel-title>
                     </mat-expansion-panel-header>
@@ -179,13 +183,14 @@
                                             [contrato]="contrato"
                                             [esVerDetalle]="esVerDetalle"
                                             [amortizacionAnticipoCodigo]="registrarSolicitudPago.amortizacionAnticipoCodigo"
-                                            [aprobarSolicitudPagoId]="aprobarSolicitudPagoId">
+                                            [aprobarSolicitudPagoId]="aprobarSolicitudPagoId"
+                                            (estadoSemaforo)="getSemaforoStatus( $event, 'amortizacion' )">
                     </app-form-amortizacion>
                 </mat-expansion-panel>
 
                 <mat-expansion-panel class="expansion-style sub-expansion-black">
                     <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title sin-diligenciar">
+                        <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforos.semaforoAcordeonDetalleFacturaProyecto">
                             Detalle factura para proyectos asociados
                         </mat-panel-title>
                     </mat-expansion-panel-header>
@@ -193,13 +198,14 @@
                     <app-obs-detll-fact-proc-asociados  [solicitudPago]="solicitudPago"
                                                         [esVerDetalle]="esVerDetalle"
                                                         [aprobarSolicitudPagoId]="aprobarSolicitudPagoId"
-                                                        [criteriosPagoProyectoCodigo]="registrarSolicitudPago.criteriosPagoProyectoCodigo">
+                                                        [criteriosPagoProyectoCodigo]="registrarSolicitudPago.criteriosPagoProyectoCodigo"
+                                                        (estadoSemaforo)="getSemaforoStatus( $event, 'detalleFactura' )">
                     </app-obs-detll-fact-proc-asociados>
                 </mat-expansion-panel>
 
                 <mat-expansion-panel class="expansion-style sub-expansion-black">
                     <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title sin-diligenciar">
+                        <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforos.semaforoAcordeonDatosFactura">
                             Datos de la factura
                         </mat-panel-title>
                     </mat-expansion-panel-header>
@@ -207,17 +213,18 @@
                     <app-obs-datos-factura  [solicitudPago]="solicitudPago"
                                             [esVerDetalle]="esVerDetalle"
                                             [aprobarSolicitudPagoId]="aprobarSolicitudPagoId"
-                                            [datosFacturaCodigo]="registrarSolicitudPago.datosFacturaCodigo">
+                                            [datosFacturaCodigo]="registrarSolicitudPago.datosFacturaCodigo"
+                                            (estadoSemaforo)="getSemaforoStatus( $event, 'datosFactura' )">
                     </app-obs-datos-factura>
                 </mat-expansion-panel>
             </mat-accordion>
         </mat-expansion-panel>
     </mat-accordion>
-    
+
     <mat-accordion>
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforosAcordeonesPrincipales.semaforoAcordeonDescuentosTecnica">
                     Descuentos Dirección Técnica
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -225,7 +232,8 @@
             <app-obs-descuentos-dir-tecnica [solicitudPago]="solicitudPago"
                                             [esVerDetalle]="esVerDetalle"
                                             [aprobarSolicitudPagoId]="aprobarSolicitudPagoId"
-                                            [datosFacturaDescuentoCodigo]="registrarSolicitudPago.datosFacturaDescuentoCodigo">
+                                            [datosFacturaDescuentoCodigo]="registrarSolicitudPago.datosFacturaDescuentoCodigo"
+                                            (estadoSemaforo)="getSemaforoStatus( $event, 'descuentosTecnica' )">
             </app-obs-descuentos-dir-tecnica>
         </mat-expansion-panel>
     </mat-accordion>

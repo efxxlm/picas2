@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -17,6 +17,7 @@ export class FormAmortizacionComponent implements OnInit {
     @Input() contrato: any;
     @Input() aprobarSolicitudPagoId: any;
     @Input() amortizacionAnticipoCodigo: string;
+    @Output() estadoSemaforo = new EventEmitter<string>();
     solicitudPagoObservacionId = 0;
     solicitudPagoFase: any;
     solicitudPagoFaseAmortizacionId = 0;
@@ -63,7 +64,12 @@ export class FormAmortizacionComponent implements OnInit {
                         const obsSupervisor = response.filter( obs => obs.archivada === false )[0];
 
                         if ( obsSupervisor !== undefined ) {
-                            console.log( obsSupervisor );
+                            if ( obsSupervisor.registroCompleto === false ) {
+                                this.estadoSemaforo.emit( 'en-proceso' );
+                            }
+                            if ( obsSupervisor.registroCompleto === true ) {
+                                this.estadoSemaforo.emit( 'completo' );
+                            }
                             this.solicitudPagoObservacionId = obsSupervisor.solicitudPagoObservacionId;
                             this.addressForm.setValue(
                                 {
@@ -115,6 +121,10 @@ export class FormAmortizacionComponent implements OnInit {
     }
 
     onSubmit() {
+        if ( this.addressForm.get( 'tieneObservaciones' ).value !== null && this.addressForm.get( 'tieneObservaciones' ).value === false ) {
+            this.addressForm.get( 'observaciones' ).setValue( '' );
+        }
+
         const pSolicitudPagoObservacion = {
             solicitudPagoObservacionId: this.solicitudPagoObservacionId,
             solicitudPagoId: this.solicitudPago.solicitudPagoId,

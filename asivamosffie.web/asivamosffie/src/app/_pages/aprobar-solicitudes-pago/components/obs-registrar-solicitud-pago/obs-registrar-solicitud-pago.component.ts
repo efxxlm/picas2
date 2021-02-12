@@ -18,7 +18,7 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
     @Input() esVerDetalle = false;
     @Input() aprobarSolicitudPagoId: any;
     @Input() registrarSolicitudPago: any;
-    @Output() estadoSemaforo = new EventEmitter<string>();
+    @Output() estadoSemaforoRegistroSolicitud = new EventEmitter<string>();
     solicitudPagoObservacionId = 0;
     solicitudPago: any;
     solicitudPagoFase: any;
@@ -64,6 +64,16 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
         [{ align: [] }],
       ]
     };
+    estadoSemaforosAcordeonesPrincipales = {
+        semaforoAcordeonFase: 'sin-diligenciar',
+        semaforoAcordeonDescuentosTecnica: 'sin-diligenciar'
+    }
+    estadoSemaforos = {
+        semaforoAcordeonCriterios: 'sin-diligenciar',
+        semaforoAcordeonAmortizacion: 'sin-diligenciar',
+        semaforoAcordeonDetalleFacturaProyecto: 'sin-diligenciar',
+        semaforoAcordeonDatosFactura: 'sin-diligenciar'
+    }
 
     constructor(
         private fb: FormBuilder,
@@ -77,13 +87,16 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
         if ( this.contrato !== undefined ) {
             this.solicitudPago = this.contrato.solicitudPagoOnly;
             this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
+            if ( this.solicitudPagoFase.esPreconstruccion === true ) {
+                // Validacion si es preconstruccion eliminar el campo de amortizacion de los semaforos.
+                delete this.estadoSemaforos.semaforoAcordeonAmortizacion;
+            }
             this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.aprobarSolicitudPagoId, this.solicitudPago.solicitudPagoId, this.solicitudPagoFase.solicitudPagoFaseId )
                 .subscribe(
                     response => {
                         const obsSupervisor = response.filter( obs => obs.archivada === false )[0];
                         
                         if ( obsSupervisor !== undefined ) {
-                            console.log( obsSupervisor );
                             this.solicitudPagoObservacionId = obsSupervisor.solicitudPagoObservacionId;
                             this.addressForm.setValue(
                                 {
@@ -100,7 +113,7 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
         this.dataSource = new MatTableDataSource(this.dataTable);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-    };
+    }
 
     applyFilter(event: Event) {
       const filterValue = (event.target as HTMLInputElement).value;
@@ -113,6 +126,52 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
         tieneObservaciones: [null, Validators.required],
         observaciones:[null, Validators.required],
       })
+    }
+
+    getSemaforoStatus( estadoAcordeon: string, tipoAcordeon: string ) {
+        // Get semaforos acordeon preconstruccion
+        if ( this.solicitudPagoFase.esPreconstruccion === true ) {
+            if ( tipoAcordeon === 'criteriosPago' ) {
+                this.estadoSemaforos.semaforoAcordeonCriterios = estadoAcordeon;
+            }
+        }
+        // Get semaforos acordeon construccion
+        if ( this.solicitudPagoFase.esPreconstruccion === false ) {
+            // Get semaforo criterios de pago
+            if ( tipoAcordeon === 'criteriosPago' ) {
+                this.estadoSemaforos.semaforoAcordeonCriterios = estadoAcordeon;
+            }
+            // Get semaforo amortizacion del anticipo
+            if ( tipoAcordeon === 'amortizacion' ) {
+                this.estadoSemaforos.semaforoAcordeonAmortizacion = estadoAcordeon;
+            }
+            // Get semaforo detalle factura para proyectos asociados
+            if ( tipoAcordeon === 'detalleFactura' ) {
+                this.estadoSemaforos.semaforoAcordeonDetalleFacturaProyecto = estadoAcordeon;
+            }
+            // Get semaforo datos de la factura
+            if ( tipoAcordeon === 'datosFactura' ) {
+                this.estadoSemaforos.semaforoAcordeonDatosFactura = estadoAcordeon;
+            }
+            // Get semaforo fase
+            const sinDiligenciar = Object.values( this.estadoSemaforos ).includes( 'sin-diligenciar' );
+            const enProceso = Object.values( this.estadoSemaforos ).includes( 'en-proceso' );
+            const completo = Object.values( this.estadoSemaforos ).includes( 'completo' );
+
+            if ( enProceso === true ) {
+                this.estadoSemaforosAcordeonesPrincipales.semaforoAcordeonFase = 'en-proceso';
+            }
+            if ( sinDiligenciar === true && completo === true ) {
+                this.estadoSemaforosAcordeonesPrincipales.semaforoAcordeonFase = 'en-proceso';
+            }
+            if ( sinDiligenciar === false && enProceso === false && completo === true ) {
+                this.estadoSemaforosAcordeonesPrincipales.semaforoAcordeonFase = 'completo';
+            }
+            // Get semaforo descuentos direccion tecnica
+            if ( tipoAcordeon === 'descuentosTecnica' ) {
+                this.estadoSemaforosAcordeonesPrincipales.semaforoAcordeonDescuentosTecnica = estadoAcordeon;
+            }
+        }
     }
 
     maxLength(e: any, n: number) {
@@ -136,7 +195,11 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
         });
     }
 
-    onSubmit() {   
+    onSubmit() {
+        if ( this.addressForm.get( 'tieneObservaciones' ).value !== null && this.addressForm.get( 'tieneObservaciones' ).value === false ) {
+            this.addressForm.get( 'observaciones' ).setValue( '' );
+        }
+
         const pSolicitudPagoObservacion = {
             solicitudPagoObservacionId: this.solicitudPagoObservacionId,
             solicitudPagoId: this.solicitudPago.solicitudPagoId,

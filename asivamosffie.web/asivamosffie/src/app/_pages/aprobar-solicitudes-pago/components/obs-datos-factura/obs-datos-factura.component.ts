@@ -1,5 +1,5 @@
 import { CommonService } from './../../../../core/_services/common/common.service';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Dominio } from 'src/app/core/_services/common/common.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -17,6 +17,7 @@ export class ObsDatosFacturaComponent implements OnInit {
     @Input() esVerDetalle = false;
     @Input() aprobarSolicitudPagoId: any;
     @Input() datosFacturaCodigo: string;
+    @Output() estadoSemaforo = new EventEmitter<string>();
     solicitudPagoObservacionId = 0;
     detalleForm = this.fb.group({
         numeroFactura: [null, Validators.required],
@@ -69,7 +70,12 @@ export class ObsDatosFacturaComponent implements OnInit {
                 const obsSupervisor = response.filter( obs => obs.archivada === false )[0];
 
                 if ( obsSupervisor !== undefined ) {
-                    console.log( obsSupervisor );
+                    if ( obsSupervisor.registroCompleto === false ) {
+                        this.estadoSemaforo.emit( 'en-proceso' );
+                    }
+                    if ( obsSupervisor.registroCompleto === true ) {
+                        this.estadoSemaforo.emit( 'completo' );
+                    }
                     this.solicitudPagoObservacionId = obsSupervisor.solicitudPagoObservacionId;
                     this.addressForm.setValue(
                         {
@@ -149,7 +155,10 @@ export class ObsDatosFacturaComponent implements OnInit {
     }
 
     onSubmit() {
-      
+        if ( this.addressForm.get( 'tieneObservaciones' ).value !== null && this.addressForm.get( 'tieneObservaciones' ).value === false ) {
+            this.addressForm.get( 'observaciones' ).setValue( '' );
+        }
+
         const pSolicitudPagoObservacion = {
             solicitudPagoObservacionId: this.solicitudPagoObservacionId,
             solicitudPagoId: this.solicitudPago.solicitudPagoId,

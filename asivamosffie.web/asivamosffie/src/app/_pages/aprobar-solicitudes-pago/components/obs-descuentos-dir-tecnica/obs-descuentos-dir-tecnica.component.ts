@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -18,6 +18,7 @@ export class ObsDescuentosDirTecnicaComponent implements OnInit {
     @Input() esVerDetalle = false;
     @Input() aprobarSolicitudPagoId: any;
     @Input() datosFacturaDescuentoCodigo: string;
+    @Output() estadoSemaforo = new EventEmitter<string>();
     solicitudPagoObservacionId = 0;
     addressForm: FormGroup;
     formDescuentos: FormGroup;
@@ -74,7 +75,12 @@ export class ObsDescuentosDirTecnicaComponent implements OnInit {
                         const obsSupervisor = response.filter( obs => obs.archivada === false )[0];
 
                         if ( obsSupervisor !== undefined ) {
-                            console.log( obsSupervisor );
+                            if ( obsSupervisor.registroCompleto === false ) {
+                                this.estadoSemaforo.emit( 'en-proceso' );
+                            }
+                            if ( obsSupervisor.registroCompleto === true ) {
+                                this.estadoSemaforo.emit( 'completo' );
+                            }
                             this.solicitudPagoObservacionId = obsSupervisor.solicitudPagoObservacionId;
                             this.addressForm.setValue(
                                 {
@@ -153,6 +159,10 @@ export class ObsDescuentosDirTecnicaComponent implements OnInit {
     }
 
     onSubmit() {
+        if ( this.addressForm.get( 'tieneObservaciones' ).value !== null && this.addressForm.get( 'tieneObservaciones' ).value === false ) {
+            this.addressForm.get( 'observaciones' ).setValue( '' );
+        }
+
         const pSolicitudPagoObservacion = {
             solicitudPagoObservacionId: this.solicitudPagoObservacionId,
             solicitudPagoId: this.solicitudPago.solicitudPagoId,

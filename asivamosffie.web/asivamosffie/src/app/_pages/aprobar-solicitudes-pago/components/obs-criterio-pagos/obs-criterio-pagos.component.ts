@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
@@ -17,6 +17,7 @@ export class ObsCriterioPagosComponent implements OnInit {
     @Input() esVerDetalle = false;
     @Input() aprobarSolicitudPagoId: any;
     @Input() criteriosPagoFacturaCodigo: string;
+    @Output() estadoSemaforo = new EventEmitter<string>();
     solicitudPagoObservacionId = 0;
     listaCriterios: Dominio[] = [];
     criteriosArraySeleccionados: Dominio[] = [];
@@ -57,8 +58,13 @@ export class ObsCriterioPagosComponent implements OnInit {
                     response => {
                         const obsSupervisor = response.filter( obs => obs.archivada === false )[0];
 
-                        if ( obsSupervisor !== undefined ) {
-                            console.log( obsSupervisor );
+                        if ( obsSupervisor !== undefined ) {  
+                            if ( obsSupervisor.registroCompleto === false ) {
+                                this.estadoSemaforo.emit( 'en-proceso' );
+                            }
+                            if ( obsSupervisor.registroCompleto === true ) {
+                                this.estadoSemaforo.emit( 'completo' );
+                            }
                             this.solicitudPagoObservacionId = obsSupervisor.solicitudPagoObservacionId;
                             this.addressForm.get( 'fechaCreacion' ).setValue( obsSupervisor.fechaCreacion );
                             this.addressForm.get( 'tieneObservaciones' ).setValue( obsSupervisor.tieneObservacion !== undefined ? obsSupervisor.tieneObservacion : null );
@@ -197,6 +203,10 @@ export class ObsCriterioPagosComponent implements OnInit {
     }
 
     onSubmit() {
+        if ( this.addressForm.get( 'tieneObservaciones' ).value !== null && this.addressForm.get( 'tieneObservaciones' ).value === false ) {
+            this.addressForm.get( 'observaciones' ).setValue( '' );
+        }
+
         const pSolicitudPagoObservacion = {
             solicitudPagoObservacionId: this.solicitudPagoObservacionId,
             solicitudPagoId: this.solicitudPago.solicitudPagoId,
