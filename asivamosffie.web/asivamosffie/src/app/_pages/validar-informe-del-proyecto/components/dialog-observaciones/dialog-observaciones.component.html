@@ -1,0 +1,69 @@
+<button mat-button mat-dialog-close class="modal--btn-cerrar" [mat-dialog-close]="null">
+  <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar" />
+</button>
+
+<div class="text-center">
+  <h1 class="title-menu--h1">
+    Observaciones
+    LJ77654
+  </h1>
+  <p class="colorMainColor mt-05em">
+    <span class="mx-1em">
+      Estado del requisito:
+      <b> No cumple </b>
+    </span>
+    <span class="mx-1em">
+      Tipo de anexo:
+      <b> Fisico </b>
+    </span>
+    <span class="mx-1em">
+      SAC:
+      <b> 9088765 </b>
+    </span>
+    <span class="mx-1em">
+      Fecha de radicado:
+      <b> 10/11/2020 </b>
+    </span>
+  </p>
+  <p>
+    <b> 3. </b>
+    Informe final de Obra del contratista de obra
+  </p>
+</div>
+
+<form [formGroup]="observaciones" novalidate (ngSubmit)="onSubmit()">
+  <div class="d-flex align-items-center">
+    <div class="text-area-quill">
+      <label for="alcanceParticular" class="text-area-quill--label">Observaciones</label>
+      <quill-editor
+        class="quill-editor-style"
+        [styles]="editorStyle"
+        [modules]="config"
+        required
+        (onContentChanged)="maxLength($event, 500)"
+        formControlName="observaciones"
+      ></quill-editor>
+    </div>
+    <span class="contador miles" *ngIf="observaciones.get('observaciones').value">
+      {{
+        500 -
+          (textoLimpio(observaciones.get('observaciones').value) > 500
+            ? 500
+            : textoLimpio(observaciones.get('observaciones').value))
+      }}
+    </span>
+    <span class="contador miles" *ngIf="!observaciones.get('observaciones').value"> 500 </span>
+  </div>
+
+  <div class="text-center">
+    <button
+      mat-button
+      color="warn"
+      class="btn-guardar"
+      type="submit"
+      [disabled]="observaciones.get('observaciones').invalid"
+    >
+      <img src="assets/img/icon/guardar.svg" alt="Guardar" />
+    </button>
+  </div>
+</form>

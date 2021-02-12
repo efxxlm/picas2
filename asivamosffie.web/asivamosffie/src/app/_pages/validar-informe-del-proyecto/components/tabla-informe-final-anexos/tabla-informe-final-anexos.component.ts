@@ -6,12 +6,24 @@ import { MatDialog } from '@angular/material/dialog';
 import { FormBuilder, Validators, FormArray, FormGroup } from '@angular/forms';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 // import { DialogTipoDocumentoComponent } from '../dialog-tipo-documento/dialog-tipo-documento.component';
-// import { DialogObservacionesComponent } from '../dialog-observaciones/dialog-observaciones.component';
+import { DialogObservacionesComponent } from '../dialog-observaciones/dialog-observaciones.component';
 
 import { ListaChequeo } from 'src/app/_interfaces/proyecto-final-anexos.model';
 import { RegistrarInformeFinalProyectoService } from 'src/app/core/_services/registrar-informe-final-proyecto.service';
 import { Respuesta } from 'src/app/core/_services/common/common.service';
 
+const ELEMENT_DATA = [
+  {
+    No: '1',
+    item: 'Acta de recibo a satisfacción de la fase 2 - Interventoría',
+    calificacionInterventoria: 'Cumple',
+    tipoAnexo: 'Cumple',
+    Ubicacion: 'https://drive.google.com/',
+    verificacion: 'No cumple',
+    validacion: 'No cumple',
+    id: '1'
+  }
+]
 
 @Component({
   selector: 'app-tabla-informe-final-anexos',
@@ -24,13 +36,17 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   @Input() llaveMen: string;
   anexos: any;
   displayedColumns: string[] = [
-    'informeFinalListaChequeoId',
-    'nombre',
-    'calificacionCodigo',
-    'informeFinalInterventoriaId'
-  ];
+    'No',
+    'item',
+    'calificacionInterventoria',
+    'tipoAnexo',
+    'Ubicacion',
+    'verificacion',
+    'validacion',
+    'id'
+  ]
   addressForm: FormGroup;
-  dataSource = new MatTableDataSource<ListaChequeo>(this.ELEMENT_DATA);
+  dataSource = new MatTableDataSource(ELEMENT_DATA);
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -50,17 +66,17 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit(): void {
-    this.getInformeFinalListaChequeo(this.id);
+    // this.getInformeFinalListaChequeo(this.id);
   }
 
-  getInformeFinalListaChequeo (id:string) {
-    this.registrarInformeFinalProyectoService.getInformeFinalListaChequeo(id)
-    .subscribe(anexos => {
-      this.dataSource.data = anexos as ListaChequeo[];
-      this.anexos = anexos;
-      console.log("Aquí:",this.anexos);
-    });
-  }
+  // getInformeFinalListaChequeo (id:string) {
+  //   this.registrarInformeFinalProyectoService.getInformeFinalListaChequeo(id)
+  //   .subscribe(anexos => {
+  //     this.dataSource.data = anexos as ListaChequeo[];
+  //     this.anexos = anexos;
+  //     console.log("Aquí:",this.anexos);
+  //   });
+  // }
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
@@ -108,22 +124,22 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   //   });
   // }
 
-  // openDialogObservaciones(informe:any) {
-  //   let dialogRef = this.dialog.open(DialogObservacionesComponent, {
-  //     width: '70em',
-  //     data: {
-  //       informe: informe,
-  //       llaveMen: this.llaveMen
-  //     },
-  //     id:'dialogObservaciones'
-  //   });
+  openDialogObservaciones(informe:any) {
+    let dialogRef = this.dialog.open(DialogObservacionesComponent, {
+      width: '70em',
+      data: {
+        informe: informe,
+        llaveMen: this.llaveMen
+      },
+      id:'dialogObservaciones'
+    });
 
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     console.log(`Dialog result: ${result}`);
-  //     this.ngOnInit();
-  //     return;
-  //   });
-  // }
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      this.ngOnInit();
+      return;
+    });
+  }
 
   openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
