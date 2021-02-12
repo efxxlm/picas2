@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace asivamosffie.model.Models
 {
-    public partial class InformeFinalInterventoriaObservaciones
+    public partial class InformeFinalObservaciones
     {
-        public int InformeFinalInterventoriaObservacionesId { get; set; }
-        public int? InformeFinalInterventoriaId { get; set; }
+        public int InformeFinalObservacionesId { get; set; }
+        public int InformeFinalId { get; set; }
         public string Observaciones { get; set; }
         public bool? EsSupervision { get; set; }
         public DateTime? FechaCreacion { get; set; }
@@ -15,8 +15,7 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
         public bool? Eliminado { get; set; }
         public bool? Archivado { get; set; }
-        public bool? EsCalificacion { get; set; }
 
-        public virtual InformeFinalInterventoria InformeFinalInterventoria { get; set; }
+        public virtual InformeFinal InformeFinal { get; set; }
     }
 }
