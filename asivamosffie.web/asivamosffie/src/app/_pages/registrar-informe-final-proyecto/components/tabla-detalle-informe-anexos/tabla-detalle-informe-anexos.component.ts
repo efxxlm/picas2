@@ -9,7 +9,7 @@ import { DialogTipoDocumentoComponent } from '../dialog-tipo-documento/dialog-ti
 import { DialogObservacionesComponent } from '../dialog-observaciones/dialog-observaciones.component';
 
 import { ListaChequeo } from 'src/app/_interfaces/proyecto-final-anexos.model';
-import { RegistrarInformeFinalProyectoService } from 'src/app/core/_services/registrar-informe-final-proyecto.service';
+import { RegistrarInformeFinalProyectoService } from 'src/app/core/_services/registrarInformeFinal/registrar-informe-final-proyecto.service'
 import { Respuesta } from 'src/app/core/_services/common/common.service';
 
 @Component({

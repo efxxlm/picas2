@@ -19,12 +19,12 @@ using asivamosffie.services.Helpers.Constants;
 
 namespace asivamosffie.services
 {
-    public class ValidateFinalReportService : IValidateFinalReportService
+    public class VerifyFinalReportService : IVerifyFinalReportService
     {
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
 
-        public ValidateFinalReportService(devAsiVamosFFIEContext context, ICommonService commonService)
+        public VerifyFinalReportService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
             _commonService = commonService;
             _context = context;

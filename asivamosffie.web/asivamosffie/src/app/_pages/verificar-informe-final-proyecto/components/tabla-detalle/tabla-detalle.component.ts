@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material/dialog'
 import { FormBuilder, Validators, FormArray, FormGroup } from '@angular/forms'
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component'
 import { DialogObservacionesComponent } from '../dialog-observaciones/dialog-observaciones.component';
-import { ValidarInformeFinalService } from 'src/app/core/_services/validarInformeFinal/validar-informe-final.service'
+import { VerificarInformeFinalService } from 'src/app/core/_services/verificarInformeFinal/verificar-informe-final.service'
 import { Anexo } from 'src/app/_interfaces/proyecto-final-anexos.model'
 import { Respuesta } from 'src/app/core/_services/common/common.service'
 
@@ -39,7 +39,7 @@ export class TablaDetalleComponent implements OnInit, AfterViewInit {
   constructor(
     private fb: FormBuilder,
     public dialog: MatDialog,
-    private validarInformeFinalService: ValidarInformeFinalService
+    private validarInformeFinalService: VerificarInformeFinalService
   ) {}
 
   estaEditando = false

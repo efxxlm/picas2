@@ -1,17 +1,17 @@
-import { environment } from './../../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ValidarInformeFinalService {
+export class VerificarInformeFinalService {
 
     private urlApi = `${ environment.apiUrl }`;
 
     constructor( private http: HttpClient ) { }
 
-    final_report = 'ValidateFinalReport';
+    final_report = 'VerifyFinalReport';
   
     getListInformeFinal(){
       return this.http.get(`${environment.apiUrl}/${this.final_report}/GetListInformeFinal`);

@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core'
 import { FormBuilder, Validators } from '@angular/forms'
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog'
 import { Respuesta } from 'src/app/core/_services/common/common.service'
-import { ValidarInformeFinalService } from 'src/app/core/_services/validarInformeFinal/validar-informe-final.service'
+import { VerificarInformeFinalService } from 'src/app/core/_services/verificarInformeFinal/verificar-informe-final.service'
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component'
 
 @Component({
@@ -34,7 +34,7 @@ export class DialogObservacionesComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private validarInformeFinalService: ValidarInformeFinalService,
+    private validarInformeFinalService: VerificarInformeFinalService,
     @Inject(MAT_DIALOG_DATA) public data,
     public dialog: MatDialog
   ) {}

@@ -7,7 +7,7 @@ using asivamosffie.model.APIModels;
 
 namespace asivamosffie.services.Interfaces
 {
-    public interface IValidateFinalReportService
+    public interface IVerifyFinalReportService
     {
         Task<List<InformeFinal>> GetListInformeFinal();
         Task<List<dynamic>> GetInformeFinalByProyectoId(int pProyectoId);

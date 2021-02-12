@@ -11,22 +11,21 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Authorization;
 
 namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class ValidateFinalReportController : Controller
+    public class VerifyFinalReportController : Controller
     {
 
-        private readonly IValidateFinalReportService _validateFinalReportService;
+        private readonly IVerifyFinalReportService _verifyFinalReportService;
         private readonly IOptions<AppSettings> _settings;
 
-        public ValidateFinalReportController(IValidateFinalReportService validateFinalReportService, IOptions<AppSettings> settings)
+        public VerifyFinalReportController(IVerifyFinalReportService verifyFinalReportService, IOptions<AppSettings> settings)
         {
-            _validateFinalReportService = validateFinalReportService;
+            _verifyFinalReportService = verifyFinalReportService;
             _settings = settings;
         }
   
@@ -34,7 +33,7 @@ namespace asivamosffie.api.Controllers
         [HttpGet]
         public async Task<List<InformeFinal>> GetListInformeFinal()
         {
-            return await _validateFinalReportService.GetListInformeFinal();
+            return await _verifyFinalReportService.GetListInformeFinal();
         }
 
         [HttpGet]
@@ -43,7 +42,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                return await _validateFinalReportService.GetInformeFinalByProyectoId(pProyectoId);
+                return await _verifyFinalReportService.GetInformeFinalByProyectoId(pProyectoId);
             }
 
             catch (Exception ex)
@@ -58,7 +57,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                return await _validateFinalReportService.GetInformeFinalListaChequeoByInformeFinalId(pInformeFinalId);
+                return await _verifyFinalReportService.GetInformeFinalListaChequeoByInformeFinalId(pInformeFinalId);
             }
 
             catch (Exception ex)
@@ -73,7 +72,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                return await _validateFinalReportService.VerificarInformeFinalValidacion(pInformeFinalId);
+                return await _verifyFinalReportService.VerificarInformeFinalValidacion(pInformeFinalId);
             }
 
             catch (Exception ex)
@@ -87,7 +86,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                return await _validateFinalReportService.GetInformeFinalInterventoriaObservacionByInformeFinalInterventoria(pInformeFinalInterventoriaId);
+                return await _verifyFinalReportService.GetInformeFinalInterventoriaObservacionByInformeFinalInterventoria(pInformeFinalInterventoriaId);
             }
 
             catch (Exception ex)
@@ -105,7 +104,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 string user = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _validateFinalReportService.UpdateStateValidateInformeFinalInterventoriaByInformeFinal(informeFinal, user);
+                respuesta = await _verifyFinalReportService.UpdateStateValidateInformeFinalInterventoriaByInformeFinal(informeFinal, user);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -124,7 +123,7 @@ namespace asivamosffie.api.Controllers
             {
                 string user = HttpContext.User.FindFirst("User").Value;
                 //pInformeFinal.UsuarioCreacion = "LCT";
-                respuesta = await _validateFinalReportService.UpdateStateValidateInformeFinalInterventoria(pInformeFinalInterventoriaId, code, user);
+                respuesta = await _verifyFinalReportService.UpdateStateValidateInformeFinalInterventoria(pInformeFinalInterventoriaId, code, user);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -144,7 +143,7 @@ namespace asivamosffie.api.Controllers
             {
                 pObservacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 //pObservacion.UsuarioCreacion = "LCT";
-                respuesta = await _validateFinalReportService.CreateEditObservacionInformeFinal(pObservacion, tieneObservacion);
+                respuesta = await _verifyFinalReportService.CreateEditObservacionInformeFinal(pObservacion, tieneObservacion);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -163,7 +162,7 @@ namespace asivamosffie.api.Controllers
             {
                 pObservacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 //pObservacion.UsuarioCreacion = "LCT";
-                respuesta = await _validateFinalReportService.CreateEditInformeFinalInterventoriaObservacion(pObservacion);
+                respuesta = await _verifyFinalReportService.CreateEditInformeFinalInterventoriaObservacion(pObservacion);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -181,7 +180,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 //pObservacion.UsuarioCreacion = "LCT";
-                respuesta = await _validateFinalReportService.SendFinalReportToSupervision(pProyectoId, HttpContext.User.FindFirst("User").Value);
+                respuesta = await _verifyFinalReportService.SendFinalReportToSupervision(pProyectoId, HttpContext.User.FindFirst("User").Value);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -199,7 +198,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 //pObservacion.UsuarioCreacion = "LCT";
-                respuesta = await _validateFinalReportService.ApproveInformeFinal(pProyectoId, HttpContext.User.FindFirst("User").Value);
+                respuesta = await _verifyFinalReportService.ApproveInformeFinal(pProyectoId, HttpContext.User.FindFirst("User").Value);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -217,7 +216,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 //pObservacion.UsuarioCreacion = "LCT";
-                respuesta = await _validateFinalReportService.NoApprovedInformeFinal(pProyectoId, HttpContext.User.FindFirst("User").Value);
+                respuesta = await _verifyFinalReportService.NoApprovedInformeFinal(pProyectoId, HttpContext.User.FindFirst("User").Value);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -233,7 +232,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                return await _validateFinalReportService.GetInformeFinalInterventoriaObservacionByInformeFinalObservacion(pObservacionId);
+                return await _verifyFinalReportService.GetInformeFinalInterventoriaObservacionByInformeFinalObservacion(pObservacionId);
             }
 
             catch (Exception ex)
