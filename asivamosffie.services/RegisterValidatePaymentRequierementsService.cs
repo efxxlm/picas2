@@ -220,6 +220,8 @@ namespace asivamosffie.services
 
                     solicitudPago = _context.SolicitudPago.Where(r => r.SolicitudPagoId == solicitudPago.SolicitudPagoId)
                         .Include(r => r.SolicitudPagoListaChequeo)
+                           .ThenInclude(r => r.ListaChequeo)
+                        .Include(r => r.SolicitudPagoListaChequeo)
                             .ThenInclude(r => r.SolicitudPagoListaChequeoRespuesta)
                                 .ThenInclude(r => r.ListaChequeoItem)
                         .Include(r => r.SolicitudPagoCargarFormaPago)
@@ -551,7 +553,7 @@ namespace asivamosffie.services
                                                                                                    UsuarioModificacion = pUsuarioModificacion,
                                                                                                    Eliminado = true,
                                                                                                });
-                 
+
                 //Eliminar Lista de Chequeo Asociada al criterio 
 
                 string strCodigoCriterio = _context.SolicitudPagoFaseCriterio.Find(pSolicitudPagoFaseCriterioId).TipoCriterioCodigo;
@@ -569,7 +571,7 @@ namespace asivamosffie.services
                                                                             && s.SolicitudPagoListaChequeo.FirstOrDefault().ListaChequeo.CriterioPagoCodigo == strCodigoCriterio)
                                                                         .Select(r => r.SolicitudPagoId).FirstOrDefault();
 
-                if(SolicitudPagoListaChequeoId > 0)
+                if (SolicitudPagoListaChequeoId > 0)
                 {
                     await _context.Set<SolicitudPagoListaChequeo>()
                                                            .Where(r => r.SolicitudPagoListaChequeoId == SolicitudPagoListaChequeoId)
@@ -579,7 +581,6 @@ namespace asivamosffie.services
                                                                                                UsuarioModificacion = pUsuarioModificacion,
                                                                                                Eliminado = true,
                                                                                            });
-                     
                 }
                 return
                      new Respuesta
