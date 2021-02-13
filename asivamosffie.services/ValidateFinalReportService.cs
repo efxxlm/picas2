@@ -19,12 +19,12 @@ using asivamosffie.services.Helpers.Constants;
 
 namespace asivamosffie.services
 {
-    public class VerifyFinalReportService : IVerifyFinalReportService
+    public class ValidateFinalReportService : IValidateFinalReportService
     {
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
 
-        public VerifyFinalReportService(devAsiVamosFFIEContext context, ICommonService commonService)
+        public ValidateFinalReportService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
             _commonService = commonService;
             _context = context;
@@ -33,31 +33,31 @@ namespace asivamosffie.services
         public async Task<List<InformeFinal>> GetListInformeFinal()
         {
             List<InformeFinal> list = await _context.InformeFinal
-                            .Where(r=> r.EstadoInforme == ConstantCodigoEstadoInformeFinal.Con_informe_enviado_para_validación || (r.EstadoValidacion != "0" && ! String.IsNullOrEmpty(r.EstadoValidacion)))
+                            .Where(r=> r.EstadoValidacion == ConstantCodigoEstadoValidacionInformeFinal.Con_informe_enviado_al_supervisor)
                             .Include(r=> r.Proyecto)
                                 .ThenInclude(r => r.InstitucionEducativa)
                             .ToListAsync();
             List<Dominio> TipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).ToList();
             List<InstitucionEducativaSede> ListInstitucionEducativaSede = _context.InstitucionEducativaSede.ToList();
-            List<Dominio> TipoObraIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar).ToList();
+            //List<Dominio> TipoObraIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar).ToList();
 
-            List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
+            //List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
 
             foreach(var item in list)
             {
                 InstitucionEducativaSede Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == item.Proyecto.SedeId).FirstOrDefault();
-                Localizacion Municipio = ListLocalizacion.Where(r => r.LocalizacionId == item.Proyecto.LocalizacionIdMunicipio).FirstOrDefault();
-                item.Proyecto.MunicipioObj = Municipio;
-                item.Proyecto.DepartamentoObj = ListLocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
+                //Localizacion Municipio = ListLocalizacion.Where(r => r.LocalizacionId == item.Proyecto.LocalizacionIdMunicipio).FirstOrDefault();
+                //item.Proyecto.MunicipioObj = Municipio;
+                //item.Proyecto.DepartamentoObj = ListLocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
                 item.Proyecto.tipoIntervencionString = TipoIntervencion.Where(r => r.Codigo == item.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
                 item.Proyecto.Sede = Sede;
-                if (String.IsNullOrEmpty(item.EstadoValidacion)|| item.EstadoValidacion == "0")
+                if (String.IsNullOrEmpty(item.EstadoAprobacion)|| item.EstadoAprobacion == "0")
                 {
-                    item.EstadoValidacionString = "Sin verificación";
+                    item.EstadoAprobacionString = "Sin validación";
                 }
                 else
                 {
-                    item.EstadoValidacionString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.EstadoValidacion, 160);
+                    item.EstadoAprobacionString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.EstadoAprobacionString, 161);
                 }
             }
             return list;
@@ -485,13 +485,13 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<Respuesta> SendFinalReportToSupervision(int pProyectoId, string pUsuario)
+        public async Task<Respuesta> SendFinalReportToSupervision(int pInformeFinalId, string pUsuario)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Enviar_A_supervisor_Informe_Final_Validacion, (int)EnumeratorTipoDominio.Acciones);
 
             try
             {
-                InformeFinal informeFinal = _context.InformeFinal.Where(r => r.ProyectoId == pProyectoId).FirstOrDefault();
+                InformeFinal informeFinal = _context.InformeFinal.Where(r => r.InformeFinalId == pInformeFinalId).FirstOrDefault();
                 if (informeFinal != null)
                 {
                     informeFinal.EstadoValidacion = ConstantCodigoEstadoValidacionInformeFinal.Con_informe_enviado_al_supervisor;

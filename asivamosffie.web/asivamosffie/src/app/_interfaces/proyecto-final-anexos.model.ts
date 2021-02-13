@@ -34,6 +34,7 @@ export interface ListaChequeo {
   validacionCodigo: string,
   estadoInforme: string,
   registroCompleto: boolean,
+  semaforo: boolean
 }
 
 export interface InformeFinalInterventoria {

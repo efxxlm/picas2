@@ -18,5 +18,8 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public string EstadoInformeString { get; set; }
+
+        [NotMapped]
+        public string EstadoAprobacionString { get; set; }
     }
 }

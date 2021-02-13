@@ -181,6 +181,13 @@ namespace asivamosffie.services
             string CreateEdit = string.Empty;
             try
             {
+                InformeFinal informeFinal = _context.InformeFinal.Where(r => r.ProyectoId == pInformeFinal.ProyectoId).FirstOrDefault();
+                
+                if (informeFinal != null) {
+
+                    pInformeFinal.InformeFinalId = informeFinal.InformeFinalId;
+
+                }
 
                 if (pInformeFinal.InformeFinalId == 0)
                 {
@@ -240,6 +247,7 @@ namespace asivamosffie.services
             InformeFinal informeFinal = _context.InformeFinal.Where(r => r.ProyectoId == pProyectoId).FirstOrDefault();
             int informeFinalInterventoriaObservacionesId = 0;
             bool tieneObservacionNoCumple = false;
+            bool semaforo = false;
 
             if (informeFinal != null)//Sino han llenado los campos de informe final no se muestra la lista de chequeos
             {
@@ -249,6 +257,16 @@ namespace asivamosffie.services
                 .Include(r => r.InformeFinalAnexo)
                 .OrderBy(r => r.InformeFinalListaChequeo.Posicion)
                 .ToListAsync();
+
+                if (informeFinal.EstadoInforme == ConstantCodigoEstadoInformeFinal.En_proceso_de_registro)
+                {
+                    InformeFinalInterventoria no_seleccionado = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == informeFinal.InformeFinalId && (r.CalificacionCodigo != "0" || String.IsNullOrEmpty(r.CalificacionCodigo))).FirstOrDefault();
+
+                    if (no_seleccionado != null)
+                    {
+                        semaforo = true;
+                    }
+                }
 
                 foreach (var item in listInformeFinalInterventoria)
                 {
@@ -290,6 +308,7 @@ namespace asivamosffie.services
                         posicion = item.InformeFinalListaChequeo.Posicion,
                         estadoInforme = informeFinal.EstadoInforme,
                         registroCompleto = (bool)informeFinal.RegistroCompleto,
+                        semaforo = semaforo
                 });
                 }
             }
@@ -567,7 +586,7 @@ namespace asivamosffie.services
                                                                        Observaciones = pObservacion.Observaciones,
                                                                    });
                 }
-                _context.SaveChanges();
+                //_context.SaveChanges();
 
                 return
                 new Respuesta

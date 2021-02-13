@@ -7,7 +7,7 @@ using asivamosffie.model.APIModels;
 
 namespace asivamosffie.services.Interfaces
 {
-    public interface IVerifyFinalReportService
+    public interface IValidateFinalReportService
     {
         Task<List<InformeFinal>> GetListInformeFinal();
         Task<List<dynamic>> GetInformeFinalByProyectoId(int pProyectoId);
@@ -20,7 +20,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> UpdateStateValidateInformeFinalInterventoria(int pInformeFinalInterventoriaId, string code, string user);
         Task<Respuesta> CreateEditObservacionInformeFinal(InformeFinalObservaciones pObseravacion, bool tieneObservacion);
         Task<Respuesta> CreateEditInformeFinalInterventoriaObservacion(InformeFinalInterventoriaObservaciones pObservacion);
-        Task<Respuesta> SendFinalReportToSupervision(int pProyectoId, string pUsuario);
+        Task<Respuesta> SendFinalReportToSupervision(int pInformeFinalId, string pUsuario);
         Task<Respuesta> ApproveInformeFinal(int pInformeFinalId, string pUsuario);
         Task<Respuesta> NoApprovedInformeFinal(int pInformeFinalId, string pUsuario);
 

@@ -55,7 +55,6 @@ export class TablaInformeFinalComponent implements OnInit, AfterViewInit {
     this.verificarInformeFinalProyectoService.getListInformeFinal()
     .subscribe(report => {
       this.dataSource.data = report as RegistrarInterface[];
-      console.log("Aquí:",this.dataSource.data);
     });
   }
 

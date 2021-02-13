@@ -49,7 +49,6 @@ export class FormObservacionesReciboSatisfaccionComponent implements OnInit {
       archivado: [null, Validators.required],
       tieneObservacionesValidacion: [null, Validators.required],
     });
-    console.log("ue paso? ",this.report.proyecto);
     if (this.report.proyecto.informeFinal.length > 0) {
       this.observaciones.get("informeFinalId").setValue(this.report.proyecto.informeFinal[0].informeFinalId);
       this.observaciones.get("esSupervision").setValue(true);

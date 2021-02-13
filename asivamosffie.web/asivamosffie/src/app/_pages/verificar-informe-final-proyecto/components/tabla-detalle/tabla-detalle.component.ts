@@ -51,7 +51,6 @@ export class TablaDetalleComponent implements OnInit, AfterViewInit {
   ]
 
   ngOnInit(): void {
-    console.log("Què datos estan entrando? : ",this.id);
     this.getInformeFinalListaChequeoByInformeFinalId(this.id);
   }
 
@@ -60,7 +59,6 @@ export class TablaDetalleComponent implements OnInit, AfterViewInit {
     .subscribe(anexos => {
       this.dataSource.data = anexos as Anexo[];
       this.anexos = anexos;
-      console.log("Aquí:",this.anexos);
     });
   }
 
@@ -83,19 +81,18 @@ export class TablaDetalleComponent implements OnInit, AfterViewInit {
   }
 
   openDialogObservaciones(informe:any, verDetalle: boolean) {
+    console.log(verDetalle);
     let dialogRef = this.dialog.open(DialogObservacionesComponent, {
       width: '70em',
       data: {
         informe: informe,
         llaveMen: this.llaveMen,
-        VerDetalle: verDetalle
+        verDetalle: verDetalle
       },
       id:'dialogObservacionesSupervisor'
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-      this.ngOnInit();
       return;
     });
   }

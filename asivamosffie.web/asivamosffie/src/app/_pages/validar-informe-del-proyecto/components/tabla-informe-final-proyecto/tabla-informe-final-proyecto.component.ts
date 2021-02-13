@@ -2,18 +2,29 @@ import { Component, AfterViewInit, ViewChild, OnInit } from '@angular/core'
 import { MatPaginator } from '@angular/material/paginator'
 import { MatSort } from '@angular/material/sort'
 import { MatTableDataSource } from '@angular/material/table'
+import { ValidarInformeFinalService } from 'src/app/core/_services/validarInformeFinal/validar-informe-final.service';
 
 const ELEMENT_DATA = [
   {
-    contratacionProyectoId: '1',
+    proyectoId: '1',
     fechaEnvio: '22/11/2020',
     llaveMen: 'LJ776554',
     tipoIntervencion: 'Remodelación',
     institucionEducativa: 'I.E. María Villa Campo',
     sedeEducativa: 'Única Sede',
-    estadoVerificacion: 'Sin verificación',
+    estadoAprobacion: 'Sin verificación',
   }
 ]
+
+export interface RegistrarInterface {
+    proyectoId: number,
+    fechaEnvio: Date,
+    llaveMen: string,
+    tipoIntervencion: string,
+    institucionEducativa: string,
+    sedeEducativa: string,
+    estadoAprobacionString: string
+}
 
 @Component({
   selector: 'app-tabla-informe-final-proyecto',
@@ -21,25 +32,37 @@ const ELEMENT_DATA = [
   styleUrls: ['./tabla-informe-final-proyecto.component.scss']
 })
 export class TablaInformeFinalProyectoComponent implements OnInit, AfterViewInit {
+  ELEMENT_DATA : RegistrarInterface[] = [];
 
-  ELEMENT_DATA: any[]
   displayedColumns: string[] = [
     'fechaEnvio',
     'llaveMen',
     'tipoIntervencion',
     'institucionEducativa',
     'sedeEducativa',
-    'estadoVerificacion',
-    'contratacionProyectoId'
+    'estadoAprobacionString',
+    'proyectoId'
   ]
-  dataSource = new MatTableDataSource(ELEMENT_DATA)
+  dataSource = new MatTableDataSource<RegistrarInterface>(this.ELEMENT_DATA);
 
   @ViewChild(MatPaginator) paginator: MatPaginator
   @ViewChild(MatSort) sort: MatSort
 
-  constructor() {}
+  constructor(
+    private validarInformeFinalService: ValidarInformeFinalService,
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.getListInformeFinal();
+  }
+
+  getListInformeFinal(){
+    this.validarInformeFinalService.getListInformeFinal()
+    .subscribe(report => {
+      this.dataSource.data = report as RegistrarInterface[];
+      console.log("Aquí:",this.dataSource.data);
+    });
+  }
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort

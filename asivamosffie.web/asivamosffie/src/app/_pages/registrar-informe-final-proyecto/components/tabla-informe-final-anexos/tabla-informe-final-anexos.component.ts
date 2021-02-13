@@ -28,6 +28,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
 
   estadoInforme = '0';
   registroCompleto = false;
+  semaforo= false;
 
   listChequeo: any;
   displayedColumns: string[] = [
@@ -72,6 +73,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
       if(listChequeo != null){
         this.estadoInforme = listChequeo[0].estadoInforme;
         this.registroCompleto = listChequeo[0].registroCompleto;
+        this.semaforo = listChequeo[0].semaforo;
       }
       this.dataSource.data = listChequeo as ListaChequeo[];
       this.listChequeo = listChequeo;

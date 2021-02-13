@@ -15,7 +15,7 @@ export class VerDetalleInformeFinalComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private validarInformeFinalProyectoService: VerificarInformeFinalService
+    private verificarInformeFinalProyectoService: VerificarInformeFinalService
   ) { }
 
   ngOnInit(): void {
@@ -25,7 +25,7 @@ export class VerDetalleInformeFinalComponent implements OnInit {
     })
   }
   getInformeFinalByProyecto(id:string) {
-    this.validarInformeFinalProyectoService.getInformeFinalByProyecto(id)
+    this.verificarInformeFinalProyectoService.getInformeFinalByProyecto(id)
     .subscribe(report => {
       this.report = report[0];
     });
