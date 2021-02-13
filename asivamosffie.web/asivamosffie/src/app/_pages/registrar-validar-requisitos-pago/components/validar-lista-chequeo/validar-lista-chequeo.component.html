@@ -1,8 +1,8 @@
 <mat-accordion *ngIf="solicitudPagoModificado !== undefined">
-    <mat-expansion-panel class="expansion-style sub-expansion" *ngFor="let solicitudPagoListaChequeo of solicitudPagoModificado.solicitudPagoListaChequeo">
+    <mat-expansion-panel class="expansion-style sub-expansion" *ngFor="let solicitudPagoListaChequeo of solicitudPagoModificado.solicitudPagoListaChequeo; index as i">
         <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title sin-diligenciar" style="font-size: .8em !important;">
-                {{ firstLetterUpperCase( solicitudPagoListaChequeo.listaChequeo.nombre ) }}
+                {{ firstLetterUpperCase( solicitudPagoListaChequeo.listaChequeo?.nombre ) }}
             </mat-panel-title>
         </mat-expansion-panel-header>
 
@@ -10,7 +10,7 @@
             <table mat-table [dataSource]="getMatTable( solicitudPagoListaChequeo.solicitudPagoListaChequeoRespuesta )" matSort class="mat-elevation-z8">
                 <ng-container matColumnDef="item">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Item </th>
-                    <td mat-cell *matCellDef="let element; index as i" align="center"> <b>{{ i + 1 }}</b> </td>
+                    <td mat-cell *matCellDef="let element; index as j" align="center"> <b>{{ j + 1 }}</b> </td>
                 </ng-container>
                 <ng-container matColumnDef="documento">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Documento </th>
@@ -32,9 +32,9 @@
                 </ng-container>
                 <ng-container matColumnDef="observaciones">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Observaciones </th>
-                    <td mat-cell *matCellDef="let element" align="center">
+                    <td mat-cell *matCellDef="let element; index as j" align="center">
                         <button mat-raised-button color="accent" class="btn-table " [class.sin-diligenciar]="element.item==1" *ngIf="element.respuestaCodigo === noCumpleCodigo"
-                            (click)="this.callObservaciones()">Observaciones</button>
+                            (click)="getObservacion( element,i, j )">Observaciones</button>
 
                         <button mat-raised-button color="accent" class="btn-table " [class.sin-diligenciar]="element.item==2" *ngIf="element.item==2"
                             (click)="this.callSubsanacion()">Observaciones</button>

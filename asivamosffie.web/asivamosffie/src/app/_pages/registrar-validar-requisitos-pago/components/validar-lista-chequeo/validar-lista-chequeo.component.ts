@@ -18,7 +18,7 @@ import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrar
 })
 export class ValidarListaChequeoComponent implements OnInit {
 
-    @Input() solicitudPago: any;
+    @Input() contrato: any;
     solicitudPagoModificado: any;
     dataSource = new MatTableDataSource();
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -44,13 +44,13 @@ export class ValidarListaChequeoComponent implements OnInit {
 
     ngOnInit(): void {
         
-        for ( const solicitudPagoListaChequeo of this.solicitudPago.solicitudPagoListaChequeo ) {
+        for ( const solicitudPagoListaChequeo of this.contrato.solicitudPagoOnly.solicitudPagoListaChequeo ) {
             for ( const solicitudPagoListaChequeoRespuesta of solicitudPagoListaChequeo.solicitudPagoListaChequeoRespuesta ) {
                 solicitudPagoListaChequeoRespuesta.respuestaCodigo = solicitudPagoListaChequeoRespuesta.respuestaCodigo !== undefined ? solicitudPagoListaChequeoRespuesta.respuestaCodigo : null;
                 solicitudPagoListaChequeoRespuesta.observacion = solicitudPagoListaChequeoRespuesta.observacion !== undefined ? solicitudPagoListaChequeoRespuesta.observacion : null;
             }
         }
-        this.solicitudPagoModificado = this.solicitudPago;
+        this.solicitudPagoModificado = this.contrato.solicitudPagoOnly;
         console.log( this.solicitudPagoModificado );
         this.dataSource = new MatTableDataSource();
         this.dataSource.paginator = this.paginator;
@@ -70,6 +70,20 @@ export class ValidarListaChequeoComponent implements OnInit {
 
     getMatTable( solicitudPagoListaChequeoRespuesta: any[] ) {
         return new MatTableDataSource( solicitudPagoListaChequeoRespuesta );
+    }
+
+    getObservacion( registro: any, index: number, jIndex: number ) {
+        const dialogRef = this.dialog.open(DialogObservacionesItemListchequeoComponent, {
+            width: '70em',
+            data: { contrato: this.contrato, registro, jIndex }
+        });
+
+        dialogRef.afterClosed()
+            .subscribe(
+                obs => {
+                    this.solicitudPagoModificado.solicitudPagoListaChequeo[ index ].solicitudPagoListaChequeoRespuesta[ jIndex ].observacion = obs;
+                }
+            );
     }
 
     callObservaciones(){
@@ -102,13 +116,13 @@ export class ValidarListaChequeoComponent implements OnInit {
         .subscribe(
             response => {
                 this.openDialog( '', `<b>${ response.message }</b>` );
-                this.registrarPagosSvc.getValidateSolicitudPagoId( this.solicitudPago.solicitudPagoId )
+                this.registrarPagosSvc.getValidateSolicitudPagoId( this.solicitudPagoModificado.solicitudPagoId )
                     .subscribe(
                         () => {
                             this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                                 () => this.routes.navigate(
                                     [
-                                        '/registrarValidarRequisitosPago/verDetalleEditar',  this.solicitudPago.contratoId, this.solicitudPago.solicitudPagoId
+                                        '/registrarValidarRequisitosPago/verDetalleEditar',  this.solicitudPagoModificado.contratoId, this.solicitudPagoModificado.solicitudPagoId
                                     ]
                                 )
                             );
