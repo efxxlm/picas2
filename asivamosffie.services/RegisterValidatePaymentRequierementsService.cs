@@ -219,8 +219,9 @@ namespace asivamosffie.services
                 case ConstanCodigoTipoSolicitudContratoSolicitudPago.Contratos_Obra:
 
                     solicitudPago = _context.SolicitudPago.Where(r => r.SolicitudPagoId == solicitudPago.SolicitudPagoId)
-                        .Include(r=> r.SolicitudPagoListaChequeo)
-                            .ThenInclude(r=> r.SolicitudPagoListaChequeoRespuesta)
+                        .Include(r => r.SolicitudPagoListaChequeo)
+                            .ThenInclude(r => r.SolicitudPagoListaChequeoRespuesta)
+                                .ThenInclude(r => r.ListaChequeoItem)
                         .Include(r => r.SolicitudPagoCargarFormaPago)
                         .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
                            .ThenInclude(r => r.SolicitudPagoFase)
@@ -403,11 +404,11 @@ namespace asivamosffie.services
             SolicitudPago solicitudPago = await GetSolicitudPago(SolicitudPagoId);
             bool CompleteRecord = ValidateCompleteRecordSolicitudPago(solicitudPago);
             await _context.Set<SolicitudPago>()
-                                  .Where(s => s.SolicitudPagoId == SolicitudPagoId)
-                                  .UpdateAsync(r => new SolicitudPago()
-                                  {
-                                      RegistroCompleto = CompleteRecord
-                                  });
+                                              .Where(s => s.SolicitudPagoId == SolicitudPagoId)
+                                                                                              .UpdateAsync(r => new SolicitudPago()
+                                                                                              {
+                                                                                                  RegistroCompleto = CompleteRecord
+                                                                                              });
         }
 
         public async Task<Respuesta> ReturnSolicitudPago(SolicitudPago pSolicitudPago)
@@ -542,12 +543,44 @@ namespace asivamosffie.services
 
             try
             {
-                SolicitudPagoFaseCriterio solicitudPagoFaseCriterioOld = _context.SolicitudPagoFaseCriterio.Find(pSolicitudPagoFaseCriterioId);
-                solicitudPagoFaseCriterioOld.FechaModificacion = DateTime.Now;
-                solicitudPagoFaseCriterioOld.UsuarioModificacion = pUsuarioModificacion;
-                solicitudPagoFaseCriterioOld.Eliminado = true;
+                await _context.Set<SolicitudPagoFaseCriterio>()
+                                                               .Where(r => r.SolicitudPagoFaseCriterioId == pSolicitudPagoFaseCriterioId)
+                                                                                               .UpdateAsync(r => new SolicitudPagoFaseCriterio
+                                                                                               {
+                                                                                                   FechaModificacion = DateTime.Now,
+                                                                                                   UsuarioModificacion = pUsuarioModificacion,
+                                                                                                   Eliminado = true,
+                                                                                               });
+                 
+                //Eliminar Lista de Chequeo Asociada al criterio 
 
+                string strCodigoCriterio = _context.SolicitudPagoFaseCriterio.Find(pSolicitudPagoFaseCriterioId).TipoCriterioCodigo;
 
+                int SolicitudPagoId = _context.SolicitudPagoFaseCriterio.Where(s => s.SolicitudPagoFaseCriterioId == pSolicitudPagoFaseCriterioId)
+                                                                           .Include(f => f.SolicitudPagoFase)
+                                                                             .ThenInclude(r => r.SolicitudPagoRegistrarSolicitudPago)
+                                                                                       .ThenInclude(r => r.SolicitudPago)
+                                                                           .Select(s => s.SolicitudPagoFase.SolicitudPagoRegistrarSolicitudPago.SolicitudPago.SolicitudPagoId)
+                                                                                                                                                     .FirstOrDefault();
+
+                int? SolicitudPagoListaChequeoId = _context.SolicitudPago.Include(s => s.SolicitudPagoListaChequeo)
+                                                                               .ThenInclude(s => s.ListaChequeo)
+                                                                        .Where(s => s.SolicitudPagoId == SolicitudPagoId
+                                                                            && s.SolicitudPagoListaChequeo.FirstOrDefault().ListaChequeo.CriterioPagoCodigo == strCodigoCriterio)
+                                                                        .Select(r => r.SolicitudPagoId).FirstOrDefault();
+
+                if(SolicitudPagoListaChequeoId > 0)
+                {
+                    await _context.Set<SolicitudPagoListaChequeo>()
+                                                           .Where(r => r.SolicitudPagoListaChequeoId == SolicitudPagoListaChequeoId)
+                                                                                           .UpdateAsync(r => new SolicitudPagoListaChequeo
+                                                                                           {
+                                                                                               FechaModificacion = DateTime.Now,
+                                                                                               UsuarioModificacion = pUsuarioModificacion,
+                                                                                               Eliminado = true,
+                                                                                           });
+                     
+                }
                 return
                      new Respuesta
                      {
@@ -828,7 +861,6 @@ namespace asivamosffie.services
             }
         }
 
-
         private void CreateEditSolicitudPagoSolicitudPagoAmortizacion(ICollection<SolicitudPagoFaseAmortizacion> pSolicitudPagoAmortizacionList, string pUsuarioCreacion)
         {
             foreach (var SolicitudPagoAmortizacion in pSolicitudPagoAmortizacionList)
@@ -936,9 +968,6 @@ namespace asivamosffie.services
             }
         }
 
-
-
-
         private void CreateEditListaChequeoByCriterio(SolicitudPagoFaseCriterio pSolicitudPagoFaseCriterio, string pUsuarioCreacion)
         {
             ListaChequeo listaChequeo = _context.ListaChequeo
@@ -959,13 +988,14 @@ namespace asivamosffie.services
 
                 int? SolicitudPagoListaChequeoId = _context.SolicitudPago.Include(s => s.SolicitudPagoListaChequeo)
                                                                                .ThenInclude(s => s.ListaChequeo)
-                                                                        .Where(s => s.SolicitudPagoId == SolicitudPagoId
-                                                                            && s.SolicitudPagoListaChequeo.FirstOrDefault().ListaChequeo.CriterioPagoCodigo == pSolicitudPagoFaseCriterio.TipoCriterioCodigo)
-                                                                        .Select(r => r.SolicitudPagoId).FirstOrDefault();
+                                                                                .Where(s => s.SolicitudPagoId == SolicitudPagoId
+                                                                                    && s.Eliminado != true
+                                                                                    && s.SolicitudPagoListaChequeo.FirstOrDefault().ListaChequeo.CriterioPagoCodigo == pSolicitudPagoFaseCriterio.TipoCriterioCodigo)
+                                                                                .Select(r => r.SolicitudPagoId).FirstOrDefault();
 
 
 
-                if (SolicitudPagoListaChequeoId == null && SolicitudPagoId != null)
+                if (SolicitudPagoListaChequeoId == 0 && SolicitudPagoId > 0)
                 {
 
                     SolicitudPagoListaChequeo solicitudPagoListaChequeoNew = new SolicitudPagoListaChequeo
