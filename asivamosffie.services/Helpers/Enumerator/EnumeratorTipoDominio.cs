@@ -201,6 +201,8 @@ namespace asivamosffie.services.Helpers.Enumerator
         Tipo_Observacion_Solicitud_Pago = 150,
         Estado_Orden_Giro = 156, 
 
-        Medio_Pago_Giro_Tercero = 158
+        Medio_Pago_Giro_Tercero = 158,
+
+        Respuestas_Lista_Chequeo_Solicitud_Pago = 162
     }
 }

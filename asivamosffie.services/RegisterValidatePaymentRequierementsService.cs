@@ -720,6 +720,8 @@ namespace asivamosffie.services
 
                     CreateEditSolicitudPagoFase(pSolicitudPago.SolicitudPagoRegistrarSolicitudPago.FirstOrDefault().SolicitudPagoFase, pSolicitudPago.UsuarioCreacion);
                 }
+
+                CreateEditListaChequeoRespuesta(pSolicitudPago.SolicitudPagoListaChequeo, pSolicitudPago.UsuarioCreacion);
                 return
                      new Respuesta
                      {
@@ -741,6 +743,41 @@ namespace asivamosffie.services
                         Code = GeneralCodes.Error,
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.Error, idAccion, pSolicitudPago.UsuarioCreacion, ex.InnerException.ToString())
                     };
+            }
+        }
+
+        private async void CreateEditListaChequeoRespuesta(ICollection<SolicitudPagoListaChequeo> pListSolicitudPagoListaChequeo, string usuarioCreacion)
+        {
+            foreach (var SolicitudPagoListaChequeo in pListSolicitudPagoListaChequeo)
+            {
+                bool blRegistroCompletoListaChequeo = true;
+
+                foreach (var SolicitudPagoListaChequeoRespuesta in SolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta)
+                {
+                    bool RegistroCompletoItem = ValidarRegistroCompletoSolicitudPagoListaChequeoRespuesta(SolicitudPagoListaChequeoRespuesta);
+
+                    if (!RegistroCompletoItem)
+                        blRegistroCompletoListaChequeo = false;
+
+                    await _context.Set<SolicitudPagoListaChequeoRespuesta>()
+                                                    .Where(s => s.SolicitudPagoListaChequeoRespuestaId == SolicitudPagoListaChequeo.SolicitudPagoListaChequeoId)
+                                                                                 .UpdateAsync(s => new SolicitudPagoListaChequeoRespuesta
+                                                                                 {
+                                                                                     FechaModificacion = DateTime.Now,
+                                                                                     RegistroCompleto = RegistroCompletoItem,
+                                                                                     UsuarioModificacion = usuarioCreacion,
+                                                                                     RespuestaCodigo = SolicitudPagoListaChequeoRespuesta.RespuestaCodigo,
+                                                                                     Observacion = SolicitudPagoListaChequeoRespuesta.Observacion,
+                                                                                 });
+                }
+                await _context.Set<SolicitudPagoListaChequeo>()
+                                                    .Where(r => r.SolicitudPagoListaChequeoId == SolicitudPagoListaChequeo.SolicitudPagoListaChequeoId)
+                                                                                             .UpdateAsync(s => new SolicitudPagoListaChequeo
+                                                                                             {
+                                                                                                 RegistroCompleto = blRegistroCompletoListaChequeo,
+                                                                                                 FechaModificacion =DateTime.Now,
+                                                                                                 UsuarioModificacion = usuarioCreacion
+                                                                                             });  
             }
         }
 
@@ -1034,9 +1071,16 @@ namespace asivamosffie.services
 
         }
 
-        private bool? ValidarRegistroCompletoSolicitudPagoListaChequeoRespuesta(SolicitudPagoListaChequeoRespuesta pSolicitudPagoListaChequeoRespuestaNew)
+        private bool ValidarRegistroCompletoSolicitudPagoListaChequeoRespuesta(SolicitudPagoListaChequeoRespuesta pSolicitudPagoListaChequeoRespuestaNew)
         {
-            return false;
+            if (string.IsNullOrEmpty(pSolicitudPagoListaChequeoRespuestaNew.RespuestaCodigo))
+                return false;
+
+            if (pSolicitudPagoListaChequeoRespuestaNew.RespuestaCodigo == ConstanCodigoRespuestasListaChequeoSolictudPago.No_cumple)
+                if (string.IsNullOrEmpty(pSolicitudPagoListaChequeoRespuestaNew.Observacion))
+                    return false;
+
+            return true;
         }
 
         private void CreateEditSolicitudPagoFaseCriterioProyecto(ICollection<SolicitudPagoFaseCriterioProyecto> ListSolicitudPagoFaseCriterioProyecto, string pStrUsuarioCreacion)
@@ -1066,9 +1110,10 @@ namespace asivamosffie.services
         private bool ValidateCompleteRecordSolicitudPago(SolicitudPago pSolicitudPago)
         {
             if (
-                pSolicitudPago.SolicitudPagoCargarFormaPago.Count() == 0
+                   pSolicitudPago.SolicitudPagoCargarFormaPago.Count() == 0
                 || pSolicitudPago.SolicitudPagoSoporteSolicitud.Count() == 0
-                || pSolicitudPago.SolicitudPagoRegistrarSolicitudPago.Count() == 0)
+                || pSolicitudPago.SolicitudPagoRegistrarSolicitudPago.Count() == 0
+                || pSolicitudPago.SolicitudPagoListaChequeo.Count() == 0)
                 return false;
 
             foreach (var SolicitudPagoCargarFormaPago in pSolicitudPago.SolicitudPagoCargarFormaPago)
@@ -1086,8 +1131,14 @@ namespace asivamosffie.services
                 if (!ValidateCompleteRecordSolicitudPagoRegistrarSolicitudPago(SolicitudPagoRegistrarSolicitudPago))
                     return false;
             }
-
-
+            foreach (var SolicitudPagoListaChequeo in pSolicitudPago.SolicitudPagoListaChequeo)
+            {
+                foreach (var SolicitudPagoListaChequeoRespuesta in SolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta)
+                {
+                    if (SolicitudPagoListaChequeoRespuesta.RegistroCompleto != true)
+                        return false;
+                }
+            }
             return true;
         }
 
