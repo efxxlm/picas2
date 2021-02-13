@@ -219,6 +219,8 @@ namespace asivamosffie.services
                 case ConstanCodigoTipoSolicitudContratoSolicitudPago.Contratos_Obra:
 
                     solicitudPago = _context.SolicitudPago.Where(r => r.SolicitudPagoId == solicitudPago.SolicitudPagoId)
+                        .Include(r=> r.SolicitudPagoListaChequeo)
+                            .ThenInclude(r=> r.SolicitudPagoListaChequeoRespuesta)
                         .Include(r => r.SolicitudPagoCargarFormaPago)
                         .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
                            .ThenInclude(r => r.SolicitudPagoFase)
@@ -887,6 +889,9 @@ namespace asivamosffie.services
         {
             foreach (var SolicitudPagoFaseCriterio in ListSolicitudPagoFaseCriterio)
             {
+                //Crear Lista Chequeo Criterio Codigo
+                CreateEditListaChequeoByCriterio(SolicitudPagoFaseCriterio, strUsuarioCreacion);
+
                 if (SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioProyecto.Count() > 0)
                     CreateEditSolicitudPagoFaseCriterioProyecto(SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioProyecto, strUsuarioCreacion);
 
@@ -929,6 +934,78 @@ namespace asivamosffie.services
 
 
             }
+        }
+
+
+
+
+        private void CreateEditListaChequeoByCriterio(SolicitudPagoFaseCriterio pSolicitudPagoFaseCriterio, string pUsuarioCreacion)
+        {
+            ListaChequeo listaChequeo = _context.ListaChequeo
+                                                           .Where(l => l.CriterioPagoCodigo == pSolicitudPagoFaseCriterio.TipoCriterioCodigo
+                                                                    && l.Eliminado != true)
+                                                           .Include(r => r.ListaChequeoListaChequeoItem)
+                                                                                                        .FirstOrDefault();
+
+            if (listaChequeo != null)
+            {
+                int? SolicitudPagoId = _context.SolicitudPagoFase
+                                        .Where(r => r.SolicitudPagoFaseId == pSolicitudPagoFaseCriterio.SolicitudPagoFaseId)
+                                            .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
+                                                    .ThenInclude(r => r.SolicitudPago)
+                                        .Select(s => s.SolicitudPagoRegistrarSolicitudPago.SolicitudPago.SolicitudPagoId)
+                                                                                                                        .FirstOrDefault();
+
+
+                int? SolicitudPagoListaChequeoId = _context.SolicitudPago.Include(s => s.SolicitudPagoListaChequeo)
+                                                                               .ThenInclude(s => s.ListaChequeo)
+                                                                        .Where(s => s.SolicitudPagoId == SolicitudPagoId
+                                                                            && s.SolicitudPagoListaChequeo.FirstOrDefault().ListaChequeo.CriterioPagoCodigo == pSolicitudPagoFaseCriterio.TipoCriterioCodigo)
+                                                                        .Select(r => r.SolicitudPagoId).FirstOrDefault();
+
+
+
+                if (SolicitudPagoListaChequeoId == null && SolicitudPagoId != null)
+                {
+
+                    SolicitudPagoListaChequeo solicitudPagoListaChequeoNew = new SolicitudPagoListaChequeo
+                    {
+                        UsuarioCreacion = pUsuarioCreacion,
+                        FechaCreacion = DateTime.Now,
+                        Eliminado = false,
+                        RegistroCompleto = false,
+
+                        SolicitudPagoId = (int)SolicitudPagoId,
+                        ListaChequeoId = listaChequeo.ListaChequeoId
+                    };
+                    _context.SolicitudPagoListaChequeo.Add(solicitudPagoListaChequeoNew);
+                    _context.SaveChanges();
+
+
+                    foreach (var ListaChequeoListaChequeoItem in listaChequeo.ListaChequeoListaChequeoItem)
+                    {
+                        SolicitudPagoListaChequeoRespuesta solicitudPagoListaChequeoRespuestaNew = new SolicitudPagoListaChequeoRespuesta
+                        {
+                            UsuarioCreacion = pUsuarioCreacion,
+                            FechaCreacion = DateTime.Now,
+                            Eliminado = false,
+
+                            SolicitudPagoListaChequeoId = solicitudPagoListaChequeoNew.SolicitudPagoListaChequeoId,
+                            ListaChequeoItemId = ListaChequeoListaChequeoItem.ListaChequeoItemId,
+                        };
+
+                        solicitudPagoListaChequeoRespuestaNew.RegistroCompleto = ValidarRegistroCompletoSolicitudPagoListaChequeoRespuesta(solicitudPagoListaChequeoRespuestaNew);
+                        _context.SolicitudPagoListaChequeoRespuesta.Add(solicitudPagoListaChequeoRespuestaNew);
+                    }
+                }
+
+            }
+
+        }
+
+        private bool? ValidarRegistroCompletoSolicitudPagoListaChequeoRespuesta(SolicitudPagoListaChequeoRespuesta pSolicitudPagoListaChequeoRespuestaNew)
+        {
+            return false;
         }
 
         private void CreateEditSolicitudPagoFaseCriterioProyecto(ICollection<SolicitudPagoFaseCriterioProyecto> ListSolicitudPagoFaseCriterioProyecto, string pStrUsuarioCreacion)
@@ -1116,7 +1193,7 @@ namespace asivamosffie.services
                         string.IsNullOrEmpty(solicitudPagoFaseCriterio.TipoCriterioCodigo)
                     || string.IsNullOrEmpty(solicitudPagoFaseCriterio.ValorFacturado.ToString())
                       ) return false;
-            } 
+            }
             return true;
         }
 
