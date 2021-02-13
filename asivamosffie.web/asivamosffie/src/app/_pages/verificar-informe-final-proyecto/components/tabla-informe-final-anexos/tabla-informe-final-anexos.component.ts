@@ -10,6 +10,7 @@ import { VerificarInformeFinalService } from 'src/app/core/_services/verificarIn
 import { ListaChequeo } from 'src/app/_interfaces/proyecto-final-anexos.model'
 import { InformeFinal, InformeFinalAnexo, InformeFinalInterventoria, InformeFinalInterventoriaObservaciones } from 'src/app/_interfaces/informe-final';
 import { Respuesta } from 'src/app/core/_services/common/common.service'
+import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-tabla-informe-final-anexos',
@@ -41,10 +42,28 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   constructor(
     private fb: FormBuilder,
     public dialog: MatDialog,
-    private validarInformeFinalService: VerificarInformeFinalService
+    private validarInformeFinalService: VerificarInformeFinalService,
+    private router: Router
   ) {}
 
-  estaEditando = false
+  estaEditando = false;
+  noGuardado=false;
+  
+  ngOnDestroy(): void {
+    if ( this.noGuardado===true) {
+      let dialogRef =this.dialog.open(ModalDialogComponent, {
+        width: '28em',
+        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
+      });   
+      dialogRef.afterClosed().subscribe(result => {
+        // console.log(`Dialog result: ${result}`);
+        if(result === true)
+        {
+            this.onSubmit();          
+        }           
+      });
+    }
+  };
 
   estadoArray = [
     { name: 'Cumple', value: 1 },
@@ -135,6 +154,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
 
   onSubmit() {
     this.estaEditando = true;
+    this.noGuardado=false;
     //recorre el datasource y crea modelo
     const listaInformeFinalInterventoria = [] as InformeFinal;
     listaInformeFinalInterventoria.informeFinalInterventoria = [];
@@ -156,6 +176,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
       informeFinalInterventoria: listaInformeFinalInterventoria.informeFinalInterventoria,
     };
     this.updateStateValidateInformeFinalInterventoriaByInformeFinal(informeFinal);
+    this.router.navigate(['/verificarInformeFinalProyecto']);
   }
 
   updateStateValidateInformeFinalInterventoriaByInformeFinal( informeFinal: any ) {
@@ -163,14 +184,18 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     .subscribe((respuesta: Respuesta) => {
         console.log(respuesta);
         this.openDialog('', respuesta.message);
-        this.ngOnInit();
+        //this.ngOnInit();
         return;
       },
       err => {
         this.openDialog('', err.message);
-        this.ngOnInit();
+        //this.ngOnInit();
         return;
       });
+  }
+
+  changeState(){
+    this.noGuardado = true;
   }
 
 }

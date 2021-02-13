@@ -52,9 +52,7 @@ export class FormObservacionesReciboSatisfaccionComponent implements OnInit {
     if (this.report.proyecto.informeFinal.length > 0) {
       this.observaciones.get("informeFinalId").setValue(this.report.proyecto.informeFinal[0].informeFinalId);
       this.observaciones.get("esSupervision").setValue(true);
-      if(this.report.proyecto.informeFinal[0].tieneObservacionesValidacion == null){
-        this.observaciones.get("tieneObservacionesValidacion").setValue(false);
-      }else{
+      if(this.report.proyecto.informeFinal[0].tieneObservacionesValidacion != null){
         this.observaciones.get("tieneObservacionesValidacion").setValue(this.report.proyecto.informeFinal[0].tieneObservacionesValidacion);
       }
       //this.observaciones.value.setValue({informeFinalId: (this.report.proyecto.informeFinal[0].informeFinalId), esSupervision: true});

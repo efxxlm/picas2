@@ -97,7 +97,7 @@
                       <mat-label *ngIf="element.validacionCodigo != null">{{
                         element.validacionCodigoString
                       }}</mat-label>
-                      <mat-select [(ngModel)]="element.validacionCodigo" required>
+                      <mat-select [(ngModel)]="element.validacionCodigo" (selectionChange)="changeState()" required>
                         <mat-option *ngFor="let estado of estadoArray" [value]="estado.value">
                           {{ estado.name }}
                         </mat-option>

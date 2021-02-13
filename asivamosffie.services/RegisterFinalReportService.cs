@@ -260,9 +260,9 @@ namespace asivamosffie.services
 
                 if (informeFinal.EstadoInforme == ConstantCodigoEstadoInformeFinal.En_proceso_de_registro)
                 {
-                    InformeFinalInterventoria no_seleccionado = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == informeFinal.InformeFinalId && (r.CalificacionCodigo != "0" || String.IsNullOrEmpty(r.CalificacionCodigo))).FirstOrDefault();
+                    InformeFinalInterventoria no_seleccionado = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == informeFinal.InformeFinalId && (r.CalificacionCodigo != "0" && !String.IsNullOrEmpty(r.CalificacionCodigo))).FirstOrDefault();
 
-                    if (no_seleccionado != null)
+                    if (no_seleccionado == null)
                     {
                         semaforo = true;
                     }

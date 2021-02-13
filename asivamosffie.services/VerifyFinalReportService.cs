@@ -219,14 +219,17 @@ namespace asivamosffie.services
 
                 foreach (InformeFinalInterventoria informeFinalInterventoria in informeFinal.InformeFinalInterventoria)
                 {
-                    informeFinalInterventoria.UsuarioCreacion = user.ToUpper();
-                    await this.UpdateStateValidateInformeFinalInterventoria(informeFinalInterventoria.InformeFinalInterventoriaId, informeFinalInterventoria.ValidacionCodigo,user);
-                    
-                    ///Actualiza o crea observaciones segun el caso (Sólo SUPERVISIÓN)
-                    foreach (InformeFinalInterventoriaObservaciones informeFinalInterventoriaObservaciones in informeFinalInterventoria.InformeFinalInterventoriaObservaciones)
+                    if (informeFinalInterventoria.ValidacionCodigo != "0" && informeFinalInterventoria.ValidacionCodigo != null)
                     {
-                        informeFinalInterventoriaObservaciones.UsuarioCreacion = user.ToUpper();
-                        await this.CreateEditInformeFinalInterventoriaObservacion(informeFinalInterventoriaObservaciones);
+                        informeFinalInterventoria.UsuarioCreacion = user.ToUpper();
+                        await this.UpdateStateValidateInformeFinalInterventoria(informeFinalInterventoria.InformeFinalInterventoriaId, informeFinalInterventoria.ValidacionCodigo, user);
+
+                        ///Actualiza o crea observaciones segun el caso (Sólo SUPERVISIÓN)
+                        foreach (InformeFinalInterventoriaObservaciones informeFinalInterventoriaObservaciones in informeFinalInterventoria.InformeFinalInterventoriaObservaciones)
+                        {
+                            informeFinalInterventoriaObservaciones.UsuarioCreacion = user.ToUpper();
+                            await this.CreateEditInformeFinalInterventoriaObservacion(informeFinalInterventoriaObservaciones);
+                        }
                     }
                 }
 

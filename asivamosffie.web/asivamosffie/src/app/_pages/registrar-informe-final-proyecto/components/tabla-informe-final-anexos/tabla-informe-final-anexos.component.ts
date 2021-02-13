@@ -13,6 +13,7 @@ import { InformeFinal, InformeFinalAnexo, InformeFinalInterventoria, InformeFina
 import { RegistrarInformeFinalProyectoService } from 'src/app/core/_services/registrarInformeFinal/registrar-informe-final-proyecto.service'
 import { Respuesta } from 'src/app/core/_services/common/common.service';
 import { Report } from 'src/app/_interfaces/proyecto-final.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tabla-informe-final-anexos',
@@ -51,12 +52,31 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     { name: 'No cumple', value: 2 },
     { name: 'No aplica', value: 3 ,}
   ];
+  editadoSupervision = false;
 
   constructor(
     private fb: FormBuilder,
     public dialog: MatDialog,
-    private registrarInformeFinalProyectoService: RegistrarInformeFinalProyectoService
-  ) { }
+    private registrarInformeFinalProyectoService: RegistrarInformeFinalProyectoService,
+    private router: Router  ) { }
+
+  noGuardado=false;
+  
+  ngOnDestroy(): void {
+    if ( this.noGuardado===true) {
+      let dialogRef =this.dialog.open(ModalDialogComponent, {
+        width: '28em',
+        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
+      });   
+      dialogRef.afterClosed().subscribe(result => {
+        // console.log(`Dialog result: ${result}`);
+        if(result === true)
+        {
+            this.onSubmit();          
+        }           
+      });
+    }
+  };
 
   ngOnInit(): void {
     this.stateEstaEditando();
@@ -132,6 +152,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     dialogRef.afterClosed().subscribe(result => {
       this.dataSource.data.forEach(control => {
         if ( result !== null && result.id === control.informeFinalInterventoriaId ) {
+          this.editadoSupervision = true;
           const informeFinalAnexo: InformeFinalAnexo = {
             informeFinalAnexoId: result.anexo.informeFinalAnexoId,
             tipoAnexo: result.anexo.tipoAnexo,
@@ -197,6 +218,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
 
   onSubmit() {
     this.estaEditando = true;
+    this.noGuardado=false;
     //recorre el datasource y crea modelo
     const listaInformeFinalInterventoria = [] as InformeFinal;
     listaInformeFinalInterventoria.informeFinalInterventoria = [];
@@ -218,6 +240,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
       informeFinalInterventoria: listaInformeFinalInterventoria.informeFinalInterventoria,
     };
     this.createEditInformeFinalInterventoriabyInformeFinal(informeFinal);
+    this.router.navigate(['/registrarInformeFinalProyecto']);
   }
 
   createEditInformeFinalInterventoriabyInformeFinal( informeFinal: any ) {
@@ -225,13 +248,17 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     .subscribe((respuesta: Respuesta) => {
         console.log(respuesta);
         this.openDialog('', respuesta.message);
-        this.ngOnInit();
+        //this.ngOnInit();
         return;
       },
       err => {
         this.openDialog('', err.message);
-        this.ngOnInit();
+        //this.ngOnInit();
         return;
       });
+  }
+
+  changeState(){
+    this.noGuardado = true;
   }
 }
