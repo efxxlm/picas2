@@ -8,6 +8,7 @@ namespace asivamosffie.model.Models
         public ListaChequeo()
         {
             ListaChequeoListaChequeoItem = new HashSet<ListaChequeoListaChequeoItem>();
+            SolicitudPagoListaChequeo = new HashSet<SolicitudPagoListaChequeo>();
         }
 
         public int ListaChequeoId { get; set; }
@@ -22,5 +23,6 @@ namespace asivamosffie.model.Models
         public bool? EsObra { get; set; }
 
         public virtual ICollection<ListaChequeoListaChequeoItem> ListaChequeoListaChequeoItem { get; set; }
+        public virtual ICollection<SolicitudPagoListaChequeo> SolicitudPagoListaChequeo { get; set; }
     }
 }

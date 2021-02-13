@@ -182,6 +182,8 @@ namespace asivamosffie.model.Models
         public virtual DbSet<SolicitudPagoFaseCriterioProyecto> SolicitudPagoFaseCriterioProyecto { get; set; }
         public virtual DbSet<SolicitudPagoFaseFactura> SolicitudPagoFaseFactura { get; set; }
         public virtual DbSet<SolicitudPagoFaseFacturaDescuento> SolicitudPagoFaseFacturaDescuento { get; set; }
+        public virtual DbSet<SolicitudPagoListaChequeo> SolicitudPagoListaChequeo { get; set; }
+        public virtual DbSet<SolicitudPagoListaChequeoRespuesta> SolicitudPagoListaChequeoRespuesta { get; set; }
         public virtual DbSet<SolicitudPagoObservacion> SolicitudPagoObservacion { get; set; }
         public virtual DbSet<SolicitudPagoOtrosCostosServicios> SolicitudPagoOtrosCostosServicios { get; set; }
         public virtual DbSet<SolicitudPagoRegistrarSolicitudPago> SolicitudPagoRegistrarSolicitudPago { get; set; }
@@ -215,6 +217,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValidarSeguimientoSemanal> VValidarSeguimientoSemanal { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -6281,6 +6284,60 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.SolicitudPagoFaseFacturaId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SolicitudPagoFaseFacturaDescuentoId_SolicitudPagoFaseFacturaId");
+            });
+
+            modelBuilder.Entity<SolicitudPagoListaChequeo>(entity =>
+            {
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.ListaChequeo)
+                    .WithMany(p => p.SolicitudPagoListaChequeo)
+                    .HasForeignKey(d => d.ListaChequeoId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SolicitudPagoListaChequeo_ListaChequeo");
+
+                entity.HasOne(d => d.SolicitudPago)
+                    .WithMany(p => p.SolicitudPagoListaChequeo)
+                    .HasForeignKey(d => d.SolicitudPagoId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SolicitudPagoListaChequeo_SolicitudPago");
+            });
+
+            modelBuilder.Entity<SolicitudPagoListaChequeoRespuesta>(entity =>
+            {
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.Observacion).HasMaxLength(1000);
+
+                entity.Property(e => e.RespuestaCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.ListaChequeoItem)
+                    .WithMany(p => p.SolicitudPagoListaChequeoRespuesta)
+                    .HasForeignKey(d => d.ListaChequeoItemId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Fk_SolicitudPagoListaChequeoRespuesta_ListaChequeoItem");
+
+                entity.HasOne(d => d.SolicitudPagoListaChequeo)
+                    .WithMany(p => p.SolicitudPagoListaChequeoRespuesta)
+                    .HasForeignKey(d => d.SolicitudPagoListaChequeoId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Fk_SolicitudPagoListaChequeoRespuesta_SolicitudPagoListaChequeo");
             });
 
             modelBuilder.Entity<SolicitudPagoObservacion>(entity =>
