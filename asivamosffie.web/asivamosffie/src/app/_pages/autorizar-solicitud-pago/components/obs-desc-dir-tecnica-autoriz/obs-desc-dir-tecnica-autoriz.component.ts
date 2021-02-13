@@ -1,8 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
+import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
+import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -14,6 +16,10 @@ export class ObsDescDirTecnicaAutorizComponent implements OnInit {
 
     @Input() solicitudPago: any;
     @Input() esVerDetalle = false;
+    @Input() autorizarSolicitudPagoId: any;
+    @Input() datosFacturaDescuentoCodigo: string;
+    @Output() estadoSemaforo = new EventEmitter<string>();
+    solicitudPagoObservacionId = 0;
     addressForm: FormGroup;
     formDescuentos: FormGroup;
     valorFacturado = 0;
@@ -37,14 +43,19 @@ export class ObsDescDirTecnicaAutorizComponent implements OnInit {
 
     get descuentos() {
         return this.formDescuentos.get( 'descuentos' ) as FormArray;
-    };
+    }
 
     constructor(
         private fb: FormBuilder,
         private dialog: MatDialog,
         private commonSvc: CommonService,
-        private routes: Router )
+        private routes: Router,
+        private activatedRoute: ActivatedRoute,
+        private obsMultipleSvc: ObservacionesMultiplesCuService,
+        private registrarPagosSvc: RegistrarRequisitosPagoService)
     {
+        this.commonSvc.tiposDescuento()
+            .subscribe( response => this.tiposDescuentoArray = response );
         this.addressForm = this.crearFormulario();
     }
 
@@ -58,6 +69,30 @@ export class ObsDescDirTecnicaAutorizComponent implements OnInit {
         if ( this.solicitudPagoFaseFactura !== undefined ) {
             this.solicitudPagoFaseFacturaId = this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaId;
             this.solicitudPagoFaseFacturaDescuento = this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaDescuento;
+
+            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.autorizarSolicitudPagoId, this.solicitudPago.solicitudPagoId, this.solicitudPagoFaseFacturaDescuento[0].solicitudPagoFaseFacturaDescuentoId )
+                .subscribe(
+                    response => {
+                        const obsSupervisor = response.filter( obs => obs.archivada === false )[0];
+
+                        if ( obsSupervisor !== undefined ) {
+                            if ( obsSupervisor.registroCompleto === false ) {
+                                this.estadoSemaforo.emit( 'en-proceso' );
+                            }
+                            if ( obsSupervisor.registroCompleto === true ) {
+                                this.estadoSemaforo.emit( 'completo' );
+                            }
+                            this.solicitudPagoObservacionId = obsSupervisor.solicitudPagoObservacionId;
+                            this.addressForm.setValue(
+                                {
+                                    fechaCreacion: obsSupervisor.fechaCreacion,
+                                    tieneObservaciones: obsSupervisor.tieneObservacion !== undefined ? obsSupervisor.tieneObservacion : null,
+                                    observaciones: obsSupervisor.observacion !== undefined ? ( obsSupervisor.observacion.length > 0 ? obsSupervisor.observacion : null ) : null
+                                }
+                            );
+                        }
+                    }
+                );
 
             if ( this.solicitudPagoFaseFacturaDescuento !== null ) {
                 this.formDescuentos.get( 'aplicaDescuento' ).setValue( this.solicitudPagoFaseFactura.tieneDescuento !== undefined ? this.solicitudPagoFaseFactura.tieneDescuento : null );
@@ -90,8 +125,9 @@ export class ObsDescDirTecnicaAutorizComponent implements OnInit {
             descuentos: this.fb.array( [] )
           });
         return this.fb.group({
-          tieneObservaciones: [null, Validators.required],
-          observaciones:[null, Validators.required],
+            fechaCreacion: [ null ],
+            tieneObservaciones: [null, Validators.required],
+            observaciones:[null, Validators.required],
         })
     }
 
@@ -124,7 +160,35 @@ export class ObsDescDirTecnicaAutorizComponent implements OnInit {
     }
 
     onSubmit() {
-      console.log(this.addressForm.value);
+        if ( this.addressForm.get( 'tieneObservaciones' ).value !== null && this.addressForm.get( 'tieneObservaciones' ).value === false ) {
+            this.addressForm.get( 'observaciones' ).setValue( '' );
+        }
+
+        const pSolicitudPagoObservacion = {
+            solicitudPagoObservacionId: this.solicitudPagoObservacionId,
+            solicitudPagoId: this.solicitudPago.solicitudPagoId,
+            observacion: this.addressForm.get( 'observaciones' ).value !== null ? this.addressForm.get( 'observaciones' ).value : this.addressForm.get( 'observaciones' ).value,
+            tipoObservacionCodigo: this.datosFacturaDescuentoCodigo,
+            menuId: this.autorizarSolicitudPagoId,
+            idPadre: this.solicitudPagoFaseFacturaDescuento[0].solicitudPagoFaseFacturaDescuentoId,
+            tieneObservacion: this.addressForm.get( 'tieneObservaciones' ).value !== null ? this.addressForm.get( 'tieneObservaciones' ).value : this.addressForm.get( 'tieneObservaciones' ).value
+        };
+
+        console.log( pSolicitudPagoObservacion );
+        this.obsMultipleSvc.createUpdateSolicitudPagoObservacion( pSolicitudPagoObservacion )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () => this.routes.navigate(
+                            [
+                                '/autorizarSolicitudPago/autorizacionSolicitud',  this.activatedRoute.snapshot.params.idContrato, this.activatedRoute.snapshot.params.idSolicitudPago
+                            ]
+                        )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            )
     }
 
 }

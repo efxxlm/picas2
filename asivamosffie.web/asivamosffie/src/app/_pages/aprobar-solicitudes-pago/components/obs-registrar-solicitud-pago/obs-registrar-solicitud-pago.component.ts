@@ -108,6 +108,8 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
                             if ( obsSupervisor.registroCompleto === true ) {
                                 this.estadoSemaforosAcordeonesPrincipales.estadoSemaforoObsPrincipal = 'completo';
                             }
+                            this.getSemaforoStatus();
+
                             this.addressForm.setValue(
                                 {
                                     fechaCreacion: obsSupervisor.fechaCreacion,
@@ -138,7 +140,7 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
       })
     }
 
-    getSemaforoStatus( estadoAcordeon: string, tipoAcordeon: string ) {
+    getSemaforoStatus( estadoAcordeon?: string, tipoAcordeon?: string ) {
         // Get semaforos acordeon preconstruccion
         if ( this.solicitudPagoFase.esPreconstruccion === true ) {
             if ( tipoAcordeon === 'criteriosPago' ) {

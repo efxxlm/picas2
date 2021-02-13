@@ -1,10 +1,12 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Dominio } from 'src/app/core/_services/common/common.service';
+import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
 import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
@@ -17,6 +19,10 @@ export class ObsDetllfactProcasocAutorizComponent implements OnInit {
 
     @Input() solicitudPago: any;
     @Input() esVerDetalle = false;
+    @Input() autorizarSolicitudPagoId: any
+    @Input() criteriosPagoProyectoCodigo: string;
+    @Output() estadoSemaforo = new EventEmitter<string>();
+    solicitudPagoObservacionId = 0;
     esMultiProyecto = false;
     proyectos: any;
     listaCriterios: Dominio[] = [];
@@ -56,14 +62,20 @@ export class ObsDetllfactProcasocAutorizComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
+        private routes: Router,
+        private activatedRoute: ActivatedRoute,
         private registrarPagosSvc: RegistrarRequisitosPagoService,
-        private dialog: MatDialog )
+        private dialog: MatDialog,
+        private obsMultipleSvc: ObservacionesMultiplesCuService )
     {
         this.addressForm = this.crearFormulario();
     }
 
     ngOnInit(): void {
         this.getProyectos();
+        if ( this.solicitudPago !== undefined ) {
+
+        }
     };
 
     getProyectos() {
@@ -71,6 +83,26 @@ export class ObsDetllfactProcasocAutorizComponent implements OnInit {
             this.solicitudPagoCargarFormaPago = this.solicitudPago.solicitudPagoCargarFormaPago[0];
             this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
             this.solicitudPagoFaseCriterio = this.solicitudPagoFase.solicitudPagoFaseCriterio;
+            // Get observaciones
+            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.autorizarSolicitudPagoId, this.solicitudPago.solicitudPagoId, this.solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioProyecto[0].solicitudPagoFaseCriterioProyectoId )
+                .subscribe(
+                    response => {
+                        const obsSupervisor = response.filter( obs => obs.archivada === false )[0];
+
+                        if ( obsSupervisor !== undefined ) {
+                            if ( obsSupervisor.registroCompleto === false ) {
+                                this.estadoSemaforo.emit( 'en-proceso' );
+                            }
+                            if ( obsSupervisor.registroCompleto === true ) {
+                                this.estadoSemaforo.emit( 'completo' );
+                            }
+                            this.solicitudPagoObservacionId = obsSupervisor.solicitudPagoObservacionId;
+                            this.addressForm.get( 'fechaCreacion' ).setValue( obsSupervisor.fechaCreacion );
+                            this.addressForm.get( 'tieneObservaciones' ).setValue( obsSupervisor.tieneObservacion !== undefined ? obsSupervisor.tieneObservacion : null );
+                            this.addressForm.get( 'observaciones' ).setValue( obsSupervisor.observacion !== undefined ? ( obsSupervisor.observacion.length > 0 ? obsSupervisor.observacion : null ) : null );
+                        }
+                    }
+                );
 
             if ( this.solicitudPagoFase.esPreconstruccion === true ) {
                 this.registrarPagosSvc.getCriterioByFormaPagoCodigo( this.solicitudPagoCargarFormaPago.fasePreConstruccionFormaPagoCodigo )
@@ -266,12 +298,18 @@ export class ObsDetllfactProcasocAutorizComponent implements OnInit {
         }
     }
 
+    applyFilter(event: Event) {
+      const filterValue = (event.target as HTMLInputElement).value;
+      this.dataSource.filter = filterValue.trim().toLowerCase();
+    }
+
     crearFormulario() {
-        return this.fb.group({
-            tieneObservaciones: [null, Validators.required],
-            observaciones:[null, Validators.required],
-            projects: this.fb.array( [] )
-        })
+      return this.fb.group({
+        fechaCreacion: [ null ],
+        tieneObservaciones: [null, Validators.required],
+        observaciones:[null, Validators.required],
+        projects: this.fb.array( [] )
+      })
     }
 
     filterCriterios( tipoCriterioCodigo: string ) {
@@ -307,7 +345,35 @@ export class ObsDetllfactProcasocAutorizComponent implements OnInit {
     }
 
     onSubmit() {
-      console.log(this.addressForm.value);
+        if ( this.addressForm.get( 'tieneObservaciones' ).value !== null && this.addressForm.get( 'tieneObservaciones' ).value === false ) {
+            this.addressForm.get( 'observaciones' ).setValue( '' );
+        }
+
+        const pSolicitudPagoObservacion = {
+            solicitudPagoObservacionId: this.solicitudPagoObservacionId,
+            solicitudPagoId: this.solicitudPago.solicitudPagoId,
+            observacion: this.addressForm.get( 'observaciones' ).value !== null ? this.addressForm.get( 'observaciones' ).value : this.addressForm.get( 'observaciones' ).value,
+            tipoObservacionCodigo: this.criteriosPagoProyectoCodigo,
+            menuId: this.autorizarSolicitudPagoId,
+            idPadre: this.solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioProyecto[0].solicitudPagoFaseCriterioProyectoId,
+            tieneObservacion: this.addressForm.get( 'tieneObservaciones' ).value !== null ? this.addressForm.get( 'tieneObservaciones' ).value : this.addressForm.get( 'tieneObservaciones' ).value
+        };
+
+        console.log( pSolicitudPagoObservacion );
+        this.obsMultipleSvc.createUpdateSolicitudPagoObservacion( pSolicitudPagoObservacion )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () => this.routes.navigate(
+                            [
+                                '/autorizarSolicitudPago/autorizacionSolicitud',  this.activatedRoute.snapshot.params.idContrato, this.activatedRoute.snapshot.params.idSolicitudPago
+                            ]
+                        )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            )
     }
 
 }

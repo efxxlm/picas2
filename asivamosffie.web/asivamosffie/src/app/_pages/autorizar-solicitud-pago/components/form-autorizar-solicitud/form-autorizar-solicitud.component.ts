@@ -202,6 +202,18 @@ export class FormAutorizarSolicitudComponent implements OnInit {
       this.dataSource.filter = filterValue.trim().toLowerCase();
     }
 
+    getSemaforoAcordeon( tipoAcordeon: string, estado: string ) {
+        if ( tipoAcordeon === 'formaPago' ) {
+            this.estadoAcordeones.estadoFormaPago = estado;
+        }
+        if ( tipoAcordeon === 'solicitudPago' ) {
+            this.estadoAcordeones.estadoSolicitudPago = estado;
+        }
+        if ( tipoAcordeon === 'soporteSolicitud' ) {
+            this.estadoAcordeones.soporteSolicitud = estado;
+        }
+    }
+
     maxLength(e: any, n: number) {
         if (e.editor.getLength() > n) {
             e.editor.deleteText(n - 1, e.editor.getLength());

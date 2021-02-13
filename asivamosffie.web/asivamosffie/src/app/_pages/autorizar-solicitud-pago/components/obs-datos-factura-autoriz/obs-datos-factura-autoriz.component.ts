@@ -1,7 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
+import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -13,6 +15,10 @@ export class ObsDatosFacturaAutorizComponent implements OnInit {
 
     @Input() solicitudPago: any;
     @Input() esVerDetalle = false;
+    @Input() autorizarSolicitudPagoId: any;
+    @Input() datosFacturaCodigo: string;
+    @Output() estadoSemaforo = new EventEmitter<string>();
+    solicitudPagoObservacionId = 0;
     detalleForm = this.fb.group({
         numeroFactura: [null, Validators.required],
         fechaFactura: [null, Validators.required],
@@ -47,8 +53,11 @@ export class ObsDatosFacturaAutorizComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
+        private routes: Router,
+        private activatedRoute: ActivatedRoute,
         private commonSvc: CommonService,
-        private dialog: MatDialog )
+        private dialog: MatDialog,
+        private obsMultipleSvc: ObservacionesMultiplesCuService )
     {
         this.commonSvc.tiposDescuento()
             .subscribe( response => this.tiposDescuentoArray = response );
@@ -56,13 +65,67 @@ export class ObsDatosFacturaAutorizComponent implements OnInit {
     }
 
     ngOnInit(): void {
+      this.getDatosFactura();
+      this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.autorizarSolicitudPagoId, this.solicitudPago.solicitudPagoId, this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaId )
+        .subscribe(
+            response => {
+                const obsSupervisor = response.filter( obs => obs.archivada === false )[0];
+
+                if ( obsSupervisor !== undefined ) {
+                    if ( obsSupervisor.registroCompleto === false ) {
+                        this.estadoSemaforo.emit( 'en-proceso' );
+                    }
+                    if ( obsSupervisor.registroCompleto === true ) {
+                        this.estadoSemaforo.emit( 'completo' );
+                    }
+                    this.solicitudPagoObservacionId = obsSupervisor.solicitudPagoObservacionId;
+                    this.addressForm.setValue(
+                        {
+                            fechaCreacion: obsSupervisor.fechaCreacion,
+                            tieneObservaciones: obsSupervisor.tieneObservacion !== undefined ? obsSupervisor.tieneObservacion : null,
+                            observaciones: obsSupervisor.observacion !== undefined ? ( obsSupervisor.observacion.length > 0 ? obsSupervisor.observacion : null ) : null
+                        }
+                    );
+                }
+            }
+        );
+    }
+
+    getDatosFactura() {
+        this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
+        this.solicitudPagoFaseFactura = this.solicitudPagoFase.solicitudPagoFaseFactura[0];
+        if ( this.solicitudPagoFaseFactura !== undefined ) {
+            this.solicitudPagoFaseFacturaId = this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaId;
+            this.solicitudPagoFaseFacturaDescuento = this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaDescuento;
+            this.detalleForm.get( 'numeroFactura' ).setValue( this.solicitudPagoFaseFactura.numero !== undefined ? this.solicitudPagoFaseFactura.numero : null );
+            this.detalleForm.get( 'fechaFactura' ).setValue( this.solicitudPagoFaseFactura.fecha !== undefined ? new Date( this.solicitudPagoFaseFactura.fecha ) : null );
+            this.detalleForm.get( 'aplicaDescuento' ).setValue( this.solicitudPagoFaseFactura.tieneDescuento !== undefined ? this.solicitudPagoFaseFactura.tieneDescuento : null );
+            this.detalleForm.get( 'numeroDescuentos' ).setValue( `${ this.solicitudPagoFaseFacturaDescuento.length }` );
+            this.detalleForm.get( 'valorAPagarDespues' ).setValue( this.solicitudPagoFaseFactura.valorFacturadoConDescuento !== undefined ? this.solicitudPagoFaseFactura.valorFacturadoConDescuento : null );
+            for ( const descuento of this.solicitudPagoFaseFacturaDescuento ) {
+                this.descuentos.push(
+                    this.fb.group(
+                        {
+                            solicitudPagoFaseFacturaDescuentoId: [ descuento.solicitudPagoFaseFacturaDescuentoId ],
+                            solicitudPagoFaseFacturaId: [ descuento.solicitudPagoFaseFacturaId ],
+                            tipoDescuentoCodigo: [ descuento.tipoDescuentoCodigo ],
+                            valorDescuento: [ descuento.valorDescuento ]
+                        }
+                    )
+                );
+            }
+        }
+        for ( const criterio of this.solicitudPagoFase.solicitudPagoFaseCriterio ) {
+            this.valorFacturado += criterio.valorFacturado;
+        }
     }
 
     crearFormulario() {
-      return this.fb.group({
-        tieneObservaciones: [null, Validators.required],
-        observaciones:[null, Validators.required],
-      })
+        return this.fb.group({
+            fechaCreacion: [ null ],
+            tieneObservaciones: [null, Validators.required],
+            observaciones:[null, Validators.required],
+        })
     }
 
     getTipoDescuento( tipoDescuentoCodigo: string ) {
@@ -94,7 +157,35 @@ export class ObsDatosFacturaAutorizComponent implements OnInit {
     }
 
     onSubmit() {
-      console.log(this.addressForm.value);
+        if ( this.addressForm.get( 'tieneObservaciones' ).value !== null && this.addressForm.get( 'tieneObservaciones' ).value === false ) {
+            this.addressForm.get( 'observaciones' ).setValue( '' );
+        }
+
+        const pSolicitudPagoObservacion = {
+            solicitudPagoObservacionId: this.solicitudPagoObservacionId,
+            solicitudPagoId: this.solicitudPago.solicitudPagoId,
+            observacion: this.addressForm.get( 'observaciones' ).value !== null ? this.addressForm.get( 'observaciones' ).value : this.addressForm.get( 'observaciones' ).value,
+            tipoObservacionCodigo: this.datosFacturaCodigo,
+            menuId: this.autorizarSolicitudPagoId,
+            idPadre: this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaId,
+            tieneObservacion: this.addressForm.get( 'tieneObservaciones' ).value !== null ? this.addressForm.get( 'tieneObservaciones' ).value : this.addressForm.get( 'tieneObservaciones' ).value
+        };
+
+        console.log( pSolicitudPagoObservacion );
+        this.obsMultipleSvc.createUpdateSolicitudPagoObservacion( pSolicitudPagoObservacion )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () => this.routes.navigate(
+                            [
+                                '/autorizarSolicitudPago/autorizacionSolicitud',  this.activatedRoute.snapshot.params.idContrato, this.activatedRoute.snapshot.params.idSolicitudPago
+                            ]
+                        )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            )
     }
 
 }

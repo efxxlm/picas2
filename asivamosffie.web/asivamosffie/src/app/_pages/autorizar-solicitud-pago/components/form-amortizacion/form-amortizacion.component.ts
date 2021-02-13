@@ -1,27 +1,32 @@
-import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
-  selector: 'app-obs-cargar-formpago-autoriz',
-  templateUrl: './obs-cargar-formpago-autoriz.component.html',
-  styleUrls: ['./obs-cargar-formpago-autoriz.component.scss']
+  selector: 'app-form-amortizacion',
+  templateUrl: './form-amortizacion.component.html',
+  styleUrls: ['./form-amortizacion.component.scss']
 })
-export class ObsCargarFormpagoAutorizComponent implements OnInit {
+export class FormAmortizacionComponent implements OnInit {
 
     @Input() solicitudPago: any;
     @Input() esVerDetalle = false;
+    @Input() contrato: any;
     @Input() autorizarSolicitudPagoId: any;
-    @Input() cargarFormaPagoCodigo: string;
+    @Input() amortizacionAnticipoCodigo: string;
     @Output() estadoSemaforo = new EventEmitter<string>();
     solicitudPagoObservacionId = 0;
+    solicitudPagoFase: any;
+    solicitudPagoFaseAmortizacionId = 0;
+    valorTotalDelContrato = 0;
     addressForm: FormGroup;
-    solicitudPagoCargarFormaPago: any;
-    formaPagoArray: Dominio[] = [];
+    detalleForm = this.fb.group({
+        porcentajeAmortizacion: [null, Validators.required],
+        valorAmortizacion: [ { value: null, disabled: true } , Validators.required]
+    });
     editorStyle = {
       height: '45px',
       overflow: 'auto'
@@ -37,34 +42,35 @@ export class ObsCargarFormpagoAutorizComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
-        private dialog: MatDialog,
         private routes: Router,
         private activatedRoute: ActivatedRoute,
-        private obsMultipleSvc: ObservacionesMultiplesCuService,
-        private commonSvc: CommonService )
+        private dialog: MatDialog,
+        private obsMultipleSvc: ObservacionesMultiplesCuService )
     {
         this.addressForm = this.crearFormulario();
-        this.commonSvc.formasDePago()
-            .subscribe( response => this.formaPagoArray = response );
     }
 
     ngOnInit(): void {
-        if ( this.solicitudPago !== undefined ) {
-            this.solicitudPagoCargarFormaPago = this.solicitudPago.solicitudPagoCargarFormaPago[0];
-            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.autorizarSolicitudPagoId, this.solicitudPago.solicitudPagoId, this.solicitudPagoCargarFormaPago.solicitudPagoCargarFormaPagoId )
+        if ( this.contrato.contratacion.disponibilidadPresupuestal.length > 0 ) {
+            this.contrato.contratacion.disponibilidadPresupuestal.forEach( ddp => this.valorTotalDelContrato += ddp.valorSolicitud );
+        }
+        this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
+        if ( this.solicitudPagoFase.solicitudPagoFaseAmortizacion.length > 0 ) {
+            const solicitudPagoFaseAmortizacion = this.solicitudPagoFase.solicitudPagoFaseAmortizacion[0]
+            this.solicitudPagoFaseAmortizacionId = solicitudPagoFaseAmortizacion.solicitudPagoFaseAmortizacionId;
+            // Get observaciones
+            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.autorizarSolicitudPagoId, this.solicitudPago.solicitudPagoId, this.solicitudPagoFaseAmortizacionId )
                 .subscribe(
                     response => {
                         const obsSupervisor = response.filter( obs => obs.archivada === false )[0];
-                        
-                        if ( obsSupervisor !== undefined ) {
 
+                        if ( obsSupervisor !== undefined ) {
                             if ( obsSupervisor.registroCompleto === false ) {
                                 this.estadoSemaforo.emit( 'en-proceso' );
                             }
                             if ( obsSupervisor.registroCompleto === true ) {
                                 this.estadoSemaforo.emit( 'completo' );
                             }
-                            console.log( obsSupervisor );
                             this.solicitudPagoObservacionId = obsSupervisor.solicitudPagoObservacionId;
                             this.addressForm.setValue(
                                 {
@@ -76,6 +82,13 @@ export class ObsCargarFormpagoAutorizComponent implements OnInit {
                         }
                     }
                 );
+            // Get detalle amortización
+            this.detalleForm.setValue(
+                {
+                    porcentajeAmortizacion: solicitudPagoFaseAmortizacion.porcentajeAmortizacion !== undefined ? solicitudPagoFaseAmortizacion.porcentajeAmortizacion : null,
+                    valorAmortizacion: solicitudPagoFaseAmortizacion.valorAmortizacion !== undefined ? solicitudPagoFaseAmortizacion.valorAmortizacion : null
+                }
+            );
         }
     }
 
@@ -108,15 +121,6 @@ export class ObsCargarFormpagoAutorizComponent implements OnInit {
         });
     }
 
-    getFormaPago( formaPagoCodigo: string ) {
-        if ( this.formaPagoArray.length > 0 && formaPagoCodigo !== undefined ) {
-            const forma = this.formaPagoArray.filter( forma => forma.codigo === formaPagoCodigo );
-            if ( forma.length > 0 ) {
-                return forma[0].nombre;
-            }
-        }
-    }
-
     onSubmit() {
         if ( this.addressForm.get( 'tieneObservaciones' ).value !== null && this.addressForm.get( 'tieneObservaciones' ).value === false ) {
             this.addressForm.get( 'observaciones' ).setValue( '' );
@@ -126,12 +130,13 @@ export class ObsCargarFormpagoAutorizComponent implements OnInit {
             solicitudPagoObservacionId: this.solicitudPagoObservacionId,
             solicitudPagoId: this.solicitudPago.solicitudPagoId,
             observacion: this.addressForm.get( 'observaciones' ).value !== null ? this.addressForm.get( 'observaciones' ).value : this.addressForm.get( 'observaciones' ).value,
-            tipoObservacionCodigo: this.cargarFormaPagoCodigo,
+            tipoObservacionCodigo: this.amortizacionAnticipoCodigo,
             menuId: this.autorizarSolicitudPagoId,
-            idPadre: this.solicitudPagoCargarFormaPago.solicitudPagoCargarFormaPagoId,
+            idPadre: this.solicitudPagoFaseAmortizacionId,
             tieneObservacion: this.addressForm.get( 'tieneObservaciones' ).value !== null ? this.addressForm.get( 'tieneObservaciones' ).value : this.addressForm.get( 'tieneObservaciones' ).value
         };
 
+        console.log( pSolicitudPagoObservacion );
         this.obsMultipleSvc.createUpdateSolicitudPagoObservacion( pSolicitudPagoObservacion )
             .subscribe(
                 response => {

@@ -5,7 +5,7 @@
         </a>
     </div>
     <h1 class="title-menu--h1">
-        Aprobar solicitud {{ contrato.solicitudPagoOnly.numeroSolicitud }}
+        Autorizar solicitud {{ contrato.solicitudPagoOnly.numeroSolicitud }}
     </h1>
     <ng-container *ngIf="contrato.solicitudPagoOnly.tipoSolicitudCodigo === this.tipoSolicitudCodigo.contratoInterventoria || contrato.solicitudPagoOnly.tipoSolicitudCodigo === this.tipoSolicitudCodigo.contratoObra; else esOtrosCostos">
         <p style="margin-top: 0.5em;" *ngIf="this.idGestion==1">
@@ -90,21 +90,29 @@
         <mat-accordion>
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title sin-diligenciar">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="estadoAcordeones.estadoFormaPago">
                         Cargar forma de pago
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-obs-cargar-formpago-autoriz [solicitudPago]="contrato.solicitudPagoOnly"></app-obs-cargar-formpago-autoriz>
+                <app-obs-cargar-formpago-autoriz    [solicitudPago]="contrato.solicitudPagoOnly"
+                                                    [autorizarSolicitudPagoId]="menusIdPath.autorizarSolicitudPagoId"
+                                                    [cargarFormaPagoCodigo]="listaTipoObservacionSolicitudes.cargarFormaPagoCodigo"
+                                                    (estadoSemaforo)="getSemaforoAcordeon( 'formaPago', $event )">
+                </app-obs-cargar-formpago-autoriz>
             </mat-expansion-panel>
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title sin-diligenciar">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="estadoAcordeones.estadoSolicitudPago">
                         Registrar solicitud de pago
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-obs-registrar-sol-pago-autoriz [contrato]="contrato"></app-obs-registrar-sol-pago-autoriz>
+                <app-obs-registrar-sol-pago-autoriz   [contrato]="contrato"
+                                                    [autorizarSolicitudPagoId]="menusIdPath.autorizarSolicitudPagoId"
+                                                    [registrarSolicitudPago]="listaTipoObservacionSolicitudes.registrarSolicitudPago"
+                                                    (estadoSemaforoRegistroSolicitud)="estadoAcordeones.estadoSolicitudPago = $event">
+                </app-obs-registrar-sol-pago-autoriz>
             </mat-expansion-panel>
         </mat-accordion>
     </ng-container>

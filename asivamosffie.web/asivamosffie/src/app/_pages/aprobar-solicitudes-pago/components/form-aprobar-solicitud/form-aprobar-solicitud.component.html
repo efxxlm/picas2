@@ -94,6 +94,7 @@
                         Cargar forma de pago
                     </mat-panel-title>
                 </mat-expansion-panel-header>
+
                 <app-obs-cargar-forma-pago  [solicitudPago]="contrato.solicitudPagoOnly"
                                             [aprobarSolicitudPagoId]="menusIdPath.aprobarSolicitudPagoId"
                                             [cargarFormaPagoCodigo]="listaTipoObservacionSolicitudes.cargarFormaPagoCodigo"
@@ -106,6 +107,7 @@
                         Registrar solicitud de pago
                     </mat-panel-title>
                 </mat-expansion-panel-header>
+
                 <app-obs-registrar-solicitud-pago   [contrato]="contrato"
                                                     [aprobarSolicitudPagoId]="menusIdPath.aprobarSolicitudPagoId"
                                                     [registrarSolicitudPago]="listaTipoObservacionSolicitudes.registrarSolicitudPago"
