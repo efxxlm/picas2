@@ -235,22 +235,14 @@ namespace asivamosffie.services
                               .ThenInclude(r => r.SolicitudPagoFaseFactura)
                                   .ThenInclude(r => r.SolicitudPagoFaseFacturaDescuento)
                        .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
-                       .Include(r => r.SolicitudPagoSoporteSolicitud).FirstOrDefault();
+                       .Include(r => r.SolicitudPagoSoporteSolicitud)
 
-                    solicitudPago.SolicitudPagoListaChequeo = _context.SolicitudPagoListaChequeo
-                        .Include(r => r.ListaChequeo)
-                           .Include(r => r.SolicitudPagoListaChequeoRespuesta)
-                                .Where(r => r.SolicitudPagoId == solicitudPago.SolicitudPagoId && r.Eliminado != true)
-                                                                                                                      .ToList();
-
-
-                    foreach (var SolicitudPagoListaChequeo in solicitudPago.SolicitudPagoListaChequeo)
-                    {
-                        foreach (var SolicitudPagoListaChequeoRespuesta in SolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta)
-                        {
-                            SolicitudPagoListaChequeoRespuesta.ListaChequeoItem = _context.ListaChequeoItem.Find(SolicitudPagoListaChequeoRespuesta.ListaChequeoItemId);
-                        }
-                    }
+                       .Include(r => r.SolicitudPagoListaChequeo)
+                          .ThenInclude(r => r.ListaChequeo)
+                       .Include(r => r.SolicitudPagoListaChequeo)
+                          .ThenInclude(r => r.SolicitudPagoListaChequeoRespuesta)
+                              .ThenInclude(r => r.ListaChequeoItem)
+                       .FirstOrDefault();
 
                     GetRemoveObjectsDelete(solicitudPago);
 
@@ -760,6 +752,8 @@ namespace asivamosffie.services
             foreach (var SolicitudPagoListaChequeo in pListSolicitudPagoListaChequeo)
             {
                 bool blRegistroCompletoListaChequeo = true;
+
+                SolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta = SolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Where(r => r.RespuestaCodigo != null).ToList();
 
                 foreach (var SolicitudPagoListaChequeoRespuesta in SolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta)
                 {
