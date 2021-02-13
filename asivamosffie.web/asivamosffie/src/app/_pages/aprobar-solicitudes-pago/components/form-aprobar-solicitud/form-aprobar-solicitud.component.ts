@@ -253,7 +253,7 @@ export class FormAprobarSolicitudComponent implements OnInit {
 
         const pSolicitudPagoObservacion = {
             solicitudPagoObservacionId: this.solicitudPagoObservacionId,
-            solicitudPagoId: this.activatedRoute.snapshot.params.idSolicitudPago,
+            solicitudPagoId: Number( this.activatedRoute.snapshot.params.idSolicitudPago ),
             observacion: this.addressForm.get( 'observaciones' ).value !== null ? this.addressForm.get( 'observaciones' ).value : this.addressForm.get( 'observaciones' ).value,
             tipoObservacionCodigo: this.listaTipoObservacionSolicitudes.soporteSolicitudCodigo,
             menuId: this.menusIdPath.aprobarSolicitudPagoId,
@@ -285,7 +285,7 @@ export class FormAprobarSolicitudComponent implements OnInit {
 
         const pSolicitudPagoObservacion = {
             solicitudPagoObservacionId: this.solicitudPagoObsOtrosCostosId,
-            solicitudPagoId: this.activatedRoute.snapshot.params.idSolicitudPago,
+            solicitudPagoId: Number( this.activatedRoute.snapshot.params.idSolicitudPago ),
             observacion: this.otrosCostosObsForm.get( 'observaciones' ).value !== null ? this.otrosCostosObsForm.get( 'observaciones' ).value : this.otrosCostosObsForm.get( 'observaciones' ).value,
             tipoObservacionCodigo: this.listaTipoObservacionSolicitudes.otrosCostosCodigo,
             menuId: this.menusIdPath.aprobarSolicitudPagoId,

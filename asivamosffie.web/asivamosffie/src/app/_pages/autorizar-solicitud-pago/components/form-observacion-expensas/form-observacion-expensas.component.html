@@ -1,4 +1,16 @@
-<section class="container text-center mb-2em" *ngIf="solicitudPago !== undefined">
+<section class="container text-center mb-2em" *ngIf="solicitudPago !== undefined && detalleForm.get( 'conceptoPagoCriterio' ).value !== null">
+    <div class="text-right">
+        <a routerLink="/verificarSolicitudPago" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">
+        Verificar solicitud {{ solicitudPago.numeroSolicitud }}
+    </h1>
+    <p style="margin-top: 0.5em;">
+        <span>Tipo de solicitud: <b>Expensas</b></span>
+    </p>
+    
     <mat-card class="shipping-card">
         <mat-card-header class="header-card header-card--margin">
             <mat-card-title class="header-card--text">
@@ -16,10 +28,42 @@
         </mat-card-content>
     </mat-card>
 
+    <form [formGroup]="expensasForm">
+        <div class="row mtop justCenter">
+            <div class="col-md-5">
+                <label class="label-left">¿Tiene observaciones a la solicitud de pago?</label>
+            </div>
+            <div class="col-md-2">
+                <mat-radio-group aria-labelledby="example-radio-group-label" class="radioInput"
+                    formControlName="tieneObservaciones">
+                    <mat-radio-button class="radio-button" [value]="true">Sí</mat-radio-button>
+                    <mat-radio-button class="radio-button" [value]="false">No</mat-radio-button>
+                </mat-radio-group>
+                <span class="required-form-group" style="margin-left: 1px;">*</span>
+            </div>
+        </div>
+        <div class="d-flex align-items-center mtop" *ngIf="expensasForm.get('tieneObservaciones').value === true">
+            <div class="text-area-quill izqTitle">
+                <label for="observaciones" class="text-area-quill--label" style="color: #174193;">Observaciones a la solicitud de pago</label>
+                <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
+                    (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observaciones></quill-editor>
+            </div>
+            <span class="contador miles" *ngIf="expensasForm.get('observaciones').value">
+                {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
+            </span>
+            <span class="contador miles" *ngIf="expensasForm.get('observaciones').value === null">
+                1000
+            </span>
+        </div>
+        <button mat-button color="warn" class="btn-guardar" type="button" (click)="guardar()">
+            <img src="assets/img/icon/guardar.svg" alt="Guardar">
+        </button>
+    </form>
+
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title en-alerta">
+                <mat-panel-title class="expansion-style--title" [ngClass]="estadoAcordeones.listaChequeo">
                     Lista de chequeo
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -34,7 +78,7 @@
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                <mat-panel-title class="expansion-style--title" [ngClass]="estadoAcordeones.soporteSolicitud">
                     Soporte de la solicitud
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -49,10 +93,10 @@
                 </mat-card-content>
             </mat-card>
 
-            <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+            <form [formGroup]="addressForm">
                 <div class="row mtop justCenter">
                     <div class="col-md-5">
-                        <label class="label-left">¿Desde la supervisión tiene observaciones a el soporte de la solicitud?</label>
+                        <label class="label-left">¿Desde la coordinación tiene observaciones a el soporte de la solicitud?</label>
                     </div>
                     <div class="col-md-2">
                         <mat-radio-group aria-labelledby="example-radio-group-label" class="radioInput"
@@ -76,8 +120,7 @@
                         1000
                     </span>
                 </div>
-                <button mat-button color="warn" class="btn-guardar"
-                    type="submit">
+                <button mat-button color="warn" class="btn-guardar" type="button" (click)="onSubmit()">
                     <img src="assets/img/icon/guardar.svg" alt="Guardar">
                 </button>
             </form>

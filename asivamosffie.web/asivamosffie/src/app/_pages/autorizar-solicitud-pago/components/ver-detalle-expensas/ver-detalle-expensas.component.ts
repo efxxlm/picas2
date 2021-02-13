@@ -1,18 +1,17 @@
-import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
-import { MatDialog } from '@angular/material/dialog';
-import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
 
 @Component({
-  selector: 'app-form-observacion-expensas',
-  templateUrl: './form-observacion-expensas.component.html',
-  styleUrls: ['./form-observacion-expensas.component.scss']
+  selector: 'app-ver-detalle-expensas',
+  templateUrl: './ver-detalle-expensas.component.html',
+  styleUrls: ['./ver-detalle-expensas.component.scss']
 })
-export class FormObservacionExpensasComponent implements OnInit {
+export class VerDetalleExpensasComponent implements OnInit {
 
     solicitudPago: any;
     solicitudPagoObservacionExpensasId = 0;
@@ -33,22 +32,6 @@ export class FormObservacionExpensasComponent implements OnInit {
         conceptoPagoCriterio: [null, Validators.required],
         valorFacturadoConcepto: [null, Validators.required]
     });
-    editorStyle = {
-        height: '45px',
-        overflow: 'auto'
-    };
-    config = {
-      toolbar: [
-        ['bold', 'italic', 'underline'],
-        [{ list: 'ordered' }, { list: 'bullet' }],
-        [{ indent: '-1' }, { indent: '+1' }],
-        [{ align: [] }],
-      ]
-    };
-    estadoAcordeones = {
-        listaChequeo: 'en-alerta',
-        soporteSolicitud: 'sin-diligenciar'
-    }
 
     constructor(
         private routes: Router,
@@ -109,12 +92,6 @@ export class FormObservacionExpensasComponent implements OnInit {
                                                     const obsSupervisor = response.filter( obs => obs.archivada === false )[0];
 
                                                     if ( obsSupervisor !== undefined ) {
-                                                        if ( obsSupervisor.registroCompleto === false ) {
-                                                            this.estadoAcordeones.soporteSolicitud = 'en-proceso';
-                                                        }
-                                                        if ( obsSupervisor.registroCompleto === true ) {
-                                                            this.estadoAcordeones.soporteSolicitud = 'completo';
-                                                        }
                                                         this.solicitudPagoObservacionId = obsSupervisor.solicitudPagoObservacionId;
                                                         this.addressForm.setValue(
                                                             {
@@ -155,91 +132,6 @@ export class FormObservacionExpensasComponent implements OnInit {
             tieneObservaciones: [null, Validators.required],
             observaciones:[null, Validators.required]
         })
-    }
-
-    maxLength(e: any, n: number) {
-        if (e.editor.getLength() > n) {
-            e.editor.deleteText(n - 1, e.editor.getLength());
-        }
-    }
-
-    textoLimpio( evento: any, n: number ) {
-        if ( evento !== undefined ) {
-            return evento.getLength() > n ? n : evento.getLength();
-        } else {
-            return 0;
-        }
-    }
-
-    openDialog(modalTitle: string, modalText: string) {
-        const dialogRef = this.dialog.open(ModalDialogComponent, {
-          width: '28em',
-          data: { modalTitle, modalText }
-        });
-    }
-
-    guardar() {
-        if ( this.expensasForm.get( 'tieneObservaciones' ).value !== null && this.expensasForm.get( 'tieneObservaciones' ).value === false ) {
-            this.expensasForm.get( 'observaciones' ).setValue( '' );
-        }
-
-        const pSolicitudPagoObservacion = {
-            solicitudPagoObservacionId: this.solicitudPagoObservacionExpensasId,
-            solicitudPagoId: Number( this.activatedRoute.snapshot.params.id ),
-            observacion: this.expensasForm.get( 'observaciones' ).value !== null ? this.expensasForm.get( 'observaciones' ).value : this.expensasForm.get( 'observaciones' ).value,
-            tipoObservacionCodigo: this.listaTipoObservacionSolicitudes.expensasCodigo,
-            menuId: this.menusIdPath.autorizarSolicitudPagoId,
-            idPadre: this.solicitudPago.solicitudPagoExpensas[0].solicitudPagoExpensasId,
-            tieneObservacion: this.expensasForm.get( 'tieneObservaciones' ).value !== null ? this.expensasForm.get( 'tieneObservaciones' ).value : this.expensasForm.get( 'tieneObservaciones' ).value
-        };
-
-        console.log( pSolicitudPagoObservacion );
-        this.obsMultipleSvc.createUpdateSolicitudPagoObservacion( pSolicitudPagoObservacion )
-            .subscribe(
-                response => {
-                    this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                        () => this.routes.navigate(
-                            [
-                                '/autorizarSolicitudPago/observacionExpensas',  this.activatedRoute.snapshot.params.id
-                            ]
-                        )
-                    );
-                },
-                err => this.openDialog( '', `<b>${ err.message }</b>` )
-            )
-    }
-
-    onSubmit() {
-        if ( this.addressForm.get( 'tieneObservaciones' ).value !== null && this.addressForm.get( 'tieneObservaciones' ).value === false ) {
-            this.addressForm.get( 'observaciones' ).setValue( '' );
-        }
-
-        const pSolicitudPagoObservacion = {
-            solicitudPagoObservacionId: this.solicitudPagoObservacionId,
-            solicitudPagoId: Number( this.activatedRoute.snapshot.params.id ),
-            observacion: this.addressForm.get( 'observaciones' ).value !== null ? this.addressForm.get( 'observaciones' ).value : this.addressForm.get( 'observaciones' ).value,
-            tipoObservacionCodigo: this.listaTipoObservacionSolicitudes.soporteSolicitudCodigo,
-            menuId: this.menusIdPath.autorizarSolicitudPagoId,
-            idPadre: this.solicitudPago.solicitudPagoSoporteSolicitud[0].solicitudPagoSoporteSolicitudId,
-            tieneObservacion: this.addressForm.get( 'tieneObservaciones' ).value !== null ? this.addressForm.get( 'tieneObservaciones' ).value : this.addressForm.get( 'tieneObservaciones' ).value
-        };
-
-        console.log( pSolicitudPagoObservacion );
-        this.obsMultipleSvc.createUpdateSolicitudPagoObservacion( pSolicitudPagoObservacion )
-            .subscribe(
-                response => {
-                    this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                        () => this.routes.navigate(
-                            [
-                                '/autorizarSolicitudPago/observacionExpensas',  this.activatedRoute.snapshot.params.id
-                            ]
-                        )
-                    );
-                },
-                err => this.openDialog( '', `<b>${ err.message }</b>` )
-            )
     }
 
 }
