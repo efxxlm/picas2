@@ -360,6 +360,10 @@ listaEstadoRevision(){
         )
       );
   }
+  listaRevisionTecnica() {
+    // Lista del campo "Revision tecnica" para las listas de chequeo.
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=162`);
+  }
 
   public listaUsuarios(){
 

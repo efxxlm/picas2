@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
+import humanize from 'humanize-plus';
 
 @Component({
   selector: 'app-obs-cargar-formpago-autoriz',
@@ -98,6 +99,13 @@ export class ObsCargarFormpagoAutorizComponent implements OnInit {
             return evento.getLength() > n ? n : evento.getLength();
         } else {
             return 0;
+        }
+    }
+
+
+    firstLetterUpperCase( texto:string ) {
+        if ( texto !== undefined ) {
+            return humanize.capitalize( String( texto ).toLowerCase() );
         }
     }
 

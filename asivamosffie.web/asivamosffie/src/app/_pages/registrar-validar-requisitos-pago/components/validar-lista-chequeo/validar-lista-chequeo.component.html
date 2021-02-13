@@ -1,33 +1,29 @@
-<mat-accordion>
-    <mat-expansion-panel class="expansion-style sub-expansion">
+<mat-accordion *ngIf="solicitudPagoModificado !== undefined">
+    <mat-expansion-panel class="expansion-style sub-expansion" *ngFor="let solicitudPagoListaChequeo of solicitudPagoModificado.solicitudPagoListaChequeo">
         <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title sin-diligenciar">
-                Lista de chequeo 1
+            <mat-panel-title class="expansion-style--title sin-diligenciar" style="font-size: .8em !important;">
+                {{ firstLetterUpperCase( solicitudPagoListaChequeo.listaChequeo.nombre ) }}
             </mat-panel-title>
         </mat-expansion-panel-header>
-        <p class="info-sub-title supportBlack">
-            <span>Criterio de pago: <b>Estudios y diseños interventoria hasta 90%</b></span>
-            <span>Tipo de pago: <b>Costo variable</b></span>
-        </p>
+
         <div class="table-responsive">
-            <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+            <table mat-table [dataSource]="getMatTable( solicitudPagoListaChequeo.solicitudPagoListaChequeoRespuesta )" matSort class="mat-elevation-z8">
                 <ng-container matColumnDef="item">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Item </th>
-                    <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.item }}</b> </td>
+                    <td mat-cell *matCellDef="let element; index as i" align="center"> <b>{{ i + 1 }}</b> </td>
                 </ng-container>
                 <ng-container matColumnDef="documento">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Documento </th>
-                    <td mat-cell *matCellDef="let element" align="left" > <span class="supportBlack">{{ element.documento }}</span> </td>
+                    <td mat-cell *matCellDef="let element" align="left" > <span class="supportBlack">{{ element.listaChequeoItem.nombre }}</span> </td>
                 </ng-container>
                 <ng-container matColumnDef="revTecnica">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Revisión técnica </th>
                     <td mat-cell *matCellDef="let element" align="center">
                         <div class="col">
                             <mat-form-field class="select-width">
-                                <mat-select required>
-                                    <mat-option *ngFor="let revision of booleanosRevisionTecnica"
-                                        [value]="revision.viewValue">
-                                        {{ revision.viewValue }}
+                                <mat-select required [(ngModel)]="element.respuestaCodigo">
+                                    <mat-option *ngFor="let revision of listaRevisionTecnica" [value]="revision.codigo">
+                                        {{ revision.nombre }}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
@@ -37,7 +33,7 @@
                 <ng-container matColumnDef="observaciones">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Observaciones </th>
                     <td mat-cell *matCellDef="let element" align="center">
-                        <button mat-raised-button color="accent" class="btn-table " [class.sin-diligenciar]="element.item==1" *ngIf="element.item==1"
+                        <button mat-raised-button color="accent" class="btn-table " [class.sin-diligenciar]="element.item==1" *ngIf="element.respuestaCodigo === noCumpleCodigo"
                             (click)="this.callObservaciones()">Observaciones</button>
 
                         <button mat-raised-button color="accent" class="btn-table " [class.sin-diligenciar]="element.item==2" *ngIf="element.item==2"
@@ -51,7 +47,7 @@
             <!--<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>-->
         </div>
         <div class="text-center mb-2em">
-            <button mat-button color="warn" class="btn-guardar" type="submit">
+            <button mat-button color="warn" class="btn-guardar" type="button" (click)="guardar()">
                 <img src="assets/img/icon/guardar.svg" alt="Regresar">
             </button>
         </div>

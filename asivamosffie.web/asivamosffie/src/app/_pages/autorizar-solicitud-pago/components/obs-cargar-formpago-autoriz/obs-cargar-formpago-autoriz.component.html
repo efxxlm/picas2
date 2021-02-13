@@ -52,7 +52,7 @@
                 <div class="text-area-quill izqTitle">
                     <label for="observaciones" class="text-area-quill--label" style="color: #174193;">Observaciones a la forma de pago</label>
                     <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
-                        (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observaciones></quill-editor>
+                        (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observaciones autocapitalize="on"></quill-editor>
                 </div>
                 <span class="contador miles" *ngIf="addressForm.get('observaciones').value">
                     {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
