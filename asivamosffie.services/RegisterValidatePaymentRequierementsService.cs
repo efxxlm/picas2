@@ -238,7 +238,7 @@ namespace asivamosffie.services
                        .Include(r => r.SolicitudPagoSoporteSolicitud).FirstOrDefault();
 
                     solicitudPago.SolicitudPagoListaChequeo = _context.SolicitudPagoListaChequeo
-                    //       .Include(r => r.ListaChequeo)
+                        .Include(r => r.ListaChequeo)
                            .Include(r => r.SolicitudPagoListaChequeoRespuesta)
                                 .Where(r => r.SolicitudPagoId == solicitudPago.SolicitudPagoId && r.Eliminado != true)
                                                                                                                       .ToList();
@@ -1033,11 +1033,9 @@ namespace asivamosffie.services
                                                                                                                         .FirstOrDefault();
 
 
-                int? SolicitudPagoListaChequeoId = _context.SolicitudPago.Include(s => s.SolicitudPagoListaChequeo)
-                                                                               .ThenInclude(s => s.ListaChequeo)
-                                                                                .Where(s => s.SolicitudPagoId == SolicitudPagoId
+                int? SolicitudPagoListaChequeoId = _context.SolicitudPagoListaChequeo.Where(s => s.SolicitudPagoId == SolicitudPagoId
                                                                                     && s.Eliminado != true
-                                                                                    && s.SolicitudPagoListaChequeo.FirstOrDefault().ListaChequeo.CriterioPagoCodigo == pSolicitudPagoFaseCriterio.TipoCriterioCodigo)
+                                                                                    && s.TipoCriterioCodigo == pSolicitudPagoFaseCriterio.TipoCriterioCodigo)
                                                                                 .Select(r => r.SolicitudPagoId).FirstOrDefault();
 
 
@@ -1051,7 +1049,7 @@ namespace asivamosffie.services
                         FechaCreacion = DateTime.Now,
                         Eliminado = false,
                         RegistroCompleto = false,
-
+                        TipoCriterioCodigo = pSolicitudPagoFaseCriterio.TipoCriterioCodigo,
                         SolicitudPagoId = (int)SolicitudPagoId,
                         ListaChequeoId = listaChequeo.ListaChequeoId
                     };
