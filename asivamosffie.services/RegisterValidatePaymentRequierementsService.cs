@@ -207,8 +207,6 @@ namespace asivamosffie.services
                     }
                 }
             }
-            if (solicitudPago.SolicitudPagoListaChequeo.Count() > 0
-) solicitudPago.SolicitudPagoListaChequeo = solicitudPago.SolicitudPagoListaChequeo.Where(l => l.Eliminado != true).ToList();
             return solicitudPago;
         }
 
@@ -220,11 +218,6 @@ namespace asivamosffie.services
                 case ConstanCodigoTipoSolicitudContratoSolicitudPago.Contratos_Obra:
 
                     solicitudPago = _context.SolicitudPago.Where(r => r.SolicitudPagoId == solicitudPago.SolicitudPagoId)
-                        .Include(r => r.SolicitudPagoListaChequeo)
-                           .ThenInclude(r => r.ListaChequeo)
-                        .Include(r => r.SolicitudPagoListaChequeo)
-                            .ThenInclude(r => r.SolicitudPagoListaChequeoRespuesta)
-                                .ThenInclude(r => r.ListaChequeoItem)
                         .Include(r => r.SolicitudPagoCargarFormaPago)
                         .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
                            .ThenInclude(r => r.SolicitudPagoFase)
@@ -243,6 +236,21 @@ namespace asivamosffie.services
                                   .ThenInclude(r => r.SolicitudPagoFaseFacturaDescuento)
                        .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
                        .Include(r => r.SolicitudPagoSoporteSolicitud).FirstOrDefault();
+
+                    solicitudPago.SolicitudPagoListaChequeo = _context.SolicitudPagoListaChequeo
+                    //       .Include(r => r.ListaChequeo)
+                           .Include(r => r.SolicitudPagoListaChequeoRespuesta)
+                                .Where(r => r.SolicitudPagoId == solicitudPago.SolicitudPagoId && r.Eliminado != true)
+                                                                                                                      .ToList();
+
+
+                    foreach (var SolicitudPagoListaChequeo in solicitudPago.SolicitudPagoListaChequeo)
+                    {
+                        foreach (var SolicitudPagoListaChequeoRespuesta in SolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta)
+                        {
+                            SolicitudPagoListaChequeoRespuesta.ListaChequeoItem = _context.ListaChequeoItem.Find(SolicitudPagoListaChequeoRespuesta.ListaChequeoItemId);
+                        }
+                    }
 
                     GetRemoveObjectsDelete(solicitudPago);
 
@@ -760,25 +768,25 @@ namespace asivamosffie.services
                     if (!RegistroCompletoItem)
                         blRegistroCompletoListaChequeo = false;
 
-                    await _context.Set<SolicitudPagoListaChequeoRespuesta>()
-                                                    .Where(s => s.SolicitudPagoListaChequeoRespuestaId == SolicitudPagoListaChequeo.SolicitudPagoListaChequeoId)
-                                                                                 .UpdateAsync(s => new SolicitudPagoListaChequeoRespuesta
-                                                                                 {
-                                                                                     FechaModificacion = DateTime.Now,
-                                                                                     RegistroCompleto = RegistroCompletoItem,
-                                                                                     UsuarioModificacion = usuarioCreacion,
-                                                                                     RespuestaCodigo = SolicitudPagoListaChequeoRespuesta.RespuestaCodigo,
-                                                                                     Observacion = SolicitudPagoListaChequeoRespuesta.Observacion,
-                                                                                 });
+                    _context.Set<SolicitudPagoListaChequeoRespuesta>()
+                                                   .Where(s => s.SolicitudPagoListaChequeoRespuestaId == SolicitudPagoListaChequeoRespuesta.SolicitudPagoListaChequeoRespuestaId)
+                                                                                .Update(s => new SolicitudPagoListaChequeoRespuesta
+                                                                                {
+                                                                                    FechaModificacion = DateTime.Now,
+                                                                                    RegistroCompleto = RegistroCompletoItem,
+                                                                                    UsuarioModificacion = usuarioCreacion,
+                                                                                    RespuestaCodigo = SolicitudPagoListaChequeoRespuesta.RespuestaCodigo,
+                                                                                    Observacion = SolicitudPagoListaChequeoRespuesta.Observacion,
+                                                                                });
                 }
-                await _context.Set<SolicitudPagoListaChequeo>()
-                                                    .Where(r => r.SolicitudPagoListaChequeoId == SolicitudPagoListaChequeo.SolicitudPagoListaChequeoId)
-                                                                                             .UpdateAsync(s => new SolicitudPagoListaChequeo
-                                                                                             {
-                                                                                                 RegistroCompleto = blRegistroCompletoListaChequeo,
-                                                                                                 FechaModificacion = DateTime.Now,
-                                                                                                 UsuarioModificacion = usuarioCreacion
-                                                                                             });
+                _context.Set<SolicitudPagoListaChequeo>()
+                                                   .Where(r => r.SolicitudPagoListaChequeoId == SolicitudPagoListaChequeo.SolicitudPagoListaChequeoId)
+                                                                                            .Update(s => new SolicitudPagoListaChequeo
+                                                                                            {
+                                                                                                RegistroCompleto = blRegistroCompletoListaChequeo,
+                                                                                                FechaModificacion = DateTime.Now,
+                                                                                                UsuarioModificacion = usuarioCreacion
+                                                                                            });
             }
         }
 
