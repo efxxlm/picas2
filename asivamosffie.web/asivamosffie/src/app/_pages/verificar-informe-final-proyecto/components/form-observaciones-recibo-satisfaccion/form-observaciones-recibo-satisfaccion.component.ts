@@ -18,6 +18,8 @@ export class FormObservacionesReciboSatisfaccionComponent implements OnInit {
   informeFinalId = 0;
   tieneObservacionesValidacion = null;
   observaciones: FormGroup;
+  noGuardado=true; 
+
   editorStyle = {
     height: '100px'
   };
@@ -84,18 +86,21 @@ export class FormObservacionesReciboSatisfaccionComponent implements OnInit {
     }
   }
 
-  onSubmit() {
+  onSubmit(test: boolean) {
+    this.noGuardado = false;
     console.log(this.observaciones.value);
     this.estaEditando = true;
     this.observaciones.markAllAsTouched();
     this.estaEditando = true;
-    this.createEditObservacionInformeFinal(this.observaciones.value, this.observaciones.value.tieneObservacionesValidacion);
+    this.createEditObservacionInformeFinal(this.observaciones.value, this.observaciones.value.tieneObservacionesValidacion, test);
   }
 
-  createEditObservacionInformeFinal(informeFinalObservacion: any, tieneObservaciones: boolean) {
+  createEditObservacionInformeFinal(informeFinalObservacion: any, tieneObservaciones: boolean, test: boolean) {
     console.log("esta enviando: ",tieneObservaciones);
     this.validarInformeFinalService.createEditObservacionInformeFinal(informeFinalObservacion, tieneObservaciones).subscribe((respuesta: Respuesta) => {
-      this.openDialog('', respuesta.message);
+      if(!test){
+        this.openDialog('', respuesta.message);
+      }
     });
   }
 }

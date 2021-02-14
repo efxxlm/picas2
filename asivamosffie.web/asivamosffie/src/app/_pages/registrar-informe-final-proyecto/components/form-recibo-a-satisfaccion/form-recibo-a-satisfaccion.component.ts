@@ -20,12 +20,14 @@ export class FormReciboASatisfaccionComponent implements OnInit {
   urlActa = null;
   fechaSuscripcion = null;
   addressForm: FormGroup;
+  noGuardado=true; 
 
   constructor(
     private fb: FormBuilder,
     public dialog: MatDialog,
     private registrarInformeFinalProyectoService: RegistrarInformeFinalProyectoService
   ) {}
+
 
   ngOnInit(): void {
     this.buildForm();
@@ -52,18 +54,21 @@ export class FormReciboASatisfaccionComponent implements OnInit {
     });
   }
 
-  onSubmit() {
+  onSubmit(test: boolean) {
+    this.noGuardado = false;
     //[disabled]="addressForm.invalid"
     //console.log(this.addressForm.value);
     this.addressForm.markAllAsTouched();
     this.estaEditando = true;
-    this.createInformeFinal(this.addressForm.value);
+    this.createInformeFinal(this.addressForm.value, test);
     //this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
   }
 
-  createInformeFinal(informeFinal: any) {
+  createInformeFinal(informeFinal: any, test:boolean) {
     this.registrarInformeFinalProyectoService.createInformeFinal(informeFinal).subscribe((respuesta: Respuesta) => {
-      this.openDialog('', respuesta.message);
+      if(!test){
+        this.openDialog('', respuesta.message);
+      }
       this.formCompleto.emit(this.respuestaFormCompleto());
     });
   }

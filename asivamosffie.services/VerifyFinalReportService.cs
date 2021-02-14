@@ -135,6 +135,7 @@ namespace asivamosffie.services
         {
             int informeFinalInterventoriaObservacionesId = 0;
             bool tieneObservacionNoCumple = false;
+            bool semaforo = false;
 
             List<InformeFinalInterventoria> ListInformeFinalChequeo = await _context.InformeFinalInterventoria
                                 .Where(r => r.InformeFinalId == pInformeFinalId)
@@ -143,7 +144,18 @@ namespace asivamosffie.services
                                 .OrderBy(r => r.InformeFinalListaChequeo.Posicion)
                                 .ToListAsync();
             InformeFinal informeFinal = _context.InformeFinal.Find(pInformeFinalId);
-            foreach(var item in ListInformeFinalChequeo)
+
+            if (informeFinal.EstadoValidacion == ConstantCodigoEstadoValidacionInformeFinal.En_proceso_de_validacion)
+            {
+                InformeFinalInterventoria no_seleccionado = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == informeFinal.InformeFinalId && (r.ValidacionCodigo != "0" && !String.IsNullOrEmpty(r.ValidacionCodigo))).FirstOrDefault();
+
+                if (no_seleccionado == null)
+                {
+                    semaforo = true;
+                }
+            }
+
+            foreach (var item in ListInformeFinalChequeo)
             {
                 item.CalificacionCodigoString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.CalificacionCodigo, 151);
                 item.ValidacionCodigoString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.ValidacionCodigo, 151);
@@ -176,6 +188,7 @@ namespace asivamosffie.services
 
                 item.InformeFinalInterventoriaObservacionesId = informeFinalInterventoriaObservacionesId;
                 item.TieneObservacionNoCumple = tieneObservacionNoCumple;
+                item.Semaforo = semaforo;
             }
             return ListInformeFinalChequeo;
         }
@@ -306,7 +319,7 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<Respuesta> CreateEditObservacionInformeFinal(InformeFinalObservaciones pObservacion, bool tieneOBservaciones)
+        public async Task<Respuesta> CreateEditObservacionInformeFinal(InformeFinalObservaciones pObservacion, bool tieneObservacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Informe_Final_Observacion, (int)EnumeratorTipoDominio.Acciones);
             string strCrearEditar = string.Empty;
@@ -314,6 +327,13 @@ namespace asivamosffie.services
             {
                 if (pObservacion.InformeFinalObservacionesId == 0)
                 {
+                    await _context.Set<InformeFinal>().Where(r => r.InformeFinalId == pObservacion.InformeFinalId && (r.EstadoValidacion == "0" || string.IsNullOrEmpty(r.EstadoValidacion)))
+                                                                   .UpdateAsync(r => new InformeFinal()
+                                                                   {
+                                                                       FechaModificacion = DateTime.Now,
+                                                                       UsuarioModificacion = pObservacion.UsuarioCreacion,
+                                                                       EstadoValidacion = ConstantCodigoEstadoValidacionInformeFinal.En_proceso_de_validacion,
+                                                                   });
                     strCrearEditar = "CREAR INFORME FINAL OBSERVACIONES";
                     pObservacion.FechaCreacion = DateTime.Now;
                     _context.InformeFinalObservaciones.Add(pObservacion);
@@ -335,7 +355,7 @@ namespace asivamosffie.services
                                                {
                                                    FechaModificacion = DateTime.Now,
                                                    UsuarioModificacion = pObservacion.UsuarioCreacion,
-                                                   TieneObservacionesValidacion = tieneOBservaciones,
+                                                   TieneObservacionesValidacion = tieneObservacion,
                                                });
                 _context.SaveChanges();
 

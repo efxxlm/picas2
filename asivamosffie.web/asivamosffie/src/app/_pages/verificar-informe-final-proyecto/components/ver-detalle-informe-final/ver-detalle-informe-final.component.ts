@@ -12,6 +12,8 @@ export class VerDetalleInformeFinalComponent implements OnInit {
 
   id: string;
   report: Report;
+  existeObservacion = false;
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -28,6 +30,9 @@ export class VerDetalleInformeFinalComponent implements OnInit {
     this.verificarInformeFinalProyectoService.getInformeFinalByProyecto(id)
     .subscribe(report => {
       this.report = report[0];
+      if(report[0].proyecto.informeFinal[0].informeFinalObservaciones.length > 0){
+        this.existeObservacion = true;
+      }
     });
   }
 

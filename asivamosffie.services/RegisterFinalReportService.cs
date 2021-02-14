@@ -494,6 +494,7 @@ namespace asivamosffie.services
                 {
                     CreateEdit = "CREAR INFORME FINAL ANEXO";
                     pInformeFinalAnexoId.FechaCreacion = DateTime.Now;
+                    pInformeFinalAnexoId.UsuarioCreacion = informeFinalInterventoria.UsuarioCreacion;
                     _context.InformeFinalAnexo.Add(pInformeFinalAnexoId);
                     _context.SaveChanges();
                 }

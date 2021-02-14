@@ -31,5 +31,8 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public bool TieneObservacionNoCumple { get; set; }
+
+        [NotMapped]
+        public bool Semaforo { get; set; }
     }
 }

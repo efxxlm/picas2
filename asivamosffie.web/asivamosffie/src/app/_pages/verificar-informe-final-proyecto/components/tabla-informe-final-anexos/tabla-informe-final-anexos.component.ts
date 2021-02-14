@@ -36,6 +36,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   addressForm: FormGroup;
   informeFinalObservacion : InformeFinalInterventoriaObservaciones[] = [];
   dataSource = new MatTableDataSource<ListaChequeo>(this.ELEMENT_DATA);
+  semaforo = false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator
   @ViewChild(MatSort) sort: MatSort
@@ -48,22 +49,6 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
 
   estaEditando = false;
   noGuardado=false;
-  
-  ngOnDestroy(): void {
-    if ( this.noGuardado===true) {
-      let dialogRef =this.dialog.open(ModalDialogComponent, {
-        width: '28em',
-        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
-      });   
-      dialogRef.afterClosed().subscribe(result => {
-        // console.log(`Dialog result: ${result}`);
-        if(result === true)
-        {
-            this.onSubmit();          
-        }           
-      });
-    }
-  };
 
   estadoArray = [
     { name: 'Cumple', value: 1 },
@@ -81,6 +66,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
       if(listChequeo != null){
         this.estadoValidacion = listChequeo[0].estadoValidacion;
         this.registroCompletoValidacion = listChequeo[0].registroCompletoValidacion;
+        this.semaforo = listChequeo[0].semaforo;
       }
       this.dataSource.data = listChequeo as ListaChequeo[];
       this.listChequeo = listChequeo;
@@ -152,7 +138,18 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onSubmit() {
+  openDialogSuccess(modalTitle: string, modalText: string) {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText },
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      this.router.navigate(['/verificarInformeFinalProyecto']);
+    });
+  }
+
+  onSubmit(test: boolean) {
     this.estaEditando = true;
     this.noGuardado=false;
     //recorre el datasource y crea modelo
@@ -175,15 +172,17 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
       //proyectoId: Number(this.id),
       informeFinalInterventoria: listaInformeFinalInterventoria.informeFinalInterventoria,
     };
-    this.updateStateValidateInformeFinalInterventoriaByInformeFinal(informeFinal);
-    this.router.navigate(['/verificarInformeFinalProyecto']);
+    this.updateStateValidateInformeFinalInterventoriaByInformeFinal(informeFinal,test);
   }
 
-  updateStateValidateInformeFinalInterventoriaByInformeFinal( informeFinal: any ) {
+  updateStateValidateInformeFinalInterventoriaByInformeFinal( informeFinal: any , test: boolean) {
     this.validarInformeFinalService.updateStateValidateInformeFinalInterventoriaByInformeFinal(informeFinal)
     .subscribe((respuesta: Respuesta) => {
-        console.log(respuesta);
+      if(!test){
+        this.openDialogSuccess('', respuesta.message);
+      }else{
         this.openDialog('', respuesta.message);
+      }
         //this.ngOnInit();
         return;
       },

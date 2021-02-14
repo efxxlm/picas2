@@ -9,5 +9,5 @@ import { Report } from 'src/app/_interfaces/proyecto-final.model';
 export class ReciboSatisfaccionComponent {
 
   @Input() report: Report
-
+  @Input() existeObservacion: boolean
 }

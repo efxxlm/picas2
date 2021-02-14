@@ -30,6 +30,8 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   estadoInforme = '0';
   registroCompleto = false;
   semaforo= false;
+  editadoSupervision = false;
+  noGuardado=false;
 
   listChequeo: any;
   displayedColumns: string[] = [
@@ -52,31 +54,14 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     { name: 'No cumple', value: 2 },
     { name: 'No aplica', value: 3 ,}
   ];
-  editadoSupervision = false;
 
   constructor(
     private fb: FormBuilder,
     public dialog: MatDialog,
     private registrarInformeFinalProyectoService: RegistrarInformeFinalProyectoService,
     private router: Router  ) { }
-
-  noGuardado=false;
   
-  ngOnDestroy(): void {
-    if ( this.noGuardado===true) {
-      let dialogRef =this.dialog.open(ModalDialogComponent, {
-        width: '28em',
-        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
-      });   
-      dialogRef.afterClosed().subscribe(result => {
-        // console.log(`Dialog result: ${result}`);
-        if(result === true)
-        {
-            this.onSubmit();          
-        }           
-      });
-    }
-  };
+
 
   ngOnInit(): void {
     this.stateEstaEditando();
@@ -216,7 +201,19 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onSubmit() {
+  openDialogSuccess(modalTitle: string, modalText: string) {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText },
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      this.router.navigate(['/registrarInformeFinalProyecto']);
+    });
+  }
+
+
+  onSubmit(test: boolean) {
     this.estaEditando = true;
     this.noGuardado=false;
     //recorre el datasource y crea modelo
@@ -239,26 +236,32 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
       proyectoId: Number(this.id),
       informeFinalInterventoria: listaInformeFinalInterventoria.informeFinalInterventoria,
     };
-    this.createEditInformeFinalInterventoriabyInformeFinal(informeFinal);
-    this.router.navigate(['/registrarInformeFinalProyecto']);
+    this.createEditInformeFinalInterventoriabyInformeFinal(informeFinal, test);
   }
 
-  createEditInformeFinalInterventoriabyInformeFinal( informeFinal: any ) {
+  createEditInformeFinalInterventoriabyInformeFinal( informeFinal: any, test: boolean) {
     this.registrarInformeFinalProyectoService.createEditInformeFinalInterventoriabyInformeFinal(informeFinal)
     .subscribe((respuesta: Respuesta) => {
-        console.log(respuesta);
+      if(!test){
+        this.openDialogSuccess('', respuesta.message);
+      }else{
         this.openDialog('', respuesta.message);
+      }
         //this.ngOnInit();
-        return;
+        return; 
       },
       err => {
         this.openDialog('', err.message);
-        //this.ngOnInit();
+        this.ngOnInit();
         return;
       });
   }
 
   changeState(){
     this.noGuardado = true;
+  }
+
+  doSomething() {
+    console.log('do something');
   }
 }

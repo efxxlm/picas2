@@ -9,7 +9,7 @@
     <mat-expansion-panel class="expansion-style">
       <mat-expansion-panel-header class="expansion-style--header">
           <mat-panel-title class="expansion-style--title 
-          {{estadoValidacion == '0' || estadoValidacion == null ? 
+          {{estadoValidacion == '0' || estadoValidacion == null || semaforo ? 
             'sin-diligenciar' : estadoValidacion == '1' && registroCompletoValidacion == false ? 
                   'en-proceso' : 'completo' }}">
                   Informe final y anexos
@@ -178,7 +178,7 @@
         </div>
 
         <div class="text-center">
-          <button mat-button color="warn" class="btn-guardar" (click)="onSubmit()">
+          <button mat-button color="warn" class="btn-guardar" (click)="onSubmit(false)">
             <img src="assets/img/icon/guardar.svg" alt="Guardar" />
           </button>
         </div>
