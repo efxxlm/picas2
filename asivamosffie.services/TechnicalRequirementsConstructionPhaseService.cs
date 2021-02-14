@@ -1511,8 +1511,8 @@ namespace asivamosffie.services
                     (pConstruccion.ManejoAnticipoRequiere == true && pConstruccion.ManejoAnticipoPlanInversion == null) ||
                     (pConstruccion.ManejoAnticipoRequiere == true && pConstruccion.ManejoAnticipoPlanInversion == false) ||
                     (pConstruccion.ManejoAnticipoRequiere == true && pConstruccion.ManejoAnticipoCronogramaAmortizacion == null) ||
-                    (pConstruccion.ManejoAnticipoRequiere == true && pConstruccion.ManejoAnticipoCronogramaAmortizacion == false)
-                //( pConstruccion.ManejoAnticipoRequiere == true && string.IsNullOrEmpty(pConstruccion.ManejoAnticipoRutaSoporte) )
+                    (pConstruccion.ManejoAnticipoRequiere == true && pConstruccion.ManejoAnticipoCronogramaAmortizacion == false) ||
+                    (pConstruccion.ManejoAnticipoRequiere == true && string.IsNullOrEmpty(pConstruccion.ManejoAnticipoRutaSoporte))
                 )
             {
                 completo = false;

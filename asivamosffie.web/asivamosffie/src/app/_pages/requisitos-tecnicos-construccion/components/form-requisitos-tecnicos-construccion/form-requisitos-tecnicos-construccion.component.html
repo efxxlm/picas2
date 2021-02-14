@@ -102,7 +102,8 @@
   
           <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
-              <mat-panel-title class="expansion-style--title" [ngClass]="contratacion.proyecto['estadoSemaforo']">
+              <mat-panel-title class="expansion-style--title" 
+                                                              [ngClass]="contratacion['estadoSemaforoPerfiles']">
                 Hojas de vida del contratista de obra
               </mat-panel-title>
             </mat-expansion-panel-header>
@@ -142,7 +143,7 @@
               <p class="mr-1em" style="margin-right: 2em;">
                 Fecha Inicio: <b>{{ contratacion.proyecto.fechaInicioEtapaObra | date: 'dd/MM/yyyy' }}</b></p>  
                 <p class="mr-1em" style="margin-right: 2em;">Fecha Fin: <b>{{ contratacion.proyecto.fechaFinEtapaObra | date: 'dd/MM/yyyy' }}</b></p>  
-                <p class="mr-1em" style="margin-right: 2em;">Duración en meses del proyecto: <b>{{ contratacion.proyecto['plazoEnSemanas'] | number : '1.1-1' }}</b></p>
+                <p class="mr-1em" style="margin-right: 2em;">Duración en semanas del proyecto: <b>{{ contratacion.proyecto['plazoEnSemanas'] | number : '1.1-1' }}</b></p>
                 <p class="mr-1em" style="margin-right: 2em;">Valor total del Proyecto: <b> {{ contratacion.proyecto.valorObra | currency:'COP':'symbol-narrow':'.0-0' }} </b></p>
   
             </div>
@@ -186,7 +187,7 @@
               <p class="mr-1em" style="margin-right: 2em;">
                 Fecha Inicio: <b>{{ contratacion.proyecto.fechaInicioEtapaObra | date: 'dd/MM/yyyy' }}</b></p>  
                 <p class="mr-1em" style="margin-right: 2em;">Fecha Fin: <b>{{ contratacion.proyecto.fechaFinEtapaObra | date: 'dd/MM/yyyy' }}</b></p>  
-                <p class="mr-1em" style="margin-right: 2em;">Duración en meses del proyecto: <b>{{ contratacion.proyecto['plazoEnSemanas'] | number : '1.1-1' }}</b></p>
+                <p class="mr-1em" style="margin-right: 2em;">Duración en semanas del proyecto: <b>{{ contratacion.proyecto['plazoEnSemanas'] | number : '1.1-1' }}</b></p>
                 <p class="mr-1em" style="margin-right: 2em;">Valor total del Proyecto: <b> {{ contratacion.proyecto.valorObra | currency:'COP':'symbol-narrow':'.0-0' }} </b></p>
   
             </div>

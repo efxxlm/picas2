@@ -56,7 +56,7 @@ export class ProgramacionObraFlujoInversionComponent implements OnInit {
   cargarProgramacion() {
 
     if ( this.archivoCargueIdProgramacionObra === undefined && this.esFlujoInversion ){
-      this.openDialog( '', 'Se requiere cargar primero la programación de obra' )
+      this.openDialog( '', '<b> Se requiere cargar primero la programación de obra </b> ' )
       return false;
 
     }

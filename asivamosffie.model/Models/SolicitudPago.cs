@@ -9,6 +9,7 @@ namespace asivamosffie.model.Models
         {
             SolicitudPagoCargarFormaPago = new HashSet<SolicitudPagoCargarFormaPago>();
             SolicitudPagoExpensas = new HashSet<SolicitudPagoExpensas>();
+            SolicitudPagoListaChequeo = new HashSet<SolicitudPagoListaChequeo>();
             SolicitudPagoObservacion = new HashSet<SolicitudPagoObservacion>();
             SolicitudPagoOtrosCostosServicios = new HashSet<SolicitudPagoOtrosCostosServicios>();
             SolicitudPagoRegistrarSolicitudPago = new HashSet<SolicitudPagoRegistrarSolicitudPago>();
@@ -42,6 +43,7 @@ namespace asivamosffie.model.Models
         public virtual OrdenGiro OrdenGiro { get; set; }
         public virtual ICollection<SolicitudPagoCargarFormaPago> SolicitudPagoCargarFormaPago { get; set; }
         public virtual ICollection<SolicitudPagoExpensas> SolicitudPagoExpensas { get; set; }
+        public virtual ICollection<SolicitudPagoListaChequeo> SolicitudPagoListaChequeo { get; set; }
         public virtual ICollection<SolicitudPagoObservacion> SolicitudPagoObservacion { get; set; }
         public virtual ICollection<SolicitudPagoOtrosCostosServicios> SolicitudPagoOtrosCostosServicios { get; set; }
         public virtual ICollection<SolicitudPagoRegistrarSolicitudPago> SolicitudPagoRegistrarSolicitudPago { get; set; }
