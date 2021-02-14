@@ -19,7 +19,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
 
   @Input() sesionComiteSolicitud: SesionComiteSolicitud;
   @Input() listaMiembros: SesionParticipante[];
-  @Input() fechaMaxima: any;
+  @Input() fechaMaxima: any; 
   @Input() fechaComite: Date;
   @Input() EstadosolicitudActa: any;
 
