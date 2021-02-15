@@ -13,9 +13,17 @@ import { ActualizacionPolizaRlcComponent } from './components/actualizacion-poli
 import { TablaBalanceFinancieroRlcComponent } from './components/tabla-balance-financiero-rlc/tabla-balance-financiero-rlc.component';
 import { DetalleBalanceFinancieroRlcComponent } from './components/detalle-balance-financiero-rlc/detalle-balance-financiero-rlc.component';
 import { RecursosComproPagadosRlcComponent } from './components/recursos-compro-pagados-rlc/recursos-compro-pagados-rlc.component';
+import { AcordionRecursosComproPagadosRlcComponent } from './components/acordion-recursos-compro-pagados-rlc/acordion-recursos-compro-pagados-rlc.component';
+import { TablaFuentesUsosRlcComponent } from './components/tabla-fuentes-usos-rlc/tabla-fuentes-usos-rlc.component';
+import { ListaContratistasRlcComponent } from './components/lista-contratistas-rlc/lista-contratistas-rlc.component';
+import { TablaValtotalOgRlcComponent } from './components/tabla-valtotal-og-rlc/tabla-valtotal-og-rlc.component';
+import { DetalleOgRlcComponent } from './components/detalle-og-rlc/detalle-og-rlc.component';
+import { TablaFacturadoOgRlcComponent } from './components/tabla-facturado-og-rlc/tabla-facturado-og-rlc.component';
+import { TablaDescuentosOgRlcComponent } from './components/tabla-descuentos-og-rlc/tabla-descuentos-og-rlc.component';
+import { TablaOtrosDescuentosOgRlcComponent } from './components/tabla-otros-descuentos-og-rlc/tabla-otros-descuentos-og-rlc.component';
 
 @NgModule({
-  declarations: [RegistrarLiquidacionContratoComponent, TablaSinRegistroLiquidacionRlcComponent, GestionarSolicitudRlcComponent, ActualizacionPolizaRlcComponent, TablaBalanceFinancieroRlcComponent, DetalleBalanceFinancieroRlcComponent, RecursosComproPagadosRlcComponent],
+  declarations: [RegistrarLiquidacionContratoComponent, TablaSinRegistroLiquidacionRlcComponent, GestionarSolicitudRlcComponent, ActualizacionPolizaRlcComponent, TablaBalanceFinancieroRlcComponent, DetalleBalanceFinancieroRlcComponent, RecursosComproPagadosRlcComponent, AcordionRecursosComproPagadosRlcComponent, TablaFuentesUsosRlcComponent, ListaContratistasRlcComponent, TablaValtotalOgRlcComponent, DetalleOgRlcComponent, TablaFacturadoOgRlcComponent, TablaDescuentosOgRlcComponent, TablaOtrosDescuentosOgRlcComponent],
   imports: [
     CommonModule,
     RegistrarLiquidacionContratoRoutingModule,
