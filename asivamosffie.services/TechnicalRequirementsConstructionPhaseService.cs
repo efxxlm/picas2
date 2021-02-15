@@ -2602,22 +2602,15 @@ namespace asivamosffie.services
                         mensajeRespuesta = "Debe existir por lo menos una ruta critica";
                     }
 
-                    //Actualizo el archivoCarge con la cantidad de registros validos , invalidos , y el total;
-                    //-2 ya los registros comienzan desde esta fila
-                    archivoCarge.CantidadRegistrosInvalidos = CantidadRegistrosInvalidos;
-                    archivoCarge.CantidadRegistrosValidos = CantidadResgistrosValidos;
-                    archivoCarge.CantidadRegistros = cantidadActividades;
-                    _context.ArchivoCargue.Update(archivoCarge);
-
                     ArchivoCargueRespuesta archivoCargueRespuesta = new ArchivoCargueRespuesta(); 
 
                     if (estructuraValidaValidacionGeneral == true)
                     {
                         archivoCargueRespuesta = new ArchivoCargueRespuesta
                         {
-                            CantidadDeRegistros = archivoCarge.CantidadRegistros.ToString(),
-                            CantidadDeRegistrosInvalidos = archivoCarge.CantidadRegistrosInvalidos.ToString(),
-                            CantidadDeRegistrosValidos = archivoCarge.CantidadRegistrosValidos.ToString(),
+                            CantidadDeRegistros = cantidadActividades.ToString(),
+                            CantidadDeRegistrosInvalidos = CantidadRegistrosInvalidos.ToString(),
+                            CantidadDeRegistrosValidos = CantidadResgistrosValidos.ToString(),
                             LlaveConsulta = archivoCarge.Nombre,
                             CargaValida = true,
 
@@ -2625,6 +2618,8 @@ namespace asivamosffie.services
                     }
                     else if (estructuraValidaValidacionGeneral == false)
                     {
+                        CantidadResgistrosValidos = 0;
+
                         archivoCargueRespuesta = new ArchivoCargueRespuesta
                         {
                             CantidadDeRegistros = archivoCarge.CantidadRegistros.ToString(),
@@ -2636,6 +2631,13 @@ namespace asivamosffie.services
 
                         };
                     }
+
+                    //Actualizo el archivoCarge con la cantidad de registros validos , invalidos , y el total;
+                    //-2 ya los registros comienzan desde esta fila
+                    archivoCarge.CantidadRegistrosInvalidos = CantidadRegistrosInvalidos;
+                    archivoCarge.CantidadRegistrosValidos = CantidadResgistrosValidos;
+                    archivoCarge.CantidadRegistros = cantidadActividades;
+                    _context.ArchivoCargue.Update(archivoCarge);
 
 
                     byte[] bin = package.GetAsByteArray();
@@ -2879,6 +2881,10 @@ namespace asivamosffie.services
             ArchivoCargue archivoCarge = await _documentService.getSaveFile(pFile, pFilePatch, Int32.Parse(OrigenArchivoCargue.FlujoInversion), pContratoConstruccionId);
 
             // if (!string.IsNullOrEmpty(archivoCarge.ArchivoCargueId.ToString()))
+
+            bool estructuraValidaValidacionGeneral = true;
+            string mensajeRespuesta = string.Empty;
+
             if (archivoCarge != null)
             {
                 using (var stream = new MemoryStream())
@@ -2911,9 +2917,9 @@ namespace asivamosffie.services
                         worksheet.Cells[1, 1].AddComment("Numero de semanas no es igual al del proyecto", "Admin");
                         worksheet.Cells[1, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
                         worksheet.Cells[1, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
-                        CantidadRegistrosInvalidos++;
-                        CantidadResgistrosValidos--;
                         tieneErrores = true;
+                        estructuraValidaValidacionGeneral = false;
+                        mensajeRespuesta = "Numero de semanas no es igual al del proyecto";
                     }
 
                     //valida numero capitulos
@@ -2922,9 +2928,9 @@ namespace asivamosffie.services
                         worksheet.Cells[1, 1].AddComment("Numero de capitulos no es igual a la programacion", "Admin");
                         worksheet.Cells[1, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
                         worksheet.Cells[1, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
-                        CantidadRegistrosInvalidos++;
-                        CantidadResgistrosValidos--;
                         tieneErrores = true;
+                        estructuraValidaValidacionGeneral = false;
+                        mensajeRespuesta = "Numero de capitulos no es igual a la programacion";
                     }
 
                     decimal sumaTotal = 0;
@@ -2933,6 +2939,8 @@ namespace asivamosffie.services
                     //int i = 2;
                     for (int i = 2; i <= cantidadCapitulos + 1; i++)
                     {
+                        bool tieneErroresCapitulo = false;
+
                         try
                         {
                             // semanas
@@ -2950,7 +2958,8 @@ namespace asivamosffie.services
                                 temp.Posicion = k - 2;
                                 temp.PosicionCapitulo = i - 2;
 
-                                //Valores
+                                #region Mes
+
                                 // Mes
                                 if (string.IsNullOrEmpty(worksheet.Cells[1, k].Text))
                                 {
@@ -2958,12 +2967,16 @@ namespace asivamosffie.services
                                     worksheet.Cells[1, k].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
                                     worksheet.Cells[1, k].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
                                     tieneErrores = true;
-
+                                    tieneErroresCapitulo = true;
                                 }
                                 else
                                 {
                                     temp.Semana = worksheet.Cells[1, k].Text;
                                 }
+
+                                #endregion Mes
+
+                                #region Capitulo
 
                                 //Capitulo
                                 if (string.IsNullOrEmpty(worksheet.Cells[i, 1].Text))
@@ -2972,11 +2985,14 @@ namespace asivamosffie.services
                                     worksheet.Cells[i, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
                                     worksheet.Cells[i, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
                                     tieneErrores = true;
+                                    tieneErroresCapitulo = true;
                                 }
                                 else
                                 {
                                     temp.ProgramacionId = listaProgramacion[i - 2].ProgramacionId;
                                 }
+
+                                #endregion Capitulo
 
                                 //Valor
                                 temp.Valor = string.IsNullOrEmpty(worksheet.Cells[i, k].Text) ? 0 : decimal.Parse(worksheet.Cells[i, k].Text);
@@ -2989,27 +3005,22 @@ namespace asivamosffie.services
                                     _context.TempFlujoInversion.Add(temp);
                                     _context.SaveChanges();
                                 }
-
-
-
-                                if (temp.TempFlujoInversionId > 0)
-                                {
-                                    CantidadResgistrosValidos++;
-                                }
-                                else
-                                {
-                                    CantidadRegistrosInvalidos++;
-                                }
-
                             }
-
-
+                            
                         }
                         catch (Exception ex)
                         {
                             CantidadRegistrosInvalidos++;
                         }
 
+                        if (tieneErroresCapitulo == true)
+                        {
+                            CantidadRegistrosInvalidos++;
+                        }
+                        else
+                        {
+                            CantidadResgistrosValidos++;
+                        }
                     }
 
                     if (proyecto.ValorObra != sumaTotal && worksheet.Cells[1, 1].Comment == null)
@@ -3017,26 +3028,46 @@ namespace asivamosffie.services
                         worksheet.Cells[1, 1].AddComment("La suma de los valores no es igual al valor total de obra del proyecto", "Admin");
                         worksheet.Cells[1, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
                         worksheet.Cells[1, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
-                        CantidadRegistrosInvalidos++;
-                        CantidadResgistrosValidos--;
+                        estructuraValidaValidacionGeneral = false;
+                        mensajeRespuesta = "La suma de los valores no es igual al valor total de obra del proyecto";
+                    }
+
+                    ArchivoCargueRespuesta archivoCargueRespuesta = new ArchivoCargueRespuesta();
+
+                    if (estructuraValidaValidacionGeneral == true)
+                    {
+                        archivoCargueRespuesta = new ArchivoCargueRespuesta
+                        {
+                            CantidadDeRegistros = cantidadCapitulos.ToString(),
+                            CantidadDeRegistrosInvalidos = CantidadRegistrosInvalidos.ToString(),
+                            CantidadDeRegistrosValidos = CantidadResgistrosValidos.ToString(),
+                            LlaveConsulta = archivoCarge.Nombre,
+                            CargaValida = true,
+                            Mensaje = mensajeRespuesta,
+
+                        };
+                    }else if (estructuraValidaValidacionGeneral == false)
+                    {
+                        CantidadResgistrosValidos = 0;
+
+                        archivoCargueRespuesta = new ArchivoCargueRespuesta
+                        {
+                            CantidadDeRegistros = archivoCarge.CantidadRegistros.ToString(),
+                            CantidadDeRegistrosInvalidos = archivoCarge.CantidadRegistrosInvalidos.ToString(),
+                            CantidadDeRegistrosValidos = archivoCarge.CantidadRegistrosValidos.ToString(),
+                            LlaveConsulta = archivoCarge.Nombre,
+                            CargaValida = false,
+                            Mensaje = mensajeRespuesta,
+
+                        };
                     }
 
                     //Actualizo el archivoCarge con la cantidad de registros validos , invalidos , y el total;
                     //-2 ya los registros comienzan desde esta fila
                     archivoCarge.CantidadRegistrosInvalidos = CantidadRegistrosInvalidos;
                     archivoCarge.CantidadRegistrosValidos = CantidadResgistrosValidos;
-                    archivoCarge.CantidadRegistros = (cantidadCapitulos * cantidadSemnas) - CantidadRegistrosVacios;
+                    archivoCarge.CantidadRegistros = cantidadCapitulos;
                     _context.ArchivoCargue.Update(archivoCarge);
-
-
-                    ArchivoCargueRespuesta archivoCargueRespuesta = new ArchivoCargueRespuesta
-                    {
-                        CantidadDeRegistros = archivoCarge.CantidadRegistros.ToString(),
-                        CantidadDeRegistrosInvalidos = archivoCarge.CantidadRegistrosInvalidos.ToString(),
-                        CantidadDeRegistrosValidos = archivoCarge.CantidadRegistrosValidos.ToString(),
-                        LlaveConsulta = archivoCarge.Nombre
-
-                    };
 
                     byte[] bin = package.GetAsByteArray();
                     string pathFile = archivoCarge.Ruta + "/" + archivoCarge.Nombre + ".xlsx";
