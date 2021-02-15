@@ -77,6 +77,7 @@ namespace asivamosffie.services
                                     CantidadProyectosAsociados = c.CantidadProyectosAsociados,
                                     CantidadProyectosRequisitosAprobados = c.CantidadProyectosRequisitosAprobados,
                                     CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
+                                    CantidadProyectosRequisitosValidados = c.CantidadProyectosRequisitosValidados,
                                     EstadoCodigo = c.EstadoCodigo,
                                     EstadoNombre = c.EstadoNombre, //string.IsNullOrEmpty( c.EstadoCodigo ) ? "Sin verificación de requisitos técnicos" : c.EstadoNombre,
                                     Existeregistro = c.ExisteRegistro,
@@ -96,6 +97,7 @@ namespace asivamosffie.services
                                 CantidadProyectosAsociados = c.CantidadProyectosAsociados,
                                 CantidadProyectosRequisitosAprobados = c.CantidadProyectosRequisitosAprobados,
                                 CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
+                                CantidadProyectosRequisitosValidados = c.CantidadProyectosRequisitosValidados,
                                 EstadoCodigo = c.EstadoCodigo,
                                 EstadoNombre = c.EstadoNombre, //string.IsNullOrEmpty( c.EstadoCodigo ) ? "Sin verificación de requisitos técnicos" : c.EstadoNombre,
                                 Existeregistro = c.ExisteRegistro,
@@ -137,6 +139,7 @@ namespace asivamosffie.services
                                     CantidadProyectosAsociados = c.CantidadProyectosAsociados,
                                     CantidadProyectosRequisitosVerificados = c.CantidadProyectosRequisitosVerificados,
                                     CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosVerificados,
+                                    CantidadProyectosRequisitosValidados = c.CantidadProyectosRequisitosValidados,
                                     EstadoCodigo = c.EstadoCodigo,
                                     EstadoNombre = c.EstadoNombre, //string.IsNullOrEmpty( c.EstadoCodigo ) ? "Sin verificación de requisitos técnicos" : c.EstadoNombre,
                                     Existeregistro = c.ExisteRegistro,
@@ -157,6 +160,7 @@ namespace asivamosffie.services
                                 CantidadProyectosAsociados = c.CantidadProyectosAsociados,
                                 CantidadProyectosRequisitosVerificados = c.CantidadProyectosRequisitosVerificados,
                                 CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosVerificados,
+                                CantidadProyectosRequisitosValidados = c.CantidadProyectosRequisitosValidados,
                                 EstadoCodigo = c.EstadoCodigo,
                                 EstadoNombre = c.EstadoNombre, //string.IsNullOrEmpty( c.EstadoCodigo ) ? "Sin verificación de requisitos técnicos" : c.EstadoNombre,
                                 Existeregistro = c.ExisteRegistro,
@@ -1142,8 +1146,22 @@ namespace asivamosffie.services
                         completoConstruccion = false;
                     }
 
+                    cc.ConstruccionPerfil.Where(cp => cp.Eliminado != true).ToList().ForEach(cp =>
+                    {
+                        ConstruccionPerfilObservacion UltimaObservacionSupervisor = getObservacionPerfil(cp, true);// ConstruccionPerfil.ConstruccionPerfilObservacion.OrderBy(r => r.ConstruccionPerfilObservacionId).Where(r => (bool)r.EsSupervision).LastOrDefault().Observacion;
 
-                    //construccionTemp.RegistroCompleto = completoConstruccion;
+                        if (
+                            cp.TieneObservacionesSupervisor == null ||
+                            (cp.TieneObservacionesSupervisor == true && string.IsNullOrEmpty(UltimaObservacionSupervisor != null ? UltimaObservacionSupervisor.Observacion : null))
+                    )
+                        {
+                            esCompleto = false;
+                            completoConstruccion = false;
+                        }
+                    });
+
+
+                    construccionTemp.RegistroCompletoValidacion = completoConstruccion;
                     _context.SaveChanges();
 
                 });
@@ -1170,13 +1188,13 @@ namespace asivamosffie.services
                     });
 
 
-                    //construccionTemp.RegistroCompleto = completoConstruccion;
+                    construccionTemp.RegistroCompletoValidacion = completoConstruccion;
                     _context.SaveChanges();
 
                 });
             }
 
-            contrato.RegistroCompletoConstruccion = esCompleto;
+            //contrato. = esCompleto;
             if (esCompleto == true)
             {
                 contrato.FechaAprobacionRequisitosConstruccionSupervisor = DateTime.Now;
@@ -1711,7 +1729,7 @@ namespace asivamosffie.services
                     foreach (var ContratoConstruccion in contratoCambiarEstado.ContratoConstruccion)
                     {
 
-                        //if ( contratoCambiarEstado.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString() ){
+                        #region observaciones perfiles
 
                         List<ConstruccionPerfil> listaPerfiles = _context.ConstruccionPerfil
                                                                             .Where(cp => cp.ContratoConstruccionId == ContratoConstruccion.ContratoConstruccionId)
@@ -1757,7 +1775,10 @@ namespace asivamosffie.services
                             }
 
                         });
-                        //}
+
+                        #endregion observaciones perfiles
+
+                        #region Observaciones Diagnostico
 
                         //Observaciones Diagnostico
 
@@ -1798,6 +1819,10 @@ namespace asivamosffie.services
                             }
                         }
 
+                        #endregion Observaciones Diagnostico
+
+                        #region Observaciones Planes Y Programas
+
                         //Observaciones Planes Y Programas
 
                         if (ContratoConstruccion.TieneObservacionesPlanesProgramasSupervisor == true && contratoCambiarEstado.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
@@ -1835,6 +1860,10 @@ namespace asivamosffie.services
                             ContratoConstruccion.RegistroCompletoPlanesProgramas = false;
                         }
 
+                        #endregion Observaciones Planes Y Programas
+
+                        #region Observaciones Manejo de Anticipo
+
                         //Observaciones Manejo de Anticipo
 
                         if (ContratoConstruccion.TieneObservacionesManejoAnticipoSupervisor == true && contratoCambiarEstado.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
@@ -1869,6 +1898,10 @@ namespace asivamosffie.services
                             ContratoConstruccion.TieneObservacionesManejoAnticipoSupervisor = null;
                             ContratoConstruccion.RegistroCompletoManejoAnticipo = false;
                         }
+
+                        #endregion Observaciones Manejo de Anticipo
+
+                        #region Observaciones Programacion Obra  
 
                         //Observaciones Programacion Obra  
 
@@ -1905,6 +1938,10 @@ namespace asivamosffie.services
                             ContratoConstruccion.TieneObservacionesProgramacionObraSupervisor = null;
                             ContratoConstruccion.RegistroCompletoProgramacionObra = false;
                         }
+
+                        #endregion Observaciones Programacion Obra  
+
+                        #region Observaciones Flujo Inversion
 
                         //Observaciones Flujo Inversion 
 
@@ -1943,6 +1980,11 @@ namespace asivamosffie.services
                             ContratoConstruccion.TieneObservacionesFlujoInversionSupervisor = null;
                             ContratoConstruccion.RegistroCompletoFlujoInversion = false;
                         }
+
+                        #endregion Observaciones Flujo Inversion
+
+                        ContratoConstruccion.RegistroCompletoValidacion = false;
+                        ContratoConstruccion.RegistroCompletoVerificacion = false;
 
                     }
                 }
