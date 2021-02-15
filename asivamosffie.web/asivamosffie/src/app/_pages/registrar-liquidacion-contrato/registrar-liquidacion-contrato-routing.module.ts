@@ -3,10 +3,12 @@ import { RouterModule, Routes } from "@angular/router";
 import { CurrencyMaskInputMode, NgxCurrencyModule } from "ngx-currency";
 import { DetalleBalanceFinancieroRlcComponent } from "./components/detalle-balance-financiero-rlc/detalle-balance-financiero-rlc.component";
 import { DetalleOgRlcComponent } from "./components/detalle-og-rlc/detalle-og-rlc.component";
+import { DetalleTrasladoRlcComponent } from "./components/detalle-traslado-rlc/detalle-traslado-rlc.component";
 import { EjecucionFinancieraRlcComponent } from "./components/ejecucion-financiera-rlc/ejecucion-financiera-rlc.component";
 import { GestionarSolicitudRlcComponent } from "./components/gestionar-solicitud-rlc/gestionar-solicitud-rlc.component";
 import { RecursosComproPagadosRlcComponent } from "./components/recursos-compro-pagados-rlc/recursos-compro-pagados-rlc.component";
 import { RegistrarLiquidacionContratoComponent } from "./components/registrar-liquidacion-contrato/registrar-liquidacion-contrato.component";
+import { TrasladoRecursosRlcComponent } from "./components/traslado-recursos-rlc/traslado-recursos-rlc.component";
 
 export const customCurrencyMaskConfig = {
   align: "right",
@@ -46,6 +48,14 @@ const routes: Routes = [
   {
     path: 'ejecucionFinanciera/:id',
     component: EjecucionFinancieraRlcComponent
+  },
+  {
+    path: 'trasladoRecursos/:id',
+    component: TrasladoRecursosRlcComponent
+  },
+  {
+    path: 'detalleTraslado/:id',
+    component: DetalleTrasladoRlcComponent
   }
 ]; 
 @NgModule({

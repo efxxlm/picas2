@@ -24,9 +24,12 @@ import { TablaOtrosDescuentosOgRlcComponent } from './components/tabla-otros-des
 import { EjecucionFinancieraRlcComponent } from './components/ejecucion-financiera-rlc/ejecucion-financiera-rlc.component';
 import { TablaEjpresupuestalRlcComponent } from './components/tabla-ejpresupuestal-rlc/tabla-ejpresupuestal-rlc.component';
 import { TablaEjfinancieraRlcComponent } from './components/tabla-ejfinanciera-rlc/tabla-ejfinanciera-rlc.component';
+import { TrasladoRecursosRlcComponent } from './components/traslado-recursos-rlc/traslado-recursos-rlc.component';
+import { DetalleTrasladoRlcComponent } from './components/detalle-traslado-rlc/detalle-traslado-rlc.component';
+import { TablaTrasladoRlcComponent } from './components/tabla-traslado-rlc/tabla-traslado-rlc.component';
 
 @NgModule({
-  declarations: [RegistrarLiquidacionContratoComponent, TablaSinRegistroLiquidacionRlcComponent, GestionarSolicitudRlcComponent, ActualizacionPolizaRlcComponent, TablaBalanceFinancieroRlcComponent, DetalleBalanceFinancieroRlcComponent, RecursosComproPagadosRlcComponent, AcordionRecursosComproPagadosRlcComponent, TablaFuentesUsosRlcComponent, ListaContratistasRlcComponent, TablaValtotalOgRlcComponent, DetalleOgRlcComponent, TablaFacturadoOgRlcComponent, TablaDescuentosOgRlcComponent, TablaOtrosDescuentosOgRlcComponent, EjecucionFinancieraRlcComponent, TablaEjpresupuestalRlcComponent, TablaEjfinancieraRlcComponent],
+  declarations: [RegistrarLiquidacionContratoComponent, TablaSinRegistroLiquidacionRlcComponent, GestionarSolicitudRlcComponent, ActualizacionPolizaRlcComponent, TablaBalanceFinancieroRlcComponent, DetalleBalanceFinancieroRlcComponent, RecursosComproPagadosRlcComponent, AcordionRecursosComproPagadosRlcComponent, TablaFuentesUsosRlcComponent, ListaContratistasRlcComponent, TablaValtotalOgRlcComponent, DetalleOgRlcComponent, TablaFacturadoOgRlcComponent, TablaDescuentosOgRlcComponent, TablaOtrosDescuentosOgRlcComponent, EjecucionFinancieraRlcComponent, TablaEjpresupuestalRlcComponent, TablaEjfinancieraRlcComponent, TrasladoRecursosRlcComponent, DetalleTrasladoRlcComponent, TablaTrasladoRlcComponent],
   imports: [
     CommonModule,
     RegistrarLiquidacionContratoRoutingModule,
