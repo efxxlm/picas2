@@ -21,9 +21,12 @@ import { DetalleOgRlcComponent } from './components/detalle-og-rlc/detalle-og-rl
 import { TablaFacturadoOgRlcComponent } from './components/tabla-facturado-og-rlc/tabla-facturado-og-rlc.component';
 import { TablaDescuentosOgRlcComponent } from './components/tabla-descuentos-og-rlc/tabla-descuentos-og-rlc.component';
 import { TablaOtrosDescuentosOgRlcComponent } from './components/tabla-otros-descuentos-og-rlc/tabla-otros-descuentos-og-rlc.component';
+import { EjecucionFinancieraRlcComponent } from './components/ejecucion-financiera-rlc/ejecucion-financiera-rlc.component';
+import { TablaEjpresupuestalRlcComponent } from './components/tabla-ejpresupuestal-rlc/tabla-ejpresupuestal-rlc.component';
+import { TablaEjfinancieraRlcComponent } from './components/tabla-ejfinanciera-rlc/tabla-ejfinanciera-rlc.component';
 
 @NgModule({
-  declarations: [RegistrarLiquidacionContratoComponent, TablaSinRegistroLiquidacionRlcComponent, GestionarSolicitudRlcComponent, ActualizacionPolizaRlcComponent, TablaBalanceFinancieroRlcComponent, DetalleBalanceFinancieroRlcComponent, RecursosComproPagadosRlcComponent, AcordionRecursosComproPagadosRlcComponent, TablaFuentesUsosRlcComponent, ListaContratistasRlcComponent, TablaValtotalOgRlcComponent, DetalleOgRlcComponent, TablaFacturadoOgRlcComponent, TablaDescuentosOgRlcComponent, TablaOtrosDescuentosOgRlcComponent],
+  declarations: [RegistrarLiquidacionContratoComponent, TablaSinRegistroLiquidacionRlcComponent, GestionarSolicitudRlcComponent, ActualizacionPolizaRlcComponent, TablaBalanceFinancieroRlcComponent, DetalleBalanceFinancieroRlcComponent, RecursosComproPagadosRlcComponent, AcordionRecursosComproPagadosRlcComponent, TablaFuentesUsosRlcComponent, ListaContratistasRlcComponent, TablaValtotalOgRlcComponent, DetalleOgRlcComponent, TablaFacturadoOgRlcComponent, TablaDescuentosOgRlcComponent, TablaOtrosDescuentosOgRlcComponent, EjecucionFinancieraRlcComponent, TablaEjpresupuestalRlcComponent, TablaEjfinancieraRlcComponent],
   imports: [
     CommonModule,
     RegistrarLiquidacionContratoRoutingModule,
