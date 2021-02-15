@@ -1176,7 +1176,7 @@ namespace asivamosffie.services
                 });
             }
 
-            //contrato.RegistroCompletoConstruccion = esCompleto;
+            contrato.RegistroCompletoConstruccion = esCompleto;
             if (esCompleto == true)
             {
                 contrato.FechaAprobacionRequisitosConstruccionSupervisor = DateTime.Now;
@@ -1932,7 +1932,8 @@ namespace asivamosffie.services
                                         )
                                 .FirstOrDefault();
 
-                                construccionObservacionApoyo.Archivada = true;
+                                if (construccionObservacionApoyo != null)
+                                    construccionObservacionApoyo.Archivada = true;
 
                             }
 
