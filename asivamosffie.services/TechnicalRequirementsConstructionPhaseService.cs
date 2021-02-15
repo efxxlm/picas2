@@ -169,7 +169,7 @@ namespace asivamosffie.services
                     }
                 });
 
-            return listaContrats;
+            return listaContrats.OrderByDescending( r => r.FechaAprobacion).ToList() ;
 
         }
 
@@ -227,7 +227,7 @@ namespace asivamosffie.services
 
                 });
 
-            return listaContrats;
+            return listaContrats.OrderByDescending( r => r.FechaAprobacion).ToList();
 
         }
 
