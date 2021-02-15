@@ -3,6 +3,7 @@ import { RouterModule, Routes } from "@angular/router";
 import { CurrencyMaskInputMode, NgxCurrencyModule } from "ngx-currency";
 import { DetalleBalanceFinancieroRlcComponent } from "./components/detalle-balance-financiero-rlc/detalle-balance-financiero-rlc.component";
 import { GestionarSolicitudRlcComponent } from "./components/gestionar-solicitud-rlc/gestionar-solicitud-rlc.component";
+import { RecursosComproPagadosRlcComponent } from "./components/recursos-compro-pagados-rlc/recursos-compro-pagados-rlc.component";
 import { RegistrarLiquidacionContratoComponent } from "./components/registrar-liquidacion-contrato/registrar-liquidacion-contrato.component";
 
 export const customCurrencyMaskConfig = {
@@ -32,6 +33,10 @@ const routes: Routes = [
     path: 'detalleBalanceFinanciero/:id',
     component: DetalleBalanceFinancieroRlcComponent
   },
+  {
+    path: 'recursosComprometidos/:id',
+    component: RecursosComproPagadosRlcComponent
+  }
 ]; 
 @NgModule({
   imports: [RouterModule.forChild(routes),NgxCurrencyModule.forRoot(customCurrencyMaskConfig)],

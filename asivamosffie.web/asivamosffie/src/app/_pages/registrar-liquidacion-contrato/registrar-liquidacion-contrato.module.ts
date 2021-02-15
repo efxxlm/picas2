@@ -12,9 +12,10 @@ import { GestionarSolicitudRlcComponent } from './components/gestionar-solicitud
 import { ActualizacionPolizaRlcComponent } from './components/actualizacion-poliza-rlc/actualizacion-poliza-rlc.component';
 import { TablaBalanceFinancieroRlcComponent } from './components/tabla-balance-financiero-rlc/tabla-balance-financiero-rlc.component';
 import { DetalleBalanceFinancieroRlcComponent } from './components/detalle-balance-financiero-rlc/detalle-balance-financiero-rlc.component';
+import { RecursosComproPagadosRlcComponent } from './components/recursos-compro-pagados-rlc/recursos-compro-pagados-rlc.component';
 
 @NgModule({
-  declarations: [RegistrarLiquidacionContratoComponent, TablaSinRegistroLiquidacionRlcComponent, GestionarSolicitudRlcComponent, ActualizacionPolizaRlcComponent, TablaBalanceFinancieroRlcComponent, DetalleBalanceFinancieroRlcComponent],
+  declarations: [RegistrarLiquidacionContratoComponent, TablaSinRegistroLiquidacionRlcComponent, GestionarSolicitudRlcComponent, ActualizacionPolizaRlcComponent, TablaBalanceFinancieroRlcComponent, DetalleBalanceFinancieroRlcComponent, RecursosComproPagadosRlcComponent],
   imports: [
     CommonModule,
     RegistrarLiquidacionContratoRoutingModule,
