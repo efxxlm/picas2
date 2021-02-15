@@ -41,6 +41,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CreateEditObservacionPerfil(ConstruccionPerfil pPerfil, bool esSupervisor);
         Task<Respuesta> AprobarInicio(int pContratoId, string pUsuarioCreacion);
         Proyecto CalcularFechaInicioContrato(int pContratoConstruccionId);
+        Proyecto CalcularYGuardarFechaInicioContrato(int pContratoConstruccionId, DateTime pFechaInicioObra, int pContratoId, int pProyectoId, string pUsuarioModificacion);
 
     }
 }

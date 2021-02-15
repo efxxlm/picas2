@@ -332,8 +332,6 @@ namespace asivamosffie.services
 
                 });
 
-
-
                 foreach (var ContratacionProyecto in contrato.Contratacion.ContratacionProyecto)
                 {
                     Localizacion Municipio = Listlocalizacion.Where(r => r.LocalizacionId == ContratacionProyecto.Proyecto.LocalizacionIdMunicipio).FirstOrDefault();
@@ -341,11 +339,16 @@ namespace asivamosffie.services
                     ContratacionProyecto.Proyecto.Municipio = Municipio.Descripcion;
                     ContratacionProyecto.Proyecto.TipoIntervencionCodigo = ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion && r.Codigo == ContratacionProyecto.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
 
-                    Proyecto proyectoTemp = CalcularFechasContrato(ContratacionProyecto.ProyectoId);
+                    if ( contrato.ContratoConstruccion != null && contrato.ContratoConstruccion.Count() > 0 && contrato.ContratoConstruccion.ToList()[0].FechaInicioObra != null)
+                    {
+                        Proyecto proyectoTemp = CalcularFechasContrato(ContratacionProyecto.ProyectoId, contrato.ContratoConstruccion.ToList()[0].FechaInicioObra);
 
-                    contrato.Contratacion.ContratacionProyecto.Where(cp => cp.ProyectoId == ContratacionProyecto.ProyectoId).FirstOrDefault().Proyecto.FechaInicioEtapaObra = proyectoTemp.FechaInicioEtapaObra;
-                    contrato.Contratacion.ContratacionProyecto.Where(cp => cp.ProyectoId == ContratacionProyecto.ProyectoId).FirstOrDefault().Proyecto.FechaFinEtapaObra = proyectoTemp.FechaFinEtapaObra;
-                    contrato.Contratacion.ContratacionProyecto.Where(cp => cp.ProyectoId == ContratacionProyecto.ProyectoId).FirstOrDefault().Proyecto.PlazoEnSemanas = proyectoTemp.PlazoEnSemanas;
+                        contrato.Contratacion.ContratacionProyecto.Where(cp => cp.ProyectoId == ContratacionProyecto.ProyectoId).FirstOrDefault().Proyecto.FechaInicioEtapaObra = proyectoTemp.FechaInicioEtapaObra;
+                        contrato.Contratacion.ContratacionProyecto.Where(cp => cp.ProyectoId == ContratacionProyecto.ProyectoId).FirstOrDefault().Proyecto.FechaFinEtapaObra = proyectoTemp.FechaFinEtapaObra;
+                        contrato.Contratacion.ContratacionProyecto.Where(cp => cp.ProyectoId == ContratacionProyecto.ProyectoId).FirstOrDefault().Proyecto.PlazoEnSemanas = proyectoTemp.PlazoEnSemanas;
+                    }
+
+
 
                     List<ComponenteAportante> listaComponenteAportante = new List<ComponenteAportante>();
 
@@ -1560,49 +1563,50 @@ namespace asivamosffie.services
             return esCompleto;
         }
 
-        private Proyecto CalcularFechasContrato( int pProyectoId ){
+        private Proyecto CalcularFechasContrato( int pProyectoId, DateTime? pFechaInicioObra ){
             Proyecto proyecto = _context.Proyecto
                                             .Where( p => p.ProyectoId == pProyectoId )
-                                                .Include( r => r.ContratacionProyecto )
-                                                    .ThenInclude( r => r.Contratacion )
-                                                        .ThenInclude( r => r.Contrato )
-                                                            .ThenInclude( r => r.ContratoPoliza )
-                                                .Include( r => r.ContratacionProyecto )
-                                                    .ThenInclude( r => r.Contratacion )
-                                                        .ThenInclude( r => r.DisponibilidadPresupuestal )
+                                            //    .Include( r => r.ContratacionProyecto )
+                                            //        .ThenInclude( r => r.Contratacion )
+                                            //            .ThenInclude( r => r.Contrato )
+                                            //                .ThenInclude( r => r.ContratoPoliza )
+                                            //    .Include( r => r.ContratacionProyecto )
+                                            //        .ThenInclude( r => r.Contratacion )
+                                            //            .ThenInclude( r => r.DisponibilidadPresupuestal )
                                             .FirstOrDefault();
-            Contrato contrato = new Contrato();
-            if ( proyecto?.ContratacionProyecto?.FirstOrDefault()?.Contratacion?.Contrato?.FirstOrDefault() != null )
-                contrato = proyecto.ContratacionProyecto.FirstOrDefault().Contratacion.Contrato.FirstOrDefault();
 
-            // obtengo información de las fechas de las polizas y DRP
-            DateTime? fechaInicioContrato = proyecto?.ContratacionProyecto?.FirstOrDefault()?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault()?.FechaDrp;
-            DateTime? fechaPoliza = contrato.ContratoPoliza?.OrderByDescending(r => r.FechaAprobacion)?.FirstOrDefault()?.FechaAprobacion;
+            //Contrato contrato = new Contrato();
+            //if ( proyecto?.ContratacionProyecto?.FirstOrDefault()?.Contratacion?.Contrato?.FirstOrDefault() != null )
+            //    contrato = proyecto.ContratacionProyecto.FirstOrDefault().Contratacion.Contrato.FirstOrDefault();
 
-            VRequisitosTecnicosInicioConstruccion proyectoInfo = _context.VRequisitosTecnicosInicioConstruccion
-                                                                                .Where(r => r.ContratoId == contrato.ContratoId)
-                                                                                .FirstOrDefault();
+            //// obtengo información de las fechas de las polizas y DRP
+            //DateTime? fechaInicioContrato = proyecto?.ContratacionProyecto?.FirstOrDefault()?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault()?.FechaDrp;
+            //DateTime? fechaPoliza = contrato.ContratoPoliza?.OrderByDescending(r => r.FechaAprobacion)?.FirstOrDefault()?.FechaAprobacion;
 
-            //proyecto = contratoConstruccion.Proyecto;
+            //VRequisitosTecnicosInicioConstruccion proyectoInfo = _context.VRequisitosTecnicosInicioConstruccion
+            //                                                                    .Where(r => r.ContratoId == contrato.ContratoId)
+            //                                                                    .FirstOrDefault();
 
-            // valida la fecha mayor 
-            if (fechaInicioContrato != null && fechaPoliza != null)
-            {
+            //// valida la fecha mayor 
+            //if (fechaInicioContrato != null && fechaPoliza != null)
+            //{
 
-                if (fechaPoliza >= fechaInicioContrato)
-                    proyecto.FechaInicioEtapaObra = fechaPoliza.Value;
-                else
-                    proyecto.FechaInicioEtapaObra = fechaInicioContrato.Value;
+            //    if (fechaPoliza >= fechaInicioContrato)
+            //        proyecto.FechaInicioEtapaObra = fechaPoliza.Value;
+            //    else
+            //        proyecto.FechaInicioEtapaObra = fechaInicioContrato.Value;
 
-            }
+            //}
 
 
-            // agrega el plazo de preconstruccion si tiene esta fase
-            if (proyectoInfo.TieneFasePreconstruccion > 0)
-            {
-                proyecto.FechaInicioEtapaObra = proyecto.FechaInicioEtapaObra.AddMonths(proyecto.PlazoMesesInterventoria.Value);
-                proyecto.FechaInicioEtapaObra = proyecto.FechaInicioEtapaObra.AddMonths(proyecto.PlazoDiasInterventoria.Value + 1);
-            }
+            //// agrega el plazo de preconstruccion si tiene esta fase
+            //if (proyectoInfo.TieneFasePreconstruccion > 0)
+            //{
+            //    proyecto.FechaInicioEtapaObra = proyecto.FechaInicioEtapaObra.AddMonths(proyecto.PlazoMesesInterventoria.Value);
+            //    proyecto.FechaInicioEtapaObra = proyecto.FechaInicioEtapaObra.AddMonths(proyecto.PlazoDiasInterventoria.Value + 1);
+            //}
+
+            proyecto.FechaInicioEtapaObra = pFechaInicioObra.HasValue ? pFechaInicioObra.Value : DateTime.MinValue;
 
             // calcula la fecha final del contrato
             DateTime fechaFinalContrato = proyecto.FechaInicioEtapaObra.AddMonths(proyecto.PlazoMesesObra.Value);
@@ -1622,12 +1626,55 @@ namespace asivamosffie.services
             ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion
                                                                         .Find(pContratoConstruccionId);
 
-            return CalcularFechasContrato( contratoConstruccion.ProyectoId );
+            return CalcularFechasContrato( contratoConstruccion.ProyectoId, contratoConstruccion.FechaInicioObra );
 
             
         }
 
-        
+        public Proyecto CalcularYGuardarFechaInicioContrato(int pContratoConstruccionId, DateTime pFechaInicioObra, int pContratoId, int pProyectoId, string pUsuarioModificacion)
+        {
+            Proyecto proyecto = new Proyecto();
+
+            if (pContratoConstruccionId == 0)
+            {
+                ContratoConstruccion contratoTemp = new ContratoConstruccion();
+
+                contratoTemp.UsuarioCreacion = pUsuarioModificacion;
+                contratoTemp.FechaCreacion = DateTime.Now;
+
+                contratoTemp.ContratoId = pContratoId;
+                contratoTemp.ProyectoId = pProyectoId;
+
+                _context.ContratoConstruccion.Add(contratoTemp);
+                _context.SaveChanges();
+
+                pContratoConstruccionId = contratoTemp.ContratoConstruccionId;
+            }
+
+            // obtengo la informacion del contrato construccion
+            ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion
+                                                                        .Find(pContratoConstruccionId);
+
+            contratoConstruccion.FechaInicioObra = pFechaInicioObra;
+            contratoConstruccion.UsuarioModificacion = pUsuarioModificacion;
+
+            Contrato contrato = _context.Contrato
+                                            .Where( r => r.ContratoId == contratoConstruccion.ContratoId)
+                                            .Include( r => r.ContratoConstruccion )
+                                            .FirstOrDefault();
+
+            ContratoConstruccion cc = contrato.ContratoConstruccion.OrderBy(r => r.FechaInicioObra).FirstOrDefault();
+            if (cc != null)
+            {
+                contrato.FechaActaInicioFase2 = cc.FechaInicioObra;
+            }
+
+            _context.SaveChanges();
+
+            return CalcularFechasContrato(contratoConstruccion.ProyectoId, contratoConstruccion.FechaInicioObra);
+        }
+
+
 
         #endregion private
 
@@ -2281,7 +2328,7 @@ namespace asivamosffie.services
 
         
             //Proyecto proyectoTemp = CalcularFechaInicioContrato( pContratoConstruccionId );
-            Proyecto proyectoTemp = CalcularFechasContrato( pProyectoId );
+            Proyecto proyectoTemp = CalcularFechasContrato( pProyectoId, contratoConstruccion.FechaInicioObra );
             
 
             DateTime? fechaInicioContrato = proyectoTemp.FechaInicioEtapaObra;
@@ -2311,7 +2358,15 @@ namespace asivamosffie.services
                     //Controlar Registros
                     //Filas <=
                     //No comienza desde 0 por lo tanto el = no es necesario
-                    for (int i = 2; i <= worksheet.Dimension.Rows; i++)
+
+                    int cantidadActividades = 0;
+                    int posicion = 2;
+                    while (!string.IsNullOrEmpty(worksheet.Cells[posicion++, 1].Text))
+                    {
+                        cantidadActividades++;
+                    }
+
+                    for (int i = 2; i <= cantidadActividades + 1; i++)
                     {
                         bool tieneErrores = false;
                         try
@@ -2504,7 +2559,7 @@ namespace asivamosffie.services
                     //-2 ya los registros comienzan desde esta fila
                     archivoCarge.CantidadRegistrosInvalidos = CantidadRegistrosInvalidos;
                     archivoCarge.CantidadRegistrosValidos = CantidadResgistrosValidos;
-                    archivoCarge.CantidadRegistros = (worksheet.Dimension.Rows - CantidadRegistrosVacios - 1);
+                    archivoCarge.CantidadRegistros = cantidadActividades;
                     _context.ArchivoCargue.Update(archivoCarge);
 
 
@@ -2730,9 +2785,11 @@ namespace asivamosffie.services
             int CantidadResgistrosValidos = 0;
             int CantidadRegistrosInvalidos = 0;
 
+            ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find(pContratoConstruccionId);
+
             // rango de fechas
             //Proyecto proyecto = CalcularFechaInicioContrato(pContratoConstruccionId);
-            Proyecto proyecto = CalcularFechasContrato(pProyectoId);
+            Proyecto proyecto = CalcularFechasContrato(pProyectoId, contratoConstruccion.FechaInicioObra);
 
             //Numero semanas
             int numberOfWeeks = Convert.ToInt32(Math.Floor((proyecto.FechaFinEtapaObra - proyecto.FechaInicioEtapaObra).TotalDays / 7));
