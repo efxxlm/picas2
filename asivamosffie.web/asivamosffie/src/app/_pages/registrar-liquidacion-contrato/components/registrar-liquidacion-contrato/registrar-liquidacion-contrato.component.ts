@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./registrar-liquidacion-contrato.component.scss']
 })
 export class RegistrarLiquidacionContratoComponent implements OnInit {
-
+  verAyuda = false;
   constructor() { }
 
   ngOnInit(): void {

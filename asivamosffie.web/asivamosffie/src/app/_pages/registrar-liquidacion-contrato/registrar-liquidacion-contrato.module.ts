@@ -7,9 +7,12 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { QuillModule } from 'ngx-quill';
 import { MaterialModule } from 'src/app/material/material.module';
+import { TablaSinRegistroLiquidacionRlcComponent } from './components/tabla-sin-registro-liquidacion-rlc/tabla-sin-registro-liquidacion-rlc.component';
+import { GestionarSolicitudRlcComponent } from './components/gestionar-solicitud-rlc/gestionar-solicitud-rlc.component';
+import { ActualizacionPolizaRlcComponent } from './components/actualizacion-poliza-rlc/actualizacion-poliza-rlc.component';
 
 @NgModule({
-  declarations: [RegistrarLiquidacionContratoComponent],
+  declarations: [RegistrarLiquidacionContratoComponent, TablaSinRegistroLiquidacionRlcComponent, GestionarSolicitudRlcComponent, ActualizacionPolizaRlcComponent],
   imports: [
     CommonModule,
     RegistrarLiquidacionContratoRoutingModule,

@@ -1,6 +1,7 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { CurrencyMaskInputMode, NgxCurrencyModule } from "ngx-currency";
+import { GestionarSolicitudRlcComponent } from "./components/gestionar-solicitud-rlc/gestionar-solicitud-rlc.component";
 import { RegistrarLiquidacionContratoComponent } from "./components/registrar-liquidacion-contrato/registrar-liquidacion-contrato.component";
 
 export const customCurrencyMaskConfig = {
@@ -21,6 +22,10 @@ const routes: Routes = [
   {
     path: '',
     component: RegistrarLiquidacionContratoComponent
+  },
+  {
+    path: 'gestionarSolicitud/:id',
+    component: GestionarSolicitudRlcComponent
   }
 ]; 
 @NgModule({
