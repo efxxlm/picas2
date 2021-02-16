@@ -164,7 +164,8 @@ namespace asivamosffie.services
                     item.InformeFinalAnexo.TipoAnexoString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.InformeFinalAnexo.TipoAnexo, 155);
                 }
                 item.EstadoValidacion = informeFinal.EstadoValidacion;
-                item.RegistroCompletoValidacion = (bool) informeFinal.RegistroCompletoValidacion;
+                item.RegistroCompletoValidacion = informeFinal.RegistroCompletoValidacion == null ? false : (bool) informeFinal.RegistroCompletoValidacion;
+
                 if (item.ValidacionCodigo == ConstantCodigoCalificacionInformeFinal.No_Cumple)
                 {
                     //Validar si tiene observaciones
@@ -517,6 +518,7 @@ namespace asivamosffie.services
                 if (informeFinal != null)
                 {
                     informeFinal.EstadoValidacion = ConstantCodigoEstadoValidacionInformeFinal.Con_informe_enviado_al_supervisor;
+                    informeFinal.FechaEnvioSupervisor = DateTime.Now;
                     informeFinal.UsuarioModificacion = pUsuario;
                     informeFinal.FechaModificacion = DateTime.Now;
                 }

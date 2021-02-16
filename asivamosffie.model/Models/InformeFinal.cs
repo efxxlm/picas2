@@ -27,7 +27,10 @@ namespace asivamosffie.model.Models
         public bool? RegistroCompletoValidacion { get; set; }
         public string EstadoAprobacion { get; set; }
         public bool? TieneObservacionesSupervisor { get; set; }
-        public string ObservacionesValidacion { get; set; }
+        public DateTime? FechaEnvioSupervisor { get; set; }
+        public DateTime? FechaAprobacion { get; set; }
+        public string EstadoCumplimiento { get; set; }
+        public bool? TieneObservacionesCumplimiento { get; set; }
 
         public virtual Proyecto Proyecto { get; set; }
         public virtual ICollection<InformeFinalInterventoria> InformeFinalInterventoria { get; set; }

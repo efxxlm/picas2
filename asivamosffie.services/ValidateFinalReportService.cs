@@ -139,6 +139,7 @@ namespace asivamosffie.services
         {
             int informeFinalInterventoriaObservacionesId = 0;
             bool tieneObservacionNoCumple = false;
+            bool semaforo = false;
 
             List<InformeFinalInterventoria> ListInformeFinalChequeo = await _context.InformeFinalInterventoria
                                 .Where(r => r.InformeFinalId == pInformeFinalId)
@@ -147,7 +148,18 @@ namespace asivamosffie.services
                                 .OrderBy(r => r.InformeFinalListaChequeo.Posicion)
                                 .ToListAsync();
             InformeFinal informeFinal = _context.InformeFinal.Find(pInformeFinalId);
-            foreach(var item in ListInformeFinalChequeo)
+
+            if (informeFinal.EstadoAprobacion == ConstantCodigoEstadoAprobacionInformeFinal.En_proceso_aprobacion)
+            {
+                InformeFinalInterventoria no_seleccionado = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == informeFinal.InformeFinalId && (r.AprobacionCodigo != "0" && !String.IsNullOrEmpty(r.AprobacionCodigo))).FirstOrDefault();
+
+                if (no_seleccionado == null)
+                {
+                    semaforo = true;
+                }
+            }
+
+            foreach (var item in ListInformeFinalChequeo)
             {
                 item.CalificacionCodigoString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.CalificacionCodigo, 151);
                 item.ValidacionCodigoString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.ValidacionCodigo, 151);
@@ -158,7 +170,7 @@ namespace asivamosffie.services
                     item.InformeFinalAnexo.TipoAnexoString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.InformeFinalAnexo.TipoAnexo, 155);
                 }
                 item.EstadoValidacion = informeFinal.EstadoValidacion;
-                item.RegistroCompletoValidacion = (bool) informeFinal.RegistroCompletoValidacion;
+                item.RegistroCompletoValidacion = informeFinal.RegistroCompletoValidacion == null ? false : (bool) informeFinal.RegistroCompletoValidacion;
                 if (item.ValidacionCodigo == ConstantCodigoCalificacionInformeFinal.No_Cumple && item.AprobacionCodigo != ConstantCodigoCalificacionInformeFinal.No_Cumple)
                 {
                     //Validar si tiene observaciones
@@ -195,6 +207,7 @@ namespace asivamosffie.services
 
                 item.InformeFinalInterventoriaObservacionesId = informeFinalInterventoriaObservacionesId;
                 item.TieneObservacionNoCumple = tieneObservacionNoCumple;
+                item.Semaforo = semaforo;
             }
             return ListInformeFinalChequeo;
         }
@@ -572,6 +585,7 @@ namespace asivamosffie.services
                 {
                     informeFinal.EstadoAprobacion = ConstantCodigoEstadoAprobacionInformeFinal.Enviado_verificacion_liquidacion_novedades;
                     informeFinal.UsuarioModificacion = pUsuario;
+                    informeFinal.FechaAprobacion = DateTime.Now;
                     informeFinal.FechaModificacion = DateTime.Now;
                 }
 

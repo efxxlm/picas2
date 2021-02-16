@@ -9,8 +9,8 @@
     <mat-expansion-panel class="expansion-style">
       <mat-expansion-panel-header class="expansion-style--header">
         <mat-panel-title class="expansion-style--title 
-        {{estadoAprobacion == '0' || estadoAprobacion == null || semaforo ? 
-          'sin-diligenciar' : estadoAprobacion == '1' ? 
+        {{estadoAprobacion === '0' || estadoAprobacion == null || semaforo ? 
+          'sin-diligenciar' : estadoAprobacion === '1' || estadoAprobacion === '3' ? 
                 'en-proceso' : 'completo' }}">
                 Informe final y anexos
         </mat-panel-title>

@@ -23,6 +23,9 @@ namespace asivamosffie.model.Models
         public string EstadoAprobacionString { get; set; }
 
         [NotMapped]
+        public string EstadoCumplimientoString { get; set; }
+
+        [NotMapped]
         public virtual ICollection<InformeFinalObservaciones> InformeFinalObservacionesSupervisor { get; set; }
 
     }
