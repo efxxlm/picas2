@@ -27,9 +27,15 @@ import { TablaEjfinancieraRlcComponent } from './components/tabla-ejfinanciera-r
 import { TrasladoRecursosRlcComponent } from './components/traslado-recursos-rlc/traslado-recursos-rlc.component';
 import { DetalleTrasladoRlcComponent } from './components/detalle-traslado-rlc/detalle-traslado-rlc.component';
 import { TablaTrasladoRlcComponent } from './components/tabla-traslado-rlc/tabla-traslado-rlc.component';
+import { DatosSolicitudRlcComponent } from './components/datos-solicitud-rlc/datos-solicitud-rlc.component';
+import { DatosDdpDrpRlcComponent } from './components/datos-ddp-drp-rlc/datos-ddp-drp-rlc.component';
+import { TablaDrpRlcComponent } from './components/tabla-drp-rlc/tabla-drp-rlc.component';
+import { TablaPorcParticipacionRlcComponent } from './components/tabla-porc-participacion-rlc/tabla-porc-participacion-rlc.component';
+import { TablaInforecursosRlcComponent } from './components/tabla-inforecursos-rlc/tabla-inforecursos-rlc.component';
+import { TablaInformeFinalRlcComponent } from './components/tabla-informe-final-rlc/tabla-informe-final-rlc.component';
 
 @NgModule({
-  declarations: [RegistrarLiquidacionContratoComponent, TablaSinRegistroLiquidacionRlcComponent, GestionarSolicitudRlcComponent, ActualizacionPolizaRlcComponent, TablaBalanceFinancieroRlcComponent, DetalleBalanceFinancieroRlcComponent, RecursosComproPagadosRlcComponent, AcordionRecursosComproPagadosRlcComponent, TablaFuentesUsosRlcComponent, ListaContratistasRlcComponent, TablaValtotalOgRlcComponent, DetalleOgRlcComponent, TablaFacturadoOgRlcComponent, TablaDescuentosOgRlcComponent, TablaOtrosDescuentosOgRlcComponent, EjecucionFinancieraRlcComponent, TablaEjpresupuestalRlcComponent, TablaEjfinancieraRlcComponent, TrasladoRecursosRlcComponent, DetalleTrasladoRlcComponent, TablaTrasladoRlcComponent],
+  declarations: [RegistrarLiquidacionContratoComponent, TablaSinRegistroLiquidacionRlcComponent, GestionarSolicitudRlcComponent, ActualizacionPolizaRlcComponent, TablaBalanceFinancieroRlcComponent, DetalleBalanceFinancieroRlcComponent, RecursosComproPagadosRlcComponent, AcordionRecursosComproPagadosRlcComponent, TablaFuentesUsosRlcComponent, ListaContratistasRlcComponent, TablaValtotalOgRlcComponent, DetalleOgRlcComponent, TablaFacturadoOgRlcComponent, TablaDescuentosOgRlcComponent, TablaOtrosDescuentosOgRlcComponent, EjecucionFinancieraRlcComponent, TablaEjpresupuestalRlcComponent, TablaEjfinancieraRlcComponent, TrasladoRecursosRlcComponent, DetalleTrasladoRlcComponent, TablaTrasladoRlcComponent, DatosSolicitudRlcComponent, DatosDdpDrpRlcComponent, TablaDrpRlcComponent, TablaPorcParticipacionRlcComponent, TablaInforecursosRlcComponent, TablaInformeFinalRlcComponent],
   imports: [
     CommonModule,
     RegistrarLiquidacionContratoRoutingModule,
