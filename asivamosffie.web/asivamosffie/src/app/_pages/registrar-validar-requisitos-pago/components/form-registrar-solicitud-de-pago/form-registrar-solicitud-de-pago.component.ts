@@ -257,30 +257,29 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                     if ( this.estadoRegistroCompletoSubAcordeon.amortizacionRegistroCompleto === true ) {
                         if ( this.solicitudPagoFase.solicitudPagoFaseCriterio[0].registroCompleto === true ) {
                             if ( this.contrato.contratacion.contratacionProyecto.length > 1 ) {
-                                
-                                let totalCriterioRegistroCompleto = 0;
-
                                 if ( this.solicitudPagoFase.solicitudPagoFaseCriterio.length > 0 ) {
+                                    const solicitudPagoFaseCriterio = this.solicitudPagoFase.solicitudPagoFaseCriterio.filter( criterioValue => criterioValue.solicitudPagoFaseCriterioProyecto.length > 0 );
+                                    let totalCriterioRegistroCompleto = 0;
     
-                                    for ( const criterio of this.solicitudPagoFase.solicitudPagoFaseCriterio ) {
+                                    for ( const criterio of solicitudPagoFaseCriterio ) {
                                         if ( criterio.registroCompleto === true ) {
                                             totalCriterioRegistroCompleto++;
                                         }
                                     }
-                
-                                    if ( totalCriterioRegistroCompleto > 0 && totalCriterioRegistroCompleto === this.solicitudPagoFase.solicitudPagoFaseCriterio.length ) {
+    
+                                    if ( totalCriterioRegistroCompleto > 0 && totalCriterioRegistroCompleto === solicitudPagoFaseCriterio.length ) {
                                         this.estadoRegistroCompletoSubAcordeon.detalleFacturaRegistroCompleto = true;
                                         return 'completo';
                                     }
-                                    if ( totalCriterioRegistroCompleto > 0 && totalCriterioRegistroCompleto !== this.solicitudPagoFase.solicitudPagoFaseCriterio.length ) {
+                                    if ( totalCriterioRegistroCompleto > 0 && totalCriterioRegistroCompleto !== solicitudPagoFaseCriterio.length ) {
                                         return 'en-proceso';
                                     }
                                     if ( totalCriterioRegistroCompleto === 0 ) {
                                         return 'sin-diligenciar';
                                     }
-                
+                                } else {
+                                    return 'sin-diligenciar';
                                 }
-
                             } else {
                                 this.estadoRegistroCompletoSubAcordeon.detalleFacturaRegistroCompleto = true;
                                 return '';
@@ -351,38 +350,36 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                     }
     
                 }
+
                 if ( tipoAcordeon === 'detalleFactura' ) {
                     if ( this.estadoRegistroCompletoSubAcordeon.amortizacionRegistroCompleto === true ) {
-                        if ( this.solicitudPagoFase.solicitudPagoFaseCriterio[0].registroCompleto === true ) {
-                            if ( this.contrato.contratacion.contratacionProyecto.length > 1 ) {
-                                
+                        if ( this.contrato.contratacion.contratacionProyecto.length > 1 ) {
+                            if ( this.solicitudPagoFase.solicitudPagoFaseCriterio.length > 0 ) {
+                                const solicitudPagoFaseCriterio = this.solicitudPagoFase.solicitudPagoFaseCriterio.filter( criterioValue => criterioValue.solicitudPagoFaseCriterioProyecto.length > 0 );
                                 let totalCriterioRegistroCompleto = 0;
 
-                                if ( this.solicitudPagoFase.solicitudPagoFaseCriterio.length > 0 ) {
-    
-                                    for ( const criterio of this.solicitudPagoFase.solicitudPagoFaseCriterio ) {
-                                        if ( criterio.registroCompleto === true ) {
-                                            totalCriterioRegistroCompleto++;
-                                        }
+                                for ( const criterio of solicitudPagoFaseCriterio ) {
+                                    if ( criterio.registroCompleto === true ) {
+                                        totalCriterioRegistroCompleto++;
                                     }
-                
-                                    if ( totalCriterioRegistroCompleto > 0 && totalCriterioRegistroCompleto === this.solicitudPagoFase.solicitudPagoFaseCriterio.length ) {
-                                        this.estadoRegistroCompletoSubAcordeon.detalleFacturaRegistroCompleto = true;
-                                        return 'completo';
-                                    }
-                                    if ( totalCriterioRegistroCompleto > 0 && totalCriterioRegistroCompleto !== this.solicitudPagoFase.solicitudPagoFaseCriterio.length ) {
-                                        return 'en-proceso';
-                                    }
-                                    if ( totalCriterioRegistroCompleto === 0 ) {
-                                        return 'sin-diligenciar';
-                                    }
-                
                                 }
 
+                                if ( totalCriterioRegistroCompleto > 0 && totalCriterioRegistroCompleto === solicitudPagoFaseCriterio.length ) {
+                                    this.estadoRegistroCompletoSubAcordeon.detalleFacturaRegistroCompleto = true;
+                                    return 'completo';
+                                }
+                                if ( totalCriterioRegistroCompleto > 0 && totalCriterioRegistroCompleto !== solicitudPagoFaseCriterio.length ) {
+                                    return 'en-proceso';
+                                }
+                                if ( totalCriterioRegistroCompleto === 0 ) {
+                                    return 'sin-diligenciar';
+                                }
                             } else {
-                                this.estadoRegistroCompletoSubAcordeon.detalleFacturaRegistroCompleto = true;
-                                return '';
+                                return 'sin-diligenciar';
                             }
+                        } else {
+                            this.estadoRegistroCompletoSubAcordeon.detalleFacturaRegistroCompleto = true;
+                            return '';
                         }
                     } else {
                         return 'en-alerta';

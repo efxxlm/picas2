@@ -22,7 +22,7 @@
     </div>
   </div>
 
-  <div style="margin-top: 3em;" *ngFor="let criterio of criterios.controls; index as i">
+  <div formArrayName="criterios" style="margin-top: 3em;" *ngFor="let criterio of criterios.controls; index as i">
     <mat-card class="shipping-card" [formGroup]="criterio">
       <mat-card-header class="header-card header-card--margin">
         <mat-card-title class="header-card--text">
@@ -57,7 +57,7 @@
               <div class="col">
                 <mat-form-field class="select-width">
                   <mat-select formControlName="conceptoPago" multiple required
-                    (selectionChange)="getvaluesConcepto($event.value)">
+                    (selectionChange)="getvaluesConcepto( $event.value, i )">
                     <mat-option *ngFor="let conceptoPago of criterio.get( 'conceptosDePago' ).value"
                       [value]="conceptoPago">
                       {{ conceptoPago.nombre }}
@@ -68,11 +68,14 @@
             </div>
           </div>
         </div>
-        <div *ngIf="this.obj1 == true">
+        <!--
+          Get conceptos seleccionados
+        -->
+        <div formArrayName="conceptos" *ngFor="let concepto of getConceptos( i ).controls; index as j">
           <mat-card-title class="header-card--text alineacion-titulos2" style="padding-left: 0em; margin-top: 0.5em;">
-            718100000002002-DEMOLICIONES
+            {{ concepto.get( 'conceptoPagoCriterioNombre' ).value }}
           </mat-card-title>
-          <div class="row">
+          <div class="row" [formGroup]="concepto">
             <div class="col-md-8">
               <div class="row">
                 <div class="pr-1">
@@ -82,39 +85,14 @@
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="full-width">
-                    <input matInput #valorFacturado currencyMask maxlength="20" required
-                      formControlName="valorFacturado" (keypress)="validateNumberKeypress($event)"
+                    <input matInput #valorFacturadoConcepto currencyMask maxlength="20" required
+                      formControlName="valorFacturadoConcepto" (keypress)="validateNumberKeypress($event)"
                       onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                      [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
+                      [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
+                      (ngModelChange)="getValorTotalConceptos( i )">
                   </mat-form-field>
                   <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
-                    matTooltipClass="info-tooltip">{{20 - valorFacturado.value.length}}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div *ngIf="this.obj2 == true">
-          <mat-card-title class="header-card--text alineacion-titulos2" style="padding-left: 0em; margin-top: 0.5em;">
-            654231654879877-CONSTRUCCION
-          </mat-card-title>
-          <div class="row">
-            <div class="col-md-8">
-              <div class="row">
-                <div class="pr-1">
-                  <label class="label-left" for="valorFacturado">
-                    Valor facturado al concepto
-                  </label>
-                </div>
-                <div class="col d-flex">
-                  <mat-form-field class="full-width">
-                    <input matInput #valorFacturado currencyMask maxlength="20" required
-                      formControlName="valorFacturado" (keypress)="validateNumberKeypress($event)"
-                      onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                      [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
-                  </mat-form-field>
-                  <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
-                    matTooltipClass="info-tooltip">{{20 - valorFacturado.value.length}}</span>
+                    matTooltipClass="info-tooltip">{{20 - valorFacturadoConcepto.value.length}}</span>
                 </div>
               </div>
             </div>
@@ -152,7 +130,7 @@
     </div>
   </div>
   <div class="text-center mb-2em">
-    <button mat-button color="warn" class="btn-guardar" type="submit">
+    <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="criterios.dirty === false">
       <img src="assets/img/icon/guardar.svg">
     </button>
   </div>

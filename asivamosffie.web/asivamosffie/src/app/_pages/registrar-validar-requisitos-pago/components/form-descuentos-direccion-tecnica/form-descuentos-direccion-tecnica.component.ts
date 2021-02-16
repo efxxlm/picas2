@@ -52,7 +52,7 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit {
 
             if ( this.solicitudPagoFaseFacturaDescuento !== null ) {
                 this.formDescuentos.get( 'aplicaDescuento' ).setValue( this.solicitudPagoFaseFactura.tieneDescuento !== undefined ? this.solicitudPagoFaseFactura.tieneDescuento : null );
-                this.formDescuentos.get( 'numeroDescuentos' ).setValue( `${ this.solicitudPagoFaseFacturaDescuento.length }` );
+                this.formDescuentos.get( 'numeroDescuentos' ).setValue( this.solicitudPagoFaseFacturaDescuento.length > 0 ? `${ this.solicitudPagoFaseFacturaDescuento.length }` : '' );
                 this.formDescuentos.get( 'valorAPagarDespues' ).setValue( this.solicitudPagoFaseFactura.valorFacturadoConDescuento !== undefined ? this.solicitudPagoFaseFactura.valorFacturadoConDescuento : null );
                 for ( const descuento of this.solicitudPagoFaseFacturaDescuento ) {
                     this.descuentos.push(
@@ -161,7 +161,7 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit {
 
     crearFormulario () {
       this.formDescuentos = this.fb.group({
-        aplicaDescuento: [ null],
+        aplicaDescuento: [ null ],
         numeroDescuentos: [ '' ],
         valorAPagarDespues: [ { value: null, disabled: true } ],
         descuentos: this.fb.array( [] )
@@ -178,6 +178,17 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit {
         if ( isNaN( Number( value ) ) === true ) {
             this.formDescuentos.get( 'numeroDescuentos' ).setValue( '' );
         }
+    }
+
+    disabledBtn() {
+        if ( this.formDescuentos.get( 'aplicaDescuento' ).value === null ) {
+            return true;
+        }
+        if ( this.formDescuentos.get( 'aplicaDescuento' ).value === true && this.descuentos.dirty === false ) {
+            return true;
+        }
+
+        return false;
     }
 
     getTipoDescuento( tipoDescuentoCodigo: string ) {

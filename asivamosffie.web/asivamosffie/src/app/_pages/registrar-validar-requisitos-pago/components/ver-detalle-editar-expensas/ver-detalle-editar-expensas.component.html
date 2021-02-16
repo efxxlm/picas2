@@ -29,7 +29,7 @@
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title completo">
+                <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforoAcordeon.estadoSemaforoListaChequeo">
                     Lista de chequeo
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -39,11 +39,17 @@
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title completo">
+                <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforoAcordeon.estadoSemaforoSoporteSolicitud">
                     Soporte
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-form-soporte-solicitud-url [solicitudPago]="solicitudPago" [esExpensas]="true"></app-form-soporte-solicitud-url>
+            <app-form-soporte-solicitud-url [solicitudPago]="solicitudPago" [esExpensas]="true" *ngIf="registroCompletoAcordeones.registroCompletoListaChequeo === true"></app-form-soporte-solicitud-url>
         </mat-expansion-panel>
     </mat-accordion>
+    <div style="margin-top: 1em;margin-bottom: 1em;">
+        <div class="d-flex align-items-center solbloq ml8 info-text en-alertaLibre mb-2em">
+            Los acordeones se habilitarán de forma secuencial, una vez se tenga completa la información de la
+            sección anterior
+        </div>
+    </div>
 </section>

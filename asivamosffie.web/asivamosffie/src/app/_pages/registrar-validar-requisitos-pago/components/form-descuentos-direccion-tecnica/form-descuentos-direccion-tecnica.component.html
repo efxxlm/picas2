@@ -137,11 +137,11 @@
                         </div>
                     </div>
                 </section>
-                <div class="text-center">
-                    <button mat-button color="warn" class="btn-guardar" type="button" (click)="guardar()">
-                        <img src="assets/img/icon/guardar.svg">
-                    </button>
-                </div>
+            </div>
+            <div class="text-center">
+                <button mat-button color="warn" class="btn-guardar" type="button" (click)="guardar()" [disabled]="disabledBtn()">
+                    <img src="assets/img/icon/guardar.svg">
+                </button>
             </div>
         </form>
     </ng-template>

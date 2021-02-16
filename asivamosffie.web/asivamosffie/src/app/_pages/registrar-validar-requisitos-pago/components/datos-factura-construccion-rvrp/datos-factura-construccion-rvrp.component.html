@@ -178,7 +178,7 @@
       </mat-card-content>
     </mat-card>
     <div class="text-center mb-2em">
-      <button mat-button color="warn" class="btn-guardar" type="submit">
+      <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="addressForm.dirty === false">
         <img src="assets/img/icon/guardar.svg">
       </button>
     </div>

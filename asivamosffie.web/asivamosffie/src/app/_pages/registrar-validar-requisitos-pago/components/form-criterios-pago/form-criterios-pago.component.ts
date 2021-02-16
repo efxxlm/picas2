@@ -23,8 +23,6 @@ export class FormCriteriosPagoComponent implements OnInit {
         criterios: this.fb.array( [] )
     });
     criteriosArray: { codigo: string, nombre: string }[] = [];
-    obj1: boolean;
-    obj2: boolean;
 
     get criterios() {
         return this.addressForm.get( 'criterios' ) as FormArray;
@@ -39,6 +37,10 @@ export class FormCriteriosPagoComponent implements OnInit {
 
     ngOnInit(): void {
         this.getCriterios();
+    }
+
+    getConceptos( index: number ) {
+        return this.criterios.controls[ index ].get( 'conceptos' ) as FormArray;
     }
 
     getCriterios() {
@@ -62,7 +64,26 @@ export class FormCriteriosPagoComponent implements OnInit {
                                 const tipoDePago = tiposDePago.filter( value => value.codigo === criterio.tipoPagoCodigo );
                                 // GET conceptos de pago
                                 const conceptosDePago = await this.registrarPagosSvc.getConceptoPagoCriterioCodigoByTipoPagoCodigo( criterio.tipoPagoCodigo );
-                                const conceptoDePago = conceptosDePago.filter( value => value.codigo === criterio.conceptoPagoCriterio );
+                                const conceptoDePagoArray = [];
+                                const conceptosDePagoSeleccionados = [];
+                                // Get conceptos de pago
+                                if ( criterio.solicitudPagoFaseCriterioConceptoPago.length > 0 ) {
+                                    criterio.solicitudPagoFaseCriterioConceptoPago.forEach( solicitudPagoFaseCriterioConceptoPago => {
+                                        conceptosDePagoSeleccionados.push( conceptosDePago.filter( concepto => concepto.codigo === solicitudPagoFaseCriterioConceptoPago.conceptoPagoCriterio ) );
+                                        conceptoDePagoArray.push(
+                                            this.fb.group(
+                                                {
+                                                    solicitudPagoFaseCriterioConceptoPagoId: [ solicitudPagoFaseCriterioConceptoPago.solicitudPagoFaseCriterioConceptoPagoId ],
+                                                    solicitudPagoFaseCriterioId: [ criterio.solicitudPagoFaseCriterioId ],
+                                                    conceptoPagoCriterioNombre: [ conceptosDePago.filter( concepto => concepto.codigo === solicitudPagoFaseCriterioConceptoPago.conceptoPagoCriterio )[0].nombre ],
+                                                    conceptoPagoCriterio: [ solicitudPagoFaseCriterioConceptoPago.conceptoPagoCriterio ],
+                                                    valorFacturadoConcepto: [ solicitudPagoFaseCriterioConceptoPago.valorFacturadoConcepto !== undefined ? solicitudPagoFaseCriterioConceptoPago.valorFacturadoConcepto : null ]
+                                                }
+                                            )
+                                        );
+                                    } );
+                                }
+                                console.log( conceptosDePagoSeleccionados );
                                 this.criterios.push(
                                     this.fb.group(
                                         {
@@ -73,8 +94,9 @@ export class FormCriteriosPagoComponent implements OnInit {
                                             tiposDePago: [ tiposDePago ],
                                             tipoPago: [ tipoDePago.length > 0 ? tipoDePago[0] : null ],
                                             conceptosDePago: [ conceptosDePago ],
-                                            conceptoPago: [ conceptoDePago.length > 0 ? conceptoDePago[0] : null ],
-                                            valorFacturado: [ criterio.valorFacturado !== undefined ? criterio.valorFacturado : null ]
+                                            conceptoPago: conceptosDePagoSeleccionados,
+                                            conceptos: this.fb.array( conceptoDePagoArray ),
+                                            valorFacturado: [ { value: criterio.valorFacturado !== undefined ? criterio.valorFacturado : null, disabled: true }, Validators.required ]
                                         }
                                     )
                                 );
@@ -104,7 +126,26 @@ export class FormCriteriosPagoComponent implements OnInit {
                                 const tipoDePago = tiposDePago.filter( value => value.codigo === criterio.tipoPagoCodigo );
                                 // GET conceptos de pago
                                 const conceptosDePago = await this.registrarPagosSvc.getConceptoPagoCriterioCodigoByTipoPagoCodigo( criterio.tipoPagoCodigo );
-                                const conceptoDePago = conceptosDePago.filter( value => value.codigo === criterio.conceptoPagoCriterio );
+                                const conceptoDePagoArray = [];
+                                const conceptosDePagoSeleccionados = [];
+                                // Get conceptos de pago
+                                if ( criterio.solicitudPagoFaseCriterioConceptoPago.length > 0 ) {
+                                    criterio.solicitudPagoFaseCriterioConceptoPago.forEach( solicitudPagoFaseCriterioConceptoPago => {
+                                        conceptosDePagoSeleccionados.push( conceptosDePago.filter( concepto => concepto.codigo === solicitudPagoFaseCriterioConceptoPago.conceptoPagoCriterio ) );
+                                        conceptoDePagoArray.push(
+                                            this.fb.group(
+                                                {
+                                                    solicitudPagoFaseCriterioConceptoPagoId: [ solicitudPagoFaseCriterioConceptoPago.solicitudPagoFaseCriterioConceptoPagoId ],
+                                                    solicitudPagoFaseCriterioId: [ criterio.solicitudPagoFaseCriterioId ],
+                                                    conceptoPagoCriterioNombre: [ conceptosDePago.filter( concepto => concepto.codigo === solicitudPagoFaseCriterioConceptoPago.conceptoPagoCriterio )[0].nombre ],
+                                                    conceptoPagoCriterio: [ solicitudPagoFaseCriterioConceptoPago.conceptoPagoCriterio ],
+                                                    valorFacturadoConcepto: [ solicitudPagoFaseCriterioConceptoPago.valorFacturadoConcepto !== undefined ? solicitudPagoFaseCriterioConceptoPago.valorFacturadoConcepto : null ]
+                                                }
+                                            )
+                                        );
+                                    } );
+                                }
+                                console.log( conceptosDePagoSeleccionados );
                                 this.criterios.push(
                                     this.fb.group(
                                         {
@@ -115,8 +156,9 @@ export class FormCriteriosPagoComponent implements OnInit {
                                             tiposDePago: [ tiposDePago ],
                                             tipoPago: [ tipoDePago[0], Validators.required ],
                                             conceptosDePago: [ conceptosDePago, Validators.required ],
-                                            conceptoPago: [ conceptoDePago[0], Validators.required ],
-                                            valorFacturado: [ criterio.valorFacturado, Validators.required ]
+                                            conceptoPago: conceptosDePagoSeleccionados,
+                                            conceptos: this.fb.array( conceptoDePagoArray ),
+                                            valorFacturado: [ { value: criterio.valorFacturado !== undefined ? criterio.valorFacturado : null, disabled: true }, Validators.required ]
                                         }
                                     )
                                 );
@@ -134,6 +176,18 @@ export class FormCriteriosPagoComponent implements OnInit {
         const inputChar = String.fromCharCode(event.charCode);
 
         return alphanumeric.test(inputChar) ? true : false;
+    }
+
+    getValorTotalConceptos( index: number ) {
+        if ( this.getConceptos( index ).length > 0 ) {
+            let valorTotalCriterios = 0;
+            this.getConceptos( index ).controls.forEach( concepto => {
+                if ( concepto.value.valorFacturadoConcepto !== null ) {
+                    valorTotalCriterios += concepto.value.valorFacturadoConcepto;
+                }
+            } );
+            this.criterios.controls[ index ].get( 'valorFacturado' ).setValue( valorTotalCriterios );
+        }
     }
 
     getvalues( criteriovalues: { codigo: string, nombre: string }[] ) {
@@ -165,8 +219,9 @@ export class FormCriteriosPagoComponent implements OnInit {
                                     tiposDePago: [ tiposDePago ],
                                     tipoPago: [ null, Validators.required ],
                                     conceptosDePago: [ [], Validators.required ],
-                                    conceptoPago: [ null, Validators.required ],
-                                    valorFacturado: [ null, Validators.required ]
+                                    conceptoPago: [ null ],
+                                    conceptos: this.fb.array( [] ),
+                                    valorFacturado: [ { value: null, disabled: true }, Validators.required ]
                                 }
                             )
                         );
@@ -202,8 +257,9 @@ export class FormCriteriosPagoComponent implements OnInit {
                                         tiposDePago: [ tiposDePago ],
                                         tipoPago: [ null, Validators.required ],
                                         conceptosDePago: [ [], Validators.required ],
-                                        conceptoPago: [ null, Validators.required ],
-                                        valorFacturado: [ null, Validators.required ]
+                                        conceptoPago: [ null ],
+                                        conceptos: this.fb.array( [] ),
+                                        valorFacturado: [ { value: null, disabled: true }, Validators.required ]
                                     }
                                 )
                             );
@@ -223,8 +279,9 @@ export class FormCriteriosPagoComponent implements OnInit {
                                     tiposDePago: [ tiposDePago ],
                                     tipoPago: [ null, Validators.required ],
                                     conceptosDePago: [ [], Validators.required ],
-                                    conceptoPago: [ null, Validators.required ],
-                                    valorFacturado: [ null, Validators.required ]
+                                    conceptoPago: [ null ],
+                                    conceptos: this.fb.array( [] ),
+                                    valorFacturado: [ { value: null, disabled: true }, Validators.required ]
                                 }
                             )
                         );
@@ -235,17 +292,51 @@ export class FormCriteriosPagoComponent implements OnInit {
             this.criterios.clear();
         }
     }
-    //Para efectos de maquetación getvaluesConcepto()
-    getvaluesConcepto( values:any[]){
-        const var1 = values.find(value => value.codigo == "1");
-        const var2 = values.find(value => value.codigo == "2");
-        var1 ? this.obj1 = true : this.obj1 = false;
-        var2 ? this.obj2 = true : this.obj2 = false;
-    }
+
     async getConceptosDePago( index: number, tipoPago: any ) {
         const conceptosDePago = await this.registrarPagosSvc.getConceptoPagoCriterioCodigoByTipoPagoCodigo( tipoPago.codigo );
         console.log( conceptosDePago );
         this.criterios.controls[ index ].get( 'conceptosDePago' ).setValue( conceptosDePago );
+    }
+
+    getvaluesConcepto( conceptos: any[], index: number ) {
+        if ( conceptos.length > 0 ) {
+            if ( this.criterios.controls[ index ].get( 'conceptos' ).dirty === true ) {
+                conceptos.forEach( concepto => {
+                    this.getConceptos( index ).push(
+                        this.fb.group(
+                            {
+                                solicitudPagoFaseCriterioConceptoPagoId: [ 0 ],
+                                solicitudPagoFaseCriterioId: [ this.criterios.controls[ index ].get( 'solicitudPagoFaseCriterioId' ).value ],
+                                conceptoPagoCriterioNombre: [ concepto.nombre ],
+                                conceptoPagoCriterio: [ concepto.codigo ],
+                                valorFacturadoConcepto: [ null ]
+                            }
+                        )
+                    );
+                } );
+            }
+
+            if ( this.criterios.controls[ index ].get( 'conceptos' ).dirty === false ) {
+                this.getConceptos( index ).clear();
+
+                conceptos.forEach( concepto => {
+                    this.getConceptos( index ).push(
+                        this.fb.group(
+                            {
+                                solicitudPagoFaseCriterioConceptoPagoId: [ 0 ],
+                                solicitudPagoFaseCriterioId: [ this.criterios.controls[ index ].get( 'solicitudPagoFaseCriterioId' ).value ],
+                                conceptoPagoCriterioNombre: [ concepto.nombre ],
+                                conceptoPagoCriterio: [ concepto.codigo ],
+                                valorFacturadoConcepto: [ null ]
+                            }
+                        )
+                    );
+                } );
+            }
+        } else {
+            this.getConceptos( index ).clear();
+        }
     }
 
     openDialog(modalTitle: string, modalText: string) {
@@ -314,9 +405,10 @@ export class FormCriteriosPagoComponent implements OnInit {
                         tipoCriterioCodigo: criterio.tipoCriterioCodigo,
                         solicitudPagoFaseCriterioId: criterio.solicitudPagoFaseCriterioId,
                         tipoPagoCodigo: criterio.tipoPago.codigo,
-                        conceptoPagocriterio: criterio.conceptoPago.codigo,
                         valorFacturado: criterio.valorFacturado,
-                        solicitudPagoFaseId: criterio.solicitudPagoFaseId
+                        solicitudPagoFaseCriterioConceptoPago: criterio.conceptos,
+                        solicitudPagoFaseId: criterio.solicitudPagoFaseId,
+                        solicitudPagoFaseCriterioProyecto: []
                     }
                 );
             } );
@@ -356,8 +448,8 @@ export class FormCriteriosPagoComponent implements OnInit {
                         tipoCriterioCodigo: criterio.tipoCriterioCodigo,
                         solicitudPagoFaseCriterioId: criterio.solicitudPagoFaseCriterioId,
                         tipoPagoCodigo: criterio.tipoPago.codigo,
-                        conceptoPagocriterio: criterio.conceptoPago.codigo,
                         valorFacturado: criterio.valorFacturado,
+                        solicitudPagoFaseCriterioConceptoPago: criterio.conceptos,
                         solicitudPagoFaseId: criterio.solicitudPagoFaseId,
                         solicitudPagoFaseCriterioProyecto
                     }

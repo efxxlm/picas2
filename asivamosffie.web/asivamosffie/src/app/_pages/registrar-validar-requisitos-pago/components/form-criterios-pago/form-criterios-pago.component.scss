@@ -1,3 +1,7 @@
 .supportBlack{
     color: #474747;
 }
+
+.mat-button.mat-warn[disabled], .mat-button[disabled][disabled] {
+    opacity: .5;
+}

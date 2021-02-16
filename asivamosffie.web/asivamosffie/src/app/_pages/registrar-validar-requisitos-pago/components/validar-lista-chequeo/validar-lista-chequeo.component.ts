@@ -31,6 +31,7 @@ export class ValidarListaChequeoComponent implements OnInit {
     ];
     listaRevisionTecnica: Dominio[] = [];
     noCumpleCodigo = '2';
+    seDiligencioCampo = false;
 
     constructor(
         private routes: Router,
@@ -109,6 +110,10 @@ export class ValidarListaChequeoComponent implements OnInit {
           width: '28em',
           data: { modalTitle, modalText }
         });
+    }
+
+    disabledBtn() {
+        this.seDiligencioCampo = true;
     }
 
     guardar() {

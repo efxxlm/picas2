@@ -120,7 +120,7 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
             return;
         }
 
-        const dialogRef = this.dialog.open( DialogProyectosAsociadosComponent, {
+        this.dialog.open( DialogProyectosAsociadosComponent, {
             width: '80em',
             data: { contrato: this.contrato }
         });
@@ -155,8 +155,27 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
             return 'en-alerta';
         }
         if ( nombreAcordeon === 'listaChequeo' && tieneRegistroAnterior === true ) {
-            // Get semaforo se coloca con la clase 'en-alerta' ya que el CU lista de chequeo no esta terminado
-            return 'en-alerta';
+            
+            const solicitudPagoListaChequeo: any[] = this.contrato.solicitudPagoOnly.solicitudPagoListaChequeo;
+            let totalRegistroCompleto = 0;
+            let semaforoListaChequeo = 'sin-diligenciar';
+
+            if ( solicitudPagoListaChequeo.length > 0 ) {
+                solicitudPagoListaChequeo.forEach( listaChequeo => {
+                    if ( listaChequeo.registroCompleto === true ) {
+                        totalRegistroCompleto++;
+                    }
+                } );
+    
+                if ( totalRegistroCompleto > 0 && totalRegistroCompleto < solicitudPagoListaChequeo.length ) {
+                    semaforoListaChequeo = 'en-proceso';
+                }
+                if ( totalRegistroCompleto > 0 && totalRegistroCompleto === solicitudPagoListaChequeo.length ) {
+                    semaforoListaChequeo = 'completo';
+                    this.registroCompletoAcordeones.registroCompletoListaChequeo = true;
+                }
+            }
+            return semaforoListaChequeo;
         }
 
         // Acordeon soporte de la solicitud
