@@ -29,5 +29,6 @@ namespace asivamosffie.services.Interfaces
         Task<List<FuenteFinanciacion>> GetListFuentesFinanciacionshort();
         Task<List<GrillaFuentesFinanciacion>> GetListFuentesFinanciacionByDisponibilidadPresupuestald(int disponibilidadPresupuestaId);
         Task<Respuesta> EliminarCuentaBancaria(int id, string value);
+        Task<Respuesta> EliminarFuentesFinanciacionCompleto(int id, string UsuarioModifico);
     }
 }
