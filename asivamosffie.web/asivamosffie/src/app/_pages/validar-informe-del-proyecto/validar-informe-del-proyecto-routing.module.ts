@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { HomeComponent } from './components/home/home.component';
 import { ValidarInformeComponent } from './components/validar-informe/validar-informe.component';
+import { VerDetalleInformeFinalComponent } from './components/ver-detalle-informe-final/ver-detalle-informe-final.component';
 
 const routes: Routes = [
   {
@@ -12,6 +13,10 @@ const routes: Routes = [
   {
     path: 'validar/:id',
     component: ValidarInformeComponent
+  },
+  {
+    path: 'verDetalle/:id',
+    component: VerDetalleInformeFinalComponent
   }
 ];
 
