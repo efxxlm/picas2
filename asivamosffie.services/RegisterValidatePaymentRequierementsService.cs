@@ -973,6 +973,7 @@ namespace asivamosffie.services
                     {
                         SolicitudPagoFaseCriterioConceptoPago SolicitudPagoFaseCriterioConceptoPagoOld = _context.SolicitudPagoFaseCriterioConceptoPago.Find(SolicitudPagoFaseCriterioConceptoPago.SolicitudPagoFaseCriterioConceptoPagoId);
                         SolicitudPagoFaseCriterioConceptoPagoOld.SolicitudPagoFaseCriterio = SolicitudPagoFaseCriterioConceptoPago.SolicitudPagoFaseCriterio;
+                        SolicitudPagoFaseCriterioConceptoPagoOld.ValorFacturadoConcepto = SolicitudPagoFaseCriterioConceptoPago.ValorFacturadoConcepto;
                     }
                     else
                     {
