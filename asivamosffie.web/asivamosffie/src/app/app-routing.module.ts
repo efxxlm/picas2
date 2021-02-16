@@ -301,6 +301,11 @@ const routes: Routes = [
         loadChildren: () => import( './_pages/validar-informe-del-proyecto/validar-informe-del-proyecto.module' )
           .then( module => module.ValidarInformeDelProyectoModule )
       },
+      {
+        path: 'validarCumplimientoInformeFinalProyecto',
+        loadChildren: () => import( './_pages/validar-cumplimiento-informe-final-proyecto/validar-cumplimiento-informe-final-proyecto.module' )
+          .then( module => module.ValidarCumplimientoInformeFinalProyectoModule )
+      },
     { 
         path: 'verificarSolicitudDeNovedades',
         loadChildren: () => import('./_pages/verificar-solicitud-de-novedades/verificar-solicitud-de-novedades.module')

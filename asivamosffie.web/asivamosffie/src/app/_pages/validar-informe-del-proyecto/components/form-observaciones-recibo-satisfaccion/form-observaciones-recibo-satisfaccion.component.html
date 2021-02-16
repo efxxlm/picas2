@@ -16,21 +16,21 @@
           </mat-radio-group>
         </div>
         <span class="required-form-group m-0 margin-required">*</span>
+        <span class="icon-incompleto">
+          <img
+            class="icon-incompleto--img"
+            src="assets/img/icon/incompleto.svg"
+            alt="este campo es requerido"
+            [matTooltipPosition]="'above'"
+            matTooltip="Debe ingresar la información en el campo para continuar"
+            matTooltipClass="info-tooltip"
+            *ngIf="
+              (observaciones.get('tieneObservacionesSupervisor').invalid && observaciones.get('tieneObservacionesSupervisor').touched) ||
+              (observaciones.get('tieneObservacionesSupervisor').invalid && estaEditando)
+            "
+          />
+        </span>
       </div>
-      <span class="icon-incompleto">
-        <img
-          class="icon-incompleto--img"
-          src="assets/img/icon/incompleto.svg"
-          alt="este campo es requerido"
-          [matTooltipPosition]="'above'"
-          matTooltip="Debe ingresar la información en el campo para continuar"
-          matTooltipClass="info-tooltip"
-          *ngIf="
-            (observaciones.get('tieneObservacionesSupervisor').invalid && observaciones.get('tieneObservacionesSupervisor').touched) ||
-            (observaciones.get('tieneObservacionesSupervisor').invalid && estaEditando)
-          "
-        />
-      </span>
     </div>
   </div>
   <div
