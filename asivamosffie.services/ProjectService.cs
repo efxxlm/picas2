@@ -896,6 +896,7 @@ namespace asivamosffie.services
                             proyectoAportanteAntiguo.ValorObra = proyectoAportante.ValorObra;
                             proyectoAportanteAntiguo.ValorInterventoria = proyectoAportante.ValorInterventoria;
                             proyectoAportanteAntiguo.ValorTotalAportante = proyectoAportante.ValorTotalAportante;
+
                             valorobra += proyectoAportante.ValorObra != null ? Convert.ToDecimal(proyectoAportanteAntiguo.ValorObra) : 0;
                             valorinterventoria += proyectoAportante.ValorInterventoria != null ? Convert.ToDecimal(proyectoAportanteAntiguo.ValorInterventoria) : 0;
                             valortotal += valorobra+valorinterventoria;
@@ -907,7 +908,7 @@ namespace asivamosffie.services
                     }
                     proyectoAntiguo.ValorInterventoria = valorinterventoria;
                     proyectoAntiguo.ValorObra = valorobra;
-                    proyectoAntiguo.ValorTotal = valortotal;
+                    proyectoAntiguo.ValorTotal = valorobra + valorinterventoria;
 
 
                     // Infraestructura  a intervenir 

@@ -20,7 +20,7 @@ export interface RegistrosCargados {
     estado:string,
     estadoj:string,
     estadop:string,
-    gestion:{estadop:string,id:number}
+    gestion:any,
 }
 
 @Component({
@@ -32,7 +32,18 @@ export class TablaProyectosTecnicoComponent {
   //no se va a usar estado juridico
   //displayedColumns: string[] = ['fecha','departamento','municipio','institucion','sede','estado','estadoj','estadop','gestion'];
 
-  displayedColumns: string[] = ['fecha','departamento','municipio','institucion','sede','estado','estadop','gestion'];
+  displayedColumns: string[] = 
+  [
+    'fecha',
+    'departamento',
+    'municipio',
+    'institucion',
+    'sede',
+    'estado',
+    //'estadop',
+    'gestion'
+  ];
+
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   dataSource= new MatTableDataSource();
@@ -103,7 +114,8 @@ export class TablaProyectosTecnicoComponent {
           ,id:element.proyectoId,departamento:element.departamento,municipio:element.municipio,
           estado:element.estadoRegistro,estadoj:element.estadoJuridicoPredios,estadop:element.estadoProyecto,
           institucion:element.institucionEducativa,sede:element.sede,
-          gestion:{id:element.proyectoId,estadop:element.estadoProyecto},
+          gestion:{id:element.proyectoId,estadoProyectoObra:element.estadoProyectoObra,
+            estadoProyectoInterventoria:element.estadoProyectoInterventoria},
         });
       });
       this.dataSource=new MatTableDataSource<RegistrosCargados>(datos);
