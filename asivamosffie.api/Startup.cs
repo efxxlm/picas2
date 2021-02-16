@@ -114,7 +114,7 @@ namespace asivamosffie.api
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-          
+
 
         private void ConfigureDependencyInjection(IServiceCollection services)
         {
@@ -155,15 +155,15 @@ namespace asivamosffie.api
             services.AddTransient<IDocumentService, DocumentService>();
             services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<IDailyFollowUpService, DailyFollowUpService>();
-            services.AddTransient<IManagementCommitteeReportService, ManagementCommitteeReportService>(); 
+            services.AddTransient<IManagementCommitteeReportService, ManagementCommitteeReportService>();
             services.AddTransient<IContractualControversy, ContractualControversyService>();
             services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>();
             services.AddTransient<IRegisterContractsAndContractualModificationsService, RegisterContractsAndContractualModificationsService>();
-            services.AddTransient<IManagePreContructionActPhase1Service, ManagePreContructionActPhase1Service>(); 
+            services.AddTransient<IManagePreContructionActPhase1Service, ManagePreContructionActPhase1Service>();
             services.AddTransient<IVerifyPreConstructionRequirementsPhase1Service, VerifyPreConstructionRequirementsPhase1Service>();
             services.AddTransient<IContractualControversy, ContractualControversyService>();
             services.AddTransient<IJudicialDefense, JudicialDefenseService>();
-            services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>(); 
+            services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>();
             services.AddTransient<IManageContractualProcessesService, ManageContractualProcessesService>();
             services.AddTransient<ITechnicalRequirementsConstructionPhaseService, TechnicalRequirementsConstructionPhaseService>();
             services.AddTransient<ITechnicalCheckConstructionPhase2Service, TechnicalCheckConstructionPhase2Service>();
@@ -172,7 +172,7 @@ namespace asivamosffie.api
             services.AddTransient<IContractualModification, ContractualModificationService>();
             services.AddTransient<IDerivativeActionService, DerivativeActionService>();
             services.AddTransient<IMonitoringURL, MonitoringURLService>();
-            
+
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

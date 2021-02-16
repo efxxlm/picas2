@@ -235,8 +235,7 @@ namespace asivamosffie.services
                               .ThenInclude(r => r.SolicitudPagoFaseFactura)
                                   .ThenInclude(r => r.SolicitudPagoFaseFacturaDescuento)
                        .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
-                       .Include(r => r.SolicitudPagoSoporteSolicitud)
-
+                       .Include(r => r.SolicitudPagoSoporteSolicitud) 
                        .Include(r => r.SolicitudPagoListaChequeo)
                           .ThenInclude(r => r.ListaChequeo)
                        .Include(r => r.SolicitudPagoListaChequeo)
