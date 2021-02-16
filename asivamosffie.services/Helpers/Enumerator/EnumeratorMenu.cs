@@ -44,7 +44,11 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         RegistrarPagosRendimientos = 65,
         GestionarRendimientos = 66,
-        AprobarIncorporacionRendimientos = 67
+        AprobarIncorporacionRendimientos = 67,
+        VerificarInformeFinalProyecto = 69,
+        ValidarInformeFinalProyecto = 72,
+        ValidarCumplimientoInformeFinalProyecto = 73,
+        RegistrarTransferenciaProyectoETC = 74
     }
 
     public enum enumeratorAccion

@@ -268,7 +268,16 @@
         public const string Actualizar_Estado_validacion_informe_final = "202";
         public const string Enviar_A_supervisor_Informe_Final_Validacion = "203";
         public const string Crear_Editar_Informe_Final_Observacion = "206";
+        public const string Actualizar_Estado_Aprobacion_Informe_Final = "207";
+        public const string Enviar_A_Interventor_Devolucion_Informe_Final = "208";
+        public const string Enviar_Informe_Final_Ultima_Validacion = "209";
+        public const string Enviar_A_supervisor_Devolucion_Cumplimiento_Informe_Final = "210";
 
+        //Entrega ETC
+        public const string Crear_Editar_Recorrido_Obra = "211";
+        public const string Crear_Editar_Representante_ETC = "212";
+        public const string Crear_Editar_Remision_Documentos_Tecnicos = "213";
+        public const string Crear_Editar_Acta_Bienes_Servicios = "214";
 
     }
 }   

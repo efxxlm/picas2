@@ -122,6 +122,7 @@ namespace asivamosffie.api
               => options.UseSqlServer(Configuration.GetConnectionString("asivamosffieDatabase")));
 
             //Agregar Interfaces y clases
+            services.AddTransient<IRegisterProjectETCService, RegisterProjectETCService>();
             services.AddTransient<IValidateFulfilmentFinalReportService, ValidateFulfilmentFinalReportService>();
             services.AddTransient<IValidateFinalReportService, ValidateFinalReportService>();
             services.AddTransient<IVerifyFinalReportService, VerifyFinalReportService>();
