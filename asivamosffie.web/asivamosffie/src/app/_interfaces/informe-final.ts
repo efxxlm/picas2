@@ -31,6 +31,7 @@ export interface InformeFinalInterventoria{
         fechaAprobacion?: Date,
         tieneObservacionSupervisor?: boolean,
         validacionCodigo?: string,
+        aprobacionCodigo?: string,
         informeFinalAnexo:{
                 informeFinalAnexoId?: number,
                 fechaCreacion?: Date,
@@ -62,5 +63,6 @@ export interface InformeFinalInterventoriaObservaciones{
         informeFinalInterventoriaId?:number,
         observaciones?: string,
         esSupervision?: boolean,
-        esCalificacion: boolean
+        esCalificacion?: boolean,
+        esApoyo?: boolean
 }

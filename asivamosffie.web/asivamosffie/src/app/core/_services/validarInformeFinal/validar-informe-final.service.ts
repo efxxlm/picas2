@@ -25,13 +25,14 @@ export class ValidarInformeFinalService {
       return this.http.get(`${ this.urlApi }/${this.final_report}/GetInformeFinalListaChequeoByInformeFinalId?pInformeFinalId=${ pInformeFinalId }`);
     }
     
-    updateStateValidateInformeFinalInterventoria( pInformeFinalInterventoriaId: number, code:string){
-      return this.http.post( `${ this.urlApi }/${this.final_report}/UpdateStateValidateInformeFinalInterventoria?pInformeFinalInterventoriaId=${ pInformeFinalInterventoriaId }&code=${ code }`, '' );
+    sendFinalReportToInterventor(pProyectoId: number){
+      return this.http.post(`${environment.apiUrl}/${this.final_report}/SendFinalReportToInterventor?pProyectoId=${ pProyectoId }`,null);
     }
-    
-    sendFinalReportToSupervision(pProyectoId: number){
-      return this.http.post(`${environment.apiUrl}/${this.final_report}/SendFinalReportToSupervision?pProyectoId=${ pProyectoId }`,null);
+
+    sendFinalReportToFinalVerification(pProyectoId: number){
+      return this.http.post(`${environment.apiUrl}/${this.final_report}/SendFinalReportToFinalVerification?pProyectoId=${ pProyectoId }`,null);
     }
+
 
     createEditInformeFinalInterventoriaObservacion( informeFinalInterventoriaObservaciones: any ){
       return this.http.post(`${environment.apiUrl}/${this.final_report}/CreateEditInformeFinalInterventoriaObservacion`, informeFinalInterventoriaObservaciones );
@@ -45,8 +46,8 @@ export class ValidarInformeFinalService {
       return this.http.get(`${environment.apiUrl}/${this.final_report}/GetInformeFinalInterventoriaObservacionByInformeFinalInterventoria?pInformeFinalInterventoriaId=${ pInformeFinalInterventoriaId }`);
     }
 
-    updateStateValidateInformeFinalInterventoriaByInformeFinal( informeFinal: any ){
-      return this.http.post(`${environment.apiUrl}/${this.final_report}/UpdateStateValidateInformeFinalInterventoriaByInformeFinal`, informeFinal );
+    updateStateApproveInformeFinalInterventoriaByInformeFinal( informeFinal: any ){
+      return this.http.post(`${environment.apiUrl}/${this.final_report}/UpdateStateApproveInformeFinalInterventoriaByInformeFinal`, informeFinal );
     }
 
     createEditObservacionInformeFinal( informeFinalObservacion: any , tieneObservacion: boolean){

@@ -34,7 +34,8 @@ export interface ListaChequeo {
   validacionCodigo: string,
   estadoInforme: string,
   registroCompleto: boolean,
-  semaforo: boolean
+  semaforo: boolean,
+  aprobacionCodigo: string,
 }
 
 export interface InformeFinalInterventoria {
@@ -73,5 +74,6 @@ export interface InformeFinalInterventoriaObservaciones{
   informeFinalInterventoriaId?:number,
   observaciones?: string,
   esSupervision?: boolean,
-  esCalificacion: boolean
+  esCalificacion?: boolean,
+  esApoyo?: boolean,
 }

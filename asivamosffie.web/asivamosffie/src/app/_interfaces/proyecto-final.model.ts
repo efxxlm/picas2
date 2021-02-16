@@ -11,9 +11,11 @@ export interface Report {
                 registroCompleto: boolean,
                 usuarioCreacion: string,
                 urlActa: string,
-                fechaSuscripcion: string
+                fechaSuscripcion: string,
                 informeFinalObservaciones: InformeFinalObservaciones[],
-                tieneObservacionesValidacion: boolean
+                informeFinalObservacionesSupervisor: InformeFinalObservaciones[],
+                tieneObservacionesValidacion: boolean,
+                tieneObservacionesSupervisor: boolean
             }
         ],
         departamentoObj: {

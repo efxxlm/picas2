@@ -19,6 +19,8 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public string ValidacionCodigoString { get; set; }
 
+        [NotMapped]
+        public string AprobacionCodigoString { get; set; }
 
         [NotMapped]
         public string EstadoValidacion { get; set; }

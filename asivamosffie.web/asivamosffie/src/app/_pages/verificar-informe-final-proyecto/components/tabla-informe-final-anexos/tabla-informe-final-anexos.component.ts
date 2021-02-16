@@ -43,7 +43,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   constructor(
     private fb: FormBuilder,
     public dialog: MatDialog,
-    private validarInformeFinalService: VerificarInformeFinalService,
+    private verificarInformeFinalService: VerificarInformeFinalService,
     private router: Router
   ) {}
 
@@ -61,7 +61,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   }
 
   getInformeFinalListaChequeoByInformeFinalId (id:number) {
-    this.validarInformeFinalService.getInformeFinalListaChequeoByInformeFinalId(id)
+    this.verificarInformeFinalService.getInformeFinalListaChequeoByInformeFinalId(id)
     .subscribe(listChequeo => {
       if(listChequeo != null){
         this.estadoValidacion = listChequeo[0].estadoValidacion;
@@ -120,7 +120,8 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
             informeFinalInterventoriaId:result.observaciones.informeFinalInterventoriaId,
             observaciones: result.observaciones.observaciones,
             esSupervision: result.observaciones.esSupervision,
-            esCalificacion: result.observaciones.esCalificacion
+            esCalificacion: result.observaciones.esCalificacion,
+            esApoyo: result.observaciones.esApoyo
           };
           control.tieneObservacionNoCumple = true;
           control.informeFinalInterventoriaObservaciones.push(informeFinalInterventoriaObservaciones);
@@ -176,7 +177,8 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   }
 
   updateStateValidateInformeFinalInterventoriaByInformeFinal( informeFinal: any , test: boolean) {
-    this.validarInformeFinalService.updateStateValidateInformeFinalInterventoriaByInformeFinal(informeFinal)
+    console.log("Este es el modelo que esta enviando: ",informeFinal);
+    this.verificarInformeFinalService.updateStateValidateInformeFinalInterventoriaByInformeFinal(informeFinal)
     .subscribe((respuesta: Respuesta) => {
       if(!test){
         this.openDialogSuccess('', respuesta.message);

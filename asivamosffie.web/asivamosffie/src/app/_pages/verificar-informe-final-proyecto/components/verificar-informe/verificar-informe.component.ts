@@ -22,7 +22,7 @@ export class VerificarInformeComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private validarInformeFinalProyectoService: VerificarInformeFinalService,
+    private verificarInformeFinalProyectoService: VerificarInformeFinalService,
     public dialog: MatDialog,
   ) { }
 
@@ -79,7 +79,7 @@ export class VerificarInformeComponent implements OnInit {
     })
   }
   getInformeFinalByProyecto(id:string) {
-    this.validarInformeFinalProyectoService.getInformeFinalByProyecto(id)
+    this.verificarInformeFinalProyectoService.getInformeFinalByProyecto(id)
     .subscribe(report => {
       this.report = report[0];
     });

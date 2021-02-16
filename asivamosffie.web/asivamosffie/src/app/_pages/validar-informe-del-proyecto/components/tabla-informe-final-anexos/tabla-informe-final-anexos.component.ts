@@ -9,21 +9,10 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 import { DialogObservacionesComponent } from '../dialog-observaciones/dialog-observaciones.component';
 
 import { ListaChequeo } from 'src/app/_interfaces/proyecto-final-anexos.model';
-import { RegistrarInformeFinalProyectoService } from 'src/app/core/_services/registrarInformeFinal/registrar-informe-final-proyecto.service';
+import { InformeFinal, InformeFinalAnexo, InformeFinalInterventoria, InformeFinalInterventoriaObservaciones } from 'src/app/_interfaces/informe-final';
+import { ValidarInformeFinalService } from 'src/app/core/_services/validarInformeFinal/validar-informe-final.service'
 import { Respuesta } from 'src/app/core/_services/common/common.service';
-
-const ELEMENT_DATA = [
-  {
-    No: '1',
-    item: 'Acta de recibo a satisfacción de la fase 2 - Interventoría',
-    calificacionInterventoria: 'Cumple',
-    tipoAnexo: 'Cumple',
-    Ubicacion: 'https://drive.google.com/',
-    verificacion: 'No cumple',
-    validacion: 'No cumple',
-    id: '1'
-  }
-]
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tabla-informe-final-anexos',
@@ -32,26 +21,31 @@ const ELEMENT_DATA = [
 })
 export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   ELEMENT_DATA : ListaChequeo[] = [];
-  @Input() id: string;
+  @Input() id: number;
   @Input() llaveMen: string;
-  anexos: any;
+  listChequeo: any;
   displayedColumns: string[] = [
     'No',
     'item',
-    'calificacionInterventoria',
-    'tipoAnexo',
+    'calificacionCodigoString',
+    'tipoAnexoString',
     'Ubicacion',
-    'verificacion',
-    'validacion',
+    'validacionCodigoString',
+    'aprobacionCodigo',
     'id'
-  ]
+  ];
+  estadoAprobacion = '0';
+  //registroCompletoValidacion = false;
   addressForm: FormGroup;
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  informeFinalObservacion : InformeFinalInterventoriaObservaciones[] = [];
+  dataSource = new MatTableDataSource<ListaChequeo>(this.ELEMENT_DATA);
+  semaforo = false;
+  estaEditando = false;
+  noGuardado=false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-
-  estaEditando = false;
+  
 
   estadoArray = [
     { name: 'Cumple', value: 1 },
@@ -62,21 +56,26 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   constructor(
     private fb: FormBuilder,
     public dialog: MatDialog,
-    private registrarInformeFinalProyectoService: RegistrarInformeFinalProyectoService
+    private validarInformeFinalProyectoService: ValidarInformeFinalService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
-    // this.getInformeFinalListaChequeo(this.id);
+    this.getInformeFinalListaChequeoByInformeFinalId(this.id);
   }
 
-  // getInformeFinalListaChequeo (id:string) {
-  //   this.registrarInformeFinalProyectoService.getInformeFinalListaChequeo(id)
-  //   .subscribe(anexos => {
-  //     this.dataSource.data = anexos as ListaChequeo[];
-  //     this.anexos = anexos;
-  //     console.log("Aquí:",this.anexos);
-  //   });
-  // }
+  getInformeFinalListaChequeoByInformeFinalId (id:number) {
+    this.validarInformeFinalProyectoService.getInformeFinalListaChequeoByInformeFinalId(id)
+    .subscribe(listChequeo => {
+      if(listChequeo != null){
+        this.estadoAprobacion = listChequeo[0].estadoAprobacion;
+        //this.registroCompletoValidacion = listChequeo[0].registroCompletoValidacion;
+        this.semaforo = listChequeo[0].semaforo;
+      }
+      this.dataSource.data = listChequeo as ListaChequeo[];
+      this.listChequeo = listChequeo;
+    });
+  }
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
@@ -107,39 +106,47 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     }
   }
 
-  // openDialogTipoDocumento(informe:any) {
-  //   let dialogRef = this.dialog.open(DialogTipoDocumentoComponent, {
-  //     width: '70em',
-  //     data:{
-  //       informe: informe,
-  //       llaveMen: this.llaveMen
-  //     },
-  //     id:'dialogTipoDocumento'
-  //   });
-
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     console.log(`Dialog result: ${result}`);
-  //     this.ngOnInit();
-  //     return;
-  //   });
-  // }
-
   openDialogObservaciones(informe:any) {
+    this.informeFinalObservacion = null;
+    this.dataSource.data.forEach(control => {
+      if ( informe !== null && informe.informeFinalInterventoriaId === control.informeFinalInterventoriaId ) {
+        if(control.informeFinalInterventoriaObservaciones != null && control.informeFinalInterventoriaObservaciones.length > 0){
+          this.informeFinalObservacion = control.informeFinalInterventoriaObservaciones;
+        }
+        return;
+      }
+    });
     let dialogRef = this.dialog.open(DialogObservacionesComponent, {
       width: '70em',
       data: {
         informe: informe,
-        llaveMen: this.llaveMen
+        llaveMen: this.llaveMen,
+        informeFinalObservacion: this.informeFinalObservacion,
       },
       id:'dialogObservaciones'
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-      this.ngOnInit();
+      this.dataSource.data.forEach(control => {
+        if ( result !== null && result.id === control.informeFinalInterventoriaId ) {
+          control.informeFinalInterventoriaObservaciones = [];
+          const informeFinalInterventoriaObservaciones: InformeFinalInterventoriaObservaciones = {
+            informeFinalInterventoriaObservacionesId:result.observaciones.informeFinalInterventoriaObservacionesId,
+            informeFinalInterventoriaId:result.observaciones.informeFinalInterventoriaId,
+            observaciones: result.observaciones.observaciones,
+            esSupervision: result.observaciones.esSupervision,
+            esCalificacion: result.observaciones.esCalificacion,
+            esApoyo: result.observaciones.esApoyo,
+          };
+          control.tieneObservacionNoCumple = true;
+          control.informeFinalInterventoriaObservaciones.push(informeFinalInterventoriaObservaciones);
+          return;
+        }
+      });
       return;
     });
   }
+
 
   openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
@@ -148,34 +155,70 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onSubmit() {
-    // console.log(this.addressForm.value);
-    this.estaEditando = true;
-    this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
-  }
-
-  select(informeFinalAnexo) {
-    this.addressForm = this.fb.group({
-      calificacionCodigo:  [informeFinalAnexo.calificacionCodigo, Validators.required],
-      informeFinalId:  [informeFinalAnexo.informeFinalId, Validators.required],
-      informeFinalInterventoriaId:  [informeFinalAnexo.informeFinalInterventoriaId, Validators.required],
-      informeFinalListaChequeoId:  [informeFinalAnexo.informeFinalListaChequeoId, Validators.required],
+  openDialogSuccess(modalTitle: string, modalText: string) {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText },
     });
-    //console.log("Autosave test: ",this.addressForm.value);
-    this.createInformeFinalInterventoria(this.addressForm.value);
+  
+    dialogRef.afterClosed().subscribe(result => {
+      this.router.navigate(['/validarInformeFinalProyecto']);
+    });
   }
 
-  createInformeFinalInterventoria( informeFinalInterventoria: any ) {
-    this.registrarInformeFinalProyectoService.createEditInformeFinalInterventoria(informeFinalInterventoria)
+  onSubmit(test: boolean) {
+    this.estaEditando = true;
+    this.noGuardado=false;
+    //recorre el datasource y crea modelo
+    const listaInformeFinalInterventoria = [] as InformeFinal;
+    listaInformeFinalInterventoria.informeFinalInterventoria = [];
+    this.dataSource.data.forEach(control => {
+        if(control.aprobacionCodigo == null || control.aprobacionCodigo === 'undefined'){
+          control.aprobacionCodigo = control.validacionCodigo;
+        }
+        const informeFinalInterventoria: InformeFinalInterventoria = {
+          informeFinalInterventoriaId: control.informeFinalInterventoriaId,
+          informeFinalId: control.informeFinalId,
+          calificacionCodigo: control.calificacionCodigo,
+          informeFinalListaChequeoId: control.informeFinalListaChequeoId,
+          informeFinalAnexo: null,
+          informeFinalInterventoriaObservaciones: control.informeFinalInterventoriaObservaciones,
+          validacionCodigo: control.validacionCodigo,
+          aprobacionCodigo: control.aprobacionCodigo
+        };
+        listaInformeFinalInterventoria.informeFinalInterventoria.push(informeFinalInterventoria);
+    });
+    const informeFinal: InformeFinal = {
+      informeFinalId: this.dataSource.data[0].informeFinalId,
+      //proyectoId: Number(this.id),
+      informeFinalInterventoria: listaInformeFinalInterventoria.informeFinalInterventoria,
+    };
+    this.updateStateApproveInformeFinalInterventoriaByInformeFinal(informeFinal,test);
+  }
+
+  updateStateApproveInformeFinalInterventoriaByInformeFinal( informeFinal: any , test: boolean) {
+    this.validarInformeFinalProyectoService.updateStateApproveInformeFinalInterventoriaByInformeFinal(informeFinal)
     .subscribe((respuesta: Respuesta) => {
-        console.log(respuesta.message);
-        this.ngOnInit();
+      if(!test){
+        this.openDialogSuccess('', respuesta.message);
+      }else{
+        this.openDialog('', respuesta.message);
+      }
+        //this.ngOnInit();
         return;
-        //this.router.navigate(['/crearProyecto']);
       },
       err => {
-        console.log( err );
+        this.openDialog('', err.message);
+        //this.ngOnInit();
+        return;
       });
+  }
+
+  changeState(aprobacionCodigo: any, validacionCodigo: string){
+    this.noGuardado = true;
+    if(validacionCodigo === '2' && (aprobacionCodigo === '1' || aprobacionCodigo === 1 ) ){
+      this.openDialog('', "Le recomendamos verificar su respuesta; tenga en cuenta que el apoyo a la supervisión si tuvo observaciones.");
+    }
   }
 
 }

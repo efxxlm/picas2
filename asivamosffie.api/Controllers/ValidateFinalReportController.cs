@@ -67,20 +67,6 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
-        [Route("VerificarInformeFinalValidacion")]
-        public async Task<bool> VerificarInformeFinalEstadoCompleto([FromQuery] int pInformeFinalId)
-        {
-            try
-            {
-                return await _validateFinalReportService.VerificarInformeFinalValidacion(pInformeFinalId);
-            }
-
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-        [HttpGet]
         [Route("GetInformeFinalInterventoriaObservacionByInformeFinalInterventoria")]
         public async Task<InformeFinalInterventoriaObservaciones> GetInformeFinalInterventoriaObservacionByInformeFinalInterventoria([FromQuery] int pInformeFinalInterventoriaId)
         {
@@ -97,14 +83,14 @@ namespace asivamosffie.api.Controllers
         //Creaciones y modificaciones
 
         [HttpPost]
-        [Route("UpdateStateValidateInformeFinalInterventoriaByInformeFinal")]
+        [Route("UpdateStateApproveInformeFinalInterventoriaByInformeFinal")]
         public async Task<IActionResult> UpdateStateValidateInformeFinalInterventoriaByInformeFinal([FromBody] InformeFinal informeFinal)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
                 string user = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _validateFinalReportService.UpdateStateValidateInformeFinalInterventoriaByInformeFinal(informeFinal, user);
+                respuesta = await _validateFinalReportService.UpdateStateApproveInformeFinalInterventoriaByInformeFinal(informeFinal, user);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -115,15 +101,15 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpPost]
-        [Route("UpdateStateValidateInformeFinalInterventoria")]
-        public async Task<IActionResult> UpdateStateValidateInformeFinalInterventoria([FromQuery] int pInformeFinalInterventoriaId,[FromQuery] string code)
+        [Route("UpdateStateApproveInformeFinalInterventoria")]
+        public async Task<IActionResult> UpdateStateApproveInformeFinalInterventoria([FromQuery] int pInformeFinalInterventoriaId,[FromQuery] string code)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
                 string user = HttpContext.User.FindFirst("User").Value;
                 //pInformeFinal.UsuarioCreacion = "LCT";
-                respuesta = await _validateFinalReportService.UpdateStateValidateInformeFinalInterventoria(pInformeFinalInterventoriaId, code, user);
+                respuesta = await _validateFinalReportService.UpdateStateApproveInformeFinalInterventoria(pInformeFinalInterventoriaId, code, user);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -173,14 +159,14 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpPost]
-        [Route("SendFinalReportToSupervision")]
+        [Route("SendFinalReportToInterventor")]
         public async Task<IActionResult> SendFinalReportToSupervision([FromQuery] int pProyectoId)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
                 //pObservacion.UsuarioCreacion = "LCT";
-                respuesta = await _validateFinalReportService.SendFinalReportToSupervision(pProyectoId, HttpContext.User.FindFirst("User").Value);
+                respuesta = await _validateFinalReportService.SendFinalReportToInterventor(pProyectoId, HttpContext.User.FindFirst("User").Value);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -191,32 +177,14 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpPost]
-        [Route("ApproveInformeFinal")]
-        public async Task<IActionResult> ApproveInformeFinal([FromQuery] int pProyectoId)
+        [Route("SendFinalReportToFinalVerification")]
+        public async Task<IActionResult> SendFinalReportToFinalVerification([FromQuery] int pProyectoId)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
                 //pObservacion.UsuarioCreacion = "LCT";
-                respuesta = await _validateFinalReportService.ApproveInformeFinal(pProyectoId, HttpContext.User.FindFirst("User").Value);
-                return Ok(respuesta);
-            }
-            catch (Exception ex)
-            {
-                respuesta.Data = ex.ToString();
-                return BadRequest(respuesta);
-            }
-        }
-
-        [HttpPost]
-        [Route("NoApprovedInformeFinal")]
-        public async Task<IActionResult> NoApprovedInformeFinal([FromQuery] int pProyectoId)
-        {
-            Respuesta respuesta = new Respuesta();
-            try
-            {
-                //pObservacion.UsuarioCreacion = "LCT";
-                respuesta = await _validateFinalReportService.NoApprovedInformeFinal(pProyectoId, HttpContext.User.FindFirst("User").Value);
+                respuesta = await _validateFinalReportService.SendFinalReportToFinalVerification(pProyectoId, HttpContext.User.FindFirst("User").Value);
                 return Ok(respuesta);
             }
             catch (Exception ex)

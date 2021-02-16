@@ -1,8 +1,10 @@
 import { Component, AfterViewInit, ViewChild, OnInit } from '@angular/core'
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator'
 import { MatSort } from '@angular/material/sort'
 import { MatTableDataSource } from '@angular/material/table'
 import { ValidarInformeFinalService } from 'src/app/core/_services/validarInformeFinal/validar-informe-final.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 const ELEMENT_DATA = [
   {
@@ -49,6 +51,7 @@ export class TablaInformeFinalProyectoComponent implements OnInit, AfterViewInit
   @ViewChild(MatSort) sort: MatSort
 
   constructor(
+    public dialog: MatDialog,
     private validarInformeFinalService: ValidarInformeFinalService,
   ) {}
 
@@ -60,7 +63,13 @@ export class TablaInformeFinalProyectoComponent implements OnInit, AfterViewInit
     this.validarInformeFinalService.getListInformeFinal()
     .subscribe(report => {
       this.dataSource.data = report as RegistrarInterface[];
-      console.log("Aquí:",this.dataSource.data);
+    });
+  }
+
+  openDialog(modalTitle: string, modalText: string) {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
     });
   }
 
@@ -89,6 +98,22 @@ export class TablaInformeFinalProyectoComponent implements OnInit, AfterViewInit
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage()
     }
+  }
+
+  sendFinalReportToFinalVerification(pProyectoId: number) {
+    this.validarInformeFinalService.sendFinalReportToFinalVerification(pProyectoId)
+      .subscribe(respuesta => {
+        this.openDialog('', '<b>La información ha sido enviada correctamente.</b>');
+        this.ngOnInit();
+      });
+  }
+
+  sendFinalReportToInterventor(pProyectoId: number) {
+    this.validarInformeFinalService.sendFinalReportToInterventor(pProyectoId)
+      .subscribe(respuesta => {
+        this.openDialog('', '<b>La información ha sido enviada correctamente.</b>');
+        this.ngOnInit();
+      });
   }
 
 }

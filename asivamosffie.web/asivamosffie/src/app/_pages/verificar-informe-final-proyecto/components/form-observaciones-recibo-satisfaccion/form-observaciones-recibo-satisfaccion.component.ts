@@ -34,7 +34,7 @@ export class FormObservacionesReciboSatisfaccionComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog, private fb: FormBuilder,
-    private validarInformeFinalService: VerificarInformeFinalService
+    private verificarInformeFinalService: VerificarInformeFinalService
     ) {}
 
   ngOnInit(): void {
@@ -50,10 +50,11 @@ export class FormObservacionesReciboSatisfaccionComponent implements OnInit {
       eliminado: [null, Validators.required],
       archivado: [null, Validators.required],
       tieneObservacionesValidacion: [null, Validators.required],
+      esApoyo: [null, Validators.required],
     });
     if (this.report.proyecto.informeFinal.length > 0) {
       this.observaciones.get("informeFinalId").setValue(this.report.proyecto.informeFinal[0].informeFinalId);
-      this.observaciones.get("esSupervision").setValue(true);
+      this.observaciones.get("esApoyo").setValue(true);
       if(this.report.proyecto.informeFinal[0].tieneObservacionesValidacion != null){
         this.observaciones.get("tieneObservacionesValidacion").setValue(this.report.proyecto.informeFinal[0].tieneObservacionesValidacion);
       }
@@ -97,7 +98,7 @@ export class FormObservacionesReciboSatisfaccionComponent implements OnInit {
 
   createEditObservacionInformeFinal(informeFinalObservacion: any, tieneObservaciones: boolean, test: boolean) {
     console.log("esta enviando: ",tieneObservaciones);
-    this.validarInformeFinalService.createEditObservacionInformeFinal(informeFinalObservacion, tieneObservaciones).subscribe((respuesta: Respuesta) => {
+    this.verificarInformeFinalService.createEditObservacionInformeFinal(informeFinalObservacion, tieneObservaciones).subscribe((respuesta: Respuesta) => {
       if(!test){
         this.openDialog('', respuesta.message);
       }

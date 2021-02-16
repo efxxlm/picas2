@@ -168,7 +168,7 @@ namespace asivamosffie.services
                 if (item.ValidacionCodigo == ConstantCodigoCalificacionInformeFinal.No_Cumple)
                 {
                     //Validar si tiene observaciones
-                    InformeFinalInterventoriaObservaciones informeFinalInterventoriaObservaciones = _context.InformeFinalInterventoriaObservaciones.Where(r => r.InformeFinalInterventoriaId == item.InformeFinalInterventoriaId && r.EsSupervision == true).FirstOrDefault();
+                    InformeFinalInterventoriaObservaciones informeFinalInterventoriaObservaciones = _context.InformeFinalInterventoriaObservaciones.Where(r => r.InformeFinalInterventoriaId == item.InformeFinalInterventoriaId && r.EsApoyo == true).FirstOrDefault();
                     if (informeFinalInterventoriaObservaciones != null)
                     {
                         informeFinalInterventoriaObservacionesId = informeFinalInterventoriaObservaciones.InformeFinalInterventoriaObservacionesId;
@@ -399,7 +399,6 @@ namespace asivamosffie.services
                                                                                       FechaModificacion = DateTime.Now,
                                                                                       UsuarioModificacion = pInformeFinal.UsuarioCreacion,
                                                                                       EstadoValidacion = pInformeFinal.EstadoValidacion == null || pInformeFinal.EstadoValidacion == "0" ? ConstantCodigoEstadoValidacionInformeFinal.En_proceso_de_validacion : pInformeFinal.EstadoValidacion,
-                                                                                      ObservacionesValidacion = pInformeFinal.ObservacionesValidacion,
                                                                                       TieneObservacionesValidacion = pInformeFinal.TieneObservacionesValidacion,
                                                                                   });
                 }
@@ -436,7 +435,7 @@ namespace asivamosffie.services
             try
             {
                 string strCrearEditar = string.Empty;
-                if (pObservacion.EsSupervision == true)
+                if (pObservacion.EsApoyo == true)
                 {
                     if (pObservacion.InformeFinalInterventoriaObservacionesId == 0)
                     {
@@ -445,7 +444,7 @@ namespace asivamosffie.services
 
                         _context.InformeFinalInterventoriaObservaciones.Add(pObservacion);
 
-                        if (pObservacion.EsSupervision == true)
+                        /*if (pObservacion.EsApoyo == true)
                         {
                             InformeFinalInterventoria informeFinalInterventoria = _context.InformeFinalInterventoria.Find(pObservacion.InformeFinalInterventoriaId);
                             InformeFinal informeFinal = _context.InformeFinal.Find(informeFinalInterventoria.InformeFinalId);
@@ -455,7 +454,7 @@ namespace asivamosffie.services
                                 informeFinal.RegistroCompleto = false;
                             }
                             informeFinalInterventoria.TieneObservacionSupervisor = true;
-                        }
+                        }*/
                     }
                     else
                     {
@@ -469,7 +468,7 @@ namespace asivamosffie.services
                                                                                                     UsuarioModificacion = pObservacion.UsuarioCreacion,
                                                                                                     Observaciones = pObservacion.Observaciones,
                                                                                                   });
-                        if (pObservacion.EsSupervision == true)
+                        /*if (pObservacion.EsSupervision == true)
                         {
                             InformeFinalInterventoria informeFinalInterventoria = _context.InformeFinalInterventoria.Find(pObservacion.InformeFinalInterventoriaId);
                             InformeFinal informeFinal = _context.InformeFinal.Find(informeFinalInterventoria.InformeFinalId);
@@ -479,7 +478,7 @@ namespace asivamosffie.services
                                 informeFinal.RegistroCompleto = false;
                             }
                             informeFinalInterventoria.TieneObservacionSupervisor = true;
-                        }
+                        }*/
                     }
                 }
                 _context.SaveChanges();

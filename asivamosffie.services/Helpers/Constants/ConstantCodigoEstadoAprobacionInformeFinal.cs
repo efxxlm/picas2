@@ -14,5 +14,8 @@ namespace asivamosffie.services.Helpers.Constant
 
         public const string Con_observaciones_liquidaciones_novedades = "5";
 
+        public const string Devuelta_por_supervisor = "6";
+
+
     }
 }

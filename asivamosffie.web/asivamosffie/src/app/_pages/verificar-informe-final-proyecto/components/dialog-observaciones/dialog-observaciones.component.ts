@@ -17,6 +17,7 @@ export class DialogObservacionesComponent implements OnInit {
     observaciones: [null, Validators.required],
     esSupervision: [null, Validators.required],
     esCalificacion: [null, Validators.required],
+    esApoyo: [null, Validators.required],
   })
 
   editorStyle = {
@@ -40,11 +41,6 @@ export class DialogObservacionesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    //if (this.data.informe.informeFinalInterventoriaObservacionesId > 0 && this.data.informe.informeFinalInterventoriaObservacionesId != null) {
-      //this.getInformeFinalInterventoriaObservacionByInformeFinalObservacion(
-      // this.data.informe.informeFinalInterventoriaObservacionesId
-      // );
-    //}
     if(this.data.informeFinalObservacion != null){
       this.observaciones.patchValue(this.data.informeFinalObservacion[0])
     }else{
@@ -90,7 +86,7 @@ export class DialogObservacionesComponent implements OnInit {
 
   onSubmit() {
     this.observaciones.value.informeFinalInterventoriaId = this.data.informe.informeFinalInterventoriaId
-    this.observaciones.value.esSupervision = true
+    this.observaciones.value.esApoyo = true
     if (this.data.informe.informeFinalInterventoriaObservacionesId != null) {
       this.observaciones.value.informeFinalInterventoriaObservacionesId = this.data.informe.informeFinalInterventoriaObservacionesId
     }
