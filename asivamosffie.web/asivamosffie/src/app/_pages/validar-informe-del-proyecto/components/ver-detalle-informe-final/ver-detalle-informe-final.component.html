@@ -10,20 +10,14 @@
       <b *ngIf="report"> {{ report.proyecto.llaveMen }} </b>
     </h1>
     <p class="colorMainColor mt-05em"> 
-      Fecha de terminación del proyecto obra
+      Fecha de envío del informe final
       <b *ngIf="report">
-        {{ report.fechaTerminacionObra  | date:'dd/MM/yyyy' }}
-      </b>
-    </p>
-    <p class="colorMainColor mt-05em"> 
-      Fecha de terminación del proyecto interventoría
-      <b *ngIf="report">
-        {{ report.fechaTerminacionInterventoria  | date:'dd/MM/yyyy' }}
+        {{ report.proyecto.informeFinal[0].fechaCreacion  | date:'dd/MM/yyyy' }}
       </b>
     </p>
   </div>
 
-  <app-datos-del-proyecto *ngIf="report" [report]="report"></app-datos-del-proyecto>
-  <app-detalle-observaciones-recibo-satisfaccion *ngIf="report" [report]="report"></app-detalle-observaciones-recibo-satisfaccion>
-  <app-tabla-detalle-informe-anexos [id]="id"></app-tabla-detalle-informe-anexos>
+  <app-datos-del-proyecto *ngIf="report" [report]="report" [existeObservacionApoyo]="existeObservacionApoyo"></app-datos-del-proyecto>
+  <app-detalle-observaciones-recibo-satisfaccion *ngIf="report" [report]="report" [existeObservacionSupervision]="existeObservacionSupervision"></app-detalle-observaciones-recibo-satisfaccion>
+  <app-tabla-detalle-informe-anexos *ngIf="report" [id]="report.proyecto.informeFinal[0].informeFinalId" [llaveMen]="report.proyecto.llaveMen"></app-tabla-detalle-informe-anexos>
 </section>

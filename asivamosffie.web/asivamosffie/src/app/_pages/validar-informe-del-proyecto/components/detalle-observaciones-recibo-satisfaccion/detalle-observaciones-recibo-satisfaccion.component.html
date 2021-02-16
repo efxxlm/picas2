@@ -1,4 +1,4 @@
-<mat-card class="shipping-card var-main-gris">
+<mat-card class="shipping-card var-main-gris" *ngIf="existeObservacionSupervision">
   <mat-card-header class="header-card header-card--margin">
     <mat-card-title class="mat-card-title header-card--text">
       Validación de la supervisión
@@ -7,14 +7,17 @@
   <mat-card-content>
     <p>
       <strong>
-        27/11/2020
+        {{ report.proyecto.informeFinal[0].informeFinalObservacionesSupervisor[0].fechaCreacion | date:'dd/MM/yyyy' }}
       </strong>
     </p>
     <p>
       <strong>
         ¿Desde la supervisión tiene observaciones al recibo a satisfacción?:
       </strong>
-      No
+      <span *ngIf="report.proyecto.informeFinal[0].tieneObservacionesSupervision"> Si</span>
+      <span *ngIf="!report.proyecto.informeFinal[0].tieneObservacionesSupervision"> No</span>
+    </p>
+    <p *ngIf="report.proyecto.informeFinal[0].tieneObservacionesSupervision" [innerHTML]="report.proyecto.informeFinal[0].informeFinalObservacionesSupervisor[0].observaciones">
     </p>
   </mat-card-content>
 </mat-card>

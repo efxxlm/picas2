@@ -211,13 +211,13 @@ namespace asivamosffie.services
 
             informeFinal.EstadoValidacion = ConstantCodigoEstadoValidacionInformeFinal.Con_informe_validado;
             informeFinal.RegistroCompletoValidacion = true;
-            InformeFinalInterventoria existeObservacion = _context.InformeFinalInterventoria.Where(r=> r.InformeFinalId == informeFinal.InformeFinalId && r.TieneObservacionSupervisor == true).FirstOrDefault();
+            /*InformeFinalInterventoria existeObservacion = _context.InformeFinalInterventoria.Where(r=> r.InformeFinalId == informeFinal.InformeFinalId && r.TieneObservacionSupervisor == true).FirstOrDefault();
             
             if (existeObservacion != null )
             {
                 informeFinal.EstadoInforme = ConstantCodigoEstadoInformeFinal.Con_Observaciones_del_supervisor;
                 informeFinal.RegistroCompleto = false;
-            }
+            }*/
 
             return esCompleto;
         }

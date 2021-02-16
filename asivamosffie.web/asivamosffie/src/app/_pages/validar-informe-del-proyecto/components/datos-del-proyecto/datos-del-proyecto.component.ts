@@ -9,7 +9,7 @@ import { Report } from 'src/app/_interfaces/proyecto-final.model';
 export class DatosDelProyectoComponent implements OnInit {
 
   @Input() report: Report
-  @Input() existeObservacion: boolean
+  @Input() existeObservacionApoyo: boolean
 
   constructor() { }
 

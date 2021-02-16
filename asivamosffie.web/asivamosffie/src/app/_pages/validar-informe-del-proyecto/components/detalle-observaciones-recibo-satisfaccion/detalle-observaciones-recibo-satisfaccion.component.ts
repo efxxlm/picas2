@@ -9,6 +9,8 @@ import { Report } from 'src/app/_interfaces/proyecto-final.model';
 export class DetalleObservacionesReciboSatisfaccionComponent implements OnInit {
 
   @Input() report: Report
+  @Input() existeObservacionSupervision: boolean
+
   constructor() { }
 
   ngOnInit(): void {

@@ -177,7 +177,6 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   }
 
   updateStateValidateInformeFinalInterventoriaByInformeFinal( informeFinal: any , test: boolean) {
-    console.log("Este es el modelo que esta enviando: ",informeFinal);
     this.verificarInformeFinalService.updateStateValidateInformeFinalInterventoriaByInformeFinal(informeFinal)
     .subscribe((respuesta: Respuesta) => {
       if(!test){
