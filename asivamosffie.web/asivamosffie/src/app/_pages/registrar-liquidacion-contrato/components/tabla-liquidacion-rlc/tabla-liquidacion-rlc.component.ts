@@ -22,8 +22,8 @@ export class TablaLiquidacionRlcComponent implements OnInit {
       numeroSolicitud: 'Liq _0009',
       numeroContrato: 'N801801',
       tipoContrato: 'Obra',
-      estadoRegistro: 'Incompleto',
-      estadoDocumento: 'Sin registro',
+      estadoRegistro: 'Completo',
+      estadoDocumento: 'Liquidado',
       id: 1
     }
   ];
@@ -51,7 +51,7 @@ export class TablaLiquidacionRlcComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
-  gestionSolicitud(id){
-    this.router.navigate(['/registrarLiquidacionContrato/gestionarSolicitud', id]);
+  verDetalleSolicitud(id){
+    this.router.navigate(['/registrarLiquidacionContrato/verDetalleSolicitud', id]);
   };
 }

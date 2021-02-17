@@ -23,7 +23,7 @@ export class TablaEnProcesoDeFirmasRlcComponent implements OnInit {
       numeroContrato: 'N801801',
       tipoContrato: 'Obra',
       estadoRegistro: 'Incompleto',
-      estadoDocumento: 'Sin registro',
+      estadoDocumento: 'En firma de la fiduciaria',
       id: 1
     }
   ];

@@ -1,1 +1,90 @@
-<p>verdetalle-rlc works!</p>
+<section class="container text-center">
+    <div class="text-right">
+        <a routerLink="/registrarLiquidacionContrato" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">Ver detalle/Editar gestión solicitud Liq_0009</h1>
+    <p class="info-sub-title">
+        <span>Número de contrato: <b>N801801</b></span>
+    </p>
+    <mat-card class="shipping-card var-main-gris">
+        <mat-card-content align="left">
+            <p><strong>Contratista: </strong><em>Interventores S.A</em></p>
+            <p><strong>Número identificación contratista: </strong><em>900.879.765-2</em></p>
+            <p><strong>Tipo de contrato: </strong><em>Interventoría</em></p>
+            <p><strong>Valor del contrato: </strong><em>$ 180.000.000</em></p>
+            <p><strong>Número DRP 1: </strong><em>DRP_PI_003</em></p>
+            <p><strong>Número DRP 2: </strong><em>DRP_PI_013</em></p>
+            <p><strong>Número DDP: </strong><em>DRP_PI_002</em></p>
+            <p><strong>Plazo: </strong><em>3 meses / 10 días</em></p>
+            <p><strong>Objeto: </strong></p>
+            <p><b>1. </b><em>Contrato de modificación de obra que compromete el diagnóstico y/o actualización y/o
+                    complementación y/o elaboraciónde estudios
+                    y diseños y ejecución de las obras necesarias para la adecuación y mejoramiento de las instituciones
+                    rurales.</em></p>
+            <p><strong>Tipo de modificación: </strong><em>Adición y plazo</em></p>
+            <p><strong>Valor después de la modificación: </strong><em>$ 240.000.000</em></p>
+            <p><strong>Plazo después de la modificación: </strong><em>6 meses / 25 días</em></p>
+            <p><strong>Detalle de la modificación: </strong></p>
+            <p><em>Se realiza adición de recursos para obras complementarias</em></p>
+        </mat-card-content>
+    </mat-card>
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Actualización de póliza
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-actualizacion-poliza-rlc></app-actualizacion-poliza-rlc>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Balance Financiero
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-tabla-balance-financiero-rlc></app-tabla-balance-financiero-rlc>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Informe Final
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-tabla-informe-final-rlc></app-tabla-informe-final-rlc>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Proyecto de acta
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="container text-center" style="margin-top: 1em;">
+                <button mat-raised-button color="accent">
+                    Descargar acta
+                </button>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <div class="mt-2em">
+        <mat-card class="shipping-card var-main-gris">
+            <mat-card-header class="header-card  header-card--margin">
+                <mat-card-title class="header-card--text">
+                    Registro del trámite
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content align="left">
+                <p><strong>Fecha del trámite: </strong><em>12/01/2021</em></p>
+                <p><strong>Fecha de envío para firma del contratista: </strong><em>19/01/2021</em></p>
+                <p><strong>Fecha de firma por parte del contratista: </strong><em>20/01/2021</em></p>
+                <p><strong>Fecha de envío para la firma de la fiduciaria: </strong><em>21/01/2021</em></p>
+                <p><strong>Fecha de firma por parte de la fiduciaria: </strong><em>21/01/2021</em></p>
+                <p><strong>Observaciones: </strong></p>
+                <p><em>1. La fiduciaria se comprometio a enviar firmas el 21 de enero antes del medio día para continuar con el proceso</em></p>
+                <p><strong>Url con soporte documento suscrito: </strong><em>Firmascontrato_N801801.pdf</em></p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</section>
