@@ -34,6 +34,7 @@ namespace asivamosffie.model.Models
         public bool? TieneObservacionesCumplimiento { get; set; }
         public string EstadoEntregaEtc { get; set; }
         public bool? RegistroCompletoEntregaEtc { get; set; }
+        public bool? TieneObservacionesInterventoria { get; set; }
 
         public virtual Proyecto Proyecto { get; set; }
         public virtual ICollection<InformeFinalInterventoria> InformeFinalInterventoria { get; set; }

@@ -31,5 +31,8 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public virtual ICollection<InformeFinalObservaciones> InformeFinalObservacionesSupervisor { get; set; }
 
+        [NotMapped]
+        public virtual ICollection<InformeFinalObservaciones> InformeFinalObservacionesInterventoria { get; set; }
+
     }
 }

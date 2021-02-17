@@ -5064,11 +5064,6 @@ namespace asivamosffie.model.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SeguimientoDiario_ContratacionProyecto");
 
-                entity.HasOne(d => d.ObservacionSupervisor)
-                    .WithMany(p => p.SeguimientoDiario)
-                    .HasForeignKey(d => d.ObservacionSupervisorId)
-                    .HasConstraintName("FK_SeguimientoDiario_SeguimientoDiarioObservaciones");
-
                 entity.HasOne(d => d.SeguimientoSemanal)
                     .WithMany(p => p.SeguimientoDiario)
                     .HasForeignKey(d => d.SeguimientoSemanalId)
@@ -5091,7 +5086,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.SeguimientoDiarioNavigation)
+                entity.HasOne(d => d.SeguimientoDiario)
                     .WithMany(p => p.SeguimientoDiarioObservaciones)
                     .HasForeignKey(d => d.SeguimientoDiarioId)
                     .HasConstraintName("FK_SeguimientoDiarioObservaciones_SeguimientoDiario");

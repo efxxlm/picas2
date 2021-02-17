@@ -272,6 +272,7 @@
         public const string Enviar_A_Interventor_Devolucion_Informe_Final = "208";
         public const string Enviar_Informe_Final_Ultima_Validacion = "209";
         public const string Enviar_A_supervisor_Devolucion_Cumplimiento_Informe_Final = "210";
+        public const string Aprobar_Informe_Final_Cumplimiento = "215";
 
         //Entrega ETC
         public const string Crear_Editar_Recorrido_Obra = "211";

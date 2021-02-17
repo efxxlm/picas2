@@ -126,5 +126,21 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("ApproveFinalReportByFulfilment")]
+        public async Task<IActionResult> ApproveFinalReportByFulfilment([FromQuery] int pProyectoId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _validateFinalReportService.ApproveFinalReportByFulfilment(pProyectoId, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
     }
 }

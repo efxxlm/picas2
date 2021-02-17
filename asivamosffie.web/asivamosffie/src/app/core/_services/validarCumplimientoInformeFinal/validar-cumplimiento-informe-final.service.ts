@@ -36,4 +36,8 @@ export class ValidarCumplimientoInformeFinalService {
     sendFinalReportToSupervision(pProyectoId: number){
       return this.http.post(`${environment.apiUrl}/${this.final_report}/SendFinalReportToSupervision?pProyectoId=${ pProyectoId }`,null);
     }
+
+    approveFinalReportByFulfilment(pProyectoId: number){
+      return this.http.post(`${environment.apiUrl}/${this.final_report}/ApproveFinalReportByFulfilment?pProyectoId=${ pProyectoId }`,null);
+    }
 }

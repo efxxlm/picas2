@@ -518,7 +518,7 @@ namespace asivamosffie.services
                 if (informeFinal != null)
                 {
                     informeFinal.EstadoValidacion = ConstantCodigoEstadoValidacionInformeFinal.Con_informe_enviado_al_supervisor;
-                    informeFinal.FechaEnvioSupervisor = DateTime.Now;
+                    //informeFinal.FechaEnvioSupervisor = DateTime.Now;
                     informeFinal.UsuarioModificacion = pUsuario;
                     informeFinal.FechaModificacion = DateTime.Now;
                 }

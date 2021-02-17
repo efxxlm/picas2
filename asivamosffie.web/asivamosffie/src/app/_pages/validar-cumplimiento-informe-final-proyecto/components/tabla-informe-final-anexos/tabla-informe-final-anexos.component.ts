@@ -4,16 +4,9 @@ import { MatSort } from '@angular/material/sort'
 import { MatTableDataSource } from '@angular/material/table'
 import { MatDialog } from '@angular/material/dialog'
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component'
-
-const ELEMENT_DATA = [
-  {
-    No: '1',
-    item: 'Acta de recibo a satisfacción de la fase 2 - Interventoría',
-    tipoAnexo: 'Cumple',
-    Ubicacion: 'https://drive.google.com/drive/actadereciboasatisfaccion',
-    verificacion: 'No cumple',
-  }
-]
+import { ListaChequeo } from 'src/app/_interfaces/proyecto-final-anexos.model'
+import { FormGroup } from '@angular/forms'
+import { ValidarCumplimientoInformeFinalService } from 'src/app/core/_services/validarCumplimientoInformeFinal/validar-cumplimiento-informe-final.service'
 
 @Component({
   selector: 'app-tabla-informe-final-anexos',
@@ -21,31 +14,41 @@ const ELEMENT_DATA = [
   styleUrls: ['./tabla-informe-final-anexos.component.scss']
 })
 export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
-  ELEMENT_DATA: any[]
+  ELEMENT_DATA : ListaChequeo[] = [];
+  @Input() id: number;
+  @Input() llaveMen: string; 
+  listChequeo: any;
   displayedColumns: string[] = [
     'No',
     'item',
-    'tipoAnexo',
+    'tipoAnexoString',
     'Ubicacion',
-    'verificacion'
-  ]
-  dataSource = new MatTableDataSource(ELEMENT_DATA)
+    'aprobacionCodigoString',
+  ];
+  addressForm: FormGroup;
+  dataSource = new MatTableDataSource<ListaChequeo>(this.ELEMENT_DATA);
+  semaforo = false;
+  estaEditando = false;
+  noGuardado=false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator
   @ViewChild(MatSort) sort: MatSort
   constructor(
+    private validarCumplimientoInformeFinalProyectoService: ValidarCumplimientoInformeFinalService,
     public dialog: MatDialog
   ) {}
+  
+  ngOnInit(): void {
+    this.getInformeFinalListaChequeoByInformeFinalId(this.id);
+  }
 
-  estaEditando = false
-
-  estadoArray = [
-    { name: 'Cumple', value: 'Cumple' },
-    { name: 'No cumple', value: 'No cumple' },
-    { name: 'No aplica', value: 'No aplica' }
-  ]
-
-  ngOnInit(): void {}
+  getInformeFinalListaChequeoByInformeFinalId (id:number) {
+    this.validarCumplimientoInformeFinalProyectoService.getInformeFinalListaChequeoByInformeFinalId(id)
+    .subscribe(listChequeo => {
+      this.dataSource.data = listChequeo as ListaChequeo[];
+      this.listChequeo = listChequeo;
+    });
+  }
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort

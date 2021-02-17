@@ -14,8 +14,12 @@ export interface Report {
                 fechaSuscripcion: string,
                 informeFinalObservaciones: InformeFinalObservaciones[],
                 informeFinalObservacionesSupervisor: InformeFinalObservaciones[],
+                informeFinalObservacionesInterventoria: InformeFinalObservaciones[],
                 tieneObservacionesValidacion: boolean,
-                tieneObservacionesSupervisor: boolean
+                tieneObservacionesSupervisor: boolean,
+                tieneObservacionesCumplimiento: boolean,
+                fechaAprobacion: Date,
+                tieneObservacionesInterventoria: boolean
             }
         ],
         departamentoObj: {

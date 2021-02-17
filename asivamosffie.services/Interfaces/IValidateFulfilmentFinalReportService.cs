@@ -16,5 +16,6 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CreateEditObservacionInformeFinal(InformeFinalObservaciones pObseravacion, bool tieneObservacion);
         Task<Respuesta> CreateEditObservacionInformeFinalInterventoria(InformeFinalObservaciones pObseravacion, bool tieneObservacion);
         Task<Respuesta> SendFinalReportToSupervision(int pInformeFinalId, string pUsuario);
+        Task<Respuesta> ApproveFinalReportByFulfilment(int pInformeFinalId, string pUsuario);
     }
 }

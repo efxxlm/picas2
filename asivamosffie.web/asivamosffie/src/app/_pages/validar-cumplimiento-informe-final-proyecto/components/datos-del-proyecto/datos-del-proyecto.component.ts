@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Report } from 'src/app/_interfaces/proyecto-final.model';
 
 @Component({
   selector: 'app-datos-del-proyecto',
@@ -7,6 +8,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DatosDelProyectoComponent implements OnInit {
 
+  @Input() report: Report
+  
   constructor() { }
 
   ngOnInit(): void {

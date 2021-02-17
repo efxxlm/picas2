@@ -1,20 +1,24 @@
 import { Component, AfterViewInit, ViewChild, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { ValidarCumplimientoInformeFinalService } from 'src/app/core/_services/validarCumplimientoInformeFinal/validar-cumplimiento-informe-final.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
-const ELEMENT_DATA = [
-  {
-    id: '1',
-    fechaEnvio: '29/11/2020',
-    fechaAprobacion: '29/11/2020',
-    llaveMen: 'LJ776554',
-    tipoIntervencion: 'Remodelación',
-    institucionEducativa: 'I.E. María Villa Campo',
-    sedeEducativa: 'Única Sede',
-    estadoVerificacion: 'Sin verificación'
-  }
-];
+
+export interface RegistrarInterface {
+  proyectoId: number,
+  fechaCreacion: Date,
+  fechaAprobacion: Date,
+  llaveMen: string,
+  tipoIntervencion: string,
+  institucionEducativa: string,
+  sedeEducativa: string,
+  estadoCumplimientoString: string,
+  estadoCumplimiento: string
+}
+
 
 @Component({
   selector: 'app-tabla-informe-final',
@@ -23,24 +27,43 @@ const ELEMENT_DATA = [
 })
 export class TablaInformeFinalComponent implements OnInit, AfterViewInit {
 
-  ELEMENT_DATA: any[];
+  ELEMENT_DATA : RegistrarInterface[] = [];
   displayedColumns: string[] = [
-    'fechaEnvio',
+    'fechaCreacion',
     'fechaAprobacion',
     'llaveMen',
     'tipoIntervencion',
     'institucionEducativa',
     'sedeEducativa',
-    'estadoVerificacion',
+    'estadoCumplimientoString',
     'id'
   ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource<RegistrarInterface>(this.ELEMENT_DATA);
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  constructor() { }
+  constructor(
+    public dialog: MatDialog,
+    private validarCumplimientoInformeFinalService: ValidarCumplimientoInformeFinalService,
+  ) { 
+  }
 
   ngOnInit(): void {
+    this.getListInformeFinal();
+  }
+
+  getListInformeFinal(){
+    this.validarCumplimientoInformeFinalService.getListInformeFinal()
+    .subscribe(report => {
+      this.dataSource.data = report as RegistrarInterface[];
+    });
+  }
+  
+  openDialog(modalTitle: string, modalText: string) {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
   }
 
   ngAfterViewInit() {
@@ -70,6 +93,22 @@ export class TablaInformeFinalComponent implements OnInit, AfterViewInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  sendFinalReportToSupervision(pProyectoId: number) {
+    this.validarCumplimientoInformeFinalService.sendFinalReportToSupervision(pProyectoId)
+      .subscribe(respuesta => {
+        this.openDialog('', '<b>La información ha sido enviada correctamente.</b>');
+        this.ngOnInit();
+      });
+  }
+
+  approveFinalReportByFulfilment(pProyectoId: number) {
+    this.validarCumplimientoInformeFinalService.approveFinalReportByFulfilment(pProyectoId)
+      .subscribe(respuesta => {
+        this.openDialog('', '<b>La información ha sido enviada correctamente.</b>');
+        this.ngOnInit();
+      });
   }
 
 }

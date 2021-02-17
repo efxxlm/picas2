@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Report } from 'src/app/_interfaces/proyecto-final.model';
 
 @Component({
   selector: 'app-verificacion-novedades',
@@ -7,6 +8,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class VerificacionNovedadesComponent implements OnInit {
 
+  @Input() report: Report
+  @Input() existeObservacionCumplimiento: boolean
+  
   constructor() { }
 
   ngOnInit(): void {

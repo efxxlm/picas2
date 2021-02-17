@@ -9,55 +9,55 @@
       <strong>
         Tipo de intervención:
       </strong>
-      Remodelación
+      {{ report.proyecto.tipoIntervencionString }}
     </p>
     <p>
       <strong>
         Institución educativa:
       </strong>
-      I.E. María Villa Campo
+      {{ report.proyecto.institucionEducativa.nombre }}
     </p>
     <p>
       <strong>
         Sede educativa:
       </strong>
-      Única sede
+      {{ report.proyecto.sede.nombre }}
     </p>
     <p>
       <strong>
         Departamento:
       </strong>
-      Atlántico
+      {{ report.proyecto.departamentoObj.descripcion }}
     </p>
     <p>
       <strong>
         Municipio:
       </strong>
-      Manatí
+      {{ report.proyecto.municipioObj.descripcion }}
     </p>
     <p>
       <strong>
         Número de contrato de obra:
       </strong>
-      CC223456789
+      {{ report.numeroContratoObra }}
     </p>
     <p>
       <strong>
         Nombre del contratista de obra:
       </strong>
-      Constructora Colpatria SAS
+      {{ report.nombreContratistaObra }}
     </p>
     <p>
       <strong>
         Número de contrato de interventoría:
       </strong>
-      CI8769-98076
+      {{ report.numeroContratoInterventoria }}
     </p>
     <p>
       <strong>
         Nombre de contratista de interventoría:
       </strong>
-      Constructora Bolivar
+      {{ report.nombreContratistaInterventoria }}
     </p>
   </mat-card-content>
 </mat-card>

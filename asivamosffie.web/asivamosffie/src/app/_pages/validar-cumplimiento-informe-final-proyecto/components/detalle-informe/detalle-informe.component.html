@@ -7,26 +7,26 @@
   <div class="text-center">
     <h1 class="title-menu--h1">
       Revisar informe final
-      LJ776554
+      <b *ngIf="report"> {{ report.proyecto.llaveMen }} </b>
     </h1>
     <p class="colorMainColor mt-05em"> 
       <span class="mx-1em">
         Fecha de envío del informe final
-        <b>
-          29/11/2020
+        <b *ngIf="report">
+          {{ report.proyecto.informeFinal[0].fechaCreacion  | date:'dd/MM/yyyy' }}
         </b>
       </span>
       <span class="mx-1em">
         Fecha de aprobación del informe final
-        <b>
-          29/11/2020
+        <b *ngIf="report">
+          {{ report.proyecto.informeFinal[0].fechaAprobacion  | date:'dd/MM/yyyy' }}
         </b>
       </span>
     </p>
   </div>
 
-  <app-datos-del-proyecto></app-datos-del-proyecto>
-  <app-recibo-satisfaccion></app-recibo-satisfaccion>
-  <app-verificacion-novedades></app-verificacion-novedades>
-  <app-tabla-detalle-informe-final-anexos></app-tabla-detalle-informe-final-anexos>
+  <app-datos-del-proyecto *ngIf="report" [report]="report"></app-datos-del-proyecto>
+  <app-recibo-satisfaccion *ngIf="report" [report]="report"></app-recibo-satisfaccion>
+  <app-verificacion-novedades *ngIf="report" [report]="report" [existeObservacionCumplimiento]="existeObservacionCumplimiento"></app-verificacion-novedades>
+  <app-tabla-detalle-informe-final-anexos *ngIf="report" [id]="report.proyecto.informeFinal[0].informeFinalId" [llaveMen]="report.proyecto.llaveMen" [existeObservacionInterventoria]="existeObservacionInterventoria" [report]="report"></app-tabla-detalle-informe-final-anexos>
 </section>

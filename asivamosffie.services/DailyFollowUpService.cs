@@ -447,14 +447,14 @@ namespace asivamosffie.services
                                                                 .FirstOrDefaultAsync();
 
 
-            sd.ObservacionSupervisor = getObservacion(sd, pEsSupervicion);
+            //sd.ObservacionSupervisor = getObservacion(sd, pEsSupervicion);
 
-            if (sd.ObservacionSupervisor == null ||
+            /*if (sd.ObservacionSupervisor == null ||
                  (sd.TieneObservacionSupervisor == true && string.IsNullOrEmpty(sd.ObservacionSupervisor != null ? sd.ObservacionSupervisor.Observaciones : null))
                )
             {
                 esCompleto = false;
-            }
+            }*/
 
             return esCompleto;
         }
@@ -599,7 +599,7 @@ namespace asivamosffie.services
                                                                 .FirstOrDefault()?.Nombre;
 
             seguimiento.ObservacionApoyo = getObservacion(seguimiento, false);
-            seguimiento.ObservacionSupervisor = getObservacion(seguimiento, true);
+            //seguimiento.ObservacionSupervisor = getObservacion(seguimiento, true);
             
             seguimiento.ObservacionDevolucion = _context.SeguimientoDiarioObservaciones.Find( seguimiento.ObservacionSupervisorId ); 
 
