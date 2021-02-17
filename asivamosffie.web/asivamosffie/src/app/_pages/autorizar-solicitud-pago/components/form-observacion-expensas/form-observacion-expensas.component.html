@@ -55,7 +55,7 @@
                 1000
             </span>
         </div>
-        <button mat-button color="warn" class="btn-guardar" type="button" (click)="guardar()">
+        <button mat-button color="warn" class="btn-guardar" type="button" (click)="guardar()" [disabled]="expensasForm.dirty === false">
             <img src="assets/img/icon/guardar.svg" alt="Guardar">
         </button>
     </form>
@@ -120,7 +120,7 @@
                         1000
                     </span>
                 </div>
-                <button mat-button color="warn" class="btn-guardar" type="button" (click)="onSubmit()">
+                <button mat-button color="warn" class="btn-guardar" type="button" (click)="onSubmit()" [disabled]="addressForm.dirty === false">
                     <img src="assets/img/icon/guardar.svg" alt="Guardar">
                 </button>
             </form>

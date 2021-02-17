@@ -19,7 +19,7 @@ export class FormCriteriosPagoComponent implements OnInit {
     solicitudPagoRegistrarSolicitudPago: any;
     solicitudPagoFase: any;
     addressForm = this.fb.group({
-        criterioPago: [null, Validators.required],
+        criterioPago: [ null, Validators.required ],
         criterios: this.fb.array( [] )
     });
     criteriosArray: { codigo: string, nombre: string }[] = [];
@@ -83,7 +83,6 @@ export class FormCriteriosPagoComponent implements OnInit {
                                         );
                                     } );
                                 }
-                                console.log( conceptosDePagoSeleccionados );
                                 this.criterios.push(
                                     this.fb.group(
                                         {
@@ -145,7 +144,6 @@ export class FormCriteriosPagoComponent implements OnInit {
                                         );
                                     } );
                                 }
-                                console.log( conceptosDePagoSeleccionados );
                                 this.criterios.push(
                                     this.fb.group(
                                         {
@@ -295,7 +293,6 @@ export class FormCriteriosPagoComponent implements OnInit {
 
     async getConceptosDePago( index: number, tipoPago: any ) {
         const conceptosDePago = await this.registrarPagosSvc.getConceptoPagoCriterioCodigoByTipoPagoCodigo( tipoPago.codigo );
-        console.log( conceptosDePago );
         this.criterios.controls[ index ].get( 'conceptosDePago' ).setValue( conceptosDePago );
     }
 
