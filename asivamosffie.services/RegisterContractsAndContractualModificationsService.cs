@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-
+using Z.EntityFramework.Plus;
 
 namespace asivamosffie.services
 {
@@ -135,7 +135,9 @@ namespace asivamosffie.services
                 Contrato contratoOld = _context.Contrato.Where(r => r.ContratoId == pContrato.ContratoId)
                     .Include(r => r.Contratacion)
                     .FirstOrDefault();
-                contratoOld.ModalidadCodigo = pContrato.ModalidadCodigo;
+
+                if (contratoOld.ModalidadCodigo != null)
+                    contratoOld.ModalidadCodigo = pContrato.ModalidadCodigo;
                 //contratacion
                 Contratacion contratacionOld = _context.Contratacion.Find(contratoOld.ContratacionId);
 
@@ -143,15 +145,8 @@ namespace asivamosffie.services
                     contratacionOld.FechaTramite = DateTime.Now;
 
                 contratacionOld.EstadoSolicitudCodigo = pEstadoCodigo;
-                contratacionOld.UsuarioModificacion = pContrato.UsuarioModificacion;
-                contratacionOld.FechaModificacion = pContrato.FechaModificacion;
-
-                //Contrato  
-                //if (!string.IsNullOrEmpty(pContrato.RutaDocumento))
-                //    contratoOld.RutaDocumento = pContrato.RutaDocumento;
-
-                contratacionOld.FechaTramite = DateTime.Now;
-
+                contratacionOld.UsuarioModificacion = pContrato.UsuarioCreacion;
+                contratacionOld.FechaModificacion = DateTime.Now;
 
                 if (!string.IsNullOrEmpty(pContrato.NumeroContrato))
                     contratoOld.NumeroContrato = pContrato.NumeroContrato;
@@ -216,7 +211,7 @@ namespace asivamosffie.services
                 }
 
             }
-            //Contrato Nuevo
+
             else
             {
                 pContrato.FechaTramite = DateTime.Now;
@@ -234,16 +229,15 @@ namespace asivamosffie.services
                 }
             }
 
-            //Cambiar estado contratacion
-            Contratacion contratacion = _context.Contratacion.Find(pContrato.ContratacionId);
-
-            contratacion.EstadoSolicitudCodigo = pEstadoCodigo;
-            contratacion.UsuarioModificacion = pContrato.UsuarioModificacion;
-            contratacion.FechaModificacion = pContrato.FechaModificacion;
-            contratacion.FechaTramite = DateTime.Now;
-
-            _context.SaveChanges();
-
+            await _context.Set<Contratacion>()
+                                    .Where(r => r.ContratacionId == pContrato.ContratacionId)
+                                                                        .UpdateAsync(c => new Contratacion
+                                                                        {
+                                                                            EstadoSolicitudCodigo = pEstadoCodigo,
+                                                                            UsuarioModificacion = pContrato.UsuarioCreacion,
+                                                                            FechaModificacion = DateTime.Now,
+                                                                            FechaTramite = DateTime.Now
+                                                                        });
 
             try
             {

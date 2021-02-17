@@ -2516,8 +2516,8 @@ namespace asivamosffie.services
 
             Plantilla Plantilla = _context.Plantilla.Where(r => r.Codigo == TipoPlantilla).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
             Plantilla.Contenido = ReemplazarDatosPlantillaContratacion(Plantilla.Contenido, contratacion);
-            //return ConvertirPDF(Plantilla);
-            return PDF.Convertir(Plantilla);
+            return ConvertirPDF(Plantilla);
+            //return PDF.Convertir(Plantilla);
 
         }
 
