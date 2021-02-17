@@ -94,18 +94,18 @@ export class FormPerfilComponent implements OnInit {
             this.perfiles.push(
               this.fb.group(
                 {
-                  estadoSemaforo              : [ 'sin-diligenciar', Validators.required ],
-                  contratoPerfilId            : [ 0, Validators.required ],
-                  perfilCodigo                : [ null, Validators.required ],
-                  cantidadHvRequeridas        : [ null, Validators.required ],
-                  cantidadHvRecibidas         : [ null, Validators.required ],
-                  cantidadHvAprobadas         : [ null, Validators.required ],
-                  fechaAprobacion             : [ null, Validators.required ],
-                  observacion                 : [ null, Validators.required ],
-                  observacionSupervisor       : [ null, Validators.required ],
-                  fechaObservacion            : [ null, Validators.required ],
+                  estadoSemaforo              : [ 'sin-diligenciar' ],
+                  contratoPerfilId            : [ 0 ],
+                  perfilCodigo                : [ null ],
+                  cantidadHvRequeridas        : [ '' ],
+                  cantidadHvRecibidas         : [ '' ],
+                  cantidadHvAprobadas         : [ '' ],
+                  fechaAprobacion             : [ null ],
+                  observacion                 : [ null ],
+                  observacionSupervisor       : [ null ],
+                  fechaObservacion            : [ null ],
                   contratoPerfilNumeroRadicado: this.fb.array([ this.fb.group({ numeroRadicado: '' }) ]),
-                  rutaSoporte                 : [ '', Validators.required ]
+                  rutaSoporte                 : [ '' ]
                 }
               )
             );
@@ -117,18 +117,18 @@ export class FormPerfilComponent implements OnInit {
             this.perfiles.push(
               this.fb.group(
                 {
-                  estadoSemaforo              : [ 'sin-diligenciar', Validators.required ],
-                  contratoPerfilId            : [ 0, Validators.required ],
-                  perfilCodigo                : [ null, Validators.required ],
-                  cantidadHvRequeridas        : [ null, Validators.required ],
-                  cantidadHvRecibidas         : [ null, Validators.required ],
-                  cantidadHvAprobadas         : [ null, Validators.required ],
-                  fechaAprobacion             : [ null, Validators.required ],
-                  observacion                 : [ null, Validators.required ],
-                  observacionSupervisor       : [ null, Validators.required ],
-                  fechaObservacion            : [ null, Validators.required ],
+                  estadoSemaforo              : [ 'sin-diligenciar' ],
+                  contratoPerfilId            : [ 0 ],
+                  perfilCodigo                : [ null ],
+                  cantidadHvRequeridas        : [ '' ],
+                  cantidadHvRecibidas         : [ '' ],
+                  cantidadHvAprobadas         : [ '' ],
+                  fechaAprobacion             : [ null ],
+                  observacion                 : [ null ],
+                  observacionSupervisor       : [ null ],
+                  fechaObservacion            : [ null ],
                   contratoPerfilNumeroRadicado: this.fb.array([ this.fb.group({ numeroRadicado: '' }) ]),
-                  rutaSoporte                 : [ '', Validators.required ]
+                  rutaSoporte                 : [ '' ]
                 }
               )
             );
@@ -154,18 +154,18 @@ export class FormPerfilComponent implements OnInit {
               this.perfiles.push(
                 this.fb.group(
                   {
-                    estadoSemaforo              : [ 'sin-diligenciar', Validators.required ],
-                    contratoPerfilId            : [ 0, Validators.required ],
-                    perfilCodigo                : [ null, Validators.required ],
-                    cantidadHvRequeridas        : [ null, Validators.required ],
-                    cantidadHvRecibidas         : [ null, Validators.required ],
-                    cantidadHvAprobadas         : [ null, Validators.required ],
-                    fechaAprobacion             : [ null, Validators.required ],
-                    observacion                 : [ null, Validators.required ],
-                    observacionSupervisor       : [ null, Validators.required ],
-                    fechaObservacion            : [ null, Validators.required ],
+                    estadoSemaforo              : [ 'sin-diligenciar' ],
+                    contratoPerfilId            : [ 0 ],
+                    perfilCodigo                : [ null ],
+                    cantidadHvRequeridas        : [ '' ],
+                    cantidadHvRecibidas         : [ '' ],
+                    cantidadHvAprobadas         : [ '' ],
+                    fechaAprobacion             : [ null ],
+                    observacion                 : [ null ],
+                    observacionSupervisor       : [ null ],
+                    fechaObservacion            : [ null ],
                     contratoPerfilNumeroRadicado: this.fb.array([ this.fb.group({ numeroRadicado: '' }) ]),
-                    rutaSoporte                 : [ '', Validators.required ]
+                    rutaSoporte                 : [ '' ]
                   }
                 )
               );
@@ -230,20 +230,20 @@ export class FormPerfilComponent implements OnInit {
         this.perfiles.push(
           this.fb.group(
             {
-              estadoSemaforo              : [ observacionSupervisorSemaforo === true ? 'en-proceso' : ( semaforo ? semaforo : 'sin-diligenciar' ), Validators.required ],
-              contratoPerfilId            : [ perfil.contratoPerfilId ? perfil.contratoPerfilId : 0, Validators.required ],
+              estadoSemaforo              : [ observacionSupervisorSemaforo === true ? 'en-proceso' : ( semaforo ? semaforo : 'sin-diligenciar' ) ],
+              contratoPerfilId            : [ perfil.contratoPerfilId ? perfil.contratoPerfilId : 0 ],
               perfilObservacion           : [ ( perfil.contratoPerfilObservacion.length === 0 )
-                                                ? 0 : perfil.contratoPerfilObservacion[0].contratoPerfilObservacionId, Validators.required ],
-              perfilCodigo                : [ perfil.perfilCodigo ? perfil.perfilCodigo : null, Validators.required ],
-              cantidadHvRequeridas        : [ perfil.cantidadHvRequeridas ? perfil.cantidadHvRequeridas : null, Validators.required ],
-              cantidadHvRecibidas         : [ perfil.cantidadHvRecibidas ? perfil.cantidadHvRecibidas : null, Validators.required ],
-              cantidadHvAprobadas         : [ perfil.cantidadHvAprobadas ? perfil.cantidadHvAprobadas : null, Validators.required ],
-              fechaAprobacion             : [ perfil.fechaAprobacion ? new Date( perfil.fechaAprobacion ) : null, Validators.required ],
-              observacion                 : [ observaciones, Validators.required ],
-              observacionSupervisor       : [ observacionSupervisor, Validators.required ],
-              fechaObservacion            : [ fechaObservacion, Validators.required ],
-              contratoPerfilNumeroRadicado: this.fb.array( numeroRadicados),
-              rutaSoporte                 : [ perfil.rutaSoporte ? perfil.rutaSoporte : '', Validators.required ]
+                                                ? 0 : perfil.contratoPerfilObservacion[0].contratoPerfilObservacionId ],
+              perfilCodigo                : [ perfil.perfilCodigo ? perfil.perfilCodigo : null ],
+              cantidadHvRequeridas        : [ perfil.cantidadHvRequeridas ? perfil.cantidadHvRequeridas : '' ],
+              cantidadHvRecibidas         : [ perfil.cantidadHvRecibidas ? perfil.cantidadHvRecibidas : '' ],
+              cantidadHvAprobadas         : [ perfil.cantidadHvAprobadas ? perfil.cantidadHvAprobadas : '' ],
+              fechaAprobacion             : [ perfil.fechaAprobacion ? new Date( perfil.fechaAprobacion ) : null ],
+              observacion                 : [ observaciones ],
+              observacionSupervisor       : [ observacionSupervisor ],
+              fechaObservacion            : [ fechaObservacion ],
+              contratoPerfilNumeroRadicado: this.fb.array( numeroRadicados ),
+              rutaSoporte                 : [ perfil.rutaSoporte ? perfil.rutaSoporte : '' ]
             }
           )
         );
@@ -268,24 +268,19 @@ export class FormPerfilComponent implements OnInit {
   }
 
   disabledDate( cantidadHvAprobadas: string, cantidadHvRequeridas: string, cantidadHvRecibidas: string, index: number ) {
-    if ( cantidadHvRequeridas === null ) {
+    if ( Number( cantidadHvAprobadas ) >= Number( cantidadHvRequeridas ) ) {
+      this.perfiles.controls[index].get( 'fechaAprobacion' ).enable();
+    } else {
       this.perfiles.controls[index].get( 'fechaAprobacion' ).disable();
       this.perfiles.controls[index].get( 'fechaAprobacion' ).setValue( null );
     }
-    else {
-      if ( Number( cantidadHvAprobadas ) === Number( cantidadHvRequeridas ) ) {
-        this.perfiles.controls[index].get( 'fechaAprobacion' ).enable();
-      } else {
-        this.perfiles.controls[index].get( 'fechaAprobacion' ).disable();
-        this.perfiles.controls[index].get( 'fechaAprobacion' ).setValue( null );
-      }
-      if (Number( cantidadHvAprobadas ) > Number( cantidadHvRecibidas )){
-        this.perfiles.controls[index].get( 'fechaAprobacion' ).disable();
-        this.perfiles.controls[index].get( 'fechaAprobacion' ).setValue( null );
-      }
-      if (Number( cantidadHvAprobadas ) > Number( cantidadHvRequeridas )) {
-        this.perfiles.controls[index].get( 'fechaAprobacion' ).enable();
-      }
+    if (Number( cantidadHvAprobadas ) > Number( cantidadHvRecibidas )){
+      this.perfiles.controls[index].get( 'fechaAprobacion' ).disable();
+      this.perfiles.controls[index].get( 'fechaAprobacion' ).setValue( null );
+    }
+    if ( cantidadHvRequeridas.length === 0 ) {
+      this.perfiles.controls[index].get( 'fechaAprobacion' ).disable();
+      this.perfiles.controls[index].get( 'fechaAprobacion' ).setValue( null );
     }
   }
 
@@ -373,10 +368,7 @@ export class FormPerfilComponent implements OnInit {
 
   agregarNumeroRadicado( numeroRadicado: number, contratoPerfilId: number ) {
     this.numeroRadicado( numeroRadicado ).push(
-      this.fb.group({
-        contratoPerfilNumeroRadicadoId: 0,
-        contratoPerfilId,
-        numeroRadicado: ['', Validators.required] })
+      this.fb.group({ contratoPerfilNumeroRadicadoId: 0, contratoPerfilId, numeroRadicado: '' })
     );
   }
 

@@ -87,9 +87,26 @@ export class TablaFuentesComponent implements OnInit {
     console.log(e);
     this.router.navigate(['/registrarFuentes',e,idTipo]);
   }
-  
+  eliminarFuente(e: number) {
+    this.openDialogSiNo('','<b>¿Está seguro de eliminar este registro?</b>',e)
+  }
+
   controlRecursosFuente(e: number) {
     this.router.navigate(['/gestionarFuentes/controlRecursos',e,0])
+  }
+
+  openDialogSiNo(modalTitle: string, modalText: string, e:number) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText, siNoBoton:true }
+    });   
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if(result === true)
+      {
+        this.eliminarRegistro(e);
+      }           
+    });
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -97,6 +114,14 @@ export class TablaFuentesComponent implements OnInit {
       width: '28em',
       data: { modalTitle, modalText }
     });   
+  }
+
+  eliminarRegistro(e: number){
+    this.fuenteFinanciacionService.eliminarFuentesFinanciacion(e).subscribe( resultado => {
+      let res = resultado as Respuesta;
+      this.openDialog('', `<b>${res.message}</b>`);
+      this.ngOnInit();
+    })
   }
 
 }

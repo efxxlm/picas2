@@ -557,21 +557,5 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        [Route("CalcularYGuardarFechaInicioContrato")]
-        [HttpPost]
-        public Proyecto CalcularYGuardarFechaInicioContrato([FromBody] ContratoConstruccion contratoConstruccion)
-        {
-            try
-            {
-                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
-                return _technicalRequirementsConstructionPhaseService.CalcularYGuardarFechaInicioContrato(contratoConstruccion.ContratoConstruccionId, (DateTime)contratoConstruccion.FechaInicioObra, contratoConstruccion.ContratoId, contratoConstruccion.ProyectoId, UsuarioModificacion); 
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-
     }
 }

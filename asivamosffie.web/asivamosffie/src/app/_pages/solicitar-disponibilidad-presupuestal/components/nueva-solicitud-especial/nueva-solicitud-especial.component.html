@@ -13,6 +13,8 @@
     <h1 class="title-menu--h1">Nueva solicitud DDP especial</h1>
   </div>
 
+  <app-tabla-observaciones></app-tabla-observaciones>
+
   <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
     <mat-card class="shipping-card">
       <mat-card-header class="header-card header-card--margin">
@@ -704,9 +706,4 @@
       </button>
     </div>
   </form>
-  <app-tabla-observaciones
-                          [DisponibilidadPresupuestal]="disponibilidadaeditar"
-                          *ngIf="disponibilidadaeditar && disponibilidadaeditar.estadoSolicitudCodigo === '2'"
-        >
-  </app-tabla-observaciones>
 </div>

@@ -4,7 +4,6 @@ import { FaseUnoConstruccionService } from '../../../../core/_services/faseUnoCo
 import { ActivatedRoute, Router } from '@angular/router';
 import { Contrato, ContratoPerfil } from '../../../../_interfaces/faseUnoPreconstruccion.interface';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-import { ContratoConstruccion } from 'src/app/_interfaces/programacionPersonal.interface';
 
 @Component({
   selector: 'app-form-requisitos-tecnicos-construccion',
@@ -24,10 +23,10 @@ export class FormRequisitosTecnicosConstruccionComponent implements OnInit {
                 private activatedRoute: ActivatedRoute )
   {
     this.getContrato();
-    // if (this.router.getCurrentNavigation().extras.replaceUrl) {
-    //   this.router.navigateByUrl('/requisitosTecnicosConstruccion');
-    //   return;
-    // };
+    if (this.router.getCurrentNavigation().extras.replaceUrl) {
+      this.router.navigateByUrl('/requisitosTecnicosConstruccion');
+      return;
+    };
 
     if (this.router.getCurrentNavigation().extras.state)
       this.fechaPoliza = this.router.getCurrentNavigation().extras.state.fechaPoliza;
@@ -43,19 +42,11 @@ export class FormRequisitosTecnicosConstruccionComponent implements OnInit {
         console.log( this.contrato );
 
         this.contrato.contratacion.contratacionProyecto.forEach( cp => {
-          cp['estadoSemaforoPerfiles'] = 'sin-diligenciar';
           let perfilCompleto = true;
-
           if ( cp.proyecto.contratoConstruccion.length > 0 ) {
-
-            if (cp.proyecto.contratoConstruccion[0].construccionPerfil.length > 0)
-              cp['estadoSemaforoPerfiles'] = 'completo';
-
             cp.proyecto.contratoConstruccion[0].construccionPerfil.forEach( p => {
-              if ( p.registroCompleto != true ){
+              if ( p.registroCompleto != true )
                 perfilCompleto = false
-                cp['estadoSemaforoPerfiles'] = 'en-proceso';
-              }
             });
           }
           
@@ -300,36 +291,5 @@ export class FormRequisitosTecnicosConstruccionComponent implements OnInit {
       );
 
   };
-
-  changeFechaInicioObra(contratoConstruccionId, proyectoId, fechaInicioObra, i){
-
-    let construccion: ContratoConstruccion = {
-      contratoConstruccionId: contratoConstruccionId,
-      contratoId: this.contrato.contratoId,
-      proyectoId: proyectoId,
-
-      fechaInicioObra: fechaInicioObra._validSelected,
-    }
-
-    console.log( construccion )
-
-     this.faseUnoConstruccionSvc.CalcularYGuardarFechaInicioContrato( construccion)
-       .subscribe( proy => {
-
-        if ( contratoConstruccionId == 0 ){
-          this.getContrato();
-        }else{
-          this.contrato.contratacion.contratacionProyecto[i].proyecto['fechaFinEtapaObra'] = proy['fechaFinEtapaObra'];
-         this.contrato.contratacion.contratacionProyecto[i].proyecto['plazoEnSemanas'] = proy['plazoEnSemanas'];
-         console.log(proy, this.contrato.contratacion.contratacionProyecto[i].proyecto.contratoConstruccion[0]);
-        }
-
-        console.log(proy);
-         
-
-
-       })
-
-  }
 
 };

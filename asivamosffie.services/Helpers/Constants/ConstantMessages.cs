@@ -243,7 +243,6 @@ namespace asivamosffie.services.Helpers.Constant
         public const string OperacionExitosa = "200";
         public const string EliminacionExitosa = "201";
         public const string EliminacionFallida = "301";
-        public const string EliminarFuenteConControlRecursos = "302";
 
         #endregion Mensajes Exitoso
 
