@@ -2,6 +2,7 @@ import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { CurrencyMaskInputMode, NgxCurrencyModule } from "ngx-currency";
 import { DetalleBalanceFinancieroRlcComponent } from "./components/detalle-balance-financiero-rlc/detalle-balance-financiero-rlc.component";
+import { DetalleInformeFinalRlcComponent } from "./components/detalle-informe-final-rlc/detalle-informe-final-rlc.component";
 import { DetalleOgRlcComponent } from "./components/detalle-og-rlc/detalle-og-rlc.component";
 import { DetalleTrasladoRlcComponent } from "./components/detalle-traslado-rlc/detalle-traslado-rlc.component";
 import { EjecucionFinancieraRlcComponent } from "./components/ejecucion-financiera-rlc/ejecucion-financiera-rlc.component";
@@ -56,6 +57,10 @@ const routes: Routes = [
   {
     path: 'detalleTraslado/:id',
     component: DetalleTrasladoRlcComponent
+  },
+  {
+    path: 'detalleInformeFinal/:id',
+    component: DetalleInformeFinalRlcComponent
   }
 ]; 
 @NgModule({
