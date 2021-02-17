@@ -4,11 +4,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
-  selector: 'app-gestionar-solicitud-rlc',
-  templateUrl: './gestionar-solicitud-rlc.component.html',
-  styleUrls: ['./gestionar-solicitud-rlc.component.scss']
+  selector: 'app-verdetalle-edit-gestion-solicitud-rlc',
+  templateUrl: './verdetalle-edit-gestion-solicitud-rlc.component.html',
+  styleUrls: ['./verdetalle-edit-gestion-solicitud-rlc.component.scss']
 })
-export class GestionarSolicitudRlcComponent implements OnInit {
+export class VerdetalleEditGestionSolicitudRlcComponent implements OnInit {
   addressForm = this.fb.group({
     fechaEnvioFirmaContratista: [null, Validators.required],
     fechaFirmaParteContratista: [null, Validators.required],
@@ -75,5 +75,4 @@ export class GestionarSolicitudRlcComponent implements OnInit {
   onSubmit() {
     this.estaEditando = true;
   }
-
 }

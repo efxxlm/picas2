@@ -10,6 +10,8 @@ import { GestionarSolicitudRlcComponent } from "./components/gestionar-solicitud
 import { RecursosComproPagadosRlcComponent } from "./components/recursos-compro-pagados-rlc/recursos-compro-pagados-rlc.component";
 import { RegistrarLiquidacionContratoComponent } from "./components/registrar-liquidacion-contrato/registrar-liquidacion-contrato.component";
 import { TrasladoRecursosRlcComponent } from "./components/traslado-recursos-rlc/traslado-recursos-rlc.component";
+import { VerdetalleEditGestionSolicitudRlcComponent } from "./components/verdetalle-edit-gestion-solicitud-rlc/verdetalle-edit-gestion-solicitud-rlc.component";
+import { VerdetalleRlcComponent } from "./components/verdetalle-rlc/verdetalle-rlc.component";
 
 export const customCurrencyMaskConfig = {
   align: "right",
@@ -61,6 +63,14 @@ const routes: Routes = [
   {
     path: 'detalleInformeFinal/:id',
     component: DetalleInformeFinalRlcComponent
+  },
+  {
+    path: 'verDetalleEditarSolicitud/:id',
+    component: VerdetalleEditGestionSolicitudRlcComponent
+  },
+  {
+    path: 'verDetalleSolicitud/:id',
+    component: VerdetalleRlcComponent
   }
 ]; 
 @NgModule({
