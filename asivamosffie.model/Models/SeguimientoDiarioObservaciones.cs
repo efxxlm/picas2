@@ -5,11 +5,6 @@ namespace asivamosffie.model.Models
 {
     public partial class SeguimientoDiarioObservaciones
     {
-        public SeguimientoDiarioObservaciones()
-        {
-            SeguimientoDiario = new HashSet<SeguimientoDiario>();
-        }
-
         public int SeguimientoDiarioObservacionesId { get; set; }
         public int? SeguimientoDiarioId { get; set; }
         public string Observaciones { get; set; }
@@ -21,7 +16,6 @@ namespace asivamosffie.model.Models
         public bool? Eliminado { get; set; }
         public bool? Archivado { get; set; }
 
-        public virtual SeguimientoDiario SeguimientoDiarioNavigation { get; set; }
-        public virtual ICollection<SeguimientoDiario> SeguimientoDiario { get; set; }
+        public virtual SeguimientoDiario SeguimientoDiario { get; set; }
     }
 }
