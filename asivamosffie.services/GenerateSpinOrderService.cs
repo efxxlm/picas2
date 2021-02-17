@@ -31,144 +31,6 @@ namespace asivamosffie.services
             _registerValidatePayment = registerValidatePaymentRequierementsService;
         }
 
-
-        #region get
-        /// <summary>
-        /// TODO : VALIDAR SOLICITUDES DE PAGO QUE YA TENGAN APROBACION 
-        /// </summary>
-        /// <returns></returns>
-        public async Task<dynamic> GetListSolicitudPago()
-        {
-            var result = await _context.SolicitudPago
-                 .Include(r => r.Contrato)
-                 .Include(r => r.OrdenGiro).Where(s => s.Eliminado != true)
-                                                                            .Select(s => new
-                                                                            {
-                                                                                s.FechaAprobacionFinanciera,
-                                                                                s.NumeroSolicitud,
-                                                                                s.Contrato.ModalidadCodigo,
-                                                                                s.Contrato.NumeroContrato,
-                                                                                s.EstadoCodigo,
-                                                                                s.ContratoId,
-                                                                                s.SolicitudPagoId,
-                                                                                s.OrdenGiro
-                                                                            }).OrderByDescending(r => r.SolicitudPagoId).ToListAsync();
-            List<dynamic> grind = new List<dynamic>();
-            List<Dominio> ListParametricas = _context.Dominio.Where(
-                                                                         d => d.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato
-                                                                      || d.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Solicitud_Pago
-                                                                      || d.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Orden_Giro
-                                                              ).ToList();
-
-            result.ForEach(r =>
-            {
-                bool RegistroCompleto = false;
-                string EstadoOrdenGiro = string.Empty;
-                if (r.OrdenGiro == null)
-                    EstadoOrdenGiro = ConstanCodigoEstadoOrdenGiro.Sin_generacion;
-                else
-                {
-                    EstadoOrdenGiro = r.OrdenGiro.EstadoCodigo;
-                    RegistroCompleto = r.OrdenGiro.RegistroCompleto ?? false;
-                }
-                EstadoOrdenGiro = ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Orden_Giro && r.Codigo == EstadoOrdenGiro).FirstOrDefault().Nombre;
-
-                grind.Add(new
-                {
-                    r.FechaAprobacionFinanciera,
-                    r.NumeroSolicitud,
-                    Modalidad = !string.IsNullOrEmpty(r.ModalidadCodigo) ? ListParametricas.Where(l => l.Codigo == r.ModalidadCodigo && l.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato).FirstOrDefault().Nombre : "No aplica",
-                    NumeroContrato = r.NumeroContrato ?? "No Aplica",
-                    r.OrdenGiro,
-                    EstadoOrdenGiro,
-                    RegistroCompleto,
-                    r.SolicitudPagoId,
-                });
-            });
-            return grind;
-        }
-
-        public async Task<SolicitudPago> GetSolicitudPagoBySolicitudPagoId(int SolicitudPagoId)
-        {
-            SolicitudPago SolicitudPago = await _registerValidatePayment.GetSolicitudPago(SolicitudPagoId);
-
-            try
-            {
-                if (SolicitudPago.ContratoId > 0)
-                {
-                    SolicitudPago.ContratoSon = await _registerValidatePayment.GetContratoByContratoId((int)SolicitudPago.ContratoId, 0);
-                    SolicitudPago.ContratoSon.ListProyectos = await _registerValidatePayment.GetProyectosByIdContrato((int)SolicitudPago.ContratoId);
-                }
-                if (SolicitudPago.OrdenGiroId != null)
-                {
-                    SolicitudPago.OrdenGiro = _context.OrdenGiro
-                        .Where(o => o.OrdenGiroId == SolicitudPago.OrdenGiroId)
-                            .Include(t => t.OrdenGiroTercero).ThenInclude(o => o.OrdenGiroTerceroChequeGerencia)
-                            .Include(t => t.OrdenGiroTercero).ThenInclude(o => o.OrdenGiroTerceroTransferenciaElectronica)
-                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleEstrategiaPago)
-                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleDescuentoTecnica).ThenInclude(r => r.OrdenGiroDetalleDescuentoTecnicaAportante)
-                            .Include(d => d.SolicitudPago)
-                        .FirstOrDefault();
-                }
-            }
-            catch (Exception ex)
-            {
-            }
-            return SolicitudPago;
-        }
-        #endregion
-
-
-
-        #region validate 
-        private bool? ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(OrdenGiroDetalleTerceroCausacion pOrdenGiroDetalleTerceroCausacion)
-        {
-            throw new NotImplementedException();
-        }
-        private bool ValidarRegistroCompletoOrdenGiroTerceroTransferenciaElectronica(OrdenGiroTerceroTransferenciaElectronica pOrdenGiroTerceroTransferenciaElectronica)
-        {
-            return false;
-        }
-
-        private bool ValidarRegistroCompletoOrdenGiroTerceroChequeGerencia(OrdenGiroTerceroChequeGerencia pOrdenGiroTerceroChequeGerencia)
-        {
-            return false;
-        }
-
-        private bool ValidarRegistroCompletoOrdenGiroTercero(OrdenGiroTercero pOrdenGiroTercero)
-        {
-            return false;
-        }
-
-        private bool ValidarRegistroCompletoOrdenGiro(OrdenGiro pOrdenGiro)
-        {
-            return false;
-        }
-
-        private bool ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnicaAportante(OrdenGiroDetalleDescuentoTecnicaAportante pOrdenGiroDetalleDescuentoTecnicaAportante)
-        {
-            return false;
-        }
-
-        private bool ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnica(OrdenGiroDetalleDescuentoTecnica pOrdenGiroDetalleDescuentoTecnica)
-        {
-            return false;
-        }
-
-        private bool ValidarRegistroCompletoOrdenGiroDetalleEstrategiaPago(OrdenGiroDetalleEstrategiaPago pOrdenGiroDetalleEstrategiaPago)
-        {
-            return false;
-        }
-
-        private bool ValidarRegistroCompletoOrdenGiroDetalle(OrdenGiroDetalle pOrdenGiroDetalle)
-        {
-            return false;
-        }
-
-
-        #endregion
-
-
         #region create
         /// <summary>
         /// create edit
@@ -496,5 +358,142 @@ namespace asivamosffie.services
 
 
         #endregion
+
+
+        #region validate 
+        private bool? ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(OrdenGiroDetalleTerceroCausacion pOrdenGiroDetalleTerceroCausacion)
+        {
+            throw new NotImplementedException();
+        }
+        private bool ValidarRegistroCompletoOrdenGiroTerceroTransferenciaElectronica(OrdenGiroTerceroTransferenciaElectronica pOrdenGiroTerceroTransferenciaElectronica)
+        {
+            return false;
+        }
+
+        private bool ValidarRegistroCompletoOrdenGiroTerceroChequeGerencia(OrdenGiroTerceroChequeGerencia pOrdenGiroTerceroChequeGerencia)
+        {
+            return false;
+        }
+
+        private bool ValidarRegistroCompletoOrdenGiroTercero(OrdenGiroTercero pOrdenGiroTercero)
+        {
+            return false;
+        }
+
+        private bool ValidarRegistroCompletoOrdenGiro(OrdenGiro pOrdenGiro)
+        {
+            return false;
+        }
+
+        private bool ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnicaAportante(OrdenGiroDetalleDescuentoTecnicaAportante pOrdenGiroDetalleDescuentoTecnicaAportante)
+        {
+            return false;
+        }
+
+        private bool ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnica(OrdenGiroDetalleDescuentoTecnica pOrdenGiroDetalleDescuentoTecnica)
+        {
+            return false;
+        }
+
+        private bool ValidarRegistroCompletoOrdenGiroDetalleEstrategiaPago(OrdenGiroDetalleEstrategiaPago pOrdenGiroDetalleEstrategiaPago)
+        {
+            return false;
+        }
+
+        private bool ValidarRegistroCompletoOrdenGiroDetalle(OrdenGiroDetalle pOrdenGiroDetalle)
+        {
+            return false;
+        }
+
+
+        #endregion
+
+        #region get
+        /// <summary>
+        /// TODO : VALIDAR SOLICITUDES DE PAGO QUE YA TENGAN APROBACION 
+        /// </summary>
+        /// <returns></returns>
+        public async Task<dynamic> GetListSolicitudPago()
+        {
+            var result = await _context.SolicitudPago
+                 .Include(r => r.Contrato)
+                 .Include(r => r.OrdenGiro).Where(s => s.Eliminado != true)
+                                                                            .Select(s => new
+                                                                            {
+                                                                                s.FechaAprobacionFinanciera,
+                                                                                s.NumeroSolicitud,
+                                                                                s.Contrato.ModalidadCodigo,
+                                                                                s.Contrato.NumeroContrato,
+                                                                                s.EstadoCodigo,
+                                                                                s.ContratoId,
+                                                                                s.SolicitudPagoId,
+                                                                                s.OrdenGiro
+                                                                            }).OrderByDescending(r => r.SolicitudPagoId).ToListAsync();
+            List<dynamic> grind = new List<dynamic>();
+            List<Dominio> ListParametricas = _context.Dominio.Where(
+                                                                         d => d.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato
+                                                                      || d.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Solicitud_Pago
+                                                                      || d.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Orden_Giro
+                                                              ).ToList();
+
+            result.ForEach(r =>
+            {
+                bool RegistroCompleto = false;
+                string EstadoOrdenGiro = string.Empty;
+                if (r.OrdenGiro == null)
+                    EstadoOrdenGiro = ConstanCodigoEstadoOrdenGiro.Sin_generacion;
+                else
+                {
+                    EstadoOrdenGiro = r.OrdenGiro.EstadoCodigo;
+                    RegistroCompleto = r.OrdenGiro.RegistroCompleto ?? false;
+                }
+                EstadoOrdenGiro = ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Orden_Giro && r.Codigo == EstadoOrdenGiro).FirstOrDefault().Nombre;
+
+                grind.Add(new
+                {
+                    r.FechaAprobacionFinanciera,
+                    r.NumeroSolicitud,
+                    Modalidad = !string.IsNullOrEmpty(r.ModalidadCodigo) ? ListParametricas.Where(l => l.Codigo == r.ModalidadCodigo && l.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato).FirstOrDefault().Nombre : "No aplica",
+                    NumeroContrato = r.NumeroContrato ?? "No Aplica",
+                    r.OrdenGiro,
+                    EstadoOrdenGiro,
+                    RegistroCompleto,
+                    r.SolicitudPagoId,
+                });
+            });
+            return grind;
+        }
+
+        public async Task<SolicitudPago> GetSolicitudPagoBySolicitudPagoId(int SolicitudPagoId)
+        {
+            SolicitudPago SolicitudPago = await _registerValidatePayment.GetSolicitudPago(SolicitudPagoId);
+
+            try
+            {
+                if (SolicitudPago.ContratoId > 0)
+                {
+                    SolicitudPago.ContratoSon = await _registerValidatePayment.GetContratoByContratoId((int)SolicitudPago.ContratoId, 0);
+                    SolicitudPago.ContratoSon.ListProyectos = await _registerValidatePayment.GetProyectosByIdContrato((int)SolicitudPago.ContratoId);
+                }
+                if (SolicitudPago.OrdenGiroId != null)
+                {
+                    SolicitudPago.OrdenGiro = _context.OrdenGiro
+                        .Where(o => o.OrdenGiroId == SolicitudPago.OrdenGiroId)
+                            .Include(t => t.OrdenGiroTercero).ThenInclude(o => o.OrdenGiroTerceroChequeGerencia)
+                            .Include(t => t.OrdenGiroTercero).ThenInclude(o => o.OrdenGiroTerceroTransferenciaElectronica)
+                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleEstrategiaPago)
+                            .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleDescuentoTecnica).ThenInclude(r => r.OrdenGiroDetalleDescuentoTecnicaAportante)
+                            .Include(d => d.SolicitudPago)
+                        .FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return SolicitudPago;
+        }
+        #endregion
+
+
     }
 }
