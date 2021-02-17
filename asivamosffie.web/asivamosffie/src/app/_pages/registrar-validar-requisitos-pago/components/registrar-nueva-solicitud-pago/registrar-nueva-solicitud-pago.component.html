@@ -270,7 +270,7 @@
             </mat-accordion>
         </div>
     </form>
-    <div style="margin-top: 1em;" *ngIf="addressForm.get( 'tipoSolicitud' ).value !== null">
+    <div style="margin-top: 1em;" *ngIf="contrato !== undefined || addressForm.get( 'tipoSolicitud' ).value !== null && ( addressForm.get( 'tipoSolicitud' ).value.codigo === tipoSolicitudCodigo.expensas || addressForm.get( 'tipoSolicitud' ).value.codigo === tipoSolicitudCodigo.otrosCostos )">
         <div class="d-flex align-items-center solbloq ml8 info-text en-alertaLibre mb-2em">
             Los acordeones se habilitarán de forma secuencial, una vez se tenga completa la información de la
             sección anterior
