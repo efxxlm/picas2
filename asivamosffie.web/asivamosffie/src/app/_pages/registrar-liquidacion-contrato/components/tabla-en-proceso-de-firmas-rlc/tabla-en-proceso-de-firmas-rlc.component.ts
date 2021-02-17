@@ -22,8 +22,8 @@ export class TablaEnProcesoDeFirmasRlcComponent implements OnInit {
       numeroSolicitud: 'Liq _0009',
       numeroContrato: 'N801801',
       tipoContrato: 'Obra',
-      estadoRegistro: 'Incompleto',
-      estadoDocumento: 'En firma de la fiduciaria',
+      estadoRegistro: 'Completo',
+      estadoDocumento: 'Firmado',
       id: 1
     }
   ];
