@@ -10,34 +10,18 @@
       <div class="col-md-6">
         <div class="row">
           <div class="pr-1">
-            <label
-              class="label-left"
-              for="numeroContrato"
-              [class.color-secondaryColor]="
-                (addressForm.get('numeroContrato').invalid && addressForm.get('numeroContrato').touched) ||
-                (addressForm.get('numeroContrato').invalid && estaEditando)
-              "
-            >
+            <label class="label-left" for="numeroContrato"
+              [class.color-secondaryColor]="this.myFilter.invalid && this.myFilter.touched">
               Número de contrato
             </label>
           </div>
           <div class="col d-flex">
             <mat-form-field class="full-width">
-              <input
-                matInput
-                #nombre2
-                type="text"
-                maxlength="10"
-                [formControl]="myFilter"
-                required
-                [matAutocomplete]="auto2"
-              />
+              <input matInput #nombre2 type="text" maxlength="10" [formControl]="myFilter" required
+                [matAutocomplete]="auto2" />
               <mat-autocomplete #auto2="matAutocomplete">
-                <mat-option
-                  (click)="seleccionAutocomplete(nombres)"
-                  *ngFor="let nombres of filteredContrato | async"
-                  [value]="nombres"
-                >
+                <mat-option (click)="seleccionAutocomplete(nombres)" *ngFor="let nombres of filteredContrato | async"
+                  [value]="nombres">
                   {{ nombres }}
                 </mat-option>
               </mat-autocomplete>
@@ -47,18 +31,9 @@
             </button>
           </div>
           <span class="icon-incompleto">
-            <img
-              class="icon-incompleto--img"
-              src="assets/img/icon/incompleto.svg"
-              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
-              *ngIf="
-                (addressForm.get('numeroContrato').invalid && addressForm.get('numeroContrato').touched) ||
-                (addressForm.get('numeroContrato').invalid && estaEditando)
-              "
-            />
+            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+              [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip" *ngIf="this.myFilter.invalid && this.myFilter.touched" />
           </span>
         </div>
       </div>

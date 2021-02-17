@@ -56,7 +56,7 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
     ]
   };
   numReclamacion: any;
-
+  estaEditando = false;
   constructor(private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private common: CommonService, private router: Router) { }
 
   ngOnInit(): void {
@@ -127,6 +127,7 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
   }
 
   onSubmit() {
+    this.estaEditando = true;
     let actuacionTaiArray;
     let completo: boolean;
     if (this.addressForm.valid) {

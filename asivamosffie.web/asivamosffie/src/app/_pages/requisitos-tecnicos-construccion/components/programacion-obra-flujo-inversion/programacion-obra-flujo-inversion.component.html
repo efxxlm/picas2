@@ -10,7 +10,7 @@
 
         <div>
                 <button mat-raised-button color="accent" type="submit" (click)="cargarProgramacion()"
-                        [disabled]="archivoCargueIdProgramacionObra !== undefined">
+                        [disabled]="(archivoCargueIdProgramacionObra !== undefined || fechaInicioObra === undefined)">
                         Cargar programación
                 </button>
         </div>

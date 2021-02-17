@@ -249,4 +249,9 @@
       </button>
     </div>
   </form>
+  <app-tabla-observaciones
+                          [DisponibilidadPresupuestal]="objetoDisponibilidad"
+                          *ngIf="objetoDisponibilidad && objetoDisponibilidad.estadoSolicitudCodigo === '2'"
+        >
+  </app-tabla-observaciones>
 </div>

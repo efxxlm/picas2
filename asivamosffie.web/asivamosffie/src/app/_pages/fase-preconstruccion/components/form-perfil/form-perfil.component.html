@@ -137,17 +137,13 @@
                       maxlength="3"
                       min="1"
                       max="999"
+                      #cantidadHvRequeridas
                       (keypress)="validateNumberKeypress($event)"
                       onKeyPress="if(this.value.length>=this.maxLength) return false;"
                   oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                       formControlName="cantidadHvRequeridas"
                       required
                       (ngModelChange)="validateNumber($event, i, 'cantidadHvRequeridas')"
-                      [class.invalid]="
-                        perfil.get('cantidadHvRequeridas').value.length > 0
-                          ? perfil.get('cantidadHvRequeridas').markAsUntouched()
-                          : perfil.get('cantidadHvRequeridas').markAsTouched()
-                      "
                     />
                   </mat-form-field>
                   <span
@@ -156,7 +152,7 @@
                     matTooltip="Campo numérico"
                     matTooltipClass="info-tooltip"
                   >
-                    {{ 3 - perfil.get('cantidadHvRequeridas').value.toString().length }}
+                    {{ 3 - cantidadHvRequeridas.value.length }}
                   </span>
                   <span class="icon-incompleto">
                     <img
@@ -200,17 +196,13 @@
                       maxlength="3"
                       min="1"
                       max="999"
+                      #cantidadHvRecibidas
                       (keypress)="validateNumberKeypress($event)"
                       onKeyPress="if(this.value.length>=this.maxLength) return false;"
                   oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                       formControlName="cantidadHvRecibidas"
                       required
                       (ngModelChange)="validateNumber($event, i, 'cantidadHvRecibidas')"
-                      [class.invalid]="
-                        perfil.get('cantidadHvRecibidas').value.length > 0
-                          ? perfil.get('cantidadHvRecibidas').markAsUntouched()
-                          : perfil.get('cantidadHvRecibidas').markAsTouched()
-                      "
                     />
                   </mat-form-field>
                   <span
@@ -219,7 +211,7 @@
                     matTooltip="Campo numérico"
                     matTooltipClass="info-tooltip"
                   >
-                    {{ 3 - perfil.get('cantidadHvRecibidas').value.toString().length }}
+                    {{ 3 - cantidadHvRecibidas.value.length }}
                   </span>
                   <span class="icon-incompleto">
                     <img
@@ -263,17 +255,13 @@
                       maxlength="3"
                       min="1"
                       max="999"
+                      #cantidadHvAprobadas
                       (keypress)="validateNumberKeypress($event)"
                       onKeyPress="if(this.value.length>=this.maxLength) return false;"
                   oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                       formControlName="cantidadHvAprobadas"
                       required
                       (ngModelChange)="validateNumber($event, i, 'cantidadHvAprobadas')"
-                      [class.invalid]="
-                        perfil.get('cantidadHvAprobadas').value.length > 0
-                          ? perfil.get('cantidadHvAprobadas').markAsUntouched()
-                          : perfil.get('cantidadHvAprobadas').markAsTouched()
-                      "
                     />
                   </mat-form-field>
                   <span
@@ -282,7 +270,7 @@
                     matTooltip="Campo numérico"
                     matTooltipClass="info-tooltip"
                   >
-                    {{ 3 - perfil.get('cantidadHvAprobadas').value.toString().length }}
+                    {{ 3 - cantidadHvAprobadas.value.length }}
                   </span>
                   <span class="icon-incompleto">
                     <img
@@ -335,11 +323,6 @@
                           perfil.get('cantidadHvRecibidas').value,
                           i
                         )
-                      "
-                      [class.invalid]="
-                        perfil.get('fechaAprobacion').value !== null
-                          ? perfil.get('fechaAprobacion').markAsUntouched()
-                          : perfil.get('fechaAprobacion').markAsTouched()
                       "
                     />
                     <mat-datepicker #fechaAprobacion></mat-datepicker>

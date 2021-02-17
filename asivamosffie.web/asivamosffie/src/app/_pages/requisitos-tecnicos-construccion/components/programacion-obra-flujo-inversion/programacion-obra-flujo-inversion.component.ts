@@ -21,6 +21,7 @@ export class ProgramacionObraFlujoInversionComponent implements OnInit {
   @Input() observacionDevolucionFlujoInversion: number;
   @Input() archivoCargueIdProgramacionObra: number;
   @Input() archivoCargueIdFlujoInversion: number;
+  @Input() fechaInicioObra: Date;
   
   @Output() terminoCarga = new EventEmitter();
   @Output() realizoObservacion = new EventEmitter();
@@ -56,7 +57,7 @@ export class ProgramacionObraFlujoInversionComponent implements OnInit {
   cargarProgramacion() {
 
     if ( this.archivoCargueIdProgramacionObra === undefined && this.esFlujoInversion ){
-      this.openDialog( '', 'Se requiere cargar primero la programación de obra' )
+      this.openDialog( '', '<b> Se requiere cargar primero la programación de obra </b> ' )
       return false;
 
     }

@@ -9,7 +9,6 @@ namespace asivamosffie.model.Models
         {
             InformeFinalInterventoria = new HashSet<InformeFinalInterventoria>();
             InformeFinalObservaciones = new HashSet<InformeFinalObservaciones>();
-            ProyectoEntregaEtc = new HashSet<ProyectoEntregaEtc>();
         }
 
         public int InformeFinalId { get; set; }
@@ -28,16 +27,10 @@ namespace asivamosffie.model.Models
         public bool? RegistroCompletoValidacion { get; set; }
         public string EstadoAprobacion { get; set; }
         public bool? TieneObservacionesSupervisor { get; set; }
-        public DateTime? FechaEnvioSupervisor { get; set; }
-        public DateTime? FechaAprobacion { get; set; }
-        public string EstadoCumplimiento { get; set; }
-        public bool? TieneObservacionesCumplimiento { get; set; }
-        public string EstadoEntregaEtc { get; set; }
-        public bool? RegistroCompletoEntregaEtc { get; set; }
+        public string ObservacionesValidacion { get; set; }
 
         public virtual Proyecto Proyecto { get; set; }
         public virtual ICollection<InformeFinalInterventoria> InformeFinalInterventoria { get; set; }
         public virtual ICollection<InformeFinalObservaciones> InformeFinalObservaciones { get; set; }
-        public virtual ICollection<ProyectoEntregaEtc> ProyectoEntregaEtc { get; set; }
     }
 }
