@@ -1251,19 +1251,15 @@ namespace asivamosffie.services
 
         public async Task<Respuesta> CreateContratacionProyecto(Contratacion pContratacion, string usuarioCreacion)
         {
-            Respuesta respuesta = new Respuesta();
             int idAccionCrearContratacionProyecto = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Proyecto, (int)EnumeratorTipoDominio.Acciones);
 
-
             try
-            {
-
+            { 
                 if (pContratacion.TipoSolicitudCodigo != ConstanCodigoTipoContratacion.Obra_Interventoria.ToString())
                 {
                     Contratacion contratacion = await CreateContratacion(pContratacion, usuarioCreacion);
 
-                    return respuesta =
-                     new Respuesta
+                    return new Respuesta
                      {
                          IsSuccessful = true,
                          IsException = false,
@@ -1285,28 +1281,28 @@ namespace asivamosffie.services
 
 
                     return
-                  new Respuesta
-                  {
-                      IsSuccessful = true,
-                      IsException = false,
-                      IsValidation = true,
-                      Code = ConstantMessagesContratacionProyecto.OperacionExitosa,
-                      Data = contratacionInterventoria,
-                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Contratacion_Proyecto, ConstantMessagesContratacionProyecto.OperacionExitosa, idAccionCrearContratacionProyecto, usuarioCreacion, "CREAR CONTRATACION PROYECTO")
-                  };
+                              new Respuesta
+                              {
+                                  IsSuccessful = true,
+                                  IsException = false,
+                                  IsValidation = true,
+                                  Code = ConstantMessagesContratacionProyecto.OperacionExitosa,
+                                  Data = contratacionInterventoria,
+                                  Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Contratacion_Proyecto, ConstantMessagesContratacionProyecto.OperacionExitosa, idAccionCrearContratacionProyecto, usuarioCreacion, "CREAR CONTRATACION PROYECTO")
+                              };
                 }
             }
             catch (Exception ex)
             {
                 return
-                 new Respuesta
-                 {
-                     IsSuccessful = false,
-                     IsException = true,
-                     IsValidation = false,
-                     Code = ConstantMessagesProyecto.Error,
-                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.Error, idAccionCrearContratacionProyecto, usuarioCreacion, ex.InnerException.ToString())
-                 };
+                         new Respuesta
+                         {
+                             IsSuccessful = false,
+                             IsException = true,
+                             IsValidation = false,
+                             Code = ConstantMessagesProyecto.Error,
+                             Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.Error, idAccionCrearContratacionProyecto, usuarioCreacion, ex.InnerException.ToString())
+                         };
             }
         }
 
