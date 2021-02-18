@@ -526,120 +526,83 @@ namespace asivamosffie.services
             //estado de registro “Completo”, que tienen viabilidad jurídica y técnica
             List<ProyectoGrilla> ListProyectoGrilla = new List<ProyectoGrilla>();
             List<Proyecto> ListProyectos = new List<Proyecto>();
-            try
+
+            ListProyectos =
+                 _context.Proyecto.Where(
+                                                r => !(bool)r.Eliminado
+                                             && r.EstadoJuridicoCodigo == ConstantCodigoEstadoJuridico.Aprobado
+                                             && (bool)r.RegistroCompleto
+                                             && (
+                                                 r.EstadoProyectoObraCodigo == ConstantCodigoEstadoProyecto.Disponible ||
+                                                 r.EstadoProyectoInterventoriaCodigo == ConstantCodigoEstadoProyecto.Disponible
+                                                 ) 
+                                            && r.TipoIntervencionCodigo == (string.IsNullOrEmpty(pTipoIntervencion) ? r.TipoIntervencionCodigo : pTipoIntervencion) 
+                                            && r.LlaveMen.Contains((string.IsNullOrEmpty(pLlaveMen) ? r.LlaveMen : pLlaveMen)) 
+                                            && r.LocalizacionIdMunicipio == (string.IsNullOrEmpty(pMunicipio) ? r.LocalizacionIdMunicipio : pMunicipio) 
+                                            && r.InstitucionEducativaId == (pIdInstitucionEducativa > 0 ? pIdInstitucionEducativa : r.InstitucionEducativaId) 
+                                            && r.SedeId == (pIdSede > 0 ? pIdSede : r.SedeId)
+                                       )
+                                         .Include(r => r.ContratacionProyecto)
+                                            .ThenInclude(r => r.Contratacion)
+                                         .Include(r => r.Sede)
+                                         .Include(r => r.InstitucionEducativa)
+                                         .Include(r => r.LocalizacionIdMunicipioNavigation)
+                                         .Distinct()
+                                                   .ToList();
+
+            List<Localicacion> Municipios = new List<Localicacion>();
+
+            if (!string.IsNullOrEmpty(pDepartamento) && string.IsNullOrEmpty(pRegion) && string.IsNullOrEmpty(pMunicipio))
+                Municipios = await _commonService.GetListMunicipioByIdDepartamento(pDepartamento);
+
+            if (!string.IsNullOrEmpty(pRegion) && string.IsNullOrEmpty(pDepartamento) && string.IsNullOrEmpty(pMunicipio))
             {
-
-                ListProyectos =
-                     _context.Proyecto.Where(
-                          r => !(bool)r.Eliminado
-                         && r.EstadoJuridicoCodigo == ConstantCodigoEstadoJuridico.Aprobado
-                         && (bool)r.RegistroCompleto
-                         && (r.EstadoProyectoObraCodigo == ConstantCodigoEstadoProyecto.Disponible ||
-                         r.EstadoProyectoInterventoriaCodigo == ConstantCodigoEstadoProyecto.Disponible)
-                        //Se quitan los proyectos que ya esten vinculados a una contratacion 
-                        && r.TipoIntervencionCodigo == (string.IsNullOrEmpty(pTipoIntervencion) ? r.TipoIntervencionCodigo : pTipoIntervencion) &&
-                         r.LlaveMen.Contains((string.IsNullOrEmpty(pLlaveMen) ? r.LlaveMen : pLlaveMen)) &&
-                         r.LocalizacionIdMunicipio == (string.IsNullOrEmpty(pMunicipio) ? r.LocalizacionIdMunicipio : pMunicipio) &&
-                         r.InstitucionEducativaId == (pIdInstitucionEducativa > 0 ? pIdInstitucionEducativa : r.InstitucionEducativaId) &&
-                         r.SedeId == (pIdSede > 0 ? pIdSede : r.SedeId)
-                         )
-                                 .Include(r => r.ContratacionProyecto)
-                                   .ThenInclude(r => r.Contratacion)
-                                 .Include(r => r.Sede)
-                                 .Include(r => r.InstitucionEducativa)
-                                 .Include(r => r.LocalizacionIdMunicipioNavigation).Distinct().ToList();
-
-                List<Localicacion> Municipios = new List<Localicacion>();
-
-                if (!string.IsNullOrEmpty(pDepartamento) && string.IsNullOrEmpty(pRegion) && string.IsNullOrEmpty(pMunicipio))
-                    Municipios = await _commonService.GetListMunicipioByIdDepartamento(pDepartamento);
-
-                if (!string.IsNullOrEmpty(pRegion) && string.IsNullOrEmpty(pDepartamento) && string.IsNullOrEmpty(pMunicipio))
+                List<Localizacion> Departamentos = _context.Localizacion.Where(r => r.IdPadre == pRegion).ToList();
+                foreach (var dep in Departamentos)
                 {
-                    List<Localizacion> Departamentos = _context.Localizacion.Where(r => r.IdPadre == pRegion).ToList();
-                    foreach (var dep in Departamentos)
-                    {
-                        Municipios.AddRange(await _commonService.GetListMunicipioByIdDepartamento(dep.LocalizacionId));
-                    }
+                    Municipios.AddRange(await _commonService.GetListMunicipioByIdDepartamento(dep.LocalizacionId));
                 }
-                if (Municipios.Count() > 0)
-                    ListProyectos.RemoveAll(item => !Municipios.Select(r => r.LocalizacionId).Contains(item.LocalizacionIdMunicipio));
-
-                List<Proyecto> ListaProyectosRemover = new List<Proyecto>();
-                foreach (var Proyecto in ListProyectos)
-                {
-                    foreach (var ContratacionProyecto in Proyecto.ContratacionProyecto.Where(r => !(bool)r.Eliminado))
-                    {
-                        //if (ContratacionProyecto.Contratacion.EstadoSolicitudCodigo != ConstanCodigoEstadoSolicitudContratacion.Rechazado)
-                        //    ListaProyectosRemover.Add(Proyecto);
-                        //else
-                        //{
-                        //    if (Proyecto.ContratacionProyecto.Where(r => r.ProyectoId == Proyecto.ProyectoId).Count() > 1)
-                        //        ListaProyectosRemover.Add(Proyecto);
-                        //}
-                    }
-                }
-                foreach (var proyecto in ListaProyectosRemover.Distinct())
-                {
-                    ListProyectos.Remove(proyecto);
-                }
-
-                List<Dominio> ListTipoSolicitud = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Tipo_de_Solicitud_Obra_Interventorias);
-
-                List<Dominio> ListTipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion && (bool)r.Activo).ToList();
-
-                List<Localizacion> ListDepartamentos = _context.Localizacion.Where(r => r.Nivel == (int)ConstanCodigoTipoNivelLocalizacion.Departamento).ToList();
-
-                List<Localizacion> ListRegiones = _context.Localizacion.Where(r => r.Nivel == (int)ConstanCodigoTipoNivelLocalizacion.Region).ToList();
-
-                //List<Contratacion> ListContratacion = _context.Contratacion.Where(r => !(bool)r.Eliminado).ToList();
-
-                foreach (var proyecto in ListProyectos)
-                {
-                    if (!string.IsNullOrEmpty(proyecto.TipoIntervencionCodigo))
-                    {
-                        Localizacion departamento = ListDepartamentos.Find(r => r.LocalizacionId == proyecto.LocalizacionIdMunicipioNavigation.IdPadre);
-
-                        try
-                        {
-                            ProyectoGrilla proyectoGrilla = new ProyectoGrilla
-                            {
-                                TipoIntervencion = ListTipoIntervencion.Find(r => r.Codigo == proyecto.TipoIntervencionCodigo).Nombre,
-                                LlaveMen = proyecto.LlaveMen,
-                                Departamento = departamento.Descripcion,
-                                Region = ListRegiones.Find(r => r.LocalizacionId == departamento.IdPadre).Descripcion,
-                                Municipio = proyecto.LocalizacionIdMunicipioNavigation.Descripcion,
-                                InstitucionEducativa = proyecto.InstitucionEducativa.Nombre,
-                                Sede = proyecto.Sede.Nombre,
-                                ProyectoId = proyecto.ProyectoId,
-                            };
-                            foreach (var item in proyecto.ContratacionProyecto.Where(r => !(bool)r.Eliminado))
-                            {
-                                // item.Contratacion = ListContratacion.Where(r => r.ContratacionId == item.ContratacionId).FirstOrDefault();
-                                if (!string.IsNullOrEmpty(item.Contratacion.TipoSolicitudCodigo))
-                                {
-                                    if (item.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
-                                        proyectoGrilla.TieneObra = true;
-
-                                    if (item.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
-                                        proyectoGrilla.TieneInterventoria = true;
-                                }
-                            }
-                            ListProyectoGrilla.Add(proyectoGrilla);
-                        }
-                        catch (Exception ex)
-                        {
-                        }
-                    }
-                }
-
             }
-            catch (Exception ex)
+            if (Municipios.Count() > 0)
+                ListProyectos.RemoveAll(item => !Municipios.Select(r => r.LocalizacionId).Contains(item.LocalizacionIdMunicipio));
+              
+            List<Dominio> ListTipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion && (bool)r.Activo).ToList();
+
+            List<Localizacion> ListDepartamentos = _context.Localizacion.Where(r => r.Nivel == (int)ConstanCodigoTipoNivelLocalizacion.Departamento).ToList();
+
+            List<Localizacion> ListRegiones = _context.Localizacion.Where(r => r.Nivel == (int)ConstanCodigoTipoNivelLocalizacion.Region).ToList();
+             
+            foreach (var proyecto in ListProyectos)
             {
-                return ListProyectoGrilla.OrderByDescending(r => r.ProyectoId).ToList();
+                if (!string.IsNullOrEmpty(proyecto.TipoIntervencionCodigo))
+                {
+                    Localizacion departamento = ListDepartamentos.Find(r => r.LocalizacionId == proyecto.LocalizacionIdMunicipioNavigation.IdPadre);
+
+                    ProyectoGrilla proyectoGrilla = new ProyectoGrilla
+                    {
+                        TipoIntervencion = ListTipoIntervencion.Find(r => r.Codigo == proyecto.TipoIntervencionCodigo).Nombre,
+                        LlaveMen = proyecto.LlaveMen,
+                        Departamento = departamento.Descripcion,
+                        Region = ListRegiones.Find(r => r.LocalizacionId == departamento.IdPadre).Descripcion,
+                        Municipio = proyecto.LocalizacionIdMunicipioNavigation.Descripcion,
+                        InstitucionEducativa = proyecto.InstitucionEducativa.Nombre,
+                        Sede = proyecto.Sede.Nombre,
+                        ProyectoId = proyecto.ProyectoId,
+                    };
+
+                    if (proyecto.EstadoProyectoObraCodigo != ConstantCodigoEstadoProyecto.Disponible)
+                        proyectoGrilla.TieneObra = true;
+
+                    if (proyecto.EstadoProyectoInterventoriaCodigo != ConstantCodigoEstadoProyecto.Disponible)
+                        proyectoGrilla.TieneInterventoria = true;
+
+                    ListProyectoGrilla.Add(proyectoGrilla);
+
+                }
             }
             return ListProyectoGrilla.OrderByDescending(r => r.ProyectoId).ToList();
         }
+
 
         public async Task<Respuesta> CreateEditContratacion(Contratacion Pcontratacion)
         {
