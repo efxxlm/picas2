@@ -139,9 +139,9 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
                       *ngIf="
-                        (addressForm.get('fechaActaInicioFUnoPreconstruccion').invalid &&
+                        (addressForm.get('fechaActaInicioFUnoPreconstruccion')?.invalid &&
                           addressForm.get('fechaActaInicioFUnoPreconstruccion').touched) ||
-                        (addressForm.get('fechaActaInicioFUnoPreconstruccion').invalid && estaEditando)
+                        (addressForm.get('fechaActaInicioFUnoPreconstruccion')?.invalid && estaEditando)
                       "
                     />
                   </span>
@@ -184,9 +184,9 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
                     *ngIf="
-                      (addressForm.get('fechaPrevistaTerminacion').invalid &&
+                      (addressForm.get('fechaPrevistaTerminacion')?.invalid &&
                         addressForm.get('fechaPrevistaTerminacion').touched) ||
-                      (addressForm.get('fechaPrevistaTerminacion').invalid && estaEditando)
+                      (addressForm.get('fechaPrevistaTerminacion')?.invalid && estaEditando)
                     "
                   />
                 </span>
@@ -246,8 +246,8 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
                       *ngIf="
-                        (addressForm.get('mesPlazoEjFase1').invalid && addressForm.get('mesPlazoEjFase1').touched) ||
-                        (addressForm.get('mesPlazoEjFase1').invalid && estaEditando)
+                        (addressForm.get('mesPlazoEjFase1')?.invalid && addressForm.get('mesPlazoEjFase1').touched) ||
+                        (addressForm.get('mesPlazoEjFase1')?.invalid && estaEditando)
                       "
                     />
                   </span>
@@ -294,8 +294,8 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
                       *ngIf="
-                        (addressForm.get('diasPlazoEjFase1').invalid && addressForm.get('diasPlazoEjFase1').touched) ||
-                        (addressForm.get('diasPlazoEjFase1').invalid && estaEditando)
+                        (addressForm.get('diasPlazoEjFase1')?.invalid && addressForm.get('diasPlazoEjFase1').touched) ||
+                        (addressForm.get('diasPlazoEjFase1')?.invalid && estaEditando)
                       "
                     />
                   </span>
@@ -357,8 +357,8 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
                       *ngIf="
-                        (addressForm.get('mesPlazoEjFase2').invalid && addressForm.get('mesPlazoEjFase2').touched) ||
-                        (addressForm.get('mesPlazoEjFase2').invalid && estaEditando)
+                        (addressForm.get('mesPlazoEjFase2')?.invalid && addressForm.get('mesPlazoEjFase2').touched) ||
+                        (addressForm.get('mesPlazoEjFase2')?.invalid && estaEditando)
                       "
                     />
                   </span>
@@ -405,8 +405,8 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
                       *ngIf="
-                        (addressForm.get('diasPlazoEjFase2').invalid && addressForm.get('diasPlazoEjFase2').touched) ||
-                        (addressForm.get('diasPlazoEjFase2').invalid && estaEditando)
+                        (addressForm.get('diasPlazoEjFase2')?.invalid && addressForm.get('diasPlazoEjFase2').touched) ||
+                        (addressForm.get('diasPlazoEjFase2')?.invalid && estaEditando)
                       "
                     />
                   </span>
@@ -418,8 +418,8 @@
             <div
               class="text-area-quill noDecorated"
               [class.color-secondaryColor]="
-                (addressForm.get('objeto').invalid && addressForm.get('objeto').touched) ||
-                (addressForm.get('objeto').invalid && estaEditando)
+                (addressForm.get('objeto')?.invalid && addressForm.get('objeto').touched) ||
+                (addressForm.get('objeto')?.invalid && estaEditando)
               "
             >
               <label class="label-left" for="observacionesEspeciales">Observaciones o consideraciones especiales</label>
@@ -453,9 +453,9 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
                 *ngIf="
-                  (addressForm.get('observacionesEspeciales').invalid &&
+                  (addressForm.get('observacionesEspeciales')?.invalid &&
                     addressForm.get('observacionesEspeciales').touched) ||
-                  (addressForm.get('observacionesEspeciales').invalid && estaEditando)
+                  (addressForm.get('observacionesEspeciales')?.invalid && estaEditando)
                 "
               />
             </span>
