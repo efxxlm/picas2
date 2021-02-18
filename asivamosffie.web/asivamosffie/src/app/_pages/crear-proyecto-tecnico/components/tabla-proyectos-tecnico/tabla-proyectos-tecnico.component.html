@@ -61,7 +61,9 @@
                 class="btn-table m05_important" 
                 type="button"
                 (click)="ver(gestion.id)" 
-                *ngIf="gestion.gestion.estadoProyectoObra=='Disponible' && gestion.gestion.estadoProyectoInterventoria=='Disponible'">
+                *ngIf="(gestion.gestion.estadoProyectoObra=='Disponible' && gestion.gestion.estadoProyectoInterventoria=='Disponible') || 
+                       (gestion.gestion.estadoProyectoObra=='Rechazado por comité técnico' && gestion.gestion.estadoProyectoInterventoria=='Rechazado por comité técnico') ||
+                       (gestion.gestion.estadoProyectoObra=='Rechazado por comité fiduciario' && gestion.gestion.estadoProyectoInterventoria=='Rechazado por comité fiduciario')">
         Ver detalle /<br>Editar
         </button>
 
@@ -71,7 +73,9 @@
                 class="btn-table m05_important" 
                 type="button"
                 (click)="ver(gestion.id)" 
-                *ngIf="gestion.gestion.estadoProyectoObra!='Disponible' || gestion.gestion.estadoProyectoInterventoria!='Disponible'">
+                *ngIf="(gestion.gestion.estadoProyectoObra!='Disponible' || gestion.gestion.estadoProyectoInterventoria!='Disponible') &&
+                       (gestion.gestion.estadoProyectoObra!='Rechazado por comité técnico' || gestion.gestion.estadoProyectoInterventoria!='Rechazado por comité técnico') &&
+                       (gestion.gestion.estadoProyectoObra!='Rechazado por comité fiduciario' || gestion.gestion.estadoProyectoInterventoria!='Rechazado por comité fiduciario')">
         Ver detalle
         </button>
 
@@ -81,7 +85,9 @@
                 class="btn-table m05_important" 
                 type="button"
                 (click)="eliminar(gestion.id)"  
-                *ngIf="gestion.gestion.estadoProyectoObra=='Disponible' && gestion.gestion.estadoProyectoInterventoria=='Disponible'">
+                *ngIf="(gestion.gestion.estadoProyectoObra=='Disponible' && gestion.gestion.estadoProyectoInterventoria=='Disponible') ||
+                      (gestion.gestion.estadoProyectoObra=='Rechazado por comité técnico' && gestion.gestion.estadoProyectoInterventoria=='Rechazado por comité técnico') ||
+                      (gestion.gestion.estadoProyectoObra=='Rechazado por comité fiduciario' && gestion.gestion.estadoProyectoInterventoria=='Rechazado por comité fiduciario')">
         Eliminar
         </button>
 

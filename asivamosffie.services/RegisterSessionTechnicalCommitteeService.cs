@@ -1341,6 +1341,7 @@ namespace asivamosffie.services
 
         private bool ValidarRegistroCompletoSesionComiteSolicitud(SesionComiteSolicitud sesionComiteSolicitud)
         {
+            bool completo = true;
             if (
                //(sesionComiteSolicitud.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_tecnico &&
                //     string.IsNullOrEmpty(sesionComiteSolicitud.RutaSoporteVotacion) ) ||
@@ -1357,9 +1358,38 @@ namespace asivamosffie.services
                 //string.IsNullOrEmpty(sesionComiteSolicitud.RutaSoporteVotacion
                 )
             {
-                return false;
+                completo = false;
             }
-            return true;
+
+            if ( sesionComiteSolicitud.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
+            {
+                Contratacion contratacion = _context.Contratacion
+                                                        .Where( c => c.ContratacionId == sesionComiteSolicitud.SolicitudId)
+                                                        .Include( r => r.ContratacionProyecto )
+                                                            .ThenInclude( r => r.Proyecto )
+                                                        .FirstOrDefault();
+                contratacion.ContratacionProyecto.ToList().ForEach(cp =>
+               {
+                   if (contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+                       if (
+                               cp.Proyecto.EstadoProyectoObraCodigo != ConstantCodigoEstadoProyecto.AprobadoComiteTecnico &&
+                               cp.Proyecto.EstadoProyectoObraCodigo != ConstantCodigoEstadoProyecto.DevueltoComiteFiduciario &&
+                               cp.Proyecto.EstadoProyectoObraCodigo != ConstantCodigoEstadoProyecto.RechazadoComiteTecnico
+                          )
+                           completo = false;
+
+                   if (contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
+                       if (
+                               cp.Proyecto.EstadoProyectoInterventoriaCodigo != ConstantCodigoEstadoProyecto.AprobadoComiteTecnico &&
+                               cp.Proyecto.EstadoProyectoInterventoriaCodigo != ConstantCodigoEstadoProyecto.DevueltoComiteFiduciario &&
+                               cp.Proyecto.EstadoProyectoInterventoriaCodigo != ConstantCodigoEstadoProyecto.RechazadoComiteTecnico
+                          )
+                           completo = false;
+               });
+
+            }
+
+            return completo;
         }
 
         private bool? ValidarRegistroCompletoSesionComiteSolicitudActa(SesionComiteSolicitud sesionComiteSolicitud)
@@ -2248,9 +2278,9 @@ namespace asivamosffie.services
                             if (pSesionComiteSolicitud.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
                             {
                                 if (ct.Proyecto.EstadoProyectoObraCodigo != null)
-                                    if (ct.Proyecto.EstadoProyectoObraCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteTecnico)
-                                        proy.EstadoProyectoObraCodigo = ConstantCodigoEstadoProyecto.Disponible;
-                                    else
+                                    //if (ct.Proyecto.EstadoProyectoObraCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteTecnico)
+                                    //    proy.EstadoProyectoObraCodigo = ConstantCodigoEstadoProyecto.Disponible;
+                                    //else
                                         proy.EstadoProyectoObraCodigo = ct.Proyecto.EstadoProyectoObraCodigo;
                                 else
                                 {
@@ -2261,9 +2291,9 @@ namespace asivamosffie.services
                             if (pSesionComiteSolicitud.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
                             {
                                 if (ct.Proyecto.EstadoProyectoInterventoriaCodigo != null)
-                                    if (ct.Proyecto.EstadoProyectoInterventoriaCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteTecnico)
-                                        proy.EstadoProyectoInterventoriaCodigo = ConstantCodigoEstadoProyecto.Disponible;
-                                    else
+                                    //if (ct.Proyecto.EstadoProyectoInterventoriaCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteTecnico)
+                                    //    proy.EstadoProyectoInterventoriaCodigo = ConstantCodigoEstadoProyecto.Disponible;
+                                    //else
                                         proy.EstadoProyectoInterventoriaCodigo = ct.Proyecto.EstadoProyectoInterventoriaCodigo;
                                 else
                                 {
@@ -2516,8 +2546,8 @@ namespace asivamosffie.services
 
             Plantilla Plantilla = _context.Plantilla.Where(r => r.Codigo == TipoPlantilla).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
             Plantilla.Contenido = ReemplazarDatosPlantillaContratacion(Plantilla.Contenido, contratacion);
-            return ConvertirPDF(Plantilla);
-            //return PDF.Convertir(Plantilla);
+            //return ConvertirPDF(Plantilla);
+            return PDF.Convertir(Plantilla);
 
         }
 
@@ -3987,7 +4017,8 @@ namespace asivamosffie.services
             Plantilla plantilla = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Descargar_Acta).ToString()).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
 
             plantilla.Contenido = await ReemplazarDatosPlantillaActa(plantilla.Contenido, comiteTecnico);
-            return ConvertirPDF(plantilla);
+            //return ConvertirPDF(plantilla);
+            return Helpers.PDF.Convertir(plantilla);
         }
 
         private async Task<string> ReemplazarDatosPlantillaActa(string strContenido, ComiteTecnico pComiteTecnico)
