@@ -46,12 +46,9 @@ namespace asivamosffie.services
                 .Include(r => r.Contratacion)
                 .ThenInclude(r => r.Contrato)
                 .FirstOrDefault();
-
-            // contratacionProyecto.Contratacion.Contrato.FirstOrDefault().fecha
-
-            if (contratacionProyecto.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
-            {
-
+             
+            if (contratacionProyecto.Contratacion.TipoSolicitudCodigo == ConstantCodigoEstadoProyecto.Disponible)
+            { 
                 CantidadDias = contratacionProyecto.Proyecto.PlazoMesesObra ?? 0;
                 CantidadDias *= 30;
                 CantidadDias += contratacionProyecto.Proyecto.PlazoDiasObra.HasValue ? (int)contratacionProyecto.Proyecto.PlazoDiasObra : 0;
@@ -72,10 +69,7 @@ namespace asivamosffie.services
 
                 if (CantidadDias % 7 == 1)
                     CantidadSemanas = (CantidadDias / 7) + 1;
-            }
-
-
-
+            } 
             return CantidadSemanas;
         }
 

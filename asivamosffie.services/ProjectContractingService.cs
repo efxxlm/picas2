@@ -526,29 +526,34 @@ namespace asivamosffie.services
             //estado de registro “Completo”, que tienen viabilidad jurídica y técnica
             List<ProyectoGrilla> ListProyectoGrilla = new List<ProyectoGrilla>();
             List<Proyecto> ListProyectos = new List<Proyecto>();
-
+             
             ListProyectos =
-                 _context.Proyecto.Where(
-                                                r => !(bool)r.Eliminado
-                                             && r.EstadoJuridicoCodigo == ConstantCodigoEstadoJuridico.Aprobado
-                                             && (bool)r.RegistroCompleto
-                                             && (
-                                                 r.EstadoProyectoObraCodigo == ConstantCodigoEstadoProyecto.Disponible ||
-                                                 r.EstadoProyectoInterventoriaCodigo == ConstantCodigoEstadoProyecto.Disponible
-                                                 ) 
-                                            && r.TipoIntervencionCodigo == (string.IsNullOrEmpty(pTipoIntervencion) ? r.TipoIntervencionCodigo : pTipoIntervencion) 
-                                            && r.LlaveMen.Contains((string.IsNullOrEmpty(pLlaveMen) ? r.LlaveMen : pLlaveMen)) 
-                                            && r.LocalizacionIdMunicipio == (string.IsNullOrEmpty(pMunicipio) ? r.LocalizacionIdMunicipio : pMunicipio) 
-                                            && r.InstitucionEducativaId == (pIdInstitucionEducativa > 0 ? pIdInstitucionEducativa : r.InstitucionEducativaId) 
-                                            && r.SedeId == (pIdSede > 0 ? pIdSede : r.SedeId)
-                                       )
-                                         .Include(r => r.ContratacionProyecto)
-                                            .ThenInclude(r => r.Contratacion)
-                                         .Include(r => r.Sede)
-                                         .Include(r => r.InstitucionEducativa)
-                                         .Include(r => r.LocalizacionIdMunicipioNavigation)
-                                         .Distinct()
-                                                   .ToList();
+                     _context.Proyecto.Where(
+                                                    r => !(bool)r.Eliminado
+                                                 && r.EstadoJuridicoCodigo == ConstantCodigoEstadoJuridico.Aprobado
+                                                 && (bool)r.RegistroCompleto
+                                                 && (
+                                                     r.EstadoProyectoObraCodigo == ConstantCodigoEstadoProyecto.Disponible ||
+                                                     r.EstadoProyectoObraCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteTecnico ||
+                                                     r.EstadoProyectoObraCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteFiduciario ||
+
+                                                     r.EstadoProyectoInterventoriaCodigo == ConstantCodigoEstadoProyecto.Disponible ||
+                                                     r.EstadoProyectoInterventoriaCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteTecnico ||
+                                                     r.EstadoProyectoInterventoriaCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteFiduciario  
+                                                     )
+                                                && r.TipoIntervencionCodigo == (string.IsNullOrEmpty(pTipoIntervencion) ? r.TipoIntervencionCodigo : pTipoIntervencion)
+                                                && r.LlaveMen.Contains((string.IsNullOrEmpty(pLlaveMen) ? r.LlaveMen : pLlaveMen))
+                                                && r.LocalizacionIdMunicipio == (string.IsNullOrEmpty(pMunicipio) ? r.LocalizacionIdMunicipio : pMunicipio)
+                                                && r.InstitucionEducativaId == (pIdInstitucionEducativa > 0 ? pIdInstitucionEducativa : r.InstitucionEducativaId)
+                                                && r.SedeId == (pIdSede > 0 ? pIdSede : r.SedeId)
+                                           )
+                                             .Include(r => r.ContratacionProyecto)
+                                                .ThenInclude(r => r.Contratacion)
+                                             .Include(r => r.Sede)
+                                             .Include(r => r.InstitucionEducativa)
+                                             .Include(r => r.LocalizacionIdMunicipioNavigation)
+                                             .Distinct()
+                                                       .ToList();
 
             List<Localicacion> Municipios = new List<Localicacion>();
 
@@ -565,13 +570,13 @@ namespace asivamosffie.services
             }
             if (Municipios.Count() > 0)
                 ListProyectos.RemoveAll(item => !Municipios.Select(r => r.LocalizacionId).Contains(item.LocalizacionIdMunicipio));
-              
+
             List<Dominio> ListTipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion && (bool)r.Activo).ToList();
 
             List<Localizacion> ListDepartamentos = _context.Localizacion.Where(r => r.Nivel == (int)ConstanCodigoTipoNivelLocalizacion.Departamento).ToList();
 
             List<Localizacion> ListRegiones = _context.Localizacion.Where(r => r.Nivel == (int)ConstanCodigoTipoNivelLocalizacion.Region).ToList();
-             
+
             foreach (var proyecto in ListProyectos)
             {
                 if (!string.IsNullOrEmpty(proyecto.TipoIntervencionCodigo))
