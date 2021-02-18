@@ -123,7 +123,7 @@ namespace asivamosffie.services
                     proyectoCambiarEstadoEliminado.UsuarioModificacion = pUsusarioElimino;
                     proyectoCambiarEstadoEliminado.FechaModificacion = DateTime.Now;
 
-                    if ( contratacionOld.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
+                    if (contratacionOld.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
                         proyectoCambiarEstadoEliminado.EstadoProyectoInterventoriaCodigo = ConstantCodigoEstadoProyecto.Disponible;
 
                     if (contratacionOld.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
@@ -531,10 +531,12 @@ namespace asivamosffie.services
 
                 ListProyectos =
                      _context.Proyecto.Where(
-                         r => !(bool)r.Eliminado &&
-                         r.EstadoJuridicoCodigo == ConstantCodigoEstadoJuridico.Aprobado
+                          r => (r.EstadoProyectoObraCodigo == ConstantCodigoEstadoProyecto.Disponible ||
+                         r.EstadoProyectoInterventoriaCodigo == ConstantCodigoEstadoProyecto.Disponible)
+                         && !(bool)r.Eliminado
+                         && r.EstadoJuridicoCodigo == ConstantCodigoEstadoJuridico.Aprobado
+                         && (bool)r.RegistroCompleto
                          &&
-                         (bool)r.RegistroCompleto &&
                          //Se quitan los proyectos que ya esten vinculados a una contratacion 
                          r.TipoIntervencionCodigo == (string.IsNullOrEmpty(pTipoIntervencion) ? r.TipoIntervencionCodigo : pTipoIntervencion) &&
                          r.LlaveMen == (string.IsNullOrEmpty(pLlaveMen) ? r.LlaveMen : pLlaveMen) &&
@@ -571,11 +573,11 @@ namespace asivamosffie.services
                     {
                         if (ContratacionProyecto.Contratacion.EstadoSolicitudCodigo != ConstanCodigoEstadoSolicitudContratacion.Rechazado)
                             ListaProyectosRemover.Add(Proyecto);
-                        else
-                        {
-                            if (Proyecto.ContratacionProyecto.Where(r => r.ProyectoId == Proyecto.ProyectoId).Count() > 1)
-                                ListaProyectosRemover.Add(Proyecto);
-                        }
+                        //else
+                        //{
+                        //    if (Proyecto.ContratacionProyecto.Where(r => r.ProyectoId == Proyecto.ProyectoId).Count() > 1)
+                        //        ListaProyectosRemover.Add(Proyecto);
+                        //}
                     }
                 }
                 foreach (var proyecto in ListaProyectosRemover.Distinct())
@@ -646,12 +648,12 @@ namespace asivamosffie.services
 
             try
             {
-
                 //Contratista 
                 /* if (Pcontratacion.Contratista != null)
                      await CreateEditContratista(Pcontratacion.Contratista, true);
                      */
-                //ContratacionProyecto 
+                //ContratacionProyecto  
+
                 foreach (var ContratacionProyecto in Pcontratacion.ContratacionProyecto)
                 {
                     ContratacionProyecto.UsuarioCreacion = Pcontratacion.UsuarioCreacion;
@@ -1275,7 +1277,7 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                    //Si se seleccionan obra o interventoria se creas nos solicitudes
+                    //Si se seleccionan obra o interventoria se crean Dos solicitudes
                     pContratacion.TipoSolicitudCodigo = ConstanCodigoTipoContratacion.Obra.ToString();
                     Contratacion contratacionObra = await CreateContratacion(pContratacion, usuarioCreacion);
 
