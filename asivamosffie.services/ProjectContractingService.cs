@@ -570,8 +570,8 @@ namespace asivamosffie.services
                 {
                     foreach (var ContratacionProyecto in Proyecto.ContratacionProyecto.Where(r => !(bool)r.Eliminado))
                     {
-                        if (ContratacionProyecto.Contratacion.EstadoSolicitudCodigo != ConstanCodigoEstadoSolicitudContratacion.Rechazado)
-                            ListaProyectosRemover.Add(Proyecto);
+                        //if (ContratacionProyecto.Contratacion.EstadoSolicitudCodigo != ConstanCodigoEstadoSolicitudContratacion.Rechazado)
+                        //    ListaProyectosRemover.Add(Proyecto);
                         //else
                         //{
                         //    if (Proyecto.ContratacionProyecto.Where(r => r.ProyectoId == Proyecto.ProyectoId).Count() > 1)
