@@ -231,13 +231,20 @@ namespace asivamosffie.services
                 List<ComiteTecnico> ListComiteTecnico = await _context.ComiteTecnico
                                                                               .Where(r => r.ComiteTecnicoId == comiteTecnicoId)
                                                                                     .Include(r => r.SesionComentario)
-                                                                                    .Include(r => r.SesionComiteTema).ThenInclude(r => r.TemaCompromiso)
-                                                                                    .Include(r => r.SesionParticipante).ThenInclude(r => r.Usuario)
-                                                                                    .Include(r => r.SesionComiteTecnicoCompromiso).ThenInclude(r => r.CompromisoSeguimiento)
-                                                                                    .Include(r => r.SesionComiteSolicitudComiteTecnico).ThenInclude(r => r.SesionSolicitudVoto)
-                                                                                    .Include(r => r.SesionComiteSolicitudComiteTecnico).ThenInclude(r => r.SesionSolicitudCompromiso)
-                                                                                    .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario).ThenInclude(r => r.SesionSolicitudCompromiso)
-                                                                                    .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario).ThenInclude(r => r.SesionSolicitudVoto)
+                                                                                    .Include(r => r.SesionComiteTema)
+                                                                                        .ThenInclude(r => r.TemaCompromiso)
+                                                                                    //.Include(r => r.SesionParticipante)
+                                                                                    //    .ThenInclude(r => r.Usuario)
+                                                                                    .Include(r => r.SesionComiteTecnicoCompromiso)
+                                                                                        .ThenInclude(r => r.CompromisoSeguimiento)
+                                                                                    .Include(r => r.SesionComiteSolicitudComiteTecnico)
+                                                                                        .ThenInclude(r => r.SesionSolicitudVoto)
+                                                                                    .Include(r => r.SesionComiteSolicitudComiteTecnico)
+                                                                                        .ThenInclude(r => r.SesionSolicitudCompromiso)
+                                                                                    .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
+                                                                                        .ThenInclude(r => r.SesionSolicitudCompromiso)
+                                                                                    .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
+                                                                                        .ThenInclude(r => r.SesionSolicitudVoto)
                                                                                     .ToListAsync();
 
                 List<Dominio> ListParametricas = _context.Dominio.ToList();
@@ -246,6 +253,8 @@ namespace asivamosffie.services
 
                 foreach (var item in ListComiteTecnico)
                 {
+                    List<VSesionParticipante> listaParticipantes = _context.VSesionParticipante.Where(r => r.ComiteTecnicoId == item.ComiteTecnicoId).ToList();
+
                     if (item.SesionComiteTecnicoCompromiso.Count() > 0)
                     {
                         item.SesionComiteTecnicoCompromiso = item.SesionComiteTecnicoCompromiso.Where(r => !(bool)r.Eliminado).ToList();
@@ -275,7 +284,30 @@ namespace asivamosffie.services
                             SesionComiteTema.EstadoTemaCodigo = ListParametricas
                                 .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Sesion_Comite_Solicitud && r.Codigo == SesionComiteTema.EstadoTemaCodigo)
                                 .FirstOrDefault().Nombre;
-                        } 
+                        }
+
+                        SesionComiteTema.TemaCompromiso.ToList().ForEach(tc =>
+                       {
+                           SesionParticipante participante = new SesionParticipante();
+                           participante.Usuario = new Usuario();
+
+                           VSesionParticipante vSesionParticipante = listaParticipantes.Where(r => r.SesionParticipanteId == tc.Responsable).FirstOrDefault();
+
+                           if (vSesionParticipante != null)
+                           {
+                               participante.SesionParticipanteId = vSesionParticipante.SesionParticipanteId;
+                               participante.ComiteTecnicoId = vSesionParticipante.ComiteTecnicoId;
+                               participante.UsuarioId = vSesionParticipante.UsuarioId;
+                               participante.Eliminado = vSesionParticipante.Eliminado;
+
+                               participante.Usuario.UsuarioId = vSesionParticipante.UsuarioId;
+                               participante.Usuario.Nombres = vSesionParticipante.Nombres;
+                               participante.Usuario.Apellidos = vSesionParticipante.Apellidos;
+                               participante.Usuario.NumeroIdentificacion = vSesionParticipante.NumeroIdentificacion;
+
+                               tc.ResponsableNavigation = participante;
+                           }
+                       });
                     }
                     foreach (var SesionComiteSolicitudComiteTecnico in item.SesionComiteSolicitudComiteTecnico)
                     {
