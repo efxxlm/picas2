@@ -531,15 +531,14 @@ namespace asivamosffie.services
 
                 ListProyectos =
                      _context.Proyecto.Where(
-                          r => (r.EstadoProyectoObraCodigo == ConstantCodigoEstadoProyecto.Disponible ||
-                         r.EstadoProyectoInterventoriaCodigo == ConstantCodigoEstadoProyecto.Disponible)
-                         && !(bool)r.Eliminado
+                          r => !(bool)r.Eliminado
                          && r.EstadoJuridicoCodigo == ConstantCodigoEstadoJuridico.Aprobado
                          && (bool)r.RegistroCompleto
-                         &&
-                         //Se quitan los proyectos que ya esten vinculados a una contratacion 
-                         r.TipoIntervencionCodigo == (string.IsNullOrEmpty(pTipoIntervencion) ? r.TipoIntervencionCodigo : pTipoIntervencion) &&
-                         r.LlaveMen == (string.IsNullOrEmpty(pLlaveMen) ? r.LlaveMen : pLlaveMen) &&
+                         && (r.EstadoProyectoObraCodigo == ConstantCodigoEstadoProyecto.Disponible ||
+                         r.EstadoProyectoInterventoriaCodigo == ConstantCodigoEstadoProyecto.Disponible)
+                        //Se quitan los proyectos que ya esten vinculados a una contratacion 
+                        && r.TipoIntervencionCodigo == (string.IsNullOrEmpty(pTipoIntervencion) ? r.TipoIntervencionCodigo : pTipoIntervencion) &&
+                         r.LlaveMen.Contains((string.IsNullOrEmpty(pLlaveMen) ? r.LlaveMen : pLlaveMen)) &&
                          r.LocalizacionIdMunicipio == (string.IsNullOrEmpty(pMunicipio) ? r.LocalizacionIdMunicipio : pMunicipio) &&
                          r.InstitucionEducativaId == (pIdInstitucionEducativa > 0 ? pIdInstitucionEducativa : r.InstitucionEducativaId) &&
                          r.SedeId == (pIdSede > 0 ? pIdSede : r.SedeId)
