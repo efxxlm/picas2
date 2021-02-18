@@ -136,8 +136,10 @@ namespace asivamosffie.services
                     .Include(r => r.Contratacion)
                     .FirstOrDefault();
 
-                if (contratoOld.ModalidadCodigo != null)
+                if (!string.IsNullOrEmpty(pContrato.ModalidadCodigo))
                     contratoOld.ModalidadCodigo = pContrato.ModalidadCodigo;
+             
+                contratoOld.ModalidadCodigo = pContrato.ModalidadCodigo;
                 //contratacion
                 Contratacion contratacionOld = _context.Contratacion.Find(contratoOld.ContratacionId);
 
