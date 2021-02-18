@@ -592,7 +592,7 @@ namespace asivamosffie.services
 
                 List<Localizacion> ListRegiones = _context.Localizacion.Where(r => r.Nivel == (int)ConstanCodigoTipoNivelLocalizacion.Region).ToList();
 
-                List<Contratacion> ListContratacion = _context.Contratacion.Where(r => !(bool)r.Eliminado).ToList();
+                //List<Contratacion> ListContratacion = _context.Contratacion.Where(r => !(bool)r.Eliminado).ToList();
 
                 foreach (var proyecto in ListProyectos)
                 {
@@ -615,7 +615,7 @@ namespace asivamosffie.services
                             };
                             foreach (var item in proyecto.ContratacionProyecto.Where(r => !(bool)r.Eliminado))
                             {
-                                item.Contratacion = ListContratacion.Where(r => r.ContratacionId == item.ContratacionId).FirstOrDefault();
+                                // item.Contratacion = ListContratacion.Where(r => r.ContratacionId == item.ContratacionId).FirstOrDefault();
                                 if (!string.IsNullOrEmpty(item.Contratacion.TipoSolicitudCodigo))
                                 {
                                     if (item.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
@@ -1254,20 +1254,20 @@ namespace asivamosffie.services
             int idAccionCrearContratacionProyecto = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Proyecto, (int)EnumeratorTipoDominio.Acciones);
 
             try
-            { 
+            {
                 if (pContratacion.TipoSolicitudCodigo != ConstanCodigoTipoContratacion.Obra_Interventoria.ToString())
                 {
                     Contratacion contratacion = await CreateContratacion(pContratacion, usuarioCreacion);
 
                     return new Respuesta
-                     {
-                         IsSuccessful = true,
-                         IsException = false,
-                         IsValidation = true,
-                         Code = ConstantMessagesContratacionProyecto.OperacionExitosa,
-                         Data = contratacion,
-                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Contratacion_Proyecto, ConstantMessagesContratacionProyecto.OperacionExitosa, idAccionCrearContratacionProyecto, usuarioCreacion, "CREAR CONTRATACION PROYECTO")
-                     };
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = true,
+                        Code = ConstantMessagesContratacionProyecto.OperacionExitosa,
+                        Data = contratacion,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Contratacion_Proyecto, ConstantMessagesContratacionProyecto.OperacionExitosa, idAccionCrearContratacionProyecto, usuarioCreacion, "CREAR CONTRATACION PROYECTO")
+                    };
 
                 }
                 else
