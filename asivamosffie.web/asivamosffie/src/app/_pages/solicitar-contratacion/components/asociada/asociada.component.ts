@@ -1,3 +1,4 @@
+import { CommonService, Dominio } from './../../../../core/_services/common/common.service';
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
@@ -27,22 +28,43 @@ export interface TableElement {
 export class AsociadaComponent implements OnInit {
 
   solicitudAsociada: FormControl;
-  solicitudAsociadaArray = [
-    { name: 'Obra', value: '1' },
-    { name: 'Interventoría', value: '2' }
-  ];
+  solicitudAsociadaArray: Dominio[] = [];
+  listaTipoSolicitud = {
+    obraCodigo: '1',
+    interventoriaCodigo: '2'
+  }
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private projectContactingService: ProjectContractingService,
     private dialogRef: MatDialogRef<AsociadaComponent>,
+    private commonSvc: CommonService,
     public dialog: MatDialog,
-    public router: Router
-  ) {
-
+    public router: Router )
+  {
   }
   ngOnInit(): void {
     this.declararInput();
+    this.commonSvc.listaTipoSolicitudAsociada()
+      .subscribe( response => {
+        this.solicitudAsociadaArray = response;
+
+        if ( this.data.tieneInterventoria === true ) {
+          this.solicitudAsociadaArray.forEach( ( solicitud, index ) => {
+            if ( solicitud.codigo === this.listaTipoSolicitud.interventoriaCodigo ) {
+              this.solicitudAsociadaArray.splice( index, 1 );
+            }
+          } );
+        }
+    
+        if ( this.data.tieneObra === true ) {
+          this.solicitudAsociadaArray.forEach( ( solicitud, index ) => {
+            if ( solicitud.codigo === this.listaTipoSolicitud.obraCodigo ) {
+              this.solicitudAsociadaArray.splice( index, 1 );
+            }
+          } );
+        }
+      } );
   }
 
   private declararInput() {
