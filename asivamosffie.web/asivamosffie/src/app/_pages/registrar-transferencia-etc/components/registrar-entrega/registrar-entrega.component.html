@@ -1,0 +1,65 @@
+<section class="container">
+  <div class="text-right">
+    <a routerLink="../../" mat-button color="primary" class="btn-regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar" />
+    </a>
+  </div>
+  <div class="text-center">
+    <h1 class="title-menu--h1">Registrar entrega LL457326</h1>
+    <p class="colorMainColor mt-05em">
+      Número de contrato:
+      <b> N801801 </b>
+    </p>
+  </div>
+
+  <div>
+    <p class="info-container text-center">
+      <span class="info-text sin-diligenciar">Sin diligenciar</span>
+      <span class="info-text en-proceso">En proceso</span>
+      <span class="info-text completo">Completo</span>
+    </p>
+
+    <mat-accordion>
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header">
+          <mat-panel-title
+            class="expansion-style--title"
+            [class.sin-diligenciar]="true"
+            [class.en-proceso]="false"
+            [class.completo]="false"
+          >
+            Recorrido de la obra
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-form-recorrido-obra></app-form-recorrido-obra>
+
+      </mat-expansion-panel>
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header">
+          <mat-panel-title
+            class="expansion-style--title"
+            [class.sin-diligenciar]="true"
+            [class.en-proceso]="false"
+            [class.completo]="false"
+          >
+            Remisión a ETC de documentos técnicos a la ETC
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-form-remision></app-form-remision>
+      </mat-expansion-panel>
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header">
+          <mat-panel-title
+            class="expansion-style--title"
+            [class.sin-diligenciar]="true"
+            [class.en-proceso]="false"
+            [class.completo]="false"
+          >
+            Acta de entrega de bienes y servicios
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-form-acta-entrega-bienes-y-servicios></app-form-acta-entrega-bienes-y-servicios>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+</section>

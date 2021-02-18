@@ -302,6 +302,11 @@ const routes: Routes = [
           .then( module => module.ValidarInformeDelProyectoModule )
       },
       {
+        path: 'registrarTransferenciaProyectosETC',
+        loadChildren: () => import( './_pages/registrar-transferencia-etc/registrar-transferencia-etc.module' )
+          .then( module => module.RegistrarTransferenciaEtcModule )
+      },
+      {
         path: 'validarCumplimientoInformeFinalProyecto',
         loadChildren: () => import( './_pages/validar-cumplimiento-informe-final-proyecto/validar-cumplimiento-informe-final-proyecto.module' )
           .then( module => module.ValidarCumplimientoInformeFinalProyectoModule )
