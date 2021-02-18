@@ -136,20 +136,27 @@ namespace asivamosffie.services
                     .Include(r => r.Contratacion)
                     .FirstOrDefault();
 
+                //ACTUALIZAR CONTRATACIÓN
+                DateTime? FechaTramite = contratoOld.Contratacion.FechaTramite;
+
+                if (FechaTramite == null)
+                    FechaTramite = DateTime.Now;
+
+                _context.Set<Contratacion>().Where(c => c.ContratacionId == contratoOld.ContratacionId)
+                                                   .Update(c => new Contratacion
+                                                   {
+                                                       FechaTramite = DateTime.Now,
+                                                       EstadoSolicitudCodigo = pEstadoCodigo,
+                                                       UsuarioModificacion = pContrato.UsuarioCreacion,
+                                                       FechaModificacion = DateTime.Now
+                                                   });
+
+
                 if (!string.IsNullOrEmpty(pContrato.ModalidadCodigo))
                     contratoOld.ModalidadCodigo = pContrato.ModalidadCodigo;
-             
+
                 contratoOld.ModalidadCodigo = pContrato.ModalidadCodigo;
-                //contratacion
-                Contratacion contratacionOld = _context.Contratacion.Find(contratoOld.ContratacionId);
-
-                if (!contratacionOld.FechaTramite.HasValue)
-                    contratacionOld.FechaTramite = DateTime.Now;
-
-                contratacionOld.EstadoSolicitudCodigo = pEstadoCodigo;
-                contratacionOld.UsuarioModificacion = pContrato.UsuarioCreacion;
-                contratacionOld.FechaModificacion = DateTime.Now;
-
+                  
                 if (!string.IsNullOrEmpty(pContrato.NumeroContrato))
                     contratoOld.NumeroContrato = pContrato.NumeroContrato;
 
