@@ -90,7 +90,7 @@
                             Consultar / Editar actualizaciones
                         </button>
                         <button mat-raised-button color="accent" class="btn-table"
-                            *ngIf="element.estadoControversiaCodigo=='10'"
+                            *ngIf="element.estadoControversiaCodigo=='10' && element.sePuedeCerrar==true"
                             (click)="this.cerrarTramite(element.controversiaContractualId)">
                             Cerrar trámite
                         </button>
@@ -157,7 +157,7 @@
                             Consultar / Editar actualizaciones
                         </button>
                         <button mat-raised-button color="accent" class="btn-table"
-                            *ngIf="element.estadoControversiaCodigo=='4'"
+                            *ngIf="element.estadoControversiaCodigo=='4' && element.sePuedeCerrar==true"
                             (click)="this.cerrarTramiteNoTAI(element.controversiaContractualId)">
                             Cerrar Tramite
                         </button>
