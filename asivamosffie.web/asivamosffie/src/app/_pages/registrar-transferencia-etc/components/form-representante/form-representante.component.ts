@@ -4,33 +4,23 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
-  selector: 'app-form-recorrido-obra',
-  templateUrl: './form-recorrido-obra.component.html',
-  styleUrls: ['./form-recorrido-obra.component.scss']
+  selector: 'app-form-representante',
+  templateUrl: './form-representante.component.html',
+  styleUrls: ['./form-representante.component.scss']
 })
-export class FormRecorridoObraComponent implements OnInit {
+export class FormRepresentanteComponent implements OnInit {
+
   addressForm = this.fb.group({
-    fechaRecorrido: [null, Validators.required],
-    cuantosRepresentantes: [null, Validators.compose([Validators.required, Validators.maxLength(2)])],
-    fechaFirma: [null, Validators.required],
-    urlActa: [null, Validators.required]
+    nombreApellidos: [null, Validators.required],
+    cargo: [null, Validators.required],
+    dependenciaETC: [null, Validators.required]
   });
 
   estaEditando = false;
 
-  validateNumberKeypress(event: KeyboardEvent) {
-    const alphanumeric = /[0-9]/;
-    const inputChar = String.fromCharCode(event.charCode);
-    return alphanumeric.test(inputChar) ? true : false;
-  }
-
   constructor(private fb: FormBuilder, public dialog: MatDialog) {}
 
   ngOnInit(): void {}
-
-  arrayOne(n: number): any[] {
-    return Array(n);
-  }
 
   openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {

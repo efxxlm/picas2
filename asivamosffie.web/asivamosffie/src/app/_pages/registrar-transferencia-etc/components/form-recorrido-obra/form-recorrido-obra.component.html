@@ -206,3 +206,23 @@
     </button>
   </div>
 </form>
+
+<mat-accordion class="animatedDown" *ngIf="addressForm.get('cuantosRepresentantes').value">
+  <mat-expansion-panel
+    class="expansion-style sub-expansion"
+    *ngFor="let representante of arrayOne(addressForm.get('cuantosRepresentantes').value); let i = index"
+  >
+    <mat-expansion-panel-header class="expansion-style--header">
+      <mat-panel-title
+        class="expansion-style--title"
+        [class.sin-diligenciar]="true"
+        [class.en-proceso]="false"
+        [class.completo]="false"
+      >
+        Representante {{ i + 1 }}
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <app-form-representante></app-form-representante>
+  </mat-expansion-panel>
+</mat-accordion>

@@ -1,0 +1,134 @@
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+  <mat-card class="shipping-card">
+    <mat-card-content>
+      <div class="row">
+        <div class="pr-1">
+          <label
+            class="label-left"
+            for="nombreApellidos"
+            [class.color-secondaryColor]="
+              (addressForm.get('nombreApellidos').invalid && addressForm.get('nombreApellidos').touched) ||
+              (addressForm.get('nombreApellidos').invalid && estaEditando)
+            "
+          >
+            Nombre y apellidos
+          </label>
+        </div>
+        <div class="col d-flex">
+          <mat-form-field class="full-width">
+            <input matInput type="text" #nombreApellidos formControlName="nombreApellidos" maxlength="100" required />
+          </mat-form-field>
+          <span
+            class="contador"
+            [matTooltipPosition]="'above'"
+            matTooltip="Campo numérico"
+            matTooltipClass="info-tooltip"
+          >
+            {{ 100 - nombreApellidos.value.length }}
+          </span>
+          <span class="icon-incompleto">
+            <img
+              class="icon-incompleto--img"
+              src="assets/img/icon/incompleto.svg"
+              alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
+              *ngIf="
+                (addressForm.get('nombreApellidos').invalid && addressForm.get('nombreApellidos').touched) ||
+                (addressForm.get('nombreApellidos').invalid && estaEditando)
+              "
+            />
+          </span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="pr-1">
+          <label
+            class="label-left"
+            for="cargo"
+            [class.color-secondaryColor]="
+              (addressForm.get('cargo').invalid && addressForm.get('cargo').touched) ||
+              (addressForm.get('cargo').invalid && estaEditando)
+            "
+          >
+            Cargo
+          </label>
+        </div>
+        <div class="col d-flex">
+          <mat-form-field class="full-width">
+            <input matInput type="text" #cargo formControlName="cargo" maxlength="100" required />
+          </mat-form-field>
+          <span
+            class="contador"
+            [matTooltipPosition]="'above'"
+            matTooltip="Campo numérico"
+            matTooltipClass="info-tooltip"
+          >
+            {{ 100 - cargo.value.length }}
+          </span>
+          <span class="icon-incompleto">
+            <img
+              class="icon-incompleto--img"
+              src="assets/img/icon/incompleto.svg"
+              alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
+              *ngIf="
+                (addressForm.get('cargo').invalid && addressForm.get('cargo').touched) ||
+                (addressForm.get('cargo').invalid && estaEditando)
+              "
+            />
+          </span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="pr-1">
+          <label
+            class="label-left"
+            for="dependenciaETC"
+            [class.color-secondaryColor]="
+              (addressForm.get('dependenciaETC').invalid && addressForm.get('dependenciaETC').touched) ||
+              (addressForm.get('dependenciaETC').invalid && estaEditando)
+            "
+          >
+            Dependencia de la ETC
+          </label>
+        </div>
+        <div class="col d-flex">
+          <mat-form-field class="full-width">
+            <input matInput type="text" #dependenciaETC formControlName="dependenciaETC" maxlength="100" required />
+          </mat-form-field>
+          <span
+            class="contador"
+            [matTooltipPosition]="'above'"
+            matTooltip="Campo numérico"
+            matTooltipClass="info-tooltip"
+          >
+            {{ 100 - dependenciaETC.value.length }}
+          </span>
+          <span class="icon-incompleto">
+            <img
+              class="icon-incompleto--img"
+              src="assets/img/icon/incompleto.svg"
+              alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
+              *ngIf="
+                (addressForm.get('dependenciaETC').invalid && addressForm.get('dependenciaETC').touched) ||
+                (addressForm.get('dependenciaETC').invalid && estaEditando)
+              "
+            />
+          </span>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <div class="text-center">
+    <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="addressForm.invalid">
+      <img src="assets/img/icon/guardar.svg" alt="Guardar" />
+    </button>
+  </div>
+</form>

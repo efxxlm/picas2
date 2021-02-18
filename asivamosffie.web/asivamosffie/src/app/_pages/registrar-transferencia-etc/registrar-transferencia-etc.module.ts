@@ -12,6 +12,7 @@ import { RegistrarEntregaComponent } from './components/registrar-entrega/regist
 import { FormRecorridoObraComponent } from './components/form-recorrido-obra/form-recorrido-obra.component';
 import { FormRemisionComponent } from './components/form-remision/form-remision.component';
 import { FormActaEntregaBienesYServiciosComponent } from './components/form-acta-entrega-bienes-y-servicios/form-acta-entrega-bienes-y-servicios.component';
+import { FormRepresentanteComponent } from './components/form-representante/form-representante.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { FormActaEntregaBienesYServiciosComponent } from './components/form-acta
     RegistrarEntregaComponent,
     FormRecorridoObraComponent,
     FormRemisionComponent,
-    FormActaEntregaBienesYServiciosComponent
+    FormActaEntregaBienesYServiciosComponent,
+    FormRepresentanteComponent
   ],
   imports: [
     CommonModule,
