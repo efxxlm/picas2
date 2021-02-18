@@ -102,7 +102,7 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
         "rutaSoporte":this.addressForm.value.urlSoporte,
         };
       this.services.CreateEditarReclamacion(arrayReclam).subscribe((data:any)=>{
-        this.services.CambiarEstadoActuacionSeguimiento(this.controversiaAct,'2').subscribe((data:any)=>{
+        this.services.CambiarEstadoActuacionReclamacion(this.controversiaAct,'2').subscribe((data:any)=>{
           
         });
         this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
@@ -118,7 +118,7 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
         "rutaSoporte":this.addressForm.value.urlSoporte,
         };
       this.services.CreateEditarReclamacion(arrayReclam).subscribe((data:any)=>{
-        this.services.CambiarEstadoActuacionSeguimiento(this.controversiaAct,'2').subscribe((data:any)=>{
+        this.services.CambiarEstadoActuacionReclamacion(this.controversiaAct,'2').subscribe((data:any)=>{
           
         });
         this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
