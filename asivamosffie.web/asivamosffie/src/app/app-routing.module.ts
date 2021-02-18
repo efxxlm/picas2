@@ -413,6 +413,11 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/registrar-liquidacion-contrato/registrar-liquidacion-contrato.module')
         .then(m => m.RegistrarLiquidacionContratoModule)
       },
+      {
+        path: 'gestionarTramiteLiquidacionContractual',
+        loadChildren: () => import('./_pages/gestionar-tramite-liq-contractual/gestionar-tramite-liq-contractual.module')
+        .then(m => m.GestionarTramiteLiqContractualModule)
+      },
     ]
 
   },
