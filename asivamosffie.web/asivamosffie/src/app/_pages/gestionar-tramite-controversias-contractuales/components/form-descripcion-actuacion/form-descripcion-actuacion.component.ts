@@ -223,6 +223,13 @@ export class FormDescripcionActuacionComponent implements OnInit {
     }
     this.services.CreateEditControversiaOtros(actuacionTaiArray).subscribe((data: any) => {
       if(data.isSuccessful==true){
+        this.services.CambiarEstadoActuacionSeguimiento(data.data.controversiaActuacionId,"1").subscribe((data:any)=>{
+        });
+        /*
+        this.services.CambiarEstadoControversiaActuacion(data.data.controversiaActuacionId,"1").subscribe((a:any)=>{
+
+        });
+        */
         this.openDialog("",`<b>${ data.message }</b>`);
         this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
       }
