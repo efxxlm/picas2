@@ -178,11 +178,11 @@ namespace asivamosffie.services
 
                     foreach (var SeguimientoDiario in seguimientoSemanal.SeguimientoDiario)
                     {
-                        SeguimientoDiario.CausaIndisponibilidadMaterialCodigo = !string.IsNullOrEmpty(SeguimientoDiario.CausaIndisponibilidadMaterialCodigo) ? CausaBajaDisponibilidadMaterial.Where(r => r.Codigo == SeguimientoDiario.CausaIndisponibilidadMaterialCodigo).FirstOrDefault().Nombre : "---";
+                        SeguimientoDiario.CausaBajaDisponibilidadMaterialNombre = !string.IsNullOrEmpty(SeguimientoDiario.CausaIndisponibilidadMaterialCodigo) ? CausaBajaDisponibilidadMaterial.Where(r => r.Codigo == SeguimientoDiario.CausaIndisponibilidadMaterialCodigo).FirstOrDefault().Nombre : "---";
 
-                        SeguimientoDiario.CausaIndisponibilidadEquipoCodigo = !string.IsNullOrEmpty(SeguimientoDiario.CausaIndisponibilidadEquipoCodigo) ? CausaBajaDisponibilidadEquipo.Where(r => r.Codigo == SeguimientoDiario.CausaIndisponibilidadEquipoCodigo).FirstOrDefault().Nombre : "---";
+                        SeguimientoDiario.CausaBajaDisponibilidadEquipoNombre = !string.IsNullOrEmpty(SeguimientoDiario.CausaIndisponibilidadEquipoCodigo) ? CausaBajaDisponibilidadEquipo.Where(r => r.Codigo == SeguimientoDiario.CausaIndisponibilidadEquipoCodigo).FirstOrDefault().Nombre : "---";
 
-                        SeguimientoDiario.CausaIndisponibilidadProductividadCodigo = !string.IsNullOrEmpty(SeguimientoDiario.CausaIndisponibilidadProductividadCodigo) ? CausaBajaDisponibilidadProductividad.Where(r => r.Codigo == SeguimientoDiario.CausaIndisponibilidadProductividadCodigo).FirstOrDefault().Nombre : "---";
+                        SeguimientoDiario.CausaBajaDisponibilidadProductividadNombre = !string.IsNullOrEmpty(SeguimientoDiario.CausaIndisponibilidadProductividadCodigo) ? CausaBajaDisponibilidadProductividad.Where(r => r.Codigo == SeguimientoDiario.CausaIndisponibilidadProductividadCodigo).FirstOrDefault().Nombre : "---";
                     }
 
                     //Crear Comite Obra numerador
@@ -448,7 +448,11 @@ namespace asivamosffie.services
             }
 
         }
-
+        /// <summary>
+        /// Bitacora
+        /// </summary>
+        /// <param name="pContratacionProyectoId"></param>
+        /// <returns></returns>
         public async Task<List<dynamic>> GetListSeguimientoSemanalByContratacionProyectoId(int pContratacionProyectoId)
         {
             List<SeguimientoSemanal> ListseguimientoSemanal = await _context.SeguimientoSemanal
@@ -1776,6 +1780,7 @@ namespace asivamosffie.services
             if (gestionObraCalidadEnsayoLaboratorio != null)
             {
                 gestionObraCalidadEnsayoLaboratorio.Eliminado = true;
+
                 foreach (var EnsayoLaboratorioMuestra in gestionObraCalidadEnsayoLaboratorio.EnsayoLaboratorioMuestra)
                 {
                     EnsayoLaboratorioMuestra.Eliminado = true;
