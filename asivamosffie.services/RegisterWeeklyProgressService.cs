@@ -170,7 +170,7 @@ namespace asivamosffie.services
                     seguimientoSemanal.SeguimientoSemanalObservacion = null;
                      
                     if (seguimientoSemanal.SeguimientoSemanalAvanceFisico.Count() > 0)
-                        seguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo = !string.IsNullOrEmpty(seguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo) ? EstadoDeObraSeguimientoSemanal.Where(r => r.Codigo == seguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo).FirstOrDefault().Nombre : "Sin estado obra";
+                        seguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraNombre = !string.IsNullOrEmpty(seguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo) ? EstadoDeObraSeguimientoSemanal.Where(r => r.Codigo == seguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo).FirstOrDefault().Nombre : "Sin estado obra";
 
                     List<Dominio> CausaBajaDisponibilidadMaterial = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Causa_Baja_Disponibilidad_Material).ToList();
 
@@ -332,7 +332,7 @@ namespace asivamosffie.services
 
                     seguimientoSemanal.SeguimientoSemanalObservacion = null;
                     if (seguimientoSemanal.SeguimientoSemanalAvanceFisico.Count() > 0)
-                        seguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo = !string.IsNullOrEmpty(seguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo) ? EstadoDeObraSeguimientoSemanal.Where(r => r.Codigo == seguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo).FirstOrDefault().Nombre : "Sin estado obra";
+                        seguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraNombre = !string.IsNullOrEmpty(seguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo) ? EstadoDeObraSeguimientoSemanal.Where(r => r.Codigo == seguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo).FirstOrDefault().Nombre : "Sin estado obra";
 
                     List<Dominio> CausaBajaDisponibilidadMaterial = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Causa_Baja_Disponibilidad_Material).ToList();
 
