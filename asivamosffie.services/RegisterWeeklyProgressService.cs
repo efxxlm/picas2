@@ -497,24 +497,23 @@ namespace asivamosffie.services
                         strCodigoEstadoMuestas = ListEstadoSeguimientoSemanal.Where(r => r.Codigo == item.EstadoMuestrasCodigo).FirstOrDefault().Nombre;
                     else
                         strCodigoEstadoMuestas = "Sin iniciar";
-
-
-
-
-
-                    bool? RegistroCompletoMuestrasVerificar = RegistroCompletoMuestrasVerificar = item.SeguimientoSemanalGestionObra?
+                     
+                    bool? RegistroCompletoMuestrasVerificar  = 
+                         item.SeguimientoSemanalGestionObra?
                         .FirstOrDefault()?.SeguimientoSemanalGestionObraCalidad?
                         .FirstOrDefault()?.GestionObraCalidadEnsayoLaboratorio?
-                        .FirstOrDefault()?.EnsayoLaboratorioMuestra?.FirstOrDefault()?.RegistroCompletoObservacionApoyo;
+                        .FirstOrDefault()?.EnsayoLaboratorioMuestra?
+                        .FirstOrDefault()?.RegistroCompletoObservacionApoyo;
 
                     if (RegistroCompletoMuestrasVerificar == null)
                         RegistroCompletoMuestrasVerificar = false;
-
-
-                    bool? RegistroCompletoMuestrasValidar = RegistroCompletoMuestrasValidar = item.SeguimientoSemanalGestionObra?
+                     
+                    bool? RegistroCompletoMuestrasValidar  = 
+                         item.SeguimientoSemanalGestionObra?
                         .FirstOrDefault()?.SeguimientoSemanalGestionObraCalidad?
                         .FirstOrDefault()?.GestionObraCalidadEnsayoLaboratorio?
-                        .FirstOrDefault()?.EnsayoLaboratorioMuestra?.FirstOrDefault()?.RegistroCompletoObservacionApoyo;
+                        .FirstOrDefault()?.EnsayoLaboratorioMuestra?
+                        .FirstOrDefault()?.RegistroCompletoObservacionApoyo;
                     if (RegistroCompletoMuestrasValidar == null)
                         RegistroCompletoMuestrasValidar = false;
 
