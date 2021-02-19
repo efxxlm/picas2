@@ -25,7 +25,7 @@
             </div>
         </div>
     </div>
-    <div class="d-flex align-items-center mtop" *ngIf="addressForm.get('requiereTrasladoRecursos').value === true">
+    <div class="d-flex align-items-center mtop animatedDown" *ngIf="addressForm.get('requiereTrasladoRecursos').value === true">
         <div class="text-area-quill izqTitle helperWidthText" [class.color-secondaryColor]="
             (addressForm.get('justificacionTraslado').invalid && addressForm.get('justificacionTraslado').touched) ||
             (addressForm.get('justificacionTraslado').invalid && estaEditando)
@@ -54,7 +54,7 @@
             " />
         </span>
     </div>
-    <div class="row" *ngIf="addressForm.get('requiereTrasladoRecursos').value === true">
+    <div class="row animatedDown" *ngIf="addressForm.get('requiereTrasladoRecursos').value === true">
         <div class="pr-1">
             <label for="urlSoporte" class="label-left" [class.color-secondaryColor]="
               (addressForm.get('urlSoporte').invalid && addressForm.get('urlSoporte').touched) ||
@@ -84,7 +84,7 @@
     </div>
 </form>
 <!--SOLO PARA EFECTOS DE MAQUETACIÓN-->
-<div class="text-center mb-3em mt-2em" *ngIf="addressForm.get('requiereTrasladoRecursos').value === true" >
+<div class="text-center mb-3em mt-2em animatedDown" *ngIf="addressForm.get('requiereTrasladoRecursos').value === true" >
     <a routerLink="/gestionarBalanceFinancieroTrasladoRecursos/registrarTraslado" mat-raised-button color="accent" class="btn-cargar-proyecto">Registrar traslado</a><br>  
 </div>
 <app-tabla-traslados-gbftrec *ngIf="addressForm.get('requiereTrasladoRecursos').value === true"></app-tabla-traslados-gbftrec>

@@ -44,7 +44,7 @@
         </mat-card-content>
     </mat-card>
 </form>
-<div *ngIf="this.myFilter.value!=null || this.myFilter2.value!=null">
+<div class="animatedDown" *ngIf="this.myFilter.value!=null || this.myFilter2.value!=null">
     <div class="d-flex align-items-center solbloq ml8 info-text en-alertaLibre mb-2em">
         Seleccione la orden de giro que requiere ajuste en la facturación
     </div>
@@ -90,7 +90,7 @@
     </div>
 </div>
 <!--Solo para efectos de maquetación-->
-<div *ngIf="this.idContrato!=null">
+<div *ngIf="this.idContrato!=null" class="animatedDown">
     <mat-card class="shipping-card var-main-gris">
         <mat-card-header class="header-card header-card--margin">
             <mat-card-title class="header-card--text textoGris">
