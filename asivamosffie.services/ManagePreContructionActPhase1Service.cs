@@ -226,7 +226,7 @@ namespace asivamosffie.services
 
                 ContratoOld.FechaActaInicioFase1 = pContrato.FechaActaInicioFase1;
                 ContratoOld.FechaTerminacion = pContrato.FechaTerminacion;
-                ContratoOld.EstadoActa = ConstanCodigoEstadoActaContrato.Con_acta_suscrita_y_cargada;
+                ContratoOld.EstadoActa = pContrato.EstadoActa;
 
                 _context.SaveChanges();
 
