@@ -21,8 +21,10 @@
             <input #buscar type="text" aria-label="Number" matInput [formControl]="numeroContrato"
               [matAutocomplete]="auto" required>
             <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-              <mat-option class="autocomplete" *ngFor="let option of filteredOptions | async" [value]="option">
-                {{option}}
+              <mat-option class="autocomplete"
+              (click)="seleccionAutocomplete(option)"
+               *ngFor="let option of filteredOptions | async"  [value]="option">
+               {{option}}
               </mat-option>
             </mat-autocomplete>
           </mat-form-field>
