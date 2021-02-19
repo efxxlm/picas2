@@ -739,7 +739,7 @@ namespace asivamosffie.services
 
             plantilla.Contenido = ReemplazarDatosDDP(plantilla.Contenido, disponibilidad,false);
             //return ConvertirPDF(plantilla);
-            return Helpers.PDF.Convertir(plantilla);
+            return Helpers.PDF.Convertir(plantilla, true);
         }
 
         private byte[] ConvertirPDF(Plantilla pPlantilla)
@@ -1584,7 +1584,7 @@ namespace asivamosffie.services
             string contenido = ReemplazarDatosDDP(plantilla.Contenido, disponibilidad, true);
             plantilla.Contenido = contenido;
             //return ConvertirPDF(plantilla);
-            return Helpers.PDF.Convertir(plantilla);
+            return Helpers.PDF.Convertir(plantilla, true);
         }
 
         private string getNombreAportante(CofinanciacionAportante confinanciacion)
