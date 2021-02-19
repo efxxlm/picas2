@@ -613,18 +613,23 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<Respuesta> SendFinalReportToSupervision(int pProyectoId, string pUsuario)
+        public async Task<Respuesta> SendFinalReportToSupervision(int pProyectoId, string pUsuario, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Enviar_A_supervisor_Informe_Final_Interventoria, (int)EnumeratorTipoDominio.Acciones);
 
             try
             {
-                InformeFinal informeFinal = _context.InformeFinal.Where(r => r.ProyectoId == pProyectoId).FirstOrDefault();
+                InformeFinal informeFinal = _context.InformeFinal.Where(r => r.ProyectoId == pProyectoId)
+                                                                 .Include(r => r.Proyecto)
+                                                                 .FirstOrDefault();
                 if (informeFinal != null)
                 {
+                    informeFinal.FechaEnvioApoyoSupervisor = DateTime.Now;
                     informeFinal.EstadoInforme = ConstantCodigoEstadoInformeFinal.Con_informe_enviado_para_validación;
                     informeFinal.UsuarioModificacion = pUsuario;
                     informeFinal.FechaModificacion = DateTime.Now;
+                    //Enviar Correo apoyo supervisor 5.1.1
+                    await EnviarCorreoApoyoSupervisor(informeFinal, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
                 }
 
                 _context.SaveChanges();
@@ -651,28 +656,66 @@ namespace asivamosffie.services
             }
         }
 
-        /*public async Task SendMailToSupervision(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
+        private async Task<bool> EnviarCorreoApoyoSupervisor(InformeFinal informeFinal, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
-            DateTime RangoFechaConDiasHabiles = await _commonService.CalculardiasLaborales(2, DateTime.Now);
+            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Apoyo).Include(y => y.Usuario);
 
-            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Apoyo || x.PerfilId == (int)EnumeratorPerfil.Tecnica).Include(y => y.Usuario);
+            Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificacionApoyoInformeFinal5_1_1);
 
-            Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.Alertas2DiasObraInterventoria318);
+            string template = TemplateRecoveryPassword.Contenido
+                .Replace("_LinkF_", pDominioFront)
+                .Replace("[LLAVE_MEN]", informeFinal.Proyecto.LlaveMen);
 
+            bool blEnvioCorreo = false;
+
+            foreach (var item in usuarios)
+            {
+                blEnvioCorreo = Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Verificar informe final", template, pSender, pPassword, pMailServer, pMailPort);
+            }
+            return blEnvioCorreo;
+        }
+
+        //Alerta 8-2 días plazo de entrega del informe al interventor
+        public async Task GetInformeFinalSinGestionar(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
+        {
+            DateTime RangoFechaCon8DiasHabiles = await _commonService.CalculardiasLaborales(22, DateTime.Now);// 8 días antes de que se cumpla el plazo
+            DateTime RangoFechaCon2DiasHabiles = await _commonService.CalculardiasLaborales(28, DateTime.Now);//2 días antes de que se cumpla el plazo
+
+            List<InformeFinal> informeFinal = _context.InformeFinal
+                .Where(r => r.EstadoInforme == ConstantCodigoEstadoInformeFinal.En_proceso_de_registro && r.FechaSuscripcion != null)
+                .Include(r => r.Proyecto)
+                .ToList();
+
+            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Interventor).Include(y => y.Usuario);
+            Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.Alerta8_2_Dias_Fecha_limite_informe_final);
+
+            foreach (var informe in informeFinal)
+            {
+
+                if (informeFinal.Count() > 0 && informe.FechaCreacion > RangoFechaCon2DiasHabiles)  
                 {
-                DateTime fechaValidacion = DateTime.Now;
+                    string template = TemplateRecoveryPassword.Contenido
+                                .Replace("_LinkF_", pDominioFront)
+                                .Replace("[LLAVE_MEN]", informe.Proyecto.LlaveMen)
+                                .Replace("[DIAS_HABILES]", "dos (2)");
+                    foreach (var item in usuarios)
+                    {
+                        Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Fecha límite de entrega del informe final", template, pSender, pPassword, pMailServer, pMailPort);
+                    }
 
-                        string template = TemplateRecoveryPassword.Contenido
-                                 .Replace("LinkF", pDominioFront)
-                                 //.Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
-                                 .Replace("[FECHA_REQUISITOS]", fechaValidacion.ToString("dd-MMMM-yy"))
-                                 //.Replace("[CANTIDAD_PROYECTOS]", contrato.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
-                        foreach (var item in usuarios)
-                        {
-                            Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Verificación y Aprobación de requisitos pendientes", template, pSender, pPassword, pMailServer, pMailPort);
-                        }
                 }
-
-        }*/
+                if (informeFinal.Count() > 0 && informe.FechaCreacion > RangoFechaCon8DiasHabiles)
+                {
+                    string template = TemplateRecoveryPassword.Contenido
+                                .Replace("_LinkF_", pDominioFront)
+                                .Replace("[LLAVE_MEN]", informe.Proyecto.LlaveMen)
+                                .Replace("[DIAS_HABILES]", "ocho (8)");
+                    foreach (var item in usuarios)
+                    {
+                        Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Fecha límite de entrega del informe final", template, pSender, pPassword, pMailServer, pMailPort);
+                    }
+                }
+            }
+        }
     }
 }

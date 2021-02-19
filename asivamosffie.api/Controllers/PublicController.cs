@@ -24,6 +24,8 @@ namespace asivamosffie.api.Controllers
         public readonly IOptions<AppSettings> _settings;
         public readonly IManagePreContructionActPhase1Service _managePreContructionActPhase1Service;
         public readonly IActBeginService _actBeginService;
+        public readonly IRegisterFinalReportService _RegisterFinalReportService;
+        public readonly IVerifyFinalReportService _VerifyFinalReportService;
 
         public PublicController(IManagePreContructionActPhase1Service managePreContructionActPhase1Service, IRegisterPreContructionPhase1Service registerPreContructionPhase1Service, IManagementCommitteeReportService managementCommitteeReportService, ISourceFundingService sourceFunding, ISelectionProcessService selectionProcess, IOptions<AppSettings> settings, IGuaranteePolicyService guaranteePolicy, IActBeginService actBeginService)
         {
@@ -228,6 +230,33 @@ namespace asivamosffie.api.Controllers
             {
                 AppSettingsService appSettingsService = ToAppSettingsService(_settings);
                 await _actBeginService.GetDiasHabilesActaRegistrada(appSettingsService);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        //5.1.1
+        [HttpGet("GetInformeFinalSinGestionar")]
+        public async Task GetInformeFinalSinGestionar()
+        {
+            try
+            {
+                await _RegisterFinalReportService.GetInformeFinalSinGestionar(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        //5.1.2
+        [HttpGet("GetInformeFinalNoEnviadoASupervisor")]
+        public async Task GetInformeFinalNoEnviadoASupervisor()
+        {
+            try
+            {
+                await _VerifyFinalReportService.GetInformeFinalNoEnviadoASupervisor(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
             }
             catch (Exception ex)
             {

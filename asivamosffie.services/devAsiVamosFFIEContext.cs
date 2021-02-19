@@ -220,7 +220,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValidarSeguimientoSemanal> VValidarSeguimientoSemanal { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -1223,7 +1222,6 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaTramite).HasColumnType("datetime");
 
                 entity.Property(e => e.ModalidadCodigo)
-                    .IsRequired()
                     .HasMaxLength(2)
                     .IsUnicode(false);
 
@@ -1439,8 +1437,6 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
-
-                entity.Property(e => e.Observaciones).IsRequired();
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
@@ -1664,6 +1660,8 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
+                entity.Property(e => e.EstadoCodigo).HasMaxLength(100);
+
                 entity.Property(e => e.FechaActuacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
@@ -1671,6 +1669,8 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaVencimiento).HasColumnType("datetime");
+
+                entity.Property(e => e.NumeroActuacion).HasMaxLength(100);
 
                 entity.Property(e => e.Observaciones)
                     .HasMaxLength(3000)
@@ -2828,6 +2828,8 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaAprobacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaEnvioApoyoSupervisor).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaEnvioSupervisor).HasColumnType("datetime");
 
