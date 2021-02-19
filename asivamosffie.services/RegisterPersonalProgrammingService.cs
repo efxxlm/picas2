@@ -302,7 +302,7 @@ namespace asivamosffie.services
 
                     foreach (var item in usuarios)
                     {
-                        Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Programación aprobada", template, pSender, pPassword, pMailServer, pMailPort);
+                        Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Programación de obra sin aprobación", template, pSender, pPassword, pMailServer, pMailPort);
                     }
                 }
             }
