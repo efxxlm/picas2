@@ -15,6 +15,8 @@ import { FormSoporteSolicitudComponent } from './components/form-soporte-solicit
 import { TablaSolicitudNovedadContractualComponent } from './components/tabla-solicitud-novedad-contractual/tabla-solicitud-novedad-contractual.component';
 import { VerDetalleComponent } from './components/ver-detalle/ver-detalle.component';
 import { TablaProyectosRegistrarNovedadComponent } from './components/tabla-proyectos-registrar-novedad/tabla-proyectos-registrar-novedad.component';
+import { FormRegistrarNovedadContratoComponent } from './components/form-registrar-novedad-contrato/form-registrar-novedad-contrato.component';
+import { AccordionNovedadesComponent } from './components/accordion-novedades/accordion-novedades.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,9 @@ import { TablaProyectosRegistrarNovedadComponent } from './components/tabla-proy
     FormSoporteSolicitudComponent,
     TablaSolicitudNovedadContractualComponent,
     VerDetalleComponent,
-    TablaProyectosRegistrarNovedadComponent
+    TablaProyectosRegistrarNovedadComponent,
+    FormRegistrarNovedadContratoComponent,
+    AccordionNovedadesComponent
   ],
   imports: [
     CommonModule,
