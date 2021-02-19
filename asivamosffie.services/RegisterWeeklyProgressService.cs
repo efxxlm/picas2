@@ -497,8 +497,8 @@ namespace asivamosffie.services
                         strCodigoEstadoMuestas = ListEstadoSeguimientoSemanal.Where(r => r.Codigo == item.EstadoMuestrasCodigo).FirstOrDefault().Nombre;
                     else
                         strCodigoEstadoMuestas = "Sin iniciar";
-                     
-                    bool? RegistroCompletoMuestrasVerificar  = 
+
+                    bool? RegistroCompletoMuestrasVerificar =
                          item.SeguimientoSemanalGestionObra?
                         .FirstOrDefault()?.SeguimientoSemanalGestionObraCalidad?
                         .FirstOrDefault()?.GestionObraCalidadEnsayoLaboratorio?
@@ -507,8 +507,8 @@ namespace asivamosffie.services
 
                     if (RegistroCompletoMuestrasVerificar == null)
                         RegistroCompletoMuestrasVerificar = false;
-                     
-                    bool? RegistroCompletoMuestrasValidar  = 
+
+                    bool? RegistroCompletoMuestrasValidar =
                          item.SeguimientoSemanalGestionObra?
                         .FirstOrDefault()?.SeguimientoSemanalGestionObraCalidad?
                         .FirstOrDefault()?.GestionObraCalidadEnsayoLaboratorio?
@@ -1641,6 +1641,11 @@ namespace asivamosffie.services
                         seguimientoSemanalGestionObraCalidadOld.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanalGestionObraCalidad(SeguimientoSemanalGestionObraCalidad);
 
                         seguimientoSemanalGestionObraCalidadOld.SeRealizaronEnsayosLaboratorio = SeguimientoSemanalGestionObraCalidad.SeRealizaronEnsayosLaboratorio;
+
+                        if (SeguimientoSemanalGestionObraCalidad.SeRealizaronEnsayosLaboratorio != false)
+                            EliminarGestionObraCalidadEnsayoLaboratorioAndEnsayoLaboratorioMuestra(SeguimientoSemanalGestionObraCalidad.SeguimientoSemanalGestionObraCalidadId);
+
+
                     }
                 }
 
@@ -1759,6 +1764,22 @@ namespace asivamosffie.services
                     }
                 }
                 seguimientoSemanalGestionObraOld.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanalGestionObra(pSeguimientoSemanalGestionObra);
+            }
+        }
+
+        private void EliminarGestionObraCalidadEnsayoLaboratorioAndEnsayoLaboratorioMuestra(int pSeguimientoSemanalGestionObraCalidadId)
+        {
+            GestionObraCalidadEnsayoLaboratorio gestionObraCalidadEnsayoLaboratorio = _context.GestionObraCalidadEnsayoLaboratorio
+                                              .Where(r => r.SeguimientoSemanalGestionObraCalidadId == pSeguimientoSemanalGestionObraCalidadId)
+                                              .Include(r => r.EnsayoLaboratorioMuestra).FirstOrDefault();
+
+            if (gestionObraCalidadEnsayoLaboratorio != null)
+            {
+                gestionObraCalidadEnsayoLaboratorio.Eliminado = true;
+                foreach (var EnsayoLaboratorioMuestra in gestionObraCalidadEnsayoLaboratorio.EnsayoLaboratorioMuestra)
+                {
+                    EnsayoLaboratorioMuestra.Eliminado = true;
+                } 
             }
         }
 
