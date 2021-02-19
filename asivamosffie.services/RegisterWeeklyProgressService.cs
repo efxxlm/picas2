@@ -107,6 +107,8 @@ namespace asivamosffie.services
             List<Dominio> TipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).ToList();
             List<InstitucionEducativaSede> ListInstitucionEducativaSede = _context.InstitucionEducativaSede.ToList();
             List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
+            List<Dominio> EstadoDeObraSeguimientoSemanal = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Obra_Avance_Semanal).ToList();
+
             try
             {
                 if (pContratacionProyectoId > 0)
@@ -159,16 +161,16 @@ namespace asivamosffie.services
                        .Include(r => r.SeguimientoSemanalGestionObra)
                            .ThenInclude(r => r.SeguimientoSemanalGestionObraAlerta)
 
-
                        .Include(r => r.SeguimientoSemanalReporteActividad)
-
                        .Include(r => r.SeguimientoSemanalRegistroFotografico)
-
                        .Include(r => r.SeguimientoSemanalRegistrarComiteObra)
 
                        .FirstOrDefaultAsync();
-
+                     
                     seguimientoSemanal.SeguimientoSemanalObservacion = null;
+                     
+                    if (seguimientoSemanal.SeguimientoSemanalAvanceFisico.Count() > 0)
+                        seguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo = !string.IsNullOrEmpty(seguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo) ? EstadoDeObraSeguimientoSemanal.Where(r => r.Codigo == seguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo).FirstOrDefault().Nombre : "Sin estado obra";
 
                     List<Dominio> CausaBajaDisponibilidadMaterial = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Causa_Baja_Disponibilidad_Material).ToList();
 
@@ -201,24 +203,17 @@ namespace asivamosffie.services
                             ManejoOtroId = seguimientoSemanal?.SeguimientoSemanalGestionObra?.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental?.FirstOrDefault().ManejoOtroId;
 
                             if (ManejoMaterialesInsumoId != null)
-                            {
                                 seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental.FirstOrDefault().ManejoMaterialesInsumo = _context.ManejoMaterialesInsumos.Include(r => r.ManejoMaterialesInsumosProveedor).Where(r => r.ManejoMaterialesInsumosId == ManejoMaterialesInsumoId).FirstOrDefault();
-                            }
 
                             if (ManejoResiduosConstruccionDemolicionId != null)
-                            {
                                 seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental.FirstOrDefault().ManejoResiduosConstruccionDemolicion = _context.ManejoResiduosConstruccionDemolicion.Include(r => r.ManejoResiduosConstruccionDemolicionGestor).Where(r => r.ManejoResiduosConstruccionDemolicionId == ManejoResiduosConstruccionDemolicionId).FirstOrDefault();
-                            }
 
                             if (ManejoResiduosPeligrososEspecialesId != null)
-                            {
                                 seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental.FirstOrDefault().ManejoResiduosPeligrososEspeciales = _context.ManejoResiduosPeligrososEspeciales.Find(ManejoResiduosPeligrososEspecialesId);
-                            }
 
                             if (ManejoOtroId != null)
-                            {
                                 seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental.FirstOrDefault().ManejoOtro = _context.ManejoOtro.Find(ManejoOtroId);
-                            }
+
                         }
                     }
 
@@ -336,6 +331,8 @@ namespace asivamosffie.services
                        .FirstOrDefaultAsync();
 
                     seguimientoSemanal.SeguimientoSemanalObservacion = null;
+                    if (seguimientoSemanal.SeguimientoSemanalAvanceFisico.Count() > 0)
+                        seguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo = !string.IsNullOrEmpty(seguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo) ? EstadoDeObraSeguimientoSemanal.Where(r => r.Codigo == seguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo).FirstOrDefault().Nombre : "Sin estado obra";
 
                     List<Dominio> CausaBajaDisponibilidadMaterial = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Causa_Baja_Disponibilidad_Material).ToList();
 
@@ -345,11 +342,11 @@ namespace asivamosffie.services
 
                     foreach (var SeguimientoDiario in seguimientoSemanal.SeguimientoDiario)
                     {
-                        SeguimientoDiario.CausaIndisponibilidadMaterialCodigo = !string.IsNullOrEmpty(SeguimientoDiario.CausaIndisponibilidadMaterialCodigo) ? CausaBajaDisponibilidadMaterial.Where(r => r.Codigo == SeguimientoDiario.CausaIndisponibilidadMaterialCodigo).FirstOrDefault().Nombre : "---";
+                        SeguimientoDiario.CausaBajaDisponibilidadMaterialNombre = !string.IsNullOrEmpty(SeguimientoDiario.CausaIndisponibilidadMaterialCodigo) ? CausaBajaDisponibilidadMaterial.Where(r => r.Codigo == SeguimientoDiario.CausaIndisponibilidadMaterialCodigo).FirstOrDefault().Nombre : "---";
 
-                        SeguimientoDiario.CausaIndisponibilidadEquipoCodigo = !string.IsNullOrEmpty(SeguimientoDiario.CausaIndisponibilidadEquipoCodigo) ? CausaBajaDisponibilidadEquipo.Where(r => r.Codigo == SeguimientoDiario.CausaIndisponibilidadEquipoCodigo).FirstOrDefault().Nombre : "---";
+                        SeguimientoDiario.CausaBajaDisponibilidadEquipoNombre = !string.IsNullOrEmpty(SeguimientoDiario.CausaIndisponibilidadEquipoCodigo) ? CausaBajaDisponibilidadEquipo.Where(r => r.Codigo == SeguimientoDiario.CausaIndisponibilidadEquipoCodigo).FirstOrDefault().Nombre : "---";
 
-                        SeguimientoDiario.CausaIndisponibilidadProductividadCodigo = !string.IsNullOrEmpty(SeguimientoDiario.CausaIndisponibilidadProductividadCodigo) ? CausaBajaDisponibilidadProductividad.Where(r => r.Codigo == SeguimientoDiario.CausaIndisponibilidadProductividadCodigo).FirstOrDefault().Nombre : "---";
+                        SeguimientoDiario.CausaBajaDisponibilidadProductividadNombre = !string.IsNullOrEmpty(SeguimientoDiario.CausaIndisponibilidadProductividadCodigo) ? CausaBajaDisponibilidadProductividad.Where(r => r.Codigo == SeguimientoDiario.CausaIndisponibilidadProductividadCodigo).FirstOrDefault().Nombre : "---";
                     }
 
                     //Crear Comite Obra numerador
@@ -368,24 +365,17 @@ namespace asivamosffie.services
                             ManejoOtroId = seguimientoSemanal?.SeguimientoSemanalGestionObra?.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental?.FirstOrDefault().ManejoOtroId;
 
                             if (ManejoMaterialesInsumoId != null)
-                            {
                                 seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental.FirstOrDefault().ManejoMaterialesInsumo = _context.ManejoMaterialesInsumos.Include(r => r.ManejoMaterialesInsumosProveedor).Where(r => r.ManejoMaterialesInsumosId == ManejoMaterialesInsumoId).FirstOrDefault();
-                            }
 
                             if (ManejoResiduosConstruccionDemolicionId != null)
-                            {
                                 seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental.FirstOrDefault().ManejoResiduosConstruccionDemolicion = _context.ManejoResiduosConstruccionDemolicion.Include(r => r.ManejoResiduosConstruccionDemolicionGestor).Where(r => r.ManejoResiduosConstruccionDemolicionId == ManejoResiduosConstruccionDemolicionId).FirstOrDefault();
-                            }
 
                             if (ManejoResiduosPeligrososEspecialesId != null)
-                            {
                                 seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental.FirstOrDefault().ManejoResiduosPeligrososEspeciales = _context.ManejoResiduosPeligrososEspeciales.Find(ManejoResiduosPeligrososEspecialesId);
-                            }
 
                             if (ManejoOtroId != null)
-                            {
                                 seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental.FirstOrDefault().ManejoOtro = _context.ManejoOtro.Find(ManejoOtroId);
-                            }
+
                         }
                     }
                     seguimientoSemanal.FlujoInversion = _context.FlujoInversion.Include(r => r.Programacion).Where(r => r.SeguimientoSemanalId == seguimientoSemanal.SeguimientoSemanalId && r.Programacion.TipoActividadCodigo == "C").ToList();
@@ -1796,7 +1786,7 @@ namespace asivamosffie.services
                                                                                             .Update(s => new SeguimientoSemanal
                                                                                             {
                                                                                                 EstadoMuestrasCodigo = ConstanCodigoEstadoSeguimientoSemanal.Sin_Muestras,
-                                                                                                RegistroCompletoMuestras = true 
+                                                                                                RegistroCompletoMuestras = true
                                                                                             });
 
 
