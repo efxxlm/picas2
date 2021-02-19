@@ -495,12 +495,18 @@ namespace asivamosffie.services
 
                     if (!string.IsNullOrEmpty(item.EstadoMuestrasCodigo))
                         strCodigoEstadoMuestas = ListEstadoSeguimientoSemanal.Where(r => r.Codigo == item.EstadoMuestrasCodigo).FirstOrDefault().Nombre;
+                    else
+                        strCodigoEstadoMuestas = "Sin iniciar";
+
+
+
+
 
                     bool? RegistroCompletoMuestrasVerificar = RegistroCompletoMuestrasVerificar = item.SeguimientoSemanalGestionObra?
                         .FirstOrDefault()?.SeguimientoSemanalGestionObraCalidad?
                         .FirstOrDefault()?.GestionObraCalidadEnsayoLaboratorio?
                         .FirstOrDefault()?.EnsayoLaboratorioMuestra?.FirstOrDefault()?.RegistroCompletoObservacionApoyo;
-                     
+
                     if (RegistroCompletoMuestrasVerificar == null)
                         RegistroCompletoMuestrasVerificar = false;
 
