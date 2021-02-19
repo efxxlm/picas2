@@ -78,9 +78,13 @@
           Rechazar solicitud
         </button>
         <a mat-button color="warn" mat-raised-button color="accent" class="btn-table"
-        [routerLink]="[ 'verDetalleSolicitudNovedadObra', element.id ]">
+        [routerLink]="[ 'verDetalleEditarSolicitudNovedadObra', element.id ]">
         Ver detalle/Editar
       </a>
+      <a mat-button color="warn" mat-raised-button color="accent" class="btn-table"
+      [routerLink]="[ 'verDetalleSolicitudNovedadObra', element.id ]">
+      Ver detalle
+    </a>
       <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button">
         Tramitar solicitud
       </button>
