@@ -56,7 +56,7 @@
         <button mat-raised-button
                 color="accent" 
                 class="btn-table"
-                *ngIf="element.verReportarSeguimientoSemanal === true && element.fechaUltimoReporte !== 'Sin registro'"
+                *ngIf="element.verReportarSeguimientoSemanal === true && element.fechaUltimoReporte !== 'Sin registro' && element.fechaModificacion === undefined"
                 [routerLink]="[ 'registroSeguimientoSemanal', element.contratacionProyectoId ]">
                 Registrar seguimiento semanal
         </button>
@@ -84,7 +84,7 @@
         <button mat-raised-button
                 color="accent" 
                 class="btn-table"
-                *ngIf="element.verReportarSeguimientoSemanal === true && element.fechaUltimoReporte === 'Sin registro'"
+                *ngIf="element.verReportarSeguimientoSemanal === true && element.fechaUltimoReporte === 'Sin registro' && element.fechaModificacion !== undefined"
                 [routerLink]="[ 'registroSeguimientoSemanal', element.contratacionProyectoId ]">
                 Ver detalle/Editar
         </button>
