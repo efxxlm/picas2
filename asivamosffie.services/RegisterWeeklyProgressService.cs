@@ -1647,7 +1647,7 @@ namespace asivamosffie.services
                         seguimientoSemanalGestionObraCalidadOld.SeRealizaronEnsayosLaboratorio = SeguimientoSemanalGestionObraCalidad.SeRealizaronEnsayosLaboratorio;
 
                         if (SeguimientoSemanalGestionObraCalidad.SeRealizaronEnsayosLaboratorio != false)
-                            EliminarGestionObraCalidadEnsayoLaboratorioAndEnsayoLaboratorioMuestra(SeguimientoSemanalGestionObraCalidad.SeguimientoSemanalGestionObraCalidadId);
+                            EliminarGestionObraCalidadEnsayoLaboratorioAndEnsayoLaboratorioMuestra(SeguimientoSemanalGestionObraCalidad.SeguimientoSemanalGestionObraCalidadId, pSeguimientoSemanalGestionObra.SeguimientoSemanalGestionObraId);
 
 
                     }
@@ -1771,7 +1771,7 @@ namespace asivamosffie.services
             }
         }
 
-        private void EliminarGestionObraCalidadEnsayoLaboratorioAndEnsayoLaboratorioMuestra(int pSeguimientoSemanalGestionObraCalidadId)
+        private void EliminarGestionObraCalidadEnsayoLaboratorioAndEnsayoLaboratorioMuestra(int pSeguimientoSemanalGestionObraCalidadId, int pSeguimientoSemanalGestionObraId)
         {
             GestionObraCalidadEnsayoLaboratorio gestionObraCalidadEnsayoLaboratorio = _context.GestionObraCalidadEnsayoLaboratorio
                                               .Where(r => r.SeguimientoSemanalGestionObraCalidadId == pSeguimientoSemanalGestionObraCalidadId)
@@ -1784,8 +1784,24 @@ namespace asivamosffie.services
                 foreach (var EnsayoLaboratorioMuestra in gestionObraCalidadEnsayoLaboratorio.EnsayoLaboratorioMuestra)
                 {
                     EnsayoLaboratorioMuestra.Eliminado = true;
-                } 
+                }
             }
+
+            //Pasar Registro Completo Ensayo Laboratorio Muestras
+            // Y estado Muestras = sin muestras
+            int SeguimientoSemanalId = _context.SeguimientoSemanalGestionObra.Find(pSeguimientoSemanalGestionObraId).SeguimientoSemanalId;
+
+            _context.Set<SeguimientoSemanal>()
+                                .Where(s => s.SeguimientoSemanalId == SeguimientoSemanalId)
+                                                                                            .Update(s => new SeguimientoSemanal
+                                                                                            {
+                                                                                                EstadoMuestrasCodigo = ConstanCodigoEstadoSeguimientoSemanal.Sin_Muestras,
+                                                                                                RegistroCompletoMuestras = true 
+                                                                                            });
+
+
+
+
         }
 
         private void SaveUpdateReporteActividades(SeguimientoSemanalReporteActividad pSeguimientoSemanalReporteActividad, string pUsuarioCreacion)
