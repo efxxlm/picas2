@@ -20,7 +20,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class TablaResultadosComponent implements OnInit {
 
   @Input() listaResultados: ProyectoGrilla[];
-  @Input() esMultiproyecto;
+  @Input() esMultiproyecto: boolean;
 
   displayedColumns: string[] = [
     'tipoInterventor',
@@ -98,6 +98,14 @@ export class TablaResultadosComponent implements OnInit {
 
     const tieneInterventoria = this.elementosSelecciondos.filter( registro => registro.tieneInterventoria === true );
     const tieneObra = this.elementosSelecciondos.filter( registro => registro.tieneObra === true );
+
+    if (this.esMultiproyecto === true ) {
+      if ( tieneInterventoria.length > 0 || tieneObra.length > 0 ) {
+        this.openDialog( '', '<b>Algunos de los proyectos seleccionados ya cuentan con solicitudes en trámite asociadas a obra o interventoría, por tal razon no puede continuar con esta solicitud.</b>' );
+        return;
+      }
+    }
+
     if ( tieneInterventoria.length > 0 && tieneObra.length > 0 ) {
       this.openDialog( '', '<b>Algunos de los proyectos seleccionados ya cuentan con solicitudes en trámite asociadas a obra o interventoría, por tal razon no puede continuar con esta solicitud.</b>' );
       return;

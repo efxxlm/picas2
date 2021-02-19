@@ -345,12 +345,7 @@
                   />
                 </mat-form-field>
                 <span class="contador">
-                  {{
-                    2 -
-                      (addressForm.get('mesPlazoEjFase2').value
-                        ? addressForm.get('mesPlazoEjFase1').value.toString().length
-                        : 0)
-                  }}
+                  {{ 2 - getSizeInput( addressForm.get('mesPlazoEjFase2').value ) }}
                 </span>
                 <span class="icon-incompleto">
                   <img
@@ -429,12 +424,13 @@
           >
             <label class="label-left" for="observacionesEspeciales">Observaciones o consideraciones especiales</label>
             <quill-editor
-              class="quill-editor-style card"
+              class="quill-editor-style card "
               [styles]="editorStyle"
               [modules]="config"
               (onContentChanged)="maxLength($event, 500)"
               formControlName="observacionesEspeciales"
               #observaciones
+              required
             >
             </quill-editor>
           </div>

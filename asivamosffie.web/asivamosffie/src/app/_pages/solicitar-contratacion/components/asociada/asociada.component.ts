@@ -79,11 +79,11 @@ export class AsociadaComponent implements OnInit {
   }
 
   validaciones(): string {
-    if (this.data.esMultiproyecto === 'true' && this.data.data.length < 2) {
+    if (this.data.esMultiproyecto === true && this.data.data.length < 2) {
       return '<b>Debe seleccionar por lo menos dos (2) proyectos</b>';
     }
 
-    if (this.data.esMultiproyecto === 'false' && this.data.data.length > 1) {
+    if (this.data.esMultiproyecto === false && this.data.data.length > 1) {
       return '<b>Puede seleccionar unicamente un (1) proyecto</b>';
     }
     return '';

@@ -194,7 +194,7 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-9" style="padding-left: 0px">
+            <div class="col-md-12" style="padding-left: 0px">
               <div class="row">
                 <div class="pr-1">
                   <label
@@ -429,6 +429,7 @@
                 [modules]="config"
                 (onContentChanged)="maxLength($event, 500)"
                 formControlName="observacionesEspeciales"
+                required
               >
               </quill-editor>
             </div>
