@@ -19,8 +19,10 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> UpdateStateApproveInformeFinalInterventoria(int pInformeFinalInterventoriaId, string code, string user);
         Task<Respuesta> CreateEditObservacionInformeFinal(InformeFinalObservaciones pObseravacion, bool tieneObservacion);
         Task<Respuesta> CreateEditInformeFinalInterventoriaObservacion(InformeFinalInterventoriaObservaciones pObservacion);
-        Task<Respuesta> SendFinalReportToInterventor(int pInformeFinalId, string pUsuario);
-        Task<Respuesta> SendFinalReportToFinalVerification(int pInformeFinalId, string pUsuario);
+        Task<Respuesta> SendFinalReportToInterventor(int pInformeFinalId, string pUsuario, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
+        Task<Respuesta> SendFinalReportToFinalVerification(int pInformeFinalId, string pUsuario, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
+        //alertas
+        Task GetInformeFinalNoEnviadoAGrupoNovedades(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
 
     }
 }

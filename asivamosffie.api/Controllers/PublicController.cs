@@ -26,6 +26,8 @@ namespace asivamosffie.api.Controllers
         public readonly IActBeginService _actBeginService;
         public readonly IRegisterFinalReportService _RegisterFinalReportService;
         public readonly IVerifyFinalReportService _VerifyFinalReportService;
+        public readonly IValidateFinalReportService _ValidateFinalReportService;
+        public readonly IValidateFulfilmentFinalReportService _ValidateFulfilmentFinalReportService;
 
         public PublicController(IManagePreContructionActPhase1Service managePreContructionActPhase1Service, IRegisterPreContructionPhase1Service registerPreContructionPhase1Service, IManagementCommitteeReportService managementCommitteeReportService, ISourceFundingService sourceFunding, ISelectionProcessService selectionProcess, IOptions<AppSettings> settings, IGuaranteePolicyService guaranteePolicy, IActBeginService actBeginService)
         {
@@ -257,6 +259,32 @@ namespace asivamosffie.api.Controllers
             try
             {
                 await _VerifyFinalReportService.GetInformeFinalNoEnviadoASupervisor(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        //5.1.3
+        [HttpGet("GetInformeFinalNoEnviadoAGrupoNovedades")]
+        public async Task GetInformeFinalNoEnviadoAGrupoNovedades()
+        {
+            try
+            {
+                await _ValidateFinalReportService.GetInformeFinalNoEnviadoAGrupoNovedades(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        //5.1.4
+        [HttpGet("GetInformeFinalNoCumplimiento")]
+        public async Task GetInformeFinalNoCumplimiento()
+        {
+            try
+            {
+                await _ValidateFulfilmentFinalReportService.GetInformeFinalNoCumplimiento(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
             }
             catch (Exception ex)
             {

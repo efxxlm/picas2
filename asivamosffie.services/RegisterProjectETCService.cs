@@ -280,5 +280,38 @@ namespace asivamosffie.services
                   };
             }
         }
+
+        //Alerta Acta bienes y servicios
+        /*public async Task GetInformeFinalActaBienesServicios(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
+        {
+            DateTime RangoFechaConDiasHabiles = await _commonService.CalculardiasLaborales(30, DateTime.Now);
+
+            List<InformeFinal> informeFinal = _context.InformeFinal
+                .Where(r => r.EstadoAprobacion == ConstantCodigoEstadoAprobacionInformeFinal.Enviado_verificacion_liquidacion_novedades && (String.IsNullOrEmpty(r.EstadoCumplimiento) || r.EstadoCumplimiento == ConstantCodigoEstadoCumplimientoInformeFinal.En_proceso_validacion_cumplimiento))
+                .Include(r => r.Proyecto)
+                .ToList();
+
+            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Supervisor || x.PerfilId == (int)EnumeratorPerfil.Tecnica).Include(y => y.Usuario);
+            Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.Alerta5DiasGrupoNovedades5_1_4);
+
+            foreach (var informe in informeFinal)
+            {
+
+                if (informeFinal.Count() > 0 && informe.FechaEnvioGrupoNovedades > RangoFechaConDiasHabiles)
+                {
+                    string template = TemplateRecoveryPassword.Contenido
+                                .Replace("_LinkF_", pDominioFront)
+                                .Replace("[LLAVE_MEN]", informe.Proyecto.LlaveMen)
+                                .Replace("[ESTADO_CUMPLIMIENTO]", String.IsNullOrEmpty(informe.EstadoCumplimiento) ? "Sin Validación" : await _commonService.GetNombreDominioByCodigoAndTipoDominio(informe.EstadoCumplimiento, 163))
+                                .Replace("[FECHA_ENVIO_NOVEDADES]", ((DateTime)informe.FechaEnvioGrupoNovedades).ToString("yyyy-MM-dd"));
+
+                    foreach (var item in usuarios)
+                    {
+                        Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Pendiente por revisión final. ", template, pSender, pPassword, pMailServer, pMailPort);
+                    }
+
+                }
+            }
+        }*/
     }
 }

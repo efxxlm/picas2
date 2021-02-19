@@ -687,7 +687,7 @@ namespace asivamosffie.services
 
                     foreach (var item in usuarios)
                     {
-                        Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "No se ha enviado informe Final para revisión del supervisor, ", template, pSender, pPassword, pMailServer, pMailPort);
+                        Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "No se ha enviado informe Final para revisión del supervisor", template, pSender, pPassword, pMailServer, pMailPort);
                     }
 
                 }           

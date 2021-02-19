@@ -56,5 +56,10 @@ namespace asivamosffie.services.Helpers.Enumerator
         Alerta8_2_Dias_Fecha_limite_informe_final = 66,
         NotificacionSupervisionInformeFinal5_1_2 = 67,
         Alerta5DiasEnvioSupervisor5_1_2 = 68,
+        NotificacionInterventorDevolucion5_1_3 = 69,
+        NotificacionGrupoNovedadesInformeFinal5_1_3 = 70,
+        Alerta5DiasEnvioGrupoNovedades5_1_3 = 71,
+        NotificacionSupervisorDevolucion5_1_4 = 72,
+        Alerta5DiasGrupoNovedades5_1_4 = 73,
     }
 }

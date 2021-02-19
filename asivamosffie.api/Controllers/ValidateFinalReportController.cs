@@ -160,13 +160,13 @@ namespace asivamosffie.api.Controllers
 
         [HttpPost]
         [Route("SendFinalReportToInterventor")]
-        public async Task<IActionResult> SendFinalReportToSupervision([FromQuery] int pProyectoId)
+        public async Task<IActionResult> SendFinalReportToInterventor([FromQuery] int pProyectoId)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
-                //pObservacion.UsuarioCreacion = "LCT";
-                respuesta = await _validateFinalReportService.SendFinalReportToInterventor(pProyectoId, HttpContext.User.FindFirst("User").Value);
+                respuesta = await _validateFinalReportService.SendFinalReportToInterventor(pProyectoId, HttpContext.User.FindFirst("User").Value, _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -183,8 +183,7 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                //pObservacion.UsuarioCreacion = "LCT";
-                respuesta = await _validateFinalReportService.SendFinalReportToFinalVerification(pProyectoId, HttpContext.User.FindFirst("User").Value);
+                respuesta = await _validateFinalReportService.SendFinalReportToFinalVerification(pProyectoId, HttpContext.User.FindFirst("User").Value, _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 return Ok(respuesta);
             }
             catch (Exception ex)

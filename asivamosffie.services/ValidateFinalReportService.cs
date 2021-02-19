@@ -528,13 +528,15 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<Respuesta> SendFinalReportToInterventor(int pProyectoId, string pUsuario)
+        public async Task<Respuesta> SendFinalReportToInterventor(int pProyectoId, string pUsuario, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Enviar_A_Interventor_Devolucion_Informe_Final, (int)EnumeratorTipoDominio.Acciones);
 
             try
             {
-                InformeFinal informeFinal = _context.InformeFinal.Where(r => r.ProyectoId == pProyectoId).FirstOrDefault();
+                InformeFinal informeFinal = _context.InformeFinal.Where(r => r.ProyectoId == pProyectoId)
+                                                                 .Include(r => r.Proyecto)
+                                                                 .FirstOrDefault();
                 if (informeFinal != null)
                 {
                     informeFinal.EstadoAprobacion = ConstantCodigoEstadoAprobacionInformeFinal.Devuelta_por_supervisor;
@@ -542,6 +544,10 @@ namespace asivamosffie.services
                     informeFinal.EstadoInforme = ConstantCodigoEstadoInformeFinal.Con_Observaciones_del_supervisor;
                     informeFinal.UsuarioModificacion = pUsuario;
                     informeFinal.FechaModificacion = DateTime.Now;
+
+                    //Enviar Correo a interventor 5.1.3
+                    await EnviarCorreoInterventor(informeFinal, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
+
                 }
 
                 _context.SaveChanges();
@@ -568,20 +574,27 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<Respuesta> SendFinalReportToFinalVerification(int pProyectoId, string pUsuario)
+        public async Task<Respuesta> SendFinalReportToFinalVerification(int pProyectoId, string pUsuario, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Enviar_Informe_Final_Ultima_Validacion, (int)EnumeratorTipoDominio.Acciones);
 
             try
             {
-                InformeFinal informeFinal = _context.InformeFinal.Where(r => r.ProyectoId == pProyectoId).FirstOrDefault();
+                InformeFinal informeFinal = _context.InformeFinal.Where(r => r.ProyectoId == pProyectoId)
+                                                                    .Include(r => r.Proyecto)
+                                                                    .FirstOrDefault();
+                
                 if (informeFinal != null)
                 {
                     informeFinal.EstadoAprobacion = ConstantCodigoEstadoAprobacionInformeFinal.Enviado_verificacion_liquidacion_novedades;
+                    informeFinal.FechaEnvioGrupoNovedades = DateTime.Now;
                     informeFinal.UsuarioModificacion = pUsuario;
                     informeFinal.FechaAprobacion = DateTime.Now;
                     informeFinal.FechaModificacion = DateTime.Now;
                 }
+
+                //Enviar Correo a grupo novedades liquidaciones 5.1.3
+                await EnviarCorreoGrupoNovedades(informeFinal, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
 
                 _context.SaveChanges();
 
@@ -618,6 +631,78 @@ namespace asivamosffie.services
             InformeFinalInterventoria informeFinalInterventoria = await _context.InformeFinalInterventoria.Where(r => r.InformeFinalInterventoriaId == pInformeFinalInterventoriaId).FirstOrDefaultAsync();
             //InformeFinal informeFinal = await _context.InformeFinal.Where(r => r.InformeFinalId == informeFinalInterventoria.InformeFinalId).FirstOrDefaultAsync();
              return await _context.InformeFinalInterventoriaObservaciones.Where(r => r.InformeFinalInterventoriaId == pInformeFinalInterventoriaId && r.EsSupervision == true).OrderByDescending(r => r.FechaCreacion).FirstOrDefaultAsync();
+        }
+
+        private async Task<bool> EnviarCorreoInterventor(InformeFinal informeFinal, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
+        {
+            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Interventor).Include(y => y.Usuario);
+
+            Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificacionInterventorDevolucion5_1_3);
+
+            string template = TemplateRecoveryPassword.Contenido
+                .Replace("_LinkF_", pDominioFront)
+                .Replace("[LLAVE_MEN]", informeFinal.Proyecto.LlaveMen);
+
+            bool blEnvioCorreo = false;
+
+            foreach (var item in usuarios)
+            {
+                blEnvioCorreo = Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Devolución por Supervisión - Informe Final", template, pSender, pPassword, pMailServer, pMailPort);
+            }
+            return blEnvioCorreo;
+        }
+
+        private async Task<bool> EnviarCorreoGrupoNovedades(InformeFinal informeFinal, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
+        {
+            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Tecnica).Include(y => y.Usuario);
+
+            Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificacionGrupoNovedadesInformeFinal5_1_3);
+
+            string template = TemplateRecoveryPassword.Contenido
+                .Replace("_LinkF_", pDominioFront)
+                .Replace("[LLAVE_MEN]", informeFinal.Proyecto.LlaveMen)
+                .Replace("[FECHA_VERIFICACION]", ((DateTime)informeFinal.FechaAprobacion).ToString("dd-MMM-yy"));
+
+            bool blEnvioCorreo = false;
+
+            foreach (var item in usuarios)
+            {
+                blEnvioCorreo = Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Validar informe final Grupo Novedades", template, pSender, pPassword, pMailServer, pMailPort);
+            }
+            return blEnvioCorreo;
+        }
+
+        //Alerta 5 días
+        public async Task GetInformeFinalNoEnviadoAGrupoNovedades(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
+        {
+            DateTime RangoFechaConDiasHabiles = await _commonService.CalculardiasLaborales(5, DateTime.Now);
+
+            List<InformeFinal> informeFinal = _context.InformeFinal
+                .Where(r => r.EstadoValidacion == ConstantCodigoEstadoValidacionInformeFinal.Con_informe_enviado_al_supervisor && r.EstadoAprobacion != ConstantCodigoEstadoAprobacionInformeFinal.Enviado_verificacion_liquidacion_novedades)
+                .Include(r => r.Proyecto)
+                .ToList();
+
+            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Apoyo || x.PerfilId == (int)EnumeratorPerfil.Supervisor).Include(y => y.Usuario);
+            Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.Alerta5DiasEnvioGrupoNovedades5_1_3);
+
+            foreach (var informe in informeFinal)
+            {
+
+                if (informeFinal.Count() > 0 && informe.FechaEnvioSupervisor > RangoFechaConDiasHabiles)
+                {
+                    string template = TemplateRecoveryPassword.Contenido
+                                .Replace("_LinkF_", pDominioFront)
+                                .Replace("[LLAVE_MEN]", informe.Proyecto.LlaveMen)
+                                .Replace("[ESTADO_APROBACION]", String.IsNullOrEmpty(informe.EstadoAprobacion) ? "Sin Validación" : await _commonService.GetNombreDominioByCodigoAndTipoDominio(informe.EstadoAprobacion, 161))
+                                .Replace("[FECHA_ENVIO_SUPERVISOR]", ((DateTime)informe.FechaEnvioSupervisor).ToString("yyyy-MM-dd"));
+
+                    foreach (var item in usuarios)
+                    {
+                        Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "No se ha enviado el informe Final para revisión final. ", template, pSender, pPassword, pMailServer, pMailPort);
+                    }
+
+                }
+            }
         }
     }
 }
