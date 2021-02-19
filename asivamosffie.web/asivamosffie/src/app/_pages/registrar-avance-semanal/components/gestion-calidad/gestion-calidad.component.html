@@ -118,6 +118,7 @@
                                                         [min]="seguimientoSemanal.fechaInicio"
                                                         [max]="seguimientoSemanal.fechaFin"
                                                         (click)="pickerfechaToma.open()"
+                                                        (ngModelChange)="getMaxDate( $event )"
                                                         readonly required>
                                                 <mat-datepicker #pickerfechaToma></mat-datepicker>
                                             </mat-form-field>
