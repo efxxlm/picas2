@@ -250,10 +250,11 @@ namespace asivamosffie.services
         {
             var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Supervisor || x.PerfilId == (int)EnumeratorPerfil.Apoyo).Include(y => y.Usuario);
             List<Dominio> ListTipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).ToList();
-            Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.Aprobado_Programacion_4_1_10);
+            Template TemplateRecoveryPassword = _context.Template.Find((int)enumeratorTemplate.Aprobado_Programacion_4_1_10);
 
             string template = TemplateRecoveryPassword.Contenido
                      .Replace("_LinkF_", pDominioFront)
+                     .Replace("[LLAVE_MEN]", pProyecto.LlaveMen)
                      .Replace("[NUMERO_CONTRATO]", pProyecto.ContratacionProyecto.FirstOrDefault().Contratacion.Contrato.FirstOrDefault().NumeroContrato)
                      .Replace("[INSTITUCION_EDUCATIVA]", pProyecto.InstitucionEducativa.Nombre)
                      .Replace("[SEDE]", pProyecto.Sede.Nombre)
@@ -262,36 +263,37 @@ namespace asivamosffie.services
 
             foreach (var item in usuarios)
             {
-                Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Programación aprobada", template, pSender, pPassword, pMailServer, pMailPort);
+                Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Aprobación de programación de obra", template, pSender, pPassword, pMailServer, pMailPort);
             }
         }
 
         /// <summary>
         /// Rutina 5 dias despues que se tiene acta y no se ha aprobado la programacion de obra
         /// </summary>
-        public  async Task TareaProgramada(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
+        public async Task TareaProgramada(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
             var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Supervisor || x.PerfilId == (int)EnumeratorPerfil.Apoyo).Include(y => y.Usuario);
 
             DateTime RangoFechaConDiasHabiles = await _commonService.CalculardiasLaborales(5, DateTime.Now);
             List<InstitucionEducativaSede> ListInstitucionEducativaSedes = _context.InstitucionEducativaSede.ToList();
             List<Dominio> ListTipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).ToList();
-            Template TemplateRecoveryPassword =  _context.Template.Find((int)enumeratorTemplate.Alerta_Automatica_5_Dias);
-          
+            Template TemplateRecoveryPassword = _context.Template.Find((int)enumeratorTemplate.Alerta_Automatica_5_Dias);
+
             List<Contrato> listContratos = _context.Contrato
                                                     .Where(c => c.FechaActaInicioFase2.HasValue && c.FechaActaInicioFase2 > RangoFechaConDiasHabiles)
                                                     .Include(r => r.Contratacion)
                                                         .ThenInclude(cp => cp.ContratacionProyecto)
                                                             .ThenInclude(t => t.Proyecto)
                                                                 .ThenInclude(r => r.InstitucionEducativa)
-                                                                                                        .ToList(); 
-             
+                                                                                                        .ToList();
+
             foreach (var pContrato in listContratos)
             {
                 foreach (var ContratacionProyecto in pContrato.Contratacion.ContratacionProyecto.Where(r => r.Proyecto.EstadoProgramacionCodigo != ConstanCodigoEstadoProgramacionInicial.Con_aprobacion_de_programacion_de_personal).ToList())
-                { 
+                {
                     string template = TemplateRecoveryPassword.Contenido
                            .Replace("_LinkF_", pDominioFront)
+                           .Replace("[LLAVE_MEN]", ContratacionProyecto.Proyecto.LlaveMen)
                            .Replace("[NUMERO_CONTRATO]", ContratacionProyecto.Contratacion.Contrato.FirstOrDefault().NumeroContrato)
                            .Replace("[INSTITUCION_EDUCATIVA]", ContratacionProyecto.Proyecto.InstitucionEducativa.Nombre)
                            .Replace("[SEDE]", ListInstitucionEducativaSedes.Where(r => r.InstitucionEducativaSedeId == (int)ContratacionProyecto.Proyecto.SedeId).FirstOrDefault().Nombre)
@@ -302,7 +304,7 @@ namespace asivamosffie.services
                     {
                         Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Programación aprobada", template, pSender, pPassword, pMailServer, pMailPort);
                     }
-                } 
+                }
             }
 
         }
