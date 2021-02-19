@@ -85,7 +85,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
   }
 
   ActualizarProyectos(lista) {
-    console.log(lista)
+    //console.log(lista)
     this.proyectos = lista;
   }
 
