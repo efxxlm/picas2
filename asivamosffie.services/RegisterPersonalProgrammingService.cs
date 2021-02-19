@@ -272,7 +272,11 @@ namespace asivamosffie.services
         /// </summary>
         public async Task TareaProgramada(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
-            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Supervisor || x.PerfilId == (int)EnumeratorPerfil.Apoyo).Include(y => y.Usuario);
+            var usuarios = _context.UsuarioPerfil
+                .Where(x => x.PerfilId == (int)EnumeratorPerfil.Supervisor
+                         || x.PerfilId == (int)EnumeratorPerfil.Apoyo
+                         || x.PerfilId == (int)EnumeratorPerfil.Interventor
+                         ).Include(y => y.Usuario);
 
             DateTime RangoFechaConDiasHabiles = await _commonService.CalculardiasLaborales(5, DateTime.Now);
             List<InstitucionEducativaSede> ListInstitucionEducativaSedes = _context.InstitucionEducativaSede.ToList();
