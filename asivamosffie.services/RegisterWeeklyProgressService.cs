@@ -7,7 +7,7 @@ using asivamosffie.services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Helpers.Enumerator;
-using asivamosffie.model.APIModels; 
+using asivamosffie.model.APIModels;
 using System.IO;
 using Z.EntityFramework.Plus;
 using DinkToPdf;
@@ -451,7 +451,9 @@ namespace asivamosffie.services
 
         public async Task<List<dynamic>> GetListSeguimientoSemanalByContratacionProyectoId(int pContratacionProyectoId)
         {
-            List<SeguimientoSemanal> ListseguimientoSemanal = await _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId)
+            List<SeguimientoSemanal> ListseguimientoSemanal = await _context.SeguimientoSemanal
+                                                                    .Where(r => r.ContratacionProyectoId == pContratacionProyectoId
+                                                                       && r.RegistroCompleto == true)
                                                                     .Include(r => r.ContratacionProyecto)
                                                                        .ThenInclude(r => r.Proyecto)
                                                                     .Include(r => r.ContratacionProyecto)
@@ -465,60 +467,79 @@ namespace asivamosffie.services
                                                                     .ToListAsync();
 
             List<dynamic> ListBitaCora = new List<dynamic>();
-            List<Dominio> ListEstadoObra = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Obra_Avance_Semanal).ToList();
-            List<Dominio> ListEstadoSeguimientoSemanal = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Reporte_Semanal_Y_Muestras).ToList();
 
-            int UltimaSemana = ListseguimientoSemanal.OrderBy(r => r.SeguimientoSemanalId).LastOrDefault().NumeroSemana;
-
-            foreach (var item in ListseguimientoSemanal.Where(r => r.RegistroCompleto == true))
+            try
             {
-                decimal? ProgramacionAcumulada = 0, AvanceFisico = 0;
-                string strCodigoEstadoObra = string.Empty;
-                string strCodigoEstadoMuestas = string.Empty;
-                if (item.SeguimientoSemanalAvanceFisico.Count() > 0)
+
+                List<Dominio> ListEstadoObra = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Obra_Avance_Semanal).ToList();
+                List<Dominio> ListEstadoSeguimientoSemanal = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Reporte_Semanal_Y_Muestras).ToList();
+
+                int UltimaSemana = ListseguimientoSemanal.OrderBy(r => r.SeguimientoSemanalId).LastOrDefault().NumeroSemana;
+
+                foreach (var item in ListseguimientoSemanal)
                 {
-                    if (item.SeguimientoSemanalAvanceFisico.FirstOrDefault().ProgramacionSemanal.HasValue)
-                        ProgramacionAcumulada = item.SeguimientoSemanalAvanceFisico.FirstOrDefault().ProgramacionSemanal;
+                    decimal? ProgramacionAcumulada = 0, AvanceFisico = 0;
+                    string strCodigoEstadoObra = string.Empty;
+                    string strCodigoEstadoMuestas = string.Empty;
+                    if (item.SeguimientoSemanalAvanceFisico.Count() > 0)
+                    {
+                        if (item.SeguimientoSemanalAvanceFisico.FirstOrDefault().ProgramacionSemanal.HasValue)
+                            ProgramacionAcumulada = item.SeguimientoSemanalAvanceFisico.FirstOrDefault().ProgramacionSemanal;
 
-                    if (item.SeguimientoSemanalAvanceFisico.FirstOrDefault().AvanceFisicoSemanal.HasValue)
-                        AvanceFisico = item.SeguimientoSemanalAvanceFisico.FirstOrDefault().AvanceFisicoSemanal;
+                        if (item.SeguimientoSemanalAvanceFisico.FirstOrDefault().AvanceFisicoSemanal.HasValue)
+                            AvanceFisico = item.SeguimientoSemanalAvanceFisico.FirstOrDefault().AvanceFisicoSemanal;
 
-                    if (!string.IsNullOrEmpty(item.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo))
-                        strCodigoEstadoObra = ListEstadoObra.Where(r => r.Codigo == item.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo).FirstOrDefault().Nombre;
+                        if (!string.IsNullOrEmpty(item.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo))
+                            strCodigoEstadoObra = ListEstadoObra.Where(r => r.Codigo == item.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo).FirstOrDefault().Nombre;
+                    }
+
+                    if (!string.IsNullOrEmpty(item.EstadoMuestrasCodigo))
+                        strCodigoEstadoMuestas = ListEstadoSeguimientoSemanal.Where(r => r.Codigo == item.EstadoMuestrasCodigo).FirstOrDefault().Nombre;
+
+                    bool? RegistroCompletoMuestrasVerificar = RegistroCompletoMuestrasVerificar = item.SeguimientoSemanalGestionObra?
+                        .FirstOrDefault()?.SeguimientoSemanalGestionObraCalidad?
+                        .FirstOrDefault()?.GestionObraCalidadEnsayoLaboratorio?
+                        .FirstOrDefault()?.EnsayoLaboratorioMuestra?.FirstOrDefault()?.RegistroCompletoObservacionApoyo;
+                     
+                    if (RegistroCompletoMuestrasVerificar == null)
+                        RegistroCompletoMuestrasVerificar = false;
+
+
+                    bool? RegistroCompletoMuestrasValidar = RegistroCompletoMuestrasValidar = item.SeguimientoSemanalGestionObra?
+                        .FirstOrDefault()?.SeguimientoSemanalGestionObraCalidad?
+                        .FirstOrDefault()?.GestionObraCalidadEnsayoLaboratorio?
+                        .FirstOrDefault()?.EnsayoLaboratorioMuestra?.FirstOrDefault()?.RegistroCompletoObservacionApoyo;
+                    if (RegistroCompletoMuestrasValidar == null)
+                        RegistroCompletoMuestrasValidar = false;
+
+                    ListBitaCora.Add(new
+                    {
+                        UltimoReporte = item.FechaModificacion,
+                        item.SeguimientoSemanalId,
+                        RegistroCompletoMuestras = item.RegistroCompletoMuestras.HasValue ? item.RegistroCompletoMuestras : false,
+                        item.NumeroSemana,
+                        UltimaSemana,
+                        item.FechaInicio,
+                        item.FechaFin,
+                        EstadoObra = strCodigoEstadoObra,
+                        ProgramacionAcumulada = Math.Truncate((decimal)ProgramacionAcumulada),
+                        AvanceFisico = Math.Truncate((decimal)AvanceFisico),
+                        EstadoRegistro = item.RegistroCompletoMuestras.HasValue ? item.RegistroCompletoMuestras : false,
+                        item.ContratacionProyecto?.Proyecto?.LlaveMen,
+                        item.ContratacionProyecto?.Contratacion?.Contrato?.FirstOrDefault()?.NumeroContrato,
+                        EstadoReporteSemanal = !string.IsNullOrEmpty(item.EstadoSeguimientoSemanalCodigo) ? ListEstadoSeguimientoSemanal.Where(r => r.Codigo == item.EstadoSeguimientoSemanalCodigo).FirstOrDefault().Nombre : "---",
+                        EstadoMuestrasReporteSemanal = strCodigoEstadoMuestas,
+
+                        RegistroCompletoMuestrasVerificar = RegistroCompletoMuestrasVerificar,
+                        RegistroCompletoMuestrasValidar = RegistroCompletoMuestrasValidar
+                    });
                 }
-
-                if (!string.IsNullOrEmpty(item.EstadoMuestrasCodigo))
-                    strCodigoEstadoMuestas = ListEstadoSeguimientoSemanal.Where(r => r.Codigo == item.EstadoMuestrasCodigo).FirstOrDefault().Nombre;
-
-                ListBitaCora.Add(new
-                {
-                    UltimoReporte = item.FechaModificacion,
-                    item.SeguimientoSemanalId,
-                    RegistroCompletoMuestras = item.RegistroCompletoMuestras,
-                    item.NumeroSemana,
-                    UltimaSemana,
-                    item.FechaInicio,
-                    item.FechaFin,
-                    EstadoObra = strCodigoEstadoObra,
-                    ProgramacionAcumulada = Math.Truncate((decimal)ProgramacionAcumulada),
-                    AvanceFisico = Math.Truncate((decimal)AvanceFisico),
-                    EstadoRegistro = item.RegistroCompletoMuestras.HasValue ? item.RegistroCompletoMuestras : false,
-                    item.ContratacionProyecto?.Proyecto?.LlaveMen,
-                    item.ContratacionProyecto?.Contratacion?.Contrato?.FirstOrDefault().NumeroContrato,
-                    EstadoReporteSemanal = !string.IsNullOrEmpty(item.EstadoSeguimientoSemanalCodigo) ? ListEstadoSeguimientoSemanal.Where(r => r.Codigo == item.EstadoSeguimientoSemanalCodigo).FirstOrDefault().Nombre : "---",
-                    EstadoMuestrasReporteSemanal = strCodigoEstadoMuestas,
-
-                    RegistroCompletoMuestrasVerificar = item.SeguimientoSemanalGestionObra?
-                    .FirstOrDefault().SeguimientoSemanalGestionObraCalidad?
-                    .FirstOrDefault().GestionObraCalidadEnsayoLaboratorio?
-                    .FirstOrDefault().EnsayoLaboratorioMuestra?.FirstOrDefault().RegistroCompletoObservacionApoyo,
-                    RegistroCompletoMuestrasValidar = item.SeguimientoSemanalGestionObra?
-                    .FirstOrDefault().SeguimientoSemanalGestionObraCalidad?
-                    .FirstOrDefault().GestionObraCalidadEnsayoLaboratorio?
-                    .FirstOrDefault().EnsayoLaboratorioMuestra?.FirstOrDefault().RegistroCompletoObservacionApoyo
-                });
+                return ListBitaCora;
             }
-            return ListBitaCora;
+            catch (Exception ex)
+            {
+                return ListBitaCora;
+            }
         }
         #endregion
 
@@ -2149,13 +2170,13 @@ namespace asivamosffie.services
         #endregion
 
         #endregion
-         
+
         #region Notificaciones Alertas 
 
 
         public void SendSeguimientoSemanalApoyoSupervision()
         {
-             
+
         }
 
         #endregion
