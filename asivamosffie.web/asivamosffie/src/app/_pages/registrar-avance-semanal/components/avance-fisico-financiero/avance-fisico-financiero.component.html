@@ -1,6 +1,6 @@
 <section class="text-center" *ngIf="esVerDetalle === false && seguimientoDiario !== undefined">
     <div class="colorMainColor">
-        <p>Estado de la obra: <b>Por integrar</b> </p>
+        <p>Estado de la obra: <b> {{ seguimientoDiario.seguimientoSemanalAvanceFisico.length > 0 ? seguimientoDiario.seguimientoSemanalAvanceFisico[ 0 ].estadoObraNombre : 'En ejecución' }} </b> </p>
     </div>
 
     <mat-accordion>
