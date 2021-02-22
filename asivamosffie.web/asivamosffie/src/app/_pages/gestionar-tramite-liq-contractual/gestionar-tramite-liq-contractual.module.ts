@@ -22,11 +22,14 @@ import { DetalleOgGtlcComponent } from './components/detalle-og-gtlc/detalle-og-
 import { TablaFacturadoOgGtlcComponent } from './components/tabla-facturado-og-gtlc/tabla-facturado-og-gtlc.component';
 import { TablaDescuentosOgGtlcComponent } from './components/tabla-descuentos-og-gtlc/tabla-descuentos-og-gtlc.component';
 import { TablaOtrosDescuentosOgGtlcComponent } from './components/tabla-otros-descuentos-og-gtlc/tabla-otros-descuentos-og-gtlc.component';
+import { EjecucionFinancieraGtlcComponent } from './components/ejecucion-financiera-gtlc/ejecucion-financiera-gtlc.component';
+import { TablaEjpresupuestalGtlcComponent } from './components/tabla-ejpresupuestal-gtlc/tabla-ejpresupuestal-gtlc.component';
+import { TablaEjfinancieraGtlcComponent } from './components/tabla-ejfinanciera-gtlc/tabla-ejfinanciera-gtlc.component';
 
 
 
 @NgModule({
-  declarations: [GestionarTramiteLiqContractualComponent, TablaLiquidacionObraGtlcComponent, TablaLiquidacionIntervnGtlcComponent, VerificarRequisitosGtlcComponent, ActualizacionPolizaGtlcComponent, TablaBalanceFinancieroGtlcComponent, VerificarBalanceGtlcComponent, RecursosComproPagadosGtlcComponent, AcordionRecursosComproPagadosGtlcComponent, ListaContratistasGtlcComponent, TablaValtotalOgGtlcComponent, TablaFuentesUsosGtlcComponent, DetalleOgGtlcComponent, TablaFacturadoOgGtlcComponent, TablaDescuentosOgGtlcComponent, TablaOtrosDescuentosOgGtlcComponent],
+  declarations: [GestionarTramiteLiqContractualComponent, TablaLiquidacionObraGtlcComponent, TablaLiquidacionIntervnGtlcComponent, VerificarRequisitosGtlcComponent, ActualizacionPolizaGtlcComponent, TablaBalanceFinancieroGtlcComponent, VerificarBalanceGtlcComponent, RecursosComproPagadosGtlcComponent, AcordionRecursosComproPagadosGtlcComponent, ListaContratistasGtlcComponent, TablaValtotalOgGtlcComponent, TablaFuentesUsosGtlcComponent, DetalleOgGtlcComponent, TablaFacturadoOgGtlcComponent, TablaDescuentosOgGtlcComponent, TablaOtrosDescuentosOgGtlcComponent, EjecucionFinancieraGtlcComponent, TablaEjpresupuestalGtlcComponent, TablaEjfinancieraGtlcComponent],
   imports: [
     CommonModule,
     GestionarTramiteLiqContractualRoutingModule,
