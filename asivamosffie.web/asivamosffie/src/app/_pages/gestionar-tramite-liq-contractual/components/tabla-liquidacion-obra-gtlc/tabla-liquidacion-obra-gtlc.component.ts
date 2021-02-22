@@ -23,7 +23,7 @@ export class TablaLiquidacionObraGtlcComponent implements OnInit {
       numeroContrato: 'N801801',
       valor: '$ 105.000.000',
       cantProyectosAsociados: '1',
-      estadoVerifiacion: 'Sin verificación',
+      estadoVerifiacion: 'Enviado para liquidación',
       id: 1
     },
     {

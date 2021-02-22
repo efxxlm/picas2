@@ -7,7 +7,9 @@ import { EjecucionFinancieraGtlcComponent } from "./components/ejecucion-financi
 import { GestionarTramiteLiqContractualComponent } from "./components/gestionar-tramite-liq-contractual/gestionar-tramite-liq-contractual.component";
 import { RecursosComproPagadosGtlcComponent } from "./components/recursos-compro-pagados-gtlc/recursos-compro-pagados-gtlc.component";
 import { TrasladoRecursosGtlcComponent } from "./components/traslado-recursos-gtlc/traslado-recursos-gtlc.component";
+import { VerDetalleVerificacionGtlcComponent } from "./components/ver-detalle-verificacion-gtlc/ver-detalle-verificacion-gtlc.component";
 import { VerificarBalanceGtlcComponent } from "./components/verificar-balance-gtlc/verificar-balance-gtlc.component";
+import { VerificarInformeGtlcComponent } from "./components/verificar-informe-gtlc/verificar-informe-gtlc.component";
 import { VerificarRequisitosGtlcComponent } from "./components/verificar-requisitos-gtlc/verificar-requisitos-gtlc.component";
 
 export const customCurrencyMaskConfig = {
@@ -56,6 +58,14 @@ const routes: Routes = [
   {
     path: 'detalleTraslado/:id',
     component: DetalleTrasladoGtlcComponent
+  },
+  {
+    path:'verificarInformeFinal/:id',
+    component: VerificarInformeGtlcComponent
+  },
+  {
+    path: 'VerDetalleVerificacionGtlcComponent/:id',
+    component: VerDetalleVerificacionGtlcComponent
   }
 ]; 
 @NgModule({
