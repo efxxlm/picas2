@@ -64,7 +64,7 @@ const routes: Routes = [
     component: VerificarInformeGtlcComponent
   },
   {
-    path: 'VerDetalleVerificacionGtlcComponent/:id',
+    path: 'verDetalleVerificacion/:id',
     component: VerDetalleVerificacionGtlcComponent
   }
 ]; 
