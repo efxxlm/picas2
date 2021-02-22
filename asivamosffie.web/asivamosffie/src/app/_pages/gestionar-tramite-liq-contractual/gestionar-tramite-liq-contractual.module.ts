@@ -13,11 +13,16 @@ import { VerificarRequisitosGtlcComponent } from './components/verificar-requisi
 import { ActualizacionPolizaGtlcComponent } from './components/actualizacion-poliza-gtlc/actualizacion-poliza-gtlc.component';
 import { TablaBalanceFinancieroGtlcComponent } from './components/tabla-balance-financiero-gtlc/tabla-balance-financiero-gtlc.component';
 import { VerificarBalanceGtlcComponent } from './components/verificar-balance-gtlc/verificar-balance-gtlc.component';
+import { RecursosComproPagadosGtlcComponent } from './components/recursos-compro-pagados-gtlc/recursos-compro-pagados-gtlc.component';
+import { AppAcordionRecursosComproPagadosGtlcComponent } from './components/app-acordion-recursos-compro-pagados-gtlc/app-acordion-recursos-compro-pagados-gtlc.component';
+import { AcordionRecursosComproPagadosGtlcComponent } from './components/acordion-recursos-compro-pagados-gtlc/acordion-recursos-compro-pagados-gtlc.component';
+import { ListaContratistasGtlcComponent } from './components/lista-contratistas-gtlc/lista-contratistas-gtlc.component';
+import { TablaValtotalOgGtlcComponent } from './components/tabla-valtotal-og-gtlc/tabla-valtotal-og-gtlc.component';
 
 
 
 @NgModule({
-  declarations: [GestionarTramiteLiqContractualComponent, TablaLiquidacionObraGtlcComponent, TablaLiquidacionIntervnGtlcComponent, VerificarRequisitosGtlcComponent, ActualizacionPolizaGtlcComponent, TablaBalanceFinancieroGtlcComponent, VerificarBalanceGtlcComponent],
+  declarations: [GestionarTramiteLiqContractualComponent, TablaLiquidacionObraGtlcComponent, TablaLiquidacionIntervnGtlcComponent, VerificarRequisitosGtlcComponent, ActualizacionPolizaGtlcComponent, TablaBalanceFinancieroGtlcComponent, VerificarBalanceGtlcComponent, RecursosComproPagadosGtlcComponent, AppAcordionRecursosComproPagadosGtlcComponent, AcordionRecursosComproPagadosGtlcComponent, ListaContratistasGtlcComponent, TablaValtotalOgGtlcComponent],
   imports: [
     CommonModule,
     GestionarTramiteLiqContractualRoutingModule,

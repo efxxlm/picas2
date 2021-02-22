@@ -43,6 +43,6 @@ export class TablaBalanceFinancieroGtlcComponent implements OnInit {
     //this.router.navigate(['/registrarLiquidacionContrato/detalleBalanceFinanciero', id]);
   }
   verificar(id){
-    
+    this.router.navigate(['/gestionarTramiteLiquidacionContractual/verificarBalance', id]);
   }
 }

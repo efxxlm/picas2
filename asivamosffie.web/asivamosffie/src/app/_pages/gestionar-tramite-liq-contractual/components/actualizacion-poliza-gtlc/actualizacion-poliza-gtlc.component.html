@@ -214,7 +214,7 @@
                 <span class="required-form-group" style="margin-left: 1px;">*</span>
             </div>
         </div>
-        <div class="d-flex align-items-center mtop" *ngIf="addressForm.get('tieneObservaciones').value === true">
+        <div class="d-flex align-items-center mt-2em animatedDown" *ngIf="addressForm.get('tieneObservaciones').value === true">
             <div class="text-area-quill izqTitle">
                 <label for="observaciones" class="text-area-quill--label" style="color: #174193;">Observaciones frente a la actualización de la póliza</label>
                 <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
