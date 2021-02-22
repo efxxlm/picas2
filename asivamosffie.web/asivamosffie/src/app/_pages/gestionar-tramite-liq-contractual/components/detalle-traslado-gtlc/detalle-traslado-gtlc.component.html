@@ -1,0 +1,291 @@
+<section class="container text-center">
+    <div class="text-right">
+        <a routerLink="/registrarLiquidacionContrato/trasladoRecursos/1" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">Ver detalle Tras_001</h1>
+    <p class="info-sub-title">
+        <span>Llave MEN: <b>LL000000</b></span>
+        <span>Número de contrato de obra: <b>N801801</b></span>
+        <span>Número de contrato de interventoría: <b>A513513</b></span>
+    </p>
+    <mat-card class="shipping-card var-main-gris">
+        <mat-card-content align="left">
+            <p><strong>Tipo de intervención: </strong><em>Remodelación</em></p>
+            <p><strong>Institución Educativa: </strong><em>I.E Nuestra Señora Del Carmen</em></p>
+            <p><strong>Sede: </strong><em>Única Sede</em></p>
+            <p><strong>Departamento: </strong><em>Boyacá</em></p>
+            <p><strong>Municipio: </strong><em>Susacón</em></p>
+            <p><strong>Número DDP: </strong><em>DDP_0001</em></p>
+            <p><strong>Valor DDP: </strong><em>$100.000.000</em></p>
+            <p><strong>Justificación del traslado entre aportantes y fuentes del proyecto: </strong></p>
+            <p><em>Se requiere el traslados ya que el aportante Gobernación de Boyacá No cuenta con los recursos
+                    necesarios y seran solventados por la Alcaldía de
+                    Susacón</em></p>
+            <p><strong>Url con soporte: </strong><em>http//:onedrive/traslado0001</em></p>
+            <h2 class="card-subTitle">DRP</h2>
+            <div class="table-responsive">
+                <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+                    <ng-container matColumnDef="drp">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>DRP </th>
+                        <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.drp }}</b> </td>
+                    </ng-container>
+                    <ng-container matColumnDef="numDRP">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Número DRP </th>
+                        <td mat-cell *matCellDef="let element" align="center"> {{ element.numDRP }} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="valor">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor </th>
+                        <td mat-cell *matCellDef="let element" align="center"> {{ element.valor }} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="saldo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Saldo </th>
+                        <td mat-cell *matCellDef="let element" align="center"> {{ element.saldo }} </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+            </div>
+        </mat-card-content>
+    </mat-card>
+    <div class="mt-2em">
+        <app-tabla-traslado-gtlc></app-tabla-traslado-gtlc>
+    </div>
+    <div class="mt-2em">
+        <mat-card class="shipping-card var-main-gris">
+            <mat-card-header class="header-card  header-card--margin">
+                <mat-card-title class="header-card--text">
+                    ODG_obra_222
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content align="left">
+                <p><strong>Fecha de aprobación fiduciaria: </strong><em>15/11/2020</em></p>
+                <p><strong>Modalidad del contrato: </strong><em>Modalidad 1</em></p>
+                <p><strong>Número del contrato: </strong><em>N801801</em></p>
+                <p><strong>Valor facturado: </strong><em>$15.000.000</em></p>
+                <p><strong>Valor pagado: </strong><em>$10.000.000</em></p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="mt-2em">
+        <mat-accordion>
+            <mat-expansion-panel class="expansion-style">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title">
+                        Información general
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-accordion>
+                    <mat-expansion-panel class="expansion-style sub-expansion">
+                        <mat-expansion-panel-header class="expansion-style--header">
+                            <mat-panel-title class="expansion-style--title ">
+                                Datos de la solicitud
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <app-datos-solicitud-gtlc></app-datos-solicitud-gtlc>
+                    </mat-expansion-panel>
+                    <mat-expansion-panel class="expansion-style sub-expansion">
+                        <mat-expansion-panel-header class="expansion-style--header">
+                            <mat-panel-title class="expansion-style--title ">
+                                Datos DDP y DRP
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <app-datos-ddp-drp-gtlc></app-datos-ddp-drp-gtlc>
+                    </mat-expansion-panel>
+                    <mat-expansion-panel class="expansion-style sub-expansion">
+                        <mat-expansion-panel-header class="expansion-style--header">
+                            <mat-panel-title class="expansion-style--title ">
+                                Soportes de factura
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <mat-card class="shipping-card var-main-gris">
+                            <mat-card-content align="left">
+                                <p><strong>URL con soporte:
+                                    </strong><em>https://drive.google.com/drive/registrodecontroversiacontractual/soportedefacturaSolPagoO001-N801801</em>
+                                </p>
+                            </mat-card-content>
+                        </mat-card>
+                    </mat-expansion-panel>
+                    <mat-expansion-panel class="expansion-style sub-expansion">
+                        <mat-expansion-panel-header class="expansion-style--header">
+                            <mat-panel-title class="expansion-style--title ">
+                                Tercero de giro
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <p class="info-sub-title textoGrisVar">
+                            <span>Nombre del contratista: <b>Interventores S.A.</b></span>
+                            <span>Número de identificación: <b>900.879.765-2</b></span>
+                        </p>
+                        <mat-card class="shipping-card var-main-gris">
+                            <mat-card-content align="left">
+                                <p><strong>¿Cuál es el medio de pago para los giros del contrato?:
+                                    </strong><em>Transferencia electrónica</em></p>
+                                <p><strong>Titular de la cuenta: </strong><em>Depósito de pinturas SAS</em></p>
+                                <p><strong>Número de identificación del titular: </strong><em>950.789.897-2</em></p>
+                                <p><strong>Número de cuenta: </strong><em>4563-9876-2453-3245</em></p>
+                                <p><strong>Banco: </strong><em>Bancolombia</em></p>
+                                <p><strong>Tipo de cuenta: </strong><em>Corriente</em></p>
+                            </mat-card-content>
+                        </mat-card>
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </mat-expansion-panel>
+            <mat-expansion-panel class="expansion-style">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title">
+                        Detalle del giro
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-accordion>
+                    <mat-expansion-panel class="expansion-style sub-expansion">
+                        <mat-expansion-panel-header class="expansion-style--header">
+                            <mat-panel-title class="expansion-style--title ">
+                                Porcentajes de participación
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <app-tabla-porc-participacion-gtlc></app-tabla-porc-participacion-gtlc>
+                    </mat-expansion-panel>
+                    <mat-expansion-panel class="expansion-style sub-expansion">
+                        <mat-expansion-panel-header class="expansion-style--header">
+                            <mat-panel-title class="expansion-style--title ">
+                                Información fuente de recursos
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <app-tabla-inforecursos-gtlc></app-tabla-inforecursos-gtlc>
+                    </mat-expansion-panel>
+                    <mat-expansion-panel class="expansion-style sub-expansion">
+                        <mat-expansion-panel-header class="expansion-style--header">
+                            <mat-panel-title class="expansion-style--title ">
+                                Tercero de causación
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <mat-card class="shipping-card var-main-gris">
+                            <mat-card-content align="left">
+                                <p><strong>Número de identificación del contratista: </strong><em>900.879.765-2</em></p>
+                                <p><strong>Nombre de contratista: </strong><em>Interventores S.A.</em></p>
+                                <p><strong>Número de factura: </strong><em>FAC00456</em></p>
+                            </mat-card-content>
+                        </mat-card>
+                        <p class="info-sub-title textoGrisVar">
+                            <span>Valor neto de giro: <em>$15.000.000</em></span>
+                            <span>Nuevo valor resgistrado: <em>$0</em></span>
+                        </p>
+                        <mat-accordion>
+                            <mat-expansion-panel class="expansion-style sub-expansion-black">
+                                <mat-expansion-panel-header class="expansion-style--header">
+                                    <mat-panel-title class="expansion-style--title ">
+                                        Costo variable
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <mat-card class="shipping-card var-main-gris">
+                                    <mat-card-header class="header-card  header-card--margin">
+                                        <mat-card-title class="header-card--text">
+                                            Demolición
+                                        </mat-card-title>
+                                    </mat-card-header>
+                                    <mat-card-content align="left">
+                                        <p><strong>Valor facturado por concepto: </strong><em>$ 13.000.000</em></p>
+                                        <div style="margin-top: 1em; margin-bottom: 1em;">
+                                            <mat-card-title class="header-card--text textoGris"
+                                                style="padding-left: 0px; margin-bottom: 1em;">
+                                                Aportante 1
+                                            </mat-card-title>
+                                            <p><strong>Tipo de aportante: </strong><em>Entidad territorial</em></p>
+                                            <p><strong>Nombre del aportante: </strong><em>Alcaldía de Susacón</em></p>
+                                            <p><strong>Fuente de recursos: </strong><em>Contingencias</em></p>
+                                            <p><strong>Valor facturado por el concepto para el aportante después del descuento:
+                                                </strong><em>$ 12.804.846</em></p>
+                                        </div>
+                                        <p><strong>Nuevo valor por el concepto para el aportante: </strong><em>$ 13.000.000</em>
+                                        </p>
+                                        <h2 class="card-subTitle">Descuentos Dirección financiera</h2>
+                                        <p><strong>¿Se requieren aplicar descuentos sobre el concepto de pago?:
+                                            </strong><em>Sí</em></p>
+                                        <p><strong>¿Cuántos descuentos se aplican sobre el concepto de pago?:
+                                            </strong><em>2</em></p>
+                                        <div style="margin-top: 1em; margin-bottom: 1em;">
+                                            <mat-card-title class="header-card--text textoGris"
+                                                style="padding-left: 0px; margin-bottom: 1em;">
+                                                Descuento 1
+                                            </mat-card-title>
+                                            <p><strong>Tipo de descuento: </strong><em>Retefuente</em></p>
+                                            <p><strong>Valor de descuento: </strong><em>$ 81.250</em></p>
+                                            <p><strong>Nuevo valor del descuento para el aportante: </strong><em>$ 81.250</em>
+                                            </p>
+                                        </div>
+                                        <div style="margin-top: 1em; margin-bottom: 1em;">
+                                            <mat-card-title class="header-card--text textoGris"
+                                                style="padding-left: 0px; margin-bottom: 1em;">
+                                                Descuento 2
+                                            </mat-card-title>
+                                            <p><strong>Tipo de descuento: </strong><em>Rete ICA</em></p>
+                                            <p><strong>Valor de descuento: </strong><em>$ 61.904</em></p>
+                                            <p><strong>Nuevo valor del descuento para el aportante: </strong><em>$ 61.904</em>
+                                            </p>
+                                        </div>
+                                        <h2 class="card-subTitle">Descuentos Dirección técnica</h2>
+                                        <p><strong>¿Se requieren aplicar descuentos sobre el concepto de pago?:
+                                            </strong><em>Sí</em></p>
+                                        <p><strong>¿Cuántos descuentos se aplican sobre el concepto de pago?:
+                                            </strong><em>1</em></p>
+                                        <div style="margin-top: 1em; margin-bottom: 1em;">
+                                            <mat-card-title class="header-card--text textoGris"
+                                                style="padding-left: 0px; margin-bottom: 1em;">
+                                                Descuento 1
+                                            </mat-card-title>
+                                            <p><strong>Tipo de descuento: </strong><em>4X1.000</em></p>
+                                            <p><strong>Valor de descuento: </strong><em>$ 52.000</em></p>
+                                            <p><strong>Nuevo valor del descuento para el aportante: </strong><em>$ 52.000</em>
+                                            </p>
+                                        </div>
+                                    </mat-card-content>
+                                </mat-card>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                        <mat-accordion>
+                            <mat-expansion-panel class="expansion-style sub-expansion-black">
+                                <mat-expansion-panel-header class="expansion-style--header">
+                                    <mat-panel-title class="expansion-style--title ">
+                                        Tipo de pago 3
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <mat-card class="shipping-card var-main-gris">
+                                    <mat-card-header class="header-card  header-card--margin">
+                                        <mat-card-title class="header-card--text">
+                                            Cimentación
+                                        </mat-card-title>
+                                    </mat-card-header>
+                                    <mat-card-content align="left">
+                                        <p><strong>Valor facturado por concepto: </strong><em>$ 7.000.000</em></p>
+                                        <div style="margin-top: 1em; margin-bottom: 1em;">
+                                            <mat-card-title class="header-card--text textoGris"
+                                                style="padding-left: 0px; margin-bottom: 1em;">
+                                                Aportante 1
+                                            </mat-card-title>
+                                            <p><strong>Tipo de aportante: </strong><em>Entidad territorial</em></p>
+                                            <p><strong>Nombre del aportante: </strong><em>Gobernación de Boyacá</em></p>
+                                            <p><strong>Fuente de recursos: </strong><em>Contingencias</em></p>
+                                            <p><strong>Valor facturado por el concepto para el aportante después del descuento:
+                                                </strong><em>$
+                                                    6.970.000</em></p>
+                                        </div>
+                                        <p><strong>Nuevo valor por el concepto para el aportante: </strong><em>6.970.000</em>
+                                        </p>
+                                        <h2 class="card-subTitle">Descuentos Dirección financiera</h2>
+                                        <p><strong>¿Se requieren aplicar descuentos sobre el concepto de pago?:
+                                            </strong><em>No</em></p>
+                                        <h2 class="card-subTitle">Descuentos Dirección técnica</h2>
+                                        <p><strong>¿Se requieren aplicar descuentos sobre el concepto de pago?:
+                                            </strong><em>No</em></p>
+                                    </mat-card-content>
+                                </mat-card>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+</section>
+

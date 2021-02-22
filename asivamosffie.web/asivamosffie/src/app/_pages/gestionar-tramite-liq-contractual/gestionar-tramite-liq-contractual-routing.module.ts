@@ -2,9 +2,11 @@ import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 import { CurrencyMaskInputMode, NgxCurrencyModule } from "ngx-currency";
 import { DetalleOgGtlcComponent } from "./components/detalle-og-gtlc/detalle-og-gtlc.component";
+import { DetalleTrasladoGtlcComponent } from "./components/detalle-traslado-gtlc/detalle-traslado-gtlc.component";
 import { EjecucionFinancieraGtlcComponent } from "./components/ejecucion-financiera-gtlc/ejecucion-financiera-gtlc.component";
 import { GestionarTramiteLiqContractualComponent } from "./components/gestionar-tramite-liq-contractual/gestionar-tramite-liq-contractual.component";
 import { RecursosComproPagadosGtlcComponent } from "./components/recursos-compro-pagados-gtlc/recursos-compro-pagados-gtlc.component";
+import { TrasladoRecursosGtlcComponent } from "./components/traslado-recursos-gtlc/traslado-recursos-gtlc.component";
 import { VerificarBalanceGtlcComponent } from "./components/verificar-balance-gtlc/verificar-balance-gtlc.component";
 import { VerificarRequisitosGtlcComponent } from "./components/verificar-requisitos-gtlc/verificar-requisitos-gtlc.component";
 
@@ -47,6 +49,14 @@ const routes: Routes = [
     path: 'ejecucionFinanciera/:id',
     component: EjecucionFinancieraGtlcComponent
   },
+  {
+    path: 'trasladoRecursos/:id',
+    component: TrasladoRecursosGtlcComponent
+  },
+  {
+    path: 'detalleTraslado/:id',
+    component: DetalleTrasladoGtlcComponent
+  }
 ]; 
 @NgModule({
   imports: [RouterModule.forChild(routes),NgxCurrencyModule.forRoot(customCurrencyMaskConfig)],

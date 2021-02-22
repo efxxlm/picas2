@@ -25,11 +25,18 @@ import { TablaOtrosDescuentosOgGtlcComponent } from './components/tabla-otros-de
 import { EjecucionFinancieraGtlcComponent } from './components/ejecucion-financiera-gtlc/ejecucion-financiera-gtlc.component';
 import { TablaEjpresupuestalGtlcComponent } from './components/tabla-ejpresupuestal-gtlc/tabla-ejpresupuestal-gtlc.component';
 import { TablaEjfinancieraGtlcComponent } from './components/tabla-ejfinanciera-gtlc/tabla-ejfinanciera-gtlc.component';
+import { TrasladoRecursosGtlcComponent } from './components/traslado-recursos-gtlc/traslado-recursos-gtlc.component';
+import { DetalleTrasladoGtlcComponent } from './components/detalle-traslado-gtlc/detalle-traslado-gtlc.component';
+import { TablaTrasladoGtlcComponent } from './components/tabla-traslado-gtlc/tabla-traslado-gtlc.component';
+import { DatosSolicitudGtlcComponent } from './components/datos-solicitud-gtlc/datos-solicitud-gtlc.component';
+import { DatosDdpDrpGtlcComponent } from './components/datos-ddp-drp-gtlc/datos-ddp-drp-gtlc.component';
+import { TablaPorcParticipacionGtlcComponent } from './components/tabla-porc-participacion-gtlc/tabla-porc-participacion-gtlc.component';
+import { TablaInforecursosGtlcComponent } from './components/tabla-inforecursos-gtlc/tabla-inforecursos-gtlc.component';
 
 
 
 @NgModule({
-  declarations: [GestionarTramiteLiqContractualComponent, TablaLiquidacionObraGtlcComponent, TablaLiquidacionIntervnGtlcComponent, VerificarRequisitosGtlcComponent, ActualizacionPolizaGtlcComponent, TablaBalanceFinancieroGtlcComponent, VerificarBalanceGtlcComponent, RecursosComproPagadosGtlcComponent, AcordionRecursosComproPagadosGtlcComponent, ListaContratistasGtlcComponent, TablaValtotalOgGtlcComponent, TablaFuentesUsosGtlcComponent, DetalleOgGtlcComponent, TablaFacturadoOgGtlcComponent, TablaDescuentosOgGtlcComponent, TablaOtrosDescuentosOgGtlcComponent, EjecucionFinancieraGtlcComponent, TablaEjpresupuestalGtlcComponent, TablaEjfinancieraGtlcComponent],
+  declarations: [GestionarTramiteLiqContractualComponent, TablaLiquidacionObraGtlcComponent, TablaLiquidacionIntervnGtlcComponent, VerificarRequisitosGtlcComponent, ActualizacionPolizaGtlcComponent, TablaBalanceFinancieroGtlcComponent, VerificarBalanceGtlcComponent, RecursosComproPagadosGtlcComponent, AcordionRecursosComproPagadosGtlcComponent, ListaContratistasGtlcComponent, TablaValtotalOgGtlcComponent, TablaFuentesUsosGtlcComponent, DetalleOgGtlcComponent, TablaFacturadoOgGtlcComponent, TablaDescuentosOgGtlcComponent, TablaOtrosDescuentosOgGtlcComponent, EjecucionFinancieraGtlcComponent, TablaEjpresupuestalGtlcComponent, TablaEjfinancieraGtlcComponent, TrasladoRecursosGtlcComponent, DetalleTrasladoGtlcComponent, TablaTrasladoGtlcComponent, DatosSolicitudGtlcComponent, DatosDdpDrpGtlcComponent, TablaPorcParticipacionGtlcComponent, TablaInforecursosGtlcComponent],
   imports: [
     CommonModule,
     GestionarTramiteLiqContractualRoutingModule,
