@@ -1,0 +1,54 @@
+<section class="container text-center">
+    <div class="text-right">
+        <a routerLink="/gestionarTramiteLiquidacionContractual/recursosComprometidos/1" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">Ver detalle ODG_Obra_001</h1>
+    <p class="info-sub-title">
+        <span>Número de contrato de obra: <b>N801801</b></span>
+        <span>Contratista: <b>Construir futuro</b></span>
+    </p>   
+    <mat-card class="shipping-card var-main-gris">
+        <mat-card-content align="left">
+            <p><strong>Tipo de intervención: </strong><em>Remodelación</em></p>
+            <p><strong>Institución Educativa: </strong><em>I.E Nuestra Señora Del Carmen</em></p>
+            <p><strong>Sede: </strong><em>Única Sede</em></p>
+            <p><strong>Departamento: </strong><em>Boyacá</em></p>
+            <p><strong>Municipio: </strong><em>Susacón</em></p>
+        </mat-card-content>
+    </mat-card>
+    <p class="info-sub-title textoGris">
+        <span><b>Valor total facturado: $15.000.000</b></span>
+    </p>
+    <mat-card class="shipping-card mainGris" style="margin-top: 3em;">
+        <mat-card-header class="header-card header-card--margin">
+            <mat-card-title class="header-card--text textoGris">
+                Facturado
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content style="text-align: left;">
+            <app-tabla-facturado-og-gtlc></app-tabla-facturado-og-gtlc>
+        </mat-card-content>
+    </mat-card>  
+    <mat-card class="shipping-card mainGris" style="margin-top: 3em;">
+        <mat-card-header class="header-card header-card--margin">
+            <mat-card-title class="header-card--text textoGris">
+                Descuentos
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content style="text-align: left;">
+            <app-tabla-descuentos-og-gtlc></app-tabla-descuentos-og-gtlc>
+        </mat-card-content>
+    </mat-card>  
+    <mat-card class="shipping-card mainGris" style="margin-top: 3em;">
+        <mat-card-header class="header-card header-card--margin">
+            <mat-card-title class="header-card--text textoGris">
+                Detalle otros descuentos
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content style="text-align: left;">
+            <app-tabla-otros-descuentos-og-gtlc></app-tabla-otros-descuentos-og-gtlc>
+        </mat-card-content>
+    </mat-card>  
+</section>

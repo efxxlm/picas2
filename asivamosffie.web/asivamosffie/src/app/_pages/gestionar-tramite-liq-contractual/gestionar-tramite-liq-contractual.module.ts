@@ -17,11 +17,16 @@ import { RecursosComproPagadosGtlcComponent } from './components/recursos-compro
 import { AcordionRecursosComproPagadosGtlcComponent } from './components/acordion-recursos-compro-pagados-gtlc/acordion-recursos-compro-pagados-gtlc.component';
 import { ListaContratistasGtlcComponent } from './components/lista-contratistas-gtlc/lista-contratistas-gtlc.component';
 import { TablaValtotalOgGtlcComponent } from './components/tabla-valtotal-og-gtlc/tabla-valtotal-og-gtlc.component';
+import { TablaFuentesUsosGtlcComponent } from './components/tabla-fuentes-usos-gtlc/tabla-fuentes-usos-gtlc.component';
+import { DetalleOgGtlcComponent } from './components/detalle-og-gtlc/detalle-og-gtlc.component';
+import { TablaFacturadoOgGtlcComponent } from './components/tabla-facturado-og-gtlc/tabla-facturado-og-gtlc.component';
+import { TablaDescuentosOgGtlcComponent } from './components/tabla-descuentos-og-gtlc/tabla-descuentos-og-gtlc.component';
+import { TablaOtrosDescuentosOgGtlcComponent } from './components/tabla-otros-descuentos-og-gtlc/tabla-otros-descuentos-og-gtlc.component';
 
 
 
 @NgModule({
-  declarations: [GestionarTramiteLiqContractualComponent, TablaLiquidacionObraGtlcComponent, TablaLiquidacionIntervnGtlcComponent, VerificarRequisitosGtlcComponent, ActualizacionPolizaGtlcComponent, TablaBalanceFinancieroGtlcComponent, VerificarBalanceGtlcComponent, RecursosComproPagadosGtlcComponent, AcordionRecursosComproPagadosGtlcComponent, ListaContratistasGtlcComponent, TablaValtotalOgGtlcComponent],
+  declarations: [GestionarTramiteLiqContractualComponent, TablaLiquidacionObraGtlcComponent, TablaLiquidacionIntervnGtlcComponent, VerificarRequisitosGtlcComponent, ActualizacionPolizaGtlcComponent, TablaBalanceFinancieroGtlcComponent, VerificarBalanceGtlcComponent, RecursosComproPagadosGtlcComponent, AcordionRecursosComproPagadosGtlcComponent, ListaContratistasGtlcComponent, TablaValtotalOgGtlcComponent, TablaFuentesUsosGtlcComponent, DetalleOgGtlcComponent, TablaFacturadoOgGtlcComponent, TablaDescuentosOgGtlcComponent, TablaOtrosDescuentosOgGtlcComponent],
   imports: [
     CommonModule,
     GestionarTramiteLiqContractualRoutingModule,

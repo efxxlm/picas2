@@ -1,6 +1,7 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 import { CurrencyMaskInputMode, NgxCurrencyModule } from "ngx-currency";
+import { DetalleOgGtlcComponent } from "./components/detalle-og-gtlc/detalle-og-gtlc.component";
 import { GestionarTramiteLiqContractualComponent } from "./components/gestionar-tramite-liq-contractual/gestionar-tramite-liq-contractual.component";
 import { RecursosComproPagadosGtlcComponent } from "./components/recursos-compro-pagados-gtlc/recursos-compro-pagados-gtlc.component";
 import { VerificarBalanceGtlcComponent } from "./components/verificar-balance-gtlc/verificar-balance-gtlc.component";
@@ -36,7 +37,11 @@ const routes: Routes = [
   {
     path: 'recursosComprometidos/:id',
     component: RecursosComproPagadosGtlcComponent
-  }
+  },
+  {
+    path: 'detalleOrdengiro/:id',
+    component: DetalleOgGtlcComponent
+  },
 ]; 
 @NgModule({
   imports: [RouterModule.forChild(routes),NgxCurrencyModule.forRoot(customCurrencyMaskConfig)],
