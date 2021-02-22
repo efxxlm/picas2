@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using Z.EntityFramework.Plus;
 
 namespace asivamosffie.services
 {
@@ -19,7 +20,6 @@ namespace asivamosffie.services
 
         public GuaranteePolicyService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
-
             _commonService = commonService;
             _context = context;
             //_settings = settings;
@@ -215,7 +215,8 @@ namespace asivamosffie.services
 
             int idAccionCrearContratoPoliza = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Poliza_Observacion, (int)EnumeratorTipoDominio.Acciones);
 
-            string strCrearEditar = string.Empty, strUsuario = string.Empty;
+            string strCrearEditar = string.Empty,
+            strUsuario = string.Empty;
             try
             {
                 if (polizaObservacion != null)
@@ -240,24 +241,21 @@ namespace asivamosffie.services
                         polizaObservacionBD = _context.PolizaObservacion.Where(r => r.PolizaObservacionId == polizaObservacion.PolizaObservacionId).FirstOrDefault();
                         if (polizaObservacion != null)
                         {
-                            polizaObservacion.FechaModificacion = DateTime.Now;
+                            polizaObservacionBD.FechaModificacion = DateTime.Now;
                             polizaObservacionBD.Observacion = polizaObservacion.Observacion;
                             polizaObservacionBD.FechaRevision = polizaObservacion.FechaRevision;
                             polizaObservacionBD.EstadoRevisionCodigo = polizaObservacion.EstadoRevisionCodigo;
                             _context.PolizaObservacion.Update(polizaObservacionBD);
-
                         }
                         id = polizaObservacionBD.ContratoPolizaId;
                     }
                     Template TemplateRecoveryPassword = new Template();
+
                     if (polizaObservacion.EstadoRevisionCodigo == ConstanCodigoEstadoRevision.aprobada)
-                    {
                         TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.MsjFiduciariaJuridicaGestionPoliza);
-                    }
                     else
-                    {
                         TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.MsjSupervisorGestionPoliza);
-                    }
+
 
                     string template = TemplateRecoveryPassword.Contenido;
 
@@ -304,32 +302,141 @@ namespace asivamosffie.services
                             IsException = false,
                             IsValidation = false,
                             Code = ConstantMessagesContratoPoliza.OperacionExitosa,
-                            Message =
-                            await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias,
+                            Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias,
                             ConstantMessagesContratoPoliza.OperacionExitosa,
-                            //contratoPoliza
-                            idAccionCrearContratoPoliza
-                            , polizaObservacion.UsuarioCreacion
-                            //"UsuarioCreacion"
-                            , "REGISTRAR POLIZA OBSERVACION"
-                            //contratoPoliza.UsuarioCreacion, "REGISTRAR CONTRATO POLIZA"
+                            idAccionCrearContratoPoliza,
+                            polizaObservacion.UsuarioCreacion,
+                            "REGISTRAR POLIZA OBSERVACION"
                             )
                         };
-
-                    //return _response = new Respuesta { IsSuccessful = true,
-                    //    IsValidation = false, Data = cuentaBancaria,
-                    //    Code = ConstantMessagesBankAccount.OperacionExitosa };
                 }
                 else
                 {
-                    return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContratoPoliza.RecursoNoEncontrado };
+                    return new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsValidation = false,
+                        Data = null,
+                        Code = ConstantMessagesContratoPoliza.RecursoNoEncontrado
+                    };
                 }
 
             }
             catch (Exception ex)
             {
-                return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContratoPoliza.ErrorInterno, Message = ex.InnerException.ToString().Substring(0, 500) };
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesContratoPoliza.ErrorInterno,
+                    Message = ex.InnerException.ToString().Substring(0, 500)
+                };
             }
+
+        }
+
+        public async Task<Respuesta> CreateEditPolizaObservacion(PolizaObservacion pPolizaObservacion , AppSettingsService appSettingsService)
+        {
+            int idAccionCrearContratoPoliza = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Poliza_Observacion, (int)EnumeratorTipoDominio.Acciones);
+             
+            try
+            {
+                if (pPolizaObservacion.PolizaObservacionId > 0)
+                {
+                    _context.Set<PolizaObservacion>()
+                                        .Where(p => p.PolizaObservacionId == pPolizaObservacion.PolizaObservacionId)
+                                                                                        .Update(r => new PolizaObservacion
+                                                                                        {
+                                                                                            UsuarioModificacion = pPolizaObservacion.UsuarioCreacion,
+                                                                                            Observacion = pPolizaObservacion.Observacion,
+                                                                                            FechaRevision = pPolizaObservacion.FechaRevision,
+                                                                                            EstadoRevisionCodigo = pPolizaObservacion.EstadoRevisionCodigo,
+                                                                                        });
+                }
+                else
+                {
+                    pPolizaObservacion.FechaCreacion = DateTime.Now;
+                    pPolizaObservacion.Eliminado = false;
+                    _context.PolizaObservacion.Add(pPolizaObservacion);
+                }
+
+
+                Template TemplateRecoveryPassword = new Template();
+
+                if (pPolizaObservacion.EstadoRevisionCodigo == ConstanCodigoEstadoRevision.aprobada)
+                    TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.MsjFiduciariaJuridicaGestionPoliza);
+                else
+                    TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.MsjSupervisorGestionPoliza);
+
+
+                string template = TemplateRecoveryPassword.Contenido;
+
+                //string urlDestino = pDominio;
+                //asent/img/logo  
+                var contratopoliza = _context.ContratoPoliza.Where(x => x.ContratoPolizaId == pPolizaObservacion.ContratoPolizaId).
+                                                                       Include(x => x.Contrato).FirstOrDefault();
+
+                var ListVista = ListVistaContratoGarantiaPoliza(contratopoliza.Contrato.ContratoId).Result.FirstOrDefault();
+
+                var fechaFirmaContrato = contratopoliza.Contrato.FechaFirmaContrato != null ? Convert.ToDateTime(contratopoliza.Contrato.FechaFirmaContrato).ToString("dd/MM/yyyy") : "";
+
+                //datos basicos generales, aplican para los 4 mensajes
+                template = template.Replace("_Tipo_Contrato_", ListVista.TipoContrato);
+                template = template.Replace("_Numero_Contrato_", ListVista.NumeroContrato);
+                template = template.Replace("_Fecha_Firma_Contrato_", ListVista.FechaFirmaContrato);
+                template = template.Replace("_Nombre_Contratista_", ListVista.NombreContratista);
+                template = template.Replace("_Valor_Contrato_", string.Format("${0:#,0}", ListVista.ValorContrato.ToString()));  //fomato miles .
+                template = template.Replace("_Plazo_", ListVista.PlazoContrato);
+                template = template.Replace("_LinkF_", appSettingsService.DominioFront);
+
+                template = template.Replace("_Fecha_Revision_", pPolizaObservacion.FechaRevision.ToString("dd/MM/yyyy"));
+                template = template.Replace("_Estado_Revision_", _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Revision_Poliza && x.Codigo == pPolizaObservacion.EstadoRevisionCodigo).Select(x => x.Nombre).FirstOrDefault());
+                template = template.Replace("_Observaciones_", Helpers.Helpers.HtmlStringLimpio(pPolizaObservacion.Observacion));
+                template = template.Replace("_Nombre_Aseguradora_", contratopoliza.NombreAseguradora);
+                template = template.Replace("_Numero_Poliza_", contratopoliza.NumeroPoliza);
+
+                if (pPolizaObservacion.EstadoRevisionCodigo != ConstanCodigoEstadoRevision.aprobada)
+                {
+                    string destinatario = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Supervisor && (bool)x.Activo && (bool)x.Usuario.Activo)
+                   .Select(x => x.Usuario.Email).FirstOrDefault();//esto va a cambiar en fase 2
+                    var blEnvioCorreo = Helpers.Helpers.EnviarCorreo(destinatario, "Gestión Poliza", template, appSettingsService.Sender, appSettingsService.Password, appSettingsService.MailServer, appSettingsService.MailPort);
+                }
+
+
+                return
+                      new Respuesta
+                      {
+                          IsSuccessful = true,
+                          IsException = false,
+                          IsValidation = false,
+                          Code = ConstantMessagesContratoPoliza.OperacionExitosa,
+                          Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias,
+                          ConstantMessagesContratoPoliza.OperacionExitosa,
+                          idAccionCrearContratoPoliza,
+                          pPolizaObservacion.UsuarioCreacion,
+                          "REGISTRAR POLIZA OBSERVACION"
+                          )
+                      };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantMessagesContratoPoliza.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                                                                                               (int)enumeratorMenu.GestionarGarantias,
+                                                                                               ConstantMessagesContratoPoliza.Error,
+                                                                                               idAccionCrearContratoPoliza,
+                                                                                               pPolizaObservacion.UsuarioCreacion,
+                                                                                               ex.ToString()
+                                                                                              )
+                };
+            }
+
 
         }
 
@@ -413,6 +520,9 @@ namespace asivamosffie.services
             }
 
         }
+
+
+
 
         public async Task<Respuesta> InsertContratoPoliza(ContratoPoliza contratoPoliza, AppSettingsService appSettingsService)
         {
@@ -1258,7 +1368,6 @@ namespace asivamosffie.services
             }
             catch (Exception ex)
             {
-
                 respuesta = new Respuesta() { IsSuccessful = false, IsValidation = false, Code = ConstantMessagesContratoPoliza.Error };
                 respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, respuesta.Code, (int)enumeratorAccion.Notificacion_Gestion_Poliza, lstMails, "Gestión Pólizas") + ": " + ex.ToString() + ex.InnerException;
                 return respuesta;
@@ -1525,8 +1634,7 @@ namespace asivamosffie.services
                             plazoDias = Convert.ToInt32(disponibilidadPresupuestal.PlazoDias);
 
                         if (!string.IsNullOrEmpty(disponibilidadPresupuestal.PlazoMeses.ToString()))
-
-                            PlazoContratoFormat = plazoMeses.ToString("00") + " meses / " + plazoDias.ToString("00") + " dias ";
+                            PlazoContratoFormat = plazoMeses.ToString("00") + " meses / " + plazoDias.ToString("00") + " dias";
                     }
 
                     string strTipoContratoCodigoContratoNombre = string.Empty;
@@ -1583,29 +1691,7 @@ namespace asivamosffie.services
                 }
                 catch (Exception e)
                 {
-                    VistaContratoGarantiaPoliza proyectoGrilla = new VistaContratoGarantiaPoliza
-                    {
-                        IdContrato = 0,
-                        TipoContrato = e.ToString(),
-                        NumeroContrato = e.InnerException.ToString(),
-                        ObjetoContrato = "ERROR",
-                        NombreContratista = "ERROR",
-
-                        //Nit  
-                        NumeroIdentificacion = "ERROR",
-                        ValorContrato = 0,
-                        PlazoContrato = "ERROR",
-
-                        //EstadoRegistro 
-                        //public bool? RegistroCompleto { get; set; } 
-                        //TipoSolicitud = contratoPoliza.EstadoPolizaCodigo
-
-                        DescripcionModificacion = "ERROR",
-                        TipoModificacion = "ERROR",
-                        TipoDocumento = "ERROR"
-
-                    };
-                    ListContratoGrilla.Add(proyectoGrilla);
+                    VistaContratoGarantiaPoliza proyectoGrilla = new VistaContratoGarantiaPoliza();
                 }
             }
             return ListContratoGrilla.OrderByDescending(r => r.TipoSolicitud).ToList();
