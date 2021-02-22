@@ -1,1 +1,22 @@
-<p>tabla-inforecursos-gtlc works!</p>
+<div class="table-responsive">
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+        <ng-container matColumnDef="nomAportante">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre del aportante </th>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.nomAportante }} </td>
+        </ng-container>
+        <ng-container matColumnDef="fuenteRecursos">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Fuente de recursos </th>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.fuenteRecursos }} </td>
+        </ng-container>
+        <ng-container matColumnDef="saldoActualFRecursos">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Saldo actual fuente de recursos </th>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.saldoActualFRecursos }} </td>
+        </ng-container>
+        <ng-container matColumnDef="saldoAfectado">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Saldo fuente de recursos afectado por el valor facturado </th>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.saldoAfectado }} </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</div>
