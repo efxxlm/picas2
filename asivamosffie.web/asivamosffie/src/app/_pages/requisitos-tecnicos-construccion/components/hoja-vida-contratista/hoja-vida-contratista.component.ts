@@ -229,7 +229,7 @@ export class HojaVidaContratistaComponent implements OnInit {
               cantidadHvRecibidas         : [ perfil.cantidadHvRecibidas ? String( perfil.cantidadHvRecibidas ) : '' ],
               cantidadHvAprobadas         : [ perfil.cantidadHvAprobadas ? String( perfil.cantidadHvAprobadas ) : '' ],
               fechaAprobacion             : [ perfil.fechaAprobacion ? new Date( perfil.fechaAprobacion ) : null ],
-              observacion                 : [ observaciones ],
+              observacion                 : [ perfil.observaciones ],
               observacionDevolucion       : [ perfil.observacionDevolucion],
               observacionSupervisor       : [ observacionSupervisor ],
               fechaObservacion            : [ fechaObservacion ],
