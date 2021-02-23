@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace asivamosffie.services.Interfaces
 {
     public interface IGuaranteePolicyService
-    {
+    { 
         Task<Respuesta> CreateEditPolizaObservacion(PolizaObservacion pPolizaObservacion, AppSettingsService appSettingsService);
 
         Task<Respuesta> InsertContratoPoliza(ContratoPoliza contratoPoliza, AppSettingsService appSettingsService);

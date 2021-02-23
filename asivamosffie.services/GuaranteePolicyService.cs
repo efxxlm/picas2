@@ -336,10 +336,10 @@ namespace asivamosffie.services
 
         }
 
-        public async Task<Respuesta> CreateEditPolizaObservacion(PolizaObservacion pPolizaObservacion , AppSettingsService appSettingsService)
+        public async Task<Respuesta> CreateEditPolizaObservacion(PolizaObservacion pPolizaObservacion, AppSettingsService appSettingsService)
         {
             int idAccionCrearContratoPoliza = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Poliza_Observacion, (int)EnumeratorTipoDominio.Acciones);
-             
+
             try
             {
                 if (pPolizaObservacion.PolizaObservacionId > 0)
@@ -388,7 +388,7 @@ namespace asivamosffie.services
                 template = template.Replace("_Nombre_Contratista_", ListVista.NombreContratista);
                 template = template.Replace("_Valor_Contrato_", string.Format("${0:#,0}", ListVista.ValorContrato.ToString()));  //fomato miles .
                 template = template.Replace("_Plazo_", ListVista.PlazoContrato);
-                template = template.Replace("_LinkF_", appSettingsService.DominioFront); 
+                template = template.Replace("_LinkF_", appSettingsService.DominioFront);
                 template = template.Replace("_Fecha_Revision_", pPolizaObservacion.FechaRevision.ToString("dd/MM/yyyy"));
                 template = template.Replace("_Estado_Revision_", _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Revision_Poliza && x.Codigo == pPolizaObservacion.EstadoRevisionCodigo).Select(x => x.Nombre).FirstOrDefault());
                 template = template.Replace("_Observaciones_", Helpers.Helpers.HtmlStringLimpio(pPolizaObservacion.Observacion));
@@ -519,7 +519,7 @@ namespace asivamosffie.services
             }
 
         }
-         
+
         public async Task<Respuesta> InsertContratoPoliza(ContratoPoliza contratoPoliza, AppSettingsService appSettingsService)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Contrato_Poliza, (int)EnumeratorTipoDominio.Acciones);
@@ -1630,7 +1630,9 @@ namespace asivamosffie.services
                             plazoDias = Convert.ToInt32(disponibilidadPresupuestal.PlazoDias);
 
                         if (!string.IsNullOrEmpty(disponibilidadPresupuestal.PlazoMeses.ToString()))
-                            PlazoContratoFormat = plazoMeses.ToString("00") + " meses / " + plazoDias.ToString("00") + " dias";
+                            plazoMeses = Convert.ToInt32(disponibilidadPresupuestal.PlazoMeses);
+
+                        PlazoContratoFormat = plazoMeses.ToString("00") + " meses / " + plazoDias.ToString("00") + " dias";
                     }
 
                     string strTipoContratoCodigoContratoNombre = string.Empty;
@@ -1647,7 +1649,9 @@ namespace asivamosffie.services
                         ObjetoContrato = contratoObjeto,
                         NombreContratista = strContratistaNombre,
                         TipoDocumento = strTipoDocumentoContratista,
-
+                        PlazoMeses = disponibilidadPresupuestal.PlazoMeses,
+                        PlazoDias = disponibilidadPresupuestal.PlazoDias, 
+                        PlazoContrato = PlazoContratoFormat,
                         //Nit  
                         NumeroIdentificacion = strContratistaNumeroIdentificacion,
 
@@ -1655,7 +1659,6 @@ namespace asivamosffie.services
                         ValorContrato = vlrContratoComponenteUso,
 
 
-                        PlazoContrato = PlazoContratoFormat,
 
                         //EstadoRegistro 
                         //public bool? RegistroCompleto { get; set; }                         
