@@ -261,7 +261,7 @@ namespace asivamosffie.services
                             ContratoPerfil.Eliminado = false;
                             ContratoPerfil.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(ContratoPerfil);
                             _context.ContratoPerfil.Add(ContratoPerfil);
-
+                            _context.SaveChanges();
 
                             foreach (var ContratoPerfilObservacion in ContratoPerfil.ContratoPerfilObservacion)
                             {
@@ -274,7 +274,7 @@ namespace asivamosffie.services
                                 ContratoPerfilObservacion.Eliminado = false;
 
 
-                                _context.ContratoPerfilObservacion.Add(ContratoPerfilObservacion);
+                                _context.ContratoPerfilObservacion.Add(ContratoPerfilObservacion); 
                             }
 
                             foreach (var ContratoPerfilNumeroRadicado in ContratoPerfil.ContratoPerfilNumeroRadicado)
