@@ -356,9 +356,20 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                    pPolizaObservacion.FechaCreacion = DateTime.Now;
-                    pPolizaObservacion.Eliminado = false;
-                    _context.PolizaObservacion.Add(pPolizaObservacion);
+
+                    try
+                    {
+                    
+            
+                        pPolizaObservacion.FechaCreacion = DateTime.Now;
+                        pPolizaObservacion.Eliminado = false;
+                        _context.PolizaObservacion.Add(pPolizaObservacion);
+                        _context.SaveChanges();
+                    }
+                    catch (Exception ex)
+                    {
+                         
+                    }
                 }
 
 
