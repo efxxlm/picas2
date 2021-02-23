@@ -233,6 +233,8 @@ namespace asivamosffie.services
                                                                                     .Include(r => r.SesionComentario)
                                                                                     .Include(r => r.SesionComiteTema)
                                                                                         .ThenInclude(r => r.TemaCompromiso)
+                                                                                    .Include(r => r.SesionComiteTema)
+                                                                                        .ThenInclude(r => r.SesionTemaVoto)
                                                                                     //.Include(r => r.SesionParticipante)
                                                                                     //    .ThenInclude(r => r.Usuario)
                                                                                     .Include(r => r.SesionComiteTecnicoCompromiso)
@@ -256,15 +258,13 @@ namespace asivamosffie.services
 
                 foreach (var item in ListComiteTecnico)
                 {
-             
-
                     List<VSesionParticipante> listaParticipantes = _context.VSesionParticipante.Where(r => r.ComiteTecnicoId == item.ComiteTecnicoId).ToList();
                     item.SesionParticipanteView = listaParticipantes;
                     if (item.SesionComiteTecnicoCompromiso.Count() > 0)
                     {
                         item.SesionComiteTecnicoCompromiso = item.SesionComiteTecnicoCompromiso.Where(r => !(bool)r.Eliminado).ToList();
                     }
-                     
+
                     foreach (var SesionComiteTema in item.SesionComiteTema)
                     {
                         if (SesionComiteTema.TemaCompromiso.Count() > 0)
@@ -292,14 +292,14 @@ namespace asivamosffie.services
                            participante.Usuario = new Usuario();
 
                            VSesionParticipante vSesionParticipante = listaParticipantes.Where(r => r.SesionParticipanteId == tc.Responsable).FirstOrDefault();
-                            
+
                            if (vSesionParticipante != null)
                            {
                                participante.SesionParticipanteId = vSesionParticipante.SesionParticipanteId;
                                participante.ComiteTecnicoId = vSesionParticipante.ComiteTecnicoId;
                                participante.UsuarioId = vSesionParticipante.UsuarioId;
                                participante.Eliminado = vSesionParticipante.Eliminado;
- 
+
                                participante.Usuario.UsuarioId = vSesionParticipante.UsuarioId;
                                participante.Usuario.Nombres = vSesionParticipante.Nombres;
                                participante.Usuario.Apellidos = vSesionParticipante.Apellidos;
@@ -307,7 +307,7 @@ namespace asivamosffie.services
                                participante.esAprobado = ListParticipanteVotos
                                                                           .Where(s => s.ComiteTecnicoId == item.ComiteTecnicoId
                                                                             && s.SesionParticipanteId == participante.SesionParticipanteId
-                                                                            ).Select(r=> r.EsAprobado).LastOrDefault();
+                                                                            ).Select(r => r.EsAprobado).LastOrDefault();
                                tc.ResponsableNavigation = participante;
                            }
                        });
