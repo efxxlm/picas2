@@ -254,7 +254,7 @@ namespace asivamosffie.services
                 foreach (var item in ListComiteTecnico)
                 {
                     List<VSesionParticipante> listaParticipantes = _context.VSesionParticipante.Where(r => r.ComiteTecnicoId == item.ComiteTecnicoId).ToList();
-
+                    item.SesionParticipanteView = listaParticipantes;
                     if (item.SesionComiteTecnicoCompromiso.Count() > 0)
                     {
                         item.SesionComiteTecnicoCompromiso = item.SesionComiteTecnicoCompromiso.Where(r => !(bool)r.Eliminado).ToList();
