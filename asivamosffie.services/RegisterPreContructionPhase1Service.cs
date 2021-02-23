@@ -136,7 +136,7 @@ namespace asivamosffie.services
                     if (ContratacionProyecto.Proyecto.ContratoPerfil.Count() > 0)
                         ContratacionProyecto.Proyecto.ContratoPerfil = ContratacionProyecto.Proyecto.ContratoPerfil.Where(t => !(bool)t.Eliminado).ToList();
 
-                    foreach (var ContratoPerfil in ContratacionProyecto.Proyecto.ContratoPerfil)
+                     foreach (var ContratoPerfil in ContratacionProyecto.Proyecto.ContratoPerfil)
                     {
                         if (ContratoPerfil.ContratoPerfilObservacion.Count() > 0)
                             ContratoPerfil.ContratoPerfilObservacion = ContratoPerfil.ContratoPerfilObservacion.Where(r => !(bool)r.Eliminado).ToList();
@@ -182,7 +182,7 @@ namespace asivamosffie.services
                         proyectoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
                     }
 
-                    foreach (var ContratoPerfil in ContratacionProyecto.Proyecto.ContratoPerfil)
+                    foreach (var ContratoPerfil in ContratacionProyecto.Proyecto.ContratoPerfil.Reverse())
                     {
                         if (ContratoPerfil.ContratoPerfilId > 0)
                         {
