@@ -3527,6 +3527,16 @@ namespace asivamosffie.services
                     string strEstadoAvanceTramiteCodigo = "sin definir";
                     string strEstadoAvanceTramite = "sin definir";
 
+                    string strEstadoActuacionGeneral = string.Empty;
+                    string strEstadoActuacionCodigoGeneral = string.Empty;
+                    var EstadoActuacionGeneral = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.EstadoCodigo, (int)EnumeratorTipoDominio.Estados_Actuacion_Derivada);
+                    if (EstadoActuacionGeneral != null)
+                    {
+                        strEstadoActuacionGeneral = EstadoActuacionGeneral.Nombre;
+                        strEstadoActuacionCodigoGeneral = EstadoActuacionGeneral.Codigo;
+
+                    }
+
                     //Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
                     Dominio EstadoAvanceCodigo;
 
@@ -3576,17 +3586,23 @@ namespace asivamosffie.services
                         stadomesa = EstadoActuacionMesa == null ? "" : EstadoActuacionMesa.Nombre;
                     }
 
+                    List<Dominio> listaDominioActuacionActualizada = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Actuacion_adelantada).ToList();
 
                     GrillaControversiaActuacionEstado RegistroControversiaContractual = new GrillaControversiaActuacionEstado
                     {
+
                         ControversiaContractualId = controversia.ControversiaContractualId,
                         FechaActualizacion = controversia.FechaActuacion != null ? Convert.ToDateTime(controversia.FechaActuacion).ToString("dd/MM/yyyy") : "",
-                        DescripcionActuacion = "Actuación " + controversia.ControversiaActuacionId.ToString(),
+                        //DescripcionActuacion = "Actuación " + controversia.ControversiaActuacionId.ToString(),
+                        DescripcionActuacion = listaDominioActuacionActualizada.Where(r => r.Codigo == controversia.ActuacionAdelantadaCodigo)?.FirstOrDefault()?.Nombre,
                         //DescripcionActuacion = "ACT" + controversia.ControversiaActuacionId.ToString(),
                         ActuacionId = controversia.ControversiaActuacionId,
 
                         EstadoActuacion = strEstadoAvanceTramite,//controversia.EstadoAvanceTramiteCodigo
                         EstadoActuacionCodigo = strEstadoAvanceTramiteCodigo,//controversia.EstadoAvanceTramiteCodigo
+
+                        EstadoActuacionGeneral = strEstadoActuacionGeneral,
+                        EstadoActuacionCodigoGeneral = strEstadoActuacionCodigoGeneral,
 
                         NumeroActuacion = controversia.NumeroActuacion,// "ACT controversia " + controversia.ControversiaActuacionId.ToString("000"),
 
