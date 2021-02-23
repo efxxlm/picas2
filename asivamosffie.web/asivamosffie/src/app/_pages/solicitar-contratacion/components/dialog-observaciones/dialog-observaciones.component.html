@@ -24,14 +24,16 @@
         </section>
           
         <section *ngIf="contratacion.sesionSolicitudObservacionProyecto.length > 0">
-          <mat-card class="shipping-card w-80" *ngFor="let observacionesProyecto of contratacion.sesionSolicitudObservacionProyecto; index as i">
-            <mat-card-content>
-        
-              <section [innerHTML]="observacionesProyecto.observacion" align="left" class="padding-section">
-              </section>
-        
-            </mat-card-content>
-          </mat-card>
+          <div *ngFor="let observacionesProyecto of contratacion.sesionSolicitudObservacionProyecto; index as i">
+            <mat-card class="shipping-card w-80" *ngIf="observacionesProyecto.observacion !== undefined">
+              <mat-card-content>
+          
+                <section [innerHTML]="observacionesProyecto.observacion" align="left" class="padding-section">
+                </section>
+          
+              </mat-card-content>
+            </mat-card>
+          </div>
         </section>
 
     </mat-expansion-panel>

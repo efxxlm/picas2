@@ -15,7 +15,7 @@
     <span>Estado: <b>Con póliza observada y devuelta</b></span>
   </p>
 </section>
-<section class="container">
+<section class="container" *ngIf="contrato !== undefined">
   <mat-card class="shipping-card var-main-gris">
     <mat-card-content>
       <p>
@@ -1015,7 +1015,7 @@
         />
       </span>
     </div>
-    <app-tabla-historial-observaciones-poliza></app-tabla-historial-observaciones-poliza>
+    <app-tabla-historial-observaciones-poliza [polizaObservacion]="contrato.polizaObservacion"></app-tabla-historial-observaciones-poliza>
     <div class="text-center mb-2em">
       <button mat-button color="warn" class="btn-guardar" type="submit">
         <img src="assets/img/icon/guardar.svg" alt="Regresar" />

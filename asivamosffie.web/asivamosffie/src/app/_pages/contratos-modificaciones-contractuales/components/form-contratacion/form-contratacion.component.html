@@ -59,9 +59,9 @@
         <div align="left">
           <mat-card class="border" style="margin-top: 2em;">
             <mat-card-content>
-              <p><b>Tipo de contrato</b>: {{ contratacion?.disponibilidadPresupuestal[0].opcionContratarCodigo }} </p>
-              <p><b>Valor del contrato</b>: {{ contratacion?.disponibilidadPresupuestal[0].valorSolicitud | currency:'COP':'symbol-narrow':'.0-0' }}</p>
-              <p><b>Plazo</b>: {{ contratacion?.disponibilidadPresupuestal[0].plazoMeses }} meses / {{ contratacion?.disponibilidadPresupuestal[0].plazoDias }} días</p>
+              <p><b>Tipo de contrato</b>: {{ contratacion?.disponibilidadPresupuestal[0]?.opcionContratarCodigo }} </p>
+              <p><b>Valor del contrato</b>: {{ contratacion?.disponibilidadPresupuestal[0]?.valorSolicitud | currency:'COP':'symbol-narrow':'.0-0' }}</p>
+              <p><b>Plazo</b>: {{ contratacion?.disponibilidadPresupuestal[0]?.plazoMeses }} meses / {{ contratacion?.disponibilidadPresupuestal[0]?.plazoDias }} días</p>
             </mat-card-content>
           </mat-card>
         </div>
