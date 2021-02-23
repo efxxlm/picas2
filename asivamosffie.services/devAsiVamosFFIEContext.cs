@@ -221,7 +221,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -1645,7 +1644,7 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.ActuacionAdelantadaOtro)
-                    .HasMaxLength(500)
+                    .HasMaxLength(1000)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
@@ -1679,7 +1678,7 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.ProximaActuacionOtro)
-                    .HasMaxLength(500)
+                    .HasMaxLength(1000)
                     .IsUnicode(false);
 
                 entity.Property(e => e.ResumenPropuestaFiduciaria)
@@ -1731,7 +1730,7 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaVencimiento).HasColumnType("datetime");
 
                 entity.Property(e => e.Observaciones)
-                    .HasMaxLength(2000)
+                    .HasMaxLength(3000)
                     .IsUnicode(false);
 
                 entity.Property(e => e.ProximaActuacionRequerida)
@@ -1787,7 +1786,7 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.Observaciones)
-                    .HasMaxLength(2000)
+                    .HasMaxLength(3000)
                     .IsUnicode(false);
 
                 entity.Property(e => e.ProximaActuacionRequerida)
