@@ -100,12 +100,12 @@
                             Enviar trámite a comité técnico
                         </button>
                         <button mat-raised-button color="accent" class="btn-table"
-                            *ngIf="(element.estadoControversiaCodigo=='1' || element.estadoControversiaCodigo=='3' || element.estadoControversiaCodigo=='4')&& element.registroCompletoNombre=='Incompleto'"
+                            *ngIf="(element.estadoControversiaCodigo=='1' || element.estadoControversiaCodigo=='2' || element.estadoControversiaCodigo=='3' || element.estadoControversiaCodigo=='4')&& element.registroCompletoNombre=='Incompleto'"
                             (click)=this.verDetalleEditarTramiteButton(element.controversiaContractualId);>
                             Ver detalle/Editar
                         </button>
                         <button mat-raised-button color="accent" class="btn-table"
-                            *ngIf="(element.estadoControversiaCodigo=='1' || element.estadoControversiaCodigo=='3' || element.estadoControversiaCodigo=='4')&& element.registroCompletoNombre=='Incompleto'"
+                            *ngIf="(element.estadoControversiaCodigo=='1' || element.estadoControversiaCodigo=='2' || element.estadoControversiaCodigo=='3' || element.estadoControversiaCodigo=='4')&& element.registroCompletoNombre=='Incompleto'"
                             (click)=this.deleteControversia(element.controversiaContractualId);>
                             Eliminar
                         </button>
