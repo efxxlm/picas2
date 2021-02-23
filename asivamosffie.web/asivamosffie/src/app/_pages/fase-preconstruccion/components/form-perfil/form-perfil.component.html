@@ -87,7 +87,7 @@
                   </label>
                 </div>
                 <div class="col d-flex">
-                  <mat-form-field>
+                  <mat-form-field style="margin-top: .7em;">
                     <mat-select formControlName="perfilCodigo" class="padding-left" required>
                       <mat-option *ngFor="let perfilCv of perfilesCv" [value]="perfilCv.codigo">
                         {{ perfilCv.nombre }}
@@ -621,7 +621,7 @@
           class="btn-guardar"
           type="button"
           (click)="guardar()"
-          [disabled]="formContratista.dirty === false"
+          [disabled]="perfil.dirty === false"
         >
           <img src="assets/img/icon/guardar.svg" />
         </button>

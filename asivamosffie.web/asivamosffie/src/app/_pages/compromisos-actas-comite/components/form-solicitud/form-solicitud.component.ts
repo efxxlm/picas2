@@ -1,3 +1,4 @@
+import { Dominio } from './../../../../core/_services/common/common.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { CommonService } from '../../../../core/_services/common/common.service';
@@ -37,14 +38,18 @@ export class FormSolicitudComponent implements OnInit {
     controversiaContractual: '4',
     defensaJudicial: '5'
   }
+  listaTipoSolicitud: Dominio[] = [];
 
   get compromisos() {
     return this.addressForm.get('compromisos') as FormArray;
   };
 
-  constructor ( private fb       : FormBuilder,
-                private commonSvc: CommonService ) 
+  constructor(
+    private fb: FormBuilder,
+    private commonSvc: CommonService ) 
   {
+    this.commonSvc.listaTipoSolicitud()
+      .subscribe( listaTipoSolicitud => this.listaTipoSolicitud = listaTipoSolicitud );
   };
 
   ngOnInit(): void {
@@ -55,6 +60,18 @@ export class FormSolicitudComponent implements OnInit {
     } );
   };
 
+  getSolicitudCodigo( tipoSolicitudCodigo: string ) {
+    if ( this.listaTipoSolicitud.length > 0 ) {
+      const tipoSolicitud = this.listaTipoSolicitud.filter( tipoSolicitud => tipoSolicitud.codigo === tipoSolicitudCodigo );
+
+      if ( tipoSolicitud.length > 0 ) {
+        return tipoSolicitud[0].nombre;
+      } else {
+        return 'No esta llegando el campo tipoSolicitudCodigo';
+      }
+    }
+  }
+
   innerObservacion ( observacion: string ) {
     if ( observacion !== undefined ) {
       const observacionHtml = observacion.replace( '"', '' );
@@ -63,17 +80,37 @@ export class FormSolicitudComponent implements OnInit {
   };
 
   resultadosVotaciones ( solicitud: any ) {
-    solicitud.sesionSolicitudVoto.forEach( sv => {
-      if (sv.esAprobado)
-        this.totalAprobado++;
-      else
-        this.totalNoAprobado++;
-    })
+    if ( this.esComiteFiduciario === true ) {
+      solicitud.sesionSolicitudVoto.forEach( sv => {
+        if ( sv.comiteTecnicoFiduciarioId !== undefined ) {
+          if ( sv.esAprobado === true ) {
+            this.totalAprobado++;
+          }
+          if ( sv.esAprobado === false ) {
+            this.totalNoAprobado++;
+          }
+        }
+      });
+    }
 
-    if ( this.totalNoAprobado > 0 )
-      this.resultadoVotacion = 'No Aprobó'
-    else
-      this.resultadoVotacion = 'Aprobó'
+    if ( this.esComiteFiduciario === false ) {
+      solicitud.sesionSolicitudVoto.forEach( sv => {
+        if ( sv.comiteTecnicoFiduciarioId === undefined ) {
+          if ( sv.esAprobado === true ) {
+            this.totalAprobado++;
+          }
+          if ( sv.esAprobado === false ) {
+            this.totalNoAprobado++;
+          }
+        }
+      });
+    }
+
+    if ( this.totalNoAprobado > 0 ) {
+      this.resultadoVotacion = 'No Aprobó';
+    } else {
+      this.resultadoVotacion = 'Aprobó';
+    }
   };
 
   compromisosFiduciario ( compromisos: any ) {

@@ -57,9 +57,7 @@ export class FormPerfilComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    setTimeout(() => {
-      this.perfilesProyecto();
-    }, 1000);
+    this.perfilesProyecto();
   }
 
   crearFormulario() {
@@ -460,7 +458,6 @@ export class FormPerfilComponent implements OnInit {
         value.proyectoId                   = this.proyectoId;
       } );
     }
-
     this.enviarPerfilesContrato.emit( perfiles );
   }
 
