@@ -388,8 +388,7 @@ namespace asivamosffie.services
                 template = template.Replace("_Nombre_Contratista_", ListVista.NombreContratista);
                 template = template.Replace("_Valor_Contrato_", string.Format("${0:#,0}", ListVista.ValorContrato.ToString()));  //fomato miles .
                 template = template.Replace("_Plazo_", ListVista.PlazoContrato);
-                template = template.Replace("_LinkF_", appSettingsService.DominioFront);
-
+                template = template.Replace("_LinkF_", appSettingsService.DominioFront); 
                 template = template.Replace("_Fecha_Revision_", pPolizaObservacion.FechaRevision.ToString("dd/MM/yyyy"));
                 template = template.Replace("_Estado_Revision_", _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Revision_Poliza && x.Codigo == pPolizaObservacion.EstadoRevisionCodigo).Select(x => x.Nombre).FirstOrDefault());
                 template = template.Replace("_Observaciones_", Helpers.Helpers.HtmlStringLimpio(pPolizaObservacion.Observacion));
@@ -520,10 +519,7 @@ namespace asivamosffie.services
             }
 
         }
-
-
-
-
+         
         public async Task<Respuesta> InsertContratoPoliza(ContratoPoliza contratoPoliza, AppSettingsService appSettingsService)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Contrato_Poliza, (int)EnumeratorTipoDominio.Acciones);
