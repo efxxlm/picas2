@@ -182,7 +182,7 @@ namespace asivamosffie.services
                         proyectoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
                     }
 
-                    foreach (var ContratoPerfil in ContratacionProyecto.Proyecto.ContratoPerfil.Reverse())
+                    foreach (var ContratoPerfil in ContratacionProyecto.Proyecto.ContratoPerfil)
                     {
                         if (ContratoPerfil.ContratoPerfilId > 0)
                         {
