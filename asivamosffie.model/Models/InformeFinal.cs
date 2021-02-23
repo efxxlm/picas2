@@ -36,6 +36,8 @@ namespace asivamosffie.model.Models
         public bool? RegistroCompletoEntregaEtc { get; set; }
         public bool? TieneObservacionesInterventoria { get; set; }
         public DateTime? FechaEnvioApoyoSupervisor { get; set; }
+        public DateTime? FechaEnvioGrupoNovedades { get; set; }
+        public DateTime? FechaAprobacionFinal { get; set; }
 
         public virtual Proyecto Proyecto { get; set; }
         public virtual ICollection<InformeFinalInterventoria> InformeFinalInterventoria { get; set; }
