@@ -57,7 +57,7 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
 
   minDate: Date;
   editorStyle = {
-    // height: '45px'
+    height: '45px'
   };
   config = {
     toolbar: [
@@ -86,7 +86,11 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
       return textolimpio.length;
     }
   }
-
+  textoLimpioAux(texto,n) {
+    if (texto!=undefined) {
+      return texto.getLength() > n ? n : texto.getLength();
+    }
+  }
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n, e.editor.getLength());
