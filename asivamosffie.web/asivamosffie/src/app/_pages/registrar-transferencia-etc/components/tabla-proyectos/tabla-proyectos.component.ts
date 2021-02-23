@@ -1,20 +1,21 @@
 import { Component, AfterViewInit, ViewChild, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { RegisterProjectEtcService } from 'src/app/core/_services/registerProjectETC/register-project-etc.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
-const ELEMENT_DATA = [
-  {
-    id: '1',
-    fechaTerminacion: '09/08/2021',
-    llaveMen: 'LJ776554',
-    tipoIntervencion: 'Remodelación',
-    institucionEducativa: 'I.E. María Villa Campo',
-    sedeEducativa: 'Única Sede',
-    estadoEntrega: 'Sin entrega a ETC',
-    estadoRegistro: 'Incompleto'
-  }
-];
+export interface RegistrarInterface {
+  informeFinalId: number,
+  fechaSuscripcion: Date,
+  llaveMen: string,
+  tipoIntervencion: string,
+  institucionEducativa: string,
+  sedeEducativa: string,
+  estadoEntregaETCString: string,
+  registroCompletoEntregaETC:boolean,
+}
 
 @Component({
   selector: 'app-tabla-proyectos',
@@ -22,25 +23,42 @@ const ELEMENT_DATA = [
   styleUrls: ['./tabla-proyectos.component.scss']
 })
 export class TablaProyectosComponent implements OnInit, AfterViewInit {
-
-  ELEMENT_DATA: any[];
+  ELEMENT_DATA : RegistrarInterface[] = [];
   displayedColumns: string[] = [
-    'fechaTerminacion',
+    'fechaSuscripcion',
     'llaveMen',
     'tipoIntervencion',
     'institucionEducativa',
     'sedeEducativa',
-    'estadoEntrega',
-    'estadoRegistro',
-    'id'
+    'estadoEntregaETCString',
+    'registroCompletoEntregaETC',
+    'informeFinalId'
   ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource<RegistrarInterface>(this.ELEMENT_DATA);
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  constructor() { }
+  constructor(
+    public dialog: MatDialog,
+    private registerProjectETCService: RegisterProjectEtcService,
+  ) { }
 
   ngOnInit(): void {
+    this.getListInformeFinal();
+  }
+
+  getListInformeFinal(){
+    this.registerProjectETCService.getListInformeFinal()
+    .subscribe(report => {
+      this.dataSource.data = report as RegistrarInterface[];
+    });
+  }
+
+  openDialog(modalTitle: string, modalText: string) {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
   }
 
   ngAfterViewInit() {

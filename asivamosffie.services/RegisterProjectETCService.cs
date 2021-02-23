@@ -59,11 +59,14 @@ namespace asivamosffie.services
 
         public async Task<ProyectoEntregaEtc> GetProyectoEntregaETCByInformeFinalId(int pInformeFinalId)
         {
+            //String numeroContratoObra = string.Empty, numeroContratoInterventoria = string.Empty, llaveMen = string.Empty;
+
             ProyectoEntregaEtc proyectoEntregaEtc = await _context.ProyectoEntregaEtc
                                         .Where(r => r.InformeFinalId == pInformeFinalId)
                                         .Include(r => r.RepresentanteEtcrecorrido)
+                                        .Include(r => r.InformeFinal)
+                                            .ThenInclude(r => r.Proyecto)
                                         .FirstOrDefaultAsync();
-
             return proyectoEntregaEtc;
         }
 
