@@ -218,7 +218,7 @@ namespace asivamosffie.services
 
             ListComiteTecnico.ForEach(l =>
             {
-                l.esVotoAprobado = l.SesionComentario.Where(r => r.MiembroSesionParticipanteId == pUserId && r.EstadoActaVoto == ConstantCodigoActas.Aprobada).Count() > 0 ? true : false; 
+                l.esVotoAprobado = l.SesionComentario.Where(r => r.MiembroSesionParticipanteId == pUserId && r.EstadoActaVoto == ConstantCodigoActas.Aprobada).Count() > 0 ? true : false;
             });
             return ListComiteTecnico;
         }
@@ -250,7 +250,8 @@ namespace asivamosffie.services
                 List<Dominio> ListParametricas = _context.Dominio.ToList();
                 List<Contratacion> ListContratacion = _context.Contratacion.ToList();
                 List<ProcesoSeleccion> ListProcesosSelecicon = _context.ProcesoSeleccion.ToList();
-
+                List<ControversiaContractual> ListControversiasContractuales = _context.ControversiaContractual.ToList();
+                List<NovedadContractual> ListModificacionesContractuales = _context.NovedadContractual.ToList();
                 foreach (var item in ListComiteTecnico)
                 {
                     List<VSesionParticipante> listaParticipantes = _context.VSesionParticipante.Where(r => r.ComiteTecnicoId == item.ComiteTecnicoId).ToList();
@@ -323,7 +324,36 @@ namespace asivamosffie.services
                                 SesionComiteSolicitudComiteTecnico.ProcesoSeleccion = ListProcesosSelecicon.Where(r => r.ProcesoSeleccionId == SesionComiteSolicitudComiteTecnico.SolicitudId).FirstOrDefault();
                             }
                         }
-
+                        if (SesionComiteSolicitudComiteTecnico.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.ControversiasContractuales)
+                        {
+                            if (SesionComiteSolicitudComiteTecnico.SolicitudId > 0)
+                            {
+                                SesionComiteSolicitudComiteTecnico.ControversiaContractual =
+                                    ListControversiasContractuales
+                                    .Where(r => r.ControversiaContractualId == SesionComiteSolicitudComiteTecnico.SolicitudId)
+                                    .FirstOrDefault();
+                            }
+                        }
+                        if (SesionComiteSolicitudComiteTecnico.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.ControversiasContractuales)
+                        {
+                            if (SesionComiteSolicitudComiteTecnico.SolicitudId > 0)
+                            {
+                                SesionComiteSolicitudComiteTecnico.ControversiaContractual =
+                                    ListControversiasContractuales
+                                    .Where(r => r.ControversiaContractualId == SesionComiteSolicitudComiteTecnico.SolicitudId)
+                                    .FirstOrDefault();
+                            }
+                        } 
+                        if (SesionComiteSolicitudComiteTecnico.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual)
+                        {
+                            if (SesionComiteSolicitudComiteTecnico.SolicitudId > 0)
+                            {
+                                SesionComiteSolicitudComiteTecnico.ModificacionContractual =
+                                    ListModificacionesContractuales
+                                    .Where(r => r.NovedadContractualId == SesionComiteSolicitudComiteTecnico.SolicitudId)
+                                    .FirstOrDefault();
+                            }
+                        }
                         if (!string.IsNullOrEmpty(SesionComiteSolicitudComiteTecnico.EstadoCodigo))
                         {
                             SesionComiteSolicitudComiteTecnico.EstadoCodigo = ListParametricas
@@ -346,6 +376,27 @@ namespace asivamosffie.services
                                 SesionComiteSolicitudComiteTecnico.ProcesoSeleccion =
                                     ListProcesosSelecicon
                                     .Where(r => r.ProcesoSeleccionId == SesionComiteSolicitudComiteTecnico.SolicitudId)
+                                    .FirstOrDefault();
+                            }
+                        }
+                        if (SesionComiteSolicitudComiteTecnico.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.ControversiasContractuales)
+                        {
+                            if (SesionComiteSolicitudComiteTecnico.SolicitudId > 0)
+                            {
+                                SesionComiteSolicitudComiteTecnico.ControversiaContractual =
+                                    ListControversiasContractuales
+                                    .Where(r => r.ControversiaContractualId == SesionComiteSolicitudComiteTecnico.SolicitudId)
+                                    .FirstOrDefault();
+                            }
+                        }
+
+                        if (SesionComiteSolicitudComiteTecnico.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual)
+                        {
+                            if (SesionComiteSolicitudComiteTecnico.SolicitudId > 0)
+                            {
+                                SesionComiteSolicitudComiteTecnico.ModificacionContractual =
+                                    ListModificacionesContractuales
+                                    .Where(r => r.NovedadContractualId == SesionComiteSolicitudComiteTecnico.SolicitudId)
                                     .FirstOrDefault();
                             }
                         }
