@@ -122,7 +122,7 @@
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.cualOtroActuacionAdelantada.value">
-                                {{500 - (textoLimpio(addressForm.get('cualOtroActuacionAdelantada').value))}}
+                                {{500 - (textoLimpio(cualOtroActuacionAdelantada.quillEditor,500))}}
                             </span>
                             <span class="contador miles"
                                 *ngIf="!addressForm.controls.cualOtroActuacionAdelantada.value">
@@ -199,7 +199,7 @@
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.cualOtroActuacionRequerida.value">
-                                {{500 - (textoLimpio(addressForm.get('cualOtroActuacionRequerida').value))}}
+                                {{500 - (textoLimpio(cualOtroActuacionRequerida.quillEditor,500))}}
                             </span>
                             <span class="contador miles" *ngIf="!addressForm.controls.cualOtroActuacionRequerida.value">
                                 500
@@ -446,7 +446,7 @@
                         style="padding: 1.5em 0em 1.2em;"></quill-editor>
                 </div>
                 <span class="contador miles" *ngIf="addressForm.controls.observaciones.value">
-                    {{1000 - (textoLimpio(addressForm.get('observaciones').value))}}
+                    {{1000 - (textoLimpio(observaciones.quillEditor,500))}}
                 </span>
                 <span class="contador miles" *ngIf="!addressForm.controls.observaciones.value">
                     1000
