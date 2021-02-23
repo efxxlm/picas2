@@ -980,15 +980,15 @@ namespace asivamosffie.services
 
 
 
-                        foreach (var observacion in perfil.ConstruccionPerfilObservacion)
-                        {
+                        //foreach (var observacion in perfil.ConstruccionPerfilObservacion)
+                        //{
 
-                            observacion.UsuarioCreacion = pConstruccion.UsuarioCreacion;
-                            observacion.FechaCreacion = DateTime.Now;
-                            observacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Interventoria;
+                        //    observacion.UsuarioCreacion = pConstruccion.UsuarioCreacion;
+                        //    observacion.FechaCreacion = DateTime.Now;
+                        //    observacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Interventoria;
 
-                            //perfil.ConstruccionPerfilObservacion.Add(observacion);
-                        }
+                        //    //perfil.ConstruccionPerfilObservacion.Add(observacion);
+                        //}
 
                         foreach (var radicado in perfil.ConstruccionPerfilNumeroRadicado)
                         {

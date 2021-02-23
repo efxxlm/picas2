@@ -397,7 +397,8 @@ export class HojaVidaContratistaComponent implements OnInit {
         value.cantidadHvRecibidas                 = Number( value.cantidadHvRecibidas );
         value.cantidadHvRequeridas                = Number( value.cantidadHvRequeridas );
         value['construccionPerfilNumeroRadicado'] = ( value.contratoPerfilNumeroRadicado[0][ 'numeroRadicado' ].length === 0 ) ? null : value.contratoPerfilNumeroRadicado;
-        value['construccionPerfilObservacion']    = value.observacion ? [{ observacion: value.observacion }] : null;
+        //value['construccionPerfilObservacion']    = value.observacion ? [{ observacion: value.observacion }] : null;
+        value['observaciones']                    = value.observacion;
         value.fechaAprobacion                     = value.fechaAprobacion ? new Date( value.fechaAprobacion ).toISOString() : null;
         value.contratoId                          = this.contratoId;
         value.proyectoId                          = this.proyectoId;

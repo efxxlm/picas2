@@ -174,7 +174,7 @@ namespace asivamosffie.services
             //            });
 
 
-
+            cofinanciacion.CofinanciacionAportante = cofinanciacion.CofinanciacionAportante.OrderBy(r => r.CofinanciacionAportanteId).ToList();
             return cofinanciacion;
         }
 

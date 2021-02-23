@@ -130,12 +130,12 @@ namespace asivamosffie.services
                 //VALIDAR PREDIO PRINCIPAL
                 if (
                /*string.IsNullOrEmpty(proyecto.PredioPrincipal.TipoPredioCodigo)
-            || */string.IsNullOrEmpty(proyecto.PredioPrincipal.UbicacionLatitud)
-                  || string.IsNullOrEmpty(proyecto.PredioPrincipal.UbicacionLongitud)
+            || */( string.IsNullOrEmpty(proyecto.PredioPrincipal.UbicacionLatitud) || proyecto.PredioPrincipal.UbicacionLatitud == "°" )
+                  || (string.IsNullOrEmpty(proyecto.PredioPrincipal.UbicacionLongitud) || proyecto.PredioPrincipal.UbicacionLongitud == "°" )
                   || string.IsNullOrEmpty(proyecto.PredioPrincipal.Direccion)
                   || string.IsNullOrEmpty(proyecto.PredioPrincipal.DocumentoAcreditacionCodigo)
                   || string.IsNullOrEmpty(proyecto.PredioPrincipal.NumeroDocumento)
-                    //|| string.IsNullOrEmpty(proyecto.PredioPrincipal.CedulaCatastral)
+                  || (proyecto.PredioPrincipal.DocumentoAcreditacionCodigo == "1" && string.IsNullOrEmpty(proyecto.PredioPrincipal.CedulaCatastral))
                     )
                 {
                     return false;
@@ -234,7 +234,7 @@ namespace asivamosffie.services
                   || string.IsNullOrEmpty(predio.Direccion)
                   || string.IsNullOrEmpty(predio.DocumentoAcreditacionCodigo)
                   || string.IsNullOrEmpty(predio.NumeroDocumento)
-                    //|| string.IsNullOrEmpty(predio.CedulaCatastral)
+                  || (predio.DocumentoAcreditacionCodigo == "1" && string.IsNullOrEmpty(predio.CedulaCatastral))
                     )
                 {
                     return false;
