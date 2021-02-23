@@ -57,7 +57,7 @@
             <strong>Tipo de intervención: </strong> <em>{{ this.tipoIntervencion }}</em>
           </p>
           <p>
-            <strong>Valor del contrato: </strong> <em> {{ this.valorContrato | currency }}</em>
+            <strong>Valor del contrato: </strong> <em> {{ this.valorContrato | currency: 'COP':'symbol-narrow':'.0-0' }}</em>
           </p>
           <p>
             <strong>Plazo: </strong> <em>{{ this.plazoContrato }}</em>

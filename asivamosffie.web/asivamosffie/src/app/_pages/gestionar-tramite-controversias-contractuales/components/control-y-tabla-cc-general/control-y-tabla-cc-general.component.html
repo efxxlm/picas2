@@ -132,7 +132,7 @@
                             Actualizar trámite
                         </button>
                         <button mat-raised-button color="accent" class="btn-table"
-                            *ngIf="element.estadoControversiaCodigo=='2'"
+                            *ngIf="element.estadoControversiaCodigo=='2'&& element.registroCompletoNombre=='Completo'"
                             (click)=this.registrarControversia(element.controversiaContractualId);>
                             Registrar controversia
                         </button>
