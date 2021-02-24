@@ -834,14 +834,10 @@ namespace asivamosffie.services
             string EstadoActa = ConstantCodigoActas.Devuelta;
 
             if (pComiteTecnico.SesionComentario
-                .Where(r => r.EstadoActaVoto == ConstantCodigoActas.Aprobada).Count()
-                                            == pComiteTecnico.SesionComentario.Count())
-            {
+                                           .Where(r => r.EstadoActaVoto == ConstantCodigoActas.Aprobada).Count()
+                                                                      == pComiteTecnico.SesionComentario.Count()) 
                 EstadoActa = ConstantCodigoActas.Aprobada;
-
-            }
-
-
+             
             //Reiniciar los votos Cuando ya todos estan  
             if (EstadoActa == ConstantCodigoActas.Devuelta)
             {
@@ -851,11 +847,12 @@ namespace asivamosffie.services
                 {
                     _context.Set<SesionComentario>()
                                    .Where(s => s.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId)
-                                   .Update(s => new SesionComentario
-                                   {
-                                       EstadoActaVoto = string.Empty,
-                                       ValidacionVoto = null
-                                   });
+                                                                                               .Update(s => new SesionComentario
+                                                                                               {
+                                                                                                   EstadoActaVoto = string.Empty,
+                                                                                                   ValidacionVoto = false,
+                                                                                                   FechaModificacion = DateTime.Now
+                                                                                               });
                 } 
             }
             return EstadoActa;
