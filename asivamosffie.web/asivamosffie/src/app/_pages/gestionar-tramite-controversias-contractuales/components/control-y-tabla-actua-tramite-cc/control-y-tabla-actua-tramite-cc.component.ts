@@ -45,7 +45,9 @@ export class ControlYTablaActuaTramiteCcComponent implements OnInit {
   enviarComiteTecnicoTramAct(id){
     this.services.CambiarEstadoActuacionSeguimiento(id,'2').subscribe((data:any)=>{
       if(data.isSuccessful==true){
-        this.ngOnInit();
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+          () => this.router.navigate(['gestionarTramiteControversiasContractuales/actualizarTramiteControversia'])
+        );
       }
     });
   }
@@ -57,7 +59,9 @@ export class ControlYTablaActuaTramiteCcComponent implements OnInit {
   }
   eliminarActuacion(id){
     this.services.EliminarControversiaActuacion(id).subscribe((data:any)=>{
-      this.ngOnInit();
+      this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+        () => this.router.navigate(['gestionarTramiteControversiasContractuales/actualizarTramiteControversia'])
+      );
     });
   }
   verDetalleActuacion(id){

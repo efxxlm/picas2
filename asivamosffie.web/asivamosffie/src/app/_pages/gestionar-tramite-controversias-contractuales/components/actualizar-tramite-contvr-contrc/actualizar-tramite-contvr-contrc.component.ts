@@ -57,7 +57,7 @@ export class ActualizarTramiteContvrContrcComponent implements OnInit {
     this.services.GetListGrillaControversiaActuacion(id).subscribe((data0:any)=>{
       //cuando hay reclamaciones
       for(let estado of data0){
-        if(estado.estadoAvanceTramiteCodigo=='14'){
+        if(estado.estadoAvanceTramiteCodigo=='14'&& estado.estadoActuacionCodigo=='2'){
           this.tieneReclamaciones.push(estado);
         }
       }
