@@ -66,7 +66,9 @@ export class TablaControversiasRaccComponent implements OnInit {
   }
 
   irActualizarTramite(id){
-    this.router.navigate(['/registrarActuacionesControversiasContractuales/actualizarTramite', id]);
+    this.conServices.ChangeStateActuacion(id).subscribe(res=>{
+      this.router.navigate(['/registrarActuacionesControversiasContractuales/actualizarTramite', id]);
+    });
   }
 
   finalizarActuacion(id){
