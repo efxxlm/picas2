@@ -836,5 +836,13 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
+
+        [Route("GetSeguimientoActuacionDerivadabyId")]
+        [HttpGet]
+        public async Task<SeguimientoActuacionDerivada> GetSeguimientoActuacionDerivadabyId(int pSeguimientoActuacionDerivadaId)
+        {
+            var respuesta = await _contractualControversy.GetSeguimientoActuacionDerivadabyId(pSeguimientoActuacionDerivadaId);
+            return respuesta;
+        }
     }
 }

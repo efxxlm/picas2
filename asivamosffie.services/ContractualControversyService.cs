@@ -289,7 +289,7 @@ namespace asivamosffie.services
                 Include(x => x.ControversiaActuacion).
                 ThenInclude(x => x.SeguimientoActuacionDerivada)
                 .FirstOrDefault();
-            actuacionSeguimiento.NumeroReclamacion = actuacionSeguimiento.NumeroActuacionReclamacion;
+            actuacionSeguimiento.NumeroReclamacion = actuacionSeguimiento == null ? "" :  actuacionSeguimiento.NumeroActuacionReclamacion;
             //actuacionSeguimiento.NumeroReclamacion = "REC " + actuacionSeguimiento.ActuacionSeguimientoId.ToString("0000");
             //    NumeroActuacionFormat = "ACT controversia " + actuacionSeguimiento.ActuacionSeguimientoId.ToString("0000"),
             var vTipoControversiaCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(actuacionSeguimiento.ControversiaActuacion.ControversiaContractual.TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipo_de_controversia);
@@ -3777,6 +3777,12 @@ namespace asivamosffie.services
         public async Task<ControversiaActuacionMesa> GetMesaByMesaId(int pControversiaMesaID)
         {
             return _context.ControversiaActuacionMesa.Find(pControversiaMesaID);
+        }
+
+        public async Task<SeguimientoActuacionDerivada> GetSeguimientoActuacionDerivadabyId(int pSeguimientoActuacionDerivadaId)
+        {
+
+            return await _context.SeguimientoActuacionDerivada.Where(r => r.SeguimientoActuacionDerivadaId == pSeguimientoActuacionDerivadaId).FirstOrDefaultAsync();
         }
     }
 }
