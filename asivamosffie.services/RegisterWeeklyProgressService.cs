@@ -52,11 +52,13 @@ namespace asivamosffie.services
             List<dynamic> dynamics = new List<dynamic>();
             flujoInversions.ForEach(flujoInversion =>
             {
+                string Valor = String.Format("{0:n}", flujoInversion.Valor);
+                string Porcentaje = String.Format("{0:n}", Math.Round((decimal)((flujoInversion.Valor * 100) / ValorTotalProyecto), 2))+("%");
                 dynamics.Add(new
                 {
-                    item = flujoInversion.Programacion.Actividad,
-                    valor = String.Format("{0:n}", flujoInversion.Valor),
-                    Porcentaje = String.Format("{0:n}", Math.Round((decimal)((flujoInversion.Valor * 100) / ValorTotalProyecto), 2)).Concat("%")
+                    Item = flujoInversion.Programacion.Actividad,
+                    Valor = Valor,
+                    Porcentaje = Porcentaje
                 });
             });
 
