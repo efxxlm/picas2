@@ -32,16 +32,14 @@
                     <button mat-raised-button color="accent" class="btn-table"
                         (click)="this.cargarActaSuscrita(element.contratoId, element.tipoContratoNombre, element.numeroContratoObra)"
                         *ngIf="element.estadoActaCodigo === listaEstadoActaCodigo.conActaGenerada"> Cargar acta suscrita</button>
-                        <!--
                     <button mat-raised-button color="accent" class="btn-table"
-                        (click)="this.descargarActaDesdeTabla(element.contratoId)"
-                        *ngIf="element.estadoActa=='Con acta en proceso de firma'"> Descargar acta preliminar </button>
-                    -->
+                        (click)="this.descargarActaDesdeTabla(element.contratoId, element.numeroContratoObra)"
+                        *ngIf="element.estadoActaCodigo === listaEstadoActaCodigo.conActaGenerada"> Descargar acta preliminar </button>
                     <button mat-raised-button
                             color="accent"
                             class="btn-table"
                             *ngIf="element.estadoActaCodigo === listaEstadoActaCodigo.conActaPreliminarGenerada"
-                            (click)="this.enviarActaParaFirma(element.contratoId,element.numeroContratoObra)">
+                            (click)="this.enviarActaParaFirma(element.contratoId, element.numeroContratoObra)">
                             Enviar acta para firma
                     </button>
                     <button mat-raised-button
@@ -61,7 +59,7 @@
                     <button mat-raised-button
                             color="accent"
                             class="btn-table"
-                            *ngIf="element.estadoActa === listaEstadoActaCodigo.conActaPreliminarGenerada"
+                            *ngIf="element.estadoActaCodigo === listaEstadoActaCodigo.conActaPreliminarGenerada"
                             (click)="this.verDetalleEditar(element.contratoId)">
                             Ver detalle/Editar
                     </button>
@@ -79,7 +77,7 @@
                             color="accent"
                             class="btn-table"
                             (click)="this.verDetalleActaCargada(element.contratoId)"
-                            *ngIf="element.estadoActaCodigo === listaEstadoActaCodigo.conActaSuscritaCargada">
+                            *ngIf="element.estadoActaCodigo === listaEstadoActaCodigo.conActaSuscritaCargada || element.estadoActaCodigo === listaEstadoActaCodigo.conActaGenerada">
                         Ver detalle
                     </button>
                     <button mat-raised-button

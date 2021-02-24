@@ -137,6 +137,22 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
     });
   }
 
+  getValueMeses( value: number ) {
+    if ( value !== null && this.mesPlazoIni !== undefined ) {
+      if ( value > this.mesPlazoIni ) {
+        this.addressForm.get( 'mesPlazoEjFase1' ).setValue( this.mesPlazoIni );
+      }
+    }
+  }
+
+  getValueDias( value: number ) {
+    if ( value !== null && this.diasPlazoIni !== undefined ) {
+      if ( value > this.diasPlazoIni ) {
+        this.addressForm.get( 'diasPlazoEjFase1' ).setValue( this.diasPlazoIni );
+      }
+    }
+  }
+
   getSizeInput( value: any ) {
     if ( value !== null ) {
       return value.toString().length;
@@ -154,6 +170,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
       this.ocpion = 2;
     }
   }
+
   openDialogConfirmar(modalTitle: string, modalText: string) {
     const confirmarDialog = this.dialog.open(ModalDialogComponent, {
       width: '30em',
@@ -323,7 +340,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
             "observaciones":this.addressForm.value.observacionesEspeciales,
             'esActa':false,
             'esActaFase1':true,
-            'esSupervision':esSupervisionBool
+            'esSupervision': this.rolAsignado !== 11 ? true : false//perfil 8 es supervisor
           }];
           const arrayContrato: EditContrato = {
             contratoId: this.idContrato,

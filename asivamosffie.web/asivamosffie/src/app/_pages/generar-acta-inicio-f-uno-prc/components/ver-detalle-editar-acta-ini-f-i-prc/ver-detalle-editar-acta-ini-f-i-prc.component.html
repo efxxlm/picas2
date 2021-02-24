@@ -219,6 +219,7 @@
                       max="99"
                       required
                       (keypress)="number($event)"
+                      (ngModelChange)="getValueMeses( $event )"
                       onKeyPress="if(this.value.length>=this.maxLength) return false;"
                       type="number"
                       formControlName="mesPlazoEjFase1"
@@ -231,7 +232,7 @@
                     matTooltipClass="info-tooltip"
                   >
                     {{
-                      2 -
+                      3 -
                         (addressForm.get('mesPlazoEjFase1').value
                           ? addressForm.get('mesPlazoEjFase1').value.toString().length
                           : 0)
@@ -267,6 +268,7 @@
                       max="31"
                       required
                       (keypress)="number($event)"
+                      (ngModelChange)="getValueDias( $event )"
                       onKeyPress="if(this.value.length>=this.maxLength) return false;if(this.value>=this.max) return false;"
                       type="number"
                       formControlName="diasPlazoEjFase1"
@@ -342,7 +344,7 @@
                     matTooltipClass="info-tooltip"
                   >
                     {{
-                      2 -
+                      3 -
                         (addressForm.get('mesPlazoEjFase2').value !== null
                           ? addressForm.get('mesPlazoEjFase2').value.toString().length
                           : 0)
@@ -429,7 +431,6 @@
                 [modules]="config"
                 (onContentChanged)="maxLength($event, 500)"
                 formControlName="observacionesEspeciales"
-                required
               >
               </quill-editor>
             </div>

@@ -84,6 +84,7 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
   }
   loadData(id){
     this.service.GetContratoByContratoId(id).subscribe((data:any)=>{
+      console.log( data );
       this.cargarDataParaInsercion(data);
       this.numContrato = data.numeroContrato;
       this.fechaFirmaContrato = data.fechaFirmaContrato;
@@ -107,6 +108,7 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
       console.log( data );
       const obsArraySupervisor = [];
       const obsArrayConsideraciones = [];
+      console.log( data );
       data.forEach( obs => {
         if ( obs.esSupervision === true ) {
           obsArraySupervisor.push( obs );
