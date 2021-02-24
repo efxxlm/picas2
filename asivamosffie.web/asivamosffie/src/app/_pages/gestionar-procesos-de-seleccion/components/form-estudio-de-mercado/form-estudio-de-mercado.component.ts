@@ -151,16 +151,32 @@ export class FormEstudioDeMercadoComponent implements OnInit {
     });
   }
 
+  openDialogSiNo(modalTitle: string, modalText: string) {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+
+    return dialogRef;
+  }
+
   borrarArray(borrarForm: any, i: number) {    
-    
-    //consumo servicio
-    console.log(borrarForm.value[i]);
-    if(borrarForm.value[i].procesoSeleccionCotizacionId>0)
-    {
-      this.procesoSeleccionService.deleteProcesoSeleccionCotizacionByID(borrarForm.value[i].procesoSeleccionCotizacionId).subscribe(borrarForm.removeAt(i));
-    }
-    //ajusto el contador  
-    this.addressForm.get('cuantasCotizaciones').setValue(borrarForm.length);    
+
+    let dialogRef = this.openDialogSiNo('', '<b>¿Está seguro de eliminar este registro?</b>')
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === true) {
+        this.procesoSeleccionService.deleteProcesoSeleccionCotizacionByID(borrarForm.value[i].procesoSeleccionCotizacionId)
+              .subscribe( respuesta => {
+                if ( respuesta.code == "200"){
+                  borrarForm.removeAt(i);
+                  //ajusto el contador  
+                  this.addressForm.get('cuantasCotizaciones').setValue(borrarForm.length);    
+                  this.openDialog('','<b>La información se ha eliminado correctamente.</b>')
+                }
+              }); 
+      }
+    });
   }
 
   textoLimpio(texto: string) {
