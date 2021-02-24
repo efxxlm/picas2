@@ -515,19 +515,16 @@
                 matTooltip="Debe ingresar la información en el campo para continuar"
                 matTooltipClass="info-tooltip"
                 *ngIf="
-                (perfil.get('rutaSoporte').invalid && perfil.get('rutaSoporte').touched) ||
-                (perfil.get('rutaSoporte').invalid && estaEditando)
+                  (perfil.get('rutaSoporte').invalid && perfil.get('rutaSoporte').touched) ||
+                  (perfil.get('rutaSoporte').invalid && estaEditando)
                 "
               />
             </span>
           </section>
           <div class="d-flex justify-content-center size-text-descriptivo">
-            <span class="info-url margen-url"
-              >
-              Indique la ruta en la que se encuentra el soporte de las hojas de vida y el Acta de aprobación de
-              personal
-              </span
-            >
+            <span class="info-url margen-url">
+              Indique la ruta en la que se encuentra el soporte de las hojas de vida y el Acta de aprobación de personal
+            </span>
           </div>
         </mat-card-content>
       </mat-card>
@@ -574,7 +571,7 @@
         style="margin-top: 3em"
         *ngIf="perfil.get('observacionSupervisor').value !== null"
       >
-        <mat-card-header class="header-card">
+        <mat-card-header class="header-card header-card--margin">
           <mat-card-title class="header-card--text"> Observaciones del supervisor </mat-card-title>
         </mat-card-header>
         <mat-card-content>
@@ -588,7 +585,7 @@
       </mat-card>
       <div align="center" *ngIf="perfil.value.observacionDevolucion">
         <mat-card class="border" style="margin-top: 20px">
-          <mat-card-header class="header-card">
+          <mat-card-header class="header-card header-card--margin">
             <mat-card-title class="header-card--text grayTitle"> Observaciones de la supervisión </mat-card-title>
           </mat-card-header>
           <mat-card-content align="left">
