@@ -260,7 +260,7 @@ namespace asivamosffie.services
                 foreach (var item in ListComiteTecnico)
                 {
                     bool BorrarCompromisosFiduciarios = item.EsComiteFiduciario ?? false;
-                    
+
                     List<VSesionParticipante> listaParticipantes = _context.VSesionParticipante.Where(r => r.ComiteTecnicoId == item.ComiteTecnicoId).ToList();
                     item.SesionParticipanteView = listaParticipantes;
                     if (item.SesionComiteTecnicoCompromiso.Count() > 0)
@@ -312,7 +312,7 @@ namespace asivamosffie.services
                     }
                     foreach (var SesionComiteSolicitudComiteTecnico in item.SesionComiteSolicitudComiteTecnico)
                     {
-                        if (BorrarCompromisosFiduciarios && SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Count() > 0) 
+                        if (BorrarCompromisosFiduciarios && SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Count() > 0)
                             SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso = null;
 
                         if (SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Count() > 0)
@@ -840,6 +840,24 @@ namespace asivamosffie.services
                 EstadoActa = ConstantCodigoActas.Aprobada;
 
             }
+
+
+            //Reiniciar los votos Cuando ya todos estan  
+            if (EstadoActa == ConstantCodigoActas.Devuelta)
+            {
+                List<SesionComentario> ListSesionComientario = _context.SesionComentario.Where(r => r.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId).ToList();
+                 
+                foreach (var SesionComientario in ListSesionComientario)
+                {
+                    _context.Set<SesionComentario>()
+                                   .Where(s => s.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId)
+                                   .Update(s => new SesionComentario
+                                   {
+                                       EstadoActaVoto = string.Empty,
+                                       ValidacionVoto = null
+                                   });
+                } 
+            }
             return EstadoActa;
         }
 
@@ -1011,8 +1029,6 @@ namespace asivamosffie.services
                 };
             }
         }
-
-
 
         //plantilla - Acta de comité técnico
         //Forozco
