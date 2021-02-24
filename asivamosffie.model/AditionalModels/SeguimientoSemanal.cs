@@ -7,7 +7,9 @@ namespace asivamosffie.model.Models
 {
     public partial class SeguimientoSemanal
     {
-         
+        [NotMapped]
+        public List<dynamic> PeriodoReporteMensualFinanciero { get; set; }
+
         [NotMapped]
         public dynamic AvanceAcumulado { get; set; }     
 

@@ -102,6 +102,22 @@ namespace asivamosffie.services
             return await _context.VRegistrarAvanceSemanal.OrderByDescending(r => r.FechaUltimoReporte).ToListAsync();
         }
 
+        public List<dynamic> GetPeriodoReporteMensualFinanciero(SeguimientoSemanal pSeguimientoSemanal)
+        {
+            List<SeguimientoSemanal> seguimientoSemanals =
+                                   _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pSeguimientoSemanal.ContratacionProyectoId && r.NumeroSemana < pSeguimientoSemanal.NumeroSemana)
+                                                                                                       .OrderByDescending(s => s.NumeroSemana).Take(4).ToList();
+
+            List<dynamic> dynamics = new List<dynamic>
+            {
+                seguimientoSemanals.FirstOrDefault().FechaInicio,
+                seguimientoSemanals.LastOrDefault().FechaInicio
+            };
+
+
+            return dynamics;
+        }
+
         public async Task<SeguimientoSemanal> GetLastSeguimientoSemanalByContratacionProyectoIdOrSeguimientoSemanalId(int pContratacionProyectoId, int pSeguimientoSemanalId)
         {
             List<Dominio> TipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).ToList();
@@ -117,10 +133,7 @@ namespace asivamosffie.services
 
                     .Include(r => r.ContratacionProyecto)
                           .ThenInclude(r => r.Contratacion)
-                              .ThenInclude(r => r.Contrato) 
-                                     .ThenInclude(r => r.ContratoConstruccion)
-                                          .ThenInclude(r => r.MesEjecucion)
-
+                              .ThenInclude(r => r.Contrato)
                        .Include(r => r.ContratacionProyecto)
                           .ThenInclude(r => r.Proyecto)
                               .ThenInclude(r => r.InstitucionEducativa)
@@ -168,9 +181,13 @@ namespace asivamosffie.services
                        .Include(r => r.SeguimientoSemanalRegistrarComiteObra)
 
                        .FirstOrDefaultAsync();
-                     
+
+                    //enviar periodo reporte financiero
+                    if (seguimientoSemanal.NumeroSemana % 5 == 0)
+                        seguimientoSemanal.PeriodoReporteMensualFinanciero = GetPeriodoReporteMensualFinanciero(seguimientoSemanal);
+
                     seguimientoSemanal.SeguimientoSemanalObservacion = null;
-                     
+
                     if (seguimientoSemanal.SeguimientoSemanalAvanceFisico.Count() > 0)
                         seguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraNombre = !string.IsNullOrEmpty(seguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo) ? EstadoDeObraSeguimientoSemanal.Where(r => r.Codigo == seguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo).FirstOrDefault().Nombre : "En ejecución";
 
@@ -280,8 +297,6 @@ namespace asivamosffie.services
                         .Include(r => r.ContratacionProyecto)
                           .ThenInclude(r => r.Contratacion)
                               .ThenInclude(r => r.Contrato)
-                                     .ThenInclude(r => r.ContratoConstruccion)
-                                          .ThenInclude(r => r.MesEjecucion)
                        .Include(r => r.ContratacionProyecto)
                           .ThenInclude(r => r.Proyecto)
                               .ThenInclude(r => r.InstitucionEducativa)
@@ -333,6 +348,10 @@ namespace asivamosffie.services
                        .Include(r => r.SeguimientoSemanalRegistrarComiteObra)
 
                        .FirstOrDefaultAsync();
+
+                    //enviar periodo reporte financiero
+                    if (seguimientoSemanal.NumeroSemana % 5 == 0)
+                        seguimientoSemanal.PeriodoReporteMensualFinanciero = GetPeriodoReporteMensualFinanciero(seguimientoSemanal);
 
                     seguimientoSemanal.SeguimientoSemanalObservacion = null;
                     if (seguimientoSemanal.SeguimientoSemanalAvanceFisico.Count() > 0)
