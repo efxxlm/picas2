@@ -2941,6 +2941,10 @@ namespace asivamosffie.services
                 }
                 else
                 {
+                    int consecutivo = _context.SeguimientoActuacionDerivada
+                                     .Where(r => r.ControversiaActuacionId == actuacionSeguimiento.ControversiaActuacionId)
+                                     .Count();
+                    actuacionSeguimiento.NumeroActuacionDerivada = "Act_derivada " + (consecutivo + 1).ToString("000");
                     actuacionSeguimiento.FechaCreacion = DateTime.Now;
                     _context.SeguimientoActuacionDerivada.Add(actuacionSeguimiento);
                 }
