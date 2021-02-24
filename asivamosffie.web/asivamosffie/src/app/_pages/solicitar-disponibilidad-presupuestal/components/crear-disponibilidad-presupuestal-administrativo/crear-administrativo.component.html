@@ -10,10 +10,15 @@
 
   <div class="row justify-content-center">
     <div class="pr-1">
-      <label class="label-left" for="consecutivo" [class.color-secondaryColor]="
-      (formulario.get('consecutivo').invalid && formulario.get('consecutivo').touched) ||
-      (formulario.get('consecutivo').invalid && estaEditando)
-    ">Consecutivo proyecto administrativo:</label>
+      <label
+        class="label-left"
+        for="consecutivo"
+        [class.color-secondaryColor]="
+          (formulario.get('consecutivo').invalid && formulario.get('consecutivo').touched) ||
+          (formulario.get('consecutivo').invalid && estaEditando)
+        "
+        >Consecutivo proyecto administrativo:</label
+      >
     </div>
     <div class="col">
       <mat-form-field class="select-width">
@@ -25,19 +30,19 @@
       </mat-form-field>
     </div>
     <span class="icon-incompleto">
-        <img
-          class="icon-incompleto--img"
-          src="assets/img/icon/incompleto.svg"
-          alt="este campo es requerido"
-          [matTooltipPosition]="'above'"
-          matTooltip="Debe ingresar la información en el campo para continuar"
-          matTooltipClass="info-tooltip"
-          *ngIf="
-            (formulario.get('consecutivo').invalid && formulario.get('consecutivo').touched) ||
-            (formulario.get('consecutivo').invalid && estaEditando)
-          "
-        />
-      </span>
+      <img
+        class="icon-incompleto--img"
+        src="assets/img/icon/incompleto.svg"
+        alt="este campo es requerido"
+        [matTooltipPosition]="'above'"
+        matTooltip="Debe ingresar la información en el campo para continuar"
+        matTooltipClass="info-tooltip"
+        *ngIf="
+          (formulario.get('consecutivo').invalid && formulario.get('consecutivo').touched) ||
+          (formulario.get('consecutivo').invalid && estaEditando)
+        "
+      />
+    </span>
   </div>
 
   <mat-card class="shipping-card var-main-gris">
@@ -66,7 +71,13 @@
   </mat-card>
 
   <div class="d-flex align-items-center">
-    <div class="text-area-quill">
+    <div
+      class="text-area-quill"
+      [class.color-secondaryColor]="
+        (formulario.get('objeto').invalid && formulario.get('objeto').touched) ||
+        (formulario.get('objeto').invalid && estaEditando)
+      "
+    >
       <label for="alcanceParticular" class="text-area-quill--label">Objeto</label>
       <quill-editor
         class="quill-editor-style"

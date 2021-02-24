@@ -256,6 +256,8 @@ export class FormPerfilComponent implements OnInit {
       if ( this.perfilesCompletos === 0 && this.perfilesEnProceso === 0 && this.perfilProyecto.length > 0 ) {
         this.perfilesCompletados.emit( 'sin-diligenciar' );
       }
+      this.estaEditando = true;
+      this.formContratista.markAllAsTouched();
     }
   }
 
@@ -422,6 +424,7 @@ export class FormPerfilComponent implements OnInit {
 
   guardar() {
     this.estaEditando = true;
+    this.formContratista.markAllAsTouched();
     const perfiles: ContratoPerfil[] = this.formContratista.get( 'perfiles' ).value;
 
     if ( this.perfilProyecto.length === 0 ) {

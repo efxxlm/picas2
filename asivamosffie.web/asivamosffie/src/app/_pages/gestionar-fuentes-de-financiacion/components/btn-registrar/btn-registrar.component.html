@@ -39,37 +39,22 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
-            <span class="icon-incompleto">
-              <img
-                class="icon-incompleto--img"
-                src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
+          </div>
+          <span class="icon-incompleto m-0">
+            <img
+              class="icon-incompleto--img"
+              src="assets/img/icon/incompleto.svg"
+              alt="este campo es requerido"
               [matTooltipPosition]="'above'"
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
-                *ngIf="
-                  (regitrarAporteForm.get('tipoAportante').invalid &&
-                    regitrarAporteForm.get('tipoAportante').touched) ||
-                  (regitrarAporteForm.get('tipoAportante').invalid && estaEditando)
-                "
-              />
-            </span>
-            <span class="icon-incompleto">
-              <img
-                class="icon-incompleto--img"
-                src="assets/img/icon/incompleto.svg"
-                alt="este campo es requerido"
-                [matTooltipPosition]="'above'"
-                matTooltip="Debe ingresar la información en el campo para continuar"
-                matTooltipClass="info-tooltip"
-                *ngIf="
-                  (regitrarAporteForm.get('tipoAportante').invalid &&
-                    regitrarAporteForm.get('tipoAportante').touched) ||
-                  (regitrarAporteForm.get('tipoAportante').invalid && estaEditando)
-                "
-              />
-            </span>
-          </div>
+              *ngIf="
+                (regitrarAporteForm.get('tipoAportante').invalid &&
+                  regitrarAporteForm.get('tipoAportante').touched) ||
+                (regitrarAporteForm.get('tipoAportante').invalid && estaEditando)
+              "
+            />
+          </span>
         </div>
       </div>
     </div>
