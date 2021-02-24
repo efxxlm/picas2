@@ -259,11 +259,12 @@ namespace asivamosffie.services
 
                 foreach (var item in ListComiteTecnico)
                 {
+                    bool BorrarCompromisosFiduciarios = item.EsComiteFiduciario ?? false;
+                    
                     List<VSesionParticipante> listaParticipantes = _context.VSesionParticipante.Where(r => r.ComiteTecnicoId == item.ComiteTecnicoId).ToList();
                     item.SesionParticipanteView = listaParticipantes;
                     if (item.SesionComiteTecnicoCompromiso.Count() > 0)
                         item.SesionComiteTecnicoCompromiso = item.SesionComiteTecnicoCompromiso.Where(r => !(bool)r.Eliminado).ToList();
-
 
                     foreach (var SesionComiteTema in item.SesionComiteTema)
                     {
@@ -311,6 +312,8 @@ namespace asivamosffie.services
                     }
                     foreach (var SesionComiteSolicitudComiteTecnico in item.SesionComiteSolicitudComiteTecnico)
                     {
+                        if (BorrarCompromisosFiduciarios && SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Count() > 0) 
+                            SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso = null;
 
                         if (SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Count() > 0)
                             SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso = SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Where(s => s.Eliminado != true).ToList();
@@ -356,9 +359,13 @@ namespace asivamosffie.services
 
                     foreach (var SesionComiteSolicitudComiteTecnico in item.SesionComiteSolicitudComiteTecnicoFiduciario)
                     {
+
+                        if (!BorrarCompromisosFiduciarios && SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Count() > 0)
+                            SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso = null;
+
                         if (SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Count() > 0)
                             SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso = SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Where(s => s.Eliminado != true).ToList();
-                         
+
                         if (SesionComiteSolicitudComiteTecnico.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
                         {
                             SesionComiteSolicitudComiteTecnico.Contratacion = ListContratacion.Where(r => r.ContratacionId == SesionComiteSolicitudComiteTecnico.SolicitudId).FirstOrDefault();
