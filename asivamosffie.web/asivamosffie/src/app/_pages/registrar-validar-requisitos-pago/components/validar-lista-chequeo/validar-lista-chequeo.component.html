@@ -1,7 +1,7 @@
 <mat-accordion *ngIf="solicitudPagoModificado !== undefined">
     <mat-expansion-panel class="expansion-style sub-expansion" *ngFor="let solicitudPagoListaChequeo of solicitudPagoModificado.solicitudPagoListaChequeo; index as i">
         <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title sin-diligenciar" style="font-size: .8em !important;">
+            <mat-panel-title class="expansion-style--title" style="font-size: .8em !important;" [ngClass]="getEstadoSemaforo( solicitudPagoListaChequeo.solicitudPagoListaChequeoRespuesta )">
                 {{ firstLetterUpperCase( solicitudPagoListaChequeo.listaChequeo?.nombre ) }}
             </mat-panel-title>
         </mat-expansion-panel-header>

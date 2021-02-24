@@ -166,7 +166,6 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
                         totalRegistroCompleto++;
                     }
                 } );
-    
                 if ( totalRegistroCompleto > 0 && totalRegistroCompleto < solicitudPagoListaChequeo.length ) {
                     semaforoListaChequeo = 'en-proceso';
                 }

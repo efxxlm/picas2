@@ -96,6 +96,16 @@ export class ValidarListaChequeoComponent implements OnInit {
       //dialogRef.afterClosed().subscribe(value => {});
     }
 
+    getEstadoSemaforo( solicitudPagoListaChequeoRespuesta: any[] ) {
+        if ( solicitudPagoListaChequeoRespuesta.length > 0 ) {
+            let enProceso = 0;
+            let completo = 0;
+            solicitudPagoListaChequeoRespuesta.forEach( listaChequeo => {
+                console.log( Object.keys( listaChequeo ) );
+            } );
+        }
+    }
+
     callSubsanacion(){
       const dialogConfig = new MatDialogConfig();
       dialogConfig.height = 'auto';
