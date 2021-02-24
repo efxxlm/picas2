@@ -106,16 +106,13 @@ namespace asivamosffie.services
         {
             List<SeguimientoSemanal> seguimientoSemanals =
                                    _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pSeguimientoSemanal.ContratacionProyectoId && r.NumeroSemana < pSeguimientoSemanal.NumeroSemana)
-                                                                                                       .OrderByDescending(s => s.NumeroSemana).Take(4).ToList();
+                                                                                                       .OrderBy(s => s.NumeroSemana).Take(4).ToList();
 
-            List<dynamic> dynamics = new List<dynamic>
+            return new List<dynamic>
             {
                 seguimientoSemanals.FirstOrDefault().FechaInicio,
                 seguimientoSemanals.LastOrDefault().FechaFin
-            };
-
-
-            return dynamics;
+            }; 
         }
 
         public async Task<SeguimientoSemanal> GetLastSeguimientoSemanalByContratacionProyectoIdOrSeguimientoSemanalId(int pContratacionProyectoId, int pSeguimientoSemanalId)
