@@ -117,13 +117,15 @@ namespace asivamosffie.services
 
                     .Include(r => r.ContratacionProyecto)
                           .ThenInclude(r => r.Contratacion)
-                              .ThenInclude(r => r.Contrato)
+                              .ThenInclude(r => r.Contrato) 
+                                     .ThenInclude(r => r.ContratoConstruccion)
+                                          .ThenInclude(r => r.MesEjecucion)
+
                        .Include(r => r.ContratacionProyecto)
                           .ThenInclude(r => r.Proyecto)
                               .ThenInclude(r => r.InstitucionEducativa)
                        .Include(r => r.SeguimientoDiario)
                               .ThenInclude(r => r.SeguimientoDiarioObservaciones)
-
                           //Financiero
                           .Include(r => r.SeguimientoSemanalAvanceFinanciero)
                        //Fisico
@@ -275,9 +277,11 @@ namespace asivamosffie.services
                 {
                     SeguimientoSemanal seguimientoSemanal = await _context.SeguimientoSemanal.Where(r => r.SeguimientoSemanalId == pSeguimientoSemanalId)
 
-                         .Include(r => r.ContratacionProyecto)
+                        .Include(r => r.ContratacionProyecto)
                           .ThenInclude(r => r.Contratacion)
                               .ThenInclude(r => r.Contrato)
+                                     .ThenInclude(r => r.ContratoConstruccion)
+                                          .ThenInclude(r => r.MesEjecucion)
                        .Include(r => r.ContratacionProyecto)
                           .ThenInclude(r => r.Proyecto)
                               .ThenInclude(r => r.InstitucionEducativa)

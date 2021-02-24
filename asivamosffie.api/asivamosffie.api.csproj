@@ -25,4 +25,5 @@
     <ProjectReference Include="..\asivamosffie.authorization\asivamosffie.authorization.csproj" />
     <ProjectReference Include="..\asivamosffie.services\asivamosffie.services.csproj" />
   </ItemGroup>
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 </Project>
