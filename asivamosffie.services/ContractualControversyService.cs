@@ -2808,7 +2808,7 @@ namespace asivamosffie.services
                             var dmActuacionEstado = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.EstadoCodigo, (int)EnumeratorTipoDominio.Estados_Actuacion_Derivada);
                             var dmReclamacionEstado = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.EstadoActuacionReclamacionCodigo, (int)EnumeratorTipoDominio.Estados_Reclamacion);
                             string actuacion = dmActuacion == null ? "" : dmActuacion.Nombre;
-                            string estado = dmActuacionEstado == null ? "" : dmActuacionEstado.Nombre;
+                            string estado = dmActuacionEstado == null ? "Sin registro" : dmActuacionEstado.Nombre;
 
                             string estadoReclamacion = dmReclamacionEstado == null ? "" : dmReclamacionEstado.Nombre;
                             //Dominio EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
