@@ -74,6 +74,7 @@ export interface SesionComiteTema{
     generaCompromiso?: boolean,
     cantCompromisos?: number,
     registroCompleto?: boolean,
+    registroCompletoActa?: boolean,
 
     completo?: boolean,
 
