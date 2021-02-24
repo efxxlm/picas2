@@ -154,9 +154,7 @@ namespace asivamosffie.services
 
                 if (!string.IsNullOrEmpty(pContrato.ModalidadCodigo))
                     contratoOld.ModalidadCodigo = pContrato.ModalidadCodigo;
-
-                contratoOld.ModalidadCodigo = pContrato.ModalidadCodigo;
-                  
+                 
                 if (!string.IsNullOrEmpty(pContrato.NumeroContrato))
                     contratoOld.NumeroContrato = pContrato.NumeroContrato;
 
