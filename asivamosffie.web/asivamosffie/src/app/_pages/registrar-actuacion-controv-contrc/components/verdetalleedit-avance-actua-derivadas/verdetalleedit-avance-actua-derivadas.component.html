@@ -5,18 +5,19 @@
         </a>
     </div>
     <h1 class="title-menu--h1">
-        Ver detalle/Editar actuación derivada ACT_derivada0001
+        Ver detalle/Editar actuación derivada {{actuacionDerivadaInfo?.numeroActuacionDerivada}}
     </h1>
     <p class="info-sub-title">
-        <span>Número de solicitud: <b>CO001</b></span>
-        <span>Número de contrato: <b>C223456789</b></span>
-        <span>Tipo de controversia: <b>Terminación anticipada por incumplimiento (TAI)</b></span>
+        <span>Número de solicitud: <b>{{controversia?.controversiaContractual.numeroSolicitud}}</b></span>
+        <span>Número de contrato: <b>{{controversia?.numeroContrato}}</b></span>
+        <span>Tipo de controversia: <b>{{controversia?.tipoControversia}}</b></span>
     </p>
     <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
         <mat-card class="shipping-card">
             <mat-card-content align="left">
-                <p><strong>Actuación en la que se requiere participación o insumo de la fiduciaria: </strong>Solicitar descargos al contratista de obra</p>
-                <p><strong>Fecha de la actuación adelantada: </strong>20/07/2020</p>
+                <p><strong>Actuación en la que se requiere participación o insumo de la fiduciaria: </strong>{{controversia?.numeroActuacionFormat}}</p>
+                <p><strong>Fecha de la actuación adelantada: </strong>{{controversia?.fechaActuacion | date:
+                    'dd/MM/yyyy'}}</p>
                 <div class="row">
                     <div class="col-md-8">
                       <div class="row">
@@ -74,8 +75,8 @@
                             <div class="col">
                                 <mat-form-field class="select-width">
                                     <mat-select formControlName="estadoActuacionDerivada" required>
-                                        <mat-option *ngFor="let contr of estadoDerivadaArray" [value]="contr.value">
-                                            {{ contr.name }}
+                                        <mat-option *ngFor="let estadoActuacionDerivada of estadoDerivadaArray" [value]="estadoActuacionDerivada">
+                                            {{ estadoActuacionDerivada.nombre }}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
