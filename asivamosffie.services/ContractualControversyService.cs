@@ -3784,5 +3784,42 @@ namespace asivamosffie.services
 
             return await _context.SeguimientoActuacionDerivada.Where(r => r.SeguimientoActuacionDerivadaId == pSeguimientoActuacionDerivadaId).FirstOrDefaultAsync();
         }
+
+        public async Task<Respuesta> ChangeStateActuacion(int pControversiaActuacionId, string pUsuarioModifica)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_estado_Actuacion_Seguimiento, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                ControversiaActuacion actuacionSeguimientoOld;
+
+                actuacionSeguimientoOld = _context.ControversiaActuacion.Find(pControversiaActuacionId);
+                actuacionSeguimientoOld.UsuarioModificacion = pUsuarioModifica;
+                actuacionSeguimientoOld.FechaModificacion = DateTime.Now;
+                actuacionSeguimientoOld.EstadoActuacionReclamacionCodigo = "2";//Actualizar trámite
+
+                _context.SaveChanges();
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesContractualControversy.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales, ConstantMessagesContractualControversy.OperacionExitosa, idAccion, pUsuarioModifica, "FINALIZAR ESTADO ACTUACION SEGUIMIENTO")
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantMessagesContractualControversy.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales, ConstantMessagesContractualControversy.Error, idAccion, pUsuarioModifica, ex.InnerException.ToString())
+                };
+            }
+        }
     }
 }

@@ -844,5 +844,23 @@ namespace asivamosffie.api.Controllers
             var respuesta = await _contractualControversy.GetSeguimientoActuacionDerivadabyId(pSeguimientoActuacionDerivadaId);
             return respuesta;
         }
+
+        /*4.4.1*/
+        [HttpPut]
+        [Route("ChangeStateActuacion")]
+        public async Task<IActionResult> ChangeStateActuacion([FromQuery] int pControversiaActuacionId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _contractualControversy.ChangeStateActuacion(pControversiaActuacionId, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
     }
 }
