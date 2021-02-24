@@ -111,7 +111,7 @@ namespace asivamosffie.services
             List<dynamic> dynamics = new List<dynamic>
             {
                 seguimientoSemanals.FirstOrDefault().FechaInicio,
-                seguimientoSemanals.LastOrDefault().FechaInicio
+                seguimientoSemanals.LastOrDefault().FechaFin
             };
 
 
