@@ -283,6 +283,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
       data: { modalTitle, modalText }
     });
   }
+
   editorStyle = {
     height: '50%'
   };
