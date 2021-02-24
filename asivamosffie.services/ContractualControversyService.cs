@@ -2115,8 +2115,13 @@ namespace asivamosffie.services
                         List<ControversiaActuacionMesa> listaMesas = new List<ControversiaActuacionMesa>();
                         listaActuaciones.ForEach(actuacion =>
                         {
-                            listaMesas.AddRange(_context.ControversiaActuacionMesa
-                                                                 .Where(ca => ca.ControversiaActuacionId == actuacion.ControversiaActuacionId).ToList());
+                            List<ControversiaActuacionMesa> controversiaActuacionMesa = _context.ControversiaActuacionMesa
+                                                                 .Where(ca => ca.ControversiaActuacionId == actuacion.ControversiaActuacionId)?.ToList();
+                            
+                            if (controversiaActuacionMesa != null) {
+                                listaMesas.AddRange(controversiaActuacionMesa);
+                            }
+
                         });
 
                         // cantidad de registros con marca cerrada
@@ -3232,8 +3237,13 @@ namespace asivamosffie.services
                 }
                 else
                 {
+                   /* int consecutivo = _context.ControversiaActuacionMesa
+                                .Where(r => r.ControversiaActuacionId == prmMesa.ControversiaActuacionId)
+                                .Count();*/
+
                     prmMesa.FechaCreacion = DateTime.Now;
                     prmMesa.EstadoRegistroCodigo = "1";
+                    //prmMesa.NumeroMesaTrabajo = "MT " + (consecutivo + 1).ToString("000");
                     _context.ControversiaActuacionMesa.Add(prmMesa);
                 }
                 //al papa le cambio el estado
@@ -3615,6 +3625,7 @@ namespace asivamosffie.services
                         EstadoActuacionReclamacionCodigo = (controversia.EstadoActuacionReclamacionCodigo != null) ? controversia.EstadoActuacionReclamacionCodigo : "",
                         EstadoActuacionReclamacion = EstadoActuacionReclamacionTmp,
                         ActuacionSeguimientoId = ActuacionSeguimientoIdTmp,
+                        //NumeroMesa = controversiamesa == null ? "" : controversiamesa.NumeroMesaTrabajo,
                         NumeroMesa = controversiamesa == null ? "" : "MT " + controversiamesa.ControversiaActuacionMesaId.ToString("0000"),
                         EstadoMesa = controversiamesa == null ? "" : controversiamesa.EstadoRegistroCodigo,
                         EstadoCodigoMesa = stadomesa,

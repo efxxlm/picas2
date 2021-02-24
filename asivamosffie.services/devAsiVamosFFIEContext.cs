@@ -1729,6 +1729,8 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaVencimiento).HasColumnType("datetime");
 
+                entity.Property(e => e.NumeroMesaTrabajo).HasMaxLength(100);
+
                 entity.Property(e => e.Observaciones)
                     .HasMaxLength(3000)
                     .IsUnicode(false);
