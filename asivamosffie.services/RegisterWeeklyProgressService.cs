@@ -36,6 +36,32 @@ namespace asivamosffie.services
 
         #endregion
 
+        private List<dynamic> GetTableFinanciera(SeguimientoSemanal pSeguimientoSemanal)
+        { 
+            int ContratoConstruccionId = _context.FlujoInversion.Where(f => f.SeguimientoSemanalId == pSeguimientoSemanal.SeguimientoSemanalId).Select(r => r.ContratoConstruccionId).FirstOrDefault();
+
+            decimal ValorTotalProyecto = (decimal)(_context.FlujoInversion
+                                            .Where(f => f.ContratoConstruccionId == ContratoConstruccionId)
+                                            .Sum(f => f.Valor));
+             
+            List<FlujoInversion> flujoInversions = _context.FlujoInversion
+                                                          .Include(r => r.Programacion)
+                                                          .Where(r => r.SeguimientoSemanal.ContratacionProyectoId == pSeguimientoSemanal.ContratacionProyectoId && r.SeguimientoSemanal.NumeroSemana < pSeguimientoSemanal.NumeroSemana)
+                                                          .Take(4).ToList();
+           
+            List<dynamic> dynamics = new List<dynamic>();
+            flujoInversions.ForEach(flujoInversion =>
+            {
+                dynamics.Add(new
+                {
+                    item = flujoInversion.Programacion.Actividad,
+                    valor = String.Format("{0:n}", flujoInversion.Valor),
+                    Porcentaje = String.Format("{0:n}", Math.Round((decimal)((flujoInversion.Valor * 100) / ValorTotalProyecto), 2)).Concat("%")
+                });
+            });
+
+            return dynamics;
+        }
         #region Get
         public async Task<dynamic> GetObservacionBy(int pSeguimientoSemanalId, int pPadreId, string pTipoCodigo)
         {
@@ -106,13 +132,14 @@ namespace asivamosffie.services
         {
             List<SeguimientoSemanal> seguimientoSemanals =
                                    _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pSeguimientoSemanal.ContratacionProyectoId && r.NumeroSemana < pSeguimientoSemanal.NumeroSemana)
-                                                                                                       .OrderBy(s => s.NumeroSemana).Take(4).ToList();
+                                                                                                       .OrderBy(s => s.NumeroSemana)
+                                                                                                                                    .Take(4).ToList();
 
             return new List<dynamic>
             {
                 seguimientoSemanals.FirstOrDefault().FechaInicio,
                 seguimientoSemanals.LastOrDefault().FechaFin
-            }; 
+            };
         }
 
         public async Task<SeguimientoSemanal> GetLastSeguimientoSemanalByContratacionProyectoIdOrSeguimientoSemanalId(int pContratacionProyectoId, int pSeguimientoSemanalId)
@@ -181,7 +208,11 @@ namespace asivamosffie.services
 
                     //enviar periodo reporte financiero
                     if (seguimientoSemanal.NumeroSemana % 5 == 0)
+                    {
                         seguimientoSemanal.PeriodoReporteMensualFinanciero = GetPeriodoReporteMensualFinanciero(seguimientoSemanal);
+                        seguimientoSemanal.TablaFinanciera = GetTableFinanciera(seguimientoSemanal);
+                    }
+                      
 
                     seguimientoSemanal.SeguimientoSemanalObservacion = null;
 
@@ -235,11 +266,7 @@ namespace asivamosffie.services
 
                     seguimientoSemanal.FlujoInversion = _context.FlujoInversion.Include(r => r.Programacion).Where(r => r.SeguimientoSemanalId == seguimientoSemanal.SeguimientoSemanalId && r.Programacion.TipoActividadCodigo == "C").ToList();
 
-                    //foreach (var FlujoInversion in seguimientoSemanal.FlujoInversion)
-                    //{
-                    //    FlujoInversion.Programacion.RangoDias = (FlujoInversion.Programacion.FechaFin - FlujoInversion.Programacion.FechaInicio).TotalDays;
-                    //}
-
+             
                     List<int> ListSeguimientoSemanalId = _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == seguimientoSemanal.ContratacionProyectoId).Select(r => r.SeguimientoSemanalId).ToList();
 
                     List<Programacion> ListProgramacion = _context.Programacion.FromSqlRaw("SELECT DISTINCT p.* FROM dbo.Programacion AS p INNER JOIN dbo.FlujoInversion AS f ON p.ProgramacionId = f.ProgramacionId INNER JOIN dbo.SeguimientoSemanal AS s ON f.SeguimientoSemanalId = s.SeguimientoSemanalId WHERE s.ContratacionProyectoId = " + seguimientoSemanal.ContratacionProyectoId + " AND p.TipoActividadCodigo = 'C'").ToList();
@@ -332,23 +359,22 @@ namespace asivamosffie.services
 
                         //Gestion Obra Social
                         .Include(r => r.SeguimientoSemanalGestionObra)
-                           .ThenInclude(r => r.SeguimientoSemanalGestionObraSocial)
-
+                           .ThenInclude(r => r.SeguimientoSemanalGestionObraSocial) 
                        .Include(r => r.SeguimientoSemanalGestionObra)
-                           .ThenInclude(r => r.SeguimientoSemanalGestionObraAlerta)
-
-
-                       .Include(r => r.SeguimientoSemanalReporteActividad)
-
-                       .Include(r => r.SeguimientoSemanalRegistroFotografico)
-
-                       .Include(r => r.SeguimientoSemanalRegistrarComiteObra)
-
+                           .ThenInclude(r => r.SeguimientoSemanalGestionObraAlerta) 
+                       .Include(r => r.SeguimientoSemanalReporteActividad) 
+                       .Include(r => r.SeguimientoSemanalRegistroFotografico) 
+                       .Include(r => r.SeguimientoSemanalRegistrarComiteObra) 
                        .FirstOrDefaultAsync();
-
+                     
                     //enviar periodo reporte financiero
                     if (seguimientoSemanal.NumeroSemana % 5 == 0)
+                    {
                         seguimientoSemanal.PeriodoReporteMensualFinanciero = GetPeriodoReporteMensualFinanciero(seguimientoSemanal);
+                        seguimientoSemanal.TablaFinanciera = GetTableFinanciera(seguimientoSemanal);
+                    }
+
+
 
                     seguimientoSemanal.SeguimientoSemanalObservacion = null;
                     if (seguimientoSemanal.SeguimientoSemanalAvanceFisico.Count() > 0)
