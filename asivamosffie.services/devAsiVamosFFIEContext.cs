@@ -150,6 +150,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<SeguimientoSemanal> SeguimientoSemanal { get; set; }
         public virtual DbSet<SeguimientoSemanalAvanceFinanciero> SeguimientoSemanalAvanceFinanciero { get; set; }
         public virtual DbSet<SeguimientoSemanalAvanceFisico> SeguimientoSemanalAvanceFisico { get; set; }
+        public virtual DbSet<SeguimientoSemanalAvanceFisicoProgramacion> SeguimientoSemanalAvanceFisicoProgramacion { get; set; }
         public virtual DbSet<SeguimientoSemanalGestionObra> SeguimientoSemanalGestionObra { get; set; }
         public virtual DbSet<SeguimientoSemanalGestionObraAlerta> SeguimientoSemanalGestionObraAlerta { get; set; }
         public virtual DbSet<SeguimientoSemanalGestionObraAmbiental> SeguimientoSemanalGestionObraAmbiental { get; set; }
@@ -222,6 +223,8 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValidarSeguimientoSemanal> VValidarSeguimientoSemanal { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -5206,6 +5209,29 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.SeguimientoSemanalId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SeguimientoSemanalAvanceFisico_SeguimientoSemanal");
+            });
+
+            modelBuilder.Entity<SeguimientoSemanalAvanceFisicoProgramacion>(entity =>
+            {
+                entity.Property(e => e.AvanceFisicoCapitulo).HasColumnType("decimal(38, 3)");
+
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.SeguimientoSemanalAvanceFisico)
+                    .WithMany(p => p.SeguimientoSemanalAvanceFisicoProgramacion)
+                    .HasForeignKey(d => d.SeguimientoSemanalAvanceFisicoId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SeguimientoSemanalAvanceFisicoProgramacion_SeguimientoSemanalAvanceFisico");
             });
 
             modelBuilder.Entity<SeguimientoSemanalGestionObra>(entity =>

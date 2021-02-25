@@ -143,12 +143,12 @@ namespace asivamosffie.services
         }
 
         public List<Programacion> GetListProgramacionBySeguimientoSemanal(SeguimientoSemanal pSeguimientoSemanal)
-        { 
+        {
             List<Programacion> ListProgramacionTipoC = _context.Programacion
                                                 .Include(r => r.ContratoConstruccion)
-                                                .Where(r=> r.TipoActividadCodigo == "C")
+                                                .Where(r => r.TipoActividadCodigo == "C")
                                                 .OrderByDescending(r => r.ProgramacionId).ToList();
-             
+
             List<Programacion> ListProgramacionTipoI = _context.Programacion
                                                 .Include(r => r.ContratoConstruccion)
                                                 .Where(r => r.TipoActividadCodigo == "I")
@@ -177,7 +177,6 @@ namespace asivamosffie.services
                         programacionItem.ContratoConstruccion = null;
                         programacionCapitulo.ContratoConstruccion = null;
                         programacionItem.Capitulo = programacionCapitulo;
-                      
                         break;
                     }
                 }
@@ -185,7 +184,6 @@ namespace asivamosffie.services
             }
             return ListProgramacion.Distinct().ToList();
         }
-
 
         public async Task<SeguimientoSemanal> GetLastSeguimientoSemanalByContratacionProyectoIdOrSeguimientoSemanalId(int pContratacionProyectoId, int pSeguimientoSemanalId)
         {
@@ -959,8 +957,7 @@ namespace asivamosffie.services
 
                 _context.Update(seguimientoSemanalMod);
                 _context.SaveChanges();
-
-
+                 
                 return new Respuesta
                 {
 
@@ -987,18 +984,7 @@ namespace asivamosffie.services
         private void SaveUpdateAvanceFisico(SeguimientoSemanal pSeguimientoSemanal, string usuarioCreacion)
         {
             bool RegistroCompleto = true;
-
-            foreach (var FlujoInversion in pSeguimientoSemanal.FlujoInversion)
-            {
-                Programacion programacionOld = _context.Programacion.Where(r => r.ProgramacionId == FlujoInversion.ProgramacionId).FirstOrDefault();
-                programacionOld.AvanceFisicoCapitulo = FlujoInversion.Programacion.AvanceFisicoCapitulo;
-                programacionOld.ProgramacionCapitulo = FlujoInversion.Programacion.ProgramacionCapitulo;
-
-                if (!programacionOld.AvanceFisicoCapitulo.HasValue)
-                {
-                    RegistroCompleto = false;
-                }
-            }
+             
             //EstadosDisponibilidad codigo =  7 6 cuando esta estos estados de obra desabilitar 
             ///Validar Estado De obra 
             //Actualizar estado obra
@@ -1060,6 +1046,9 @@ namespace asivamosffie.services
                 pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo = contratacionProyectoValidarEstadoObra.EstadoObraCodigo;
 
                 _context.SeguimientoSemanalAvanceFisico.Add(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault());
+
+                CrearEditarSeguimientoSemanalAvanceFisicoProgramacion(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().SeguimientoSemanalAvanceFisicoProgramacion, pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().UsuarioCreacion);
+                 
             }
             else
             {
@@ -1072,6 +1061,32 @@ namespace asivamosffie.services
                 seguimientoSemanalAvanceFisicoOld.EstadoObraCodigo = contratacionProyectoValidarEstadoObra.EstadoObraCodigo;
                 seguimientoSemanalAvanceFisicoOld.ProgramacionSemanal = pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().ProgramacionSemanal;
                 seguimientoSemanalAvanceFisicoOld.AvanceFisicoSemanal = pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().AvanceFisicoSemanal;
+                 
+                CrearEditarSeguimientoSemanalAvanceFisicoProgramacion(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().SeguimientoSemanalAvanceFisicoProgramacion, pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().UsuarioCreacion);
+
+            }
+        }
+
+        private void CrearEditarSeguimientoSemanalAvanceFisicoProgramacion(ICollection<SeguimientoSemanalAvanceFisicoProgramacion> List, string strUsuario)
+        {
+            foreach (var item in List)
+            {
+                if (item.SeguimientoSemanalAvanceFisicoProgramacionId == 0)
+                {
+
+                    item.UsuarioCreacion = strUsuario;
+                    item.FechaCreacion = DateTime.Now;
+                    item.Eliminado = false;
+                    _context.SeguimientoSemanalAvanceFisicoProgramacion.Add(item);
+                }
+                else
+                {
+                    SeguimientoSemanalAvanceFisicoProgramacion itemOld = _context.SeguimientoSemanalAvanceFisicoProgramacion.Find(item.SeguimientoSemanalAvanceFisicoProgramacionId);
+
+                    itemOld.UsuarioModificacion = strUsuario;
+                    itemOld.FechaModificacion = DateTime.Now;
+                    itemOld.AvanceFisicoCapitulo = item.AvanceFisicoCapitulo; 
+                } 
             }
         }
 
