@@ -144,16 +144,20 @@ namespace asivamosffie.services
 
         public List<Programacion> GetListProgramacionBySeguimientoSemanal(SeguimientoSemanal pSeguimientoSemanal)
         {
-            List<Contrato> ListConstrato = (List<Contrato>)_context.SeguimientoSemanal.Where(s => s.SeguimientoSemanalId == pSeguimientoSemanal.SeguimientoSemanalId).Include(c => c.ContratacionProyecto).ThenInclude(c => c.Contratacion).ThenInclude(c => c.Contrato).ThenInclude(cc => cc.ContratoConstruccion).ThenInclude(p => p.Programacion).Select(r => r.ContratacionProyecto.Contratacion.Contrato.ToList());
-            List<Programacion> ListProgramacion = new List<Programacion>();
+            SeguimientoSemanal listProgramacion = _context.SeguimientoSemanal.Where(r => r.SeguimientoSemanalId == pSeguimientoSemanal.SeguimientoSemanalId)
+                  .Include(r => r.FlujoInversion).ThenInclude(r => r.ContratoConstruccion).ThenInclude(p => p.Programacion).FirstOrDefault();
 
-            foreach (var contrato in ListConstrato)
+
+            List<Programacion> ListProgramacion = new List<Programacion>();
+            foreach (var FlujoInversion in listProgramacion.FlujoInversion)
             {
-                foreach (var ContratoConstruccion in contrato.ContratoConstruccion)
+                foreach (var Programacion in FlujoInversion.ContratoConstruccion.Programacion)
                 {
-                    ListProgramacion.AddRange(ContratoConstruccion.Programacion);
+                    if (Programacion.FechaInicio > pSeguimientoSemanal.FechaInicio && Programacion.FechaInicio < pSeguimientoSemanal.FechaFin)
+                        ListProgramacion.Add(Programacion); 
                 }
             }
+
             return ListProgramacion;
         }
         public async Task<SeguimientoSemanal> GetLastSeguimientoSemanalByContratacionProyectoIdOrSeguimientoSemanalId(int pContratacionProyectoId, int pSeguimientoSemanalId)
