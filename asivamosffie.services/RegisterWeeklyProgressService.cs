@@ -142,6 +142,20 @@ namespace asivamosffie.services
             };
         }
 
+        public List<Programacion> GetListProgramacionBySeguimientoSemanal(SeguimientoSemanal pSeguimientoSemanal)
+        {
+            List<Contrato> ListConstrato = (List<Contrato>)_context.SeguimientoSemanal.Where(s => s.SeguimientoSemanalId == pSeguimientoSemanal.SeguimientoSemanalId).Include(c => c.ContratacionProyecto).ThenInclude(c => c.Contratacion).ThenInclude(c => c.Contrato).ThenInclude(cc => cc.ContratoConstruccion).ThenInclude(p => p.Programacion).Select(r => r.ContratacionProyecto.Contratacion.Contrato.ToList());
+            List<Programacion> ListProgramacion = new List<Programacion>();
+
+            foreach (var contrato in ListConstrato)
+            {
+                foreach (var ContratoConstruccion in contrato.ContratoConstruccion)
+                {
+                    ListProgramacion.AddRange(ContratoConstruccion.Programacion);
+                }
+            }
+            return ListProgramacion;
+        }
         public async Task<SeguimientoSemanal> GetLastSeguimientoSemanalByContratacionProyectoIdOrSeguimientoSemanalId(int pContratacionProyectoId, int pSeguimientoSemanalId)
         {
             try
@@ -278,6 +292,11 @@ namespace asivamosffie.services
             List<InstitucionEducativaSede> ListInstitucionEducativaSede = _context.InstitucionEducativaSede.ToList();
             List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
             List<Dominio> EstadoDeObraSeguimientoSemanal = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Obra_Avance_Semanal).ToList();
+
+
+            //Agregar Programacion por seguimiento semanal
+            seguimientoSemanal.ListProgramacion = GetListProgramacionBySeguimientoSemanal(seguimientoSemanal);
+
 
             //enviar periodo reporte financiero
             if (seguimientoSemanal.NumeroSemana % 5 == 0)

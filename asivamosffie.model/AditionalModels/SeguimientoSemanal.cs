@@ -21,5 +21,8 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public int CantidadTotalDiasActividades { get; set; }
+
+        [NotMapped]
+        public List<Programacion>ListProgramacion{ get; set; }
     }
 }
