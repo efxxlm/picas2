@@ -153,7 +153,7 @@ namespace asivamosffie.services
             {
                 foreach (var Programacion in FlujoInversion.ContratoConstruccion.Programacion)
                 {
-                    if (Programacion.FechaInicio > pSeguimientoSemanal.FechaInicio && Programacion.FechaInicio < pSeguimientoSemanal.FechaFin)
+                    if (Programacion.FechaInicio >= pSeguimientoSemanal.FechaInicio && Programacion.FechaInicio <= pSeguimientoSemanal.FechaFin)
                         ListProgramacion.Add(Programacion); 
                 }
             }
