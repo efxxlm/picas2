@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 })
 export class TablaBalanceFinancieroGtlcComponent implements OnInit {
   @Input() verDetalleBtn;
-  displayedColumns: string[] = ['fechaTerminacionProyecto', 'llaveMEN', 'tipoIntervencion', 'institucionEducativa', 'sede', 'numeroTraslados', 'gestion'];
+  displayedColumns: string[] = ['fechaTerminacionProyecto', 'llaveMEN', 'tipoIntervencion', 'institucionEducativa', 'sede', 'numeroTraslados', 'estadoBalance', 'gestion'];
   dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -40,7 +40,7 @@ export class TablaBalanceFinancieroGtlcComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
   verDetalle(id){
-    //this.router.navigate(['/registrarLiquidacionContrato/detalleBalanceFinanciero', id]);
+    this.router.navigate(['/gestionarTramiteLiquidacionContractual/detalleBalanceFinanciero', id]);
   }
   verificar(id){
     this.router.navigate(['/gestionarTramiteLiquidacionContractual/verificarBalance', id]);

@@ -1,0 +1,21 @@
+table th {
+    background-color: #474747;
+    border-color: white;
+}
+
+table td{
+    border-color: #474747;
+    color: #474747;
+}
+.mainGris{
+    border: 1px solid var(--fontColor) !important;
+}
+.textoGris{
+    color: var(--fontColor) !important;
+}
+.izqTitle{
+    text-align: left;
+  }
+  .justCenter{
+    justify-content: center;
+  }
