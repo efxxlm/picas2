@@ -112,7 +112,7 @@ export class DialogCargarProgramacionComponent implements OnInit {
               ` <br>Número de registros en el archivo: <b>${ response.data.cantidadDeRegistros }</b><br>
               Número de registros válidos: <b>${ response.data.cantidadDeRegistrosValidos }</b><br>
               Número de registros inválidos: <b>${ response.data.cantidadDeRegistrosInvalidos }</b><br><br>
-              <b>¿Desea realizar el cargue de la programación de obra?</b>
+              <b>¿Desea realizar el cargue del flujo de inversión?</b>
               `
             )
           } else if (response.data.cargaValida === true) {
