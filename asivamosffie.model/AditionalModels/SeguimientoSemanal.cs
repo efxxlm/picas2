@@ -24,5 +24,8 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public List<Programacion>ListProgramacion{ get; set; }
+
+        [NotMapped]
+        public dynamic InfoProyecto { get; set; }
     }
 }

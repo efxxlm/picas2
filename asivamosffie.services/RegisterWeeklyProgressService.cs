@@ -155,7 +155,7 @@ namespace asivamosffie.services
                                                 .Where(r => r.TipoActividadCodigo == "I")
                                                 .OrderByDescending(r => r.ProgramacionId).ToList();
 
-         
+
             List<Programacion> ListProgramacion = new List<Programacion>();
 
             List<VProgramacionBySeguimientoSemanal> ListProgramaciones =
@@ -173,17 +173,18 @@ namespace asivamosffie.services
                 {
                     Programacion programacionCapitulo = new Programacion();
                     programacionCapitulo = ListProgramacionTipoC.Where(r => r.ProgramacionId == i).FirstOrDefault();
-                 
+
                     programacionItem.ContratoConstruccion = null;
                     programacionItem.FlujoInversion = null;
                     if (programacionCapitulo != null)
                     {
                         programacionCapitulo.FlujoInversion = null;
                         programacionCapitulo.ContratoConstruccion = null;
-                        programacionItem.Capitulo = new {
+                        programacionItem.Capitulo = new
+                        {
                             programacionCapitulo.ProgramacionId,
                             programacionCapitulo.Actividad,
-                        }; 
+                        };
                         break;
                     }
                 }
@@ -200,12 +201,7 @@ namespace asivamosffie.services
                     pSeguimientoSemanalId = _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId && !(bool)r.Eliminado && !(bool)r.RegistroCompleto).FirstOrDefault().SeguimientoSemanalId;
 
                 SeguimientoSemanal seguimientoSemanal = await _context.SeguimientoSemanal.Where(r => r.SeguimientoSemanalId == pSeguimientoSemanalId)
-                    .Include(r => r.ContratacionProyecto)
-                          .ThenInclude(r => r.Contratacion)
-                              .ThenInclude(r => r.Contrato)
-                       .Include(r => r.ContratacionProyecto)
-                          .ThenInclude(r => r.Proyecto)
-                              .ThenInclude(r => r.InstitucionEducativa)
+
                        .Include(r => r.SeguimientoDiario)
                               .ThenInclude(r => r.SeguimientoDiarioObservaciones)
                           //Financiero
@@ -265,11 +261,7 @@ namespace asivamosffie.services
 
         private async Task<SeguimientoSemanal> GetModInfoSeguimientoSemanal(SeguimientoSemanal seguimientoSemanal)
         {
-            List<Dominio> TipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).ToList();
-            List<InstitucionEducativaSede> ListInstitucionEducativaSede = _context.InstitucionEducativaSede.ToList();
-            List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
             List<Dominio> EstadoDeObraSeguimientoSemanal = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Obra_Avance_Semanal).ToList();
-
 
             //Agregar Programacion por seguimiento semanal
             seguimientoSemanal.ListProgramacion = GetListProgramacionBySeguimientoSemanal(seguimientoSemanal);
@@ -370,17 +362,44 @@ namespace asivamosffie.services
                 }
             }
 
-            Localizacion Municipio = ListLocalizacion.Where(r => r.LocalizacionId == seguimientoSemanal.ContratacionProyecto.Proyecto.LocalizacionIdMunicipio).FirstOrDefault();
-            InstitucionEducativaSede Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == seguimientoSemanal.ContratacionProyecto.Proyecto.SedeId).FirstOrDefault();
-            InstitucionEducativaSede institucionEducativa = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == Sede.PadreId).FirstOrDefault();
+            seguimientoSemanal.InfoProyecto = GetInfoProyectoBySeguimientoContratacionProyectoId(seguimientoSemanal.ContratacionProyectoId);
+            seguimientoSemanal.ContratacionProyecto = null;
+            seguimientoSemanal.FlujoInversion = null;
 
-            seguimientoSemanal.ContratacionProyecto.Proyecto.tipoIntervencionString = TipoIntervencion.Where(r => r.Codigo == seguimientoSemanal.ContratacionProyecto.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
-            seguimientoSemanal.ContratacionProyecto.Proyecto.MunicipioObj = Municipio;
-            seguimientoSemanal.ContratacionProyecto.Proyecto.DepartamentoObj = ListLocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
-            seguimientoSemanal.ContratacionProyecto.Proyecto.Sede = Sede;
-            seguimientoSemanal.ContratacionProyecto.Proyecto.InstitucionEducativa = institucionEducativa;
+            seguimientoSemanal.SeguimientoDiario.ToList().ForEach(item =>
+            {
+                item.ContratacionProyecto = null;
+            });
 
             return seguimientoSemanal;
+        }
+
+
+        private dynamic GetInfoProyectoBySeguimientoContratacionProyectoId(int ContratacionProyectoId)
+        {
+            List<Dominio> TipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).ToList();
+            List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
+
+            ContratacionProyecto ContratacionProyecto = _context.ContratacionProyecto
+                                .Where(r => r.ContratacionProyectoId == ContratacionProyectoId)
+                                     .Include(c => c.Contratacion)
+                                        .ThenInclude(c => c.Contrato)
+                                   .Include(r => r.Proyecto)
+                                   .ThenInclude(r => r.InstitucionEducativa)
+                                       .Include(r => r.Proyecto)
+                                   .ThenInclude(r => r.Sede)
+                                   //     .Include(r => r.Proyecto)
+                                   //.ThenInclude(r => r.Municipio)
+                                   .FirstOrDefault();
+
+            return new
+            {
+                TipoIntervencion = TipoIntervencion.Where(t => t.Codigo == ContratacionProyecto.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre,
+                Departamento = ListLocalizacion.Where(r => r.LocalizacionId == ContratacionProyecto.Proyecto.LocalizacionIdMunicipioNavigation.IdPadre).FirstOrDefault().Descripcion,
+                Municipio = ContratacionProyecto.Proyecto.LocalizacionIdMunicipioNavigation.Descripcion,
+                InstitucionEducativa = ContratacionProyecto.Proyecto.InstitucionEducativa.Nombre,
+                Sede = ContratacionProyecto.Proyecto.Sede.Nombre,
+            };
         }
 
         /// <summary>
