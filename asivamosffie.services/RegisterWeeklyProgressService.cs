@@ -409,8 +409,17 @@ namespace asivamosffie.services
                                    .ThenInclude(r => r.Sede)
                                    //     .Include(r => r.Proyecto)
                                    //.ThenInclude(r => r.Municipio)
+                                   .Include(s=> s.SeguimientoSemanal)
                                    .FirstOrDefault();
 
+            if (string.IsNullOrEmpty(ContratacionProyecto.EstadoObraCodigo))
+                ContratacionProyecto.EstadoObraCodigo = ConstanCodigoEstadoObraSeguimientoSemanal.En_ejecucion;
+
+            string strEstadoObra = _context.Dominio.
+                Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Obra_Avance_Semanal 
+                        && r.Codigo == ContratacionProyecto.EstadoObraCodigo)
+                                                                            .FirstOrDefault().Nombre;
+             
             return new
             {
                 TipoIntervencion = TipoIntervencion.Where(t => t.Codigo == ContratacionProyecto.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre,
@@ -422,6 +431,8 @@ namespace asivamosffie.services
                 LlaveMen = ContratacionProyecto.Proyecto.LlaveMen,
                 AvanceFisicoSemanal = ContratacionProyecto.AvanceFisicoSemanal,
                 ProgramacionSemanal = ContratacionProyecto.ProgramacionSemanal,
+                EstadoObra = strEstadoObra,
+                FechaUltimoReporte = ContratacionProyecto.SeguimientoSemanal.Where(r => r.FechaModificacion.HasValue).LastOrDefault()
             };
         }
 
