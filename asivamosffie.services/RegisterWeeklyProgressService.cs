@@ -146,26 +146,38 @@ namespace asivamosffie.services
         {
             SeguimientoSemanal listProgramacion = _context.SeguimientoSemanal.Where(r => r.SeguimientoSemanalId == pSeguimientoSemanal.SeguimientoSemanalId)
                   .Include(r => r.FlujoInversion).ThenInclude(r => r.ContratoConstruccion).ThenInclude(p => p.Programacion).FirstOrDefault();
-
-
-            List<Programacion> ListProgramacionDB = _context.Programacion.ToList();
+             
+            List<Programacion> ListProgramacionDB = _context.Programacion.OrderByDescending(r => r.ProgramacionId).ToList();
             List<Programacion> ListProgramacion = new List<Programacion>();
             foreach (var FlujoInversion in listProgramacion.FlujoInversion)
             {
+                FlujoInversion.ContratoConstruccion.Programacion = FlujoInversion.ContratoConstruccion.Programacion.Where(r => r.TipoActividadCodigo == "I").ToList();
+
                 foreach (var Programacion in FlujoInversion.ContratoConstruccion.Programacion)
                 {
-                    if ((Programacion.FechaInicio.Date >= ((DateTime)pSeguimientoSemanal.FechaInicio).Date && Programacion.FechaInicio.Date <= ((DateTime)pSeguimientoSemanal.FechaFin).Date)
-                     || (Programacion.FechaFin.Date >= ((DateTime)pSeguimientoSemanal.FechaInicio).Date && Programacion.FechaInicio.Date <= ((DateTime)pSeguimientoSemanal.FechaFin).Date)
-                        )
-                        if (Programacion.TipoActividadCodigo == "I")
+                    Programacion.ContratoConstruccion = null;
+                    if (
+                          (Programacion.FechaInicio.Date >= ((DateTime)pSeguimientoSemanal.FechaInicio).Date && Programacion.FechaInicio.Date <= ((DateTime)pSeguimientoSemanal.FechaFin).Date)
+                       || (Programacion.FechaFin.Date >= ((DateTime)pSeguimientoSemanal.FechaInicio).Date && Programacion.FechaInicio.Date <= ((DateTime)pSeguimientoSemanal.FechaFin).Date)
+                       )
+                    {
+                        for (int i = Programacion.ProgramacionId; i < ListProgramacionDB.FirstOrDefault().ProgramacionId; i--)
                         {
-                            Programacion.Capitulo = ListProgramacionDB.Where(r => r.ContratoConstruccionId == Programacion.ContratoConstruccionId && r.TipoActividadCodigo == "C").FirstOrDefault();
-                            ListProgramacion.Add(Programacion);
+                            Programacion programacion = new Programacion();
+                            programacion = ListProgramacionDB.Where(r => r.ProgramacionId == i).FirstOrDefault();
+
+                            if (programacion?.TipoActividadCodigo == "C")
+                            {
+                                Programacion.Capitulo = ListProgramacionDB.Where(r => r.ContratoConstruccionId == Programacion.ContratoConstruccionId && r.TipoActividadCodigo == "C").FirstOrDefault();
+                                break;
+                            }
+                  
                         }
+                        ListProgramacion.Add(Programacion);
+                    }
 
                 }
             }
-
             return ListProgramacion.Distinct().ToList();
         }
         public async Task<SeguimientoSemanal> GetLastSeguimientoSemanalByContratacionProyectoIdOrSeguimientoSemanalId(int pContratacionProyectoId, int pSeguimientoSemanalId)
