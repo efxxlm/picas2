@@ -146,19 +146,21 @@ namespace asivamosffie.services
         {
             SeguimientoSemanal listProgramacion = _context.SeguimientoSemanal.Where(r => r.SeguimientoSemanalId == pSeguimientoSemanal.SeguimientoSemanalId)
                   .Include(r => r.FlujoInversion).ThenInclude(r => r.ContratoConstruccion).ThenInclude(p => p.Programacion).FirstOrDefault();
-
-
+          
             List<Programacion> ListProgramacion = new List<Programacion>();
             foreach (var FlujoInversion in listProgramacion.FlujoInversion)
             {
                 foreach (var Programacion in FlujoInversion.ContratoConstruccion.Programacion)
-                {
-                    if (Programacion.FechaInicio >= pSeguimientoSemanal.FechaInicio && Programacion.FechaInicio <= pSeguimientoSemanal.FechaFin)
-                        ListProgramacion.Add(Programacion); 
+                { 
+                    if ((Programacion.FechaInicio.Date >= ((DateTime)pSeguimientoSemanal.FechaInicio).Date && Programacion.FechaInicio.Date <= ((DateTime)pSeguimientoSemanal.FechaFin).Date)
+                    ||  (Programacion.FechaFin.Date >= ((DateTime)pSeguimientoSemanal.FechaInicio).Date && Programacion.FechaInicio.Date <= ((DateTime)pSeguimientoSemanal.FechaFin).Date)
+                        )
+                        if (Programacion.TipoActividadCodigo == "I")
+                            ListProgramacion.Add(Programacion); 
                 }
             }
 
-            return ListProgramacion;
+            return ListProgramacion.Distinct().ToList();
         }
         public async Task<SeguimientoSemanal> GetLastSeguimientoSemanalByContratacionProyectoIdOrSeguimientoSemanalId(int pContratacionProyectoId, int pSeguimientoSemanalId)
         {
