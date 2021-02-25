@@ -103,7 +103,7 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
                 if (p.contratacion.tipoSolicitudCodigo === '1')
                   p.proyecto.estadoProyectoObraCodigo = EstadosProyecto.DevueltoComiteTecnico;
                 if (p.contratacion.tipoSolicitudCodigo === '2')
-                  p.proyecto.estadoProyectoInterveCodigo = EstadosProyecto.DevueltoComiteTecnico;
+                  p.proyecto.estadoProyectoInterventoriaCodigo = EstadosProyecto.DevueltoComiteTecnico;
               })
               break;
           }

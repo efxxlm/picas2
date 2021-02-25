@@ -804,6 +804,8 @@ namespace asivamosffie.services
                     ct.NombreResponsable = responsable.Nombre;
 
                 ct.TemaCompromiso = ct.TemaCompromiso.Where(r => !(bool)r.Eliminado).ToList();
+
+                ct.RegistroCompletoActa = ValidarRegistroCompletoSesionComiteTemaActa(ct);
             });
 
 
@@ -3099,6 +3101,22 @@ namespace asivamosffie.services
             }
         }
 
+        private bool? ValidarRegistroCompletoSesionComiteTemaActa(SesionComiteTema pSesionComiteTema)
+        {
+            if (
+                    string.IsNullOrEmpty(pSesionComiteTema.Observaciones) &&
+                    string.IsNullOrEmpty(pSesionComiteTema.ObservacionesDecision) &&
+                    string.IsNullOrEmpty(pSesionComiteTema.EstadoTemaCodigo) &&
+                    pSesionComiteTema.GeneraCompromiso == null
+                )
+            {
+                return null;
+            }
+            else
+            {
+                return ValidarRegistroCompletoSesionComiteTema(pSesionComiteTema);
+            }
+        }
         private bool ValidarRegistroCompletoSesionComiteTema(SesionComiteTema sesionComiteTemaOld)
         {
             if (string.IsNullOrEmpty(sesionComiteTemaOld.Tema)
