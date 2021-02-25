@@ -374,6 +374,7 @@ namespace asivamosffie.services
             seguimientoSemanal.FlujoInversion.ToList().ForEach(item =>
             {
                 item.Programacion.FlujoInversion = null;
+                item.Programacion.ContratoConstruccion = null;
                 item.ContratoConstruccion  = null;
             });
 
