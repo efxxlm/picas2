@@ -15,6 +15,7 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
 
+        public virtual Programacion Programacion { get; set; }
         public virtual SeguimientoSemanalAvanceFisico SeguimientoSemanalAvanceFisico { get; set; }
     }
 }

@@ -36,6 +36,8 @@ namespace asivamosffie.services
 
         #endregion
 
+
+        #region Get
         private dynamic GetTableFinanciera(SeguimientoSemanal pSeguimientoSemanal)
         {
             int ContratoConstruccionId = _context.FlujoInversion.Where(f => f.SeguimientoSemanalId == pSeguimientoSemanal.SeguimientoSemanalId).Select(r => r.ContratoConstruccionId).FirstOrDefault();
@@ -48,7 +50,6 @@ namespace asivamosffie.services
                                                           .Include(r => r.Programacion)
                                                           .Where(r => r.SeguimientoSemanal.ContratacionProyectoId == pSeguimientoSemanal.ContratacionProyectoId && r.SeguimientoSemanal.NumeroSemana < pSeguimientoSemanal.NumeroSemana)
                                                           .Take(4)
-
                                                           .ToList();
 
             var GroupByProgramacionId = flujoInversions
@@ -62,7 +63,7 @@ namespace asivamosffie.services
 
             return GroupByProgramacionId;
         }
-        #region Get
+
         public async Task<dynamic> GetObservacionBy(int pSeguimientoSemanalId, int pPadreId, string pTipoCodigo)
         {
             try
@@ -154,15 +155,16 @@ namespace asivamosffie.services
                                                 .Where(r => r.TipoActividadCodigo == "I")
                                                 .OrderByDescending(r => r.ProgramacionId).ToList();
 
+         
             List<Programacion> ListProgramacion = new List<Programacion>();
 
             List<VProgramacionBySeguimientoSemanal> ListProgramaciones =
                 _context.VProgramacionBySeguimientoSemanal
                                                         .Where(
-                                                        r => r.SeguimientoSemanalId == pSeguimientoSemanal.SeguimientoSemanalId
-                                                        && ((r.FechaInicio.Date >= ((DateTime)pSeguimientoSemanal.FechaInicio).Date && r.FechaInicio.Date <= ((DateTime)pSeguimientoSemanal.FechaFin).Date)
-                                                         || (r.FechaFin.Date >= ((DateTime)pSeguimientoSemanal.FechaInicio).Date && r.FechaInicio.Date <= ((DateTime)pSeguimientoSemanal.FechaFin).Date)
-                                                          )).ToList();
+                                                            r => r.SeguimientoSemanalId == pSeguimientoSemanal.SeguimientoSemanalId
+                                                            && ((r.FechaInicio.Date >= ((DateTime)pSeguimientoSemanal.FechaInicio).Date && r.FechaInicio.Date <= ((DateTime)pSeguimientoSemanal.FechaFin).Date)
+                                                             || (r.FechaFin.Date >= ((DateTime)pSeguimientoSemanal.FechaInicio).Date && r.FechaInicio.Date <= ((DateTime)pSeguimientoSemanal.FechaFin).Date)
+                                                              )).ToList();
             foreach (var Programacion in ListProgramaciones)
             {
                 Programacion programacionItem = ListProgramacionTipoI.Where(r => r.ProgramacionId == Programacion.ProgramacionId).FirstOrDefault();
@@ -171,12 +173,17 @@ namespace asivamosffie.services
                 {
                     Programacion programacionCapitulo = new Programacion();
                     programacionCapitulo = ListProgramacionTipoC.Where(r => r.ProgramacionId == i).FirstOrDefault();
-
+                 
+                    programacionItem.ContratoConstruccion = null;
+                    programacionItem.FlujoInversion = null;
                     if (programacionCapitulo != null)
                     {
-                        programacionItem.ContratoConstruccion = null;
+                        programacionCapitulo.FlujoInversion = null;
                         programacionCapitulo.ContratoConstruccion = null;
-                        programacionItem.Capitulo = programacionCapitulo;
+                        programacionItem.Capitulo = new {
+                            programacionCapitulo.ProgramacionId,
+                            programacionCapitulo.Actividad,
+                        }; 
                         break;
                     }
                 }
@@ -190,9 +197,9 @@ namespace asivamosffie.services
             try
             {
                 if (pContratacionProyectoId > 0)
-                {
-                    SeguimientoSemanal seguimientoSemanal = await _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId && !(bool)r.Eliminado && !(bool)r.RegistroCompleto)
+                    pSeguimientoSemanalId = _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId && !(bool)r.Eliminado && !(bool)r.RegistroCompleto).FirstOrDefault().SeguimientoSemanalId;
 
+                SeguimientoSemanal seguimientoSemanal = await _context.SeguimientoSemanal.Where(r => r.SeguimientoSemanalId == pSeguimientoSemanalId)
                     .Include(r => r.ContratacionProyecto)
                           .ThenInclude(r => r.Contratacion)
                               .ThenInclude(r => r.Contrato)
@@ -205,7 +212,8 @@ namespace asivamosffie.services
                           .Include(r => r.SeguimientoSemanalAvanceFinanciero)
                        //Fisico
                        .Include(r => r.SeguimientoSemanalAvanceFisico)
-
+                          .ThenInclude(r => r.SeguimientoSemanalAvanceFisicoProgramacion)
+                                .ThenInclude(r => r.Programacion)
                        //Gestion Obra
                        //Gestion Obra Ambiental
                        .Include(r => r.SeguimientoSemanalGestionObra)
@@ -244,69 +252,9 @@ namespace asivamosffie.services
 
                        .FirstOrDefaultAsync();
 
-                    await GetModInfoSeguimientoSemanal(seguimientoSemanal);
+                await GetModInfoSeguimientoSemanal(seguimientoSemanal);
 
-                    return seguimientoSemanal;
-                }
-                else
-                {
-                    SeguimientoSemanal seguimientoSemanal = await _context.SeguimientoSemanal.Where(r => r.SeguimientoSemanalId == pSeguimientoSemanalId)
-
-                        .Include(r => r.ContratacionProyecto)
-                          .ThenInclude(r => r.Contratacion)
-                              .ThenInclude(r => r.Contrato)
-                       .Include(r => r.ContratacionProyecto)
-                          .ThenInclude(r => r.Proyecto)
-                              .ThenInclude(r => r.InstitucionEducativa)
-                       .Include(r => r.SeguimientoDiario)
-                              .ThenInclude(r => r.SeguimientoDiarioObservaciones)
-
-                          //Financiero
-                          .Include(r => r.SeguimientoSemanalAvanceFinanciero)
-                       //Fisico
-                       .Include(r => r.SeguimientoSemanalAvanceFisico)
-
-                       //Gestion Obra
-                       //Gestion Obra Ambiental
-                       .Include(r => r.SeguimientoSemanalGestionObra)
-                            .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
-                         // Gestion Obra Calidad
-                         .Include(r => r.SeguimientoSemanalGestionObra)
-                            .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
-                                .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
-                                    .ThenInclude(r => r.EnsayoLaboratorioMuestra)
-
-                         //   Gestion Obra Calidad
-                         .Include(r => r.SeguimientoSemanalGestionObra)
-                            .ThenInclude(r => r.SeguimientoSemanalGestionObraSeguridadSalud)
-                                .ThenInclude(r => r.SeguridadSaludCausaAccidente)
-
-                      // Gestion Obra Calidad + Observaciones 
-                      .Include(r => r.SeguimientoSemanalGestionObra)
-                         .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
-                             .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
-                                 .ThenInclude(r => r.ObservacionSupervisor)
-                      .Include(r => r.SeguimientoSemanalGestionObra)
-                         .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
-                             .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
-                                 .ThenInclude(r => r.ObservacionApoyo)
-
-                        //Gestion Obra Social
-                        .Include(r => r.SeguimientoSemanalGestionObra)
-                           .ThenInclude(r => r.SeguimientoSemanalGestionObraSocial)
-                       .Include(r => r.SeguimientoSemanalGestionObra)
-                           .ThenInclude(r => r.SeguimientoSemanalGestionObraAlerta)
-                       .Include(r => r.SeguimientoSemanalReporteActividad)
-                       .Include(r => r.SeguimientoSemanalRegistroFotografico)
-                       .Include(r => r.SeguimientoSemanalRegistrarComiteObra)
-                       .FirstOrDefaultAsync();
-
-                    //enviar periodo reporte financiero
-
-                    await GetModInfoSeguimientoSemanal(seguimientoSemanal);
-
-                    return seguimientoSemanal;
-                }
+                return seguimientoSemanal;
             }
             catch (Exception ex)
             {
@@ -957,7 +905,7 @@ namespace asivamosffie.services
 
                 _context.Update(seguimientoSemanalMod);
                 _context.SaveChanges();
-                 
+
                 return new Respuesta
                 {
 
@@ -984,7 +932,7 @@ namespace asivamosffie.services
         private void SaveUpdateAvanceFisico(SeguimientoSemanal pSeguimientoSemanal, string usuarioCreacion)
         {
             bool RegistroCompleto = true;
-             
+
             //EstadosDisponibilidad codigo =  7 6 cuando esta estos estados de obra desabilitar 
             ///Validar Estado De obra 
             //Actualizar estado obra
@@ -1048,7 +996,7 @@ namespace asivamosffie.services
                 _context.SeguimientoSemanalAvanceFisico.Add(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault());
 
                 CrearEditarSeguimientoSemanalAvanceFisicoProgramacion(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().SeguimientoSemanalAvanceFisicoProgramacion, pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().UsuarioCreacion);
-                 
+
             }
             else
             {
@@ -1061,7 +1009,7 @@ namespace asivamosffie.services
                 seguimientoSemanalAvanceFisicoOld.EstadoObraCodigo = contratacionProyectoValidarEstadoObra.EstadoObraCodigo;
                 seguimientoSemanalAvanceFisicoOld.ProgramacionSemanal = pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().ProgramacionSemanal;
                 seguimientoSemanalAvanceFisicoOld.AvanceFisicoSemanal = pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().AvanceFisicoSemanal;
-                 
+
                 CrearEditarSeguimientoSemanalAvanceFisicoProgramacion(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().SeguimientoSemanalAvanceFisicoProgramacion, pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().UsuarioCreacion);
 
             }
@@ -1085,8 +1033,8 @@ namespace asivamosffie.services
 
                     itemOld.UsuarioModificacion = strUsuario;
                     itemOld.FechaModificacion = DateTime.Now;
-                    itemOld.AvanceFisicoCapitulo = item.AvanceFisicoCapitulo; 
-                } 
+                    itemOld.AvanceFisicoCapitulo = item.AvanceFisicoCapitulo;
+                }
             }
         }
 
