@@ -363,11 +363,18 @@ namespace asivamosffie.services
 
             seguimientoSemanal.InfoProyecto = GetInfoProyectoBySeguimientoContratacionProyectoId(seguimientoSemanal.ContratacionProyectoId);
             seguimientoSemanal.ContratacionProyecto = null;
-           // seguimientoSemanal.FlujoInversion = null;
-
+    
+     
             seguimientoSemanal.SeguimientoDiario.ToList().ForEach(item =>
             {
                 item.ContratacionProyecto = null;
+            });
+
+
+            seguimientoSemanal.FlujoInversion.ToList().ForEach(item =>
+            {
+                item.Programacion.FlujoInversion = null;
+                item.ContratoConstruccion  = null;
             });
 
             return seguimientoSemanal;
