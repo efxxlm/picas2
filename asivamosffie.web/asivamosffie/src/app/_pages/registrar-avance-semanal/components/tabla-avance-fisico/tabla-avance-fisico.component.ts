@@ -74,9 +74,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
                         {
                             programacionId: flujo.programacion.programacionId,
                             capitulo: flujo.programacion.actividad,
-                            programacionCapitulo:   this.verifyInteger( flujo.programacion.duracion /
-                                                                        this.seguimientoDiario.cantidadTotalDiasActividades * 100,
-                                                                        false ),
+                            programacionCapitulo:   this.verifyInteger( ( flujo.programacion.duracion / this.seguimientoDiario.cantidadTotalDiasActividades ) * 100, false ),
                             avanceFisicoCapitulo:   flujo.programacion.avanceFisicoCapitulo !== undefined
                                                     && flujo.programacion.avanceFisicoCapitulo !== null ?
                                                     String( this.verifyInteger( Number( flujo.programacion.avanceFisicoCapitulo ), true ) )
@@ -88,7 +86,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
                     {
                         semanaNumero: this.seguimientoDiario.numeroSemana,
                         periodoReporte: `${ this.datePipe.transform( this.seguimientoDiario.fechaInicio, 'dd/MM/yyyy' ) } - ${ this.datePipe.transform( this.seguimientoDiario.fechaFin, 'dd/MM/yyyy' ) }`,
-                        programacionSemana: this.verifyInteger( totalDuracion / this.seguimientoDiario.cantidadTotalDiasActividades * 100,
+                        programacionSemana: this.verifyInteger( ( totalDuracion / this.seguimientoDiario.cantidadTotalDiasActividades ) * 100,
                                                                 false ),
                         avancePorCapitulo,
                         avanceFisicoSemana: this.seguimientoDiario.seguimientoSemanalAvanceFisico.length > 0 ?
