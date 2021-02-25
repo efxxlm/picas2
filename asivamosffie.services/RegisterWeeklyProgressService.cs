@@ -608,15 +608,25 @@ namespace asivamosffie.services
         {
             decimal? AvanceFisicoSemanal = _context.SeguimientoSemanalAvanceFisico.Where(r => r.SeguimientoSemanalId == pSeguimientoSemanal.SeguimientoSemanalId).Sum(s => s.AvanceFisicoSemanal);
             decimal? ProgramacionSemanal = _context.SeguimientoSemanalAvanceFisico.Where(r => r.SeguimientoSemanalId == pSeguimientoSemanal.SeguimientoSemanalId).Sum(s => s.ProgramacionSemanal);
-
+             
+            string strEstadoObraCodigo = ValidarEstadoDeObraBySeguimientoSemanalId(pSeguimientoSemanal.SeguimientoSemanalId);
+            
             _context.Set<ContratacionProyecto>()
                     .Where(r => r.ContratacionProyectoId == pSeguimientoSemanal.ContratacionProyectoId)
                     .Update(r => new ContratacionProyecto
                     {
                         AvanceFisicoSemanal = AvanceFisicoSemanal,
                         ProgramacionSemanal = ProgramacionSemanal,
-                        EstadoObraCodigo = ValidarEstadoDeObraBySeguimientoSemanalId(pSeguimientoSemanal.SeguimientoSemanalId)
-                    }) ;
+                        EstadoObraCodigo = strEstadoObraCodigo
+                    });
+
+            _context.Set<SeguimientoSemanalAvanceFisico>()
+                     .Where(r => r.SeguimientoSemanalId == pSeguimientoSemanal.SeguimientoSemanalId)
+                                      .Update(r => new SeguimientoSemanalAvanceFisico
+                                      {
+                                          EstadoObraCodigo = strEstadoObraCodigo 
+                                      });
+                                     
         }
 
         public async Task<Respuesta> UploadContractTerminationCertificate(ContratacionProyecto pContratacionProyecto, AppSettingsService appSettingsService)
@@ -1005,8 +1015,7 @@ namespace asivamosffie.services
             //EstadosDisponibilidad codigo =  7 6 cuando esta estos estados de obra desabilitar 
             ///Validar Estado De obra 
             //Actualizar estado obra 
-            decimal? ProgramacionAcumuladaObra = 0;
-            decimal? ProgramacionEjecutadaObra = 0;
+
 
             SeguimientoSemanal seguimientoSemanal =
                 _context.SeguimientoSemanal.Where(r => r.SeguimientoSemanalId == SeguimientoSemanalId)
@@ -1015,6 +1024,10 @@ namespace asivamosffie.services
                             .ThenInclude(r => r.SeguimientoSemanalAvanceFisicoProgramacion)
                             .ThenInclude(r => r.Programacion)
                             .FirstOrDefault();
+
+            decimal? ProgramacionAcumuladaObra = seguimientoSemanal.SeguimientoSemanalAvanceFisico.Sum(s => s.ProgramacionSemanal);
+            decimal? ProgramacionEjecutadaObra = seguimientoSemanal.SeguimientoSemanalAvanceFisico.Sum(s => s.AvanceFisicoSemanal); ;
+
 
             int CantidadDeSeguimientosSemanales = _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == seguimientoSemanal.ContratacionProyectoId).ToList().Count();
             decimal PrimerTercio = decimal.Round(CantidadDeSeguimientosSemanales / 3);
@@ -1089,10 +1102,10 @@ namespace asivamosffie.services
         {
             bool EsCompleto = true;
             Parallel.ForEach(seguimientoSemanalAvanceFisico.SeguimientoSemanalAvanceFisicoProgramacion, item =>
-            { 
+            {
                 if (item.AvanceFisicoCapitulo == null)
                     EsCompleto = false;
-            }); 
+            });
             return EsCompleto;
         }
 
