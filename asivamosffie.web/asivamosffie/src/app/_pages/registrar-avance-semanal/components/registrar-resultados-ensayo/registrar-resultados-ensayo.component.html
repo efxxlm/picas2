@@ -96,16 +96,16 @@
                                                 <quill-editor   class="quill-editor-style card-80em position-relative"
                                                                 [styles]="editorStyle"
                                                                 [modules]="config"
-                                                                (onContentChanged)="maxLength($event, 400)"
+                                                                (onContentChanged)="maxLength($event, 600)"
                                                                 formControlName="observacion"
                                                                 #obsResultado
                                                                 required>
                                                 </quill-editor>
                                                 <span class="contador miles" *ngIf="muestra.get('observacion').value !== null" style="margin-top: 3.5em;">
-                                                    {{400 - textoLimpio( obsResultado.quillEditor, 400 )}}
+                                                    {{600 - textoLimpio( obsResultado.quillEditor, 600 )}}
                                                 </span>
                                                 <span class="contador miles" *ngIf="muestra.get('observacion').value === null" style="margin-top: 3.5em;">
-                                                    400
+                                                    600
                                                 </span>
                                             </div>
                                           </div>

@@ -1,6 +1,6 @@
-<section class="text-center" *ngIf="esVerDetalle === false && seguimientoDiario !== undefined">
+<section class="text-center" *ngIf="esVerDetalle === false && seguimientoSemanal !== undefined">
     <div class="colorMainColor">
-        <p>Estado de la obra: <b> {{ seguimientoDiario.seguimientoSemanalAvanceFisico.length > 0 ? seguimientoDiario.seguimientoSemanalAvanceFisico[ 0 ].estadoObraNombre : 'En ejecución' }} </b> </p>
+        <p>Estado de la obra: <b> {{ seguimientoSemanal.seguimientoSemanalAvanceFisico.length > 0 ? seguimientoSemanal.seguimientoSemanalAvanceFisico[ 0 ].estadoObraNombre : 'En ejecución' }} </b> </p>
     </div>
 
     <mat-accordion>
@@ -19,7 +19,7 @@
                         </mat-panel-title>
                     </mat-expansion-panel-header>
         
-                    <app-tabla-avance-resumen-alertas [seguimientoDiario]="seguimientoDiario.seguimientoDiario"></app-tabla-avance-resumen-alertas>
+                    <app-tabla-avance-resumen-alertas [seguimientoDiario]="seguimientoSemanal.seguimientoDiario"></app-tabla-avance-resumen-alertas>
                 </mat-expansion-panel>
 
                 <mat-expansion-panel class="expansion-style sub-expansion-black">
@@ -29,7 +29,7 @@
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
-                    <app-tabla-disponibilidad-material [seguimientoDiario]="seguimientoDiario.seguimientoDiario"></app-tabla-disponibilidad-material>
+                    <app-tabla-disponibilidad-material [seguimientoDiario]="seguimientoSemanal.seguimientoDiario"></app-tabla-disponibilidad-material>
                 </mat-expansion-panel>
             </mat-accordion>
 
@@ -42,7 +42,7 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-tabla-avance-fisico [seguimientoDiario]="seguimientoDiario" *ngIf="seguimientoDiario.flujoInversion.length > 0"></app-tabla-avance-fisico>
+            <app-tabla-avance-fisico [seguimientoSemanal]="seguimientoSemanal" *ngIf="seguimientoSemanal.flujoInversion.length > 0"></app-tabla-avance-fisico>
         </mat-expansion-panel>
     </mat-accordion>
 </section>
@@ -68,7 +68,7 @@
                         <p> <b>Disponiblidad personal: Insuficiente</b> </p>
                     </div>
         
-                    <app-tabla-avance-resumen-alertas [seguimientoDiario]="seguimientoDiario.seguimientoDiario"></app-tabla-avance-resumen-alertas>
+                    <app-tabla-avance-resumen-alertas [seguimientoDiario]="seguimientoSemanal.seguimientoDiario"></app-tabla-avance-resumen-alertas>
                 </mat-expansion-panel>
 
                 <mat-expansion-panel class="expansion-style sub-expansion-black">
@@ -84,7 +84,7 @@
                         <p style="margin-left: 2em;"><b>Productividad</b>: --- </p>
                     </div>
 
-                    <app-tabla-disponibilidad-material [seguimientoDiario]="seguimientoDiario.seguimientoDiario"></app-tabla-disponibilidad-material>
+                    <app-tabla-disponibilidad-material [seguimientoDiario]="seguimientoSemanal.seguimientoDiario"></app-tabla-disponibilidad-material>
                 </mat-expansion-panel>
             </mat-accordion>
         </mat-expansion-panel>
@@ -96,7 +96,7 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-tabla-avance-fisico [seguimientoDiario]="seguimientoDiario" [esVerDetalle]="true"></app-tabla-avance-fisico>
+            <app-tabla-avance-fisico [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true"></app-tabla-avance-fisico>
         </mat-expansion-panel>
     </mat-accordion>
 </section>
