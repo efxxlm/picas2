@@ -204,9 +204,11 @@ namespace asivamosffie.model.Models
         public virtual DbSet<TipoPagoConceptoPagoCriterio> TipoPagoConceptoPagoCriterio { get; set; }
         public virtual DbSet<Usuario> Usuario { get; set; }
         public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
+        public virtual DbSet<VCompromisoSeguimiento> VCompromisoSeguimiento { get; set; }
         public virtual DbSet<VGestionarGarantiasPolizas> VGestionarGarantiasPolizas { get; set; }
         public virtual DbSet<VListaContratacionModificacionContractual> VListaContratacionModificacionContractual { get; set; }
         public virtual DbSet<VListaProyectos> VListaProyectos { get; set; }
+        public virtual DbSet<VProgramacionBySeguimientoSemanal> VProgramacionBySeguimientoSemanal { get; set; }
         public virtual DbSet<VProyectosCierre> VProyectosCierre { get; set; }
         public virtual DbSet<VProyectosXcontrato> VProyectosXcontrato { get; set; }
         public virtual DbSet<VRegistrarAvanceSemanal> VRegistrarAvanceSemanal { get; set; }
@@ -7141,6 +7143,24 @@ namespace asivamosffie.model.Models
                     .HasConstraintName("FK_usuario");
             });
 
+            modelBuilder.Entity<VCompromisoSeguimiento>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_CompromisoSeguimiento");
+
+                entity.Property(e => e.CompromisoSeguimientoId).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.DescripcionSeguimiento)
+                    .IsRequired()
+                    .HasMaxLength(3000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EstadoCompromisoCodigo)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<VGestionarGarantiasPolizas>(entity =>
             {
                 entity.HasNoKey();
@@ -7271,6 +7291,27 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.TipoIntervencion)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VProgramacionBySeguimientoSemanal>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_ProgramacionBySeguimientoSemanal");
+
+                entity.Property(e => e.Actividad)
+                    .IsRequired()
+                    .HasMaxLength(2000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FechaFin).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaInicio).HasColumnType("datetime");
+
+                entity.Property(e => e.TipoActividadCodigo)
+                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
             });
