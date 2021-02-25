@@ -406,7 +406,8 @@ namespace asivamosffie.services
                 Municipio = ContratacionProyecto.Proyecto.LocalizacionIdMunicipioNavigation.Descripcion,
                 InstitucionEducativa = ContratacionProyecto.Proyecto.InstitucionEducativa.Nombre,
                 Sede = ContratacionProyecto.Proyecto.Sede.Nombre,
-                NumeroContrato = ContratacionProyecto.Contratacion.Contrato.FirstOrDefault().NumeroContrato
+                NumeroContrato = ContratacionProyecto.Contratacion.Contrato.FirstOrDefault().NumeroContrato,
+                LlaveMen = ContratacionProyecto.Proyecto.LlaveMen
             };
         }
 
