@@ -60,7 +60,7 @@
                             0
                             );" *ngIf="contratacion.tipoSolicitudCodigo === '1'" mat-raised-button color="accent"
                     class="btn-table"
-                    [disabled]="element.proyecto.estadoProyectoObraCodigo == null || element.proyecto.estadoProyectoObraCodigo == estadosProyecto.AprobadoComiteTecnico">
+                    [disabled]="element.proyecto.estadoProyectoObraCodigo == null || element.proyecto.estadoProyectoObraCodigo == estadosProyecto.AprobadoComiteFiduciario">
                     Observaciones
                 </button>
                 <button mat-raised-button type="button" (click)="Observaciones(element.contratacionProyectoId, 
@@ -71,7 +71,7 @@
                             element.proyecto.estadoProyectoInterventoriaCodigo
                             );" *ngIf="contratacion.tipoSolicitudCodigo === '2'" mat-raised-button color="accent"
                     class="btn-table"
-                    [disabled]="element.proyecto.estadoProyectoInterventoriaCodigo == null || element.proyecto.estadoProyectoInterventoriaCodigo == estadosProyecto.AprobadoComiteTecnico">
+                    [disabled]="element.proyecto.estadoProyectoInterventoriaCodigo == null || element.proyecto.estadoProyectoInterventoriaCodigo == estadosProyecto.AprobadoComiteFiduciario">
                     Observaciones
                 </button>
 

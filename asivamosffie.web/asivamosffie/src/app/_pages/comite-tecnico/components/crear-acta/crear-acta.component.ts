@@ -79,9 +79,10 @@ export class CrearActaComponent implements OnInit {
           setTimeout(() => {
 
             this.objetoComiteTecnico.sesionParticipante.forEach(p => {
+              console.log(p)
               let usuario: Usuario = this.listaMiembros.find(m => m.usuarioId == p.usuarioId)
-
-              this.nombresParticipantes = `${this.nombresParticipantes} ${usuario.nombres} ${usuario.apellidos} , `
+              if ( usuario )
+                this.nombresParticipantes = `${this.nombresParticipantes} ${usuario.nombres} ${usuario.apellidos} , `
 
             });
 

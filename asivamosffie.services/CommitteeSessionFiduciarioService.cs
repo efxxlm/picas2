@@ -2489,6 +2489,9 @@ namespace asivamosffie.services
                 comite.EsCompleto = true;
                 _context.SaveChanges();
             }else{
+                comite.EsCompleto = false;
+                _context.SaveChanges();
+
                 comite.EstadoActaCodigo = "0";
             }
 

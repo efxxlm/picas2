@@ -545,6 +545,20 @@ namespace asivamosffie.services
                 {
                     foreach (var SesionSolicitudCompromiso in SesionComiteSolicitud.SesionSolicitudCompromiso.Where(r => !(bool)r.Eliminado))
                     {
+                        SesionSolicitudCompromiso.CompromisoSeguimiento = _context.VCompromisoSeguimiento
+                                                                                    .Where(r => r.SesionSolicitudCompromisoId == SesionSolicitudCompromiso.SesionSolicitudCompromisoId)
+                                                                                       .ToList()
+                                                                                       .ConvertAll(x => new CompromisoSeguimiento
+                                                                                       {
+                                                                                           CompromisoSeguimientoId = x.CompromisoSeguimientoId,
+                                                                                           DescripcionSeguimiento = x.DescripcionSeguimiento,
+                                                                                           Eliminado = x.Eliminado,
+                                                                                           SesionParticipanteId = x.SesionParticipanteId,
+                                                                                           EstadoCompromisoCodigo = x.EstadoCompromisoCodigo,
+                                                                                           SesionSolicitudCompromisoId = x.SesionSolicitudCompromisoId,
+
+                                                                                       })
+                                                                                       .ToList();
 
                         SesionSolicitudCompromiso.EstadoCodigo = string.IsNullOrEmpty(SesionSolicitudCompromiso.EstadoCodigo) ? ConstantStringCompromisos.Sin_Iniciar : ListEstadoReportado.Where(r => r.Codigo == SesionSolicitudCompromiso.EstadoCodigo).FirstOrDefault().Nombre;
 
@@ -2277,6 +2291,11 @@ namespace asivamosffie.services
             {
                 comite.EstadoComiteCodigo = ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Enviada;
                 comite.EsCompleto = true;
+                _context.SaveChanges();
+            }
+            else
+            {
+                comite.EsCompleto = false;
                 _context.SaveChanges();
             }
 

@@ -204,7 +204,7 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
       plazo = this.addressForm.get('plazoMeses').value * 30;
       plazo = plazo + this.addressForm.get('plazoDias').value;
 
-      console.log(this.tipoSolicitudCodigo)
+      console.log(this.tipoSolicitudCodigo, plazo)
       // obra
       if (this.tipoSolicitudCodigo == '1') {
         this.contratacion.contratacionProyecto.forEach( cp => {
@@ -246,6 +246,8 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
         }
 
       }
+
+      return false;
 
       this.objetoDisponibilidad.objeto = this.addressForm.get('objeto').value;
       this.objetoDisponibilidad.plazoMeses = this.addressForm.get('plazoMeses').value;

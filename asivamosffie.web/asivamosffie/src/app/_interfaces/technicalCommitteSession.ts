@@ -278,6 +278,7 @@ export interface SesionSolicitudObservacionProyecto{
     proyecto?: Proyecto,
 
     nombreParticipante?: string,
+    sesionParticipante?: SesionParticipante,
 
 }
 

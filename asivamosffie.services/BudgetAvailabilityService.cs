@@ -128,6 +128,7 @@ namespace asivamosffie.services
             if(resultado.AportanteId>0)
             {
                 resultado.stringAportante = getNombreAportante(_context.CofinanciacionAportante.Find(resultado.AportanteId));
+                resultado.stringTipoAportante = getNombreTipoAportante(_context.CofinanciacionAportante.Find(resultado.AportanteId)); 
             }
             
             return resultado;
@@ -1616,6 +1617,31 @@ namespace asivamosffie.services
                 }
             }
             return nombreAportante;
+        }
+
+        private string getNombreTipoAportante(CofinanciacionAportante confinanciacion)
+        {
+            string nombreTipoAportante;
+            if (confinanciacion.TipoAportanteId.Equals(ConstanTipoAportante.Ffie))
+            {
+                nombreTipoAportante = ConstanStringTipoAportante.Ffie;
+            }
+            else if (confinanciacion.TipoAportanteId.Equals(ConstanTipoAportante.Tercero))
+            {
+                nombreTipoAportante = "Tercero";
+            }
+            else
+            {
+                if (confinanciacion.MunicipioId == null)
+                {
+                    nombreTipoAportante = "Gobernación";
+                }
+                else
+                {
+                    nombreTipoAportante = "Alcaldía";
+                }
+            }
+            return nombreTipoAportante;
         }
     }
 }
