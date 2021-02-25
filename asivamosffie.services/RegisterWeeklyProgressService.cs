@@ -146,17 +146,23 @@ namespace asivamosffie.services
         {
             SeguimientoSemanal listProgramacion = _context.SeguimientoSemanal.Where(r => r.SeguimientoSemanalId == pSeguimientoSemanal.SeguimientoSemanalId)
                   .Include(r => r.FlujoInversion).ThenInclude(r => r.ContratoConstruccion).ThenInclude(p => p.Programacion).FirstOrDefault();
-          
+
+
+            List<Programacion> ListProgramacionDB = _context.Programacion.ToList();
             List<Programacion> ListProgramacion = new List<Programacion>();
             foreach (var FlujoInversion in listProgramacion.FlujoInversion)
             {
                 foreach (var Programacion in FlujoInversion.ContratoConstruccion.Programacion)
-                { 
+                {
                     if ((Programacion.FechaInicio.Date >= ((DateTime)pSeguimientoSemanal.FechaInicio).Date && Programacion.FechaInicio.Date <= ((DateTime)pSeguimientoSemanal.FechaFin).Date)
-                    ||  (Programacion.FechaFin.Date >= ((DateTime)pSeguimientoSemanal.FechaInicio).Date && Programacion.FechaInicio.Date <= ((DateTime)pSeguimientoSemanal.FechaFin).Date)
+                     || (Programacion.FechaFin.Date >= ((DateTime)pSeguimientoSemanal.FechaInicio).Date && Programacion.FechaInicio.Date <= ((DateTime)pSeguimientoSemanal.FechaFin).Date)
                         )
                         if (Programacion.TipoActividadCodigo == "I")
-                            ListProgramacion.Add(Programacion); 
+                        {
+                            Programacion.Capitulo = ListProgramacionDB.Where(r => r.ContratoConstruccionId == Programacion.ContratoConstruccionId && r.TipoActividadCodigo == "C").FirstOrDefault();
+                            ListProgramacion.Add(Programacion);
+                        }
+
                 }
             }
 
