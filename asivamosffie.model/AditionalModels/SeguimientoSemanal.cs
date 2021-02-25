@@ -11,7 +11,7 @@ namespace asivamosffie.model.Models
         public List<dynamic> PeriodoReporteMensualFinanciero { get; set; }
 
         [NotMapped]
-        public List<dynamic> TablaFinanciera { get; set; }
+        public dynamic TablaFinanciera { get; set; }
          
         [NotMapped]
         public dynamic AvanceAcumulado { get; set; }     
