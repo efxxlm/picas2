@@ -201,8 +201,7 @@ namespace asivamosffie.services
                     pSeguimientoSemanalId = _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId && !(bool)r.Eliminado && !(bool)r.RegistroCompleto).FirstOrDefault().SeguimientoSemanalId;
 
                 SeguimientoSemanal seguimientoSemanal = await _context.SeguimientoSemanal.Where(r => r.SeguimientoSemanalId == pSeguimientoSemanalId)
-
-                       .Include(r => r.SeguimientoDiario)
+                      .Include(r => r.SeguimientoDiario)
                               .ThenInclude(r => r.SeguimientoDiarioObservaciones)
                           //Financiero
                           .Include(r => r.SeguimientoSemanalAvanceFinanciero)
@@ -364,7 +363,7 @@ namespace asivamosffie.services
 
             seguimientoSemanal.InfoProyecto = GetInfoProyectoBySeguimientoContratacionProyectoId(seguimientoSemanal.ContratacionProyectoId);
             seguimientoSemanal.ContratacionProyecto = null;
-            seguimientoSemanal.FlujoInversion = null;
+           // seguimientoSemanal.FlujoInversion = null;
 
             seguimientoSemanal.SeguimientoDiario.ToList().ForEach(item =>
             {
