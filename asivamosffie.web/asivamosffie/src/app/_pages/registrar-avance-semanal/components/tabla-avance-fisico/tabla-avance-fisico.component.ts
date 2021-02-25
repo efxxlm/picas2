@@ -85,6 +85,10 @@ export class TablaAvanceFisicoComponent implements OnInit {
             if ( flujoInversion.length > 0 ) {
                 const avancePorCapitulo = [];
                 let duracionProgramacion = 0;
+                let cantidadTotalDiasActividades = 0
+                for ( const flujo of flujoInversion ) {
+                    cantidadTotalDiasActividades += flujo.programacion.duracion;
+                };
                 for ( const flujo of flujoInversion ) {
                     flujo.seguimientoSemanalAvanceFisicoProgramacionId = 0;
                     flujo.programacion.avanceFisicoCapitulo = null;
@@ -131,7 +135,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
                         {
                             programacionId: flujo.programacion.programacionId,
                             capitulo: flujo.programacion.actividad,
-                            programacionCapitulo:   this.verifyInteger( ( duracionItem / this.seguimientoSemanal.cantidadTotalDiasActividades ) * 100, false ),
+                            programacionCapitulo:   this.verifyInteger( ( duracionItem / cantidadTotalDiasActividades ) * 100, false ),
                             avanceFisicoCapitulo: flujo.programacion.avanceFisicoCapitulo !== null ? String( this.verifyInteger( Number( flujo.programacion.avanceFisicoCapitulo ), true ) ) : null
                         }
                     );
@@ -142,7 +146,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
                     {
                         semanaNumero: this.seguimientoSemanal.numeroSemana,
                         periodoReporte: `${ this.datePipe.transform( this.seguimientoSemanal.fechaInicio, 'dd/MM/yyyy' ) } - ${ this.datePipe.transform( this.seguimientoSemanal.fechaFin, 'dd/MM/yyyy' ) }`,
-                        programacionSemana: this.verifyInteger( ( duracionProgramacion / this.seguimientoSemanal.cantidadTotalDiasActividades ) * 100,
+                        programacionSemana: this.verifyInteger( ( duracionProgramacion / cantidadTotalDiasActividades ) * 100,
                                                                 false ),
                         avancePorCapitulo,
                         avanceFisicoSemana: this.seguimientoSemanal.seguimientoSemanalAvanceFisico.length > 0 ?

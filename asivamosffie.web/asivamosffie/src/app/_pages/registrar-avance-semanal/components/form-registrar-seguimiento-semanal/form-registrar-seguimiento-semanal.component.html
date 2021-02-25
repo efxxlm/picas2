@@ -25,7 +25,7 @@
               <p><b>Municipio</b>: {{ seguimientoSemanal.infoProyecto.municipio }} </p>
               <p><b>Institución Educativa</b>: {{ seguimientoSemanal.infoProyecto.institucionEducativa }} </p>
               <p><b>Sede</b>: {{ seguimientoSemanal.infoProyecto.sede }} </p>
-              <p><b>Fecha del último reporte</b>: {{ seguimientoSemanal.infoProyecto.fechaUltimoReporte.fechaModificacion | date: 'dd/MM/yyyy' }} </p>
+              <p *ngIf="seguimientoSemanal.infoProyecto.fechaUltimoReporte !== undefined"><b>Fecha del último reporte</b>: {{ seguimientoSemanal.infoProyecto.fechaUltimoReporte.fechaModificacion | date: 'dd/MM/yyyy' }} </p>
             </mat-card-content>
         </mat-card>
     </div>
