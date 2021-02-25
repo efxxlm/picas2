@@ -1012,6 +1012,8 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ContratacionProyecto>(entity =>
             {
+                entity.Property(e => e.AvanceFisicoSemanal).HasColumnType("decimal(18, 3)");
+
                 entity.Property(e => e.EstadoObraCodigo)
                     .HasMaxLength(2)
                     .IsUnicode(false);
@@ -1035,6 +1037,8 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.PorcentajeAvanceObra)
                     .HasMaxLength(500)
                     .IsUnicode(false);
+
+                entity.Property(e => e.ProgramacionSemanal).HasColumnType("decimal(18, 3)");
 
                 entity.Property(e => e.RutaCargaActaTerminacionContrato).HasMaxLength(200);
 
@@ -4472,13 +4476,9 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(2000)
                     .IsUnicode(false);
 
-                entity.Property(e => e.AvanceFisicoCapitulo).HasColumnType("decimal(18, 3)");
-
                 entity.Property(e => e.FechaFin).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaInicio).HasColumnType("datetime");
-
-                entity.Property(e => e.ProgramacionCapitulo).HasColumnType("decimal(18, 3)");
 
                 entity.Property(e => e.TipoActividadCodigo)
                     .IsRequired()

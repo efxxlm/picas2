@@ -337,7 +337,7 @@ namespace asivamosffie.services
                 .Select(r => new
                 {
                     Actividad = r.Key,
-                    AvanceAcumulado = Math.Truncate((decimal)r.Sum(r => r.AvanceFisicoCapitulo)) + "%",
+                    AvanceAcumulado = 0 + "%",
                     AvanceFisicoCapitulo = Math.Truncate((((decimal)r.Sum(r => r.Duracion) / seguimientoSemanal.CantidadTotalDiasActividades) * 100)) + "%"
                 });
 
@@ -968,12 +968,16 @@ namespace asivamosffie.services
                 .FromSqlRaw("SELECT DISTINCT p.* FROM dbo.Programacion AS p INNER JOIN dbo.FlujoInversion AS f ON p.ProgramacionId = f.ProgramacionId INNER JOIN dbo.SeguimientoSemanal AS s ON f.SeguimientoSemanalId = s.SeguimientoSemanalId WHERE s.ContratacionProyectoId = " + pSeguimientoSemanal.ContratacionProyectoId + " AND p.TipoActividadCodigo = 'C'")
                 .ToList();
 
-            decimal? ProgramacionAcumuladaObra = ListProgramacion.Sum(r => r.ProgramacionCapitulo);
-            decimal? ProgramacionEjecutadaObra = ListProgramacion.Sum(r => r.AvanceFisicoCapitulo);
+            decimal? ProgramacionAcumuladaObra = 0;
+            decimal? ProgramacionEjecutadaObra = 0;
 
             ContratacionProyecto contratacionProyectoValidarEstadoObra = _context.ContratacionProyecto.Find(pSeguimientoSemanal.ContratacionProyectoId);
             contratacionProyectoValidarEstadoObra.UsuarioModificacion = usuarioCreacion;
             contratacionProyectoValidarEstadoObra.FechaModificacion = DateTime.Now;
+
+            //Suma la 
+            contratacionProyectoValidarEstadoObra.AvanceFisicoSemanal += pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().AvanceFisicoSemanal;
+            contratacionProyectoValidarEstadoObra.ProgramacionSemanal += pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().ProgramacionSemanal;
 
 
             int CantidadDeSeguimientosSemanales = _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pSeguimientoSemanal.ContratacionProyectoId).ToList().Count();
@@ -1020,7 +1024,7 @@ namespace asivamosffie.services
                 pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().FechaCreacion = DateTime.Now;
                 pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().Eliminado = false;
                 pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo = contratacionProyectoValidarEstadoObra.EstadoObraCodigo;
-
+                
                 _context.SeguimientoSemanalAvanceFisico.Add(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault());
 
                 CrearEditarSeguimientoSemanalAvanceFisicoProgramacion(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().SeguimientoSemanalAvanceFisicoProgramacion, pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().UsuarioCreacion);
