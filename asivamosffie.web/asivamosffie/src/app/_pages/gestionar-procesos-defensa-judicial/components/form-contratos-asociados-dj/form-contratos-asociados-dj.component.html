@@ -9,8 +9,7 @@
             <span class="contador">{{2 - formContratista.get( 'numeroContratos' ).value.toString().length}}</span>
         </div>
     </div>
-
-    <mat-accordion formArrayName="perfiles" *ngIf="formContratista.get( 'numeroContratos' ).value !== null">
+    <mat-accordion formArrayName="perfiles" *ngIf="formContratista.get( 'numeroContratos' ).value !== null" >
         <mat-expansion-panel class="expansion-style sub-expansion" *ngFor="let perfil of perfiles.controls; index as i">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title "[ngClass]="{'sin-diligenciar': !listContrattoscompletos[i], 'completo': listContrattoscompletos[i]}">
