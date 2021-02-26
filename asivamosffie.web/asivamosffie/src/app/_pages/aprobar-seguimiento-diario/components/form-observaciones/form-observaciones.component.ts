@@ -36,7 +36,6 @@ export class FormObservacionesComponent {
   @Input() observacionObjeto: SeguimientoDiarioObservaciones;
   @Input() tieneObservaciones?: boolean;
 
-  estaEditando = false;
   constructor(
     private fb: FormBuilder,
     private dialog: MatDialog,
@@ -46,13 +45,13 @@ export class FormObservacionesComponent {
   ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.observacionObjeto) {
-      this.addressForm.get('observacion').setValue(this.observacionObjeto ? this.observacionObjeto.observaciones : null);
+    if ( changes.observacionObjeto ){
+      this.addressForm.get('observacion').setValue( this.observacionObjeto ? this.observacionObjeto.observaciones : null );
     }
-    if (changes.tieneObservaciones) {
-      this.addressForm.get('tieneObservaciones').setValue(this.tieneObservaciones);
+    if ( changes.tieneObservaciones ){
+      this.addressForm.get('tieneObservaciones').setValue( this.tieneObservaciones );
     }
-    console.log('t', changes)
+    console.log('t',changes)
 
   }
 
@@ -61,22 +60,23 @@ export class FormObservacionesComponent {
       this.seguimientoId = params.id;
       console.log(this.seguimientoId, this.observacionObjeto, this.tieneObservaciones);
 
-      this.addressForm.get('observacion').setValue(this.observacionObjeto ? this.observacionObjeto.observaciones : null);
-      this.addressForm.get('tieneObservaciones').setValue(this.tieneObservaciones);
+      this.addressForm.get('observacion').setValue( this.observacionObjeto ? this.observacionObjeto.observaciones : null );
+      this.addressForm.get('tieneObservaciones').setValue( this.tieneObservaciones );
 
-
+      
     });
   }
 
-  maxLength(e: any, n: number) {
-    // console.log(e.editor.getLength()+" "+n);
-    if (e.editor.getLength() > n) {
-      e.editor.deleteText(n - 1, e.editor.getLength());
+  textoLimpio(texto: string) {
+    if (texto) {
+      const textolimpio = texto.replace(/<[^>]*>/g, '');
+      return textolimpio.length;
     }
   }
-  textoLimpio(texto, n) {
-    if (texto != undefined) {
-      return texto.getLength() > n ? n : texto.getLength();
+
+  maxLength(e: any, n: number) {
+    if (e.editor.getLength() > n) {
+      e.editor.deleteText(n, e.editor.getLength());
     }
   }
 
@@ -88,7 +88,6 @@ export class FormObservacionesComponent {
   }
 
   onSubmit() {
-    this.estaEditando = true;
     this.addressForm.markAllAsTouched();
 
     let seguimiento: SeguimientoDiario = {
@@ -105,10 +104,10 @@ export class FormObservacionesComponent {
       ]
     }
 
-    this.followUpDailyService.createEditObservacion(seguimiento, true)
-      .subscribe(respuesta => {
+    this.followUpDailyService.createEditObservacion( seguimiento, true )
+      .subscribe( respuesta => {
         this.openDialog('', respuesta.message);
-        if (respuesta.code == "200") {
+        if ( respuesta.code == "200" ){
           this.router.navigate(['/aprobarSeguimientoDiario']);
         }
 

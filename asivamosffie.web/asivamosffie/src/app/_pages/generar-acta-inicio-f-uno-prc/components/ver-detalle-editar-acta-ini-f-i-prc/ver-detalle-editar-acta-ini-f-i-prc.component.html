@@ -139,9 +139,9 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
                       *ngIf="
-                        (addressForm.get('fechaActaInicioFUnoPreconstruccion')?.invalid &&
+                        (addressForm.get('fechaActaInicioFUnoPreconstruccion').invalid &&
                           addressForm.get('fechaActaInicioFUnoPreconstruccion').touched) ||
-                        (addressForm.get('fechaActaInicioFUnoPreconstruccion')?.invalid && estaEditando)
+                        (addressForm.get('fechaActaInicioFUnoPreconstruccion').invalid && estaEditando)
                       "
                     />
                   </span>
@@ -184,9 +184,9 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
                     *ngIf="
-                      (addressForm.get('fechaPrevistaTerminacion')?.invalid &&
+                      (addressForm.get('fechaPrevistaTerminacion').invalid &&
                         addressForm.get('fechaPrevistaTerminacion').touched) ||
-                      (addressForm.get('fechaPrevistaTerminacion')?.invalid && estaEditando)
+                      (addressForm.get('fechaPrevistaTerminacion').invalid && estaEditando)
                     "
                   />
                 </span>
@@ -194,7 +194,7 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-12" style="padding-left: 0px">
+            <div class="col-md-9" style="padding-left: 0px">
               <div class="row">
                 <div class="pr-1">
                   <label
@@ -219,7 +219,6 @@
                       max="99"
                       required
                       (keypress)="number($event)"
-                      (ngModelChange)="getValueMeses( $event )"
                       onKeyPress="if(this.value.length>=this.maxLength) return false;"
                   oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                       type="number"
@@ -233,7 +232,7 @@
                     matTooltipClass="info-tooltip"
                   >
                     {{
-                      3 -
+                      2 -
                         (addressForm.get('mesPlazoEjFase1').value
                           ? addressForm.get('mesPlazoEjFase1').value.toString().length
                           : 0)
@@ -248,8 +247,8 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
                       *ngIf="
-                        (addressForm.get('mesPlazoEjFase1')?.invalid && addressForm.get('mesPlazoEjFase1').touched) ||
-                        (addressForm.get('mesPlazoEjFase1')?.invalid && estaEditando)
+                        (addressForm.get('mesPlazoEjFase1').invalid && addressForm.get('mesPlazoEjFase1').touched) ||
+                        (addressForm.get('mesPlazoEjFase1').invalid && estaEditando)
                       "
                     />
                   </span>
@@ -269,7 +268,6 @@
                       max="31"
                       required
                       (keypress)="number($event)"
-                      (ngModelChange)="getValueDias( $event )"
                       onKeyPress="if(this.value.length>=this.maxLength) return false;if(this.value>=this.max) return false;"
                       type="number"
                       formControlName="diasPlazoEjFase1"
@@ -297,8 +295,8 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
                       *ngIf="
-                        (addressForm.get('diasPlazoEjFase1')?.invalid && addressForm.get('diasPlazoEjFase1').touched) ||
-                        (addressForm.get('diasPlazoEjFase1')?.invalid && estaEditando)
+                        (addressForm.get('diasPlazoEjFase1').invalid && addressForm.get('diasPlazoEjFase1').touched) ||
+                        (addressForm.get('diasPlazoEjFase1').invalid && estaEditando)
                       "
                     />
                   </span>
@@ -346,7 +344,7 @@
                     matTooltipClass="info-tooltip"
                   >
                     {{
-                      3 -
+                      2 -
                         (addressForm.get('mesPlazoEjFase2').value !== null
                           ? addressForm.get('mesPlazoEjFase2').value.toString().length
                           : 0)
@@ -361,8 +359,8 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
                       *ngIf="
-                        (addressForm.get('mesPlazoEjFase2')?.invalid && addressForm.get('mesPlazoEjFase2').touched) ||
-                        (addressForm.get('mesPlazoEjFase2')?.invalid && estaEditando)
+                        (addressForm.get('mesPlazoEjFase2').invalid && addressForm.get('mesPlazoEjFase2').touched) ||
+                        (addressForm.get('mesPlazoEjFase2').invalid && estaEditando)
                       "
                     />
                   </span>
@@ -409,8 +407,8 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
                       *ngIf="
-                        (addressForm.get('diasPlazoEjFase2')?.invalid && addressForm.get('diasPlazoEjFase2').touched) ||
-                        (addressForm.get('diasPlazoEjFase2')?.invalid && estaEditando)
+                        (addressForm.get('diasPlazoEjFase2').invalid && addressForm.get('diasPlazoEjFase2').touched) ||
+                        (addressForm.get('diasPlazoEjFase2').invalid && estaEditando)
                       "
                     />
                   </span>
@@ -422,8 +420,8 @@
             <div
               class="text-area-quill noDecorated"
               [class.color-secondaryColor]="
-                (addressForm.get('objeto')?.invalid && addressForm.get('objeto').touched) ||
-                (addressForm.get('objeto')?.invalid && estaEditando)
+                (addressForm.get('objeto').invalid && addressForm.get('objeto').touched) ||
+                (addressForm.get('objeto').invalid && estaEditando)
               "
             >
               <label class="label-left" for="observacionesEspeciales">Observaciones o consideraciones especiales</label>
@@ -457,9 +455,9 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
                 *ngIf="
-                  (addressForm.get('observacionesEspeciales')?.invalid &&
+                  (addressForm.get('observacionesEspeciales').invalid &&
                     addressForm.get('observacionesEspeciales').touched) ||
-                  (addressForm.get('observacionesEspeciales')?.invalid && estaEditando)
+                  (addressForm.get('observacionesEspeciales').invalid && estaEditando)
                 "
               />
             </span>

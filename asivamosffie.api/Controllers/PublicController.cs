@@ -16,7 +16,6 @@ namespace asivamosffie.api.Controllers
     [ApiController]
     public class PublicController : ControllerBase
     {
-        public readonly IRegisterPersonalProgrammingService _registerPersonalProgrammingService;
         public readonly IRegisterPreContructionPhase1Service _RegisterPreContructionPhase1Service;
         public readonly ISourceFundingService _sourceFunding;
         public readonly ISelectionProcessService _selectionProcess;
@@ -30,9 +29,8 @@ namespace asivamosffie.api.Controllers
         public readonly IValidateFinalReportService _ValidateFinalReportService;
         public readonly IValidateFulfilmentFinalReportService _ValidateFulfilmentFinalReportService;
 
-        public PublicController(IRegisterPersonalProgrammingService registerPersonalProgrammingService, IManagePreContructionActPhase1Service managePreContructionActPhase1Service, IRegisterPreContructionPhase1Service registerPreContructionPhase1Service, IManagementCommitteeReportService managementCommitteeReportService, ISourceFundingService sourceFunding, ISelectionProcessService selectionProcess, IOptions<AppSettings> settings, IGuaranteePolicyService guaranteePolicy, IActBeginService actBeginService)
+        public PublicController(IManagePreContructionActPhase1Service managePreContructionActPhase1Service, IRegisterPreContructionPhase1Service registerPreContructionPhase1Service, IManagementCommitteeReportService managementCommitteeReportService, ISourceFundingService sourceFunding, ISelectionProcessService selectionProcess, IOptions<AppSettings> settings, IGuaranteePolicyService guaranteePolicy, IActBeginService actBeginService)
         {
-            _registerPersonalProgrammingService = registerPersonalProgrammingService;
             _managePreContructionActPhase1Service = managePreContructionActPhase1Service;
             _RegisterPreContructionPhase1Service = registerPreContructionPhase1Service;
             _sourceFunding = sourceFunding;
@@ -54,27 +52,6 @@ namespace asivamosffie.api.Controllers
             };
             return appSettingsService;
         }
-
-        /// <summary>
-        /// JMartinez
-        /// 4.1.10  5 Dias de aprobacion del acta y sin gestion de programacion personal de obra
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("GetProyectosSinGestionProgramacionObra")]
-        public async Task TareaProgramada()
-        {
-            try
-            {
-               await _registerPersonalProgrammingService.TareaProgramada(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender); 
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-        }
-
-
 
         [HttpGet("GetConsignationValue")]
         public async Task GetConsignationValue()

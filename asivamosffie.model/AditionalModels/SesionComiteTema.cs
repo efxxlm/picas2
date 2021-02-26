@@ -9,9 +9,6 @@ namespace asivamosffie.model.Models
     {
         [NotMapped]
         public string NombreResponsable { get; set; }
-
-        [NotMapped]
-        public bool? RegistroCompletoActa { get; set; }
     }
 
 }

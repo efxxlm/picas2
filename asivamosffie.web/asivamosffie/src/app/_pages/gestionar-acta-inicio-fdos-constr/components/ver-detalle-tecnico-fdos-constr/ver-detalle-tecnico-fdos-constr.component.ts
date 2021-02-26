@@ -107,8 +107,8 @@ export class VerDetalleTecnicoFdosConstrComponent implements OnInit {
       this.plazoEjecucionPreConstruccionMeses = data.plazoFase1PreMeses;
       this.plazoEjecucionPreConstruccionDias = data.plazoFase1PreDias;
       this.obsConEspeciales = data.observacionOConsideracionesEspeciales;
-      this.plazoEjecucionConstrM = data.plazoFase2ConstruccionMeses;
-      this.plazoEjecucionConstrD = data.plazoFase2ConstruccionDias;
+      this.plazoEjecucionConstrM = data.plazoFase2ConstruccionDias;
+      this.plazoEjecucionConstrD = data.plazoFase2ConstruccionMeses;
       //ruta del acta suscrita
       this.rutaActaSuscrita = data.rutaActaSuscrita;
       //console.log(data.contrato.estadoActaFase2, data.contrato.estadoActaFase2 == 20 );

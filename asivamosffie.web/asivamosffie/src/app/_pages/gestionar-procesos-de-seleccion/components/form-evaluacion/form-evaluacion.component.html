@@ -1,4 +1,9 @@
-<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()" *ngIf="puedeVer">
+<form
+  [formGroup]="addressForm"
+  novalidate
+  (ngSubmit)="onSubmit()"
+  *ngIf="procesoSeleccion.estadoProcesoSeleccionCodigo == estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario"
+>
   <div class="d-flex align-items-center">
     <div
       class="text-area-quill"
@@ -31,10 +36,10 @@
       <img
         class="icon-incompleto--img"
         src="assets/img/icon/incompleto.svg"
-        alt="este campo es requerido"
-        [matTooltipPosition]="'above'"
-        matTooltip="Debe ingresar la información en el campo para continuar"
-        matTooltipClass="info-tooltip"
+                      alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
         *ngIf="
           (addressForm.get('descricion').invalid && addressForm.get('descricion').touched) ||
           (addressForm.get('descricion').invalid && estaEditando)
@@ -61,26 +66,26 @@
         <input matInput type="url" formControlName="url" required />
       </mat-form-field>
     </div>
-    <span class="icon-incompleto">
-      <img
-        class="icon-incompleto--img"
-        src="assets/img/icon/incompleto.svg"
-        alt="este campo es requerido"
-        [matTooltipPosition]="'above'"
-        matTooltip="Debe ingresar la información en el campo para continuar"
-        matTooltipClass="info-tooltip"
-        *ngIf="
-          (addressForm.get('url').invalid && addressForm.get('url').touched) ||
-          (addressForm.get('url').invalid && estaEditando)
-        "
-      />
-    </span>
   </div>
   <div class="row">
     <div class="pr-1 mcenter">
       <span class="info-url">Indique la ruta del soporte de esta información</span>
     </div>
   </div>
+  <span class="icon-incompleto">
+    <img
+      class="icon-incompleto--img"
+      src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
+      *ngIf="
+        (addressForm.get('url').invalid && addressForm.get('url').touched) ||
+        (addressForm.get('url').invalid && estaEditando)
+      "
+    />
+  </span>
 
   <div class="text-center">
     <button *ngIf="editar" mat-button color="warn" class="btn-guardar" type="submit">

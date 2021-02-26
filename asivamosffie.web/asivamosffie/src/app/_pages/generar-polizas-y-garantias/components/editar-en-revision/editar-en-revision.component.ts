@@ -70,7 +70,6 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
     ]
   };
 
-  contrato: any;
   public tipoContrato;
   public objeto;
   public nombreContratista;
@@ -194,7 +193,6 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
         const responAprob = this.listaUsuarios.find(p => p.usuarioId === parseInt(data.responsableAprobacion));
         this.addressForm.get('responsableAprob').setValue(responAprob);
       }
-      this.contrato = data;
       this.dataLoad2(data);
       if (data.nombreAseguradora) this.estaEditando = true
     });
@@ -311,6 +309,9 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
     const inputChar = String.fromCharCode(event.charCode);
     return alphanumeric.test(inputChar) ? true : false;
   }
+  clickedOption() {
+    // console.log(this.selected)
+  }
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n - 1, e.editor.getLength());
@@ -368,7 +369,8 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
     else {
       completo = false;
     }
-
+    // console.log(this.addressForm.value);
+    // console.log(nombreAprobado);
     const contratoArray = {
       'contratoId': this.idContrato,
       "contratoPolizaId": this.idPoliza,
@@ -401,11 +403,11 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
       'Eliminado': false
     };
     const observacionArray = {
-      polizaObservacionId: 0,
-      contratoPolizaId: this.idPoliza,
-      observacion: this.addressForm.get( 'observacionesGenerales' ).value !== null ? this.addressForm.get( 'observacionesGenerales' ).value : '',
-      fechaRevision: this.addressForm.get( 'fechaRevision' ).value !== null ? new Date( this.addressForm.get( 'fechaRevision' ).value ).toISOString() : null,
-      estadoRevisionCodigo: this.addressForm.get( 'estadoRevision' ).value !== null ? this.addressForm.get( 'estadoRevision' ).value.codigo : null
+      'contratoId': this.idContrato,
+      "contratoPolizaId": this.idPoliza,
+      "Observacion": this.addressForm.value.observacionesGenerales,
+      "FechaRevision": this.addressForm.value.fechaRevision,
+      "EstadoRevisionCodigo": revEstado
     }
     let garantiaArray;
     if (this.addressForm.value.polizasYSeguros != undefined || this.addressForm.value.polizasYSeguros != null) {
@@ -455,11 +457,9 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
         /*this.polizaService.CreatePolizaGarantia(polizaGarantia).subscribe(data0=>{
 
         });*/
-        this.polizaService.createEditPolizaObservacion( observacionArray )
-          .subscribe(
-            () => this.realizoPeticion = true,
-            err => this.openDialog('', `<b>${err.message}</b>`)
-          );
+        this.polizaService.CreatePolizaObservacion(observacionArray).subscribe(resp => {
+
+        });
         /*
         this.polizaService.CambiarEstadoPolizaByContratoId(statePoliza, this.idContrato).subscribe(resp1 => {
 
@@ -473,6 +473,7 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
         this.openDialog('', `<b>${data.message}</b>`);
       }
     }, err => this.openDialog( '', `<b>${ err.message }</b>` ) );
+    // console.log(this.addressForm.value);
   }
 
 }

@@ -64,46 +64,26 @@
                     </div>
                 </div>
             </div>
-            <div class="row animatedDown"
-                *ngIf="addressForm.controls.actuacionAdelantada.value && addressForm.controls.actuacionAdelantada.value.codigo == '4'">
-                <div class="col-md-12" style="padding-left: 0;">
-                    <div class="row">
-                        <div class="pr-1">
-                            <label class="label-left" for="cualOtroActuacionAdelantada" [class.color-secondaryColor]="
-                            (addressForm.get('cualOtroActuacionAdelantada').invalid && addressForm.get('cualOtroActuacionAdelantada').touched) ||
-                            (addressForm.get('cualOtroActuacionAdelantada').invalid && estaEditando)
-                          ">¿Cuál?</label>
-                        </div>
+            <div class="row"
+            *ngIf="addressForm.controls.actuacionAdelantada.value && addressForm.controls.actuacionAdelantada.value.codigo == '4'">
+            <div class="col-md-12" style="padding-left: 0;">
+                <div class="row">
+                    <div class="pr-1">
+                        <label class="label-left" for="cualOtroActuacionAdelantada">¿Cuál?</label>
                     </div>
                 </div>
             </div>
-            <div class="row animatedDown"
-                *ngIf="addressForm.controls.actuacionAdelantada.value && addressForm.controls.actuacionAdelantada.value.codigo == '4'">
-                <div class="col-md-12" style="padding-left: 0;">
-                    <div>
-                        <div class="d-flex align-items-center">
-                            <div class="text-area-quill auxBox">
-                                <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
-                                    required (onContentChanged)="maxLength($event, 500)"
-                                    formControlName="cualOtroActuacionAdelantada" #cualOtroActuacionAdelantada>
-                                </quill-editor>
-                            </div>
-                            <span class="contador miles" *ngIf="addressForm.controls.cualOtroActuacionAdelantada.value">
-                                {{500 - (textoLimpio(cualOtroActuacionAdelantada.quillEditor,500))}}
-                            </span>
-                            <span class="contador miles"
-                                *ngIf="!addressForm.controls.cualOtroActuacionAdelantada.value">
-                                500
-                            </span>
-                            <span class="icon-incompleto">
-                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
-                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
-                                    matTooltip="Debe ingresar la información en el campo para continuar"
-                                    matTooltipClass="info-tooltip" *ngIf="
-                                (addressForm.get('cualOtroActuacionAdelantada').invalid && addressForm.get('cualOtroActuacionAdelantada').touched) ||
-                                (addressForm.get('cualOtroActuacionAdelantada').invalid && estaEditando)
-                              " />
-                            </span>
+        </div>
+        <div class="row"
+            *ngIf="addressForm.controls.actuacionAdelantada.value && addressForm.controls.actuacionAdelantada.value.codigo == '4'">
+            <div class="col-md-12" style="padding-left: 0;">
+                <div>
+                    <div class="d-flex align-items-center">
+                        <div class="text-area-quill auxBox">
+                            <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
+                                required (onContentChanged)="maxLength($event, 500)" formControlName="cualOtroActuacionAdelantada"
+                                #cualOtroActuacionAdelantada>
+                            </quill-editor>
                         </div>
                         <span class="contador miles" *ngIf="addressForm.controls.cualOtroActuacionAdelantada.value">
                             {{500 - (textoLimpio(addressForm.get('cualOtroActuacionAdelantada').value))}}
@@ -136,7 +116,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row animatedDown"
+            <div class="row"
                 *ngIf="addressForm.controls.proximaActuacionRequerida.value && addressForm.controls.proximaActuacionRequerida.value.codigo == '4'">
                 <div class="col-md-12" style="padding-left: 0;">
                     <div class="row">
@@ -146,7 +126,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row animatedDown"
+            <div class="row"
                 *ngIf="addressForm.controls.proximaActuacionRequerida.value && addressForm.controls.proximaActuacionRequerida.value.codigo == '4'">
                 <div class="col-md-12" style="padding-left: 0;">
                     <div>
@@ -158,7 +138,7 @@
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.cualOtroActuacionRequerida.value">
-                                {{500 - (textoLimpio(cualOtroActuacionRequerida.quillEditor,500))}}
+                                {{500 - (textoLimpio(addressForm.get('cualOtroActuacionRequerida').value))}}
                             </span>
                             <span class="contador miles" *ngIf="!addressForm.controls.cualOtroActuacionRequerida.value">
                                 500
@@ -311,7 +291,7 @@
                         style="padding: 1.5em 0em 1.2em;"></quill-editor>
                 </div>
                 <span class="contador miles" *ngIf="addressForm.controls.observaciones.value">
-                    {{1000 - (textoLimpio(observaciones.quillEditor,500))}}
+                    {{1000 - (textoLimpio(addressForm.get('observaciones').value))}}
                 </span>
                 <span class="contador miles" *ngIf="!addressForm.controls.observaciones.value">
                     1000

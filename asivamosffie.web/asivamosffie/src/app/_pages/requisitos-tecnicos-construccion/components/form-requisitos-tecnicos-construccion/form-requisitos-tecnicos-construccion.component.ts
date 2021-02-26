@@ -16,8 +16,6 @@ export class FormRequisitosTecnicosConstruccionComponent implements OnInit {
   contrato: Contrato;
   fechaPoliza: string;
   programacionObra: string = 'sin-diligenciar';
-  minDate: Date;
-  maxDate: Date;
 
   constructor ( private dialog: MatDialog,
                 private faseUnoConstruccionSvc: FaseUnoConstruccionService,
@@ -40,23 +38,11 @@ export class FormRequisitosTecnicosConstruccionComponent implements OnInit {
   getContrato () {
     this.faseUnoConstruccionSvc.getContratoByContratoId( this.activatedRoute.snapshot.params.id )
       .subscribe( response => {
-
         this.contrato = response;
         console.log( this.contrato );
 
-        
-
         this.contrato.contratacion.contratacionProyecto.forEach( cp => {
           let perfilCompleto = true;
-
-          if (cp.proyecto.fechaInicioEtapaObra){
-            this.minDate = cp.proyecto.fechaInicioEtapaObra;
-            this.maxDate = cp.proyecto.fechaFinEtapaObra;
-          }else{
-            this.minDate = cp.proyecto.fechaInicioEtapaObraTemporal;
-            this.maxDate = cp.proyecto.fechaFinEtapaObraTemporal;
-          }
-
           if ( cp.proyecto.contratoConstruccion.length > 0 ) {
             cp.proyecto.contratoConstruccion[0].construccionPerfil.forEach( p => {
               if ( p.registroCompleto != true )

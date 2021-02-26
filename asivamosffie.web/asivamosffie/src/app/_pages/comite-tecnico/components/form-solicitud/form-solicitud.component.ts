@@ -85,7 +85,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
   }
 
   ActualizarProyectos(lista) {
-    //console.log(lista)
+    console.log(lista)
     this.proyectos = lista;
   }
 
@@ -213,7 +213,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
       }
       else {
 
-        this.openDialog('', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos</b>');
+        this.openDialog('', 'Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos');
         this.addressForm.get('cuantosCompromisos').setValue(this.compromisos.length);
 
       }

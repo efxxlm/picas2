@@ -7,7 +7,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogTableProyectosSeleccionadosComponent } from '../dialog-table-proyectos-seleccionados/dialog-table-proyectos-seleccionados.component';
 import { AsociadaComponent } from '../asociada/asociada.component';
 import { ProyectoGrilla } from 'src/app/core/_services/project/project.service';
-import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 
 
@@ -20,7 +19,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class TablaResultadosComponent implements OnInit {
 
   @Input() listaResultados: ProyectoGrilla[];
-  @Input() esMultiproyecto: boolean;
+  @Input() esMultiproyecto;
 
   displayedColumns: string[] = [
     'tipoInterventor',
@@ -56,7 +55,7 @@ export class TablaResultadosComponent implements OnInit {
     } else {
       lista = this.listaResultados
     }
-    console.log( lista );
+
     this.dataSource = new MatTableDataSource(lista);
 
     this.dataSource.sort = this.sort;
@@ -87,36 +86,10 @@ export class TablaResultadosComponent implements OnInit {
     dialogRef.afterClosed().subscribe( console.log );
   }
 
-  openDialog(modalTitle: string, modalText: string) {
-    const dialogRef = this.dialog.open(ModalDialogComponent, {
-      width: '28em',
-      data: { modalTitle, modalText }
-    });
-  }
-
   openPopup() {
 
-    const tieneInterventoria = this.elementosSelecciondos.filter( registro => registro.tieneInterventoria === true );
-    const tieneObra = this.elementosSelecciondos.filter( registro => registro.tieneObra === true );
-
-    if (this.esMultiproyecto === true ) {
-      if ( tieneInterventoria.length > 0 || tieneObra.length > 0 ) {
-        this.openDialog( '', '<b>Algunos de los proyectos seleccionados ya cuentan con solicitudes en trámite asociadas a obra o interventoría, por tal razon no puede continuar con esta solicitud.</b>' );
-        return;
-      }
-    }
-
-    if ( tieneInterventoria.length > 0 && tieneObra.length > 0 ) {
-      this.openDialog( '', '<b>Algunos de los proyectos seleccionados ya cuentan con solicitudes en trámite asociadas a obra o interventoría, por tal razon no puede continuar con esta solicitud.</b>' );
-      return;
-    }
     this.dialog.open(AsociadaComponent, {
-      data: { 
-        data: this.elementosSelecciondos,
-        tieneObra: tieneObra.length > 0 ? true : false,
-        tieneInterventoria: tieneInterventoria.length > 0 ? true : false,
-        esMultiproyecto: this.esMultiproyecto
-      }
+      data: { data: this.elementosSelecciondos, esMultiproyecto: this.esMultiproyecto }
     });
 
   }

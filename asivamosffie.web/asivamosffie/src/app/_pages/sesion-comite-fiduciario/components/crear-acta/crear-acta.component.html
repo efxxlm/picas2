@@ -79,9 +79,8 @@
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title"
-                    [class.sin-diligenciar]="temasCompletos === null"
-                    [class.en-proceso]="temasCompletos === false"
-                    [class.completo]="temasCompletos === true">
+                        [class.en-proceso]="!temasCompletos"
+                        [class.completo]="temasCompletos">
                     Otros temas
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -89,9 +88,9 @@
                 <mat-expansion-panel class="expansion-style sub-expansion">
                     <mat-expansion-panel-header class="expansion-style--header">
                         <mat-panel-title class="expansion-style--title"
-                            [class.sin-diligenciar]="tema.registroCompletoActa === undefined"
-                            [class.en-proceso]="tema.registroCompletoActa === false" 
-                            [class.completo]="tema.registroCompletoActa === true"
+                        [class.sin-diligenciar]="tema.sesionTemaId == 0"
+                        [class.en-proceso]="!tema.registroCompleto"
+                        [class.completo]="tema.registroCompleto"
                         >
                             Tema {{ i + 1 }}
                         </mat-panel-title>
@@ -99,7 +98,6 @@
 
                     <button
                         (click)="otros.cargarRegistro()"
-
                         style="display: none;"
                         id="btnOtros"
                         name="btnOtros"
@@ -123,9 +121,8 @@
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title"
-                    [class.sin-diligenciar]="proposicionesCompletos === null"
-                    [class.en-proceso]="proposicionesCompletos === false"
-                    [class.completo]="proposicionesCompletos === true">
+                        [class.en-proceso]="!proposicionesCompletos"
+                        [class.completo]="proposicionesCompletos">
                     Proposiciones y varios
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -134,9 +131,9 @@
                 <mat-expansion-panel class="expansion-style sub-expansion">
                     <mat-expansion-panel-header class="expansion-style--header">
                         <mat-panel-title class="expansion-style--title"
-                            [class.sin-diligenciar]="tema.registroCompletoActa === undefined "
-                            [class.en-proceso]="tema.registroCompletoActa === false" 
-                            [class.completo]="tema.registroCompletoActa === true">
+                        [class.sin-diligenciar]="tema.sesionTemaId == 0"
+                        [class.en-proceso]="!tema.registroCompleto"
+                        [class.completo]="tema.registroCompleto"
                         >
                             Tema {{ i + 1 }}
                         </mat-panel-title>

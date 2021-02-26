@@ -231,7 +231,7 @@ export class FormOtrosTemasComponent implements OnInit {
       }
       else {
 
-        this.openDialog('', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos</b>');
+        this.openDialog('', 'Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos');
         this.addressForm.get('cuantosCompromisos').setValue( this.compromisos.length );
 
       }

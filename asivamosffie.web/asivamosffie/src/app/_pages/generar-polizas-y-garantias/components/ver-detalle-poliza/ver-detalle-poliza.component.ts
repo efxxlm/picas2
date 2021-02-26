@@ -17,7 +17,6 @@ export class VerDetallePolizaComponent implements OnInit {
     { name: 'Aprobada', value: '2' }
   ];
 
-  contrato: any;
   fechaFirmaContrato: any;
   tipoSolicitud: any;
   tipoContrato: any;
@@ -103,7 +102,6 @@ export class VerDetallePolizaComponent implements OnInit {
       this.loadGarantia(data0.contratoPolizaId);
       this.loadLastObservation(data0.contratoPolizaId);
       this.loadChequeo(data0);
-      this.contrato = data0;
     });
     this.common.listaGarantiasPolizas().subscribe(data00 => {
       this.polizasYSegurosArray = data00;

@@ -52,23 +52,11 @@ export class TablaControversiasRaccComponent implements OnInit {
   };
 
   descargarControversia(id){
-    this.conServices.GetPlantillaControversiaContractual(id).subscribe((esPdf:any)=>{
-      //const documento = `${ numContrato }.pdf`; // Valor de prueba
-      const documento = `Controversia${ id }.pdf`; // Valor de prueba
-      const text = documento,
-      blob = new Blob([esPdf], { type: 'application/pdf' }),
-      anchor = document.createElement('a');
-      anchor.download = documento;
-      anchor.href = window.URL.createObjectURL(blob);
-      anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
-      anchor.click();
-    });
+    this.router.navigate(['/registrarActuacionesControversiasContractuales/actualizarTramite', id]);
   }
 
   irActualizarTramite(id){
-    this.conServices.ChangeStateActuacion(id).subscribe(res=>{
-      this.router.navigate(['/registrarActuacionesControversiasContractuales/actualizarTramite', id]);
-    });
+    this.router.navigate(['/registrarActuacionesControversiasContractuales/actualizarTramite', id]);
   }
 
   finalizarActuacion(id){

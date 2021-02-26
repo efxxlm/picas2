@@ -57,7 +57,9 @@ export class FormPerfilComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.perfilesProyecto();
+    setTimeout(() => {
+      this.perfilesProyecto();
+    }, 1000);
   }
 
   crearFormulario() {
@@ -256,8 +258,6 @@ export class FormPerfilComponent implements OnInit {
       if ( this.perfilesCompletos === 0 && this.perfilesEnProceso === 0 && this.perfilProyecto.length > 0 ) {
         this.perfilesCompletados.emit( 'sin-diligenciar' );
       }
-      this.estaEditando = true;
-      this.formContratista.markAllAsTouched();
     }
   }
 
@@ -416,7 +416,6 @@ export class FormPerfilComponent implements OnInit {
 
   guardar() {
     this.estaEditando = true;
-    this.formContratista.markAllAsTouched();
     const perfiles: ContratoPerfil[] = this.formContratista.get( 'perfiles' ).value;
 
     if ( this.perfilProyecto.length === 0 ) {
@@ -453,6 +452,7 @@ export class FormPerfilComponent implements OnInit {
         value.proyectoId                   = this.proyectoId;
       } );
     }
+
     this.enviarPerfilesContrato.emit( perfiles );
   }
 

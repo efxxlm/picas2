@@ -203,7 +203,7 @@
       </p>
     </mat-card-content>
   </mat-card>
-  <mat-card class="shipping-card var-main-gris" *ngIf="contrato !== undefined">
+  <mat-card class="shipping-card var-main-gris">
     <mat-card-header class="header-card">
       <mat-card-title class="header-card--text">
         Observaciones generales
@@ -212,7 +212,7 @@
     <mat-card-content>
     <!--jflorez, quito esto pues ya tiene la tabla
     <div [innerHtml]="this.observaciones"></div>-->  
-      <app-tabla-historial-observaciones-poliza [polizaObservacion]="contrato.polizaObservacion"></app-tabla-historial-observaciones-poliza>
+      <app-tabla-historial-observaciones-poliza></app-tabla-historial-observaciones-poliza>
     </mat-card-content>
   </mat-card>
   

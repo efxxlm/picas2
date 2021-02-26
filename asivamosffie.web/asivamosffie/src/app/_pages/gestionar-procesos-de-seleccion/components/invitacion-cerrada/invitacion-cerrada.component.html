@@ -66,14 +66,12 @@
 
         <mat-expansion-panel class="expansion-style" >
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title " 
-                    [ngClass]="{'sin-diligenciar':evaluacion_class===0,'en-proceso':evaluacion_class===1,'completo':evaluacion_class===2, 'en-alerta':evaluacion_class===3}">
+                <mat-panel-title class="expansion-style--title " [ngClass]="{'sin-diligenciar':evaluacion_class===0,'en-proceso':evaluacion_class===1,'completo':evaluacion_class===2, 'en-alerta':evaluacion_class===3}">
                     Evaluación
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <button style="display: none;" type="button" (click)="evaluacion.cargarRegistro()"
                 id="botonevaluacion"></button>
-                
             <app-form-evaluacion #evaluacion 
                 [procesoSeleccion]="procesoSeleccion"
                 [editar]="bitPuedoEditar"
@@ -92,7 +90,7 @@
             <app-form-seleccion-proponente-a-invitar #proponenteInvitar
                 [editar]="bitPuedoEditar"    
                 [procesoSeleccion]="procesoSeleccion"               
-                (guardar)="onSubmit()" [style.pointer-events]="getStyleEvaluacion()">
+                (guardar)="onSubmit()">
             </app-form-seleccion-proponente-a-invitar>
 
         </mat-expansion-panel>

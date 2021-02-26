@@ -105,7 +105,7 @@ export class FormGestionarFuentesAdministrativasComponent implements OnInit {
     //valido que no se haya seleccionado previamente
     let cont=0;
     this.addressForm.value.fuentes.forEach(element => {
-      console.log(element.fuentecampo, fuenteSeleccionada);
+      console.log(element.fuentecampo);
       if(element.fuentecampo==fuente.controls.fuentecampo.value)
       {
         cont++;
@@ -119,7 +119,7 @@ export class FormGestionarFuentesAdministrativasComponent implements OnInit {
     }
     else
     {
-      fuente.get('saldoActual').setValue(fuenteSeleccionada[0].Saldo_actual_de_la_fuente);
+      fuente.get('saldoActual').setValue(fuenteSeleccionada[0].saldo_actual_de_la_fuente);
     }
 
     

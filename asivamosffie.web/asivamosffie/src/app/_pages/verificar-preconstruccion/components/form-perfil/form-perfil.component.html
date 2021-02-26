@@ -50,10 +50,10 @@
         <img
           class="icon-incompleto--img"
           src="assets/img/icon/incompleto.svg"
-          alt="este campo es requerido"
-          [matTooltipPosition]="'above'"
-          matTooltip="Debe ingresar la información en el campo para continuar"
-          matTooltipClass="info-tooltip"
+                        alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
           *ngIf="
             (formContratista.get('numeroPerfiles').invalid && formContratista.get('numeroPerfiles').touched) ||
             (formContratista.get('numeroPerfiles').invalid && estaEditando)
@@ -105,10 +105,10 @@
                   <img
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
-                    alt="este campo es requerido"
-                    [matTooltipPosition]="'above'"
-                    matTooltip="Debe ingresar la información en el campo para continuar"
-                    matTooltipClass="info-tooltip"
+                                  alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                     *ngIf="
                       (perfil.get('perfilCodigo').invalid && perfil.get('perfilCodigo').touched) ||
                       (perfil.get('perfilCodigo').invalid && estaEditando)
@@ -162,10 +162,10 @@
                     <img
                       class="icon-incompleto--img"
                       src="assets/img/icon/incompleto.svg"
-                      alt="este campo es requerido"
-                      [matTooltipPosition]="'above'"
-                      matTooltip="Debe ingresar la información en el campo para continuar"
-                      matTooltipClass="info-tooltip"
+                                    alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                       *ngIf="
                         (perfil.get('cantidadHvRequeridas').invalid && perfil.get('cantidadHvRequeridas').touched) ||
                         (perfil.get('cantidadHvRequeridas').invalid && estaEditando)
@@ -220,10 +220,10 @@
                     <img
                       class="icon-incompleto--img"
                       src="assets/img/icon/incompleto.svg"
-                      alt="este campo es requerido"
-                      [matTooltipPosition]="'above'"
-                      matTooltip="Debe ingresar la información en el campo para continuar"
-                      matTooltipClass="info-tooltip"
+                                    alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                       *ngIf="
                         (perfil.get('cantidadHvRecibidas').invalid && perfil.get('cantidadHvRecibidas').touched) ||
                         (perfil.get('cantidadHvRecibidas').invalid && estaEditando)
@@ -278,10 +278,10 @@
                     <img
                       class="icon-incompleto--img"
                       src="assets/img/icon/incompleto.svg"
-                      alt="este campo es requerido"
-                      [matTooltipPosition]="'above'"
-                      matTooltip="Debe ingresar la información en el campo para continuar"
-                      matTooltipClass="info-tooltip"
+                                    alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                       *ngIf="
                         (perfil.get('cantidadHvAprobadas').invalid && perfil.get('cantidadHvAprobadas').touched) ||
                         (perfil.get('cantidadHvAprobadas').invalid && estaEditando)
@@ -347,10 +347,10 @@
                     <img
                       class="icon-incompleto--img"
                       src="assets/img/icon/incompleto.svg"
-                      alt="este campo es requerido"
-                      [matTooltipPosition]="'above'"
-                      matTooltip="Debe ingresar la información en el campo para continuar"
-                      matTooltipClass="info-tooltip"
+                                    alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                       *ngIf="
                         (perfil.get('fechaAprobacion').invalid && perfil.get('fechaAprobacion').touched) ||
                         (perfil.get('fechaAprobacion').invalid && estaEditando)
@@ -393,17 +393,19 @@
                   ></quill-editor>
                   <div class="d-flex" style="align-items: flex-end; margin-bottom: 0.6em">
                     <span class="contador miles" *ngIf="perfil.get('observacion').value !== null">
-                      {{ 1000 - textoLimpio(observaciones.quillEditor, 1000) }}
+                      {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
                     </span>
-                    <span class="contador miles" *ngIf="perfil.get('observacion').value === null"> 1000 </span>
+                    <span class="contador miles" *ngIf="perfil.get('observacion').value === null">
+                        1000
+                    </span>
                     <span class="icon-incompleto">
                       <img
                         class="icon-incompleto--img"
                         src="assets/img/icon/incompleto.svg"
-                        alt="este campo es requerido"
-                        [matTooltipPosition]="'above'"
-                        matTooltip="Debe ingresar la información en el campo para continuar"
-                        matTooltipClass="info-tooltip"
+                                      alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                         *ngIf="
                           (perfil.get('observacion').invalid && perfil.get('observacion').touched) ||
                           (perfil.get('observacion').invalid && estaEditando)
@@ -460,10 +462,10 @@
                         <img
                           class="icon-incompleto--img"
                           src="assets/img/icon/incompleto.svg"
-                          alt="este campo es requerido"
-                          [matTooltipPosition]="'above'"
-                          matTooltip="Debe ingresar la información en el campo para continuar"
-                          matTooltipClass="info-tooltip"
+                                        alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                           *ngIf="
                             (numero.get('numeroRadicado').invalid && numero.get('numeroRadicado').touched) ||
                             (numero.get('numeroRadicado').invalid && estaEditando)
@@ -555,27 +557,27 @@
                       "
                     />
                   </mat-form-field>
-                  <span class="icon-incompleto">
-                    <img
-                      class="icon-incompleto--img"
-                      src="assets/img/icon/incompleto.svg"
-                      alt="este campo es requerido"
-                      [matTooltipPosition]="'above'"
-                      matTooltip="Debe ingresar la información en el campo para continuar"
-                      matTooltipClass="info-tooltip"
-                      *ngIf="
-                        (perfil.get('rutaSoporte').invalid && perfil.get('rutaSoporte').touched) ||
-                        (perfil.get('rutaSoporte').invalid && estaEditando)
-                      "
-                    />
-                  </span>
                 </div>
                 <div class="d-flex justify-content-center size-text-descriptivo">
-                  <span class="info-url">
-                    Indique la ruta en la que se encuentra el soporte de las hojas de vida y el Acta de aprobación del
-                    personal.
-                  </span>
+                  <span class="info-url"
+                    >Indique la ruta en la que se encuentra el soporte de las hojas de vida y el Acta de aprobación del
+                    personal.</span
+                  >
                 </div>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                                  alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
+                    *ngIf="
+                      (perfil.get('rutaSoporte').invalid && perfil.get('rutaSoporte').touched) ||
+                      (perfil.get('rutaSoporte').invalid && estaEditando)
+                    "
+                  />
+                </span>
               </div>
             </div>
           </div>
@@ -596,21 +598,21 @@
 
         <section *ngIf="perfil.get('observacionSupervisor').value !== undefined">
           <mat-card
-            class="shipping-card var-main-gris"
-            style="margin-top: 3em"
-            *ngIf="perfil.get('observacionSupervisor').value !== null"
-            align="left"
-          >
-            <mat-card-header class="header-card">
-              <mat-card-title class="header-card--text"> Observaciones del supervisor </mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-              <b style="margin-top: 0.8em; margin-left: 2em">
-                {{ perfil.get('fechaObservacion').value | date: 'dd/MM/yyyy' }}
-              </b>
-              <section [innerHTML]="perfil.get('observacionSupervisor').value" style="margin-left: 2em"></section>
-            </mat-card-content>
-          </mat-card>
+          class="shipping-card var-main-gris"
+          style="margin-top: 3em"
+          *ngIf="perfil.get('observacionSupervisor').value !== null"
+          align="left"
+        >
+          <mat-card-header class="header-card">
+            <mat-card-title class="header-card--text"> Observaciones del supervisor </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <b style="margin-top: 0.8em;margin-left: 2em;">
+              {{ perfil.get('fechaObservacion').value | date: 'dd/MM/yyyy' }}
+            </b>
+            <section [innerHTML]="perfil.get('observacionSupervisor').value" style="margin-left: 2em;"></section>
+          </mat-card-content>
+        </mat-card>
         </section>
 
         <button

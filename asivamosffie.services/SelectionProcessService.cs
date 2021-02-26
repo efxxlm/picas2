@@ -77,9 +77,6 @@ namespace asivamosffie.services
                                             .IncludeFilter(r => r.ProcesoSeleccionGrupo.Where(r => !(bool)r.Eliminado))
                                             .FirstOrDefaultAsync(proceso => proceso.ProcesoSeleccionId == id);
                 procesoSeleccion.ListaContratistas = _context.Contratista.Where(x => x.NumeroInvitacion == procesoSeleccion.NumeroProceso).ToList();
-                procesoSeleccion.ProcesoSeleccionGrupo = procesoSeleccion.ProcesoSeleccionGrupo.Where(r => r.Eliminado != true).ToList();
-
-
                 return procesoSeleccion;
             }
             catch (Exception ex)
@@ -1453,9 +1450,9 @@ namespace asivamosffie.services
                  string.IsNullOrEmpty(procesoSeleccion.Justificacion) ||
                  string.IsNullOrEmpty(procesoSeleccion.TipoIntervencionCodigo) ||
                  string.IsNullOrEmpty(procesoSeleccion.TipoAlcanceCodigo) ||
-                 //string.IsNullOrEmpty(procesoSeleccion.TipoProcesoCodigo) ||
-                 //string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableTecnicoUsuarioId)) ||
-                 //string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableEstructuradorUsuarioid)) ||
+                 string.IsNullOrEmpty(procesoSeleccion.TipoProcesoCodigo) ||
+                 string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableTecnicoUsuarioId)) ||
+                 string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableEstructuradorUsuarioid)) ||
                  string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CantidadCotizaciones)) ||
                  string.IsNullOrEmpty(procesoSeleccion.EstadoProcesoSeleccionCodigo) ||
                  string.IsNullOrEmpty(procesoSeleccion.EtapaProcesoSeleccionCodigo) 
@@ -1463,62 +1460,17 @@ namespace asivamosffie.services
                 )
                     esCompleto = false;
 
-                if (procesoSeleccion.ProcesoSeleccionProponente.Count() == 0)
-                {
-                    esCompleto = false;
-                }
-
                 procesoSeleccion.ProcesoSeleccionProponente.ToList().ForEach(psp =>
                {
-                   if ( psp.TipoProponenteCodigo == ConstanCodigoTipoProponente.Persona_Juridica_Union_Temporal_o_Consorcio )
                    if (
                          string.IsNullOrEmpty(psp.NombreProponente) ||
-                         string.IsNullOrEmpty(psp.CedulaRepresentanteLegal) ||
-
-                         //string.IsNullOrEmpty(psp.NumeroIdentificacion) ||
+                         string.IsNullOrEmpty(psp.NumeroIdentificacion) ||
                          string.IsNullOrEmpty(psp.TipoProponenteCodigo) ||
                          psp.LocalizacionIdMunicipio == null ||
                          string.IsNullOrEmpty(psp.DireccionProponente) ||
                          string.IsNullOrEmpty(psp.TelefonoProponente) ||
                          string.IsNullOrEmpty(psp.EmailProponente)
                    )
-                       esCompleto = false;
-
-                   if (psp.TipoProponenteCodigo == ConstanCodigoTipoProponente.Persona_Juridica_Individual)
-                       if (
-                             string.IsNullOrEmpty(psp.NombreProponente) ||
-                             string.IsNullOrEmpty(psp.NombreRepresentanteLegal) ||
-                             string.IsNullOrEmpty(psp.CedulaRepresentanteLegal) ||
-                             string.IsNullOrEmpty(psp.NumeroIdentificacion) ||
-                             string.IsNullOrEmpty(psp.TipoProponenteCodigo) ||
-                             psp.LocalizacionIdMunicipio == null ||
-                             string.IsNullOrEmpty(psp.DireccionProponente) ||
-                             string.IsNullOrEmpty(psp.TelefonoProponente) ||
-                             string.IsNullOrEmpty(psp.EmailProponente)
-                       )
-                           esCompleto = false;
-
-                   if (psp.TipoProponenteCodigo == ConstanCodigoTipoProponente.Personal_Natural)
-                       if (
-                             string.IsNullOrEmpty(psp.NombreProponente) ||
-                             string.IsNullOrEmpty(psp.NumeroIdentificacion) ||
-                             string.IsNullOrEmpty(psp.TipoProponenteCodigo) ||
-                             psp.LocalizacionIdMunicipio == null ||
-                             string.IsNullOrEmpty(psp.DireccionProponente) ||
-                             string.IsNullOrEmpty(psp.TelefonoProponente) ||
-                             string.IsNullOrEmpty(psp.EmailProponente)
-                       )
-                           esCompleto = false;
-               });
-
-                procesoSeleccion.ProcesoSeleccionCotizacion.ToList().ForEach(psc =>
-               {
-                   if (
-                          string.IsNullOrEmpty(psc.NombreOrganizacion) ||
-                          psc.ValorCotizacion == null ||
-                          string.IsNullOrEmpty( psc.Descripcion ) ||
-                          string.IsNullOrEmpty( psc.UrlSoporte )
-                       )
                        esCompleto = false;
                });
 
@@ -1713,22 +1665,18 @@ namespace asivamosffie.services
             {
                 var procesoSeleccionCot = _context.ProcesoSeleccionCotizacion.Find(procesoSeleccionCotizacionId);
 
-                if ( procesoSeleccionCot != null)
-                {
-                    procesoSeleccionCot.Eliminado = true;
-                    procesoSeleccionCot.UsuarioModificacion = usuarioModificacion;
-                    procesoSeleccionCot.FechaModificacion = DateTime.Now;
-                    _context.Update(procesoSeleccionCot);
-                    _context.SaveChanges();
+                procesoSeleccionCot.Eliminado = true;
+                procesoSeleccionCot.UsuarioModificacion = usuarioModificacion;
+                procesoSeleccionCot.FechaModificacion = DateTime.Now;
+                _context.Update(procesoSeleccionCot);
+                _context.SaveChanges();
 
-                    var procesoSeleccion = _context.ProcesoSeleccion
-                                                        .Where(r => r.ProcesoSeleccionId == procesoSeleccionCot.ProcesoSeleccionId)
-                                                        .Include(r => r.ProcesoSeleccionCotizacion)
-                                                        .FirstOrDefault();
+                var procesoSeleccion = _context.ProcesoSeleccion
+                                                    .Where( r => r.ProcesoSeleccionId == procesoSeleccionCot.ProcesoSeleccionId)
+                                                    .Include(r => r.ProcesoSeleccionCotizacion)
+                                                    .FirstOrDefault();
 
-                    procesoSeleccion.CantidadCotizaciones = procesoSeleccion.ProcesoSeleccionCotizacion.Where(r => r.Eliminado != true).Count();
-                }
-
+                procesoSeleccion.CantidadCotizaciones = procesoSeleccion.ProcesoSeleccionCotizacion.Where(r => r.Eliminado != false).Count();
 
                 return respuesta =
                     new Respuesta
@@ -1758,31 +1706,17 @@ namespace asivamosffie.services
         /*autor: jflorez
             descripción: borra lOS GRUPOS en editar
             impacto: CU 3.1.3*/
-        public async Task<Respuesta> deleteProcesoSeleccionGrupoByID(int procesoSeleccionGrupoId, string usuarioModificacion)
+        public async Task<Respuesta> deleteProcesoSeleccionGrupoByID(int procesoSeleccionCotizacionId, string usuarioModificacion)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
-                var procesoSeleccionCot = _context.ProcesoSeleccionGrupo.Find(procesoSeleccionGrupoId);
-
-                if (procesoSeleccionCot != null)
-                {
-                    
-
-                    procesoSeleccionCot.Eliminado = true;
-                    procesoSeleccionCot.UsuarioModificacion = usuarioModificacion;
-                    procesoSeleccionCot.FechaModificacion = DateTime.Now;
-                    _context.SaveChanges();
-
-                    ProcesoSeleccion procesoSeleccion = _context.ProcesoSeleccion
-                                                                    .Where( r => r.ProcesoSeleccionId == procesoSeleccionCot.ProcesoSeleccionId)
-                                                                    .Include( r => r.ProcesoSeleccionGrupo )
-                                                                    .FirstOrDefault();
-
-                    procesoSeleccion.CantGrupos = procesoSeleccion.ProcesoSeleccionGrupo.Where(r => r.Eliminado != true).Count();
-                    _context.SaveChanges();
-                }
-                
+                var procesoSeleccionCot = _context.ProcesoSeleccionGrupo.Find(procesoSeleccionCotizacionId);
+                procesoSeleccionCot.Eliminado = true;
+                procesoSeleccionCot.UsuarioModificacion = usuarioModificacion;
+                procesoSeleccionCot.FechaModificacion = DateTime.Now;
+                _context.Update(procesoSeleccionCot);
+                _context.SaveChanges();
                 return respuesta =
                     new Respuesta
                     {

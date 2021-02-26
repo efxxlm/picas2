@@ -9,8 +9,8 @@
     <div class="col">
         <mat-form-field class="select-width">
             <mat-select multiple required [formControl]="solicitudAsociada">
-                <mat-option *ngFor="let asociada of solicitudAsociadaArray" [value]="asociada.codigo">
-                    {{ asociada.nombre }}
+                <mat-option *ngFor="let asociada of solicitudAsociadaArray" [value]="asociada.value">
+                    {{ asociada.name }}
                 </mat-option>
             </mat-select>
         </mat-form-field>

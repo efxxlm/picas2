@@ -37,7 +37,7 @@ namespace asivamosffie.services.Helpers
 
 
 
-        public static byte[] Convertir(Plantilla pPlantilla, bool pEsHorizontal = false)
+        public static byte[] Convertir(Plantilla pPlantilla)
         {
             string contenido = pPlantilla.Contenido ?? " ";
             string encabezado = pPlantilla.Encabezado != null ? pPlantilla.Encabezado.Contenido : " ";
@@ -67,9 +67,6 @@ namespace asivamosffie.services.Helpers
                 Document document = new Document();
                 iTextSharp.text.Rectangle z = PageSize.LETTER;
                 document = new Document(z, (float)margenIzquierdo, (float)margenDerecho, (float)margenSuperior, (float)margenInferior);
-
-                if ( pEsHorizontal == true )
-                    document.SetPageSize(iTextSharp.text.PageSize.LETTER.Rotate());
 
 
                 EventosPdf e = new EventosPdf();

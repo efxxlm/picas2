@@ -25,16 +25,6 @@
             {{ solicitudes.contratacion.numeroSolicitud }}
           </b>
         </div>
-        <div class="col" *ngIf="solicitudes.tipoSolicitudCodigo === tipoSolicitudCodigo.modificacionContractual">
-          <b class="label-left color-blue">
-            {{ solicitudes.novedadContractual.numeroSolicitud }}
-          </b>
-        </div>
-        <div class="col" *ngIf="solicitudes.tipoSolicitudCodigo === tipoSolicitudCodigo.controversiaContractual">
-          <b class="label-left color-blue">
-            {{ solicitudes.controversiaContractual.numeroSolicitud }}
-          </b>
-        </div>
       </div>
       <div class="row">
         <div class="pr-1">
@@ -42,7 +32,7 @@
         </div>
         <div class="col">
           <b class="label-left color-blue">
-            {{ getSolicitudCodigo( solicitudes.tipoSolicitudCodigo ) }}
+            {{ solicitudes.tipoSolicitud }}
           </b>
         </div>
       </div>
@@ -55,13 +45,13 @@
       </div>
       
       <div style="margin-top: .6em;">
-        <div class="row" *ngIf="solicitudes.desarrolloSolicitud !== undefined && esComiteFiduciario === false">
+        <div class="row" *ngIf="solicitudes.desarrolloSolicitud">
           <div class="pr-1">
             <label><b>Desarrollo</b></label>
           </div>
           <div class="col color-blue" [innerHTML]="innerObservacion( solicitudes.desarrolloSolicitud )"></div>
         </div>
-        <div class="row" *ngIf="solicitudes.desarrolloSolicitudFiduciario !== undefined && esComiteFiduciario === true">
+        <div class="row" *ngIf="solicitudes.desarrolloSolicitudFiduciario">
           <div class="pr-1">
             <label><b>Desarrollo</b></label>
           </div>
@@ -94,7 +84,7 @@
               <label><b>Estado de la solicitud</b></label>
             </div>
             <div class="col w-50">
-              <span class="color-blue"> <b>{{ solicitudes.estadoCodigo }}</b> </span>
+              <span class="color-blue"> <b>{{ estadoSolicitud[0]?.nombre }}</b> </span>
             </div>
           </div>
         </div>
@@ -105,7 +95,7 @@
           <div class="pr-1">
             <label><b>Observaciones de la solicitud</b></label>
           </div>
-          <b><div class="col color-blue" [innerHTML]="esComiteFiduciario === true ? solicitudes.observacionesFiduciario : solicitudes.observaciones"></div></b>
+          <div class="col color-blue" [innerHTML]="innerObservacion( solicitudes.observaciones )"></div>
         </div>
       </ng-container>
       <ng-template #elseTemplate>

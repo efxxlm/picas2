@@ -115,10 +115,7 @@ export class CargarActaSuscritaActaIniFIPreconstruccionComponent implements OnIn
       else {
         this.service.LoadActa(pContrato)
           .subscribe(
-            response => {
-              this.openDialog( '', `<b>${ response.message }</b>` );
-              this.matDialogRef.close( 'aceptado' );
-            },
+            response => this.openDialog( '', `<b>${ response.message }</b>` ),
             err => this.openDialog( '', `<b>${ err.message }</b>` )
           );
       }
@@ -126,6 +123,11 @@ export class CargarActaSuscritaActaIniFIPreconstruccionComponent implements OnIn
       this.openDialog('', '<b>El tipo de archivo que esta intentando cargar no es permitido en la plataforma.<br>El tipo de documento soportado es .pdf</b>');
       return;
     }
-  }
 
+
+
+  }
+  close() {
+    this.matDialogRef.close('aceptado');
+  }
 }

@@ -201,13 +201,6 @@ interface Proyecto2 {
   proyectoPredio: any[];
   proyectoRequisitoTecnico: any[];
   semaforoGeneral?: string;//just for class colors
-
-  fechaInicioEtapaObra?: Date,
-  fechaFinEtapaObra?: Date,
-  fechaInicioEtapaObraTemporal?: Date,
-  fechaFinEtapaObraTemporal?: Date,
-
-
 }
 
 interface LocalizacionIdMunicipioNavigation {

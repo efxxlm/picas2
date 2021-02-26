@@ -23,7 +23,7 @@ export class TablaDisponibilidadMaterialComponent implements OnInit {
       'totalHorasRetraso'
     ];
 
-    constructor( private dialog: MatDialog ){ }
+    constructor( private dialog: MatDialog ) { }
 
     ngOnInit(): void {
         if ( this.seguimientoDiario !== undefined ) {
@@ -31,29 +31,28 @@ export class TablaDisponibilidadMaterialComponent implements OnInit {
             let sumaTotal = 0;
             if ( this.seguimientoDiario.length > 0 ) {
                 for ( const seguimiento of this.seguimientoDiario ) {
-                    if ( seguimiento.causaBajaDisponibilidadMaterialNombre !== '---' && seguimiento.causaBajaDisponibilidadEquipoNombre !== '---' && seguimiento.causaBajaDisponibilidadProductividadNombre !== '---' ) {
-                        let totalhorasRetraso = 0;
-                        totalhorasRetraso += seguimiento.numeroHorasRetrasoMaterial !== undefined ? seguimiento.numeroHorasRetrasoMaterial : 0;
-                        totalhorasRetraso += seguimiento.numeroHorasRetrasoEquipo !== undefined ? seguimiento.numeroHorasRetrasoEquipo : 0;
-                        totalhorasRetraso +=    seguimiento.numeroHorasRetrasoProductividad !== undefined ?
-                                                seguimiento.numeroHorasRetrasoProductividad : 0;
-                        seguimiento.totalHorasRetraso = totalhorasRetraso === 0 ? '---' : totalhorasRetraso;
-                        sumaTotal += totalhorasRetraso;
-                        seguimientoDiario.push( seguimiento );
-                    }
+                    let totalhorasRetraso = 0;
+                    totalhorasRetraso += seguimiento.numeroHorasRetrasoMaterial !== undefined ? seguimiento.numeroHorasRetrasoMaterial : 0;
+                    totalhorasRetraso += seguimiento.numeroHorasRetrasoEquipo !== undefined ? seguimiento.numeroHorasRetrasoEquipo : 0;
+                    totalhorasRetraso +=    seguimiento.numeroHorasRetrasoProductividad !== undefined ?
+                                            seguimiento.numeroHorasRetrasoProductividad : 0;
+                    seguimiento.totalHorasRetraso = totalhorasRetraso === 0 ? '---' : totalhorasRetraso;
+                    sumaTotal += totalhorasRetraso;
+                    seguimientoDiario.push( seguimiento );
                 }
             } else {
                 seguimientoDiario.push(
                     {
                         fechaSeguimiento: null,
-                        causaBajaDisponibilidadMaterialNombre: '---',
-                        causaBajaDisponibilidadEquipoNombre: '---',
-                        causaBajaDisponibilidadProductividadNombre: '---',
+                        causaIndisponibilidadMaterialCodigo: '---',
+                        causaIndisponibilidadEquipoCodigo: '---',
+                        causaIndisponibilidadProductividadCodigo: '---',
                         totalHorasRetraso: '---',
                         seguimientoDiarioObservaciones: ''
                     }
                 );
             }
+
             this.dataSeguimientoDiario.push(
                 {
                     totalHorasRetraso: sumaTotal === 0 ? '---' : sumaTotal,
@@ -64,10 +63,10 @@ export class TablaDisponibilidadMaterialComponent implements OnInit {
         }
     }
 
-    openDialogObservaciones( registro: any ) {
+    openDialogObservaciones( observacion: string, registro: any ) {
         this.dialog.open( DialogAvanceResumenAlertasComponent, {
-            width: '100em',
-            data : { registro, esDisponibilidadPersonal : false }
+            width: '60em',
+            data : { observacion, registro }
         } );
     }
 

@@ -96,10 +96,10 @@ export class FormRegistrarControversiaContractuaComponent implements OnInit {
       this.tipoIdentificacion = resp_0[0].tipoDocumento;
       this.numIdentificacion = resp_0[0].numeroIdentificacion;
       this.valorContrato = resp_0[0].valorContrato;
-      this.plazoContrato = resp_0[0].plazoContrato;
     });
     this.services.GetVistaContratoContratista(ret[0].contratoId).subscribe((resp_1:any)=>{
       this.tipoIntervencion = resp_1.tipoIntervencion;
+      this.plazoContrato = resp_1.plazoFormat;
       this.fechaInicioContrato = resp_1.fechaInicioContrato;
       this.fechaFinalizacionContrato = resp_1.fechaFinContrato;
     });

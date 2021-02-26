@@ -452,7 +452,7 @@
             />
           </span>
         </div>
-        <div class="animatedDown" *ngIf="this.obj1 == true">
+        <div *ngIf="this.obj1 == true">
           <mat-card-title class="header-card--text alineacion-titulos2 mt-1em" style="padding-left: 0px">
             Buen manejo y correcta inversión del anticipo
           </mat-card-title>
@@ -500,7 +500,7 @@
             </div>
           </div>
         </div>
-        <div class="animatedDown" *ngIf="this.obj2 == true">
+        <div *ngIf="this.obj2 == true">
           <mat-card-title class="header-card--text alineacion-titulos2 mt-1em" style="padding-left: 0px">
             Garantía de estabilidad y calidad de la obra
           </mat-card-title>
@@ -548,7 +548,7 @@
             </div>
           </div>
         </div>
-        <div class="animatedDown" *ngIf="this.obj3 == true">
+        <div *ngIf="this.obj3 == true">
           <mat-card-title class="header-card--text alineacion-titulos2 mt-1em" style="padding-left: 0px">
             Póliza de cumplimiento
           </mat-card-title>
@@ -596,7 +596,7 @@
             </div>
           </div>
         </div>
-        <div class="animatedDown" *ngIf="this.obj4 == true">
+        <div *ngIf="this.obj4 == true">
           <mat-card-title class="header-card--text alineacion-titulos2 mt-1em" style="padding-left: 0px">
             Pólizas y seguros
           </mat-card-title>
@@ -645,7 +645,6 @@
           </div>
         </div>
         <div
-        class="animatedDown"
           *ngIf="
             addressForm.get('polizasYSegurosCompleto').value != null ||
             addressForm.get('polizaYCoumplimiento').value != null ||
@@ -867,7 +866,6 @@
       </mat-card-content>
     </mat-card>
     <div
-    class="animatedDown"
       *ngIf="
         addressForm.get('condicionesGenerales').value != null &&
         addressForm.get('reciboDePago').value != null &&
@@ -982,7 +980,7 @@
               </div>
             </div>
           </div>
-          <div class="animatedDown"
+          <div
             *ngIf="addressForm.controls.estadoRevision.value && addressForm.controls.estadoRevision.value.codigo == '2'"
           >
             <h2 class="card-subTitle">Aprobación</h2>

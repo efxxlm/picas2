@@ -682,7 +682,6 @@ namespace asivamosffie.services
                     gestionid = gestionfienteid.FirstOrDefault();
                 }
                 decimal valor = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == disponibilidadPresupuestaId).Sum(x => x.ValorSolicitado);
-                decimal valorSolicitado = 0;
                 if (valor == 0)//si es disponibilidad especial entonces la relacion es diferente
                 {
                     var gestionfiente = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalId == disponibilidadPresupuestaId).Select(x => x.GestionFuenteFinanciacionId);
@@ -690,28 +689,9 @@ namespace asivamosffie.services
                     {
                         gestionid = gestionfiente.FirstOrDefault();
                     }
-
-                    List<GestionFuenteFinanciacion> gestionFuenteFinanciacions = _context.GestionFuenteFinanciacion
-                                                                                             .Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId)
-                                                                                             .Include(x => x.DisponibilidadPresupuestalProyecto)
-                                                                                             .ToList();
-
-                    gestionFuenteFinanciacions.ForEach(g =>
-                    {
-                        if (g.DisponibilidadPresupuestalId != disponibilidadPresupuestaId)
-                            valor = valor + g.ValorSolicitado;
-                        if (g.DisponibilidadPresupuestalId == disponibilidadPresupuestaId)
-                            valorSolicitado = valorSolicitado + g.ValorSolicitado;
-                    });
-
-                    //valor = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalId == disponibilidadPresupuestaId).Sum(x => x.ValorSolicitado);
-                    //valor = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId != disponibilidadPresupuestaId).Sum(x => x.ValorSolicitado);
-                    //var e = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId != disponibilidadPresupuestaId).ToList();
+                    valor = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalId == disponibilidadPresupuestaId).Sum(x => x.ValorSolicitado);
                 }
-                //var saldoFuente = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId != disponibilidadPresupuestaId).Sum(x => x.SaldoActual);
-                var saldoFuente = financiacion.ValorFuente;
-                //var saldoFuente = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId != disponibilidadPresupuestaId).Sum(x => x.ValorSolicitado);
-
+                var saldoFuente = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId != disponibilidadPresupuestaId).Sum(x => x.ValorSolicitado);
                 //si no he gestionado fuentes, soy especial y mi saldo es el total de la fuente
                 if (saldoFuente == 0)
                 {
@@ -722,9 +702,9 @@ namespace asivamosffie.services
                     GestionFuenteFinanciacionID = gestionid,
                     FuenteFinanciacionID = financiacion.FuenteFinanciacionId,
                     Fuente = _context.Dominio.Where(x => x.Codigo == financiacion.FuenteRecursosCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre,
-                    Nuevo_saldo_de_la_fuente = saldoFuente.Value - valor - valorSolicitado,
-                    Saldo_actual_de_la_fuente = saldoFuente.Value - valor,
-                    Valor_solicitado_de_la_fuente = valorSolicitado
+                    Nuevo_saldo_de_la_fuente = saldoFuente - valor,
+                    Saldo_actual_de_la_fuente = saldoFuente,
+                    Valor_solicitado_de_la_fuente = valor
                 });
             }
             return ListaRetorno;

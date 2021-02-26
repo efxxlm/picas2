@@ -75,7 +75,7 @@
           <div class="row">
             <div class="col-md-12">
               <div class="row">
-                <div class="pr-1">
+                <div class="pr-1 mt-1em">
                   <label
                     class="label-left"
                     for="perfilCodigo"
@@ -306,7 +306,7 @@
           <div class="row">
             <div class="col-md-8">
               <div class="row">
-                <div class="pr-1">
+                <div class="pr-1 mt-1em">
                   <label
                     class="label-left"
                     for="fechaAprobacion"
@@ -452,6 +452,11 @@
                           maxlength="20"
                           formControlName="numeroRadicado"
                           required
+                          [class.invalid]="
+                            numero.get('numeroRadicado').value.length > 0
+                              ? numero.get('numeroRadicado').markAsUntouched()
+                              : numero.get('numeroRadicado').markAsTouched()
+                          "
                         />
                       </mat-form-field>
                       <span
@@ -554,6 +559,11 @@
                       maxlength="400"
                       formControlName="rutaSoporte"
                       required
+                      [class.invalid]="
+                        perfil.get('rutaSoporte').value.length > 0
+                          ? perfil.get('rutaSoporte').markAsUntouched()
+                          : perfil.get('rutaSoporte').markAsTouched()
+                      "
                     />
                   </mat-form-field>
                 </div>
@@ -632,7 +642,7 @@
           class="btn-guardar"
           type="button"
           (click)="guardar()"
-          [disabled]="perfil.dirty === false"
+          [disabled]="formContratista.dirty === false"
         >
           <img src="assets/img/icon/guardar.svg" />
         </button>

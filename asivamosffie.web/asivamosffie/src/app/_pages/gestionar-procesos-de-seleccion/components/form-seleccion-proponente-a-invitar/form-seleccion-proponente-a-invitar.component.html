@@ -2,7 +2,8 @@
   [formGroup]="addressForm"
   novalidate
   (ngSubmit)="onSubmit()"
-  *ngIf="sePuedeVer">
+  *ngIf="procesoSeleccion.estadoProcesoSeleccionCodigo == estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario"
+>
   <mat-card class="shipping-card">
     <mat-card-content>
       <div class="row">

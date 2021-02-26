@@ -585,15 +585,9 @@ namespace asivamosffie.services
                 //}
 
                 List<int> ListSeguimientoSemanalId = _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == seguimientoSemanal.ContratacionProyectoId).Select(r => r.SeguimientoSemanalId).ToList();
-             
-                List<Programacion> ListProgramacion = new List<Programacion>();
 
-                Parallel.ForEach(seguimientoSemanal.SeguimientoSemanalAvanceFisico.ToList(), item =>
-                {
-                    ListProgramacion.AddRange(item.SeguimientoSemanalAvanceFisicoProgramacion
-                                             .Select(s => s.Programacion)
-                                             .ToList());
-                });
+                List<Programacion> ListProgramacion = _context.Programacion.FromSqlRaw("SELECT DISTINCT p.* FROM dbo.Programacion AS p INNER JOIN dbo.FlujoInversion AS f ON p.ProgramacionId = f.ProgramacionId INNER JOIN dbo.SeguimientoSemanal AS s ON f.SeguimientoSemanalId = s.SeguimientoSemanalId WHERE s.ContratacionProyectoId = " + seguimientoSemanal.ContratacionProyectoId + " AND p.TipoActividadCodigo = 'C'").ToList();
+
                 seguimientoSemanal.CantidadTotalDiasActividades = ListProgramacion.Sum(r => r.Duracion);
 
                 seguimientoSemanal.AvanceAcumulado = ListProgramacion
@@ -601,7 +595,7 @@ namespace asivamosffie.services
                     .Select(r => new
                     {
                         Actividad = r.Key,
-                        AvanceAcumulado = Math.Truncate((decimal)r.Sum(r => r.SeguimientoSemanalAvanceFisicoProgramacion.FirstOrDefault().AvanceFisicoCapitulo)) + "%",
+                        AvanceAcumulado = Math.Truncate((decimal)r.Sum(r => r.AvanceFisicoCapitulo)) + "%",
                         AvanceFisicoCapitulo = Math.Truncate((((decimal)r.Sum(r => r.Duracion) / seguimientoSemanal.CantidadTotalDiasActividades) * 100)) + "%"
                     });
 
@@ -762,7 +756,7 @@ namespace asivamosffie.services
                     .Select(r => new
                     {
                         Actividad = r.Key,
-                        AvanceAcumulado = 0 + "%",
+                        AvanceAcumulado = Math.Truncate((decimal)r.Sum(r => r.AvanceFisicoCapitulo)) + "%",
                         AvanceFisicoCapitulo = Math.Truncate((((decimal)r.Sum(r => r.Duracion) / seguimientoSemanal.CantidadTotalDiasActividades) * 100)) + "%"
                     });
 

@@ -77,6 +77,7 @@ export class ExpansionGestionarRequisitosComponent implements OnInit {
   getPerfilesContrato( index: number, perfilContrato: ContratoPerfil[] ) {
     this.contrato.contratacion.contratacionProyecto[index].proyecto.contratoPerfil = perfilContrato;
 
+    console.log( this.contrato );
     this.faseUnoPreconstruccionSvc.createEditContratoPerfil( this.contrato )
       .subscribe(
         response => {

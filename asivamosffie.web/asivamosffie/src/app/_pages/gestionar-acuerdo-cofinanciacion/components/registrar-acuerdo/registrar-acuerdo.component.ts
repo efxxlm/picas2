@@ -99,18 +99,6 @@ export class RegistrarAcuerdoComponent implements OnInit {
             const idMunicipio = apor.municipioId ? apor.municipioId.toString() : '00000';
             const idDepartamento = apor.departamentoId ? apor.departamentoId.toString() : '000';
 
-
-            // se crea vacio para no perder el order
-            // debido a la demora de ulgun servicio
-            grupo.get('departamento').setValue(null);
-            grupo.get('municipios').setValue(null);
-            grupo.get('municipio').setValue(null);
-            grupo.get('tipo').setValue(valorTipo);
-            grupo.get('nombre').setValue(valorNombre);
-
-            this.aportantes.push(grupo);
-
-
             this.commonService.listaMunicipiosByIdDepartamento(idMunicipio.substring(0, 5)).subscribe(mun => {
 
               const valorMunicipio = mun.find(a => a.localizacionId === idMunicipio);
@@ -122,7 +110,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
               grupo.get('tipo').setValue(valorTipo);
               grupo.get('nombre').setValue(valorNombre);
 
-              //this.aportantes.push(grupo);
+              this.aportantes.push(grupo);
             });
 
           });

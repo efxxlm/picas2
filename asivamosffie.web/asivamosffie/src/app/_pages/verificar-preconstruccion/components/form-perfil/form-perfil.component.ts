@@ -421,7 +421,6 @@ export class FormPerfilComponent implements OnInit {
 
   guardar() {
     this.estaEditando = true;
-    this.formContratista.markAllAsTouched();
     const perfiles: ContratoPerfil[] = this.formContratista.get( 'perfiles' ).value;
 
     if ( this.perfilProyecto.length === 0 ) {

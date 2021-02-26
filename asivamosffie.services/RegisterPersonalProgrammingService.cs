@@ -15,22 +15,17 @@ using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.model.APIModels;
 using Newtonsoft.Json;
 using iTextSharp.text.pdf.codec;
-using Microsoft.Extensions.Options;
-using asivamosffie.model.AditionalModels;
 
 namespace asivamosffie.services
 {
     public class RegisterPersonalProgrammingService : IRegisterPersonalProgrammingService
     {
-        public AppSettings _mailSettings { get; }
-
         private readonly devAsiVamosFFIEContext _context;
 
         private readonly ICommonService _commonService;
 
-        public RegisterPersonalProgrammingService(devAsiVamosFFIEContext context, ICommonService commonService, IOptions<AppSettings> mailSettings)
+        public RegisterPersonalProgrammingService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
-            _mailSettings = mailSettings.Value;
             _context = context;
             _commonService = commonService;
         }
@@ -52,8 +47,11 @@ namespace asivamosffie.services
                 .ThenInclude(r => r.Contrato)
                 .FirstOrDefault();
 
-            if (contratacionProyecto.Contratacion.TipoSolicitudCodigo == ConstantCodigoEstadoProyecto.Disponible)
+            // contratacionProyecto.Contratacion.Contrato.FirstOrDefault().fecha
+
+            if (contratacionProyecto.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
             {
+
                 CantidadDias = contratacionProyecto.Proyecto.PlazoMesesObra ?? 0;
                 CantidadDias *= 30;
                 CantidadDias += contratacionProyecto.Proyecto.PlazoDiasObra.HasValue ? (int)contratacionProyecto.Proyecto.PlazoDiasObra : 0;
@@ -75,6 +73,9 @@ namespace asivamosffie.services
                 if (CantidadDias % 7 == 1)
                     CantidadSemanas = (CantidadDias / 7) + 1;
             }
+
+
+
             return CantidadSemanas;
         }
 
@@ -135,8 +136,8 @@ namespace asivamosffie.services
                     {
                         RegistroCompleto = false;
                     }
-                    else
-                    {
+                    else {
+                         
                         if (SeguimientoSemanal.SeguimientoSemanalPersonalObra.FirstOrDefault().SeguimientoSemanalPersonalObraId == 0)
                         {
                             SeguimientoSemanalPersonalObra seguimientoSemanalPersonalObra = new SeguimientoSemanalPersonalObra
@@ -147,6 +148,7 @@ namespace asivamosffie.services
                                 FechaCreacion = DateTime.Now,
                                 CantidadPersonal = SeguimientoSemanal.SeguimientoSemanalPersonalObra.FirstOrDefault().CantidadPersonal
                             };
+
                             _context.SeguimientoSemanalPersonalObra.Add(seguimientoSemanalPersonalObra);
                         }
                         else
@@ -155,8 +157,12 @@ namespace asivamosffie.services
                             SeguimientoSemanalPersonalObraOld.CantidadPersonal = SeguimientoSemanal.SeguimientoSemanalPersonalObra.FirstOrDefault().CantidadPersonal;
                             SeguimientoSemanalPersonalObraOld.UsuarioModificacion = proyecto.UsuarioModificacion;
                             SeguimientoSemanalPersonalObraOld.FechaModificacion = DateTime.Now;
+
                         }
                     }
+
+                 
+
                 }
                 if (RegistroCompleto)
                     proyecto.EstadoProgramacionCodigo = ConstanCodigoEstadoProgramacionInicial.Sin_aprobacion_de_programacion_personal;
@@ -198,27 +204,11 @@ namespace asivamosffie.services
             {
                 ContratacionProyecto contratacionProyecto = _context.ContratacionProyecto.Find(pContratacionProyecto);
 
-                Proyecto proyecto = _context.Proyecto.Where(r => r.ProyectoId == contratacionProyecto.ProyectoId)
-                                                        .Include(r => r.Sede)
-                                                        .Include(r => r.InstitucionEducativa)
-                                                        .Include(r => r.ContratacionProyecto)
-                                                           .ThenInclude(r => r.Contratacion)
-                                                               .ThenInclude(r => r.Contrato)
-                                                        .FirstOrDefault();
+                Proyecto proyecto = _context.Proyecto.Find(contratacionProyecto.ProyectoId);
+
                 proyecto.UsuarioModificacion = pUsuario;
                 proyecto.FechaModificacion = DateTime.Now;
                 proyecto.EstadoProgramacionCodigo = pEstadoProgramacionCodigo;
-
-                //enviar correo a supervisor y apoyo si esta aprobada la solicitud
-
-                if (pEstadoProgramacionCodigo == ConstanCodigoEstadoProgramacionInicial.Con_aprobacion_de_programacion_de_personal)
-                    AprobarProgramacionCorreo(
-                        proyecto, _mailSettings.DominioFront,
-                        _mailSettings.MailServer,
-                        _mailSettings.MailPort,
-                        _mailSettings.EnableSSL,
-                        _mailSettings.Password
-                        , _mailSettings.Sender);
 
                 await _context.SaveChangesAsync();
 
@@ -245,75 +235,5 @@ namespace asivamosffie.services
                     };
             }
         }
-
-        public async void AprobarProgramacionCorreo(Proyecto pProyecto, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
-        {
-            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Supervisor || x.PerfilId == (int)EnumeratorPerfil.Apoyo).Include(y => y.Usuario);
-            List<Dominio> ListTipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).ToList();
-            Template TemplateRecoveryPassword = _context.Template.Find((int)enumeratorTemplate.Aprobado_Programacion_4_1_10);
-
-            string template = TemplateRecoveryPassword.Contenido
-                     .Replace("_LinkF_", pDominioFront)
-                     .Replace("[LLAVE_MEN]", pProyecto.LlaveMen)
-                     .Replace("[NUMERO_CONTRATO]", pProyecto.ContratacionProyecto.FirstOrDefault().Contratacion.Contrato.FirstOrDefault().NumeroContrato)
-                     .Replace("[INSTITUCION_EDUCATIVA]", pProyecto.InstitucionEducativa.Nombre)
-                     .Replace("[SEDE]", pProyecto.Sede.Nombre)
-                     .Replace("[TIPO_INTERVENCION]", ListTipoIntervencion.Where(r => r.Codigo == pProyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre)
-                     .Replace("[FECHA_ACTA_INICIO]", ((DateTime)pProyecto.ContratacionProyecto.FirstOrDefault().Contratacion.Contrato.FirstOrDefault().FechaActaInicioFase2).ToString("dd-MM-yyyy"));
-
-            foreach (var item in usuarios)
-            {
-                Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Aprobación de programación de obra", template, pSender, pPassword, pMailServer, pMailPort);
-            }
-        }
-
-        /// <summary>
-        /// Rutina 5 dias despues que se tiene acta y no se ha aprobado la programacion de obra
-        /// </summary>
-        public async Task TareaProgramada(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
-        {
-            var usuarios = _context.UsuarioPerfil
-                .Where(x => x.PerfilId == (int)EnumeratorPerfil.Supervisor
-                         || x.PerfilId == (int)EnumeratorPerfil.Apoyo
-                         || x.PerfilId == (int)EnumeratorPerfil.Interventor
-                         ).Include(y => y.Usuario);
-
-            DateTime RangoFechaConDiasHabiles = await _commonService.CalculardiasLaborales(5, DateTime.Now);
-            List<InstitucionEducativaSede> ListInstitucionEducativaSedes = _context.InstitucionEducativaSede.ToList();
-            List<Dominio> ListTipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).ToList();
-            Template TemplateRecoveryPassword = _context.Template.Find((int)enumeratorTemplate.Alerta_Automatica_5_Dias);
-
-            List<Contrato> listContratos = _context.Contrato
-                                                    .Where(c => c.FechaActaInicioFase2.HasValue && c.FechaActaInicioFase2 > RangoFechaConDiasHabiles)
-                                                    .Include(r => r.Contratacion)
-                                                        .ThenInclude(cp => cp.ContratacionProyecto)
-                                                            .ThenInclude(t => t.Proyecto)
-                                                                .ThenInclude(r => r.InstitucionEducativa)
-                                                                                                        .ToList();
-
-            foreach (var pContrato in listContratos)
-            {
-                foreach (var ContratacionProyecto in pContrato.Contratacion.ContratacionProyecto.Where(r => r.Proyecto.EstadoProgramacionCodigo != ConstanCodigoEstadoProgramacionInicial.Con_aprobacion_de_programacion_de_personal).ToList())
-                {
-                    string template = TemplateRecoveryPassword.Contenido
-                           .Replace("_LinkF_", pDominioFront)
-                           .Replace("[LLAVE_MEN]", ContratacionProyecto.Proyecto.LlaveMen)
-                           .Replace("[NUMERO_CONTRATO]", ContratacionProyecto.Contratacion.Contrato.FirstOrDefault().NumeroContrato)
-                           .Replace("[INSTITUCION_EDUCATIVA]", ContratacionProyecto.Proyecto.InstitucionEducativa.Nombre)
-                           .Replace("[SEDE]", ListInstitucionEducativaSedes.Where(r => r.InstitucionEducativaSedeId == (int)ContratacionProyecto.Proyecto.SedeId).FirstOrDefault().Nombre)
-                           .Replace("[TIPO_INTERVENCION]", ListTipoIntervencion.Where(r => r.Codigo == ContratacionProyecto.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre)
-                           .Replace("[FECHA_ACTA_INICIO]", ((DateTime)pContrato.FechaActaInicioFase2).ToString("dd-MM-yyy"));
-
-                    foreach (var item in usuarios)
-                    {
-                        Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Programación de obra sin aprobación", template, pSender, pPassword, pMailServer, pMailPort);
-                    }
-                }
-            }
-
-        }
-
     }
-
 }
-

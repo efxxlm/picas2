@@ -27,7 +27,6 @@ export class FormVerificarSeguimientoSemanalComponent implements OnInit {
             .subscribe(
                 seguimiento => {
                     this.seguimientoSemanal = seguimiento;
-                    console.log( this.seguimientoSemanal );
                     this.verificarAvanceSemanalSvc.tipoObservaciones()
                     .subscribe( response => {
                         this.tipoObservaciones = response;

@@ -15,66 +15,13 @@ export class ValidarComponent implements OnInit {
     'Devuelta por validación presupuestal','Con validación presupuestal',
     'Con disponibilidad presupuestal','Rechazada por validación presupuestal','Con disponibilidad cancelada']
 
-  devueltaPresupuestal_class:string;
-
   constructor(private disponibilidadServices: DisponibilidadPresupuestalService) {}
-
-  validarCompletos( disponibilidad: any ){
-    disponibilidad['class'] = 2;// completo 
-
-    //disponibilidad['class'] = 0; // sin diligenciar
-
-    // if (disponibilidad.disponibilidadPresupuestal.length === 0)
-    //   disponibilidad['class'] = 2;// completo  
-
-    disponibilidad.disponibilidadPresupuestal.forEach(d => {
-      if (d.estadoRegistro !== true )
-        //disponibilidad['class'] = 1;// incompleto
-        disponibilidad['class'] = 0; // sin diligenciar
-    });
-  }
-    
-  pintarSemaforos(){
-    this.listaDisponibilidades.forEach(disponibilidad => {
-      switch (disponibilidad.nombreEstado){
-        case 'En validación presupuestal':
-          this.validarCompletos( disponibilidad );
-        break;
-
-        case 'Devuelta por validación presupuestal': 
-          this.validarCompletos( disponibilidad );
-        break;
-
-        case 'Devuelta por coordinación financiera':
-          this.validarCompletos( disponibilidad );
-        break;
-
-        case 'Con validación presupuestal':
-          this.validarCompletos( disponibilidad );
-          break;
-
-        case 'Con disponibilidad presupuestal':
-          this.validarCompletos( disponibilidad );
-          break;
-
-        case 'Rechazada por validación presupuestal':
-          this.validarCompletos( disponibilidad );
-        break;
-
-        case 'Con disponibilidad cancelada':
-          this.validarCompletos( disponibilidad );
-        break;
-      }
-    });
-  }
 
   ngOnInit(): void {
     this.disponibilidadServices.GetListGenerarDisponibilidadPresupuestal().subscribe(respuesta => 
       {
         this.listaDisponibilidades=respuesta;
         
-        this.pintarSemaforos();
-
         this.listaDisponibilidades.forEach(element => {
           //determino si esta completo o incompleto
           

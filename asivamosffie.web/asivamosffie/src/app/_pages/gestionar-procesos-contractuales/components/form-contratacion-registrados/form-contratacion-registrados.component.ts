@@ -1,10 +1,8 @@
-import { MatDialog } from '@angular/material/dialog';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { ContratosModificacionesContractualesService } from './../../../../core/_services/contratos-modificaciones-contractuales/contratos-modificaciones-contractuales.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-form-contratacion-registrados',
@@ -27,7 +25,6 @@ export class FormContratacionRegistradosComponent implements OnInit {
   constructor ( private fb: FormBuilder,
                 private activatedRoute: ActivatedRoute,
                 private routes: Router,
-                private dialog: MatDialog,
                 private commonSvc: CommonService,
                 private contratosContractualesSvc: ContratosModificacionesContractualesService )
   {
@@ -59,9 +56,7 @@ export class FormContratacionRegistradosComponent implements OnInit {
   getModalidadContrato( modalidadCodigo: string ) {
     if ( this.modalidadContratoArray.length > 0 ) {
       const modalidad = this.modalidadContratoArray.filter( modalidad => modalidad.codigo === modalidadCodigo );
-      if ( modalidad.length > 0 ) {
-        return modalidad[0].nombre;
-      }
+      return modalidad[0].nombre;
     }
   }
 
@@ -94,38 +89,12 @@ export class FormContratacionRegistradosComponent implements OnInit {
 
   getEstadoCodigo () {
     if ( this.routes.getCurrentNavigation().extras.replaceUrl || this.routes.getCurrentNavigation().extras.skipLocationChange === false ) {
-      this.routes.navigate( [ '/procesosContractuales' ] );
+      this.routes.navigate( [ '/contratosModificacionesContractuales' ] );
       return;
     }
     
     this.estadoCodigo = this.routes.getCurrentNavigation().extras.state.estadoCodigo;
     
   }
-
-  openDialog (modalTitle: string, modalText: string) {
-    this.dialog.open(ModalDialogComponent, {
-      width: '28em',
-      data : { modalTitle, modalText }
-    });
-  };
-
-  getDocumento ( nombreDocumento: string ) {
-    this.commonSvc.getDocumento( nombreDocumento )
-      .subscribe(
-        response => {
-
-          const documento = `Documento suscrito`;
-          const text = documento,
-          blob = new Blob([response], { type: 'application/pdf' }),
-          anchor = document.createElement('a');
-          anchor.download = documento;
-          anchor.href = window.URL.createObjectURL(blob);
-          anchor.dataset.downloadurl = ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', anchor.download, anchor.href].join(':');
-          anchor.click();
-
-        },
-        err => this.openDialog( '', `<b>Archivo no encontrado.</b>` )
-      );
-  };
 
 };

@@ -22,7 +22,12 @@ export class AvanceFinancieroComponent implements OnInit {
         height: '45px'
     };
     config = {
-      toolbar: []
+      toolbar: [
+        ['bold', 'italic', 'underline'],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        [{ indent: '-1' }, { indent: '+1' }],
+        [{ align: [] }],
+      ]
     };
     booleanosEnsayosLaboratorio: any[] = [
         { value: true, viewValue: 'Si' },

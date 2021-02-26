@@ -177,7 +177,6 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
   loadObservaciones(id) {
     this.service.GetListContratoObservacionByContratoId(id).subscribe((data: any) => {
       this.elementsObservacion = data;
-      console.log( data );
       for (let i = 0; i < data.length; i++) {
         if (data[i].esSupervision == false) {
 
@@ -204,7 +203,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
   cargarRol() {
     this.rolAsignado = JSON.parse(localStorage.getItem("actualUser")).rol[0].perfilId;
     //jflorez, el perfil 11 es interventor.....
-    if (this.rolAsignado == 11 ) {
+    if (this.rolAsignado == 11) {
       this.opcion = 1;
     }
     else {
@@ -252,22 +251,6 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
     }*/
   }
 
-  getValueMeses( value: number ) {
-    if ( value !== null && this.mesPlazoIni !== undefined ) {
-      if ( value > this.mesPlazoIni ) {
-        this.addressForm.get( 'mesPlazoEjFase1' ).setValue( this.mesPlazoIni );
-      }
-    }
-  }
-
-  getValueDias( value: number ) {
-    if ( value !== null && this.diasPlazoIni !== undefined ) {
-      if ( value > this.diasPlazoIni ) {
-        this.addressForm.get( 'diasPlazoEjFase1' ).setValue( this.diasPlazoIni );
-      }
-    }
-  }
-
   generarActaSuscrita() {
     alert("genera PDf");
   }
@@ -283,7 +266,6 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
       data: { modalTitle, modalText }
     });
   }
-
   editorStyle = {
     height: '50%'
   };
@@ -409,7 +391,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
         "observaciones": this.addressForm.value.observacionesEspeciales,
         'esActa': true,
         'esActaFase1': true,
-        'esSupervision': this.rolAsignado !== 11 ? true : false//perfil 8 es supervisor
+        'esSupervision': this.rolAsignado==8?true:false//perfil 8 es supervisor
         //'esSupervision': esSupervisionBool
       }];
       const arrayContrato: EditContrato = {
@@ -426,10 +408,10 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
         fechaFirmaContrato: this.fechaFirmaContrato,
         fechaActaInicioFase1: this.fechaSesionString,
         fechaTerminacion: this.fechaSesionString2,
-        plazoFase1PreMeses: this.addressForm.get( 'mesPlazoEjFase1' ).value,
-        plazoFase1PreDias: this.addressForm.get( 'diasPlazoEjFase1' ).value,
-        plazoFase2ConstruccionMeses: this.addressForm.get( 'mesPlazoEjFase2' ).value,
-        plazoFase2ConstruccionDias: this.addressForm.get( 'diasPlazoEjFase2' ).value,
+        plazoFase1PreMeses: this.addressForm.value.mesPlazoEjFase1,
+        plazoFase1PreDias: this.addressForm.value.diasPlazoEjFase1,
+        plazoFase2ConstruccionMeses: this.addressForm.value.mesPlazoEjFase2,
+        plazoFase2ConstruccionDias: this.addressForm.value.diasPlazoEjFase2,
         observaciones: this.addressForm.value.observacionesEspeciales,
         conObervacionesActa: true,
         registroCompleto: false,
@@ -438,7 +420,6 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
         contratoPerfil: [],
         contratoPoliza: []
       };
-      console.log( arrayContrato );
       this.service.EditContrato(arrayContrato).subscribe(data => {
         if (data.code == "200") {
           if (localStorage.getItem("origin") == "obra") {

@@ -109,10 +109,10 @@ export class RegistroFotograficoComponent implements OnInit {
                     this.openDialog( '', `<b>${ response.message }</b>` );
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                         () =>   this.routes.navigate(
-                            [
-                                '/registrarAvanceSemanal/registroSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
-                            ]
-                        )
+                                    [
+                                        '/registrarAvanceSemanal/registroSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
+                                    ]
+                                )
                     );
                 },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )

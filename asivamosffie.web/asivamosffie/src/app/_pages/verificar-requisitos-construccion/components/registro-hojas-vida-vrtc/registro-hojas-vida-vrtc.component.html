@@ -87,20 +87,6 @@
                 </mat-select>
               </mat-form-field>
             </div>
-            <span class="icon-incompleto m-0">
-              <img
-                class="icon-incompleto--img"
-                src="assets/img/icon/incompleto.svg"
-                alt="este campo es requerido"
-                [matTooltipPosition]="'above'"
-                matTooltip="Debe ingresar la información en el campo para continuar"
-                matTooltipClass="info-tooltip"
-                *ngIf="
-                  (perfil.get('perfilCodigo').invalid && perfil.get('perfilCodigo').touched) ||
-                  (perfil.get('perfilCodigo').invalid && estaEditando)
-                "
-              />
-            </span>
           </div>
 
           <div class="row">
@@ -137,23 +123,8 @@
                     [matTooltipPosition]="'above'"
                     matTooltip="Campo numérico"
                     matTooltipClass="info-tooltip"
+                    >{{ 3 - cantidadHvRequeridas.value.length }}</span
                   >
-                    {{ 3 - cantidadHvRequeridas.value.length }}
-                  </span>
-                  <span class="icon-incompleto">
-                    <img
-                      class="icon-incompleto--img"
-                      src="assets/img/icon/incompleto.svg"
-                      alt="este campo es requerido"
-                      [matTooltipPosition]="'above'"
-                      matTooltip="Debe ingresar la información en el campo para continuar"
-                      matTooltipClass="info-tooltip"
-                      *ngIf="
-                        (perfil.get('cantidadHvRequeridas').invalid && perfil.get('cantidadHvRequeridas').touched) ||
-                        (perfil.get('cantidadHvRequeridas').invalid && estaEditando)
-                      "
-                    />
-                  </span>
                 </div>
               </div>
             </div>
@@ -193,23 +164,8 @@
                     [matTooltipPosition]="'above'"
                     matTooltip="Campo numérico"
                     matTooltipClass="info-tooltip"
+                    >{{ 3 - cantidadHvRecibidas.value.length }}</span
                   >
-                    {{ 3 - cantidadHvRecibidas.value.length }}
-                  </span>
-                  <span class="icon-incompleto">
-                    <img
-                      class="icon-incompleto--img"
-                      src="assets/img/icon/incompleto.svg"
-                      alt="este campo es requerido"
-                      [matTooltipPosition]="'above'"
-                      matTooltip="Debe ingresar la información en el campo para continuar"
-                      matTooltipClass="info-tooltip"
-                      *ngIf="
-                        (perfil.get('cantidadHvRecibidas').invalid && perfil.get('cantidadHvRecibidas').touched) ||
-                        (perfil.get('cantidadHvRecibidas').invalid && estaEditando)
-                      "
-                    />
-                  </span>
                 </div>
               </div>
             </div>
@@ -249,23 +205,8 @@
                     [matTooltipPosition]="'above'"
                     matTooltip="Campo numérico"
                     matTooltipClass="info-tooltip"
+                    >{{ 3 - cantidadHvAprobadas.value.length }}</span
                   >
-                    {{ 3 - cantidadHvAprobadas.value.length }}
-                  </span>
-                  <span class="icon-incompleto">
-                    <img
-                      class="icon-incompleto--img"
-                      src="assets/img/icon/incompleto.svg"
-                      alt="este campo es requerido"
-                      [matTooltipPosition]="'above'"
-                      matTooltip="Debe ingresar la información en el campo para continuar"
-                      matTooltipClass="info-tooltip"
-                      *ngIf="
-                        (perfil.get('cantidadHvAprobadas').invalid && perfil.get('cantidadHvAprobadas').touched) ||
-                        (perfil.get('cantidadHvAprobadas').invalid && estaEditando)
-                      "
-                    />
-                  </span>
                 </div>
               </div>
             </div>
@@ -317,20 +258,6 @@
                   >
                     <img class="mr-bottom-1" src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
                   </button>
-                  <span class="icon-incompleto">
-                    <img
-                      class="icon-incompleto--img"
-                      src="assets/img/icon/incompleto.svg"
-                      alt="este campo es requerido"
-                      [matTooltipPosition]="'above'"
-                      matTooltip="Debe ingresar la información en el campo para continuar"
-                      matTooltipClass="info-tooltip"
-                      *ngIf="
-                        (perfil.get('fechaAprobacion').invalid && perfil.get('fechaAprobacion').touched) ||
-                        (perfil.get('fechaAprobacion').invalid && estaEditando)
-                      "
-                    />
-                  </span>
                 </div>
               </div>
             </div>
@@ -374,20 +301,6 @@
                       }}
                     </span>
                     <span class="contador miles" *ngIf="perfil.get('observaciones').value === null"> 1000 </span>
-                    <span class="icon-incompleto">
-                      <img
-                        class="icon-incompleto--img"
-                        src="assets/img/icon/incompleto.svg"
-                        alt="este campo es requerido"
-                        [matTooltipPosition]="'above'"
-                        matTooltip="Debe ingresar la información en el campo para continuar"
-                        matTooltipClass="info-tooltip"
-                        *ngIf="
-                          (perfil.get('observaciones').invalid && perfil.get('observaciones').touched) ||
-                          (perfil.get('observaciones').invalid && estaEditando)
-                        "
-                      />
-                    </span>
                   </div>
                 </div>
               </div>
@@ -420,23 +333,8 @@
                         [matTooltipPosition]="'above'"
                         matTooltip="Campo alfanumérico"
                         matTooltipClass="info-tooltip"
+                        >{{ 20 - numero.get('numeroRadicado').value.length }}</span
                       >
-                        {{ 20 - numero.get('numeroRadicado').value.length }}
-                      </span>
-                      <span class="icon-incompleto">
-                        <img
-                          class="icon-incompleto--img"
-                          src="assets/img/icon/incompleto.svg"
-                          alt="este campo es requerido"
-                          [matTooltipPosition]="'above'"
-                          matTooltip="Debe ingresar la información en el campo para continuar"
-                          matTooltipClass="info-tooltip"
-                          *ngIf="
-                            (numero.get('numeroRadicado').invalid && numero.get('numeroRadicado').touched) ||
-                            (numero.get('numeroRadicado').invalid && estaEditando)
-                          "
-                        />
-                      </span>
                     </div>
                   </div>
                 </div>
@@ -510,27 +408,11 @@
                 <input matInput type="text" formControlName="rutaSoporte" required />
               </mat-form-field>
             </div>
-            <span class="icon-incompleto">
-              <img
-                class="icon-incompleto--img"
-                src="assets/img/icon/incompleto.svg"
-                alt="este campo es requerido"
-                [matTooltipPosition]="'above'"
-                matTooltip="Debe ingresar la información en el campo para continuar"
-                matTooltipClass="info-tooltip"
-                *ngIf="
-                (perfil.get('rutaSoporte').invalid && perfil.get('rutaSoporte').touched) ||
-                (perfil.get('rutaSoporte').invalid && estaEditando)
-                "
-              />
-            </span>
           </section>
           <div class="d-flex justify-content-center size-text-descriptivo">
             <span class="info-url margen-url"
-              >
-              Indique la ruta en la que se encuentra el soporte de las hojas de vida y el Acta de aprobación de
-              personal
-              </span
+              >Indique la ruta en la que se encuentra el soporte de las hojas de vida y el Acta de aprobación de
+              personal</span
             >
           </div>
         </mat-card-content>

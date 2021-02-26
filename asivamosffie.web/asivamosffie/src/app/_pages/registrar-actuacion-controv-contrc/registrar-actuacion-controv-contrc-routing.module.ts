@@ -20,7 +20,7 @@ const routes: Routes = [
     component: RegistrarAvanceActuaDerivadasComponent
   },
   {
-    path:'verDetalleEditarActuacionDerivada/:id/:editId',
+    path:'verDetalleEditarActuacionDerivada/:id',
     component: VerdetalleeditAvanceActuaDerivadasComponent
   },
   {

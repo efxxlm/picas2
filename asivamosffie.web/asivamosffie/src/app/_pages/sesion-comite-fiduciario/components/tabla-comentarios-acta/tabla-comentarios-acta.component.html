@@ -1,4 +1,4 @@
-<div class="margin-90 text-center table-responsive">
+<!-- <div class="margin-90 text-center table-responsive">
   <table mat-table [dataSource]="dataSource" matSort>
 
       <ng-container matColumnDef="fecha">
@@ -20,8 +20,8 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
   <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" class="radio-color-detalle"></mat-paginator>
-</div> 
-<!-- <div *ngIf="data.length>0">
+</div> -->
+<div *ngIf="data.length>0">
   <p>
     <b>Fecha:</b>
     {{ data[0].fecha | date: 'dd/MM/yyyy' }}
@@ -37,4 +37,4 @@
     <b>Miembro comité:</b>
     {{ data[0].miembroSesionParticipante.nombres }} {{ data[0].miembroSesionParticipante.apellidos }}
   </p>
-</div> -->
+</div>

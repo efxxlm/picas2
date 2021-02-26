@@ -225,7 +225,7 @@
 
         <div class="text-center w-15">
           <button mat-raised-button color="accent" class="btn-table"
-            (click)="getDdp( dataContratacion.disponibilidadPresupuestal[0].disponibilidadPresupuestalId, dataContratacion.disponibilidadPresupuestal[0].numeroDdp )">
+            (click)="getDdp( sesionComiteId, dataContratacion.disponibilidadPresupuestal[0].numeroDdp )">
             Descargar DDP
           </button>
         </div>
@@ -250,18 +250,17 @@
                   [innerHTML]="innerObservacion( dataContratacion.observaciones ? dataContratacion.observaciones : '' )">
                 </div>
               </section>
-              <p><b>URL con soporte</b>: {{ dataContratacion.rutaMinuta }} </p>
+              <p><b>Minuta adjunta</b>:
+                {{ form.get( 'minutaName' ).value !== null ? form.get( 'minutaName' ).value : '' }}</p>
             </mat-card-content>
           </mat-card>
         </div>
 
-        <!--
         <div class="text-center" style="width: 20%;display: inline-block;">
           <button mat-raised-button color="accent" class="btn-table" (click)="getDocumento( form.get( 'rutaDocumento' ).value )">
             Descargar minuta
           </button>
         </div>
-        -->
 
       </mat-expansion-panel>
     </mat-accordion>

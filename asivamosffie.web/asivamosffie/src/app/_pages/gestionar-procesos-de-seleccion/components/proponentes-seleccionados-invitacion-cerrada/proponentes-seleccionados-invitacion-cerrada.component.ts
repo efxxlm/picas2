@@ -96,11 +96,8 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
 
   initForm() {
     this.addressForm = this.fb.group({
-      cuantosProponentes: [
-        this.procesoSeleccion.procesoSeleccionProponente
-          ? this.procesoSeleccion.procesoSeleccionProponente.length
-          : null,
-        Validators.compose([Validators.required, Validators.minLength(1), Validators.maxLength(2)])
+      cuantosProponentes: [this.procesoSeleccion.procesoSeleccionProponente.length, Validators.compose([
+        Validators.required, Validators.minLength(1), Validators.maxLength(2)])
       ],
       nombresProponentes: [null, Validators.required],
       tipoProponente: [null, Validators.required],

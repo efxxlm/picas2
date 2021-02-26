@@ -34,16 +34,7 @@ namespace asivamosffie.services.Helpers
         {
             DocumentoHtml documento = new DocumentoHtml();
             origen = documento.ConvertirATextoPlano(origen);
-            return origen.Replace("<", "")
-                         .Replace(">", "")
-                         .Replace("/", "")
-                         .Replace("\\", "")
-                         .Replace("[", "")
-                         .Replace("]", "")
-                         .Replace("{", "")
-                         .Replace("}", "")
-                         .Replace("\n", "")
-                         .Replace("\r", "");
+            return origen.Replace("<", "").Replace(">", "").Replace("/", "").Replace("\\", "").Replace("[", "").Replace("]", "").Replace("{", "").Replace("}", "");
         }
 
         public static string HtmlStringLimpio(string valor)

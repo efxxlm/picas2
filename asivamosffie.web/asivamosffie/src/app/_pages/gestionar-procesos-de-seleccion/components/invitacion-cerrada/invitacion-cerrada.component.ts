@@ -117,20 +117,15 @@ export class InvitacionCerradaComponent implements OnInit {
         botonevaluacion.click();
         botonProponenteInvitar.click();
 
-        console.log( this.procesoSeleccion.estadoProcesoSeleccionCodigo, this.estadosProcesoSeleccion.AprobadaSelecciónPorComiteFiduciario )
-
         //confirmo si tiene el estado para editar
-        if(
-          this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.Creado||
+        if(this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.Creado||
           this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario||
           this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaAperturaPorComiteFiduciario||
           this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaAperturaPorComiteTecnico ||
           this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaSeleccionPorComiteFiduciario ||
           this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaSeleccionPorComiteTecnico ||
           this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltoPorComiteFiduciario ||
-          this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltoPorComiteTecnico ||
-          this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.AprobadaSelecciónPorComiteFiduciario
-          )
+          this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltoPorComiteTecnico)
         {
           this.bitPuedoEditar=true;
         }
@@ -233,10 +228,7 @@ export class InvitacionCerradaComponent implements OnInit {
 
   estaIncompletoEvaluacion(pProceso:any):number{
     let retorno=0;    
-    if(
-        pProceso.estadoProcesoSeleccionCodigo != EstadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario &&
-        pProceso.estadoProcesoSeleccionCodigo != EstadosProcesoSeleccion.AprobadaSelecciónPorComiteFiduciario
-      )
+    if(pProceso.estadoProcesoSeleccionCodigo != EstadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario)
     {
       retorno=3;
     }
@@ -261,10 +253,7 @@ export class InvitacionCerradaComponent implements OnInit {
   }
   estaIncompletoProponentes(pProceso:any):number{
     let retorno=0;
-    if(
-        pProceso.estadoProcesoSeleccionCodigo != EstadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario &&
-        pProceso.estadoProcesoSeleccionCodigo != EstadosProcesoSeleccion.AprobadaSelecciónPorComiteFiduciario
-      )
+    if(pProceso.estadoProcesoSeleccionCodigo != EstadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario)
     {
       retorno=3;
     }

@@ -22,32 +22,18 @@
   </div>
   <div class="d-flex align-items-center var-main-gris mt-2em animatedDown"
     *ngIf="addressForm.get('tieneObservaciones').value === true">
-    <div class="text-area-quill" [class.color-secondaryColor]="
-    (addressForm.get('observacion').invalid && addressForm.get('observacion').touched) ||
-    (addressForm.get('observacion').invalid && estaEditando)
-  ">
-      <label for="observacion" class="text-area-quill--label header" style=" font-size: 16px"
-      [class.color-secondaryColor]="
-    (addressForm.get('observacion').invalid && addressForm.get('observacion').touched) ||
-    (addressForm.get('observacion').invalid && estaEditando)">
+    <div class="text-area-quill">
+      <label for="observacion" class="text-area-quill--label header">
         Observaciones al seguimiento diario
       </label>
       <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
-        (onContentChanged)="maxLength($event, 1000)" formControlName="observacion" required #observacion></quill-editor>
+        (onContentChanged)="maxLength($event, 500)" formControlName="observacion" required></quill-editor>
     </div>
     <span class="contador miles" *ngIf="addressForm.get('observacion').value !== null">
-      {{ 1000 - textoLimpio(observacion.quillEditor, 1000) }}
+      {{1000 - (textoLimpio(addressForm.get('observacion').value)>500?500:textoLimpio(addressForm.get('observacion').value))}}
     </span>
     <span class="contador miles" *ngIf="addressForm.get('observacion').value === null">
       1000
-    </span>
-    <span class="icon-incompleto">
-      <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
-        [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
-        matTooltipClass="info-tooltip" *ngIf="
-          (addressForm.get('observacion').invalid && addressForm.get('observacion').touched) ||
-          (addressForm.get('observacion').invalid && estaEditando)
-        " />
     </span>
   </div>
   <div class="text-center mb-2em">

@@ -57,15 +57,14 @@ export class ActualizarTramiteContvrContrcComponent implements OnInit {
     this.services.GetListGrillaControversiaActuacion(id).subscribe((data0:any)=>{
       //cuando hay reclamaciones
       for(let estado of data0){
-        if(estado.estadoAvanceTramiteCodigo=='14'&& estado.estadoActuacionCodigo=='2'){
+        if(estado.estadoAvanceTramite=='Remisión de comunicación de TAI por alianza fiduciaria a la aseguradora'){
           this.tieneReclamaciones.push(estado);
         }
       }
       //cuando hay mesas de trabajo
       for(let estadoMT of data0){
-        if(estadoMT.requiereMesaTrabajo==true && estadoMT.estadoActuacionCodigo=='2'){
+        if(estadoMT.requiereMesaTrabajo==true){
           this.tieneMesasTrabajo.push(estadoMT);
-          console.log(this.tieneMesasTrabajo);
         }
       }
     })

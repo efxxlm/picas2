@@ -214,8 +214,6 @@ export interface Proyecto{
   coordinacionResponsableCodigo?:string ,
   fechaInicioEtapaObra?: Date,
   fechaFinEtapaObra?: Date,
-  fechaInicioEtapaObraTemporal?: Date,
-  fechaFinEtapaObraTemporal?: Date,
 
   //no modelado
   cantidadAportantes?:number;

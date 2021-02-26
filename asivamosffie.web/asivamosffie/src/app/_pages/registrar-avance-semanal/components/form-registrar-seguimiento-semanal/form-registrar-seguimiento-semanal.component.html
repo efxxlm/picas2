@@ -7,25 +7,24 @@
 
     <div class="text-center">
         <h1 class="title-menu--h1">
-            Registrar avance semanal {{ seguimientoSemanal.infoProyecto.llaveMen }}
+            Registrar seguimiento semanal {{ seguimientoSemanal.contratacionProyecto.proyecto.llaveMen }}
         </h1>
     </div>
 
     <div class="text-center colorMainColor mt-1em">
         <p>Número de contrato de obra:
-          <b> {{ seguimientoSemanal.infoProyecto.numeroContrato }} </b>
+          <b> {{ seguimientoSemanal.contratacionProyecto.contratacion.contrato[0].numeroContrato }} </b>
         </p>
     </div>
 
     <div class="mt-1em" align="left">
         <mat-card class="border">
             <mat-card-content class="mt-1em">
-              <p><b>Tipo de intervención</b>: {{ seguimientoSemanal.infoProyecto.tipoIntervencion }} </p>
-              <p><b>Departamento</b>: {{ seguimientoSemanal.infoProyecto.departamento }} </p>
-              <p><b>Municipio</b>: {{ seguimientoSemanal.infoProyecto.municipio }} </p>
-              <p><b>Institución Educativa</b>: {{ seguimientoSemanal.infoProyecto.institucionEducativa }} </p>
-              <p><b>Sede</b>: {{ seguimientoSemanal.infoProyecto.sede }} </p>
-              <p *ngIf="seguimientoSemanal.infoProyecto.fechaUltimoReporte !== undefined"><b>Fecha del último reporte</b>: {{ seguimientoSemanal.infoProyecto.fechaUltimoReporte.fechaModificacion | date: 'dd/MM/yyyy' }} </p>
+              <p><b>Tipo de intervención</b>: {{ seguimientoSemanal.contratacionProyecto.proyecto.tipoIntervencionString }} </p>
+              <p><b>Departamento</b>: {{ seguimientoSemanal.contratacionProyecto.proyecto.departamentoObj.descripcion }} </p>
+              <p><b>Municipio</b>: {{ seguimientoSemanal.contratacionProyecto.proyecto.municipioObj.descripcion }} </p>
+              <p><b>Institución Educativa</b>: {{ seguimientoSemanal.contratacionProyecto.proyecto.institucionEducativa.nombre }} </p>
+              <p><b>Sede</b>: {{ seguimientoSemanal.contratacionProyecto.proyecto.sede.nombre }} </p>
             </mat-card-content>
         </mat-card>
     </div>
@@ -57,7 +56,7 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-avance-fisico-financiero [seguimientoSemanal]="seguimientoSemanal"></app-avance-fisico-financiero>
+                <app-avance-fisico-financiero [seguimientoDiario]="seguimientoSemanal"></app-avance-fisico-financiero>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">

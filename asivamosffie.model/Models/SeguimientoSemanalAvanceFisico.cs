@@ -5,11 +5,6 @@ namespace asivamosffie.model.Models
 {
     public partial class SeguimientoSemanalAvanceFisico
     {
-        public SeguimientoSemanalAvanceFisico()
-        {
-            SeguimientoSemanalAvanceFisicoProgramacion = new HashSet<SeguimientoSemanalAvanceFisicoProgramacion>();
-        }
-
         public int SeguimientoSemanalAvanceFisicoId { get; set; }
         public int SeguimientoSemanalId { get; set; }
         public bool RegistroCompleto { get; set; }
@@ -31,6 +26,5 @@ namespace asivamosffie.model.Models
         public virtual SeguimientoSemanalObservacion ObservacionApoyo { get; set; }
         public virtual SeguimientoSemanalObservacion ObservacionSupervisor { get; set; }
         public virtual SeguimientoSemanal SeguimientoSemanal { get; set; }
-        public virtual ICollection<SeguimientoSemanalAvanceFisicoProgramacion> SeguimientoSemanalAvanceFisicoProgramacion { get; set; }
     }
 }

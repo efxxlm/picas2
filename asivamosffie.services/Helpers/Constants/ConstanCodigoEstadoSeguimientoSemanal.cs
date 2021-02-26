@@ -10,9 +10,6 @@ namespace asivamosffie.services.Helpers.Constants
         public const string Enviado_Validacion = "2";
         public const string Validado_Supervisor = "3";
         public const string Devuelto_Supervisor = "4";
-
-        //Solo para muestras
-        public const string Sin_Muestras = "5";
     }
 }
 

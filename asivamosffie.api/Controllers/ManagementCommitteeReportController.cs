@@ -17,7 +17,7 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-  //  [Authorize]
+    [Authorize]
     public class ManagementCommitteeReportController : ControllerBase
     {
         private readonly IManagementCommitteeReportService _managementCommitteeReportService;

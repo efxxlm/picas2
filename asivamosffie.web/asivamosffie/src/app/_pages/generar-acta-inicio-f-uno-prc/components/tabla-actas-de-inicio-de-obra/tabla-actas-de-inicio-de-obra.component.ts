@@ -129,7 +129,7 @@ export class TablaActasDeInicioDeObraComponent implements OnInit {
     const dialogRef = this.dialog.open(CargarActaSuscritaActaIniFIPreconstruccionComponent, dialogConfig);
   }
   descargarActaDesdeTabla(id, numContrato){
-    this.service.GetActaByIdPerfil( id, 'False' ).subscribe(resp => {
+    this.service.GetActaByIdPerfil(id, 'False').subscribe(resp => {
       const documento = `Acta contrato ${numContrato}.pdf`; // Valor de prueba
       const text = documento,
         blob = new Blob([resp], { type: 'application/pdf' }),

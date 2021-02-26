@@ -416,6 +416,7 @@
             #fileInput
             type="file"
             id="file"
+            formControlName="documentoFile"
             [placeholder]="archivo || dataFormulario.get('documento').value"
             [class.invalid]="campoSinDiligenciar('documentoFile')"
             accept="application/pdf"
