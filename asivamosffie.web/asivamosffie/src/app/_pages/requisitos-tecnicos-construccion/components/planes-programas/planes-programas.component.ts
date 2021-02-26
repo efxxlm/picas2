@@ -223,6 +223,10 @@ export class PlanesProgramasComponent implements OnInit {
   };
 
   getDataPlanes () {
+
+    this.minDate = this.proyecto.fechaInicioEtapaObraTemporal;
+    this.maxDate = this.proyecto.fechaFinEtapaObraTemporal;
+
     this.urlSoporte = null;
     this.dataPlanesProgramas.push(
       {

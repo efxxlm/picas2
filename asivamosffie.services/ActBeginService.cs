@@ -632,10 +632,14 @@ namespace asivamosffie.services
 
                 if (pContratoConstruccion.ConstruccionObservacion.FirstOrDefault().ConstruccionObservacionId == 0 || string.IsNullOrEmpty(pContratoConstruccion.ConstruccionObservacion.FirstOrDefault().ConstruccionObservacionId.ToString()))
                 {
-                    construccionObservacion.UsuarioCreacion = pUsuarioCreacion;
-                    construccionObservacion.FechaCreacion = DateTime.Now;
+                    ConstruccionObservacion observacion = pContratoConstruccion.ConstruccionObservacion.FirstOrDefault();
 
-                    _context.ConstruccionObservacion.Add(construccionObservacion);
+                    observacion.TipoObservacionConstruccion = construccionObservacion.TipoObservacionConstruccion;
+
+                    observacion.UsuarioCreacion = pUsuarioCreacion;
+                    observacion.FechaCreacion = DateTime.Now;
+
+                    _context.ConstruccionObservacion.Add(observacion);
                 }
                 else
                 {

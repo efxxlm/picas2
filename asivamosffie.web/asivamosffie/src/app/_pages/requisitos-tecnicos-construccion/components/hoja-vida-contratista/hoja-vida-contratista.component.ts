@@ -214,9 +214,25 @@ export class HojaVidaContratistaComponent implements OnInit {
           this.perfilesCompletos++;
           semaforo = 'completo';
         }
-        if ( !perfil.registroCompleto && (perfil.cantidadHvRequeridas > 0 || perfil.cantidadHvRecibidas > 0 || perfil.cantidadHvAprobadas > 0) ) {
+        console.log(perfil, numeroRadicados)
+        if ( 
+          
+            !perfil.registroCompleto && 
+            (
+                perfil.cantidadHvRequeridas > 0 || 
+                perfil.cantidadHvRecibidas > 0 || 
+                perfil.cantidadHvAprobadas > 0  ||
+                perfil.perfilCodigo !== undefined ||
+                perfil.observaciones !== undefined ||
+                perfil.fechaAprobacion !== undefined || 
+                (perfil.rutaSoporte !== undefined && perfil.rutaSoporte !== '')
+                // numeroRadicados.length > 0
+            )
+
+          ) 
+          {
           semaforo = 'en-proceso';
-        }
+          }
 
         this.perfiles.push(
           this.fb.group(
