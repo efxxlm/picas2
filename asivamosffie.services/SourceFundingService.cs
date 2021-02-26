@@ -808,8 +808,9 @@ namespace asivamosffie.services
                     valor = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId != disponibilidadPresupuestaId).Sum(x => x.ValorSolicitado);
                     var e = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId != disponibilidadPresupuestaId).ToList();
                 }
-                var saldoFuente = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId != disponibilidadPresupuestaId).Sum(x => x.SaldoActual);
-                
+                //var saldoFuente = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId != disponibilidadPresupuestaId).Sum(x => x.SaldoActual);
+                var saldoFuente = financiacion.ValorFuente;
+
                 //si no he gestionado fuentes, soy especial y mi saldo es el total de la fuente
                 if (saldoFuente == 0)
                 {
@@ -820,8 +821,8 @@ namespace asivamosffie.services
                     GestionFuenteFinanciacionID = gestionid,
                     FuenteFinanciacionID = financiacion.FuenteFinanciacionId,
                     Fuente = _context.Dominio.Where(x => x.Codigo == financiacion.FuenteRecursosCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre,
-                    Nuevo_saldo_de_la_fuente = saldoFuente - valor,
-                    Saldo_actual_de_la_fuente = saldoFuente,
+                    Nuevo_saldo_de_la_fuente = saldoFuente.Value - valor,
+                    Saldo_actual_de_la_fuente = saldoFuente.Value,
                     Valor_solicitado_de_la_fuente = valor
                 });
             }
