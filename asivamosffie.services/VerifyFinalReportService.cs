@@ -57,7 +57,7 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                    item.EstadoValidacionString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.EstadoValidacion, 160);
+                    item.EstadoValidacionString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.EstadoValidacion, (int)EnumeratorTipoDominio.Estado_Validacion_Informe_Final);
                 }
             }
             return list;
@@ -157,11 +157,11 @@ namespace asivamosffie.services
 
             foreach (var item in ListInformeFinalChequeo)
             {
-                item.CalificacionCodigoString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.CalificacionCodigo, 151);
-                item.ValidacionCodigoString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.ValidacionCodigo, 151);
+                item.CalificacionCodigoString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.CalificacionCodigo, (int)EnumeratorTipoDominio.Calificacion_Informe_Final);
+                item.ValidacionCodigoString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.ValidacionCodigo, (int)EnumeratorTipoDominio.Calificacion_Informe_Final);
                 if (item.InformeFinalAnexoId != null)
                 {
-                    item.InformeFinalAnexo.TipoAnexoString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.InformeFinalAnexo.TipoAnexo, 155);
+                    item.InformeFinalAnexo.TipoAnexoString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.InformeFinalAnexo.TipoAnexo, (int)EnumeratorTipoDominio.Tipo_Anexo_Informe_Final);
                 }
                 item.EstadoValidacion = informeFinal.EstadoValidacion;
                 item.RegistroCompletoValidacion = informeFinal.RegistroCompletoValidacion == null ? false : (bool) informeFinal.RegistroCompletoValidacion;
@@ -186,6 +186,7 @@ namespace asivamosffie.services
                     informeFinalInterventoriaObservacionesId = 0;
                     tieneObservacionNoCumple = false;
                 }
+                item.ObservacionVigenteSupervisor = _context.InformeFinalInterventoriaObservaciones.Where(r => r.EsSupervision == true && r.InformeFinalInterventoriaId == item.InformeFinalInterventoriaId && (r.Archivado == false || r.Archivado == null)).FirstOrDefault();
 
                 item.InformeFinalInterventoriaObservacionesId = informeFinalInterventoriaObservacionesId;
                 item.TieneObservacionNoCumple = tieneObservacionNoCumple;
@@ -519,10 +520,15 @@ namespace asivamosffie.services
                                                                   .FirstOrDefault();
                 if (informeFinal != null)
                 {
+                    informeFinal.EstadoInforme = ConstantCodigoEstadoInformeFinal.Informe_enviado_validacion; //control de cambios
                     informeFinal.EstadoValidacion = ConstantCodigoEstadoValidacionInformeFinal.Con_informe_enviado_al_supervisor;
                     informeFinal.FechaEnvioSupervisor = DateTime.Now;
                     informeFinal.UsuarioModificacion = pUsuario;
                     informeFinal.FechaModificacion = DateTime.Now;
+                    if (informeFinal.EstadoAprobacion == ConstantCodigoEstadoAprobacionInformeFinal.Devuelta_por_supervisor)
+                    {
+                        informeFinal.EstadoAprobacion = ConstantCodigoEstadoAprobacionInformeFinal.Modificado_Apoyo_Supervision_Interventor;
+                    }
                     //Enviar Correo supervisor 5.1.2
                     await EnviarCorreoSupervisor(informeFinal, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
                 }
@@ -682,7 +688,7 @@ namespace asivamosffie.services
                     string template = TemplateRecoveryPassword.Contenido
                                 .Replace("_LinkF_", pDominioFront)
                                 .Replace("[LLAVE_MEN]", informe.Proyecto.LlaveMen)
-                                .Replace("[ESTADO_VALIDACION]", String.IsNullOrEmpty(informe.EstadoValidacion) ? "Sin Verificación" : await _commonService.GetNombreDominioByCodigoAndTipoDominio(informe.EstadoValidacion, 160))
+                                .Replace("[ESTADO_VALIDACION]", String.IsNullOrEmpty(informe.EstadoValidacion) ? "Sin Verificación" : await _commonService.GetNombreDominioByCodigoAndTipoDominio(informe.EstadoValidacion, (int)EnumeratorTipoDominio.Estado_Validacion_Informe_Final))
                                 .Replace("[FECHA_ENVIO_APOYO]", ((DateTime) informe.FechaEnvioApoyoSupervisor).ToString("yyyy-MM-dd"));
 
                     foreach (var item in usuarios)

@@ -107,7 +107,7 @@
               mat-raised-button
               color="accent"
               class="btn-table animatedOpacity info-button min-w-11em"
-              [class.completo]="element.tieneObservacionNoCumple"
+              [class.completo]="element.tieneObservacionNoCumple || element.tieneObservacionSupervisor"
               [class.sin-diligenciar]="!element.tieneObservacionNoCumple"
               type="button"
               (click)="openDialogObservaciones(element, true)"

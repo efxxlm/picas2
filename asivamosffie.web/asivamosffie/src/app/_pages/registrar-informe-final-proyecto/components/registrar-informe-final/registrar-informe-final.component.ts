@@ -29,7 +29,7 @@ export class RegistrarInformeFinalComponent implements OnInit {
 
   ngOnDestroy(): void {
     //Sólo satisfacción
-    if (this.childFormReciboASatisfaccion.noGuardado===true && this.childFormReciboASatisfaccion.addressForm.dirty && !this.childTablaInformeFinalAnexos.noGuardado) {
+    if (this.childFormReciboASatisfaccion && this.childFormReciboASatisfaccion.noGuardado===true && this.childFormReciboASatisfaccion.addressForm.dirty && (!this.childTablaInformeFinalAnexos || !this.childTablaInformeFinalAnexos.noGuardado)) {
       let dialogRef =this.dialog.open(ModalDialogComponent, {
         width: '28em',
         data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
@@ -43,7 +43,7 @@ export class RegistrarInformeFinalComponent implements OnInit {
       });
     }
     //Sólo tabla anexos
-    else if (!(this.childFormReciboASatisfaccion.noGuardado===true && this.childFormReciboASatisfaccion.addressForm.dirty) && this.childTablaInformeFinalAnexos.noGuardado) {
+    else if (this.childTablaInformeFinalAnexos && !(this.childFormReciboASatisfaccion.noGuardado===true && this.childFormReciboASatisfaccion.addressForm.dirty) && this.childTablaInformeFinalAnexos.noGuardado) {
       let dialogRef =this.dialog.open(ModalDialogComponent, {
         width: '28em',
         data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }

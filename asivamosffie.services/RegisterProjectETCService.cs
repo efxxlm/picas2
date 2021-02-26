@@ -50,7 +50,7 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                    item.EstadoEntregaETCString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.EstadoEntregaETCString, 164);
+                    item.EstadoEntregaETCString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.EstadoEntregaETCString, (int)EnumeratorTipoDominio.Estado_Entrega_ETC_proyecto);
                 }
             }
             return list;

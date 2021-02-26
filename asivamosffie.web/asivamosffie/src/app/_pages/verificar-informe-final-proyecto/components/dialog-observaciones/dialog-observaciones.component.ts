@@ -18,6 +18,7 @@ export class DialogObservacionesComponent implements OnInit {
     esSupervision: [null, Validators.required],
     esCalificacion: [null, Validators.required],
     esApoyo: [null, Validators.required],
+    fechaCreacion: [null, Validators.required],
   })
 
   editorStyle = {
@@ -44,9 +45,13 @@ export class DialogObservacionesComponent implements OnInit {
     if(this.data.informeFinalObservacion != null){
       this.observaciones.patchValue(this.data.informeFinalObservacion[0])
     }else{
-      this.getInformeFinalInterventoriaObservacionByInformeFinalObservacion(
-        this.data.informe.informeFinalInterventoriaObservacionesId
-      )
+      if(this.data.informe.estadoValidacion === '4' || this.data.informe.estadoValidacion === '6'){
+        this.observaciones.patchValue(this.data.informe.observacionVigenteSupervisor)
+      }else{
+        this.getInformeFinalInterventoriaObservacionByInformeFinalObservacion(
+          this.data.informe.informeFinalInterventoriaObservacionesId
+        )
+      }
     }
   }
 

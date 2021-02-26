@@ -114,7 +114,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     }
   }
 
-  openDialogTipoDocumento(informe:any) {
+  openDialogTipoDocumento(informe:any, verDetalle: boolean) {
     this.informeFinalAnexo = null;
     this.dataSource.data.forEach(control => {
       if ( informe !== null && informe.informeFinalInterventoriaId === control.informeFinalInterventoriaId ) {
@@ -130,6 +130,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
         informe: informe,
         llaveMen: this.llaveMen,
         informeFinalAnexo: this.informeFinalAnexo,
+        verDetalle: verDetalle
       },
       id:'dialogTipoDocumento'
     });

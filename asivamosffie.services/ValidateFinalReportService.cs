@@ -33,7 +33,7 @@ namespace asivamosffie.services
         public async Task<List<InformeFinal>> GetListInformeFinal()
         {
             List<InformeFinal> list = await _context.InformeFinal
-                            .Where(r=> r.EstadoValidacion == ConstantCodigoEstadoValidacionInformeFinal.Con_informe_enviado_al_supervisor)
+                            .Where(r=> r.EstadoValidacion == ConstantCodigoEstadoValidacionInformeFinal.Con_informe_enviado_al_supervisor || !String.IsNullOrEmpty(r.EstadoAprobacion))
                             .Include(r=> r.Proyecto)
                                 .ThenInclude(r => r.InstitucionEducativa)
                             .ToListAsync();
@@ -51,7 +51,7 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                    item.EstadoAprobacionString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.EstadoAprobacion, 161);
+                    item.EstadoAprobacionString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.EstadoAprobacion, (int)EnumeratorTipoDominio.Estado_Aprobacion_Informe_Final);
                 }
             }
             return list;
@@ -155,13 +155,21 @@ namespace asivamosffie.services
 
             foreach (var item in ListInformeFinalChequeo)
             {
-                item.CalificacionCodigoString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.CalificacionCodigo, 151);
-                item.ValidacionCodigoString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.ValidacionCodigo, 151);
-                item.AprobacionCodigoString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.AprobacionCodigo, 151);
+                item.CalificacionCodigoString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.CalificacionCodigo, (int)EnumeratorTipoDominio.Calificacion_Informe_Final);
+                item.ValidacionCodigoString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.ValidacionCodigo, (int)EnumeratorTipoDominio.Calificacion_Informe_Final);
+
+                if (String.IsNullOrEmpty(item.AprobacionCodigo) || item.AprobacionCodigo == "0")
+                {
+                    item.AprobacionCodigoString = String.Empty;
+                }
+                else
+                {
+                    item.AprobacionCodigoString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.AprobacionCodigo, (int)EnumeratorTipoDominio.Calificacion_Informe_Final);
+                }
 
                 if (item.InformeFinalAnexoId != null)
                 {
-                    item.InformeFinalAnexo.TipoAnexoString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.InformeFinalAnexo.TipoAnexo, 155);
+                    item.InformeFinalAnexo.TipoAnexoString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.InformeFinalAnexo.TipoAnexo, (int)EnumeratorTipoDominio.Tipo_Anexo_Informe_Final);
                 }
                 item.EstadoValidacion = informeFinal.EstadoValidacion;
                 item.RegistroCompletoValidacion = informeFinal.RegistroCompletoValidacion == null ? false : (bool) informeFinal.RegistroCompletoValidacion;
@@ -312,6 +320,7 @@ namespace asivamosffie.services
                                                                       {
                                                                         FechaModificacion = DateTime.Now,
                                                                         UsuarioModificacion = user,
+                                                                        TieneObservacionSupervisor = code == ConstantCodigoCalificacionInformeFinal.No_Cumple ? true : false,
                                                                         AprobacionCodigo = code,//cumple,no aplica, no cumple
                                                                       });
                 informeFinal.EstadoAprobacion = ConstantCodigoEstadoAprobacionInformeFinal.En_proceso_aprobacion;
@@ -542,12 +551,16 @@ namespace asivamosffie.services
                     informeFinal.EstadoAprobacion = ConstantCodigoEstadoAprobacionInformeFinal.Devuelta_por_supervisor;
                     informeFinal.RegistroCompleto = false;
                     informeFinal.EstadoInforme = ConstantCodigoEstadoInformeFinal.Con_Observaciones_del_supervisor;
+                    informeFinal.EstadoValidacion = ConstantCodigoEstadoValidacionInformeFinal.Con_observaciones_del_supervisor;
+                    informeFinal.RegistroCompletoValidacion = false; 
                     informeFinal.UsuarioModificacion = pUsuario;
                     informeFinal.FechaModificacion = DateTime.Now;
 
                     //Enviar Correo a interventor 5.1.3
                     await EnviarCorreoInterventor(informeFinal, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
 
+                    //Cambiar estado de validación
+                    await updateStateValidation(informeFinal.InformeFinalId, pUsuario);
                 }
 
                 _context.SaveChanges();
@@ -587,6 +600,8 @@ namespace asivamosffie.services
                 if (informeFinal != null)
                 {
                     informeFinal.EstadoAprobacion = ConstantCodigoEstadoAprobacionInformeFinal.Enviado_verificacion_liquidacion_novedades;
+                    informeFinal.EstadoInforme = ConstantCodigoEstadoInformeFinal.Enviado_verificacion_liquidaciones_novedades; // control de cambios
+                    informeFinal.EstadoValidacion = ConstantCodigoEstadoValidacionInformeFinal.Enviado_verificacion_liquidacion_novedades;//control de cambios
                     informeFinal.FechaEnvioGrupoNovedades = DateTime.Now;
                     informeFinal.UsuarioModificacion = pUsuario;
                     informeFinal.FechaAprobacion = DateTime.Now;
@@ -595,6 +610,9 @@ namespace asivamosffie.services
 
                 //Enviar Correo a grupo novedades liquidaciones 5.1.3
                 await EnviarCorreoGrupoNovedades(informeFinal, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
+
+                //Cambiar estado de validación
+                await updateStateValidation(informeFinal.InformeFinalId, pUsuario);
 
                 _context.SaveChanges();
 
@@ -693,7 +711,7 @@ namespace asivamosffie.services
                     string template = TemplateRecoveryPassword.Contenido
                                 .Replace("_LinkF_", pDominioFront)
                                 .Replace("[LLAVE_MEN]", informe.Proyecto.LlaveMen)
-                                .Replace("[ESTADO_APROBACION]", String.IsNullOrEmpty(informe.EstadoAprobacion) ? "Sin Validación" : await _commonService.GetNombreDominioByCodigoAndTipoDominio(informe.EstadoAprobacion, 161))
+                                .Replace("[ESTADO_APROBACION]", String.IsNullOrEmpty(informe.EstadoAprobacion) ? "Sin Validación" : await _commonService.GetNombreDominioByCodigoAndTipoDominio(informe.EstadoAprobacion, (int)EnumeratorTipoDominio.Estado_Aprobacion_Informe_Final))
                                 .Replace("[FECHA_ENVIO_SUPERVISOR]", ((DateTime)informe.FechaEnvioSupervisor).ToString("yyyy-MM-dd"));
 
                     foreach (var item in usuarios)
@@ -702,6 +720,55 @@ namespace asivamosffie.services
                     }
 
                 }
+            }
+        }
+
+        //Actualizar ValidacionCodigo == AprobacionCodigo
+        private async Task<Respuesta> updateStateValidation(int informeFinalId, string user)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Actualizar_Estado_validacion_informe_final, (int)EnumeratorTipoDominio.Acciones);
+            string CreateEdit = string.Empty;
+            try
+            {
+                List<InformeFinalInterventoria> informeFinalInterventoria = _context.InformeFinalInterventoria
+                        .Where(r => r.InformeFinalId == informeFinalId).ToList();
+
+                foreach (var item in informeFinalInterventoria)
+                {
+                    if (item.ValidacionCodigo != item.AprobacionCodigo)
+                    {
+                        await _context.Set<InformeFinalInterventoria>()
+                                  .Where(r => r.InformeFinalInterventoriaId == item.InformeFinalInterventoriaId)
+                                                      .UpdateAsync(r => new InformeFinalInterventoria()
+                                                      {
+                                                          FechaModificacion = DateTime.Now,
+                                                          UsuarioModificacion = user,
+                                                          ValidacionCodigo = item.AprobacionCodigo,//cumple,no aplica, no cumple
+                                                                      });
+                    }
+                }
+
+                return
+                new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.ValidarInformeFinalProyecto, GeneralCodes.OperacionExitosa, idAccion, user, CreateEdit)
+                };
+            }
+            catch (Exception ex)
+            {
+                return
+                  new Respuesta
+                  {
+                      IsSuccessful = false,
+                      IsException = true,
+                      IsValidation = false,
+                      Code = GeneralCodes.Error,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.ValidarInformeFinalProyecto, GeneralCodes.Error, idAccion, user, ex.InnerException.ToString())
+                  };
             }
         }
     }

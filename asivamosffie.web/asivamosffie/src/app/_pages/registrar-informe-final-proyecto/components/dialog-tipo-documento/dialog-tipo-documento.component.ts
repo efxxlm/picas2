@@ -17,6 +17,7 @@ export class DialogTipoDocumentoComponent implements OnInit {
   anexos: any;
   dataSource = new MatTableDataSource<InformeFinalInterventoria>(this.ELEMENT_DATA);
   estaEditando = false;
+  existe_historial = false;
   addressForm = this.fb.group({
     informeFinalAnexoId: [null, Validators.required],
     tipoAnexo: [null, Validators.required],
@@ -88,10 +89,14 @@ export class DialogTipoDocumentoComponent implements OnInit {
         this.anexos = anexos;
         if(this.anexos.informeFinalAnexo != null){
           this.addressForm.patchValue(this.anexos.informeFinalAnexo)
-          console.log("Observaciones: ",this.anexos.informeFinalInterventoriaObservaciones.length);
         }
-        if(this.anexos.informeFinalInterventoriaObservaciones.length>0){
-          this.observacionesForm.patchValue(this.anexos.informeFinalInterventoriaObservaciones[0])
+        if(this.anexos.observacionVigenteSupervisor != null){
+          this.observacionesForm.patchValue(this.anexos.observacionVigenteSupervisor)
+        }
+        if(this.anexos.historialInformeFinalInterventoriaObservaciones != null){
+          if(this.anexos.historialInformeFinalInterventoriaObservaciones.length > 0){
+            this.existe_historial = true;
+          }      
         }
     });
   }

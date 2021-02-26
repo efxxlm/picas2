@@ -54,7 +54,15 @@ export interface InformeFinalInterventoria {
   informeFinalInterventoriaId: number,
   informeFinalInterventoriaObservaciones: [],
   informeFinalListaChequeoId: number,
-  usuarioCreacion: string
+  usuarioCreacion: string,
+  observacionVigenteSupervisor: {
+    esSupervision: boolean,
+    fechaCreacion: Date,
+    informeFinalInterventoriaId: number,
+    informeFinalInterventoriaObservacionesId: number,
+    observaciones: string,
+    usuarioCreacion: string
+  },
 }
 
 export interface InformeFinalAnexo{
