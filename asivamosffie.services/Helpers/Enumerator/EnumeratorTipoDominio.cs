@@ -180,11 +180,23 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Tipo_Observacion_Seguimiento_Semanal = 123,
 
-        Calificacion_Informe_Final = 151,
+        //informe final - paquete 6
 
-        Estado_Informe_Final = 154,
+        Calificacion_Informe_Final = 151, // cumple- no cumple - no aplica
 
-        
+        Estado_Informe_Final = 154, //5.1.1
+
+        Estado_Validacion_Informe_Final = 160, //5.1.2
+
+        Tipo_Anexo_Informe_Final = 155, //Fisico - dgital
+
+        Estado_Aprobacion_Informe_Final = 161, //5.1.3
+
+        Estado_validacion_cumplimiento_informe_Final = 163, //5.1.4
+
+        Estado_Entrega_ETC_proyecto = 164, //5.1.5
+
+
         Jurisdiccion =116,
         Actuaciones_Recomendadas=119,
         Estados_Defensa_Judicial=120,

@@ -36,5 +36,12 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public bool Semaforo { get; set; }
+
+        [NotMapped]
+        public virtual InformeFinalInterventoriaObservaciones ObservacionVigenteSupervisor { get; set; }
+
+        [NotMapped]
+        public virtual ICollection<InformeFinalInterventoriaObservaciones> HistorialInformeFinalInterventoriaObservaciones { get; set; }
+
     }
 }

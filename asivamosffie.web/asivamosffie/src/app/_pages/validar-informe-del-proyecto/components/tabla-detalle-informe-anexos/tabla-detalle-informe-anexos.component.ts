@@ -106,43 +106,19 @@ export class TablaDetalleInformeAnexosComponent implements OnInit, AfterViewInit
     }
   }
 
-  openDialogObservaciones(informe:any) {
-    this.informeFinalObservacion = null;
-    this.dataSource.data.forEach(control => {
-      if ( informe !== null && informe.informeFinalInterventoriaId === control.informeFinalInterventoriaId ) {
-        if(control.informeFinalInterventoriaObservaciones != null && control.informeFinalInterventoriaObservaciones.length > 0){
-          this.informeFinalObservacion = control.informeFinalInterventoriaObservaciones;
-        }
-        return;
-      }
-    });
+  openDialogObservaciones(informe:any, verDetalle: boolean) {
+    console.log(verDetalle);
     let dialogRef = this.dialog.open(DialogObservacionesComponent, {
       width: '70em',
       data: {
         informe: informe,
         llaveMen: this.llaveMen,
-        informeFinalObservacion: this.informeFinalObservacion,
+        verDetalle: verDetalle 
       },
       id:'dialogObservaciones'
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.dataSource.data.forEach(control => {
-        if ( result !== null && result.id === control.informeFinalInterventoriaId ) {
-          control.informeFinalInterventoriaObservaciones = [];
-          const informeFinalInterventoriaObservaciones: InformeFinalInterventoriaObservaciones = {
-            informeFinalInterventoriaObservacionesId:result.observaciones.informeFinalInterventoriaObservacionesId,
-            informeFinalInterventoriaId:result.observaciones.informeFinalInterventoriaId,
-            observaciones: result.observaciones.observaciones,
-            esSupervision: result.observaciones.esSupervision,
-            esCalificacion: result.observaciones.esCalificacion,
-            esApoyo: result.observaciones.esApoyo,
-          };
-          control.tieneObservacionNoCumple = true;
-          control.informeFinalInterventoriaObservaciones.push(informeFinalInterventoriaObservaciones);
-          return;
-        }
-      });
       return;
     });
   }

@@ -57,7 +57,7 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                    item.EstadoCumplimientoString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.EstadoCumplimiento, 163);
+                    item.EstadoCumplimientoString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.EstadoCumplimiento, (int)EnumeratorTipoDominio.Estado_validacion_cumplimiento_informe_Final);
                 }
             }
             return list;
@@ -148,11 +148,11 @@ namespace asivamosffie.services
 
             foreach (var item in ListInformeFinalChequeo)
             {
-                item.AprobacionCodigoString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.AprobacionCodigo, 151);
+                item.AprobacionCodigoString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.AprobacionCodigo, (int)EnumeratorTipoDominio.Estado_Aprobacion_Informe_Final);
 
                 if (item.InformeFinalAnexoId != null)
                 {
-                    item.InformeFinalAnexo.TipoAnexoString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.InformeFinalAnexo.TipoAnexo, 155);
+                    item.InformeFinalAnexo.TipoAnexoString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.InformeFinalAnexo.TipoAnexo, (int)EnumeratorTipoDominio.Tipo_Anexo_Informe_Final);
                 }
             }
             return ListInformeFinalChequeo;
@@ -294,6 +294,8 @@ namespace asivamosffie.services
                 {
                     //informeFinal.EstadoCumplimiento = ConstantCodigoEstadoCumplimientoInformeFinal.Con_observaciones_liquidaciones_novedades;
                     informeFinal.EstadoAprobacion = ConstantCodigoEstadoAprobacionInformeFinal.Con_observaciones_liquidaciones_novedades;
+                    informeFinal.EstadoInforme = ConstantCodigoEstadoInformeFinal.Con_observaciones_liquidaciones_novedades; // control de cambios
+                    informeFinal.EstadoValidacion = ConstantCodigoEstadoValidacionInformeFinal.Con_observaciones_liquidaciones_novedades; // control de cambios
                     informeFinal.UsuarioModificacion = pUsuario;
                     informeFinal.FechaModificacion = DateTime.Now;
 
@@ -406,7 +408,7 @@ namespace asivamosffie.services
                     string template = TemplateRecoveryPassword.Contenido
                                 .Replace("_LinkF_", pDominioFront)
                                 .Replace("[LLAVE_MEN]", informe.Proyecto.LlaveMen)
-                                .Replace("[ESTADO_CUMPLIMIENTO]", String.IsNullOrEmpty(informe.EstadoCumplimiento) ? "Sin Validación" : await _commonService.GetNombreDominioByCodigoAndTipoDominio(informe.EstadoCumplimiento, 163))
+                                .Replace("[ESTADO_CUMPLIMIENTO]", String.IsNullOrEmpty(informe.EstadoCumplimiento) ? "Sin Validación" : await _commonService.GetNombreDominioByCodigoAndTipoDominio(informe.EstadoCumplimiento, (int)EnumeratorTipoDominio.Estado_validacion_cumplimiento_informe_Final))
                                 .Replace("[FECHA_ENVIO_NOVEDADES]", ((DateTime)informe.FechaEnvioGrupoNovedades).ToString("yyyy-MM-dd"));
 
                     foreach (var item in usuarios)

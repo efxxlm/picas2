@@ -17,6 +17,7 @@ export class DialogTipoDocumentoComponent implements OnInit {
   anexos: any;
   dataSource = new MatTableDataSource<InformeFinalInterventoria>(this.ELEMENT_DATA);
   estaEditando = false;
+  existe_historial = false;
   addressForm = this.fb.group({
     informeFinalAnexoId: [null, Validators.required],
     tipoAnexo: [null, Validators.required],
@@ -50,6 +51,7 @@ export class DialogTipoDocumentoComponent implements OnInit {
     }else{
       this.getInformeFinalAnexoByInformeFinalInterventoriaId(this.data.informe.informeFinalInterventoriaId)
     }
+    this.getObservacionesByInformeFinalInterventoriaId(this.data.informe.informeFinalInterventoriaId);
   }
 
    // evalua tecla a tecla
@@ -88,10 +90,21 @@ export class DialogTipoDocumentoComponent implements OnInit {
         this.anexos = anexos;
         if(this.anexos.informeFinalAnexo != null){
           this.addressForm.patchValue(this.anexos.informeFinalAnexo)
-          console.log("Observaciones: ",this.anexos.informeFinalInterventoriaObservaciones.length);
         }
-        if(this.anexos.informeFinalInterventoriaObservaciones.length>0){
-          this.observacionesForm.patchValue(this.anexos.informeFinalInterventoriaObservaciones[0])
+    });
+  }
+
+  getObservacionesByInformeFinalInterventoriaId(id: string) {
+    this.registrarInformeFinalProyectoService.getObservacionesByInformeFinalInterventoriaId(id).subscribe(anexos => {
+        this.dataSource.data = anexos as InformeFinalInterventoria[];
+        this.anexos = anexos;
+        if(this.anexos.observacionVigenteSupervisor != null){
+          this.observacionesForm.patchValue(this.anexos.observacionVigenteSupervisor)
+        }
+        if(this.anexos.historialInformeFinalInterventoriaObservaciones != null){
+          if(this.anexos.historialInformeFinalInterventoriaObservaciones.length > 0){
+            this.existe_historial = true;
+          }      
         }
     });
   }

@@ -20,7 +20,7 @@ export class ValidarInformeComponent implements OnInit {
   @ViewChild(TablaInformeFinalAnexosComponent ) childTablaInformeFinalAnexos: TablaInformeFinalAnexosComponent ; 
   @ViewChild(FormObservacionesReciboSatisfaccionComponent ) childFormObsReciboASatisfaccion: FormObservacionesReciboSatisfaccionComponent ; 
 
-  existeObservacion = false;
+  existeObservacionApoyo = false;
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -86,7 +86,7 @@ export class ValidarInformeComponent implements OnInit {
     .subscribe(report => {
       this.report = report[0];
       if(report[0].proyecto.informeFinal[0].informeFinalObservaciones.length > 0){
-        this.existeObservacion = true;
+        this.existeObservacionApoyo = true;
       }
     });
   }

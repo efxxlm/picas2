@@ -5669,10 +5669,6 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Observaciones)
-                    .HasMaxLength(3000)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.ObservacionesFiduciario)
                     .HasMaxLength(3000)
                     .IsUnicode(false);
@@ -5762,14 +5758,6 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
-
-                entity.Property(e => e.Observaciones)
-                    .HasMaxLength(3000)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.ObservacionesDecision)
-                    .HasMaxLength(3000)
-                    .IsUnicode(false);
 
                 entity.Property(e => e.ResponsableCodigo)
                     .HasMaxLength(100)

@@ -16,6 +16,7 @@ namespace asivamosffie.services.Helpers.Constant
 
         public const string Devuelta_por_supervisor = "6";
 
+        public const string Modificado_Apoyo_Supervision_Interventor = "7";
 
     }
 }

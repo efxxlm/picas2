@@ -48,6 +48,10 @@ export class RegistrarInformeFinalProyectoService {
     return this.http.get(`${environment.apiUrl}/${this.final_report}/GetInformeFinalAnexoByInformeFinalInterventoriaId?pInformeFinalInterventoriaId=${ pInformeFinalInterventoriaId }`);
   }
 
+  getObservacionesByInformeFinalInterventoriaId(pInformeFinalInterventoriaId: string){
+    return this.http.get(`${environment.apiUrl}/${this.final_report}/GetObservacionesByInformeFinalInterventoriaId?pInformeFinalInterventoriaId=${ pInformeFinalInterventoriaId }`);
+  }
+
   getInformeFinalAnexoByInformeFinalAnexoId(pInformeFinalAnexoId: string){
     return this.http.get(`${environment.apiUrl}/${this.final_report}/GetInformeFinalAnexoByInformeFinalAnexoId?pInformeFinalAnexoId=${ pInformeFinalAnexoId }`);
   }

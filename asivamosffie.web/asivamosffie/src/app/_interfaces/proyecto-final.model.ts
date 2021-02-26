@@ -19,7 +19,8 @@ export interface Report {
                 tieneObservacionesSupervisor: boolean,
                 tieneObservacionesCumplimiento: boolean,
                 fechaAprobacion: Date,
-                tieneObservacionesInterventoria: boolean
+                tieneObservacionesInterventoria: boolean,
+                fechaEnvioApoyoSupervisor: Date,
             }
         ],
         departamentoObj: {

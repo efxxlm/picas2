@@ -43,7 +43,8 @@ export interface InformeFinalInterventoria{
                 fechaRadicado?: Date,
                 urlSoporte?: string
               },
-        informeFinalInterventoriaObservaciones?: InformeFinalInterventoriaObservaciones[]
+        informeFinalInterventoriaObservaciones?: InformeFinalInterventoriaObservaciones[],
+        tieneModificacionInterventor?: boolean
 }
 
 export interface InformeFinalAnexo{

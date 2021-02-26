@@ -21,6 +21,8 @@ export class FormReciboASatisfaccionComponent implements OnInit {
   fechaSuscripcion = null;
   addressForm: FormGroup;
   noGuardado=true; 
+  verDetalle = false;
+  tieneObservacionesSupervisor = false;
 
   constructor(
     private fb: FormBuilder,
@@ -33,7 +35,7 @@ export class FormReciboASatisfaccionComponent implements OnInit {
     this.buildForm();
   }
 
-  private buildForm() {
+  private buildForm() {    
     this.addressForm = this.fb.group({
       informeFinalId: [null, Validators.required],
       proyectoId: [this.report.proyecto.proyectoId, Validators.required],
@@ -43,6 +45,13 @@ export class FormReciboASatisfaccionComponent implements OnInit {
     if (this.report.proyecto.informeFinal.length > 0) {
       this.addressForm.patchValue(this.report.proyecto.informeFinal[0]);
       this.estaEditando = true;
+      if(this.report.proyecto.informeFinal[0].estadoInforme === '4' && (!this.report.proyecto.informeFinal[0].tieneObservacionesSupervisor || this.report.proyecto.informeFinal[0].tieneObservacionesSupervisor == null )){
+        this.verDetalle = true;
+      }
+      if(this.report.proyecto.informeFinal[0].tieneObservacionesSupervisor){
+        this.tieneObservacionesSupervisor = true;
+      }
+        
     }
     this.formCompleto.emit(this.respuestaFormCompleto());
   }

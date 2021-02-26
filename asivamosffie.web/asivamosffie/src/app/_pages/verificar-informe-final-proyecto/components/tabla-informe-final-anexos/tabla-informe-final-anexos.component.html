@@ -150,16 +150,14 @@
                     type="button"
                     (click)="openDialogObservaciones(element)"
                   >
-                    <span
-                      *ngIf="element.tieneObservacionNoCumple == null || element.tieneObservacionNoCumple == false"
-                    >
+                    <span>
                       Observaciones
                     </span>
-                    <span
+                    <!--<span
                       *ngIf="element.tieneObservacionNoCumple != null && element.tieneObservacionNoCumple == true"
                     >
                       Ver Observaciones
-                    </span>
+                    </span>-->
                   </button>
                 </td>
               </ng-container>
