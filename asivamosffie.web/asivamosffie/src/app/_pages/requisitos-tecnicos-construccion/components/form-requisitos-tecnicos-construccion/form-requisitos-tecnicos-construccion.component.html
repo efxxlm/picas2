@@ -6,7 +6,7 @@
         </a>
     </div>
     <h1 class="title-menu--h1">
-     {{ contrato['estadoVerificacionConstruccionCodigo'] == '0' ? 'Gestionar' : 'Ver Detalle/Editar' }}  requisitos para inicio contrato {{ contrato.numeroContrato }} fase 2 - Construcción
+     {{ contrato['estadoVerificacionConstruccionCodigo'] === undefined ? 'Gestionar' : 'Ver Detalle/Editar' }}  requisitos para inicio contrato {{ contrato.numeroContrato }} fase 2 - Construcción
     </h1>
   
     <section class="container margin-1em color-primary" *ngIf="contrato.contratacion">
