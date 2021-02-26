@@ -34,6 +34,13 @@ export class TablaActasDeInicioDeInterventoriaComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
   dataTable: any[] = [];
+  listaEstadoActaCodigo = {
+    sinActaGenerada: '1',
+    conActaPreliminarGenerada: '2',
+    conActaGenerada: '3',
+    conActaSuscritaCargada: '5'
+  }
+
   constructor(private router: Router, public dialog: MatDialog, private service: GestionarActPreConstrFUnoService) { }
 
   ngOnInit(): void {
@@ -135,7 +142,7 @@ export class TablaActasDeInicioDeInterventoriaComponent implements OnInit {
     const dialogRef = this.dialog.open(CargarActaSuscritaActaIniFIPreconstruccionComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(value => {
       if (value == 'aceptado') {
-        this.service.CambiarEstadoActa(id,"4").subscribe(data=>{
+        this.service.CambiarEstadoActa( id, this.listaEstadoActaCodigo.conActaSuscritaCargada ).subscribe(data=>{
           this.router.navigateByUrl('/', { skipLocationChange: true }).then(
             () => this.router.navigate(['/generarActaInicioFaseIPreconstruccion'])
           );
@@ -144,7 +151,7 @@ export class TablaActasDeInicioDeInterventoriaComponent implements OnInit {
     });
   }
   descargarActaDesdeTabla(id,numeroContrato) {
-    this.service.GetActaByIdPerfil(8,id).subscribe(resp => {
+    this.service.GetActaByIdPerfil( id, 'False' ).subscribe(resp => {
       const documento = `Acta contrato ${numeroContrato}.pdf`; // Valor de prueba
       const text = documento,
         blob = new Blob([resp], { type: 'application/pdf' }),

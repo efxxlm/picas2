@@ -74,6 +74,7 @@ export interface SesionComiteTema{
     generaCompromiso?: boolean,
     cantCompromisos?: number,
     registroCompleto?: boolean,
+    registroCompletoActa?: boolean,
 
     completo?: boolean,
 
@@ -277,6 +278,7 @@ export interface SesionSolicitudObservacionProyecto{
     proyecto?: Proyecto,
 
     nombreParticipante?: string,
+    sesionParticipante?: SesionParticipante,
 
 }
 

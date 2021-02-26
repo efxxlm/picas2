@@ -51,6 +51,9 @@ namespace asivamosffie.model.Models
         
         [NotMapped]
         public SeguimientoDiarioObservaciones ObservacionDevolucion { get; set; }
+
+        [NotMapped]
+        public SeguimientoDiarioObservaciones ObservacionSupervisor { get; set; }
     }
 
 }

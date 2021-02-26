@@ -57,8 +57,8 @@ export class TablaResultadosContratistasComponent implements OnInit, OnChanges {
       if (this.contratacion[ 'contratista' ] !== undefined)
          this.unionTemporal.setValue( this.contratacion[ 'contratista'].tipoProponenteCodigo === '4' ? true : false );
       
-      //  if (this.contratacion[ 'contratista' ] !== undefined)
-      //     this.numeroDocumento.setValue( this.contratacion[ 'contratista'].numeroIdentificacion );
+      if (this.contratacion[ 'contratista' ] !== undefined)
+         this.numeroDocumento.setValue( this.contratacion[ 'contratista'].numeroIdentificacion );
       
     }
 

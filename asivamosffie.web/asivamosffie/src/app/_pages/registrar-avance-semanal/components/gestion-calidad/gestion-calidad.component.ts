@@ -49,7 +49,6 @@ export class GestionCalidadComponent implements OnInit {
             .subscribe( tipo => this.tipoEnsayos = tipo );
         this.crearFormulario();
         this.getCantidadEnsayos();
-        this.maxDate = new Date();
     }
 
     ngOnInit(): void {
@@ -393,6 +392,13 @@ export class GestionCalidadComponent implements OnInit {
                 }
             }
           } );
+    }
+
+    getMaxDate( value: Date ) {
+        const date = new Date( value );
+        const dias = 30;
+        date.setDate( date.getDate() + dias );
+        this.maxDate = date;
     }
 
     getRegistrarResultados( gestionObraCalidadEnsayoLaboratorioId: number ) {

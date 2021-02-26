@@ -31,22 +31,24 @@ export class TablaDisponibilidadMaterialComponent implements OnInit {
             let sumaTotal = 0;
             if ( this.seguimientoDiario.length > 0 ) {
                 for ( const seguimiento of this.seguimientoDiario ) {
-                    let totalhorasRetraso = 0;
-                    totalhorasRetraso += seguimiento.numeroHorasRetrasoMaterial !== undefined ? seguimiento.numeroHorasRetrasoMaterial : 0;
-                    totalhorasRetraso += seguimiento.numeroHorasRetrasoEquipo !== undefined ? seguimiento.numeroHorasRetrasoEquipo : 0;
-                    totalhorasRetraso +=    seguimiento.numeroHorasRetrasoProductividad !== undefined ?
-                                            seguimiento.numeroHorasRetrasoProductividad : 0;
-                    seguimiento.totalHorasRetraso = totalhorasRetraso === 0 ? '---' : totalhorasRetraso;
-                    sumaTotal += totalhorasRetraso;
-                    seguimientoDiario.push( seguimiento );
+                    if ( seguimiento.causaBajaDisponibilidadMaterialNombre !== '---' && seguimiento.causaBajaDisponibilidadEquipoNombre !== '---' && seguimiento.causaBajaDisponibilidadProductividadNombre !== '---' ) {
+                        let totalhorasRetraso = 0;
+                        totalhorasRetraso += seguimiento.numeroHorasRetrasoMaterial !== undefined ? seguimiento.numeroHorasRetrasoMaterial : 0;
+                        totalhorasRetraso += seguimiento.numeroHorasRetrasoEquipo !== undefined ? seguimiento.numeroHorasRetrasoEquipo : 0;
+                        totalhorasRetraso +=    seguimiento.numeroHorasRetrasoProductividad !== undefined ?
+                                                seguimiento.numeroHorasRetrasoProductividad : 0;
+                        seguimiento.totalHorasRetraso = totalhorasRetraso === 0 ? '---' : totalhorasRetraso;
+                        sumaTotal += totalhorasRetraso;
+                        seguimientoDiario.push( seguimiento );
+                    }
                 }
             } else {
                 seguimientoDiario.push(
                     {
                         fechaSeguimiento: null,
-                        causaIndisponibilidadMaterialCodigo: '---',
-                        causaIndisponibilidadEquipoCodigo: '---',
-                        causaIndisponibilidadProductividadCodigo: '---',
+                        causaBajaDisponibilidadMaterialNombre: '---',
+                        causaBajaDisponibilidadEquipoNombre: '---',
+                        causaBajaDisponibilidadProductividadNombre: '---',
                         totalHorasRetraso: '---',
                         seguimientoDiarioObservaciones: ''
                     }
@@ -62,10 +64,10 @@ export class TablaDisponibilidadMaterialComponent implements OnInit {
         }
     }
 
-    openDialogObservaciones( observacion: string, registro: any ) {
+    openDialogObservaciones( registro: any ) {
         this.dialog.open( DialogTablaAvanceResumenComponent, {
-            width: '60em',
-            data : { observacion, registro }
+            width: '100em',
+            data : { registro, esDisponibilidadPersonal : false }
         } );
     }
 

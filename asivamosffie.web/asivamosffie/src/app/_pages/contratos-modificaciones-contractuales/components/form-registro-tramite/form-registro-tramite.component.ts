@@ -73,11 +73,8 @@ export class FormRegistroTramiteComponent implements OnInit, OnDestroy {
   fileName( event: any ) {
 
     if ( event.target.files.length > 0) {
-      const file   = event.target.files[0];
+      this.dataFormulario.get('documentoFile').setValue( event.target.files[0] );
       this.archivo = event.target.files[0].name;
-      this.dataFormulario.patchValue({
-        documentoFile: file
-      });
     }
 
   }

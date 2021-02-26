@@ -44,7 +44,7 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
     estadoRevision: [null, Validators.required],
     fechaAprob: [null, Validators.required],
     responsableAprob: ['', Validators.required],
-    observacionesGenerales: ['']
+    observacionesGenerales: [ null ]
   });
   polizasYSegurosArray: Dominio[] = [];
   estadoArray: any[];
@@ -362,15 +362,17 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
             }
           }
           const observacionArray = {
-            'contratoId': this.idContrato,
-            "contratoPolizaId": rep1.contratoPolizaId,
-            "Observacion": this.addressForm.value.observacionesGenerales,
-            "FechaRevision": this.addressForm.value.fechaRevision,
-            "EstadoRevisionCodigo": this.addressForm.value.estadoRevision.value
+            polizaObservacionId: 0,
+            contratoPolizaId: rep1.contratoPolizaId,
+            observacion: this.addressForm.get( 'observacionesGenerales' ).value !== null ? this.addressForm.get( 'observacionesGenerales' ).value : '',
+            fechaRevision: this.addressForm.get( 'fechaRevision' ).value !== null ? new Date( this.addressForm.get( 'fechaRevision' ).value ).toISOString() : null,
+            estadoRevisionCodigo: this.addressForm.get( 'estadoRevision' ).value !== null ? this.addressForm.get( 'estadoRevision' ).value.codigo : null
           }
-          this.polizaService.CreatePolizaObservacion(observacionArray).subscribe(resp => {
-            this.realizoPeticion = true;
-          }, err => this.openDialog('', `<b>${err.message}</b>`) );
+          this.polizaService.createEditPolizaObservacion( observacionArray )
+            .subscribe(
+              () => this.realizoPeticion = true,
+              err => this.openDialog('', `<b>${err.message}</b>`)
+            );
         });
         this.realizoPeticion = true;
         this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>',true);

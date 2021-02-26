@@ -1,7 +1,7 @@
 <section class="text-center" *ngIf="esVerDetalle === false && seguimientoSemanal !== undefined">
-    <p class="colorMainColor">Periodo del reporte: <b>{{ seguimientoSemanal.fechaInicio | date: 'dd/MM/yyyy' }} - {{ seguimientoSemanal.fechaFin | date: 'dd/MM/yyyy' }}</b> </p>
+    <p class="colorMainColor">Periodo del reporte: <b>{{ seguimientoSemanal.periodoReporteMensualFinanciero[0] | date: 'dd/MM/yyyy' }} - {{ seguimientoSemanal.periodoReporteMensualFinanciero[1] | date: 'dd/MM/yyyy' }}</b> </p>
 
-    <app-tabla-avance-financiero class="mt-1em"></app-tabla-avance-financiero>
+    <app-tabla-avance-financiero class="mt-1em" [tablaFinanciera]="seguimientoSemanal.tablaFinanciera"></app-tabla-avance-financiero>
 
     <form class="mt-1em" autocomplete="off" [formGroup]="formAvanceFinanciero" (ngSubmit)="guardar()">
         <div align="left">
@@ -40,6 +40,7 @@
                                                 [modules]="config"
                                                 (onContentChanged)="maxLength($event, 400)"
                                                 formControlName="observacion"
+                                                style="width: 100%;margin-bottom: 1em;"
                                                 required>
                                 </quill-editor>
                                 <span class="contador miles" *ngIf="formAvanceFinanciero.get('observacion').value !== null" style="margin-top: 3.5em;">
@@ -89,9 +90,9 @@
 
 <!-- Ver detalle -->
 <section class="text-center" *ngIf="esVerDetalle === true && avanceFinanciero !== undefined">
-  <p class="colorMainColor">Periodo del reporte: <b>{{ seguimientoSemanal.fechaInicio | date: 'dd/MM/yyyy' }} - {{ seguimientoSemanal.fechaFin | date: 'dd/MM/yyyy' }}</b> </p>
+  <p class="colorMainColor">Periodo del reporte: <b>{{ seguimientoSemanal.periodoReporteMensualFinanciero[0] | date: 'dd/MM/yyyy' }} - {{ seguimientoSemanal.periodoReporteMensualFinanciero[1] | date: 'dd/MM/yyyy' }}</b> </p>
 
-  <app-tabla-avance-financiero class="mt-1em"></app-tabla-avance-financiero>
+  <app-tabla-avance-financiero class="mt-1em" [tablaFinanciera]="seguimientoSemanal.tablaFinanciera"></app-tabla-avance-financiero>
 
   <div align="left">
     <mat-card class="border">

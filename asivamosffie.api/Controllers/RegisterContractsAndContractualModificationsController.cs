@@ -65,7 +65,7 @@ namespace asivamosffie.api.Controllers
                 return Ok(respuesta);
             }
             catch (Exception ex)
-            {
+           {
                 respuesta.Data = ex.ToString();
                 return BadRequest(respuesta);
             }

@@ -62,7 +62,7 @@ export class ActualizarTramiteRaccComponent implements OnInit {
     this.router.navigate(['/registrarActuacionesControversiasContractuales/registrarActuacionDerivada',this.actuacionid,0]);
   }
   verDetalleEditarActuacionDerivada(id){
-    this.router.navigate(['/registrarActuacionesControversiasContractuales/registrarActuacionDerivada',this.actuacionid,id]);
+    this.router.navigate(['/registrarActuacionesControversiasContractuales/verDetalleEditarActuacionDerivada',this.actuacionid,id]);
   }
   finalizarActuacionDerivada(id){
     this.conServices.FinalizarActuacionDerivada(id).subscribe(

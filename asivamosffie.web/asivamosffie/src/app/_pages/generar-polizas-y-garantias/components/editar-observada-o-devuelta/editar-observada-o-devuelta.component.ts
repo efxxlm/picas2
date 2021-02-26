@@ -44,11 +44,11 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
     estadoRevision: [null, Validators.required],
     fechaAprob: ['', Validators.required],
     responsableAprob: ['', Validators.required],
-    observacionesGenerales: ['']
+    observacionesGenerales: [ null ]
   });
 
   polizasYSegurosArray: Dominio[] = [];
-  estadoArray = []/*[
+  estadoArray: Dominio[] = []/*[
     { name: 'Devuelta', value: '1' },
     { name: 'Aprobada', value: '2' }
   ];*/
@@ -67,6 +67,7 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
     ]
   };
 
+  contrato: any;
   public tipoContrato;
   public objeto;
   public nombreContratista;
@@ -109,15 +110,15 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private activatedRoute: ActivatedRoute,
     private common: CommonService,
-    private contratacion: ProjectContractingService
-  ) {
+    private contratacion: ProjectContractingService ) 
+  {
     this.minDate = new Date();
-  }
-  ngOnInit(): void {
     this.activatedRoute.params.subscribe(param => {
       this.loadContrato(param.id);
       this.loadData(param.id);
     });
+  }
+  ngOnInit(): void {
   }
   ngOnDestroy(): void {
     if ( this.addressForm.dirty === true && this.realizoPeticion === false) {
@@ -206,6 +207,7 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
         const responAprob = this.listaUsuarios.find(p => p.usuarioId === parseInt(data.responsableAprobacion));
         this.addressForm.get('responsableAprob').setValue(responAprob);
       }
+      this.contrato = data;
       this.dataLoad2(data);
     });
   }
@@ -307,9 +309,14 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     this.estaEditando = true;
-    const polizasList = [this.addressForm.value.polizasYSeguros[0].codigo];
-    for (let i = 1; i < this.addressForm.value.polizasYSeguros.length; i++) {
-      const membAux = polizasList.push(this.addressForm.value.polizasYSeguros[i].codigo);
+    let polizasList = [];
+    if (this.addressForm.value.polizasYSeguros != undefined || this.addressForm.value.polizasYSeguros != null) {
+      if ( this.addressForm.value.polizasYSeguros.length > 0 ) {
+        polizasList = [this.addressForm.value.polizasYSeguros[0].codigo];
+        for (let i = 1; i < this.addressForm.value.polizasYSeguros.length; i++) {
+          const membAux = polizasList.push(this.addressForm.value.polizasYSeguros[i].codigo);
+        }
+      }
     }
     // console.log(polizasList);
     let nombreAprobado;
@@ -382,11 +389,11 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
       'Eliminado': false
     };
     const observacionArray = {
-      'contratoId': this.idContrato,
-      "contratoPolizaId": this.idPoliza,
-      "Observacion": this.addressForm.value.observacionesGenerales,
-      "FechaRevision": this.addressForm.value.fechaRevision,
-      "EstadoRevisionCodigo": this.addressForm.value.estadoRevision?this.addressForm.value.estadoRevision.codigo:null
+      polizaObservacionId: 0,
+      contratoPolizaId: this.idPoliza,
+      observacion: this.addressForm.get( 'observacionesGenerales' ).value !== null ? this.addressForm.get( 'observacionesGenerales' ).value : '',
+      fechaRevision: this.addressForm.get( 'fechaRevision' ).value !== null ? new Date( this.addressForm.get( 'fechaRevision' ).value ).toISOString() : null,
+      estadoRevisionCodigo: this.addressForm.get( 'estadoRevision' ).value !== null ? this.addressForm.get( 'estadoRevision' ).value.codigo : null
     }
     let garantiaArray;
     for (let i = 0; i < polizasList.length; i++) {
@@ -435,9 +442,11 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
     }
     this.polizaService.EditarContratoPoliza(contratoArray).subscribe(data => {
       if (data.isSuccessful == true) {
-        this.polizaService.CreatePolizaObservacion(observacionArray).subscribe(resp => {
-
-        });
+        this.polizaService.createEditPolizaObservacion( observacionArray )
+          .subscribe( 
+            () => this.realizoPeticion = true,
+            err => this.openDialog('', `<b>${err.message}</b>`)
+          );
         /*
         this.polizaService.CambiarEstadoPolizaByContratoId(statePoliza, this.idContrato).subscribe(resp1 => {
 

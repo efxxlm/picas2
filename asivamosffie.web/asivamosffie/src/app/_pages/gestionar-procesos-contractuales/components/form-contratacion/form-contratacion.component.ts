@@ -139,10 +139,10 @@ export class FormContratacionComponent implements OnInit {
       } );
   };
 */
-  getDdp(sesionComiteSolicitudId: number, numeroDdp: string )
+  getDdp(disponibilidadPresupuestalId: number, numeroDdp: string )
   {
     
-    this.disponibilidadServices.GenerateDDP(sesionComiteSolicitudId).subscribe((listas:any) => {
+    this.disponibilidadServices.GenerateDDP(disponibilidadPresupuestalId).subscribe((listas:any) => {
       console.log(listas);
       let documento = '';
         if ( numeroDdp !== undefined ) {

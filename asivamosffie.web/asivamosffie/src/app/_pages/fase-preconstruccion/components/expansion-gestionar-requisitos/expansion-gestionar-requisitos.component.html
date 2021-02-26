@@ -70,11 +70,11 @@
 			</mat-card>
 
 			<app-form-perfil 	[perfilProyecto]="contratacion.proyecto.contratoPerfil"
-												[contratoId]="contrato.contratoId"
-												[proyectoId]="contratacion.proyectoId"
-												(perfilEliminado)="getContrato( $event )"
-												(enviarPerfilesContrato)="getPerfilesContrato( i, $event )"
-												(perfilesCompletados)="estadoSemaforo( i, $event )">
+								[contratoId]="contrato.contratoId"
+								[proyectoId]="contratacion.proyectoId"
+								(perfilEliminado)="getContrato( $event )"
+								(enviarPerfilesContrato)="getPerfilesContrato( i, $event )"
+								(perfilesCompletados)="estadoSemaforo( i, $event )">
 			</app-form-perfil>
 
 		</mat-expansion-panel>

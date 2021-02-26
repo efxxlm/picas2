@@ -1,11 +1,9 @@
-import { FormControl, Validators } from '@angular/forms';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { ProgramacionPersonalObraService } from 'src/app/core/_services/programacionPersonalObra/programacion-personal-obra.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-import { DetalleProgramacionPersonal, ContratoConstruccion } from 'src/app/_interfaces/programacionPersonal.interface';
+import { DetalleProgramacionPersonal } from 'src/app/_interfaces/programacionPersonal.interface';
 
 @Component({
   selector: 'app-tabla-registro-semanas',
@@ -23,7 +21,8 @@ export class TablaRegistroSemanasComponent implements OnInit {
     private dialog: MatDialog,
     private programacionPersonalSvc: ProgramacionPersonalObraService,
     private routes: Router )
-  {}
+  {
+  }
 
   ngOnInit(): void {
     if ( this.registroSemanas !== undefined ) {
@@ -54,7 +53,6 @@ export class TablaRegistroSemanasComponent implements OnInit {
           }
         }
       }
-      console.log( this.registroSemanasTabla );
     }
   }
 

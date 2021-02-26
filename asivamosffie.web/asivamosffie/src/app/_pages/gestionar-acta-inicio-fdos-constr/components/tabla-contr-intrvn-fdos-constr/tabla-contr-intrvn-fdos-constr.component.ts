@@ -134,7 +134,7 @@ export class TablaContrIntrvnFdosConstrComponent implements OnInit {
         });
     }
   }
-  enviarActaParaFirma(id) {
+  enviarActaParaFirma(id, numeroContrato) {
     //console.log(localStorage.getItem("origin"))
     //if (localStorage.getItem("origin") == "interventoria") {
       this.services.CambiarEstadoActa(id, "6", "usr2").subscribe(data => {
@@ -142,7 +142,7 @@ export class TablaContrIntrvnFdosConstrComponent implements OnInit {
           () => this.router.navigate(['/generarActaInicioConstruccion'])
         );
       });
-      this.descargarActaDesdeTabla(id);
+      this.descargarActaDesdeTabla(id, numeroContrato);
     //}
   }
   enviarInterventorBtn(id){

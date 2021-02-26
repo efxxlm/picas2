@@ -1186,6 +1186,17 @@
       <button mat-button color="warn" class="btn-guardar" type="submit">
         <img src="assets/img/icon/guardar.svg" alt="Guardar" />
       </button>
+        <button
+          mat-button
+          color="warn"
+          *ngIf="addressForm.value.fuenteRecursosArray.length === 1"
+          type="button"
+          class="btn-eliminar"
+          (click)="borrarArray(fuenteRecursosArray, 0, 2, 0)"          
+        >
+          <img src="assets/img/icon/Basu-secondary.svg" alt="Eliminar vigencia" class="height-basu" />
+          Eliminar Registro
+        </button>
     </div>
   </form>
 </div>

@@ -36,9 +36,10 @@ namespace asivamosffie.api.Controllers
             _settings = settings;
         }
 
+        [Obsolete("Se reemplaza por CreateEditPolizaObservacion")]      
         [HttpPost]
-        [Route("CreateEditPolizaObservacion")]
-        public async Task<IActionResult> InsertEditPolizaObservacion(PolizaObservacion polizaObservacion)
+        [Route("CreateEditPolizaObservacionOLD")]
+        public async Task<IActionResult> CreateEditPolizaObservacionOLD(PolizaObservacion polizaObservacion)
         {
             Respuesta respuesta = new Respuesta();
             try
@@ -48,6 +49,32 @@ namespace asivamosffie.api.Controllers
 
                 AppSettingsService _appSettingsService = toAppSettingsService(_settings);
                 respuesta = await _guaranteePolicy.InsertEditPolizaObservacion(polizaObservacion, _appSettingsService);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        } 
+          
+        /// <summary>
+        /// JMartinez 
+        /// </summary>
+        /// <param name="pPolizaObservacion"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("CreateEditPolizaObservacion")]
+        public async Task<IActionResult> CreateEditPolizaObservacion([FromBody] PolizaObservacion pPolizaObservacion)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pPolizaObservacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                pPolizaObservacion.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+
+                AppSettingsService _appSettingsService = toAppSettingsService(_settings);
+                respuesta = await _guaranteePolicy.CreateEditPolizaObservacion(pPolizaObservacion, _appSettingsService);
                 return Ok(respuesta);
             }
             catch (Exception ex)

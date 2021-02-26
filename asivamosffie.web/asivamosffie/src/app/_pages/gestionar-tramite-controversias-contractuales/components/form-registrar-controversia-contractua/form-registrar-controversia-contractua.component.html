@@ -63,7 +63,7 @@
         </div>
       </div>
     </div>
-    <div *ngIf="this.selectedContract != ''">
+    <div class="animatedDown" *ngIf="this.selectedContract != ''">
       <mat-card class="shipping-card mainGris">
         <mat-card-header class="header-card">
           <mat-card-title class="header-card--text textoGris"> Datos del contrato </mat-card-title>
@@ -82,7 +82,7 @@
             <strong>Tipo de intervención: </strong> <em>{{ this.tipoIntervencion }}</em>
           </p>
           <p>
-            <strong>Valor del contrato: </strong> <em> {{ this.valorContrato | currency }}</em>
+            <strong>Valor del contrato: </strong> <em> {{ this.valorContrato | currency: 'COP':'symbol-narrow':'.0-0' }}</em>
           </p>
           <p>
             <strong>Plazo: </strong> <em>{{ this.plazoContrato }}</em>

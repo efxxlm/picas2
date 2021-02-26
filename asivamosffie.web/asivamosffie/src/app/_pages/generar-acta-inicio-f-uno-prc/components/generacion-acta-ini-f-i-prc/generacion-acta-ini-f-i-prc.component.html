@@ -222,6 +222,7 @@
                     min="1"
                     max="99"
                     required
+                    (ngModelChange)="getValueMeses( $event )"
                     (keypress)="number($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
                   oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
@@ -272,6 +273,7 @@
                     min="1"
                     max="31"
                     required
+                    (ngModelChange)="getValueDias( $event )"
                     (keypress)="number($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;if(this.value>=this.max) return false;"
                     type="number"
@@ -347,12 +349,7 @@
                   />
                 </mat-form-field>
                 <span class="contador">
-                  {{
-                    2 -
-                      (addressForm.get('mesPlazoEjFase2').value
-                        ? addressForm.get('mesPlazoEjFase1').value.toString().length
-                        : 0)
-                  }}
+                  {{ 2 - getSizeInput( addressForm.get('mesPlazoEjFase2').value ) }}
                 </span>
                 <span class="icon-incompleto">
                   <img
@@ -431,12 +428,13 @@
           >
             <label class="label-left" for="observacionesEspeciales">Observaciones o consideraciones especiales</label>
             <quill-editor
-              class="quill-editor-style card"
+              class="quill-editor-style card "
               [styles]="editorStyle"
               [modules]="config"
               (onContentChanged)="maxLength($event, 500)"
               formControlName="observacionesEspeciales"
               #observaciones
+              required
             >
             </quill-editor>
           </div>

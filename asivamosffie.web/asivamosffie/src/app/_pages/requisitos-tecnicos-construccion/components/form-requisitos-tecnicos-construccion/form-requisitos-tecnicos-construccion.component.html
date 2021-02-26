@@ -138,6 +138,53 @@
               </mat-panel-title>
             </mat-expansion-panel-header>
   
+            <div class="d-flex mt-2em text-center" style="justify-content: center;" >
+              <p class="mr-1em" style="margin-right: 2em;"> Fecha Inicio ejecución de obra: </p>
+              <div class="col d-flex">
+                <mat-form-field class="mt-min">
+                  <input
+                    matInput
+                    [matDatepicker]="fechaInicioObra"
+                    [(ngModel)]="contratacion.proyecto.contratoConstruccion[0].fechaInicioObra"
+                    [min]="minDate"
+                    
+                    placeholder="DD/MM/AAAA"
+                    required
+                    readonly
+                    (click)="fechaInicioObra.open()"
+                    *ngIf="contratacion.proyecto.contratoConstruccion.length > 0"
+                    (dateChange)="changeFechaInicioObra(contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId,contratacion.proyecto.proyectoId, fechaInicioObra, i)"
+                    [disabled]="contratacion.proyecto.contratoConstruccion[0].archivoCargueIdProgramacionObra !== undefined"
+                  />
+
+                  <input
+                    matInput
+                    [matDatepicker]="fechaInicioObra"
+                    [min]="minDate"
+                    
+                    placeholder="DD/MM/AAAA"
+                    required
+                    readonly
+                    (click)="fechaInicioObra.open()"
+                    *ngIf="contratacion.proyecto.contratoConstruccion.length == 0"
+                    (dateChange)="changeFechaInicioObra(0, contratacion.proyecto.proyectoId, fechaInicioObra, i)"
+                    
+                  />
+                  <mat-datepicker  #fechaInicioObra></mat-datepicker>
+                </mat-form-field>
+                <button
+                  mat-button
+                  color="primary"
+                  type="button"
+                  (click)="fechaInicioObra.open()"
+                  class="btn-calendario"
+                >
+                  <img class="mr-bottom-1" src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
+                </button>
+                
+              </div>
+            </div>
+
             <div class="d-flex mt-2em text-center" style="justify-content: center;">
               <p class="mr-1em" style="margin-right: 2em;">
                 Fecha Inicio: <b>{{ contratacion.proyecto.fechaInicioEtapaObra | date: 'dd/MM/yyyy' }}</b></p>  
