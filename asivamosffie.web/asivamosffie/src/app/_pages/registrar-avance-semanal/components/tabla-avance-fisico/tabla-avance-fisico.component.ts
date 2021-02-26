@@ -95,7 +95,6 @@ export class TablaAvanceFisicoComponent implements OnInit {
                     if ( seguimientoSemanalAvanceFisico !== undefined ) {
                         const seguimientoSemanalAvanceFisicoProgramacion = seguimientoSemanalAvanceFisico.seguimientoSemanalAvanceFisicoProgramacion.filter( programacion => programacion.programacionId === flujo.programacionId );
 
-                        console.log( seguimientoSemanalAvanceFisicoProgramacion );
                         if ( seguimientoSemanalAvanceFisicoProgramacion.length > 0 ) {
                             flujo.seguimientoSemanalAvanceFisicoProgramacionId = seguimientoSemanalAvanceFisicoProgramacion[0].seguimientoSemanalAvanceFisicoProgramacionId;
                             flujo.programacion.avanceFisicoCapitulo = seguimientoSemanalAvanceFisicoProgramacion[0].avanceFisicoCapitulo !== undefined ? seguimientoSemanalAvanceFisicoProgramacion[0].avanceFisicoCapitulo : null;
@@ -104,7 +103,6 @@ export class TablaAvanceFisicoComponent implements OnInit {
 
                     const actividadActual = actividadesLista.filter( value => value[ value.length - 1 ].actividad === flujo.programacion.actividad ).length > 0 ?
                                             actividadesLista.filter( value => value[ value.length - 1 ].actividad === flujo.programacion.actividad )[0][0] : undefined;
-
                     let duracionItem = 0;
 
                     if ( actividadActual !== undefined ) {
@@ -135,7 +133,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
                         {
                             programacionId: flujo.programacion.programacionId,
                             capitulo: flujo.programacion.actividad,
-                            programacionCapitulo:   this.verifyInteger( ( duracionItem / cantidadTotalDiasActividades ) * 100, false ),
+                            programacionCapitulo: this.verifyInteger( ( duracionItem / cantidadTotalDiasActividades ) * 100, false ),
                             avanceFisicoCapitulo: flujo.programacion.avanceFisicoCapitulo !== null ? String( this.verifyInteger( Number( flujo.programacion.avanceFisicoCapitulo ), true ) ) : null
                         }
                     );

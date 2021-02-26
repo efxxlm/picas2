@@ -7,14 +7,59 @@
     Observaciones
   </h1>
   
-  <div class="d-flex justify-content-center mt-1em">
+  <ng-container *ngIf="observaciones.esDisponibilidadPersonal === true; else noEsDisponibilidadPersonal">
+    <div class="d-flex justify-content-center mt-1em">
       <p> Fecha del reporte: <b> {{ observaciones.registro.fechaSeguimiento | date: 'dd/MM/yyyy' }} </b> </p>
-      <p class="ml-2em"> Disponibilidad personal: <b>Por integrar</b> </p>
-  </div>
+      <p class="ml-2em"> Disponibilidad personal: <b> {{ observaciones.registro.disponibilidadPersonal === true ? 'Suficiente' : 'Insuficiente' }} </b> </p>
+    </div>
 
     <mat-card class="border mt-1em" align="left">
-        <mat-card-content>
-            <i><section class="mt-3em" [innerHTML]="innerObservacion( observaciones.observacion )"></section></i>
-        </mat-card-content>
+      <mat-card-content>
+          <section class="mt-3em" [innerHTML]="observaciones.registro.disponibilidadPersonalObservaciones"></section>
+      </mat-card-content>
+  </mat-card>
+  </ng-container>
+  <ng-template #noEsDisponibilidadPersonal>
+    <div class="d-flex justify-content-center mt-1em">
+      <p> Fecha del reporte: <b> {{ observaciones.registro.fechaSeguimiento | date: 'dd/MM/yyyy' }} </b> </p>
+      <div class="d-flex justify-content-center colorMainColor">
+        <p style="margin-left: 2em;"><b>Disponiblidad de material</b>: {{ observaciones.registro.causaBajaDisponibilidadMaterialNombre }} </p>
+        <p style="margin-left: 2em;"> <b>Disponiblidad del equipo</b>: {{ observaciones.registro.causaBajaDisponibilidadEquipoNombre }} </p>
+        <p style="margin-left: 2em;"><b>Productividad</b>: {{ observaciones.registro.causaBajaDisponibilidadProductividadNombre }} </p>
+      </div>
+    </div>
+
+    <mat-card class="shipping-card var-main-gris" align="left" *ngIf="observaciones.registro.disponibilidadMaterialObservaciones !== undefined">
+      <mat-card-header class="header-card">
+        <mat-card-title class="header-card--text">
+          Observación de material
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+          <section [innerHTML]="observaciones.registro.disponibilidadMaterialObservaciones" style="margin-left: 2em;"></section>
+      </mat-card-content>
     </mat-card>
+
+    <mat-card class="shipping-card var-main-gris" align="left" *ngIf="observaciones.registro.disponibilidadEquipoObservaciones !== undefined">
+      <mat-card-header class="header-card">
+        <mat-card-title class="header-card--text">
+          Observación del equipo
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+          <section [innerHTML]="observaciones.registro.disponibilidadEquipoObservaciones" style="margin-left: 2em;"></section>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="shipping-card var-main-gris" align="left" *ngIf="observaciones.registro.productividadObservaciones !== undefined">
+      <mat-card-header class="header-card">
+        <mat-card-title class="header-card--text">
+          Observación de productividad
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+          <section [innerHTML]="observaciones.registro.productividadObservaciones" style="margin-left: 2em;"></section>
+      </mat-card-content>
+    </mat-card>
+  </ng-template>
 </section>

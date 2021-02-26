@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
@@ -8,34 +8,18 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class TablaAvanceFinancieroComponent implements OnInit {
 
+    @Input() tablaFinanciera: any[];
     tablaAvanceFinanciero = new MatTableDataSource();
     displayedColumns: string[] = [
       'item',
       'valor',
       'porcentaje'
     ];
-    dataTable: any[] = [
-      {
-        item: 'Facturación programada en el mes',
-        valor: '$18.000.000',
-        porcentaje: '16%'
-      },
-      {
-        item: 'Facturación del mes',
-        valor: '$18.000.000',
-        porcentaje: '16%'
-      },
-      {
-        item: 'Facturación programada acumulada',
-        valor: '$18.000.000',
-        porcentaje: '16%'
-      }
-    ];
-
+  
     constructor() { }
-
+  
     ngOnInit(): void {
-        this.tablaAvanceFinanciero = new MatTableDataSource( this.dataTable );
+      this.tablaAvanceFinanciero = new MatTableDataSource( this.tablaFinanciera );
     }
 
 }
