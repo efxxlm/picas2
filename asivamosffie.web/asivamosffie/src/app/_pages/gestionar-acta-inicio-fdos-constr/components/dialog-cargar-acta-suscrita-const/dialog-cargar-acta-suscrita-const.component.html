@@ -56,10 +56,10 @@
             </div>
           </div>
           <div
-            class="input-file"
+            class="input-file" style="width: 100%;"
             [ngStyle]="{ color: this.archivo == undefined && this.esRojo == true ? '#d21e18' : '#174193' }"
           >
-            <span class="input-file--text">{{ archivo }}</span>
+            <span class="input-file--text" style="width: 100%; max-width: 100%;">{{ archivo }}</span>
             <button mat-raised-button color="primary" type="button" (click)="fileInput.click()" class="input-file--btn">
               Explorar
             </button>
@@ -75,21 +75,6 @@
             />
             <span class="required-form-group m-0">*</span>
           </div>
-          <p>
-            Explore en su computador o dispositivo y seleccione el documento que desea cargar los formatos permitidos son:
-            pdf
-          </p>
-          <button mat-raised-button color="accent" [disabled]="!addressForm.valid" type="submit">{{ boton }}</button>
-        </div>
-        <div class="input-file"
-          [ngStyle]="{ color: this.archivo == undefined && this.esRojo == true ? '#d21e18' : '#174193' }">
-          <span class="input-file--text">{{ archivo }}</span>
-          <button mat-raised-button color="primary" type="button" (click)="fileInput.click()" class="input-file--btn">
-            Explorar
-          </button>
-          <input required hidden (change)="fileName($event)" #fileInput type="file" id="file"
-            formControlName="documentoFile" />
-          <span class="required-form-group m-0">*</span>
         </div>
         <p>
           Explore en su computador o dispositivo y seleccione el documento que desea cargar los formatos permitidos son:

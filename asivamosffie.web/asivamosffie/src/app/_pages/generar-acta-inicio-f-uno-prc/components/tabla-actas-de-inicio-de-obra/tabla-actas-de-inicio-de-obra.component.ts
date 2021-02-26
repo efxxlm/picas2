@@ -125,7 +125,7 @@ export class TablaActasDeInicioDeObraComponent implements OnInit {
   cargarActaSuscrita(){
     const dialogConfig = new MatDialogConfig();
     dialogConfig.height = 'auto';
-    dialogConfig.width = '50%';
+    dialogConfig.width = '1000px';
     const dialogRef = this.dialog.open(CargarActaSuscritaActaIniFIPreconstruccionComponent, dialogConfig);
   }
   descargarActaDesdeTabla(id, numContrato){

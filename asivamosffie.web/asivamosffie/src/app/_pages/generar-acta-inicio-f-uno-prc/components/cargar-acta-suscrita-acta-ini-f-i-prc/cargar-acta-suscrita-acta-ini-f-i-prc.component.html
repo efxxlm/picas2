@@ -59,8 +59,9 @@
         <div
           class="input-file"
           [ngStyle]="{ color: this.archivo == undefined && this.esRojo == true ? '#d21e18' : '#174193' }"
+          style="width: 100%;"
         >
-          <span class="input-file--text">{{ archivo }}</span>
+          <span class="input-file--text"  style="width: 100%; max-width: 100%;">{{ archivo }}</span>
           <button mat-raised-button color="primary" type="button" (click)="fileInput.click()" class="input-file--btn">
             Explorar
           </button>
