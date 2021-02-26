@@ -29,7 +29,8 @@ export class FormContratosAsociadosDjComponent implements OnInit {
   dataTable: any[] = [
   ];
   myControl= new FormArray([]);
-  filteredName: Observable<string[]>[]=[];
+  myFilter = new FormControl();
+  filteredName: Observable<string[]>;
   formContratista: FormGroup;
   editorStyle = {
     height: '45px'
@@ -43,7 +44,7 @@ export class FormContratosAsociadosDjComponent implements OnInit {
     ]
   };
   contratosArray = [];
-  contratos=[];
+  contratos:any[]=[];
   listProyectos: any[]=[];
   listProyectosSeleccion: any[]=[];
   listContrattoscompletos=[];
@@ -53,35 +54,16 @@ export class FormContratosAsociadosDjComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router ) {
     this.crearFormulario();    
-  }
-  ngOnInit(): void {
-    
     this.defensaService.GetListContract().subscribe(response=>{
       this.contratosArray=response.map(x=>x.numeroContrato);
       this.contratos=response;
     });
-    this.formContratista.get( 'numeroContratos' ).valueChanges
-      .subscribe( value => {
-        this.perfiles.clear();
-        for ( let i = 0; i < Number(value); i++ ) {
-          this.perfiles.push( 
-            this.fb.group(
-              {
-                contrato: [ null ]                
-              }
-            ) 
-          )
-          let control=new FormControl();
-          this.filteredName[i] = control.valueChanges.pipe(
-            startWith(''),
-            map(values => this._filter(values))
-          );
-          this.myControl.push(control);
-        }
-      } );
-
-      
-  };
+    this.filteredName = this.myFilter.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value))
+    );
+  }
+  
   cargarRegistro() {
     //this.ngOnInit().then(() => {
       console.log("form");
@@ -123,6 +105,35 @@ export class FormContratosAsociadosDjComponent implements OnInit {
       }  
     //});
   }
+
+  ngOnInit(): void {
+    
+
+    this.formContratista.get( 'numeroContratos' ).valueChanges
+      .subscribe( value => {
+        this.perfiles.clear();
+        for ( let i = 0; i < Number(value); i++ ) {
+          this.perfiles.push( 
+            this.fb.group(
+              {
+                contrato: [ null ]                
+              }
+            ) 
+          )
+          /*
+          let control=new FormControl();
+          this.filteredName[i] = control.valueChanges.pipe(
+            startWith(''),
+            map(values => this._filter(values))
+          );
+          this.myControl.push(control);
+          */
+        }
+      } );
+
+      
+  };
+
 	  get perfiles () {
 		return this.formContratista.get( 'perfiles' ) as FormArray;
 	  };
@@ -140,19 +151,14 @@ export class FormContratosAsociadosDjComponent implements OnInit {
   };
 
   private _filter(value: string): string[] {
-    console.log(value);
-    console.log("intentnado filtrar"+value);
     const filterValue = value.toLowerCase();    
     if(value!="")
     {      
       let filtroportipo:string[]=[];
       this.contratos.forEach(element => {        
-        if(element.numeroContrato==value)
+        if(!filtroportipo.includes(element.numeroContrato))
         {
-          if(!filtroportipo.includes(element.numeroContrato))
-          {
-            filtroportipo.push(element.numeroContrato);
-          }
+          filtroportipo.push(element.numeroContrato);
         }
       });
       let ret= filtroportipo.filter(x=> x.toLowerCase().indexOf(filterValue) === 0);      

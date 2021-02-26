@@ -27,11 +27,11 @@
                                 </div>
                                 <div class="col d-flex">
                                     <mat-form-field class="full-width">
-                                        <input matInput #nombre type="text" [formControl]="myControl.controls[i]" maxlength="100" required
+                                        <input matInput #nombre type="text" [formControl]="myFilter" maxlength="100" required
                                             [matAutocomplete]="auto">
                                         <mat-autocomplete #auto="matAutocomplete">
                                             <mat-option (click)="seleccionAutocomplete(nombres,i)"
-                                                *ngFor="let nombres of filteredName[i] | async" [value]="nombres">
+                                                *ngFor="let nombres of filteredName | async" [value]="nombres">
                                                 {{nombres}}
                                             </mat-option>
                                         </mat-autocomplete>
@@ -46,7 +46,7 @@
                     </div>
                 </mat-card-content>
             </mat-card>
-            <div *ngIf="myControl.controls[i].value">
+            <div *ngIf="myFilter.value">
                 <div style="margin-top: 1em;">
                     Seleccione la(s) Institución(es) Educativa(s), sede(s) asociada(s) al proceso
                 </div>
