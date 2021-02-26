@@ -16,6 +16,7 @@ export class TablaObservacionesReciboSatisfaccionComponent implements OnInit, Af
   anexos: any[];
   dataSource = new MatTableDataSource<InformeFinalInterventoria>(this.ELEMENT_DATA);
   displayedColumns: string[] = ['fecha', 'observaciones']
+  existeHistorial = false;
 
   observacionesForm = this.fb.group({
     observaciones: [null, Validators.required],
@@ -40,17 +41,7 @@ export class TablaObservacionesReciboSatisfaccionComponent implements OnInit, Af
     });
     if(this.data.historialInformeFinalInterventoriaObservaciones != null){
       if(this.data.historialInformeFinalInterventoriaObservaciones.length > 0){
-        this.observacionesForm.patchValue(this.data.historialInformeFinalInterventoriaObservaciones);
-        this.dataSource.data = this.data.historialInformeFinalInterventoriaObservaciones as InformeFinalInterventoria[];
-        this.anexos = this.data.historialInformeFinalInterventoriaObservaciones;
-      }      
-    }
-
-    if(this.data.observacionVigenteSupervisor != null){
-      this.observacionesForm.patchValue(this.data.observacionVigenteSupervisor)
-    }
-    if(this.data.historialInformeFinalInterventoriaObservaciones != null){
-      if(this.data.historialInformeFinalInterventoriaObservaciones.length > 0){
+        this.existeHistorial = true;
         this.observacionesForm.patchValue(this.data.historialInformeFinalInterventoriaObservaciones);
         this.dataSource.data = this.data.historialInformeFinalInterventoriaObservaciones as InformeFinalInterventoria[];
         this.anexos = this.data.historialInformeFinalInterventoriaObservaciones;

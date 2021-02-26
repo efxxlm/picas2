@@ -23,6 +23,12 @@ export class FormReciboASatisfaccionComponent implements OnInit {
   noGuardado=true; 
   verDetalle = false;
   tieneObservacionesSupervisor = false;
+  existeHistorial = false;
+
+  observacionesForm = this.fb.group({
+    observaciones: [null, Validators.required],
+    fechaCreacion: [null, Validators.required],   
+  })
 
   constructor(
     private fb: FormBuilder,
@@ -42,6 +48,12 @@ export class FormReciboASatisfaccionComponent implements OnInit {
       urlActa: [null, Validators.required],
       fechaSuscripcion: [null, Validators.required]
     });
+
+    this.observacionesForm = this.fb.group({
+      observaciones: [null, Validators.required],
+      fechaCreacion: [null,Validators.required],
+    });
+
     if (this.report.proyecto.informeFinal.length > 0) {
       this.addressForm.patchValue(this.report.proyecto.informeFinal[0]);
       this.estaEditando = true;
@@ -51,10 +63,22 @@ export class FormReciboASatisfaccionComponent implements OnInit {
       if(this.report.proyecto.informeFinal[0].tieneObservacionesSupervisor){
         this.tieneObservacionesSupervisor = true;
       }
+
+      if(this.report.proyecto.informeFinal[0].observacionVigenteSupervisor != null){
+        this.observacionesForm.patchValue(this.report.proyecto.informeFinal[0].observacionVigenteSupervisor)
+      }
+
+      if(this.report.proyecto.informeFinal[0].historialInformeFinalInterventoriaObservaciones != null){
+        if(this.report.proyecto.informeFinal[0].historialInformeFinalInterventoriaObservaciones.length > 0){
+          this.existeHistorial = true;
+        }      
+      }
         
     }
+
     this.formCompleto.emit(this.respuestaFormCompleto());
   }
+
 
   openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {

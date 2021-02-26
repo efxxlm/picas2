@@ -19,6 +19,7 @@ namespace asivamosffie.services.Helpers.Constant
 
         public const string Con_observaciones_liquidaciones_novedades = "8";
 
+        public const string Modificado_Apoyo = "9";
 
     }
 }

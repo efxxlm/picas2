@@ -17,5 +17,7 @@ namespace asivamosffie.services.Helpers.Constant
 
         public const string Informe_enviado_validacion = "7";
 
+        public const string Modificado_interventor_completo = "8";//con informe registrado- despues de que se hacen los cambios del supervisor.
+
     }
 }

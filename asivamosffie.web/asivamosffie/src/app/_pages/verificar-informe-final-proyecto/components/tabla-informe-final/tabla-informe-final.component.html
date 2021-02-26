@@ -103,7 +103,7 @@
         >
           Verificar informe
         </a>
-        <a *ngIf="element.estadoValidacion === '1' || element.estadoValidacion === '2'"
+        <a *ngIf="element.estadoValidacion === '1' || element.estadoValidacion === '2' || element.estadoValidacion === '6' || element.estadoValidacion === '9'"
           mat-button
           mat-raised-button
           color="accent"
@@ -124,7 +124,7 @@
           Ver detalle
         </a>
         <button
-        *ngIf="(element.estadoValidacion === '1' || element.estadoValidacion === '2') && element.registroCompletoValidacion"
+        *ngIf="(element.estadoValidacion === '1' || element.estadoValidacion === '2'  || element.estadoValidacion === '9') && element.registroCompletoValidacion"
           mat-button
           mat-raised-button
           color="accent"

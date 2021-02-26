@@ -132,7 +132,7 @@
           Ver detalle
         </a>
         <button
-        *ngIf="element.estadoInformeCod === '2'"
+        *ngIf="element.estadoInformeCod === '2' || element.estadoInformeCod === '8'"
           mat-button
           mat-raised-button
           color="accent"
@@ -143,7 +143,7 @@
         Enviar informe a validación
       </button>
       <a
-      *ngIf="element.estadoInformeCod === '4'"
+      *ngIf="element.estadoInformeCod === '4' || element.estadoInformeCod === '8'"
         mat-button
         mat-raised-button
         color="accent"

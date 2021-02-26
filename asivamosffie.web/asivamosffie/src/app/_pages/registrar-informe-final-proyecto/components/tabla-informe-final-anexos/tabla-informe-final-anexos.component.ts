@@ -137,6 +137,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     dialogRef.afterClosed().subscribe(result => {
       this.dataSource.data.forEach(control => {
         if ( result !== null && result.id === control.informeFinalInterventoriaId ) {
+          console.log(result.tieneModificacionInterventor);
           const informeFinalAnexo: InformeFinalAnexo = {
             informeFinalAnexoId: result.anexo.informeFinalAnexoId,
             tipoAnexo: result.anexo.tipoAnexo,
@@ -144,7 +145,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
             fechaRadicado: result.anexo.fechaRadicado,
             urlSoporte: result.anexo.urlSoporte,
           };
-          control.tieneModificacionInterventor = true;
+          control.tieneModificacionInterventor =  result.tieneModificacionInterventor; 
           control.tieneAnexo = true;
           control.informeFinalAnexo = informeFinalAnexo;
           return;
