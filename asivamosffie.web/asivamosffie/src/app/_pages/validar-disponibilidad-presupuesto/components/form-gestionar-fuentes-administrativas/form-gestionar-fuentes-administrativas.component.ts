@@ -119,7 +119,7 @@ export class FormGestionarFuentesAdministrativasComponent implements OnInit {
     }
     else
     {
-      fuente.get('saldoActual').setValue(fuenteSeleccionada[0].nuevo_saldo_de_la_fuente);
+      fuente.get('saldoActual').setValue(fuenteSeleccionada[0].Saldo_actual_de_la_fuente);
     }
 
     
