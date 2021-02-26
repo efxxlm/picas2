@@ -30,7 +30,6 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   estadoInforme = '0';
   registroCompleto = false;
   semaforo= false;
-  editadoSupervision = false;
   noGuardado=false;
 
   listChequeo: any;
@@ -138,7 +137,6 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     dialogRef.afterClosed().subscribe(result => {
       this.dataSource.data.forEach(control => {
         if ( result !== null && result.id === control.informeFinalInterventoriaId ) {
-          this.editadoSupervision = true;
           const informeFinalAnexo: InformeFinalAnexo = {
             informeFinalAnexoId: result.anexo.informeFinalAnexoId,
             tipoAnexo: result.anexo.tipoAnexo,
@@ -146,6 +144,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
             fechaRadicado: result.anexo.fechaRadicado,
             urlSoporte: result.anexo.urlSoporte,
           };
+          control.tieneModificacionInterventor = true;
           control.tieneAnexo = true;
           control.informeFinalAnexo = informeFinalAnexo;
           return;
@@ -229,6 +228,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
           informeFinalListaChequeoId: control.informeFinalListaChequeoId,
           informeFinalAnexo: control.informeFinalAnexo,
           informeFinalInterventoriaObservaciones: control.informeFinalInterventoriaObservaciones,
+          tieneModificacionInterventor: control.tieneModificacionInterventor
         };
         listaInformeFinalInterventoria.informeFinalInterventoria.push(informeFinalInterventoria);
     });

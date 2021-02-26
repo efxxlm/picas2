@@ -51,6 +51,7 @@ export class DialogTipoDocumentoComponent implements OnInit {
     }else{
       this.getInformeFinalAnexoByInformeFinalInterventoriaId(this.data.informe.informeFinalInterventoriaId)
     }
+    this.getObservacionesByInformeFinalInterventoriaId(this.data.informe.informeFinalInterventoriaId);
   }
 
    // evalua tecla a tecla
@@ -90,6 +91,13 @@ export class DialogTipoDocumentoComponent implements OnInit {
         if(this.anexos.informeFinalAnexo != null){
           this.addressForm.patchValue(this.anexos.informeFinalAnexo)
         }
+    });
+  }
+
+  getObservacionesByInformeFinalInterventoriaId(id: string) {
+    this.registrarInformeFinalProyectoService.getObservacionesByInformeFinalInterventoriaId(id).subscribe(anexos => {
+        this.dataSource.data = anexos as InformeFinalInterventoria[];
+        this.anexos = anexos;
         if(this.anexos.observacionVigenteSupervisor != null){
           this.observacionesForm.patchValue(this.anexos.observacionVigenteSupervisor)
         }

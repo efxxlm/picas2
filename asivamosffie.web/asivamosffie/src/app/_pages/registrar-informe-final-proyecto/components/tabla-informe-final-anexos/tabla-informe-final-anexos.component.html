@@ -104,8 +104,8 @@
                 mat-raised-button
                 color="accent"
                 class="btn-table animatedOpacity info-button"
-                [class.completo]="element.estadoInformeFinal ==='4' && element.tieneObservacionSupervisor && editadoSupervision"
-                [class.sin-diligenciar]="element.estadoInformeFinal ==='4' && element.tieneObservacionSupervisor && !editadoSupervision"
+                [class.completo]="element.estadoInformeFinal ==='4' && element.tieneObservacionSupervisor && element.tieneModificacionInterventor"
+                [class.sin-diligenciar]="element.estadoInformeFinal ==='4' && element.tieneObservacionSupervisor && !element.tieneModificacionInterventor"
                 type="button"
                 (click)="openDialogTipoDocumento(element,false)"
               >

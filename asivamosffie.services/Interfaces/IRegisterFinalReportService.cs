@@ -16,6 +16,8 @@ namespace asivamosffie.services.Interfaces
         Task<List<dynamic>> GetInformeFinalByProyectoId(int pProyectoId);
         Task<InformeFinalInterventoria> GetInformeFinalAnexoByInformeFinalInterventoriaId(int pInformeFinalInterventoriaId);
         Task<InformeFinalAnexo> GetInformeFinalAnexoByInformeFinalAnexoId(int pInformeFinalAnexoId);
+        Task<InformeFinalInterventoria> GetObservacionesByInformeFinalInterventoriaId(int pInformeFinalInterventoriaId);
+
         Task<InformeFinal> GetInformeFinalByInformeFinalId(int pInformeFinalId);
         Task<InformeFinalInterventoriaObservaciones> GetInformeFinalInterventoriaObservacionByInformeFinalObservacion(int pObservacionId);
 

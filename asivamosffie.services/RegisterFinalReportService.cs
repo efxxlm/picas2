@@ -112,10 +112,16 @@ namespace asivamosffie.services
         {
             InformeFinalInterventoria InformeFinalAnexo = await _context.InformeFinalInterventoria.Where(r => r.InformeFinalInterventoriaId == pInformeFinalInterventoriaId)
                                                         .Include(r => r.InformeFinalAnexo).FirstOrDefaultAsync();
-            InformeFinalAnexo.HistorialInformeFinalInterventoriaObservaciones = await _context.InformeFinalInterventoriaObservaciones.Where(r => r.EsSupervision == true && r.Archivado == true && r.InformeFinalInterventoriaId == pInformeFinalInterventoriaId).ToListAsync();
-            InformeFinalAnexo.ObservacionVigenteSupervisor = _context.InformeFinalInterventoriaObservaciones.Where(r => r.EsSupervision == true && r.InformeFinalInterventoriaId == pInformeFinalInterventoriaId && (r.Archivado == false || r.Archivado == null)).FirstOrDefault();
-            
             return InformeFinalAnexo;
+        }
+
+        public async Task<InformeFinalInterventoria> GetObservacionesByInformeFinalInterventoriaId(int pInformeFinalInterventoriaId)
+        {
+            InformeFinalInterventoria informeFinalInterventoria = await _context.InformeFinalInterventoria.Where(r => r.InformeFinalInterventoriaId == pInformeFinalInterventoriaId).FirstOrDefaultAsync();
+            informeFinalInterventoria.HistorialInformeFinalInterventoriaObservaciones = await _context.InformeFinalInterventoriaObservaciones.Where(r => r.EsSupervision == true && r.Archivado == true && r.InformeFinalInterventoriaId == pInformeFinalInterventoriaId).ToListAsync();
+            informeFinalInterventoria.ObservacionVigenteSupervisor = _context.InformeFinalInterventoriaObservaciones.Where(r => r.EsSupervision == true && r.InformeFinalInterventoriaId == pInformeFinalInterventoriaId && (r.Archivado == false || r.Archivado == null)).FirstOrDefault();
+
+            return informeFinalInterventoria;
         }
 
         public async Task<InformeFinalAnexo> GetInformeFinalAnexoByInformeFinalAnexoId(int pInformeFinalAnexoId)
@@ -161,15 +167,19 @@ namespace asivamosffie.services
                 }
                 else if (informeFinal.EstadoInforme == ConstantCodigoEstadoInformeFinal.Con_Observaciones_del_supervisor)
                 {
-                    foreach (InformeFinalInterventoria informeFinalInterventoria in informeFinal.InformeFinalInterventoria)
+                    int count_modificado = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == pInformeFinalId && r.TieneModificacionInterventor == true && r.CalificacionCodigo != ConstantCodigoCalificacionInformeFinal.No_Cumple).Count();
+                    int count_con_supervision = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == pInformeFinalId && r.TieneObservacionSupervisor == true && r.CalificacionCodigo != ConstantCodigoCalificacionInformeFinal.No_Cumple).Count();
+
+                    if (count_modificado != count_con_supervision)
                     {
-                        InformeFinalInterventoriaObservaciones existe_no_archivado = _context.InformeFinalInterventoriaObservaciones.Where(r => r.InformeFinalInterventoriaId == informeFinalInterventoria.InformeFinalInterventoriaId && r.EsSupervision == true && r.Archivado == null).FirstOrDefault();
-                        if (existe_no_archivado != null)
-                        {
-                            informeFinal.EstadoInforme = ConstantCodigoEstadoInformeFinal.En_proceso_de_registro;
-                            informeFinal.RegistroCompleto = false;
-                            return false;
-                        }
+                        return false;
+                    }
+                    else
+                    {
+                        //Vuelve a empezar el flujo
+                        informeFinal.EstadoInforme = ConstantCodigoEstadoInformeFinal.Con_informe_enviado_para_validación;
+                        informeFinal.RegistroCompleto = true;
+                        return false;
                     }
                 }
                 informeFinal.EstadoInforme = ConstantCodigoEstadoInformeFinal.Con_informe_Registrado;
@@ -445,6 +455,7 @@ namespace asivamosffie.services
                                                                    FechaModificacion = DateTime.Now,
                                                                    UsuarioModificacion = pInformeFinalInterventoriaId.UsuarioCreacion,
                                                                    CalificacionCodigo = pInformeFinalInterventoriaId.CalificacionCodigo,
+                                                                   TieneModificacionInterventor = pInformeFinalInterventoriaId.TieneModificacionInterventor
                                                                });
                     ///Actualiza o crea observaciones segun el caso (Sólo calificación)
                     foreach (InformeFinalInterventoriaObservaciones informeFinalInterventoriaObservaciones in pInformeFinalInterventoriaId.InformeFinalInterventoriaObservaciones)

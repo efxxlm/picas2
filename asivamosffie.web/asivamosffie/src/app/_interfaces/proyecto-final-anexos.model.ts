@@ -21,6 +21,7 @@ export interface ListaChequeo {
   nombre: string,
   posicion: number,
   tieneObservacionNoCumple: boolean,
+  tieneModificacionInterventor:boolean,
   tieneObservacionSupervisor: boolean,
   informeFinalAnexo:{
     informeFinalAnexoId?: number,
