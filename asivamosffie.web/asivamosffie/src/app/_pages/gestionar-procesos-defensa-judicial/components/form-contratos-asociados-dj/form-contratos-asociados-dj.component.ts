@@ -58,10 +58,12 @@ export class FormContratosAsociadosDjComponent implements OnInit {
       this.contratosArray=response.map(x=>x.numeroContrato);
       this.contratos=response;
     });
+    /*
     this.filteredName = this.myFilter.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value))
     );
+    */
   }
   
   cargarRegistro() {
@@ -120,14 +122,12 @@ export class FormContratosAsociadosDjComponent implements OnInit {
               }
             ) 
           )
-          /*
           let control=new FormControl();
-          this.filteredName[i] = control.valueChanges.pipe(
+          this.filteredName = control.valueChanges.pipe(
             startWith(''),
             map(values => this._filter(values))
           );
           this.myControl.push(control);
-          */
         }
       } );
 
