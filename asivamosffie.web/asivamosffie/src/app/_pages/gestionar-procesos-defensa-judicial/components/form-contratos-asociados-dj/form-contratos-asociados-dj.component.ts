@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Form, FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -68,7 +69,6 @@ export class FormContratosAsociadosDjComponent implements OnInit {
         this.defensaJudicial.defensaJudicialContratacionProyecto.forEach(element => {
           this.myControl.controls[i].setValue(element.numeroContrato);
           console.log(this.myControl.controls[i]);
-
           let contrato=this.contratos.filter(x=>x.numeroContrato==element.numeroContrato);
           this.perfiles.value.contrato = contrato[0].contratoId;
           console.log(this.perfiles.value.contrato);
@@ -90,8 +90,6 @@ export class FormContratosAsociadosDjComponent implements OnInit {
           console.log(this.dataSource);
           i++;
         });
-        
-          
         });
       }  
     //});
@@ -180,9 +178,6 @@ export class FormContratosAsociadosDjComponent implements OnInit {
       this.listContrattoscompletos[i]=false;
       console.log(this.dataSource);
     });
-    
-    
-    
   }
   textoLimpio (texto: string) {
     if ( texto ){
