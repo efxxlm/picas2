@@ -247,8 +247,6 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
 
       }
 
-      return false;
-
       this.objetoDisponibilidad.objeto = this.addressForm.get('objeto').value;
       this.objetoDisponibilidad.plazoMeses = this.addressForm.get('plazoMeses').value;
       this.objetoDisponibilidad.plazoDias = this.addressForm.get('plazoDias').value;

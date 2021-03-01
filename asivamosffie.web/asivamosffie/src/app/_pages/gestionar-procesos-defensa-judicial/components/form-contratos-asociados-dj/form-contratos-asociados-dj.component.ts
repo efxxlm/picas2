@@ -29,6 +29,7 @@ export class FormContratosAsociadosDjComponent implements OnInit {
   dataTable: any[] = [
   ];
   myControl= new FormArray([]);
+  myFilter = new FormControl();
   filteredName: Observable<string[]>;
   formContratista: FormGroup;
   editorStyle = {
@@ -43,7 +44,7 @@ export class FormContratosAsociadosDjComponent implements OnInit {
     ]
   };
   contratosArray = [];
-  contratos=[];
+  contratos:any[]=[];
   listProyectos: any[]=[];
   listProyectosSeleccion: any[]=[];
   listContrattoscompletos=[];
@@ -53,6 +54,14 @@ export class FormContratosAsociadosDjComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router ) {
     this.crearFormulario();    
+    this.defensaService.GetListContract().subscribe(response=>{
+      this.contratosArray=response.map(x=>x.numeroContrato);
+      this.contratos=response;
+    });
+    this.filteredName = this.myFilter.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value))
+    );
   }
   
   cargarRegistro() {
@@ -99,10 +108,7 @@ export class FormContratosAsociadosDjComponent implements OnInit {
 
   ngOnInit(): void {
     
-    this.defensaService.GetListContract().subscribe(response=>{
-      this.contratosArray=response.map(x=>x.numeroContrato);
-      this.contratos=response;
-    });
+
     this.formContratista.get( 'numeroContratos' ).valueChanges
       .subscribe( value => {
         this.perfiles.clear();
@@ -114,13 +120,14 @@ export class FormContratosAsociadosDjComponent implements OnInit {
               }
             ) 
           )
+          /*
           let control=new FormControl();
-          
-          this.filteredName = control.valueChanges.pipe(
+          this.filteredName[i] = control.valueChanges.pipe(
             startWith(''),
             map(values => this._filter(values))
           );
           this.myControl.push(control);
+          */
         }
       } );
 
@@ -144,18 +151,14 @@ export class FormContratosAsociadosDjComponent implements OnInit {
   };
 
   private _filter(value: string): string[] {
-    console.log("intentnado filtrar"+value);
     const filterValue = value.toLowerCase();    
     if(value!="")
     {      
       let filtroportipo:string[]=[];
       this.contratos.forEach(element => {        
-        if(element.numeroContrato==value)
+        if(!filtroportipo.includes(element.numeroContrato))
         {
-          if(!filtroportipo.includes(element.numeroContrato))
-          {
-            filtroportipo.push(element.numeroContrato);
-          }
+          filtroportipo.push(element.numeroContrato);
         }
       });
       let ret= filtroportipo.filter(x=> x.toLowerCase().indexOf(filterValue) === 0);      

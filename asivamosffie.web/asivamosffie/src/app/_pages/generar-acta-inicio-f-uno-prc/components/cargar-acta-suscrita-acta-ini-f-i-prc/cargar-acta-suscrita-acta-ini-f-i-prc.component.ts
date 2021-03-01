@@ -57,7 +57,7 @@ export class CargarActaSuscritaActaIniFIPreconstruccionComponent implements OnIn
 
   prueba: any;
   esRojo: boolean = false;
-
+  estaEditando = false;
   constructor(private router: Router, public dialog: MatDialog, private fb: FormBuilder, public matDialogRef: MatDialogRef<CargarActaSuscritaActaIniFIPreconstruccionComponent>, @Inject(MAT_DIALOG_DATA) public data: any, private service: GestionarActPreConstrFUnoService) {
     this.maxDate = new Date();
     this.maxDate2 = new Date();
@@ -95,6 +95,7 @@ export class CargarActaSuscritaActaIniFIPreconstruccionComponent implements OnIn
     }
   }
   onSubmit() {
+    this.estaEditando = true;
     const pContrato = new FormData();
     this.fechaSesion = new Date(this.addressForm.value.fechaFirmaContratistaObra);
     this.fechaSesionString = `${this.fechaSesion.getFullYear()}-${this.fechaSesion.getMonth() + 1}-${this.fechaSesion.getDate()}`;
