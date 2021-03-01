@@ -1960,10 +1960,7 @@ namespace asivamosffie.services
                 SeguimientoSemanalRegistrarComiteObra SeguimientoSemanalRegistrarComiteObraOld = _context.SeguimientoSemanalRegistrarComiteObra.Find(pSeguimientoSemanalRegistrarComiteObra.SeguimientoSemanalRegistrarComiteObraId);
                 SeguimientoSemanalRegistrarComiteObraOld.UsuarioModificacion = pUsuarioCreacion;
                 SeguimientoSemanalRegistrarComiteObraOld.FechaModificacion = DateTime.Now;
-                SeguimientoSemanalRegistrarComiteObraOld.RegistroCompleto =
-                                                                            pSeguimientoSemanalRegistrarComiteObra.FechaComite.HasValue
-                                                                           && !string.IsNullOrEmpty(pSeguimientoSemanalRegistrarComiteObra.UrlSoporteComite)
-                                                                           ? true : false;
+                SeguimientoSemanalRegistrarComiteObraOld.RegistroCompleto = pSeguimientoSemanalRegistrarComiteObra.FechaComite.HasValue ? true : false;
 
                 SeguimientoSemanalRegistrarComiteObraOld.FechaComite = pSeguimientoSemanalRegistrarComiteObra.FechaComite;
                 SeguimientoSemanalRegistrarComiteObraOld.UrlSoporteComite = pSeguimientoSemanalRegistrarComiteObra.UrlSoporteComite;
