@@ -1418,13 +1418,13 @@ namespace asivamosffie.services
                      string.IsNullOrEmpty(procesoSeleccion.TipoIntervencionCodigo) ||
                      string.IsNullOrEmpty(procesoSeleccion.TipoAlcanceCodigo) ||
                      string.IsNullOrEmpty(procesoSeleccion.TipoProcesoCodigo) ||
-                     string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.EsDistribucionGrupos)) ||
-                     string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableTecnicoUsuarioId)) ||
-                     string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableEstructuradorUsuarioid)) ||
-                     string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesAsignacionPuntaje)) ||
-                     string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesFinancierasHabilitantes)) ||
-                     string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesJuridicasHabilitantes)) ||
-                     string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesTecnicasHabilitantes)) 
+                     string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.EsDistribucionGrupos)) 
+                     //string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableTecnicoUsuarioId)) ||
+                     //string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableEstructuradorUsuarioid)) ||
+                     //string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesAsignacionPuntaje)) ||
+                     //string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesFinancierasHabilitantes)) ||
+                     //string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesJuridicasHabilitantes)) ||
+                     //string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesTecnicasHabilitantes)) 
 
                 )
                     esCompleto = false;
