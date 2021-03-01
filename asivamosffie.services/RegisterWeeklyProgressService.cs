@@ -608,9 +608,9 @@ namespace asivamosffie.services
         {
             decimal? AvanceFisicoSemanal = _context.SeguimientoSemanalAvanceFisico.Where(r => r.SeguimientoSemanalId == pSeguimientoSemanal.SeguimientoSemanalId).Sum(s => s.AvanceFisicoSemanal);
             decimal? ProgramacionSemanal = _context.SeguimientoSemanalAvanceFisico.Where(r => r.SeguimientoSemanalId == pSeguimientoSemanal.SeguimientoSemanalId).Sum(s => s.ProgramacionSemanal);
-             
+
             string strEstadoObraCodigo = ValidarEstadoDeObraBySeguimientoSemanalId(pSeguimientoSemanal.SeguimientoSemanalId);
-            
+
             _context.Set<ContratacionProyecto>()
                     .Where(r => r.ContratacionProyectoId == pSeguimientoSemanal.ContratacionProyectoId)
                     .Update(r => new ContratacionProyecto
@@ -624,9 +624,9 @@ namespace asivamosffie.services
                      .Where(r => r.SeguimientoSemanalId == pSeguimientoSemanal.SeguimientoSemanalId)
                                       .Update(r => new SeguimientoSemanalAvanceFisico
                                       {
-                                          EstadoObraCodigo = strEstadoObraCodigo 
+                                          EstadoObraCodigo = strEstadoObraCodigo
                                       });
-                                     
+
         }
 
         public async Task<Respuesta> UploadContractTerminationCertificate(ContratacionProyecto pContratacionProyecto, AppSettingsService appSettingsService)
@@ -1951,9 +1951,7 @@ namespace asivamosffie.services
                 pSeguimientoSemanalRegistrarComiteObra.FechaCreacion = DateTime.Now;
 
                 pSeguimientoSemanalRegistrarComiteObra.RegistroCompleto =
-                       pSeguimientoSemanalRegistrarComiteObra.FechaComite.HasValue
-                    && !string.IsNullOrEmpty(pSeguimientoSemanalRegistrarComiteObra.UrlSoporteComite)
-                    ? true : false;
+                pSeguimientoSemanalRegistrarComiteObra.FechaComite.HasValue ? true : false;
 
                 _context.SeguimientoSemanalRegistrarComiteObra.Add(pSeguimientoSemanalRegistrarComiteObra);
             }
@@ -1962,9 +1960,10 @@ namespace asivamosffie.services
                 SeguimientoSemanalRegistrarComiteObra SeguimientoSemanalRegistrarComiteObraOld = _context.SeguimientoSemanalRegistrarComiteObra.Find(pSeguimientoSemanalRegistrarComiteObra.SeguimientoSemanalRegistrarComiteObraId);
                 SeguimientoSemanalRegistrarComiteObraOld.UsuarioModificacion = pUsuarioCreacion;
                 SeguimientoSemanalRegistrarComiteObraOld.FechaModificacion = DateTime.Now;
-                SeguimientoSemanalRegistrarComiteObraOld.RegistroCompleto = pSeguimientoSemanalRegistrarComiteObra.FechaComite.HasValue
-                    && !string.IsNullOrEmpty(pSeguimientoSemanalRegistrarComiteObra.UrlSoporteComite)
-                    ? true : false;
+                SeguimientoSemanalRegistrarComiteObraOld.RegistroCompleto =
+                                                                            pSeguimientoSemanalRegistrarComiteObra.FechaComite.HasValue
+                                                                           && !string.IsNullOrEmpty(pSeguimientoSemanalRegistrarComiteObra.UrlSoporteComite)
+                                                                           ? true : false;
 
                 SeguimientoSemanalRegistrarComiteObraOld.FechaComite = pSeguimientoSemanalRegistrarComiteObra.FechaComite;
                 SeguimientoSemanalRegistrarComiteObraOld.UrlSoporteComite = pSeguimientoSemanalRegistrarComiteObra.UrlSoporteComite;
@@ -2072,7 +2071,6 @@ namespace asivamosffie.services
                && seguimientoSemanalGestionObraSocial.SeRealizaronReuniones == false)
                 return true;
 
-
             if (
                     !seguimientoSemanalGestionObraSocial.CantidadEmpleosDirectos.HasValue
                  || !seguimientoSemanalGestionObraSocial.CantidadEmpleosIndirectos.HasValue
@@ -2081,11 +2079,7 @@ namespace asivamosffie.services
                  || (seguimientoSemanalGestionObraSocial.SeRealizaronReuniones == true &&
                     (string.IsNullOrEmpty(seguimientoSemanalGestionObraSocial.TemaComunidad) || string.IsNullOrEmpty(seguimientoSemanalGestionObraSocial.Conclusion)))
                 )
-            {
                 return false;
-            }
-
-
 
             return true;
         }
@@ -2249,14 +2243,11 @@ namespace asivamosffie.services
 
         private bool ValidarRegistroCompletoManejoOtro(ManejoOtro pManejoOtro)
         {
-
             if (
                 !pManejoOtro.FechaActividad.HasValue
                 || string.IsNullOrEmpty(pManejoOtro.Actividad)
                 )
-            {
                 return false;
-            }
 
             return true;
         }
