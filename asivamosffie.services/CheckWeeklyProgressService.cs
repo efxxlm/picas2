@@ -38,22 +38,25 @@ namespace asivamosffie.services
         public async Task<bool> GetValidarRegistroCompletoObservaciones(int pSeguimientoSemanalId, bool esSupervisor)
         {
             try
-            { 
+            {
                 SeguimientoSemanal seguimientoSemanal = _context.SeguimientoSemanal.Find(pSeguimientoSemanalId);
-                _context.SeguimientoSemanal.Attach(seguimientoSemanal);
+                bool RegistroCompleto = await ValidarRegistroCompletoObservacion(seguimientoSemanal, esSupervisor);
                 if (esSupervisor)
                 {
-                    seguimientoSemanal.RegistroCompletoAvalar = await ValidarRegistroCompletoObservacion(seguimientoSemanal, esSupervisor);
-                    _context.Entry(seguimientoSemanal).Property(x => x.RegistroCompletoAvalar).IsModified = true;
+                    _context.Set<SeguimientoSemanal>().Where(s => s.SeguimientoSemanalId == pSeguimientoSemanalId)
+                                                   .Update(s => new SeguimientoSemanal
+                                                   {
+                                                       RegistroCompletoAvalar = RegistroCompleto
+                                                   });
                 }
                 else
                 {
-                    seguimientoSemanal.RegistroCompletoVerificar = await ValidarRegistroCompletoObservacion(seguimientoSemanal, esSupervisor);
-                    _context.Entry(seguimientoSemanal).Property(x => x.RegistroCompletoVerificar).IsModified = true;
-                }
-
-                _context.SaveChanges();
-
+                    _context.Set<SeguimientoSemanal>().Where(s => s.SeguimientoSemanalId == pSeguimientoSemanalId)
+                                                  .Update(s => new SeguimientoSemanal
+                                                  {
+                                                      RegistroCompletoVerificar = RegistroCompleto
+                                                  });
+                } 
                 return true;
             }
             catch (Exception e)
@@ -585,7 +588,7 @@ namespace asivamosffie.services
                 //}
 
                 List<int> ListSeguimientoSemanalId = _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == seguimientoSemanal.ContratacionProyectoId).Select(r => r.SeguimientoSemanalId).ToList();
-             
+
                 List<Programacion> ListProgramacion = new List<Programacion>();
 
                 Parallel.ForEach(seguimientoSemanal.SeguimientoSemanalAvanceFisico.ToList(), item =>
@@ -900,10 +903,10 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                    if (pSeguimientoSemanalObservacion.EsSupervisor) 
-                        seguimientoSemanal.FechaModificacionAvalar = DateTime.Now; 
-                    else 
-                        seguimientoSemanal.FechaModificacionVerificar = DateTime.Now;  
+                    if (pSeguimientoSemanalObservacion.EsSupervisor)
+                        seguimientoSemanal.FechaModificacionAvalar = DateTime.Now;
+                    else
+                        seguimientoSemanal.FechaModificacionVerificar = DateTime.Now;
                 }
 
                 UpdateObservation(pSeguimientoSemanalObservacion);
@@ -1455,7 +1458,7 @@ namespace asivamosffie.services
 
             if (pSeguimientoSemanalObservacion.TieneObservacion == false)
                 return true;
-             
+
             if (pSeguimientoSemanalObservacion.TieneObservacion == true && !string.IsNullOrEmpty(Helpers.Helpers.HtmlConvertirTextoPlano(Helpers.Helpers.HtmlConvertirTextoPlano(pSeguimientoSemanalObservacion.Observacion))))
                 return true;
 
