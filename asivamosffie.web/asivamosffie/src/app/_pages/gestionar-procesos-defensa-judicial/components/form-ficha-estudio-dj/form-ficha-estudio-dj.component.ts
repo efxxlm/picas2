@@ -26,6 +26,8 @@ export class FormFichaEstudioDjComponent implements OnInit {
   };
  
   addressForm = this.fb.group({
+    fichaEstudioId: [null, Validators.required],
+    defensaJudicialId: [null, Validators.required],
     antecedentes: [null, Validators.required],
     hechosRelevantes: [null, Validators.required],
     jurisprudenciaDoctrina: [null, Validators.required],
@@ -65,6 +67,9 @@ export class FormFichaEstudioDjComponent implements OnInit {
       console.log(this.tipoProceso);      
       if(this.defensaJudicial.fichaEstudio.length>0)
       {
+        console.log("Nuevos campos: ",this.defensaJudicial.fichaEstudio[0]);
+        this.addressForm.get("fichaEstudioId").setValue(this.defensaJudicial.fichaEstudio[0].fichaEstudioId);
+        this.addressForm.get("defensaJudicialId").setValue(this.defensaJudicial.fichaEstudio[0].defensaJudicialId);
         this.addressForm.get("antecedentes").setValue(this.defensaJudicial.fichaEstudio[0].antecedentes);
         this.addressForm.get("hechosRelevantes").setValue(this.defensaJudicial.fichaEstudio[0].hechosRelevantes);
         this.addressForm.get("jurisprudenciaDoctrina").setValue(this.defensaJudicial.fichaEstudio[0].jurisprudenciaDoctrina);
@@ -136,6 +141,8 @@ export class FormFichaEstudioDjComponent implements OnInit {
     }
 
     defensaJudicial.fichaEstudio=[{
+      fichaEstudioId:this.addressForm.get("fichaEstudioId").value,
+      defensaJudicialId:this.addressForm.get("defensaJudicialId").value,
       antecedentes:this.addressForm.get("antecedentes").value,
       hechosRelevantes:this.addressForm.get("hechosRelevantes").value,
       jurisprudenciaDoctrina:this.addressForm.get("jurisprudenciaDoctrina").value,

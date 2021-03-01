@@ -136,7 +136,7 @@ namespace asivamosffie.services
             Respuesta respuesta = new Respuesta();
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Defensa_Judicial, (int)EnumeratorTipoDominio.Acciones);
 
-            string strCrearEditar = string.Empty, strUsuario = string.Empty; ;
+            string strCrearEditar = string.Empty, strUsuario = string.Empty;
 
             DefensaJudicial defensaJudicialBD = null;
             try
@@ -249,7 +249,7 @@ namespace asivamosffie.services
                     {
                         if (defFicha != null)
                         {
-                            if (defFicha.UsuarioCreacion == null)
+                            if (defFicha.FichaEstudioId == 0)
                             {
                                 defFicha.UsuarioCreacion = defensaJudicial.UsuarioCreacion;
                                 defFicha.FechaCreacion = DateTime.Now;
@@ -259,10 +259,45 @@ namespace asivamosffie.services
                             }
                             else
                             {
+                                FichaEstudio fichaEstudioBD = _context.FichaEstudio.Find(defFicha.FichaEstudioId);
+
+                                defFicha.UsuarioModificacion = defensaJudicial.UsuarioCreacion;
+                                defFicha.FechaModificacion = DateTime.Now;
+                                defFicha.Eliminado = false;
+
+                                fichaEstudioBD.Antecedentes = defFicha.Antecedentes;
+                                fichaEstudioBD.HechosRelevantes = defFicha.HechosRelevantes;
+                                fichaEstudioBD.JurisprudenciaDoctrina = defFicha.JurisprudenciaDoctrina;
+                                fichaEstudioBD.DecisionComiteDirectrices = defFicha.DecisionComiteDirectrices;
+                                fichaEstudioBD.AnalisisJuridico = defFicha.AnalisisJuridico;
+                                fichaEstudioBD.Recomendaciones = defFicha.Recomendaciones;
+                                fichaEstudioBD.EsPresentadoAnteComiteFfie = defFicha.EsPresentadoAnteComiteFfie;
+                                fichaEstudioBD.FechaComiteDefensa = defFicha.FechaComiteDefensa;
+                                fichaEstudioBD.RecomendacionFinalComite = defFicha.RecomendacionFinalComite;
+                                fichaEstudioBD.EsAprobadoAperturaProceso = defFicha.EsAprobadoAperturaProceso;
+                                fichaEstudioBD.TipoActuacionCodigo = defFicha.TipoActuacionCodigo;
+                                fichaEstudioBD.EsActuacionTramiteComite = defFicha.EsActuacionTramiteComite;
+                                fichaEstudioBD.RutaSoporte = defFicha.RutaSoporte;
+
+                                _context.FichaEstudio.Update(fichaEstudioBD);
+
+                            }
+
+                            /*if (defFicha.UsuarioCreacion == null)
+                            {
+                                defFicha.UsuarioCreacion = defensaJudicial.UsuarioCreacion;
+                                defFicha.FechaCreacion = DateTime.Now;
+                                defFicha.Eliminado = false;
+                                defFicha.DefensaJudicialId = defensaJudicialBD.DefensaJudicialId;
+                                //_context.FichaEstudio.Add(defFicha);
+                            }
+                            else
+                            {
                                 defFicha.UsuarioModificacion = defensaJudicial.UsuarioCreacion;
                                 defFicha.FechaModificacion = DateTime.Now;
                                 defFicha.Eliminado = false;
                             }
+                            */
                         }
 
 

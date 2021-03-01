@@ -2549,18 +2549,6 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.Property(e => e.AnalisisJuridico)
-                    .HasMaxLength(2000)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Antecedentes)
-                    .HasMaxLength(2000)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.DecisionComiteDirectrices)
-                    .HasMaxLength(3000)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.EsPresentadoAnteComiteFfie).HasColumnName("EsPresentadoAnteComiteFFIE");
@@ -2570,22 +2558,6 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
-
-                entity.Property(e => e.HechosRelevantes)
-                    .HasMaxLength(2000)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.JurisprudenciaDoctrina)
-                    .HasMaxLength(3000)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.RecomendacionFinalComite)
-                    .HasMaxLength(1000)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Recomendaciones)
-                    .HasMaxLength(2000)
-                    .IsUnicode(false);
 
                 entity.Property(e => e.RutaSoporte)
                     .HasMaxLength(400)

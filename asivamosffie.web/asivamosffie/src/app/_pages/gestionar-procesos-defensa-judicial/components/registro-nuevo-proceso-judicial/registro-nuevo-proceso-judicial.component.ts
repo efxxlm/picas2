@@ -101,19 +101,22 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
   }
   estaIncompletoconvocados(defensaJudicial: DefensaJudicial): number {
     let retorno:number=0;
-    if(defensaJudicial.demandadoConvocado.length>0)
-      {
-        retorno= 2;
+    //sin-diligenciar:retorno===0,'en-proceso':retorno===1,'completo':retorno===2
+    if(defensaJudicial != null){
+
+      let num_convocados = defensaJudicial.numeroDemandados;
+
+      if(defensaJudicial.demandadoConvocado.length >= num_convocados){
+          
+          retorno = 2;
+
+      }else if(defensaJudicial.demandadoConvocado.length > 0 && defensaJudicial.demandadoConvocado.length < num_convocados){
+          
+          retorno = 1;
+
       }
-      else{       
-        if(defensaJudicial.demandadoConvocado.length==0)
-        {
-          retorno= 0;
-        }
-        else{
-          retorno= 1;
-        }
-      }    
+    }
+
     return retorno;
   }
   estaIncompletodetalle(defensaJudicial: DefensaJudicial): number {
