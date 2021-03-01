@@ -7807,15 +7807,12 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.EstadoSeguimientoSemanalCodigo)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.FechaModificacionVerificar).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaReporte).HasColumnType("datetime");
 
                 entity.Property(e => e.InstitucionEducativa)
+                    .IsRequired()
                     .HasMaxLength(300)
                     .IsUnicode(false);
 
@@ -7829,6 +7826,7 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.Sede)
+                    .IsRequired()
                     .HasMaxLength(300)
                     .IsUnicode(false);
 
