@@ -41,14 +41,23 @@ export class TablaAvanceResumenAlertasComponent implements OnInit {
                         sumaTotal += seguimiento.numeroHorasRetrasoPersonal;
                     }
                 }
+                if ( seguimientoDiario.length === 0 ) {
+                    seguimientoDiario.push(
+                        {
+                            fechaSeguimiento: null,
+                            cantidadPersonalProgramado: '---',
+                            cantidadPersonalTrabajando: '---',
+                            numeroHorasRetrasoPersonal: '---'
+                        }
+                    );
+                }
             } else {
                 seguimientoDiario.push(
                     {
                         fechaSeguimiento: null,
                         cantidadPersonalProgramado: '---',
                         cantidadPersonalTrabajando: '---',
-                        numeroHorasRetrasoPersonal: '---',
-                        seguimientoDiarioObservaciones: ''
+                        numeroHorasRetrasoPersonal: '---'
                     }
                 );
             }

@@ -42,6 +42,17 @@ export class TablaDisponibilidadMaterialComponent implements OnInit {
                         seguimientoDiario.push( seguimiento );
                     }
                 }
+                if ( seguimientoDiario.length === 0 ) {
+                    seguimientoDiario.push(
+                        {
+                            fechaSeguimiento: null,
+                            causaBajaDisponibilidadMaterialNombre: '---',
+                            causaBajaDisponibilidadEquipoNombre: '---',
+                            causaBajaDisponibilidadProductividadNombre: '---',
+                            totalHorasRetraso: '---'
+                        }
+                    );
+                }
             } else {
                 seguimientoDiario.push(
                     {
@@ -49,8 +60,7 @@ export class TablaDisponibilidadMaterialComponent implements OnInit {
                         causaBajaDisponibilidadMaterialNombre: '---',
                         causaBajaDisponibilidadEquipoNombre: '---',
                         causaBajaDisponibilidadProductividadNombre: '---',
-                        totalHorasRetraso: '---',
-                        seguimientoDiarioObservaciones: ''
+                        totalHorasRetraso: '---'
                     }
                 );
             }
