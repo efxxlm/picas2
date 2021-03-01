@@ -412,89 +412,89 @@ namespace asivamosffie.services
                 {
                     ListDefensaJudicial = await _context.DefensaJudicial.Where(r => (bool)r.Eliminado == false
                     && r.DefensaJudicialId == pDefensaJudicialId).
-                    Include(x=>x.DefensaJudicialContratacionProyecto).
+                    //Include(x=>x.DefensaJudicialContratacionProyecto).
                     Include(x => x.DemandadoConvocado).
                     Include(x => x.DemandanteConvocante).
                     Include(x => x.FichaEstudio).
                     Distinct().
                     ToListAsync();
-                    
-                    /*List<VDefensaJudicialContratacionProyecto> ListVD = _context.VDefensaJudicialContratacionProyecto.ToList();
-                    List<DefensaJudicialContratacionProyecto> defensaJudicialContratacionProyectos = _context.DefensaJudicialContratacionProyecto.Distinct().ToList();
-                    
-                    foreach (var item in ListDefensaJudicial)
-                    {
-                        item.ListdefensaJudicialContratacionProyectosId = ListVD.Where(r => r.DefensaJudicialId == pDefensaJudicialId).Select(r => r.DefensaJudicialId).ToList();
 
-                        if (item.ListdefensaJudicialContratacionProyectosId.Count() > 0)
-                        { 
-                            item.ListdefensaJudicialContratacionProyectosId.ForEach(djcp =>
-                            {
-                                item.DefensaJudicialContratacionProyecto.Add(
-                                    defensaJudicialContratacionProyectos.Where(r => r.DefensaJudicialContratacionProyectoId == djcp).FirstOrDefault());
-                            }); 
+                    List<VDefensaJudicialContratacionProyecto> ListVD =
+                        _context.VDefensaJudicialContratacionProyecto
+                        .Where(r => r.DefensaJudicialId == ListDefensaJudicial.FirstOrDefault().DefensaJudicialId)
+                        .Distinct()
+                        .ToList();
+
+                    ListVD.ForEach(djcp =>
+                    {
+                        ListDefensaJudicial.FirstOrDefault().DefensaJudicialContratacionProyecto
+                               .Add(
+                                       _context.DefensaJudicialContratacionProyecto
+                                       .Where(r => r.ContratacionProyectoId == djcp.ContratacionProyectoId)
+                                       .Distinct()
+                                       .FirstOrDefault()
+                                );
+                    });
+
+                    //TipoAccionCodigo JurisdiccionCodigo TipoProcesoCodigo
+                    Dominio TipoAccionCodigo;
+
+                    Dominio TipoDocumentoCodigoContratista;
+
+                    string TipoAccionTmp = string.Empty;
+
+                    foreach (var defensaJudicial in ListDefensaJudicial)
+                    {
+                        TipoAccionCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(defensaJudicial.TipoAccionCodigo, (int)EnumeratorTipoDominio.Tipo_accion_judicial);
+
+                        if (TipoAccionCodigo != null)
+                            defensaJudicial.TipoAccionCodigoNombre = TipoAccionCodigo.Nombre;
+
+                        var jurisdicion = await _commonService.GetDominioByNombreDominioAndTipoDominio(defensaJudicial.JurisdiccionCodigo, (int)EnumeratorTipoDominio.Jurisdiccion);
+                        defensaJudicial.JurisdiccionCodigoNombre = jurisdicion == null ? "" : jurisdicion.Nombre;
+
+                        var proceso = await _commonService.GetDominioByNombreDominioAndTipoDominio(defensaJudicial.TipoProcesoCodigo, 105);
+
+                        defensaJudicial.TipoProcesoCodigoNombre = proceso == null ? "" : proceso.Nombre;
+                        if (defensaJudicial.DefensaJudicialContratacionProyecto.Count() > 0)
+                        {
+                            var contraacionpro = defensaJudicial.DefensaJudicialContratacionProyecto.FirstOrDefault();
+                            var contratista = _context.ContratacionProyecto.Where(x => x.ContratacionProyectoId == contraacionpro.ContratacionProyectoId).Select(x => x.Contratacion.Contratista.Nombre).FirstOrDefault();
+                            defensaJudicial.EntidadContratista = contratista == null ? "" : contratista;
                         }
-                    }*/
-                }
 
-                //TipoAccionCodigo JurisdiccionCodigo TipoProcesoCodigo
-                Dominio TipoAccionCodigo;
 
-                Dominio TipoDocumentoCodigoContratista;
+                        defensaJudicial.ContratosAsociados = "PENDIENTE";
+                        defensaJudicial.FuenteProceso = "PENDIENTE";
+                        if (defensaJudicial.LocalizacionIdMunicipio != null)
+                        {
+                            var munici = _context.Localizacion.Find(defensaJudicial.LocalizacionIdMunicipio.ToString());
+                            var depto = _context.Localizacion.Find(munici.IdPadre.ToString());
+                            defensaJudicial.Departamento = depto.Descripcion;
+                            defensaJudicial.Municipio = munici.Descripcion;
+                        }
 
-                string TipoAccionTmp = string.Empty;
+                        //contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
 
-                foreach (var defensaJudicial in ListDefensaJudicial)
-                {
-                    TipoAccionCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(defensaJudicial.TipoAccionCodigo, (int)EnumeratorTipoDominio.Tipo_accion_judicial);
+                        string TipoDocumentoContratistaTmp = string.Empty;
+                        string NumeroIdentificacionContratistaTmp = string.Empty;
 
-                    if (TipoAccionCodigo != null)
-                        defensaJudicial.TipoAccionCodigoNombre = TipoAccionCodigo.Nombre;
+                        string TipoIntervencionCodigoTmp = string.Empty;
+                        string TipoIntervencionNombreTmp = string.Empty;
 
-                    var jurisdicion = await _commonService.GetDominioByNombreDominioAndTipoDominio(defensaJudicial.JurisdiccionCodigo, (int)EnumeratorTipoDominio.Jurisdiccion);
-                    defensaJudicial.JurisdiccionCodigoNombre = jurisdicion == null ? "" : jurisdicion.Nombre;
+                        defensaJudicial.DepartamentoID = defensaJudicial.LocalizacionIdMunicipio == null ? "" : _context.Localizacion.Where(z => z.LocalizacionId == defensaJudicial.LocalizacionIdMunicipio.ToString()).FirstOrDefault().IdPadre;
+                        foreach (var contr in defensaJudicial.DefensaJudicialContratacionProyecto)
+                        {
+                            var contratacionProyecto = _context.ContratacionProyecto.Where(x => x.ContratacionProyectoId == contr.ContratacionProyectoId).
+                                 Include(y => y.Proyecto).
+                                    ThenInclude(y => y.InstitucionEducativa).
+                                Include(y => y.Proyecto).
+                                    ThenInclude(y => y.Sede).FirstOrDefault();
+                            contr.numeroContrato = _context.Contrato.Where(x => x.ContratacionId == contratacionProyecto.ContratacionId).FirstOrDefault().NumeroContrato;
+                        }
+                        return defensaJudicial;
 
-                    var proceso = await _commonService.GetDominioByNombreDominioAndTipoDominio(defensaJudicial.TipoProcesoCodigo, 105);
-
-                    defensaJudicial.TipoProcesoCodigoNombre = proceso == null ? "" : proceso.Nombre;
-                    if (defensaJudicial.DefensaJudicialContratacionProyecto.Count() > 0)
-                    {
-                        var contraacionpro = defensaJudicial.DefensaJudicialContratacionProyecto.FirstOrDefault();
-                        var contratista = _context.ContratacionProyecto.Where(x => x.ContratacionProyectoId == contraacionpro.ContratacionProyectoId).Select(x => x.Contratacion.Contratista.Nombre).FirstOrDefault();
-                        defensaJudicial.EntidadContratista = contratista == null ? "" : contratista;
                     }
-
-
-                    defensaJudicial.ContratosAsociados = "PENDIENTE";
-                    defensaJudicial.FuenteProceso = "PENDIENTE";
-                    if (defensaJudicial.LocalizacionIdMunicipio != null)
-                    {
-                        var munici = _context.Localizacion.Find(defensaJudicial.LocalizacionIdMunicipio.ToString());
-                        var depto = _context.Localizacion.Find(munici.IdPadre.ToString());
-                        defensaJudicial.Departamento = depto.Descripcion;
-                        defensaJudicial.Municipio = munici.Descripcion;
-                    }
-
-                    //contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
-
-                    string TipoDocumentoContratistaTmp = string.Empty;
-                    string NumeroIdentificacionContratistaTmp = string.Empty;
-
-                    string TipoIntervencionCodigoTmp = string.Empty;
-                    string TipoIntervencionNombreTmp = string.Empty;
-
-                    defensaJudicial.DepartamentoID = defensaJudicial.LocalizacionIdMunicipio == null ? "" : _context.Localizacion.Where(z => z.LocalizacionId == defensaJudicial.LocalizacionIdMunicipio.ToString()).FirstOrDefault().IdPadre;
-                    foreach (var contr in defensaJudicial.DefensaJudicialContratacionProyecto)
-                    {
-                        var contratacionProyecto = _context.ContratacionProyecto.Where(x => x.ContratacionProyectoId == contr.ContratacionProyectoId).
-                             Include(y => y.Proyecto).
-                                ThenInclude(y => y.InstitucionEducativa).
-                            Include(y => y.Proyecto).
-                                ThenInclude(y => y.Sede).FirstOrDefault();
-                        contr.numeroContrato = _context.Contrato.Where(x => x.ContratacionId == contratacionProyecto.ContratacionId).FirstOrDefault().NumeroContrato;
-                    }
-                    return defensaJudicial;
-
                 }
             }
             catch (Exception e)
