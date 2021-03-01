@@ -253,8 +253,7 @@ namespace asivamosffie.services
             catch (Exception ex)
             {
                 return new SeguimientoSemanal();
-            }
-
+            } 
         }
 
         private async Task<SeguimientoSemanal> GetModInfoSeguimientoSemanal(SeguimientoSemanal seguimientoSemanal)
@@ -1966,8 +1965,7 @@ namespace asivamosffie.services
                 SeguimientoSemanalRegistrarComiteObraOld.UrlSoporteComite = pSeguimientoSemanalRegistrarComiteObra.UrlSoporteComite;
             }
         }
-
-
+         
         #endregion
 
         #region Validate Complete Records
