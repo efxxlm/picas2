@@ -21,6 +21,15 @@ export interface Report {
                 fechaAprobacion: Date,
                 tieneObservacionesInterventoria: boolean,
                 fechaEnvioApoyoSupervisor: Date,
+                observacionVigenteSupervisor: {
+                    esSupervision: boolean,
+                    fechaCreacion: Date,
+                    informeFinalInterventoriaId: number,
+                    informeFinalInterventoriaObservacionesId: number,
+                    observaciones: string,
+                    usuarioCreacion: string
+                },
+                historialInformeFinalInterventoriaObservaciones : InformeFinalObservaciones[],
             }
         ],
         departamentoObj: {

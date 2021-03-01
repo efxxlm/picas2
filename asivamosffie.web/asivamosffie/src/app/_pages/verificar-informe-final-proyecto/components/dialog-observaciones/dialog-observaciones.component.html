@@ -72,14 +72,14 @@
   </div>
 </form>
 
-<mat-card class="shipping-card var-main-gris" *ngIf="data.verDetalle && !(data.informe.estadoValidacion === '4' || data.informe.estadoValidacion === '6')">
+<mat-card class="shipping-card var-main-gris" *ngIf="data.verDetalle && !(data.informe.estadoValidacion === '4' || data.informe.estadoValidacion === '6' || data.informe.estadoValidacion === '9')">
     <mat-card-content>
       <p [innerHTML]="observaciones.get('observaciones').value">
       </p>
     </mat-card-content>
 </mat-card>
 
-<mat-card class="shipping-card var-main-gris" *ngIf="data.verDetalle && (data.informe.estadoValidacion === '4' || data.informe.estadoValidacion === '6')" [formGroup]="observaciones">
+<mat-card class="shipping-card var-main-gris" *ngIf="data.verDetalle && (data.informe.estadoValidacion === '4' || data.informe.estadoValidacion === '6' || data.informe.estadoValidacion === '9')" [formGroup]="observaciones">
   <mat-card-header class="header-card header-card--margin">
     <mat-card-title class="mat-card-title header-card--text">
       Observación del supervisor

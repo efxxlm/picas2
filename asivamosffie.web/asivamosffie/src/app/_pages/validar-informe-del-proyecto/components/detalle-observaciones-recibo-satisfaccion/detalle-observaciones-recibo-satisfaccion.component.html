@@ -14,10 +14,10 @@
       <strong>
         ¿Desde la supervisión tiene observaciones al recibo a satisfacción?:
       </strong>
-      <span *ngIf="report.proyecto.informeFinal[0].tieneObservacionesSupervision"> Si</span>
-      <span *ngIf="!report.proyecto.informeFinal[0].tieneObservacionesSupervision"> No</span>
+      <span *ngIf="report.proyecto.informeFinal[0].tieneObservacionesSupervisor"> Si</span>
+      <span *ngIf="!report.proyecto.informeFinal[0].tieneObservacionesSupervisor"> No</span>
     </p>
-    <p *ngIf="report.proyecto.informeFinal[0].tieneObservacionesSupervision" [innerHTML]="report.proyecto.informeFinal[0].informeFinalObservacionesSupervisor[0].observaciones">
+    <p *ngIf="report.proyecto.informeFinal[0].tieneObservacionesSupervisor" [innerHTML]="report.proyecto.informeFinal[0].informeFinalObservacionesSupervisor[0].observaciones">
     </p>
   </mat-card-content>
 </mat-card>

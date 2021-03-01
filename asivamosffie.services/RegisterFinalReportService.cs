@@ -44,8 +44,8 @@ namespace asivamosffie.services
             List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
             Proyecto proyecto = await _context.Proyecto.Where(r => r.ProyectoId == pProyectoId)
                                                         .Include(r => r.InformeFinal)
-                                                              .ThenInclude(r => r.InformeFinalInterventoria)
-                                                                    .ThenInclude(r => r.InformeFinalInterventoriaObservaciones)
+                                                              //.ThenInclude(r => r.InformeFinalInterventoria)
+                                                              //      .ThenInclude(r => r.InformeFinalInterventoriaObservaciones)
                                                          .Include(r => r.InstitucionEducativa)
                                                          .FirstOrDefaultAsync();
 
@@ -168,7 +168,7 @@ namespace asivamosffie.services
                 else if (informeFinal.EstadoInforme == ConstantCodigoEstadoInformeFinal.Con_Observaciones_del_supervisor)
                 {
                     int count_modificado = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == pInformeFinalId && r.TieneModificacionInterventor == true && r.CalificacionCodigo != ConstantCodigoCalificacionInformeFinal.No_Cumple).Count();
-                    int count_con_supervision = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == pInformeFinalId && r.TieneObservacionSupervisor == true && r.CalificacionCodigo != ConstantCodigoCalificacionInformeFinal.No_Cumple).Count();
+                    int count_con_supervision = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == pInformeFinalId && r.TieneObservacionSupervisor == true && r.CalificacionCodigo != ConstantCodigoCalificacionInformeFinal.No_Cumple && r.AprobacionCodigo == ConstantCodigoCalificacionInformeFinal.No_Cumple).Count();
 
                     if (count_modificado != count_con_supervision)
                     {
@@ -177,7 +177,7 @@ namespace asivamosffie.services
                     else
                     {
                         //Vuelve a empezar el flujo
-                        informeFinal.EstadoInforme = ConstantCodigoEstadoInformeFinal.Con_informe_enviado_para_validación;
+                        informeFinal.EstadoInforme = ConstantCodigoEstadoInformeFinal.Modificado_interventor_completo;
                         informeFinal.RegistroCompleto = true;
                         return false;
                     }
@@ -328,7 +328,8 @@ namespace asivamosffie.services
                         estadoInforme = informeFinal.EstadoInforme,
                         registroCompleto = (bool)informeFinal.RegistroCompleto,
                         semaforo = semaforo,
-                        aprobacionCodigo = item.AprobacionCodigo
+                        aprobacionCodigo = item.AprobacionCodigo,
+                        tieneModificacionInterventor = item.TieneModificacionInterventor
                 });
                 }
             }
@@ -546,7 +547,7 @@ namespace asivamosffie.services
                                                            {
                                                                FechaModificacion = DateTime.Now,
                                                                UsuarioModificacion = pInformeFinalAnexoId.UsuarioCreacion,
-                                                               Archivado = true
+                                                               //Archivado = true
                                                            });
                         //await VerificarInformeFinalEstadoCompleto(informeFinal.InformeFinalId);
                     }
@@ -652,6 +653,7 @@ namespace asivamosffie.services
                     if (informeFinal.EstadoValidacion == ConstantCodigoEstadoValidacionInformeFinal.Con_observaciones_del_supervisor)
                     {
                         informeFinal.EstadoValidacion = ConstantCodigoEstadoValidacionInformeFinal.Enviado_correcciones_apoyo_supervisor;
+                        informeFinal.RegistroCompletoValidacion = false;
                     }
                     //Enviar Correo apoyo supervisor 5.1.1
                     await EnviarCorreoApoyoSupervisor(informeFinal, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);

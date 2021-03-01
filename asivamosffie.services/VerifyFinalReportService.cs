@@ -203,15 +203,24 @@ namespace asivamosffie.services
                                                         .ToListAsync();
 
             InformeFinal informeFinal = _context.InformeFinal.Where(r => r.InformeFinalId == pInformeFinalId).FirstOrDefault();
-
             InformeFinalInterventoria existe_no_data = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == pInformeFinalId && r.ValidacionCodigo == null).FirstOrDefault();
             if (existe_no_data != null)
             {
                 return false;
             }
+            if (informeFinal.EstadoValidacion != ConstantCodigoEstadoValidacionInformeFinal.Enviado_correcciones_apoyo_supervisor)
+            {
 
-            informeFinal.EstadoValidacion = ConstantCodigoEstadoValidacionInformeFinal.Con_informe_validado;
-            informeFinal.RegistroCompletoValidacion = true;
+                informeFinal.EstadoValidacion = ConstantCodigoEstadoValidacionInformeFinal.Con_informe_validado;
+                informeFinal.RegistroCompletoValidacion = true;
+            }
+            else
+            {
+                //Vuelve a empezar el flujo
+                informeFinal.EstadoValidacion = ConstantCodigoEstadoValidacionInformeFinal.Modificado_Apoyo;
+                informeFinal.RegistroCompletoValidacion = true;
+                return true;
+            }
             /*InformeFinalInterventoria existeObservacion = _context.InformeFinalInterventoria.Where(r=> r.InformeFinalId == informeFinal.InformeFinalId && r.TieneObservacionSupervisor == true).FirstOrDefault();
             
             if (existeObservacion != null )

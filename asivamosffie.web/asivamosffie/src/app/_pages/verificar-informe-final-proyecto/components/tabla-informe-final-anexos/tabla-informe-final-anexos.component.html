@@ -10,7 +10,7 @@
       <mat-expansion-panel-header class="expansion-style--header">
           <mat-panel-title class="expansion-style--title 
           {{estadoValidacion == '0' || estadoValidacion == null || semaforo ? 
-            'sin-diligenciar' : estadoValidacion == '1' && registroCompletoValidacion == false ? 
+            'sin-diligenciar' : estadoValidacion == '1' && registroCompletoValidacion == false || estadoValidacion == '6' ? 
                   'en-proceso' : 'completo' }}">
                   Informe final y anexos
           </mat-panel-title>
@@ -92,11 +92,11 @@
               <ng-container matColumnDef="validacionCodigo">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Verificación</th>
                 <td mat-cell *matCellDef="let element">
-                  <section class="slect-table-contain mt-1em">
+                  <section class="slect-table-contain mt-1em" *ngIf="(element.estadoValidacion !== '6' && element.estadoValidacion !== '9') || (element.aprobacionCodigo === '2' && (element.estadoValidacion === '6' || element.estadoValidacion === '9') && element.tieneObservacionSupervisor)">
                     <mat-form-field class="select-width">
-                      <mat-label *ngIf="element.validacionCodigo != null">{{
-                        element.validacionCodigoString
-                      }}</mat-label>
+                      <mat-label>
+                      <span *ngIf="element.estadoValidacion !== '6' && element.validacionCodigo != null">{{ element.validacionCodigoString }}</span>
+                    </mat-label> 
                       <mat-select [(ngModel)]="element.validacionCodigo" (selectionChange)="changeState()" required>
                         <mat-option *ngFor="let estado of estadoArray" [value]="estado.value">
                           {{ estado.name }}
@@ -115,6 +115,7 @@
                       />
                     </span>
                   </section>
+                  <span *ngIf="(element.estadoValidacion === '6' || element.estadoValidacion === '9') && !(element.aprobacionCodigo === '2' && element.tieneObservacionSupervisor)">{{ element.validacionCodigoString }}</span>
                 </td>
               </ng-container>
 
@@ -139,7 +140,7 @@
                     </span>
                   </button>-->
                   <button
-                    *ngIf="element.validacionCodigo == '2'"
+                    *ngIf="element.estadoValidacion !== '6' && element.estadoValidacion !== '9' && element.validacionCodigo == '2'"
                     mat-button
                     color="warn"
                     mat-raised-button
@@ -159,6 +160,22 @@
                       Ver Observaciones
                     </span>-->
                   </button>
+                  <button
+                  *ngIf="(element.estadoValidacion === '6' || element.estadoValidacion === '9') && element.validacionCodigo == '2'"
+                  mat-button
+                  color="warn"
+                  mat-raised-button
+                  color="accent"
+                  class="btn-table animatedOpacity info-button min-w-11em"
+                  [class.completo]="element.tieneObservacionNoCumple || element.tieneObservacionSupervisor"
+                  [class.sin-diligenciar]="!element.tieneObservacionNoCumple"
+                  type="button"
+                  (click)="openDialogObservaciones(element,true)"
+                >
+                  <span>
+                    Observaciones
+                  </span>
+                </button>
                 </td>
               </ng-container>
 

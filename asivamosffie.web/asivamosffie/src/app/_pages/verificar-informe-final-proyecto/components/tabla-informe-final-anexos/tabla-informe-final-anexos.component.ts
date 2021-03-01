@@ -91,7 +91,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     this.paginator._intl.previousPageLabel = 'Anterior'
   }
 
-  openDialogObservaciones(informe:any) {
+  openDialogObservaciones(informe:any, verDetalle: boolean) {
     this.informeFinalObservacion = null;
     this.dataSource.data.forEach(control => {
       if ( informe !== null && informe.informeFinalInterventoriaId === control.informeFinalInterventoriaId ) {
@@ -107,6 +107,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
         informe: informe,
         llaveMen: this.llaveMen,
         informeFinalObservacion: this.informeFinalObservacion,
+        verDetalle : verDetalle
       },
       id:'dialogObservaciones'
     });

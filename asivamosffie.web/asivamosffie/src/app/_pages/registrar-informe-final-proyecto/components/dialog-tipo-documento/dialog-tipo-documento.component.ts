@@ -6,6 +6,7 @@ import { RegistrarInformeFinalProyectoService } from 'src/app/core/_services/reg
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component'
 import { InformeFinalInterventoria } from 'src/app/_interfaces/proyecto-final-anexos.model';
 import { MatTableDataSource } from '@angular/material/table';
+import { VerificarInformeFinalService } from 'src/app/core/_services/verificarInformeFinal/verificar-informe-final.service'
 
 @Component({
   selector: 'app-dialog-tipo-documento',
@@ -26,7 +27,8 @@ export class DialogTipoDocumentoComponent implements OnInit {
       Validators.required, Validators.minLength(1), Validators.maxLength(10)])
     ],
     fechaRadicado: [null, Validators.required],
-  })
+  });
+  tieneModificacionInterventor = false; 
 
   observacionesForm = this.fb.group({
     observaciones: [null, Validators.required],
@@ -70,7 +72,8 @@ export class DialogTipoDocumentoComponent implements OnInit {
 
   onSubmit() {
     this.estaEditando = true;
-    this.dialog.getDialogById('dialogTipoDocumento').close({ anexo: this.addressForm.value, id: this.data.informe.informeFinalInterventoriaId });
+    this.tieneModificacionInterventor = true; 
+    this.dialog.getDialogById('dialogTipoDocumento').close({ anexo: this.addressForm.value, id: this.data.informe.informeFinalInterventoriaId, tieneModificacionInterventor: this.tieneModificacionInterventor});
     this.openDialog('', '<b>La información ha sido guardada correctamente.</b>');
   }
 
