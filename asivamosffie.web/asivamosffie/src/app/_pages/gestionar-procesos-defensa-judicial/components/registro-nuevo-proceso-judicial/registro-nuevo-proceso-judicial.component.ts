@@ -25,7 +25,7 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
   soporte_class:number=0;
   ficha_class:number=3;
   textCabecera: string;
-  
+  estaEditando = false;
 
   constructor(private fb: FormBuilder, public dialog: MatDialog, 
     public commonServices: CommonService,
@@ -33,7 +33,7 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
     private activatedRoute: ActivatedRoute,) { }
 
     async editMode(){
-    
+      this.estaEditando = true;
     
       this.cargarRegistro().then(() => 
       { 

@@ -48,7 +48,7 @@ export class FormContratosAsociadosDjComponent implements OnInit {
   listProyectos: any[]=[];
   listProyectosSeleccion: any[]=[];
   listContrattoscompletos=[];
-
+  estaEditando = false;
   constructor ( private fb: FormBuilder, private defensaService:DefensaJudicialService,
     public dialog: MatDialog,    
     private route: ActivatedRoute,
@@ -239,6 +239,7 @@ export class FormContratosAsociadosDjComponent implements OnInit {
   };
 
   guardar () {
+    this.estaEditando = true;
     console.log( this.formContratista );
     console.log(this.listProyectos);
     let defContraProyecto:DefensaJudicialContratacionProyecto[]=[];

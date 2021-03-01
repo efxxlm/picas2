@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CommonService } from 'src/app/core/_services/common/common.service';
+import { DefensaJudicial, DefensaJudicialService } from 'src/app/core/_services/defensaJudicial/defensa-judicial.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -33,12 +36,26 @@ export class VerDetalleEditarActuacionProcesoComponent implements OnInit {
     urlSoporte: [null, Validators.required]
   });
   estadoAvanceProcesoArray = [
-    { name: 'Estado 1', value: '1' },
-    { name: 'Estado 2', value: '2' },
   ];
-  constructor(  private fb: FormBuilder, public dialog: MatDialog) { }
+  controlJudicialId: any;
+  defensaJudicial: DefensaJudicial={};
+  constructor(  private fb: FormBuilder, public dialog: MatDialog,
+    public commonServices: CommonService,
+    public judicialServices:DefensaJudicialService,
+    private activatedRoute: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
+    this.activatedRoute.params.subscribe( param => {
+      this.controlJudicialId = param['id'];
+      this.judicialServices.GetDefensaJudicialById(this.controlJudicialId).subscribe(respose=>{
+        this.defensaJudicial=respose;
+      });
+    });
+    this.commonServices.getEstadoAvanceProcesosDefensa().subscribe(
+      response=>{
+        this.estadoAvanceProcesoArray=response;
+      }
+    );
   }
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;

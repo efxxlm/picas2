@@ -1,6 +1,11 @@
 <form autocomplete="off" [formGroup]="formContratista" (ngSubmit)="guardar()">
     <div class="d-flex mt-1em col-md-6" style="margin: 0 auto;">
-        <label class="mr-label" class="label-left"><b>Número de contratos vinculados al proceso</b></label>
+        <label class="mr-label" class="label-left"
+        [ngClass]="{
+            'color-secondaryColor':
+              (formContratista.get('numeroContratos').invalid && formContratista.get('numeroContratos').touched) ||
+              (formContratista.get('numeroContratos').invalid && estaEditando)
+          }"><b>Número de contratos vinculados al proceso</b></label>
         <div class="col d-flex">
             <mat-form-field class="w-70">
                 <input matInput (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
@@ -8,6 +13,20 @@
             </mat-form-field>
             <span class="contador">{{2 - formContratista.get( 'numeroContratos' ).value.toString().length}}</span>
         </div>
+        <span class="icon-incompleto">
+            <img
+              class="icon-incompleto--img"
+              src="assets/img/icon/incompleto.svg"
+              alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
+              *ngIf="
+                (formContratista.get('numeroContratos').invalid && formContratista.get('numeroContratos').touched) ||
+                (formContratista.get('numeroContratos').invalid && estaEditando)
+              "
+            />
+          </span>
     </div>
     <mat-accordion formArrayName="perfiles" *ngIf="formContratista.get( 'numeroContratos' ).value !== null" >
         <mat-expansion-panel class="expansion-style sub-expansion" *ngFor="let perfil of perfiles.controls; index as i">
@@ -23,7 +42,11 @@
                         <div class="col-md-6">
                             <div class="row">
                                 <div class="pr-1">
-                                    <label class="label-left" for="contrato">Número de contrato</label>
+                                    <label class="label-left" for="contrato" [ngClass]="{
+                                        'color-secondaryColor':
+                                          (perfil.get('contrato').invalid && perfil.get('contrato').touched) ||
+                                          (perfil.get('contrato').invalid && estaEditando)
+                                      }">Número de contrato</label>
                                 </div>
                                 <div class="col d-flex">
                                     <mat-form-field class="full-width">
@@ -41,6 +64,11 @@
                                         <img src="assets/img/icon/lupa.svg" alt="Buscar">
                                     </button>
                                 </div>
+                                <span class="icon-incompleto">
+                                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                                      [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+                                      matTooltipClass="info-tooltip" *ngIf="myControl.controls[i].invalid && myControl.controls[i].touched" />
+                                  </span>
                             </div>
                         </div>
                     </div>

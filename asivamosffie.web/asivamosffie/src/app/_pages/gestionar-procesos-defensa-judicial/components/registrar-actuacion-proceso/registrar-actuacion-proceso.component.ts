@@ -84,7 +84,9 @@ export class RegistrarActuacionProcesoComponent implements OnInit {
       dialogRef.afterClosed().subscribe(result => {
           if(id>0)
           {
-            this.router.navigate(["/gestionarProcesoDefensaJudicial/registrarActuacionProceso/"+id], {});
+            this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+              () => this.router.navigate(["/gestionarProcesoDefensaJudicial/verDetalleEditarActuacionProceso/"+id], {})
+            );
           }                  
       });
     }
