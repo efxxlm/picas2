@@ -37,13 +37,13 @@ export class FormConvocadosDjComponent implements OnInit {
 
   cargarRegistro() {
     this.formContratista.get("numeroContratos").setValue(this.defensaJudicial.numeroDemandados);
-      let i=0;      
-      this.defensaJudicial.demandanteConvocante.forEach(element => {
-        console.log(this.perfiles.controls[i].get("nomConvocado"));
+      let i=0; 
+      this.defensaJudicial.demandadoConvocado.forEach(element => {
         this.perfiles.controls[i].get("nomConvocado").setValue(element.nombre);
         this.perfiles.controls[i].get("tipoIdentificacion").setValue(element.tipoIdentificacionCodigo);
         this.perfiles.controls[i].get("numIdentificacion").setValue(element.numeroIdentificacion);
-        
+        this.perfiles.controls[i].get("direccion").setValue(element.numeroIdentificacion);
+        this.perfiles.controls[i].get("correo").setValue(element.email);
         i++;
       });      
   }
