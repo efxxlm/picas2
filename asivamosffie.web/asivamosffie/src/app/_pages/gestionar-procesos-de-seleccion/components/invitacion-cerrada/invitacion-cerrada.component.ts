@@ -233,14 +233,11 @@ export class InvitacionCerradaComponent implements OnInit {
 
   estaIncompletoEvaluacion(pProceso:any):number{
     let retorno=0;    
+    console.log(pProceso.estadoProcesoSeleccionCodigo, EstadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario)
     if(
-        pProceso.estadoProcesoSeleccionCodigo != EstadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario &&
-        pProceso.estadoProcesoSeleccionCodigo != EstadosProcesoSeleccion.AprobadaSelecciónPorComiteFiduciario
+        pProceso.estadoProcesoSeleccionCodigo == EstadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario ||
+        pProceso.estadoProcesoSeleccionCodigo == EstadosProcesoSeleccion.AprobadaSelecciónPorComiteFiduciario
       )
-    {
-      retorno=3;
-    }
-    else
     {
       if(pProceso.evaluacionDescripcion)
       {
@@ -256,6 +253,10 @@ export class InvitacionCerradaComponent implements OnInit {
         }
       }
       
+    }
+    else
+    {
+      retorno=3;
     }
     return retorno;
   }

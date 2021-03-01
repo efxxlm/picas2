@@ -175,10 +175,14 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
 
     this.listaCompromisos.forEach( compromiso => {
       if ( compromiso.sesionSolicitudCompromisoId !== undefined ) {
+        compromiso.esCumplido = compromiso.compromisoSeleccionado == 'Cumplido' ? true : false; 
         comite.sesionComiteSolicitudComiteTecnico[0].sesionSolicitudCompromiso.push( compromiso );
+        
       };
       if ( compromiso.temaCompromisoId !== undefined ) {
+        compromiso.esCumplido = compromiso.compromisoSeleccionado == 'Cumplido' ? true : false;
         comite.sesionComiteTema[0].temaCompromiso.push( compromiso );
+        console.log( compromiso )
       };
     } );
 

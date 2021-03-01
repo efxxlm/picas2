@@ -1508,39 +1508,63 @@ namespace asivamosffie.services
             if (
                     pConstruccion.PlanLicenciaVigente == null ||
                     pConstruccion.PlanLicenciaVigente == false ||
+                    pConstruccion.LicenciaFechaRadicado == null ||
+                    pConstruccion.LicenciaFechaAprobacion == null ||
 
                     pConstruccion.PlanCambioConstructorLicencia == null ||
                     pConstruccion.PlanCambioConstructorLicencia == false ||
+                    pConstruccion.CambioFechaAprobacion == null ||
+                    pConstruccion.CambioFechaRadicado == null ||
 
                     pConstruccion.PlanActaApropiacion == null ||
                     pConstruccion.PlanActaApropiacion == false ||
+                    pConstruccion.ActaApropiacionFechaRadicado == null ||
+                    pConstruccion.ActaApropiacionFechaAprobacion == null ||
 
                     pConstruccion.PlanResiduosDemolicion == null ||
                     pConstruccion.PlanResiduosDemolicion == false ||
+                    pConstruccion.ResiduosDemolicionFechaRadicado == null ||
+                    pConstruccion.ResiduosDemolicionFechaAprobacion == null ||
 
                     pConstruccion.PlanManejoTransito == null ||
                     pConstruccion.PlanManejoTransito == false ||
+                    pConstruccion.ManejoTransitoFechaRadicado == null ||
+                    pConstruccion.ManejoTransitoFechaAprobacion == null ||
 
                     pConstruccion.PlanManejoAmbiental == null ||
                     pConstruccion.PlanManejoAmbiental == false ||
+                    pConstruccion.ManejoAmbientalFechaRadicado == null ||
+                    pConstruccion.ManejoAmbientalFechaAprobacion == null ||
 
                     pConstruccion.PlanAseguramientoCalidad == null ||
                     pConstruccion.PlanAseguramientoCalidad == false ||
+                    pConstruccion.AseguramientoCalidadFechaRadicado == null ||
+                    pConstruccion.AseguramientoCalidadFechaAprobacion == null ||
 
                     pConstruccion.PlanProgramaSeguridad == null ||
                     pConstruccion.PlanProgramaSeguridad == false ||
+                    pConstruccion.ProgramaSeguridadFechaRadicado == null ||
+                    pConstruccion.ProgramaSeguridadFechaAprobacion == null ||
 
                     pConstruccion.PlanProgramaSalud == null ||
                     pConstruccion.PlanProgramaSalud == false ||
+                    pConstruccion.ProgramaSaludFechaRadicado == null ||
+                    pConstruccion.ProgramaSaludFechaAprobacion == null ||
 
                     pConstruccion.PlanInventarioArboreo == null ||
                     pConstruccion.PlanInventarioArboreo == 1 ||
+                    pConstruccion.InventarioArboreoFechaRadicado == null ||
+                    pConstruccion.InventarioArboreoFechaAprobacion == null ||
 
                     pConstruccion.PlanAprovechamientoForestal == null ||
                     pConstruccion.PlanAprovechamientoForestal == 1 ||
+                    pConstruccion.AprovechamientoForestalApropiacionFechaRadicado == null ||
+                    pConstruccion.AprovechamientoForestalFechaAprobacion == null ||
 
                     pConstruccion.PlanManejoAguasLluvias == null ||
                     pConstruccion.PlanManejoAguasLluvias == 1 ||
+                    pConstruccion.ManejoAguasLluviasFechaRadicado == null ||
+                    pConstruccion.ManejoAguasLluviasFechaAprobacion == null ||
 
                     string.IsNullOrEmpty(pConstruccion.PlanRutaSoporte)
             )
@@ -3126,8 +3150,12 @@ namespace asivamosffie.services
 
                                 #endregion Capitulo
 
+                                string valorTemp = worksheet.Cells[i, k].Text;
+                                
+                                valorTemp = valorTemp.Replace("$", "").Replace(".", "").Replace(" ", "");
+
                                 //Valor
-                                temp.Valor = string.IsNullOrEmpty(worksheet.Cells[i, k].Text) ? 0 : decimal.Parse(worksheet.Cells[i, k].Text);
+                                temp.Valor = string.IsNullOrEmpty(worksheet.Cells[i, k].Text) ? 0 : decimal.Parse(valorTemp);
                                 sumaTotal += temp.Valor.Value;
 
                                 //Guarda Cambios en una tabla temporal
