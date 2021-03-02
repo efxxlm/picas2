@@ -167,7 +167,7 @@ namespace asivamosffie.services
                 }
                 else if (informeFinal.EstadoInforme == ConstantCodigoEstadoInformeFinal.Con_Observaciones_del_supervisor)
                 {
-                    int count_modificado = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == pInformeFinalId && r.TieneModificacionInterventor == true && r.CalificacionCodigo != ConstantCodigoCalificacionInformeFinal.No_Cumple && r.TieneObservacionSupervisor == true).Count();
+                    int count_modificado = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == pInformeFinalId && r.TieneModificacionInterventor == true && r.CalificacionCodigo != ConstantCodigoCalificacionInformeFinal.No_Cumple && r.TieneObservacionSupervisor == true && r.AprobacionCodigo == ConstantCodigoCalificacionInformeFinal.No_Cumple).Count();
                     int count_con_supervision = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == pInformeFinalId && r.TieneObservacionSupervisor == true && r.CalificacionCodigo != ConstantCodigoCalificacionInformeFinal.No_Cumple && r.AprobacionCodigo == ConstantCodigoCalificacionInformeFinal.No_Cumple).Count();
 
                     if (count_modificado != count_con_supervision)
