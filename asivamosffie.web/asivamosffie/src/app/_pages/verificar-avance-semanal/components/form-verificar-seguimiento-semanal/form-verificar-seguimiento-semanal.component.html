@@ -76,7 +76,7 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-gestion-de-obra [seguimientoSemanal]="seguimientoSemanal" [tipoObservaciones]="tipoObservaciones" (estadoSemaforo)="valuePendingSemaforo( 'gestionObra', $event, 5 )"></app-gestion-de-obra>
+                <app-gestion-de-obra [esVerDetalle]="false" [seguimientoSemanal]="seguimientoSemanal" [tipoObservaciones]="tipoObservaciones" (estadoSemaforo)="valuePendingSemaforo( 'gestionObra', $event, 5 )"></app-gestion-de-obra>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
