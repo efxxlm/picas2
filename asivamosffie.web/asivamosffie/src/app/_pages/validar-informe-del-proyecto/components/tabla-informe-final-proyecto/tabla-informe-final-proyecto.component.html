@@ -99,8 +99,8 @@
           class="btn-table"
           [routerLink]="['validar', element.proyectoId]"
         >
-          <span *ngIf="element.estadoAprobacion == null || element.estadoAprobacion === '0'">Validar informe</span> <!--Null o 0-->
-          <span *ngIf="element.estadoAprobacion != null && element.estadoAprobacion !== '0' && element.estadoAprobacion !== '6' && element.estadoAprobacion !== '2'">Ver detalle/Editar</span><!-- !== 6/2 -->
+          <span *ngIf="element.estadoAprobacion == null || element.estadoAprobacion === '0' || element.estadoAprobacion === '7'">Validar informe</span> <!--Null o 0-->
+          <span *ngIf="element.estadoAprobacion != null && element.estadoAprobacion !== '0' && element.estadoAprobacion !== '7' && element.estadoAprobacion !== '6' && element.estadoAprobacion !== '2'">Ver detalle/Editar</span><!-- !== 6/2 -->
         </a>
         <a
         *ngIf="element.estadoAprobacion === '6' || element.estadoAprobacion === '2'"
