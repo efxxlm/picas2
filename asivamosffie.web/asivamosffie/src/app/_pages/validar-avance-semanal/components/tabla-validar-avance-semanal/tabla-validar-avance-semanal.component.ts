@@ -20,6 +20,7 @@ export class TablaValidarAvanceSemanalComponent implements OnInit {
     @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
     @ViewChild( MatSort, { static: true } ) sort: MatSort;
     displayedColumns: string[]  = [
+        'semanaReporte',
         'fechaReporte',
         'llaveMen',
         'numeroContrato',
