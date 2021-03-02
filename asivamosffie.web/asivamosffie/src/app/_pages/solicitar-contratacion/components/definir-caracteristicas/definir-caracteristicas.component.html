@@ -160,7 +160,8 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput type="number" min="1" max="100" formControlName="porcentajeAvanceObra" required />
+                  <input matInput type="number" min="1" max="100" maxLength="3" formControlName="porcentajeAvanceObra" required
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />
                 </mat-form-field>
                 <span
                   class="contador"

@@ -89,6 +89,7 @@
                     maxlength="3"
                     (keypress)="validateNumberKeypress($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     formControlName="numAportes"
                   />
                 </mat-form-field>
@@ -361,6 +362,7 @@
                             (keypress)="validateNumberKeypress($event)"
                             formControlName="cauntosDocumentos"
                             onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                            oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                           />
                           <input formControlName="cofinanciacionId" type="hidden" />
                           <input formControlName="cofinanciacionAportanteId" type="hidden" />
@@ -622,6 +624,7 @@
                             (keypress)="validateNumberKeypress($event)"
                             [(ngModel)]="documento.numeroActa"
                             onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                            oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                           />
                         </mat-form-field>
                         <span
@@ -724,6 +727,7 @@
                             (keypress)="validateNumberKeypress($event)"
                             [(ngModel)]="documento.numeroAcuerdo"
                             onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                            oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                           />
                         </mat-form-field>
                         <span

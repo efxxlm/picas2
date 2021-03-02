@@ -123,6 +123,7 @@
                   formControlName="numeroIdentificacion"
                   (keypress)="validateNumberKeypress($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   required
                 />
               </mat-form-field>
@@ -302,6 +303,7 @@
                   required
                   (keypress)="validateNumberKeypress($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 />
               </mat-form-field>
               <span
@@ -481,6 +483,7 @@
                   formControlName="numeroIdentificacion"
                   (keypress)="validateNumberKeypress($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   required
                 />
               </mat-form-field>
@@ -599,6 +602,7 @@
                   formControlName="cedulaRepresentanteLegal"
                   (keypress)="validateNumberKeypress($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   required
                 />
               </mat-form-field>
@@ -789,6 +793,7 @@
                   required
                   (keypress)="validateNumberKeypress($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 />
               </mat-form-field>
               <span
@@ -918,6 +923,7 @@
                   maxlength="2"
                   (keypress)="validateNumberKeypress($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   required
                 />
                 <input type="hidden" formControlName="procesoSeleccionProponenteId" />
@@ -1079,6 +1085,7 @@
                           maxlength="3"
                           (keypress)="validateNumberKeypress($event)"
                           onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                          oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                           onkeyup="if(this.value>100) this.value = 100;"
                           required
                         />
@@ -1227,6 +1234,7 @@
                     formControlName="cedulaRepresentanteLegal"
                     (keypress)="validateNumberKeypress($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     required
                   />
                 </mat-form-field>
@@ -1413,6 +1421,7 @@
                     required
                     (keypress)="validateNumberKeypress($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   />
                 </mat-form-field>
                 <span

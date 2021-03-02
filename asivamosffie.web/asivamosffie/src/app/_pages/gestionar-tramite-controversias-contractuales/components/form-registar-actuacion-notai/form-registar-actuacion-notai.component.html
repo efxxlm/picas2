@@ -238,6 +238,7 @@
                             <mat-form-field class="full-width">
                                 <input matInput (keypress)="validateNumberKeypress($event)"
                                     onKeyPress="if(this.value.length>=this.maxLength) return false;" type="number"
+                                    oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                     maxlength="7" formControlName="diasVencimientoTerminos" required
                                     #diasVencimientoTerminos>
                             </mat-form-field>
