@@ -22,6 +22,8 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
     @Input() seguimientoSemanalReporteActividadId: any;
     reporteActividadId = 0;
     reporteActividadSiguienteId = 0;
+    contadorObservacionApoyo = 0;
+    contadorObservacionSiguienteApoyo = 0;
     observacionApoyoActividad: any[] = [];
     observacionApoyoActividadSiguiente: any[] = [];
     tablaHistorial = new MatTableDataSource();
@@ -135,6 +137,11 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
     }
 
     guardar() {
+        if ( this.reporteActividad.tieneObservacionApoyoActividad === true && this.formActividadesRealizadas.get( 'tieneObservaciones' ).value === false && this.contadorObservacionApoyo === 0 ) {
+            this.contadorObservacionApoyo++;
+            this.openDialog( '', '<b>Le recomendamos verificar su respuesta;<br>Tenga en cuenta que el apoyo a la supervisión si tuvo observaciones.</b>' );
+            return;
+        }
         if ( this.formActividadesRealizadas.get( 'tieneObservaciones' ).value === false && this.formActividadesRealizadas.get( 'observaciones' ).value !== null ) {
             this.formActividadesRealizadas.get( 'observaciones' ).setValue( '' );
         }
@@ -171,6 +178,11 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
     }
 
     guardarSemanaSiguiente() {
+        if ( this.reporteActividad.tieneObservacionApoyoActividadSiguiente === true && this.formActividadesRealizadasSiguienteSemana.get( 'tieneObservaciones' ).value === false && this.contadorObservacionSiguienteApoyo === 0 ) {
+            this.contadorObservacionSiguienteApoyo++;
+            this.openDialog( '', '<b>Le recomendamos verificar su respuesta;<br>Tenga en cuenta que el apoyo a la supervisión si tuvo observaciones.</b>' );
+            return;
+        }
         if ( this.formActividadesRealizadasSiguienteSemana.get( 'tieneObservaciones' ).value === false && this.formActividadesRealizadasSiguienteSemana.get( 'observaciones' ).value !== null ) {
             this.formActividadesRealizadasSiguienteSemana.get( 'observaciones' ).setValue( '' );
         }
