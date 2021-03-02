@@ -1,0 +1,48 @@
+<div class="table-responsive mt-1em mb-2em text-center tabla-gris">
+  <table mat-table [dataSource]="dataSource" matSort>
+    <!-- aportante Column -->
+    <ng-container matColumnDef="aportante">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Aportante
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <b>{{ element.aportante }}</b>
+      </td>
+    </ng-container>
+
+    <!-- valorAportante Column -->
+    <ng-container matColumnDef="valorAportante">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Valor aportante
+      </th>
+      <td mat-cell *matCellDef="let element">{{ element.valorAportante }}</td>
+    </ng-container>
+
+    <!-- fuente Column -->
+    <ng-container matColumnDef="fuente">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Valor total aportantes
+      </th>
+      <td mat-cell *matCellDef="let element">{{ element.fuente }}</td>
+    </ng-container>
+
+    <!-- uso Column -->
+    <ng-container matColumnDef="uso">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Valor total aportantes
+      </th>
+      <td mat-cell *matCellDef="let element">{{ element.uso }}</td>
+    </ng-container>
+
+    <!-- valorUso Column -->
+    <ng-container matColumnDef="valorUso">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Valor total aportantes
+      </th>
+      <td mat-cell *matCellDef="let element">{{ element.valorUso }}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</div>

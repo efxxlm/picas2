@@ -6,12 +6,12 @@ import { MatTableDataSource } from '@angular/material/table';
 const ELEMENT_DATA = [
   {
     id: '1',
-    fechaActualizacion: '09/08/2021',
-    numeroSolicitud: 'LJ776554',
-    numeroContrato: 'Remodelación',
-    valor: 'I.E. María Villa Campo',
-    proyectosAsociados: 'Única Sede',
-    estadoValidacion: 'Sin entrega a ETC',
+    fechaActualizacion: '10/11/2020',
+    numeroSolicitud: '----',
+    numeroContrato: 'N801801',
+    valor: '$ 105.000.000',
+    proyectosAsociados: '1',
+    estadoValidacion: 'Sin validación',
   }
 ];
 
