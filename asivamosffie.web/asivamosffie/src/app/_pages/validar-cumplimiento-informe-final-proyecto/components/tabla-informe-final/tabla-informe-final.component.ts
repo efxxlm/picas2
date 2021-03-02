@@ -36,7 +36,7 @@ export class TablaInformeFinalComponent implements OnInit, AfterViewInit {
     'institucionEducativa',
     'sedeEducativa',
     'estadoCumplimientoString',
-    'id'
+    'proyectoId'
   ];
   dataSource = new MatTableDataSource<RegistrarInterface>(this.ELEMENT_DATA);
 

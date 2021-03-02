@@ -79,8 +79,8 @@ namespace asivamosffie.services
                                                         .Include(r => r.InformeFinal)
                                                          .Include(r => r.InstitucionEducativa)
                                                          .FirstOrDefaultAsync();
-            //List<InformeFinalObservaciones> informeFinalObservacionesCumplimiento = _context.InformeFinalObservaciones.Where(r => r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && r.EsGrupoNovedades == true).ToList();
-            //List<InformeFinalObservaciones> informeFinalObservacionesInterventoria = _context.InformeFinalObservaciones.Where(r => r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && r.EsGrupoNovedadesInterventoria == true).ToList();
+            List<InformeFinalObservaciones> informeFinalObservacionesCumplimiento = _context.InformeFinalObservaciones.Where(r => r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && r.EsGrupoNovedades == true).ToList();
+            List<InformeFinalObservaciones> informeFinalObservacionesInterventoria = _context.InformeFinalObservaciones.Where(r => r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && r.EsGrupoNovedadesInterventoria == true).ToList();
 
             InstitucionEducativaSede Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == proyecto.SedeId).FirstOrDefault();
             Localizacion Municipio = ListLocalizacion.Where(r => r.LocalizacionId == proyecto.LocalizacionIdMunicipio).FirstOrDefault();
@@ -88,8 +88,8 @@ namespace asivamosffie.services
             proyecto.DepartamentoObj = ListLocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
             proyecto.tipoIntervencionString = TipoIntervencion.Where(r => r.Codigo == proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
             proyecto.Sede = Sede;
-            //proyecto.InformeFinal.FirstOrDefault().InformeFinalObservaciones = informeFinalObservacionesCumplimiento;
-            //proyecto.InformeFinal.FirstOrDefault().InformeFinalObservacionesInterventoria = informeFinalObservacionesInterventoria;
+            proyecto.InformeFinal.FirstOrDefault().InformeFinalObservaciones = informeFinalObservacionesCumplimiento;
+            proyecto.InformeFinal.FirstOrDefault().InformeFinalObservacionesInterventoria = informeFinalObservacionesInterventoria;
             List<ContratacionProyecto> ListContratacion = await _context.ContratacionProyecto
                                                         .Where(r => r.ProyectoId == pProyectoId)
                                                         .Include(r => r.Contratacion)
@@ -148,7 +148,7 @@ namespace asivamosffie.services
 
             foreach (var item in ListInformeFinalChequeo)
             {
-                item.AprobacionCodigoString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.AprobacionCodigo, (int)EnumeratorTipoDominio.Estado_Aprobacion_Informe_Final);
+                item.AprobacionCodigoString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.AprobacionCodigo, (int)EnumeratorTipoDominio.Calificacion_Informe_Final);
 
                 if (item.InformeFinalAnexoId != null)
                 {
@@ -167,13 +167,13 @@ namespace asivamosffie.services
             {
                 if (pObservacion.InformeFinalObservacionesId == 0)
                 {
-                    /*await _context.Set<InformeFinal>().Where(r => r.InformeFinalId == pObservacion.InformeFinalId && (r.EstadoCumplimiento == "0" || string.IsNullOrEmpty(r.EstadoCumplimiento)))
+                    await _context.Set<InformeFinal>().Where(r => r.InformeFinalId == pObservacion.InformeFinalId && (r.EstadoCumplimiento == "0" || string.IsNullOrEmpty(r.EstadoCumplimiento)))
                                                .UpdateAsync(r => new InformeFinal()
                                                {
                                                    FechaModificacion = DateTime.Now,
                                                    UsuarioModificacion = pObservacion.UsuarioCreacion,
-                                                   //EstadoCumplimiento = ConstantCodigoEstadoCumplimientoInformeFinal.En_proceso_validacion_cumplimiento,
-                                               });*/
+                                                   EstadoCumplimiento = ConstantCodigoEstadoCumplimientoInformeFinal.En_proceso_validacion_cumplimiento,
+                                               });
                     strCrearEditar = "CREAR INFORME FINAL OBSERVACIONES";
                     pObservacion.FechaCreacion = DateTime.Now;
                     _context.InformeFinalObservaciones.Add(pObservacion);
@@ -195,7 +195,7 @@ namespace asivamosffie.services
                                                {
                                                    FechaModificacion = DateTime.Now,
                                                    UsuarioModificacion = pObservacion.UsuarioCreacion,
-                                                   //TieneObservacionesCumplimiento = tieneOBservaciones,
+                                                   TieneObservacionesCumplimiento = tieneOBservaciones,
                                                });
                 _context.SaveChanges();
 
@@ -252,8 +252,8 @@ namespace asivamosffie.services
                                                {
                                                    FechaModificacion = DateTime.Now,
                                                    UsuarioModificacion = pObservacion.UsuarioCreacion,
-                                                   //TieneObservacionesInterventoria = tieneOBservaciones,
-                                                   //EstadoCumplimiento = ConstantCodigoEstadoCumplimientoInformeFinal.En_proceso_validacion_cumplimiento
+                                                   TieneObservacionesInterventoria = tieneOBservaciones,
+                                                   EstadoCumplimiento = ConstantCodigoEstadoCumplimientoInformeFinal.En_proceso_validacion_cumplimiento
                                                });
                 _context.SaveChanges();
 

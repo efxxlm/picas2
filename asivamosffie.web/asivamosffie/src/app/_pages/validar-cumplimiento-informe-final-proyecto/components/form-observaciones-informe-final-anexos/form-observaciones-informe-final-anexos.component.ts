@@ -19,6 +19,7 @@ export class FormObservacionesInformeFinalAnexosComponent implements OnInit {
   tieneObservacionesInterventoria = null;
   observaciones: FormGroup;
   noGuardado=true; 
+  existe_historial = false;
 
   editorStyle = {
     height: '100px'

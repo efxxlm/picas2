@@ -85,7 +85,7 @@
     </span>
   </div>
 
-  <app-tabla-historial-observaciones></app-tabla-historial-observaciones>
+  <app-tabla-historial-observaciones *ngIf="existe_historial" [data]="anexos"></app-tabla-historial-observaciones>
 
   <div class="text-center mb-2em">
     <button
