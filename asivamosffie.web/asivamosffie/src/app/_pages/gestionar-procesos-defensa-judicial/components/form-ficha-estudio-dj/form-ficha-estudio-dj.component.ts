@@ -44,6 +44,7 @@ export class FormFichaEstudioDjComponent implements OnInit {
   });
   actuacionesArray = [
   ];
+  estaEditando = false;
   constructor(  private fb: FormBuilder, public dialog: MatDialog, 
     public commonServices: CommonService,
     public defensaService: DefensaJudicialService,
@@ -130,6 +131,7 @@ export class FormFichaEstudioDjComponent implements OnInit {
   }
 
   onSubmit() {
+    this.estaEditando = true;
     let defensaJudicial=this.defensaJudicial;
     if(!this.defensaJudicial.defensaJudicialId||this.defensaJudicial.defensaJudicialId==0)
     {

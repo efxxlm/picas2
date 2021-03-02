@@ -34,7 +34,7 @@ export class FormConvocadosDjComponent implements OnInit {
   @Input() legitimacion:boolean;
   @Input() tipoProceso:string;
   @Input() defensaJudicial:DefensaJudicial;
-
+  estaEditando = false;
   cargarRegistro() {
     this.formContratista.get("numeroContratos").setValue(this.defensaJudicial.numeroDemandados);
       let i=0; 
@@ -139,6 +139,7 @@ export class FormConvocadosDjComponent implements OnInit {
   };
 
   guardar () {
+    this.estaEditando = true;
     console.log( this.formContratista );
     let defContraProyecto:DemandadoConvocado[]=[];
     for(let perfil of this.perfiles.controls){

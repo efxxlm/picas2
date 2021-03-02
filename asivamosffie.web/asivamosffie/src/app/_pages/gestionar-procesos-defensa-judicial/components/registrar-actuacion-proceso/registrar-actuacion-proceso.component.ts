@@ -39,6 +39,7 @@ export class RegistrarActuacionProcesoComponent implements OnInit {
   ];
   controlJudicialId: any;
   defensaJudicial: DefensaJudicial={};
+  estaEditando = false;
   constructor(  private fb: FormBuilder, public dialog: MatDialog,
     public commonServices: CommonService,
     public judicialServices:DefensaJudicialService,
@@ -93,6 +94,7 @@ export class RegistrarActuacionProcesoComponent implements OnInit {
   }
 
   onSubmit() {
+    this.estaEditando = true;
     let defensaJudicial=this.defensaJudicial;
     
     defensaJudicial.defensaJudicialSeguimiento.push({

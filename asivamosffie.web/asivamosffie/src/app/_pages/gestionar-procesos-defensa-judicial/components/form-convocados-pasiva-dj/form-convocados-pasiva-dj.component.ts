@@ -36,6 +36,7 @@ export class FormConvocadosPasivaDjComponent implements OnInit {
   ];
   intanciasArray = [
   ];
+  estaEditando = false;
   constructor ( private fb: FormBuilder,public commonService:CommonService,
     public defensaService:DefensaJudicialService,
     public dialog: MatDialog, private router: Router  ) {
@@ -173,6 +174,7 @@ export class FormConvocadosPasivaDjComponent implements OnInit {
   };
 
   guardar () {
+    this.estaEditando = true;
     console.log( this.formContratista );
     let defContraProyecto:DemandadoConvocado[]=[];
     for(let perfil of this.perfiles.controls){
