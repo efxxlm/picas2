@@ -1240,7 +1240,8 @@ namespace asivamosffie.services
                 Include(x => x.ContratacionProyecto).
                     ThenInclude(y => y.Proyecto).
                     ThenInclude(y => y.Sede).
-                Include(x => x.Contratista).FirstOrDefault();
+                Include(x => x.Contratista)
+                .FirstOrDefault();
             foreach (var item in proyecto.ContratacionProyecto)
             {
                 ListProyectoGrilla.Add(new ProyectoGrilla
