@@ -441,6 +441,9 @@ namespace asivamosffie.services
         /// <returns></returns>
         public async Task<List<dynamic>> GetListSeguimientoSemanalByContratacionProyectoId(int pContratacionProyectoId)
         {
+            List<dynamic> ListBitaCora = new List<dynamic>();
+            List<Dominio> ListEstadoObra = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Obra_Avance_Semanal).ToList();
+            List<Dominio> ListEstadoSeguimientoSemanal = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Reporte_Semanal_Y_Muestras).ToList();
             List<SeguimientoSemanal> ListseguimientoSemanal = await _context.SeguimientoSemanal
                                                                     .Where(r => r.ContratacionProyectoId == pContratacionProyectoId
                                                                        && r.RegistroCompleto == true)
@@ -455,16 +458,9 @@ namespace asivamosffie.services
                                                                            .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
                                                                                .ThenInclude(r => r.EnsayoLaboratorioMuestra)
                                                                     .ToListAsync();
-
-            List<dynamic> ListBitaCora = new List<dynamic>();
-
             try
             {
-
-                List<Dominio> ListEstadoObra = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Obra_Avance_Semanal).ToList();
-                List<Dominio> ListEstadoSeguimientoSemanal = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Reporte_Semanal_Y_Muestras).ToList();
-
-                int UltimaSemana = ListseguimientoSemanal.OrderBy(r => r.SeguimientoSemanalId).LastOrDefault().NumeroSemana;
+                int UltimaSemana = _context.SeguimientoSemanal.Count(s => s.ContratacionProyectoId == pContratacionProyectoId);
 
                 foreach (var item in ListseguimientoSemanal)
                 {
@@ -483,11 +479,11 @@ namespace asivamosffie.services
                             strCodigoEstadoObra = ListEstadoObra.Where(r => r.Codigo == item.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo).FirstOrDefault().Nombre;
                     }
 
-                    if (!string.IsNullOrEmpty(item.EstadoMuestrasCodigo))
-                        strCodigoEstadoMuestas = ListEstadoSeguimientoSemanal.Where(r => r.Codigo == item.EstadoMuestrasCodigo).FirstOrDefault().Nombre;
-                    else
-                        strCodigoEstadoMuestas = "Sin iniciar";
+                    if (string.IsNullOrEmpty(item.EstadoMuestrasCodigo))
+                        item.EstadoMuestrasCodigo = ConstanCodigoEstadoSeguimientoSemanal.Sin_Muestras;
 
+                    strCodigoEstadoMuestas = ListEstadoSeguimientoSemanal.Where(r => r.Codigo == item.EstadoMuestrasCodigo).FirstOrDefault().Nombre;
+                     
                     bool? RegistroCompletoMuestrasVerificar =
                          item.SeguimientoSemanalGestionObra?
                         .FirstOrDefault()?.SeguimientoSemanalGestionObraCalidad?
@@ -523,8 +519,7 @@ namespace asivamosffie.services
                         item.ContratacionProyecto?.Proyecto?.LlaveMen,
                         item.ContratacionProyecto?.Contratacion?.Contrato?.FirstOrDefault()?.NumeroContrato,
                         EstadoReporteSemanal = !string.IsNullOrEmpty(item.EstadoSeguimientoSemanalCodigo) ? ListEstadoSeguimientoSemanal.Where(r => r.Codigo == item.EstadoSeguimientoSemanalCodigo).FirstOrDefault().Nombre : "---",
-                        EstadoMuestrasReporteSemanal = strCodigoEstadoMuestas,
-
+                        EstadoMuestrasReporteSemanal = strCodigoEstadoMuestas, 
                         RegistroCompletoMuestrasVerificar = RegistroCompletoMuestrasVerificar,
                         RegistroCompletoMuestrasValidar = RegistroCompletoMuestrasValidar
                     });
