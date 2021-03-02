@@ -556,6 +556,16 @@ namespace asivamosffie.services
                     informeFinal.UsuarioModificacion = pUsuario;
                     informeFinal.FechaModificacion = DateTime.Now;
 
+                    //Djear en false la columna TieneModificacionInterventor en todos los items 
+                    await _context.Set<InformeFinalInterventoria>()
+                                  .Where(r => r.InformeFinalId == informeFinal.InformeFinalId)
+                                                      .UpdateAsync(r => new InformeFinalInterventoria()
+                                                      {
+                                                          FechaModificacion = DateTime.Now,
+                                                          UsuarioModificacion = pUsuario,
+                                                          TieneModificacionInterventor = false
+                                                      });
+
                     //Enviar Correo a interventor 5.1.3
                     await EnviarCorreoInterventor(informeFinal, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
 
