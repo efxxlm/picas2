@@ -146,12 +146,12 @@ namespace asivamosffie.services
         {
             List<Programacion> ListProgramacionTipoC = _context.Programacion
                                                 .Include(r => r.ContratoConstruccion)
-                                                .Where(r => r.TipoActividadCodigo == "C")
+                                                .Where(r => r.TipoActividadCodigo == ConstanCodigoTipoActividadProgramacion.Capitulo)
                                                 .OrderByDescending(r => r.ProgramacionId).ToList();
 
             List<Programacion> ListProgramacionTipoI = _context.Programacion
                                                 .Include(r => r.ContratoConstruccion)
-                                                .Where(r => r.TipoActividadCodigo == "I")
+                                                .Where(r => r.TipoActividadCodigo == ConstanCodigoTipoActividadProgramacion.Item)
                                                 .OrderByDescending(r => r.ProgramacionId).ToList();
 
 
@@ -164,11 +164,11 @@ namespace asivamosffie.services
                                                             && ((r.FechaInicio.Date >= ((DateTime)pSeguimientoSemanal.FechaInicio).Date && r.FechaInicio.Date <= ((DateTime)pSeguimientoSemanal.FechaFin).Date)
                                                              || (r.FechaFin.Date >= ((DateTime)pSeguimientoSemanal.FechaInicio).Date && r.FechaInicio.Date <= ((DateTime)pSeguimientoSemanal.FechaFin).Date)
                                                               )).ToList();
-            foreach (var Programacion in ListProgramaciones)
+            Parallel.ForEach(ListProgramaciones, Programacion =>
             {
                 Programacion programacionItem = ListProgramacionTipoI.Where(r => r.ProgramacionId == Programacion.ProgramacionId).FirstOrDefault();
 
-                for (int i = Programacion.ProgramacionId; i < ListProgramacionTipoC.FirstOrDefault().ProgramacionId; i--)
+                for (int i = (Programacion.ProgramacionId); i < ListProgramacionTipoI.FirstOrDefault().ProgramacionId + 1; i--)
                 {
                     Programacion programacionCapitulo = new Programacion();
                     programacionCapitulo = ListProgramacionTipoC.Where(r => r.ProgramacionId == i).FirstOrDefault();
@@ -188,7 +188,7 @@ namespace asivamosffie.services
                     }
                 }
                 ListProgramacion.Add(programacionItem);
-            }
+            });
             return ListProgramacion.Distinct().ToList();
         }
 
@@ -253,7 +253,7 @@ namespace asivamosffie.services
             catch (Exception ex)
             {
                 return new SeguimientoSemanal();
-            } 
+            }
         }
 
         private async Task<SeguimientoSemanal> GetModInfoSeguimientoSemanal(SeguimientoSemanal seguimientoSemanal)
@@ -1965,7 +1965,7 @@ namespace asivamosffie.services
                 SeguimientoSemanalRegistrarComiteObraOld.UrlSoporteComite = pSeguimientoSemanalRegistrarComiteObra.UrlSoporteComite;
             }
         }
-         
+
         #endregion
 
         #region Validate Complete Records
