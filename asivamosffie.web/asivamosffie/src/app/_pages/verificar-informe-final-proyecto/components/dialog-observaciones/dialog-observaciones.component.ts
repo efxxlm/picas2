@@ -21,6 +21,16 @@ export class DialogObservacionesComponent implements OnInit {
     fechaCreacion: [null, Validators.required],
   })
 
+  observacionesSupervisor = this.fb.group({
+    informeFinalInterventoriaObservacionesId: [null, Validators.required],
+    informeFinalInterventoriaId: [null, Validators.required],
+    observaciones: [null, Validators.required],
+    esSupervision: [null, Validators.required],
+    esCalificacion: [null, Validators.required],
+    esApoyo: [null, Validators.required],
+    fechaCreacion: [null, Validators.required],
+  })
+
   editorStyle = {
     height: '100px'
   }
@@ -42,16 +52,17 @@ export class DialogObservacionesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log("Crear nuevo form: ",this.data);
     if(this.data.informeFinalObservacion != null){
       this.observaciones.patchValue(this.data.informeFinalObservacion[0])
-    }else{
-      if(this.data.informe.estadoValidacion === '4' || this.data.informe.estadoValidacion === '6'){
-        this.observaciones.patchValue(this.data.informe.observacionVigenteSupervisor)
-      }else{
-        this.getInformeFinalInterventoriaObservacionByInformeFinalObservacion(
+    }
+    else{
+      this.getInformeFinalInterventoriaObservacionByInformeFinalObservacion(
           this.data.informe.informeFinalInterventoriaObservacionesId
         )
-      }
+    }
+    if(this.data.informe.estadoValidacion === '4' || this.data.informe.estadoValidacion === '6'){
+      this.observacionesSupervisor.patchValue(this.data.informe.observacionVigenteSupervisor)
     }
   }
 

@@ -35,7 +35,7 @@
   </p>
 </div>
 
-<form [formGroup]="observaciones" novalidate (ngSubmit)="onSubmit()" *ngIf="!data.verDetalle">
+<form [formGroup]="observaciones" novalidate (ngSubmit)="onSubmit()" *ngIf="!data.verDetalle || (data.informe.estadoValidacion === '6')">
   <div class="d-flex align-items-center">
     <div class="text-area-quill">
       <label for="alcanceParticular" class="text-area-quill--label">Observaciones</label>
@@ -79,15 +79,15 @@
     </mat-card-content>
 </mat-card>
 
-<mat-card class="shipping-card var-main-gris" *ngIf="data.verDetalle && (data.informe.estadoValidacion === '4' || data.informe.estadoValidacion === '6' || data.informe.estadoValidacion === '9')" [formGroup]="observaciones">
+<mat-card class="shipping-card var-main-gris" *ngIf="data.verDetalle && (data.informe.estadoValidacion === '4' || data.informe.estadoValidacion === '6' || data.informe.estadoValidacion === '9')" [formGroup]="observacionesSupervisor">
   <mat-card-header class="header-card header-card--margin">
     <mat-card-title class="mat-card-title header-card--text">
       Observación del supervisor
     </mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <strong> {{ observaciones.get('fechaCreacion').value | date: 'dd/MM/yyyy' }}</strong>
-    <p [innerHTML]="observaciones.get('observaciones').value">
+    <strong> {{ observacionesSupervisor.get('fechaCreacion').value | date: 'dd/MM/yyyy' }}</strong>
+    <p [innerHTML]="observacionesSupervisor.get('observaciones').value">
     </p>
   </mat-card-content>
 </mat-card>
