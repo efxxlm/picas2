@@ -888,7 +888,7 @@ namespace asivamosffie.services
 
             try
             {
-                if (pSeguimientoSemanalObservacion.TieneObservacion)
+                if ((bool)pSeguimientoSemanalObservacion.TieneObservacion)
                 {
                     if (pSeguimientoSemanalObservacion.EsSupervisor)
                     {

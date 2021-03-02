@@ -7768,6 +7768,7 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaReporte).HasColumnType("datetime");
 
                 entity.Property(e => e.InstitucionEducativa)
+                    .IsRequired()
                     .HasMaxLength(300)
                     .IsUnicode(false);
 
@@ -7781,6 +7782,7 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.Sede)
+                    .IsRequired()
                     .HasMaxLength(300)
                     .IsUnicode(false);
 
