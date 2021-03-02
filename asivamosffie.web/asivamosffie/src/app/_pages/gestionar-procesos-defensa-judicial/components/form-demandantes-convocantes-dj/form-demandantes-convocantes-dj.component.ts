@@ -31,7 +31,7 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
   ];
 
   textoConvocantes="demandante";
-
+  estaEditando = false;
   constructor (private fb: FormBuilder,public commonService:CommonService,
     public defensaService:DefensaJudicialService,
     public dialog: MatDialog, private router: Router  ) {
@@ -178,6 +178,7 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
   };
 
   guardar () {
+    this.estaEditando = true;
     let defContraProyecto:DemandanteConvocante[]=[];
     for(let perfil of this.perfiles.controls){
       defContraProyecto.push({

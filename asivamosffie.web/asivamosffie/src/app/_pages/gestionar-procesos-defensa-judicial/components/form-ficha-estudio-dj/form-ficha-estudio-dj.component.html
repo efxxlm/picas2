@@ -10,7 +10,12 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="antecedentes">Antecedentes</label>
+                            <label class="label-left" for="antecedentes" 
+                            [ngClass]="{
+                                'color-secondaryColor':
+                                  (addressForm.get('antecedentes').invalid && addressForm.get('antecedentes').touched) ||
+                                  (addressForm.get('antecedentes').invalid && estaEditando)
+                              }">Antecedentes</label>
                         </div>
                     </div>
                 </div>
@@ -31,6 +36,15 @@
                             <span class="contador miles" *ngIf="!addressForm.controls.antecedentes.value">
                                 2000
                             </span>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                                  (addressForm.get('antecedentes').invalid && addressForm.get('antecedentes').touched) ||
+                                  (addressForm.get('antecedentes').invalid && estaEditando)
+                                  " />
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -39,7 +53,12 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="hechosRelevantes">Hechos relevantes del caso</label>
+                            <label class="label-left" for="hechosRelevantes"
+                            [ngClass]="{
+                                'color-secondaryColor':
+                                  (addressForm.get('hechosRelevantes').invalid && addressForm.get('hechosRelevantes').touched) ||
+                                  (addressForm.get('hechosRelevantes').invalid && estaEditando)
+                              }">Hechos relevantes del caso</label>
                         </div>
                     </div>
                 </div>
@@ -60,6 +79,15 @@
                             <span class="contador miles" *ngIf="!addressForm.controls.hechosRelevantes.value">
                                 2000
                             </span>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                                  (addressForm.get('hechosRelevantes').invalid && addressForm.get('hechosRelevantes').touched) ||
+                                  (addressForm.get('hechosRelevantes').invalid && estaEditando)
+                                  " />
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -68,7 +96,12 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="jurisprudenciaDoctrina">Jurisprudencia - Doctrina</label>
+                            <label class="label-left" for="jurisprudenciaDoctrina"
+                            [ngClass]="{
+                                'color-secondaryColor':
+                                  (addressForm.get('jurisprudenciaDoctrina').invalid && addressForm.get('jurisprudenciaDoctrina').touched) ||
+                                  (addressForm.get('jurisprudenciaDoctrina').invalid && estaEditando)
+                              }">Jurisprudencia - Doctrina</label>
                         </div>
                     </div>
                 </div>
@@ -89,6 +122,15 @@
                             <span class="contador miles" *ngIf="!addressForm.controls.jurisprudenciaDoctrina.value">
                                 2000
                             </span>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                                  (addressForm.get('jurisprudenciaDoctrina').invalid && addressForm.get('jurisprudenciaDoctrina').touched) ||
+                                  (addressForm.get('jurisprudenciaDoctrina').invalid && estaEditando)
+                                  " />
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -97,7 +139,12 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="decisionComite">Decisión del Comité en casos anteriores /
+                            <label class="label-left" for="decisionComite"
+                            [ngClass]="{
+                                'color-secondaryColor':
+                                  (addressForm.get('decisionComite').invalid && addressForm.get('decisionComite').touched) ||
+                                  (addressForm.get('decisionComite').invalid && estaEditando)
+                              }">Decisión del Comité en casos anteriores /
                                 Directrices de Conciliación</label>
                         </div>
                     </div>
@@ -119,6 +166,15 @@
                             <span class="contador miles" *ngIf="!addressForm.controls.decisionComite.value">
                                 2000
                             </span>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                                  (addressForm.get('decisionComite').invalid && addressForm.get('decisionComite').touched) ||
+                                  (addressForm.get('decisionComite').invalid && estaEditando)
+                                  " />
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -127,7 +183,12 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="analisisJuridico">Análisis jurídico</label>
+                            <label class="label-left" for="analisisJuridico"
+                            [ngClass]="{
+                                'color-secondaryColor':
+                                  (addressForm.get('analisisJuridico').invalid && addressForm.get('analisisJuridico').touched) ||
+                                  (addressForm.get('analisisJuridico').invalid && estaEditando)
+                              }">Análisis jurídico</label>
                         </div>
                     </div>
                 </div>
@@ -148,6 +209,15 @@
                             <span class="contador miles" *ngIf="!addressForm.controls.analisisJuridico.value">
                                 2000
                             </span>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                                  (addressForm.get('analisisJuridico').invalid && addressForm.get('analisisJuridico').touched) ||
+                                  (addressForm.get('analisisJuridico').invalid && estaEditando)
+                                  " />
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -156,7 +226,12 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="recomendaciones">Recomendaciones</label>
+                            <label class="label-left" for="recomendaciones"
+                            [ngClass]="{
+                                'color-secondaryColor':
+                                  (addressForm.get('recomendaciones').invalid && addressForm.get('recomendaciones').touched) ||
+                                  (addressForm.get('recomendaciones').invalid && estaEditando)
+                              }">Recomendaciones</label>
                         </div>
                     </div>
                 </div>
@@ -177,6 +252,15 @@
                             <span class="contador miles" *ngIf="!addressForm.controls.recomendaciones.value">
                                 2000
                             </span>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                                  (addressForm.get('recomendaciones').invalid && addressForm.get('recomendaciones').touched) ||
+                                  (addressForm.get('recomendaciones').invalid && estaEditando)
+                                  " />
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -185,8 +269,12 @@
                 <div class="col-md-12" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="procesoFichaComite">¿Este proceso y su ficha se presentaron
-                                ante el comité de defensa del FFIE?</label>
+                            <label class="label-left" for="procesoFichaComite"
+                            [ngClass]="{
+                                'color-secondaryColor':
+                                  (addressForm.get('procesoFichaComite').invalid && addressForm.get('procesoFichaComite').touched) ||
+                                  (addressForm.get('procesoFichaComite').invalid && estaEditando)
+                              }">¿Este proceso y su ficha se presentaron ante el comité de defensa del FFIE?</label>
                         </div>
                         <div class="col">
                             <mat-radio-group class="radioInput" formControlName="procesoFichaComite" required>
@@ -195,6 +283,15 @@
                             </mat-radio-group>
                             <span class="required-form-group" style="margin-left: 1px;">*</span>
                         </div>
+                        <span class="icon-incompleto">
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip" *ngIf="
+                              (addressForm.get('procesoFichaComite').invalid && addressForm.get('procesoFichaComite').touched) ||
+                              (addressForm.get('procesoFichaComite').invalid && estaEditando)
+                              " />
+                        </span>
                     </div>
                 </div>
             </div>
@@ -202,7 +299,12 @@
                 <div class="col-md-8">
                   <div class="row">
                     <div class="pr-1">
-                      <label class="label-left" for="fechaComiteDefensa">Fecha de comité de defensa</label>
+                      <label class="label-left" for="fechaComiteDefensa"
+                      [ngClass]="{
+                        'color-secondaryColor':
+                          (addressForm.get('fechaComiteDefensa').invalid && addressForm.get('fechaComiteDefensa').touched) ||
+                          (addressForm.get('fechaComiteDefensa').invalid && estaEditando)
+                      }">Fecha de comité de defensa</label>
                     </div>
                     <div class="col d-flex align-items-center">
                       <mat-form-field class="example-full-width">
@@ -214,6 +316,15 @@
                         <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
                       </button>
                     </div>
+                    <span class="icon-incompleto">
+                        <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                            alt="este campo es requerido" [matTooltipPosition]="'above'"
+                            matTooltip="Debe ingresar la información en el campo para continuar"
+                            matTooltipClass="info-tooltip" *ngIf="
+                          (addressForm.get('fechaComiteDefensa').invalid && addressForm.get('fechaComiteDefensa').touched) ||
+                          (addressForm.get('fechaComiteDefensa').invalid && estaEditando)
+                          " />
+                    </span>
                   </div>
                 </div>
             </div>
@@ -221,7 +332,12 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="recomendacionFinal">Recomendación final del comité de defensa judicial</label>
+                            <label class="label-left" for="recomendacionFinal"
+                            [ngClass]="{
+                                'color-secondaryColor':
+                                  (addressForm.get('recomendacionFinal').invalid && addressForm.get('recomendacionFinal').touched) ||
+                                  (addressForm.get('recomendacionFinal').invalid && estaEditando)
+                              }">Recomendación final del comité de defensa judicial</label>
                         </div>
                     </div>
                 </div>
@@ -242,6 +358,15 @@
                             <span class="contador miles" *ngIf="!addressForm.controls.recomendacionFinal.value">
                                 2000
                             </span>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                                  (addressForm.get('recomendacionFinal').invalid && addressForm.get('recomendacionFinal').touched) ||
+                                  (addressForm.get('recomendacionFinal').invalid && estaEditando)
+                                  " />
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -250,7 +375,12 @@
                 <div class="col-md-12" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="aperturaFormalProceso">¿Se aprobó la apertura formal del proceso?</label>
+                            <label class="label-left" for="aperturaFormalProceso"
+                            [ngClass]="{
+                                'color-secondaryColor':
+                                  (addressForm.get('aperturaFormalProceso').invalid && addressForm.get('aperturaFormalProceso').touched) ||
+                                  (addressForm.get('aperturaFormalProceso').invalid && estaEditando)
+                              }">¿Se aprobó la apertura formal del proceso?</label>
                         </div>
                         <div class="col">
                             <mat-radio-group class="radioInput" formControlName="aperturaFormalProceso" required>
@@ -259,6 +389,15 @@
                             </mat-radio-group>
                             <span class="required-form-group" style="margin-left: 1px;">*</span>
                         </div>
+                        <span class="icon-incompleto">
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip" *ngIf="
+                              (addressForm.get('aperturaFormalProceso').invalid && addressForm.get('aperturaFormalProceso').touched) ||
+                              (addressForm.get('aperturaFormalProceso').invalid && estaEditando)
+                              " />
+                        </span>
                     </div>
                 </div>
             </div>
@@ -266,7 +405,12 @@
                 <div class="col-md-10">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="tipoActuacionRecomendada">Tipo de actuación recomendada</label>
+                            <label class="label-left" for="tipoActuacionRecomendada"
+                            [ngClass]="{
+                                'color-secondaryColor':
+                                  (addressForm.get('tipoActuacionRecomendada').invalid && addressForm.get('tipoActuacionRecomendada').touched) ||
+                                  (addressForm.get('tipoActuacionRecomendada').invalid && estaEditando)
+                              }">Tipo de actuación recomendada</label>
                         </div>
                         <div class="col">
                             <mat-form-field class="select-width">
@@ -277,6 +421,15 @@
                                 </mat-select>
                             </mat-form-field>
                         </div>
+                        <span class="icon-incompleto">
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip" *ngIf="
+                              (addressForm.get('tipoActuacionRecomendada').invalid && addressForm.get('tipoActuacionRecomendada').touched) ||
+                              (addressForm.get('tipoActuacionRecomendada').invalid && estaEditando)
+                              " />
+                        </span>
                     </div>
                 </div>
             </div>
@@ -284,7 +437,12 @@
                 <div class="col-md-12" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="actuacionRecomendadaAlComite">¿La actuación recomendada debe surtir trámite en comité técnico?</label>
+                            <label class="label-left" for="actuacionRecomendadaAlComite"
+                            [ngClass]="{
+                                'color-secondaryColor':
+                                  (addressForm.get('actuacionRecomendadaAlComite').invalid && addressForm.get('actuacionRecomendadaAlComite').touched) ||
+                                  (addressForm.get('actuacionRecomendadaAlComite').invalid && estaEditando)
+                              }">¿La actuación recomendada debe surtir trámite en comité técnico?</label>
                         </div>
                         <div class="col">
                             <mat-radio-group class="radioInput" formControlName="actuacionRecomendadaAlComite" required>
@@ -293,6 +451,15 @@
                             </mat-radio-group>
                             <span class="required-form-group" style="margin-left: 1px;">*</span>
                         </div>
+                        <span class="icon-incompleto">
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip" *ngIf="
+                              (addressForm.get('actuacionRecomendadaAlComite').invalid && addressForm.get('actuacionRecomendadaAlComite').touched) ||
+                              (addressForm.get('actuacionRecomendadaAlComite').invalid && estaEditando)
+                              " />
+                        </span>
                     </div>
                 </div>
             </div>
@@ -309,7 +476,12 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="urlSoporte">URL con soporte</label>
+                            <label class="label-left" for="urlSoporte"
+                            [ngClass]="{
+                                'color-secondaryColor':
+                                  (addressForm.get('urlSoporte').invalid && addressForm.get('urlSoporte').touched) ||
+                                  (addressForm.get('urlSoporte').invalid && estaEditando)
+                              }">URL con soporte</label>
                         </div>
                         <div class="col">
                             <mat-form-field class="full-width">
@@ -318,6 +490,15 @@
                             <span class="info-url">Indique la ruta en la que se encuentran los documentos de soporte del
                                 registro del proceso</span>
                         </div>
+                        <span class="icon-incompleto">
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip" *ngIf="
+                              (addressForm.get('urlSoporte').invalid && addressForm.get('urlSoporte').touched) ||
+                              (addressForm.get('urlSoporte').invalid && estaEditando)
+                              " />
+                        </span>
                     </div>
                 </div>
             </div>

@@ -39,6 +39,7 @@ export class VerDetalleEditarActuacionProcesoComponent implements OnInit {
   ];
   controlJudicialId: any;
   defensaJudicial: DefensaJudicial={};
+  estaEditando = false;
   constructor(  private fb: FormBuilder, public dialog: MatDialog,
     public commonServices: CommonService,
     public judicialServices:DefensaJudicialService,
@@ -81,6 +82,7 @@ export class VerDetalleEditarActuacionProcesoComponent implements OnInit {
   }
 
   onSubmit() {
+    this.estaEditando = true;
     console.log(this.addressForm.value);
     this.openDialog('', 'La información ha sido guardada exitosamente.');
   }
