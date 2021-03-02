@@ -1890,7 +1890,7 @@ namespace asivamosffie.services
             List<UsuarioPerfil> listaInterventor = getCorreos((int)EnumeratorPerfil.Interventor);
 
             //Con acta en proceso de firma - obra
-            if (pContrato.EstadoActaFase2 == "19")
+            if (pContrato.EstadoActaFase2 == "19" || pContrato.EstadoActaFase2 == "21")
             {
                 Contratacion contratacion = _context.Contratacion
                                                             .Where(p => p.ContratacionId == pContrato.ContratacionId)
@@ -1914,6 +1914,8 @@ namespace asivamosffie.services
                     Helpers.Helpers.EnviarCorreo(contratacion.Contratista.ProcesoSeleccionProponente.EmailProponente, "Gestión Acta Inicio Fase II", template, pSender, pPassword, pMailServer, pMailPort);
                 }
             }
+
+
 
             // Enviada por el supervisor - obra
             if (pContrato.EstadoActaFase2 == "17")
