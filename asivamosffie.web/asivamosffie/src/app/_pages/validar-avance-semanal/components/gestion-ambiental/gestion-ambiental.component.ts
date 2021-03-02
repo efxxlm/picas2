@@ -87,6 +87,12 @@ export class GestionAmbientalComponent implements OnInit {
     obsApoyoResiduosConstruccion: any[] = [];
     obsApoyoResiduosPeligrosos: any[] = [];
     obsApoyoOtros: any[] = [];
+    // Contador observaciones del apoyo cuando el apoyo realiza observaciones y el supervisor no toma en cuenta que el apoyo no tiene observacion
+    contadorObservacionAmbientalApoyo = 0;
+    contadorObservacionMaterialApoyo = 0;
+    contadorObservacionConstruccionApoyo = 0;
+    contadorObservacionPeligrososApoyo = 0;
+    contadorObservacionOtrosApoyo = 0;
     gestionAmbientalDetalle: any[] = [];
     tipoActividadesCodigo = {
         manejoMaterialInsumo: '1',
@@ -669,6 +675,11 @@ export class GestionAmbientalComponent implements OnInit {
     }
 
     guardar() {
+        if ( this.gestionObraAmbiental.tieneObservacionApoyo === true && this.formGestionAmbientalObservacion.get( 'tieneObservaciones' ).value === false && this.contadorObservacionAmbientalApoyo === 0 ) {
+            this.contadorObservacionAmbientalApoyo++;
+            this.openDialog( '', '<b>Le recomendamos verificar su respuesta;<br>Tenga en cuenta que el apoyo a la supervisión si tuvo observaciones.</b>' );
+            return;
+        }
         if ( this.formGestionAmbientalObservacion.get( 'tieneObservaciones' ).value === false && this.formGestionAmbientalObservacion.get( 'observaciones' ).value !== null ) {
             this.formGestionAmbientalObservacion.get( 'observaciones' ).setValue( '' );
         }
@@ -704,6 +715,11 @@ export class GestionAmbientalComponent implements OnInit {
     }
 
     guardarManejoMaterial() {
+        if ( this.gestionObraAmbiental.manejoMaterialesInsumo.tieneObservacionApoyo === true && this.formMaterialObservacion.get( 'tieneObservaciones' ).value === false && this.contadorObservacionMaterialApoyo === 0 ) {
+            this.contadorObservacionMaterialApoyo++;
+            this.openDialog( '', '<b>Le recomendamos verificar su respuesta;<br>Tenga en cuenta que el apoyo a la supervisión si tuvo observaciones.</b>' );
+            return;
+        }
         if ( this.formMaterialObservacion.get( 'tieneObservaciones' ).value === false && this.formMaterialObservacion.get( 'observaciones' ).value !== null ) {
             this.formMaterialObservacion.get( 'observaciones' ).setValue( '' );
         }
@@ -739,6 +755,11 @@ export class GestionAmbientalComponent implements OnInit {
     }
 
     guardarResiduosConstruccion() {
+        if ( this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion.tieneObservacionApoyo === true && this.formResiduosConstruccion.get( 'tieneObservaciones' ).value === false && this.contadorObservacionConstruccionApoyo === 0 ) {
+            this.contadorObservacionConstruccionApoyo++;
+            this.openDialog( '', '<b>Le recomendamos verificar su respuesta;<br>Tenga en cuenta que el apoyo a la supervisión si tuvo observaciones.</b>' );
+            return;
+        }
         if ( this.formResiduosConstruccion.get( 'tieneObservaciones' ).value === false && this.formResiduosConstruccion.get( 'observaciones' ).value !== null ) {
             this.formResiduosConstruccion.get( 'observaciones' ).setValue( '' );
         }
@@ -774,6 +795,11 @@ export class GestionAmbientalComponent implements OnInit {
     }
 
     guardarResiduosPeligrosos() {
+        if ( this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales.tieneObservacionApoyo === true && this.formResiduosPeligrosos.get( 'tieneObservaciones' ).value === false && this.contadorObservacionPeligrososApoyo === 0 ) {
+            this.contadorObservacionPeligrososApoyo++;
+            this.openDialog( '', '<b>Le recomendamos verificar su respuesta;<br>Tenga en cuenta que el apoyo a la supervisión si tuvo observaciones.</b>' );
+            return;
+        }
         if ( this.formResiduosPeligrosos.get( 'tieneObservaciones' ).value === false && this.formResiduosPeligrosos.get( 'observaciones' ).value !== null ) {
             this.formResiduosPeligrosos.get( 'observaciones' ).setValue( '' );
         }
@@ -809,6 +835,11 @@ export class GestionAmbientalComponent implements OnInit {
     }
 
     guardarManejoOtra() {
+        if ( this.gestionObraAmbiental.manejoOtro.tieneObservacionApoyo === true && this.formManejoOtra.get( 'tieneObservaciones' ).value === false && this.contadorObservacionOtrosApoyo === 0 ) {
+            this.contadorObservacionOtrosApoyo++;
+            this.openDialog( '', '<b>Le recomendamos verificar su respuesta;<br>Tenga en cuenta que el apoyo a la supervisión si tuvo observaciones.</b>' );
+            return;
+        }
         if ( this.formManejoOtra.get( 'tieneObservaciones' ).value === false && this.formManejoOtra.get( 'observaciones' ).value !== null ) {
             this.formManejoOtra.get( 'observaciones' ).setValue( '' );
         }

@@ -22,6 +22,7 @@ export class ComiteObraComponent implements OnInit {
     seguimientoSemanalRegistrarComiteObraId: number;
     gestionComiteObra: any;
     seguimientoSemanalObservacionId = 0;
+    contadorObservacionApoyo = 0;
     observacionApoyo: any[] = [];
     tablaHistorial = new MatTableDataSource();
     formComiteObra: FormGroup = this.fb.group({
@@ -114,6 +115,11 @@ export class ComiteObraComponent implements OnInit {
     }
 
     guardar() {
+        if ( this.gestionComiteObra.tieneObservacionApoyo === true && this.formComiteObra.get( 'tieneObservaciones' ).value === false && this.contadorObservacionApoyo === 0 ) {
+            this.contadorObservacionApoyo++;
+            this.openDialog( '', '<b>Le recomendamos verificar su respuesta;<br>Tenga en cuenta que el apoyo a la supervisión si tuvo observaciones.</b>' );
+            return;
+        }
         if ( this.formComiteObra.get( 'tieneObservaciones' ).value === false && this.formComiteObra.get( 'observaciones' ).value !== null ) {
             this.formComiteObra.get( 'observaciones' ).setValue( '' );
         }

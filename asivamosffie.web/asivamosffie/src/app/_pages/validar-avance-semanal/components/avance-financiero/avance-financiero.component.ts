@@ -23,9 +23,11 @@ export class AvanceFinancieroComponent implements OnInit {
     tablaHistorial = new MatTableDataSource();
     observacionApoyo: any[] = [];
     seguimientoSemanalObservacionId = 0;
+    contadorObservacionApoyo = 0;
     formAvanceFinanciero: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ null ]
+        observaciones: [ null ],
+        fechaCreacion: [ null ]
 	});
 	displayedColumnsHistorial: string[]  = [
 		'fechaRevision',
@@ -109,6 +111,11 @@ export class AvanceFinancieroComponent implements OnInit {
     }
 
 	guardar() {
+        if ( this.avanceFinanciero.tieneObservacionApoyo === true && this.formAvanceFinanciero.get( 'tieneObservaciones' ).value === false && this.contadorObservacionApoyo === 0 ) {
+            this.contadorObservacionApoyo++;
+            this.openDialog( '', '<b>Le recomendamos verificar su respuesta;<br>Tenga en cuenta que el apoyo a la supervisión si tuvo observaciones.</b>' );
+            return;
+        }
         if ( this.formAvanceFinanciero.get( 'tieneObservaciones' ).value === false && this.formAvanceFinanciero.get( 'observaciones' ).value !== null ) {
             this.formAvanceFinanciero.get( 'observaciones' ).setValue( '' );
         }

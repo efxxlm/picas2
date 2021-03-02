@@ -40,6 +40,7 @@ export class GestionCalidadComponent implements OnInit {
     seguimientoSemanalGestionObraId: number;
     seguimientoSemanalGestionObraCalidadId = 0;
     seguimientoSemanalObservacionId = 0;
+    contadorObservacionApoyo = 0;
     gestionObraCalidad: any;
     tipoEnsayos: any[] = [];
     observacionApoyo: any[] = [];
@@ -208,6 +209,11 @@ export class GestionCalidadComponent implements OnInit {
     }
 
     guardar() {
+        if ( this.gestionObraCalidad.tieneObservacionApoyo === true && this.formGestionCalidad.get( 'tieneObservaciones' ).value === false && this.contadorObservacionApoyo === 0 ) {
+            this.contadorObservacionApoyo++;
+            this.openDialog( '', '<b>Le recomendamos verificar su respuesta;<br>Tenga en cuenta que el apoyo a la supervisión si tuvo observaciones.</b>' );
+            return;
+        }
         if ( this.formGestionCalidad.get( 'tieneObservaciones' ).value === false && this.formGestionCalidad.get( 'observaciones' ).value !== null ) {
             this.formGestionCalidad.get( 'observaciones' ).setValue( '' );
         }
@@ -243,6 +249,9 @@ export class GestionCalidadComponent implements OnInit {
     }
 
     guardarEnsayo( ensayo: FormGroup ) {
+        if ( ensayo.get( 'tieneObservacionApoyo' ).value === true && ensayo.get( 'tieneObservaciones' ).value === false ) {
+            this.openDialog( '', '<b>Le recomendamos verificar su respuesta;<br>Tenga en cuenta que el apoyo a la supervisión si tuvo observaciones.</b>' );
+        }
         if ( ensayo.get( 'tieneObservaciones' ).value === false && ensayo.get( 'observacionEnsayo' ).value !== null ) {
             ensayo.get( 'observacionEnsayo' ).setValue( '' );
         }

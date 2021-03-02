@@ -20,6 +20,7 @@ export class RegistroFotograficoComponent implements OnInit {
     seguimientoSemanalId: number;
     seguimientoSemanalRegistroFotograficoId: number;
     seguimientoSemanalObservacionId = 0;
+    contadorObservacionApoyo = 0;
     reporteFotografico: any;
     observacionApoyo: any[] = [];
     tablaHistorial = new MatTableDataSource();
@@ -109,6 +110,11 @@ export class RegistroFotograficoComponent implements OnInit {
     }
 
     guardar() {
+        if ( this.reporteFotografico.tieneObservacionApoyo === true && this.formRegistroFotografico.get( 'tieneObservaciones' ).value === false && this.contadorObservacionApoyo === 0 ) {
+            this.contadorObservacionApoyo++;
+            this.openDialog( '', '<b>Le recomendamos verificar su respuesta;<br>Tenga en cuenta que el apoyo a la supervisión si tuvo observaciones.</b>' );
+            return;
+        }
         if ( this.formRegistroFotografico.get( 'tieneObservaciones' ).value === false && this.formRegistroFotografico.get( 'observaciones' ).value !== null ) {
             this.formRegistroFotografico.get( 'observaciones' ).setValue( '' );
         }

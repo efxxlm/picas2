@@ -22,6 +22,11 @@ export class TablaGestionCompromisosComponent implements OnInit {
     { titulo: 'Número de comité', name: 'numeroComite' },
     { titulo: 'Compromiso', name: 'compromiso' }
   ];
+  listaEstadosCompromisos = {
+    sinIniciar: '1',
+    enProceso: '2',
+    finalizado: '3'
+  }
 
   constructor ( private routes: Router,
                 private compromisosSvc: CompromisosActasComiteService ) { }
