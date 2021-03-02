@@ -162,8 +162,9 @@ namespace asivamosffie.services
                                                         .Where(
                                                             r => r.SeguimientoSemanalId == pSeguimientoSemanal.SeguimientoSemanalId
                                                             && ((r.FechaInicio.Date >= ((DateTime)pSeguimientoSemanal.FechaInicio).Date && r.FechaInicio.Date <= ((DateTime)pSeguimientoSemanal.FechaFin).Date)
-                                                             || (r.FechaFin.Date >= ((DateTime)pSeguimientoSemanal.FechaInicio).Date && r.FechaInicio.Date <= ((DateTime)pSeguimientoSemanal.FechaFin).Date)
-                                                              )).ToList();
+                                                                 || (r.FechaFin.Date >= ((DateTime)pSeguimientoSemanal.FechaInicio).Date && r.FechaInicio.Date <= ((DateTime)pSeguimientoSemanal.FechaFin).Date)
+                                                                  )
+                                                              ).ToList();
             Parallel.ForEach(ListProgramaciones, Programacion =>
             {
                 Programacion programacionItem = ListProgramacionTipoI.Where(r => r.ProgramacionId == Programacion.ProgramacionId).FirstOrDefault();
