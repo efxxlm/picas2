@@ -105,6 +105,7 @@ interface ContratoPoliza {
 }
 
 export interface ContratoPerfil {
+  contratoPerfilObservacionArray: any[];
   contratoPerfilId?: number;
   contratoId?: number;
   perfilCodigo?: string;

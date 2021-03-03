@@ -39,6 +39,7 @@ export class FormSolicitudComponent implements OnInit {
     defensaJudicial: '5'
   }
   listaTipoSolicitud: Dominio[] = [];
+  listaEstadoSolicitud: Dominio[] = [];
 
   get compromisos() {
     return this.addressForm.get('compromisos') as FormArray;
@@ -50,14 +51,12 @@ export class FormSolicitudComponent implements OnInit {
   {
     this.commonSvc.listaTipoSolicitud()
       .subscribe( listaTipoSolicitud => this.listaTipoSolicitud = listaTipoSolicitud );
+    this.commonSvc.listaEstadoSolicitud()
+      .subscribe( listaEstadoSolicitud => this.listaEstadoSolicitud = listaEstadoSolicitud );
   };
 
   ngOnInit(): void {
-    this.resultadosVotaciones( this.solicitudes )
-    this.commonSvc.listaEstadoSolicitud()
-    .subscribe( ( resp: any[] ) => {
-      this.estadoSolicitud = resp.filter( estado => this.solicitudes.estadoCodigo === estado.codigo );
-    } );
+    this.resultadosVotaciones( this.solicitudes );
   };
 
   getSolicitudCodigo( tipoSolicitudCodigo: string ) {
@@ -68,6 +67,16 @@ export class FormSolicitudComponent implements OnInit {
         return tipoSolicitud[0].nombre;
       } else {
         return 'No esta llegando el campo tipoSolicitudCodigo';
+      }
+    }
+  }
+
+  getEstadoSolicitud( estadoCodigo: string ) {
+    if ( this.listaEstadoSolicitud.length > 0 ) {
+      const estadoSolicitud = this.listaEstadoSolicitud.find( estadoSolicitud => estadoSolicitud.codigo === estadoCodigo );
+
+      if ( estadoSolicitud !== undefined ) {
+        return estadoSolicitud.nombre;
       }
     }
   }

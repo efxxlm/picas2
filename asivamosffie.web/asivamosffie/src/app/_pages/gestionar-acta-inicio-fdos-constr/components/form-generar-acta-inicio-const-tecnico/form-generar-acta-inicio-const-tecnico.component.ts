@@ -160,10 +160,12 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
       this.contrato = data.contrato;
       this.loadDataObservaciones(data.contrato.contratoConstruccion[0].contratoConstruccionId);
       
+      const mesesPlazoInicial = data.contrato.contratacion.disponibilidadPresupuestal[0].plazoMeses;
+      const diasPlazoInicial = data.contrato.contratacion.disponibilidadPresupuestal[0].plazoDias;
+
       // calcula el plazo restante
       if ( data.plazoFase1PreMeses !== undefined && data.plazoFase1PreDias !== undefined ) {
-        const mesesPlazoInicial = data.contrato.contratacion.disponibilidadPresupuestal[0].plazoMeses;
-        const diasPlazoInicial = data.contrato.contratacion.disponibilidadPresupuestal[0].plazoDias;
+        
         this.service.getFiferenciaMesesDias( mesesPlazoInicial, diasPlazoInicial, data.plazoFase1PreMeses, data.plazoFase1PreDias )
           .subscribe(
             response => {
@@ -174,8 +176,8 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
           );
       }
       else{
-        this.addressForm.get('mesPlazoEjFase2').setValue(data.plazoFase2ConstruccionMeses);
-        this.addressForm.get('diasPlazoEjFase2').setValue(data.plazoFase2ConstruccionDias);
+        this.addressForm.get('mesPlazoEjFase2').setValue(mesesPlazoInicial);
+        this.addressForm.get('diasPlazoEjFase2').setValue(diasPlazoInicial);
       }
 
       // this.addressForm.get('mesPlazoEjFase2').disable();
