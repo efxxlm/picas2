@@ -2642,8 +2642,6 @@ namespace asivamosffie.services
                 {
                     ProcesoSeleccionMonitoreo procesoSeleccionMonitoreo = _context.ProcesoSeleccionMonitoreo.Find(sesionComiteSolicitudOld.SolicitudId);
 
-
-
                     if (procesoSeleccionMonitoreo != null)
                     {
                         if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario)
@@ -2669,7 +2667,7 @@ namespace asivamosffie.services
                                             cronograma.Descripcion = crono.Descripcion;
                                             cronograma.FechaMaxima = crono.FechaMaxima;
                                             cronograma.EstadoActividadCodigo = crono.EstadoActividadCodigo;
-
+                                            cronograma.Eliminado = crono.Eliminado;
                                         }
                                     }
                                     else
@@ -2696,10 +2694,12 @@ namespace asivamosffie.services
                         if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario)
                         {
                             procesoSeleccionMonitoreo.EstadoActividadCodigo = ConstanCodigoEstadoActividadCronogramaProcesoSeleccion.RechazadoPorComiteFiduciario;
+                            procesoSeleccionMonitoreo.EnviadoComiteTecnico = false;
                         }
                         if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario)
                         {
                             procesoSeleccionMonitoreo.EstadoActividadCodigo = ConstanCodigoEstadoActividadCronogramaProcesoSeleccion.DevueltoPorComiteFiduciario;
+                            procesoSeleccionMonitoreo.EnviadoComiteTecnico = false;
                         }
 
 

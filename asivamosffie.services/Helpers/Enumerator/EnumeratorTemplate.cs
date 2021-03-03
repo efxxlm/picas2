@@ -54,7 +54,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         AprobadoInterventoriaObra3_1_8_ = 60,
         Aprobado_Programacion_4_1_10 = 61,
         Alerta_Automatica_5_Dias = 62,
-        AprobarRequisitosTecnicosFase2 = 74,
-        DevolverConObservacionesFase2 = 75
+        AprobarRequisitosTecnicosFase2 = 76,
+        DevolverConObservacionesFase2 = 77
     }
 }

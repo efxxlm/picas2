@@ -2457,10 +2457,12 @@ namespace asivamosffie.services
                         if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_tecnico)
                         {
                             procesoSeleccionMonitoreo.EstadoActividadCodigo = ConstanCodigoEstadoActividadCronogramaProcesoSeleccion.RechazadoPorComiteTecnico;
+                            procesoSeleccionMonitoreo.EnviadoComiteTecnico = false;
                         }
                         if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_tecnico)
                         {
                             procesoSeleccionMonitoreo.EstadoActividadCodigo = ConstanCodigoEstadoActividadCronogramaProcesoSeleccion.DevueltoPorComiteTecnico;
+                            procesoSeleccionMonitoreo.EnviadoComiteTecnico = false;
                         }
 
                     }

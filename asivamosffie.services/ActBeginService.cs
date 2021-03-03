@@ -1917,8 +1917,9 @@ namespace asivamosffie.services
 
 
 
-            // Enviada por el supervisor - obra
-            if (pContrato.EstadoActaFase2 == "17")
+            // 17 -Enviada por el supervisor - obra
+            // 4 - Enviada por el supervisor - interventoria
+            if (pContrato.EstadoActaFase2 == "17" || pContrato.EstadoActaFase2 == "4")
             {
                 List<UsuarioPerfil> listaFinal = new List<UsuarioPerfil>();
                 listaFinal.AddRange(listaInterventor);
