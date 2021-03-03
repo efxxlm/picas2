@@ -16,9 +16,10 @@ import { FormEditVerificarSolicitudVfspComponent } from './components/form-edit-
 import { VerdetalleVfspComponent } from './components/verdetalle-vfsp/verdetalle-vfsp.component';
 import { DialogProyAsociadosVfspComponent } from './components/dialog-proy-asociados-vfsp/dialog-proy-asociados-vfsp.component';
 import { DetalleValidListchqVfspComponent } from './components/detalle-valid-listchq-vfsp/detalle-valid-listchq-vfsp.component';
+import { RegistrarSolicitudPagoComponent } from './components/registrar-solicitud-pago/registrar-solicitud-pago.component';
 
 @NgModule({
-  declarations: [VerificarFinancSolicitudPagoComponent,FormVerificarSolicitudVfspComponent, DetalleRegSolPagoVfspComponent, FormValidListchequeoVfspComponent, DetalleFactProcasVfspComponent, DialogObservacionesVfspComponent, DialogRechazarSolicitudVfspComponent, FormEditVerificarSolicitudVfspComponent, VerdetalleVfspComponent, DialogProyAsociadosVfspComponent, DetalleValidListchqVfspComponent],
+  declarations: [VerificarFinancSolicitudPagoComponent,FormVerificarSolicitudVfspComponent, DetalleRegSolPagoVfspComponent, FormValidListchequeoVfspComponent, DetalleFactProcasVfspComponent, DialogObservacionesVfspComponent, DialogRechazarSolicitudVfspComponent, FormEditVerificarSolicitudVfspComponent, VerdetalleVfspComponent, DialogProyAsociadosVfspComponent, DetalleValidListchqVfspComponent, RegistrarSolicitudPagoComponent],
   imports: [
     CommonModule,
     MaterialModule,
