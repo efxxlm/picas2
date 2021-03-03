@@ -45,11 +45,11 @@ namespace asivamosffie.services
             {
                 ListContratos = await _context.NovedadContractual.Where(r => r.Eliminado != true).ToListAsync();
 
-                ListContratos.ForEach(c =>
-                {
-                    c.TipoNovedadNombre = ListDominioTipoDominio.Where(r => r.Codigo == c.TipoNovedadCodigo)?.FirstOrDefault()?.Nombre;
-                    c.EstadoNovedadNombre = ListDominioEstado.Where(r => r.Codigo == c.EstadoCodigo)?.FirstOrDefault()?.Nombre;
-                });
+                //ListContratos.ForEach(c =>
+                //{
+                //    c.TipoNovedadNombre = ListDominioTipoDominio.Where(r => r.Codigo == c.TipoNovedadCodigo)?.FirstOrDefault()?.Nombre;
+                //    c.EstadoNovedadNombre = ListDominioEstado.Where(r => r.Codigo == c.EstadoCodigo)?.FirstOrDefault()?.Nombre;
+                //});
 
                 return ListContratos.OrderByDescending(r => r.FechaSolictud).ToList();
             }

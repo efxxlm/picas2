@@ -86,9 +86,9 @@
             </div>
             <div class="col">
               <mat-form-field class="select-width">
-                <mat-select required formControlName="tipoNovedad" #tipoNovedad multiple>
-                  <mat-option *ngFor="let tnovedad of tipoNovedadArray" [value]="tnovedad.codigo">
-                    {{ tnovedad.nombre }}
+                <mat-select required formControlName="tipoNovedad" #tipoNovedad multiple (selectionChange)="changeTipoNovedad()">
+                  <mat-option *ngFor="let tnovedad of tipoNovedadArray" [value]="tnovedad">
+                    {{ tnovedad.nombreTipoNovedad }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -98,6 +98,7 @@
       </div>
     </mat-card-content>
   </mat-card>
+  {{  novedadContractual | json}}
   <div class="text-center">
     <button mat-button color="warn" class="btn-guardar" type="submit">
       <img src="assets/img/icon/guardar.svg" alt="Guardar">
@@ -107,7 +108,7 @@
 <div class="animatedDown" *ngIf="addressForm.controls.tipoNovedad.value">
   <app-accordion-novedades 
                           [tiposNovedadModificacionContractual]="tiposNovedadModificacionContractual"
-                          [novedadesSeleccionadas]="tipoNovedad.value"
+                          [novedadeContractual]="novedadContractual"
                           >
   </app-accordion-novedades>
 

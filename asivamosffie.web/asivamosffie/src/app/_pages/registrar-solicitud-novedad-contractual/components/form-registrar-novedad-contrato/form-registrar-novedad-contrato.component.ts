@@ -4,6 +4,7 @@ import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { CommonService } from 'src/app/core/_services/common/common.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { NovedadContractualDescripcion } from 'src/app/_interfaces/novedadContractual';
 
 @Component({
   selector: 'app-form-registrar-novedad-contrato',
@@ -12,7 +13,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class FormRegistrarNovedadContratoComponent implements OnInit {
   @Input() tiposNovedadModificacionContractual;
-  @Input() tipoNovedad:string;
+  @Input() novedadDescripcion:NovedadContractualDescripcion;
 
   nombreTiposolicitud: string;
 

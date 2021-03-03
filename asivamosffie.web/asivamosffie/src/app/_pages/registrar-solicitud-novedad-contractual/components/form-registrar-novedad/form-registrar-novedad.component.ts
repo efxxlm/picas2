@@ -3,6 +3,7 @@ import { FormBuilder, Validators, FormArray } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { CommonService, InstanciasSeguimientoTecnico, TiposNovedadModificacionContractual } from 'src/app/core/_services/common/common.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { NovedadContractual, NovedadContractualDescripcion } from 'src/app/_interfaces/novedadContractual';
 
 @Component({
   selector: 'app-form-registrar-novedad',
@@ -41,6 +42,9 @@ export class FormRegistrarNovedadComponent implements OnInit {
 
   instanciaSeguimientoTecnico = InstanciasSeguimientoTecnico; 
   tiposNovedadModificacionContractual=TiposNovedadModificacionContractual;
+  novedadContractual: NovedadContractual = {
+
+  }
 
   get plazoSolicitadoField() {
     return this.addressForm.get('plazoSolicitado') as FormArray;
@@ -113,7 +117,18 @@ export class FormRegistrarNovedadComponent implements OnInit {
         this.instanciaPresentoSolicitudArray=response;
       });
       this.commonServices.listaTipoNovedadModificacionContractual().subscribe(response=>{
-        this.tipoNovedadArray=response;
+
+        response.forEach( n => {
+          let novedadContractualDescripcion: NovedadContractualDescripcion = {
+            tipoNovedadCodigo: n.codigo,
+            nombreTipoNovedad: n.nombre,
+
+
+          }
+
+          this.tipoNovedadArray.push( novedadContractualDescripcion );
+
+        });
       });
   }
  
@@ -176,6 +191,12 @@ export class FormRegistrarNovedadComponent implements OnInit {
 
     this.borrarArray(this.clausulaField, i);
     this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>');
+  }
+
+  changeTipoNovedad(){
+    if (this.addressForm.get('tipoNovedad').value)
+      this.novedadContractual.novedadContractualDescripcion = this.addressForm.get('tipoNovedad').value;
+    console.log( this.addressForm.get('tipoNovedad').value);  
   }
 
   onSubmit() {

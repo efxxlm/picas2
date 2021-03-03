@@ -1,5 +1,6 @@
 import { Input } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
+import { NovedadContractual, NovedadContractualDescripcion } from 'src/app/_interfaces/novedadContractual';
 
 @Component({
   selector: 'app-accordion-novedades',
@@ -8,7 +9,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AccordionNovedadesComponent implements OnInit {
   @Input () tiposNovedadModificacionContractual;
-  @Input () novedadesSeleccionadas:string[];
+  @Input () novedadeContractual: NovedadContractual[];
+  
   constructor() { }
 
   ngOnInit(): void {
