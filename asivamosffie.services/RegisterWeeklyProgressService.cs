@@ -483,7 +483,7 @@ namespace asivamosffie.services
                         item.EstadoMuestrasCodigo = ConstanCodigoEstadoSeguimientoSemanal.Sin_Muestras;
 
                     strCodigoEstadoMuestas = ListEstadoSeguimientoSemanal.Where(r => r.Codigo == item.EstadoMuestrasCodigo).FirstOrDefault().Nombre;
-                     
+
                     bool? RegistroCompletoMuestrasVerificar =
                          item.SeguimientoSemanalGestionObra?
                         .FirstOrDefault()?.SeguimientoSemanalGestionObraCalidad?
@@ -519,7 +519,7 @@ namespace asivamosffie.services
                         item.ContratacionProyecto?.Proyecto?.LlaveMen,
                         item.ContratacionProyecto?.Contratacion?.Contrato?.FirstOrDefault()?.NumeroContrato,
                         EstadoReporteSemanal = !string.IsNullOrEmpty(item.EstadoSeguimientoSemanalCodigo) ? ListEstadoSeguimientoSemanal.Where(r => r.Codigo == item.EstadoSeguimientoSemanalCodigo).FirstOrDefault().Nombre : "---",
-                        EstadoMuestrasReporteSemanal = strCodigoEstadoMuestas, 
+                        EstadoMuestrasReporteSemanal = strCodigoEstadoMuestas,
                         RegistroCompletoMuestrasVerificar = RegistroCompletoMuestrasVerificar,
                         RegistroCompletoMuestrasValidar = RegistroCompletoMuestrasValidar
                     });
@@ -2120,19 +2120,13 @@ namespace asivamosffie.services
                 return true;
 
             if (!seguimientoSemanalGestionObraCalidad.SeRealizaronEnsayosLaboratorio.HasValue
-                || seguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio.Count() == 0
-                )
-            {
+                || seguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio.Count() == 0)
                 return false;
-            }
-
-
+             
             foreach (var GestionObraCalidadEnsayoLaboratorio in seguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio)
             {
                 if (!GestionObraCalidadEnsayoLaboratorio.RegistroCompleto.HasValue || !(bool)GestionObraCalidadEnsayoLaboratorio.RegistroCompleto)
-                {
                     return false;
-                }
             }
 
             return true;
@@ -2146,8 +2140,7 @@ namespace asivamosffie.services
             if (!pSeguimientoSemanalGestionObraAmbiental.TieneManejoMaterialesInsumo.HasValue
                 && !pSeguimientoSemanalGestionObraAmbiental.TieneManejoResiduosConstruccionDemolicion.HasValue
                 && !pSeguimientoSemanalGestionObraAmbiental.TieneManejoResiduosPeligrososEspeciales.HasValue
-                && !pSeguimientoSemanalGestionObraAmbiental.TieneManejoOtro.HasValue
-                )
+                && !pSeguimientoSemanalGestionObraAmbiental.TieneManejoOtro.HasValue)
                 return false;
 
             if (pSeguimientoSemanalGestionObraAmbiental.TieneManejoMaterialesInsumo == true)
@@ -2226,9 +2219,7 @@ namespace asivamosffie.services
                 || !pManejoResiduosPeligrososEspeciales.RequiereObservacion.HasValue
                 || pManejoResiduosPeligrososEspeciales.RequiereObservacion.HasValue && (bool)pManejoResiduosPeligrososEspeciales.RequiereObservacion && string.IsNullOrEmpty(pManejoResiduosPeligrososEspeciales.Observacion)
                )
-            {
                 return false;
-            }
             return true;
         }
 

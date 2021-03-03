@@ -98,7 +98,7 @@ namespace asivamosffie.services
                 }
             }
             catch (Exception ex)
-            { 
+            {
             }
 
             return listaContrats;
@@ -191,17 +191,15 @@ namespace asivamosffie.services
                             contratoPerfilOld.CantidadHvAprobadas = ContratoPerfil.CantidadHvAprobadas;
                             contratoPerfilOld.FechaAprobacion = ContratoPerfil.FechaAprobacion;
                             contratoPerfilOld.RutaSoporte = ContratoPerfil.RutaSoporte;
-
                             contratoPerfilOld.TieneObservacionApoyo = ContratoPerfil.TieneObservacionApoyo;
                             contratoPerfilOld.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(ContratoPerfil);
 
-                            if (contratoPerfilOld.RegistroCompleto) 
-                                if (contratoPerfilOld.TieneObservacionSupervisor.HasValue) 
-                                    contratoPerfilOld.TieneObservacionSupervisor = false; 
-                            else
-                            {
-                                RegistroCompletoContrato = false;
-                            }
+                            if (contratoPerfilOld.RegistroCompleto)
+                                if (contratoPerfilOld.TieneObservacionSupervisor.HasValue)
+                                    contratoPerfilOld.TieneObservacionSupervisor = false;
+                                else
+                                    RegistroCompletoContrato = false;
+
 
                             foreach (var ContratoPerfilObservacion in ContratoPerfil.ContratoPerfilObservacion)
                             {
@@ -253,18 +251,15 @@ namespace asivamosffie.services
                             ContratoPerfil.Eliminado = false;
                             ContratoPerfil.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(ContratoPerfil);
                             _context.ContratoPerfil.Add(ContratoPerfil);
-                            //_context.SaveChanges();
-
+              
                             foreach (var ContratoPerfilObservacion in ContratoPerfil.ContratoPerfilObservacion)
                             {
-
-                                if (!string.IsNullOrEmpty(ContratoPerfilObservacion.Observacion))
-                                    ContratoPerfilObservacion.Observacion = ContratoPerfilObservacion.Observacion.ToUpper();
+                                ContratoPerfilObservacion.Observacion = ContratoPerfilObservacion.Observacion == null ? null : ContratoPerfilObservacion.Observacion.ToUpper();
                                 ContratoPerfilObservacion.UsuarioCreacion = pContrato.UsuarioCreacion;
                                 ContratoPerfilObservacion.FechaCreacion = DateTime.Now;
                                 ContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Interventoria;
                                 ContratoPerfilObservacion.Eliminado = false;
-                                 
+
                                 _context.ContratoPerfilObservacion.Add(ContratoPerfilObservacion);
                             }
 
@@ -296,9 +291,11 @@ namespace asivamosffie.services
                     .Include(r => r.ContratoPerfil)
                     .FirstOrDefault();
 
+                contratoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
+                contratoOld.FechaModificacion = DateTime.Now;
+
                 if (contratoOld.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
                     contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.En_proceso_de_aprobacion_de_requisitos_tecnicos;
-
 
                 else
                 {
@@ -308,8 +305,6 @@ namespace asivamosffie.services
                         contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_verificados;
 
                 }
-                contratoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
-                contratoOld.FechaModificacion = DateTime.Now;
 
                 return
                     new Respuesta
@@ -340,14 +335,14 @@ namespace asivamosffie.services
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Contrato_Perfil, (int)EnumeratorTipoDominio.Acciones);
 
             try
-            { 
+            {
                 _context.Set<ContratoPerfil>().Where(cp => cp.ContratoPerfilId == ContratoPerfilId)
                                                                                                 .Update(cp => new ContratoPerfil
                                                                                                 {
                                                                                                     Eliminado = true,
                                                                                                     UsuarioModificacion = UsuarioModificacion,
-                                                                                                    FechaModificacion = DateTime.Now, 
-                                                                                                }); 
+                                                                                                    FechaModificacion = DateTime.Now,
+                                                                                                });
                 return
                     new Respuesta
                     {
@@ -381,9 +376,9 @@ namespace asivamosffie.services
                  || contratoPerfilOld.CantidadHvAprobadas == 0
                  || string.IsNullOrEmpty(contratoPerfilOld.FechaAprobacion.ToString())
                  || string.IsNullOrEmpty(contratoPerfilOld.RutaSoporte)
-                ) 
+                )
                 return false;
-           
+
             return true;
         }
 
