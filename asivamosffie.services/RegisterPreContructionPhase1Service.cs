@@ -25,7 +25,7 @@ namespace asivamosffie.services
             _commonService = commonService;
             _context = context;
         }
-    
+
         public async Task<List<VRegistrarFase1>> GetListContratacion2()
         {
             return await _context.VRegistrarFase1.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString() && r.TieneFasePreconstruccion.Value > 0).OrderByDescending(r => r.FechaAprobacion).ToListAsync();
@@ -37,7 +37,7 @@ namespace asivamosffie.services
             try
             {
                 List<Contrato> listContratos = await _context.Contrato
-                  .FromSqlRaw(QuerySql.GetListContratacion) 
+                  .FromSqlRaw(QuerySql.GetListContratacion)
                   .Include(r => r.ContratoPoliza)
                   .Include(r => r.Contratacion)
                      .ThenInclude(r => r.ContratacionProyecto)
@@ -183,7 +183,7 @@ namespace asivamosffie.services
                             contratoPerfilOld.TieneObservacionApoyo = ContratoPerfil.TieneObservacionApoyo;
                             contratoPerfilOld.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(ContratoPerfil);
                             contratoPerfilOld.TieneObservacionSupervisor = ContratoPerfil.TieneObservacionApoyo;
-                      
+
                             foreach (var ContratoPerfilObservacion in ContratoPerfil.ContratoPerfilObservacion)
                             {
                                 if (ContratoPerfilObservacion.ContratoPerfilObservacionId > 0)
@@ -234,7 +234,7 @@ namespace asivamosffie.services
                             ContratoPerfil.Eliminado = false;
                             ContratoPerfil.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(ContratoPerfil);
                             _context.ContratoPerfil.Add(ContratoPerfil);
-              
+
                             foreach (var ContratoPerfilObservacion in ContratoPerfil.ContratoPerfilObservacion)
                             {
                                 ContratoPerfilObservacion.Observacion = ContratoPerfilObservacion.Observacion == null ? null : ContratoPerfilObservacion.Observacion.ToUpper();
@@ -246,8 +246,10 @@ namespace asivamosffie.services
                                 _context.ContratoPerfilObservacion.Add(ContratoPerfilObservacion);
                             }
 
-                            foreach (var ContratoPerfilNumeroRadicado in ContratoPerfil.ContratoPerfilNumeroRadicado)
+
+                            ContratoPerfil.ContratoPerfilNumeroRadicado.ToList().ForEach(ContratoPerfilNumeroRadicado =>
                             {
+
                                 if (ContratoPerfilNumeroRadicado.ContratoPerfilNumeroRadicadoId == 0)
                                 {
                                     ContratoPerfilNumeroRadicado.Eliminado = false;
@@ -262,17 +264,17 @@ namespace asivamosffie.services
                                     ContratoPerfilNumeroRadicado.UsuarioModificacion = pContrato.UsuarioCreacion;
                                     ContratoPerfilNumeroRadicado.FechaModificacion = DateTime.Now;
                                 }
-                            }
+                            });
                         }
                     }
                 }
 
                 //Cambiar Estado Contrato 
                 Contrato contratoOld = _context.Contrato.
-                    Where(r => r.ContratoId == pContrato.ContratoId)
-                    .Include(r => r.Contratacion)
-                    .Include(r => r.ContratoPerfil)
-                    .FirstOrDefault();
+                        Where(r => r.ContratoId == pContrato.ContratoId)
+                        .Include(r => r.Contratacion)
+                        .Include(r => r.ContratoPerfil)
+                        .FirstOrDefault();
 
                 contratoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
                 contratoOld.FechaModificacion = DateTime.Now;
@@ -286,9 +288,7 @@ namespace asivamosffie.services
 
                     if (contratoOld.ContratoPerfil.Count() > 0 && RegistroCompletoContrato)
                         contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_verificados;
-
                 }
-
                 return
                     new Respuesta
                     {
