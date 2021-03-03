@@ -94,6 +94,7 @@ export class TablaCronogramaComponent implements OnInit {
         // no tiene monitoreo ó los monitoreos ya estan cerrados
         let listaTemp = monitoreo.filter( r => r.estadoActividadCodigo === this.estadosProcesoSeleccionMonitoreo.DevueltoPorComiteTecnico ||
                                                r.estadoActividadCodigo === this.estadosProcesoSeleccionMonitoreo.DevueltoPorComiteFiduciario ||
+                                               r.estadoActividadCodigo === this.estadosProcesoSeleccionMonitoreo.AprobadoPorComiteTecnico ||
                                                r.estadoActividadCodigo === this.estadosProcesoSeleccionMonitoreo.EnTramite
                                                //r.estadoActividadCodigo === this.estadosProcesoSeleccionMonitoreo.AprobadoPorComiteFiduciario 
                                         )
