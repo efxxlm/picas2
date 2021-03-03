@@ -216,8 +216,13 @@ export class FormPerfilComponent implements OnInit {
           }
         }
         if ( perfil.registroCompleto === true ) {
-          this.perfilesCompletos++;
-          semaforo = 'completo';
+          if ( perfil.tieneObservacionSupervisor === true ) {
+            semaforo = 'en-proceso';
+            this.perfilesEnProceso++;
+          } else {
+            this.perfilesCompletos++;
+            semaforo = 'completo';
+          }
         }
         if (  perfil.registroCompleto === false
               && perfil.perfilCodigo !== undefined
