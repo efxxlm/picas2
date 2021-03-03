@@ -182,18 +182,8 @@ namespace asivamosffie.services
                             contratoPerfilOld.RutaSoporte = ContratoPerfil.RutaSoporte;
                             contratoPerfilOld.TieneObservacionApoyo = ContratoPerfil.TieneObservacionApoyo;
                             contratoPerfilOld.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(ContratoPerfil);
-
- 
-                            // Se comenta la siguiente validacion, el campo se editara en el servicio de aprobar inicio
-                            //if (contratoPerfilOld.RegistroCompleto)
-                            //    if (contratoPerfilOld.TieneObservacionSupervisor.HasValue) 
-                            //        contratoPerfilOld.TieneObservacionSupervisor = false; 
-                            //else
-                            //{
-                            //    RegistroCompletoContrato = false;
-                            //}
- 
-
+                            contratoPerfilOld.TieneObservacionSupervisor = ContratoPerfil.TieneObservacionApoyo;
+                      
                             foreach (var ContratoPerfilObservacion in ContratoPerfil.ContratoPerfilObservacion)
                             {
                                 if (ContratoPerfilObservacion.ContratoPerfilObservacionId > 0)
