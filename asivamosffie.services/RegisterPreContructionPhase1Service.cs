@@ -182,7 +182,7 @@ namespace asivamosffie.services
                             contratoPerfilOld.RutaSoporte = ContratoPerfil.RutaSoporte;
                             contratoPerfilOld.TieneObservacionApoyo = ContratoPerfil.TieneObservacionApoyo;
                             contratoPerfilOld.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(ContratoPerfil);
-                            contratoPerfilOld.TieneObservacionSupervisor = ContratoPerfil.TieneObservacionApoyo;
+                            contratoPerfilOld.TieneObservacionSupervisor = ContratoPerfil.TieneObservacionSupervisor;
 
                             foreach (var ContratoPerfilObservacion in ContratoPerfil.ContratoPerfilObservacion)
                             {
