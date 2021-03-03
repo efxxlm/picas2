@@ -219,7 +219,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   changeState(aprobacionCodigo: any, validacionCodigo: string){
     this.noGuardado = true;
     if(validacionCodigo === '2' && (aprobacionCodigo === '1' || aprobacionCodigo === 1 ) ){
-      this.openDialog('', "Le recomendamos verificar su respuesta; tenga en cuenta que el apoyo a la supervisión si tuvo observaciones.");
+      this.openDialog('', '<b>Le recomendamos verificar su respuesta; tenga en cuenta que el apoyo a la supervisión si tuvo observaciones.</b>');
     }
   }
 
