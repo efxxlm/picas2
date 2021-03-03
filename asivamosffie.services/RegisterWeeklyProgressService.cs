@@ -50,7 +50,7 @@ namespace asivamosffie.services
 
             List<FlujoInversion> flujoInversions = _context.FlujoInversion
                                                           .Include(r => r.Programacion)
-                                                          .Where(r => r.SeguimientoSemanal.ContratacionProyectoId == pSeguimientoSemanal.ContratacionProyectoId 
+                                                          .Where(r => r.SeguimientoSemanal.ContratacionProyectoId == pSeguimientoSemanal.ContratacionProyectoId
                                                               && r.SeguimientoSemanal.NumeroSemana < pSeguimientoSemanal.NumeroSemana)
                                                           .Take(4)
                                                           .ToList();
@@ -637,18 +637,25 @@ namespace asivamosffie.services
                 ContratacionProyecto contratacionProyecto = _context.ContratacionProyecto.Find(pContratacionProyecto.ContratacionProyectoId);
                 contratacionProyecto.UsuarioModificacion = pContratacionProyecto.UsuarioCreacion;
                 contratacionProyecto.FechaModificacion = DateTime.Now;
+                 
+                //Para Contratos Tipo B
+                if (!string.IsNullOrEmpty(pContratacionProyecto.RutaCargaActaTerminacionContrato))
+                {
+                    contratacionProyecto.RutaCargaActaTerminacionContrato = pContratacionProyecto.RutaCargaActaTerminacionContrato;
+                }
+                //Para Contratos Tipo A
+                else
+                {
+                    contratacionProyecto.RutaCargaActaTerminacionContrato = 
+                        Path.Combine(appSettingsService.DirectoryBase,
+                                     appSettingsService.DirectoryRutaCargaActaTerminacionContrato,
+                                     pContratacionProyecto.ContratacionProyectoId.ToString(),
+                                     pContratacionProyecto.pFile.FileName);
 
-                contratacionProyecto.RutaCargaActaTerminacionContrato = Path.Combine(appSettingsService.DirectoryBase,
-                                                                                      appSettingsService.DirectoryRutaCargaActaTerminacionContrato,
-                                                                                      pContratacionProyecto.ContratacionProyectoId.ToString(),
-                                                                                      pContratacionProyecto.pFile.FileName);
-
-                await _documentService.SaveFileContratacion(pContratacionProyecto.pFile, Path.Combine(appSettingsService.DirectoryBase,
-                                                                                                       appSettingsService.DirectoryRutaCargaActaTerminacionContrato,
-                                                                                                       pContratacionProyecto.ContratacionProyectoId.ToString()), pContratacionProyecto.pFile.FileName);
-
-                _context.SaveChanges();
-
+                    await _documentService.SaveFileContratacion(pContratacionProyecto.pFile, Path.Combine(appSettingsService.DirectoryBase,
+                                                                                                           appSettingsService.DirectoryRutaCargaActaTerminacionContrato,
+                                                                                                           pContratacionProyecto.ContratacionProyectoId.ToString()), pContratacionProyecto.pFile.FileName); 
+                } 
                 return new Respuesta
                 {
                     IsSuccessful = true,
@@ -2126,7 +2133,7 @@ namespace asivamosffie.services
             if (!seguimientoSemanalGestionObraCalidad.SeRealizaronEnsayosLaboratorio.HasValue
                 || seguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio.Count() == 0)
                 return false;
-             
+
             foreach (var GestionObraCalidadEnsayoLaboratorio in seguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio)
             {
                 if (!GestionObraCalidadEnsayoLaboratorio.RegistroCompleto.HasValue || !(bool)GestionObraCalidadEnsayoLaboratorio.RegistroCompleto)
