@@ -2,7 +2,13 @@
     <mat-card class="shipping-card">
         <mat-card-header class="header-card header-card--margin">
             <mat-card-title class="header-card--text">
-                Suspensión
+                {{ 
+                    tipoNovedad == "1" ? 'Suspension' :
+                    tipoNovedad == "2" ? 'Prórroga a la Suspensión' : 
+                    tipoNovedad == "3" ? 'Adición' : 
+                    tipoNovedad == "4" ? 'Prorroga' :
+                    tipoNovedad == "5" ? 'Modificación de Condiciones Contractuales' : ''
+                }}
             </mat-card-title>
         </mat-card-header>
         <mat-card-content>

@@ -8,6 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AccordionNovedadesComponent implements OnInit {
   @Input () tiposNovedadModificacionContractual;
+  @Input () novedadesSeleccionadas:string[];
   constructor() { }
 
   ngOnInit(): void {

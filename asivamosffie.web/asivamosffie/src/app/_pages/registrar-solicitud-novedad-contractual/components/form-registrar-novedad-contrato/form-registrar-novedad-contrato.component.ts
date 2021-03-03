@@ -12,6 +12,9 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class FormRegistrarNovedadContratoComponent implements OnInit {
   @Input() tiposNovedadModificacionContractual;
+  @Input() tipoNovedad:string;
+
+  nombreTiposolicitud: string;
 
   addressForm = this.fb.group({
     fechaSolicitudNovedad: [null, Validators.required],

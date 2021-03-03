@@ -1,14 +1,20 @@
 <!-- Para efectos de maquetación -->
 <mat-accordion>
-    <mat-expansion-panel class="expansion-style sub-expansion">
+    <mat-expansion-panel class="expansion-style sub-expansion" *ngFor="let novedad of novedadesSeleccionadas; let i = index" >
         <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title sin-diligenciar">
-                Novedad 1
+                Novedad {{ i + 1 }}
             </mat-panel-title>
         </mat-expansion-panel-header>
-        <app-form-registrar-novedad-contrato [tiposNovedadModificacionContractual]="this.tiposNovedadModificacionContractual"></app-form-registrar-novedad-contrato>
+
+        <app-form-registrar-novedad-contrato 
+                                            [tiposNovedadModificacionContractual]="this.tiposNovedadModificacionContractual"
+                                            [tipoNovedad]="novedad"
+                                            >
+        </app-form-registrar-novedad-contrato>
+
     </mat-expansion-panel>
-    <mat-expansion-panel class="expansion-style sub-expansion">
+    <!-- <mat-expansion-panel class="expansion-style sub-expansion">
         <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title sin-diligenciar">
                 Novedad 2
@@ -31,5 +37,5 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
         <app-form-registrar-novedad-contrato [tiposNovedadModificacionContractual]="this.tiposNovedadModificacionContractual"></app-form-registrar-novedad-contrato>
-    </mat-expansion-panel>
+    </mat-expansion-panel> -->
 </mat-accordion>
