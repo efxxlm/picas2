@@ -32,14 +32,7 @@ namespace asivamosffie.services
             List<dynamic> listaContrats = new List<dynamic>();
 
             List<Contrato> listContratos = await _context.Contrato
-                .FromSqlRaw("SELECT c.* FROM dbo.Contrato AS c " +
-                "INNER JOIN dbo.Contratacion AS ctr ON c.ContratacionId = ctr.ContratacionId " +
-                "INNER JOIN dbo.DisponibilidadPresupuestal AS dp ON ctr.ContratacionId = dp.ContratacionId " +
-                "INNER JOIN dbo.ContratoPoliza AS cp ON c.ContratoId = cp.ContratoId " +
-                "WHERE dp.NumeroDRP IS NOT NULL " + //Documento Registro Presupuestal
-                "AND c.EstadoVerificacionCodigo is not null " +
-                "AND cp.FechaAprobacion IS NOT NULL ") //Enviado al apoyo
-
+                .FromSqlRaw(QuerySql.GetListContratacionValidar)  
                 .Include(r => r.ContratoPoliza)
                 .Include(r => r.Contratacion)
                    .ThenInclude(r => r.ContratacionProyecto)
@@ -203,3 +196,4 @@ namespace asivamosffie.services
         }
     }
 }
+ 

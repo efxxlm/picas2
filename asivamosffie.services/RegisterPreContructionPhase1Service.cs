@@ -25,6 +25,7 @@ namespace asivamosffie.services
             _commonService = commonService;
             _context = context;
         }
+    
         public async Task<List<VRegistrarFase1>> GetListContratacion2()
         {
             return await _context.VRegistrarFase1.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString() && r.TieneFasePreconstruccion.Value > 0).OrderByDescending(r => r.FechaAprobacion).ToListAsync();
@@ -36,27 +37,15 @@ namespace asivamosffie.services
             try
             {
                 List<Contrato> listContratos = await _context.Contrato
-              .FromSqlRaw("SELECT c.* FROM dbo.Contrato AS c " +
-              "INNER JOIN dbo.Contratacion AS ctr ON c.ContratacionId = ctr.ContratacionId " +
-              "INNER JOIN dbo.DisponibilidadPresupuestal AS dp ON ctr.ContratacionId = dp.ContratacionId " +
-              "INNER JOIN dbo.ContratoPoliza AS cp ON c.ContratoId = cp.ContratoId " +
-              "WHERE dp.NumeroDRP IS NOT NULL " +     //Documento Registro Presupuestal
-              "AND cp.FechaAprobacion is not null " + //Fecha Aprobacion Poliza
-              "AND ctr.TipoSolicitudCodigo = 1" +   //Solo contratos Tipo Obra
-              "OR  c.EstadoVerificacionCodigo = 1" +  //Sin aprobación de requisitos técnicos
-              "OR  c.EstadoVerificacionCodigo = 2" +  //En proceso de aprobación de requisitos técnicos
-              "OR  c.EstadoVerificacionCodigo = 3" +  //Con requisitos técnicos aprobados
-              "OR  c.EstadoVerificacionCodigo = 4" +  //Con requisitos técnicos aprobados
-              "OR  c.EstadoVerificacionCodigo = 10")  //Enviado al interventor -- Enviado por el supervisor
-
-              .Include(r => r.ContratoPoliza)
-              .Include(r => r.Contratacion)
-                 .ThenInclude(r => r.ContratacionProyecto)
-                     .ThenInclude(r => r.Proyecto)
-                          .ThenInclude(r => r.ContratoPerfil)
-              .Include(r => r.Contratacion)
-                .ThenInclude(r => r.DisponibilidadPresupuestal)
-             .ToListAsync();
+                  .FromSqlRaw(QuerySql.GetListContratacion) 
+                  .Include(r => r.ContratoPoliza)
+                  .Include(r => r.Contratacion)
+                     .ThenInclude(r => r.ContratacionProyecto)
+                         .ThenInclude(r => r.Proyecto)
+                              .ThenInclude(r => r.ContratoPerfil)
+                  .Include(r => r.Contratacion)
+                    .ThenInclude(r => r.DisponibilidadPresupuestal)
+                                                                   .ToListAsync();
 
                 foreach (var c in listContratos)
                 {
