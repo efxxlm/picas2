@@ -90,8 +90,9 @@ namespace asivamosffie.services
                             CantidadProyectosConPerfilesPendientes++;
                     }
 
-                    if (c.Contratacion.ContratacionProyecto.Count(r => !r.Eliminado) == CantidadProyectosConPerfilesAprobados)
+                    if (c.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count() == CantidadProyectosConPerfilesAprobados)
                         RegistroCompleto = true;
+
                     listaContrats.Add(new
                     {
                         c.ContratoId,
@@ -141,7 +142,7 @@ namespace asivamosffie.services
                        .ThenInclude(r => r.DisponibilidadPresupuestal)
                     .ToListAsync();
 
-                foreach (var c in listContratos)
+                foreach (var c in listContratos.Where(r => r.ContratoPoliza.FirstOrDefault().FechaAprobacion.HasValue))
                 {
                     if (c.ContratoPoliza.FirstOrDefault().FechaAprobacion.HasValue)
                     {
@@ -155,12 +156,12 @@ namespace asivamosffie.services
                         {
                             if (ContratacionProyecto.Proyecto.ContratoPerfil.Count() == 0)
                                 CantidadProyectosConPerfilesPendientes++;
-                            else if (ContratacionProyecto.Proyecto.ContratoPerfil.Count(r => !(bool)r.Eliminado) == ContratacionProyecto.Proyecto.ContratoPerfil.Count(r => !(bool)r.Eliminado && r.RegistroCompleto))
+                            else if (ContratacionProyecto.Proyecto.ContratoPerfil.Where(r => !(bool)r.Eliminado).Count() == ContratacionProyecto.Proyecto.ContratoPerfil.Where(r => !(bool)r.Eliminado && r.RegistroCompleto).Count())
                                 CantidadProyectosConPerfilesAprobados++;
                             else
                                 CantidadProyectosConPerfilesPendientes++;
                         }
-                        if (c.Contratacion.ContratacionProyecto.Count(r => !r.Eliminado) == CantidadProyectosConPerfilesAprobados)
+                        if (c.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count() == CantidadProyectosConPerfilesAprobados)
                             RegistroCompleto = true;
 
 
@@ -171,7 +172,7 @@ namespace asivamosffie.services
                             c.ContratoPoliza.FirstOrDefault().FechaAprobacion,
                             c.Contratacion.TipoSolicitudCodigo,
                             c.NumeroContrato,
-                            CantidadProyectosAsociados = c.Contratacion.ContratacionProyecto.Count(r => !r.Eliminado),
+                            CantidadProyectosAsociados = c.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count(),
                             CantidadProyectosRequisitosAprobados = CantidadProyectosConPerfilesAprobados,
                             CantidadProyectosConPerfilesPendientes,
                             EstadoCodigo = c.EstadoVerificacionCodigo,
@@ -217,9 +218,8 @@ namespace asivamosffie.services
                         .ThenInclude(r => r.Contratista).FirstOrDefaultAsync();
 
                 if (contrato.ContratoPerfil.Count() > 0)
-                {
                     contrato.ContratoPerfil = contrato.ContratoPerfil.Where(r => !(bool)r.Eliminado).ToList();
-                }
+
 
                 foreach (var ContratacionProyecto in contrato.Contratacion.ContratacionProyecto)
                 {
@@ -250,8 +250,6 @@ namespace asivamosffie.services
 
         public async Task<Respuesta> CreateEditContratoPerfil(Contrato pContrato)
         {
-
-            string CreateEdit = "";
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Contrato_Perfil, (int)EnumeratorTipoDominio.Acciones);
 
             try
@@ -261,7 +259,6 @@ namespace asivamosffie.services
                 {
                     if (ContratoPerfil.ContratoPerfilId > 0)
                     {
-                        CreateEdit = "CREAR CONTRATO PERFIL";
                         ContratoPerfil contratoPerfilOld = _context.ContratoPerfil.Find(ContratoPerfil.ContratoPerfilId);
                         contratoPerfilOld.ContratoPerfilId = ContratoPerfil.ContratoPerfilId;
                         contratoPerfilOld.PerfilCodigo = ContratoPerfil.PerfilCodigo;
@@ -296,7 +293,6 @@ namespace asivamosffie.services
                     }
                     else
                     {
-                        CreateEdit = "EDITAR CONTRATO PERFIL";
                         ContratoPerfil.UsuarioCreacion = pContrato.UsuarioCreacion;
                         ContratoPerfil.FechaCreacion = DateTime.Now;
                         ContratoPerfil.Eliminado = false;
@@ -322,7 +318,7 @@ namespace asivamosffie.services
                     contratoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
                     contratoOld.FechaModificacion = DateTime.Now;
                 }
-                _context.SaveChanges();
+
                 return
                     new Respuesta
                     {
@@ -330,7 +326,7 @@ namespace asivamosffie.services
                         IsException = false,
                         IsValidation = false,
                         Code = RegisterPreContructionPhase1.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Preconstruccion_Fase_1, RegisterPreContructionPhase1.OperacionExitosa, idAccion, pContrato.UsuarioCreacion, CreateEdit)
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Preconstruccion_Fase_1, RegisterPreContructionPhase1.OperacionExitosa, idAccion, pContrato.UsuarioCreacion, "CREAR EDITAR CONTRATO")
                     };
             }
             catch (Exception ex)
@@ -355,7 +351,8 @@ namespace asivamosffie.services
             {
                 ContratoPerfil contratoPerfilOld = _context.ContratoPerfil.Find(ContratoPerfilId);
                 contratoPerfilOld.Eliminado = true;
-                _context.SaveChanges();
+                contratoPerfilOld.UsuarioModificacion = UsuarioModificacion;
+                contratoPerfilOld.FechaModificacion = DateTime.Now;
 
                 return
                     new Respuesta
@@ -385,18 +382,15 @@ namespace asivamosffie.services
         {
             if (
                     string.IsNullOrEmpty(contratoPerfilOld.PerfilCodigo)
-                 || string.IsNullOrEmpty(contratoPerfilOld.CantidadHvRequeridas.ToString())
-                 || string.IsNullOrEmpty(contratoPerfilOld.CantidadHvRecibidas.ToString())
-                 || string.IsNullOrEmpty(contratoPerfilOld.CantidadHvAprobadas.ToString())
-                 || string.IsNullOrEmpty(contratoPerfilOld.FechaAprobacion.ToString())
-
+                 || contratoPerfilOld.CantidadHvRequeridas == 0
+                 || contratoPerfilOld.CantidadHvRecibidas == 0
+                 || contratoPerfilOld.CantidadHvAprobadas == 0
+                 || !contratoPerfilOld.FechaAprobacion.HasValue
                  || string.IsNullOrEmpty(contratoPerfilOld.RutaSoporte)
 
-                //|| string.IsNullOrEmpty(contratoPerfilOld.ConObervacionesSupervision.ToString() 
-                )
-            {
+                ) 
                 return false;
-            }
+           
             return true;
         }
 
@@ -410,8 +404,7 @@ namespace asivamosffie.services
                 contratoAprobar.FechaModificacion = DateTime.Now;
                 contratoAprobar.UsuarioModificacion = UsuarioModificacion;
                 contratoAprobar.EstadoVerificacionCodigo = ConstanCodigoEstadoVerificacionContratoObra.Con_requisitos_del_contratista_de_obra_avalados;
-                _context.SaveChanges();
-
+       
                 return
                     new Respuesta
                     {
@@ -465,7 +458,7 @@ namespace asivamosffie.services
                         contratoPerfilObservacionOld.Observacion = pContratoPerfilObservacion.Observacion.ToUpper();
                 }
                 _context.Update(contratoPerfilOld);
-                _context.SaveChanges();
+               
 
                 //Validar Estados Completos
                 Contrato contrato = _context.Contrato
@@ -520,7 +513,6 @@ namespace asivamosffie.services
                     };
             }
         }
-
-
+         
     }
 }

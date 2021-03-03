@@ -53,7 +53,7 @@
                 </button>
 
                 <button mat-raised-button color="accent" class="btn-table"
-                    (click)="verDetalle(element.disponibilidadPresupuestalId)" *ngIf="element.estadoSolicitudCodigo!=8 || element.estadoSolicitudCodigo!=2">
+                    (click)="verDetalle(element.disponibilidadPresupuestalId)" *ngIf="element.estadoSolicitudCodigo!=8 && element.estadoSolicitudCodigo!=2">
                     Ver detalle
                 </button>
             </td>

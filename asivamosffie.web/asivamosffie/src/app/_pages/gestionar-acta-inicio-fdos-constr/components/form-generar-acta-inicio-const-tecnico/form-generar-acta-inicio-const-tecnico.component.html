@@ -77,13 +77,6 @@
       </p></mat-card-content
     >
   </mat-card>
-  <div
-    *ngIf="addressForm.invalid && addressForm.touched"
-    class="animateDown my-1em color-secondaryColor d-flex align-items-center justify-content-center"
-  >
-    <img class="icon-incompleto--img mr-05em" src="assets/img/icon/incompleto.svg" alt="este campo es requerido" />
-    Debe ingresar la información en el campo para continuar
-  </div>
   <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
     <mat-card class="shipping-card mainGris">
       <mat-card-content>
@@ -95,9 +88,9 @@
                   class="label-left"
                   for="fechaActaInicioFDosConstruccion"
                   [class.color-secondaryColor]="
-                    (addressForm.get('fechaActaInicioFDosConstruccion').invalid &&
+                    (addressForm.get('fechaActaInicioFDosConstruccion')?.invalid &&
                       addressForm.get('fechaActaInicioFDosConstruccion').touched) ||
-                    (addressForm.get('fechaActaInicioFDosConstruccion').invalid && estaEditando)
+                    (addressForm.get('fechaActaInicioFDosConstruccion')?.invalid && estaEditando)
                   "
                 >
                   Fecha del acta de inicio de la fase 2 - Construcción
@@ -126,10 +119,13 @@
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
                     alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
                     *ngIf="
-                      (addressForm.get('fechaActaInicioFDosConstruccion').invalid &&
+                      (addressForm.get('fechaActaInicioFDosConstruccion')?.invalid &&
                         addressForm.get('fechaActaInicioFDosConstruccion').touched) ||
-                      (addressForm.get('fechaActaInicioFDosConstruccion').invalid && estaEditando)
+                      (addressForm.get('fechaActaInicioFDosConstruccion')?.invalid && estaEditando)
                     "
                   />
                 </span>
@@ -145,9 +141,9 @@
                   class="label-left"
                   for="fechaPrevistaTerminacion"
                   [class.color-secondaryColor]="
-                    (addressForm.get('fechaPrevistaTerminacion').invalid &&
+                    (addressForm.get('fechaPrevistaTerminacion')?.invalid &&
                       addressForm.get('fechaPrevistaTerminacion').touched) ||
-                    (addressForm.get('fechaPrevistaTerminacion').invalid && estaEditando)
+                    (addressForm.get('fechaPrevistaTerminacion')?.invalid && estaEditando)
                   "
                 >
                   Fecha prevista de terminación
@@ -171,10 +167,13 @@
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
                   alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
                   *ngIf="
-                    (addressForm.get('fechaPrevistaTerminacion').invalid &&
+                    (addressForm.get('fechaPrevistaTerminacion')?.invalid &&
                       addressForm.get('fechaPrevistaTerminacion').touched) ||
-                    (addressForm.get('fechaPrevistaTerminacion').invalid && estaEditando)
+                    (addressForm.get('fechaPrevistaTerminacion')?.invalid && estaEditando)
                   "
                 />
               </span>
@@ -222,8 +221,8 @@
                   class="label-left sub-label"
                   for="mesPlazoEjFase2"
                   [class.color-secondaryColor]="
-                    (addressForm.get('mesPlazoEjFase2').invalid && addressForm.get('mesPlazoEjFase2').touched) ||
-                    (addressForm.get('mesPlazoEjFase2').invalid && estaEditando)
+                    (addressForm.get('mesPlazoEjFase2')?.invalid && addressForm.get('mesPlazoEjFase2').touched) ||
+                    (addressForm.get('mesPlazoEjFase2')?.invalid && estaEditando)
                   "
                 >
                   Meses
@@ -237,9 +236,11 @@
                     required
                     (keypress)="number($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     type="number"
                     formControlName="mesPlazoEjFase2"
                     #mesPlazoEjFase2
+                    readonly
                   />
                 </mat-form-field>
                 <span
@@ -255,9 +256,12 @@
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
                     alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
                     *ngIf="
-                      (addressForm.get('mesPlazoEjFase2').invalid && addressForm.get('mesPlazoEjFase2').touched) ||
-                      (addressForm.get('mesPlazoEjFase2').invalid && estaEditando)
+                      (addressForm.get('mesPlazoEjFase2')?.invalid && addressForm.get('mesPlazoEjFase2').touched) ||
+                      (addressForm.get('mesPlazoEjFase2')?.invalid && estaEditando)
                     "
                   />
                 </span>
@@ -265,8 +269,8 @@
                   class="label-left sub-label"
                   for="diasPlazoEjFase2"
                   [class.color-secondaryColor]="
-                    (addressForm.get('diasPlazoEjFase2').invalid && addressForm.get('diasPlazoEjFase2').touched) ||
-                    (addressForm.get('diasPlazoEjFase2').invalid && estaEditando)
+                    (addressForm.get('diasPlazoEjFase2')?.invalid && addressForm.get('diasPlazoEjFase2').touched) ||
+                    (addressForm.get('diasPlazoEjFase2')?.invalid && estaEditando)
                   "
                 >
                   Días
@@ -280,9 +284,11 @@
                     required
                     (keypress)="number($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     type="number"
                     formControlName="diasPlazoEjFase2"
                     #diasPlazoEjFase2
+                    readonly
                   />
                 </mat-form-field>
                 <span
@@ -298,9 +304,12 @@
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
                     alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
                     *ngIf="
-                      (addressForm.get('diasPlazoEjFase2').invalid && addressForm.get('diasPlazoEjFase2').touched) ||
-                      (addressForm.get('diasPlazoEjFase2').invalid && estaEditando)
+                      (addressForm.get('diasPlazoEjFase2')?.invalid && addressForm.get('diasPlazoEjFase2').touched) ||
+                      (addressForm.get('diasPlazoEjFase2')?.invalid && estaEditando)
                     "
                   />
                 </span>
@@ -314,9 +323,9 @@
               class="label-left"
               for="observacionesEspeciales"
               [class.color-secondaryColor]="
-                (addressForm.get('observacionesEspeciales').invalid &&
+                (addressForm.get('observacionesEspeciales')?.invalid &&
                   addressForm.get('observacionesEspeciales').touched) ||
-                (addressForm.get('observacionesEspeciales').invalid && estaEditando)
+                (addressForm.get('observacionesEspeciales')?.invalid && estaEditando)
               "
             >
               Observaciones o consideraciones especiales
@@ -329,10 +338,6 @@
               [modules]="config"
               (onContentChanged)="maxLength($event, 500)"
               formControlName="observacionesEspeciales"
-              [class.invalid]="
-                (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
-                (addressForm.get('observaciones').invalid && estaEditando)
-              "
             >
             </quill-editor>
 
@@ -351,10 +356,13 @@
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
                   alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
                   *ngIf="
-                    (addressForm.get('observacionesEspeciales').invalid &&
+                    (addressForm.get('observacionesEspeciales')?.invalid &&
                       addressForm.get('observacionesEspeciales').touched) ||
-                    (addressForm.get('observacionesEspeciales').invalid && estaEditando)
+                    (addressForm.get('observacionesEspeciales')?.invalid && estaEditando)
                   "
                 />
               </span>

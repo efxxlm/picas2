@@ -38,5 +38,9 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public string Municipio { get; set; }
 
+
+        [NotMapped]
+        public List <int?> ListdefensaJudicialContratacionProyectosId { get; set; }
+
     }
 }

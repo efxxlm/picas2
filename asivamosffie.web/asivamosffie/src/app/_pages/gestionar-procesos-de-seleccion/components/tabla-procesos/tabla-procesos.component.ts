@@ -85,14 +85,14 @@ export class TablaProcesosComponent implements OnInit {
             }
             else
             {
-              if( proceso.tipoProcesoCodigo==TiposProcesoSeleccion.Abierta)            
-              {
-                proceso.esCompleto=false;  
-              }
-              else
-              {
-                proceso.esCompleto=true;  
-              }
+              // if( proceso.tipoProcesoCodigo==TiposProcesoSeleccion.Abierta)            
+              // {
+              //   proceso.esCompleto=false;  
+              // }
+              // else
+              // {
+              //   proceso.esCompleto=true;  
+              // }
               
             }            
           }

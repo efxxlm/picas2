@@ -126,6 +126,7 @@ namespace asivamosffie.model.Models
         public int? ObservacionFlujoInversionSupervisorId { get; set; }
         public bool? RegistroCompletoFlujoInversion { get; set; }
         public bool? RegistroCompletoValidacion { get; set; }
+        public DateTime? FechaInicioObra { get; set; }
 
         public virtual Contrato Contrato { get; set; }
         public virtual Proyecto Proyecto { get; set; }

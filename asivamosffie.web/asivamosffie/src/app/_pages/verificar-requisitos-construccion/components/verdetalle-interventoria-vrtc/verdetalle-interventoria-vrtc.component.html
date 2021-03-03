@@ -47,7 +47,7 @@
                     <mat-expansion-panel class="expansion-style sub-expansion aux">
                         <mat-expansion-panel-header class="expansion-style--header">
                             <mat-panel-title class="expansion-style--title">
-                                Perfil {{ i + 1 }}
+                                Perfil {{ j + 1 }}
                             </mat-panel-title>
                         </mat-expansion-panel-header>
                         <div align="left">
@@ -63,7 +63,7 @@
                                     <p><b>Fecha de aprobación de la totalidad de las hojas de vida</b>:
                                         {{ perfil.fechaAprobacion | date: 'dd/MM/yyyy' }} </p>
                                     <p><b>Observaciones:</b></p>
-                                    <p *ngIf="perfil.construccionPerfilObservacion.length > 0"> {{ perfil.construccionPerfilObservacion[0].observacion }} </p>
+                                    <p [innerHTML]="perfil.observaciones" > </p>
                                     <p><b>Número de radicado en FFIE de aprobación de hojas de vida:</b></p>
                                     <section *ngIf="perfil.construccionPerfilNumeroRadicado && perfil.construccionPerfilNumeroRadicado.length > 0">
                                         <p

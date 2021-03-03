@@ -1,11 +1,4 @@
-<div
-  *ngIf="dataFormulario.invalid"
-  class="my-1em color-secondaryColor d-flex align-items-center justify-content-center"
->
-  <img class="icon-incompleto--img mr-05em" src="assets/img/icon/incompleto.svg" alt="este campo es requerido" />
-  Debe ingresar la información en el campo para continuar
-</div>
-<form autocomplete="off" [formGroup]="dataFormulario" (ngSubmit)="guardar()">
+<form *ngIf="modalidadContratoArray.length > 0" autocomplete="off" [formGroup]="dataFormulario" (ngSubmit)="guardar()">
   <div class="row">
     <div class="col-md-8">
       <div class="row">
@@ -44,7 +37,10 @@
             <img
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
-              alt="este campo es requerido"
+                            alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
               *ngIf="
                 (dataFormulario.get('numeroContrato').invalid && dataFormulario.get('numeroContrato').touched) ||
                 (dataFormulario.get('numeroContrato').invalid && estaEditando)
@@ -56,7 +52,45 @@
     </div>
   </div>
 
-  <div class="row" *ngIf="dataFormulario.get('numeroContrato').value.length > 0">
+  <div class="row">
+    <div class="col-md-8">
+        <div class="row">
+            <div class="pr-1">
+                <label class="label-left" for="modalidadContrato">Modalidad del contrato</label>
+            </div>
+            <div class="col d-flex">
+                <mat-form-field class="select-width">
+                    <mat-select formControlName="modalidadContrato" required>
+                        <mat-option *ngFor="let modalidad of modalidadContratoArray" [value]="modalidad.codigo">
+                            {{ modalidad.nombre }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <span [matTooltipPosition]="'above'"
+                      matTooltip="Campo de selección unica"
+                      matTooltipClass="info-tooltip"></span>
+
+                <span class="icon-incompleto" style="margin-left: 3.2em;">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                                  alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
+                    *ngIf="
+                      (dataFormulario.get('numeroContrato').invalid && dataFormulario.get('numeroContrato').touched) ||
+                      (dataFormulario.get('numeroContrato').invalid && estaEditando)
+                    "
+                  />
+                </span>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="dataFormulario.get('modalidadContrato').value !== null && dataFormulario.get('numeroContrato').value.length > 0">
     <div class="col-md-8">
       <div class="row">
         <div class="pr-1">
@@ -100,7 +134,10 @@
             <img
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
-              alt="este campo es requerido"
+                            alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
               *ngIf="
                 (dataFormulario.get('fechaEnvioParaFirmaContratista').invalid &&
                   dataFormulario.get('fechaEnvioParaFirmaContratista').touched) ||
@@ -157,7 +194,10 @@
             <img
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
-              alt="este campo es requerido"
+                            alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
               *ngIf="
                 (dataFormulario.get('fechaFirmaPorParteContratista').invalid &&
                   dataFormulario.get('fechaFirmaPorParteContratista').touched) ||
@@ -214,7 +254,10 @@
             <img
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
-              alt="este campo es requerido"
+                            alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
               *ngIf="
                 (dataFormulario.get('fechaEnvioParaFirmaFiduciaria').invalid &&
                   dataFormulario.get('fechaEnvioParaFirmaFiduciaria').touched) ||
@@ -271,7 +314,10 @@
             <img
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
-              alt="este campo es requerido"
+                            alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
               *ngIf="
                 (dataFormulario.get('fechaFirmaPorParteFiduciaria').invalid &&
                   dataFormulario.get('fechaFirmaPorParteFiduciaria').touched) ||
@@ -288,7 +334,13 @@
     <div class="col-md-12">
       <div class="row">
         <div class="pr-1">
-          <label class="label-left">Observaciones</label>
+          <label class="label-left" 
+          [class.color-secondaryColor]="
+            (dataFormulario.get('observaciones').invalid && dataFormulario.get('observaciones').touched) ||
+            (dataFormulario.get('observaciones').invalid && estaEditando)
+          ">
+          Observaciones
+        </label>
         </div>
         <div class="col d-flex">
           <quill-editor
@@ -319,6 +371,20 @@
           >
             2000
           </span>
+          <span class="icon-incompleto" style="margin-top: 1.9em">
+            <img
+              class="icon-incompleto--img"
+              src="assets/img/icon/incompleto.svg"
+                            alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
+              *ngIf="
+                (dataFormulario.get('observaciones').invalid && dataFormulario.get('observaciones').touched) ||
+                (dataFormulario.get('observaciones').invalid && estaEditando)
+              "
+            />
+          </span>
         </div>
       </div>
     </div>
@@ -328,7 +394,13 @@
     <div class="col-md-12">
       <div class="row">
         <div class="pr-1">
-          <label class="label-left" style="margin-top: 1.4em"> Adjuntar documento suscrito </label>
+          <label class="label-left" style="margin-top: 1.4em"
+          [class.color-secondaryColor]="
+            (dataFormulario.get('documentoFile').invalid && dataFormulario.get('documentoFile').touched) ||
+            (dataFormulario.get('documentoFile').invalid && estaEditando)
+          ">
+           Adjuntar documento suscrito 
+          </label>
         </div>
         <div class="col d-flex">
           <span class="input-file-text text-center required" (click)="fileInput.click()" style="width: 100%">
@@ -344,12 +416,25 @@
             #fileInput
             type="file"
             id="file"
-            formControlName="documentoFile"
             [placeholder]="archivo || dataFormulario.get('documento').value"
             [class.invalid]="campoSinDiligenciar('documentoFile')"
             accept="application/pdf"
           />
         </div>
+        <span class="icon-incompleto">
+          <img
+            class="icon-incompleto--img"
+            src="assets/img/icon/incompleto.svg"
+                          alt="este campo es requerido"
+            [matTooltipPosition]="'above'"
+            matTooltip="Debe ingresar la información en el campo para continuar"
+            matTooltipClass="info-tooltip"
+            *ngIf="
+              (dataFormulario.get('documentoFile').invalid && dataFormulario.get('documentoFile').touched) ||
+              (dataFormulario.get('documentoFile').invalid && estaEditando)
+            "
+          />
+        </span>
       </div>
     </div>
   </div>

@@ -44,6 +44,13 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
     aprobado: '3',
     devuelto: '4'
   };
+  tipoSolicitudCodigo = {
+    procesoSeleccion: '1',
+    contratacion: '2',
+    modificacionContractual: '3',
+    controversiaContractual: '4',
+    defensaJudicial: '5'
+  }
 
   constructor(private routes: Router,
     public dialog: MatDialog,
@@ -73,16 +80,49 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
         this.acta = resp[0];
         console.log(this.acta);
 
-        for (let temas of this.acta.sesionComiteTema) {
-          if (!temas.esProposicionesVarios) {
-            this.temas.push(temas);
-          } else {
-            this.proposicionesVarios.push(temas);
+        for ( let tema of this.acta.sesionComiteTema ) {
+          let totalAprobado = 0;
+          let totalNoAprobado = 0;
+          if ( tema.esProposicionesVarios === undefined || tema.esProposicionesVarios === false ) {
+            tema.sesionTemaVoto.forEach( sv => {
+              if ( sv.esAprobado === true ) {
+                totalAprobado++;
+              }
+              if ( sv.esAprobado === false ) {
+                totalNoAprobado++;
+              }
+            });
+            if ( totalNoAprobado > 0 ) {
+              tema.resultadoVotacion = 'No Aprobó';
+            } else {
+              tema.resultadoVotacion = 'Aprobó';
+            }
+            tema.totalAprobado = totalAprobado;
+            tema.totalNoAprobado = totalNoAprobado;
+            this.temas.push( tema );
+          }
+          if ( tema.esProposicionesVarios === true ) {
+            tema.sesionTemaVoto.forEach( sv => {
+              if ( sv.esAprobado === true ) {
+                totalAprobado++;
+              }
+              if ( sv.esAprobado === false ) {
+                totalNoAprobado++;
+              }
+            });
+            if ( totalNoAprobado > 0 ) {
+              tema.resultadoVotacion = 'No Aprobó';
+            } else {
+              tema.resultadoVotacion = 'Aprobó';
+            }
+            tema.totalAprobado = totalAprobado;
+            tema.totalNoAprobado = totalNoAprobado;
+            this.proposicionesVarios.push( tema );
           }
         };
 
-        for (let participantes of this.acta.sesionParticipante) {
-          this.miembrosParticipantes.push(`${participantes.usuario.nombres} ${participantes.usuario.apellidos}`)
+        for (let participante of this.acta.sesionParticipanteView) {
+          this.miembrosParticipantes.push(`${participante.nombres} ${participante.apellidos}`)
         };
 
         this.technicalCommitteeSessionSvc.getComiteTecnicoByComiteTecnicoId(this.activatedRoute.snapshot.params.id)
@@ -177,11 +217,14 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
   aprobarActa(comiteTecnicoId) {
     //Al aprobar acta redirige al componente principal
     this.compromisoSvc.aprobarActa(comiteTecnicoId)
-      .subscribe((resp: any) => {
-        this.seRealizoPeticion = true;
-        this.openDialog('', `<b>${resp.message}</b>`);
-        this.routes.navigate(['/compromisosActasComite']);
-      })
+      .subscribe(
+        response => {
+          this.seRealizoPeticion = true;
+          this.openDialog('', `<b>${response.message}</b>`);
+          this.routes.navigate(['/compromisosActasComite']);
+        },
+        err => this.openDialog('', `<b>${err.message}</b>`)
+      )
   };
 
   //Descargar acta en formato pdf

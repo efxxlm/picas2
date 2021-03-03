@@ -7,7 +7,7 @@ namespace asivamosffie.model.Models
     {
         public int OrdenGiroDetalleTerceroCausacionDescuentoId { get; set; }
         public int? OrdenGiroDetalleTerceroCausacionId { get; set; }
-        public int? OrdenGiroDetalleDescuentoTecnicaAportanteId { get; set; }
+        public int? GestionFuenteFinanciacionId { get; set; }
         public string TipoDescuentoCodigo { get; set; }
         public decimal? ValorDescuento { get; set; }
         public string UsuarioCreacion { get; set; }
@@ -17,7 +17,7 @@ namespace asivamosffie.model.Models
         public bool? Eliminado { get; set; }
         public bool? RegistroCompleto { get; set; }
 
-        public virtual OrdenGiroDetalleDescuentoTecnicaAportante OrdenGiroDetalleDescuentoTecnicaAportante { get; set; }
+        public virtual GestionFuenteFinanciacion GestionFuenteFinanciacion { get; set; }
         public virtual OrdenGiroDetalleTerceroCausacion OrdenGiroDetalleTerceroCausacion { get; set; }
     }
 }

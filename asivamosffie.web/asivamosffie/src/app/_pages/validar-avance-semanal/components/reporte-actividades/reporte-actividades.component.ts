@@ -21,6 +21,7 @@ export class ReporteActividadesComponent implements OnInit {
     seguimientoSemanalId: number;
     seguimientoSemanalReporteActividadId: number;
     seguimientoSemanalObservacionId = 0;
+    contadorObservacionApoyo = 0;
     reporteActividad: any;
     semaforoReporte = 'sin-diligenciar';
     semaforoActividad = 'sin-diligenciar';
@@ -147,6 +148,11 @@ export class ReporteActividadesComponent implements OnInit {
     }
 	
     guardar() {
+        if ( this.reporteActividad.tieneObservacionApoyoEstadoContrato === true && this.formReporteActividades.get( 'tieneObservaciones' ).value === false && this.contadorObservacionApoyo === 0 ) {
+            this.contadorObservacionApoyo++;
+            this.openDialog( '', '<b>Le recomendamos verificar su respuesta;<br>Tenga en cuenta que el apoyo a la supervisión si tuvo observaciones.</b>' );
+            return;
+        }
         if ( this.formReporteActividades.get( 'tieneObservaciones' ).value === false && this.formReporteActividades.get( 'observaciones' ).value !== null ) {
             this.formReporteActividades.get( 'observaciones' ).setValue( '' );
         }
@@ -159,7 +165,6 @@ export class ReporteActividadesComponent implements OnInit {
             tieneObservacion: this.formReporteActividades.get( 'tieneObservaciones' ).value,
             esSupervisor: true
         }
-        console.log( pSeguimientoSemanalObservacion );
         this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( pSeguimientoSemanalObservacion )
             .subscribe(
                 response => {

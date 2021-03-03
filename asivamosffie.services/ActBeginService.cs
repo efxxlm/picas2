@@ -22,11 +22,21 @@ namespace asivamosffie.services
 {
     public class ActBeginService : IActBeginService
     {
+        /// Querido colega Programador:
+        /// Cuando camilo escribio este código, sólo Dios y el
+        /// Sabian como funcionaba.
+        /// Ahora, ¡sólo Dios lo sabe!
+        /// 
+        /// Así que si esta tratando de 'Optimizarlo'
+        /// por favor, incremente el siguiente contador
+        /// como una advertencia 
+        /// para el siguiente colega:
+        /// 
+        /// total_horas_perdidas_aqui = 2
+
         private readonly ICommonService _commonService;
-        private readonly devAsiVamosFFIEContext _context;
-
-        private readonly IOptions<AppSettingsService> _settings;
-
+        private readonly devAsiVamosFFIEContext _context; 
+        private readonly IOptions<AppSettingsService> _settings; 
         private readonly IDocumentService _documentService;
         public readonly IConverter _converter;
 
@@ -49,7 +59,7 @@ namespace asivamosffie.services
             VistaGenerarActaInicioContrato actaInicio;
 
             int pTipoContrato = Int32.Parse(ConstanCodigoTipoContrato.Interventoria);
-
+            
             ////DOM 14 1   Obra            
             //pTipoContrato = 1;
 
@@ -598,6 +608,74 @@ namespace asivamosffie.services
                 return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesActaInicio.ErrorInterno, Message = ex.InnerException.ToString().Substring(0, 500) };
             }
         }
+
+        public async Task<Respuesta> CreateEditObservacionesActaInicioConstruccion(ContratoConstruccion pContratoConstruccion, string pUsuarioCreacion)
+        {
+            Respuesta _response = new Respuesta();
+
+            Contrato contrato = _context.Contrato.Find(pContratoConstruccion.ContratoId);
+
+            int idAccionCrearActaInicio = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Editar_Tiene_Observaciones_Acta_Inicio_Fase2, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                contrato.FechaModificacion = DateTime.Now;
+                contrato.UsuarioModificacion = pUsuarioCreacion;
+                contrato.ConObervacionesActa = true;
+
+                ConstruccionObservacion construccionObservacion = new ConstruccionObservacion();
+
+                if (pContratoConstruccion.ConstruccionObservacion.FirstOrDefault().EsSupervision == true)
+                    construccionObservacion.TipoObservacionConstruccion = "7"; //Acta de inicio supervisor
+                else
+                    construccionObservacion.TipoObservacionConstruccion = "6"; //Acta de inicio interventor
+
+                if (pContratoConstruccion.ConstruccionObservacion.FirstOrDefault().ConstruccionObservacionId == 0 || string.IsNullOrEmpty(pContratoConstruccion.ConstruccionObservacion.FirstOrDefault().ConstruccionObservacionId.ToString()))
+                {
+                    ConstruccionObservacion observacion = pContratoConstruccion.ConstruccionObservacion.FirstOrDefault();
+
+                    observacion.TipoObservacionConstruccion = construccionObservacion.TipoObservacionConstruccion;
+
+                    observacion.UsuarioCreacion = pUsuarioCreacion;
+                    observacion.FechaCreacion = DateTime.Now;
+
+                    _context.ConstruccionObservacion.Add(observacion);
+                }
+                else
+                {
+                    ConstruccionObservacion observacion = _context.ConstruccionObservacion.Find(pContratoConstruccion.ConstruccionObservacion.FirstOrDefault().ConstruccionObservacionId);
+
+                    observacion.Observaciones = pContratoConstruccion.ConstruccionObservacion.FirstOrDefault().Observaciones;
+                }
+                
+                //      CAMBIAR ESTADO “Sin acta generada” a “Con acta generada”.
+                //DOM 60  1   Sin acta generada
+                //DOM 60  3   Con acta generada
+                //contrato.EstadoActa = "3";
+
+                _context.Contrato.Update(contrato);
+                await _context.SaveChangesAsync();
+                return
+                new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesActaInicio.OperacionExitosa,
+                    Message =
+                    await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_acta_inicio_fase_2,
+                    ConstantMessagesActaInicio.OperacionExitosa, idAccionCrearActaInicio
+                    , contrato.UsuarioModificacion, " GUARDAR OBSERVACION CONTRATO ACTA"
+                    )
+                };
+
+            }
+            catch (Exception ex)
+            {
+                return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesActaInicio.ErrorInterno, Message = ex.InnerException.ToString().Substring(0, 500) };
+            }
+        }
+
 
         public async Task<Respuesta> GuardarPlazoEjecucionFase2Construccion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacionesConsideracionesEspeciales, string pUsuarioModificacion, DateTime pFechaActaInicioFase1, DateTime pFechaTerminacionFase2, bool pEsSupervisor, bool pEsActa)
         {
@@ -1362,6 +1440,26 @@ namespace asivamosffie.services
 
         }
 
+        public async Task<ConstruccionObservacion> GetConstruccionObservacionByIdContratoConstruccionId(int pContratoConstruccionId, bool pEsSupervisor)
+        {
+            ConstruccionObservacion observacion = new ConstruccionObservacion();
+            List<ContratoObservacion> lstContratoObservacion = new List<ContratoObservacion>();
+
+            observacion = _context.ConstruccionObservacion
+                                        .Where(
+                                                r => r.ContratoConstruccionId == pContratoConstruccionId &&
+                                                r.EsSupervision == pEsSupervisor &&
+                                                r.EsActa == true &&
+                                                r.Archivada != true
+                                                )
+                                        .OrderByDescending(r => r.ConstruccionObservacionId)
+                                        ?.FirstOrDefault();
+
+
+            return observacion;
+
+        }
+
         public async Task<ContratoObservacion> GetContratoObservacionByIdContratoIdUltimaArchivada(int pContratoId, bool pEsSupervisor)
         {
             ContratoObservacion contratoObservacion = new ContratoObservacion();
@@ -1792,7 +1890,7 @@ namespace asivamosffie.services
             List<UsuarioPerfil> listaInterventor = getCorreos((int)EnumeratorPerfil.Interventor);
 
             //Con acta en proceso de firma - obra
-            if (pContrato.EstadoActaFase2 == "19")
+            if (pContrato.EstadoActaFase2 == "19" || pContrato.EstadoActaFase2 == "21")
             {
                 Contratacion contratacion = _context.Contratacion
                                                             .Where(p => p.ContratacionId == pContrato.ContratacionId)
@@ -1817,8 +1915,11 @@ namespace asivamosffie.services
                 }
             }
 
-            // Enviada por el supervisor - obra
-            if (pContrato.EstadoActaFase2 == "17")
+
+
+            // 17 -Enviada por el supervisor - obra
+            // 4 - Enviada por el supervisor - interventoria
+            if (pContrato.EstadoActaFase2 == "17" || pContrato.EstadoActaFase2 == "4")
             {
                 List<UsuarioPerfil> listaFinal = new List<UsuarioPerfil>();
                 listaFinal.AddRange(listaInterventor);

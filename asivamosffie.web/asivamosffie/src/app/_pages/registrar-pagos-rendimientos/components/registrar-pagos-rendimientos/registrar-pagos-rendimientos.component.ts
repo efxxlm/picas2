@@ -6,7 +6,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./registrar-pagos-rendimientos.component.scss']
 })
 export class RegistrarPagosRendimientosComponent implements OnInit {
-
+  verAyuda = false;
+  registrarPagos = false;
+  registrarRendimientos = false;
   constructor() { }
 
   ngOnInit(): void {

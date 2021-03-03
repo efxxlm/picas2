@@ -31,7 +31,7 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
   ];
 
   textoConvocantes="demandante";
-
+  estaEditando = false;
   constructor (private fb: FormBuilder,public commonService:CommonService,
     public defensaService:DefensaJudicialService,
     public dialog: MatDialog, private router: Router  ) {
@@ -63,8 +63,7 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
     this.formContratista.get("numeroContratos").setValue(this.defensaJudicial.numeroDemandantes);
     let i=0;
     console.log(this.perfiles);
-    this.defensaJudicial.demandadoConvocado.forEach(element => {
-      console.log(this.perfiles.controls[i].get("nomConvocado"));
+    this.defensaJudicial.demandanteConvocante.forEach(element => {
       this.perfiles.controls[i].get("nomConvocado").setValue(element.nombre);
       this.perfiles.controls[i].get("tipoIdentificacion").setValue(element.tipoIdentificacionCodigo);
       this.perfiles.controls[i].get("numIdentificacion").setValue(element.numeroIdentificacion);
@@ -179,6 +178,7 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
   };
 
   guardar () {
+    this.estaEditando = true;
     let defContraProyecto:DemandanteConvocante[]=[];
     for(let perfil of this.perfiles.controls){
       defContraProyecto.push({
@@ -236,7 +236,7 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
 
   cambioTipoTexto()
   {    
-    this.textoConvocantes=this.addressForm.value.demandaContraFFIE?"demandante":"convocante";
+    this.textoConvocantes=this.addressForm.value.demandaContraFFIE?"convocante":"demandante";
   }
 
 }

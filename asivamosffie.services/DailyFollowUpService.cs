@@ -28,7 +28,7 @@ namespace asivamosffie.services
         public async Task<List<VProyectosXcontrato>> gridRegisterDailyFollowUp()
         {
             List<VProyectosXcontrato> listaInfoProyectos = await _context.VProyectosXcontrato
-                                                                        .Where(r => r.FechaActaInicioFase2 <= DateTime.Now)
+                                                                        .Where(r => r.FechaActaInicioFase2 <= DateTime.Now && r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
                                                                         .ToListAsync();
 
             listaInfoProyectos.ForEach(p =>
@@ -484,7 +484,7 @@ namespace asivamosffie.services
 
                     seguimientoDiario.TieneObservacionSupervisor = pSeguimientoDiario.TieneObservacionSupervisor;
 
-                    if (seguimientoDiario.TieneObservacionSupervisor.Value)
+                    if (seguimientoDiario.TieneObservacionSupervisor.HasValue ? seguimientoDiario.TieneObservacionSupervisor.Value : false )
                     {
 
                         await CreateEditObservacionSeguimientoDiario(pSeguimientoDiario.SeguimientoDiarioObservaciones.FirstOrDefault(), pSeguimientoDiario.UsuarioCreacion);
@@ -512,7 +512,7 @@ namespace asivamosffie.services
                 {
                     seguimientoDiario.TieneObservacionApoyo = pSeguimientoDiario.TieneObservacionApoyo;
 
-                    if (seguimientoDiario.TieneObservacionApoyo.Value)
+                    if (seguimientoDiario.TieneObservacionApoyo.HasValue ? seguimientoDiario.TieneObservacionApoyo.Value : true)
                     {
                         await CreateEditObservacionSeguimientoDiario(pSeguimientoDiario.SeguimientoDiarioObservaciones.FirstOrDefault(), pSeguimientoDiario.UsuarioCreacion);
                     }

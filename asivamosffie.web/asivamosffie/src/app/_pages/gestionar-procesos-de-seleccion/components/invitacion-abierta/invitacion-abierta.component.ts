@@ -141,16 +141,16 @@ export class InvitacionAbiertaComponent implements OnInit {
     pProceso.tipoIntervencionCodigo!="" ||
     pProceso.tipoAlcanceCodigo!="" ||
 
-    pProceso.condicionesAsignacionPuntaje!=null ||
-    pProceso.condicionesFinancierasHabilitantes!=null ||
-    pProceso.condicionesJuridicasHabilitantes!=null ||
-    pProceso.condicionesTecnicasHabilitantes!=null ||
+    // pProceso.condicionesAsignacionPuntaje!=null ||
+    // pProceso.condicionesFinancierasHabilitantes!=null ||
+    // pProceso.condicionesJuridicasHabilitantes!=null ||
+    // pProceso.condicionesTecnicasHabilitantes!=null ||
     pProceso.tipoAlcanceCodigo!="" ||
     pProceso.tipoAlcanceCodigo!="" ||
     pProceso.tipoAlcanceCodigo!="" ||
     //pProceso.esDistribucionGrupos!="" ||
-    pProceso.responsableEstructuradorUsuarioid!=undefined ||
-    pProceso.responsableTecnicoUsuarioId!=undefined ||
+    // pProceso.responsableEstructuradorUsuarioid!=undefined ||
+    // pProceso.responsableTecnicoUsuarioId!=undefined ||
     pProceso.procesoSeleccionGrupo.length>=1||
     pProceso.procesoSeleccionCronograma.length>=1)
     {
@@ -160,13 +160,13 @@ export class InvitacionAbiertaComponent implements OnInit {
       pProceso.criteriosSeleccion!="" &&
       pProceso.tipoIntervencionCodigo!="" &&
       pProceso.tipoAlcanceCodigo!="" &&
-      pProceso.condicionesAsignacionPuntaje!=null &&
-      pProceso.condicionesFinancierasHabilitantes!=null &&
-      pProceso.condicionesJuridicasHabilitantes!=null &&
-      pProceso.condicionesTecnicasHabilitantes!=null &&
+      // pProceso.condicionesAsignacionPuntaje!=null &&
+      // pProceso.condicionesFinancierasHabilitantes!=null &&
+      // pProceso.condicionesJuridicasHabilitantes!=null &&
+      // pProceso.condicionesTecnicasHabilitantes!=null &&
       //pProceso.esDistribucionGrupos!="" &&
-      pProceso.responsableEstructuradorUsuarioid!=undefined &&
-      pProceso.responsableTecnicoUsuarioId!=undefined &&
+      // pProceso.responsableEstructuradorUsuarioid!=undefined &&
+      // pProceso.responsableTecnicoUsuarioId!=undefined &&
       pProceso.procesoSeleccionGrupo.length>0 &&
       pProceso.procesoSeleccionCronograma.length>0)
       {

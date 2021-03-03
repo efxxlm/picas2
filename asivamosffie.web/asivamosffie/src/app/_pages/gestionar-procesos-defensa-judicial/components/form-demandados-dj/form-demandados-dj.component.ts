@@ -37,6 +37,7 @@ export class FormDemandadosDjComponent implements OnInit {
   @Input() tipoProceso:string;
   @Input() defensaJudicial:DefensaJudicial;
 
+  estaEditando = false;
   ngAfterViewInit(){
     this.cargarRegistro();
   }
@@ -133,6 +134,7 @@ export class FormDemandadosDjComponent implements OnInit {
   };
 
   guardar () {
+    this.estaEditando = true;
     console.log( this.formContratista );
     let defContraProyecto:DemandadoConvocado[]=[];
     for(let perfil of this.perfiles.controls){

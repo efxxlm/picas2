@@ -1,13 +1,32 @@
 <form autocomplete="off" [formGroup]="formContratista" (ngSubmit)="guardar()">
     <div class="d-flex mt-1em col-md-5" style="margin: 0 auto;">
-        <label class="mr-label" class="label-left"><b>Número de convocados</b></label>
+        <label class="mr-label" class="label-left" [ngClass]="{
+            'color-secondaryColor':
+              (formContratista.get('numeroContratos').invalid && formContratista.get('numeroContratos').touched) ||
+              (formContratista.get('numeroContratos').invalid && estaEditando)
+          }"><b>Número de convocados</b></label>
         <div class="col d-flex">
             <mat-form-field class="w-70">
                 <input matInput (keypress)="validateNumberKeypress($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 type="number" maxlength="2" formControlName="numeroContratos" required>
             </mat-form-field>
             <span class="contador">{{2 - formContratista.get( 'numeroContratos' ).value.toString().length}}</span>
         </div>
+        <span class="icon-incompleto">
+            <img
+              class="icon-incompleto--img"
+              src="assets/img/icon/incompleto.svg"
+              alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
+              *ngIf="
+                (formContratista.get('numeroContratos').invalid && formContratista.get('numeroContratos').touched) ||
+                (formContratista.get('numeroContratos').invalid && estaEditando)
+              "
+            />
+          </span>
     </div>
     <mat-accordion formArrayName="perfiles" *ngIf="formContratista.get( 'numeroContratos' ).value!==null">
         <mat-expansion-panel class="expansion-style sub-expansion" *ngFor="let perfil of perfiles.controls; index as i">
@@ -23,7 +42,12 @@
                         <div class="col-md-12">
                             <div class="row">
                                 <div class="pr-1">
-                                    <label for="nomConvocado" class="label-left">Nombre del convocado</label>
+                                    <label for="nomConvocado" class="label-left" 
+                                    [ngClass]="{
+                                        'color-secondaryColor':
+                                          (perfil.get('nomConvocado').invalid && perfil.get('nomConvocado').touched) ||
+                                          (perfil.get('nomConvocado').invalid && estaEditando)
+                                      }">Nombre del convocado</label>
                                 </div>
                                 <div class="col d-flex">
                                     <mat-form-field class="full-width">
@@ -32,6 +56,20 @@
                                     </mat-form-field>
                                     <span class="contador">{{100 - nomConvocado.value.length}}</span>
                                 </div>
+                                <span class="icon-incompleto">
+                                    <img
+                                      class="icon-incompleto--img"
+                                      src="assets/img/icon/incompleto.svg"
+                                      alt="este campo es requerido"
+                                      [matTooltipPosition]="'above'"
+                                      matTooltip="Debe ingresar la información en el campo para continuar"
+                                      matTooltipClass="info-tooltip"
+                                      *ngIf="
+                                      (perfil.get('nomConvocado').invalid && perfil.get('nomConvocado').touched) ||
+                                      (perfil.get('nomConvocado').invalid && estaEditando)
+                                      "
+                                    />
+                                  </span>
                             </div>
                         </div>
                     </div>

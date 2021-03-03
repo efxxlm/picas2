@@ -15,12 +15,14 @@ export class VerDetalleeditarActuacionNotaiComponent implements OnInit {
   fechaSolicitud: any;
   codigoSolicitud: any;
   numeroContrato: any;
+  actuacionNum: any;
 
   constructor(private activatedRoute: ActivatedRoute, private services: ContractualControversyService) { }
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(param => {
       this.idActuacion = param.id;
+      this.loadDataActuacionFormat(this.idActuacion);
     });
     this.loadDataContrato(this.controversiaID);
   }
@@ -46,9 +48,15 @@ export class VerDetalleeditarActuacionNotaiComponent implements OnInit {
           this.tipoControversia = 'Otras controversias contractuales (OCC) a solicitud del contratante';
         break;
       };
+      
       this.fechaSolicitud = data.fechaSolicitud;
       this.codigoSolicitud = data.numeroSolicitud;
       this.numeroContrato = data.contrato.numeroContrato;
+    });
+  }
+  loadDataActuacionFormat(id){
+    this.services.GetControversiaActuacionById(id).subscribe((a:any)=>{
+      this.actuacionNum = a.numeroActuacionFormat;
     });
   }
 }

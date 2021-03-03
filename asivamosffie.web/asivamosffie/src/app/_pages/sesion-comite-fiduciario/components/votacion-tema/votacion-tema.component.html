@@ -42,7 +42,10 @@
                 <img
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
-                  alt="este campo es requerido"
+                                alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                   *ngIf="
                     (temas.get('aprobacion').invalid && temas.get('aprobacion').touched) ||
                     (temas.get('aprobacion').invalid && estaEditando)
@@ -65,10 +68,6 @@
                     [modules]="config"
                     (onContentChanged)="maxLength($event, 1000)"
                     formControlName="observaciones"
-                    [class.invalid]="
-                      (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
-                      (addressForm.get('observaciones').invalid && estaEditando)
-                    "
                   >
                   </quill-editor>
 
@@ -83,16 +82,6 @@
                     </span>
                     <span class="contador miles" *ngIf="!temas.get('observaciones').value"> 1000 </span>
                     <span class="icon-incompleto">
-                      <img
-                        class="icon-incompleto--img"
-                        src="assets/img/icon/incompleto.svg"
-                        alt="este campo es requerido"
-                        *ngIf="
-                          (temas.get('observaciones').invalid && temas.get('observaciones').touched) ||
-                          (temas.get('observaciones').invalid && estaEditando)
-                        "
-                      />
-                    </span>
                   </div>
                 </div>
               </section>

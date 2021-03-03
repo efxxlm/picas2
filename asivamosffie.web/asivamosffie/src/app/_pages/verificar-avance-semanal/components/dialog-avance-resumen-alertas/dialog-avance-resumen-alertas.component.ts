@@ -13,11 +13,4 @@ export class DialogAvanceResumenAlertasComponent implements OnInit {
     ngOnInit(): void {
     }
 
-    innerObservacion( observacion: string ) {
-        if ( observacion !== undefined ) {
-            const observacionHtml = observacion.replace( '"', '' );
-            return observacionHtml;
-        }
-    }
-
 }

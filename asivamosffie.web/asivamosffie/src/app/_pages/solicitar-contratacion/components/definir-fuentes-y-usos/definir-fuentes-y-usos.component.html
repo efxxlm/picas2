@@ -95,9 +95,9 @@
                       class="label-left"
                       for="valorAportanteProyecto"
                       [class.color-secondaryColor]="
-                        (addressForm.get('valorAportanteProyecto').invalid &&
+                        (addressForm.get('valorAportanteProyecto')?.invalid &&
                           addressForm.get('valorAportanteProyecto').touched) ||
-                        (addressForm.get('valorAportanteProyecto').invalid && estaEditando)
+                        (addressForm.get('valorAportanteProyecto')?.invalid && estaEditando)
                       "
                     >
                       Valor del aportante al proyecto
@@ -140,10 +140,13 @@
                         class="icon-incompleto--img"
                         src="assets/img/icon/incompleto.svg"
                         alt="este campo es requerido"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Debe ingresar la información en el campo para continuar"
+                        matTooltipClass="info-tooltip"
                         *ngIf="
-                          (addressForm.get('valorAportanteProyecto').invalid &&
+                          (addressForm.get('valorAportanteProyecto')?.invalid &&
                             addressForm.get('valorAportanteProyecto').touched) ||
-                          (addressForm.get('valorAportanteProyecto').invalid && estaEditando)
+                          (addressForm.get('valorAportanteProyecto')?.invalid && estaEditando)
                         "
                       />
                     </span>
@@ -168,8 +171,8 @@
                               class="label-left"
                               for="fase"
                               [class.color-secondaryColor]="
-                                (addressForm.get('fase').invalid && addressForm.get('fase').touched) ||
-                                (addressForm.get('fase').invalid && estaEditando)
+                                (addressForm.get('fase')?.invalid && addressForm.get('fase').touched) ||
+                                (addressForm.get('fase')?.invalid && estaEditando)
                               "
                             >
                               Fase
@@ -194,9 +197,12 @@
                               class="icon-incompleto--img"
                               src="assets/img/icon/incompleto.svg"
                               alt="este campo es requerido"
+                              [matTooltipPosition]="'above'"
+                              matTooltip="Debe ingresar la información en el campo para continuar"
+                              matTooltipClass="info-tooltip"
                               *ngIf="
-                                (addressForm.get('fase').invalid && addressForm.get('fase').touched) ||
-                                (addressForm.get('fase').invalid && estaEditando)
+                                (addressForm.get('fase')?.invalid && addressForm.get('fase').touched) ||
+                                (addressForm.get('fase')?.invalid && estaEditando)
                               "
                             />
                           </span>
@@ -211,8 +217,8 @@
                               class="label-left"
                               for="componente"
                               [class.color-secondaryColor]="
-                                (addressForm.get('componente').invalid && addressForm.get('componente').touched) ||
-                                (addressForm.get('componente').invalid && estaEditando)
+                                (addressForm.get('componente')?.invalid && addressForm.get('componente').touched) ||
+                                (addressForm.get('componente')?.invalid && estaEditando)
                               "
                             >
                               Componente
@@ -238,9 +244,12 @@
                               class="icon-incompleto--img"
                               src="assets/img/icon/incompleto.svg"
                               alt="este campo es requerido"
+                              [matTooltipPosition]="'above'"
+                              matTooltip="Debe ingresar la información en el campo para continuar"
+                              matTooltipClass="info-tooltip"
                               *ngIf="
-                                (addressForm.get('componente').invalid && addressForm.get('componente').touched) ||
-                                (addressForm.get('componente').invalid && estaEditando)
+                                (addressForm.get('componente')?.invalid && addressForm.get('componente').touched) ||
+                                (addressForm.get('componente')?.invalid && estaEditando)
                               "
                             />
                           </span>
@@ -257,8 +266,8 @@
                                   <label
                                     class="label-left"
                                     [class.color-secondaryColor]="
-                                      (uso.get('usoDescripcion').invalid && uso.get('usoDescripcion').touched) ||
-                                      (uso.get('usoDescripcion').invalid && estaEditando)
+                                      (uso.get('usoDescripcion')?.invalid && uso.get('usoDescripcion').touched) ||
+                                      (uso.get('usoDescripcion')?.invalid && estaEditando)
                                     "
                                   >
                                     Uso {{ k + 1 }}
@@ -280,9 +289,12 @@
                                     class="icon-incompleto--img"
                                     src="assets/img/icon/incompleto.svg"
                                     alt="este campo es requerido"
+                                    [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip"
                                     *ngIf="
-                                      (uso.get('usoDescripcion').invalid && uso.get('usoDescripcion').touched) ||
-                                      (uso.get('usoDescripcion').invalid && estaEditando)
+                                      (uso.get('usoDescripcion')?.invalid && uso.get('usoDescripcion').touched) ||
+                                      (uso.get('usoDescripcion')?.invalid && estaEditando)
                                     "
                                   />
                                 </span>
@@ -309,8 +321,8 @@
                                   <label
                                     class="label-left"
                                     [class.color-secondaryColor]="
-                                      (uso.get('valorUso').invalid && uso.get('valorUso').touched) ||
-                                      (uso.get('valorUso').invalid && estaEditando)
+                                      (uso.get('valorUso')?.invalid && uso.get('valorUso').touched) ||
+                                      (uso.get('valorUso')?.invalid && estaEditando)
                                     "
                                   >
                                     Valor del uso
@@ -344,9 +356,12 @@
                                       class="icon-incompleto--img"
                                       src="assets/img/icon/incompleto.svg"
                                       alt="este campo es requerido"
+                                      [matTooltipPosition]="'above'"
+                                      matTooltip="Debe ingresar la información en el campo para continuar"
+                                      matTooltipClass="info-tooltip"
                                       *ngIf="
-                                        (uso.get('valorUso').invalid && uso.get('valorUso').touched) ||
-                                        (uso.get('valorUso').invalid && estaEditando)
+                                        (uso.get('valorUso')?.invalid && uso.get('valorUso').touched) ||
+                                        (uso.get('valorUso')?.invalid && estaEditando)
                                       "
                                     />
                                   </span>

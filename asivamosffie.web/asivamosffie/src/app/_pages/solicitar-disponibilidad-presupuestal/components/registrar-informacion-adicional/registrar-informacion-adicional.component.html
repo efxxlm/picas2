@@ -55,7 +55,7 @@
             <div class="row">
               <div
                 class="col-md-6 mb-1em"
-                *ngFor="let aportante of proyecto.contratacionProyectoAportante; index as i"
+                *ngFor="let aportante of proyecto.proyectoAportante; index as i"
                 style="margin-top: 0.5em"
               >
                 <p class="mb1-em font20">
@@ -64,15 +64,20 @@
 
                 <p style="margin-top: 0.5em">
                   <b>Tipo de aportante:</b>
-                  {{ aportante.cofinanciacionAportante.tipoAportanteString }}
+
+                  {{ aportante.aportante.tipoAportanteString }}
                 </p>
                 <p>
                   <b>Aportante:</b>
-                  {{ aportante.cofinanciacionAportante.nombreAportanteString }}
+                  {{ aportante.aportante.nombreAportanteString }}
                 </p>
                 <p>
                   <b>Valor del aportante:</b>
-                  {{ aportante.valorAporte | currency }}
+                  <!-- obra -->
+                  <span *ngIf="tipoSolicitudCodigo==='1'">{{ aportante.valorObra | currency }}</span>
+
+                  <!-- interventoria -->
+                  <span *ngIf="tipoSolicitudCodigo==='2'">{{ aportante.valorInterventoria | currency }}</span>
                 </p>
               </div>
             </div>
@@ -112,6 +117,7 @@
                 name="plazoMeses"
                 (keypress)="validateNumberKeypress($event)"
                 onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />
             </mat-form-field>
             <span
@@ -126,7 +132,10 @@
               <img
                 class="icon-incompleto--img"
                 src="assets/img/icon/incompleto.svg"
-                alt="este campo es requerido"
+                              alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                 *ngIf="
                   (addressForm.get('plazoMeses').invalid && addressForm.get('plazoMeses').touched) ||
                   (addressForm.get('plazoMeses').invalid && estaEditando)
@@ -165,6 +174,7 @@
                 (change)="validatenomore30()"
                 (keypress)="validateNumberKeypress($event)"
                 onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />
             </mat-form-field>
             <span
@@ -179,7 +189,10 @@
               <img
                 class="icon-incompleto--img"
                 src="assets/img/icon/incompleto.svg"
-                alt="este campo es requerido"
+                              alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                 *ngIf="
                   (addressForm.get('plazoDias').invalid && addressForm.get('plazoDias').touched) ||
                   (addressForm.get('plazoDias').invalid && estaEditando)
@@ -219,7 +232,10 @@
         <img
           class="icon-incompleto--img"
           src="assets/img/icon/incompleto.svg"
-          alt="este campo es requerido"
+                        alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
           *ngIf="
             (addressForm.get('objeto').invalid && addressForm.get('objeto').touched) ||
             (addressForm.get('objeto').invalid && estaEditando)
@@ -233,4 +249,9 @@
       </button>
     </div>
   </form>
+  <app-tabla-observaciones
+                          [DisponibilidadPresupuestal]="objetoDisponibilidad"
+                          *ngIf="objetoDisponibilidad && objetoDisponibilidad.estadoSolicitudCodigo === '2'"
+        >
+  </app-tabla-observaciones>
 </div>

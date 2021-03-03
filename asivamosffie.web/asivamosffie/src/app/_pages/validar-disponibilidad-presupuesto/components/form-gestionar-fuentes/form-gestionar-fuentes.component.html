@@ -110,6 +110,9 @@
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
                     alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
                     *ngIf="
                       (fuente.get('fuentecampo').invalid && fuente.get('fuentecampo').touched) ||
                       (fuente.get('fuentecampo').invalid && estaEditando)
@@ -124,10 +127,6 @@
                       <label
                         class="label-left"
                         for="saldoActual"
-                        [class.color-secondaryColor]="
-                          (fuente.get('saldoActual').invalid && fuente.get('saldoActual').touched) ||
-                          (fuente.get('saldoActual').invalid && estaEditando)
-                        "
                       >
                         Saldo actual de la fuente
                       </label>
@@ -143,17 +142,6 @@
                         />
                       </mat-form-field>
                     </div>
-                    <span class="icon-incompleto">
-                      <img
-                        class="icon-incompleto--img"
-                        src="assets/img/icon/incompleto.svg"
-                        alt="este campo es requerido"
-                        *ngIf="
-                          (fuente.get('saldoActual').invalid && fuente.get('saldoActual').touched) ||
-                          (fuente.get('saldoActual').invalid && estaEditando)
-                        "
-                      />
-                    </span>
                   </div>
                 </div>
               </div>
@@ -199,6 +187,9 @@
                           class="icon-incompleto--img"
                           src="assets/img/icon/incompleto.svg"
                           alt="este campo es requerido"
+                          [matTooltipPosition]="'above'"
+                          matTooltip="Debe ingresar la información en el campo para continuar"
+                          matTooltipClass="info-tooltip"
                           *ngIf="
                             (fuente.get('valorSolicitado').invalid && fuente.get('valorSolicitado').touched) ||
                             (fuente.get('valorSolicitado').invalid && estaEditando)
@@ -216,10 +207,6 @@
                       <label
                         class="label-left"
                         for="nuevoSaldo"
-                        [class.color-secondaryColor]="
-                          (fuente.get('nuevoSaldo').invalid && fuente.get('nuevoSaldo').touched) ||
-                          (fuente.get('nuevoSaldo').invalid && estaEditando)
-                        "
                       >
                         Nuevo saldo de la fuente
                       </label>
@@ -235,17 +222,6 @@
                         />
                       </mat-form-field>
                     </div>
-                    <span class="icon-incompleto">
-                      <img
-                        class="icon-incompleto--img"
-                        src="assets/img/icon/incompleto.svg"
-                        alt="este campo es requerido"
-                        *ngIf="
-                          (fuente.get('nuevoSaldo').invalid && fuente.get('nuevoSaldo').touched) ||
-                          (fuente.get('nuevoSaldo').invalid && estaEditando)
-                        "
-                      />
-                    </span>
                   </div>
                 </div>
                 <div class="col-md-4">

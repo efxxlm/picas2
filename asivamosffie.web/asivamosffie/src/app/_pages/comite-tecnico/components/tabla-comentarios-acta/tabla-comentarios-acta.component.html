@@ -1,4 +1,3 @@
-<!-- jflorez, quito esto 2020-11-03
 <div class="margin-90 text-center table-responsive">
   <table mat-table [dataSource]="dataSource" matSort>
 
@@ -25,22 +24,22 @@
   </table>
   <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" class="radio-color-detalle"></mat-paginator>
 </div>
- -->
-<!-- dejo esto comentado porque falta la info de back -->
+
+<!-- 
 <div *ngIf="data.length>0">
- <p>
+ <p> 
   <b>Fecha:</b>
-  {{ data[0].fecha | date: 'dd/MM/yyyy' }}
+  {{ data[data.length-1].fecha | date: 'dd/MM/yyyy' }}
 </p>
 <p class="d-flex">
   <b class="pr-05em">Observación:</b>
   <span class="ml-1em">
-    {{ textoLimpioMessage( data[0].observacion ) }}
+    {{ textoLimpioMessage( data[data.length-1].observacion ) }}
     
   </span>
 </p>
 <p>
   <b>Miembro comité:</b>
-  {{ data[0].miembroSesionParticipante.nombres }} {{ data[0].miembroSesionParticipante.apellidos }}
+  {{ data[data.length-1].miembroSesionParticipante.nombres }} {{ data[data.length-1].miembroSesionParticipante.apellidos }}
 </p>
-</div>
+</div> -->

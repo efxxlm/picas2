@@ -211,6 +211,10 @@ export class CommonService {
     return this.http.get<Dominio[]>( `${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=109` );
   }
 
+  listaTipoSolicitudAsociada() {
+    return this.http.get<Dominio[]>( `${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=52` );
+  }
+
 
 listaEstadoRevision(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=61`);
@@ -285,6 +289,10 @@ listaEstadosPoliza(){
 
   getEstadoActuacionDerivada() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=125`);
+  }
+
+  modalidadesContrato() {
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=132`);
   }
 
   public listaUsuarios(){

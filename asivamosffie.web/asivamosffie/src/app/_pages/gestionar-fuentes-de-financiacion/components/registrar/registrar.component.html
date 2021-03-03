@@ -5,14 +5,15 @@
     </a>
   </div>
   <div class="text-center">
-    <h1 class="title-menu--h1">Registrar aporte y fuente de recursos</h1>
-  </div>
-  <div
-    *ngIf="addressForm.invalid && addressForm.touched"
-    class="animateDown my-1em color-secondaryColor d-flex align-items-center justify-content-center"
-  >
-    <img class="icon-incompleto--img mr-05em" src="assets/img/icon/incompleto.svg" alt="este campo es requerido" />
-    Debe ingresar la información en el campo para continuar
+    <h1 class="title-menu--h1">
+      <span *ngIf="!edicion">
+        Registrar
+      </span>
+      <span *ngIf="edicion">
+        Ver detalle/ Editar
+      </span>
+      aporte y fuente de recursos
+    </h1>
   </div>
   <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
     <mat-card class="shipping-card">
@@ -47,6 +48,9 @@
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
               alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
               *ngIf="
                 (addressForm.controls.nombreAportante.invalid && addressForm.controls.nombreAportante.touched) ||
                 (addressForm.controls.nombreAportante.invalid && edicion)
@@ -87,6 +91,9 @@
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
               alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
               *ngIf="
                 (addressForm.controls.nombreAportanteFFIE.invalid &&
                   addressForm.controls.nombreAportanteFFIE.touched) ||
@@ -154,6 +161,9 @@
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
               alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
               *ngIf="
                 (addressForm.controls.tipoDocumento.invalid && addressForm.controls.tipoDocumento.touched) ||
                 (addressForm.controls.tipoDocumento.invalid && edicion)
@@ -210,6 +220,9 @@
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
               alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
               *ngIf="
                 (addressForm.controls.departamento.invalid && addressForm.controls.departamento.touched) ||
                 (addressForm.controls.departamento.invalid && edicion)
@@ -219,14 +232,7 @@
         </div>
         <div class="row" *ngIf="tipoAportante.ET.includes(tipoAportanteId.toString())">
           <div class="pr-1">
-            <label
-              class="label-left"
-              [ngClass]="{
-                'color-secondaryColor':
-                  (addressForm.controls.municipio.invalid && addressForm.controls.municipio.touched) ||
-                  (addressForm.controls.municipio.invalid && edicion)
-              }"
-            >
+            <label class="label-left">
               Municipio
             </label>
           </div>
@@ -240,17 +246,7 @@
               </mat-select>
             </mat-form-field>
           </div>
-          <span class="icon-incompleto">
-            <img
-              class="icon-incompleto--img"
-              src="assets/img/icon/incompleto.svg"
-              alt="este campo es requerido"
-              *ngIf="
-                (addressForm.controls.municipio.invalid && addressForm.controls.municipio.touched) ||
-                (addressForm.controls.municipio.invalid && edicion)
-              "
-            />
-          </span>
+          <span class="icon-incompleto"></span>
         </div>
         <div class="row" *ngIf="!tipoAportante.FFIE.includes(tipoAportanteId.toString())">
           <div class="pr-1">
@@ -280,6 +276,9 @@
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
               alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
               *ngIf="
                 (addressForm.controls.vigenciaAcuerdo.invalid && addressForm.controls.vigenciaAcuerdo.touched) ||
                 (addressForm.controls.vigenciaAcuerdo.invalid && edicion)
@@ -369,6 +368,7 @@
                     (change)="CambioNumeroRP()"
                     (keypress)="validateNumberKeypress($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   />
                 </mat-form-field>
                 <span
@@ -384,6 +384,9 @@
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
                     alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
                     *ngIf="
                       (addressForm.controls.cuantosRP.invalid && addressForm.controls.cuantosRP.touched) ||
                       (addressForm.controls.cuantosRP.invalid && edicion)
@@ -392,10 +395,14 @@
                 </span>
               </div>
             </div>
-            <div formGroupName="registrosPresupuestales">
-              <div *ngFor="let registroPresupuestal of registrosPresupuestales.controls; let i = index">
-                <div [formGroupName]="i">
-                  <mat-card-title class="header-card--text sub-text"> RP {{ i + 1 }} </mat-card-title>
+          </div>
+        </div>
+        <div formGroupName="registrosPresupuestales">
+          <div *ngFor="let registroPresupuestal of registrosPresupuestales.controls; let i = index">
+            <div [formGroupName]="i">
+              <mat-card-title class="header-card--text sub-text"> RP {{ i + 1 }} </mat-card-title>
+              <div class="row">
+                <div class="col-md-8">
                   <div class="row">
                     <div class="pr-1">
                       <label
@@ -420,6 +427,7 @@
                           maxlength="50"
                           (keypress)="validateNumberKeypress($event)"
                           onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                          oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         />
                         <input type="hidden" formControlName="registroPresupuestalId" />
                       </mat-form-field>
@@ -436,6 +444,9 @@
                           class="icon-incompleto--img"
                           src="assets/img/icon/incompleto.svg"
                           alt="este campo es requerido"
+                          [matTooltipPosition]="'above'"
+                          matTooltip="Debe ingresar la información en el campo para continuar"
+                          matTooltipClass="info-tooltip"
                           *ngIf="
                             (registroPresupuestal.get('numeroRP').invalid &&
                               registroPresupuestal.get('numeroRP').touched) ||
@@ -445,6 +456,10 @@
                       </span>
                     </div>
                   </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-8">
                   <div class="row">
                     <div class="pr-1">
                       <label
@@ -480,6 +495,9 @@
                           class="icon-incompleto--img"
                           src="assets/img/icon/incompleto.svg"
                           alt="este campo es requerido"
+                          [matTooltipPosition]="'above'"
+                          matTooltip="Debe ingresar la información en el campo para continuar"
+                          matTooltipClass="info-tooltip"
                           *ngIf="
                             (registroPresupuestal.get('fecha').invalid && registroPresupuestal.get('fecha').touched) ||
                             (registroPresupuestal.get('fecha').invalid && edicion)
@@ -488,6 +506,10 @@
                       </span>
                     </div>
                   </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-8">
                   <div class="row">
                     <div class="pr-1">
                       <label
@@ -502,7 +524,7 @@
                         Documento de apropiación
                       </label>
                     </div>
-                    <div class="col d-flex">
+                    <div class="col w-select-unico">
                       <mat-form-field class="full-width">
                         <mat-select formControlName="numerodocumentoRP">
                           <mat-option *ngFor="let nombreAportantes of listaDocumentos" [value]="nombreAportantes">
@@ -511,11 +533,14 @@
                         </mat-select>
                       </mat-form-field>
                     </div>
-                    <span class="icon-incompleto">
+                    <span class="icon-incompleto ml-1-5em">
                       <img
                         class="icon-incompleto--img"
                         src="assets/img/icon/incompleto.svg"
                         alt="este campo es requerido"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Debe ingresar la información en el campo para continuar"
+                        matTooltipClass="info-tooltip"
                         *ngIf="
                           (registroPresupuestal.get('numerodocumentoRP').invalid &&
                             registroPresupuestal.get('numerodocumentoRP').touched) ||
@@ -574,6 +599,9 @@
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
                     alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
                     *ngIf="
                       (fuente.get('fuenteRecursos').invalid && fuente.get('fuenteRecursos').touched) ||
                       (fuente.get('fuenteRecursos').invalid && edicion)
@@ -630,6 +658,9 @@
                         class="icon-incompleto--img"
                         src="assets/img/icon/incompleto.svg"
                         alt="este campo es requerido"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Debe ingresar la información en el campo para continuar"
+                        matTooltipClass="info-tooltip"
                         *ngIf="
                           (fuente.get('valorFuenteRecursos').invalid && fuente.get('valorFuenteRecursos').touched) ||
                           (fuente.get('valorFuenteRecursos').invalid && edicion)
@@ -670,6 +701,7 @@
                           required
                           (keypress)="validateNumberKeypress($event)"
                           onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                          oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         />
                       </mat-form-field>
                       <span
@@ -685,6 +717,9 @@
                           class="icon-incompleto--img"
                           src="assets/img/icon/incompleto.svg"
                           alt="este campo es requerido"
+                          [matTooltipPosition]="'above'"
+                          matTooltip="Debe ingresar la información en el campo para continuar"
+                          matTooltipClass="info-tooltip"
                           *ngIf="
                             (fuente.get('cuantasVigencias').invalid && fuente.get('cuantasVigencias').touched) ||
                             (fuente.get('cuantasVigencias').invalid && edicion)
@@ -729,6 +764,9 @@
                               class="icon-incompleto--img"
                               src="assets/img/icon/incompleto.svg"
                               alt="este campo es requerido"
+                              [matTooltipPosition]="'above'"
+                              matTooltip="Debe ingresar la información en el campo para continuar"
+                              matTooltipClass="info-tooltip"
                               *ngIf="
                                 (vigencia.get('vigenciaAportante').invalid &&
                                   vigencia.get('vigenciaAportante').touched) ||
@@ -788,6 +826,9 @@
                                 class="icon-incompleto--img"
                                 src="assets/img/icon/incompleto.svg"
                                 alt="este campo es requerido"
+                                [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip"
                                 *ngIf="
                                   (vigencia.get('valorVigencia').invalid && vigencia.get('valorVigencia').touched) ||
                                   (vigencia.get('valorVigencia').invalid && edicion)
@@ -858,6 +899,9 @@
                             class="icon-incompleto--img"
                             src="assets/img/icon/incompleto.svg"
                             alt="este campo es requerido"
+                            [matTooltipPosition]="'above'"
+                            matTooltip="Debe ingresar la información en el campo para continuar"
+                            matTooltipClass="info-tooltip"
                             *ngIf="
                               (cuentaBancaria.get('numeroCuenta').invalid &&
                                 cuentaBancaria.get('numeroCuenta').touched) ||
@@ -906,6 +950,9 @@
                             class="icon-incompleto--img"
                             src="assets/img/icon/incompleto.svg"
                             alt="este campo es requerido"
+                            [matTooltipPosition]="'above'"
+                            matTooltip="Debe ingresar la información en el campo para continuar"
+                            matTooltipClass="info-tooltip"
                             *ngIf="
                               (cuentaBancaria.get('nombreCuenta').invalid &&
                                 cuentaBancaria.get('nombreCuenta').touched) ||
@@ -955,6 +1002,9 @@
                                 class="icon-incompleto--img"
                                 src="assets/img/icon/incompleto.svg"
                                 alt="este campo es requerido"
+                                [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip"
                                 *ngIf="
                                   (cuentaBancaria.get('codigoSIFI').invalid &&
                                     cuentaBancaria.get('codigoSIFI').touched) ||
@@ -993,6 +1043,9 @@
                                 class="icon-incompleto--img"
                                 src="assets/img/icon/incompleto.svg"
                                 alt="este campo es requerido"
+                                [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip"
                                 *ngIf="
                                   (cuentaBancaria.get('tipoCuenta').invalid &&
                                     cuentaBancaria.get('tipoCuenta').touched) ||
@@ -1033,6 +1086,9 @@
                               class="icon-incompleto--img"
                               src="assets/img/icon/incompleto.svg"
                               alt="este campo es requerido"
+                              [matTooltipPosition]="'above'"
+                              matTooltip="Debe ingresar la información en el campo para continuar"
+                              matTooltipClass="info-tooltip"
                               *ngIf="
                                 (cuentaBancaria.get('banco').invalid && cuentaBancaria.get('banco').touched) ||
                                 (cuentaBancaria.get('banco').invalid && edicion)
@@ -1068,6 +1124,9 @@
                                 class="icon-incompleto--img"
                                 src="assets/img/icon/incompleto.svg"
                                 alt="este campo es requerido"
+                                [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip"
                                 *ngIf="
                                   (cuentaBancaria.get('extra').invalid && cuentaBancaria.get('extra').touched) ||
                                   (cuentaBancaria.get('extra').invalid && edicion)
@@ -1124,6 +1183,17 @@
       <button mat-button color="warn" class="btn-guardar" type="submit">
         <img src="assets/img/icon/guardar.svg" alt="Guardar" />
       </button>
+        <button
+          mat-button
+          color="warn"
+          *ngIf="addressForm.value.fuenteRecursosArray.length === 1"
+          type="button"
+          class="btn-eliminar"
+          (click)="borrarArray(fuenteRecursosArray, 0, 2, 0)"          
+        >
+          <img src="assets/img/icon/Basu-secondary.svg" alt="Eliminar vigencia" class="height-basu" />
+          Eliminar Registro
+        </button>
     </div>
   </form>
 </div>

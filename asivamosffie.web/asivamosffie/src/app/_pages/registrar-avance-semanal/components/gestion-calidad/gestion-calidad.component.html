@@ -118,6 +118,7 @@
                                                         [min]="seguimientoSemanal.fechaInicio"
                                                         [max]="seguimientoSemanal.fechaFin"
                                                         (click)="pickerfechaToma.open()"
+                                                        (ngModelChange)="getMaxDate( $event )"
                                                         readonly required>
                                                 <mat-datepicker #pickerfechaToma></mat-datepicker>
                                             </mat-form-field>
@@ -192,9 +193,10 @@
                                           <label class="label-left">Observaciones</label>
                                         </div>
                                         <div class="col d-flex">
-                                            <quill-editor   class="quill-editor-style card-80em position-relative"
+                                            <quill-editor   class="quill-editor-style card position-relative"
                                                             [styles]="editorStyle"
                                                             [modules]="config"
+                                                            style="width: 100%;"
                                                             (onContentChanged)="maxLength($event, 400)"
                                                             formControlName="observacion"
                                                             #obsEnsayo
@@ -299,7 +301,7 @@
                 <p><b>Tipo de ensayo</b>: {{ getTipoEnsayo( ensayo.tipoEnsayoCodigo ) }} </p>
                 <p><b>Número de muestras</b>: {{ ensayo.numeroMuestras }} </p>
                 <p><b>Fecha de toma</b>: {{ ensayo.fechaTomaMuestras | date: 'dd/MM/yyyy' }} </p>
-                <p><b>Fecha proyectada de entrega deresultados</b>: {{ ensayo.fechaEntregaResultados | date: 'dd/MM/yyyy' }} </p>
+                <p><b>Fecha proyectada de entrega de resultados</b>: {{ ensayo.fechaEntregaResultados | date: 'dd/MM/yyyy' }} </p>
                 <p *ngIf="ensayo.realizoControlMedicion === true"><b>¿Se realizó control a los equipos de medición durante la semana?</b>: Si</p>
                 <p *ngIf="ensayo.realizoControlMedicion === false"><b>¿Se realizó control a los equipos de medición durante la semana?</b>: No</p>
                 <section *ngIf="ensayo.realizoControlMedicion === true">

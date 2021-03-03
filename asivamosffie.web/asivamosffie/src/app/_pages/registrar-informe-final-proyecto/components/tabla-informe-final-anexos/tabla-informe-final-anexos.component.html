@@ -1,0 +1,121 @@
+<!-- <div class="busqueda">
+  <mat-form-field appearance="outline" class="busqueda--input">
+    <mat-label>Buscador / Filtro</mat-label>
+    <input matInput #filtro (keyup)="applyFilter($event)" />
+  </mat-form-field>
+  <button
+    mat-button
+    color="primary"
+    class="busqueda--img"
+    (click)="filtro.focus()"
+  >
+    <img src="assets/img/icon/lupa.svg" alt="Buscar" />
+  </button>
+</div> -->
+
+<div class="d-flex align-items-center info-text en-alertaLibre">
+  Seleccione si el item Cumple, No cumple o No aplica, tenga en cuenta que para continuar el proceso todos los items
+  deben estar en estado de Cumple o No aplica.
+</div>
+
+<div>
+  <div class="table-responsive">
+    <table mat-table [dataSource]="dataSource" matSort>
+      <!-- informeFinalListaChequeoId Column -->
+      <ng-container matColumnDef="informeFinalListaChequeoId">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>No.</th>
+        <td mat-cell *matCellDef="let element">
+          <b>{{ element.informeFinalListaChequeoId }}</b>
+        </td>
+      </ng-container>
+
+      <!-- nombre Column -->
+      <ng-container matColumnDef="nombre">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Ítem</th>
+        <td mat-cell *matCellDef="let element">{{ element.nombre }}</td>
+      </ng-container>
+
+      <!-- calificacionCodigo Column -->
+      <ng-container matColumnDef="calificacionCodigo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado del requisito</th>
+        <td mat-cell *matCellDef="let element">
+          <section class="slect-table-contain mt-1em">
+            <mat-form-field class="select-width">
+              <mat-label>{{ element.calificacionCodigoString }}</mat-label>
+              <mat-select [(ngModel)]="element.calificacionCodigo" (selectionChange)="select(element)" required>
+                <mat-option *ngFor="let estado of estadoArray" [value]="estado.value">
+                  {{ estado.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <span class="icon-incompleto">
+              <img
+                class="icon-incompleto--img"
+                src="assets/img/icon/incompleto.svg"
+                alt="este campo es requerido"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
+                *ngIf="element.calificacionCodigo === '' && estaEditando"
+              />
+            </span>
+          </section>
+        </td>
+      </ng-container>
+
+      <!-- Id Column -->
+      <ng-container matColumnDef="informeFinalInterventoriaId">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Gestión</th>
+        <td mat-cell *matCellDef="let element">
+          <button
+            *ngIf="element.calificacionCodigo === '1' || element.calificacionCodigo === 1"
+            mat-button
+            color="warn"
+            mat-raised-button
+            color="accent"
+            class="btn-table animatedOpacity"
+            type="button"
+            (click)="openDialogTipoDocumento(element)"
+          >
+            <span *ngIf="element.informeFinalAnexoId == null || element.informeFinalAnexoId == 0"
+              >Tipo de documento</span
+            >
+            <span *ngIf="element.informeFinalAnexoId != null && element.informeFinalAnexoId > 0"
+              >Ver detalle/ Editar</span
+            >
+          </button>
+          <button
+            *ngIf="element.calificacionCodigo === '2' || element.calificacionCodigo === 2"
+            mat-button
+            color="warn"
+            mat-raised-button
+            color="accent"
+            class="btn-table animatedOpacity info-button"
+            [class.completo]="element.tieneObservacionNoCumple"
+            [class.sin-diligenciar]="!element.tieneObservacionNoCumple"
+            type="button"
+            (click)="openDialogObservaciones(element)"
+          >
+            Observaciones
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>
+  <mat-paginator
+    #paginator
+    [length]="dataSource?.data.length"
+    [pageIndex]="0"
+    [pageSize]="5"
+    [pageSizeOptions]="[5, 10, 25, 100]"
+  ></mat-paginator>
+</div>
+
+<div class="text-center">
+  <button mat-button color="warn" class="btn-guardar" (click)="onSubmit()">
+    <img src="assets/img/icon/guardar.svg" alt="Guardar" />
+  </button>
+</div>

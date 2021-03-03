@@ -22,7 +22,7 @@
                 <p><strong>Tipo de identificación:</strong> {{this.tipoIdentificacion}}</p>
                 <p><strong>Número de identificación:</strong> {{this.numIdentificacion}}</p>
                 <p><strong>Tipo de intervención:</strong> {{this.tipoIntervencion}}</p>
-                <p><strong>Valor del contrato:</strong> $ {{this.valorContrato}}</p>
+                <p><strong>Valor del contrato:</strong> {{this.valorContrato | currency: 'COP':'symbol-narrow':'.0-0'}}</p>
                 <p><strong>Plazo:</strong> {{this.plazoContrato}}</p>
                 <p><strong>Fecha de inicio de contrato:</strong> {{this.fechaInicioContrato}}</p>
                 <p><strong>Fecha de finalización de contrato:</strong> {{this.fechaFinalizacionContrato}}</p>

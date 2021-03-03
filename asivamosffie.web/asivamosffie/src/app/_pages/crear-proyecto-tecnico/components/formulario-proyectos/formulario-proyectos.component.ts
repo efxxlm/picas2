@@ -64,7 +64,8 @@ export class FormularioProyectosComponent implements OnInit {
       this.proyecto.valorObra!=null ||  
       this.proyecto.valorInterventoria!=null ||  
       this.proyecto.valorTotal!=null ||  
-      this.proyecto.estadoProyectoCodigo!=''||
+      this.proyecto.estadoProyectoObraCodigo!=''||
+      this.proyecto.estadoProyectoInterventoriaCodigo!=''||
       this.proyecto.eliminado!=null ||  
       this.proyecto.fechaCreacion!=null || 
       this.proyecto.fechaModificacion!=null ||  
@@ -116,7 +117,8 @@ export class FormularioProyectosComponent implements OnInit {
     valorObra: null,
     valorInterventoria: null,
     valorTotal: null,
-    estadoProyectoCodigo: '',
+    estadoProyectoObraCodigo: '',
+    estadoProyectoInterventoriaCodigo: '',
     eliminado: null,
     fechaCreacion: null,
     usuarioCreacion: '',
@@ -235,10 +237,14 @@ export class FormularioProyectosComponent implements OnInit {
         this.projectServices.getProjectById(Number(id)).subscribe(respuesta => {
           
           this.proyecto = respuesta;
-          if(this.proyecto.estadoProyectoCodigo!='1')
+          if(this.proyecto.estadoProyectoObraCodigo !='1' || this.proyecto.estadoProyectoInterventoriaCodigo !='1')
           {
             this.bitPuedoEditar=false;
           }
+
+          this.valueVacioLatitud();
+          this.valueVacioLongitud();
+
           //this.proyecto.predioPrincipal.tipoPredioCodigo;
           // ajusto lartitud y longitud
           // console.log("viene predio?");
@@ -590,10 +596,11 @@ export class FormularioProyectosComponent implements OnInit {
   }
 
   openDialog(modalTitle: string, modalText: string) {
-    this.dialog.open(ModalDialogComponent, {
+    let dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
     });
+    return dialogRef;
   }
 
   openDialogSiNo(modalTitle: string, modalText: string,tipo:number,i:number) {
@@ -694,9 +701,12 @@ export class FormularioProyectosComponent implements OnInit {
           }
           else
           {
-            // console.log(this.proyecto.proyectoPredio.length+1);
-            this.proyecto.cantPrediosPostulados=this.proyecto.proyectoPredio.length+1;
-            this.openDialog("","<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>");
+            //  console.log(this.proyecto.proyectoPredio.length+1);
+            // this.proyecto.cantPrediosPostulados=this.proyecto.proyectoPredio.length+1;
+            let dialogRef = this.openDialog("","<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>");
+            dialogRef.afterClosed().subscribe( ()=> {
+              this.proyecto.cantPrediosPostulados=this.proyecto.proyectoPredio.length+1;
+            })
             
           }
         }
@@ -755,8 +765,11 @@ export class FormularioProyectosComponent implements OnInit {
           }
           else
           {            
-            this.proyecto.cantidadAportantes=this.proyecto.proyectoAportante.length;            
-            this.openDialog("","<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>");            
+            let dialogRef = this.openDialog("","<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>");            
+            dialogRef.afterClosed().subscribe( ()=> {
+              this.proyecto.cantidadAportantes=this.proyecto.proyectoAportante.length;            
+            })
+            
           }
         }
         else{
@@ -1065,6 +1078,18 @@ export class FormularioProyectosComponent implements OnInit {
     return patron.test(te);
   }
 
+  codigoDaneVacio() {
+    if(this.proyecto.tipoIntervencionCodigo == 1) {
+      this.CodigoDaneIE = '';
+    }
+  }
+
+  valueVacioLatitud() {
+    if (this.proyecto.predioPrincipal.ubicacionLatitud === '°') this.proyecto.predioPrincipal.ubicacionLatitud = ''
+  }
+  valueVacioLongitud() {
+    if (this.proyecto.predioPrincipal.ubicacionLongitud === '°') this.proyecto.predioPrincipal.ubicacionLongitud = ''
+  }
 
   validateKeypressLlave(event: KeyboardEvent) {
     const alphanumeric = /[A-Za-z0-9-]/;

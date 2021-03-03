@@ -287,6 +287,23 @@ const routes: Routes = [
           .then( module => module.RequisitosTecnicosConstruccionModule )
       }, 
       {
+        path: 'registrarInformeFinalProyecto',
+        loadChildren: () => import( './_pages/registrar-informe-final-proyecto/registrar-informe-final-proyecto.module' )
+          .then( module => module.RegistrarInformeFinalProyectoModule )
+      },
+      {
+        path: 'verificarInformeFinalProyecto',
+        loadChildren: () => import( './_pages/verificar-informe-final-proyecto/verificar-informe-final-proyecto.module' )
+          .then( module => module.VerificarInformeFinalProyectoModule )
+      },
+      /*
+      {
+        path: 'validarInformeFinalProyecto',
+        loadChildren: () => import( './_pages/validar-informe-del-proyecto/validar-informe-del-proyecto.module' )
+          .then( module => module.ValidarInformeDelProyectoModule )
+      },
+      */
+    { 
         path: 'verificarSolicitudDeNovedades',
         loadChildren: () => import('./_pages/verificar-solicitud-de-novedades/verificar-solicitud-de-novedades.module')
         .then(m => m.VerificarSolicitudDeNovedadesModule)
@@ -376,6 +393,21 @@ const routes: Routes = [
         path: 'gestionarProcesoDefensaJudicial',
         loadChildren: () => import('./_pages/gestionar-procesos-defensa-judicial/gestionar-procesos-defensa-judicial.module')
         .then(m => m.GestionarProcesosDefensaJudicialModule)
+      },
+      {
+        path: 'registrarPagosRendimientos',
+        loadChildren: () => import('./_pages/registrar-pagos-rendimientos/registrar-pagos-rendimientos.module')
+        .then(m => m.RegistrarPagosRendimientosModule)
+      },
+      {
+        path: 'gestionarRendimientos',
+        loadChildren: () => import('./_pages/gestionar-rendimientos/gestionar-rendimientos.module')
+        .then(m => m.GestionarRendimientosModule)
+      },
+      {
+        path: 'aprobarIncorporacionRendimientos',
+        loadChildren: () => import('./_pages/aprobar-incorporacion-rendimientos/aprobar-incorporacion-rendimientos.module')
+        .then(m => m.AprobarIncorporacionRendimientosModule)
       },
     ]
 

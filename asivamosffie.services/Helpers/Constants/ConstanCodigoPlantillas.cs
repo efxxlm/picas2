@@ -72,6 +72,10 @@
         Ficha_estudio_tr_contratos=62,
         Contrato_Acta_Interventoria_Construccion = 63,
         Contrato_Acta_Obra_Construccion = 64,
-        Proponentes_Proceso_Seleccion = 65
+        Proponentes_Proceso_Seleccion = 65,
+        Persona_Natural_Proceso_Seleccion = 69,
+        Persona_Juridica_Proceso_Seleccion = 70,
+        Union_Temporal_Proceso_Seleccion = 71,
+        Participantes_Union_Temporal_Proceso_Seleccion = 72,
     }
 }

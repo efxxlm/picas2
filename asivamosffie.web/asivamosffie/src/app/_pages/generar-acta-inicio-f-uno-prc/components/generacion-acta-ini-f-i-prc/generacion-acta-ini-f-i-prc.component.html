@@ -95,13 +95,6 @@
       </div>
     </mat-card-content>
   </mat-card>
-  <div
-    *ngIf="addressForm.invalid && addressForm.touched"
-    class="animateDown my-1em color-secondaryColor d-flex align-items-center justify-content-center"
-  >
-    <img class="icon-incompleto--img mr-05em" src="assets/img/icon/incompleto.svg" alt="este campo es requerido" />
-    Debe ingresar la información en el campo para continuar
-  </div>
   <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
     <mat-card class="shipping-card mainGris">
       <mat-card-content>
@@ -131,7 +124,6 @@
                     readonly
                     (click)="picker.open()"
                     formControlName="fechaActaInicioFUnoPreconstruccion"
-                    (dateInput)="generarFechaRestante()"
                     placeholder="DD/MM/AAAA"
                   />
                   <mat-datepicker #picker></mat-datepicker>
@@ -143,11 +135,14 @@
                   <img
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
-                    alt="este campo es requerido"
+                                  alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                     *ngIf="
-                      (addressForm.get('fechaActaInicioFUnoPreconstruccion').invalid &&
+                      (addressForm.get('fechaActaInicioFUnoPreconstruccion')?.invalid &&
                         addressForm.get('fechaActaInicioFUnoPreconstruccion').touched) ||
-                      (addressForm.get('fechaActaInicioFUnoPreconstruccion').invalid && estaEditando)
+                      (addressForm.get('fechaActaInicioFUnoPreconstruccion')?.invalid && estaEditando)
                     "
                   />
                 </span>
@@ -163,9 +158,9 @@
                   class="label-left"
                   for="fechaPrevistaTerminacion"
                   [class.color-secondaryColor]="
-                    (addressForm.get('fechaPrevistaTerminacion').invalid &&
+                    (addressForm.get('fechaPrevistaTerminacion')?.invalid &&
                       addressForm.get('fechaPrevistaTerminacion').touched) ||
-                    (addressForm.get('fechaPrevistaTerminacion').invalid && estaEditando)
+                    (addressForm.get('fechaPrevistaTerminacion')?.invalid && estaEditando)
                   "
                   >Fecha prevista de terminación</label
                 >
@@ -187,7 +182,10 @@
                 <img
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
-                  alt="este campo es requerido"
+                                alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                   *ngIf="
                     (addressForm.get('fechaPrevistaTerminacion').invalid &&
                       addressForm.get('fechaPrevistaTerminacion').touched) ||
@@ -199,7 +197,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-9" style="padding-left: 0px">
+          <div class="col-md-12" style="padding-left: 0px">
             <div class="row">
               <div class="pr-1">
                 <label class="label-left" [ngClass]="{ 'color-secondaryColor': this.esRojo == true }"
@@ -220,12 +218,14 @@
                 <mat-form-field class="w-8em">
                   <input
                     matInput
-                    maxlength="2"
+                    maxlength="3"
                     min="1"
                     max="99"
                     required
+                    (ngModelChange)="getValueMeses( $event )"
                     (keypress)="number($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     type="number"
                     formControlName="mesPlazoEjFase1"
                   />
@@ -237,7 +237,7 @@
                   matTooltipClass="info-tooltip"
                 >
                   {{
-                    2 -
+                    3 -
                       (addressForm.get('mesPlazoEjFase1').value
                         ? addressForm.get('mesPlazoEjFase1').value.toString().length
                         : 0)
@@ -247,7 +247,10 @@
                   <img
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
-                    alt="este campo es requerido"
+                                  alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                     *ngIf="
                       (addressForm.get('mesPlazoEjFase1').invalid && addressForm.get('mesPlazoEjFase1').touched) ||
                       (addressForm.get('mesPlazoEjFase1').invalid && estaEditando)
@@ -270,8 +273,10 @@
                     min="1"
                     max="31"
                     required
+                    (ngModelChange)="getValueDias( $event )"
                     (keypress)="number($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;if(this.value>=this.max) return false;"
+                    oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     type="number"
                     formControlName="diasPlazoEjFase1"
                   />
@@ -293,7 +298,10 @@
                   <img
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
-                    alt="este campo es requerido"
+                                  alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                     *ngIf="
                       (addressForm.get('diasPlazoEjFase1').invalid && addressForm.get('diasPlazoEjFase1').touched) ||
                       (addressForm.get('diasPlazoEjFase1').invalid && estaEditando)
@@ -336,23 +344,22 @@
                     required
                     (keypress)="number($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     type="number"
                     formControlName="mesPlazoEjFase2"
                   />
                 </mat-form-field>
                 <span class="contador">
-                  {{
-                    2 -
-                      (addressForm.get('mesPlazoEjFase2').value
-                        ? addressForm.get('mesPlazoEjFase1').value.toString().length
-                        : 0)
-                  }}
+                  {{ 2 - getSizeInput( addressForm.get('mesPlazoEjFase2').value ) }}
                 </span>
                 <span class="icon-incompleto">
                   <img
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
-                    alt="este campo es requerido"
+                                  alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                     *ngIf="
                       (addressForm.get('mesPlazoEjFase2').invalid && addressForm.get('mesPlazoEjFase2').touched) ||
                       (addressForm.get('mesPlazoEjFase2').invalid && estaEditando)
@@ -377,6 +384,7 @@
                     required
                     (keypress)="number($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;if(this.value>=this.max) return false;"
+                    oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     type="number"
                     formControlName="diasPlazoEjFase2"
                   />
@@ -398,7 +406,10 @@
                   <img
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
-                    alt="este campo es requerido"
+                                  alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                     *ngIf="
                       (addressForm.get('diasPlazoEjFase2').invalid && addressForm.get('diasPlazoEjFase2').touched) ||
                       (addressForm.get('diasPlazoEjFase2').invalid && estaEditando)
@@ -413,37 +424,36 @@
           <div
             class="text-area-quill noDecorated"
             [class.color-secondaryColor]="
-              (addressForm.get('objeto').invalid && addressForm.get('objeto').touched) ||
-              (addressForm.get('objeto').invalid && estaEditando)
+              (addressForm.get('objeto')?.invalid && addressForm.get('objeto').touched) ||
+              (addressForm.get('objeto')?.invalid && estaEditando)
             "
           >
             <label class="label-left" for="observacionesEspeciales">Observaciones o consideraciones especiales</label>
             <quill-editor
-              class="quill-editor-style card"
+              class="quill-editor-style card "
               [styles]="editorStyle"
               [modules]="config"
               (onContentChanged)="maxLength($event, 500)"
               formControlName="observacionesEspeciales"
+              #observaciones
+              required
             >
             </quill-editor>
           </div>
-          <span class="contador auxMarg" *ngIf="addressForm.get('observacionesEspeciales').value">
-            {{ 500 - textoLimpio(addressForm.get('observacionesEspeciales').value) }}
+          <span class="contador auxMarg" *ngIf="addressForm.get('observacionesEspeciales').value !== null">
+            {{500 - (textoLimpio(observaciones.quillEditor,500))}}
           </span>
-          <span
-            class="contador auxMarg"
-            *ngIf="
-              addressForm.get('observacionesEspeciales').value === null ||
-              addressForm.get('observacionesEspeciales').value === ''
-            "
-          >
-            500
+          <span class="contador auxMarg" *ngIf="addressForm.get('observacionesEspeciales').value === null">
+              500
           </span>
           <span class="icon-incompleto">
             <img
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
-              alt="este campo es requerido"
+                            alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
               *ngIf="
                 (addressForm.get('observacionesEspeciales').invalid &&
                   addressForm.get('observacionesEspeciales').touched) ||

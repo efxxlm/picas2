@@ -18,8 +18,9 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
     estadoAvanceTramite: [null, Validators.required],
     fechaActuacionAdelantada: [null, Validators.required],
     actuacionAdelantada: [null, Validators.required],
+    cualOtroActuacionAdelantada: [null],
     proximaActuacionRequerida: [null, Validators.required],
-    cualOtro: [null, Validators.required],
+    cualOtroActuacionRequerida: [null],
     diasVencimientoTerminos: [null, Validators.required],
     fechaVencimientoTerminos: [null, Validators.required],
     participacionContratista: [null, Validators.required],
@@ -55,7 +56,7 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
     ]
   };
   numReclamacion: any;
-
+  estaEditando = false;
   constructor(private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private common: CommonService, private router: Router) { }
 
   ngOnInit(): void {
@@ -83,7 +84,8 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
           const actuacionRequeridaSelected = this.proximaActuacionRequeridaArrayDom.find(t => t.codigo === data.proximaActuacionCodigo);
           this.addressForm.get('proximaActuacionRequerida').setValue(actuacionRequeridaSelected);
         }
-        this.addressForm.get('cualOtro').setValue(data.actuacionAdelantadaOtro);
+        this.addressForm.get('cualOtroActuacionAdelantada').setValue(data.actuacionAdelantadaOtro);
+        this.addressForm.get('cualOtroActuacionRequerida').setValue(data.proximaActuacionOtro);
         this.addressForm.get('diasVencimientoTerminos').setValue(data.cantDiasVencimiento.toString());
         this.addressForm.get('fechaVencimientoTerminos').setValue(data.fechaVencimiento);
         this.addressForm.get('participacionContratista').setValue(data.esRequiereContratista);
@@ -125,6 +127,7 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
   }
 
   onSubmit() {
+    this.estaEditando = true;
     let actuacionTaiArray;
     let completo: boolean;
     if (this.addressForm.valid) {
@@ -133,17 +136,44 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
     else {
       completo = false;
     }
+    let estadoAvanTramite;
+    if (this.addressForm.value.estadoAvanceTramite != undefined || this.addressForm.value.estadoAvanceTramite != null) {
+      if (!this.addressForm.value.estadoAvanceTramite.codigo) {
+        estadoAvanTramite = "pendiente";
+      }
+      else {
+        estadoAvanTramite = this.addressForm.value.estadoAvanceTramite.codigo;
+      }
+    }
+    let actuacionAdelantada;
+    if (this.addressForm.value.actuacionAdelantada != undefined || this.addressForm.value.actuacionAdelantada != null) {
+      if (!this.addressForm.value.actuacionAdelantada.codigo) {
+        actuacionAdelantada = "pendiente";
+      }
+      else {
+        actuacionAdelantada = this.addressForm.value.actuacionAdelantada.codigo;
+      }
+    }
+    let proxActuacion;
+    if (this.addressForm.value.proximaActuacionRequerida != undefined || this.addressForm.value.proximaActuacionRequerida != null) {
+      if (!this.addressForm.value.proximaActuacionRequerida.codigo) {
+        proxActuacion = "pendiente";
+      }
+      else {
+        proxActuacion = this.addressForm.value.proximaActuacionRequerida.codigo;
+      }
+    }
     if (this.isEditable == true) {
       actuacionTaiArray = {
         "ControversiaContractualId": this.controversiaID,
-        "ActuacionAdelantadaCodigo": this.addressForm.value.actuacionAdelantada.codigo,
-        "ActuacionAdelantadaOtro": "",
-        "ProximaActuacionCodigo": this.addressForm.value.proximaActuacionRequerida.codigo,
-        "ProximaActuacionOtro": this.addressForm.value.cualOtro,
+        "ActuacionAdelantadaCodigo": actuacionAdelantada,
+        "ActuacionAdelantadaOtro": this.addressForm.value.cualOtroActuacionAdelantada,
+        "ProximaActuacionCodigo": proxActuacion,
+        "ProximaActuacionOtro": this.addressForm.value.cualOtroActuacionRequerida,
         "Observaciones": this.addressForm.value.observaciones,
         "ResumenPropuestaFiduciaria": "",
         "RutaSoporte": this.addressForm.value.urlSoporte,
-        "EstadoAvanceTramiteCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
+        "EstadoAvanceTramiteCodigo": estadoAvanTramite,
         "CantDiasVencimiento": this.addressForm.value.diasVencimientoTerminos,
         "FechaVencimiento": this.addressForm.value.fechaVencimientoTerminos,
         "FechaActuacion": this.addressForm.value.fechaActuacionAdelantada,
@@ -164,14 +194,14 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
     else {
       actuacionTaiArray = {
         "ControversiaContractualId": this.controversiaID,
-        "ActuacionAdelantadaCodigo": this.addressForm.value.actuacionAdelantada.codigo,
-        "ActuacionAdelantadaOtro": "",
-        "ProximaActuacionCodigo": this.addressForm.value.proximaActuacionRequerida.codigo,
-        "ProximaActuacionOtro": this.addressForm.value.cualOtro,
+        "ActuacionAdelantadaCodigo": actuacionAdelantada,
+        "ActuacionAdelantadaOtro": this.addressForm.value.cualOtroActuacionAdelantada,
+        "ProximaActuacionCodigo": proxActuacion,
+        "ProximaActuacionOtro": this.addressForm.value.cualOtroActuacionRequerida,
         "Observaciones": this.addressForm.value.observaciones,
         "ResumenPropuestaFiduciaria": "",
         "RutaSoporte": this.addressForm.value.urlSoporte,
-        "EstadoAvanceTramiteCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
+        "EstadoAvanceTramiteCodigo": estadoAvanTramite,
         "CantDiasVencimiento": this.addressForm.value.diasVencimientoTerminos,
         "FechaVencimiento": this.addressForm.value.fechaVencimientoTerminos,
         "FechaActuacion": this.addressForm.value.fechaActuacionAdelantada,
@@ -190,6 +220,8 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
     }
     this.services.CreateEditControversiaOtros(actuacionTaiArray).subscribe((data: any) => {
       if (data.isSuccessful == true) {
+        this.services.CambiarEstadoActuacionSeguimiento(data.data.controversiaActuacionId,"1").subscribe((data0:any)=>{
+        });
         this.openDialog("", `<b>${data.message}</b>`);
         this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
       }

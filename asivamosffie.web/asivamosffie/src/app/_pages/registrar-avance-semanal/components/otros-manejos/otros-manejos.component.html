@@ -37,9 +37,10 @@
               <label class="label-left">Actividad</label>
             </div>
             <div class="col d-flex" style="width: 100%;">
-                <quill-editor   class="quill-editor-style card-80em position-relative"
+                <quill-editor   class="quill-editor-style card position-relative"
                                 [styles]="editorStyle"
                                 [modules]="config"
+                                style="width: 100%;"
                                 (onContentChanged)="maxLength($event, 500)"
                                 formControlName="actividad"
                                 #obsOtrosManejos

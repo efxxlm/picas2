@@ -26,6 +26,7 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
         public int? DefensaJudicialId { get; set; }
         public bool? ExisteConocimiento { get; set; }
+        public bool? RegistroCompleto { get; set; }
 
         public virtual DefensaJudicial DefensaJudicial { get; set; }
     }

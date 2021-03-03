@@ -117,15 +117,20 @@ export class InvitacionCerradaComponent implements OnInit {
         botonevaluacion.click();
         botonProponenteInvitar.click();
 
+        console.log( this.procesoSeleccion.estadoProcesoSeleccionCodigo, this.estadosProcesoSeleccion.AprobadaSelecciónPorComiteFiduciario )
+
         //confirmo si tiene el estado para editar
-        if(this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.Creado||
+        if(
+          this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.Creado||
           this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario||
           this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaAperturaPorComiteFiduciario||
           this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaAperturaPorComiteTecnico ||
           this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaSeleccionPorComiteFiduciario ||
           this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaSeleccionPorComiteTecnico ||
           this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltoPorComiteFiduciario ||
-          this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltoPorComiteTecnico)
+          this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltoPorComiteTecnico ||
+          this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.AprobadaSelecciónPorComiteFiduciario
+          )
         {
           this.bitPuedoEditar=true;
         }
@@ -228,11 +233,11 @@ export class InvitacionCerradaComponent implements OnInit {
 
   estaIncompletoEvaluacion(pProceso:any):number{
     let retorno=0;    
-    if(pProceso.estadoProcesoSeleccionCodigo != EstadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario)
-    {
-      retorno=3;
-    }
-    else
+    console.log(pProceso.estadoProcesoSeleccionCodigo, EstadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario)
+    if(
+        pProceso.estadoProcesoSeleccionCodigo == EstadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario ||
+        pProceso.estadoProcesoSeleccionCodigo == EstadosProcesoSeleccion.AprobadaSelecciónPorComiteFiduciario
+      )
     {
       if(pProceso.evaluacionDescripcion)
       {
@@ -249,11 +254,18 @@ export class InvitacionCerradaComponent implements OnInit {
       }
       
     }
+    else
+    {
+      retorno=3;
+    }
     return retorno;
   }
   estaIncompletoProponentes(pProceso:any):number{
     let retorno=0;
-    if(pProceso.estadoProcesoSeleccionCodigo != EstadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario)
+    if(
+        pProceso.estadoProcesoSeleccionCodigo != EstadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario &&
+        pProceso.estadoProcesoSeleccionCodigo != EstadosProcesoSeleccion.AprobadaSelecciónPorComiteFiduciario
+      )
     {
       retorno=3;
     }
@@ -269,16 +281,27 @@ export class InvitacionCerradaComponent implements OnInit {
 
 
   estaIncompletoEstudio(pProceso:any):number{
+    // 0 sin diligenciar
+    // 1 en proceso
+    // 2 completo
+
     let retorno=0;
-    if(pProceso.cantidadCotizaciones ||
-      pProceso.procesoSeleccionCotizacion.length>0
-    )
+    
+    if( pProceso.cantidadCotizaciones ||  pProceso.procesoSeleccionCotizacion.length > 0 )
     {
-      if(pProceso.cantidadCotizaciones &&
-      pProceso.procesoSeleccionCotizacion.length>0
-      )
+      if( pProceso.cantidadCotizaciones && pProceso.procesoSeleccionCotizacion.length > 0 )
       {
         retorno= 2;
+        pProceso.procesoSeleccionCotizacion.forEach(cot => {
+          if (
+            cot.nombreOrganizacion === undefined ||
+            cot.valorCotizacion === undefined ||
+            cot.descripcion === undefined ||
+            cot.urlSoporte === undefined
+          )
+          retorno = 1;
+        });
+        
       } 
       else{
         retorno =1;

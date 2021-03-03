@@ -157,31 +157,34 @@ export class SeccionPrivadaComponent implements OnInit {
     console.log(pProceso);
     
     let retorno:number=0;
-    if(pProceso.objeto !="" ||
-    pProceso.alcanceParticular!="" ||
-    pProceso.justificacion!="" ||
+    if(
+      ( pProceso.objeto !="" || pProceso.objeto !=undefined ) ||
+      ( pProceso.alcanceParticular !="" || pProceso.alcanceParticular != undefined ) ||
+      ( pProceso.justificacion !="" || pProceso.justificacion != undefined ) ||
     //pProceso.criteriosSeleccion!="" ||
-    pProceso.tipoIntervencionCodigo!="" ||
-    pProceso.tipoAlcanceCodigo!="" ||
+      ( pProceso.tipoIntervencionCodigo!="" || pProceso.tipoIntervencionCodigo != undefined ) ||
+      ( pProceso.tipoAlcanceCodigo !="" || pProceso.tipoAlcanceCodigo != undefined ) ||
     //pProceso.esDistribucionGrupos!="" ||
-    pProceso.responsableEstructuradorUsuarioid!=undefined ||
-    pProceso.responsableTecnicoUsuarioId!=undefined ||
+    //pProceso.responsableEstructuradorUsuarioid!=undefined ||
+    //pProceso.responsableTecnicoUsuarioId!=undefined ||
     pProceso.procesoSeleccionGrupo.length>=1||
     pProceso.procesoSeleccionCronograma.length>=1)
     {
-      if(pProceso.objeto !="" &&
-      pProceso.alcanceParticular!="" &&
-      pProceso.justificacion!="" &&
+      if(
+          ( pProceso.objeto !="" && pProceso.objeto !=undefined ) &&
+          ( pProceso.alcanceParticular !="" && pProceso.alcanceParticular != undefined ) &&
+          ( pProceso.justificacion !="" && pProceso.justificacion != undefined ) &&
      // pProceso.criteriosSeleccion!="" &&
-      pProceso.tipoIntervencionCodigo!="" &&
-      pProceso.tipoAlcanceCodigo!="" &&
+          ( pProceso.tipoIntervencionCodigo!="" && pProceso.tipoIntervencionCodigo != undefined ) &&
+          ( pProceso.tipoAlcanceCodigo !="" && pProceso.tipoAlcanceCodigo != undefined ) &&
       //pProceso.esDistribucionGrupos!="" &&
-      pProceso.responsableEstructuradorUsuarioid!=undefined &&
-      pProceso.responsableTecnicoUsuarioId!=undefined &&
+      //pProceso.responsableEstructuradorUsuarioid!=undefined &&
+      //pProceso.responsableTecnicoUsuarioId!=undefined &&
       pProceso.procesoSeleccionGrupo.length>0 &&
       pProceso.procesoSeleccionCronograma.length>0)
       {
-        retorno= 2;
+        console.log(pProceso.justificacion!="", pProceso.justificacion ===undefined, pProceso.justificacion);
+        retorno= 2; // completo
       }
       else{
         console.log(pProceso.objeto!="");
@@ -194,7 +197,7 @@ export class SeccionPrivadaComponent implements OnInit {
       console.log(pProceso.responsableTecnicoUsuarioId!=undefined);
       console.log(pProceso.procesoSeleccionGrupo.length>=1);
       console.log(pProceso.procesoSeleccionCronograma.length>=1);
-      retorno=1;
+      retorno=1; // en-proceso
       }
     }
     return retorno;
@@ -308,20 +311,27 @@ export class SeccionPrivadaComponent implements OnInit {
 
 
   estaIncompletoEstudio(pProceso:any):number{
-    let retorno=0;
-    if(pProceso.cantidadCotizaciones ||
-      pProceso.procesoSeleccionCotizacion.length>0
-    )
+    let retorno=0; // sin-diligenciar
+
+    if( pProceso.cantidadCotizaciones || pProceso.procesoSeleccionCotizacion.length>0 )
     {
-      if(pProceso.cantidadCotizaciones &&
-      pProceso.procesoSeleccionCotizacion.length>0
-      )
-      {
-        retorno= 2;
-      } 
-      else{
-        retorno =1;
-      }
+      retorno= 2; //completo
+
+      pProceso.procesoSeleccionCotizacion.forEach(psc => {
+
+        console.log(psc);
+        if (
+              psc.nombreOrganizacion === '' ||
+              psc.nombreOrganizacion === undefined ||
+              psc.valorCotizacion === '' ||
+              psc.valorCotizacion === undefined ||
+              psc.descripcion === undefined ||
+              psc.urlSoporte === '' ||
+              psc.urlSoporte === undefined
+        )
+        retorno =1; //en-proceso
+              
+      });
     }
 
     

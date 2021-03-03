@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,6 +13,7 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ContractualControversyController : ControllerBase
     {
         public readonly IContractualControversy _contractualControversy;
@@ -832,6 +834,32 @@ namespace asivamosffie.api.Controllers
             catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+
+        [Route("GetSeguimientoActuacionDerivadabyId")]
+        [HttpGet]
+        public async Task<SeguimientoActuacionDerivada> GetSeguimientoActuacionDerivadabyId(int pSeguimientoActuacionDerivadaId)
+        {
+            var respuesta = await _contractualControversy.GetSeguimientoActuacionDerivadabyId(pSeguimientoActuacionDerivadaId);
+            return respuesta;
+        }
+
+        /*4.4.1*/
+        [HttpPut]
+        [Route("ChangeStateActuacion")]
+        public async Task<IActionResult> ChangeStateActuacion([FromQuery] int pControversiaActuacionId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _contractualControversy.ChangeStateActuacion(pControversiaActuacionId, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
             }
         }
     }

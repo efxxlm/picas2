@@ -38,6 +38,10 @@ export class FormPerfilComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  listaTipoObservaciones = {
+    obsInterventor: '1',
+    obsSupervisor: '3'
+  }
   perfilesCv: Dominio[] = [];
   estaEditando = false;
 
@@ -103,6 +107,7 @@ export class FormPerfilComponent implements OnInit {
                       observacion                 : [ null ],
                       observacionSupervisor       : [ null ],
                       fechaObservacion            : [ null ],
+                      contratoPerfilObservacionArray: [ [] ],
                       contratoPerfilNumeroRadicado: this.fb.array([ this.fb.group({ numeroRadicado: '' }) ]),
                       rutaSoporte                 : [ '' ]
                     }
@@ -126,6 +131,7 @@ export class FormPerfilComponent implements OnInit {
                       observacion                 : [ null ],
                       observacionSupervisor       : [ null ],
                       fechaObservacion            : [ null ],
+                      contratoPerfilObservacionArray: [ [] ],
                       contratoPerfilNumeroRadicado: this.fb.array([ this.fb.group({ numeroRadicado: '' }) ]),
                       rutaSoporte                 : [ '' ]
                     }
@@ -165,6 +171,7 @@ export class FormPerfilComponent implements OnInit {
                     observacion                 : [ null ],
                     observacionSupervisor       : [ null ],
                     fechaObservacion            : [ null ],
+                    contratoPerfilObservacionArray: [ [] ],
                     contratoPerfilNumeroRadicado: this.fb.array([ this.fb.group({ numeroRadicado: '' }) ]),
                     rutaSoporte                 : [ '' ]
                   }
@@ -176,11 +183,12 @@ export class FormPerfilComponent implements OnInit {
       if ( this.tieneEstadoFase1EyD === true ) { estadosArray.push( 'Estudios y Diseños' ); }
       if ( this.tieneEstadoFase1Diagnostico === true ) { estadosArray.push( 'Diagnóstico' ); }
       this.formContratista.get( 'estadoFases' ).setValue( estadosArray );
+      console.log( this.perfilProyecto );
       for ( const perfil of this.perfilProyecto ) {
-        const numeroRadicados     = [];
-        let observaciones         = null;
-        let fechaObservacion      = null;
-        let observacionSupervisor = null;
+        const numeroRadicados = [];
+        const observacionInterventor = [];
+        const observacionSupervisor = [];
+        let observacionSupervisorSemaforo = null;
         let semaforo;
         if ( perfil.contratoPerfilNumeroRadicado.length === 0 ) {
           numeroRadicados.push(
@@ -207,16 +215,19 @@ export class FormPerfilComponent implements OnInit {
 
         if ( perfil.contratoPerfilObservacion.length > 0 ) {
           for ( const obs of perfil.contratoPerfilObservacion ) {
-            if ( obs.tipoObservacionCodigo === '1' ) {
-              observaciones = obs.observacion;
-            } else if ( obs.tipoObservacionCodigo === '3' ) {
-              fechaObservacion = obs.fechaCreacion;
-              observacionSupervisor = obs.observacion;
+            if ( obs.tipoObservacionCodigo === this.listaTipoObservaciones.obsInterventor ) {
+              observacionInterventor.push( obs );
+            }
+            if ( obs.tipoObservacionCodigo === this.listaTipoObservaciones.obsSupervisor && perfil.tieneObservacionSupervisor === true ) {
+              observacionSupervisor.push( obs );
             }
           }
         }
 
-        if ( perfil.registroCompleto ) {
+        if ( observacionSupervisor.length > 0 ) {
+          observacionSupervisorSemaforo = true;
+        }
+        if ( perfil.registroCompleto === true ) {
           this.perfilesCompletos++;
           semaforo = 'completo';
         }
@@ -225,33 +236,32 @@ export class FormPerfilComponent implements OnInit {
               && (  perfil.contratoPerfilId !== undefined
                     || perfil.cantidadHvRequeridas > 0
                     || perfil.cantidadHvRecibidas > 0
-                    || perfil.cantidadHvAprobadas > 0) ) {
+                    || perfil.cantidadHvAprobadas > 0 ) ) {
           semaforo = 'en-proceso';
           this.perfilesEnProceso++;
         }
-
         this.perfiles.push(
           this.fb.group(
             {
-              estadoSemaforo              : [ semaforo || 'sin-diligenciar' ],
-              contratoPerfilId            : [ perfil.contratoPerfilId ? perfil.contratoPerfilId : 0 ],
-              perfilObservacion           : [ ( perfil.contratoPerfilObservacion.length === 0 ) ?
-                                              0 : perfil.contratoPerfilObservacion[0].contratoPerfilObservacionId ],
-              perfilCodigo                : [ perfil.perfilCodigo ? perfil.perfilCodigo : null ],
-              cantidadHvRequeridas        : [ perfil.cantidadHvRequeridas ? String( perfil.cantidadHvRequeridas ) : '' ],
-              cantidadHvRecibidas         : [ perfil.cantidadHvRecibidas ? String( perfil.cantidadHvRecibidas ) : '' ],
-              cantidadHvAprobadas         : [ perfil.cantidadHvAprobadas ? String( perfil.cantidadHvAprobadas ) : '' ],
-              fechaAprobacion             : [ perfil.fechaAprobacion ? new Date( perfil.fechaAprobacion ) : null ],
-              observacion                 : [ observaciones ],
-              observacionSupervisor       : [ observacionSupervisor ],
-              fechaObservacion            : [ fechaObservacion ],
-              contratoPerfilNumeroRadicado: this.fb.array( numeroRadicados ),
-              rutaSoporte                 : [ perfil.rutaSoporte ? perfil.rutaSoporte : '' ]
+              estadoSemaforo                : [ observacionSupervisorSemaforo === true ? 'en-proceso' : ( semaforo ? semaforo : 'sin-diligenciar' ), Validators.required ],
+              contratoPerfilId              : [ perfil.contratoPerfilId ? perfil.contratoPerfilId : 0 ],
+              perfilObservacion             : [ ( perfil.contratoPerfilObservacion.length === 0 ) ? 0 : perfil.contratoPerfilObservacion[0].contratoPerfilObservacionId ],
+              perfilCodigo                  : [ perfil.perfilCodigo ? perfil.perfilCodigo : null ],
+              cantidadHvRequeridas          : [ perfil.cantidadHvRequeridas ? String( perfil.cantidadHvRequeridas ) : '' ],
+              cantidadHvRecibidas           : [ perfil.cantidadHvRecibidas ? String( perfil.cantidadHvRecibidas ) : '' ],
+              cantidadHvAprobadas           : [ perfil.cantidadHvAprobadas ? String( perfil.cantidadHvAprobadas ) : '' ],
+              fechaAprobacion               : [ perfil.fechaAprobacion ? new Date( perfil.fechaAprobacion ) : null ],
+              contratoPerfilObservacionArray: [ perfil.contratoPerfilObservacion.length > 0 ? perfil.contratoPerfilObservacion : [] ],
+              observacion                   : [ observacionInterventor.length > 0 ? observacionInterventor[ observacionInterventor.length - 1 ].observacion : null, Validators.required ],
+              observacionSupervisor         : [ observacionSupervisor.length > 0 ? observacionSupervisor[ observacionSupervisor.length - 1 ].observacion : null, Validators.required ],
+              fechaObservacion              : [ observacionSupervisor.length > 0 ? observacionSupervisor[ observacionSupervisor.length - 1 ].fechaCreacion : null, Validators.required ],
+              contratoPerfilNumeroRadicado  : this.fb.array( numeroRadicados ),
+              rutaSoporte                   : [ perfil.rutaSoporte ? perfil.rutaSoporte : '' ]
             }
           )
         );
       }
-      if ( this.perfilesCompletos === this.perfilProyecto.length ) {
+      if ( this.perfilesCompletos > 0 && this.perfilesCompletos === this.perfilProyecto.length ) {
         this.perfilesCompletados.emit( 'completo' );
       }
       if (  this.perfilesEnProceso > 0
@@ -312,37 +322,17 @@ export class FormPerfilComponent implements OnInit {
     return this.perfiles.controls[i].get( 'contratoPerfilNumeroRadicado' ) as FormArray;
   }
 
-  textoLimpio(texto: string) {
-    let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
-
-    if ( texto ){
-      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
-      return textolimpio.length + saltosDeLinea;
-    }
-  }
-
-  private contarSaltosDeLinea(cadena: string, subcadena: string) {
-    let contadorConcurrencias = 0;
-    let posicion = 0;
-    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
-      ++contadorConcurrencias;
-      posicion += subcadena.length;
-    }
-    return contadorConcurrencias;
-  }
-
-  textoLimpioMessage(texto: string) {
-    if ( texto ){
-      const textolimpio = texto.replace(/<[^>]*>/g, '');
-      return textolimpio;
-    }
-  }
-
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
-      e.editor.deleteText(n, e.editor.getLength());
+      e.editor.deleteText(n - 1, e.editor.getLength());
+    }
+  }
+
+  textoLimpio( evento: any, n: number ) {
+    if ( evento !== undefined ) {
+      return evento.getLength() > n ? n : evento.getLength();
+    } else {
+      return 0;
     }
   }
 
@@ -437,42 +427,53 @@ export class FormPerfilComponent implements OnInit {
 
   guardar() {
     this.estaEditando = true;
+    this.formContratista.markAllAsTouched();
     const perfiles: ContratoPerfil[] = this.formContratista.get( 'perfiles' ).value;
+    const perfilesArray = [];
 
     if ( this.perfilProyecto.length === 0 ) {
       perfiles.forEach( value => {
-        value.cantidadHvAprobadas          = Number( value.cantidadHvAprobadas );
-        value.cantidadHvRecibidas          = Number( value.cantidadHvRecibidas );
-        value.cantidadHvRequeridas         = Number( value.cantidadHvRequeridas );
-        value.contratoPerfilNumeroRadicado = (  value.contratoPerfilNumeroRadicado[0][ 'numeroRadicado' ].length === 0 ) ?
-                                                null : value.contratoPerfilNumeroRadicado;
-        value.contratoPerfilObservacion    = value.observacion ? [{ observacion: value.observacion }] : null;
-        value.fechaAprobacion              = value.fechaAprobacion ? new Date( value.fechaAprobacion ).toISOString() : null;
-        value.contratoId                   = this.contratoId;
-        value.proyectoId                   = this.proyectoId;
+        value.cantidadHvAprobadas = Number( value.cantidadHvAprobadas );
+        value.cantidadHvRecibidas = Number( value.cantidadHvRecibidas );
+        value.cantidadHvRequeridas = Number( value.cantidadHvRequeridas );
+        value.contratoPerfilNumeroRadicado = (  value.contratoPerfilNumeroRadicado[0][ 'numeroRadicado' ].length === 0 ) ? null : value.contratoPerfilNumeroRadicado;
+        value.contratoPerfilObservacion = value.observacion ? [{ observacion: value.observacion }] : null;
+        value.fechaAprobacion = value.fechaAprobacion ? new Date( value.fechaAprobacion ).toISOString() : null;
+        value.contratoId = this.contratoId;
+        value.proyectoId = this.proyectoId;
       } );
     } else {
-      perfiles.forEach( value => {
-        value.cantidadHvAprobadas          = Number( value.cantidadHvAprobadas );
-        value.cantidadHvRecibidas          = Number( value.cantidadHvRecibidas );
-        value.cantidadHvRequeridas         = Number( value.cantidadHvRequeridas );
-        value.contratoPerfilNumeroRadicado = (  value.contratoPerfilNumeroRadicado[0][ 'numeroRadicado' ].length === 0 ) ?
-                                                null : value.contratoPerfilNumeroRadicado;
-        value.contratoPerfilObservacion    = value.observacion ?  [
-                                                {
-                                                  ContratoPerfilObservacionId: value[ 'perfilObservacion' ],
-                                                  contratoPerfilId: value.contratoPerfilId,
-                                                  observacion: value.observacion
-                                                }
-                                              ] : null;
-        value.fechaAprobacion              = value.fechaAprobacion ? new Date( value.fechaAprobacion ).toISOString() : null;
-        value.contratoId                   = this.contratoId;
-        value.proyectoId                   = this.proyectoId;
+      this.perfiles.controls.forEach( perfil => {
+
+        if ( perfil.get( 'contratoPerfilObservacionArray' ).value.length > 0 ) {
+          perfil.get( 'contratoPerfilObservacionArray' ).value.forEach( ( obs, index ) => {
+            if ( obs.contratoPerfilObservacionId === perfil.get( 'perfilObservacion' ).value ) {
+              perfil.get( 'contratoPerfilObservacionArray' ).value.splice( index, 1 );
+            }
+          } );
+        }
+
+        perfilesArray.push(
+          {
+            tieneObservacionSupervisor: perfil.dirty === true && perfil.get( 'observacionSupervisor' ).value !== null ? false : null,
+            cantidadHvAprobadas: Number( perfil.get( 'cantidadHvAprobadas' ).value ),
+            cantidadHvRecibidas: Number( perfil.get( 'cantidadHvRecibidas' ).value ),
+            cantidadHvRequeridas: Number( perfil.get( 'cantidadHvRequeridas' ).value ),
+            contratoPerfilNumeroRadicado: perfil.get( 'contratoPerfilNumeroRadicado' ).value[0].length === 0 ? null : perfil.get( 'contratoPerfilNumeroRadicado' ).value,
+            contratoPerfilObservacion: perfil.get( 'observacion' ).value !== null ? ( perfil.get( 'contratoPerfilObservacionArray' ).value.length > 0 ? [ ...perfil.get( 'contratoPerfilObservacionArray' ).value, { contratoPerfilObservacionId: perfil.get( 'perfilObservacion' ).value, contratoPerfilId: perfil.get( 'contratoPerfilId' ).value, observacion: perfil.get( 'observacion' ).value } ] : [ { contratoPerfilObservacionId: perfil.get( 'perfilObservacion' ).value, contratoPerfilId: perfil.get( 'contratoPerfilId' ).value, observacion: perfil.get( 'observacion' ).value } ] ) : null,
+            fechaAprobacion: perfil.get( 'fechaAprobacion' ).value !== null ? new Date( perfil.get( 'fechaAprobacion' ).value ).toISOString() : perfil.get( 'fechaAprobacion' ).value,
+            contratoPerfilId: perfil.get( 'contratoPerfilId' ).value,
+            perfilCodigo: perfil.get( 'perfilCodigo' ).value,
+            rutaSoporte: perfil.get( 'rutaSoporte' ).value,
+            contratoId: this.contratoId,
+            proyectoId: this.proyectoId,
+          }
+        );
       } );
     }
 
     this.enviarPerfilesContrato.emit( {
-      perfiles,
+      perfiles: this.perfilProyecto.length === 0 ? perfiles : perfilesArray,
       tieneEstadoFase1EyD: this.tieneEstadoFase1EyD,
       tieneEstadoFase1Diagnostico: this.tieneEstadoFase1Diagnostico
     } );

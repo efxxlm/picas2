@@ -11,11 +11,13 @@ using System.IO;
 using Microsoft.Extensions.Options;
 using System.Reflection;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class RegisterContractsAndContractualModificationsController : Controller
     {
         public readonly IRegisterContractsAndContractualModificationsService _registerContractsService;
@@ -59,11 +61,11 @@ namespace asivamosffie.api.Controllers
             {
                 pContrato.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _registerContractsService.RegistrarTramiteContrato(pContrato,
-                 Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseRutaDocumentoContrato ), pEstadoCodigo , _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                 Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseRutaDocumentoContrato), pEstadoCodigo, _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 return Ok(respuesta);
             }
             catch (Exception ex)
-            {
+           {
                 respuesta.Data = ex.ToString();
                 return BadRequest(respuesta);
             }
@@ -74,10 +76,11 @@ namespace asivamosffie.api.Controllers
         [Route("EnviarNotificaciones")]
         public async Task<bool> EnviarNotificaciones(int idPContrato)
         {
-            Contrato contrato = new Contrato { 
-               ContratoId = idPContrato
-            }; 
-            return await _registerContractsService.EnviarNotificaciones(contrato , _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+            Contrato contrato = new Contrato
+            {
+                ContratoId = idPContrato
+            };
+            return await _registerContractsService.EnviarNotificaciones(contrato, _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
         }
 
     }

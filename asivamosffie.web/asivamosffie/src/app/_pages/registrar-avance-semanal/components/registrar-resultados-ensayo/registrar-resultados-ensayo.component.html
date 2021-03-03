@@ -51,7 +51,7 @@
                                                             formControlName="fechaEntregaResultado"
                                                             placeholder="DD/MM/AAAA"
                                                             [min]="ensayoLaboratorio.fechaTomaMuestras"
-                                                            [max]="maxDate"
+                                                            [max]="getMaxDate( ensayoLaboratorio.fechaTomaMuestras )"
                                                             (click)="pickerfechaMuestra.open()"
                                                             readonly required>
                                                     <mat-datepicker #pickerfechaMuestra></mat-datepicker>
@@ -92,20 +92,21 @@
                                             <div class="pr-1">
                                               <label class="label-left">Observaciones frente a los resultados</label>
                                             </div>
-                                            <div class="col d-flex" style="width: 99%;">
-                                                <quill-editor   class="quill-editor-style card-80em position-relative"
+                                            <div class="col d-flex">
+                                                <quill-editor   class="quill-editor-style card position-relative"
                                                                 [styles]="editorStyle"
                                                                 [modules]="config"
-                                                                (onContentChanged)="maxLength($event, 400)"
+                                                                style="width: 100%;"
+                                                                (onContentChanged)="maxLength($event, 600)"
                                                                 formControlName="observacion"
                                                                 #obsResultado
                                                                 required>
                                                 </quill-editor>
                                                 <span class="contador miles" *ngIf="muestra.get('observacion').value !== null" style="margin-top: 3.5em;">
-                                                    {{400 - textoLimpio( obsResultado.quillEditor, 400 )}}
+                                                    {{600 - textoLimpio( obsResultado.quillEditor, 600 )}}
                                                 </span>
                                                 <span class="contador miles" *ngIf="muestra.get('observacion').value === null" style="margin-top: 3.5em;">
-                                                    400
+                                                    600
                                                 </span>
                                             </div>
                                           </div>
@@ -119,7 +120,7 @@
                                     color="warn"
                                     class="btn-guardar"
                                     type="submit"
-                                    [disabled]="formMuestra.dirty === false">
+                                    [disabled]="muestra.dirty === false">
                                     <img  src="assets/img/icon/guardar.svg">
                             </button>
                         </div>

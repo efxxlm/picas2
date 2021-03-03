@@ -18,8 +18,9 @@ export class FormDescripcionActuacionComponent implements OnInit {
     estadoAvanceTramite: [null, Validators.required],
     fechaActuacionAdelantada: [null, Validators.required],
     actuacionAdelantada: [null, Validators.required],
+    cualOtroActuacionAdelantada: [null],
     proximaActuacionRequerida: [null, Validators.required],
-    cualOtro: [null],
+    cualOtroActuacionRequerida: [null],
     diasVencimientoTerminos: [null, Validators.required],
     fechaVencimientoTerminos: [null, Validators.required],
     participacionContratista: [null, Validators.required],
@@ -82,7 +83,8 @@ export class FormDescripcionActuacionComponent implements OnInit {
         this.addressForm.get('actuacionAdelantada').setValue(actuacionAdelantadaSelected);
         const actuacionRequeridaSelected = this.proximaActuacionRequeridaArrayDom.find(t => t.codigo === data.proximaActuacionCodigo);
         this.addressForm.get('proximaActuacionRequerida').setValue(actuacionRequeridaSelected);
-        this.addressForm.get('cualOtro').setValue(data.actuacionAdelantadaOtro);
+        this.addressForm.get('cualOtroActuacionAdelantada').setValue(data.actuacionAdelantadaOtro);
+        this.addressForm.get('cualOtroActuacionRequerida').setValue(data.proximaActuacionOtro);
         this.addressForm.get('diasVencimientoTerminos').setValue(data.cantDiasVencimiento.toString());
         this.addressForm.get('fechaVencimientoTerminos').setValue(data.fechaVencimiento);
         this.addressForm.get('participacionContratista').setValue(data.esRequiereContratista);
@@ -104,31 +106,14 @@ export class FormDescripcionActuacionComponent implements OnInit {
   }
 
   maxLength(e: any, n: number) {
-    
     if (e.editor.getLength() > n) {
-      e.editor.deleteText(n-1, e.editor.getLength());
+      e.editor.deleteText(n - 1, e.editor.getLength());
     }
   }
-
-  textoLimpio(texto: string) {
-    let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
-
-    if ( texto ){
-      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
-      return textolimpio.length + saltosDeLinea;
+  textoLimpio(texto, n) {
+    if (texto != undefined) {
+      return texto.getLength() > n ? n : texto.getLength();
     }
-  }
-
-  private contarSaltosDeLinea(cadena: string, subcadena: string) {
-    let contadorConcurrencias = 0;
-    let posicion = 0;
-    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
-      ++contadorConcurrencias;
-      posicion += subcadena.length;
-    }
-    return contadorConcurrencias;
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -141,16 +126,43 @@ export class FormDescripcionActuacionComponent implements OnInit {
   onSubmit() {
     let actuacionTaiArray;
     this.estaEditando = true;
+    let estadoAvanTramite;
+    if (this.addressForm.value.estadoAvanceTramite != undefined || this.addressForm.value.estadoAvanceTramite != null) {
+      if (!this.addressForm.value.estadoAvanceTramite.codigo) {
+        estadoAvanTramite = "pendiente";
+      }
+      else {
+        estadoAvanTramite = this.addressForm.value.estadoAvanceTramite.codigo;
+      }
+    }
+    let actuacionAdelantada;
+    if (this.addressForm.value.actuacionAdelantada != undefined || this.addressForm.value.actuacionAdelantada != null) {
+      if (!this.addressForm.value.actuacionAdelantada.codigo) {
+        actuacionAdelantada = "pendiente";
+      }
+      else {
+        actuacionAdelantada = this.addressForm.value.actuacionAdelantada.codigo;
+      }
+    }
+    let proxActuacion;
+    if (this.addressForm.value.proximaActuacionRequerida != undefined || this.addressForm.value.proximaActuacionRequerida != null) {
+      if (!this.addressForm.value.proximaActuacionRequerida.codigo) {
+        proxActuacion = "pendiente";
+      }
+      else {
+        proxActuacion = this.addressForm.value.proximaActuacionRequerida.codigo;
+      }
+    }
     if (this.isEditable == true) {
       actuacionTaiArray = {
         "ControversiaContractualId": this.controversiaID,
-        "ActuacionAdelantadaCodigo": this.addressForm.value.actuacionAdelantada.codigo,
-        "ActuacionAdelantadaOtro": "",
-        "ProximaActuacionCodigo": this.addressForm.value.proximaActuacionRequerida.codigo,
-        "ProximaActuacionOtro": this.addressForm.value.cualOtro,
+        "ActuacionAdelantadaCodigo": actuacionAdelantada,
+        "ActuacionAdelantadaOtro": this.addressForm.value.cualOtroActuacionAdelantada,
+        "ProximaActuacionCodigo": proxActuacion,
+        "ProximaActuacionOtro": this.addressForm.value.cualOtroActuacionRequerida,
         "Observaciones": this.addressForm.value.observaciones,
         "RutaSoporte": this.addressForm.value.urlSoporte,
-        "EstadoAvanceTramiteCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
+        "EstadoAvanceTramiteCodigo": estadoAvanTramite,
         "CantDiasVencimiento": this.addressForm.value.diasVencimientoTerminos,
         "FechaVencimiento": this.addressForm.value.fechaVencimientoTerminos,
         "FechaActuacion":this.addressForm.value.fechaActuacionAdelantada,
@@ -170,13 +182,13 @@ export class FormDescripcionActuacionComponent implements OnInit {
     else {
       actuacionTaiArray = {
         "ControversiaContractualId": this.controversiaID,
-        "ActuacionAdelantadaCodigo": this.addressForm.value.actuacionAdelantada.codigo,
-        "ActuacionAdelantadaOtro": "",
-        "ProximaActuacionCodigo": this.addressForm.value.proximaActuacionRequerida.codigo,
-        "ProximaActuacionOtro": this.addressForm.value.cualOtro,
+        "ActuacionAdelantadaCodigo": actuacionAdelantada,
+        "ActuacionAdelantadaOtro": this.addressForm.value.cualOtroActuacionAdelantada,
+        "ProximaActuacionCodigo": proxActuacion,
+        "ProximaActuacionOtro": this.addressForm.value.cualOtroActuacionRequerida,
         "Observaciones": this.addressForm.value.observaciones,
         "RutaSoporte": this.addressForm.value.urlSoporte,
-        "EstadoAvanceTramiteCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
+        "EstadoAvanceTramiteCodigo": estadoAvanTramite,
         "CantDiasVencimiento": this.addressForm.value.diasVencimientoTerminos,
         "FechaVencimiento": this.addressForm.value.fechaVencimientoTerminos,
         "FechaActuacion":this.addressForm.value.fechaActuacionAdelantada,
@@ -194,7 +206,7 @@ export class FormDescripcionActuacionComponent implements OnInit {
     }
     this.services.CreateEditControversiaOtros(actuacionTaiArray).subscribe((data: any) => {
       if(data.isSuccessful==true){
-        this.services.CambiarEstadoActuacionSeguimiento(data.data.controversiaActuacionId,"1").subscribe((data:any)=>{
+        this.services.CambiarEstadoActuacionSeguimiento(data.data.controversiaActuacionId,"1").subscribe((data0:any)=>{
         });
         /*
         this.services.CambiarEstadoControversiaActuacion(data.data.controversiaActuacionId,"1").subscribe((a:any)=>{

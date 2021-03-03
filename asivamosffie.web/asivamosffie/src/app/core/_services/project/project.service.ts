@@ -199,7 +199,8 @@ export interface Proyecto{
   valorObra?:number,
   valorInterventoria?:number,
   valorTotal?:number,
-  estadoProyectoCodigo?:string,
+  estadoProyectoObraCodigo?:string,
+  estadoProyectoInterventoriaCodigo?:string,
   eliminado?:boolean,
   fechaCreacion?: Date,
   usuarioCreacion?:string,
@@ -213,6 +214,8 @@ export interface Proyecto{
   coordinacionResponsableCodigo?:string ,
   fechaInicioEtapaObra?: Date,
   fechaFinEtapaObra?: Date,
+  fechaInicioEtapaObraTemporal?: Date,
+  fechaFinEtapaObraTemporal?: Date,
 
   //no modelado
   cantidadAportantes?:number;

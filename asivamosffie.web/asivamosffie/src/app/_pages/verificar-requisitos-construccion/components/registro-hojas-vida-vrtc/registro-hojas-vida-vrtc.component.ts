@@ -255,6 +255,8 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
       if ( this.perfilesCompletos === 0 && this.perfilesEnProceso === 0 && this.perfilProyecto.length > 0 ) {
         this.perfilesCompletados.emit( 'sin-diligenciar' );
       }
+      this.estaEditando = true;
+      this.formContratista.markAllAsTouched();
     }
   }
 
@@ -298,8 +300,8 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
 
   textoLimpio(texto: string) {
     let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
 
     if ( texto ){
       const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
@@ -326,7 +328,7 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
 
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
-      e.editor.deleteText(n, e.editor.getLength());
+      e.editor.deleteText(n - 1, e.editor.getLength());
     }
   }
 
@@ -428,6 +430,8 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
 
 
   guardar() {
+    this.estaEditando = true;
+    this.formContratista.markAllAsTouched();
     const perfiles: ContratoPerfil[] = this.formContratista.get( 'perfiles' ).value;
 
     if ( this.perfilProyecto.length === 0 ) {

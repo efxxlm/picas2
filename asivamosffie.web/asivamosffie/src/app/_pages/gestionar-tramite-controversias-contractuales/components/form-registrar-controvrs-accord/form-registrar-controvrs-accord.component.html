@@ -10,7 +10,11 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="tipoControversia">Tipo de controversia</label>
+                            <label class="label-left" for="tipoControversia" [ngClass]="{
+                                'color-secondaryColor':
+                                  (addressForm.get('tipoControversia').invalid && addressForm.get('tipoControversia').touched) ||
+                                  (addressForm.get('tipoControversia').invalid && estaEditando)
+                              }">Tipo de controversia</label>
                         </div>
                         <div class="col">
                             <mat-form-field class="select-width">
@@ -22,15 +26,28 @@
                                 </mat-select>
                             </mat-form-field>
                         </div>
+                        <span class="icon-incompleto">
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip" *ngIf="
+                                (addressForm.get('tipoControversia').invalid && addressForm.get('tipoControversia').touched) ||
+                                (addressForm.get('tipoControversia').invalid && estaEditando)
+                              " />
+                        </span>
                     </div>
                 </div>
             </div>
-            <div class="row"
+            <div class="row animatedDown"
                 *ngIf="(addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '2') || (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '3') || (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '4')">
                 <div class="col-md-6" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="fechaRadicadoSAC">Fecha de radicado en SAC</label>
+                            <label class="label-left" for="fechaRadicadoSAC" [ngClass]="{
+                                'color-secondaryColor':
+                                  (addressForm.get('fechaRadicadoSAC').invalid && addressForm.get('fechaRadicadoSAC').touched) ||
+                                  (addressForm.get('fechaRadicadoSAC').invalid && estaEditando)
+                              }">Fecha de radicado en SAC</label>
                         </div>
                         <div class="col d-flex align-items-center">
                             <mat-form-field class="example-full-width">
@@ -44,15 +61,28 @@
                                 <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
                             </button>
                         </div>
+                        <span class="icon-incompleto">
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip" *ngIf="
+                                (addressForm.get('fechaRadicadoSAC').invalid && addressForm.get('fechaRadicadoSAC').touched) ||
+                                (addressForm.get('fechaRadicadoSAC').invalid && estaEditando)
+                              " />
+                        </span>
                     </div>
                 </div>
             </div>
-            <div class="row"
+            <div class="row animatedDown"
                 *ngIf="(addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '2') || (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '3') || (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '4')">
                 <div class="col-md-6" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="numeroRadicadoSAC">Número de radicado en SAC</label>
+                            <label class="label-left" for="numeroRadicadoSAC" [ngClass]="{
+                                'color-secondaryColor':
+                                  (addressForm.get('numeroRadicadoSAC').invalid && addressForm.get('numeroRadicadoSAC').touched) ||
+                                  (addressForm.get('numeroRadicadoSAC').invalid && estaEditando)
+                              }">Número de radicado en SAC</label>
                         </div>
                         <div class="col d-flex align-items-center">
                             <mat-form-field class="full-width">
@@ -66,11 +96,20 @@
                             <span class="contador" *ngIf="!addressForm.controls.numeroRadicadoSAC.value">
                                 10
                             </span>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                                    (addressForm.get('numeroRadicadoSAC').invalid && addressForm.get('numeroRadicadoSAC').touched) ||
+                                    (addressForm.get('numeroRadicadoSAC').invalid && estaEditando)
+                                  " />
+                            </span>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row"
+            <div class="row animatedDown"
                 *ngIf="(addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '1')
             || (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '5')
             ||(addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '6')
@@ -78,7 +117,11 @@
                 <div class="col-md-6" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="fechaSolicitud">Fecha de solicitud</label>
+                            <label class="label-left" for="fechaSolicitud" [ngClass]="{
+                                'color-secondaryColor':
+                                  (addressForm.get('fechaSolicitud').invalid && addressForm.get('fechaSolicitud').touched) ||
+                                  (addressForm.get('fechaSolicitud').invalid && estaEditando)
+                              }">Fecha de solicitud</label>
                         </div>
                         <div class="col d-flex align-items-center">
                             <mat-form-field class="example-full-width">
@@ -91,14 +134,27 @@
                                 <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
                             </button>
                         </div>
+                        <span class="icon-incompleto">
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip" *ngIf="
+                                (addressForm.get('fechaSolicitud').invalid && addressForm.get('fechaSolicitud').touched) ||
+                                (addressForm.get('fechaSolicitud').invalid && estaEditando)
+                              " />
+                        </span>
                     </div>
                 </div>
             </div>
-            <div class="row" *ngIf="addressForm.value.tipoControversia!==null">
+            <div class="row animatedDown" *ngIf="addressForm.value.tipoControversia!==null">
                 <div class="col-md-6" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="motivosSolicitud">Motivos de la solicitud</label>
+                            <label class="label-left" for="motivosSolicitud" [ngClass]="{
+                                'color-secondaryColor':
+                                  (addressForm.get('motivosSolicitud').invalid && addressForm.get('motivosSolicitud').touched) ||
+                                  (addressForm.get('motivosSolicitud').invalid && estaEditando)
+                              }">Motivos de la solicitud</label>
                         </div>
                         <div class="col">
                             <mat-form-field class="select-width">
@@ -111,19 +167,32 @@
                                 </mat-select>
                             </mat-form-field>
                         </div>
+                        <span class="icon-incompleto">
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip" *ngIf="
+                                (addressForm.get('motivosSolicitud').invalid && addressForm.get('motivosSolicitud').touched) ||
+                                (addressForm.get('motivosSolicitud').invalid && estaEditando)
+                              " />
+                        </span>
                     </div>
                 </div>
             </div>
-            <div *ngIf="this.obj1==true">
+            <div class="animatedDown" *ngIf="this.obj1==true">
                 <div class="row">
-                <div class="col-md-12" style="padding-left: 0;">
-                    <div class="row">
-                        <div class="pr-1">
-                            <label class="label-left" for="cualOtroMotivo">¿Cuál?</label>
+                    <div class="col-md-12" style="padding-left: 0;">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left" for="cualOtroMotivo" [ngClass]="{
+                                'color-secondaryColor':
+                                  (addressForm.get('cualOtroMotivo').invalid && addressForm.get('cualOtroMotivo').touched) ||
+                                  (addressForm.get('cualOtroMotivo').invalid && estaEditando)
+                              }">¿Cuál?</label>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
                 <div class="row">
                     <div class="col-md-12" style="padding-left: 0;">
                         <div>
@@ -135,22 +204,35 @@
                                     </quill-editor>
                                 </div>
                                 <span class="contador miles" *ngIf="addressForm.controls.cualOtroMotivo.value">
-                                    {{100 - (textoLimpio(addressForm.get('cualOtroMotivo').value))}}
+                                    {{ 100 - textoLimpio(cualOtroMotivo.quillEditor, 1000) }}
                                 </span>
                                 <span class="contador miles" *ngIf="!addressForm.controls.cualOtroMotivo.value">
                                     100
+                                </span>
+                                <span class="icon-incompleto">
+                                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip" *ngIf="
+                                        (addressForm.get('cualOtroMotivo').invalid && addressForm.get('cualOtroMotivo').touched) ||
+                                        (addressForm.get('cualOtroMotivo').invalid && estaEditando)
+                                      " />
                                 </span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row"
+            <div class="row animatedDown"
                 *ngIf="addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '1'">
                 <div class="col-md-6" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="fechaComitePretecnico">Fecha de Comité Pre-Técnico</label>
+                            <label class="label-left" for="fechaComitePretecnico" [ngClass]="{
+                                'color-secondaryColor':
+                                  (addressForm.get('fechaComitePretecnico').invalid && addressForm.get('fechaComitePretecnico').touched) ||
+                                  (addressForm.get('fechaComitePretecnico').invalid && estaEditando)
+                              }">Fecha de Comité Pre-Técnico</label>
                         </div>
                         <div class="col d-flex align-items-center">
                             <mat-form-field class="example-full-width">
@@ -164,21 +246,34 @@
                                 <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
                             </button>
                         </div>
+                        <span class="icon-incompleto">
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip" *ngIf="
+                                (addressForm.get('fechaComitePretecnico').invalid && addressForm.get('fechaComitePretecnico').touched) ||
+                                (addressForm.get('fechaComitePretecnico').invalid && estaEditando)
+                              " />
+                        </span>
                     </div>
                 </div>
             </div>
-            <div class="row"
+            <div class="row animatedDown"
                 *ngIf="addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '1'">
                 <div class="col-md-12" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="conclusionComitePretecnico">Conclusión del Comité Pre-técnico
+                            <label class="label-left" for="conclusionComitePretecnico" [ngClass]="{
+                                'color-secondaryColor':
+                                  (addressForm.get('conclusionComitePretecnico').invalid && addressForm.get('conclusionComitePretecnico').touched) ||
+                                  (addressForm.get('conclusionComitePretecnico').invalid && estaEditando)
+                              }">Conclusión del Comité Pre-técnico
                                 de acuerdo con la solicitud</label>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row"
+            <div class="row animatedDown"
                 *ngIf="addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '1'">
                 <div class="col-md-12" style="padding-left: 0;">
                     <div>
@@ -190,27 +285,40 @@
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.conclusionComitePretecnico.value">
-                                {{ 1000 - textoLimpio(addressForm.get('conclusionComitePretecnico').value) }}
+                                {{ 1000 - textoLimpio(conclusionComitePretecnico.quillEditor, 1000) }}
                             </span>
                             <span class="contador miles" *ngIf="!addressForm.controls.conclusionComitePretecnico.value">
                                 1000
+                            </span>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                                    (addressForm.get('conclusionComitePretecnico').invalid && addressForm.get('conclusionComitePretecnico').touched) ||
+                                    (addressForm.get('conclusionComitePretecnico').invalid && estaEditando)
+                                  " />
                             </span>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row"
+            <div class="row animatedDown"
                 *ngIf="addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo != '1'">
                 <div class="col-md-12" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="resumenJustificacionSolicitud">Resumen de la justificación de
+                            <label class="label-left" for="resumenJustificacionSolicitud"  [ngClass]="{
+                                'color-secondaryColor':
+                                  (addressForm.get('resumenJustificacionSolicitud').invalid && addressForm.get('resumenJustificacionSolicitud').touched) ||
+                                  (addressForm.get('resumenJustificacionSolicitud').invalid && estaEditando)
+                              }">Resumen de la justificación de
                                 la solicitud</label>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row"
+            <div class="row animatedDown"
                 *ngIf="addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo != '1'">
                 <div class="col-md-12" style="padding-left: 0;">
                     <div>
@@ -223,22 +331,35 @@
                             </div>
                             <span class="contador miles"
                                 *ngIf="addressForm.controls.resumenJustificacionSolicitud.value">
-                                {{ 1000 - textoLimpio(addressForm.get('resumenJustificacionSolicitud').value) }}
+                                {{ 1000 - textoLimpio(resumenJustificacionSolicitud.quillEditor, 1000) }}
                             </span>
                             <span class="contador miles"
                                 *ngIf="!addressForm.controls.resumenJustificacionSolicitud.value">
                                 1000
                             </span>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                                    (addressForm.get('resumenJustificacionSolicitud').invalid && addressForm.get('resumenJustificacionSolicitud').touched) ||
+                                    (addressForm.get('resumenJustificacionSolicitud').invalid && estaEditando)
+                                  " />
+                            </span>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row"
+            <div class="row animatedDown"
                 *ngIf="addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '1'">
                 <div class="col-md-6" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="procedeSolicitud">¿La solicitud procede?</label>
+                            <label class="label-left" for="procedeSolicitud" [ngClass]="{
+                                'color-secondaryColor':
+                                  (addressForm.get('procedeSolicitud').invalid && addressForm.get('procedeSolicitud').touched) ||
+                                  (addressForm.get('procedeSolicitud').invalid && estaEditando)
+                              }">¿La solicitud procede?</label>
                         </div>
                         <div class="col">
                             <mat-radio-group class="radioInput" formControlName="procedeSolicitud" required>
@@ -247,20 +368,33 @@
                             </mat-radio-group>
                             <span class="required-form-group" style="margin-left: 1px;">*</span>
                         </div>
+                        <span class="icon-incompleto">
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip" *ngIf="
+                                (addressForm.get('procedeSolicitud').invalid && addressForm.get('procedeSolicitud').touched) ||
+                                (addressForm.get('procedeSolicitud').invalid && estaEditando)
+                              " />
+                        </span>
                     </div>
                 </div>
             </div>
-            <div class="row"
+            <div class="row animatedDown"
                 *ngIf="addressForm.value.procedeSolicitud===false && (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '1')">
                 <div class="col-md-12" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="motivosRechazo">Motivos de rechazo</label>
+                            <label class="label-left" for="motivosRechazo"  [ngClass]="{
+                                'color-secondaryColor':
+                                  (addressForm.get('motivosRechazo').invalid && addressForm.get('motivosRechazo').touched) ||
+                                  (addressForm.get('motivosRechazo').invalid && estaEditando)
+                              }">Motivos de rechazo</label>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row"
+            <div class="row animatedDown"
                 *ngIf="addressForm.value.procedeSolicitud===false && (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '1')">
                 <div class="col-md-12" style="padding-left: 0;">
                     <div>
@@ -272,21 +406,34 @@
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.motivosRechazo.value">
-                                {{ 1000 - textoLimpio(addressForm.get('motivosRechazo').value) }}
+                                {{ 1000 - textoLimpio(motivosRechazo.quillEditor, 1000) }}
                             </span>
                             <span class="contador miles" *ngIf="!addressForm.controls.motivosRechazo.value">
                                 1000
+                            </span>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                                    (addressForm.get('motivosRechazo').invalid && addressForm.get('motivosRechazo').touched) ||
+                                    (addressForm.get('motivosRechazo').invalid && estaEditando)
+                                  " />
                             </span>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row"
+            <div class="row animatedDown"
                 *ngIf="addressForm.value.procedeSolicitud===true && (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '1')">
                 <div class="col-md-6" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="requeridoComite">¿Requiere comité técnico?</label>
+                            <label class="label-left" for="requeridoComite"  [ngClass]="{
+                                'color-secondaryColor':
+                                  (addressForm.get('requeridoComite').invalid && addressForm.get('requeridoComite').touched) ||
+                                  (addressForm.get('requeridoComite').invalid && estaEditando)
+                              }">¿Requiere comité técnico?</label>
                         </div>
                         <div class="col">
                             <mat-radio-group class="radioInput" formControlName="requeridoComite" required>
@@ -295,6 +442,15 @@
                             </mat-radio-group>
                             <span class="required-form-group" style="margin-left: 1px;">*</span>
                         </div>
+                        <span class="icon-incompleto">
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip" *ngIf="
+                                (addressForm.get('requeridoComite').invalid && addressForm.get('requeridoComite').touched) ||
+                                (addressForm.get('requeridoComite').invalid && estaEditando)
+                              " />
+                        </span>
                     </div>
                 </div>
             </div>

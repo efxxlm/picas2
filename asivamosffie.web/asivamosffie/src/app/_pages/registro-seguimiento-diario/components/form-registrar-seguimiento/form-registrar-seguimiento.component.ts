@@ -57,7 +57,7 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
 
   minDate: Date;
   editorStyle = {
-    // height: '45px'
+    height: '45px'
   };
   config = {
     toolbar: [
@@ -86,7 +86,11 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
       return textolimpio.length;
     }
   }
-
+  textoLimpioAux(texto,n) {
+    if (texto!=undefined) {
+      return texto.getLength() > n ? n : texto.getLength();
+    }
+  }
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n, e.editor.getLength());
@@ -198,8 +202,8 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
   filtroCalendario = (d: Date | null): boolean => {
     const day = (d || new Date()).getDay();
     // Bloquea sabado y domingos
-    console.log( new Intl.DateTimeFormat(['ban', 'id']).format(d), d.toLocaleDateString())
-    return ( this.diasPermitidos.includes( d.toLocaleDateString()) && day !== 0 && day !== 6 ); // day !== 0 && day !== 6;
+    console.log( this.diasPermitidos, new Intl.DateTimeFormat(['ban', 'id']).format(d), d.toLocaleDateString())
+    return ( this.diasPermitidos.includes( new Intl.DateTimeFormat(['ban', 'id']).format(d)) && day !== 0 && day !== 6 ); // day !== 0 && day !== 6;
   }
 
   validateNumberKeypress(event: KeyboardEvent) {

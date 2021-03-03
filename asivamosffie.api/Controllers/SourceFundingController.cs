@@ -8,11 +8,13 @@ using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using asivamosffie.model.APIModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class SourceFundingController : ControllerBase
     {
         public readonly ISourceFundingService _sourceFunding;
@@ -127,6 +129,23 @@ namespace asivamosffie.api.Controllers
             try
             {
                 respuesta = await _sourceFunding.EliminarFuentesFinanciacion(id, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [HttpDelete]
+        [Route("EliminarFuentesFinanciacionCompleto")]
+        public async Task<IActionResult> EliminarFuentesFinanciacionCompleto(int id)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _sourceFunding.EliminarFuentesFinanciacionCompleto(id, HttpContext.User.FindFirst("User").Value);
                 return Ok(respuesta);
             }
             catch (Exception ex)

@@ -1674,8 +1674,10 @@ namespace asivamosffie.services
                         var sede = _context.InstitucionEducativaSede.Find(proyectospp.Proyecto.SedeId);
                         List<GrillaComponentes> grilla = new List<GrillaComponentes>();
                         int intaportante = 0;
-                        decimal valorgestionado = 0;                        
-                        
+                        decimal valorgestionado = 0;
+
+                        proyectospp.Proyecto.ProyectoAportante = proyectospp.Proyecto.ProyectoAportante.Where(r => r.Eliminado != true).ToList();
+
                         foreach (var ppapor in proyectospp.Proyecto.ProyectoAportante)
                         {
                             List<GrillaFuentesFinanciacion> fuentes = new List<GrillaFuentesFinanciacion>();
@@ -2032,7 +2034,7 @@ namespace asivamosffie.services
                     disponibilidadPresupuestalOld.AportanteId = pDisponibilidadPresupuestal.AportanteId;
                     disponibilidadPresupuestalOld.ValorAportante = pDisponibilidadPresupuestal.ValorAportante;
                     if (pDisponibilidadPresupuestal.ValorAportante != null)
-                        pDisponibilidadPresupuestal.ValorSolicitud = (decimal)pDisponibilidadPresupuestal.ValorAportante;
+                        disponibilidadPresupuestalOld.ValorSolicitud = (decimal)pDisponibilidadPresupuestal.ValorAportante;
                     disponibilidadPresupuestalOld.NumeroContrato = pDisponibilidadPresupuestal.NumeroContrato==null? disponibilidadPresupuestalOld.NumeroContrato:pDisponibilidadPresupuestal.NumeroContrato;
                     disponibilidadPresupuestalOld.RegistroCompleto = ValidarDisponibilidadPresupuestal(disponibilidadPresupuestalOld);
                     //disponibilidadPresupuestalOld.EstadoSolicitudCodigo = ConstanCodigoSolicitudDisponibilidadPresupuestal.Sin_Registrar;

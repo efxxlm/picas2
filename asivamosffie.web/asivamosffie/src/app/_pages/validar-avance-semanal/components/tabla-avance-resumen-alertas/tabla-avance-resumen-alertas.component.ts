@@ -41,14 +41,23 @@ export class TablaAvanceResumenAlertasComponent implements OnInit {
                         sumaTotal += seguimiento.numeroHorasRetrasoPersonal;
                     }
                 }
+                if ( seguimientoDiario.length === 0 ) {
+                    seguimientoDiario.push(
+                        {
+                            fechaSeguimiento: null,
+                            cantidadPersonalProgramado: '---',
+                            cantidadPersonalTrabajando: '---',
+                            numeroHorasRetrasoPersonal: '---'
+                        }
+                    );
+                }
             } else {
                 seguimientoDiario.push(
                     {
                         fechaSeguimiento: null,
                         cantidadPersonalProgramado: '---',
                         cantidadPersonalTrabajando: '---',
-                        numeroHorasRetrasoPersonal: '---',
-                        seguimientoDiarioObservaciones: ''
+                        numeroHorasRetrasoPersonal: '---'
                     }
                 );
             }
@@ -63,10 +72,10 @@ export class TablaAvanceResumenAlertasComponent implements OnInit {
         }
     }
 
-    openDialogObservaciones( observacion: string, registro: any ) {
+    openDialogObservaciones( registro: any ) {
         this.dialog.open( DialogAvanceResumenAlertasComponent, {
             width: '60em',
-            data : { observacion, registro }
+            data : { registro, esDisponibilidadPersonal : true }
         } );
     }
 

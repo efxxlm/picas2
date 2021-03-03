@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-
+using Z.EntityFramework.Plus;
 
 namespace asivamosffie.services
 {
@@ -27,7 +27,7 @@ namespace asivamosffie.services
             _commonService = commonService;
             _context = context;
         }
-      
+
         public async Task<List<SesionComiteSolicitud>> GetListSesionComiteSolicitud()
         {
             List<SesionComiteSolicitud> ListSesionComiteSolicitud = await _context.SesionComiteSolicitud
@@ -123,7 +123,7 @@ namespace asivamosffie.services
         {
             return await _context.VListaContratacionModificacionContractual.OrderByDescending(v => v.SesionComiteSolicitudId).ToListAsync();
         }
-         
+
 
 
         public async Task<Respuesta> RegistrarTramiteContrato(Contrato pContrato, string pPatchfile, string pEstadoCodigo, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
@@ -135,23 +135,26 @@ namespace asivamosffie.services
                 Contrato contratoOld = _context.Contrato.Where(r => r.ContratoId == pContrato.ContratoId)
                     .Include(r => r.Contratacion)
                     .FirstOrDefault();
-                //contratacion
-                Contratacion contratacionOld = _context.Contratacion.Find(contratoOld.ContratacionId);
 
-                if (!contratacionOld.FechaTramite.HasValue)
-                    contratacionOld.FechaTramite = DateTime.Now;
+                //ACTUALIZAR CONTRATACIÓN
+                DateTime? FechaTramite = contratoOld.Contratacion.FechaTramite;
 
-                contratacionOld.EstadoSolicitudCodigo = pEstadoCodigo;
-                contratacionOld.UsuarioModificacion = pContrato.UsuarioModificacion;
-                contratacionOld.FechaModificacion = pContrato.FechaModificacion;
+                if (FechaTramite == null)
+                    FechaTramite = DateTime.Now;
 
-                //Contrato  
-                //if (!string.IsNullOrEmpty(pContrato.RutaDocumento))
-                //    contratoOld.RutaDocumento = pContrato.RutaDocumento;
+                _context.Set<Contratacion>().Where(c => c.ContratacionId == contratoOld.ContratacionId)
+                                                   .Update(c => new Contratacion
+                                                   {
+                                                       FechaTramite = DateTime.Now,
+                                                       EstadoSolicitudCodigo = pEstadoCodigo,
+                                                       UsuarioModificacion = pContrato.UsuarioCreacion,
+                                                       FechaModificacion = DateTime.Now
+                                                   });
 
-                contratacionOld.FechaTramite = DateTime.Now;
 
-
+                if (!string.IsNullOrEmpty(pContrato.ModalidadCodigo))
+                    contratoOld.ModalidadCodigo = pContrato.ModalidadCodigo;
+                 
                 if (!string.IsNullOrEmpty(pContrato.NumeroContrato))
                     contratoOld.NumeroContrato = pContrato.NumeroContrato;
 
@@ -215,7 +218,7 @@ namespace asivamosffie.services
                 }
 
             }
-            //Contrato Nuevo
+
             else
             {
                 pContrato.FechaTramite = DateTime.Now;
@@ -233,16 +236,15 @@ namespace asivamosffie.services
                 }
             }
 
-            //Cambiar estado contratacion
-            Contratacion contratacion = _context.Contratacion.Find(pContrato.ContratacionId);
-
-            contratacion.EstadoSolicitudCodigo = pEstadoCodigo;
-            contratacion.UsuarioModificacion = pContrato.UsuarioModificacion;
-            contratacion.FechaModificacion = pContrato.FechaModificacion;
-            contratacion.FechaTramite = DateTime.Now;
-
-            _context.SaveChanges();
-
+            await _context.Set<Contratacion>()
+                                    .Where(r => r.ContratacionId == pContrato.ContratacionId)
+                                                                        .UpdateAsync(c => new Contratacion
+                                                                        {
+                                                                            EstadoSolicitudCodigo = pEstadoCodigo,
+                                                                            UsuarioModificacion = pContrato.UsuarioCreacion,
+                                                                            FechaModificacion = DateTime.Now,
+                                                                            FechaTramite = DateTime.Now
+                                                                        });
 
             try
             {
@@ -288,7 +290,7 @@ namespace asivamosffie.services
                             .Replace("_LinkF_", pDominioFront)
                             .Replace("[TIPO_CONTRATO]", pContrato.Contratacion.NumeroSolicitud)
                             .Replace("[NUMERO_CONTRATO]", pContrato.NumeroContrato)
-                            .Replace("[FECHA_FIRMA_CONTRATO]", FechaFirmaFiduciaria.HasValue ? ((DateTime)FechaFirmaFiduciaria).ToString("dd-MMMM-yy") : " ")
+                            .Replace("[FECHA_FIRMA_CONTRATO]", FechaFirmaFiduciaria.HasValue ? ((DateTime)FechaFirmaFiduciaria).ToString("dd-MM-yy") : " ")
                             .Replace("[Observaciones]", pContrato.Observaciones);
                 blEnvioCorreo = Helpers.Helpers.EnviarCorreo(email, "Solicitud de contratación en trámite en la Fiduciaria", template, pSender, pPassword, pMailServer, pMailPort);
 
@@ -302,6 +304,7 @@ namespace asivamosffie.services
                string.IsNullOrEmpty(contratoOld.FechaTramite.ToString())
                || string.IsNullOrEmpty(contratoOld.TipoContratoCodigo)
                || string.IsNullOrEmpty(contratoOld.NumeroContrato)
+               || string.IsNullOrEmpty(contratoOld.ModalidadCodigo)
                || string.IsNullOrEmpty(contratoOld.EstadoDocumentoCodigo)
                || string.IsNullOrEmpty(contratoOld.FechaEnvioFirma.ToString())
                || string.IsNullOrEmpty(contratoOld.FechaFirmaContratista.ToString())
@@ -311,7 +314,7 @@ namespace asivamosffie.services
                || string.IsNullOrEmpty(contratoOld.RutaDocumento)
                //|| string.IsNullOrEmpty(contratoOld.Objeto)
                || string.IsNullOrEmpty(contratoOld.Valor.ToString())
-               //|| string.IsNullOrEmpty(contratoOld.Plazo.ToString())
+                //|| string.IsNullOrEmpty(contratoOld.Plazo.ToString())
                 || string.IsNullOrEmpty(contratoOld.CantidadPerfiles.ToString())
                 || string.IsNullOrEmpty(contratoOld.EstadoVerificacionCodigo.ToString())
                 //|| string.IsNullOrEmpty(contratoOld.EstadoFase1Diagnostico.ToString())

@@ -20,7 +20,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
 
   @Input() procesoSeleccion: ProcesoSeleccion;
-  @Input() editar:boolean;
+  @Input() editar: boolean;
   @Output() guardar: EventEmitter<any> = new EventEmitter();
 
   estaEditando = false;
@@ -30,7 +30,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   listatipoPresupuesto: Dominio[];
   listaResponsables: Usuario[];
   addressForm = this.fb.group({});
-  tiposProceso=TiposProcesoSeleccion;
+  tiposProceso = TiposProcesoSeleccion;
 
   editorStyle = {
     height: '100px',
@@ -46,36 +46,35 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
       [{ align: [] }],
     ]
   };
-  listaLimite: Dominio[]=[];
-  listaSalarioMinimo: Dominio[]=[];
-  listaetapaActualProceso: Dominio[]=[];
-  
+  listaLimite: Dominio[] = [];
+  listaSalarioMinimo: Dominio[] = [];
+  listaetapaActualProceso: Dominio[] = [];
+
 
   constructor(
-              private fb: FormBuilder,
-              private commonService: CommonService,
-              public dialog: MatDialog,
-              private procesoSeleccionService: ProcesoSeleccionService,    
+    private fb: FormBuilder,
+    private commonService: CommonService,
+    public dialog: MatDialog,
+    private procesoSeleccionService: ProcesoSeleccionService,
   ) { }
-  noGuardado=true;
+  noGuardado = true;
   ngOnDestroy(): void {
-    if ( this.noGuardado===true && this.addressForm.dirty) {
-      let dialogRef =this.dialog.open(ModalDialogComponent, {
+    if (this.noGuardado === true && this.addressForm.dirty) {
+      let dialogRef = this.dialog.open(ModalDialogComponent, {
         width: '28em',
-        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
-      });   
+        data: { modalTitle: "", modalText: "¿Desea guardar la información registrada?", siNoBoton: true }
+      });
       dialogRef.afterClosed().subscribe(result => {
         // console.log(`Dialog result: ${result}`);
-        if(result === true)
-        {
-            this.onSubmit();          
-        }           
+        if (result === true) {
+          this.onSubmit();
+        }
       });
     }
   };
 
   ngOnInit() {
-    
+
     this.addressForm = this.crearFormulario();
     return new Promise<void>(resolve => {
       forkJoin([
@@ -94,11 +93,11 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
         this.listaTipoAlcance = respuesta[1];
         this.listatipoPresupuesto = respuesta[2];
         this.listaResponsables = respuesta[3];
-        this.listaLimite = respuesta[4].filter(x=>x.codigo==this.procesoSeleccion.tipoProcesoCodigo);
+        this.listaLimite = respuesta[4].filter(x => x.codigo == this.procesoSeleccion.tipoProcesoCodigo);
         this.listaSalarioMinimo = respuesta[5];
-        this.listaetapaActualProceso = respuesta[6];            
+        this.listaetapaActualProceso = respuesta[6];
 
-        this.listaTipoAlcance = this.listaTipoAlcance.filter( t => t.codigo == "1" || t.codigo == "2" || t.codigo == "3" )
+        this.listaTipoAlcance = this.listaTipoAlcance.filter(t => t.codigo == "1" || t.codigo == "2" || t.codigo == "3")
 
         resolve();
 
@@ -107,10 +106,10 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   }
 
   openDialog(modalTitle: string, modalText: string) {
-    let dialogRef =this.dialog.open(ModalDialogComponent, {
+    let dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
-    });   
+    });
   }
 
   get grupos() {
@@ -122,7 +121,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   }
 
   maxLength(e: any, n: number) {
-    
+
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n, e.editor.getLength());
     }
@@ -131,7 +130,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   validarGruposDiligenciados(): boolean {
     let diligenciado: boolean = false;
 
-    this.grupos.controls.forEach( control => {
+    this.grupos.controls.forEach(control => {
       /*let nombreGrupo: string = control.get('nombreGrupo').value ? control.get('nombreGrupo').value : '';
       let plazoGrupo:  string = control.get('plazoMeses').value ? control.get('plazoMeses').value : '';
 
@@ -139,50 +138,43 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
         console.log( nombreGrupo.length, plazoGrupo.length )
         diligenciado = true;
       }*/
-      if(control.get('nombreGrupo').value!="" || control.get('nombreGrupo').value!=null)
-      {
-        diligenciado=true;
+      if (control.get('nombreGrupo').value != "" || control.get('nombreGrupo').value != null) {
+        diligenciado = true;
       }
-      if(control.get('plazoMeses').value!="" || control.get('plazoMeses').value!=null)
-      {
-        diligenciado=true;
+      if (control.get('plazoMeses').value != "" || control.get('plazoMeses').value != null) {
+        diligenciado = true;
       }
 
     })
-    
+
     return diligenciado;
   }
 
-  CambioNumeroMeses(i:number)
-  {
+  CambioNumeroMeses(i: number) {
     // console.log(this.addressForm.controls.grupos.value[i]);
-    if(this.addressForm.controls.grupos.value[i].plazoMeses!="")
-    {
-      if(this.addressForm.controls.grupos.value[i].plazoMeses<=0)
-      {
-        this.openDialog("","<b>La cantidad de meses no puede ser 0.</b>");
+    if (this.addressForm.controls.grupos.value[i].plazoMeses != "") {
+      if (this.addressForm.controls.grupos.value[i].plazoMeses <= 0) {
+        this.openDialog("", "<b>La cantidad de meses no puede ser 0.</b>");
         return;
       }
     }
-    
+
   }
 
   CambioNumeroAportantes() {
 
     const FormGrupos = this.addressForm.value;
-    if(FormGrupos.cuantosGrupos<=1)
-    {
-      this.openDialog("","<b>La cantidad de grupos no puede ser menor a 2.</b>");
+    if (FormGrupos.cuantosGrupos <= 1) {
+      this.openDialog("", "<b>La cantidad de grupos no puede ser menor a 2.</b>");
       return;
     }
-    if(FormGrupos.cuantosGrupos>=1)
-    {
+    if (FormGrupos.cuantosGrupos >= 1) {
       if (FormGrupos.cuantosGrupos < this.grupos.length)
-        if (this.validarGruposDiligenciados()){
-          this.openDialog('','<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>');
+        if (this.validarGruposDiligenciados()) {
+          this.openDialog('', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>');
 
-          this.addressForm.get('cuantosGrupos').setValue( this.grupos.length );
-          
+          this.addressForm.get('cuantosGrupos').setValue(this.grupos.length);
+
           return false;
         }
 
@@ -196,8 +188,8 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
         }
       }
     }
-    
-    
+
+
   }
 
   createGrupo(): FormGroup {
@@ -216,29 +208,54 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
     });
   }
 
-  borrarArray(borrarForm: any, i: number) {
-    
-    borrarForm.removeAt(i);
-    //si tiene id lo envio al servicio de eliminar
-    // console.log(borrarForm);
+  openDialogSiNo(modalTitle: string, modalText: string) {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
 
-    if(borrarForm.value[0].procesoSeleccionGrupoId>0)
-    {
-      this.procesoSeleccionService.deleteProcesoSeleccionGrupoByID(borrarForm.value[0].procesoSeleccionGrupoId).subscribe();
-    }
-    this.addressForm.get('cuantosGrupos').setValue( this.grupos.length );
+    return dialogRef;
+    // dialogRef.afterClosed().subscribe(result => {
+    //   if (result===true) {
+    //     this.OnDelete(e);
+    //   }
+    // });
+  }
+
+  borrarArray(borrarForm: any, i: number) {
+
+    let dialogRef = this.openDialogSiNo('', '<b>¿Está seguro de eliminar este registro?</b>')
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === true) {
+
+        this.procesoSeleccionService.deleteProcesoSeleccionGrupoByID(borrarForm.value[i].procesoSeleccionGrupoId)
+          .subscribe(respuesta => {
+
+            if (respuesta.code == "200") {
+              borrarForm.removeAt(i);
+              this.addressForm.get('cuantosGrupos').setValue(this.grupos.length);
+              this.openDialog('','<b>La información se ha eliminado correctamente.</b>')
+            }
+            
+          });
+
+      }
+    });
+
+
+
 
   }
 
   borrarActividades(borrarForm: any, i: number) {
-    
+
     borrarForm.removeAt(i);
     //si tiene id lo envio al servicio de eliminar
 
-    if(borrarForm.value[0].procesoSeleccionCronogramaId>0)
-    {
+    if (borrarForm.value[0].procesoSeleccionCronogramaId > 0) {
       this.procesoSeleccionService.deleteProcesoSeleccionActividadesByID(borrarForm.value[0].procesoSeleccionCronogramaId).subscribe();
-    }    
+    }
   }
 
   agregarActividad() {
@@ -254,10 +271,9 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
     });
   }
 
-  borrarCronograma( i: number ){    
+  borrarCronograma(i: number) {
     // console.log(this.cronogramas[i].value);
-    if(this.cronogramas[i].value.procesoSeleccionCronogramaId>0)
-    {
+    if (this.cronogramas[i].value.procesoSeleccionCronogramaId > 0) {
       this.procesoSeleccionService.deleteProcesoSeleccionActividadesByID(this.cronogramas[i].value.procesoSeleccionCronogramaId).subscribe();
     }
     this.cronogramas.removeAt(i);
@@ -322,7 +338,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
     saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
     saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
 
-    if ( texto ){
+    if (texto) {
       const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
       return textolimpio.length + saltosDeLinea;
     }
@@ -357,11 +373,11 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
       this.procesoSeleccion.cantGrupos = this.addressForm.get('cuantosGrupos').value ? this.addressForm.get('cuantosGrupos').value : null,
       this.procesoSeleccion.procesoSeleccionGrupo = [],
       this.procesoSeleccion.procesoSeleccionCronograma = [];
-      //para invitacion abierta
-      this.procesoSeleccion.condicionesAsignacionPuntaje=this.addressForm.get('condicionesAsignacion').value?this.addressForm.get('condicionesAsignacion').value:null;
-      this.procesoSeleccion.condicionesFinancierasHabilitantes=this.addressForm.get('condicionesFinancieras').value?this.addressForm.get('condicionesFinancieras').value:null;
-      this.procesoSeleccion.condicionesJuridicasHabilitantes=this.addressForm.get('condicionesJuridicas').value?this.addressForm.get('condicionesJuridicas').value:null;
-      this.procesoSeleccion.condicionesTecnicasHabilitantes=this.addressForm.get('condicionesTecnicas').value?this.addressForm.get('condicionesTecnicas').value:null;
+    //para invitacion abierta
+    this.procesoSeleccion.condicionesAsignacionPuntaje = this.addressForm.get('condicionesAsignacion').value ? this.addressForm.get('condicionesAsignacion').value : null;
+    this.procesoSeleccion.condicionesFinancierasHabilitantes = this.addressForm.get('condicionesFinancieras').value ? this.addressForm.get('condicionesFinancieras').value : null;
+    this.procesoSeleccion.condicionesJuridicasHabilitantes = this.addressForm.get('condicionesJuridicas').value ? this.addressForm.get('condicionesJuridicas').value : null;
+    this.procesoSeleccion.condicionesTecnicasHabilitantes = this.addressForm.get('condicionesTecnicas').value ? this.addressForm.get('condicionesTecnicas').value : null;
 
     this.procesoSeleccion.procesoSeleccionGrupo = [];
 
@@ -389,7 +405,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
         fechaMaxima: control.get('fechaMaxima').value,
         numeroActividad: posicion,
         procesoSeleccionCronogramaId: control.get('procesoSeleccionCronogramaId').value,
-        etapaActualProcesoCodigo: control.get('etapaActualProceso').value?control.get('etapaActualProceso').value.codigo:null,
+        etapaActualProcesoCodigo: control.get('etapaActualProceso').value ? control.get('etapaActualProceso').value.codigo : null,
         procesoSeleccionId: this.procesoSeleccion.procesoSeleccionId,
         estadoActividadCodigo: null,
       };
@@ -398,7 +414,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
     });
 
     // console.log(this.procesoSeleccion);
-    this.noGuardado=false;
+    this.noGuardado = false;
     this.guardar.emit(null);
   }
 
@@ -422,12 +438,12 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
       this.addressForm.get('criterios').setValue(this.procesoSeleccion.criteriosSeleccion);
       this.addressForm.get('tipoIntervencion').setValue(tipoIntervencion);
       this.addressForm.get('tipoAlcance').setValue(tipoAlcance);
-      this.addressForm.get('distribucionEnGrupos').setValue(this.procesoSeleccion.esDistribucionGrupos?"true":"false");
+      this.addressForm.get('distribucionEnGrupos').setValue(this.procesoSeleccion.esDistribucionGrupos ? "true" : "false");
       this.addressForm.get('cuantosGrupos').setValue(this.procesoSeleccion.cantGrupos);
       this.addressForm.get('condicionesJuridicas').setValue(this.procesoSeleccion.condicionesJuridicasHabilitantes);
       this.addressForm.get('condicionesFinancieras').setValue(this.procesoSeleccion.condicionesFinancierasHabilitantes);
       this.addressForm.get('condicionesTecnicas').setValue(this.procesoSeleccion.condicionesTecnicasHabilitantes);
-      this.addressForm.get('condicionesAsignacion').setValue(this.procesoSeleccion.condicionesAsignacionPuntaje);      
+      this.addressForm.get('condicionesAsignacion').setValue(this.procesoSeleccion.condicionesAsignacionPuntaje);
       this.addressForm.get('responsableEquipoTecnico').setValue(responsableEquipoTecnico);
       this.addressForm.get('responsableEquipoestructurado').setValue(responsableEquipoestructurado);
 
@@ -450,11 +466,13 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
         const etapaActualproceso = this.listaetapaActualProceso.find(p => p.codigo === cronograma.etapaActualProcesoCodigo);
         const control = this.createCronograma();
         control.get('descripcion').setValue(cronograma.descripcion),
-        control.get('fechaMaxima').setValue(cronograma.fechaMaxima),
-        control.get('procesoSeleccionCronogramaId').setValue(cronograma.procesoSeleccionCronogramaId);
+          control.get('fechaMaxima').setValue(cronograma.fechaMaxima),
+          control.get('procesoSeleccionCronogramaId').setValue(cronograma.procesoSeleccionCronogramaId);
         control.get('etapaActualProceso').setValue(etapaActualproceso),
-        listaCronograma.push(control);
-      });      
+          listaCronograma.push(control);
+      });
+      this.estaEditando = true;
+      this.addressForm.markAllAsTouched();
     });
   }
   validateNumberKeypress(event: KeyboardEvent) {
@@ -463,88 +481,79 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
     return alphanumeric.test(inputChar) ? true : false;
   }
 
-  nosuperarlimite(i:number,caso:number)
-  {
-    let limite=this.listaLimite[0].nombre.split(",");
+  nosuperarlimite(i: number, caso: number) {
+    let limite = this.listaLimite[0].nombre.split(",");
     // console.log(limite[1]);
-    let maximo=parseInt(limite[1])*parseInt(this.listaSalarioMinimo[0].descripcion);
-    let minimo=parseInt(limite[0])*parseInt(this.listaSalarioMinimo[0].descripcion);
+    let maximo = parseInt(limite[1]) * parseInt(this.listaSalarioMinimo[0].descripcion);
+    let minimo = parseInt(limite[0]) * parseInt(this.listaSalarioMinimo[0].descripcion);
     const listaGrupo = this.addressForm.get('grupos') as FormArray;
-    if(caso==1)
-    {
+    if (caso == 1) {
       //ahora debo tener en cuenta la sumatoria de los grupos
-      let valor=0;
-      let cantidadconvalor=0;
-      let cantidadGrupos=0;
+      let valor = 0;
+      let cantidadconvalor = 0;
+      let cantidadGrupos = 0;
       this.addressForm.controls.grupos.value.forEach(element => {
-        valor+=element.valor;
-        if(element.valor>0){cantidadconvalor++;}
+        valor += element.valor;
+        if (element.valor > 0) { cantidadconvalor++; }
         cantidadGrupos++;
       });
       console.log(valor);
       //antes de evaluar esto debo saber que todos los valores fueron ingresados
       console.log(cantidadGrupos);
-      if(cantidadconvalor==cantidadGrupos)
-      {
-        if(valor>maximo
+      if (cantidadconvalor == cantidadGrupos) {
+        if (valor > maximo
           ||
-          valor<minimo)
-        {        
+          valor < minimo) {
           console.log(listaGrupo.controls[i]);
           listaGrupo.controls[i].get("valor").setValue(0);
-          this.openDialog("","<b>El valor de salarios mínimos no corresponde con el tipo de proceso de selección. Verifique por favor.</b>");
-        } 
+          this.openDialog("", "<b>El valor de salarios mínimos no corresponde con el tipo de proceso de selección. Verifique por favor.</b>");
+        }
       }
-           
+
     }
-    else if(caso==2)
-    {
+    else if (caso == 2) {
       //ahora debo tener en cuenta la sumatoria de los grupos
-      let valor=0;
-      
-      let cantidadconvalor=0;
-      let cantidadGrupos=0;
+      let valor = 0;
+
+      let cantidadconvalor = 0;
+      let cantidadGrupos = 0;
       this.addressForm.controls.grupos.value.forEach(element => {
-        valor+=element.valorMaximoCategoria;
-        if(element.valor>0){cantidadconvalor++;}
+        valor += element.valorMaximoCategoria;
+        if (element.valorMaximoCategoria > 0) { cantidadconvalor++; }
         cantidadGrupos++;
       });
       console.log(valor);
       //antes de evaluar esto debo saber que todos los valores fueron ingresados
       console.log(cantidadGrupos);
-      if(cantidadconvalor==cantidadGrupos)
-      {
+      if (cantidadconvalor == cantidadGrupos) {
         console.log(valor);
-        if(valor>maximo
+        if (valor > maximo
           ||
-          valor<minimo)
-        {
+          valor < minimo) {
           listaGrupo.controls[i].get("valorMaximoCategoria").setValue(0);
-          this.openDialog("","<b>El valor de salarios mínimos no corresponde con el tipo de proceso de selección. Verifique por favor.</b>");
+          this.openDialog("", "<b>El valor de salarios mínimos no corresponde con el tipo de proceso de selección. Verifique por favor.</b>");
         }
       }
     }
-    else{
-      let valor=0;      
-      let cantidadconvalor=0;
-      let cantidadGrupos=0;
+    else {
+      let valor = 0;
+      let cantidadconvalor = 0;
+      let cantidadGrupos = 0;
       this.addressForm.controls.grupos.value.forEach(element => {
-        valor+=element.valorMaximoCategoria;
-        if(element.valor>0){cantidadconvalor++;}
+        valor += element.valorMinimoCategoria;
+        if (element.valorMinimoCategoria > 0) { cantidadconvalor++; }
         cantidadGrupos++;
       });
-      console.log(valor);
+      console.log(valor, maximo);
       //antes de evaluar esto debo saber que todos los valores fueron ingresados
       console.log(cantidadGrupos);
-      if(cantidadconvalor==cantidadGrupos)
-      {
+      if (cantidadconvalor == cantidadGrupos) {
         console.log(valor);
-        if(valor > maximo
+        if (valor > maximo
           ||
-          valor < minimo)
-        {
+          valor < minimo) {
           listaGrupo.controls[i].get("valorMinimoCategoria").setValue(0);
-          this.openDialog("","<b>El valor de salarios mínimos no corresponde con el tipo de proceso de selección. Verifique por favor.</b>");
+          this.openDialog("", "<b>El valor de salarios mínimos no corresponde con el tipo de proceso de selección. Verifique por favor.</b>");
         }
       }
     }

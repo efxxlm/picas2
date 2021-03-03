@@ -24,24 +24,35 @@ export class ConsideracionesEspecialesComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
 
   constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
+    this.cargarEdicion()
+  }
+  
+  private cargarEdicion() {
+    setTimeout(() => {
+      if ( this.contratacion[ 'contratista' ] !== undefined ) {
+        this.estaEditando = true;
+      }
+    }, 2000);
   }
 
-  textoLimpio (texto: string) {
-    if ( texto ){
-      const textolimpio = texto.replace(/<[^>]*>/g, '');
-      return textolimpio.length;
-    };
-  };
-
-  maxLength (e: any, n: number) {
+  maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
-      e.editor.deleteText(n, e.editor.getLength());
-    };
-  };
+      e.editor.deleteText(n - 1, e.editor.getLength());
+    }
+  }
+
+  textoLimpio( evento: any, n: number ) {
+    if ( evento !== undefined ) {
+        return evento.getLength() > n ? n : evento.getLength();
+    } else {
+        return 0;
+    }
+  }
 
   onSubmit() {
 

@@ -47,6 +47,7 @@ export class FormDetalleProcesoPasivoDjComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
   constructor(private fb: FormBuilder,public dialog: MatDialog, public commonService:CommonService
     ,private router: Router, public defensaService: DefensaJudicialService) { }
 
@@ -143,6 +144,7 @@ export class FormDetalleProcesoPasivoDjComponent implements OnInit {
   }
 
   onSubmit() {
+    this.estaEditando = true;
     let defensaJudicial=this.defensaJudicial;
     if(!this.defensaJudicial.defensaJudicialId||this.defensaJudicial.defensaJudicialId==0)
     {

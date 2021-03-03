@@ -5,11 +5,6 @@ namespace asivamosffie.model.Models
 {
     public partial class OrdenGiroDetalleDescuentoTecnicaAportante
     {
-        public OrdenGiroDetalleDescuentoTecnicaAportante()
-        {
-            OrdenGiroDetalleTerceroCausacionDescuento = new HashSet<OrdenGiroDetalleTerceroCausacionDescuento>();
-        }
-
         public int OrdenGiroDetalleDescuentoTecnicaAportanteId { get; set; }
         public int SolicitudPagoFaseFacturaDescuentoId { get; set; }
         public int? AportanteId { get; set; }
@@ -23,7 +18,6 @@ namespace asivamosffie.model.Models
         public string ConceptoPagoCodigo { get; set; }
         public bool? RequiereDescuento { get; set; }
 
-        public virtual SolicitudPagoFaseFacturaDescuento SolicitudPagoFaseFacturaDescuento { get; set; }
-        public virtual ICollection<OrdenGiroDetalleTerceroCausacionDescuento> OrdenGiroDetalleTerceroCausacionDescuento { get; set; }
+        public virtual OrdenGiroDetalleDescuentoTecnica SolicitudPagoFaseFacturaDescuento { get; set; }
     }
 }

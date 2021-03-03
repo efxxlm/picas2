@@ -16,12 +16,12 @@ using iTextSharp.text.pdf;
 using iTextSharp.tool.xml;
 using iTextSharp.tool.xml.pipeline;
 using DinkToPdf;
-using DinkToPdf.Contracts; 
+using DinkToPdf.Contracts;
 using iTextSharp.tool.xml.html;
 using iTextSharp.tool.xml.pipeline.html;
 using iTextSharp.tool.xml.pipeline.css;
 using iTextSharp.tool.xml.pipeline.end;
- 
+
 namespace asivamosffie.services.Helpers
 {
     public class PDF
@@ -32,17 +32,17 @@ namespace asivamosffie.services.Helpers
         public PDF(devAsiVamosFFIEContext context, IConverter converter)
         {
             _context = context;
-            _converter = converter; 
+            _converter = converter;
         }
 
 
 
-        public static byte[] Convertir(Plantilla pPlantilla)
+        public static byte[] Convertir(Plantilla pPlantilla, bool pEsHorizontal = false)
         {
-            string contenido = pPlantilla.Contenido ?? " "; 
-            string encabezado = pPlantilla.Encabezado != null ? pPlantilla.Encabezado.Contenido : " "; 
-            string pie = pPlantilla.PieDePagina != null ? pPlantilla.PieDePagina.Contenido :" ";
-        
+            string contenido = pPlantilla.Contenido ?? " ";
+            string encabezado = pPlantilla.Encabezado != null ? pPlantilla.Encabezado.Contenido : " ";
+            string pie = pPlantilla.PieDePagina != null ? pPlantilla.PieDePagina.Contenido : " ";
+
             Margenes margenes = new Margenes
             {
                 Arriba = (float)pPlantilla.MargenArriba,
@@ -68,6 +68,9 @@ namespace asivamosffie.services.Helpers
                 iTextSharp.text.Rectangle z = PageSize.LETTER;
                 document = new Document(z, (float)margenIzquierdo, (float)margenDerecho, (float)margenSuperior, (float)margenInferior);
 
+                if ( pEsHorizontal == true )
+                    document.SetPageSize(iTextSharp.text.PageSize.LETTER.Rotate());
+
 
                 EventosPdf e = new EventosPdf();
                 e.Iniciar(encabezado, pie, (float)margenes.Arriba, (float)margenes.Abajo);
@@ -78,6 +81,7 @@ namespace asivamosffie.services.Helpers
 
                 document.Open();
 
+                
                 HtmlPipelineContext htmlContext = new HtmlPipelineContext(null);
 
                 htmlContext.SetTagFactory(Tags.GetHtmlTagProcessorFactory());
@@ -120,60 +124,57 @@ namespace asivamosffie.services.Helpers
                 this.MargenSuperior = margenSuperior;
                 this.MargenInferior = margenInferior;
                 this.Pie = pie;
-                if (!string.IsNullOrEmpty(encabezado))
-                {
-                    encabezado = encabezado.Replace("[RUTA_ICONO]", Path.Combine(Directory.GetCurrentDirectory(), "assets", "pdf-styles.css"));
-                    header = XMLWorkerHelper.ParseToElementList(encabezado, null);
-                }
-                if (!string.IsNullOrEmpty(pie))
-                {
-                    footer = XMLWorkerHelper.ParseToElementList(pie, null);
-                }
-            }
-
-            public override void OnStartPage(PdfWriter writer, Document document)
-            {
-
-                if (Encabezado != null)
-                {
-
-                }
             }
 
             public override void OnEndPage(PdfWriter writer, Document document)
             {
-
                 try
                 {
-                    ColumnText ct = new ColumnText(writer.DirectContent);
-                    if (header != null)
-                    {
+                    //header = XMLWorkerHelper.ParseToElementList(this.Encabezado, null);
+                    PdfPTable tbHeader = new PdfPTable(1);
+                    tbHeader.TotalWidth = document.PageSize.Width - document.LeftMargin - document.RightMargin;
+                    tbHeader.DefaultCell.Border = 0;
 
-                        ct.SetSimpleColumn(new Rectangle(36, 0, 559, document.Top + document.TopMargin - 10));
+                    //tbHeader.AddCell(new Paragraph());
+                    
+                    PdfPCell _cell = new PdfPCell(new Paragraph("FONDO DE FINANCIAMIENTO DE INFRAESTRUCTURA EDUCATIVA - FFIE \n MINISTERIO DE EDUCACIÓN"));
+                    _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                    _cell.Border = 0;
 
-                        foreach (IElement e in header)
-                        {
-                            ct.AddElement(e);
-                        }
-                        ct.Go();
-                    }
-                    if (footer != null)
-                    {
-                        ct.SetSimpleColumn(new Rectangle(36, 0, 559, 80));
+                    tbHeader.AddCell(_cell);
 
-                        foreach (IElement e in footer)
-                        {
-                            ct.AddElement(e);
-                        }
-                        ct.Go();
-                    }
+                    tbHeader.WriteSelectedRows(0, -1, document.LeftMargin, writer.PageSize.GetTop(document.TopMargin) + this.MargenSuperior + 40 , writer.DirectContent);
+
+                    PdfPTable tbFooter = new PdfPTable(3);
+                    tbFooter.TotalWidth = document.PageSize.Width - document.LeftMargin - document.RightMargin;
+                    tbFooter.DefaultCell.Border = 0;
+
+                    tbFooter.AddCell(new Paragraph());
+                    _cell = new PdfPCell(new Paragraph());
+                    _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                    _cell.Border = 0;
+                    tbFooter.AddCell(_cell);
+
+                    _cell = new PdfPCell(new Paragraph("Página " + writer.PageNumber));
+                    _cell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                    _cell.Border = 0;
+
+                    tbFooter.AddCell(_cell);
+
+                    tbFooter.WriteSelectedRows(0, -1, document.LeftMargin, writer.PageSize.GetBottom(document.BottomMargin) - this.MargenInferior -10 , writer.DirectContent);
+
+                    string pathImage = Path.Combine(Directory.GetCurrentDirectory(), "assets", "img-FFIE.png");
+
+                    iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(pathImage);
+                    logo.SetAbsolutePosition(writer.PageSize.GetRight(document.RightMargin), writer.PageSize.GetTop(document.TopMargin));
+                    logo.ScaleAbsolute(50f, 50f);
+                    document.Add(logo);
                 }
                 catch (Exception de)
                 {
                     throw de;
                 }
             }
-
         }
 
         public class ColumnTextElementHandler : IElementHandler

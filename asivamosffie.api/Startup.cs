@@ -60,6 +60,7 @@ namespace asivamosffie.api
             });
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
+            services.Configure<asivamosffie.model.AditionalModels.AppSettings>(appSettingsSection);
             var appSettings = appSettingsSection.Get<AppSettings>();
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -122,6 +123,8 @@ namespace asivamosffie.api
               => options.UseSqlServer(Configuration.GetConnectionString("asivamosffieDatabase")));
 
             //Agregar Interfaces y clases
+            services.AddTransient<IValidateFinalReportService, ValidateFinalReportService>();
+            services.AddTransient<IRegisterFinalReportService, RegisterFinalReportService>();
             services.AddTransient<IValidateWeeklyProgressService, ValidateWeeklyProgressService>();
             services.AddTransient<ICheckWeeklyProgressService, CheckWeeklyProgressService>();
             services.AddTransient<IRegisterWeeklyProgressService, RegisterWeeklyProgressService>();
@@ -162,6 +165,7 @@ namespace asivamosffie.api
             services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>(); 
             services.AddTransient<IManageContractualProcessesService, ManageContractualProcessesService>();
             services.AddTransient<ITechnicalRequirementsConstructionPhaseService, TechnicalRequirementsConstructionPhaseService>();
+            services.AddTransient<IRegisterPayPerformanceService, RegisterPayPerformanceService>();
             services.AddTransient<ITechnicalCheckConstructionPhase2Service, TechnicalCheckConstructionPhase2Service>();
             services.AddTransient<IActBeginService, ActBeginService>();
             services.AddTransient<IResourceControlService, ResourceControlService>();

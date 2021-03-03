@@ -41,7 +41,7 @@
             <mat-expansion-panel class="expansion-style sub-expansion">
               <mat-expansion-panel-header
                 class="expansion-style--header"
-                *ngIf="sesionComite.tipoSolicitudCodigo === '1'"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.procesoSeleccion"
               >
                 <mat-panel-title class="expansion-style--title sub-expansion">
                   <b>Solicitud {{ sesionComite.procesoSeleccion.numeroProceso }}</b>
@@ -49,10 +49,26 @@
               </mat-expansion-panel-header>
               <mat-expansion-panel-header
                 class="expansion-style--header"
-                *ngIf="sesionComite.tipoSolicitudCodigo === '2'"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.contratacion"
               >
                 <mat-panel-title class="expansion-style--title sub-expansion">
                   <b>Solicitud {{ sesionComite.numeroSolicitud }}</b>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <mat-expansion-panel-header
+              class="expansion-style--header"
+              *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.modificacionContractual"
+            >
+              <mat-panel-title class="expansion-style--title sub-expansion">
+                <b>Solicitud {{ sesionComite.novedadContractual !== undefined ? sesionComite.novedadContractual.numeroSolicitud : sesionComite.numeroSolicitud }} </b>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+              <mat-expansion-panel-header
+                class="expansion-style--header"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.controversiaContractual"
+              >
+                <mat-panel-title class="expansion-style--title sub-expansion">
+                  <b>Solicitud {{ sesionComite.controversiaContractual !== undefined ? sesionComite.controversiaContractual.numeroSolicitud : sesionComite.numeroSolicitud }} </b>
                 </mat-panel-title>
               </mat-expansion-panel-header>
 
@@ -60,13 +76,12 @@
             </mat-expansion-panel>
           </mat-accordion>
         </section>
-
-        <section *ngIf="acta.sesionComiteSolicitudComiteTecnicoFiduciario !== null">
+        <section *ngIf="acta.sesionComiteSolicitudComiteTecnicoFiduciario !== undefined">
           <mat-accordion *ngFor="let sesionComite of acta.sesionComiteSolicitudComiteTecnicoFiduciario">
             <mat-expansion-panel class="expansion-style sub-expansion">
               <mat-expansion-panel-header
                 class="expansion-style--header"
-                *ngIf="sesionComite.tipoSolicitudCodigo === '1'"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.procesoSeleccion"
               >
                 <mat-panel-title class="expansion-style--title sub-expansion">
                   <b>Solicitud {{ sesionComite.procesoSeleccion.numeroProceso }}</b>
@@ -74,10 +89,26 @@
               </mat-expansion-panel-header>
               <mat-expansion-panel-header
                 class="expansion-style--header"
-                *ngIf="sesionComite.tipoSolicitudCodigo === '2'"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.contratacion"
               >
                 <mat-panel-title class="expansion-style--title sub-expansion">
                   <b>Solicitud {{ sesionComite.contratacion.numeroSolicitud }}</b>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <mat-expansion-panel-header
+              class="expansion-style--header"
+              *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.modificacionContractual"
+            >
+              <mat-panel-title class="expansion-style--title sub-expansion">
+                <b>Solicitud {{ sesionComite.novedadContractual.numeroSolicitud }} </b>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+              <mat-expansion-panel-header
+                class="expansion-style--header"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.controversiaContractual"
+              >
+                <mat-panel-title class="expansion-style--title sub-expansion">
+                  <b>Solicitud {{ sesionComite.controversiaContractual.numeroSolicitud }} </b>
                 </mat-panel-title>
               </mat-expansion-panel-header>
 
@@ -115,6 +146,17 @@
                     <div class="text-color" [innerHTML]="innerObservacion(tema.observaciones)"></div>
                   </section>
                   <h2 class="card-subTitle">Decisiones</h2>
+                  <div class="reparacion-card row">
+                    <div class="col-md-4">
+                      Resultado de la votación <b class="color-blue"> {{ tema.resultadoVotacion }} </b>
+                    </div>
+                    <div class="col-md-4 info-text completo">
+                      Aprobó <b class="color-blue"> {{ tema.totalAprobado }} </b>
+                    </div>
+                    <div class="col-md-4 info-text sin-diligenciar">
+                      No aprobó <b class="color-blue"> {{ tema.totalNoAprobado }} </b>
+                    </div>
+                  </div>
                   <p>
                     <b>Estado de la solicitud</b>: <span class="text-color"> {{ tema.estadoTemaCodigo }} </span>
                   </p>
@@ -200,6 +242,17 @@
                     <div class="text-color" [innerHTML]="innerObservacion(tema.observaciones)"></div>
                   </section>
                   <h2 class="card-subTitle">Decisiones</h2>
+                  <div class="reparacion-card row">
+                    <div class="col-md-4">
+                      Resultado de la votación <b class="color-blue"> {{ tema.resultadoVotacion }} </b>
+                    </div>
+                    <div class="col-md-4 info-text completo">
+                      Aprobó <b class="color-blue"> {{ tema.totalAprobado }} </b>
+                    </div>
+                    <div class="col-md-4 info-text sin-diligenciar">
+                      No aprobó <b class="color-blue"> {{ tema.totalNoAprobado }} </b>
+                    </div>
+                  </div>
                   <p>
                     <b>Estado de la solicitud</b>: <span class="text-color"> {{ tema.estadoTemaCodigo }} </span>
                   </p>
@@ -300,13 +353,6 @@
   </div>
 
   <div *ngIf="comentarActa">
-    <div
-      *ngIf="form.invalid && form.touched"
-      class="animateDown my-1em color-secondaryColor d-flex align-items-center justify-content-center"
-    >
-      <img class="icon-incompleto--img mr-05em" src="assets/img/icon/incompleto.svg" alt="este campo es requerido" />
-      Debe ingresar la información en el campo para continuar
-    </div>
     <form autocomplete="off" [formGroup]="form" (ngSubmit)="onSubmit()">
       <mat-card style="margin-bottom: 1em">
         <mat-card-title
@@ -331,7 +377,7 @@
           </p>
           <div class="d-flex align-items-center">
             <quill-editor
-              class="quill-editor-style card"
+              class="quill-editor-style card position-relative"
               [styles]="editorStyle"
               [modules]="config"
               (onContentChanged)="maxLength($event, 1000)"
@@ -339,15 +385,18 @@
               required
             >
             </quill-editor>
-            <span class="contador" *ngIf="form.get('comentarioActa').value !== null">
+            <span class="contador" *ngIf="form.get('comentarioActa').value !== null" style="margin-top: 2em;">
               {{ 1000 - textoLimpio(form.get('comentarioActa').value, 1000) }}
             </span>
-            <span class="contador" *ngIf="form.get('comentarioActa').value === null"> 1000 </span>
+            <span class="contador" *ngIf="form.get('comentarioActa').value === null" style="margin-top: 2em;"> 1000 </span>
             <span class="icon-incompleto">
               <img
                 class="icon-incompleto--img"
                 src="assets/img/icon/incompleto.svg"
-                alt="este campo es requerido"
+                              alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
                 *ngIf="
                   (form.get('comentarioActa').invalid && form.get('comentarioActa').touched) ||
                   (form.get('comentarioActa').invalid && estaEditando)

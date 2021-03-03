@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { ActBeginService } from 'src/app/core/_services/actBegin/act-begin.service';
+import { ActaInicioConstruccionService } from 'src/app/core/_services/actaInicioConstruccion/acta-inicio-construccion.service';
 export interface Contrato {
   fechaAprobacionRequisitos: string;
   numeroContrato:string;
@@ -31,7 +31,7 @@ export class GestionarActaInicioFdosConstrComponent implements OnInit {
   contratoInterventoria = false;
   loadDataItems: Subscription;
   dataTable: any;
-  constructor(private services: ActBeginService) { }
+  constructor(private services: ActaInicioConstruccionService) { }
 
   ngOnInit(): void {
     this.loadDataItems = this.services.loadDataItems.subscribe((loadDataItems: any) => {

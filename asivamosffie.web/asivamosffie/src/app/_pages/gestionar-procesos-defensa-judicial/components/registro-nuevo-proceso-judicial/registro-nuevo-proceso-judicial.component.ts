@@ -25,7 +25,7 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
   soporte_class:number=0;
   ficha_class:number=3;
   textCabecera: string;
-  
+  estaEditando = false;
 
   constructor(private fb: FormBuilder, public dialog: MatDialog, 
     public commonServices: CommonService,
@@ -33,7 +33,7 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
     private activatedRoute: ActivatedRoute,) { }
 
     async editMode(){
-    
+      this.estaEditando = true;
     
       this.cargarRegistro().then(() => 
       { 
@@ -59,7 +59,7 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
           this.convocados_class=this.estaIncompletoconvocados(this.defensaJudicial);
           this.soporte_class=this.defensaJudicial.urlSoporteProceso==null?0:2;
           this.ficha_class=this.estaIncompletoficha(this.defensaJudicial);
-          setTimeout(() => { resolve(); },1000)
+          setTimeout(() => { resolve(''); },1000)
       });           
     });
 
@@ -101,19 +101,22 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
   }
   estaIncompletoconvocados(defensaJudicial: DefensaJudicial): number {
     let retorno:number=0;
-    if(defensaJudicial.demandadoConvocado.length>0)
-      {
-        retorno= 2;
+    //sin-diligenciar:retorno===0,'en-proceso':retorno===1,'completo':retorno===2
+    if(defensaJudicial != null){
+
+      let num_convocados = defensaJudicial.numeroDemandados;
+
+      if(defensaJudicial.demandadoConvocado.length >= num_convocados){
+          
+          retorno = 2;
+
+      }else if(defensaJudicial.demandadoConvocado.length > 0 && defensaJudicial.demandadoConvocado.length < num_convocados){
+          
+          retorno = 1;
+
       }
-      else{       
-        if(defensaJudicial.demandadoConvocado.length==0)
-        {
-          retorno= 0;
-        }
-        else{
-          retorno= 1;
-        }
-      }    
+    }
+
     return retorno;
   }
   estaIncompletodetalle(defensaJudicial: DefensaJudicial): number {
@@ -121,8 +124,8 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
     if(defensaJudicial.localizacionIdMunicipio!=null && 
       defensaJudicial.tipoAccionCodigo!=null &&
       defensaJudicial.jurisdiccionCodigo!=null &&
-      defensaJudicial.pretensiones!="" && defensaJudicial.pretensiones!=null &&
-      defensaJudicial.cuantiaPerjuicios>0 && defensaJudicial.esRequiereSupervisor!=null)
+      defensaJudicial.pretensiones!="" && defensaJudicial.pretensiones!=null
+       && defensaJudicial.esRequiereSupervisor!=null)
       {
         retorno= 2;
       }
@@ -130,8 +133,8 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
         if(defensaJudicial.localizacionIdMunicipio==null && 
           defensaJudicial.tipoAccionCodigo==null &&
           defensaJudicial.jurisdiccionCodigo==null &&
-          (defensaJudicial.pretensiones=="" || defensaJudicial.pretensiones==null) &&
-          defensaJudicial.cuantiaPerjuicios==null && defensaJudicial.esRequiereSupervisor==null)
+          (defensaJudicial.pretensiones=="" || defensaJudicial.pretensiones==null)
+           && defensaJudicial.esRequiereSupervisor==null)
           {
             retorno=0;
           }

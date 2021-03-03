@@ -244,6 +244,29 @@
         public const string Editar_crear_url = "178";
         public const string Visita_url = "179";
         public const string Cargar_Acta_Terminacion_Contrato = "180";
-        	
+
+        //4.4.3 registro de pagos    	
+        public const string Validar_Excel_Registro_Pagos = "191";
+        public const string Comentar_Pagos = "197";
+        public const string Validar_Excel_Registro_Rendimientos = "198";
+        public const string Eliminar_Pagos = "199";
+        // public const string Tramitar_Pagos = "200";
+        public const string Ver_Detalle_Pagos = "201";
+        public const string Ver_Detalle_Rendimientos = "202";
+        public const string Ver_Inconsistencias = "203";
+
+        public const string Tramitar_Rendimientos = "200";
+        public const string Notificar_Inconsistencias = "2001";
+        public const string Notificar_Solicitud_Aprobacion = "2002";
+        
+        //Informe final
+        public const string Crear_Informe_Final = "192";
+        public const string Crear_Editar_Informe_Final_Interventoria = "193";
+        public const string Crear_Editar_Informe_Final_Anexo = "194";
+        public const string Crear_Editar_Informe_Final_Interventoria_Observacion = "195";
+        public const string Enviar_A_supervisor_Informe_Final_Interventoria = "196";
+        public const string Actualizar_Estado_validacion_informe_final = "202";
+        public const string Enviar_A_supervisor_Informe_Final_Validacion = "203";
+
     }
 }   

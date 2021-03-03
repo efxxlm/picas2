@@ -16,6 +16,7 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public string Nombre { get; set; }
+        public int? Posicion { get; set; }
 
         public virtual ICollection<InformeFinalInterventoria> InformeFinalInterventoria { get; set; }
     }

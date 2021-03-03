@@ -27,9 +27,16 @@
     *ngIf="eliminar">Eliminar</button>
   <button mat-raised-button color="accent" class="dialog-btn--button" (click)="onMonitorearCronograma()"
     *ngIf="monitorear">Monitorear cronograma</button>
-  <button mat-raised-button color="accent" class="dialog-btn--button" *ngIf="presentarEvaluacion"
-    (click)="onAperturaEvaluacion( data.procesoSeleccionId )">
-    Presentar evaluación a comité</button>
+  
+  <button 
+          mat-raised-button 
+          color="accent" 
+          class="dialog-btn--button" 
+          *ngIf="presentarEvaluacion"
+          (click)="onAperturaEvaluacion( data.procesoSeleccionId )">
+    Presentar evaluación a comité
+  </button>
+  
   <button mat-raised-button color="accent" class="dialog-btn--button"
     (click)="onCerrarProceso( data.procesoSeleccionId )" *ngIf="cerrarProceso">
     Cerrar proceso</button>

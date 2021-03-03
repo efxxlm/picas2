@@ -46,9 +46,13 @@ namespace asivamosffie.services
                                             .Include(r => r.ProcesoSeleccionGrupo).Where(r => !(bool)r.Eliminado)
                                             .OrderByDescending(x => x.FechaCreacion)
                                             .ToListAsync();
+
+
+                List<Contratista> ListaContratistas = _context.Contratista.ToList();// Where(x => x.NumeroInvitacion == proceso.NumeroProceso).ToList();
+
                 foreach (var proceso in procesosSeleccion)
                 {
-                    proceso.ListaContratistas = _context.Contratista.Where(x => x.NumeroInvitacion == proceso.NumeroProceso).ToList();
+                    proceso.ListaContratistas = ListaContratistas.Where(x => x.NumeroInvitacion == proceso.NumeroProceso).ToList();
                 }
                 return procesosSeleccion;
             }
@@ -64,7 +68,7 @@ namespace asivamosffie.services
         {
             try
             {
-                var procesoSeleccion = await _context.ProcesoSeleccion.Where(r => !(bool)r.Eliminado)                                            
+                var procesoSeleccion = await _context.ProcesoSeleccion.Where(r => !(bool)r.Eliminado)
                                             .Include(r => r.ProcesoSeleccionObservacion)
                                             .IncludeFilter(r => r.ProcesoSeleccionProponente.Where(r => !(bool)r.Eliminado))
                                             .IncludeFilter(r => r.ProcesoSeleccionIntegrante.Where(r => !(bool)r.Eliminado))
@@ -73,6 +77,9 @@ namespace asivamosffie.services
                                             .IncludeFilter(r => r.ProcesoSeleccionGrupo.Where(r => !(bool)r.Eliminado))
                                             .FirstOrDefaultAsync(proceso => proceso.ProcesoSeleccionId == id);
                 procesoSeleccion.ListaContratistas = _context.Contratista.Where(x => x.NumeroInvitacion == procesoSeleccion.NumeroProceso).ToList();
+                procesoSeleccion.ProcesoSeleccionGrupo = procesoSeleccion.ProcesoSeleccionGrupo.Where(r => r.Eliminado != true).ToList();
+
+
                 return procesoSeleccion;
             }
             catch (Exception ex)
@@ -90,7 +97,7 @@ namespace asivamosffie.services
             ProcesoSeleccion ProcesoSeleccionAntiguo = null;
             try
             {
-
+                
                 if (string.IsNullOrEmpty(procesoSeleccion.ProcesoSeleccionId.ToString()) || procesoSeleccion.ProcesoSeleccionId == 0)
                 {
 
@@ -167,15 +174,15 @@ namespace asivamosffie.services
                 foreach (ProcesoSeleccionCotizacion cotizacion in procesoSeleccion.ProcesoSeleccionCotizacion)
                 {
                     cotizacion.UsuarioCreacion = procesoSeleccion.UsuarioCreacion.ToUpper();
-                    cotizacion.NombreOrganizacion = cotizacion.NombreOrganizacion==null?"":cotizacion.NombreOrganizacion.ToUpper();
-                    cotizacion.UrlSoporte = cotizacion.UrlSoporte==null?"":cotizacion.UrlSoporte.ToUpper();
+                    cotizacion.NombreOrganizacion = cotizacion.NombreOrganizacion == null ? "" : cotizacion.NombreOrganizacion.ToUpper();
+                    cotizacion.UrlSoporte = cotizacion.UrlSoporte == null ? "" : cotizacion.UrlSoporte.ToUpper();
                     await this.CreateEditarProcesoSeleccionCotizacion(cotizacion);
                 }
 
                 //si la cantidad que recibe de parametros no es la misma que tiene en datos, borro los anteriores
-                if(procesoSeleccion.ProcesoSeleccionProponente.Count()<_context.ProcesoSeleccionProponente.Where(x=>x.ProcesoSeleccionId==procesoSeleccion.ProcesoSeleccionId && !(bool)x.Eliminado).Count())
+                if (procesoSeleccion.ProcesoSeleccionProponente.Count() < _context.ProcesoSeleccionProponente.Where(x => x.ProcesoSeleccionId == procesoSeleccion.ProcesoSeleccionId && !(bool)x.Eliminado).Count())
                 {
-                    foreach(var procesoseleccionprop in _context.ProcesoSeleccionProponente.Where(x => x.ProcesoSeleccionId == procesoSeleccion.ProcesoSeleccionId && !(bool)x.Eliminado))
+                    foreach (var procesoseleccionprop in _context.ProcesoSeleccionProponente.Where(x => x.ProcesoSeleccionId == procesoSeleccion.ProcesoSeleccionId && !(bool)x.Eliminado))
                     {
                         procesoseleccionprop.Eliminado = true;
                         _context.ProcesoSeleccionProponente.Update(procesoseleccionprop);
@@ -236,8 +243,8 @@ namespace asivamosffie.services
             try
             {
                 //si tiene relacion con algo, no lo dejo eliminar
-                var comite = _context.SesionComiteSolicitud.Where(x=>x.SolicitudId==pId && !(bool)x.Eliminado && x.TipoSolicitudCodigo==ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion).Count();//jflorez. no me cuadra el nombre de la constante pero la pregunte 20201021
-                if(comite>0)
+                var comite = _context.SesionComiteSolicitud.Where(x => x.SolicitudId == pId && !(bool)x.Eliminado && x.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion).Count();//jflorez. no me cuadra el nombre de la constante pero la pregunte 20201021
+                if (comite > 0)
                 {
                     return respuesta = new Respuesta
                     {
@@ -246,7 +253,7 @@ namespace asivamosffie.services
                         IsValidation = false,
                         Data = null,
                         Code = ConstantMessagesProcesoSeleccion.DependenciaEnEliminacion,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.DependenciaEnEliminacion, idAccionCrearProcesoSeleccion, pUsuarioModificacion,"ELIMINACIÓN CON DEPENDENCIA.")
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.DependenciaEnEliminacion, idAccionCrearProcesoSeleccion, pUsuarioModificacion, "ELIMINACIÓN CON DEPENDENCIA.")
                     };
                 }
 
@@ -624,7 +631,10 @@ namespace asivamosffie.services
                     //Registros
 
                     ProcesoSeleccionCotizacionAntiguo.ProcesoSeleccionCotizacionId = procesoSeleccionCotizacion.ProcesoSeleccionCotizacionId;
-
+                    ProcesoSeleccionCotizacionAntiguo.NombreOrganizacion = procesoSeleccionCotizacion.NombreOrganizacion;
+                    ProcesoSeleccionCotizacionAntiguo.ValorCotizacion = procesoSeleccionCotizacion.ValorCotizacion;
+                    ProcesoSeleccionCotizacionAntiguo.Descripcion = procesoSeleccionCotizacion.Descripcion;
+                    ProcesoSeleccionCotizacionAntiguo.UrlSoporte = procesoSeleccionCotizacion.UrlSoporte;
 
                     ProcesoSeleccionCotizacionAntiguo.Eliminado = false;
 
@@ -660,10 +670,10 @@ namespace asivamosffie.services
 
         public async Task<List<ProcesoSeleccionProponente>> GetProcesoSeleccionProponentes()
         {
-            var proceso= await _context.ProcesoSeleccionProponente.Where(p => p.ProcesoSeleccionProponenteId == p.ProcesoSeleccionProponenteId && !(bool)p.Eliminado).ToListAsync();
-            foreach(var proces in proceso)
+            var proceso = await _context.ProcesoSeleccionProponente.Where(p => p.ProcesoSeleccionProponenteId == p.ProcesoSeleccionProponenteId && !(bool)p.Eliminado).ToListAsync();
+            foreach (var proces in proceso)
             {
-                if(proces.LocalizacionIdMunicipio==null)
+                if (proces.LocalizacionIdMunicipio == null)
                 {
                     proces.municipioString = "Error municipio";
                     proces.departamentoString = "Error departamento";
@@ -675,7 +685,7 @@ namespace asivamosffie.services
                     proces.municipioString = municipio.Descripcion;
                     proces.departamentoString = departamento.Descripcion;
                 }
-                
+
             }
             return proceso;
 
@@ -881,7 +891,7 @@ namespace asivamosffie.services
 
                 if (string.IsNullOrEmpty(cronogramaSeguimiento.CronogramaSeguimientoId.ToString()) || cronogramaSeguimiento.CronogramaSeguimientoId == 0)
                 {
-                    if(cronogramaSeguimiento.EstadoActividadFinalCodigo!=null)
+                    if (cronogramaSeguimiento.EstadoActividadFinalCodigo != null)
                     {
                         //Auditoria
                         strCrearEditar = "CREAR CRONOGRAMA SEGUIMIENTO";
@@ -915,7 +925,7 @@ namespace asivamosffie.services
                             Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion_Cronograma, ConstantMessagesProcesoSeleccion.CamposIncompletos, idAccion, cronogramaSeguimiento.UsuarioCreacion, strCrearEditar)
                         };
                     }
-                    
+
 
                 }
                 else
@@ -996,7 +1006,7 @@ namespace asivamosffie.services
 
                 });
 
-                var procesosel = _context.ProcesoSeleccion.Where(x=>x.NumeroProceso==pProcesoSeleccion.NumeroProceso).FirstOrDefault();
+                var procesosel = _context.ProcesoSeleccion.Where(x => x.NumeroProceso == pProcesoSeleccion.NumeroProceso).FirstOrDefault();
                 procesosel.CantidadProponentes = pProcesoSeleccion.CantidadProponentes;
                 procesosel.UrlSoporteProponentesSeleccionados = pProcesoSeleccion.UrlSoporteProponentesSeleccionados;
                 _context.ProcesoSeleccion.Update(procesosel);
@@ -1027,7 +1037,7 @@ namespace asivamosffie.services
                 };
             }
         }
-         
+
         //Grilla Seguimiento a cronograma
         // public async Task<ActionResult<List<GrillaCronogramaSeguimiento>>> GetViewSchedules(int? ProcesoSeleccionCronogramaId)
         // {
@@ -1056,7 +1066,7 @@ namespace asivamosffie.services
 
         //     return ListGrillaCronogramaSeguimiento;
         // }
-          
+
         public async Task<Respuesta> SetValidateCargueMasivo(IFormFile pFile, string pFilePatch, string pUsuarioCreo, int pProcesoSeleccion)
         {
             int CantidadRegistrosVacios = 0;
@@ -1068,7 +1078,7 @@ namespace asivamosffie.services
             //int OrigenId = await _commonService.GetDominioIdByCodigoAndTipoDominio(OrigenArchivoCargue.Proyecto, (int)EnumeratorTipoDominio.Origen_Documento_Cargue);
             DocumentService _documentService = new DocumentService(_context, _commonService);
 
-            ArchivoCargue archivoCarge = await _documentService.getSaveFile(pFile, pFilePatch, Int32.Parse(OrigenArchivoCargue.OrdeELegibilidad),pProcesoSeleccion);
+            ArchivoCargue archivoCarge = await _documentService.getSaveFile(pFile, pFilePatch, Int32.Parse(OrigenArchivoCargue.OrdeELegibilidad), pProcesoSeleccion);
 
             // if (!string.IsNullOrEmpty(archivoCarge.ArchivoCargueId.ToString()))
             if (archivoCarge != null)
@@ -1089,178 +1099,178 @@ namespace asivamosffie.services
                             /* Columnas Obligatorias de excel
                              2	3	4	5	6	7	8	10	11	12	13	14 28 29 30 31 32		
                             Campos Obligatorios Validos   */
-                            
-
-                                TempOrdenLegibilidad temp = new TempOrdenLegibilidad();
-                                //Auditoria
-                                temp.ArchivoCargueId = archivoCarge.ArchivoCargueId;
-                                temp.EstaValidado = false;
-                                temp.FechaCreacion = DateTime.Now;
-                                temp.UsuarioCreacion = pUsuarioCreo.ToUpper();
-
-                                // #1
-                                //Tipo proponente
-                                temp.TipoProponenteId = Int32.Parse(await _commonService.GetDominioCodigoByNombreDominioAndTipoDominio(worksheet.Cells[i, 1].Text, (int)EnumeratorTipoDominio.Tipo_Proponente));
 
 
-                                //#2
-                                //Nombre proponente
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 2].Text))
-                                {
-                                    temp.NombreProponente = worksheet.Cells[i, 2].Text.ToUpper();
-                                }
+                            TempOrdenLegibilidad temp = new TempOrdenLegibilidad();
+                            //Auditoria
+                            temp.ArchivoCargueId = archivoCarge.ArchivoCargueId;
+                            temp.EstaValidado = false;
+                            temp.FechaCreacion = DateTime.Now;
+                            temp.UsuarioCreacion = pUsuarioCreo.ToUpper();
 
-                                //#3
-                                //Identificacion del proponente
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 3].Text)) { temp.NumeroIddentificacionProponente = worksheet.Cells[i, 3].Text; } else { temp.NumeroIddentificacionProponente = string.Empty; }
-
-
-                                //#5
-                                //Departamento domicilio proponente
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 4].Text)) { temp.Departamento = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 4].Text, "0"); } else { temp.Departamento = 0; }
-
-                                //#5
-                                //Municipio proponente///aqui debe recibir el parametro iddepartamento, pueden haber municipios del mismo nombre para diferente departamento
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 5].Text))
-                                {
-                                    int DepartamentoId = temp.Departamento = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 4].Text, "0");
-                                    temp.Minicipio = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 5].Text, DepartamentoId.ToString());//temp.Departamento.ToString()
-
-                                }
-                                else
-                                {
-                                    temp.Minicipio = 0;
-                                }
-
-                                //#6
-                                //Direccion del proponente
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 6].Text)) { temp.Direccion = Convert.ToString(worksheet.Cells[i, 6].Text).ToUpper(); } else { temp.Direccion = string.Empty; }
-
-                                //#7
-                                //Telefono del proponente
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 7].Text)) { temp.Telefono = Convert.ToString(worksheet.Cells[i, 7].Text); } else { temp.Telefono = string.Empty; }
-
-                                //#8
-                                //Correo del proponente
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 8].Text)) { temp.Correo = Convert.ToString(worksheet.Cells[i, 8].Text).ToUpper(); } else { temp.Correo = string.Empty; }
-
-                                //#9
-                                //Correo del proponente
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 9].Text)) { temp.NombreEntidad = Convert.ToString(worksheet.Cells[i, 9].Text); } else { temp.NombreEntidad = string.Empty; }
-
-                                //#10
-                                //Correo del proponente
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 10].Text))
-                                {
-                                    temp.IdentificacionTributaria = Convert.ToInt32(worksheet.Cells[i, 10].Text) > 0 ? Int32.Parse(worksheet.Cells[i, 10].Text) : 0;
-                                }
-
-                                //#11
-                                //Correo del proponente
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 11].Text))
-                                {
-                                    temp.RepresentanteLegal = Convert.ToString(worksheet.Cells[i, 11].Text) != string.Empty ? Convert.ToString(worksheet.Cells[i, 11].Text).ToUpper() : "";
-                                }
-                                else
-                                {
-                                    temp.RepresentanteLegal = string.Empty;
-                                }
-
-                                //#12
-                                //Correo del proponente
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 12].Text))
-                                {
-                                    temp.CedulaRepresentanteLegal = Convert.ToInt32(worksheet.Cells[i, 12].Text) > 0 ? Int32.Parse(worksheet.Cells[i, 12].Text) : 0;
-                                }
+                            // #1
+                            //Tipo proponente
+                            temp.TipoProponenteId = Int32.Parse(await _commonService.GetDominioCodigoByNombreDominioAndTipoDominio(worksheet.Cells[i, 1].Text, (int)EnumeratorTipoDominio.Tipo_Proponente));
 
 
-                                //#13
-                                //Correo del proponente
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 13].Text))
-                                {
-                                    temp.DepartamentoRl = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 13].Text, "0");
-                                }
+                            //#2
+                            //Nombre proponente
+                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 2].Text))
+                            {
+                                temp.NombreProponente = worksheet.Cells[i, 2].Text.ToUpper();
+                            }
 
-                                //#14
-                                //Municipio representante legal
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 14].Text))
-                                {
-                                    int DepartamentoIdRL = temp.Departamento = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 13].Text, "0");
-                                    temp.MunucipioRl = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 14].Text, DepartamentoIdRL.ToString());//temp.Departamento.ToString()
-                                }
-
-                                //#15
-                                //Direccion Representante Legal
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 15].Text)) { temp.DireccionRl = worksheet.Cells[i, 15].Text.ToUpper(); } else { temp.DireccionRl = string.Empty; }
-
-                                //#16
-                                //Telefono Representante Legal
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 16].Text)) { temp.TelefonoRl = worksheet.Cells[i, 16].Text; } else { temp.TelefonoRl = string.Empty; }
-
-                                //#17
-                                //Correo Representante Legal
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 17].Text)) { temp.CorreoRl = worksheet.Cells[i, 17].Text.ToUpper(); } else { temp.CorreoRl = string.Empty; }
-
-                                //#18
-                                //Nombre del representante legal del la UT o consorcio
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 18].Text)) { temp.NombreOtoConsorcio = worksheet.Cells[i, 18].Text.ToUpper(); } else { temp.NombreOtoConsorcio = string.Empty; }
-
-                                //#19
-                                //Entiddaes que integran la union temporal
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 19].Text))
-                                {
-                                    temp.EntiddaesQueIntegranLaUnionTemporal = Convert.ToInt32(worksheet.Cells[i, 19].Text) >= 0 ? Int32.Parse(worksheet.Cells[i, 19].Text) : 0;
-                                }
+                            //#3
+                            //Identificacion del proponente
+                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 3].Text)) { temp.NumeroIddentificacionProponente = worksheet.Cells[i, 3].Text; } else { temp.NumeroIddentificacionProponente = string.Empty; }
 
 
-                                //#20
-                                //Nombre integrante
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 20].Text)) { temp.NombreIntegrante = worksheet.Cells[i, 20].Text.ToUpper(); } else { temp.NombreIntegrante = string.Empty; }
+                            //#5
+                            //Departamento domicilio proponente
+                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 4].Text)) { temp.Departamento = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 4].Text, "0"); } else { temp.Departamento = 0; }
+
+                            //#5
+                            //Municipio proponente///aqui debe recibir el parametro iddepartamento, pueden haber municipios del mismo nombre para diferente departamento
+                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 5].Text))
+                            {
+                                int DepartamentoId = temp.Departamento = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 4].Text, "0");
+                                temp.Minicipio = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 5].Text, DepartamentoId.ToString());//temp.Departamento.ToString()
+
+                            }
+                            else
+                            {
+                                temp.Minicipio = 0;
+                            }
+
+                            //#6
+                            //Direccion del proponente
+                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 6].Text)) { temp.Direccion = Convert.ToString(worksheet.Cells[i, 6].Text).ToUpper(); } else { temp.Direccion = string.Empty; }
+
+                            //#7
+                            //Telefono del proponente
+                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 7].Text)) { temp.Telefono = Convert.ToString(worksheet.Cells[i, 7].Text); } else { temp.Telefono = string.Empty; }
+
+                            //#8
+                            //Correo del proponente
+                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 8].Text)) { temp.Correo = Convert.ToString(worksheet.Cells[i, 8].Text).ToUpper(); } else { temp.Correo = string.Empty; }
+
+                            //#9
+                            //Correo del proponente
+                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 9].Text)) { temp.NombreEntidad = Convert.ToString(worksheet.Cells[i, 9].Text); } else { temp.NombreEntidad = string.Empty; }
+
+                            //#10
+                            //Correo del proponente
+                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 10].Text))
+                            {
+                                temp.IdentificacionTributaria = Convert.ToInt32(worksheet.Cells[i, 10].Text) > 0 ? Int32.Parse(worksheet.Cells[i, 10].Text) : 0;
+                            }
+
+                            //#11
+                            //Correo del proponente
+                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 11].Text))
+                            {
+                                temp.RepresentanteLegal = Convert.ToString(worksheet.Cells[i, 11].Text) != string.Empty ? Convert.ToString(worksheet.Cells[i, 11].Text).ToUpper() : "";
+                            }
+                            else
+                            {
+                                temp.RepresentanteLegal = string.Empty;
+                            }
+
+                            //#12
+                            //Correo del proponente
+                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 12].Text))
+                            {
+                                temp.CedulaRepresentanteLegal = Convert.ToInt32(worksheet.Cells[i, 12].Text) > 0 ? Int32.Parse(worksheet.Cells[i, 12].Text) : 0;
+                            }
 
 
-                                //#21
-                                //Porcentaje participacion
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 21].Text))
-                                {
-                                    temp.PorcentajeParticipacion = Convert.ToDecimal(worksheet.Cells[i, 21].Text.Replace("%","")) >= 0 ? Int32.Parse(worksheet.Cells[i, 21].Text.Replace("%", "")) : 0;
-                                }
+                            //#13
+                            //Correo del proponente
+                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 13].Text))
+                            {
+                                temp.DepartamentoRl = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 13].Text, "0");
+                            }
+
+                            //#14
+                            //Municipio representante legal
+                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 14].Text))
+                            {
+                                int DepartamentoIdRL = temp.Departamento = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 13].Text, "0");
+                                temp.MunucipioRl = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 14].Text, DepartamentoIdRL.ToString());//temp.Departamento.ToString()
+                            }
+
+                            //#15
+                            //Direccion Representante Legal
+                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 15].Text)) { temp.DireccionRl = worksheet.Cells[i, 15].Text.ToUpper(); } else { temp.DireccionRl = string.Empty; }
+
+                            //#16
+                            //Telefono Representante Legal
+                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 16].Text)) { temp.TelefonoRl = worksheet.Cells[i, 16].Text; } else { temp.TelefonoRl = string.Empty; }
+
+                            //#17
+                            //Correo Representante Legal
+                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 17].Text)) { temp.CorreoRl = worksheet.Cells[i, 17].Text.ToUpper(); } else { temp.CorreoRl = string.Empty; }
+
+                            //#18
+                            //Nombre del representante legal del la UT o consorcio
+                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 18].Text)) { temp.NombreOtoConsorcio = worksheet.Cells[i, 18].Text.ToUpper(); } else { temp.NombreOtoConsorcio = string.Empty; }
+
+                            //#19
+                            //Entiddaes que integran la union temporal
+                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 19].Text))
+                            {
+                                temp.EntiddaesQueIntegranLaUnionTemporal = Convert.ToInt32(worksheet.Cells[i, 19].Text) >= 0 ? Int32.Parse(worksheet.Cells[i, 19].Text) : 0;
+                            }
 
 
-                                //#22
-                                //Nombre  del representante legal de la UT o consorcio
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 22].Text)) { temp.NombreRlutoConsorcio = worksheet.Cells[i, 22].Text.ToUpper(); } else { temp.NombreRlutoConsorcio = string.Empty; }
-
-                                //#23
-                                //Cedula  del representante legal de la UT o consorcio
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 23].Text))
-                                {
-                                    temp.CcrlutoConsorcio = Convert.ToInt32(worksheet.Cells[i, 23].Text.Replace("%", "")) >= 0 ? Int32.Parse(worksheet.Cells[i, 23].Text.Replace("%", "")) : 0;
-                                }
+                            //#20
+                            //Nombre integrante
+                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 20].Text)) { temp.NombreIntegrante = worksheet.Cells[i, 20].Text.ToUpper(); } else { temp.NombreIntegrante = string.Empty; }
 
 
-                                //#24
-                                //Cedula  del representante legal de la UT o consorcio
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 24].Text)) { temp.DepartamentoRlutoConsorcio = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 24].Text, "0"); }
+                            //#21
+                            //Porcentaje participacion
+                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 21].Text))
+                            {
+                                temp.PorcentajeParticipacion = Convert.ToDecimal(worksheet.Cells[i, 21].Text.Replace("%", "")) >= 0 ? Int32.Parse(worksheet.Cells[i, 21].Text.Replace("%", "")) : 0;
+                            }
 
-                                //#25
-                                //Municipio  del representante legal de la UT o consorcio
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 25].Text))
-                                {
-                                    int DepartamentoIdConsorcio = temp.Departamento = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 24].Text, "0");
-                                    temp.MinicipioRlutoConsorcio = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 25].Text, DepartamentoIdConsorcio.ToString());
-                                }
 
-                                //#26
-                                //Direccion  del representante legal de la UT o consorcio
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 26].Text)) { temp.DireccionRlutoConsorcio = worksheet.Cells[i, 26].Text.ToUpper(); } else { temp.DireccionRlutoConsorcio = string.Empty; }
+                            //#22
+                            //Nombre  del representante legal de la UT o consorcio
+                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 22].Text)) { temp.NombreRlutoConsorcio = worksheet.Cells[i, 22].Text.ToUpper(); } else { temp.NombreRlutoConsorcio = string.Empty; }
 
-                                //#27
-                                //Telefono  del representante legal de la UT o consorcio
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 27].Text)) { temp.TelefonoRlutoConsorcio = worksheet.Cells[i, 27].Text; } else { temp.TelefonoRlutoConsorcio = string.Empty; }
+                            //#23
+                            //Cedula  del representante legal de la UT o consorcio
+                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 23].Text))
+                            {
+                                temp.CcrlutoConsorcio = Convert.ToInt32(worksheet.Cells[i, 23].Text.Replace("%", "")) >= 0 ? Int32.Parse(worksheet.Cells[i, 23].Text.Replace("%", "")) : 0;
+                            }
 
-                                //#28
-                                //Correo  del representante legal de la UT o consorcio
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 28].Text)) { temp.CorreoRlutoConsorcio = worksheet.Cells[i, 28].Text.ToUpper(); } else { temp.CorreoRlutoConsorcio = string.Empty; }
+
+                            //#24
+                            //Cedula  del representante legal de la UT o consorcio
+                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 24].Text)) { temp.DepartamentoRlutoConsorcio = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 24].Text, "0"); }
+
+                            //#25
+                            //Municipio  del representante legal de la UT o consorcio
+                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 25].Text))
+                            {
+                                int DepartamentoIdConsorcio = temp.Departamento = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 24].Text, "0");
+                                temp.MinicipioRlutoConsorcio = await _commonService.GetLocalizacionIdByName(worksheet.Cells[i, 25].Text, DepartamentoIdConsorcio.ToString());
+                            }
+
+                            //#26
+                            //Direccion  del representante legal de la UT o consorcio
+                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 26].Text)) { temp.DireccionRlutoConsorcio = worksheet.Cells[i, 26].Text.ToUpper(); } else { temp.DireccionRlutoConsorcio = string.Empty; }
+
+                            //#27
+                            //Telefono  del representante legal de la UT o consorcio
+                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 27].Text)) { temp.TelefonoRlutoConsorcio = worksheet.Cells[i, 27].Text; } else { temp.TelefonoRlutoConsorcio = string.Empty; }
+
+                            //#28
+                            //Correo  del representante legal de la UT o consorcio
+                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 28].Text)) { temp.CorreoRlutoConsorcio = worksheet.Cells[i, 28].Text.ToUpper(); } else { temp.CorreoRlutoConsorcio = string.Empty; }
 
 
                             //Guarda Cambios en una tabla temporal
@@ -1399,56 +1409,157 @@ namespace asivamosffie.services
             //depende del tipo
             if (procesoSeleccion.TipoProcesoCodigo == ConstanCodigoTipoProcesoSeleccion.Invitacion_Abierta)
             {
+                bool esCompleto = true;
+
                 if (
-                 !string.IsNullOrEmpty(procesoSeleccion.Objeto)
-                 && !string.IsNullOrEmpty(procesoSeleccion.AlcanceParticular)
-                 && !string.IsNullOrEmpty(procesoSeleccion.Justificacion)
-                 && !string.IsNullOrEmpty(procesoSeleccion.TipoIntervencionCodigo)
-                 && !string.IsNullOrEmpty(procesoSeleccion.TipoAlcanceCodigo)
-                 && !string.IsNullOrEmpty(procesoSeleccion.TipoProcesoCodigo)
-                 && !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.EsDistribucionGrupos))
-                 && !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableTecnicoUsuarioId))
-                 && !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableEstructuradorUsuarioid))
-                 && !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesAsignacionPuntaje))
-                 && !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesFinancierasHabilitantes))
-                 && !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesJuridicasHabilitantes))
-                 && !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesTecnicasHabilitantes))
+                     string.IsNullOrEmpty(procesoSeleccion.Objeto) ||
+                     string.IsNullOrEmpty(procesoSeleccion.AlcanceParticular) ||
+                     string.IsNullOrEmpty(procesoSeleccion.Justificacion) ||
+                     string.IsNullOrEmpty(procesoSeleccion.TipoIntervencionCodigo) ||
+                     string.IsNullOrEmpty(procesoSeleccion.TipoAlcanceCodigo) ||
+                     string.IsNullOrEmpty(procesoSeleccion.TipoProcesoCodigo) ||
+                     string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.EsDistribucionGrupos)) 
+                     //string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableTecnicoUsuarioId)) ||
+                     //string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableEstructuradorUsuarioid)) ||
+                     //string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesAsignacionPuntaje)) ||
+                     //string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesFinancierasHabilitantes)) ||
+                     //string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesJuridicasHabilitantes)) ||
+                     //string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesTecnicasHabilitantes)) 
 
                 )
-                    return true;
-                else
-                    return false;
+                    esCompleto = false;
+
+                if (procesoSeleccion.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.AprobadaAperturaPorComiteFiduciario)
+                {
+                    if (
+                     string.IsNullOrEmpty(procesoSeleccion.EvaluacionDescripcion) ||
+                     string.IsNullOrEmpty(procesoSeleccion.UrlSoporteEvaluacion) ||
+                     procesoSeleccion.ProcesoSeleccionProponente == null || 
+                     procesoSeleccion.ProcesoSeleccionProponente.Count() == 0
+                     
+
+                )
+                        esCompleto = false;
+                }
+
+                return esCompleto;
             }
-            else
+            else if (procesoSeleccion.TipoProcesoCodigo == ConstanCodigoTipoProcesoSeleccion.Invitacion_Privada)
             {
+                bool esCompleto = true;
                 if (
-                 !string.IsNullOrEmpty(procesoSeleccion.Objeto)
-                 && !string.IsNullOrEmpty(procesoSeleccion.AlcanceParticular)
-                 && !string.IsNullOrEmpty(procesoSeleccion.Justificacion)
-                 //|| !string.IsNullOrEmpty(procesoSeleccion.CriteriosSeleccion)
-                 && !string.IsNullOrEmpty(procesoSeleccion.TipoIntervencionCodigo)
-                 && !string.IsNullOrEmpty(procesoSeleccion.TipoAlcanceCodigo)
-                 && !string.IsNullOrEmpty(procesoSeleccion.TipoProcesoCodigo)
-                 //|| !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.EsDistribucionGrupos))
-                 //|| !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CantGrupos))
-                 && !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableTecnicoUsuarioId))
-                 && !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableEstructuradorUsuarioid))
-                 //|| !string.IsNullOrEmpty(procesoSeleccion.CondicionesJuridicasHabilitantes)
-                 //|| !string.IsNullOrEmpty(procesoSeleccion.CondicionesFinancierasHabilitantes)
-                 //|| !string.IsNullOrEmpty(procesoSeleccion.CondicionesAsignacionPuntaje)
-                 && !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CantidadCotizaciones))
-                 //|| !string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CantidadProponentes))
-                 && !string.IsNullOrEmpty(procesoSeleccion.EstadoProcesoSeleccionCodigo)
-                 && !string.IsNullOrEmpty(procesoSeleccion.EtapaProcesoSeleccionCodigo)
-                //|| !string.IsNullOrEmpty(procesoSeleccion.EvaluacionDescripcion)
-                //|| !string.IsNullOrEmpty(procesoSeleccion.UrlSoporteEvaluacion)
-                //|| !string.IsNullOrEmpty(procesoSeleccion.TipoOrdenEligibilidadCodigo)
+                 string.IsNullOrEmpty(procesoSeleccion.Objeto) ||
+                 string.IsNullOrEmpty(procesoSeleccion.AlcanceParticular) ||
+                 string.IsNullOrEmpty(procesoSeleccion.Justificacion) ||
+                 string.IsNullOrEmpty(procesoSeleccion.TipoIntervencionCodigo) ||
+                 string.IsNullOrEmpty(procesoSeleccion.TipoAlcanceCodigo) ||
+                 //string.IsNullOrEmpty(procesoSeleccion.TipoProcesoCodigo) ||
+                 //string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableTecnicoUsuarioId)) ||
+                 //string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableEstructuradorUsuarioid)) ||
+                 string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CantidadCotizaciones)) ||
+                 string.IsNullOrEmpty(procesoSeleccion.EstadoProcesoSeleccionCodigo) ||
+                 string.IsNullOrEmpty(procesoSeleccion.EtapaProcesoSeleccionCodigo) 
 
                 )
-                    return true;
-                else
-                    return false;
+                    esCompleto = false;
+
+                if (procesoSeleccion.ProcesoSeleccionProponente.Count() == 0)
+                {
+                    esCompleto = false;
+                }
+
+                procesoSeleccion.ProcesoSeleccionProponente.ToList().ForEach(psp =>
+               {
+                   if ( psp.TipoProponenteCodigo == ConstanCodigoTipoProponente.Persona_Juridica_Union_Temporal_o_Consorcio )
+                   if (
+                         string.IsNullOrEmpty(psp.NombreProponente) ||
+                         string.IsNullOrEmpty(psp.CedulaRepresentanteLegal) ||
+
+                         //string.IsNullOrEmpty(psp.NumeroIdentificacion) ||
+                         string.IsNullOrEmpty(psp.TipoProponenteCodigo) ||
+                         psp.LocalizacionIdMunicipio == null ||
+                         string.IsNullOrEmpty(psp.DireccionProponente) ||
+                         string.IsNullOrEmpty(psp.TelefonoProponente) ||
+                         string.IsNullOrEmpty(psp.EmailProponente)
+                   )
+                       esCompleto = false;
+
+                   if (psp.TipoProponenteCodigo == ConstanCodigoTipoProponente.Persona_Juridica_Individual)
+                       if (
+                             string.IsNullOrEmpty(psp.NombreProponente) ||
+                             string.IsNullOrEmpty(psp.NombreRepresentanteLegal) ||
+                             string.IsNullOrEmpty(psp.CedulaRepresentanteLegal) ||
+                             string.IsNullOrEmpty(psp.NumeroIdentificacion) ||
+                             string.IsNullOrEmpty(psp.TipoProponenteCodigo) ||
+                             psp.LocalizacionIdMunicipio == null ||
+                             string.IsNullOrEmpty(psp.DireccionProponente) ||
+                             string.IsNullOrEmpty(psp.TelefonoProponente) ||
+                             string.IsNullOrEmpty(psp.EmailProponente)
+                       )
+                           esCompleto = false;
+
+                   if (psp.TipoProponenteCodigo == ConstanCodigoTipoProponente.Personal_Natural)
+                       if (
+                             string.IsNullOrEmpty(psp.NombreProponente) ||
+                             string.IsNullOrEmpty(psp.NumeroIdentificacion) ||
+                             string.IsNullOrEmpty(psp.TipoProponenteCodigo) ||
+                             psp.LocalizacionIdMunicipio == null ||
+                             string.IsNullOrEmpty(psp.DireccionProponente) ||
+                             string.IsNullOrEmpty(psp.TelefonoProponente) ||
+                             string.IsNullOrEmpty(psp.EmailProponente)
+                       )
+                           esCompleto = false;
+               });
+
+                procesoSeleccion.ProcesoSeleccionCotizacion.ToList().ForEach(psc =>
+               {
+                   if (
+                          string.IsNullOrEmpty(psc.NombreOrganizacion) ||
+                          psc.ValorCotizacion == null ||
+                          string.IsNullOrEmpty( psc.Descripcion ) ||
+                          string.IsNullOrEmpty( psc.UrlSoporte )
+                       )
+                       esCompleto = false;
+               });
+
+                return esCompleto;
             }
+            else if (procesoSeleccion.TipoProcesoCodigo == ConstanCodigoTipoProcesoSeleccion.Invitacion_Cerrada)
+            {
+                bool esCompleto = true;
+
+                if (
+                 string.IsNullOrEmpty(procesoSeleccion.Objeto) ||
+                 string.IsNullOrEmpty(procesoSeleccion.AlcanceParticular) ||
+                 string.IsNullOrEmpty(procesoSeleccion.Justificacion) ||
+                 string.IsNullOrEmpty(procesoSeleccion.TipoIntervencionCodigo) ||
+                 string.IsNullOrEmpty(procesoSeleccion.TipoAlcanceCodigo) ||
+                 string.IsNullOrEmpty(procesoSeleccion.TipoProcesoCodigo) ||
+                 string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableTecnicoUsuarioId)) ||
+                 string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableEstructuradorUsuarioid)) ||
+                 string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CantidadCotizaciones)) ||
+                 string.IsNullOrEmpty(procesoSeleccion.EstadoProcesoSeleccionCodigo) ||
+                 string.IsNullOrEmpty(procesoSeleccion.EtapaProcesoSeleccionCodigo)
+                )
+                    esCompleto = false;
+
+                procesoSeleccion.ProcesoSeleccionCotizacion.ToList().ForEach(psc =>
+               {
+                   if (
+                        string.IsNullOrEmpty(psc.NombreOrganizacion) ||
+                        psc.ValorCotizacion == null ||
+                        string.IsNullOrEmpty(psc.Descripcion) ||
+                        string.IsNullOrEmpty(psc.UrlSoporte) 
+                   )
+                       esCompleto = false;
+
+               });
+
+                return esCompleto;
+                       
+            }
+
+            return false;
 
         }
 
@@ -1471,7 +1582,6 @@ namespace asivamosffie.services
             }
             try
             {
-
 
                 int OrigenId = await _commonService.GetDominioIdByCodigoAndTipoDominio(OrigenArchivoCargue.OrdeELegibilidad, (int)EnumeratorTipoDominio.Origen_Documento_Cargue);
 
@@ -1502,7 +1612,7 @@ namespace asivamosffie.services
                             CedulaRepresentanteLegal = tempOrdenLegibilidad.CedulaRepresentanteLegal.ToString(),
                             Eliminado = false,
                             FechaCreacion = DateTime.Now,
-                            UsuarioCreacion= pUsuarioModifico
+                            UsuarioCreacion = pUsuarioModifico
                         };
 
                         _context.ProcesoSeleccionProponente.Add(procesoSeleccionProponente);
@@ -1548,6 +1658,11 @@ namespace asivamosffie.services
                         _context.TempOrdenLegibilidad.Update(tempOrdenLegibilidad);
                         _context.SaveChanges();
                     }
+
+                    ProcesoSeleccion procesoSeleccion = _context.ProcesoSeleccion.Find(procesoSeleccionId);
+                    procesoSeleccion.EsCompleto = EsCompleto(procesoSeleccion);
+
+                    _context.SaveChanges();
 
 
                     return respuesta =
@@ -1597,11 +1712,24 @@ namespace asivamosffie.services
             try
             {
                 var procesoSeleccionCot = _context.ProcesoSeleccionCotizacion.Find(procesoSeleccionCotizacionId);
-                procesoSeleccionCot.Eliminado = true;
-                procesoSeleccionCot.UsuarioModificacion = usuarioModificacion;
-                procesoSeleccionCot.FechaModificacion = DateTime.Now;
-                _context.Update(procesoSeleccionCot);
-                _context.SaveChanges();
+
+                if ( procesoSeleccionCot != null)
+                {
+                    procesoSeleccionCot.Eliminado = true;
+                    procesoSeleccionCot.UsuarioModificacion = usuarioModificacion;
+                    procesoSeleccionCot.FechaModificacion = DateTime.Now;
+                    _context.Update(procesoSeleccionCot);
+                    _context.SaveChanges();
+
+                    var procesoSeleccion = _context.ProcesoSeleccion
+                                                        .Where(r => r.ProcesoSeleccionId == procesoSeleccionCot.ProcesoSeleccionId)
+                                                        .Include(r => r.ProcesoSeleccionCotizacion)
+                                                        .FirstOrDefault();
+
+                    procesoSeleccion.CantidadCotizaciones = procesoSeleccion.ProcesoSeleccionCotizacion.Where(r => r.Eliminado != true).Count();
+                }
+
+
                 return respuesta =
                     new Respuesta
                     {
@@ -1630,17 +1758,31 @@ namespace asivamosffie.services
         /*autor: jflorez
             descripción: borra lOS GRUPOS en editar
             impacto: CU 3.1.3*/
-        public async Task<Respuesta> deleteProcesoSeleccionGrupoByID(int procesoSeleccionCotizacionId, string usuarioModificacion)
+        public async Task<Respuesta> deleteProcesoSeleccionGrupoByID(int procesoSeleccionGrupoId, string usuarioModificacion)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
-                var procesoSeleccionCot = _context.ProcesoSeleccionGrupo.Find(procesoSeleccionCotizacionId);
-                procesoSeleccionCot.Eliminado = true;
-                procesoSeleccionCot.UsuarioModificacion = usuarioModificacion;
-                procesoSeleccionCot.FechaModificacion = DateTime.Now;
-                _context.Update(procesoSeleccionCot);
-                _context.SaveChanges();
+                var procesoSeleccionCot = _context.ProcesoSeleccionGrupo.Find(procesoSeleccionGrupoId);
+
+                if (procesoSeleccionCot != null)
+                {
+                    
+
+                    procesoSeleccionCot.Eliminado = true;
+                    procesoSeleccionCot.UsuarioModificacion = usuarioModificacion;
+                    procesoSeleccionCot.FechaModificacion = DateTime.Now;
+                    _context.SaveChanges();
+
+                    ProcesoSeleccion procesoSeleccion = _context.ProcesoSeleccion
+                                                                    .Where( r => r.ProcesoSeleccionId == procesoSeleccionCot.ProcesoSeleccionId)
+                                                                    .Include( r => r.ProcesoSeleccionGrupo )
+                                                                    .FirstOrDefault();
+
+                    procesoSeleccion.CantGrupos = procesoSeleccion.ProcesoSeleccionGrupo.Where(r => r.Eliminado != true).Count();
+                    _context.SaveChanges();
+                }
+                
                 return respuesta =
                     new Respuesta
                     {
@@ -1711,7 +1853,7 @@ namespace asivamosffie.services
         public async Task<List<string>> getObservacionesProcesoSeleccionProponentes(int id)
         {
             //  return _context.ProcesoSeleccionObservacion.Where(x => x.ProcesoSeleccionId == id).ToList();
-            return _context.SesionComiteSolicitud.Where(x=>x.TipoSolicitudCodigo==ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion && !(bool)x.Eliminado && x.SolicitudId==id).Select(y=>y.Observaciones).ToList();
+            return _context.SesionComiteSolicitud.Where(x => x.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion && !(bool)x.Eliminado && x.SolicitudId == id).Select(y => y.Observaciones).ToList();
         }
 
         public async Task<Respuesta> DeleteProcesoSeleccionCronogramaMonitoreo(int pId, string usuarioCreacion)
@@ -1841,14 +1983,14 @@ namespace asivamosffie.services
          resumen: tarea programada para enviar mensaje al equipo estructurador cuando se vence una actividad*/
         public async Task getActividadesVencidas(string dominioFront, string mailServer, int mailPort, bool enableSSL, string password, string sender)
         {
-            var tareas = _context.ProcesoSeleccionCronograma.Where(x => x.FechaMaxima < DateTime.Now && !(bool)x.Eliminado && x.ProcesoSeleccion.ResponsableEstructuradorUsuarioid!=null && x.CronogramaSeguimiento.Count() == 0).Select(x=>new { x.ProcesoSeleccion.NumeroProceso,x.ProcesoSeleccion.ResponsableEstructuradorUsuarioid }).ToList();            
-            
-            foreach (var tarea in tareas.Select(x=>x.ResponsableEstructuradorUsuarioid).Distinct())
+            var tareas = _context.ProcesoSeleccionCronograma.Where(x => x.FechaMaxima < DateTime.Now && !(bool)x.Eliminado && x.ProcesoSeleccion.ResponsableEstructuradorUsuarioid != null && x.CronogramaSeguimiento.Count() == 0).Select(x => new { x.ProcesoSeleccion.NumeroProceso, x.ProcesoSeleccion.ResponsableEstructuradorUsuarioid }).ToList();
+
+            foreach (var tarea in tareas.Select(x => x.ResponsableEstructuradorUsuarioid).Distinct())
             {
-                string texto = string.Join("<br>", tareas.Where(x=>x.ResponsableEstructuradorUsuarioid==tarea).Select(x => x.NumeroProceso));
+                string texto = string.Join("<br>", tareas.Where(x => x.ResponsableEstructuradorUsuarioid == tarea).Select(x => x.NumeroProceso));
                 var usuarioenvio = _context.Usuario.Find(tarea);
                 Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.ActividadesNoMonitoreadasProcesoSeleccion);
-                string template = TemplateRecoveryPassword.Contenido.Replace("_LinkF_", dominioFront).Replace("[TablaSolicitudes]",texto);
+                string template = TemplateRecoveryPassword.Contenido.Replace("_LinkF_", dominioFront).Replace("[TablaSolicitudes]", texto);
                 bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioenvio.Email, "Actividades procesos de selección", template, sender, password, mailServer, mailPort);
             }
         }
