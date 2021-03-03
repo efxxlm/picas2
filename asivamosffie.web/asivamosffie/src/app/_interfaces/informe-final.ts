@@ -65,5 +65,6 @@ export interface InformeFinalInterventoriaObservaciones{
         observaciones?: string,
         esSupervision?: boolean,
         esCalificacion?: boolean,
-        esApoyo?: boolean
+        esApoyo?: boolean,
+        archivado?: boolean,
 }

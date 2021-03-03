@@ -66,8 +66,11 @@ namespace asivamosffie.services
             //Flujo observaciones recibo de satisfacción
             if (proyecto.InformeFinal.Count >0)
             {
-                proyecto.InformeFinal.FirstOrDefault().HistorialInformeFinalInterventoriaObservaciones = _context.InformeFinalObservaciones.Where(r => r.EsSupervision == true && r.Archivado == true && r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId).ToList();
-                proyecto.InformeFinal.FirstOrDefault().ObservacionVigenteSupervisor = _context.InformeFinalObservaciones.Where(r => r.EsSupervision == true && r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && (r.Archivado == false || r.Archivado == null)).FirstOrDefault();
+                if (proyecto.InformeFinal.FirstOrDefault().EstadoInforme == ConstantCodigoEstadoInformeFinal.Con_Observaciones_del_supervisor || proyecto.InformeFinal.FirstOrDefault().EstadoInforme == ConstantCodigoEstadoInformeFinal.Modificado_interventor_completo)
+                {
+                    proyecto.InformeFinal.FirstOrDefault().HistorialInformeFinalInterventoriaObservaciones = _context.InformeFinalObservaciones.Where(r => r.EsSupervision == true && r.Archivado == true && r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId).ToList();
+                    proyecto.InformeFinal.FirstOrDefault().ObservacionVigenteSupervisor = _context.InformeFinalObservaciones.Where(r => r.EsSupervision == true && r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && (r.Archivado == false || r.Archivado == null)).FirstOrDefault();
+                }
             }
 
             ListContratacion.FirstOrDefault().Contratacion.TipoContratacionCodigo = TipoObraIntervencion.Where(r => r.Codigo == ListContratacion.FirstOrDefault().Contratacion.TipoSolicitudCodigo).Select(r => r.Nombre).FirstOrDefault();
@@ -458,17 +461,23 @@ namespace asivamosffie.services
                                                                    CalificacionCodigo = pInformeFinalInterventoriaId.CalificacionCodigo,
                                                                    TieneModificacionInterventor = pInformeFinalInterventoriaId.TieneModificacionInterventor
                                                                });
-                    ///Actualiza o crea observaciones segun el caso (Sólo calificación)
-                    foreach (InformeFinalInterventoriaObservaciones informeFinalInterventoriaObservaciones in pInformeFinalInterventoriaId.InformeFinalInterventoriaObservaciones)
+                    if (pInformeFinalInterventoriaId.CalificacionCodigo == ConstantCodigoCalificacionInformeFinal.No_Cumple)
                     {
-                        informeFinalInterventoriaObservaciones.UsuarioCreacion = pInformeFinalInterventoriaId.UsuarioCreacion.ToUpper();
-                        await this.CreateEditInformeFinalInterventoriaObservacion(informeFinalInterventoriaObservaciones);
+                        ///Actualiza o crea observaciones segun el caso (Sólo calificación)
+                        foreach (InformeFinalInterventoriaObservaciones informeFinalInterventoriaObservaciones in pInformeFinalInterventoriaId.InformeFinalInterventoriaObservaciones)
+                        {
+                            informeFinalInterventoriaObservaciones.UsuarioCreacion = pInformeFinalInterventoriaId.UsuarioCreacion.ToUpper();
+                            await this.CreateEditInformeFinalInterventoriaObservacion(informeFinalInterventoriaObservaciones);
+                        }
                     }
 
-                    //Actualiza o crea anexos segun el caso (Sólo calificación)
-                    if (pInformeFinalInterventoriaId.InformeFinalAnexo != null)
+                    if (pInformeFinalInterventoriaId.CalificacionCodigo == ConstantCodigoCalificacionInformeFinal.Cumple)
                     {
-                        await this.CreateEditInformeFinalAnexo(pInformeFinalInterventoriaId.InformeFinalAnexo, pInformeFinalInterventoriaId.InformeFinalInterventoriaId);
+                        //Actualiza o crea anexos segun el caso (Sólo calificación)
+                        if (pInformeFinalInterventoriaId.InformeFinalAnexo != null)
+                        {
+                            await this.CreateEditInformeFinalAnexo(pInformeFinalInterventoriaId.InformeFinalAnexo, pInformeFinalInterventoriaId.InformeFinalInterventoriaId);
+                        }
                     }
                 }
                 ///_context.SaveChanges();

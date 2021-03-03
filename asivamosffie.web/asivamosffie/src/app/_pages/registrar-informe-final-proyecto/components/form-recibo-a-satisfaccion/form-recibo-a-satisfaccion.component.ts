@@ -60,17 +60,19 @@ export class FormReciboASatisfaccionComponent implements OnInit {
       if(this.report.proyecto.informeFinal[0].estadoInforme === '4' && (!this.report.proyecto.informeFinal[0].tieneObservacionesSupervisor || this.report.proyecto.informeFinal[0].tieneObservacionesSupervisor == null )){
         this.verDetalle = true;
       }
-      if(this.report.proyecto.informeFinal[0].tieneObservacionesSupervisor){
-        this.tieneObservacionesSupervisor = true;
-      }
 
       if(this.report.proyecto.informeFinal[0].observacionVigenteSupervisor != null){
-        this.observacionesForm.patchValue(this.report.proyecto.informeFinal[0].observacionVigenteSupervisor)
+        this.observacionesForm.patchValue(this.report.proyecto.informeFinal[0].observacionVigenteSupervisor);
+        if(this.report.proyecto.informeFinal[0].tieneObservacionesSupervisor){
+          this.tieneObservacionesSupervisor = true;
+        }
       }
 
       if(this.report.proyecto.informeFinal[0].historialInformeFinalInterventoriaObservaciones != null){
         if(this.report.proyecto.informeFinal[0].historialInformeFinalInterventoriaObservaciones.length > 0){
-          this.existeHistorial = true;
+          if(this.report.proyecto.informeFinal[0].observacionVigenteSupervisor != null){
+            this.existeHistorial = true;
+          }
         }      
       }
         

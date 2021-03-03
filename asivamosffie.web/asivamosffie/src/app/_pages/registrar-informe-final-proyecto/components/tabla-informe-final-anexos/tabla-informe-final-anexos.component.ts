@@ -242,6 +242,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   }
 
   createEditInformeFinalInterventoriabyInformeFinal( informeFinal: any, test: boolean) {
+    console.log("Modelo: ",informeFinal);
     this.registrarInformeFinalProyectoService.createEditInformeFinalInterventoriabyInformeFinal(informeFinal)
     .subscribe((respuesta: Respuesta) => {
       if(!test){

@@ -138,6 +138,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
             esSupervision: result.observaciones.esSupervision,
             esCalificacion: result.observaciones.esCalificacion,
             esApoyo: result.observaciones.esApoyo,
+            archivado: result.observaciones.archivado,
           };
           control.tieneObservacionNoCumple = true;
           control.informeFinalInterventoriaObservaciones.push(informeFinalInterventoriaObservaciones);

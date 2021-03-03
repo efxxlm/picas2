@@ -248,11 +248,14 @@ namespace asivamosffie.services
                         informeFinalInterventoria.UsuarioCreacion = user.ToUpper();
                         await this.UpdateStateValidateInformeFinalInterventoria(informeFinalInterventoria.InformeFinalInterventoriaId, informeFinalInterventoria.ValidacionCodigo, user);
 
-                        ///Actualiza o crea observaciones segun el caso (Sólo SUPERVISIÓN)
-                        foreach (InformeFinalInterventoriaObservaciones informeFinalInterventoriaObservaciones in informeFinalInterventoria.InformeFinalInterventoriaObservaciones)
+                        if (informeFinalInterventoria.ValidacionCodigo == ConstantCodigoCalificacionInformeFinal.No_Cumple)
                         {
-                            informeFinalInterventoriaObservaciones.UsuarioCreacion = user.ToUpper();
-                            await this.CreateEditInformeFinalInterventoriaObservacion(informeFinalInterventoriaObservaciones);
+                            ///Actualiza o crea observaciones segun el caso (Sólo SUPERVISIÓN)
+                            foreach (InformeFinalInterventoriaObservaciones informeFinalInterventoriaObservaciones in informeFinalInterventoria.InformeFinalInterventoriaObservaciones)
+                            {
+                                informeFinalInterventoriaObservaciones.UsuarioCreacion = user.ToUpper();
+                                await this.CreateEditInformeFinalInterventoriaObservacion(informeFinalInterventoriaObservaciones);
+                            }
                         }
                     }
                 }
@@ -537,6 +540,31 @@ namespace asivamosffie.services
                     if (informeFinal.EstadoAprobacion == ConstantCodigoEstadoAprobacionInformeFinal.Devuelta_por_supervisor)
                     {
                         informeFinal.EstadoAprobacion = ConstantCodigoEstadoAprobacionInformeFinal.Modificado_Apoyo_Supervision_Interventor;
+
+                        //Enviar las observaciones del supervisor a historial
+
+                        //Observaciones a recibo de satisfacción
+                        List<InformeFinalObservaciones> informeFinalObservaciones = _context.InformeFinalObservaciones.Where(r => r.InformeFinalId == informeFinal.InformeFinalId && r.EsSupervision == true && (r.Archivado == null || r.Archivado == false)).ToList();
+                        foreach (var itemobs in informeFinalObservaciones)
+                        {
+                            itemobs.Archivado = true;
+                            itemobs.FechaModificacion = DateTime.Now;
+                            itemobs.UsuarioModificacion = pUsuario;
+                        }
+
+                        //Observaciones lista interventoria
+                        List<InformeFinalInterventoria> listanexo = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == informeFinal.InformeFinalId).ToList();
+                        foreach (var item in listanexo)
+                        {
+                            item.TieneObservacionSupervisor = false;
+                            List<InformeFinalInterventoriaObservaciones> listobs = _context.InformeFinalInterventoriaObservaciones.Where(r => r.InformeFinalInterventoriaId == item.InformeFinalInterventoriaId && r.EsSupervision == true && (r.Archivado == null || r.Archivado == false)).ToList();
+                            foreach (var itemobs in listobs)
+                            {
+                                itemobs.Archivado = true;
+                                itemobs.FechaModificacion = DateTime.Now;
+                                itemobs.UsuarioModificacion = pUsuario;
+                            }
+                        }
                     }
                     //Enviar Correo supervisor 5.1.2
                     await EnviarCorreoSupervisor(informeFinal, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);

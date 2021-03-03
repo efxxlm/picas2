@@ -20,6 +20,7 @@ export class DialogObservacionesComponent implements OnInit {
     esSupervision: [true, Validators.required],
     esCalificacion: [null, Validators.required],
     esApoyo: [null, Validators.required],
+    archivado: [null, Validators.required],
   })
 
   editorStyle = {
@@ -43,9 +44,12 @@ export class DialogObservacionesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log("Data: ",this.data);
     if(this.data.informeFinalObservacion != null){
+      console.log("1");
       this.observaciones.patchValue(this.data.informeFinalObservacion[0])
     }else{
+      console.log("2");
       this.getInformeFinalInterventoriaObservacionByInformeFinalObservacion(
         this.data.informe.informeFinalInterventoriaObservacionesId
       )

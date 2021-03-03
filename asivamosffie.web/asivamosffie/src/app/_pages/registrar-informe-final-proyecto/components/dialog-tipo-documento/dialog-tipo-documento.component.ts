@@ -106,7 +106,9 @@ export class DialogTipoDocumentoComponent implements OnInit {
         }
         if(this.anexos.historialInformeFinalInterventoriaObservaciones != null){
           if(this.anexos.historialInformeFinalInterventoriaObservaciones.length > 0){
-            this.existe_historial = true;
+            if(this.anexos.observacionVigenteSupervisor != null){
+              this.existe_historial = true;
+            }
           }      
         }
     });

@@ -69,7 +69,7 @@ export class RegistrarInformeFinalProyectoService {
   }
   
   createEditInformeFinalInterventoriabyInformeFinal(pInformeFinal: any){
-    return this.http.post(`${environment.apiUrl}/${this.final_report}/createEditInformeFinalInterventoriabyInformeFinal`, pInformeFinal );
+    return this.http.post(`${environment.apiUrl}/${this.final_report}/CreateEditInformeFinalInterventoriabyInformeFinal`, pInformeFinal );
   }
 
 }

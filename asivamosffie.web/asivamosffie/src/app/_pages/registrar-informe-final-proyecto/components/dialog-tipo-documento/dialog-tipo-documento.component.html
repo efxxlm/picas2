@@ -261,7 +261,7 @@
   </mat-card-content>
 </mat-card>
 
-<mat-card class="shipping-card var-main-gris" *ngIf="data.informe.tieneObservacionSupervisor" [formGroup]="observacionesForm">
+<mat-card class="shipping-card var-main-gris" *ngIf="data.informe.tieneObservacionSupervisor && (data.informe.estadoInforme === '4' || data.informe.estadoInforme === '8')" [formGroup]="observacionesForm">
   <mat-card-header class="header-card header-card--margin">
     <mat-card-title class="mat-card-title header-card--text">
       Observación del supervisor
@@ -274,4 +274,4 @@
   </mat-card-content>
 </mat-card>
 
-<app-tabla-observaciones *ngIf="existe_historial" [data]="anexos"></app-tabla-observaciones>
+<app-tabla-observaciones *ngIf="existe_historial && (data.informe.estadoInforme === '4' || data.informe.estadoInforme === '8')" [data]="anexos"></app-tabla-observaciones>

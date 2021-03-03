@@ -189,11 +189,18 @@ namespace asivamosffie.services
                     }
                 }else if (item.AprobacionCodigo == ConstantCodigoCalificacionInformeFinal.No_Cumple)
                 {
-                    InformeFinalInterventoriaObservaciones informeFinalInterventoriaObservaciones = _context.InformeFinalInterventoriaObservaciones.Where(r => r.InformeFinalInterventoriaId == item.InformeFinalInterventoriaId && r.EsSupervision == true).FirstOrDefault();
+                    InformeFinalInterventoriaObservaciones informeFinalInterventoriaObservaciones = _context.InformeFinalInterventoriaObservaciones.Where(r => r.InformeFinalInterventoriaId == item.InformeFinalInterventoriaId && r.EsSupervision == true).OrderByDescending(r => r.FechaCreacion).FirstOrDefault();
                     if (informeFinalInterventoriaObservaciones != null)
                     {
                         informeFinalInterventoriaObservacionesId = informeFinalInterventoriaObservaciones.InformeFinalInterventoriaObservacionesId;
-                        tieneObservacionNoCumple = true;
+                        if (informeFinalInterventoriaObservaciones.Archivado == null || informeFinalInterventoriaObservaciones.Archivado == false)
+                        {
+                            tieneObservacionNoCumple = true;
+                        }
+                        else
+                        {
+                            tieneObservacionNoCumple = false;
+                        }
                     }
                     else
                     {
@@ -259,20 +266,24 @@ namespace asivamosffie.services
                     informeFinalInterventoria.UsuarioCreacion = user.ToUpper();
                     informeFinalInterventoria.TieneObservacionSupervisor = false;
                     await this.UpdateStateApproveInformeFinalInterventoria(informeFinalInterventoria.InformeFinalInterventoriaId, informeFinalInterventoria.AprobacionCodigo,user);
-                    
-                    ///Actualiza o crea observaciones segun el caso (Sólo SUPERVISIÓN)
-                    foreach (InformeFinalInterventoriaObservaciones informeFinalInterventoriaObservaciones in informeFinalInterventoria.InformeFinalInterventoriaObservaciones)
-                    {
-                        if (informeFinalInterventoriaObservaciones.EsApoyo == true)
-                        {
-                            informeFinalInterventoriaObservaciones.InformeFinalInterventoriaObservacionesId = 0;
-                            informeFinalInterventoriaObservaciones.EsApoyo = false;
-                            informeFinalInterventoriaObservaciones.EsSupervision = true;
-                        }
 
-                        informeFinalInterventoriaObservaciones.UsuarioCreacion = user.ToUpper();
-                        await this.CreateEditInformeFinalInterventoriaObservacion(informeFinalInterventoriaObservaciones);
+                    if (informeFinalInterventoria.AprobacionCodigo == ConstantCodigoCalificacionInformeFinal.No_Cumple)
+                    {
+                        ///Actualiza o crea observaciones segun el caso (Sólo SUPERVISIÓN)
+                        foreach (InformeFinalInterventoriaObservaciones informeFinalInterventoriaObservaciones in informeFinalInterventoria.InformeFinalInterventoriaObservaciones)
+                        {
+                            if (informeFinalInterventoriaObservaciones.EsApoyo == true)
+                            {
+                                informeFinalInterventoriaObservaciones.InformeFinalInterventoriaObservacionesId = 0;
+                                informeFinalInterventoriaObservaciones.EsApoyo = false;
+                                informeFinalInterventoriaObservaciones.EsSupervision = true;
+                            }
+
+                            informeFinalInterventoriaObservaciones.UsuarioCreacion = user.ToUpper();
+                            await this.CreateEditInformeFinalInterventoriaObservacion(informeFinalInterventoriaObservaciones);
+                        }
                     }
+
                 }
 
                 VerificarInformeFinalAprobacion(informeFinal.InformeFinalId);
@@ -467,6 +478,12 @@ namespace asivamosffie.services
                 string strCrearEditar = string.Empty;
                 if (pObservacion.EsSupervision == true)
                 {
+                    if (pObservacion.Archivado == true)
+                    {
+                        pObservacion.InformeFinalInterventoriaObservacionesId = 0;
+                        pObservacion.Archivado = false;
+                    }
+
                     if (pObservacion.InformeFinalInterventoriaObservacionesId == 0)
                     {
                         strCrearEditar = "CREAR INFORME FINAL OBSERVACION";
