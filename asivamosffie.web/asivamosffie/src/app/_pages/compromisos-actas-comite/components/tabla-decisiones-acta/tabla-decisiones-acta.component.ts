@@ -24,6 +24,10 @@ export class TablaDecisionesActaComponent implements OnInit {
   listaEstadoProyectos: any[] = [];
   displayedColumns: string[] = [ 'llaveMen', 'tipoIntervencion', 'departamentoMunicipio', 'institucionEducativa', 'sede', 'estadoProyecto', 'gestion' ];
   contratacion: Contratacion;
+  listaTipoSolicitudCodigo = {
+    obra: '1',
+    interventoria: '2'
+  };
 
   constructor ( private projectContractingSvc: ProjectContractingService,
                 private commonSvc: CommonService,
@@ -51,8 +55,9 @@ export class TablaDecisionesActaComponent implements OnInit {
           this.projectContractingSvc.getContratacionByContratacionIdWithGrillaProyecto( this.contratacionId )
           .subscribe( ( resp: any ) => {
             this.contratacion = resp;
+            console.log( resp );
             for ( let contratacion of resp.contratacionProyecto ) {
-              this.data.push( { contratacion: contratacion.proyectoGrilla, sesionSolicitudObservacionProyecto: contratacion.sesionSolicitudObservacionProyecto } )
+              this.data.push( { contratacion: contratacion.proyectoGrilla, sesionSolicitudObservacionProyecto: contratacion.sesionSolicitudObservacionProyecto, tipoSolicitudCodigo: resp.tipoSolicitudCodigo } )
             }
             this.dataSource = new MatTableDataSource( this.data );
             this.dataSource.sort = this.sort;
