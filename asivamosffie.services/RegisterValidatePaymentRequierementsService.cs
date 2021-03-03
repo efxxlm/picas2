@@ -1327,21 +1327,13 @@ namespace asivamosffie.services
             try
             {
                 if (!string.IsNullOrEmpty(pTipoSolicitud) && !string.IsNullOrEmpty(pModalidadContrato))
-                {
-                    ///Siempre aparecera el contrato Reunion ivhon 20/01/201 - 5:16  
-                    //List<int?> ListContratosConSolicitudPago = _context.SolicitudPago
-                    // .Include(c => c.Contrato)
-                    // .Where(s => s.Eliminado == false && s.ContratoId != null)
-                    //         .Select(r => r.ContratoId).ToList();
-
+                { 
                     List<Contrato> ListContratos = await _context.Contrato
                                     .Include(c => c.Contratacion)
                                              .Where(c => c.NumeroContrato.Trim().ToLower().Contains(pNumeroContrato.Trim().ToLower())
                                                    && c.Contratacion.TipoSolicitudCodigo == pTipoSolicitud
                                                    && c.EstadoActaFase2 == ConstanCodigoEstadoActaContrato.Con_acta_suscrita_y_cargada
-                                                   ).ToListAsync();
-
-                    // ListContratos.RemoveAll(item => ListContratosConSolicitudPago.Contains(item.ContratoId));
+                                                   ).ToListAsync(); 
                     return ListContratos
                         .Select(r => new
                         {
@@ -1350,26 +1342,18 @@ namespace asivamosffie.services
                         }).ToList();
                 }
                 else
-                {
-                    // List<int?> ListContratosConSolicitudPago = _context.SolicitudPago
-                    //.Include(c => c.Contrato)
-                    //.Where(s => s.Eliminado == false && s.ContratoId != null)
-                    //        .Select(r => r.ContratoId).ToList();
-
+                { 
                     List<Contrato> ListContratos = await _context.Contrato
                                     .Include(c => c.Contratacion)
                                              .Where(c => c.NumeroContrato.Trim().ToLower().Contains(pNumeroContrato.Trim().ToLower())
-                                                   // && c.Contratacion.TipoSolicitudCodigo == pTipoSolicitud
-                                                   && c.EstadoActaFase2 == ConstanCodigoEstadoActaContrato.Con_acta_suscrita_y_cargada
-                                                   ).ToListAsync();
-
-                    //  ListContratos.RemoveAll(item => ListContratosConSolicitudPago.Contains(item.ContratoId));
+                                                      && c.EstadoActaFase2 == ConstanCodigoEstadoActaContrato.Con_acta_suscrita_y_cargada
+                                                   ).ToListAsync(); 
                     return ListContratos
-                        .Select(r => new
-                        {
-                            r.ContratoId,
-                            r.NumeroContrato
-                        }).ToList();
+                                        .Select(r => new
+                                        {
+                                                r.ContratoId,
+                                                r.NumeroContrato
+                                        }).ToList();
                 }
             }
             catch (Exception ex)
