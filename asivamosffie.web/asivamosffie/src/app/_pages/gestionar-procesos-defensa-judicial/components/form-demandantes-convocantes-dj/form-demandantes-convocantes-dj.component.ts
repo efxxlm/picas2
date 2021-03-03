@@ -64,11 +64,13 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
     let i=0;
     console.log(this.perfiles);
     this.defensaJudicial.demandanteConvocante.forEach(element => {
+      this.perfiles.controls[i].get("demandanteConvocadoId").setValue(element.demandanteConvocadoId);
       this.perfiles.controls[i].get("nomConvocado").setValue(element.nombre);
       this.perfiles.controls[i].get("tipoIdentificacion").setValue(element.tipoIdentificacionCodigo);
       this.perfiles.controls[i].get("numIdentificacion").setValue(element.numeroIdentificacion);
       this.perfiles.controls[i].get("direccion").setValue(element.direccion);
       this.perfiles.controls[i].get("correo").setValue(element.email);
+      this.perfiles.controls[i].get("registroCompleto").setValue(element.registroCompleto);
       i++;
     });
     //defensaJudicial.eDemandaFFIE=this.addressForm.get("demandaContraFFIE").value;
@@ -105,11 +107,13 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
             this.perfiles.push( 
               this.fb.group(
                 {
+                  demandanteConvocadoId: [ null ],
                   nomConvocado: [ null ],
                   tipoIdentificacion: [ null ],
                   numIdentificacion: [ null ],
                   direccion: [ null ],
-                  correo: [ null ]
+                  correo: [ null ],
+                  registroCompleto : [ null ],
                 }
               ) 
             )
@@ -182,6 +186,7 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
     let defContraProyecto:DemandanteConvocante[]=[];
     for(let perfil of this.perfiles.controls){
       defContraProyecto.push({
+        demandanteConvocadoId:perfil.get("demandanteConvocadoId").value,
         nombre:perfil.get("nomConvocado").value,
         tipoIdentificacionCodigo:perfil.get("tipoIdentificacion").value,
         numeroIdentificacion:perfil.get("numIdentificacion").value,

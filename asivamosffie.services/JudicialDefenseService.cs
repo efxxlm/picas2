@@ -324,7 +324,25 @@ namespace asivamosffie.services
                             defFicha.FechaCreacion = DateTime.Now;
                             defFicha.Eliminado = false;
                             defFicha.DefensaJudicialId = defensaJudicialBD.DefensaJudicialId;
+                            defFicha.RegistroCompleto = ValidarRegistroCompletoDemandadoConvocado(defFicha);
                             _context.DemandadoConvocado.Add(defFicha);
+                        }
+                        else
+                        {
+                            DemandadoConvocado demandadoConvocado = _context.DemandadoConvocado.Find(defFicha.DemandadoConvocadoId);
+
+                            demandadoConvocado.UsuarioModificacion = defensaJudicial.UsuarioCreacion;
+                            demandadoConvocado.FechaModificacion = DateTime.Now;
+                            demandadoConvocado.Eliminado = false;
+                            demandadoConvocado.DefensaJudicialId = defensaJudicialBD.DefensaJudicialId;
+                            demandadoConvocado.RegistroCompleto = ValidarRegistroCompletoDemandadoConvocado(defFicha);
+                            demandadoConvocado.Nombre = defFicha.Nombre;
+                            demandadoConvocado.TipoIdentificacionCodigo = defFicha.TipoIdentificacionCodigo;
+                            demandadoConvocado.NumeroIdentificacion = defFicha.NumeroIdentificacion;
+                            demandadoConvocado.Direccion = defFicha.Direccion;
+                            demandadoConvocado.Email = defFicha.Email;
+
+                            _context.DemandadoConvocado.Update(demandadoConvocado);
                         }
                     }
                     foreach (var defFicha in defensaJudicial.DemandanteConvocante)
@@ -335,7 +353,25 @@ namespace asivamosffie.services
                             defFicha.FechaCreacion = DateTime.Now;
                             defFicha.Eliminado = false;
                             defFicha.DefensaJucicialId = defensaJudicialBD.DefensaJudicialId;
+                            defFicha.RegistroCompleto = ValidarRegistroCompletoDemandanteConvocante(defFicha);
                             _context.DemandanteConvocante.Add(defFicha);
+                        }
+                        else
+                        {
+                            DemandanteConvocante demandanteConvocante = _context.DemandanteConvocante.Find(defFicha.DemandanteConvocadoId);
+
+                            demandanteConvocante.UsuarioModificacion = defensaJudicial.UsuarioCreacion;
+                            demandanteConvocante.FechaModificacion = DateTime.Now;
+                            demandanteConvocante.Eliminado = false;
+                            demandanteConvocante.DefensaJucicialId = defensaJudicialBD.DefensaJudicialId;
+                            demandanteConvocante.RegistroCompleto = ValidarRegistroCompletoDemandanteConvocante(defFicha);
+                            demandanteConvocante.Nombre = defFicha.Nombre;
+                            demandanteConvocante.TipoIdentificacionCodigo = defFicha.TipoIdentificacionCodigo;
+                            demandanteConvocante.NumeroIdentificacion = defFicha.NumeroIdentificacion;
+                            demandanteConvocante.Direccion = defFicha.Direccion;
+                            demandanteConvocante.Email = defFicha.Email;
+
+                            _context.DemandanteConvocante.Update(demandanteConvocante);
                         }
                     }
                     defensaJudicialBD.EsCompleto = ValidarRegistroCompleto(defensaJudicialBD);
@@ -1467,6 +1503,34 @@ namespace asivamosffie.services
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_procesos_Defensa_Judicial, ConstantMessagesJudicialDefense.Error, idAccion, pUsuarioModifico, ex.InnerException.ToString().Substring(0, 500))
                 };
             }
+        }
+
+        private bool ValidarRegistroCompletoDemandadoConvocado(DemandadoConvocado demandadoConvocado)
+        {
+            bool retorno = true;
+
+            //valido detalle
+            if (string.IsNullOrEmpty(demandadoConvocado.Nombre) || string.IsNullOrEmpty(demandadoConvocado.TipoIdentificacionCodigo) || string.IsNullOrEmpty(demandadoConvocado.NumeroIdentificacion) ||
+                string.IsNullOrEmpty(demandadoConvocado.Direccion) || string.IsNullOrEmpty(demandadoConvocado.Email))
+            {
+                retorno = false;
+            }
+
+            return retorno;
+        }
+
+        private bool ValidarRegistroCompletoDemandanteConvocante(DemandanteConvocante demandanteConvocante)
+        {
+            bool retorno = true;
+
+            //valido detalle
+            if (string.IsNullOrEmpty(demandanteConvocante.Nombre) || string.IsNullOrEmpty(demandanteConvocante.TipoIdentificacionCodigo) || string.IsNullOrEmpty(demandanteConvocante.NumeroIdentificacion) ||
+                string.IsNullOrEmpty(demandanteConvocante.Direccion) || string.IsNullOrEmpty(demandanteConvocante.Email))
+            {
+                retorno = false;
+            }
+
+            return retorno;
         }
     }
 }

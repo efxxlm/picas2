@@ -45,7 +45,7 @@ export class FormDemandadosDjComponent implements OnInit {
   cargarRegistro() {
       this.formContratista.get("numeroContratos").setValue(this.defensaJudicial.numeroDemandados);
       let i=0;      
-      this.defensaJudicial.demandanteConvocante.forEach(element => {
+      this.defensaJudicial.demandadoConvocado.forEach(element => {
         console.log(this.perfiles.controls[i].get("nomConvocado"));
         this.perfiles.controls[i].get("nomConvocado").setValue(element.nombre);
         this.perfiles.controls[i].get("tipoIdentificacion").setValue(element.tipoIdentificacionCodigo);

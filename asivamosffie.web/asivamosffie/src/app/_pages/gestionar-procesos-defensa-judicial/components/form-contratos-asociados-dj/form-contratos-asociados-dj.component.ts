@@ -71,6 +71,7 @@ export class FormContratosAsociadosDjComponent implements OnInit {
           let contrato=this.contratos.filter(x=>x.numeroContrato==element.numeroContrato);
           this.perfiles.value.contrato = contrato[0].contratoId;
         this.defensaService.GetListProyectsByContract(contrato[0].contratoId).subscribe(response=>{
+          console.log(contrato[0].contratoId);
           this.listProyectosSeleccion=response;
           this.dataTable=response;
           let alguno=false;
@@ -95,7 +96,6 @@ export class FormContratosAsociadosDjComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
     this.defensaService.GetListContract().subscribe(response=>{
       this.contratosArray=response.map(x=>x.numeroContrato);
       this.contratos=response;

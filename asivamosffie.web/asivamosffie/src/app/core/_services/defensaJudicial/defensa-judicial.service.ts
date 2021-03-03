@@ -151,7 +151,8 @@ export interface DemandadoConvocado{
   etapaProcesoFfiecodigo?:string,
   caducidadPrescripcion?:Date,
   defensaJudicialId?:number,
-  existeConocimiento?:boolean
+  existeConocimiento?:boolean,
+  registroCompleto?: boolean,
 }
 
 export interface DemandanteConvocante{
@@ -162,7 +163,9 @@ export interface DemandanteConvocante{
   numeroIdentificacion?:string,
   direccion?:string,
   email?:string,  
-  defensaJudicialId?:number
+  defensaJudicialId?:number,
+  demandanteConvocadoId?:number,
+  registroCompleto?: boolean,
 }
 
 export interface FichaEstudio{  

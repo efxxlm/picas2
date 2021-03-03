@@ -29,14 +29,17 @@
           </span>
     </div>
     <mat-accordion formArrayName="perfiles" *ngIf="formContratista.get( 'numeroContratos' ).value!==null">
-        <mat-expansion-panel class="expansion-style sub-expansion" *ngFor="let perfil of perfiles.controls; index as i">
+        <mat-expansion-panel class="expansion-style sub-expansion" *ngFor="let perfil of perfiles.controls; index as i" [formGroup]="perfil">
+            
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                <mat-panel-title class="expansion-style--title "
+                [ngClass]="{'sin-diligenciar': perfil.get('registroCompleto').value == null,'en-proceso': !perfil.get('registroCompleto').value,'completo':perfil.get('registroCompleto').value}"
+                >
                     Convocado {{ i+1 }}
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <mat-card [formGroup]="perfil">
+            <mat-card>
                 <mat-card-content>
                     <div class="row">
                         <div class="col-md-12">
