@@ -39,7 +39,10 @@ namespace asivamosffie.services
         #region Get
         private dynamic GetTableFinanciera(SeguimientoSemanal pSeguimientoSemanal)
         {
-            int ContratoConstruccionId = _context.FlujoInversion.Where(f => f.SeguimientoSemanalId == pSeguimientoSemanal.SeguimientoSemanalId).Select(r => r.ContratoConstruccionId).FirstOrDefault();
+            int ContratoConstruccionId = _context.FlujoInversion
+                                            .Where(f => f.SeguimientoSemanalId == pSeguimientoSemanal.SeguimientoSemanalId)
+                                            .Select(r => r.ContratoConstruccionId)
+                                            .FirstOrDefault();
 
             decimal ValorTotalProyecto = (decimal)(_context.FlujoInversion
                                             .Where(f => f.ContratoConstruccionId == ContratoConstruccionId)
@@ -47,7 +50,8 @@ namespace asivamosffie.services
 
             List<FlujoInversion> flujoInversions = _context.FlujoInversion
                                                           .Include(r => r.Programacion)
-                                                          .Where(r => r.SeguimientoSemanal.ContratacionProyectoId == pSeguimientoSemanal.ContratacionProyectoId && r.SeguimientoSemanal.NumeroSemana < pSeguimientoSemanal.NumeroSemana)
+                                                          .Where(r => r.SeguimientoSemanal.ContratacionProyectoId == pSeguimientoSemanal.ContratacionProyectoId 
+                                                              && r.SeguimientoSemanal.NumeroSemana < pSeguimientoSemanal.NumeroSemana)
                                                           .Take(4)
                                                           .ToList();
 
