@@ -1418,13 +1418,26 @@ namespace asivamosffie.services
                         if (SolicitudPagoFaseFactura.SolicitudPagoFaseFacturaDescuento.Count() > 0)
                             SolicitudPagoFaseFactura.SolicitudPagoFaseFacturaDescuento = SolicitudPagoFaseFactura.SolicitudPagoFaseFacturaDescuento.Where(r => r.Eliminado != true).ToList();
 
-                    }
+                    } 
                 }
             }
 
             if (solicitudPago.SolicitudPagoListaChequeo.Count() > 0)
                 solicitudPago.SolicitudPagoListaChequeo = solicitudPago.SolicitudPagoListaChequeo.Where(r => r.Eliminado != true).ToList();
 
+            List<SolicitudPagoListaChequeoRespuesta> ListSolicitudPagoListaChequeoRespuesta =
+                _context.SolicitudPagoListaChequeoRespuesta.Include(r=> r .ListaChequeoItem).ToList();
+
+            foreach (var SolicitudPagoListaChequeo in solicitudPago.SolicitudPagoListaChequeo)
+            {
+                SolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta = ListSolicitudPagoListaChequeoRespuesta.Where(r=> r.SolicitudPagoListaChequeoId == SolicitudPagoListaChequeo.ListaChequeoId).ToList();
+
+                foreach (var SolicitudPagoListaChequeoRespuesta in SolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta)
+                {
+           
+                    SolicitudPagoListaChequeoRespuesta.SolicitudPagoListaChequeo = null;
+                }
+            }
             return solicitudPago;
         }
 
@@ -1455,10 +1468,10 @@ namespace asivamosffie.services
                        .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
                        .Include(r => r.SolicitudPagoSoporteSolicitud)
                        .Include(r => r.SolicitudPagoListaChequeo)
-                          .ThenInclude(r => r.ListaChequeo)
+                         .ThenInclude(r => r.ListaChequeo)
                        .Include(r => r.SolicitudPagoListaChequeo)
-                          .ThenInclude(r => r.SolicitudPagoListaChequeoRespuesta)
-                              .ThenInclude(r => r.ListaChequeoItem)
+                         // .ThenInclude(r => r.SolicitudPagoListaChequeoRespuesta)
+                       //       .ThenInclude(r => r.ListaChequeoItem)
                        .FirstOrDefault();
 
                     GetRemoveObjectsDelete(solicitudPago);

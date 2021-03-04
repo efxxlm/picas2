@@ -17,7 +17,8 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+   // [Authorize]
+   // [Authorize]
     public class RegisterValidatePaymentRequierementsController : Controller
     {
         public readonly IRegisterValidatePaymentRequierementsService _registerValidatePaymentRequierementsService;
