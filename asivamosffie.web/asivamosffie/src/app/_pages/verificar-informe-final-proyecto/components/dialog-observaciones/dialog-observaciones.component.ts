@@ -19,6 +19,7 @@ export class DialogObservacionesComponent implements OnInit {
     esCalificacion: [null, Validators.required],
     esApoyo: [null, Validators.required],
     fechaCreacion: [null, Validators.required],
+    archivado: [null, Validators.required],
   })
 
   observacionesSupervisor = this.fb.group({
@@ -102,11 +103,16 @@ export class DialogObservacionesComponent implements OnInit {
 
   onSubmit() {
     this.observaciones.value.informeFinalInterventoriaId = this.data.informe.informeFinalInterventoriaId
-    this.observaciones.value.esApoyo = true
+    this.observaciones.value.esApoyo = true;
+    if(this.data.informe){
+      this.data.informe.estadoValidacion === '6' ? this.observaciones.value.archivado = false : true;
+    }else{
+      this.observaciones.value.archivado = false;
+    }
     if (this.data.informe.informeFinalInterventoriaObservacionesId != null) {
       this.observaciones.value.informeFinalInterventoriaObservacionesId = this.data.informe.informeFinalInterventoriaObservacionesId
     }
-    this.dialog.getDialogById('dialogObservaciones').close({ observaciones: this.observaciones.value, id: this.data.informe.informeFinalInterventoriaId });
+    this.dialog.getDialogById('dialogObservaciones').close({ observaciones: this.observaciones.value, id: this.data.informe.informeFinalInterventoriaId, tieneObservacionNoCumple: true, archivado: this.observaciones.value.archivado });
     this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
   }
 

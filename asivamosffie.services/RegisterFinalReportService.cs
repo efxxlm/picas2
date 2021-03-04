@@ -670,6 +670,19 @@ namespace asivamosffie.services
                     {
                         informeFinal.EstadoValidacion = ConstantCodigoEstadoValidacionInformeFinal.Enviado_correcciones_apoyo_supervisor;
                         informeFinal.RegistroCompletoValidacion = false;
+
+                        //Observaciones lista interventoria
+                        List<InformeFinalInterventoria> listanexo = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == informeFinal.InformeFinalId).ToList();
+                        foreach (var item in listanexo)
+                        {
+                            List<InformeFinalInterventoriaObservaciones> listobs = _context.InformeFinalInterventoriaObservaciones.Where(r => r.InformeFinalInterventoriaId == item.InformeFinalInterventoriaId && r.EsApoyo == true && (r.Archivado == null || r.Archivado == false)).ToList();
+                            foreach (var itemobs in listobs)
+                            {
+                                itemobs.Archivado = true;
+                                itemobs.FechaModificacion = DateTime.Now;
+                                itemobs.UsuarioModificacion = pUsuario;
+                            }
+                        }
                     }
                     //Enviar Correo apoyo supervisor 5.1.1
                     await EnviarCorreoApoyoSupervisor(informeFinal, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);

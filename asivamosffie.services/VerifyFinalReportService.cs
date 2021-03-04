@@ -136,6 +136,7 @@ namespace asivamosffie.services
             int informeFinalInterventoriaObservacionesId = 0;
             bool tieneObservacionNoCumple = false;
             bool semaforo = false;
+            bool archivado = false;
 
             List<InformeFinalInterventoria> ListInformeFinalChequeo = await _context.InformeFinalInterventoria
                                 .Where(r => r.InformeFinalId == pInformeFinalId)
@@ -174,11 +175,13 @@ namespace asivamosffie.services
                     {
                         informeFinalInterventoriaObservacionesId = informeFinalInterventoriaObservaciones.InformeFinalInterventoriaObservacionesId;
                         tieneObservacionNoCumple = true;
+                        archivado = informeFinalInterventoriaObservaciones.Archivado == null ? false : (bool) informeFinalInterventoriaObservaciones.Archivado;
                     }
                     else
                     {
                         informeFinalInterventoriaObservacionesId = 0;
                         tieneObservacionNoCumple = false;
+                        archivado = false;
                     }
                 }
                 else
@@ -191,6 +194,7 @@ namespace asivamosffie.services
                 item.InformeFinalInterventoriaObservacionesId = informeFinalInterventoriaObservacionesId;
                 item.TieneObservacionNoCumple = tieneObservacionNoCumple;
                 item.Semaforo = semaforo;
+                item.Archivado = archivado;
             }
             return ListInformeFinalChequeo;
         }
@@ -481,6 +485,7 @@ namespace asivamosffie.services
                                                                                                     FechaModificacion = DateTime.Now,
                                                                                                     UsuarioModificacion = pObservacion.UsuarioCreacion,
                                                                                                     Observaciones = pObservacion.Observaciones,
+                                                                                                    Archivado = pObservacion.Archivado
                                                                                                   });
                         /*if (pObservacion.EsSupervision == true)
                         {
@@ -540,11 +545,14 @@ namespace asivamosffie.services
                     if (informeFinal.EstadoAprobacion == ConstantCodigoEstadoAprobacionInformeFinal.Devuelta_por_supervisor)
                     {
                         informeFinal.EstadoAprobacion = ConstantCodigoEstadoAprobacionInformeFinal.Modificado_Apoyo_Supervision_Interventor;
+                        
+                        //Actualizar las calificaciones de supervisor (dejarlas igual a las de apoyo)
+                        await updateStateAprobacion(informeFinal.InformeFinalId, pUsuario);
 
                         //Enviar las observaciones del supervisor a historial
 
                         //Observaciones a recibo de satisfacción
-                        List<InformeFinalObservaciones> informeFinalObservaciones = _context.InformeFinalObservaciones.Where(r => r.InformeFinalId == informeFinal.InformeFinalId && r.EsSupervision == true && (r.Archivado == null || r.Archivado == false)).ToList();
+                        List<InformeFinalObservaciones> informeFinalObservaciones = _context.InformeFinalObservaciones.Where(r => r.InformeFinalId == informeFinal.InformeFinalId && r.EsSupervision == true  && (r.Archivado == null || r.Archivado == false)).ToList();
                         foreach (var itemobs in informeFinalObservaciones)
                         {
                             itemobs.Archivado = true;
@@ -737,6 +745,55 @@ namespace asivamosffie.services
             }
         }
 
-        
+        //Actualizar AprobacionCodigo == ValidacionCodigo
+        private async Task<Respuesta> updateStateAprobacion(int informeFinalId, string user)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Actualizar_Estado_validacion_informe_final, (int)EnumeratorTipoDominio.Acciones);
+            string CreateEdit = string.Empty;
+            try
+            {
+                List<InformeFinalInterventoria> informeFinalInterventoria = _context.InformeFinalInterventoria
+                        .Where(r => r.InformeFinalId == informeFinalId).ToList();
+
+                foreach (var item in informeFinalInterventoria)
+                {
+                    if (item.ValidacionCodigo != item.AprobacionCodigo && item.TieneObservacionSupervisor == true)
+                    {
+                        await _context.Set<InformeFinalInterventoria>()
+                                  .Where(r => r.InformeFinalInterventoriaId == item.InformeFinalInterventoriaId)
+                                                      .UpdateAsync(r => new InformeFinalInterventoria()
+                                                      {
+                                                          FechaModificacion = DateTime.Now,
+                                                          UsuarioModificacion = user,
+                                                          AprobacionCodigo = item.ValidacionCodigo,//cumple,no aplica, no cumple
+                                                      });
+                    }
+                }
+
+                return
+                new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.VerificarInformeFinalProyecto, GeneralCodes.OperacionExitosa, idAccion, user, CreateEdit)
+                };
+            }
+            catch (Exception ex)
+            {
+                return
+                  new Respuesta
+                  {
+                      IsSuccessful = false,
+                      IsException = true,
+                      IsValidation = false,
+                      Code = GeneralCodes.Error,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.VerificarInformeFinalProyecto, GeneralCodes.Error, idAccion, user, ex.InnerException.ToString())
+                  };
+            }
+        }
+
+
     }
 }
