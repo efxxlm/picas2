@@ -14,6 +14,7 @@ import { RegistrarInformeFinalProyectoService } from 'src/app/core/_services/reg
 import { Respuesta } from 'src/app/core/_services/common/common.service';
 import { Report } from 'src/app/_interfaces/proyecto-final.model';
 import { Router } from '@angular/router';
+import { DatePipe, formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-tabla-informe-final-anexos',
@@ -26,12 +27,11 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   @Input() llaveMen: string;
   @Input() report: Report;
   estaEditando: boolean;
-
   estadoInforme = '0';
   registroCompleto = false;
   semaforo= false;
   noGuardado=false;
-
+  soloMostrarObservacion=false;
   listChequeo: any;
   displayedColumns: string[] = [
     'informeFinalListaChequeoId',
@@ -58,7 +58,8 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     private fb: FormBuilder,
     public dialog: MatDialog,
     private registrarInformeFinalProyectoService: RegistrarInformeFinalProyectoService,
-    private router: Router  ) { }
+    private router: Router,
+    private datePipe: DatePipe ) { }
   
 
 
@@ -123,13 +124,20 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
         return;
       }
     });
+    //Mostrar solo observaciones sin form de anexo
+    if((informe.aprobacionCodigo === '2' && (informe.calificacionCodigo === '3' || informe.calificacionCodigo === 3))){
+      this.soloMostrarObservacion = true;
+    }else{
+      this.soloMostrarObservacion = false;
+    }
     let dialogRef = this.dialog.open(DialogTipoDocumentoComponent, {
       width: '70em',
       data:{
         informe: informe,
         llaveMen: this.llaveMen,
         informeFinalAnexo: this.informeFinalAnexo,
-        verDetalle: verDetalle
+        verDetalle: verDetalle,
+        soloMostrarObservacion: this.soloMostrarObservacion
       },
       id:'dialogTipoDocumento'
     });
@@ -137,17 +145,19 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     dialogRef.afterClosed().subscribe(result => {
       this.dataSource.data.forEach(control => {
         if ( result !== null && result.id === control.informeFinalInterventoriaId ) {
-          console.log(result.tieneModificacionInterventor);
+          console.log(result.tieneModificacionInterventor,result.modificadoCumple);
           const informeFinalAnexo: InformeFinalAnexo = {
-            informeFinalAnexoId: result.anexo.informeFinalAnexoId,
+            informeFinalAnexoId: result.anexo.informeFinalAnexoId == null ? 0 : result.anexo.informeFinalAnexoId,
             tipoAnexo: result.anexo.tipoAnexo,
             numRadicadoSac: result.anexo.numRadicadoSac,
-            fechaRadicado: result.anexo.fechaRadicado,
+            //fechaRadicado: result.anexo.fechaRadicado,
+            fechaRadicado: result.anexo.fechaRadicado ? new Date( result.anexo.fechaRadicado ) : null,
             urlSoporte: result.anexo.urlSoporte,
           };
           control.tieneModificacionInterventor =  result.tieneModificacionInterventor; 
           control.tieneAnexo = true;
           control.informeFinalAnexo = informeFinalAnexo;
+          control.modificadoCumple = result.tieneModificacionInterventor;
           return;
         }
       });
@@ -225,7 +235,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
         const informeFinalInterventoria: InformeFinalInterventoria = {
           informeFinalInterventoriaId: control.informeFinalInterventoriaId,
           informeFinalId: control.informeFinalId,
-          calificacionCodigo: control.calificacionCodigo,
+          calificacionCodigo: control.calificacionCodigo.toString(),
           informeFinalListaChequeoId: control.informeFinalListaChequeoId,
           informeFinalAnexo: control.informeFinalAnexo,
           informeFinalInterventoriaObservaciones: control.informeFinalInterventoriaObservaciones,
@@ -238,6 +248,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
       proyectoId: Number(this.id),
       informeFinalInterventoria: listaInformeFinalInterventoria.informeFinalInterventoria,
     };
+    console.log("ya esta creado: ",informeFinal);
     this.createEditInformeFinalInterventoriabyInformeFinal(informeFinal, test);
   }
 
@@ -260,8 +271,30 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
       });
   }
 
-  changeState(){
+  changeState(informe:any){
     this.noGuardado = true;
+    if(informe){
+      //Solo cuando es devuelto con observaciones
+      if(informe.estadoInforme === '4' && informe.aprobacionCodigo === '2'){
+        if((informe.calificacionCodigo === '3' || informe.calificacionCodigo === 3)){
+          this.dataSource.data.forEach(control => {
+            if ( informe.informeFinalInterventoriaId === control.informeFinalInterventoriaId ) {
+              control.tieneModificacionInterventor =  true; 
+              return;
+            }
+          });
+        }else{
+          this.dataSource.data.forEach(control => {
+            if(!informe.modificadoCumple){
+              if ( informe.informeFinalInterventoriaId === control.informeFinalInterventoriaId ) {
+                control.tieneModificacionInterventor =  false; 
+                return;
+              }
+            }
+          });
+        }
+      }
+    }
   }
 
   doSomething() {

@@ -9,7 +9,8 @@
   </h1>
   <p class="mt-05em">
     Estado del requisito:
-    <b> Cumple </b>
+    <b *ngIf="!data.soloMostrarObservacion"> Cumple </b>
+    <b *ngIf="data.soloMostrarObservacion"> No aplica </b>
   </p>
   <p>
     <b> {{ data.informe.posicion }}. </b>
@@ -17,7 +18,7 @@
   </p>
 </div>
 
-<form [formGroup]="addressForm" (ngSubmit)="onSubmit()" *ngIf="!data.verDetalle">
+<form [formGroup]="addressForm" (ngSubmit)="onSubmit()" *ngIf="!data.verDetalle && !data.soloMostrarObservacion">
   <mat-card class="shipping-card">
     <mat-card-content>
       <div class="row">
@@ -234,7 +235,7 @@
   </div>
 </form>
 
-<mat-card class="shipping-card var-main-gris" *ngIf="data.verDetalle">
+<mat-card class="shipping-card var-main-gris" *ngIf="data.verDetalle && !data.soloMostrarObservacion">
   <mat-card-content *ngIf="addressForm.get('tipoAnexo').value === '1'">
     <p>
       <strong> Tipo de anexo: </strong>

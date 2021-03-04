@@ -29,6 +29,7 @@ export class DialogTipoDocumentoComponent implements OnInit {
     fechaRadicado: [null, Validators.required],
   });
   tieneModificacionInterventor = false; 
+  modificadoCumple = false;
 
   observacionesForm = this.fb.group({
     observaciones: [null, Validators.required],
@@ -48,6 +49,7 @@ export class DialogTipoDocumentoComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log(this.data);
     if(this.data.informeFinalAnexo != null){
       this.addressForm.patchValue(this.data.informeFinalAnexo)
     }else{
@@ -72,7 +74,10 @@ export class DialogTipoDocumentoComponent implements OnInit {
 
   onSubmit() {
     this.estaEditando = true;
-    this.tieneModificacionInterventor = true; 
+    if(this.data.informe){
+      this.data.informe.estadoInforme === '4' ? this.tieneModificacionInterventor = true : this.tieneModificacionInterventor = false;
+    }
+    //this.tieneModificacionInterventor = true; 
     this.dialog.getDialogById('dialogTipoDocumento').close({ anexo: this.addressForm.value, id: this.data.informe.informeFinalInterventoriaId, tieneModificacionInterventor: this.tieneModificacionInterventor});
     this.openDialog('', '<b>La información ha sido guardada correctamente.</b>');
   }

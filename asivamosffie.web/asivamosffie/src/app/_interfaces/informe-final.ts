@@ -32,7 +32,7 @@ export interface InformeFinalInterventoria{
         tieneObservacionSupervisor?: boolean,
         validacionCodigo?: string,
         aprobacionCodigo?: string,
-        informeFinalAnexo:{
+        informeFinalAnexo?:{
                 informeFinalAnexoId?: number,
                 fechaCreacion?: Date,
                 usuarioCreacion?: string,

@@ -168,13 +168,18 @@ namespace asivamosffie.services
                         return false;
                     }
                 }
-                else if (informeFinal.EstadoInforme == ConstantCodigoEstadoInformeFinal.Con_Observaciones_del_supervisor)
+                else if (informeFinal.EstadoInforme == ConstantCodigoEstadoInformeFinal.Con_Observaciones_del_supervisor || informeFinal.EstadoInforme == ConstantCodigoEstadoInformeFinal.Modificado_interventor_completo)
                 {
                     int count_modificado = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == pInformeFinalId && r.TieneModificacionInterventor == true && r.CalificacionCodigo != ConstantCodigoCalificacionInformeFinal.No_Cumple && r.TieneObservacionSupervisor == true && r.AprobacionCodigo == ConstantCodigoCalificacionInformeFinal.No_Cumple).Count();
-                    int count_con_supervision = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == pInformeFinalId && r.TieneObservacionSupervisor == true && r.CalificacionCodigo != ConstantCodigoCalificacionInformeFinal.No_Cumple && r.AprobacionCodigo == ConstantCodigoCalificacionInformeFinal.No_Cumple).Count();
+                    int count_con_supervision = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == pInformeFinalId && r.TieneObservacionSupervisor == true && r.AprobacionCodigo == ConstantCodigoCalificacionInformeFinal.No_Cumple).Count();
 
                     if (count_modificado != count_con_supervision)
                     {
+                        if (informeFinal.EstadoInforme == ConstantCodigoEstadoInformeFinal.Modificado_interventor_completo)
+                        {
+                            informeFinal.EstadoInforme = ConstantCodigoEstadoInformeFinal.Con_Observaciones_del_supervisor;
+                            informeFinal.RegistroCompleto = false;
+                        }
                         return false;
                     }
                     else
@@ -461,7 +466,7 @@ namespace asivamosffie.services
                                                                    FechaModificacion = DateTime.Now,
                                                                    UsuarioModificacion = pInformeFinalInterventoriaId.UsuarioCreacion,
                                                                    CalificacionCodigo = pInformeFinalInterventoriaId.CalificacionCodigo,
-                                                                   TieneModificacionInterventor = pInformeFinalInterventoriaId.TieneModificacionInterventor
+                                                                   TieneModificacionInterventor = pInformeFinalInterventoriaId.CalificacionCodigo == ConstantCodigoCalificacionInformeFinal.No_Cumple ? false : pInformeFinalInterventoriaId.TieneModificacionInterventor
                                                                });
                     if (pInformeFinalInterventoriaId.CalificacionCodigo == ConstantCodigoCalificacionInformeFinal.No_Cumple)
                     {

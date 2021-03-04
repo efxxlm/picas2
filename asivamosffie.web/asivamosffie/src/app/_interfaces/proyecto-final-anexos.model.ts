@@ -24,10 +24,10 @@ export interface ListaChequeo {
   tieneModificacionInterventor:boolean,
   tieneObservacionSupervisor: boolean,
   informeFinalAnexo:{
-    informeFinalAnexoId?: number,
-    tipoAnexo?: string,
-    numRadicadoSac?: number,
     fechaRadicado?: Date,
+    informeFinalAnexoId?: number,
+    numRadicadoSac?: number,
+    tipoAnexo?: string,
     urlSoporte?: string
   },
   tieneAnexo: boolean,
@@ -37,6 +37,7 @@ export interface ListaChequeo {
   registroCompleto: boolean,
   semaforo: boolean,
   aprobacionCodigo: string,
+  modificadoCumple?: boolean,
 }
 
 export interface InformeFinalInterventoria {

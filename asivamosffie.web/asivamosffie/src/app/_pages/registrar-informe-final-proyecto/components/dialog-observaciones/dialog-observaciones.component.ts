@@ -1,9 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core'
 import { FormBuilder, Validators } from '@angular/forms'
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog'
+import { MatTableDataSource } from '@angular/material/table'
 import { Respuesta } from 'src/app/core/_services/common/common.service'
 import { RegistrarInformeFinalProyectoService } from 'src/app/core/_services/registrarInformeFinal/registrar-informe-final-proyecto.service'
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component'
+import { InformeFinalInterventoria } from 'src/app/_interfaces/proyecto-final-anexos.model'
 
 @Component({
   selector: 'app-dialog-observaciones',
@@ -24,6 +26,16 @@ export class DialogObservacionesComponent implements OnInit {
   editorStyle = {
     height: '100px'
   }
+  //observaciones supervisor
+  observacionesForm = this.fb.group({
+    observaciones: [null, Validators.required],
+    fechaCreacion: [null, Validators.required],   
+  })
+
+  ELEMENT_DATA : InformeFinalInterventoria[] = [];
+  anexos: any;
+  dataSource = new MatTableDataSource<InformeFinalInterventoria>(this.ELEMENT_DATA);
+  existe_historial = false;
 
   config = {
     toolbar: [
@@ -49,6 +61,7 @@ export class DialogObservacionesComponent implements OnInit {
         this.data.informe.informeFinalInterventoriaObservacionesId
       )
     }
+    this.getObservacionesByInformeFinalInterventoriaId(this.data.informe.informeFinalInterventoriaId);
   }
 
   maxLength(e: any, n: number) {
@@ -116,5 +129,22 @@ export class DialogObservacionesComponent implements OnInit {
           this.observaciones.patchValue(responseData)
         }
       })
+  }
+
+  getObservacionesByInformeFinalInterventoriaId(id: string) {
+    this.registrarInformeFinalProyectoService.getObservacionesByInformeFinalInterventoriaId(id).subscribe(anexos => {
+        this.dataSource.data = anexos as InformeFinalInterventoria[];
+        this.anexos = anexos;
+        if(this.anexos.observacionVigenteSupervisor != null){
+          this.observacionesForm.patchValue(this.anexos.observacionVigenteSupervisor)
+        }
+        if(this.anexos.historialInformeFinalInterventoriaObservaciones != null){
+          if(this.anexos.historialInformeFinalInterventoriaObservaciones.length > 0){
+            if(this.anexos.observacionVigenteSupervisor != null){
+              this.existe_historial = true;
+            }
+          }      
+        }
+    });
   }
 }
