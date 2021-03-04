@@ -44,13 +44,21 @@ export class FormDemandadosDjComponent implements OnInit {
 
   cargarRegistro() {
       this.formContratista.get("numeroContratos").setValue(this.defensaJudicial.numeroDemandados);
-      let i=0;      
+      let i=0;  
+      
+      let listaDemandado:DemandadoConvocado[]= [];
+
       this.defensaJudicial.demandadoConvocado.forEach(element => {
-        console.log(this.perfiles.controls[i].get("nomConvocado"));
-        this.perfiles.controls[i].get("nomConvocado").setValue(element.nombre);
-        this.perfiles.controls[i].get("tipoIdentificacion").setValue(element.tipoIdentificacionCodigo);
-        this.perfiles.controls[i].get("numIdentificacion").setValue(element.numeroIdentificacion);
-        
+        if (element.esDemandado == true)
+        listaDemandado.push(element);
+      });
+
+      listaDemandado.forEach(element => {
+          this.perfiles.controls[i].get("demandadoConvocadoId").setValue(element.demandadoConvocadoId);
+          this.perfiles.controls[i].get("nomConvocado").setValue(element.nombre);
+          this.perfiles.controls[i].get("tipoIdentificacion").setValue(element.tipoIdentificacionCodigo);
+          this.perfiles.controls[i].get("numIdentificacion").setValue(element.numeroIdentificacion);
+          this.perfiles.controls[i].get("registroCompleto").setValue(element.registroCompleto);
         i++;
       });
   }
@@ -66,9 +74,11 @@ export class FormDemandadosDjComponent implements OnInit {
           this.perfiles.push( 
             this.fb.group(
               {
+                demandadoConvocadoId: [ null ],
                 nomConvocado: [ null ],
                 tipoIdentificacion: [ null ],
-                numIdentificacion: [ null ]
+                numIdentificacion: [ null ],
+                registroCompleto: [ null ]
               }
             ) 
           )
@@ -139,10 +149,12 @@ export class FormDemandadosDjComponent implements OnInit {
     let defContraProyecto:DemandadoConvocado[]=[];
     for(let perfil of this.perfiles.controls){
       defContraProyecto.push({
+        demandadoConvocadoId:perfil.get("demandadoConvocadoId").value,
         nombre:perfil.get("nomConvocado").value,
         tipoIdentificacionCodigo:perfil.get("tipoIdentificacion").value,
         numeroIdentificacion:perfil.get("numIdentificacion").value,        
-        esConvocado:false //para este modulo, no lo es
+        esConvocado:false, //para este modulo, no lo es
+        esDemandado:true //nuevo campo - diferenciar entre demandado y convocado
       });
     };
     

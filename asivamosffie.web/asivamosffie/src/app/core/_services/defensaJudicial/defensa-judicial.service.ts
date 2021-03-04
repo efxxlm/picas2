@@ -153,6 +153,7 @@ export interface DemandadoConvocado{
   defensaJudicialId?:number,
   existeConocimiento?:boolean,
   registroCompleto?: boolean,
+  esDemandado?: boolean,
 }
 
 export interface DemandanteConvocante{
