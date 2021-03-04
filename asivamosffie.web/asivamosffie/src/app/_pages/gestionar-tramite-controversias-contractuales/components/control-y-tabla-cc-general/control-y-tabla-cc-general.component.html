@@ -100,12 +100,14 @@
                             Enviar trámite a comité técnico
                         </button>
                         <button mat-raised-button color="accent" class="btn-table"
-                            *ngIf="(element.estadoControversiaCodigo=='1' || element.estadoControversiaCodigo=='2' || element.estadoControversiaCodigo=='3' || element.estadoControversiaCodigo=='4')&& element.registroCompletoNombre=='Incompleto'"
+                            *ngIf="((element.estadoControversiaCodigo=='1' || element.estadoControversiaCodigo=='2' || element.estadoControversiaCodigo=='3' || element.estadoControversiaCodigo=='4')&& element.registroCompletoNombre=='Incompleto')
+                            || (element.estadoControversiaCodigo=='4' &&  element.registroCompletoNombre=='Completo')"
                             (click)=this.verDetalleEditarTramiteButton(element.controversiaContractualId);>
                             Ver detalle/Editar
                         </button>
                         <button mat-raised-button color="accent" class="btn-table"
-                            *ngIf="(element.estadoControversiaCodigo=='1' || element.estadoControversiaCodigo=='2' || element.estadoControversiaCodigo=='3' || element.estadoControversiaCodigo=='4')&& element.registroCompletoNombre=='Incompleto'"
+                            *ngIf="((element.estadoControversiaCodigo=='1' || element.estadoControversiaCodigo=='2' || element.estadoControversiaCodigo=='3' || element.estadoControversiaCodigo=='4')&& element.registroCompletoNombre=='Incompleto')
+                            || (element.estadoControversiaCodigo=='4' && element.registroCompletoNombre=='Completo')"
                             (click)=this.deleteControversia(element.controversiaContractualId);>
                             Eliminar
                         </button>
@@ -115,12 +117,12 @@
                             Descargar proceso de controversia
                         </button>
                         <button mat-raised-button color="accent" class="btn-table"
-                            *ngIf="element.estadoControversiaCodigo=='9'"
+                            *ngIf="element.estadoControversiaCodigo=='9' || (element.estadoControversiaCodigo=='3' && element.registroCompletoNombre=='Completo')"
                             (click)=this.actualizarTramiteButton(element.controversiaContractualId);>
                             Actualizar trámite
                         </button>
                         <button mat-raised-button color="accent" class="btn-table"
-                            *ngIf="(element.estadoControversiaCodigo=='2' || element.estadoControversiaCodigo=='5' || element.estadoControversiaCodigo=='6' || element.estadoControversiaCodigo=='7' || element.estadoControversiaCodigo=='8' || element.estadoControversiaCodigo=='9' || element.estadoControversiaCodigo=='10')&& element.registroCompletoNombre=='Completo'"
+                            *ngIf="(element.estadoControversiaCodigo=='2' || element.estadoControversiaCodigo=='3' || element.estadoControversiaCodigo=='5' || element.estadoControversiaCodigo=='6' || element.estadoControversiaCodigo=='7' || element.estadoControversiaCodigo=='8' || element.estadoControversiaCodigo=='9' || element.estadoControversiaCodigo=='10')&& element.registroCompletoNombre=='Completo'"
                             (click)="this.verDetalleButton(element.controversiaContractualId)">
                             Ver detalle
                         </button>

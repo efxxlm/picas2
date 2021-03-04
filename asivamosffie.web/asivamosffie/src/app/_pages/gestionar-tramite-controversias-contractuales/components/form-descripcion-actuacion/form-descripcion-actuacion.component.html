@@ -457,7 +457,7 @@
               (addressForm.get('observaciones').invalid && estaEditando)"></quill-editor>
                 </div>
                 <span class="contador miles" *ngIf="addressForm.controls.observaciones.value">
-                    {{1000 - (textoLimpio(observaciones.quillEditor,500))}}
+                    {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
                 </span>
                 <span class="contador miles" *ngIf="!addressForm.controls.observaciones.value">
                     1000

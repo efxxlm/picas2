@@ -332,7 +332,8 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       if (this.estaCompleto == true && this.addressForm.value.procedeSolicitud == false && this.addressForm.value.motivosRechazo != null) {
         estadoControversia = "2";
       }
-      if (this.estaCompleto == false && this.addressForm.value.procedeSolicitud == true && this.addressForm.value.requeridoComite == null) {
+      if ((this.estaCompleto == false && this.addressForm.value.procedeSolicitud == true && this.addressForm.value.requeridoComite == null)
+        || (this.estaCompleto == true && this.addressForm.value.procedeSolicitud == true && this.addressForm.value.requeridoComite == false)) {
         estadoControversia = "3";
       }
       if (this.estaCompleto == true && this.addressForm.value.procedeSolicitud == true && this.addressForm.value.requeridoComite == true) {
