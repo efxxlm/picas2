@@ -25,7 +25,12 @@
                     <div class="col-md-8">
                         <div class="row">
                             <div class="pr-1">
-                                <label class="label-left" for="fechaActuacionDerivada">Fecha de la actuación
+                                <label class="label-left" for="fechaActuacionDerivada"
+                                [ngClass]="{
+                                    'color-secondaryColor':
+                                      (addressForm.get('fechaActuacionDerivada').invalid && addressForm.get('fechaActuacionDerivada').touched) ||
+                                      (addressForm.get('fechaActuacionDerivada').invalid && estaEditando)
+                                  }">Fecha de la actuación
                                     derivada</label>
                             </div>
                             <div class="col d-flex align-items-center">
@@ -40,6 +45,15 @@
                                     <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
                                 </button>
                             </div>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                                    (addressForm.get('fechaActuacionDerivada').invalid && addressForm.get('fechaActuacionDerivada').touched) ||
+                                    (addressForm.get('fechaActuacionDerivada').invalid && estaEditando)
+                                  " />
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -47,7 +61,11 @@
                     <div class="col-md-12">
                         <div class="row">
                             <div class="pr-1">
-                                <label class="label-left" for="proximaActuacionRequerida">Próxima actuación
+                                <label class="label-left" for="proximaActuacionRequerida" [ngClass]="{
+                                    'color-secondaryColor':
+                                      (addressForm.get('proximaActuacionRequerida').invalid && addressForm.get('proximaActuacionRequerida').touched) ||
+                                      (addressForm.get('proximaActuacionRequerida').invalid && estaEditando)
+                                  }">Próxima actuación
                                     requerida</label>
                             </div>
                         </div>
@@ -77,6 +95,15 @@
                                     *ngIf="!addressForm.controls.proximaActuacionRequerida.value">
                                     500
                                 </span>
+                                <span class="icon-incompleto">
+                                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip" *ngIf="
+                                        (addressForm.get('proximaActuacionRequerida').invalid && addressForm.get('proximaActuacionRequerida').touched) ||
+                                        (addressForm.get('proximaActuacionRequerida').invalid && estaEditando)
+                                      " />
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -85,7 +112,11 @@
                     <div class="col-md-12">
                         <div class="row">
                             <div class="pr-1">
-                                <label class="label-left" for="estadoActuacionDerivada">Estado de la actuación
+                                <label class="label-left" for="estadoActuacionDerivada" [ngClass]="{
+                                    'color-secondaryColor':
+                                      (addressForm.get('estadoActuacionDerivada').invalid && addressForm.get('estadoActuacionDerivada').touched) ||
+                                      (addressForm.get('estadoActuacionDerivada').invalid && estaEditando)
+                                  }">Estado de la actuación
                                     derivada</label>
                             </div>
                             <div class="col">
@@ -97,6 +128,15 @@
                                     </mat-select>
                                 </mat-form-field>
                             </div>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                                    (addressForm.get('estadoActuacionDerivada').invalid && addressForm.get('estadoActuacionDerivada').touched) ||
+                                    (addressForm.get('estadoActuacionDerivada').invalid && estaEditando)
+                                  " />
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -104,7 +144,12 @@
                     <div class="col-md-12">
                         <div class="row">
                             <div class="pr-1">
-                                <label class="label-left" for="observaciones">Observaciones</label>
+                                <label class="label-left" for="observaciones"
+                                [ngClass]="{
+                                    'color-secondaryColor':
+                                      (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                                      (addressForm.get('observaciones').invalid && estaEditando)
+                                  }">Observaciones</label>
                             </div>
                         </div>
                     </div>
@@ -131,6 +176,15 @@
                                 <span class="contador miles" *ngIf="!addressForm.controls.observaciones.value">
                                     1000
                                 </span>
+                                <span class="icon-incompleto">
+                                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip" *ngIf="
+                                        (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                                        (addressForm.get('observaciones').invalid && estaEditando)
+                                      " />
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -148,7 +202,12 @@
                     <div class="col-md-12">
                         <div class="row">
                             <div class="pr-1">
-                                <label class="label-left" for="urlSoporte">URL con soporte</label>
+                                <label class="label-left" for="urlSoporte"
+                                [ngClass]="{
+                                    'color-secondaryColor':
+                                      (addressForm.get('urlSoporte').invalid && addressForm.get('urlSoporte').touched) ||
+                                      (addressForm.get('urlSoporte').invalid && estaEditando)
+                                  }">URL con soporte</label>
                             </div>
                             <div class="col">
                                 <mat-form-field class="full-width">
@@ -157,6 +216,15 @@
                                 <span class="info-url">Indique la ruta en la que se encuentran los documentos de soporte
                                     del registro de la actuación de trámite.</span>
                             </div>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                                    (addressForm.get('urlSoporte').invalid && addressForm.get('urlSoporte').touched) ||
+                                    (addressForm.get('urlSoporte').invalid && estaEditando)
+                                  " />
+                            </span>
                         </div>
                     </div>
                 </div>
