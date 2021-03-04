@@ -245,8 +245,6 @@ namespace asivamosffie.services
 
                                 _context.ContratoPerfilObservacion.Add(ContratoPerfilObservacion);
                             }
-
-
                             ContratoPerfil.ContratoPerfilNumeroRadicado.ToList().ForEach(ContratoPerfilNumeroRadicado =>
                             {
 
@@ -296,7 +294,13 @@ namespace asivamosffie.services
                         IsException = false,
                         IsValidation = false,
                         Code = RegisterPreContructionPhase1.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Preconstruccion_Fase_1, RegisterPreContructionPhase1.OperacionExitosa, idAccion, pContrato.UsuarioCreacion, CreateEdit)
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                                                                                                    (int)enumeratorMenu.Preconstruccion_Fase_1,
+                                                                                                    RegisterPreContructionPhase1.OperacionExitosa,
+                                                                                                    idAccion,
+                                                                                                    pContrato.UsuarioCreacion,
+                                                                                                    CreateEdit
+                                                                                                )
                     };
             }
             catch (Exception ex)
@@ -432,6 +436,7 @@ namespace asivamosffie.services
                 //Enviar Correo Botón aprobar inicio 3.1.7
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_supervisor && contratoMod.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
                 {
+                    GetDeleteTieneObservacionSupervisor(pContratoId);
                     await EnviarCorreoSupervisor(ConstanCodigoTipoContratacionSTRING.Interventoria, contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
                     contratoMod.FechaAprobacionRequisitosApoyo = DateTime.Now;
                 }
@@ -439,6 +444,7 @@ namespace asivamosffie.services
                 //Enviar Correo Botón aprobar inicio 3.1.7
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_supervisor && contratoMod.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
                 {
+                    GetDeleteTieneObservacionSupervisor(pContratoId);
                     await EnviarCorreoSupervisor(ConstanCodigoTipoContratacionSTRING.Obra, contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
                     contratoMod.FechaAprobacionRequisitosApoyo = DateTime.Now;
                 }
@@ -526,6 +532,22 @@ namespace asivamosffie.services
                     };
             }
         }
+
+        private void GetDeleteTieneObservacionSupervisor(int pContratoId)
+        {
+            _context.ContratoPerfil.Where(cp => cp.ContratoId == pContratoId).ToList().ForEach(ContratoPerfil =>
+            {
+                _context.Set<ContratoPerfil>()
+                        .Where(c => c.ContratoPerfilId == ContratoPerfil.ContratoPerfilId)
+                        .Update(
+                                  c => new ContratoPerfil
+                                                          {
+                                                              TieneObservacionSupervisor = null,
+                                                              FechaModificacion = DateTime.Now
+                                                          }); 
+            });
+        }
+
         /// <summary>
         /// Correos  Automaticos
         /// </summary>

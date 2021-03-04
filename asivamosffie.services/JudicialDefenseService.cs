@@ -341,6 +341,20 @@ namespace asivamosffie.services
                             demandadoConvocado.NumeroIdentificacion = defFicha.NumeroIdentificacion;
                             demandadoConvocado.Direccion = defFicha.Direccion;
                             demandadoConvocado.Email = defFicha.Email;
+                            demandadoConvocado.EsDemandado = defFicha.EsDemandado;
+                            //pasiva
+                            if (demandadoConvocado.EsConvocado == true)
+                            {
+                                demandadoConvocado.ExisteConocimiento = defFicha.ExisteConocimiento;
+                                demandadoConvocado.ConvocadoAutoridadDespacho = defFicha.ConvocadoAutoridadDespacho;
+                                demandadoConvocado.LocalizacionIdMunicipio = defFicha.LocalizacionIdMunicipio;
+                                demandadoConvocado.RadicadoDespacho = defFicha.RadicadoDespacho;
+                                demandadoConvocado.FechaRadicado = defFicha.FechaRadicado;
+                                demandadoConvocado.MedioControlAccion = defFicha.MedioControlAccion;
+                                demandadoConvocado.EtapaProcesoFfiecodigo = defFicha.EtapaProcesoFfiecodigo;
+                                demandadoConvocado.CaducidadPrescripcion = defFicha.CaducidadPrescripcion;
+
+                            }
 
                             _context.DemandadoConvocado.Update(demandadoConvocado);
                         }
@@ -1509,11 +1523,48 @@ namespace asivamosffie.services
         {
             bool retorno = true;
 
-            //valido detalle
-            if (string.IsNullOrEmpty(demandadoConvocado.Nombre) || string.IsNullOrEmpty(demandadoConvocado.TipoIdentificacionCodigo) || string.IsNullOrEmpty(demandadoConvocado.NumeroIdentificacion) ||
-                string.IsNullOrEmpty(demandadoConvocado.Direccion) || string.IsNullOrEmpty(demandadoConvocado.Email))
+            //Pasivo - acordeón demandado
+            if (demandadoConvocado.EsDemandado == true)
             {
-                retorno = false;
+                //valido detalle
+                if (string.IsNullOrEmpty(demandadoConvocado.Nombre) || string.IsNullOrEmpty(demandadoConvocado.TipoIdentificacionCodigo) || string.IsNullOrEmpty(demandadoConvocado.NumeroIdentificacion))
+                {
+                    retorno = false;
+                }
+            }else if (demandadoConvocado.EsConvocado == true)
+            {
+                if (demandadoConvocado.ExisteConocimiento == true)
+                {
+                    if (string.IsNullOrEmpty(demandadoConvocado.Nombre)
+                        || string.IsNullOrEmpty(demandadoConvocado.TipoIdentificacionCodigo)
+                        || string.IsNullOrEmpty(demandadoConvocado.TipoIdentificacionCodigo)
+                        || string.IsNullOrEmpty(demandadoConvocado.NumeroIdentificacion)
+                        || string.IsNullOrEmpty(demandadoConvocado.ConvocadoAutoridadDespacho)
+                        || (demandadoConvocado.LocalizacionIdMunicipio == null)
+                        || (demandadoConvocado.FechaRadicado == null)
+                        || string.IsNullOrEmpty(demandadoConvocado.MedioControlAccion)
+                        || string.IsNullOrEmpty(demandadoConvocado.EtapaProcesoFfiecodigo)
+                        || (demandadoConvocado.CaducidadPrescripcion == null))
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(demandadoConvocado.Nombre) || string.IsNullOrEmpty(demandadoConvocado.TipoIdentificacionCodigo) || string.IsNullOrEmpty(demandadoConvocado.NumeroIdentificacion))
+                    {
+                        retorno = false;
+                    }
+                }
+            }
+            else
+            {
+                //valido detalle
+                if (string.IsNullOrEmpty(demandadoConvocado.Nombre) || string.IsNullOrEmpty(demandadoConvocado.TipoIdentificacionCodigo) || string.IsNullOrEmpty(demandadoConvocado.NumeroIdentificacion) ||
+                    string.IsNullOrEmpty(demandadoConvocado.Direccion) || string.IsNullOrEmpty(demandadoConvocado.Email))
+                {
+                    retorno = false;
+                }
             }
 
             return retorno;

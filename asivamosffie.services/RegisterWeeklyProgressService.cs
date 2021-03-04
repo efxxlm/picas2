@@ -39,7 +39,10 @@ namespace asivamosffie.services
         #region Get
         private dynamic GetTableFinanciera(SeguimientoSemanal pSeguimientoSemanal)
         {
-            int ContratoConstruccionId = _context.FlujoInversion.Where(f => f.SeguimientoSemanalId == pSeguimientoSemanal.SeguimientoSemanalId).Select(r => r.ContratoConstruccionId).FirstOrDefault();
+            int ContratoConstruccionId = _context.FlujoInversion
+                                            .Where(f => f.SeguimientoSemanalId == pSeguimientoSemanal.SeguimientoSemanalId)
+                                            .Select(r => r.ContratoConstruccionId)
+                                            .FirstOrDefault();
 
             decimal ValorTotalProyecto = (decimal)(_context.FlujoInversion
                                             .Where(f => f.ContratoConstruccionId == ContratoConstruccionId)
@@ -47,7 +50,8 @@ namespace asivamosffie.services
 
             List<FlujoInversion> flujoInversions = _context.FlujoInversion
                                                           .Include(r => r.Programacion)
-                                                          .Where(r => r.SeguimientoSemanal.ContratacionProyectoId == pSeguimientoSemanal.ContratacionProyectoId && r.SeguimientoSemanal.NumeroSemana < pSeguimientoSemanal.NumeroSemana)
+                                                          .Where(r => r.SeguimientoSemanal.ContratacionProyectoId == pSeguimientoSemanal.ContratacionProyectoId
+                                                              && r.SeguimientoSemanal.NumeroSemana < pSeguimientoSemanal.NumeroSemana)
                                                           .Take(4)
                                                           .ToList();
 
@@ -565,6 +569,7 @@ namespace asivamosffie.services
                 SeguimientoSemanal seguimientoSemanalMod = await _context.SeguimientoSemanal.FindAsync(pSeguimientoSemanal.SeguimientoSemanalId);
                 seguimientoSemanalMod.UsuarioModificacion = pSeguimientoSemanal.UsuarioCreacion;
                 seguimientoSemanalMod.FechaModificacion = DateTime.Now;
+
                 if (ValidarRegistroCompletoSeguimientoSemanal(seguimientoSemanalMod))
                     seguimientoSemanalMod.FechaEnvioSupervisor = DateTime.Now;
                 else
@@ -634,17 +639,23 @@ namespace asivamosffie.services
                 contratacionProyecto.UsuarioModificacion = pContratacionProyecto.UsuarioCreacion;
                 contratacionProyecto.FechaModificacion = DateTime.Now;
 
-                contratacionProyecto.RutaCargaActaTerminacionContrato = Path.Combine(appSettingsService.DirectoryBase,
-                                                                                      appSettingsService.DirectoryRutaCargaActaTerminacionContrato,
-                                                                                      pContratacionProyecto.ContratacionProyectoId.ToString(),
-                                                                                      pContratacionProyecto.pFile.FileName);
+                //Para Contratos Tipo B (string URL)
+                if (!string.IsNullOrEmpty(pContratacionProyecto.RutaCargaActaTerminacionContrato))
+                    contratacionProyecto.RutaCargaActaTerminacionContrato = pContratacionProyecto.RutaCargaActaTerminacionContrato;
 
-                await _documentService.SaveFileContratacion(pContratacionProyecto.pFile, Path.Combine(appSettingsService.DirectoryBase,
-                                                                                                       appSettingsService.DirectoryRutaCargaActaTerminacionContrato,
-                                                                                                       pContratacionProyecto.ContratacionProyectoId.ToString()), pContratacionProyecto.pFile.FileName);
+                //Para Contratos Tipo A (File)
+                else
+                {
+                    contratacionProyecto.RutaCargaActaTerminacionContrato =
+                        Path.Combine(appSettingsService.DirectoryBase,
+                                     appSettingsService.DirectoryRutaCargaActaTerminacionContrato,
+                                     pContratacionProyecto.ContratacionProyectoId.ToString(),
+                                     pContratacionProyecto.pFile.FileName);
 
-                _context.SaveChanges();
-
+                    await _documentService.SaveFileContratacion(pContratacionProyecto.pFile, Path.Combine(appSettingsService.DirectoryBase,
+                                                                                                           appSettingsService.DirectoryRutaCargaActaTerminacionContrato,
+                                                                                                           pContratacionProyecto.ContratacionProyectoId.ToString()), pContratacionProyecto.pFile.FileName);
+                }
                 return new Respuesta
                 {
                     IsSuccessful = true,
@@ -795,8 +806,11 @@ namespace asivamosffie.services
                             ? true : false;
                         if (EnsayoLaboratorioMuestraOld.RegistroCompleto == false)
                             RegistroCompletoMuestras = false;
-                    }
+                    } 
                 }
+
+
+                //Actualizar estado ensayo laboratorio
                 GestionObraCalidadEnsayoLaboratorio gestionObraCalidadEnsayoLaboratorioOld =
                     _context.GestionObraCalidadEnsayoLaboratorio
                     .Where(r => r.GestionObraCalidadEnsayoLaboratorioId == pGestionObraCalidadEnsayoLaboratorio.GestionObraCalidadEnsayoLaboratorioId)
@@ -808,17 +822,14 @@ namespace asivamosffie.services
                 gestionObraCalidadEnsayoLaboratorioOld.UsuarioModificacion = pGestionObraCalidadEnsayoLaboratorio.UsuarioCreacion;
                 gestionObraCalidadEnsayoLaboratorioOld.FechaModificacion = DateTime.Now;
 
-                if (RegistroCompletoMuestras)
-                {
-                    SeguimientoSemanal seguimientoSemanalOld = _context.SeguimientoSemanal.Find(gestionObraCalidadEnsayoLaboratorioOld.SeguimientoSemanalGestionObraCalidad.SeguimientoSemanalGestionObra.SeguimientoSemanalId);
 
-                    seguimientoSemanalOld.FechaModificacion = DateTime.Now;
-                    seguimientoSemanalOld.UsuarioModificacion = pGestionObraCalidadEnsayoLaboratorio.UsuarioCreacion;
-                    seguimientoSemanalOld.RegistroCompletoMuestras = RegistroCompletoMuestras;
-                }
+                SeguimientoSemanal seguimientoSemanalOld = _context.SeguimientoSemanal.Find(gestionObraCalidadEnsayoLaboratorioOld.SeguimientoSemanalGestionObraCalidad.SeguimientoSemanalGestionObra.SeguimientoSemanalId);
 
-                _context.SaveChanges();
+                seguimientoSemanalOld.FechaModificacion = DateTime.Now;
+                seguimientoSemanalOld.UsuarioModificacion = pGestionObraCalidadEnsayoLaboratorio.UsuarioCreacion;
+                seguimientoSemanalOld.RegistroCompletoMuestras = RegistroCompletoMuestras;
 
+           
 
                 return new Respuesta
                 {
@@ -2122,7 +2133,7 @@ namespace asivamosffie.services
             if (!seguimientoSemanalGestionObraCalidad.SeRealizaronEnsayosLaboratorio.HasValue
                 || seguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio.Count() == 0)
                 return false;
-             
+
             foreach (var GestionObraCalidadEnsayoLaboratorio in seguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio)
             {
                 if (!GestionObraCalidadEnsayoLaboratorio.RegistroCompleto.HasValue || !(bool)GestionObraCalidadEnsayoLaboratorio.RegistroCompleto)

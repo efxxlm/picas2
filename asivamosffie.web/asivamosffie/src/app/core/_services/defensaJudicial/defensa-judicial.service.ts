@@ -19,7 +19,7 @@ export class DefensaJudicialService {
     return this.http.get<Contrato[]>( `${ this.url }/JudicialDefense/GetListContract` );
   }
 
-  GetListProyectsByContract( pContratoId: string ) {
+  GetListProyectsByContract( pContratoId: any ) {
     return this.http.get<any[]>( `${ this.url }/JudicialDefense/GetListProyectsByContract?pContratoId=${pContratoId}` );
   }
   
@@ -153,6 +153,7 @@ export interface DemandadoConvocado{
   defensaJudicialId?:number,
   existeConocimiento?:boolean,
   registroCompleto?: boolean,
+  esDemandado?: boolean,
 }
 
 export interface DemandanteConvocante{

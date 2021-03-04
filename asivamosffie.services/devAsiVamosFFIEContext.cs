@@ -7451,6 +7451,10 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
+                entity.Property(e => e.ModalidadCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.NumeroContrato)
                     .HasMaxLength(10)
                     .IsUnicode(false);
