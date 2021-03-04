@@ -1392,6 +1392,10 @@ namespace asivamosffie.services
                                                         .Include( r => r.ContratacionProyecto )
                                                             .ThenInclude( r => r.Proyecto )
                                                         .FirstOrDefault();
+                if (sesionComiteSolicitud.Contratacion != null)
+                {
+                    contratacion = sesionComiteSolicitud.Contratacion;
+                }
 
                 contratacion.ContratacionProyecto.ToList().ForEach(cp =>
                {
@@ -2313,6 +2317,9 @@ namespace asivamosffie.services
                 sesionComiteSolicitudOld.Observaciones = pSesionComiteSolicitud.Observaciones;
                 sesionComiteSolicitudOld.RutaSoporteVotacion = pSesionComiteSolicitud.RutaSoporteVotacion;
                 sesionComiteSolicitudOld.DesarrolloSolicitud = pSesionComiteSolicitud.DesarrolloSolicitud;
+
+                //para validar si los proyectos tienen estados validos
+                sesionComiteSolicitudOld.Contratacion = pSesionComiteSolicitud.Contratacion;
 
                 sesionComiteSolicitudOld.RegistroCompleto = ValidarRegistroCompletoSesionComiteSolicitud(sesionComiteSolicitudOld);
 

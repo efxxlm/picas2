@@ -526,6 +526,8 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
+                entity.Property(e => e.NumeroAcuerdo).HasColumnType("numeric(25, 0)");
+
                 entity.Property(e => e.UsuarioCreacion).HasMaxLength(200);
 
                 entity.Property(e => e.UsuarioModificacion).HasMaxLength(200);
@@ -2847,6 +2849,8 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaRadicado).HasColumnType("datetime");
 
+                entity.Property(e => e.NumRadicadoSac).HasColumnType("numeric(10, 0)");
+
                 entity.Property(e => e.TipoAnexo)
                     .HasMaxLength(2)
                     .IsUnicode(false)
@@ -2935,6 +2939,10 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.MensajeAyuda)
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Nombre)
                     .IsRequired()
@@ -7275,7 +7283,6 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.Fecha).HasColumnType("datetime");
 
                 entity.Property(e => e.InstitucionEducativa)
-                    .IsRequired()
                     .HasMaxLength(300)
                     .IsUnicode(false);
 
@@ -7284,7 +7291,6 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.Sede)
-                    .IsRequired()
                     .HasMaxLength(300)
                     .IsUnicode(false);
 

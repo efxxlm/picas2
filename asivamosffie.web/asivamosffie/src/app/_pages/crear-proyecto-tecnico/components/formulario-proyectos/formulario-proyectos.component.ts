@@ -1085,10 +1085,10 @@ export class FormularioProyectosComponent implements OnInit {
   }
 
   valueVacioLatitud() {
-    if (this.proyecto.predioPrincipal.ubicacionLatitud === '°') this.proyecto.predioPrincipal.ubicacionLatitud = ''
+    if (this.proyecto.predioPrincipal && this.proyecto.predioPrincipal.ubicacionLatitud === '°') this.proyecto.predioPrincipal.ubicacionLatitud = ''
   }
   valueVacioLongitud() {
-    if (this.proyecto.predioPrincipal.ubicacionLongitud === '°') this.proyecto.predioPrincipal.ubicacionLongitud = ''
+    if (this.proyecto.predioPrincipal && this.proyecto.predioPrincipal.ubicacionLongitud === '°') this.proyecto.predioPrincipal.ubicacionLongitud = ''
   }
 
   validateKeypressLlave(event: KeyboardEvent) {

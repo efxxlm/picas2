@@ -19,7 +19,7 @@ namespace asivamosffie.model.Models
         public int? TipoDocumentoId { get; set; }
         public int? NumeroActa { get; set; }
         public DateTime? FechaActa { get; set; }
-        public int? NumeroAcuerdo { get; set; }
+        public decimal? NumeroAcuerdo { get; set; }
         public DateTime? FechaAcuerdo { get; set; }
         public decimal? ValorTotalAportante { get; set; }
         public bool? Eliminado { get; set; }
