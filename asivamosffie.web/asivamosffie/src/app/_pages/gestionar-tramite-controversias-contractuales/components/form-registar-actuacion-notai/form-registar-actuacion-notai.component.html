@@ -122,7 +122,8 @@
                             <div class="text-area-quill auxBox">
                                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                                     #cualOtroActuacionAdelantada required (onContentChanged)="maxLength($event, 500)"
-                                    formControlName="cualOtroActuacionAdelantada">
+                                    formControlName="cualOtroActuacionAdelantada" [class.invalid]="(addressForm.get('cualOtroActuacionAdelantada').invalid && addressForm.get('cualOtroActuacionAdelantada').touched) ||
+                                    (addressForm.get('cualOtroActuacionAdelantada').invalid && estaEditando)">
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.cualOtroActuacionAdelantada.value">
@@ -201,7 +202,9 @@
                             <div class="text-area-quill auxBox">
                                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                                     #cualOtroActuacionRequerida required (onContentChanged)="maxLength($event, 500)"
-                                    formControlName="cualOtroActuacionRequerida">
+                                    formControlName="cualOtroActuacionRequerida"
+                                    [class.invalid]="(addressForm.get('cualOtroActuacionRequerida').invalid && addressForm.get('cualOtroActuacionRequerida').touched) ||
+                                    (addressForm.get('cualOtroActuacionRequerida').invalid && estaEditando)">
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.cualOtroActuacionRequerida.value">
@@ -459,7 +462,9 @@
                           }">Observaciones</label>
                     <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                         #observaciones (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones"
-                        style="padding: 1.5em 0em 1.2em;"></quill-editor>
+                        style="padding: 1.5em 0em 1.2em;"
+                        [class.invalid]="(addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                                    (addressForm.get('observaciones').invalid && estaEditando)"></quill-editor>
                 </div>
                 <span class="contador miles" *ngIf="addressForm.controls.observaciones.value">
                     {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}

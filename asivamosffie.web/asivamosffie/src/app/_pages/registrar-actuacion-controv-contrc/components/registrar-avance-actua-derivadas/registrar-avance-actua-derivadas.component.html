@@ -62,7 +62,11 @@
                                     [ngClass]="{'color-secondaryColor' : addressForm.controls.proximaActuacionRequerida.invalid && addressForm.controls.proximaActuacionRequerida.touched}"
                                         [styles]="editorStyle" [modules]="config" required
                                         (onContentChanged)="maxLength($event, 500)"
-                                        formControlName="proximaActuacionRequerida" #proximaActuacionRequerida>
+                                        formControlName="proximaActuacionRequerida" #proximaActuacionRequerida
+                                        [class.invalid]="
+                                        (addressForm.get('proximaActuacionRequerida').invalid && addressForm.get('proximaActuacionRequerida').touched) ||
+                                        (addressForm.get('proximaActuacionRequerida').invalid && estaEditando)
+                                      ">
                                     </quill-editor>
                                 </div>
                                 <span class="contador miles"
@@ -114,7 +118,11 @@
                                     [ngClass]="{'color-secondaryColor' : addressForm.controls.observaciones.invalid && addressForm.controls.observaciones.touched}"
                                     [styles]="editorStyle"
                                         [modules]="config" required (onContentChanged)="maxLength($event, 1000)"
-                                        formControlName="observaciones" #observaciones>
+                                        formControlName="observaciones" #observaciones
+                                        [class.invalid]="
+                                        (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                                        (addressForm.get('observaciones').invalid && estaEditando)
+                                      ">
                                     </quill-editor>
                                 </div>
                                 <span class="contador miles" *ngIf="addressForm.controls.observaciones.value">
