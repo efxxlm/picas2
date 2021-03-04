@@ -4473,13 +4473,13 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(2000)
                     .IsUnicode(false);
 
-                entity.Property(e => e.AvanceFisicoCapitulo).HasColumnType("decimal(18, 3)");
+                //entity.Property(e => e.AvanceFisicoCapitulo).HasColumnType("decimal(18, 3)");
 
                 entity.Property(e => e.FechaFin).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaInicio).HasColumnType("datetime");
 
-                entity.Property(e => e.ProgramacionCapitulo).HasColumnType("decimal(18, 3)");
+                //entity.Property(e => e.ProgramacionCapitulo).HasColumnType("decimal(18, 3)");
 
                 entity.Property(e => e.TipoActividadCodigo)
                     .IsRequired()
@@ -7757,9 +7757,9 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.EstadoSeguimientoSemanalCodigo)
+                /*entity.Property(e => e.EstadoSeguimientoSemanalCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false);
+                    .IsUnicode(false);*/
 
                 entity.Property(e => e.FechaModificacionVerificar).HasColumnType("datetime");
 

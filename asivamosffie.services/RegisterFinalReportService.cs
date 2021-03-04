@@ -332,8 +332,10 @@ namespace asivamosffie.services
                         registroCompleto = (bool)informeFinal.RegistroCompleto,
                         semaforo = semaforo,
                         aprobacionCodigo = item.AprobacionCodigo,
-                        tieneModificacionInterventor = item.TieneModificacionInterventor
-                });
+                        tieneModificacionInterventor = item.TieneModificacionInterventor,
+                        mensajeAyuda = String.IsNullOrEmpty(item.InformeFinalListaChequeo.MensajeAyuda) ? string.Empty : item.InformeFinalListaChequeo.MensajeAyuda
+
+                    });
                 }
             }
 

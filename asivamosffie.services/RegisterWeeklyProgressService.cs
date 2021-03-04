@@ -240,7 +240,7 @@ namespace asivamosffie.services
                         .Select(r => new
                         {
                             Actividad = r.Key,
-                            AvanceAcumulado = Math.Truncate((decimal)r.Sum(r => r.AvanceFisicoCapitulo)) + "%",
+                            //AvanceAcumulado = Math.Truncate((decimal)r.Sum(r => r.AvanceFisicoCapitulo)) + "%",
                             AvanceFisicoCapitulo = Math.Truncate((((decimal)r.Sum(r => r.Duracion) / seguimientoSemanal.CantidadTotalDiasActividades) * 100)) + "%"
                         });
 
@@ -404,7 +404,7 @@ namespace asivamosffie.services
                         .Select(r => new
                         {
                             Actividad = r.Key,
-                            AvanceAcumulado = Math.Truncate((decimal)r.Sum(r => r.AvanceFisicoCapitulo)) + "%",
+                            //AvanceAcumulado = Math.Truncate((decimal)r.Sum(r => r.AvanceFisicoCapitulo)) + "%",
                             AvanceFisicoCapitulo = Math.Truncate((((decimal)r.Sum(r => r.Duracion) / seguimientoSemanal.CantidadTotalDiasActividades) * 100)) + "%"
                         });
 
@@ -972,13 +972,13 @@ namespace asivamosffie.services
             foreach (var FlujoInversion in pSeguimientoSemanal.FlujoInversion)
             {
                 Programacion programacionOld = _context.Programacion.Where(r => r.ProgramacionId == FlujoInversion.ProgramacionId).FirstOrDefault();
-                programacionOld.AvanceFisicoCapitulo = FlujoInversion.Programacion.AvanceFisicoCapitulo;
+                /*programacionOld.AvanceFisicoCapitulo = FlujoInversion.Programacion.AvanceFisicoCapitulo;
                 programacionOld.ProgramacionCapitulo = FlujoInversion.Programacion.ProgramacionCapitulo;
 
                 if (!programacionOld.AvanceFisicoCapitulo.HasValue)
                 {
                     RegistroCompleto = false;
-                }
+                }*/
             }
             //EstadosDisponibilidad codigo =  7 6 cuando esta estos estados de obra desabilitar 
             ///Validar Estado De obra 
@@ -987,8 +987,8 @@ namespace asivamosffie.services
                 .FromSqlRaw("SELECT DISTINCT p.* FROM dbo.Programacion AS p INNER JOIN dbo.FlujoInversion AS f ON p.ProgramacionId = f.ProgramacionId INNER JOIN dbo.SeguimientoSemanal AS s ON f.SeguimientoSemanalId = s.SeguimientoSemanalId WHERE s.ContratacionProyectoId = " + pSeguimientoSemanal.ContratacionProyectoId + " AND p.TipoActividadCodigo = 'C'")
                 .ToList();
 
-            decimal? ProgramacionAcumuladaObra = ListProgramacion.Sum(r => r.ProgramacionCapitulo);
-            decimal? ProgramacionEjecutadaObra = ListProgramacion.Sum(r => r.AvanceFisicoCapitulo);
+            //decimal? ProgramacionAcumuladaObra = ListProgramacion.Sum(r => r.ProgramacionCapitulo);
+            //decimal? ProgramacionEjecutadaObra = ListProgramacion.Sum(r => r.AvanceFisicoCapitulo);
 
             ContratacionProyecto contratacionProyectoValidarEstadoObra = _context.ContratacionProyecto.Find(pSeguimientoSemanal.ContratacionProyectoId);
             contratacionProyectoValidarEstadoObra.UsuarioModificacion = usuarioCreacion;
@@ -1000,7 +1000,7 @@ namespace asivamosffie.services
             decimal SegundoTercio = PrimerTercio * 2;
 
 
-            if (ProgramacionAcumuladaObra.HasValue && ProgramacionEjecutadaObra.HasValue)
+            /*if (ProgramacionAcumuladaObra.HasValue && ProgramacionEjecutadaObra.HasValue)
             {
                 /////Programación acumulada de la obra: == Avance acumulado ejecutado de la obra:   = normal
                 if (ProgramacionAcumuladaObra == ProgramacionEjecutadaObra)
@@ -1028,7 +1028,7 @@ namespace asivamosffie.services
             else
             {
                 contratacionProyectoValidarEstadoObra.EstadoObraCodigo = ConstanCodigoEstadoObraSeguimientoSemanal.En_ejecucion;
-            }
+            }*/
 
             //Guardar Seguimiento Semanal Avance Fisico
 
