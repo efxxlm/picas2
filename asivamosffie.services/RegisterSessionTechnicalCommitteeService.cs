@@ -1374,19 +1374,12 @@ namespace asivamosffie.services
         {
             bool completo = true;
             if (
-               //(sesionComiteSolicitud.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_tecnico &&
-               //     string.IsNullOrEmpty(sesionComiteSolicitud.RutaSoporteVotacion) ) ||
                (sesionComiteSolicitud.RequiereVotacion == true && string.IsNullOrEmpty(sesionComiteSolicitud.RutaSoporteVotacion)) ||
                sesionComiteSolicitud.GeneraCompromiso == null ||
                sesionComiteSolicitud.RequiereVotacion == null ||
-               //sesionComiteSolicitud.ComiteTecnicoFiduciarioId > 0 ||
-               //sesionComiteSolicitud.FechaComiteFiduciario == null ||
-               //sesionComiteSolicitud.UsuarioComiteFiduciario == null ||
-               //sesionComiteSolicitud.EstadoActaCodigo == null ||
                sesionComiteSolicitud.EstadoCodigo == null ||
                string.IsNullOrEmpty(sesionComiteSolicitud.Observaciones) || 
                string.IsNullOrEmpty(sesionComiteSolicitud.DesarrolloSolicitud) 
-                //string.IsNullOrEmpty(sesionComiteSolicitud.RutaSoporteVotacion
                 )
             {
                 completo = false;
@@ -1399,12 +1392,13 @@ namespace asivamosffie.services
                                                         .Include( r => r.ContratacionProyecto )
                                                             .ThenInclude( r => r.Proyecto )
                                                         .FirstOrDefault();
+
                 contratacion.ContratacionProyecto.ToList().ForEach(cp =>
                {
                    if (contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
                        if (
                                cp.Proyecto.EstadoProyectoObraCodigo != ConstantCodigoEstadoProyecto.AprobadoComiteTecnico &&
-                               cp.Proyecto.EstadoProyectoObraCodigo != ConstantCodigoEstadoProyecto.DevueltoComiteFiduciario &&
+                               cp.Proyecto.EstadoProyectoObraCodigo != ConstantCodigoEstadoProyecto.DevueltoComiteTecnico &&
                                cp.Proyecto.EstadoProyectoObraCodigo != ConstantCodigoEstadoProyecto.RechazadoComiteTecnico
                           )
                            completo = false;
@@ -1412,7 +1406,7 @@ namespace asivamosffie.services
                    if (contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
                        if (
                                cp.Proyecto.EstadoProyectoInterventoriaCodigo != ConstantCodigoEstadoProyecto.AprobadoComiteTecnico &&
-                               cp.Proyecto.EstadoProyectoInterventoriaCodigo != ConstantCodigoEstadoProyecto.DevueltoComiteFiduciario &&
+                               cp.Proyecto.EstadoProyectoInterventoriaCodigo != ConstantCodigoEstadoProyecto.DevueltoComiteTecnico &&
                                cp.Proyecto.EstadoProyectoInterventoriaCodigo != ConstantCodigoEstadoProyecto.RechazadoComiteTecnico
                           )
                            completo = false;
