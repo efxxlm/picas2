@@ -84,14 +84,13 @@
   }
 
   &.card {
-      width: 100%;
+    width: 100%;
 
-      .ql-container.ql-snow {
-        border-bottom: $fontColor solid 1px;
+    .ql-container.ql-snow {
+      border-bottom: $fontColor solid 1px;
 
       &.invalid {
         .ql-container.ql-snow {
-          max-width: 70em;
           border-bottom: $secondaryColor solid 1px;
         }
       }
@@ -145,3 +144,6 @@
   }
 }
 
+.quill-editor-style.card.ng-invalid .ql-container.ql-snow {
+  border-color: $secondaryColor;
+}
