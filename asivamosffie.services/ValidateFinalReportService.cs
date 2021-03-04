@@ -74,7 +74,7 @@ namespace asivamosffie.services
                                                          .Include(r => r.InstitucionEducativa)
                                                          .FirstOrDefaultAsync();
             List<InformeFinalObservaciones> informeFinalObservacionesApoyo = _context.InformeFinalObservaciones.Where(r => r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && r.EsApoyo == true).ToList();
-            List<InformeFinalObservaciones> informeFinalObservacionesSupervisor = _context.InformeFinalObservaciones.Where(r => r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && r.EsSupervision == true).ToList();
+            List<InformeFinalObservaciones> informeFinalObservacionesSupervisor = _context.InformeFinalObservaciones.Where(r => r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && r.EsSupervision == true).OrderByDescending(r=> r.FechaCreacion).ToList();
 
             InstitucionEducativaSede Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == proyecto.SedeId).FirstOrDefault();
             Localizacion Municipio = ListLocalizacion.Where(r => r.LocalizacionId == proyecto.LocalizacionIdMunicipio).FirstOrDefault();
@@ -230,7 +230,7 @@ namespace asivamosffie.services
             if (informeFinal != null)
             {
                 InformeFinalInterventoria existe_no_cumple = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == pInformeFinalId && r.AprobacionCodigo == ConstantCodigoCalificacionInformeFinal.No_Cumple).FirstOrDefault();
-                InformeFinalInterventoria existe_no_diligenciado = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == pInformeFinalId && r.AprobacionCodigo == "0" || String.IsNullOrEmpty(r.AprobacionCodigo)).FirstOrDefault();
+                InformeFinalInterventoria existe_no_diligenciado = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == pInformeFinalId && (r.AprobacionCodigo == "0" || String.IsNullOrEmpty(r.AprobacionCodigo))).FirstOrDefault();
                 
                 if (existe_no_cumple != null)
                 {
@@ -366,6 +366,14 @@ namespace asivamosffie.services
             string strCrearEditar = string.Empty;
             try
             {
+                InformeFinal informefinal = _context.InformeFinal.Find(pObservacion.InformeFinalId);
+
+                if (informefinal.EstadoAprobacion == ConstantCodigoEstadoAprobacionInformeFinal.Modificado_Apoyo_Supervision_Interventor && pObservacion.Archivado == true)
+                {
+                    pObservacion.InformeFinalObservacionesId = 0;
+                    pObservacion.Archivado = false;
+                }
+
                 if (pObservacion.InformeFinalObservacionesId == 0)
                 {
                     await _context.Set<InformeFinal>().Where(r => r.InformeFinalId == pObservacion.InformeFinalId && (r.EstadoAprobacion == "0" || string.IsNullOrEmpty(r.EstadoAprobacion)))
