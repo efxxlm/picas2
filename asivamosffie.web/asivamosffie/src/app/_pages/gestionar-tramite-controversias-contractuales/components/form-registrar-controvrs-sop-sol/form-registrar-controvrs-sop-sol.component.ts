@@ -56,7 +56,8 @@ export class FormRegistrarControvrsSopSolComponent implements OnInit {
 
   onSubmit() {
     this.estaEditando = true;
-    console.log(this.addressForm.value);
+    this.addressForm.markAllAsTouched();
+    // console.log(this.addressForm.value);
     this.services.ActualizarRutaSoporteControversiaContractual(this.idControversia, this.addressForm.value.urlSoporte).subscribe(resp => {
       if (resp.isSuccessful == true) {
         this.openDialog('', 'La información ha sido guardada exitosamente.');

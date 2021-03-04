@@ -203,6 +203,7 @@ export class FormEstudioDeMercadoComponent implements OnInit {
   onSubmit() {
     //console.log(this.procesoSeleccion);return;
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     const listaCotizaciones = this.addressForm.get('cotizaciones') as FormArray;
 
     this.procesoSeleccion.procesoSeleccionCotizacion = [];

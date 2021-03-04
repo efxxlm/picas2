@@ -312,7 +312,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
   }
   onSubmit() {
     this.estaEditando = true;
-
+    this.addressForm.markAllAsTouched();
     let meses: number = this.plazoEjecucionPreConstruccionMeses === undefined ? 0 : this.plazoEjecucionPreConstruccionMeses;
     meses = meses + (this.addressForm.get('mesPlazoEjFase2').value === undefined ? 0 : this.addressForm.get('mesPlazoEjFase2').value);
 

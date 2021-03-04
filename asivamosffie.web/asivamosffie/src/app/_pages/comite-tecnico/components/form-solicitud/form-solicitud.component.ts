@@ -261,9 +261,8 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
 
   onSubmit() {
     this.estaEditando = true;
-    let tipoSolicitudCodigo: string;
-
-    
+    this.addressForm.markAllAsTouched();
+    let tipoSolicitudCodigo: string;    
 
     if (this.proyectos)
       this.proyectos.forEach(p => {
@@ -418,7 +417,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     }
 
     this.estaEditando = true;
-
+    this.addressForm.markAllAsTouched();
   }
 
 

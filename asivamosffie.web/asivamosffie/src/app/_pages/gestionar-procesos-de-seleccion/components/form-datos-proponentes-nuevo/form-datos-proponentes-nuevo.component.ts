@@ -356,6 +356,8 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
 
 
     this.estaEditando = true;
+    this.personaNaturalForm.markAllAsTouched();
+
     if(!this.noTanNuevo)
     {
       this.procesoSeleccion.procesoSeleccionProponente = [];
@@ -388,6 +390,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
      return false; 
     }
     this.estaEditando = true;
+    this.personaNaturalForm.markAllAsTouched();
     if(!this.noTanNuevo)
     {
       this.procesoSeleccion.procesoSeleccionProponente = [];
@@ -452,6 +455,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
      return false; 
     }
     this.estaEditando = true;
+    this.personaNaturalForm.markAllAsTouched();
     let porcentaje: number = 0;
 
     if(!this.noTanNuevo)

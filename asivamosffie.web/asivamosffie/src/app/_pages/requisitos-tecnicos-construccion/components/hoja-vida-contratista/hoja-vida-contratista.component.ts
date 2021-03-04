@@ -129,6 +129,7 @@ export class HojaVidaContratistaComponent implements OnInit {
           }
         }
         this.estaEditando = true;
+        this.formContratista.markAllAsTouched();
 
       } );
       this.perfilesCompletados.emit( 'sin-diligenciar' );

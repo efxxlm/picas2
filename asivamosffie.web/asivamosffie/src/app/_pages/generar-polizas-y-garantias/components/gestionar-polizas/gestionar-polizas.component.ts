@@ -248,6 +248,7 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     // console.log(this.addressForm.value);
     let polizasList;
     if (this.addressForm.value.polizasYSeguros != undefined || this.addressForm.value.polizasYSeguros != null) {

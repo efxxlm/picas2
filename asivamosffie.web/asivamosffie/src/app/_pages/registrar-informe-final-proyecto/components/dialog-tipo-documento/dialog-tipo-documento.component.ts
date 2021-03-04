@@ -61,6 +61,7 @@ export class DialogTipoDocumentoComponent implements OnInit {
       this.data.informe.informeFinalAnexoId
     );
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     if (this.data.informe.informeFinalAnexoId != null) {
       this.addressForm.value.informeFinalAnexoId = this.data.informe.informeFinalAnexoId;
     }

@@ -135,7 +135,8 @@ export class FormDemandadosDjComponent implements OnInit {
 
   guardar () {
     this.estaEditando = true;
-    console.log( this.formContratista );
+    this.formContratista.markAllAsTouched();
+    // console.log( this.formContratista );
     let defContraProyecto:DemandadoConvocado[]=[];
     for(let perfil of this.perfiles.controls){
       defContraProyecto.push({

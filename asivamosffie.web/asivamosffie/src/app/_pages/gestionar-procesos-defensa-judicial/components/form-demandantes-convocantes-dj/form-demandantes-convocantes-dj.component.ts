@@ -183,6 +183,7 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
 
   guardar () {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let defContraProyecto:DemandanteConvocante[]=[];
     for(let perfil of this.perfiles.controls){
       defContraProyecto.push({

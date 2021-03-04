@@ -309,6 +309,7 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let polizasList = [];
     if (this.addressForm.value.polizasYSeguros != undefined || this.addressForm.value.polizasYSeguros != null) {
       if ( this.addressForm.value.polizasYSeguros.length > 0 ) {

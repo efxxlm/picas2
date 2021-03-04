@@ -434,6 +434,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
 
   onSubmitPersonaNatural() {
     this.estaEditando = true;
+    this.personaNaturalForm.markAllAsTouched();
     this.procesoSeleccion.procesoSeleccionProponente = [];
     let proponente: ProcesoSeleccionProponente = {
       procesoSeleccionProponenteId: this.personaNaturalForm.get('procesoSeleccionProponenteId').value,
@@ -457,6 +458,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
   onSubmitPersonaJuridicaIndividual() {
 
     this.estaEditando = true;
+    this.personaNaturalForm.markAllAsTouched();
     this.procesoSeleccion.procesoSeleccionProponente = [];
     let proponente: ProcesoSeleccionProponente = {
 
@@ -498,6 +500,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
 
   onSubmitUnionTemporal() {
     this.estaEditando = true;
+    this.personaNaturalForm.markAllAsTouched();
     let porcentaje: number = 0;
     this.procesoSeleccion.procesoSeleccionProponente = [];
     this.procesoSeleccion.procesoSeleccionIntegrante = [];

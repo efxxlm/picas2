@@ -357,6 +357,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   onSubmit() {
     // console.log(this.addressForm.value);+
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
 
     const listaGrupos = this.addressForm.get('grupos') as FormArray;
     const listaCronogramas = this.addressForm.get('cronogramas') as FormArray;

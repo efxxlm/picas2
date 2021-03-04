@@ -151,6 +151,7 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
 
   onSubmit() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     this.noGuardado=false;
   }
 

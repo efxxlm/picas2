@@ -175,6 +175,7 @@ export class FormConvocadosPasivaDjComponent implements OnInit {
 
   guardar () {
     this.estaEditando = true;
+    this.formContratista.markAllAsTouched();
     console.log( this.formContratista );
     let defContraProyecto:DemandadoConvocado[]=[];
     for(let perfil of this.perfiles.controls){

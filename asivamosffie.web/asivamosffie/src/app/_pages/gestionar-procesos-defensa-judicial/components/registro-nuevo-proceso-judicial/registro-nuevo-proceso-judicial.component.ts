@@ -35,6 +35,7 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
 
     async editMode(){
       this.estaEditando = true;
+      this.addressForm.markAllAsTouched();
     
       this.cargarRegistro().then(() => 
       { 

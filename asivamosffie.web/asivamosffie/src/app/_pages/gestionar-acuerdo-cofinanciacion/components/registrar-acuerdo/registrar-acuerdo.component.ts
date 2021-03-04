@@ -81,6 +81,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
 
       if (param.id) {
         this.estaEditando = true;
+        this.datosAportantes.markAllAsTouched();
         this.id = param.id;
         this.cofinanciacionService.getAcuerdoCofinanciacionById(this.id).subscribe(cof => {
           this.mostrarDocumentosDeApropiacion = true;
@@ -373,6 +374,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
   onSave(parcial: boolean) {
     // this.loading = true;
     this.estaEditando = true;
+    this.datosAportantes.markAllAsTouched();
     this.listaAportantes();
 
     const cofinanciacion: Cofinanciacion =

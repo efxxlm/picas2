@@ -84,6 +84,7 @@ export class FormEvaluacionComponent {
 
   onSubmit() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     // console.log(this.addressForm.value);
 
     this.procesoSeleccion.procesoSeleccionId = this.addressForm.get('procesoSeleccionId').value,

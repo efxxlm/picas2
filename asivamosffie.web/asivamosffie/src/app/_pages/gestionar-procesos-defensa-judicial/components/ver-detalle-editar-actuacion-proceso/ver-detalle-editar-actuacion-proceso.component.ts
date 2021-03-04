@@ -83,7 +83,8 @@ export class VerDetalleEditarActuacionProcesoComponent implements OnInit {
 
   onSubmit() {
     this.estaEditando = true;
-    console.log(this.addressForm.value);
+    this.addressForm.markAllAsTouched();
+    // console.log(this.addressForm.value);
     this.openDialog('', 'La información ha sido guardada exitosamente.');
   }
 

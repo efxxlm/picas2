@@ -78,6 +78,7 @@ export class DiagnosticoComponent implements OnInit {
       this.totalConstruccion = totalFase;
       this.totalFaseConstruccion.nativeElement.value = this.currencyPipe.transform( totalFase, 'COP', 'symbol-narrow', '.0-0' );
       this.estaEditando = true;
+      this.formDiagnostico.markAllAsTouched();
     } );
   }
 

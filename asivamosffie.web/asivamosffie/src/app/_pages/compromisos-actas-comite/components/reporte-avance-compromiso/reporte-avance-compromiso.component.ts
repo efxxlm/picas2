@@ -131,6 +131,7 @@ export class ReporteAvanceCompromisoComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     this.estaEditando = true;
+    this.reporte.markAllAsTouched();
     if (this.reporte.invalid || this.estadoCodigo === undefined) {
       this.openDialog('', '<b>Falta registrar información.</b>');
       return;

@@ -239,6 +239,7 @@ export class FormContratosAsociadosDjComponent implements OnInit {
 
   guardar () {
     this.estaEditando = true;
+    this.formContratista.markAllAsTouched();
     console.log( this.formContratista );
     console.log(this.listProyectos);
     let defContraProyecto:DefensaJudicialContratacionProyecto[]=[];

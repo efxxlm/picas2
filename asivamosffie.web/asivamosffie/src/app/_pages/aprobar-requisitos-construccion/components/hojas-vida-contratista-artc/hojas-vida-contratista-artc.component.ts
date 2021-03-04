@@ -108,6 +108,7 @@ export class HojasVidaContratistaArtcComponent implements OnInit {
 
   onSubmit(){
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     const ConstruccionPerfil = {
       construccionPerfilId: this.perfil.construccionPerfilId,
       tieneObservacionesSupervisor: this.addressForm.value.tieneObservaciones,

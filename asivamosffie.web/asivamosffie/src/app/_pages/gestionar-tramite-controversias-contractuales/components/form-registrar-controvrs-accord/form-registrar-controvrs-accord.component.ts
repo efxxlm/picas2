@@ -292,6 +292,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
   onSubmit() {
     console.log(this.addressForm.value);
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
 
     let fecha1 = Date.parse(this.addressForm.get('fechaSolicitud').value);
     this.fechaSesion = new Date(fecha1);

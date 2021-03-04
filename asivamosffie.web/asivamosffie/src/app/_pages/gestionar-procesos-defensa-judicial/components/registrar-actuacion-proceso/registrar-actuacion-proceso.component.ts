@@ -95,6 +95,7 @@ export class RegistrarActuacionProcesoComponent implements OnInit {
 
   onSubmit() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let defensaJudicial=this.defensaJudicial;
     
     defensaJudicial.defensaJudicialSeguimiento.push({

@@ -34,6 +34,7 @@ export class BtnRegistrarComponent implements OnInit {
 
   onSubmit() {
     this.estaEditando = true;
+    this.regitrarAporteForm.markAllAsTouched();
     if (this.regitrarAporteForm.valid) {
       let idTipoAportante: number;
       idTipoAportante = this.regitrarAporteForm.get('tipoAportante').value.dominioId
