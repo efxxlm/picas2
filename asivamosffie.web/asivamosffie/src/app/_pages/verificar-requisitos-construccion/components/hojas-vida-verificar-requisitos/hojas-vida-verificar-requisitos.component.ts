@@ -94,6 +94,7 @@ export class HojasVidaVerificarRequisitosComponent implements OnInit {
 
   onSubmit(){
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     const ConstraccionPerfil = {
       construccionPerfilId: this.perfil.construccionPerfilId,
       tieneObservacionesApoyo: this.addressForm.value.tieneObservaciones,

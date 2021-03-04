@@ -128,6 +128,7 @@ export class ProgramacionObraVerificarRequisitosComponent implements OnInit {
 
   guardarProgramacion() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let construccion = {
       contratoConstruccionId: this.contratoConstruccionId,
       tieneObservacionesProgramacionObraApoyo: this.addressForm.value.tieneObservaciones,

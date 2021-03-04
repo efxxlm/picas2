@@ -196,6 +196,7 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
 
   onSubmit() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     if (this.addressForm.valid) {
       let plazoObra: number = 0;
       let plazoInterventoria: number = 0;

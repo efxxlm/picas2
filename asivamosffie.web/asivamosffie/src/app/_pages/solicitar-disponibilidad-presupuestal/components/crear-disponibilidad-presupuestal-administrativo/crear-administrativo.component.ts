@@ -79,6 +79,7 @@ export class CrearDisponibilidadPresupuestalAdministrativoComponent implements O
       
                 this.changeProyecto();              
                 this.estaEditando = true;
+                this.formulario.markAllAsTouched();
               }
             )            
           }          
@@ -151,6 +152,7 @@ export class CrearDisponibilidadPresupuestalAdministrativoComponent implements O
 
   enviarObjeto() {
     this.estaEditando = true;
+    this.formulario.markAllAsTouched();
     let aportante = this.listaAportantes[0];
 
     let valor=0;

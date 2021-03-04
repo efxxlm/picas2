@@ -356,6 +356,7 @@ export class FormRegistrarParticipantesComponent {
 
   onSubmit() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     if (this.addressForm.valid) {
 
       let comite: ComiteTecnico = {

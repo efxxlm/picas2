@@ -93,6 +93,7 @@ export class FormProposicionesVariosComponent {
 
   onSubmit() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     // console.log(this.addressForm)
 
     let temas: SesionComiteTema[] = []
