@@ -1,6 +1,6 @@
 <section class="container text-center" *ngIf="contrato !== undefined">
     <div class="text-right">
-        <a routerLink="/verificarSolicitudPago" mat-button color="primary" class="btn-regresar">
+        <a routerLink="/verificarFinancieramenteSolicitudDePago" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
         </a>
     </div>
@@ -120,10 +120,7 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-registrar-solicitud-pago></app-registrar-solicitud-pago>
-                <!--
-                    <app-obs-registrar-solicitud-pago [contrato]="contrato"></app-obs-registrar-solicitud-pago>
-                -->
+                <app-registrar-solicitud-pago [contrato]="contrato"></app-registrar-solicitud-pago>
             </mat-expansion-panel>
         </mat-accordion>
     </ng-container>
@@ -149,15 +146,28 @@
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title en-alerta">
-                    Verificar lista de chequeo
+                <mat-panel-title class="expansion-style--title">
+                    Radicación SAC a financiera
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <div style="margin-top: 1em;">
-                <div class="d-flex align-items-center solbloq ml8 info-text en-alertaLibre mb-2em">
-                    Este acordeón consume información de la funcionalidad Listas de chequeó.
-                </div>
-            </div>
+
+            <mat-card class="shipping-card var-main-gris">
+                <mat-card-content style="text-align: left;">
+                    <p><strong>Fecha de Radicación SAC a financiera:</strong> 10/10/2020 </p>
+                    <p><strong>Número de radicación SAC a financiera:</strong> 009898 </p>
+                    <p><strong>Fecha de asignación:</strong> 11/10/2020 </p>
+                </mat-card-content>
+            </mat-card>
+
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Validar lista de chequeo
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <app-form-valid-listchequeo-vfsp></app-form-valid-listchequeo-vfsp>
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">

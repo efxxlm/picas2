@@ -101,7 +101,7 @@ export class ValidarListaChequeoComponent implements OnInit {
             let enProceso = 0;
             let completo = 0;
             solicitudPagoListaChequeoRespuesta.forEach( listaChequeo => {
-                console.log( Object.keys( listaChequeo ) );
+                // console.log( Object.keys( listaChequeo ) );
             } );
         }
     }

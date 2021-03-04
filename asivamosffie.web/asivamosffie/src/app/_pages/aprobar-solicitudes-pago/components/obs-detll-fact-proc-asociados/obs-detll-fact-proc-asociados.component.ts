@@ -73,9 +73,6 @@ export class ObsDetllFactProcAsociadosComponent implements OnInit {
 
     ngOnInit(): void {
         this.getProyectos();
-        if ( this.solicitudPago !== undefined ) {
-
-        }
     };
 
     getProyectos() {

@@ -49,13 +49,13 @@ export class FormCriteriosPagoComponent implements OnInit {
             const fasePreConstruccionFormaPagoCodigo = solicitudPagoCargarFormaPago.fasePreConstruccionFormaPagoCodigo;
             this.registrarPagosSvc.getCriterioByFormaPagoCodigo( fasePreConstruccionFormaPagoCodigo )
                 .subscribe(
-                    response => {
+                    async response => {
                         const criteriosArray = [];
                         this.solicitudPagoRegistrarSolicitudPago = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0];
                         this.solicitudPagoFase = this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase[0];
 
                         if ( this.solicitudPagoFase.solicitudPagoFaseCriterio.length > 0 ) {
-                            this.solicitudPagoFase.solicitudPagoFaseCriterio.forEach( async criterio => {
+                            for ( const criterio of this.solicitudPagoFase.solicitudPagoFaseCriterio ) {
                                 // GET Criterio seleccionado
                                 const criterioSeleccionado = response.filter( value => value.codigo === criterio.tipoCriterioCodigo );
                                 criteriosArray.push( criterioSeleccionado[0] );
@@ -99,7 +99,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                                         }
                                     )
                                 );
-                            } );
+                            }
                         }
                         
                         this.criteriosArray = response;
@@ -111,12 +111,12 @@ export class FormCriteriosPagoComponent implements OnInit {
             const faseConstruccionFormaPagoCodigo = solicitudPagoCargarFormaPago.faseConstruccionFormaPagoCodigo;
             this.registrarPagosSvc.getCriterioByFormaPagoCodigo( faseConstruccionFormaPagoCodigo )
                 .subscribe(
-                    response => {
+                    async response => {
                         const criteriosArray = [];
                         this.solicitudPagoRegistrarSolicitudPago = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0];
                         this.solicitudPagoFase = this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase[0];
                         if ( this.solicitudPagoFase.solicitudPagoFaseCriterio.length > 0 ) {
-                            this.solicitudPagoFase.solicitudPagoFaseCriterio.forEach( async criterio => {
+                            for ( const criterio of this.solicitudPagoFase.solicitudPagoFaseCriterio ) {
                                 // GET Criterio seleccionado
                                 const criterioSeleccionado = response.filter( value => value.codigo === criterio.tipoCriterioCodigo );
                                 criteriosArray.push( criterioSeleccionado[0] );
@@ -160,7 +160,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                                         }
                                     )
                                 );
-                            } );
+                            }
                         }
                         this.criteriosArray = response;
                         this.addressForm.get( 'criterioPago' ).setValue( criteriosArray );
