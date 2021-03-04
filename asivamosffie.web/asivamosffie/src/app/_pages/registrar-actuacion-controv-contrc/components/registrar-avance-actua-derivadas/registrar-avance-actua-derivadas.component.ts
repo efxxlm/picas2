@@ -39,7 +39,7 @@ export class RegistrarAvanceActuaDerivadasComponent implements OnInit {
   controversia: any;
   actuacion: any;
   seRealizoPeticion=false;
-
+  estaEditando = false;
   ngOnDestroy(): void {
     if (this.addressForm.dirty === true  && this.seRealizoPeticion === false ) {
       let dialogRef =this.dialog.open(ModalDialogComponent, {
@@ -112,6 +112,7 @@ export class RegistrarAvanceActuaDerivadasComponent implements OnInit {
     }
   }
   onSubmit() {
+    this.estaEditando = true;
     let obj={
       seguimientoActuacionDerivadaId:this.actuacionDerivadaID,
       controversiaActuacionId:this.controversia.controversiaActuacionId,
