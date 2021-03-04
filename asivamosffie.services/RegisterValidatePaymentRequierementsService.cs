@@ -1430,7 +1430,10 @@ namespace asivamosffie.services
 
             foreach (var SolicitudPagoListaChequeo in solicitudPago.SolicitudPagoListaChequeo)
             {
-                SolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta = ListSolicitudPagoListaChequeoRespuesta.Where(r=> r.SolicitudPagoListaChequeoId == SolicitudPagoListaChequeo.ListaChequeoId).ToList();
+                SolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta = 
+                    ListSolicitudPagoListaChequeoRespuesta
+                    .Where(r=> r.SolicitudPagoListaChequeoId == SolicitudPagoListaChequeo.SolicitudPagoListaChequeoId)
+                    .ToList();
 
                 foreach (var SolicitudPagoListaChequeoRespuesta in SolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta)
                 {
