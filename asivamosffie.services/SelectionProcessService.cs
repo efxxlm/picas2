@@ -1860,11 +1860,16 @@ namespace asivamosffie.services
             try
             {
                 var procesoSeleccionCot = _context.ProcesoSeleccionCronograma.Find(procesoSeleccionCotizacionId);
-                procesoSeleccionCot.Eliminado = true;
-                procesoSeleccionCot.UsuarioModificacion = usuarioModificacion;
-                procesoSeleccionCot.FechaModificacion = DateTime.Now;
-                _context.Update(procesoSeleccionCot);
-                _context.SaveChanges();
+
+                if (procesoSeleccionCot != null)
+                {
+                    procesoSeleccionCot.Eliminado = true;
+                    procesoSeleccionCot.UsuarioModificacion = usuarioModificacion;
+                    procesoSeleccionCot.FechaModificacion = DateTime.Now;
+                    _context.Update(procesoSeleccionCot);
+                    _context.SaveChanges();
+                }
+                
                 return respuesta =
                     new Respuesta
                     {
