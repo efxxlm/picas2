@@ -61,7 +61,7 @@ export class ObservacionComponent implements OnInit {
       this.technicalCommitteSessionService
         .getSesionSolicitudObservacionProyecto(this.data.idsesionComiteSolicitud, this.data.contratacionProyectoid)
         .subscribe(observaciones => {
-          this.listaObservaciones = observaciones;
+          this.listaObservaciones = observaciones.filter( o => o.sesionParticipante.comiteTecnicoId == this.comiteTecnicoId );
           
           this.contratacionObservacion = this.contratacionObservacion.filter( o => o.comiteTecnicoId == this.comiteTecnicoId );
 
@@ -84,7 +84,7 @@ export class ObservacionComponent implements OnInit {
 
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
-      e.editor.deleteText(n, e.editor.getLength());
+      e.editor.deleteText(n-1, e.editor.getLength());
     }
   }
 
@@ -118,6 +118,8 @@ export class ObservacionComponent implements OnInit {
 
   enviarObservacion() {
 
+    console.log( this.data);
+
     let contraracionObservacion: ContratacionObservacion = {
       contratacionObservacionId: this.contratacionObservacionId,
       contratacionProyectoid: this.contratacionProyectoId,
@@ -129,7 +131,8 @@ export class ObservacionComponent implements OnInit {
       contratacionProyecto:{
         proyecto:{
           proyectoId: this.data.proyectoId,
-          estadoProyectoCodigo: this.data.estadoProyectoCodigo,
+          estadoProyectoObraCodigo: this.data.estadoProyectoObraCodigo,
+          estadoProyectoInterventoriaCodigo: this.data.estadoProyectoInterventoriaCodigo,
           
         }
       }

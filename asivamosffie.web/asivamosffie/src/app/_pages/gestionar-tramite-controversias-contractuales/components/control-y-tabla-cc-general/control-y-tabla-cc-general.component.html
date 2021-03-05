@@ -55,7 +55,7 @@
                     <div *ngIf="element.estadoControversiaCodigo=='5' && element.tipoControversiaCodigo=='1'">Enviada a
                         comité técnico</div>
                     <div *ngIf="element.estadoControversiaCodigo=='6' && element.tipoControversiaCodigo=='1'">Rechazada
-                        a comité técnico</div>
+                        por comité técnico</div>
                     <div *ngIf="element.estadoControversiaCodigo=='7' && element.tipoControversiaCodigo=='1'">Rechazada
                         por comité fiduciario</div>
                     <div *ngIf="element.estadoControversiaCodigo=='8' && element.tipoControversiaCodigo=='1'">Aprobada
@@ -90,22 +90,24 @@
                             Consultar / Editar actualizaciones
                         </button>
                         <button mat-raised-button color="accent" class="btn-table"
-                            *ngIf="element.estadoControversiaCodigo=='10'"
+                            *ngIf="element.estadoControversiaCodigo=='10' && element.sePuedeCerrar==true"
                             (click)="this.cerrarTramite(element.controversiaContractualId)">
                             Cerrar trámite
                         </button>
                         <button mat-raised-button color="accent" class="btn-table"
-                            *ngIf="element.estadoControversiaCodigo=='4'"
+                            *ngIf="element.estadoControversiaCodigo=='4' && element.registroCompletoNombre=='Completo'"
                             (click)="this.sendTramiteToComite(element.controversiaContractualId)">
                             Enviar trámite a comité técnico
                         </button>
                         <button mat-raised-button color="accent" class="btn-table"
-                            *ngIf="element.estadoControversiaCodigo=='1' || element.estadoControversiaCodigo=='3' || element.estadoControversiaCodigo=='4'"
+                            *ngIf="((element.estadoControversiaCodigo=='1' || element.estadoControversiaCodigo=='2' || element.estadoControversiaCodigo=='3' || element.estadoControversiaCodigo=='4')&& element.registroCompletoNombre=='Incompleto')
+                            || (element.estadoControversiaCodigo=='4' &&  element.registroCompletoNombre=='Completo')"
                             (click)=this.verDetalleEditarTramiteButton(element.controversiaContractualId);>
                             Ver detalle/Editar
                         </button>
                         <button mat-raised-button color="accent" class="btn-table"
-                            *ngIf="element.estadoControversiaCodigo=='1' || element.estadoControversiaCodigo=='3' || element.estadoControversiaCodigo=='4'"
+                            *ngIf="((element.estadoControversiaCodigo=='1' || element.estadoControversiaCodigo=='2' || element.estadoControversiaCodigo=='3' || element.estadoControversiaCodigo=='4')&& element.registroCompletoNombre=='Incompleto')
+                            || (element.estadoControversiaCodigo=='4' && element.registroCompletoNombre=='Completo')"
                             (click)=this.deleteControversia(element.controversiaContractualId);>
                             Eliminar
                         </button>
@@ -115,12 +117,12 @@
                             Descargar proceso de controversia
                         </button>
                         <button mat-raised-button color="accent" class="btn-table"
-                            *ngIf="element.estadoControversiaCodigo=='9'"
+                            *ngIf="element.estadoControversiaCodigo=='9' || (element.estadoControversiaCodigo=='3' && element.registroCompletoNombre=='Completo')"
                             (click)=this.actualizarTramiteButton(element.controversiaContractualId);>
                             Actualizar trámite
                         </button>
                         <button mat-raised-button color="accent" class="btn-table"
-                            *ngIf="element.estadoControversiaCodigo=='2' || element.estadoControversiaCodigo=='5' || element.estadoControversiaCodigo=='6' || element.estadoControversiaCodigo=='7' || element.estadoControversiaCodigo=='8' || element.estadoControversiaCodigo=='9' || element.estadoControversiaCodigo=='10'"
+                            *ngIf="(element.estadoControversiaCodigo=='2' || element.estadoControversiaCodigo=='3' || element.estadoControversiaCodigo=='5' || element.estadoControversiaCodigo=='6' || element.estadoControversiaCodigo=='7' || element.estadoControversiaCodigo=='8' || element.estadoControversiaCodigo=='9' || element.estadoControversiaCodigo=='10')&& element.registroCompletoNombre=='Completo'"
                             (click)="this.verDetalleButton(element.controversiaContractualId)">
                             Ver detalle
                         </button>
@@ -132,7 +134,7 @@
                             Actualizar trámite
                         </button>
                         <button mat-raised-button color="accent" class="btn-table"
-                            *ngIf="element.estadoControversiaCodigo=='2'"
+                            *ngIf="element.estadoControversiaCodigo=='2'&& element.registroCompletoNombre=='Completo'"
                             (click)=this.registrarControversia(element.controversiaContractualId);>
                             Registrar controversia
                         </button>
@@ -157,7 +159,7 @@
                             Consultar / Editar actualizaciones
                         </button>
                         <button mat-raised-button color="accent" class="btn-table"
-                            *ngIf="element.estadoControversiaCodigo=='4'"
+                            *ngIf="element.estadoControversiaCodigo=='4' && element.sePuedeCerrar==true"
                             (click)="this.cerrarTramiteNoTAI(element.controversiaContractualId)">
                             Cerrar Tramite
                         </button>

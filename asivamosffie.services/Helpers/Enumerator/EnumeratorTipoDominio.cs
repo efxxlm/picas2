@@ -160,11 +160,14 @@ namespace asivamosffie.services.Helpers.Enumerator
         Estado_Actuacion_Derivada_r_4_4_1 = 125,
 
 
-        //Estado_avance_reclamacion = 91,
+        Tipos_Controversia = 100,
 
         Proxima_actuacion_requerida = 103,
 
         Procesos_judiciales = 105,
+        Actuacion_adelantada = 104,
+
+        Procesos_judiciales =105,
 
         Tipo_accion_judicial = 106,
         Estados_Actuacion = 110,
@@ -175,6 +178,8 @@ namespace asivamosffie.services.Helpers.Enumerator
         Estado_Obra_Avance_Semanal = 111,
 
         Estado_Reporte_Semanal_Y_Muestras = 112,
+
+        Tipo_Novedad_Modificacion_Contractual = 113,
 
         Tipo_Observacion_Seguimiento_Semanal = 123,
 
@@ -204,5 +209,15 @@ namespace asivamosffie.services.Helpers.Enumerator
         Medio_Pago_Giro_Tercero = 158,
 
         Respuestas_Lista_Chequeo_Solicitud_Pago = 162
+        Calificacion_Informe_Final = 151,
+
+        Estado_Informe_Final = 154,
+
+        
+        Jurisdiccion =116,
+        Actuaciones_Recomendadas=119,
+        Estados_Defensa_Judicial=120,
+        Estados_Reclamacion     = 126,
+        Estado_Novedad_Contractual = 157,
     }
 }

@@ -1,5 +1,5 @@
 import { GestionarAcuerdoCofinanciacionRoutingModule } from './_pages/gestionar-acuerdo-cofinanciacion/gestionar-acuerdo-cofinanciacion-routing.module';
-
+import { CambiarContrasenaModule } from './_pages/cambiar-contrasena/cambiar-contrasena.module';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, PreloadAllModules, PreloadingStrategy, NoPreloading } from '@angular/router';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
@@ -35,43 +35,58 @@ const routes: Routes = [
       {
         path: 'home',
         // canActivate: [AuthGuard],
-        loadChildren: () => import('./_pages/home/home.module').then(m => m.HomeModule)
+        loadChildren: () => import('./_pages/home/home.module').then(m => m.HomeModule),
+
       },
       {
         path: 'cambiarContrasena',
-        loadChildren: () => import('./_pages/cambiar-contrasena/cambiar-contrasena.module').then(m => m.CambiarContrasenaModule)
+        loadChildren: () => import('./_pages/cambiar-contrasena/cambiar-contrasena.module').then(m => m.CambiarContrasenaModule),
+
+      },
+      //verificar ruta duplicada
+      {
+        path: 'cargarMasivamente',
+        // tslint:disable-next-line: max-line-length
+        loadChildren: () => import('./_pages/cargar-masivamente-proyectos-viabilizados/cargar-masivamente-proyectos-viabilizados.module')
+          .then(m => m.CargarMasivamenteProyectosViabilizadosModule),
+
+      },
+      {
+        path: 'gestionarAcuerdos',
+        loadChildren: () => import('./_pages/gestionar-acuerdo-cofinanciacion/gestionar-acuerdo-cofinanciacion.module')
+        .then(m => m.GestionarAcuerdoCofinanciacionModule),
+
+      },
+      {
+        path: 'crearProyecto',
+        loadChildren: () => import('./_pages/crear-proyecto-tecnico/crear-proyecto-tecnico.module')
+          .then(m => m.CrearProyectoTecnicoModule),
+
+      }
+      ,
+      {
+        path: 'crearProyectoAdministrativo',
+        loadChildren: () => import('./_pages/crear-proyecto-admin/crear-proyecto-admin.module')
+          .then(m => m.CrearProyectoAdminModule),
+
+      }
+      ,
+      {
+        path: 'gestionarFuentes',
+        loadChildren: () => import('./_pages/gestionar-fuentes-de-financiacion/gestionar-fuentes-de-financiacion.module')
+        .then(m => m.GestionarFuentesDeFinanciacionModule),
+
+      },
+      {
+        path: 'registrarAcuerdos/:id',
+        component: RegistrarAcuerdoComponent,
+
       },
       {
         path: 'cargarMasivamente',
         // tslint:disable-next-line: max-line-length
         loadChildren: () => import('./_pages/cargar-masivamente-proyectos-viabilizados/cargar-masivamente-proyectos-viabilizados.module')
           .then(m => m.CargarMasivamenteProyectosViabilizadosModule)
-      },
-      {
-        path: 'gestionarAcuerdos',
-        loadChildren: () => import('./_pages/gestionar-acuerdo-cofinanciacion/gestionar-acuerdo-cofinanciacion.module')
-        .then(m => m.GestionarAcuerdoCofinanciacionModule)
-      },
-      {
-        path: 'crearProyecto',
-        loadChildren: () => import('./_pages/crear-proyecto-tecnico/crear-proyecto-tecnico.module')
-          .then(m => m.CrearProyectoTecnicoModule)
-      }
-      ,
-      {
-        path: 'crearProyectoAdministrativo',
-        loadChildren: () => import('./_pages/crear-proyecto-admin/crear-proyecto-admin.module')
-          .then(m => m.CrearProyectoAdminModule)
-      }
-      ,
-      {
-        path: 'gestionarFuentes',
-        loadChildren: () => import('./_pages/gestionar-fuentes-de-financiacion/gestionar-fuentes-de-financiacion.module')
-        .then(m => m.GestionarFuentesDeFinanciacionModule)
-      },
-      {
-        path: 'registrarAcuerdos/:id',
-        component: RegistrarAcuerdoComponent,
       },
       {
         path: 'gestionarFuentes',
@@ -102,42 +117,50 @@ const routes: Routes = [
       {
         path: 'solicitarDisponibilidadPresupuestal',
         loadChildren: () => import('./_pages/solicitar-disponibilidad-presupuestal/solicitar-disponibilidad-presupuestal.module')
-          .then(m => m.SolicitarDisponibilidadPresupuestalModule)
+          .then(m => m.SolicitarDisponibilidadPresupuestalModule),
       },
       {
         path: 'validarDisponibilidadPresupuesto',
         loadChildren: () => import('./_pages/validar-disponibilidad-presupuesto/validar-disponibilidad-presupuesto.module')
-        .then(m => m.ValidarDisponibilidadPresupuestoModule)
+        .then(m => m.ValidarDisponibilidadPresupuestoModule),
+
       },
       {
         path: 'comiteTecnico',
-        loadChildren: () => import('./_pages/comite-tecnico/comite-tecnico.module').then(m => m.ComiteTecnicoModule)
+        loadChildren: () => import('./_pages/comite-tecnico/comite-tecnico.module').then(m => m.ComiteTecnicoModule),
+
       },
       {
         path: 'seleccion',
         loadChildren: () => import('./_pages/gestionar-procesos-de-seleccion/gestionar-procesos-de-seleccion.module')
-        .then(m => m.GestionarProcesosDeSeleccionModule)
+        .then(m => m.GestionarProcesosDeSeleccionModule),
+
+
       },
       {
         path: 'contratosModificacionesContractuales',
         loadChildren: () => import( './_pages/contratos-modificaciones-contractuales/contratos-modificaciones-contractuales.module' )
-          .then( module => module.ContratosModificacionesContractualesModule )
+          .then( module => module.ContratosModificacionesContractualesModule ),
+
       },
       {
         path: 'generarPolizasYGarantias',
         loadChildren: () => import('./_pages/generar-polizas-y-garantias/generar-polizas-y-garantias.module')
-          .then(m => m.GenerarPolizasYGarantiasModule)
+          .then(m => m.GenerarPolizasYGarantiasModule),
+
       },
       {
         path: 'comiteFiduciario',
         loadChildren: () => import( './_pages/sesion-comite-fiduciario/comite-fiduciario.module' )
-          .then( module => module.ComiteFiduciarioModule )
+          .then( module => module.ComiteFiduciarioModule ),
+
       },
       {
-
+ 
         path: 'procesosContractuales',
         loadChildren: () => import( './_pages/gestionar-procesos-contractuales/gestionar-procesos-contractuales.module' )
-          .then( module => module.GestionarProcesosContractualesModule )
+          .then( module => module.GestionarProcesosContractualesModule ),
+
       },
       {
         path: 'solicitarContratacion',
@@ -236,6 +259,7 @@ const routes: Routes = [
         path: 'aprobarRequisitosTecnicosConstruccion',
         loadChildren: () => import( './_pages/aprobar-requisitos-construccion/aprobar-requisitos-construccion.module' )
           .then( module => module.AprobarRequisitosConstruccionModule )
+ 
       },
       {
         path: 'verificarRequisitosTecnicosConstruccion',
@@ -263,6 +287,23 @@ const routes: Routes = [
           .then( module => module.RequisitosTecnicosConstruccionModule )
       }, 
       {
+        path: 'registrarInformeFinalProyecto',
+        loadChildren: () => import( './_pages/registrar-informe-final-proyecto/registrar-informe-final-proyecto.module' )
+          .then( module => module.RegistrarInformeFinalProyectoModule )
+      },
+      {
+        path: 'verificarInformeFinalProyecto',
+        loadChildren: () => import( './_pages/verificar-informe-final-proyecto/verificar-informe-final-proyecto.module' )
+          .then( module => module.VerificarInformeFinalProyectoModule )
+      },
+      /*
+      {
+        path: 'validarInformeFinalProyecto',
+        loadChildren: () => import( './_pages/validar-informe-del-proyecto/validar-informe-del-proyecto.module' )
+          .then( module => module.ValidarInformeDelProyectoModule )
+      },
+      */
+    { 
         path: 'verificarSolicitudDeNovedades',
         loadChildren: () => import('./_pages/verificar-solicitud-de-novedades/verificar-solicitud-de-novedades.module')
         .then(m => m.VerificarSolicitudDeNovedadesModule)
@@ -348,6 +389,31 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/generar-orden-giro/generar-orden-giro.module')
         .then(m => m.GenerarOrdenGiroModule)
       },
+      {
+        path: 'gestionarProcesoDefensaJudicial',
+        loadChildren: () => import('./_pages/gestionar-procesos-defensa-judicial/gestionar-procesos-defensa-judicial.module')
+        .then(m => m.GestionarProcesosDefensaJudicialModule)
+      },
+      {
+        path: 'registrarPagosRendimientos',
+        loadChildren: () => import('./_pages/registrar-pagos-rendimientos/registrar-pagos-rendimientos.module')
+        .then(m => m.RegistrarPagosRendimientosModule)
+      },
+      {
+        path: 'gestionarRendimientos',
+        loadChildren: () => import('./_pages/gestionar-rendimientos/gestionar-rendimientos.module')
+        .then(m => m.GestionarRendimientosModule)
+      },
+      {
+        path: 'aprobarIncorporacionRendimientos',
+        loadChildren: () => import('./_pages/aprobar-incorporacion-rendimientos/aprobar-incorporacion-rendimientos.module')
+        .then(m => m.AprobarIncorporacionRendimientosModule)
+      },
+      {
+        path: 'gestionListaChequeo',
+        loadChildren: () => import( './_pages/gestionar-lista-chequeo/gestionar-lista-chequeo.module' )
+          .then( module => module.GestionarListaChequeoModule )
+      }
     ]
 
   },

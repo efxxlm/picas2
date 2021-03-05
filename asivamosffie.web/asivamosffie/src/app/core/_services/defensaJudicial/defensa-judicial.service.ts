@@ -19,12 +19,12 @@ export class DefensaJudicialService {
     return this.http.get<Contrato[]>( `${ this.url }/JudicialDefense/GetListContract` );
   }
 
-  GetListProyectsByContract( pContratoId: string ) {
+  GetListProyectsByContract( pContratoId: any ) {
     return this.http.get<any[]>( `${ this.url }/JudicialDefense/GetListProyectsByContract?pContratoId=${pContratoId}` );
   }
   
   GetListGrillaProcesosDefensaJudicial( ) {
-    return this.http.get<Contrato[]>( `${ this.url }/JudicialDefense/GetListGrillaProcesosDefensaJudicial` );
+    return this.http.get<any[]>( `${ this.url }/JudicialDefense/GetListGrillaProcesosDefensaJudicial` );
   }
 
   
@@ -101,10 +101,12 @@ export interface DefensaJudicial{
   fichaEstudio?:FichaEstudio[],
   defensaJudicialSeguimiento?: DefensaJudicialSeguimiento[];
   canalIngresoCodigo?: string;
-  numeroRadicadoFFIE?: string;
-  fechaRadicadoFFIE?: Date;
-  numeroDemandantes?: string;
+  numeroRadicadoFfie?: string;
+  fechaRadicadoFfie?: Date;
+  numeroDemandantes?: number;
+  numeroDemandados?: number;
   esDemandaFfie?: any;
+  //existeConocimiento?:boolean,
   //not maped
   jurisdiccionCodigoNombre?:string,
   tipoAccionCodigoNombre?:string
@@ -148,7 +150,10 @@ export interface DemandadoConvocado{
   medioControlAccion?:string,
   etapaProcesoFfiecodigo?:string,
   caducidadPrescripcion?:Date,
-  defensaJudicialId?:number
+  defensaJudicialId?:number,
+  existeConocimiento?:boolean,
+  registroCompleto?: boolean,
+  esDemandado?: boolean,
 }
 
 export interface DemandanteConvocante{
@@ -159,7 +164,9 @@ export interface DemandanteConvocante{
   numeroIdentificacion?:string,
   direccion?:string,
   email?:string,  
-  defensaJudicialId?:number
+  defensaJudicialId?:number,
+  demandanteConvocadoId?:number,
+  registroCompleto?: boolean,
 }
 
 export interface FichaEstudio{  

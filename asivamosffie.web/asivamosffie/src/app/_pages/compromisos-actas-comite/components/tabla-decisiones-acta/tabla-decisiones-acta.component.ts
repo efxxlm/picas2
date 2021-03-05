@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ObservacionDialogComponent } from '../observacion-dialog/observacion-dialog.component';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { CompromisosActasComiteService } from '../../../../core/_services/compromisosActasComite/compromisos-actas-comite.service';
+import { Contratacion } from 'src/app/_interfaces/project-contracting';
 
 @Component({
   selector: 'app-tabla-decisiones-acta',
@@ -22,6 +23,11 @@ export class TablaDecisionesActaComponent implements OnInit {
   data: any[] = [];
   listaEstadoProyectos: any[] = [];
   displayedColumns: string[] = [ 'llaveMen', 'tipoIntervencion', 'departamentoMunicipio', 'institucionEducativa', 'sede', 'estadoProyecto', 'gestion' ];
+  contratacion: Contratacion;
+  listaTipoSolicitudCodigo = {
+    obra: '1',
+    interventoria: '2'
+  };
 
   constructor ( private projectContractingSvc: ProjectContractingService,
                 private commonSvc: CommonService,
@@ -48,8 +54,10 @@ export class TablaDecisionesActaComponent implements OnInit {
         if ( tipoSolicitud[0].nombre === 'Contratación' ) {
           this.projectContractingSvc.getContratacionByContratacionIdWithGrillaProyecto( this.contratacionId )
           .subscribe( ( resp: any ) => {
+            this.contratacion = resp;
+            console.log( resp );
             for ( let contratacion of resp.contratacionProyecto ) {
-              this.data.push( { contratacion: contratacion.proyectoGrilla, sesionSolicitudObservacionProyecto: contratacion.sesionSolicitudObservacionProyecto } )
+              this.data.push( { contratacion: contratacion.proyectoGrilla, sesionSolicitudObservacionProyecto: contratacion.sesionSolicitudObservacionProyecto, tipoSolicitudCodigo: resp.tipoSolicitudCodigo } )
             }
             this.dataSource = new MatTableDataSource( this.data );
             this.dataSource.sort = this.sort;
@@ -70,9 +78,9 @@ export class TablaDecisionesActaComponent implements OnInit {
     }
   }
 
-  estadoObservaciones ( estadoProyectoCodigo: string ) {
+  estadoObservaciones ( estadoProyecto: string ) {
     if ( this.listaEstadoProyectos.length !== 0 ) {
-      if ( estadoProyectoCodigo === this.listaEstadoProyectos[4].codigo || estadoProyectoCodigo === this.listaEstadoProyectos[6].codigo ) {
+      if ( estadoProyecto === this.listaEstadoProyectos[4].codigo || estadoProyecto === this.listaEstadoProyectos[6].codigo ) {
         return false;
       } else {
         return true;

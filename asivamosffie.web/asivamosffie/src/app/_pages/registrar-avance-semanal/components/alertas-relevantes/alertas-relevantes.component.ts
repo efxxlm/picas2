@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-alertas-relevantes',
@@ -14,11 +15,19 @@ export class AlertasRelevantesComponent implements OnInit {
 
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
+    @Input() tipoObservacionAlertas: any;
     formAlertasRelevantes: FormGroup;
     seguimientoSemanalId: number;
     seguimientoSemanalGestionObraId: number;
     seguimientoSemanalGestionObraAlertaId = 0;
     gestionAlertas: any;
+    tablaHistorial = new MatTableDataSource();
+    dataHistorial: any[] = [];
+    displayedColumnsHistorial: string[]  = [
+        'fechaRevision',
+        'responsable',
+        'historial'
+    ];
     editorStyle = {
         height: '45px'
     };
@@ -56,6 +65,13 @@ export class AlertasRelevantesComponent implements OnInit {
                 this.gestionAlertas = this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAlerta[0];
                 if ( this.gestionAlertas !== undefined ) {
                     this.seguimientoSemanalGestionObraAlertaId = this.gestionAlertas.seguimientoSemanalGestionObraAlertaId;
+                    this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalGestionObraAlertaId, this.tipoObservacionAlertas )
+                        .subscribe(
+                            response => {
+                                this.dataHistorial = response.filter( obs => obs.archivada === true );
+                                this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
+                            }
+                        );
                     this.formAlertasRelevantes.setValue(
                         {
                             seIdentificaronAlertas: this.gestionAlertas.seIdentificaronAlertas !== undefined ?

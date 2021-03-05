@@ -1,7 +1,7 @@
 <section class="text-center" *ngIf="avanceFinanciero !== undefined">
-    <p class="colorMainColor">Periodo del reporte: <b>{{ seguimientoSemanal.fechaInicio | date: 'dd/MM/yyyy' }} - {{ seguimientoSemanal.fechaFin | date: 'dd/MM/yyyy' }}</b> </p>
+    <p class="colorMainColor">Periodo del reporte: <b>{{ seguimientoSemanal.periodoReporteMensualFinanciero[0] | date: 'dd/MM/yyyy' }} - {{ seguimientoSemanal.periodoReporteMensualFinanciero[1] | date: 'dd/MM/yyyy' }}</b> </p>
   
-    <app-tabla-avance-financiero class="mt-1em"></app-tabla-avance-financiero>
+    <app-tabla-avance-financiero class="mt-1em" [tablaFinanciera]="seguimientoSemanal.tablaFinanciera"></app-tabla-avance-financiero>
   
     <div class="mt-1em" align="left">
         <mat-card class="border">

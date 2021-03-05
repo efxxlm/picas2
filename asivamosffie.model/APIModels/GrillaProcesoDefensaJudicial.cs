@@ -21,6 +21,7 @@ namespace asivamosffie.model.APIModels
         public string TipoProceso { get; set; }
         public string TipoProcesoCodigo { get; set; }
 
+        public DateTime FechaCreacion { get; set; }
 
     }
 }

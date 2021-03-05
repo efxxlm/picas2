@@ -58,6 +58,7 @@ export class FormOtrosTemasComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
 
   get compromisos() {
     return this.addressForm.get('compromisos') as FormArray;
@@ -79,7 +80,7 @@ export class FormOtrosTemasComponent implements OnInit {
 
     let estados: string[] = ['2', '4', '6', '8']
 
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
 
       forkJoin([
         this.commonService.listaEstadoSolicitud(),
@@ -230,7 +231,7 @@ export class FormOtrosTemasComponent implements OnInit {
       }
       else {
 
-        this.openDialog('', 'Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos');
+        this.openDialog('', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos</b>');
         this.addressForm.get('cuantosCompromisos').setValue( this.compromisos.length );
 
       }
@@ -246,6 +247,8 @@ export class FormOtrosTemasComponent implements OnInit {
   }
 
   onSubmit() {
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let tema: SesionComiteTema = {
 
       sesionTemaId: this.sesionComiteTema.sesionTemaId,
@@ -293,63 +296,63 @@ export class FormOtrosTemasComponent implements OnInit {
       .subscribe(response => {
 
         this.estadosArray = response.filter(s => estados.includes(s.codigo));
-      if ( this.sesionComiteTema.requiereVotacion ){
-        this.sesionComiteTema.sesionTemaVoto.forEach(sv => {
-          if (sv.esAprobado)
-            this.cantidadAprobado++;
-          else
-            this.cantidadNoAprobado++;
-        })
-    
-        if (this.cantidadNoAprobado == 0){
-          this.resultadoVotacion = 'Aprobó'
-          this.estadosArray = this.estadosArray.filter(e => e.codigo == EstadosSolicitud.AprobadaPorComiteFiduciario)
-        }else if ( this.cantidadAprobado == 0 ){
-          this.resultadoVotacion = 'No Aprobó'
-          this.estadosArray = this.estadosArray.filter(e => [EstadosSolicitud.RechazadaPorComiteFiduciario, EstadosSolicitud.DevueltaPorComiteFiduciario].includes(e.codigo))
-        }else if ( this.cantidadAprobado > this.cantidadNoAprobado ){
-          this.resultadoVotacion = 'Aprobó'
-        }else if ( this.cantidadAprobado <= this.cantidadNoAprobado ){
-          this.resultadoVotacion = 'No Aprobó'
+        if ( this.sesionComiteTema.requiereVotacion ){
+          this.sesionComiteTema.sesionTemaVoto.forEach(sv => {
+            if (sv.esAprobado)
+              this.cantidadAprobado++;
+            else
+              this.cantidadNoAprobado++;
+          })
+      
+          if (this.cantidadNoAprobado == 0){
+            this.resultadoVotacion = 'Aprobó'
+            this.estadosArray = this.estadosArray.filter(e => e.codigo == EstadosSolicitud.AprobadaPorComiteFiduciario)
+          }else if ( this.cantidadAprobado == 0 ){
+            this.resultadoVotacion = 'No Aprobó'
+            this.estadosArray = this.estadosArray.filter(e => [EstadosSolicitud.RechazadaPorComiteFiduciario, EstadosSolicitud.DevueltaPorComiteFiduciario].includes(e.codigo))
+          }else if ( this.cantidadAprobado > this.cantidadNoAprobado ){
+            this.resultadoVotacion = 'Aprobó'
+          }else if ( this.cantidadAprobado <= this.cantidadNoAprobado ){
+            this.resultadoVotacion = 'No Aprobó'
+          }
         }
-      }
 
-      this.responsable = this.listaResponsables.find(r => r.codigo == this.sesionComiteTema.responsableCodigo)
+        this.responsable = this.listaResponsables.find(r => r.codigo == this.sesionComiteTema.responsableCodigo)
 
-      let estadoSeleccionado = this.estadosArray.find(e => e.codigo == this.sesionComiteTema.estadoTemaCodigo)
+        let estadoSeleccionado = this.estadosArray.find(e => e.codigo == this.sesionComiteTema.estadoTemaCodigo)
 
-      this.addressForm.get('observaciones').setValue(this.sesionComiteTema.observaciones),
-        this.addressForm.get('estadoSolicitud').setValue(estadoSeleccionado),
-        this.addressForm.get('observacionesDecision').setValue(this.sesionComiteTema.observacionesDecision),
-        this.addressForm.get('tieneCompromisos').setValue(this.sesionComiteTema.generaCompromiso),
-        this.addressForm.get('cuantosCompromisos').setValue(this.sesionComiteTema.cantCompromisos),
+        this.addressForm.get('observaciones').setValue(this.sesionComiteTema.observaciones),
+          this.addressForm.get('estadoSolicitud').setValue(estadoSeleccionado),
+          this.addressForm.get('observacionesDecision').setValue(this.sesionComiteTema.observacionesDecision),
+          this.addressForm.get('tieneCompromisos').setValue(this.sesionComiteTema.generaCompromiso),
+          this.addressForm.get('cuantosCompromisos').setValue(this.sesionComiteTema.cantCompromisos),
 
-        this.commonService.listaUsuarios().then((respuesta) => {
+          this.commonService.listaUsuarios().then((respuesta) => {
 
-          this.listaMiembros.forEach(m => {
-            let usuario: Usuario = respuesta.find(u => u.usuarioId == m.usuarioId);
-            m.nombre = `${usuario.nombres} ${usuario.apellidos}`
+            this.listaMiembros.forEach(m => {
+              let usuario: Usuario = respuesta.find(u => u.usuarioId == m.usuarioId);
+              m.nombre = `${usuario.nombres} ${usuario.apellidos}`
 
-          })
+            })
 
-          this.sesionComiteTema.temaCompromiso.forEach(c => {
-            let grupoCompromiso = this.crearCompromiso();
-            let responsableSeleccionado = this.listaMiembros.find(m => m.sesionParticipanteId.toString() == c.responsable)
+            this.sesionComiteTema.temaCompromiso.forEach(c => {
+              let grupoCompromiso = this.crearCompromiso();
+              let responsableSeleccionado = this.listaMiembros.find(m => m.sesionParticipanteId.toString() == c.responsable)
 
-            grupoCompromiso.get('tarea').setValue(c.tarea);
-            grupoCompromiso.get('responsable').setValue(responsableSeleccionado);
-            grupoCompromiso.get('fecha').setValue(c.fechaCumplimiento);
-            grupoCompromiso.get('temaCompromisoId').setValue(c.temaCompromisoId);
-            grupoCompromiso.get('sesionTemaId').setValue(this.sesionComiteTema.sesionTemaId);
+              grupoCompromiso.get('tarea').setValue(c.tarea);
+              grupoCompromiso.get('responsable').setValue(responsableSeleccionado);
+              grupoCompromiso.get('fecha').setValue(c.fechaCumplimiento);
+              grupoCompromiso.get('temaCompromisoId').setValue(c.temaCompromisoId);
+              grupoCompromiso.get('sesionTemaId').setValue(this.sesionComiteTema.sesionTemaId);
 
-            this.compromisos.push(grupoCompromiso)
-          })
+              this.compromisos.push(grupoCompromiso)
+            })
 
-        });
+          });
 
-        this.tieneVotacion = this.sesionComiteTema.requiereVotacion;
+          this.tieneVotacion = this.sesionComiteTema.requiereVotacion;
 
-    })
+      })
 
   }
 

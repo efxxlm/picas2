@@ -1,0 +1,29 @@
+<section class="container">
+  <div class="text-right">
+    <a routerLink="../../" mat-button color="primary" class="btn-regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar">
+    </a>
+  </div>
+  <div class="text-center">
+    <h1 class="title-menu--h1">
+      Ver detalle registro informe final
+      <b *ngIf="report"> {{ report.proyecto.llaveMen }} </b>
+    </h1>
+    <p class="colorMainColor mt-05em"> 
+      Fecha de terminación del proyecto obra
+      <b *ngIf="report">
+        {{ report.fechaTerminacionObra  | date:'dd/MM/yyyy' }}
+      </b>
+    </p>
+    <p class="colorMainColor mt-05em"> 
+      Fecha de terminación del proyecto interventoría
+      <b *ngIf="report">
+        {{ report.fechaTerminacionInterventoria  | date:'dd/MM/yyyy' }}
+      </b>
+    </p>
+  </div>
+
+  <app-datos-del-proyecto *ngIf="report" [report]="report"></app-datos-del-proyecto>
+  <app-detalle-recibo-satisfaccion *ngIf="report" [report]="report"></app-detalle-recibo-satisfaccion>
+  <app-tabla-detalle-informe-anexos [id]="id"></app-tabla-detalle-informe-anexos>
+</section>

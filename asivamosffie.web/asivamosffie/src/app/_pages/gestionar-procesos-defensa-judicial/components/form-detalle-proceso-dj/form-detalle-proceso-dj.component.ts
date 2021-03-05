@@ -42,6 +42,7 @@ export class FormDetalleProcesoDjComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
   constructor(private fb: FormBuilder,public dialog: MatDialog, public commonService:CommonService
     ,private router: Router, public defensaService: DefensaJudicialService) { }
 
@@ -65,10 +66,17 @@ export class FormDetalleProcesoDjComponent implements OnInit {
       this.commonService.listaMunicipiosByIdDepartamento(this.defensaJudicial.departamentoID).subscribe(respuesta => {
         this.municipioArray = respuesta;
         //let mun =this.municipioArray.filter(x=>x.localizacionId==this.defensaJudicial.localizacionIdMunicipio)[0];
-        setTimeout(function(){ 
-          this.addressForm.get("municipioInicio").setValue(this.defensaJudicial.localizacionIdMunicipio);
+        setTimeout(() => {
+
+          this.updatemunform();
         }, 1000);
+        
       });
+  }
+
+  updatemunform()
+  {
+    this.addressForm.get("municipioInicio").setValue(this.defensaJudicial.localizacionIdMunicipio.toString());
   }
   
   ngOnInit(): void {
@@ -145,6 +153,8 @@ export class FormDetalleProcesoDjComponent implements OnInit {
   }
 
   onSubmit() {
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let defensaJudicial=this.defensaJudicial;
     if(!this.defensaJudicial.defensaJudicialId||this.defensaJudicial.defensaJudicialId==0)
     {

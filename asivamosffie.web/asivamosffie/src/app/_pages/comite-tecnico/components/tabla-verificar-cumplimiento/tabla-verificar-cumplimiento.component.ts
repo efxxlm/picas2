@@ -36,6 +36,8 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
 
   estadosArray: Dominio[] = []
 
+  estaEditando = false;
+
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
@@ -60,7 +62,7 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
     this.activatedRoute.params.subscribe(parametros => {
 
       forkJoin([
-        this.technicalCommitteeSessionService.getCompromisosByComiteTecnicoId(parametros.id),
+        this.technicalCommitteeSessionService.getCompromisosByComiteTecnicoId(parametros.id, false),
         this.commonService.listaEstadoCompromisos(),
 
       ]).subscribe(respuesta => {
@@ -151,7 +153,7 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
   };
 
   onSave() {
-
+    this.estaEditando = true;
     const compromisosIncompletos = this.listaCompromisos.filter( value => value[ 'esCumplido' ] === null );
     console.log( compromisosIncompletos, this.listaCompromisos );
     if ( compromisosIncompletos.length > 0 ) {
@@ -173,10 +175,14 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
 
     this.listaCompromisos.forEach( compromiso => {
       if ( compromiso.sesionSolicitudCompromisoId !== undefined ) {
+        compromiso.esCumplido = compromiso.compromisoSeleccionado == 'Cumplido' ? true : false; 
         comite.sesionComiteSolicitudComiteTecnico[0].sesionSolicitudCompromiso.push( compromiso );
+        
       };
       if ( compromiso.temaCompromisoId !== undefined ) {
+        compromiso.esCumplido = compromiso.compromisoSeleccionado == 'Cumplido' ? true : false;
         comite.sesionComiteTema[0].temaCompromiso.push( compromiso );
+        console.log( compromiso )
       };
     } );
 

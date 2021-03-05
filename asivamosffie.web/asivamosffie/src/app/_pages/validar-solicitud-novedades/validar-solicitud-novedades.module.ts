@@ -15,6 +15,8 @@ import { DialogRechazarSolicitudComponent } from './components/dialog-rechazar-s
 import { ValidarNovedadContratoInterventoriaComponent } from './components/validar-novedad-contrato-interventoria/validar-novedad-contrato-interventoria.component';
 import { DialogRechazarSolicitudInterventorComponent } from './components/dialog-rechazar-solicitud-interventor/dialog-rechazar-solicitud-interventor.component';
 import { DialogDevolverSolicitudInterventorComponent } from './components/dialog-devolver-solicitud-interventor/dialog-devolver-solicitud-interventor.component';
+import { VerDetalleSolicNovObraComponent } from './components/ver-detalle-solic-nov-obra/ver-detalle-solic-nov-obra.component';
+import { VerDetalleSolicNovIntervnComponent } from './components/ver-detalle-solic-nov-intervn/ver-detalle-solic-nov-intervn.component';
 
 
 @NgModule({
@@ -26,7 +28,9 @@ import { DialogDevolverSolicitudInterventorComponent } from './components/dialog
     DialogRechazarSolicitudComponent,
     ValidarNovedadContratoInterventoriaComponent,
     DialogRechazarSolicitudInterventorComponent,
-    DialogDevolverSolicitudInterventorComponent
+    DialogDevolverSolicitudInterventorComponent,
+    VerDetalleSolicNovObraComponent,
+    VerDetalleSolicNovIntervnComponent
   ],
   imports: [
     CommonModule,

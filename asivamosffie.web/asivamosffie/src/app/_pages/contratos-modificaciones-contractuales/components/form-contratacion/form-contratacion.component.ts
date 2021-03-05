@@ -3,7 +3,7 @@ import { Component, Inject, Input, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CommonService } from 'src/app/core/_services/common/common.service';
+import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { ContratosModificacionesContractualesService } from '../../../../core/_services/contratos-modificaciones-contractuales/contratos-modificaciones-contractuales.service';
 
@@ -22,6 +22,7 @@ export class FormContratacionComponent implements OnInit {
     firmado: '6'
   }
   contratacion: any;
+  modalidadContratoArray: Dominio[] = [];
   fechaTramite: Date = new Date();
 
   constructor ( private fb: FormBuilder,
@@ -42,6 +43,7 @@ export class FormContratacionComponent implements OnInit {
   crearFormulario () {
     this.form = this.fb.group({
       numeroContrato                : [ '', Validators.required ],
+      modalidadContrato             : [ null ],
       fechaEnvioParaFirmaContratista: [ null ],
       fechaFirmaPorParteContratista : [ null ],
       fechaEnvioParaFirmaFiduciaria : [ null ],
@@ -66,30 +68,45 @@ export class FormContratacionComponent implements OnInit {
   getContratacionId ( id ) {
     this.contratosContractualesSvc.getContratacionId( id )
       .subscribe( ( resp: any ) => {
-        this.contratacion = resp;
-        console.log( this.contratacion );
-        if ( resp.contrato.length > 0 ) {
-          let rutaDocumento;
-          if ( resp.contrato[0].rutaDocumento !== undefined ) {
-            rutaDocumento = resp.contrato[0].rutaDocumento.split( /[^\w\s]/gi );
-            rutaDocumento = `${ rutaDocumento[ rutaDocumento.length -2 ] }.${ rutaDocumento[ rutaDocumento.length -1 ] }`;
-          } else {
-            rutaDocumento = null;
+        this.commonSvc.modalidadesContrato()
+        .subscribe( modalidadContrato => {
+          this.contratacion = resp;
+          if ( resp.contrato.length > 0 ) {
+            let rutaDocumento;
+            if ( resp.contrato[0].rutaDocumento !== undefined ) {
+              rutaDocumento = resp.contrato[0].rutaDocumento.split( /[^\w\s]/gi );
+              rutaDocumento = `${ rutaDocumento[ rutaDocumento.length -2 ] }.${ rutaDocumento[ rutaDocumento.length -1 ] }`;
+            } else {
+              rutaDocumento = null;
+            };
+            console.log( resp.contrato[0] );
+            this.modalidadContratoArray = modalidadContrato;
+            this.form.reset({
+              numeroContrato: resp.contrato[0].numeroContrato || '',
+              modalidadContrato: resp.contrato[0].modalidadCodigo !== undefined ? modalidadContrato.filter( modalidad => modalidad.codigo === resp.contrato[0].modalidadCodigo )[0].codigo : null,
+              fechaEnvioParaFirmaContratista: resp.contrato[0].fechaEnvioFirma || null,
+              fechaFirmaPorParteContratista: resp.contrato[0].fechaFirmaContratista || null,
+              fechaEnvioParaFirmaFiduciaria: resp.contrato[0].fechaFirmaFiduciaria || null,
+              fechaFirmaPorParteFiduciaria: resp.contrato[0].fechaFirmaContrato || null,
+              observaciones: resp.contrato[0].observaciones || null,
+              documento: rutaDocumento,
+              rutaDocumento: resp.contrato[0].rutaDocumento !== undefined ? resp.contrato[0].rutaDocumento : null
+            });
+            console.log( this.form.value );
           };
-          this.form.reset({
-            numeroContrato: resp.contrato[0].numeroContrato || '',
-            fechaEnvioParaFirmaContratista: resp.contrato[0].fechaEnvioFirma || null,
-            fechaFirmaPorParteContratista: resp.contrato[0].fechaFirmaContratista || null,
-            fechaEnvioParaFirmaFiduciaria: resp.contrato[0].fechaFirmaFiduciaria || null,
-            fechaFirmaPorParteFiduciaria: resp.contrato[0].fechaFirmaContrato || null,
-            observaciones: resp.contrato[0].observaciones || null,
-            documento: rutaDocumento,
-            rutaDocumento: resp.contrato[0].rutaDocumento !== undefined ? resp.contrato[0].rutaDocumento : null
-          });
-          console.log( this.form.value );
-        };
+        } );
       } );
   };
+
+  getModalidadContrato( modalidadCodigo: string ) {
+    if ( this.modalidadContratoArray.length > 0 ) {
+        const modalidad = this.modalidadContratoArray.filter( modalidad => modalidad.codigo === modalidadCodigo );
+        
+        if ( modalidad.length > 0 ) {
+          return modalidad[0].nombre;
+        }
+    }
+  }
 
   openDialog (modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {

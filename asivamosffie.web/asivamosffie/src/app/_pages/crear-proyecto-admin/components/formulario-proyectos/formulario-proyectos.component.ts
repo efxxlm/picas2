@@ -20,6 +20,7 @@ export class FormularioProyectosComponent implements OnInit {
   proyectoAdmin: ProyectoAdministrativo;
   listadoAportantes: Dominio[];
   listadoFuentes: Dominio[];
+  estaEditando = false;
 
   addFont(index: number) {
     console.log("push");
@@ -97,6 +98,7 @@ export class FormularioProyectosComponent implements OnInit {
           this.bitPuedoEditar=false;
         }
         console.log(this.proyectoAdmin);
+        this.estaEditando = true;
       }
       else{
         let idcontador = 0;
@@ -191,6 +193,7 @@ export class FormularioProyectosComponent implements OnInit {
               private router: Router) { }
 
   onSubmit() {
+    this.estaEditando = true;
     this.projectServices.CreateOrUpdateAdministrativeProyect(this.proyectoAdmin).subscribe(respuesta => {
       this.openDialog('', `<b>${respuesta.message}</b>`,true);
     },

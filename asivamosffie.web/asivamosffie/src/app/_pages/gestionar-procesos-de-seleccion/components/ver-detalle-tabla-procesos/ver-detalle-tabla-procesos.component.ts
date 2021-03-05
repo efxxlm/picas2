@@ -61,6 +61,7 @@ export class VerDetalleTablaProcesosComponent implements OnInit{
     
     this.solicitarApertura=this.data.esCompleto 
       && (this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario &&
+        this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.AprobadaAperturaPorComiteTecnico &&
         this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaAperturaPorComiteFiduciario &&
         this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaAperturaPorComiteTecnico &&
         this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaSeleccionPorComiteFiduciario &&
@@ -68,14 +69,19 @@ export class VerDetalleTablaProcesosComponent implements OnInit{
         this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadoPorComiteFiduciario &&
         this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadoPorComiteTecnico &&
         this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.AprobacionDeSeleccionEnTramite &&
-        this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.AperturaEntramite)
+        this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.AperturaEntramite &&
+        this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.AprobadaSelecciónPorComiteFiduciario)
         ;
+
+        console.log(this.data.estadoProcesoSeleccionCodigo)
+    
     
     this.presentarEvaluacion=
       this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario
       && (this.data.tipoProcesoCodigo==this.tiposProcesoSeleccion.Abierta ||
         this.data.tipoProcesoCodigo==this.tiposProcesoSeleccion.Cerrada)
-      && this.data.procesoSeleccionProponente.length>0;
+      && this.data.procesoSeleccionProponente.length>0
+      && this.data.esCompleto === true;
 
     this.eliminar=this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.Creado;/*this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaAperturaPorComiteFiduciario &&
       this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaAperturaPorComiteTecnico &&

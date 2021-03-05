@@ -39,20 +39,20 @@
 
       <mat-expansion-panel class="expansion-style">
         <mat-expansion-panel-header class="expansion-style--header">
-          <mat-panel-title class="expansion-style--title">
+          <mat-panel-title class="expansion-style--title" [ngClass]="estadoAcordeonEnviadaFiduciaria">
             Enviadas a la fiduciaria
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <app-tabla-solicitudes-enviadas [$data]="$data"></app-tabla-solicitudes-enviadas>
+        <app-tabla-solicitudes-enviadas [$data]="$data" (estadoSemaforo)="estadoAcordeonEnviadaFiduciaria = $event"></app-tabla-solicitudes-enviadas>
       </mat-expansion-panel>
 
       <mat-expansion-panel class="expansion-style">
         <mat-expansion-panel-header class="expansion-style--header">
-          <mat-panel-title class="expansion-style--title">
+          <mat-panel-title class="expansion-style--title" [ngClass]="estadoAcordeonRegistrados">
             Registradas por la fiduciaria
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <app-tabla-registrados></app-tabla-registrados>
+        <app-tabla-registrados (sinData)="estadoAcordeonRegistrados = $event" [$data]="$data"></app-tabla-registrados>
       </mat-expansion-panel>
     </mat-accordion>
   </section>

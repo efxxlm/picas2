@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators, FormControl, FormArray, FormGroup } from '@angular/forms';
 import { ProcesoSeleccion, ProcesoSeleccionProponente, ProcesoSeleccionIntegrante, ProcesoSeleccionService } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
 import { Dominio, Localizacion, CommonService } from 'src/app/core/_services/common/common.service';
@@ -17,6 +17,8 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
   @Input() procesoSeleccion: ProcesoSeleccion;
   @Input() editar:boolean;
   @Output() guardar: EventEmitter<any> = new EventEmitter();
+
+  estaEditando = false;
 
   listaDepartamentos: Localizacion[] = [];
   listaMunicipios: Localizacion[] = [];
@@ -136,9 +138,54 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
   ) {
     this.declararSelect();
   }
+  noGuardado=true;
+  ngOnDestroy(): void {
+    if ( this.noGuardado===true && this.personaNaturalForm.dirty) {
+      let dialogRef =this.dialog.open(ModalDialogComponent, {
+        width: '28em',
+        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
+      });   
+      dialogRef.afterClosed().subscribe(result => {
+        // console.log(`Dialog result: ${result}`);
+        if(result === true)
+        {
+            this.onSubmitPersonaNatural();          
+        }           
+      });
+    }
+
+    if ( this.personaJuridicaIndividualForm.dirty) {
+      let dialogRef =this.dialog.open(ModalDialogComponent, {
+        width: '28em',
+        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
+      });   
+      dialogRef.afterClosed().subscribe(result => {
+        // console.log(`Dialog result: ${result}`);
+        if(result === true)
+        {
+            this.onSubmitPersonaJuridicaIndividual();          
+        }           
+      });
+    }
+
+    if ( this.unionTemporalForm.dirty) {
+      let dialogRef =this.dialog.open(ModalDialogComponent, {
+        width: '28em',
+        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
+      });   
+      dialogRef.afterClosed().subscribe(result => {
+        // console.log(`Dialog result: ${result}`);
+        if(result === true)
+        {
+            this.onSubmitUnionTemporal();          
+        }           
+      });
+    }
+  };
+
   ngOnInit() {
 
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       forkJoin([
 
         this.commonService.listaTipoProponente(),
@@ -380,13 +427,15 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
         }
       );
     }
-    console.log(borrarForm);
+    // console.log(borrarForm);
     /*borrarForm.removeAt(i);
     this.unionTemporalForm.get("cuantasEntidades").setValue(borrarForm.length);*/
   }
 
   onSubmitPersonaNatural() {
-
+    this.estaEditando = true;
+    this.personaNaturalForm.markAllAsTouched();
+    this.myControl.markAllAsTouched();
     this.procesoSeleccion.procesoSeleccionProponente = [];
     let proponente: ProcesoSeleccionProponente = {
       procesoSeleccionProponenteId: this.personaNaturalForm.get('procesoSeleccionProponenteId').value,
@@ -402,13 +451,16 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
     }
 
     this.procesoSeleccion.procesoSeleccionProponente.push(proponente);
-
+    this.noGuardado=false;
     this.guardar.emit(null);
     //console.log(this.personaNaturalForm.value);
   }
 
   onSubmitPersonaJuridicaIndividual() {
 
+    this.estaEditando = true;
+    this.personaNaturalForm.markAllAsTouched();
+    this.myControl.markAllAsTouched();
     this.procesoSeleccion.procesoSeleccionProponente = [];
     let proponente: ProcesoSeleccionProponente = {
 
@@ -449,9 +501,10 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
   }
 
   onSubmitUnionTemporal() {
-
+    this.estaEditando = true;
+    this.personaNaturalForm.markAllAsTouched();
+    this.myControl.markAllAsTouched();
     let porcentaje: number = 0;
-
     this.procesoSeleccion.procesoSeleccionProponente = [];
     this.procesoSeleccion.procesoSeleccionIntegrante = [];
 
@@ -517,7 +570,9 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
 
           switch (proponente.tipoProponenteCodigo) {
             case "1": {
-
+              this.estaEditando = true;
+              this.personaNaturalForm.markAllAsTouched();
+              this.myControl.markAllAsTouched();
               this.personaNaturalForm.get('municipio').setValue(municipio);
               this.personaNaturalForm.get('depaetamento').setValue(departamentoSeleccionado);
               this.personaNaturalForm.get('procesoSeleccionProponenteId').setValue(proponente.procesoSeleccionProponenteId);
@@ -533,6 +588,9 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
 
             }
             case "2": {
+              this.estaEditando = true;
+              this.personaNaturalForm.markAllAsTouched();
+              this.myControl.markAllAsTouched();
               this.personaJuridicaIndividualForm.get('depaetamento').setValue(departamentoSeleccionado);
               this.personaJuridicaIndividualForm.get('procesoSeleccionProponenteId').setValue(proponente.procesoSeleccionProponenteId);
               this.personaJuridicaIndividualForm.get('nombre').setValue(proponente.nombreProponente);
@@ -547,6 +605,9 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
               this.personaJuridicaIndividualForm.get('correoElectronico').setValue(proponente.emailProponente);
             }
             case "4": {
+              this.estaEditando = true;
+              this.personaNaturalForm.markAllAsTouched();
+              this.myControl.markAllAsTouched();
               (<FormArray>this.unionTemporalForm.get('entidades')).clear();
               let listaIntegrantes = this.unionTemporalForm.get('entidades') as FormArray;
 

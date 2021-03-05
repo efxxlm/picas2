@@ -6,6 +6,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogAvanceAcumuladoComponent } from '../dialog-avance-acumulado/dialog-avance-acumulado.component';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-tabla-avance-fisico',
@@ -15,8 +16,11 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class TablaAvanceFisicoComponent implements OnInit {
 
     @Input() esVerDetalle = false;
-    @Input() seguimientoDiario: any;
+    @Input() seguimientoSemanal: any;
+    @Input() avanceFisicoObs: string;
     tablaAvanceFisico = new MatTableDataSource();
+    tablaHistorial = new MatTableDataSource();
+    dataHistorial: any[] = [];
     avanceFisico: any[];
     seRealizoCambio = false;
     seguimientoSemanalId: number;
@@ -30,6 +34,11 @@ export class TablaAvanceFisicoComponent implements OnInit {
         'avanceFisicoCapitulo',
         'avanceFisicoSemana'
     ];
+    displayedColumnsHistorial: string[]  = [
+        'fechaRevision',
+        'responsable',
+        'historial'
+    ];
 
     constructor(
         private dialog: MatDialog,
@@ -42,7 +51,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
         this.getDataTable();
     }
 
-    verifyInteger( value: number, esAvanceCapitulo: boolean ) {
+    verifyInteger( value: number, esAvanceCapitulo: boolean ): number {
         const esEntero = Number.isInteger( value );
         if ( value === 0 ) {
             return 0;
@@ -50,49 +59,114 @@ export class TablaAvanceFisicoComponent implements OnInit {
         if ( esEntero === true && value > 0 ) {
             return value;
         } else {
-            return esAvanceCapitulo === true ? value.toFixed( 1 ) : value.toFixed( 2 );
+            return esAvanceCapitulo === true ? Number( value.toFixed( 1 ) ) : Number( value.toFixed( 2 ) );
         }
     }
 
+    groupBy( itemList: any[], actividad: string ) {
+        const groupByItems = [];
+
+        itemList.forEach( item => {
+            if ( item.capitulo.actividad === actividad ) {
+                groupByItems.length === 0 ? groupByItems.push( { actividad, items: [ item ] } ) : groupByItems[ groupByItems.length - 1 ].items.push( item );
+            }
+        } );
+
+        return groupByItems;
+    }
+
     getDataTable() {
-        if ( this.seguimientoDiario !== undefined ) {
-            this.seguimientoSemanalId = this.seguimientoDiario.seguimientoSemanalId;
-            this.seguimientoSemanalAvanceFisicoId =  this.seguimientoDiario.seguimientoSemanalAvanceFisico.length > 0 ?
-            this.seguimientoDiario.seguimientoSemanalAvanceFisico[0].seguimientoSemanalAvanceFisicoId : 0;
-            const flujoInversion = this.seguimientoDiario.flujoInversion;
+        if ( this.seguimientoSemanal !== undefined ) {
+            const actividadesLista = [];
+
+            this.seguimientoSemanal.flujoInversion.forEach( flujo => {
+                if ( this.groupBy( this.seguimientoSemanal.listProgramacion, flujo.programacion.actividad ).length > 0 ) {
+                    actividadesLista.push( this.groupBy( this.seguimientoSemanal.listProgramacion, flujo.programacion.actividad ) );
+                }
+            } );
+            
+            this.seguimientoSemanalId = this.seguimientoSemanal.seguimientoSemanalId;
+            this.seguimientoSemanalAvanceFisicoId =  this.seguimientoSemanal.seguimientoSemanalAvanceFisico.length > 0 ?
+            this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0].seguimientoSemanalAvanceFisicoId : 0;
+            const flujoInversion = this.seguimientoSemanal.flujoInversion;
+            const seguimientoSemanalAvanceFisico = this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0];
+
+            this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalAvanceFisicoId, this.avanceFisicoObs )
+                .subscribe(
+                    response => {
+                        this.dataHistorial = response.filter( obs => obs.archivada === true );
+                        this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
+                    }
+                );
             if ( flujoInversion.length > 0 ) {
                 const avancePorCapitulo = [];
-                let totalDuracion = 0;
+                let duracionProgramacion = 0;
+                let cantidadTotalDiasActividades = 0
                 for ( const flujo of flujoInversion ) {
-                    totalDuracion += flujo.programacion.duracion;
-                }
+                    cantidadTotalDiasActividades += flujo.programacion.duracion;
+                };
                 for ( const flujo of flujoInversion ) {
-                    flujo.programacion.avanceFisicoCapitulo =   flujo.programacion.avanceFisicoCapitulo !== undefined ?
-                        String( this.verifyInteger( Number( flujo.programacion.avanceFisicoCapitulo ), false ) )
-                        : null;
-                    avancePorCapitulo.push(
-                        {
-                            programacionId: flujo.programacion.programacionId,
-                            capitulo: flujo.programacion.actividad,
-                            programacionCapitulo:   this.verifyInteger( flujo.programacion.duracion /
-                                                                        this.seguimientoDiario.cantidadTotalDiasActividades * 100,
-                                                                        false ),
-                            avanceFisicoCapitulo:   flujo.programacion.avanceFisicoCapitulo !== undefined
-                                                    && flujo.programacion.avanceFisicoCapitulo !== null ?
-                                                    String( this.verifyInteger( Number( flujo.programacion.avanceFisicoCapitulo ), true ) )
-                                                    : null
+                    flujo.seguimientoSemanalAvanceFisicoProgramacionId = 0;
+                    flujo.programacion.avanceFisicoCapitulo = null;
+                    if ( seguimientoSemanalAvanceFisico !== undefined ) {
+                        const seguimientoSemanalAvanceFisicoProgramacion = seguimientoSemanalAvanceFisico.seguimientoSemanalAvanceFisicoProgramacion.filter( programacion => programacion.programacionId === flujo.programacionId );
+
+                        if ( seguimientoSemanalAvanceFisicoProgramacion.length > 0 ) {
+                            flujo.seguimientoSemanalAvanceFisicoProgramacionId = seguimientoSemanalAvanceFisicoProgramacion[0].seguimientoSemanalAvanceFisicoProgramacionId;
+                            flujo.programacion.avanceFisicoCapitulo = seguimientoSemanalAvanceFisicoProgramacion[0].avanceFisicoCapitulo !== undefined ? seguimientoSemanalAvanceFisicoProgramacion[0].avanceFisicoCapitulo : null;
                         }
-                    );
+                    }
+
+                    const actividadActual = actividadesLista.filter( value => value[ value.length - 1 ].actividad === flujo.programacion.actividad ).length > 0 ?
+                                            actividadesLista.filter( value => value[ value.length - 1 ].actividad === flujo.programacion.actividad )[0][0] : undefined;
+                    let duracionItem = 0;
+
+                    if ( actividadActual !== undefined ) {
+                        const fechaInicio = moment( new Date( this.seguimientoSemanal.fechaInicio ).setHours( 0, 0, 0, 0 ) );
+                        const fechaFin = moment( new Date( this.seguimientoSemanal.fechaFin ).setHours( 0, 0, 0, 0 ) );
+
+                        actividadActual.items.forEach( item => {
+                            const fechaInicioItem = moment( new Date( item.fechaInicio ).setHours( 0, 0, 0, 0 ) );
+                            const fechaFinItem = moment( item.fechaFin );
+
+                            if ( fechaInicioItem < fechaInicio ) {
+                                if ( fechaInicio <= fechaFinItem ) {
+                                    duracionItem++;
+                                } else {
+                                    duracionItem += fechaFinItem.diff( fechaInicio, 'days' );
+                                }
+                            } else {
+                                if ( fechaFinItem < fechaFin ) {
+                                    duracionItem +=  fechaFinItem.diff( fechaInicioItem, 'days' );
+                                } else {
+                                    duracionItem += fechaFin.diff( fechaInicioItem, 'days' );
+                                }
+                            }
+                        } );
+                    }
+
+                    if ( this.verifyInteger( ( duracionItem / cantidadTotalDiasActividades ) * 100, false ) > 0 ) {
+                        avancePorCapitulo.push(
+                            {
+                                programacionId: flujo.programacion.programacionId,
+                                capitulo: flujo.programacion.actividad,
+                                programacionCapitulo: this.verifyInteger( ( duracionItem / cantidadTotalDiasActividades ) * 100, false ),
+                                avanceFisicoCapitulo: flujo.programacion.avanceFisicoCapitulo !== null ? String( this.verifyInteger( Number( flujo.programacion.avanceFisicoCapitulo ), true ) ) : null
+                            }
+                        );
+                    }
+
+                    duracionProgramacion += duracionItem;
                 }
                 this.avanceFisico = [
                     {
-                        semanaNumero: this.seguimientoDiario.numeroSemana,
-                        periodoReporte: `${ this.datePipe.transform( this.seguimientoDiario.fechaInicio, 'dd/MM/yyyy' ) } - ${ this.datePipe.transform( this.seguimientoDiario.fechaFin, 'dd/MM/yyyy' ) }`,
-                        programacionSemana: this.verifyInteger( totalDuracion / this.seguimientoDiario.cantidadTotalDiasActividades * 100,
+                        semanaNumero: this.seguimientoSemanal.numeroSemana,
+                        periodoReporte: `${ this.datePipe.transform( this.seguimientoSemanal.fechaInicio, 'dd/MM/yyyy' ) } - ${ this.datePipe.transform( this.seguimientoSemanal.fechaFin, 'dd/MM/yyyy' ) }`,
+                        programacionSemana: this.verifyInteger( ( duracionProgramacion / cantidadTotalDiasActividades ) * 100,
                                                                 false ),
                         avancePorCapitulo,
-                        avanceFisicoSemana: this.seguimientoDiario.seguimientoSemanalAvanceFisico.length > 0 ?
-                                            this.seguimientoDiario.seguimientoSemanalAvanceFisico[0].avanceFisicoSemanal : 0
+                        avanceFisicoSemana: this.seguimientoSemanal.seguimientoSemanalAvanceFisico.length > 0 ?
+                                            this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0].avanceFisicoSemanal : 0
                     }
                 ];
             }
@@ -104,6 +178,10 @@ export class TablaAvanceFisicoComponent implements OnInit {
         if ( isNaN( Number( value ) ) === true ) {
             registro.avanceFisicoCapitulo = '0';
         } else {
+            if ( Number( value ) < 0 ) {
+                registro.avanceFisicoCapitulo = '0';
+                return;
+            }
             this.seRealizoCambio = true;
             this.tablaAvanceFisico.data[0]['avanceFisicoSemana'] = 0;
             let totalAvanceFisicoSemana = 0;
@@ -118,7 +196,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
             }
             for ( const capitulo of this.tablaAvanceFisico.data[0]['avancePorCapitulo'] ) {
                 
-                let avanceValue;
+                let avanceValue = 0;
                 if ( capitulo.avanceFisicoCapitulo > 0 ) {
                     avanceValue = this.verifyInteger( Number( capitulo.avanceFisicoCapitulo ), false );
                 }
@@ -135,9 +213,9 @@ export class TablaAvanceFisicoComponent implements OnInit {
     }
 
     valuePendingProgramacionObra() {
-        if ( this.seguimientoDiario !== undefined ) {
+        if ( this.seguimientoSemanal !== undefined ) {
             let totalProgramacionObra = 0;
-            const seguimientoSemanal = this.seguimientoDiario;
+            const seguimientoSemanal = this.seguimientoSemanal;
             if ( seguimientoSemanal.seguimientoSemanalAvanceFisico.length > 0 && seguimientoSemanal.numeroSemana > 1 ) {
                 totalProgramacionObra += Number( seguimientoSemanal.seguimientoSemanalAvanceFisico[ 0 ].programacionSemanal );
             }
@@ -149,9 +227,9 @@ export class TablaAvanceFisicoComponent implements OnInit {
     }
 
     valuePendingAvanceEjecutado() {
-        if ( this.seguimientoDiario !== undefined ) {
+        if ( this.seguimientoSemanal !== undefined ) {
             let totalAvanceEjecutado = 0;
-            const seguimientoSemanal = this.seguimientoDiario;
+            const seguimientoSemanal = this.seguimientoSemanal;
             if ( seguimientoSemanal.seguimientoSemanalAvanceFisico.length > 0 && seguimientoSemanal.numeroSemana > 1 ) {
                 totalAvanceEjecutado += seguimientoSemanal.seguimientoSemanalAvanceFisico[ 0 ].avanceFisicoSemanal;
             }
@@ -172,7 +250,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
     openDialogObservaciones( ) {
         this.dialog.open( DialogAvanceAcumuladoComponent, {
             width: '80em',
-            data: { avanceAcumulado: this.seguimientoDiario.avanceAcumulado, seguimientoSemanal: this.seguimientoDiario }
+            data: { avanceAcumulado: this.seguimientoSemanal.avanceAcumulado, seguimientoSemanal: this.seguimientoSemanal }
         } );
     }
 
@@ -183,27 +261,31 @@ export class TablaAvanceFisicoComponent implements OnInit {
         } else {
             return 0;
         }
-      }
+    }
 
     guardar() {
-        const pSeguimientoSemanal = this.seguimientoDiario;
-        for (const flujoInversion of this.seguimientoDiario.flujoInversion ) {
-            this.tablaAvanceFisico.data[0][ 'avancePorCapitulo' ].filter( value => {
-                if ( flujoInversion.programacion.programacionId === value.programacionId ) {
-                    console.log( );
-                    if (  value.avanceFisicoCapitulo === null ) {
-                        flujoInversion.programacion.avanceFisicoCapitulo = null;
-                    } else {
-                        flujoInversion.programacion.avanceFisicoCapitulo = Number( value.avanceFisicoCapitulo );
+        const pSeguimientoSemanal = this.seguimientoSemanal;
+        const getSeguimientoSemanalAvanceFisicoProgramacion = () => {
+            const seguimientoSemanalAvanceFisicoProgramacion = [];
+            for (const flujoInversion of this.seguimientoSemanal.flujoInversion ) {
+                const programacion = this.tablaAvanceFisico.data[ 0 ][ 'avancePorCapitulo' ].filter( programacion => programacion.programacionId === flujoInversion.programacionId );
+                seguimientoSemanalAvanceFisicoProgramacion.push(
+                    {
+                        seguimientoSemanalAvanceFisicoProgramacionId: flujoInversion.seguimientoSemanalAvanceFisicoProgramacionId,
+                        seguimientoSemanalAvanceFisicoId: this.seguimientoSemanalAvanceFisicoId,
+                        programacionId: flujoInversion.programacionId,
+                        avanceFisicoCapitulo: programacion[0].avanceFisicoCapitulo
                     }
-                    flujoInversion.programacion.programacionCapitulo = Number( value.programacionCapitulo );
-                }
-            } );
+                );
+            }
+            
+            return seguimientoSemanalAvanceFisicoProgramacion;
         }
         const seguimientoSemanalAvanceFisico = [
             {
                 seguimientoSemanalId: this.seguimientoSemanalId,
                 seguimientoSemanalAvanceFisicoId: this.seguimientoSemanalAvanceFisicoId,
+                seguimientoSemanalAvanceFisicoProgramacion: getSeguimientoSemanalAvanceFisicoProgramacion(),
                 programacionSemanal: this.avanceFisico[ 0 ].programacionSemana,
                 avanceFisicoSemanal: this.tablaAvanceFisico.data[ 0 ][ 'avanceFisicoSemana' ]
             }
@@ -217,7 +299,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                         () =>   this.routes.navigate(
                                     [
-                                        '/registrarAvanceSemanal/registroSeguimientoSemanal', this.seguimientoDiario.contratacionProyectoId
+                                        '/registrarAvanceSemanal/registroSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
                                     ]
                                 )
                     );

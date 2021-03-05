@@ -39,6 +39,7 @@ export class RegistrarActuacionProcesoComponent implements OnInit {
   ];
   controlJudicialId: any;
   defensaJudicial: DefensaJudicial={};
+  estaEditando = false;
   constructor(  private fb: FormBuilder, public dialog: MatDialog,
     public commonServices: CommonService,
     public judicialServices:DefensaJudicialService,
@@ -84,13 +85,17 @@ export class RegistrarActuacionProcesoComponent implements OnInit {
       dialogRef.afterClosed().subscribe(result => {
           if(id>0)
           {
-            this.router.navigate(["/gestionarProcesoDefensaJudicial/registrarActuacionProceso/"+id], {});
+            this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+              () => this.router.navigate(["/gestionarProcesoDefensaJudicial/verDetalleEditarActuacionProceso/"+id], {})
+            );
           }                  
       });
     }
   }
 
   onSubmit() {
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let defensaJudicial=this.defensaJudicial;
     
     defensaJudicial.defensaJudicialSeguimiento.push({

@@ -30,32 +30,32 @@
     <div class="table-responsive">
         <table mat-table [dataSource]="dataSource" matSort>
     
-            <ng-container matColumnDef="fecha">
+            <ng-container matColumnDef="fechaSolicitud">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de la solicitud </th>
                 <td mat-cell *matCellDef="let element"> <b>{{element.fechaSolicitud | date: 'dd/MM/yyyy'}}</b> </td>
             </ng-container>
     
-            <ng-container matColumnDef="tipo">
+            <ng-container matColumnDef="tipoSolicitudText">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de solicitud </th>
                 <td mat-cell *matCellDef="let element"> {{element.tipoSolicitudText}} </td>
             </ng-container>
     
-            <ng-container matColumnDef="numero">
+            <ng-container matColumnDef="numeroSolicitud">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de solicitud </th>
                 <td mat-cell *matCellDef="let element"> {{element.numeroSolicitud}} </td>
             </ng-container>
     
-            <ng-container matColumnDef="opcionPorContratar">
+            <ng-container matColumnDef="opcionContratar">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Opción por contratar </th>
                 <td mat-cell *matCellDef="let element"> {{element.opcionContratar}} </td>
             </ng-container>
     
-            <ng-container matColumnDef="valorSolicitado">
+            <ng-container matColumnDef="valorSolicitud">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor solicitado </th>
                 <td mat-cell *matCellDef="let element"> {{element.valorSolicitud | currency:'USD':'symbol':'1.0'}} </td>
             </ng-container>
     
-            <ng-container matColumnDef="estado">
+            <ng-container matColumnDef="estadoSolicitudText">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la solicitud </th>
                 <td mat-cell *matCellDef="let element">
                     <section *ngIf=" element.estadoSolicitudText.length === 0">

@@ -10,7 +10,8 @@ import { RegistroPresupuestal } from '../fuenteFinanciacion/fuente-financiacion.
 @Injectable({
   providedIn: 'root'
 })
-export class CofinanciacionService {    
+export class CofinanciacionService {
+  
 
   constructor( private http: HttpClient ) {}
 
@@ -40,6 +41,10 @@ export class CofinanciacionService {
 
   eliminarVigencia(vigenciaAporteId: any) {
     return this.http.post<Respuesta>(`${environment.apiUrl}/Cofinancing/EliminarVigenciaAportanteId?pVigenciaAportanteId=${vigenciaAporteId}`,null);
+  }
+
+  eliminarDocumento(DocumentoAporteId: any) {
+    return this.http.post<Respuesta>(`${environment.apiUrl}/Cofinancing/EliminarDocumentoAportanteId?pDocumentID=${DocumentoAporteId}`,null);
   }
 
   listaAcuerdosCofinanciacion(){ 

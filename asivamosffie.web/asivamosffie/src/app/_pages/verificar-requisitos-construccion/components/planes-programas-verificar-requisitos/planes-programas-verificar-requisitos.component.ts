@@ -58,6 +58,7 @@ export class PlanesProgramasVerificarRequisitosComponent implements OnInit, OnCh
   @Input() contratoConstruccionId: any;
 
   @Output() createEdit = new EventEmitter();
+  estaEditando = false;
 
   constructor(
     private dialog: MatDialog,
@@ -245,8 +246,8 @@ export class PlanesProgramasVerificarRequisitosComponent implements OnInit, OnCh
 
   textoLimpio(texto: string) {
     let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
+    // saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
+    // saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
 
     if ( texto ){
       const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
@@ -265,7 +266,8 @@ export class PlanesProgramasVerificarRequisitosComponent implements OnInit, OnCh
   }
 
   guardarPlanes() {
-
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let construccion = {
       contratoConstruccionId: this.contratoConstruccionId,
       tieneObservacionesPlanesProgramasApoyo: this.addressForm.value.tieneObservaciones,

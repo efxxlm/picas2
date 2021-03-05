@@ -8,11 +8,13 @@ using Microsoft.AspNetCore.Mvc;
 using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class JudicialDefenseController : ControllerBase
     {
 
@@ -306,6 +308,24 @@ namespace asivamosffie.api.Controllers
                 Respuesta respuesta = new Respuesta();
                 string pUsuarioModifico = HttpContext.User.FindFirst("User").Value.ToUpper();
                 respuesta = await _judicialDefense.FinalizeActuation(id, pUsuarioModifico);
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
+        [Route("ChangeStateLegitimacion")]
+        [HttpPost]
+        public async Task<IActionResult> ChangeStateLegitimacion([FromQuery] int pDefensaJudicialId, [FromQuery] string code)
+        {
+            try
+            {
+                Respuesta respuesta = new Respuesta();
+                string user = HttpContext.User.FindFirst("User").Value.ToUpper();
+                respuesta = await _judicialDefense.ChangeStateLegitimacion(pDefensaJudicialId, code, user);
 
                 return Ok(respuesta);
             }

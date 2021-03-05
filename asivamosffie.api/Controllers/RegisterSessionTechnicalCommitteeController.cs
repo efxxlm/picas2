@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -14,6 +15,7 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class RegisterSessionTechnicalCommitteeController : ControllerBase
     {
         public readonly IRegisterSessionTechnicalCommitteeService _registerSessionTechnicalCommitteeService;
@@ -433,9 +435,9 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetCompromisosByComiteTecnicoId")]
-        public async Task<ComiteTecnico> GetCompromisosByComiteTecnicoId([FromQuery] int ComiteTecnicoId)
+        public async Task<ComiteTecnico> GetCompromisosByComiteTecnicoId([FromQuery] int ComiteTecnicoId, bool pEsFiduciario)
         {
-            return await _registerSessionTechnicalCommitteeService.GetCompromisosByComiteTecnicoId(ComiteTecnicoId);
+            return await _registerSessionTechnicalCommitteeService.GetCompromisosByComiteTecnicoId(ComiteTecnicoId, pEsFiduciario);
         }
          
         [Route("GetComiteTecnicoByComiteTecnicoId")]

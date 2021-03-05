@@ -74,6 +74,7 @@ export interface SesionComiteTema{
     generaCompromiso?: boolean,
     cantCompromisos?: number,
     registroCompleto?: boolean,
+    registroCompletoActa?: boolean,
 
     completo?: boolean,
 
@@ -100,9 +101,11 @@ export interface SesionComiteSolicitud {
     requiereVotacion?: boolean,
     registroCompleto?: boolean,
     desarrolloSolicitud?: string,
+    estadoActaCodigo?: string,
 
     comiteTecnicoFiduciarioId?: number,
     registroCompletoFiduciaria?: boolean,
+    registroCompletoActa?: boolean,
     desarrolloSolicitudFiduciario?: string,
     estadoActaCodigoFiduciario?: string,
     observacionesFiduciario?: string,
@@ -275,6 +278,7 @@ export interface SesionSolicitudObservacionProyecto{
     proyecto?: Proyecto,
 
     nombreParticipante?: string,
+    sesionParticipante?: SesionParticipante,
 
 }
 

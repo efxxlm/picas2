@@ -42,6 +42,7 @@ export interface ContratacionProyecto{
     tipoSolicitudCodigo?: string,
     
     proyectoGrilla?: ProyectoGrilla,
+    contratacion?: Contratacion,
 
 }
 
@@ -66,7 +67,8 @@ export interface ProyectoGrilla{
     tipoIntervencion?: string,
     llaveMen?: string,
     region?: string,
-    estadoProyectoCodigo?: string,
+    estadoProyectoObraCodigo?: string,
+    estadoProyectoInterventoriaCodigo?: string,
 }
 
 export interface ContratacionProyectoAportante{

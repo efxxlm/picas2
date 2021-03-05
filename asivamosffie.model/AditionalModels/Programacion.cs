@@ -14,6 +14,12 @@ namespace asivamosffie.model.Models
     {
         [NotMapped]
         public double RangoDias { get; set; }
+
+        //[NotMapped]
+        //public Programacion Capitulo { get; set; }
+
+        [NotMapped]
+        public dynamic Capitulo { get; set; }
     }
 }
  

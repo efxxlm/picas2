@@ -20,6 +20,10 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public Contratacion Contratacion { get; set; }
         [NotMapped]
+        public ControversiaContractual ControversiaContractual{ get; set; }
+        [NotMapped]
+        public NovedadContractual ModificacionContractual { get; set; }
+        [NotMapped]
         public string EstadoDelRegistro { get; set; } 
         [NotMapped]
         public bool EstadoRegistro { get; set; }
@@ -27,6 +31,8 @@ namespace asivamosffie.model.Models
         public bool EstaTramitado { get; set; }
         [NotMapped]
         public ProcesoSeleccionMonitoreo ProcesoSeleccionMonitoreo { get; set; }
+        [NotMapped]
+        public bool? RegistroCompletoActa { get; set; }
     }
 
 }

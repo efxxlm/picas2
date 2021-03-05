@@ -5,7 +5,7 @@ namespace asivamosffie.services.Helpers.Constant
     {
         #region Mensajes Informativos
 
- 
+
         #endregion Mensajes Informativos
 
         #region Mensajes Exitoso
@@ -47,7 +47,7 @@ namespace asivamosffie.services.Helpers.Constant
         public const string DirecCambioContrasena = "301";
 
         #endregion Mensajes Redireccion
-         
+
     }
 
     public class ConstantMessagesContrasena
@@ -228,7 +228,8 @@ namespace asivamosffie.services.Helpers.Constant
         public const string Error = "500";
         #endregion
     }
-     
+
+
     public class ConstantMessagesFuentesFinanciacion
     {
 
@@ -241,6 +242,8 @@ namespace asivamosffie.services.Helpers.Constant
 
         public const string OperacionExitosa = "200";
         public const string EliminacionExitosa = "201";
+        public const string EliminacionFallida = "301";
+        public const string EliminarFuenteConControlRecursos = "302";
 
         #endregion Mensajes Exitoso
 
@@ -450,6 +453,7 @@ namespace asivamosffie.services.Helpers.Constant
         #region Mensajes Exitoso
 
         public const string OperacionExitosa = "200";
+        public const string EliminacionExitosa = "201";
 
         #endregion Mensajes Exitoso
 
@@ -561,7 +565,6 @@ namespace asivamosffie.services.Helpers.Constant
         public const string Error = "500";
         #endregion
     }
-   
     public class ConstantMessagesGenerateBudget
     {
 
@@ -584,7 +587,7 @@ namespace asivamosffie.services.Helpers.Constant
         public const string Error = "500";
         #endregion
     }
-     
+
     public class ConstantGestionarProcesosContractuales
     {
 
@@ -607,7 +610,8 @@ namespace asivamosffie.services.Helpers.Constant
         public const string Error = "500";
         #endregion
     }
-     
+
+
     public class ConstantMessagesProcesoSeleccion
     {
         #region Mensajes Error
@@ -668,7 +672,7 @@ namespace asivamosffie.services.Helpers.Constant
         public const string Error = "500";
         #endregion
     }
-     
+
     public class ConstantMessagesContratoPoliza
     {
 
@@ -695,6 +699,7 @@ namespace asivamosffie.services.Helpers.Constant
         #region 
         public const string Error = "500";
         public const string ErrorInterno = "501";
+        public const string ErrorDuplicarPoliza = "502";
         public const string ErrorEnviarCorreo = "107";
         public const string CorreoNoExiste = "106";
         #endregion
@@ -703,8 +708,8 @@ namespace asivamosffie.services.Helpers.Constant
     public class RegisterPreContructionPhase1
     { 
         #region Mensajes Informativos
-
-
+        public const string CanceladoCorrrectamente = "201";
+        public const string DevueltoCorrrectamente = "202";
         #endregion Mensajes Informativos
 
         #region Mensajes Exitoso
@@ -728,7 +733,7 @@ namespace asivamosffie.services.Helpers.Constant
 
 
         public const string ErrorInterno = "501";
-        
+
         public const string Error = "500";
 
         #endregion Mensajes Informativos
@@ -849,6 +854,13 @@ namespace asivamosffie.services.Helpers.Constant
         #endregion Mensajes Exitoso
     }
 
+    public class ConstMessagesPerformances
+    {
+        public const string CorreoEnviado = "101";
+        public const string ErrorGuardarCambios = "109";
+        public const string ErrorEnviarCorreo = "107";
+    }
+
 
     //public class ConstantMessagesJudicialDefense
     //{
@@ -909,6 +921,7 @@ namespace asivamosffie.services.Helpers.Constant
 
         #region 
         public const string Error = "500";
+        public const string EntradaInvalida = "422";
         #endregion
     }
 

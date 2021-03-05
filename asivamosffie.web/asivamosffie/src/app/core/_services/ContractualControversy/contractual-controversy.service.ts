@@ -15,8 +15,8 @@ export class ContractualControversyService implements OnInit{
   ngOnInit(): void {
 
   }
-  GetPlantillaControversiaContractual(pContratoId: number){
-    return this.http.get(`${environment.apiUrl}/ContractualControversy/GetPlantillaControversiaContractual?pContratoId=${pContratoId}`,{ responseType: "blob" });
+  GetPlantillaControversiaContractual(pControversiaContractualID: number){
+    return this.http.get(`${environment.apiUrl}/ContractualControversy/GetPlantillaControversiaContractual?pControversiaContractualID=${pControversiaContractualID}`,{ responseType: "blob" });
   }
   CreateEditarControversiaTAI(controversiaContractual: any){
     return this.http.post<Respuesta>(`${environment.apiUrl}/ContractualControversy/CreateEditarControversiaTAI`, controversiaContractual);
@@ -68,6 +68,9 @@ export class ContractualControversyService implements OnInit{
   CambiarEstadoControversiaContractual(pControversiaContractualId:number, pNuevoCodigoEstado:string){
     return this.http.put<Respuesta>(`${environment.apiUrl}/ContractualControversy/CambiarEstadoControversiaContractual?pControversiaContractualId=${pControversiaContractualId}&pNuevoCodigoEstado=${pNuevoCodigoEstado}`, null);  
   }
+  CambiarEstadoActuacionReclamacion(pActuacionId:number, pEstadoReclamacionCodigo:string){
+    return this.http.put<Respuesta>(`${environment.apiUrl}/ContractualControversy/CambiarEstadoActuacionReclamacion?pActuacionId=${pActuacionId}&pEstadoReclamacionCodigo=${pEstadoReclamacionCodigo}`, null);
+  }
   EliminarControversiaContractual(pControversiaContractualId:number){
     return this.http.post<EliminarControversiaContractual>(`${environment.apiUrl}/ContractualControversy/EliminarControversiaContractual?pControversiaContractualId=${pControversiaContractualId}`,null);
   }
@@ -101,6 +104,15 @@ export class ContractualControversyService implements OnInit{
   CreateEditarReclamacion(prmReclamacion: any){
     return this.http.post<Respuesta>(`${environment.apiUrl}/ContractualControversy/CreateEditarReclamacion`, prmReclamacion);
   }
+  CambiarEstadoActuacionSeguimientoActuacion(pActuacionSeguimientoId: number, pEstadoReclamacionCodigo: string){
+    return this.http.put<Respuesta>(`${environment.apiUrl}/ContractualControversy/CambiarEstadoActuacionSeguimientoActuacion?pActuacionSeguimientoId=${pActuacionSeguimientoId}&pEstadoReclamacionCodigo=${pEstadoReclamacionCodigo}`, null);
+  }
+  EliminarActuacionSeguimientoActuacion(pActuacionSeguimientoId:number){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/ContractualControversy/EliminarActuacionSeguimientoActuacion?pActuacionSeguimientoId=${pActuacionSeguimientoId}`, null);
+  }
+  GetListGrillMesasByControversiaId(id:number){
+    return this.http.get<any>(`${environment.apiUrl}/ContractualControversy/GetListGrillMesasByControversiaId?id=${id}`);
+  }
   CreateEditarMesa(prmMesa: any){
     return this.http.post<Respuesta>(`${environment.apiUrl}/ContractualControversy/CreateEditarMesa`, prmMesa);
   }
@@ -113,6 +125,9 @@ export class ContractualControversyService implements OnInit{
   GetActuacionesMesasByMesaId(pControversiaMesaID: number){
     return this.http.get<any>(`${environment.apiUrl}/ContractualControversy/GetActuacionesMesasByMesaId?pControversiaMesaID=${pControversiaMesaID}`);
   }
+  GetActuacionesMesasByActuacionId(pActuacionId:number){
+    return this.http.get<any>(`${environment.apiUrl}/ContractualControversy/GetActuacionesMesasByActuacionId?pActuacionId=${pActuacionId}`);
+  }
   GetActuacionMesaByActuacionMesaId(pControversiaActuacionMesaID:number){
     return this.http.get<any>(`${environment.apiUrl}/ContractualControversy/GetActuacionMesaByActuacionMesaId?pControversiaActuacionMesaID=${pControversiaActuacionMesaID}`);
   }
@@ -121,6 +136,19 @@ export class ContractualControversyService implements OnInit{
   }
   CreateEditarActuacionMesa(controversiaActuacionMesa: any){
     return this.http.post<Respuesta>(`${environment.apiUrl}/ContractualControversy/CreateEditarActuacionMesa`, controversiaActuacionMesa);
+  }
+  EliminacionActuacionMesa(pControversiaActuacionMesaId:number){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/ContractualControversy/EliminacionActuacionMesa?pControversiaActuacionMesaId=${pControversiaActuacionMesaId}`, null);
+  }
+  GetMesaByMesaId(pControversiaMesaID: number){
+    return this.http.get<any>(`${environment.apiUrl}/ContractualControversy/GetMesaByMesaId?pControversiaMesaID=${pControversiaMesaID}`);
+  }
+  //4.4.1
+  GetSeguimientoActuacionDerivadabyId(pSeguimientoActuacionDerivadaId: number){
+    return this.http.get<any>(`${environment.apiUrl}/ContractualControversy/GetSeguimientoActuacionDerivadabyId?pSeguimientoActuacionDerivadaId=${pSeguimientoActuacionDerivadaId}`);
+  }
+  ChangeStateActuacion(pControversiaActuacionId: number){
+    return this.http.put<Respuesta>(`${environment.apiUrl}/ContractualControversy/ChangeStateActuacion?pControversiaActuacionId=${pControversiaActuacionId}`, null);
   }
   FinalizarActuacion(id: any) {
     return this.http.put<Respuesta>(`${environment.apiUrl}/ContractualControversy/FinalizarActuacion?pControversiaActuacionId=${id}`, null);

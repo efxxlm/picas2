@@ -15,6 +15,8 @@ export class ActualizarTramiteContvrContrcComponent implements OnInit {
   public numeroContrato;
   opcion1 = false;
   opcion2 = false;
+  tieneReclamaciones: any[] = [];
+  tieneMesasTrabajo: any[] = [];
   constructor(private services: ContractualControversyService) { }
 
   ngOnInit(): void {
@@ -52,5 +54,20 @@ export class ActualizarTramiteContvrContrcComponent implements OnInit {
       this.codigoSolicitud = data.numeroSolicitud;
       this.numeroContrato = data.contrato.numeroContrato;
     });
+    this.services.GetListGrillaControversiaActuacion(id).subscribe((data0:any)=>{
+      //cuando hay reclamaciones
+      for(let estado of data0){
+        if(estado.estadoAvanceTramiteCodigo=='14'&& estado.estadoActuacionCodigo=='2'){
+          this.tieneReclamaciones.push(estado);
+        }
+      }
+      //cuando hay mesas de trabajo
+      for(let estadoMT of data0){
+        if(estadoMT.requiereMesaTrabajo==true && estadoMT.estadoActuacionCodigo=='2'){
+          this.tieneMesasTrabajo.push(estadoMT);
+          console.log(this.tieneMesasTrabajo);
+        }
+      }
+    })
   }
 }

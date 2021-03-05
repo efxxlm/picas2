@@ -8,7 +8,7 @@
       <h1 class="title-menu--h1">
           Ver detalle requisitos para inicio contrato {{ contrato.numeroContrato }} fase 1 - Preconstrucción
       </h1>
-      <p class="text-primary">
+      <p class="colorMainColor" style="margin-top: 1em;">
           <span class="mx-2em">
               Fecha de aprobacion de póliza:
               <b>
@@ -73,7 +73,7 @@
                       <mat-card-content>
                           <p>
                             <b>Perfil:</b>
-                            {{ perfil.perfilCodigo }}
+                            {{ getNombrePerfil( perfil.perfilCodigo ) }}
                           </p>
                           <p>
                             <b>Cantidad de hojas de vida requeridas:</b>

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit,AfterViewInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -30,6 +30,9 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
   tiposIdentificacionArray = [
   ];
 
+  textoConvocantes="demandante";
+  demandado_class:number=0;
+  estaEditando = false;
   constructor (private fb: FormBuilder,public commonService:CommonService,
     public defensaService:DefensaJudicialService,
     public dialog: MatDialog, private router: Router  ) {
@@ -39,6 +42,9 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
   @Input() legitimacion:boolean;
   @Input() tipoProceso:string;
   @Input() defensaJudicial:DefensaJudicial;
+  ngAfterViewInit(){
+    this.cargarRegistro();
+  }
   cargarRegistro() {
      
 
@@ -57,13 +63,31 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
     this.addressForm.get("demandaContraFFIE").setValue(this.defensaJudicial.esDemandaFfie);
     this.formContratista.get("numeroContratos").setValue(this.defensaJudicial.numeroDemandantes);
     let i=0;
-    console.log(this.perfiles);
+    this.demandado_class=this.estaIncompletoDemandado(this.defensaJudicial);
     this.defensaJudicial.demandanteConvocante.forEach(element => {
-      this.perfiles.controls[i].get("nomConvocado").setValue(element.nombre);
-      this.perfiles.controls[i].get("tipoIdentificacion").setValue(element.tipoIdentificacionCodigo);
-      this.perfiles.controls[i].get("numIdentificacion").setValue(element.numeroIdentificacion);
-      this.perfiles.controls[i].get("direccion").setValue(element.direccion);
-      this.perfiles.controls[i].get("correo").setValue(element.email);
+      if(this.perfiles.controls[i]){
+        this.perfiles.controls[i].get("demandanteConvocadoId").setValue(element.demandanteConvocadoId);
+        this.perfiles.controls[i].get("nomConvocado").setValue(element.nombre);
+        this.perfiles.controls[i].get("tipoIdentificacion").setValue(element.tipoIdentificacionCodigo);
+        this.perfiles.controls[i].get("numIdentificacion").setValue(element.numeroIdentificacion);
+        this.perfiles.controls[i].get("direccion").setValue(element.direccion);
+        this.perfiles.controls[i].get("correo").setValue(element.email);
+        //this.perfiles.controls[i].get("registroCompleto").setValue(element.registroCompleto);
+        if( element.registroCompleto == null 
+          || (!element.registroCompleto 
+          && (element.nombre == null || element.nombre == '')
+          && (element.tipoIdentificacionCodigo == null || element.tipoIdentificacionCodigo == '')
+          && (element.numeroIdentificacion == null || element.numeroIdentificacion == '')
+          && (element.direccion == null || element.direccion == '') 
+          && (element.email == null || element.email == '') 
+          )){
+            this.perfiles.controls[i].get("registroCompleto").setValue(null);
+          }else if(!element.registroCompleto){
+            this.perfiles.controls[i].get("registroCompleto").setValue(false);
+          }else if(element.registroCompleto){
+            this.perfiles.controls[i].get("registroCompleto").setValue(true);
+          }
+      }
       i++;
     });
     //defensaJudicial.eDemandaFFIE=this.addressForm.get("demandaContraFFIE").value;
@@ -76,20 +100,44 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
     });
     this.formContratista.get( 'numeroContratos' ).valueChanges
       .subscribe( value => {
-        this.perfiles.clear();
-        for ( let i = 0; i < Number(value); i++ ) {
-          this.perfiles.push( 
-            this.fb.group(
+        console.log(this.perfiles.length);
+        console.log(value);
+        if(this.perfiles.length>Number(value))
+        {
+          //verifico si tiene datos para mandar la alerta
+          this.perfiles.value.forEach(element => {
+            if(element.nomConvocado!= null || element.correo!= null ||
+              element.direccion!=null || element.numIdentificacion != null ||
+              element.tipoIdentificacion!=null)
               {
-                nomConvocado: [ null ],
-                tipoIdentificacion: [ null ],
-                numIdentificacion: [ null ],
-                direccion: [ null ],
-                correo: [ null ]
+                this.openDialog("","<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>");
               }
-            ) 
-          )
+              else
+              {
+                this.perfiles.removeAt(this.perfiles.length-1);
+              }
+          });
         }
+        else
+        {
+          for ( let i = this.perfiles.length; i < Number(value); i++ ) {
+            this.perfiles.push( 
+              this.fb.group(
+                {
+                  demandanteConvocadoId: [ null ],
+                  nomConvocado: [ null ],
+                  tipoIdentificacion: [ null ],
+                  numIdentificacion: [ null ],
+                  direccion: [ null ],
+                  correo: [ null ],
+                  registroCompleto : [ null ],
+                }
+              ) 
+            )
+          }
+        }
+        
+        
       } )
   };
 
@@ -151,9 +199,12 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
   };
 
   guardar () {
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let defContraProyecto:DemandanteConvocante[]=[];
     for(let perfil of this.perfiles.controls){
       defContraProyecto.push({
+        demandanteConvocadoId:perfil.get("demandanteConvocadoId").value,
         nombre:perfil.get("nomConvocado").value,
         tipoIdentificacionCodigo:perfil.get("tipoIdentificacion").value,
         numeroIdentificacion:perfil.get("numIdentificacion").value,
@@ -204,6 +255,35 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
       });
     }
   
+  }
+
+  cambioTipoTexto()
+  {    
+    this.textoConvocantes=this.addressForm.value.demandaContraFFIE?"convocante":"demandante";
+  }
+
+  estaIncompletoDemandado(defensaJudicial: DefensaJudicial): number {
+    let retorno:number=0;
+    //sin-diligenciar:retorno===0,'en-proceso':retorno===1,'completo':retorno===2
+    if(defensaJudicial != null){
+
+      let num_convocados = defensaJudicial.numeroDemandados;// total de convocados
+      let num_completo = 0; //almacena los registros que estan completos
+      defensaJudicial.demandadoConvocado.forEach(element => {
+          if(element.registroCompleto){
+            num_completo = num_completo + 1;
+          }
+      });
+
+      if(num_completo >= num_convocados){
+          retorno = 2;
+      }else if (num_completo > 0 && num_completo < num_convocados){
+          retorno = 1;
+      }
+
+    }
+
+    return retorno;
   }
 
 }

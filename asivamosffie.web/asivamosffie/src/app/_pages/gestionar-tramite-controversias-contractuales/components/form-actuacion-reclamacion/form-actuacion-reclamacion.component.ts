@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -14,6 +14,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class FormActuacionReclamacionComponent implements OnInit {
   @Input() isEditable;
   @Input() idReclamacionActuacion;
+  @Output() codRecalamacion = new EventEmitter<string>();
   public controversiaID = parseInt(localStorage.getItem("controversiaID"));
   public reclamacionID = parseInt(localStorage.getItem("reclamacionID"));
   addressForm = this.fb.group({
@@ -40,6 +41,7 @@ export class FormActuacionReclamacionComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
   constructor(private services: ContractualControversyService, private common: CommonService, private fb: FormBuilder, public dialog: MatDialog, private router: Router) { }
 
   ngOnInit(): void {
@@ -59,6 +61,7 @@ export class FormActuacionReclamacionComponent implements OnInit {
         this.addressForm.get('definitvoAseguradora').setValue(data.esResultadoDefinitivo);
         this.addressForm.get('observaciones').setValue(data.observaciones);
         this.addressForm.get('urlSoporte').setValue(data.rutaSoporte);
+        this.codRecalamacion.emit(data.numeroReclamacion);
       });
     }
   }
@@ -88,10 +91,13 @@ export class FormActuacionReclamacionComponent implements OnInit {
   }
 
   onSubmit() {
+    this.estaEditando=true;
+    this.addressForm.markAllAsTouched();
     let actuacionTaiArray;
     if (this.isEditable == true) {
       actuacionTaiArray = {
         "ControversiaActuacionId": this.reclamacionID,
+        "EstadoDerivadaCodigo":'1',
         "SeguimientoCodigo": true,
         "EstadoReclamacionCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
         "ActuacionAdelantada": this.addressForm.value.actuacionAdelantada,
@@ -108,6 +114,7 @@ export class FormActuacionReclamacionComponent implements OnInit {
     else {
       actuacionTaiArray = {
         "ControversiaActuacionId": this.reclamacionID,
+        "EstadoDerivadaCodigo":'1',
         "SeguimientoCodigo": true,
         "EstadoReclamacionCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
         "ActuacionAdelantada": this.addressForm.value.actuacionAdelantada,

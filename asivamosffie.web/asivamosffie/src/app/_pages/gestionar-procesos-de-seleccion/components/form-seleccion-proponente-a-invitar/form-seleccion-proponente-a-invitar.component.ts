@@ -19,6 +19,7 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
   @Output() guardar: EventEmitter<any> = new EventEmitter();
   listaProponentes: ProcesoSeleccionProponente[] = [];
   estadosProcesoSeleccion = EstadosProcesoSeleccion;
+  sePuedeVer:boolean = false;
 
   addressForm = this.fb.group({
     cuantosProponentes: [null, Validators.compose([
@@ -28,6 +29,7 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
       Validators.required])
     ]
   });
+  estaEditando = false;
 
   constructor(
     private fb: FormBuilder,
@@ -37,23 +39,44 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
   ) {
 
   }
-
+  noGuardado=true;
+  ngOnDestroy(): void {
+    if (this.noGuardado===true &&  this.addressForm.dirty) {
+      let dialogRef =this.dialog.open(ModalDialogComponent, {
+        width: '28em',
+        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
+      });   
+      dialogRef.afterClosed().subscribe(result => {
+        console.log(`Dialog result: ${result}`);
+        if(result === true)
+        {
+            this.onSubmit();          
+        }           
+      });
+    }
+  };
 
   ngOnInit() {
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       resolve();
     });
   }
 
   cargarRegistro() {
     this.ngOnInit().then(() => {
-      console.log(this.procesoSeleccion.listaContratistas.length);
-      if(this.procesoSeleccion.listaContratistas.length>0)
+      console.log(this.procesoSeleccion.procesoSeleccionProponente.length);
+      if(this.procesoSeleccion.procesoSeleccionProponente.length>0)
       {
-        this.addressForm.get('cuantosProponentes').setValue(this.procesoSeleccion.listaContratistas.length);
+        this.addressForm.get('cuantosProponentes').setValue(this.procesoSeleccion.procesoSeleccionProponente.length);
       }      
       this.addressForm.get('url').setValue(this.procesoSeleccion.urlSoporteProponentesSeleccionados);
     });
+
+    if (
+        this.procesoSeleccion.estadoProcesoSeleccionCodigo == this.estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario ||
+        this.procesoSeleccion.estadoProcesoSeleccionCodigo == this.estadosProcesoSeleccion.AprobadaSelecciónPorComiteFiduciario
+      )
+      this.sePuedeVer = true;
   }
 
   validateNumberKeypress(event: KeyboardEvent) {
@@ -66,8 +89,8 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
   validateSel(numeroid: string) {
     
     let retorno= this.valida(numeroid);
-    console.log("valido "+numeroid);
-    console.log(retorno);
+    //console.log("valido "+numeroid);
+    //console.log(retorno);
     return retorno;
     
   }
@@ -76,7 +99,7 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
     let ret=false;
     this.procesoSeleccion.listaContratistas.forEach(element => {
       if (element.nombre == numeroid) {
-        console.log("valido2 "+element.nombre);
+        //console.log("valido2 "+element.nombre);
         ret= true;
       }
     });
@@ -87,6 +110,7 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
 
     const proceso: ProcesoSeleccion = {
       numeroProceso: this.procesoSeleccion.numeroProceso,
+      cantidadProponentes:this.addressForm.get('cuantosProponentes').value,
       procesoSeleccionProponente: this.listaProponentes,
       urlSoporteProponentesSeleccionados: this.addressForm.get('url').value
     };
@@ -126,7 +150,9 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
 
 
   onSubmit() {
-
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
+    this.noGuardado=false;
   }
 
   changeSeleccion(check, elemento) {

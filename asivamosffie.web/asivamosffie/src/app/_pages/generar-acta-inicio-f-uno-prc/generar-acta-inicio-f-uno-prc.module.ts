@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from 'src/app/material/material.module';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GenerarActaInicioFaseunoPreconstruccionComponent } from './components/generar-acta-inicio-f-i-prc/generar-acta-inicio-f-i-prc.component';
 import { GenerarActaInicioFaseunoPreconstruccionRoutingModule } from './generar-acta-inicio-f-uno-prc-routing.module';
 import { TablaGenerarFIPreconstruccionComponent } from './components/tabla-generar-f-i-prc/tabla-generar-f-i-prc.component';
@@ -22,6 +22,7 @@ import { FormularioTieneObservacionesComponent } from './components/formulario-t
     MaterialModule,
     GenerarActaInicioFaseunoPreconstruccionRoutingModule,
     ReactiveFormsModule,
+    FormsModule,
     QuillModule.forRoot()
   ]
 })

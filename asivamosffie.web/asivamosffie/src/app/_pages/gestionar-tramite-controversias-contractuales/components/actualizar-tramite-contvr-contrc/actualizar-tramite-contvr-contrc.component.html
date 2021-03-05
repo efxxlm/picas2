@@ -22,11 +22,12 @@
                     Actuaciones
                 </button>
                 <button mat-raised-button color="accent" class="tabs--btn" [ngClass]="{'active': opcion2 === true}"
-                    (click)="opcion2 = true; opcion1 = false;">
+                    (click)="opcion2 = true; opcion1 = false;" [disabled]="this.tieneReclamaciones.length==0">
                     Reclamaciones
                 </button>
             </div>
             <app-control-y-tabla-actua-tramite-cc *ngIf="opcion1"></app-control-y-tabla-actua-tramite-cc>
+            <!--<app-control-y-tabla-actuacion-reclamacion *ngIf="opcion2"></app-control-y-tabla-actuacion-reclamacion>-->
             <app-control-y-tabla-reclamacion-cc *ngIf="opcion2"></app-control-y-tabla-reclamacion-cc>
         </div>
         <div *ngIf="this.tipoControversia!='Terminación anticipada por incumplimiento (TAI)'">
@@ -36,11 +37,12 @@
                     Actuaciones
                 </button>
                 <button mat-raised-button color="accent" class="tabs--btn" [ngClass]="{'active': opcion2 === true}"
-                    (click)="opcion2 = true; opcion1 = false;">
+                    (click)="opcion2 = true; opcion1 = false;" [disabled]="this.tieneMesasTrabajo.length==0">
                     Mesas de trabajo
                 </button>
             </div>
             <app-control-y-tabla-actuaciones-no-tai *ngIf="opcion1"></app-control-y-tabla-actuaciones-no-tai>
+            <!--<app-control-y-tabla-actuacion-mt *ngIf="opcion2"></app-control-y-tabla-actuacion-mt>-->
             <app-control-y-tabla-mesas-trabajo-cc *ngIf="opcion2"></app-control-y-tabla-mesas-trabajo-cc>
         </div>
     </div>

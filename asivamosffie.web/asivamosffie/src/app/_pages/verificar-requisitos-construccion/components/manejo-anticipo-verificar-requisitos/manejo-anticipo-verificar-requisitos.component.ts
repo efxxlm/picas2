@@ -39,6 +39,7 @@ export class ManejoAnticipoVerificarRequisitosComponent implements OnInit, OnCha
   @Input() contratoConstruccionId: any;
 
   @Output() createEdit = new EventEmitter();
+  estaEditando = false;
 
   constructor(
     private dialog: MatDialog,
@@ -70,23 +71,11 @@ export class ManejoAnticipoVerificarRequisitosComponent implements OnInit, OnCha
 
   textoLimpio(texto: string) {
     let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
 
     if ( texto ){
       const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
       return textolimpio.length + saltosDeLinea;
     }
-  }
-
-  private contarSaltosDeLinea(cadena: string, subcadena: string) {
-    let contadorConcurrencias = 0;
-    let posicion = 0;
-    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
-      ++contadorConcurrencias;
-      posicion += subcadena.length;
-    }
-    return contadorConcurrencias;
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -109,7 +98,7 @@ export class ManejoAnticipoVerificarRequisitosComponent implements OnInit, OnCha
   }
 
   guardarManejo() {
-
+    this.estaEditando = true;
     let construccion = {
       contratoConstruccionId: this.contratoConstruccionId,
       tieneObservacionesManejoAnticipoApoyo: this.addressForm.value.tieneObservaciones,

@@ -30,7 +30,9 @@ export class TablaValidacionSolicitudesContractualesComponent implements OnInit 
     private technicalCommitteSessionService: TechnicalCommitteSessionService
   ) { }
 
-  ngOnInit(): void {
+  ngOnInit(): void { }
+
+  initTable() {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
@@ -48,9 +50,14 @@ export class TablaValidacionSolicitudesContractualesComponent implements OnInit 
     };
   }
 
-  verSoporte(pTablaId: string, pRegistroId: number, numeroSolicitud: string) {
+  verSoporte(pTablaId: string, pRegistroId: number, numeroSolicitud: string, element: any) {
 
-    //console.log(pTablaId, pRegistroId)
+    // cuando es actualizacion de cronograma y debe mostrar la ficha de procesos de seleccion
+    if (pTablaId == '6'){
+      pRegistroId = element.procesoSeleccionMonitoreo.procesoSeleccionId;
+      pTablaId = '1';
+    }
+
     this.technicalCommitteSessionService.getPlantillaByTablaIdRegistroId(pTablaId, pRegistroId)
       .subscribe(resp => {
         console.log(resp);
@@ -68,6 +75,7 @@ export class TablaValidacionSolicitudesContractualesComponent implements OnInit 
 
   cargarRegistro() {
     this.dataSource = new MatTableDataSource(this.ObjetoComiteTecnico.sesionComiteSolicitudComiteTecnico);
+    this.initTable();
   }
 
 }

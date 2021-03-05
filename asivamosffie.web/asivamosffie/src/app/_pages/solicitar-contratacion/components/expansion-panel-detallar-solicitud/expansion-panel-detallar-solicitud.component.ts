@@ -123,8 +123,6 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
               registroCompleto = false;
             }
 
-            console.log( caracteristicasconalgo, registroCompleto )
-
           if ( registroCompleto === false && caracteristicasconalgo===false) {
             cantidadProyectosSinDiligenciar++;
           }
@@ -135,8 +133,6 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
             cantProyectosCompletos++;
           }
         }
-
-        console.log( cantProyectosCompletos, this.contratacion.contratacionProyecto.length, cantidadProyectosSinDiligenciar )
 
         let respuesta: string;
         

@@ -1,3 +1,4 @@
+import { Respuesta } from 'src/app/core/_services/common/common.service';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -56,7 +57,7 @@ export class CargarActaSuscritaActaIniFIPreconstruccionComponent implements OnIn
 
   prueba: any;
   esRojo: boolean = false;
-
+  estaEditando = false;
   constructor(private router: Router, public dialog: MatDialog, private fb: FormBuilder, public matDialogRef: MatDialogRef<CargarActaSuscritaActaIniFIPreconstruccionComponent>, @Inject(MAT_DIALOG_DATA) public data: any, private service: GestionarActPreConstrFUnoService) {
     this.maxDate = new Date();
     this.maxDate2 = new Date();
@@ -94,6 +95,7 @@ export class CargarActaSuscritaActaIniFIPreconstruccionComponent implements OnIn
     }
   }
   onSubmit() {
+    this.estaEditando = true;
     const pContrato = new FormData();
     this.fechaSesion = new Date(this.addressForm.value.fechaFirmaContratistaObra);
     this.fechaSesionString = `${this.fechaSesion.getFullYear()}-${this.fechaSesion.getMonth() + 1}-${this.fechaSesion.getDate()}`;
@@ -112,26 +114,19 @@ export class CargarActaSuscritaActaIniFIPreconstruccionComponent implements OnIn
         this.esRojo = true;
       }
       else {
-        this.service.LoadActa(pContrato).subscribe((data: any) => {
-
-          if (data.code == "200") {
-            this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
-            this.close();
-          }
-          else {
-            this.openDialog("", data.message);
-          }
-        });
+        this.service.LoadActa(pContrato)
+          .subscribe(
+            response => {
+              this.openDialog( '', `<b>${ response.message }</b>` );
+              this.matDialogRef.close( 'aceptado' );
+            },
+            err => this.openDialog( '', `<b>${ err.message }</b>` )
+          );
       }
     } else {
       this.openDialog('', '<b>El tipo de archivo que esta intentando cargar no es permitido en la plataforma.<br>El tipo de documento soportado es .pdf</b>');
       return;
     }
-
-
-
   }
-  close() {
-    this.matDialogRef.close('aceptado');
-  }
+
 }

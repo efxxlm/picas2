@@ -18,8 +18,9 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
     estadoAvanceTramite: [null, Validators.required],
     fechaActuacionAdelantada: [null, Validators.required],
     actuacionAdelantada: [null, Validators.required],
+    cualOtroActuacionAdelantada: [null],
     proximaActuacionRequerida: [null, Validators.required],
-    cualOtro: [null, Validators.required],
+    cualOtroActuacionRequerida: [null],
     diasVencimientoTerminos: [null, Validators.required],
     fechaVencimientoTerminos: [null, Validators.required],
     participacionContratista: [null, Validators.required],
@@ -30,7 +31,7 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
     observaciones: [null, Validators.required],
     urlSoporte: [null, Validators.required],
     requiereMesaDeTrabajo: [null, Validators.required],
-    resultadoDefinitivoyCerrado:  [null, Validators.required]
+    resultadoDefinitivoyCerrado: [null, Validators.required]
   });
   estadoAvanceTramiteArrayDom = [
 
@@ -38,7 +39,7 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
   proximaActuacionRequeridaArrayDom = [
 
   ];
-  actuacionAdelantadaArrayDom= [
+  actuacionAdelantadaArrayDom = [
 
   ];
 
@@ -55,29 +56,36 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
     ]
   };
   numReclamacion: any;
-
-  constructor(private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private common: CommonService,private router: Router) { }
+  estaEditando = false;
+  constructor(private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private common: CommonService, private router: Router) { }
 
   ngOnInit(): void {
     this.common.listaEstadosControversiaNoTAI().subscribe(rep => {
       this.estadoAvanceTramiteArrayDom = rep;
     });
-    this.common.listaActuacionAdelantada().subscribe(rep1=>{
+    this.common.listaActuacionAdelantada().subscribe(rep1 => {
       this.actuacionAdelantadaArrayDom = rep1;
     });
     this.common.listaProximaActuacionRequerida().subscribe(rep2 => {
       this.proximaActuacionRequeridaArrayDom = rep2;
     });
     if (this.isEditable == true) {
-      this.services.GetControversiaActuacionById(this.idActuacionFromEdit).subscribe((data:any)=>{
-        const avanceTramSelected = this.estadoAvanceTramiteArrayDom.find(t => t.codigo === data.estadoAvanceTramiteCodigo);
-        this.addressForm.get('estadoAvanceTramite').setValue(avanceTramSelected);
+      this.services.GetControversiaActuacionById(this.idActuacionFromEdit).subscribe((data: any) => {
+        for (let i = 0; i < this.estadoAvanceTramiteArrayDom.length; i++) {
+          const avanceTramSelected = this.estadoAvanceTramiteArrayDom.find(t => t.codigo === data.estadoAvanceTramiteCodigo);
+          this.addressForm.get('estadoAvanceTramite').setValue(avanceTramSelected);
+        }
         this.addressForm.get('fechaActuacionAdelantada').setValue(data.fechaActuacion);
-        const actuacionAdelantadaSelected = this.actuacionAdelantadaArrayDom.find(t => t.codigo === data.actuacionAdelantadaCodigo);
-        this.addressForm.get('actuacionAdelantada').setValue(actuacionAdelantadaSelected);
-        const actuacionRequeridaSelected = this.proximaActuacionRequeridaArrayDom.find(t => t.codigo === data.proximaActuacionCodigo);
-        this.addressForm.get('proximaActuacionRequerida').setValue(actuacionRequeridaSelected);
-        this.addressForm.get('cualOtro').setValue(data.actuacionAdelantadaOtro);
+        for (let i = 0; i < this.actuacionAdelantadaArrayDom.length; i++) {
+          const actuacionAdelantadaSelected = this.actuacionAdelantadaArrayDom.find(t => t.codigo === data.actuacionAdelantadaCodigo);
+          this.addressForm.get('actuacionAdelantada').setValue(actuacionAdelantadaSelected);
+        }
+        for (let i = 0; i < this.proximaActuacionRequeridaArrayDom.length; i++) {
+          const actuacionRequeridaSelected = this.proximaActuacionRequeridaArrayDom.find(t => t.codigo === data.proximaActuacionCodigo);
+          this.addressForm.get('proximaActuacionRequerida').setValue(actuacionRequeridaSelected);
+        }
+        this.addressForm.get('cualOtroActuacionAdelantada').setValue(data.actuacionAdelantadaOtro);
+        this.addressForm.get('cualOtroActuacionRequerida').setValue(data.proximaActuacionOtro);
         this.addressForm.get('diasVencimientoTerminos').setValue(data.cantDiasVencimiento.toString());
         this.addressForm.get('fechaVencimientoTerminos').setValue(data.fechaVencimiento);
         this.addressForm.get('participacionContratista').setValue(data.esRequiereContratista);
@@ -100,13 +108,13 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
   }
 
   maxLength(e: any, n: number) {
-    
+
     if (e.editor.getLength() > n) {
-      e.editor.deleteText(n-1, e.editor.getLength());
+      e.editor.deleteText(n - 1, e.editor.getLength());
     }
   }
-  textoLimpio(texto,n) {
-    if (texto!=undefined) {
+  textoLimpio(texto, n) {
+    if (texto != undefined) {
       return texto.getLength() > n ? n : texto.getLength();
     }
   }
@@ -119,30 +127,58 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
   }
 
   onSubmit() {
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let actuacionTaiArray;
     let completo: boolean;
-    if (this.addressForm.valid){
+    if (this.addressForm.valid) {
       completo = true;
     }
-    else
-    {
+    else {
       completo = false;
+    }
+    let estadoAvanTramite;
+    if (this.addressForm.value.estadoAvanceTramite != undefined || this.addressForm.value.estadoAvanceTramite != null) {
+      if (!this.addressForm.value.estadoAvanceTramite.codigo) {
+        estadoAvanTramite = "pendiente";
+      }
+      else {
+        estadoAvanTramite = this.addressForm.value.estadoAvanceTramite.codigo;
+      }
+    }
+    let actuacionAdelantada;
+    if (this.addressForm.value.actuacionAdelantada != undefined || this.addressForm.value.actuacionAdelantada != null) {
+      if (!this.addressForm.value.actuacionAdelantada.codigo) {
+        actuacionAdelantada = "pendiente";
+      }
+      else {
+        actuacionAdelantada = this.addressForm.value.actuacionAdelantada.codigo;
+      }
+    }
+    let proxActuacion;
+    if (this.addressForm.value.proximaActuacionRequerida != undefined || this.addressForm.value.proximaActuacionRequerida != null) {
+      if (!this.addressForm.value.proximaActuacionRequerida.codigo) {
+        proxActuacion = "pendiente";
+      }
+      else {
+        proxActuacion = this.addressForm.value.proximaActuacionRequerida.codigo;
+      }
     }
     if (this.isEditable == true) {
       actuacionTaiArray = {
         "ControversiaContractualId": this.controversiaID,
-        "ActuacionAdelantadaCodigo": this.addressForm.value.actuacionAdelantada.codigo,
-        "ActuacionAdelantadaOtro": "",
-        "ProximaActuacionCodigo": this.addressForm.value.proximaActuacionRequerida.codigo,
-        "ProximaActuacionOtro": this.addressForm.value.cualOtro,
+        "ActuacionAdelantadaCodigo": actuacionAdelantada,
+        "ActuacionAdelantadaOtro": this.addressForm.value.cualOtroActuacionAdelantada,
+        "ProximaActuacionCodigo": proxActuacion,
+        "ProximaActuacionOtro": this.addressForm.value.cualOtroActuacionRequerida,
         "Observaciones": this.addressForm.value.observaciones,
         "ResumenPropuestaFiduciaria": "",
         "RutaSoporte": this.addressForm.value.urlSoporte,
-        "EstadoAvanceTramiteCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
+        "EstadoAvanceTramiteCodigo": estadoAvanTramite,
         "CantDiasVencimiento": this.addressForm.value.diasVencimientoTerminos,
         "FechaVencimiento": this.addressForm.value.fechaVencimientoTerminos,
-        "FechaActuacion":this.addressForm.value.fechaActuacionAdelantada,
-        "EsRequiereContratista":this.addressForm.value.participacionContratista,
+        "FechaActuacion": this.addressForm.value.fechaActuacionAdelantada,
+        "EsRequiereContratista": this.addressForm.value.participacionContratista,
         "EsRequiereInterventor": this.addressForm.value.participacionInterventorContrato,
         "EsRequiereSupervisor": this.addressForm.value.participacionSupervisorContrato,
         "EsRequiereJuridico": "",
@@ -159,18 +195,18 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
     else {
       actuacionTaiArray = {
         "ControversiaContractualId": this.controversiaID,
-        "ActuacionAdelantadaCodigo": this.addressForm.value.actuacionAdelantada.codigo,
-        "ActuacionAdelantadaOtro": "",
-        "ProximaActuacionCodigo": this.addressForm.value.proximaActuacionRequerida.codigo,
-        "ProximaActuacionOtro": this.addressForm.value.cualOtro,
+        "ActuacionAdelantadaCodigo": actuacionAdelantada,
+        "ActuacionAdelantadaOtro": this.addressForm.value.cualOtroActuacionAdelantada,
+        "ProximaActuacionCodigo": proxActuacion,
+        "ProximaActuacionOtro": this.addressForm.value.cualOtroActuacionRequerida,
         "Observaciones": this.addressForm.value.observaciones,
-        "ResumenPropuestaFiduciaria": "ResumenPropuestaFiduciaria w",
+        "ResumenPropuestaFiduciaria": "",
         "RutaSoporte": this.addressForm.value.urlSoporte,
-        "EstadoAvanceTramiteCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
+        "EstadoAvanceTramiteCodigo": estadoAvanTramite,
         "CantDiasVencimiento": this.addressForm.value.diasVencimientoTerminos,
         "FechaVencimiento": this.addressForm.value.fechaVencimientoTerminos,
-        "FechaActuacion":this.addressForm.value.fechaActuacionAdelantada,
-        "EsRequiereContratista":this.addressForm.value.participacionContratista,
+        "FechaActuacion": this.addressForm.value.fechaActuacionAdelantada,
+        "EsRequiereContratista": this.addressForm.value.participacionContratista,
         "EsRequiereInterventor": this.addressForm.value.participacionInterventorContrato,
         "EsRequiereSupervisor": this.addressForm.value.participacionSupervisorContrato,
         "EsRequiereJuridico": "",
@@ -184,12 +220,14 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
       }
     }
     this.services.CreateEditControversiaOtros(actuacionTaiArray).subscribe((data: any) => {
-      if(data.isSuccessful==true){
-        this.openDialog("",`<b>${ data.message }</b>`);
+      if (data.isSuccessful == true) {
+        this.services.CambiarEstadoActuacionSeguimiento(data.data.controversiaActuacionId,"1").subscribe((data0:any)=>{
+        });
+        this.openDialog("", `<b>${data.message}</b>`);
         this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
       }
-      else{
-        this.openDialog("",`<b>${ data.message }</b>`);
+      else {
+        this.openDialog("", `<b>${data.message}</b>`);
       }
     });
   }

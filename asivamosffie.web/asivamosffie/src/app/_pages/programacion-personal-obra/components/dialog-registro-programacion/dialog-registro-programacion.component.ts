@@ -23,7 +23,6 @@ export class DialogRegistroProgramacionComponent implements OnInit {
       .subscribe(
         response => {
           this.registroSemanas = response;
-          console.log( this.registroSemanas );
         }
       );
   }

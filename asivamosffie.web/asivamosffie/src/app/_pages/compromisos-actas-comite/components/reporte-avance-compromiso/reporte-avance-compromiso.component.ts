@@ -11,7 +11,7 @@ import { CompromisosActasComiteService } from '../../../../core/_services/compro
   styleUrls: ['./reporte-avance-compromiso.component.scss']
 })
 export class ReporteAvanceCompromisoComponent implements OnInit, OnDestroy {
-
+  estaEditando = false;
   reporte: FormGroup;
   estadoBoolean = false;
   estadoComite = '';
@@ -130,7 +130,8 @@ export class ReporteAvanceCompromisoComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-
+    this.estaEditando = true;
+    this.reporte.markAllAsTouched();
     if (this.reporte.invalid || this.estadoCodigo === undefined) {
       this.openDialog('', '<b>Falta registrar información.</b>');
       return;

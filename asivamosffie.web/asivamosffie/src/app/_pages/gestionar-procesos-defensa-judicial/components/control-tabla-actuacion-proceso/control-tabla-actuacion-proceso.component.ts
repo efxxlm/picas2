@@ -18,13 +18,7 @@ export class ControlTablaActuacionProcesoComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   dataTable: any[] = [
-    {
-      fecha: '05/08/2020',
-      numeroActuacion: 'ACT defensa 0001',
-      actuacion: 'En notificación',
-      estadoRegistro: 'Completo',
-      id: 1
-    },
+    
   ]
 
   @Input() defensaJudicialID:number;
@@ -34,6 +28,11 @@ export class ControlTablaActuacionProcesoComponent implements OnInit {
 
   ngOnInit(): void {
     this.defensaService.getActuaciones(this.defensaJudicialID).subscribe(response =>{
+      let i=1;
+      response.forEach(element => {
+        element.id=i;
+        i++;
+      });
       this.dataSource = new MatTableDataSource(response);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;

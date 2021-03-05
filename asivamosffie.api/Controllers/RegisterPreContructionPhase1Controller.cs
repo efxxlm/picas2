@@ -11,12 +11,13 @@ using System.IO;
 using Microsoft.Extensions.Options;
 using System.Reflection;
 using Newtonsoft.Json;
-
+using Microsoft.AspNetCore.Authorization;
 
 namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class RegisterPreContructionPhase1Controller : ControllerBase
     {
         public readonly IRegisterPreContructionPhase1Service _registerPreContructionPhase1Service;
@@ -29,18 +30,19 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
-        [Route("GetListContratacion2")]
+        [Route("GetListContratacion")]
         public async Task<List<VRegistrarFase1>> GetListContratacion2()
         {
             return await _registerPreContructionPhase1Service.GetListContratacion2();
         }
 
         [HttpGet]
-        [Route("GetListContratacion")]
+        [Route("GetListContratacionOld")]
         public async Task<List<dynamic>> GetListContratacion()
         {
             return await _registerPreContructionPhase1Service.GetListContratacion();
         }
+                
 
         [HttpGet]
         [Route("GetContratoByContratoId")]
@@ -48,7 +50,7 @@ namespace asivamosffie.api.Controllers
         {
             return await _registerPreContructionPhase1Service.GetContratoByContratoId(pContratoId);
         }
-         
+
         [Route("CreateEditContratoPerfil")]
         [HttpPost]
         public async Task<IActionResult> CreateEditContratoPerfil([FromBody] Contrato pContrato)
@@ -66,7 +68,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-  
+
         [Route("ChangeStateContrato")]
         [HttpPost]
         public async Task<IActionResult> ChangeStateContrato([FromQuery] int pContratoId, string pEstadoVerificacionContratoCodigo)
@@ -88,13 +90,13 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-         [Route("DeleteContratoPerfilNumeroRadicado")]
+        [Route("DeleteContratoPerfilNumeroRadicado")]
         [HttpPost]
         public async Task<IActionResult> DeleteContratoPerfilNumeroRadicado([FromQuery] int ContratoPerfilNumeroRadicadoId)
         {
             Respuesta respuesta = new Respuesta();
             try
-            { 
+            {
                 respuesta = await _registerPreContructionPhase1Service.DeleteContratoPerfilNumeroRadicado(ContratoPerfilNumeroRadicadoId, HttpContext.User.FindFirst("User").Value);
                 return Ok(respuesta);
             }
@@ -104,15 +106,15 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
- 
+
         [Route("DeleteContratoPerfil")]
         [HttpDelete]
-        public async Task<IActionResult> DeleteContratoPerfil([FromQuery]  int ContratoPerfilId)
+        public async Task<IActionResult> DeleteContratoPerfil([FromQuery] int ContratoPerfilId)
         {
             Respuesta respuesta = new Respuesta();
             try
-            { 
-                respuesta = await _registerPreContructionPhase1Service.DeleteContratoPerfil(ContratoPerfilId,HttpContext.User.FindFirst("User").Value);
+            {
+                respuesta = await _registerPreContructionPhase1Service.DeleteContratoPerfil(ContratoPerfilId, HttpContext.User.FindFirst("User").Value);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -121,7 +123,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-         
+
 
     }
 }

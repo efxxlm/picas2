@@ -19,6 +19,8 @@ import { TablaSolicitudNovedadContractualComponent } from './components/tabla-so
 import { VerDetalleInterventoriaComponent } from './components/ver-detalle-interventoria/ver-detalle-interventoria.component';
 import { RegistrarSolicitudInterventoriaComponent } from './components/registrar-solicitud-interventoria/registrar-solicitud-interventoria.component';
 import { ExpansionPanelInterventoriaComponent } from './components/expansion-panel-interventoria/expansion-panel-interventoria.component';
+import { AccordionNovedadesComponent } from './components/accordion-novedades/accordion-novedades.component';
+import { FormRegistrarNovedadAccordComponent } from './components/form-registrar-novedad-accord/form-registrar-novedad-accord.component';
 
 
 
@@ -35,7 +37,9 @@ import { ExpansionPanelInterventoriaComponent } from './components/expansion-pan
     TablaSolicitudNovedadContractualComponent,
     VerDetalleInterventoriaComponent,
     RegistrarSolicitudInterventoriaComponent,
-    ExpansionPanelInterventoriaComponent],
+    ExpansionPanelInterventoriaComponent,
+    AccordionNovedadesComponent,
+    FormRegistrarNovedadAccordComponent],
   imports: [
     CommonModule,
     VerificarSolicitudDeNovedadesRoutingModule,

@@ -1,11 +1,12 @@
 export interface GrillaFaseUnoPreconstruccion {
-  cantidadProyectosAsociados: number;
-  estadoVerificacionNombre: string;
-  fechaAprobacionPoliza: string;
-  idContrato: number;
+  fechaAprobacion: string;
   numeroContrato: string;
-  proyectosCompletos: number;
-  proyectosNoCompletos: number;
+  cantidadProyectosAsociados: number;
+  cantidadProyectosRequisitosAprobados: number;
+  cantidadProyectosRequisitosPendientes: number;
+  estadoCodigo: string;
+  estadoNombre: string;
+  contratoId: number;
   verBotonAprobarInicio: boolean;
 };
 
@@ -29,12 +30,13 @@ interface estadoCodigos {
 };
 
 export interface ContratoModificado {
-  contratacion: Contratacion,
-  fechaPoliza: string,
-  numeroContrato: string
-};
+  contratacion: Contratacion;
+  fechaPoliza: string;
+  numeroContrato: string;
+}
 
 export interface Contrato {
+  
   contratacionId: number;
   fechaTramite: string;
   tipoContratoCodigo: string;
@@ -103,6 +105,7 @@ interface ContratoPoliza {
 }
 
 export interface ContratoPerfil {
+  contratoPerfilObservacionArray: any[];
   contratoPerfilId?: number;
   contratoId?: number;
   perfilCodigo?: string;
@@ -164,6 +167,7 @@ export interface ContratacionProyecto2 {
 }
 
 interface Proyecto2 {
+  
   departamento: string;
   municipio: string;
   proyectoId: number;
@@ -181,7 +185,8 @@ interface Proyecto2 {
   valorObra: number;
   valorInterventoria: number;
   valorTotal: number;
-  estadoProyectoCodigo: string;
+  estadoProyectoObraCodigo: string;
+  estadoProyectoInterventoriaCodigo: string;
   eliminado: boolean;
   fechaCreacion: string;
   usuarioCreacion: string;
@@ -197,6 +202,13 @@ interface Proyecto2 {
   proyectoPredio: any[];
   proyectoRequisitoTecnico: any[];
   semaforoGeneral?: string;//just for class colors
+
+  fechaInicioEtapaObra?: Date,
+  fechaFinEtapaObra?: Date,
+  fechaInicioEtapaObraTemporal?: Date,
+  fechaFinEtapaObraTemporal?: Date,
+
+
 }
 
 interface LocalizacionIdMunicipioNavigation {
@@ -228,7 +240,8 @@ interface Proyecto {
   valorObra: number;
   valorInterventoria: number;
   valorTotal: number;
-  estadoProyectoCodigo: string;
+  estadoProyectoObraCodigo: string;
+  estadoProyectoInterventoriaCodigo: string;
   eliminado: boolean;
   fechaCreacion: string;
   usuarioCreacion: string;

@@ -4,7 +4,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { ActBeginService } from 'src/app/core/_services/actBegin/act-begin.service';
+import { ActaInicioConstruccionService } from 'src/app/core/_services/actaInicioConstruccion/acta-inicio-construccion.service';
+import { GestionarActPreConstrFUnoService } from 'src/app/core/_services/GestionarActPreConstrFUno/gestionar-act-pre-constr-funo.service';
 import { DialogCargarActaSuscritaConstComponent } from '../dialog-cargar-acta-suscrita-const/dialog-cargar-acta-suscrita-const.component';
 export interface Contrato {
   idContrato: number;
@@ -96,7 +97,7 @@ export class TablaContrObraFdosConstrComponent implements OnInit {
 
   dataTable: any[] = [];
   public noValidate = "Sin Validar";
-  constructor(private router: Router, public dialog: MatDialog, private services: ActBeginService) { }
+  constructor(private router: Router, public dialog: MatDialog, private services: ActaInicioConstruccionService, private gestionarActaSvc: GestionarActPreConstrFUnoService) { }
 
   ngOnInit(): void {
     this.services.GetListGrillaActaInicio(8).subscribe((data:any)=>{
@@ -177,15 +178,15 @@ export class TablaContrObraFdosConstrComponent implements OnInit {
   cargarActaSuscrita(){
     const dialogConfig = new MatDialogConfig();
     dialogConfig.height = 'auto';
-    dialogConfig.width = '865px';
+    dialogConfig.width = '1000px';
     const dialogRef = this.dialog.open(DialogCargarActaSuscritaConstComponent, dialogConfig);
   }
-  descargarActaDesdeTabla(id){
-    this.services.GetPlantillaActaInicio(id).subscribe(resp=>{
-      const documento = `Prueba.pdf`; // Valor de prueba
+  descargarActaDesdeTabla(id, numContrato?) {
+    this.gestionarActaSvc.GetActaByIdPerfil(id, 'True').subscribe(resp => {
+      const documento = `${numContrato}.pdf`; // Valor de prueba
       const text = documento,
-      blob = new Blob([resp], { type: 'application/pdf' }),
-      anchor = document.createElement('a');
+        blob = new Blob([resp], { type: 'application/pdf' }),
+        anchor = document.createElement('a');
       anchor.download = documento;
       anchor.href = window.URL.createObjectURL(blob);
       anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');

@@ -11,14 +11,14 @@ export interface ListaProgramacionPersonal {
     plazoProyecto: number;
     sede: string;
     tipoIntervencion: string;
-}
+};
 
 export interface EstadosProgramacion {
     sinProgramacionPersonal: string;
     enRegistroProgramacion: string;
     sinAprobacionProgramacionPersonal: string;
     conAprobacionProgramacionPersonal: string;
-}
+};
 
 export interface DetalleProgramacionPersonal {
     seguimientoSemanalPersonalObra: any;
@@ -31,7 +31,10 @@ export interface DetalleProgramacionPersonal {
 
 export interface ContratoConstruccion {
     contratoConstruccionId: number;
-    programacionPersonalContratoConstruccion: ProgramacionPersonalContratoConstruccion[];
+    contratoId?: number;
+    proyectoId?: number;
+    programacionPersonalContratoConstruccion?: ProgramacionPersonalContratoConstruccion[];
+    fechaInicioObra?: Date;
 }
 
 interface ProgramacionPersonalContratoConstruccion {

@@ -15,7 +15,7 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class ActBeginController : ControllerBase
     {
         public readonly IActBeginService _ActBegin;
@@ -86,6 +86,14 @@ namespace asivamosffie.api.Controllers
         public async Task<ContratoObservacion> GetContratoObservacionByIdContratoId(int pContratoId, bool pEsSupervisor)
         {
             var respuesta = await _ActBegin.GetContratoObservacionByIdContratoId(pContratoId, pEsSupervisor);
+            return respuesta;
+        }
+
+        [Route("GetConstruccionObservacionByIdContratoConstruccionId")]
+        [HttpGet]
+        public async Task<ConstruccionObservacion> GetConstruccionObservacionByIdContratoConstruccionId(int pContratoConstruccionId, bool pEsSupervisor)
+        {
+            var respuesta = await _ActBegin.GetConstruccionObservacionByIdContratoConstruccionId(pContratoConstruccionId, pEsSupervisor);
             return respuesta;
         }
 
@@ -238,6 +246,24 @@ namespace asivamosffie.api.Controllers
             { 
                 pUsuarioModificacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _ActBegin.GuardarTieneObservacionesActaInicio(pContratoId, pObservacionesActa, pUsuarioModificacion, pEsSupervisor, pEsActa);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [HttpPost]
+        [Route("CreateEditObservacionesActaInicioConstruccion")]
+        public async Task<IActionResult> CreateEditObservacionesActaInicioConstruccion([FromBody] ContratoConstruccion pContratoConstraccion)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                string pUsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _ActBegin.CreateEditObservacionesActaInicioConstruccion(pContratoConstraccion, pUsuarioCreacion);
                 return Ok(respuesta);
             }
             catch (Exception ex)

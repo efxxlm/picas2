@@ -68,7 +68,8 @@
                                 </p>
                                 <p>
                                     <b>Valor del aportante:</b>
-                                    {{ aportante.valorTotalAportante | currency }}
+                                    <span *ngIf="opcionContratarCodigo=='Interventoria'">{{ aportante.valorInterventoria | currency }}</span>
+                                    <span *ngIf="opcionContratarCodigo!='Interventoria'">{{ aportante.valorObra | currency }}</span>
     
                                 </p>
                             </div>
@@ -100,7 +101,7 @@
             <div [innerHtml]="this.objeto"></div>
         </mat-card-content>
     </mat-card>
-    <mat-card class="shipping-card mainGris" *ngIf="observaciones.length>0"> 
+    <mat-card class="shipping-card mainGris" *ngIf="observaciones?.length>0"> 
         <mat-card-header class="header-card">
             <mat-card-title class="header-card--text textoGris">
                 Observaciones

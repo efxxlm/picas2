@@ -201,6 +201,7 @@ export interface ProcesoSeleccionCronogramaMonitoreo{
   estadoActividadCodigo?: string,
   etapaActualProcesoCodigo?:string,
   eliminado?:boolean,
+  procesoSeleccionCronogramaMonitoreoId?:number,
   procesoSeleccionMonitoreo?: ProcesoSeleccionMonitoreo
 }
 
@@ -326,6 +327,8 @@ interface EstadoProcesoSeleccionMonitoreo{
 	RechazadoPorComiteFiduciario: string,
 	DevueltoPorComiteTecnico: string,
 	DevueltoPorComiteFiduciario: string,
+  EnTramite: string,
+  
 }
 export const EstadosProcesoSeleccionMonitoreo: EstadoProcesoSeleccionMonitoreo = {
   Creada: "1",  
@@ -335,4 +338,6 @@ export const EstadosProcesoSeleccionMonitoreo: EstadoProcesoSeleccionMonitoreo =
   RechazadoPorComiteFiduciario: "5",
   DevueltoPorComiteTecnico: "6",
   DevueltoPorComiteFiduciario: "7",
+  EnTramite: "8",
+
 }

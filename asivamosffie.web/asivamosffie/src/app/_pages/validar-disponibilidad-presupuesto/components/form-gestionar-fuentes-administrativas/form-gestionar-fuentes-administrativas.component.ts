@@ -39,6 +39,7 @@ export class FormGestionarFuentesAdministrativasComponent implements OnInit {
   fuentesbase: any[];
   disponibilidadPresupuestalProyectoid: any;
   valorGestionado: any;
+  estaEditando = false;
 
   constructor(
     private fb: FormBuilder, private fuenteFinanciacionService: FuenteFinanciacionService
@@ -101,10 +102,11 @@ export class FormGestionarFuentesAdministrativasComponent implements OnInit {
   fuenteCambio(fuente:any)
   {
     let fuenteSeleccionada=this.fuentesbase.filter(x=>x.fuenteFinanciacionID==fuente.controls.fuentecampo.value);    
+    console.log( fuenteSeleccionada);
     //valido que no se haya seleccionado previamente
     let cont=0;
     this.addressForm.value.fuentes.forEach(element => {
-      console.log(element.fuentecampo);
+      console.log(element.fuentecampo, fuenteSeleccionada);
       if(element.fuentecampo==fuente.controls.fuentecampo.value)
       {
         cont++;
@@ -119,18 +121,21 @@ export class FormGestionarFuentesAdministrativasComponent implements OnInit {
     else
     {
       fuente.get('saldoActual').setValue(fuenteSeleccionada[0].saldo_actual_de_la_fuente);
+      console.log(fuenteSeleccionada[0].Saldo_actual_de_la_fuente)
     }
 
     
   }
   reste(fuente:any)
   {
+    console.log(fuente.controls.saldoActual.value)
     if(fuente.controls.saldoActual.value-fuente.controls.valorSolicitado.value<0)
     {
       let fuenteSeleccionada=this.fuentesbase.filter(x=>x.fuenteFinanciacionID==fuente.controls.fuentecampo.value);    
       this.openDialog("","El saldo actual de la fuente <b>"+fuenteSeleccionada[0].fuente+"</b> es menor al valor solicitado de la fuente, verifique por favor.");
       fuente.get('valorSolicitado').setValue(0);  
     }
+    
     fuente.get('nuevoSaldo').setValue(fuente.controls.saldoActual.value-fuente.controls.valorSolicitado.value);
     
   }
@@ -225,7 +230,9 @@ export class FormGestionarFuentesAdministrativasComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.addressForm.controls.fuentes.value);
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
+    // console.log(this.addressForm.controls.fuentes.value);
     let mensaje="";
     this.addressForm.controls.fuentes.value.forEach(fuente => {
       let CreateFinancialFundingGestion={

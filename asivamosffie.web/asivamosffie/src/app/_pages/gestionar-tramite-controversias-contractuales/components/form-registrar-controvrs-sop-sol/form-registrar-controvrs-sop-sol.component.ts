@@ -18,6 +18,7 @@ export class FormRegistrarControvrsSopSolComponent implements OnInit {
   addressForm = this.fb.group({
     urlSoporte: [null, Validators.required]
   });
+  estaEditando = false;
   constructor(private router: Router, private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService) { }
 
   ngOnInit(): void {
@@ -54,15 +55,19 @@ export class FormRegistrarControvrsSopSolComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.addressForm.value);
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
+    // console.log(this.addressForm.value);
     this.services.ActualizarRutaSoporteControversiaContractual(this.idControversia, this.addressForm.value.urlSoporte).subscribe(resp => {
       if (resp.isSuccessful == true) {
         this.openDialog('', 'La información ha sido guardada exitosamente.');
         if (this.isEditable == true) {
-          this.router.navigate(['/gestionarTramiteControversiasContractuales']);
+          this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+            () => this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarControversia', this.idControversia]));
         }
         else {
-          this.router.navigate(['/gestionarTramiteControversiasContractuales']);
+          this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+            () => this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarControversia', this.idControversia]));
         }
       }
       else {

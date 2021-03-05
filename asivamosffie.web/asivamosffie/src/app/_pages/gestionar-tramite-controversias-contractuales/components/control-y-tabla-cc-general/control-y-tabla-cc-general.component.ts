@@ -120,7 +120,8 @@ export class ControlYTablaCcGeneralComponent implements OnInit {
   }
   descargarProcesoControversia(id){
     this.services.GetPlantillaControversiaContractual(id).subscribe((esPdf:any)=>{
-      const documento = `Prueba.pdf`; // Valor de prueba
+      //const documento = `${ numContrato }.pdf`; // Valor de prueba
+      const documento = `Proceso de controversi.pdf`; // Valor de prueba
       const text = documento,
       blob = new Blob([esPdf], { type: 'application/pdf' }),
       anchor = document.createElement('a');

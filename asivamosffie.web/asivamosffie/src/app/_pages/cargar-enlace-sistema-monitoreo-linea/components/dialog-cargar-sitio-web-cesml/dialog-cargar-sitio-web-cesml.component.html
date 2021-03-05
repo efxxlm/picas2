@@ -8,11 +8,14 @@
     <p><b>{{this.departamento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{this.municipio}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{this.instEdu}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{this.sede}}</b>
     </p>
 </div>
+
 <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
     <div class="flex-editor mt-2em">
-        <mat-card class="shipping-card w-85" style="padding: 1em 2em;">
+        <mat-card class="shipping-card w-85" style="padding: 1em 2em;"  [ngStyle]="{ border: (addressForm.get('urlMonitoreo').invalid && addressForm.get('urlMonitoreo').touched) ||
+        (addressForm.get('urlMonitoreo').invalid && estaEditando) ? '1px solid #d21e18' : 'solid 1px var(--mainColor)' }"> 
             <mat-card-header class="header-card header-card--margin">
-                <mat-card-title class="header-card--text f16">
+                <mat-card-title class="header-card--text f16 " [ngStyle]="{ color: (addressForm.get('urlMonitoreo').invalid && addressForm.get('urlMonitoreo').touched) ||
+                (addressForm.get('urlMonitoreo').invalid && estaEditando) ? '#d21e18' : '#174193' }">
                     URL para monitoreo en línea
                 </mat-card-title>
             </mat-card-header>
@@ -39,6 +42,20 @@
         <span class="contador miles mt-2em mb-2em" *ngIf="!addressForm.value.urlMonitoreo">
             300
         </span>
+        <span class="icon-incompleto">
+            <img
+              class="icon-incompleto--img"
+              src="assets/img/icon/incompleto.svg"
+              alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
+              *ngIf="
+                (addressForm.get('urlMonitoreo').invalid && addressForm.get('urlMonitoreo').touched) ||
+                (addressForm.get('urlMonitoreo').invalid && estaEditando)
+              "
+            />
+          </span>
     </div>
     <div class="text-center">
         <div class="mtop">

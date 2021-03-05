@@ -8,14 +8,16 @@ using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
 using asivamosffie.model.APIModels;
 using System.IO;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Options; 
 using System.Reflection;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ManageContractualProcessesController : ControllerBase
     {
         public readonly IManageContractualProcessesService _manageContractualProcessesService;
@@ -26,9 +28,17 @@ namespace asivamosffie.api.Controllers
             _manageContractualProcessesService = IManageContractualProcessesService;
             _settings = settings;
         }
-  
+
 
         [Route("GetListSesionComiteSolicitud")]
+        [HttpGet]
+        public async Task<List<VListaContratacionModificacionContractual>> GetListSesionComiteSolicitudV2()
+        {
+            var result = await _manageContractualProcessesService.GetListSesionComiteSolicitudV2();
+            return result;
+        }
+
+        [Route("GetListSesionComiteSolicitudOLd")]
         [HttpGet]
         public async Task<List<SesionComiteSolicitud>> GetListSesionComiteSolicitud()
         {

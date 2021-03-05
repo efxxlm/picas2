@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -13,19 +14,35 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ProjectContractingController : ControllerBase
     {
         private readonly IDocumentService _documentService;
         private readonly IProjectContractingService _projectContractingService;
         private readonly IOptions<AppSettings> _settings;
-  
-
-
+   
         public ProjectContractingController(IDocumentService documentService, IOptions<AppSettings> settings, IProjectContractingService projectContractingService)
         {
             _projectContractingService = projectContractingService;
             _settings = settings;
             _documentService = documentService;
+        }
+
+        [Route("DeleteComponenteAportante")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteComponenteAportante([FromBody] int pComponenteAportanteId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _projectContractingService.DeleteComponenteAportante(pComponenteAportanteId, HttpContext.User.FindFirst("User").Value.ToUpper());
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
         }
 
 
@@ -70,6 +87,14 @@ namespace asivamosffie.api.Controllers
         public async Task<Contratacion> GetContratacionByContratacionId(int pContratacionId)
         {
             return await _projectContractingService.GetContratacionByContratacionId(pContratacionId);
+        }
+
+       
+        [Route("GetListContratacionObservacion")]
+        [HttpGet]
+        public async Task<Contratacion> GetListContratacionObservacion(int pContratacionId)
+        {
+            return await _projectContractingService.GetListContratacionObservacion(pContratacionId);
         }
 
         [Route("GetContratacionByContratacionIdWithGrillaProyecto")]

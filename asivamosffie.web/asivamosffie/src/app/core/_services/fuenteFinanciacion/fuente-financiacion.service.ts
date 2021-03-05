@@ -11,6 +11,8 @@ import { mergeMap, tap, toArray } from 'rxjs/operators';
 })
 export class FuenteFinanciacionService {
   
+  
+
   constructor( private http:HttpClient
 
   ) { }
@@ -61,7 +63,11 @@ export class FuenteFinanciacionService {
   }
 
   eliminarFuentesFinanciacion( id: number ){
-    return this.http.delete(`${environment.apiUrl}/SourceFunding/EliminarFuentesFinanciacion?id=${id}`);
+    return this.http.delete<Respuesta>(`${environment.apiUrl}/SourceFunding/EliminarFuentesFinanciacion?id=${id}`);
+  }
+
+  EliminarFuentesFinanciacionCompleto( id: number ){
+    return this.http.delete<Respuesta>(`${environment.apiUrl}/SourceFunding/EliminarFuentesFinanciacionCompleto?id=${id}`);
   }
 
   getFuenteFinanciacion( id: number ){

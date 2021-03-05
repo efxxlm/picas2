@@ -11,7 +11,6 @@ import { estadosPreconstruccion } from '../../../_interfaces/faseUnoPreconstrucc
   providedIn: 'root'
 })
 export class CommonService {
-  
     
   constructor(private http: HttpClient) { }
 
@@ -47,6 +46,10 @@ export class CommonService {
 
   listaMunicipiosByIdDepartamento(pIdDepartamento: string){
     return this.http.get<Localizacion[]>(`${environment.apiUrl}/Common/ListMunicipiosByIdDepartamento?idDepartamento=${pIdDepartamento}`);
+  }
+
+  GetDepartamentoByIdMunicipio(pidMunicipio: string){
+    return this.http.get<Localizacion>(`${environment.apiUrl}/Common/GetDepartamentoByIdMunicipio?pIdMunicipio=${pidMunicipio}`);
   }
 
   listaTipoDocFinanciacion(){
@@ -208,11 +211,38 @@ export class CommonService {
     return this.http.get<Dominio[]>( `${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=109` );
   }
 
+  listaTipoSolicitudAsociada() {
+    return this.http.get<Dominio[]>( `${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=52` );
+  }
+
 
 listaEstadoRevision(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=61`);
   }
 
+listaEstadosPoliza(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=51`)
+      .pipe(
+        map( estados => {
+          const estadoPoliza: any = {};
+          for ( const estado of estados ) {
+            if ( estado.codigo === '1' ) {
+              estadoPoliza.sinRadicacion = estado.codigo
+            }
+            if ( estado.codigo === '2' ) {
+              estadoPoliza.enRevision = estado.codigo
+            }
+            if ( estado.codigo === '3' ) {
+              estadoPoliza.polizaDevuelta = estado.codigo
+            }
+            if ( estado.codigo === '4' ) {
+              estadoPoliza.conAprobacion = estado.codigo
+            }
+          }
+          return estadoPoliza;
+        } )
+      );
+}
   listaTipoEnsayos() {
     return this.http.get<Dominio[]>( `${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=74` );
   }
@@ -226,7 +256,7 @@ listaEstadoRevision(){
   }
 
   listaTipoNovedadModificacionContractual(){
-    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=76`);
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=113`);
   }
   
   listaProcesosJudiciales() {

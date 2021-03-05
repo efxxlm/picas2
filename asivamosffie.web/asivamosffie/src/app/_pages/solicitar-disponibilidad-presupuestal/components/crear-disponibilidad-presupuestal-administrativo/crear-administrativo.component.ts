@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -40,6 +40,7 @@ export class CrearDisponibilidadPresupuestalAdministrativoComponent implements O
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
 
   constructor(
     private fb: FormBuilder,
@@ -77,6 +78,8 @@ export class CrearDisponibilidadPresupuestalAdministrativoComponent implements O
                 this.formulario.get('disponibilidadPresupuestalId').setValue( this.objetoDispinibilidad.disponibilidadPresupuestalId )
       
                 this.changeProyecto();              
+                this.estaEditando = true;
+                this.formulario.markAllAsTouched();
               }
             )            
           }          
@@ -130,9 +133,26 @@ export class CrearDisponibilidadPresupuestalAdministrativoComponent implements O
       data: { modalTitle, modalText }
     });
   }
+  noGuardado=true;
+  ngOnDestroy(): void {
+    if ( this.noGuardado===true && this.formulario.dirty) {
+      let dialogRef =this.dialog.open(ModalDialogComponent, {
+        width: '28em',
+        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
+      });   
+      dialogRef.afterClosed().subscribe(result => {
+        console.log(`Dialog result: ${result}`);
+        if(result === true)
+        {
+            this.enviarObjeto();          
+        }           
+      });
+    }
+  };
 
   enviarObjeto() {
-
+    this.estaEditando = true;
+    this.formulario.markAllAsTouched();
     let aportante = this.listaAportantes[0];
 
     let valor=0;
@@ -162,7 +182,11 @@ export class CrearDisponibilidadPresupuestalAdministrativoComponent implements O
       .subscribe( respuesta => {
         this.openDialog( '', `<b>${respuesta.message}</b>` )
         if ( respuesta.code == "200" )
+        {
           this.router.navigate(['/solicitarDisponibilidadPresupuestal'])
+          this.noGuardado=false;
+        }
+          
       })
 
      console.log( disponibilidad, this.formulario.get('consecutivo').value.proyectoId );

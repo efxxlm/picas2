@@ -10,5 +10,6 @@
     <p class="info-sub-title">
         <span>Número de reclamación: <b>{{this.codRecalamacion}}</b></span>
     </p>
-    <app-form-actuacion-reclamacion [isEditable]="true" [idReclamacionActuacion]="this.idReclamacionActuacion"></app-form-actuacion-reclamacion>
+    <app-form-actuacion-reclamacion [isEditable]="true" [idReclamacionActuacion]="this.idReclamacionActuacion"
+    (codRecalamacion)="this.codRecalamacion = $event"></app-form-actuacion-reclamacion>
 </div>

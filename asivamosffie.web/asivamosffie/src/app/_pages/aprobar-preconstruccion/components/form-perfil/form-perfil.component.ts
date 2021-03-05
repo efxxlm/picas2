@@ -50,6 +50,7 @@ export class FormPerfilComponent {
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
 
   get numeroRadicado() {
     return this.addressForm.get('numeroRadicado') as FormArray;
@@ -107,5 +108,7 @@ export class FormPerfilComponent {
 
   onSubmit() {
     console.log(this.addressForm.value);
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
   }
 }

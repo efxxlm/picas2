@@ -41,6 +41,7 @@
         public const string Crear_Editar_Disponibilidad_Presupuestal = "32";
 
         public const string Crear_Editar_Cronograma_Seguimiento = "37";
+        public const string Crear_Editar_Contrato_Perfil = "82";
 
         //gestion polizas y garantias
         public const string Crear_Contrato_Poliza = "85";
@@ -101,6 +102,17 @@
         public const string Votacion_Solicitud_Participante = "80";
         public const string Registrar_Tramite_Contrato = "78";
 
+        //Acta inicio contrato Fase 2     
+        public const string Editar_Plazo_Ejecucion_Fase_2 = "108";
+        public const string Editar_Cargar_Acta_Suscrita_Contrato_Fase_2 = "109";
+        public const string Editar_Tiene_Observaciones_Acta_Inicio_Fase2 = "110";
+        public const string Notificación_Acta_Inicio_Fase_II = "111";
+        public const string Cambiar_Estado_Acta_Inicio_Fase_2 = "121";
+        public const string Cambiar_Estado_Verificacion_Acta_Inicio_Fase_2 = "124";
+        public const string Crear_Editar_Contrato_Observacion = "122";
+
+
+
         public const string Crear_Cronograma_monitoreo = "114";
 
         public const string Eliminar_Compromisos_Solicitud = "125";
@@ -133,6 +145,7 @@
         public const string Devolver_Seguimiento_Diario = "173";
 
         public const string Crear_Editar_Contrato_Perfil = "82";
+                
 
         public const string Eliminar_Contrato_Perfil = "83";
 
@@ -154,6 +167,7 @@
         public const string Cambiar_Estado_Acta_Inicio_Fase_2 = "121";
         public const string Cambiar_Estado_Verificacion_Acta_Inicio_Fase_2 = "124";
         public const string Crear_Editar_Contrato_Observacion = "122";
+        
 
         public const string Cambiar_Estado_Verificacion_Contrato = "103";
 
@@ -172,7 +186,7 @@
         public const string Cambiar_estado_Actuacion_Seguimiento = "150";
         public const string Crear_Editar_Controversia_Motivo = "153";
 
-        //4.2.2 Gestionar procesos de Defensa Judicial
+        //4.2.2 Gestionar procesos de Defensa Judicial        
         public const string Crear_Editar_Ficha_Estudio = "145";
         public const string Crear_Editar_Demandado_Convocado = "146";
         public const string Cambiar_Estado_Proceso = "147";
@@ -221,6 +235,7 @@
         public const string Crear_Editar_Novedad_Contractual = "163";
         public const string Notificación_Novedad_Contractual = "164";
         public const string Eliminar_Novedad_Contractual = "165";
+        public const string Enviar_Correo_Crear_Contrato_Poliza = "182";
 
 
         //CU 4_4_1
@@ -256,5 +271,30 @@
         //4.3.3 Generar Orden Giro
         public const string Crear_Editar_Orden_Giro = "201";
         
+        //4.4.3 registro de pagos    	
+        public const string Validar_Excel_Registro_Pagos = "191";
+        public const string Comentar_Pagos = "197";
+        public const string Validar_Excel_Registro_Rendimientos = "198";
+        public const string Eliminar_Pagos = "199";
+        // public const string Tramitar_Pagos = "200";
+        public const string Ver_Detalle_Pagos = "201";
+        public const string Ver_Detalle_Rendimientos = "202";
+        public const string Ver_Inconsistencias = "203";
+
+        public const string Tramitar_Rendimientos = "200";
+        public const string Notificar_Inconsistencias = "2001";
+        public const string Notificar_Solicitud_Aprobacion = "2002";
+        
+        //Informe final
+        public const string Crear_Informe_Final = "192";
+        public const string Crear_Editar_Informe_Final_Interventoria = "193";
+        public const string Crear_Editar_Informe_Final_Anexo = "194";
+        public const string Crear_Editar_Informe_Final_Interventoria_Observacion = "195";
+        public const string Enviar_A_supervisor_Informe_Final_Interventoria = "196";
+        public const string Actualizar_Estado_validacion_informe_final = "202";
+        public const string Enviar_A_supervisor_Informe_Final_Validacion = "203";
+
+        public const string Cambiar_Estado_Legitimacion_Defensa_Judicial = "216";
+
     }
 }

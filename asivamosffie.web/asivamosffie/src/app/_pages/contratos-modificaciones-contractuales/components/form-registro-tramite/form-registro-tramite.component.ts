@@ -5,6 +5,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 import { Router } from '@angular/router';
 import { ContratosModificacionesContractualesService } from '../../../../core/_services/contratos-modificaciones-contractuales/contratos-modificaciones-contractuales.service';
 import { Contrato } from '../../../../_interfaces/contratos-modificaciones.interface';
+import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 
 @Component({
   selector: 'app-form-registro-tramite',
@@ -15,6 +16,7 @@ export class FormRegistroTramiteComponent implements OnInit, OnDestroy {
 
   archivo: string;
   seRealizoPeticion = false;
+  modalidadContratoArray: Dominio[] = [];
   @Input() dataFormulario: FormGroup;
   @Input() contratoId: number;
   @Input() contratacionId: number;
@@ -37,12 +39,17 @@ export class FormRegistroTramiteComponent implements OnInit, OnDestroy {
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
 
   constructor(
     private dialog: MatDialog,
     private routes: Router,
-    private contratosContractualesSvc: ContratosModificacionesContractualesService )
-  {}
+    private contratosContractualesSvc: ContratosModificacionesContractualesService,
+    private commonSvc: CommonService )
+  {
+    this.commonSvc.modalidadesContrato()
+      .subscribe( response => this.modalidadContratoArray = response );
+  }
 
   ngOnDestroy(): void {
     if ( this.dataFormulario.dirty === true && this.seRealizoPeticion === false ) {
@@ -66,11 +73,8 @@ export class FormRegistroTramiteComponent implements OnInit, OnDestroy {
   fileName( event: any ) {
 
     if ( event.target.files.length > 0) {
-      const file   = event.target.files[0];
+      this.dataFormulario.get('documentoFile').setValue( event.target.files[0] );
       this.archivo = event.target.files[0].name;
-      this.dataFormulario.patchValue({
-        documentoFile: file
-      });
     }
 
   }
@@ -131,7 +135,7 @@ export class FormRegistroTramiteComponent implements OnInit, OnDestroy {
   }
 
   guardar() {
-
+    this.estaEditando = true;
     if ( this.dataFormulario.get( 'numeroContrato' ).value.length === 0 ) {
       this.openDialog( '', '<b>Falta registrar información</b>.' );
       this.dataFormulario.get( 'numeroContrato' ).markAsTouched();
@@ -147,6 +151,10 @@ export class FormRegistroTramiteComponent implements OnInit, OnDestroy {
 
     if ( this.dataFormulario.get( 'numeroContrato' ).value !== null ) {
       pContrato.append( 'numeroContrato', `${ this.dataFormulario.get( 'numeroContrato' ).value }` );
+    }
+
+    if ( this.dataFormulario.get( 'modalidadContrato' ).value !== null ) {
+      pContrato.append( 'modalidadCodigo', this.dataFormulario.get( 'modalidadContrato' ).value );
       this.estadoCodigo = this.estadoCodigos.enRevision;
     }
 

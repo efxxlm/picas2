@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ProcesoSeleccionService, ProcesoSeleccionProponente, ProcesoSeleccion, ProcesoSeleccionIntegrante } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
 import { Localizacion, CommonService } from 'src/app/core/_services/common/common.service';
 import { forkJoin } from 'rxjs';
@@ -17,44 +17,13 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
   @Input() editar:boolean;
   @Output() guardar: EventEmitter<any> = new EventEmitter(); 
 
+  estaEditando = false;
+
   nombresProponentesList: ProcesoSeleccionProponente[] = [];
   listaDepartamentos: Localizacion[] = [];
   idProponenteExistente: string;
   
-  addressForm = this.fb.group({
-    cuantosProponentes: [null, Validators.compose([
-      Validators.required, Validators.minLength(1), Validators.maxLength(2)])
-    ],
-    nombresProponentes: [null, Validators.required],
-    tipoProponente: [null, Validators.required],
-    nombre: [null, Validators.compose([
-      Validators.required, Validators.minLength(1), Validators.maxLength(100)])
-    ],
-    numeroIdentificacon: [null, Validators.compose([
-      Validators.required, Validators.minLength(10), Validators.maxLength(12)])
-    ],
-    representanteLegal: [null, Validators.compose([
-      Validators.required, Validators.minLength(1), Validators.maxLength(100)])
-    ],
-    cedulaRepresentanteLegal: [null, Validators.compose([
-      Validators.required, Validators.minLength(10), Validators.maxLength(12)])
-    ],
-    departamentoRepresentanteLegal: [null, Validators.required],
-    municipioRepresentanteLegal: [null, Validators.required],
-    direccionPrincipalRepresentanteLegal: [null, Validators.compose([
-      Validators.required, Validators.minLength(1), Validators.maxLength(100)])
-    ],
-    telefonoRepresentanteLegal: [null, Validators.compose([
-      Validators.required, Validators.minLength(10), Validators.maxLength(10)])
-    ],
-    correoRepresentanteLegal: [null, [
-      Validators.required,
-      Validators.minLength(4),
-      Validators.maxLength(50),
-      Validators.email,
-      Validators.pattern(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/)
-    ]],
-  });
+  addressForm: FormGroup;
   nuevo: boolean=false;
 
   constructor(
@@ -81,7 +50,8 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
     }
   }
   ngOnInit(){
-    return new Promise( resolve => {
+    this.initForm();
+    return new Promise<void>( resolve => {
 
       forkJoin([
         this.procesoSeleccionService.getProcesoSeleccionProponentes(),
@@ -118,19 +88,59 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
           
         });
 
-        console.log(this.nombresProponentesList)
+        // console.log(this.nombresProponentesList)
         resolve();
       })
     })
   }
 
+  initForm() {
+    this.addressForm = this.fb.group({
+      cuantosProponentes: [
+        this.procesoSeleccion.procesoSeleccionProponente
+          ? this.procesoSeleccion.procesoSeleccionProponente.length
+          : null,
+        Validators.compose([Validators.required, Validators.minLength(1), Validators.maxLength(2)])
+      ],
+      nombresProponentes: [null, Validators.required],
+      tipoProponente: [null, Validators.required],
+      nombre: [null, Validators.compose([
+        Validators.required, Validators.minLength(1), Validators.maxLength(100)])
+      ],
+      numeroIdentificacon: [null, Validators.compose([
+        Validators.required, Validators.minLength(10), Validators.maxLength(12)])
+      ],
+      representanteLegal: [null, Validators.compose([
+        Validators.required, Validators.minLength(1), Validators.maxLength(100)])
+      ],
+      cedulaRepresentanteLegal: [null, Validators.compose([
+        Validators.required, Validators.minLength(10), Validators.maxLength(12)])
+      ],
+      departamentoRepresentanteLegal: [null, Validators.required],
+      municipioRepresentanteLegal: [null, Validators.required],
+      direccionPrincipalRepresentanteLegal: [null, Validators.compose([
+        Validators.required, Validators.minLength(1), Validators.maxLength(100)])
+      ],
+      telefonoRepresentanteLegal: [null, Validators.compose([
+        Validators.required, Validators.minLength(10), Validators.maxLength(10)])
+      ],
+      correoRepresentanteLegal: [null, [
+        Validators.required,
+        Validators.minLength(4),
+        Validators.maxLength(50),
+        Validators.email,
+        Validators.pattern(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/)
+      ]],
+    });
+  }
+
   changeProponente($event:any){
     
-    console.log(this.addressForm.get('cuantosProponentes').value);
+    // console.log(this.addressForm.get('cuantosProponentes').value);
     //this.procesoSeleccion.procesoSeleccionProponente=[];
-    console.log(this.procesoSeleccion.procesoSeleccionProponente.length);
-    console.log(this.addressForm.get('nombresProponentes').value.length);
-    console.log(this.addressForm.get('nombresProponentes').value);
+    // console.log(this.procesoSeleccion.procesoSeleccionProponente.length);
+    // console.log(this.addressForm.get('nombresProponentes').value.length);
+    // console.log(this.addressForm.get('nombresProponentes').value);
     if(this.addressForm.get('cuantosProponentes').value>0)
     {
       if(this.procesoSeleccion.procesoSeleccionProponente.length>this.addressForm.get('nombresProponentes').value.length)
@@ -141,7 +151,7 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
       && this.addressForm.get('cuantosProponentes').value>this.procesoSeleccion.procesoSeleccionProponente.length)
       {
         this.addressForm.get('nombresProponentes').value.forEach(element => {   
-          console.log(element);     
+          // console.log(element);     
           if ( element != 'Nuevo' ){
             let elemento: ProcesoSeleccionProponente = element;
             if(elemento.procesoSeleccionProponenteId!="0" && this.procesoSeleccion.procesoSeleccionId!=elemento.procesoSeleccionId)
@@ -155,7 +165,7 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
             }
             
             this.idProponenteExistente = element.procesoSeleccionProponenteId; 
-            console.log(this.procesoSeleccion.procesoSeleccionProponente);
+            // console.log(this.procesoSeleccion.procesoSeleccionProponente);
           }
           else{
             this.nuevo=true;
@@ -194,13 +204,13 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
 
     this.ngOnInit().then(() =>       
         { 
-          this.addressForm.get('cuantosProponentes').setValue( this.procesoSeleccion.cantidadProponentesInvitados );      
+          this.addressForm.get('cuantosProponentes').setValue( this.procesoSeleccion.procesoSeleccionProponente.length );      
           let proceso:ProcesoSeleccionProponente[]=[];
           
           this.procesoSeleccion.procesoSeleccionProponente.forEach(element => {
             //busco 
-            console.log("busco "+element.procesoSeleccionProponenteId+" en");
-            console.log(this.nombresProponentesList);
+            // console.log("busco "+element.procesoSeleccionProponenteId+" en");
+            // console.log(this.nombresProponentesList);
             let nombre = this.nombresProponentesList.filter(x=>x.procesoSeleccionProponenteId==element.procesoSeleccionProponenteId);
             if(nombre.length>0)
             {
@@ -212,17 +222,18 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
               proceso.push(element);
             }       
           });
-          console.log(proceso)
+          // console.log(proceso)
           this.addressForm.get('nombresProponentes').setValue(proceso);
-          console.log(this.addressForm.get('nombresProponentes').value);
+          // console.log(this.addressForm.get('nombresProponentes').value);
         });
   }
 
   onSubmit() {
-    
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     this.addressForm.get('nombresProponentes').setValue( null );
     this.procesoSeleccion.cantidadProponentesInvitados = this.addressForm.get('cuantosProponentes').value;
-    console.log(this.procesoSeleccion);
+    // console.log(this.procesoSeleccion);
     this.guardar.emit(null);
   }
 

@@ -135,6 +135,7 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
       this.perfilesCompletados.emit( 'sin-diligenciar' );
     } else {
       this.estaEditando = true;
+      this.formContratista.markAllAsTouched();
       this.formContratista.get( 'numeroPerfiles' ).setValue( String( this.perfilProyecto.length ) );
       this.formContratista.get( 'numeroPerfiles' ).setValidators( Validators.min( this.perfiles.length ) );
       this.formContratista.get( 'numeroPerfiles' ).valueChanges
@@ -255,10 +256,12 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
       if ( this.perfilesCompletos === 0 && this.perfilesEnProceso === 0 && this.perfilProyecto.length > 0 ) {
         this.perfilesCompletados.emit( 'sin-diligenciar' );
       }
+      this.estaEditando = true;
+      this.formContratista.markAllAsTouched();
     }
   }
 
-  disabledDate( cantidadHvAprobadas: string, cantidadHvRequeridas: string, index: number ) {
+  disabledDate( cantidadHvAprobadas: string, cantidadHvRequeridas: string, cantidadHvRecibidas: string, index: number ) {
     if ( Number( cantidadHvAprobadas ) >= Number( cantidadHvRequeridas ) ) {
       this.perfiles.controls[index].get( 'fechaAprobacion' ).enable();
     } else {
@@ -266,6 +269,10 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
       this.perfiles.controls[index].get( 'fechaAprobacion' ).setValue( null );
     }
     if ( cantidadHvRequeridas === null ) {
+      this.perfiles.controls[index].get( 'fechaAprobacion' ).disable();
+      this.perfiles.controls[index].get( 'fechaAprobacion' ).setValue( null );
+    }
+    if (Number( cantidadHvAprobadas ) > Number( cantidadHvRecibidas )){
       this.perfiles.controls[index].get( 'fechaAprobacion' ).disable();
       this.perfiles.controls[index].get( 'fechaAprobacion' ).setValue( null );
     }
@@ -294,8 +301,8 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
 
   textoLimpio(texto: string) {
     let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
 
     if ( texto ){
       const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
@@ -322,7 +329,7 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
 
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
-      e.editor.deleteText(n, e.editor.getLength());
+      e.editor.deleteText(n - 1, e.editor.getLength());
     }
   }
 
@@ -424,6 +431,8 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
 
 
   guardar() {
+    this.estaEditando = true;
+    this.formContratista.markAllAsTouched();
     const perfiles: ContratoPerfil[] = this.formContratista.get( 'perfiles' ).value;
 
     if ( this.perfilProyecto.length === 0 ) {

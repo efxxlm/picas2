@@ -15,8 +15,9 @@ export class PolizaGarantiaService implements OnInit {
   ngOnInit(): void {
 
   }
-  CreatePolizaObservacion(polizaObservacion: any) {
-    return this.http.post<Respuesta>(`${environment.apiUrl}/guaranteePolicy/CreateEditPolizaObservacion`, polizaObservacion);
+
+  createEditPolizaObservacion( pPolizaObservacion: any ) {
+    return this.http.post( `${environment.apiUrl}/guaranteePolicy/CreateEditPolizaObservacion`, pPolizaObservacion );
   }
   CreatePolizaGarantia(polizaGarantia: any) {
     return this.http.post<Respuesta>(`${environment.apiUrl}/guaranteePolicy/CreateEditPolizaGarantia`, polizaGarantia);
@@ -45,8 +46,8 @@ export class PolizaGarantiaService implements OnInit {
   GetContratoPolizaByIdContratoId(pContratoId: number) {
     return this.http.get<GetContratoPolizaByIdContratoId>(`${environment.apiUrl}/guaranteePolicy/GetContratoPolizaByIdContratoId?pContratoId=${pContratoId}`);
   }
-  AprobarContratoByIdContrato(pContratoPolizaId: number) {
-    return this.http.post<ContratoPoliza>(`${environment.apiUrl}/guaranteePolicy/AprobarContratoByIdContrato?pContratoPolizaId=${pContratoPolizaId}`, pContratoPolizaId);
+  AprobarContratoByIdContrato(pIdContrato: number) {
+    return this.http.post<ContratoPoliza>(`${environment.apiUrl}/guaranteePolicy/AprobarContratoByIdContrato?pIdContrato=${pIdContrato}`, null);
   }
   CambiarEstadoPoliza(pContratoPolizaId: number, pCodigoNuevoEstadoPoliza: string) {
     return this.http.put<Respuesta>(`${environment.apiUrl}/guaranteePolicy/CambiarEstadoPoliza?pContratoPolizaId=${pContratoPolizaId}&pCodigoNuevoEstadoPoliza=${pCodigoNuevoEstadoPoliza}`, null);
@@ -184,10 +185,10 @@ export interface GetContratoPolizaByIdContratoId {
   responsableAprobacion: any;
   tipoModificacionCodigo:  any;
   tipoSolicitudCodigo: any;
+  usuarioCreacion: any;
   valorAmparo: number;
   vigencia:  any;
   vigenciaAmparo:  any;
-  usuarioCreacion: any;
 }
 
 export interface GetNotificacionContratoPolizaByIdContratoId{

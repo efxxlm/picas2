@@ -136,4 +136,8 @@ export class FaseUnoConstruccionService {
     return this.http.get(`${ this.urlApi }/GenerateDRP?pContratoId=${id}`, { responseType: "blob" } );
   }
 
+  CalcularYGuardarFechaInicioContrato(construccion){ 
+    return this.http.post(`${ this.urlApi }/CalcularYGuardarFechaInicioContrato`,construccion);
+  }
+
 }

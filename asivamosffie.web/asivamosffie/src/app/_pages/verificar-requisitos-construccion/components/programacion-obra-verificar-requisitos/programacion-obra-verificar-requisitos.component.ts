@@ -37,6 +37,7 @@ export class ProgramacionObraVerificarRequisitosComponent implements OnInit {
   @Input() contratoConstruccionId: any;
 
   @Output() createEdit = new EventEmitter();
+  estaEditando = false;
 
   constructor(
     private dialog: MatDialog,
@@ -85,8 +86,8 @@ export class ProgramacionObraVerificarRequisitosComponent implements OnInit {
 
   textoLimpio(texto: string) {
     let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
 
     if ( texto ){
       const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
@@ -126,7 +127,8 @@ export class ProgramacionObraVerificarRequisitosComponent implements OnInit {
   }
 
   guardarProgramacion() {
-
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let construccion = {
       contratoConstruccionId: this.contratoConstruccionId,
       tieneObservacionesProgramacionObraApoyo: this.addressForm.value.tieneObservaciones,

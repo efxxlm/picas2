@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.model.APIModels;
+using System.Globalization;
 
 namespace asivamosffie.services
 {
@@ -27,7 +28,7 @@ namespace asivamosffie.services
         public async Task<List<VProyectosXcontrato>> gridRegisterDailyFollowUp()
         {
             List<VProyectosXcontrato> listaInfoProyectos = await _context.VProyectosXcontrato
-                                                                        .Where(r => r.FechaActaInicioFase2 <= DateTime.Now)
+                                                                        .Where(r => r.FechaActaInicioFase2 <= DateTime.Now && r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
                                                                         .ToListAsync();
 
             listaInfoProyectos.ForEach(p =>
@@ -483,7 +484,7 @@ namespace asivamosffie.services
 
                     seguimientoDiario.TieneObservacionSupervisor = pSeguimientoDiario.TieneObservacionSupervisor;
 
-                    if (seguimientoDiario.TieneObservacionSupervisor.Value)
+                    if (seguimientoDiario.TieneObservacionSupervisor.HasValue ? seguimientoDiario.TieneObservacionSupervisor.Value : false )
                     {
 
                         await CreateEditObservacionSeguimientoDiario(pSeguimientoDiario.SeguimientoDiarioObservaciones.FirstOrDefault(), pSeguimientoDiario.UsuarioCreacion);
@@ -511,7 +512,7 @@ namespace asivamosffie.services
                 {
                     seguimientoDiario.TieneObservacionApoyo = pSeguimientoDiario.TieneObservacionApoyo;
 
-                    if (seguimientoDiario.TieneObservacionApoyo.Value)
+                    if (seguimientoDiario.TieneObservacionApoyo.HasValue ? seguimientoDiario.TieneObservacionApoyo.Value : true)
                     {
                         await CreateEditObservacionSeguimientoDiario(pSeguimientoDiario.SeguimientoDiarioObservaciones.FirstOrDefault(), pSeguimientoDiario.UsuarioCreacion);
                     }
@@ -660,9 +661,9 @@ namespace asivamosffie.services
 
             listaFechasTotal.ForEach(f =>
             {
-                if (contratacion.SeguimientoDiario.Where(s => s.FechaSeguimiento == f && s.Eliminado != true).Count() == 0)
+                if (contratacion.SeguimientoDiario.Where(s => s.FechaSeguimiento.ToShortDateString() == f.ToShortDateString() && s.Eliminado != true).Count() == 0)
                 {
-                    listaFechas.Add(f.ToShortDateString());
+                    listaFechas.Add(f.ToString("d/M/yyyy", CultureInfo.InvariantCulture));
                 }
             });
 

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ActBeginService } from 'src/app/core/_services/actBegin/act-begin.service';
+import { ActaInicioConstruccionService } from 'src/app/core/_services/actaInicioConstruccion/acta-inicio-construccion.service';
 import { CommonService } from 'src/app/core/_services/common/common.service';
+import { GestionarActPreConstrFUnoService } from 'src/app/core/_services/GestionarActPreConstrFUno/gestionar-act-pre-constr-funo.service';
 import { Contrato } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
 
 @Component({
@@ -40,9 +41,9 @@ export class VerDetalleTecnicoFdosConstrComponent implements OnInit {
   obsConEspeciales: string;
   plazoEjecucionConstrM: number;
   plazoEjecucionConstrD: number;
-  mostrarCarga= false;
+  mostrarCarga = false;
 
-  botonDescargar: boolean =false;
+  botonDescargar: boolean = false;
   conObservacionesSupervisor: boolean;
   observacionesSupervisor: string;
   fechaCreacion: Date;
@@ -50,17 +51,17 @@ export class VerDetalleTecnicoFdosConstrComponent implements OnInit {
   numeroIdentificacionRepresentanteContratistaInterventoria: any;
   valorProponente: any;
   rutaActaSuscrita: any;
-  constructor(private activatedRoute: ActivatedRoute,private services: ActBeginService, private commonSvc: CommonService) { }
+  constructor(private activatedRoute: ActivatedRoute, private services: ActaInicioConstruccionService, private commonSvc: CommonService, private gestionarActaSvc: GestionarActPreConstrFUnoService) { }
 
   ngOnInit(): void {
     this.cargarRol();
     this.activatedRoute.params.subscribe(param => {
       this.loadData(param.id);
     });
-    if(localStorage.getItem("actaSuscrita") == "true"){
+    if (localStorage.getItem("actaSuscrita") == "true") {
       this.botonDescargar = true;
     }
-    else{
+    else {
       this.botonDescargar = false;
     }
   }
@@ -76,7 +77,7 @@ export class VerDetalleTecnicoFdosConstrComponent implements OnInit {
   }
 
   loadData(id) {
-    this.services.GetVistaGenerarActaInicio(id).subscribe((data:any) => {
+    this.services.GetVistaGenerarActaInicio(id).subscribe((data: any) => {
       /*Titulo*/
       this.contratoCode = data.numeroContrato;
       this.fechaAprobacionSupervisor = data.fechaAprobacionRequisitosSupervisor;
@@ -106,38 +107,56 @@ export class VerDetalleTecnicoFdosConstrComponent implements OnInit {
       this.plazoEjecucionPreConstruccionMeses = data.plazoFase1PreMeses;
       this.plazoEjecucionPreConstruccionDias = data.plazoFase1PreDias;
       this.obsConEspeciales = data.observacionOConsideracionesEspeciales;
-      this.plazoEjecucionConstrM = data.plazoFase2ConstruccionDias;
-      this.plazoEjecucionConstrD = data.plazoFase2ConstruccionMeses;
+      this.plazoEjecucionConstrM = data.plazoFase2ConstruccionMeses;
+      this.plazoEjecucionConstrD = data.plazoFase2ConstruccionDias;
       //ruta del acta suscrita
       this.rutaActaSuscrita = data.rutaActaSuscrita;
       //console.log(data.contrato.estadoActaFase2, data.contrato.estadoActaFase2 == 20 );
-      if ( data.contrato && ( data.contrato.estadoActaFase2 == 20 || data.contrato.estadoActaFase2 == 7 ) )
+      if (data.contrato && (data.contrato.estadoActaFase2 == 20 || data.contrato.estadoActaFase2 == 7))
         this.mostrarCarga = true;
+      this.services.GetConstruccionObservacionByIdContratoConstruccionId(data.contrato.contratoConstruccion[0].contratoConstruccionId, true).subscribe((data1: any) => {
+        this.conObservacionesSupervisor = data1.esActa;
+        this.observacionesSupervisor = data1.observaciones;
+        this.fechaCreacion = data1.fechaCreacion;
+      });
     });
+    /*
     this.services.GetContratoObservacionByIdContratoId(id,true).subscribe(data1=>{
       if ( data1 ){
         this.conObservacionesSupervisor = data1.esActa;
         this.observacionesSupervisor = data1.observaciones;
         this.fechaCreacion = data1.fechaCreacion;
       }
-    });
+    });*/
     this.idContrato = id;
   }
-  descargarActaSuscrita(doc){
+  descargarActaSuscrita(doc) {
     this.commonSvc.getDocumento(doc).subscribe(
       response => {
 
         const documento = `Acta fase 2 contrato ${this.contratoCode}.pdf`;
         const text = documento,
-        blob = new Blob([response], { type: 'application/pdf' }),
-        anchor = document.createElement('a');
+          blob = new Blob([response], { type: 'application/pdf' }),
+          anchor = document.createElement('a');
         anchor.download = documento;
         anchor.href = window.URL.createObjectURL(blob);
         anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
         anchor.click();
 
       },
-      err => console.log( `<b>${err.message}</b>` )
+      err => console.log(`<b>${err.message}</b>`)
     );
+  }
+  descargarActaDesdeTabla() {
+    this.gestionarActaSvc.GetActaByIdPerfil(this.idContrato, 'True').subscribe(resp => {
+      const documento = `${this.contratoCode}.pdf`; // Valor de prueba
+      const text = documento,
+        blob = new Blob([resp], { type: 'application/pdf' }),
+        anchor = document.createElement('a');
+      anchor.download = documento;
+      anchor.href = window.URL.createObjectURL(blob);
+      anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+      anchor.click();
+    });
   }
 }

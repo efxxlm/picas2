@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { MaterialModule } from './../../material/material.module';
+import { MaterialModule } from 'src/app/material/material.module';
 import { ReactiveFormsModule, FormsModule  } from '@angular/forms';
 
 import { QuillModule } from 'ngx-quill';
@@ -21,6 +20,8 @@ import { VerDetalleDdpEspecialComponent } from './components/ver-detalle-ddp-esp
 import { VerDetalleDdpAdministrativoComponent } from './components/ver-detalle-ddp-administrativo/ver-detalle-ddp-administrativo.component'
 import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatSortModule } from '@angular/material/sort';
+import { TablaObservacionesComponent } from './components/tabla-observaciones/tabla-observaciones.component';
 
 
 @NgModule({
@@ -36,7 +37,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     TablaCrearSolicitudadministrativaComponent,
     DetalleDisponibilidadPresupuestalComponent,
     VerDetalleDdpEspecialComponent,
-    VerDetalleDdpAdministrativoComponent
+    VerDetalleDdpAdministrativoComponent,
+    TablaObservacionesComponent
   ],
   imports: [
     CommonModule,
@@ -46,7 +48,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     SolicitarDisponibilidadPresupuestalRoutingModule,
     CurrencyMaskModule,
     QuillModule.forRoot(),
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatSortModule
   ]
 })
 export class SolicitarDisponibilidadPresupuestalModule { }

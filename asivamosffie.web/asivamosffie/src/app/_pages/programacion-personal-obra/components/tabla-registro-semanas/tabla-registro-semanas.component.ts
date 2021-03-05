@@ -1,10 +1,9 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { ProgramacionPersonalObraService } from 'src/app/core/_services/programacionPersonalObra/programacion-personal-obra.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-import { DetalleProgramacionPersonal, ContratoConstruccion } from 'src/app/_interfaces/programacionPersonal.interface';
+import { DetalleProgramacionPersonal } from 'src/app/_interfaces/programacionPersonal.interface';
 
 @Component({
   selector: 'app-tabla-registro-semanas',
@@ -29,7 +28,6 @@ export class TablaRegistroSemanasComponent implements OnInit {
     if ( this.registroSemanas !== undefined ) {
       let numeroregistros = 0;
       this.registroSemanasTabla.push( [] );
-      console.log( this.registroSemanas );
       this.registroSemanas.forEach( registro => {
         if ( this.registroSemanasTabla[ numeroregistros ].length < 20 ) {
           if ( registro.seguimientoSemanalPersonalObra.length === 0 ) {
@@ -55,7 +53,6 @@ export class TablaRegistroSemanasComponent implements OnInit {
           }
         }
       }
-      console.log( this.registroSemanasTabla );
     }
   }
 

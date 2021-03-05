@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators, FormArray, ControlValueAccessor, FormGroup, FormControl, FormsModule, ControlContainer } from '@angular/forms';
 import { CofinanciacionService, CofinanciacionAportante, Cofinanciacion, CofinanciacionDocumento } from 'src/app/core/_services/Cofinanciacion/cofinanciacion.service';
 import { Dominio, CommonService, Respuesta, Localizacion } from 'src/app/core/_services/common/common.service';
@@ -15,7 +15,7 @@ import { forkJoin } from 'rxjs';
 })
 export class RegistrarAcuerdoComponent implements OnInit {
 
-  loading = false;
+  // loading = false;
 
   estaEditando = false;
 
@@ -56,6 +56,22 @@ export class RegistrarAcuerdoComponent implements OnInit {
     numAportes: ['', [Validators.required, Validators.maxLength(3), Validators.min(1), Validators.max(999)]],
     aportantes: this.fb.array([])
   });
+  noGuardado=true;
+  ngOnDestroy(): void {
+    if ( this.noGuardado===true && this.datosAportantes.dirty) {
+      let dialogRef =this.dialog.open(ModalDialogComponent, {
+        width: '28em',
+        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
+      });   
+      dialogRef.afterClosed().subscribe(result => {
+        // console.log(`Dialog result: ${result}`);
+        if(result === true)
+        {
+            this.onSave(false);          
+        }           
+      });
+    }
+  };
 
   // tabla de los documentos de aportantes
   documentoApropiacion: CofinanciacionDocumento[] = [];
@@ -65,6 +81,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
 
       if (param.id) {
         this.estaEditando = true;
+        this.datosAportantes.markAllAsTouched();
         this.id = param.id;
         this.cofinanciacionService.getAcuerdoCofinanciacionById(this.id).subscribe(cof => {
           this.mostrarDocumentosDeApropiacion = true;
@@ -83,6 +100,18 @@ export class RegistrarAcuerdoComponent implements OnInit {
             const idMunicipio = apor.municipioId ? apor.municipioId.toString() : '00000';
             const idDepartamento = apor.departamentoId ? apor.departamentoId.toString() : '000';
 
+
+            // se crea vacio para no perder el order
+            // debido a la demora de ulgun servicio
+            grupo.get('departamento').setValue(null);
+            grupo.get('municipios').setValue(null);
+            grupo.get('municipio').setValue(null);
+            grupo.get('tipo').setValue(valorTipo);
+            grupo.get('nombre').setValue(valorNombre);
+
+            this.aportantes.push(grupo);
+            this.datosAportantes.markAllAsTouched();
+
             this.commonService.listaMunicipiosByIdDepartamento(idMunicipio.substring(0, 5)).subscribe(mun => {
 
               const valorMunicipio = mun.find(a => a.localizacionId === idMunicipio);
@@ -94,7 +123,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
               grupo.get('tipo').setValue(valorTipo);
               grupo.get('nombre').setValue(valorNombre);
 
-              this.aportantes.push(grupo);
+              //this.aportantes.push(grupo);
             });
 
           });
@@ -104,6 +133,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
 
         });
       }
+      this.datosAportantes.markAllAsTouched();
     });
   }
 
@@ -112,7 +142,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
     this.listaCofinancAportantes.forEach(apo => {
       let valorAportante = 0;
       apo.cofinanciacionDocumento.forEach(doc => {
-        console.log(doc.valorDocumento)
+        // console.log(doc.valorDocumento)
         valorTotal += doc.valorDocumento ? doc.valorDocumento : 0;
         valorAportante += doc.valorDocumento ? doc.valorDocumento : 0;
       });
@@ -154,7 +184,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
 
 
   changeTipoAportante(p: any) {
-    console.log(p);
+    // console.log(p);
   }
 
   borrarArray(borrarForm: any, i: number) {
@@ -178,8 +208,8 @@ export class RegistrarAcuerdoComponent implements OnInit {
         }
       } else if (FormNumAportantes.numAportes <= this.aportantes.length && FormNumAportantes.numAportes >= 0) {
 
-        console.log(this.datosAportantes);
-        console.log(this.datosAportantes.value.numAportes);
+        // console.log(this.datosAportantes);
+        // console.log(this.datosAportantes.value.numAportes);
         let estaenblanco = true;
         this.datosAportantes.value.aportantes.forEach((element: {
           cauntosDocumentos: string;
@@ -343,7 +373,9 @@ export class RegistrarAcuerdoComponent implements OnInit {
   }
 
   onSave(parcial: boolean) {
-    this.loading = true;
+    // this.loading = true;
+    this.estaEditando = true;
+    this.datosAportantes.markAllAsTouched();
     this.listaAportantes();
 
     const cofinanciacion: Cofinanciacion =
@@ -355,10 +387,11 @@ export class RegistrarAcuerdoComponent implements OnInit {
 
     this.cofinanciacionService.CrearOModificarAcuerdoCofinanciacion(cofinanciacion).subscribe(
       respuesta => {
+        this.noGuardado=false;
         this.verificarRespuesta(respuesta, parcial);
       },
       err => {
-        this.loading = false;
+        // this.loading = false;
         let mensaje: string;
         if (err.error.message) {
           mensaje = err.error.message;
@@ -370,7 +403,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
       },
       () => {
         // console.log('terminó');
-        this.loading = false;
+        // this.loading = false;
       });
   }
 
@@ -380,9 +413,17 @@ export class RegistrarAcuerdoComponent implements OnInit {
       this.openDialog('', `<b>${respuesta.message}</b>`);
       if (!respuesta.isValidation) // have validations
       {
-        console.log(respuesta);
+        // console.log(respuesta);
         if (parcial) {
-          this.router.navigate([`/registrarAcuerdos/${respuesta.data.cofinanciacionId}`]);
+          if(this.id>0)
+          {
+            location.reload()
+          }
+          else
+          {
+            this.router.navigate([`/registrarAcuerdos/${respuesta.data.cofinanciacionId}`]);
+          }
+          
         } else {
           this.router.navigate(['/gestionarAcuerdos']);
         }
@@ -410,7 +451,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
       }
     }
     else {
-      console.log(cantidadDocumentos, ' ', this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length);
+      // console.log(cantidadDocumentos, ' ', this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length);
       if (cantidadDocumentos > this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length
         && cantidadDocumentos < 1000) {
         while (this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length < cantidadDocumentos) {
@@ -483,12 +524,12 @@ export class RegistrarAcuerdoComponent implements OnInit {
           // retorno=0;
         }
         else if (
-          element.fechaAcuerdo !== null &&
-          element.numeroAcuerdo !== null &&
-          element.tipoDocumentoId !== null &&
-          element.valorDocumento !== null &&
+          (element.fechaAcuerdo !== null && element.fechaAcuerdo) &&
+          (element.numeroAcuerdo !== null && element.numeroAcuerdo) &&
+          (element.tipoDocumentoId !== null && element.tipoDocumentoId) &&
+          (element.valorDocumento !== null && element.valorDocumento) &&
           // element.valorTotalAportante!=null&&
-          element.vigenciaAporte !== null) {
+          (element.vigenciaAporte !== null && element.vigenciaAporte)) {
           retorno += 2;
         }
         else {
@@ -509,8 +550,9 @@ export class RegistrarAcuerdoComponent implements OnInit {
     return retorno;
   }
   eliminadoc(aportante: any, documento: any, indexd: any) {
-    console.log(aportante);
-    console.log(indexd);
+    // console.log(aportante);
+    // console.log(indexd);
+    let docid=aportante.cofinanciacionDocumento[indexd].cofinanciacionDocumentoId;
     const index = aportante.cofinanciacionDocumento.indexOf(documento, 0);
     if (index > -1) {
       aportante.cofinanciacionDocumento.splice(index, 1);
@@ -518,6 +560,15 @@ export class RegistrarAcuerdoComponent implements OnInit {
     aportante.cauntosDocumentos = aportante.cofinanciacionDocumento.length;
     this.datosAportantes.get('aportantes')['controls'][indexd]
       .controls.cauntosDocumentos.setValue(aportante.cofinanciacionDocumento.length);
+    if(docid>0)
+    {
+      this.cofinanciacionService.eliminarDocumento(docid).subscribe( cof => 
+        {
+           
+        } );
+    }
+    this.actualizarValores();
+      
   }
 
   // evalua tecla a tecla
@@ -528,7 +579,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
   }
 
   validateNumber(event: Event, max: any) {
-    console.log(event);
+    // console.log(event);
     const alphanumeric = /[0-9]/;
     // let inputChar = String.fromCharCode(event.charCode);
     // return alphanumeric.test(inputChar) ? true : false;

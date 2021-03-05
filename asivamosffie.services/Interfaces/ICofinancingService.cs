@@ -30,5 +30,6 @@ namespace asivamosffie.services.Interfaces
         Task<ActionResult<List<CofinanciacionDocumento>>> GetListDocumentoByAportanteId(int pAportanteID);
         Task<Respuesta> EliminarCofinanciacionAportanteByCofinanciacionAportanteId(int pCofinancicacionId, string pUsuarioModifico);
         Task<Respuesta> EliminarVigenciaAportanteId(int pCofinancicacionId, string pUsuarioModifico);
+        Task<Respuesta> EliminarDocumentoAportanteId(int pDocumentID, string pUsuarioModifico);
     }
 }

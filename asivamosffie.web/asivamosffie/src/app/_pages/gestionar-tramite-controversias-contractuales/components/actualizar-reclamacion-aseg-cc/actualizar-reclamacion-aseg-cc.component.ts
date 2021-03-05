@@ -11,7 +11,7 @@ import { PolizaGarantiaService } from 'src/app/core/_services/polizaGarantia/pol
 export class ActualizarReclamacionAsegCcComponent implements OnInit {
   idControversia: any;
   public controversiaID = parseInt(localStorage.getItem("controversiaID"));
-  public numReclamacion = localStorage.getItem("codReclamacion");
+  public numReclamacion = localStorage.getItem("numReclamacion");
   tipoControversia: string;
   solicitud: any;
   numContrato: any;

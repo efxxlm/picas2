@@ -65,6 +65,7 @@ export class GestionarDrpComponent implements OnInit {
         {
           this.detailavailabilityBudget=listas[0];
           this.detailavailabilityBudget.proyectos.forEach(element => {
+            this.listacomponentes = [];
             element.componenteGrilla.forEach(element2 => {                          
               this.listacomponentes.push({
                 componente: element2.componente, uso: [
@@ -106,7 +107,7 @@ export class GestionarDrpComponent implements OnInit {
     console.log(this.detailavailabilityBudget);
     this.disponibilidadServices.GenerateDDP(this.detailavailabilityBudget.id).subscribe((listas:any) => {
       console.log(listas);
-      const documento = `DDP ${ this.detailavailabilityBudget.id }.pdf`;
+      const documento = `${ this.detailavailabilityBudget.numeroDDP  }.pdf`;
         const text = documento,
           blob = new Blob([listas], { type: 'application/pdf' }),
           anchor = document.createElement('a');
