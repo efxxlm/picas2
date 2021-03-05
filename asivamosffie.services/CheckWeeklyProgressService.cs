@@ -33,500 +33,30 @@ namespace asivamosffie.services
             _context = context;
         }
         #endregion region 
-        #region List
-        public async Task<SeguimientoSemanal> GetSeguimientoSemanalBySeguimientoSemanalId(int pSeguimientoSemanalId)
-        {
-            List<Dominio> TipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).ToList();
-            List<InstitucionEducativaSede> ListInstitucionEducativaSede = _context.InstitucionEducativaSede.ToList();
-            List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
-            try
-            {
-                SeguimientoSemanal seguimientoSemanal = await _context.SeguimientoSemanal
-                    .Where(r => r.ContratacionProyectoId == pSeguimientoSemanalId && !(bool)r.Eliminado && !(bool)r.RegistroCompleto)
-                  .Include(r => r.ContratacionProyecto)
-                          .ThenInclude(r => r.Contratacion)
-                              .ThenInclude(r => r.Contrato)
-                       .Include(r => r.ContratacionProyecto)
-                          .ThenInclude(r => r.Proyecto)
-                              .ThenInclude(r => r.InstitucionEducativa)
-                       .Include(r => r.SeguimientoDiario)
-                              .ThenInclude(r => r.SeguimientoDiarioObservaciones)
 
-                       //Financiero + Observaciones
-                       .Include(r => r.SeguimientoSemanalAvanceFinanciero)
-                            .ThenInclude(r => r.ObservacionApoyo)
-                       .Include(r => r.SeguimientoSemanalAvanceFinanciero)
-                            .ThenInclude(r => r.ObservacionSupervisor)
-
-                       //Fisico + Observaciones
-                       .Include(r => r.SeguimientoSemanalAvanceFisico)
-                          .ThenInclude(r => r.ObservacionApoyo)
-                       .Include(r => r.SeguimientoSemanalAvanceFisico)
-                          .ThenInclude(r => r.ObservacionSupervisor)
-
-                       //Gestion Obra
-                       //Gestion Obra Ambiental + Observaciones
-                       .Include(r => r.SeguimientoSemanalGestionObra)
-                            .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
-                                  .ThenInclude(r => r.ObservacionApoyo)
-                      .Include(r => r.SeguimientoSemanalGestionObra)
-                            .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
-                                  .ThenInclude(r => r.ObservacionSupervisor)
-
-                         // Gestion Obra Calidad 
-                         //Observaciones Ensayo Laboratorio + Observaciones
-                         .Include(r => r.SeguimientoSemanalGestionObra)
-                            .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
-                                .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
-                                        .ThenInclude(r => r.ObservacionApoyo)
-                          .Include(r => r.SeguimientoSemanalGestionObra)
-                            .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
-                                .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
-                                        .ThenInclude(r => r.ObservacionSupervisor)
-
-                           //Observaciones Ensayo laboratorio Muestras + Observaciones
-                           .Include(r => r.SeguimientoSemanalGestionObra)
-                            .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
-                                .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
-                                    .ThenInclude(r => r.EnsayoLaboratorioMuestra)
-                                        .ThenInclude(r => r.ObservacionApoyo)
-
-                           .Include(r => r.SeguimientoSemanalGestionObra)
-                            .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
-                                .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
-                                    .ThenInclude(r => r.EnsayoLaboratorioMuestra)
-                                        .ThenInclude(r => r.ObservacionSupervisor)
-
-                         //Gestion Obra Calidad
-                         .Include(r => r.SeguimientoSemanalGestionObra)
-                            .ThenInclude(r => r.SeguimientoSemanalGestionObraSeguridadSalud)
-                                .ThenInclude(r => r.SeguridadSaludCausaAccidente)
-
-                          //Gestion Obra Calidad + Observaciones
-                          .Include(r => r.SeguimientoSemanalGestionObra)
-                             .ThenInclude(r => r.SeguimientoSemanalGestionObraSeguridadSalud)
-                                 .ThenInclude(r => r.ObservacionApoyo)
-                          .Include(r => r.SeguimientoSemanalGestionObra)
-                             .ThenInclude(r => r.SeguimientoSemanalGestionObraSeguridadSalud)
-                                 .ThenInclude(r => r.ObservacionSupervisor)
-
-                        //Gestion Obra Social + Observaciones
-                        .Include(r => r.SeguimientoSemanalGestionObra)
-                           .ThenInclude(r => r.SeguimientoSemanalGestionObraSocial)
-                             .ThenInclude(r => r.ObservacionApoyo)
-
-                        .Include(r => r.SeguimientoSemanalGestionObra)
-                           .ThenInclude(r => r.SeguimientoSemanalGestionObraSocial)
-                             .ThenInclude(r => r.ObservacionSupervisor)
-
-                       //Alertas Relevantes  + Observaciones
-                       .Include(r => r.SeguimientoSemanalGestionObra)
-                           .ThenInclude(r => r.SeguimientoSemanalGestionObraAlerta)
-                                 .ThenInclude(r => r.ObservacionApoyo)
-
-                        .Include(r => r.SeguimientoSemanalGestionObra)
-                           .ThenInclude(r => r.SeguimientoSemanalGestionObraAlerta)
-                                 .ThenInclude(r => r.ObservacionSupervisor)
-
-                       //Reporte Actividades + Observaciones
-
-                       //Estado Contrato + Observaciones
-                       .Include(r => r.SeguimientoSemanalReporteActividad)
-                              .ThenInclude(r => r.ObservacionApoyoIdEstadoContratoNavigation)
-                       .Include(r => r.SeguimientoSemanalReporteActividad)
-                              .ThenInclude(r => r.ObservacionSupervisorIdEstadoContratoNavigation)
-
-                       //Actividades Realizadas + Observaciones
-                       .Include(r => r.SeguimientoSemanalReporteActividad)
-                              .ThenInclude(r => r.ObservacionApoyoIdActividadNavigation)
-                       .Include(r => r.SeguimientoSemanalReporteActividad)
-                              .ThenInclude(r => r.ObservacionSupervisorIdActividadNavigation)
-
-                         //Actividades Realizadas Siguiente semana  + Observaciones
-                         .Include(r => r.SeguimientoSemanalReporteActividad)
-                              .ThenInclude(r => r.ObservacionApoyoIdActividadSiguienteNavigation)
-                       .Include(r => r.SeguimientoSemanalReporteActividad)
-                              .ThenInclude(r => r.ObservacionSupervisorIdActividadSiguienteNavigation)
-
-                       //Registro Fotografico + Observaciones
-                       .Include(r => r.SeguimientoSemanalRegistroFotografico)
-                            .ThenInclude(r => r.ObservacionApoyo)
-                       .Include(r => r.SeguimientoSemanalRegistroFotografico)
-                            .ThenInclude(r => r.ObservacionSupervisor)
-
-                       //Comite Obra + Observaciones 
-                       .Include(r => r.SeguimientoSemanalRegistrarComiteObra)
-                           .ThenInclude(r => r.ObservacionApoyo)
-                       .Include(r => r.SeguimientoSemanalRegistrarComiteObra)
-                           .ThenInclude(r => r.ObservacionSupervisor)
-                      .FirstOrDefaultAsync();
-
-
-                List<Dominio> CausaBajaDisponibilidadMaterial = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Causa_Baja_Disponibilidad_Material).ToList();
-
-                List<Dominio> CausaBajaDisponibilidadEquipo = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Causa_Baja_Disponibilidad_Equipo).ToList();
-
-                List<Dominio> CausaBajaDisponibilidadProductividad = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Causa_Baja_Disponibilidad_Productividad).ToList();
-
-                foreach (var SeguimientoDiario in seguimientoSemanal.SeguimientoDiario)
-                {
-                    SeguimientoDiario.CausaIndisponibilidadMaterialCodigo = !string.IsNullOrEmpty(SeguimientoDiario.CausaIndisponibilidadMaterialCodigo) ? CausaBajaDisponibilidadMaterial.Where(r => r.Codigo == SeguimientoDiario.CausaIndisponibilidadMaterialCodigo).FirstOrDefault().Nombre : "---";
-
-                    SeguimientoDiario.CausaIndisponibilidadEquipoCodigo = !string.IsNullOrEmpty(SeguimientoDiario.CausaIndisponibilidadEquipoCodigo) ? CausaBajaDisponibilidadEquipo.Where(r => r.Codigo == SeguimientoDiario.CausaIndisponibilidadEquipoCodigo).FirstOrDefault().Nombre : "---";
-
-                    SeguimientoDiario.CausaIndisponibilidadProductividadCodigo = !string.IsNullOrEmpty(SeguimientoDiario.CausaIndisponibilidadProductividadCodigo) ? CausaBajaDisponibilidadProductividad.Where(r => r.Codigo == SeguimientoDiario.CausaIndisponibilidadProductividadCodigo).FirstOrDefault().Nombre : "---";
-                }
-
-                //Crear Comite Obra numerador
-
-                seguimientoSemanal.ComiteObraGenerado = await _commonService.EnumeradorComiteObra();
-
-                int? ManejoMaterialesInsumoId, ManejoResiduosConstruccionDemolicionId, ManejoResiduosPeligrososEspecialesId, ManejoOtroId = null;
-
-                if (seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault() != null)
-                {
-                    if (seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental.FirstOrDefault() != null)
-                    {
-                        ManejoMaterialesInsumoId = seguimientoSemanal?.SeguimientoSemanalGestionObra?.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental?.FirstOrDefault().ManejoMaterialesInsumoId;
-                        ManejoResiduosConstruccionDemolicionId = seguimientoSemanal?.SeguimientoSemanalGestionObra?.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental?.FirstOrDefault().ManejoResiduosConstruccionDemolicionId;
-                        ManejoResiduosPeligrososEspecialesId = seguimientoSemanal?.SeguimientoSemanalGestionObra?.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental?.FirstOrDefault().ManejoResiduosPeligrososEspecialesId;
-                        ManejoOtroId = seguimientoSemanal?.SeguimientoSemanalGestionObra?.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental?.FirstOrDefault().ManejoOtroId;
-
-                        if (ManejoMaterialesInsumoId != null)
-                        {
-                            seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental.FirstOrDefault().ManejoMaterialesInsumo = _context.ManejoMaterialesInsumos.Include(r => r.ManejoMaterialesInsumosProveedor).Where(r => r.ManejoMaterialesInsumosId == ManejoMaterialesInsumoId).FirstOrDefault();
-                        }
-
-                        if (ManejoResiduosConstruccionDemolicionId != null)
-                        {
-                            seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental.FirstOrDefault().ManejoResiduosConstruccionDemolicion = _context.ManejoResiduosConstruccionDemolicion.Include(r => r.ManejoResiduosConstruccionDemolicionGestor).Where(r => r.ManejoResiduosConstruccionDemolicionId == ManejoResiduosConstruccionDemolicionId).FirstOrDefault();
-                        }
-
-                        if (ManejoResiduosPeligrososEspecialesId != null)
-                        {
-                            seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental.FirstOrDefault().ManejoResiduosPeligrososEspeciales = _context.ManejoResiduosPeligrososEspeciales.Find(ManejoResiduosPeligrososEspecialesId);
-                        }
-
-                        if (ManejoOtroId != null)
-                        {
-                            seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental.FirstOrDefault().ManejoOtro = _context.ManejoOtro.Find(ManejoOtroId);
-                        }
-                    }
-                }
-
-                seguimientoSemanal.FlujoInversion = _context.FlujoInversion.Include(r => r.Programacion).Where(r => r.SeguimientoSemanalId == seguimientoSemanal.SeguimientoSemanalId && r.Programacion.TipoActividadCodigo == "C").ToList();
-
-                //foreach (var FlujoInversion in seguimientoSemanal.FlujoInversion)
-                //{
-                //    FlujoInversion.Programacion.RangoDias = (FlujoInversion.Programacion.FechaFin - FlujoInversion.Programacion.FechaInicio).TotalDays;
-                //}
-
-                List<int> ListSeguimientoSemanalId = _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == seguimientoSemanal.ContratacionProyectoId).Select(r => r.SeguimientoSemanalId).ToList();
-
-                List<Programacion> ListProgramacion = _context.Programacion.FromSqlRaw("SELECT DISTINCT p.* FROM dbo.Programacion AS p INNER JOIN dbo.FlujoInversion AS f ON p.ProgramacionId = f.ProgramacionId INNER JOIN dbo.SeguimientoSemanal AS s ON f.SeguimientoSemanalId = s.SeguimientoSemanalId WHERE s.ContratacionProyectoId = " + seguimientoSemanal.ContratacionProyectoId + " AND p.TipoActividadCodigo = 'C'").ToList();
-
-                seguimientoSemanal.CantidadTotalDiasActividades = ListProgramacion.Sum(r => r.Duracion);
-
-                seguimientoSemanal.AvanceAcumulado = ListProgramacion
-                    .GroupBy(r => r.Actividad)
-                    .Select(r => new
-                    {
-                        Actividad = r.Key,
-                        AvanceAcumulado = Math.Truncate((decimal)r.Sum(r => r.AvanceFisicoCapitulo)) + "%",
-                        AvanceFisicoCapitulo = Math.Truncate((((decimal)r.Sum(r => r.Duracion) / seguimientoSemanal.CantidadTotalDiasActividades) * 100)) + "%"
-                    });
-
-                //Eliminar Las tablas eliminadas Logicamente
-                foreach (var SeguimientoSemanalGestionObra in seguimientoSemanal.SeguimientoSemanalGestionObra)
-                {
-                    foreach (var SeguimientoSemanalGestionObraAmbiental in SeguimientoSemanalGestionObra.SeguimientoSemanalGestionObraAmbiental)
-                    {
-                        //No incluir los ManejoMaterialesInsumosProveedor eliminados
-                        if (SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo != null || SeguimientoSemanalGestionObraAmbiental?.ManejoMaterialesInsumo?.ManejoMaterialesInsumosProveedor.Count() > 0)
-                            SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.ManejoMaterialesInsumosProveedor = SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.ManejoMaterialesInsumosProveedor.Where(r => !(bool)r.Eliminado).ToList();
-                        //No incluir los Manejo Residuos Construccion Demolicion Gestor eliminados
-                        if (SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion != null || SeguimientoSemanalGestionObraAmbiental?.ManejoResiduosConstruccionDemolicion?.ManejoResiduosConstruccionDemolicionGestor.Count() > 0)
-                            SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionGestor = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionGestor.Where(r => !(bool)r.Eliminado).ToList();
-                    }
-
-                    foreach (var SeguimientoSemanalGestionObraCalidad in SeguimientoSemanalGestionObra.SeguimientoSemanalGestionObraCalidad)
-                    {
-                        if (SeguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio != null || SeguimientoSemanalGestionObraCalidad?.GestionObraCalidadEnsayoLaboratorio.Count() > 0)
-                            SeguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio = SeguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio.Where(r => !(bool)r.Eliminado).ToList();
-                    }
-                }
-
-                Localizacion Municipio = ListLocalizacion.Where(r => r.LocalizacionId == seguimientoSemanal.ContratacionProyecto.Proyecto.LocalizacionIdMunicipio).FirstOrDefault();
-                InstitucionEducativaSede Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == seguimientoSemanal.ContratacionProyecto.Proyecto.SedeId).FirstOrDefault();
-                InstitucionEducativaSede institucionEducativa = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == Sede.PadreId).FirstOrDefault();
-
-                seguimientoSemanal.ContratacionProyecto.Proyecto.tipoIntervencionString = TipoIntervencion.Where(r => r.Codigo == seguimientoSemanal.ContratacionProyecto.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
-                seguimientoSemanal.ContratacionProyecto.Proyecto.MunicipioObj = Municipio;
-                seguimientoSemanal.ContratacionProyecto.Proyecto.DepartamentoObj = ListLocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
-                seguimientoSemanal.ContratacionProyecto.Proyecto.Sede = Sede;
-                seguimientoSemanal.ContratacionProyecto.Proyecto.InstitucionEducativa = institucionEducativa;
-
-                return seguimientoSemanal;
-
-
-            }
-            catch (Exception ex)
-            {
-                return new SeguimientoSemanal();
-            }
-
-        }
-
-        public SeguimientoSemanal GetSeguimientoSemanalBySeguimientoSemanalIdClean(int pSeguimientoSemanalId)
-        {
-            List<Dominio> TipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).ToList();
-            List<InstitucionEducativaSede> ListInstitucionEducativaSede = _context.InstitucionEducativaSede.ToList();
-            List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
-            try
-            {
-                SeguimientoSemanal seguimientoSemanal = _context.SeguimientoSemanal.Where(r => r.SeguimientoSemanalId == pSeguimientoSemanalId)
-                  .Include(r => r.ContratacionProyecto)
-                          .ThenInclude(r => r.Contratacion)
-                              .ThenInclude(r => r.Contrato)
-                       .Include(r => r.ContratacionProyecto)
-                          .ThenInclude(r => r.Proyecto)
-                              .ThenInclude(r => r.InstitucionEducativa)
-                       .Include(r => r.SeguimientoDiario)
-                              .ThenInclude(r => r.SeguimientoDiarioObservaciones)
-
-                          //Financiero
-                          .Include(r => r.SeguimientoSemanalAvanceFinanciero)
-                       //Fisico
-                       .Include(r => r.SeguimientoSemanalAvanceFisico)
-
-                       //Gestion Obra
-                       //Gestion Obra Ambiental
-                       .Include(r => r.SeguimientoSemanalGestionObra)
-                            .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
-                         // Gestion Obra Calidad
-                         .Include(r => r.SeguimientoSemanalGestionObra)
-                            .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
-                                .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
-                                    .ThenInclude(r => r.EnsayoLaboratorioMuestra)
-
-                         //   Gestion Obra Calidad
-                         .Include(r => r.SeguimientoSemanalGestionObra)
-                            .ThenInclude(r => r.SeguimientoSemanalGestionObraSeguridadSalud)
-                                .ThenInclude(r => r.SeguridadSaludCausaAccidente)
-
-                        //Gestion Obra Social
-                        .Include(r => r.SeguimientoSemanalGestionObra)
-                           .ThenInclude(r => r.SeguimientoSemanalGestionObraSocial)
-
-                       .Include(r => r.SeguimientoSemanalGestionObra)
-                           .ThenInclude(r => r.SeguimientoSemanalGestionObraAlerta)
-
-
-                       .Include(r => r.SeguimientoSemanalReporteActividad)
-
-                       .Include(r => r.SeguimientoSemanalRegistroFotografico)
-
-                       .Include(r => r.SeguimientoSemanalRegistrarComiteObra)
-
-                       .FirstOrDefault();
-
-                seguimientoSemanal.SeguimientoSemanalObservacion = null;
-
-                List<Dominio> CausaBajaDisponibilidadMaterial = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Causa_Baja_Disponibilidad_Material).ToList();
-
-                List<Dominio> CausaBajaDisponibilidadEquipo = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Causa_Baja_Disponibilidad_Equipo).ToList();
-
-                List<Dominio> CausaBajaDisponibilidadProductividad = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Causa_Baja_Disponibilidad_Productividad).ToList();
-
-
-
-                //Crear Comite Obra numerador
-
-                int? ManejoMaterialesInsumoId, ManejoResiduosConstruccionDemolicionId, ManejoResiduosPeligrososEspecialesId, ManejoOtroId = null;
-
-                if (seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault() != null)
-                {
-                    if (seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental.FirstOrDefault() != null)
-                    {
-                        ManejoMaterialesInsumoId = seguimientoSemanal?.SeguimientoSemanalGestionObra?.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental?.FirstOrDefault().ManejoMaterialesInsumoId;
-                        ManejoResiduosConstruccionDemolicionId = seguimientoSemanal?.SeguimientoSemanalGestionObra?.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental?.FirstOrDefault().ManejoResiduosConstruccionDemolicionId;
-                        ManejoResiduosPeligrososEspecialesId = seguimientoSemanal?.SeguimientoSemanalGestionObra?.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental?.FirstOrDefault().ManejoResiduosPeligrososEspecialesId;
-                        ManejoOtroId = seguimientoSemanal?.SeguimientoSemanalGestionObra?.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental?.FirstOrDefault().ManejoOtroId;
-
-                        if (ManejoMaterialesInsumoId != null)
-                        {
-                            seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental.FirstOrDefault().ManejoMaterialesInsumo = _context.ManejoMaterialesInsumos.Include(r => r.ManejoMaterialesInsumosProveedor).Where(r => r.ManejoMaterialesInsumosId == ManejoMaterialesInsumoId).FirstOrDefault();
-                        }
-
-                        if (ManejoResiduosConstruccionDemolicionId != null)
-                        {
-                            seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental.FirstOrDefault().ManejoResiduosConstruccionDemolicion = _context.ManejoResiduosConstruccionDemolicion.Include(r => r.ManejoResiduosConstruccionDemolicionGestor).Where(r => r.ManejoResiduosConstruccionDemolicionId == ManejoResiduosConstruccionDemolicionId).FirstOrDefault();
-                        }
-
-                        if (ManejoResiduosPeligrososEspecialesId != null)
-                        {
-                            seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental.FirstOrDefault().ManejoResiduosPeligrososEspeciales = _context.ManejoResiduosPeligrososEspeciales.Find(ManejoResiduosPeligrososEspecialesId);
-                        }
-
-                        if (ManejoOtroId != null)
-                        {
-                            seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental.FirstOrDefault().ManejoOtro = _context.ManejoOtro.Find(ManejoOtroId);
-                        }
-                    }
-                }
-
-                seguimientoSemanal.FlujoInversion = _context.FlujoInversion.Include(r => r.Programacion).Where(r => r.SeguimientoSemanalId == seguimientoSemanal.SeguimientoSemanalId && r.Programacion.TipoActividadCodigo == "C").ToList();
-
-                //foreach (var FlujoInversion in seguimientoSemanal.FlujoInversion)
-                //{
-                //    FlujoInversion.Programacion.RangoDias = (FlujoInversion.Programacion.FechaFin - FlujoInversion.Programacion.FechaInicio).TotalDays;
-                //}
-
-                List<int> ListSeguimientoSemanalId = _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == seguimientoSemanal.ContratacionProyectoId).Select(r => r.SeguimientoSemanalId).ToList();
-
-                List<Programacion> ListProgramacion = _context.Programacion.FromSqlRaw("SELECT DISTINCT p.* FROM dbo.Programacion AS p INNER JOIN dbo.FlujoInversion AS f ON p.ProgramacionId = f.ProgramacionId INNER JOIN dbo.SeguimientoSemanal AS s ON f.SeguimientoSemanalId = s.SeguimientoSemanalId WHERE s.ContratacionProyectoId = " + seguimientoSemanal.ContratacionProyectoId + " AND p.TipoActividadCodigo = 'C'").ToList();
-
-                seguimientoSemanal.CantidadTotalDiasActividades = ListProgramacion.Sum(r => r.Duracion);
-
-                seguimientoSemanal.AvanceAcumulado = ListProgramacion
-                    .GroupBy(r => r.Actividad)
-                    .Select(r => new
-                    {
-                        Actividad = r.Key,
-                        AvanceAcumulado = Math.Truncate((decimal)r.Sum(r => r.AvanceFisicoCapitulo)) + "%",
-                        AvanceFisicoCapitulo = Math.Truncate((((decimal)r.Sum(r => r.Duracion) / seguimientoSemanal.CantidadTotalDiasActividades) * 100)) + "%"
-                    });
-
-                //Eliminar Las tablas eliminadas Logicamente
-                foreach (var SeguimientoSemanalGestionObra in seguimientoSemanal.SeguimientoSemanalGestionObra)
-                {
-                    foreach (var SeguimientoSemanalGestionObraAmbiental in SeguimientoSemanalGestionObra.SeguimientoSemanalGestionObraAmbiental)
-                    {
-                        //No incluir los ManejoMaterialesInsumosProveedor eliminados
-                        if (SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo != null || SeguimientoSemanalGestionObraAmbiental?.ManejoMaterialesInsumo?.ManejoMaterialesInsumosProveedor.Count() > 0)
-                            SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.ManejoMaterialesInsumosProveedor = SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.ManejoMaterialesInsumosProveedor.Where(r => !(bool)r.Eliminado).ToList();
-                        //No incluir los Manejo Residuos Construccion Demolicion Gestor eliminados
-                        if (SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion != null || SeguimientoSemanalGestionObraAmbiental?.ManejoResiduosConstruccionDemolicion?.ManejoResiduosConstruccionDemolicionGestor.Count() > 0)
-                            SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionGestor = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionGestor.Where(r => !(bool)r.Eliminado).ToList();
-                    }
-
-                    foreach (var SeguimientoSemanalGestionObraCalidad in SeguimientoSemanalGestionObra.SeguimientoSemanalGestionObraCalidad)
-                    {
-                        if (SeguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio != null || SeguimientoSemanalGestionObraCalidad?.GestionObraCalidadEnsayoLaboratorio.Count() > 0)
-                            SeguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio = SeguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio.Where(r => !(bool)r.Eliminado).ToList();
-                    }
-                }
-
-                Localizacion Municipio = ListLocalizacion.Where(r => r.LocalizacionId == seguimientoSemanal.ContratacionProyecto.Proyecto.LocalizacionIdMunicipio).FirstOrDefault();
-                InstitucionEducativaSede Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == seguimientoSemanal.ContratacionProyecto.Proyecto.SedeId).FirstOrDefault();
-                InstitucionEducativaSede institucionEducativa = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == Sede.PadreId).FirstOrDefault();
-
-                seguimientoSemanal.ContratacionProyecto.Proyecto.tipoIntervencionString = TipoIntervencion.Where(r => r.Codigo == seguimientoSemanal.ContratacionProyecto.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
-                seguimientoSemanal.ContratacionProyecto.Proyecto.MunicipioObj = Municipio;
-                seguimientoSemanal.ContratacionProyecto.Proyecto.DepartamentoObj = ListLocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
-                seguimientoSemanal.ContratacionProyecto.Proyecto.Sede = Sede;
-                seguimientoSemanal.ContratacionProyecto.Proyecto.InstitucionEducativa = institucionEducativa;
-
-                return seguimientoSemanal;
-
-
-            }
-            catch (Exception ex)
-            {
-                return new SeguimientoSemanal();
-            }
-
-        }
-
-        public async Task<dynamic> GetListReporteSemanal()
-        {
-            List<SeguimientoSemanal> ListseguimientoSemanal =
-                 await _context.SeguimientoSemanal.Where(r => !string.IsNullOrEmpty(r.EstadoSeguimientoSemanalCodigo))
-                 .Include(r => r.ContratacionProyecto)
-                    .ThenInclude(r => r.Proyecto)
-                 .Include(r => r.ContratacionProyecto)
-                    .ThenInclude(r => r.Contratacion)
-                        .ThenInclude(r => r.Contrato)
-                 .Include(r => r.SeguimientoSemanalAvanceFisico)
-
-                 .ToListAsync();
-
-            List<dynamic> ListBitaCora = new List<dynamic>();
-
-            List<Dominio> ListEstadoObra = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Obra_Avance_Semanal).ToList();
-            List<Dominio> ListEstadoSeguimientoSemanal = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Reporte_Semanal_Y_Muestras).ToList();
-
-            int UltimaSemana = ListseguimientoSemanal.OrderBy(r => r.SeguimientoSemanalId).LastOrDefault().NumeroSemana;
-
-            foreach (var item in ListseguimientoSemanal.Where(r => r.RegistroCompleto == true))
-            {
-                decimal? ProgramacionAcumulada = 0, AvanceFisico = 0;
-                string strCodigoEstadoObra = string.Empty;
-                string strCodigoEstadoMuestas = string.Empty;
-                if (item.SeguimientoSemanalAvanceFisico.Count() > 0)
-                {
-                    if (item.SeguimientoSemanalAvanceFisico.FirstOrDefault().ProgramacionSemanal.HasValue)
-                        ProgramacionAcumulada = item.SeguimientoSemanalAvanceFisico.FirstOrDefault().ProgramacionSemanal;
-
-                    if (item.SeguimientoSemanalAvanceFisico.FirstOrDefault().AvanceFisicoSemanal.HasValue)
-                        AvanceFisico = item.SeguimientoSemanalAvanceFisico.FirstOrDefault().AvanceFisicoSemanal;
-
-                    if (!string.IsNullOrEmpty(item.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo))
-                        strCodigoEstadoObra = ListEstadoObra.Where(r => r.Codigo == item.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo).FirstOrDefault().Nombre;
-                }
-
-                if (!string.IsNullOrEmpty(item.EstadoMuestrasCodigo))
-                    strCodigoEstadoMuestas = ListEstadoSeguimientoSemanal.Where(r => r.Codigo == item.EstadoMuestrasCodigo).FirstOrDefault().Nombre;
-
-                ListBitaCora.Add(new
-                {
-                    UltimoReporte = item.FechaModificacion,
-                    item.SeguimientoSemanalId,
-                    RegistroCompletoMuestras = item.RegistroCompletoMuestras.HasValue ? item.RegistroCompletoMuestras : false,
-                    item.NumeroSemana,
-                    UltimaSemana,
-                    item.FechaInicio,
-                    item.FechaFin,
-                    EstadoObra = strCodigoEstadoObra,
-                    ProgramacionAcumulada = Math.Truncate((decimal)ProgramacionAcumulada),
-                    AvanceFisico = Math.Truncate((decimal)AvanceFisico),
-                    EstadoRegistro = item.RegistroCompletoMuestras.HasValue ? item.RegistroCompletoMuestras : false,
-                    item.ContratacionProyecto?.Proyecto?.LlaveMen,
-                    item.ContratacionProyecto?.Contratacion?.Contrato?.FirstOrDefault().NumeroContrato,
-                    EstadoReporteSemanal = !string.IsNullOrEmpty(item.EstadoSeguimientoSemanalCodigo) ? ListEstadoSeguimientoSemanal.Where(r => r.Codigo == item.EstadoSeguimientoSemanalCodigo).FirstOrDefault().Nombre : "---",
-                    EstadoMuestrasReporteSemanal = strCodigoEstadoMuestas,
-
-                });
-            }
-            return ListBitaCora;
-        }
-
-        public async Task<List<VVerificarSeguimientoSemanal>> GetListReporteSemanalView(List<string> strListCodEstadoSeguimientoSemanal)
-        {
-            return await _context.VVerificarSeguimientoSemanal.ToListAsync();
-        }
-
-        #endregion
         #region Business
         public async Task<bool> GetValidarRegistroCompletoObservaciones(int pSeguimientoSemanalId, bool esSupervisor)
         {
             try
-            { 
+            {
                 SeguimientoSemanal seguimientoSemanal = _context.SeguimientoSemanal.Find(pSeguimientoSemanalId);
-                _context.SeguimientoSemanal.Attach(seguimientoSemanal);
+                bool RegistroCompleto = await ValidarRegistroCompletoObservacion(seguimientoSemanal, esSupervisor);
                 if (esSupervisor)
                 {
-                    seguimientoSemanal.RegistroCompletoAvalar = await ValidarRegistroCompletoObservacion(seguimientoSemanal, esSupervisor);
-                    _context.Entry(seguimientoSemanal).Property(x => x.RegistroCompletoAvalar).IsModified = true;
+                    _context.Set<SeguimientoSemanal>().Where(s => s.SeguimientoSemanalId == pSeguimientoSemanalId)
+                                                   .Update(s => new SeguimientoSemanal
+                                                   {
+                                                       RegistroCompletoAvalar = RegistroCompleto
+                                                   });
                 }
                 else
                 {
-                    seguimientoSemanal.RegistroCompletoVerificar = await ValidarRegistroCompletoObservacion(seguimientoSemanal, esSupervisor);
-                    _context.Entry(seguimientoSemanal).Property(x => x.RegistroCompletoVerificar).IsModified = true;
+                    _context.Set<SeguimientoSemanal>().Where(s => s.SeguimientoSemanalId == pSeguimientoSemanalId)
+                                                  .Update(s => new SeguimientoSemanal
+                                                  {
+                                                      RegistroCompletoVerificar = RegistroCompleto
+                                                  });
                 }
-
-                _context.SaveChanges();
-
                 return true;
             }
             catch (Exception e)
@@ -869,7 +399,486 @@ namespace asivamosffie.services
 
         #endregion
 
-       
+        #region List
+        public async Task<SeguimientoSemanal> GetSeguimientoSemanalBySeguimientoSemanalId(int pSeguimientoSemanalId)
+        {
+            List<Dominio> TipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).ToList();
+            List<InstitucionEducativaSede> ListInstitucionEducativaSede = _context.InstitucionEducativaSede.ToList();
+            List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
+            try
+            {
+                SeguimientoSemanal seguimientoSemanal = await _context.SeguimientoSemanal
+                    .Where(r => r.ContratacionProyectoId == pSeguimientoSemanalId && !(bool)r.Eliminado && !(bool)r.RegistroCompleto)
+                  .Include(r => r.ContratacionProyecto)
+                          .ThenInclude(r => r.Contratacion)
+                              .ThenInclude(r => r.Contrato)
+                       .Include(r => r.ContratacionProyecto)
+                          .ThenInclude(r => r.Proyecto)
+                              .ThenInclude(r => r.InstitucionEducativa)
+                       .Include(r => r.SeguimientoDiario)
+                              .ThenInclude(r => r.SeguimientoDiarioObservaciones)
+
+                       //Financiero + Observaciones
+                       .Include(r => r.SeguimientoSemanalAvanceFinanciero)
+                            .ThenInclude(r => r.ObservacionApoyo)
+                       .Include(r => r.SeguimientoSemanalAvanceFinanciero)
+                            .ThenInclude(r => r.ObservacionSupervisor)
+
+                       //Fisico + Observaciones
+                       .Include(r => r.SeguimientoSemanalAvanceFisico)
+                          .ThenInclude(r => r.ObservacionApoyo)
+                       .Include(r => r.SeguimientoSemanalAvanceFisico)
+                          .ThenInclude(r => r.ObservacionSupervisor)
+
+                       //Gestion Obra
+                       //Gestion Obra Ambiental + Observaciones
+                       .Include(r => r.SeguimientoSemanalGestionObra)
+                            .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
+                                  .ThenInclude(r => r.ObservacionApoyo)
+                      .Include(r => r.SeguimientoSemanalGestionObra)
+                            .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
+                                  .ThenInclude(r => r.ObservacionSupervisor)
+
+                         // Gestion Obra Calidad 
+                         //Observaciones Ensayo Laboratorio + Observaciones
+                         .Include(r => r.SeguimientoSemanalGestionObra)
+                            .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
+                                .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
+                                        .ThenInclude(r => r.ObservacionApoyo)
+                          .Include(r => r.SeguimientoSemanalGestionObra)
+                            .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
+                                .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
+                                        .ThenInclude(r => r.ObservacionSupervisor)
+
+                           //Observaciones Ensayo laboratorio Muestras + Observaciones
+                           .Include(r => r.SeguimientoSemanalGestionObra)
+                            .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
+                                .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
+                                    .ThenInclude(r => r.EnsayoLaboratorioMuestra)
+                                        .ThenInclude(r => r.ObservacionApoyo)
+
+                           .Include(r => r.SeguimientoSemanalGestionObra)
+                            .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
+                                .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
+                                    .ThenInclude(r => r.EnsayoLaboratorioMuestra)
+                                        .ThenInclude(r => r.ObservacionSupervisor)
+
+                         //Gestion Obra Calidad
+                         .Include(r => r.SeguimientoSemanalGestionObra)
+                            .ThenInclude(r => r.SeguimientoSemanalGestionObraSeguridadSalud)
+                                .ThenInclude(r => r.SeguridadSaludCausaAccidente)
+
+                          //Gestion Obra Calidad + Observaciones
+                          .Include(r => r.SeguimientoSemanalGestionObra)
+                             .ThenInclude(r => r.SeguimientoSemanalGestionObraSeguridadSalud)
+                                 .ThenInclude(r => r.ObservacionApoyo)
+                          .Include(r => r.SeguimientoSemanalGestionObra)
+                             .ThenInclude(r => r.SeguimientoSemanalGestionObraSeguridadSalud)
+                                 .ThenInclude(r => r.ObservacionSupervisor)
+
+                        //Gestion Obra Social + Observaciones
+                        .Include(r => r.SeguimientoSemanalGestionObra)
+                           .ThenInclude(r => r.SeguimientoSemanalGestionObraSocial)
+                             .ThenInclude(r => r.ObservacionApoyo)
+
+                        .Include(r => r.SeguimientoSemanalGestionObra)
+                           .ThenInclude(r => r.SeguimientoSemanalGestionObraSocial)
+                             .ThenInclude(r => r.ObservacionSupervisor)
+
+                       //Alertas Relevantes  + Observaciones
+                       .Include(r => r.SeguimientoSemanalGestionObra)
+                           .ThenInclude(r => r.SeguimientoSemanalGestionObraAlerta)
+                                 .ThenInclude(r => r.ObservacionApoyo)
+
+                        .Include(r => r.SeguimientoSemanalGestionObra)
+                           .ThenInclude(r => r.SeguimientoSemanalGestionObraAlerta)
+                                 .ThenInclude(r => r.ObservacionSupervisor)
+
+                       //Reporte Actividades + Observaciones
+
+                       //Estado Contrato + Observaciones
+                       .Include(r => r.SeguimientoSemanalReporteActividad)
+                              .ThenInclude(r => r.ObservacionApoyoIdEstadoContratoNavigation)
+                       .Include(r => r.SeguimientoSemanalReporteActividad)
+                              .ThenInclude(r => r.ObservacionSupervisorIdEstadoContratoNavigation)
+
+                       //Actividades Realizadas + Observaciones
+                       .Include(r => r.SeguimientoSemanalReporteActividad)
+                              .ThenInclude(r => r.ObservacionApoyoIdActividadNavigation)
+                       .Include(r => r.SeguimientoSemanalReporteActividad)
+                              .ThenInclude(r => r.ObservacionSupervisorIdActividadNavigation)
+
+                         //Actividades Realizadas Siguiente semana  + Observaciones
+                         .Include(r => r.SeguimientoSemanalReporteActividad)
+                              .ThenInclude(r => r.ObservacionApoyoIdActividadSiguienteNavigation)
+                       .Include(r => r.SeguimientoSemanalReporteActividad)
+                              .ThenInclude(r => r.ObservacionSupervisorIdActividadSiguienteNavigation)
+
+                       //Registro Fotografico + Observaciones
+                       .Include(r => r.SeguimientoSemanalRegistroFotografico)
+                            .ThenInclude(r => r.ObservacionApoyo)
+                       .Include(r => r.SeguimientoSemanalRegistroFotografico)
+                            .ThenInclude(r => r.ObservacionSupervisor)
+
+                       //Comite Obra + Observaciones 
+                       .Include(r => r.SeguimientoSemanalRegistrarComiteObra)
+                           .ThenInclude(r => r.ObservacionApoyo)
+                       .Include(r => r.SeguimientoSemanalRegistrarComiteObra)
+                           .ThenInclude(r => r.ObservacionSupervisor)
+                      .FirstOrDefaultAsync();
+
+
+                List<Dominio> CausaBajaDisponibilidadMaterial = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Causa_Baja_Disponibilidad_Material).ToList();
+
+                List<Dominio> CausaBajaDisponibilidadEquipo = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Causa_Baja_Disponibilidad_Equipo).ToList();
+
+                List<Dominio> CausaBajaDisponibilidadProductividad = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Causa_Baja_Disponibilidad_Productividad).ToList();
+
+                foreach (var SeguimientoDiario in seguimientoSemanal.SeguimientoDiario)
+                {
+                    SeguimientoDiario.CausaIndisponibilidadMaterialCodigo = !string.IsNullOrEmpty(SeguimientoDiario.CausaIndisponibilidadMaterialCodigo) ? CausaBajaDisponibilidadMaterial.Where(r => r.Codigo == SeguimientoDiario.CausaIndisponibilidadMaterialCodigo).FirstOrDefault().Nombre : "---";
+
+                    SeguimientoDiario.CausaIndisponibilidadEquipoCodigo = !string.IsNullOrEmpty(SeguimientoDiario.CausaIndisponibilidadEquipoCodigo) ? CausaBajaDisponibilidadEquipo.Where(r => r.Codigo == SeguimientoDiario.CausaIndisponibilidadEquipoCodigo).FirstOrDefault().Nombre : "---";
+
+                    SeguimientoDiario.CausaIndisponibilidadProductividadCodigo = !string.IsNullOrEmpty(SeguimientoDiario.CausaIndisponibilidadProductividadCodigo) ? CausaBajaDisponibilidadProductividad.Where(r => r.Codigo == SeguimientoDiario.CausaIndisponibilidadProductividadCodigo).FirstOrDefault().Nombre : "---";
+                }
+
+                //Crear Comite Obra numerador
+
+                seguimientoSemanal.ComiteObraGenerado = await _commonService.EnumeradorComiteObra();
+
+                int? ManejoMaterialesInsumoId, ManejoResiduosConstruccionDemolicionId, ManejoResiduosPeligrososEspecialesId, ManejoOtroId = null;
+
+                if (seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault() != null)
+                {
+                    if (seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental.FirstOrDefault() != null)
+                    {
+                        ManejoMaterialesInsumoId = seguimientoSemanal?.SeguimientoSemanalGestionObra?.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental?.FirstOrDefault().ManejoMaterialesInsumoId;
+                        ManejoResiduosConstruccionDemolicionId = seguimientoSemanal?.SeguimientoSemanalGestionObra?.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental?.FirstOrDefault().ManejoResiduosConstruccionDemolicionId;
+                        ManejoResiduosPeligrososEspecialesId = seguimientoSemanal?.SeguimientoSemanalGestionObra?.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental?.FirstOrDefault().ManejoResiduosPeligrososEspecialesId;
+                        ManejoOtroId = seguimientoSemanal?.SeguimientoSemanalGestionObra?.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental?.FirstOrDefault().ManejoOtroId;
+
+                        if (ManejoMaterialesInsumoId != null)
+                        {
+                            seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental.FirstOrDefault().ManejoMaterialesInsumo = _context.ManejoMaterialesInsumos.Include(r => r.ManejoMaterialesInsumosProveedor).Where(r => r.ManejoMaterialesInsumosId == ManejoMaterialesInsumoId).FirstOrDefault();
+                        }
+
+                        if (ManejoResiduosConstruccionDemolicionId != null)
+                        {
+                            seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental.FirstOrDefault().ManejoResiduosConstruccionDemolicion = _context.ManejoResiduosConstruccionDemolicion.Include(r => r.ManejoResiduosConstruccionDemolicionGestor).Where(r => r.ManejoResiduosConstruccionDemolicionId == ManejoResiduosConstruccionDemolicionId).FirstOrDefault();
+                        }
+
+                        if (ManejoResiduosPeligrososEspecialesId != null)
+                        {
+                            seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental.FirstOrDefault().ManejoResiduosPeligrososEspeciales = _context.ManejoResiduosPeligrososEspeciales.Find(ManejoResiduosPeligrososEspecialesId);
+                        }
+
+                        if (ManejoOtroId != null)
+                        {
+                            seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental.FirstOrDefault().ManejoOtro = _context.ManejoOtro.Find(ManejoOtroId);
+                        }
+                    }
+                }
+
+                seguimientoSemanal.FlujoInversion = _context.FlujoInversion.Include(r => r.Programacion).Where(r => r.SeguimientoSemanalId == seguimientoSemanal.SeguimientoSemanalId && r.Programacion.TipoActividadCodigo == "C").ToList();
+
+                //foreach (var FlujoInversion in seguimientoSemanal.FlujoInversion)
+                //{
+                //    FlujoInversion.Programacion.RangoDias = (FlujoInversion.Programacion.FechaFin - FlujoInversion.Programacion.FechaInicio).TotalDays;
+                //}
+
+                List<int> ListSeguimientoSemanalId = _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == seguimientoSemanal.ContratacionProyectoId).Select(r => r.SeguimientoSemanalId).ToList();
+
+                List<Programacion> ListProgramacion = new List<Programacion>();
+
+                Parallel.ForEach(seguimientoSemanal.SeguimientoSemanalAvanceFisico.ToList(), item =>
+                {
+                    ListProgramacion.AddRange(item.SeguimientoSemanalAvanceFisicoProgramacion
+                                             .Select(s => s.Programacion)
+                                             .ToList());
+                });
+                seguimientoSemanal.CantidadTotalDiasActividades = ListProgramacion.Sum(r => r.Duracion);
+
+                seguimientoSemanal.AvanceAcumulado = ListProgramacion
+                    .GroupBy(r => r.Actividad)
+                    .Select(r => new
+                    {
+                        Actividad = r.Key,
+                        AvanceAcumulado = Math.Truncate((decimal)r.Sum(r => r.SeguimientoSemanalAvanceFisicoProgramacion.FirstOrDefault().AvanceFisicoCapitulo)) + "%",
+                        AvanceFisicoCapitulo = Math.Truncate((((decimal)r.Sum(r => r.Duracion) / seguimientoSemanal.CantidadTotalDiasActividades) * 100)) + "%"
+                    });
+
+                //Eliminar Las tablas eliminadas Logicamente
+                foreach (var SeguimientoSemanalGestionObra in seguimientoSemanal.SeguimientoSemanalGestionObra)
+                {
+                    foreach (var SeguimientoSemanalGestionObraAmbiental in SeguimientoSemanalGestionObra.SeguimientoSemanalGestionObraAmbiental)
+                    {
+                        //No incluir los ManejoMaterialesInsumosProveedor eliminados
+                        if (SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo != null || SeguimientoSemanalGestionObraAmbiental?.ManejoMaterialesInsumo?.ManejoMaterialesInsumosProveedor.Count() > 0)
+                            SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.ManejoMaterialesInsumosProveedor = SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.ManejoMaterialesInsumosProveedor.Where(r => !(bool)r.Eliminado).ToList();
+                        //No incluir los Manejo Residuos Construccion Demolicion Gestor eliminados
+                        if (SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion != null || SeguimientoSemanalGestionObraAmbiental?.ManejoResiduosConstruccionDemolicion?.ManejoResiduosConstruccionDemolicionGestor.Count() > 0)
+                            SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionGestor = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionGestor.Where(r => !(bool)r.Eliminado).ToList();
+                    }
+
+                    foreach (var SeguimientoSemanalGestionObraCalidad in SeguimientoSemanalGestionObra.SeguimientoSemanalGestionObraCalidad)
+                    {
+                        if (SeguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio != null || SeguimientoSemanalGestionObraCalidad?.GestionObraCalidadEnsayoLaboratorio.Count() > 0)
+                            SeguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio = SeguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio.Where(r => !(bool)r.Eliminado).ToList();
+                    }
+                }
+
+                Localizacion Municipio = ListLocalizacion.Where(r => r.LocalizacionId == seguimientoSemanal.ContratacionProyecto.Proyecto.LocalizacionIdMunicipio).FirstOrDefault();
+                InstitucionEducativaSede Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == seguimientoSemanal.ContratacionProyecto.Proyecto.SedeId).FirstOrDefault();
+                InstitucionEducativaSede institucionEducativa = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == Sede.PadreId).FirstOrDefault();
+
+                seguimientoSemanal.ContratacionProyecto.Proyecto.tipoIntervencionString = TipoIntervencion.Where(r => r.Codigo == seguimientoSemanal.ContratacionProyecto.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
+                seguimientoSemanal.ContratacionProyecto.Proyecto.MunicipioObj = Municipio;
+                seguimientoSemanal.ContratacionProyecto.Proyecto.DepartamentoObj = ListLocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
+                seguimientoSemanal.ContratacionProyecto.Proyecto.Sede = Sede;
+                seguimientoSemanal.ContratacionProyecto.Proyecto.InstitucionEducativa = institucionEducativa;
+
+                return seguimientoSemanal;
+
+
+            }
+            catch (Exception ex)
+            {
+                return new SeguimientoSemanal();
+            }
+
+        }
+
+        public SeguimientoSemanal GetSeguimientoSemanalBySeguimientoSemanalIdClean(int pSeguimientoSemanalId)
+        {
+            List<Dominio> TipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).ToList();
+            List<InstitucionEducativaSede> ListInstitucionEducativaSede = _context.InstitucionEducativaSede.ToList();
+            List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
+            try
+            {
+                SeguimientoSemanal seguimientoSemanal = _context.SeguimientoSemanal.Where(r => r.SeguimientoSemanalId == pSeguimientoSemanalId)
+                  .Include(r => r.ContratacionProyecto)
+                          .ThenInclude(r => r.Contratacion)
+                              .ThenInclude(r => r.Contrato)
+                       .Include(r => r.ContratacionProyecto)
+                          .ThenInclude(r => r.Proyecto)
+                              .ThenInclude(r => r.InstitucionEducativa)
+                       .Include(r => r.SeguimientoDiario)
+                              .ThenInclude(r => r.SeguimientoDiarioObservaciones)
+
+                          //Financiero
+                          .Include(r => r.SeguimientoSemanalAvanceFinanciero)
+                       //Fisico
+                       .Include(r => r.SeguimientoSemanalAvanceFisico)
+
+                       //Gestion Obra
+                       //Gestion Obra Ambiental
+                       .Include(r => r.SeguimientoSemanalGestionObra)
+                            .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
+                         // Gestion Obra Calidad
+                         .Include(r => r.SeguimientoSemanalGestionObra)
+                            .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
+                                .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
+                                    .ThenInclude(r => r.EnsayoLaboratorioMuestra)
+
+                         //   Gestion Obra Calidad
+                         .Include(r => r.SeguimientoSemanalGestionObra)
+                            .ThenInclude(r => r.SeguimientoSemanalGestionObraSeguridadSalud)
+                                .ThenInclude(r => r.SeguridadSaludCausaAccidente)
+
+                        //Gestion Obra Social
+                        .Include(r => r.SeguimientoSemanalGestionObra)
+                           .ThenInclude(r => r.SeguimientoSemanalGestionObraSocial)
+
+                       .Include(r => r.SeguimientoSemanalGestionObra)
+                           .ThenInclude(r => r.SeguimientoSemanalGestionObraAlerta)
+
+
+                       .Include(r => r.SeguimientoSemanalReporteActividad)
+
+                       .Include(r => r.SeguimientoSemanalRegistroFotografico)
+
+                       .Include(r => r.SeguimientoSemanalRegistrarComiteObra)
+
+                       .FirstOrDefault();
+
+                seguimientoSemanal.SeguimientoSemanalObservacion = null;
+
+                List<Dominio> CausaBajaDisponibilidadMaterial = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Causa_Baja_Disponibilidad_Material).ToList();
+
+                List<Dominio> CausaBajaDisponibilidadEquipo = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Causa_Baja_Disponibilidad_Equipo).ToList();
+
+                List<Dominio> CausaBajaDisponibilidadProductividad = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Causa_Baja_Disponibilidad_Productividad).ToList();
+
+
+
+                //Crear Comite Obra numerador
+
+                int? ManejoMaterialesInsumoId, ManejoResiduosConstruccionDemolicionId, ManejoResiduosPeligrososEspecialesId, ManejoOtroId = null;
+
+                if (seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault() != null)
+                {
+                    if (seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental.FirstOrDefault() != null)
+                    {
+                        ManejoMaterialesInsumoId = seguimientoSemanal?.SeguimientoSemanalGestionObra?.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental?.FirstOrDefault().ManejoMaterialesInsumoId;
+                        ManejoResiduosConstruccionDemolicionId = seguimientoSemanal?.SeguimientoSemanalGestionObra?.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental?.FirstOrDefault().ManejoResiduosConstruccionDemolicionId;
+                        ManejoResiduosPeligrososEspecialesId = seguimientoSemanal?.SeguimientoSemanalGestionObra?.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental?.FirstOrDefault().ManejoResiduosPeligrososEspecialesId;
+                        ManejoOtroId = seguimientoSemanal?.SeguimientoSemanalGestionObra?.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental?.FirstOrDefault().ManejoOtroId;
+
+                        if (ManejoMaterialesInsumoId != null)
+                        {
+                            seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental.FirstOrDefault().ManejoMaterialesInsumo = _context.ManejoMaterialesInsumos.Include(r => r.ManejoMaterialesInsumosProveedor).Where(r => r.ManejoMaterialesInsumosId == ManejoMaterialesInsumoId).FirstOrDefault();
+                        }
+
+                        if (ManejoResiduosConstruccionDemolicionId != null)
+                        {
+                            seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental.FirstOrDefault().ManejoResiduosConstruccionDemolicion = _context.ManejoResiduosConstruccionDemolicion.Include(r => r.ManejoResiduosConstruccionDemolicionGestor).Where(r => r.ManejoResiduosConstruccionDemolicionId == ManejoResiduosConstruccionDemolicionId).FirstOrDefault();
+                        }
+
+                        if (ManejoResiduosPeligrososEspecialesId != null)
+                        {
+                            seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental.FirstOrDefault().ManejoResiduosPeligrososEspeciales = _context.ManejoResiduosPeligrososEspeciales.Find(ManejoResiduosPeligrososEspecialesId);
+                        }
+
+                        if (ManejoOtroId != null)
+                        {
+                            seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental.FirstOrDefault().ManejoOtro = _context.ManejoOtro.Find(ManejoOtroId);
+                        }
+                    }
+                }
+
+                seguimientoSemanal.FlujoInversion = _context.FlujoInversion.Include(r => r.Programacion).Where(r => r.SeguimientoSemanalId == seguimientoSemanal.SeguimientoSemanalId && r.Programacion.TipoActividadCodigo == "C").ToList();
+
+                //foreach (var FlujoInversion in seguimientoSemanal.FlujoInversion)
+                //{
+                //    FlujoInversion.Programacion.RangoDias = (FlujoInversion.Programacion.FechaFin - FlujoInversion.Programacion.FechaInicio).TotalDays;
+                //}
+
+                List<int> ListSeguimientoSemanalId = _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == seguimientoSemanal.ContratacionProyectoId).Select(r => r.SeguimientoSemanalId).ToList();
+
+                List<Programacion> ListProgramacion = _context.Programacion.FromSqlRaw("SELECT DISTINCT p.* FROM dbo.Programacion AS p INNER JOIN dbo.FlujoInversion AS f ON p.ProgramacionId = f.ProgramacionId INNER JOIN dbo.SeguimientoSemanal AS s ON f.SeguimientoSemanalId = s.SeguimientoSemanalId WHERE s.ContratacionProyectoId = " + seguimientoSemanal.ContratacionProyectoId + " AND p.TipoActividadCodigo = 'C'").ToList();
+
+                seguimientoSemanal.CantidadTotalDiasActividades = ListProgramacion.Sum(r => r.Duracion);
+
+                seguimientoSemanal.AvanceAcumulado = ListProgramacion
+                    .GroupBy(r => r.Actividad)
+                    .Select(r => new
+                    {
+                        Actividad = r.Key,
+                        AvanceAcumulado = 0 + "%",
+                        AvanceFisicoCapitulo = Math.Truncate((((decimal)r.Sum(r => r.Duracion) / seguimientoSemanal.CantidadTotalDiasActividades) * 100)) + "%"
+                    });
+
+                //Eliminar Las tablas eliminadas Logicamente
+                foreach (var SeguimientoSemanalGestionObra in seguimientoSemanal.SeguimientoSemanalGestionObra)
+                {
+                    foreach (var SeguimientoSemanalGestionObraAmbiental in SeguimientoSemanalGestionObra.SeguimientoSemanalGestionObraAmbiental)
+                    {
+                        //No incluir los ManejoMaterialesInsumosProveedor eliminados
+                        if (SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo != null || SeguimientoSemanalGestionObraAmbiental?.ManejoMaterialesInsumo?.ManejoMaterialesInsumosProveedor.Count() > 0)
+                            SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.ManejoMaterialesInsumosProveedor = SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.ManejoMaterialesInsumosProveedor.Where(r => !(bool)r.Eliminado).ToList();
+                        //No incluir los Manejo Residuos Construccion Demolicion Gestor eliminados
+                        if (SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion != null || SeguimientoSemanalGestionObraAmbiental?.ManejoResiduosConstruccionDemolicion?.ManejoResiduosConstruccionDemolicionGestor.Count() > 0)
+                            SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionGestor = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionGestor.Where(r => !(bool)r.Eliminado).ToList();
+                    }
+
+                    foreach (var SeguimientoSemanalGestionObraCalidad in SeguimientoSemanalGestionObra.SeguimientoSemanalGestionObraCalidad)
+                    {
+                        if (SeguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio != null || SeguimientoSemanalGestionObraCalidad?.GestionObraCalidadEnsayoLaboratorio.Count() > 0)
+                            SeguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio = SeguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio.Where(r => !(bool)r.Eliminado).ToList();
+                    }
+                }
+
+                Localizacion Municipio = ListLocalizacion.Where(r => r.LocalizacionId == seguimientoSemanal.ContratacionProyecto.Proyecto.LocalizacionIdMunicipio).FirstOrDefault();
+                InstitucionEducativaSede Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == seguimientoSemanal.ContratacionProyecto.Proyecto.SedeId).FirstOrDefault();
+                InstitucionEducativaSede institucionEducativa = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == Sede.PadreId).FirstOrDefault();
+
+                seguimientoSemanal.ContratacionProyecto.Proyecto.tipoIntervencionString = TipoIntervencion.Where(r => r.Codigo == seguimientoSemanal.ContratacionProyecto.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
+                seguimientoSemanal.ContratacionProyecto.Proyecto.MunicipioObj = Municipio;
+                seguimientoSemanal.ContratacionProyecto.Proyecto.DepartamentoObj = ListLocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
+                seguimientoSemanal.ContratacionProyecto.Proyecto.Sede = Sede;
+                seguimientoSemanal.ContratacionProyecto.Proyecto.InstitucionEducativa = institucionEducativa;
+
+                return seguimientoSemanal;
+
+
+            }
+            catch (Exception ex)
+            {
+                return new SeguimientoSemanal();
+            }
+
+        }
+
+        public async Task<dynamic> GetListReporteSemanal()
+        {
+            List<SeguimientoSemanal> ListseguimientoSemanal =
+                 await _context.SeguimientoSemanal.Where(r => !string.IsNullOrEmpty(r.EstadoSeguimientoSemanalCodigo))
+                 .Include(r => r.ContratacionProyecto)
+                    .ThenInclude(r => r.Proyecto)
+                 .Include(r => r.ContratacionProyecto)
+                    .ThenInclude(r => r.Contratacion)
+                        .ThenInclude(r => r.Contrato)
+                 .Include(r => r.SeguimientoSemanalAvanceFisico)
+
+                 .ToListAsync();
+
+            List<dynamic> ListBitaCora = new List<dynamic>();
+
+            List<Dominio> ListEstadoObra = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Obra_Avance_Semanal).ToList();
+            List<Dominio> ListEstadoSeguimientoSemanal = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Reporte_Semanal_Y_Muestras).ToList();
+
+            int UltimaSemana = ListseguimientoSemanal.OrderBy(r => r.SeguimientoSemanalId).LastOrDefault().NumeroSemana;
+
+            foreach (var item in ListseguimientoSemanal.Where(r => r.RegistroCompleto == true))
+            {
+                decimal? ProgramacionAcumulada = 0, AvanceFisico = 0;
+                string strCodigoEstadoObra = string.Empty;
+                string strCodigoEstadoMuestas = string.Empty;
+                if (item.SeguimientoSemanalAvanceFisico.Count() > 0)
+                {
+                    if (item.SeguimientoSemanalAvanceFisico.FirstOrDefault().ProgramacionSemanal.HasValue)
+                        ProgramacionAcumulada = item.SeguimientoSemanalAvanceFisico.FirstOrDefault().ProgramacionSemanal;
+
+                    if (item.SeguimientoSemanalAvanceFisico.FirstOrDefault().AvanceFisicoSemanal.HasValue)
+                        AvanceFisico = item.SeguimientoSemanalAvanceFisico.FirstOrDefault().AvanceFisicoSemanal;
+
+                    if (!string.IsNullOrEmpty(item.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo))
+                        strCodigoEstadoObra = ListEstadoObra.Where(r => r.Codigo == item.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo).FirstOrDefault().Nombre;
+                }
+
+                if (!string.IsNullOrEmpty(item.EstadoMuestrasCodigo))
+                    strCodigoEstadoMuestas = ListEstadoSeguimientoSemanal.Where(r => r.Codigo == item.EstadoMuestrasCodigo).FirstOrDefault().Nombre;
+
+                ListBitaCora.Add(new
+                {
+                    UltimoReporte = item.FechaModificacion,
+                    item.SeguimientoSemanalId,
+                    RegistroCompletoMuestras = item.RegistroCompletoMuestras.HasValue ? item.RegistroCompletoMuestras : false,
+                    item.NumeroSemana,
+                    UltimaSemana,
+                    item.FechaInicio,
+                    item.FechaFin,
+                    EstadoObra = strCodigoEstadoObra,
+                    ProgramacionAcumulada = Math.Truncate((decimal)ProgramacionAcumulada),
+                    AvanceFisico = Math.Truncate((decimal)AvanceFisico),
+                    EstadoRegistro = item.RegistroCompletoMuestras.HasValue ? item.RegistroCompletoMuestras : false,
+                    item.ContratacionProyecto?.Proyecto?.LlaveMen,
+                    item.ContratacionProyecto?.Contratacion?.Contrato?.FirstOrDefault().NumeroContrato,
+                    EstadoReporteSemanal = !string.IsNullOrEmpty(item.EstadoSeguimientoSemanalCodigo) ? ListEstadoSeguimientoSemanal.Where(r => r.Codigo == item.EstadoSeguimientoSemanalCodigo).FirstOrDefault().Nombre : "---",
+                    EstadoMuestrasReporteSemanal = strCodigoEstadoMuestas,
+
+                });
+            }
+            return ListBitaCora;
+        }
+
+        public async Task<List<VVerificarSeguimientoSemanal>> GetListReporteSemanalView(List<string> strListCodEstadoSeguimientoSemanal)
+        {
+            return await _context.VVerificarSeguimientoSemanal.ToListAsync();
+        }
+
+        #endregion
 
         #region Create update
         public async Task<Respuesta> CreateEditSeguimientoSemanalObservacion(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion)
@@ -879,7 +888,7 @@ namespace asivamosffie.services
 
             try
             {
-                if (pSeguimientoSemanalObservacion.TieneObservacion)
+                if ((bool)pSeguimientoSemanalObservacion.TieneObservacion)
                 {
                     if (pSeguimientoSemanalObservacion.EsSupervisor)
                     {
@@ -894,10 +903,16 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                    if (pSeguimientoSemanalObservacion.EsSupervisor) 
-                        seguimientoSemanal.FechaModificacionAvalar = DateTime.Now; 
-                    else 
-                        seguimientoSemanal.FechaModificacionVerificar = DateTime.Now;  
+                    if (pSeguimientoSemanalObservacion.EsSupervisor)
+                    {
+                        seguimientoSemanal.TieneObservacionSupervisor = ValidarSiTieneObservacionSeguimientoSemanal(pSeguimientoSemanalObservacion.SeguimientoSemanalId, pSeguimientoSemanalObservacion.EsSupervisor);
+                        seguimientoSemanal.FechaModificacionAvalar = DateTime.Now;
+                    }
+                    else
+                    {
+                        seguimientoSemanal.TieneObservacionApoyo = ValidarSiTieneObservacionSeguimientoSemanal(pSeguimientoSemanalObservacion.SeguimientoSemanalId, pSeguimientoSemanalObservacion.EsSupervisor);
+                        seguimientoSemanal.FechaModificacionVerificar = DateTime.Now;
+                    }
                 }
 
                 UpdateObservation(pSeguimientoSemanalObservacion);
@@ -1011,6 +1026,15 @@ namespace asivamosffie.services
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.Error, idAccion, pSeguimientoSemanalObservacion.UsuarioCreacion, ex.InnerException.ToString())
                 };
             }
+        }
+
+        private bool ValidarSiTieneObservacionSeguimientoSemanal(int seguimientoSemanalId, bool esSupervisor)
+        {
+            return _context.SeguimientoSemanalObservacion
+                                             .Where(r => r.SeguimientoSemanalId == seguimientoSemanalId
+                                                 && r.EsSupervisor == esSupervisor
+                                                 && r.TieneObservacion == true
+                                             ).Count() == 0;
         }
 
         private void CreateOrEditObservacionAlertasRelevantes(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion)
@@ -1449,7 +1473,7 @@ namespace asivamosffie.services
 
             if (pSeguimientoSemanalObservacion.TieneObservacion == false)
                 return true;
-             
+
             if (pSeguimientoSemanalObservacion.TieneObservacion == true && !string.IsNullOrEmpty(Helpers.Helpers.HtmlConvertirTextoPlano(Helpers.Helpers.HtmlConvertirTextoPlano(pSeguimientoSemanalObservacion.Observacion))))
                 return true;
 
@@ -1468,7 +1492,7 @@ namespace asivamosffie.services
             else
             {
                 SeguimientoSemanalObservacion seguimientoSemanalObservacionOld = _context.SeguimientoSemanalObservacion.Find(pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId);
-
+                seguimientoSemanalObservacionOld.TieneObservacion = pSeguimientoSemanalObservacion.TieneObservacion;
                 seguimientoSemanalObservacionOld.Observacion = pSeguimientoSemanalObservacion.Observacion;
                 seguimientoSemanalObservacionOld.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
                 seguimientoSemanalObservacionOld.FechaModificacion = DateTime.Now;

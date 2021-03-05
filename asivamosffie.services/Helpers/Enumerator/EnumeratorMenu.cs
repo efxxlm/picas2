@@ -39,30 +39,24 @@ namespace asivamosffie.services.Helpers.Enumerator
         Registrar_seguimiento_diario = 53,
         Verificar_seguimiento_diario = 54,
 
-        Preconstruccion_Fase_1 = 37,
-        Registrar_Requisitos_Tecnicos_Construccion = 41,
-        Registrar_Programacion_Personal_Obra = 48,
-        Gestionar_controversias_contractuales = 47,
-        Gestionar_procesos_Defensa_Judicial = 52,
+        
         Registrar_Avance_Semanal = 55,
-        Verificar_Requisitos_Tecnicos_Construccion = 45,
+        
 
-        Registrar_solicitud_novedad_contractual = 50,
+        
         Registrar_actuaciones_controversias_contractuales = 57,
 
-        Cargar_enlace_monitoreo = 43,
+        
 
         Registrar_validar_requisitos_de_pago = 63,
 
         Generar_Orden_de_giro = 68,
 
         Autorizar_solicitud_de_pago = 70,
-        Verificar_solicitud_de_pago = 71
+        Verificar_solicitud_de_pago = 71,
 
-        Verificar_seguimiento_diario = 54,      
-        Registrar_Avance_Semanal = 55,
         Registrar_Informe_Final = 64,
-        Registrar_actuaciones_controversias_contractuales=57,
+        
 
         RegistrarPagosRendimientos = 65,
         GestionarRendimientos = 66,

@@ -167,8 +167,6 @@ namespace asivamosffie.services.Helpers.Enumerator
         Procesos_judiciales = 105,
         Actuacion_adelantada = 104,
 
-        Procesos_judiciales =105,
-
         Tipo_accion_judicial = 106,
         Estados_Actuacion = 110,
         Estados_Actuacion_Derivada = 114,
@@ -208,16 +206,13 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Medio_Pago_Giro_Tercero = 158,
 
-        Respuestas_Lista_Chequeo_Solicitud_Pago = 162
+        Respuestas_Lista_Chequeo_Solicitud_Pago = 162,
         Calificacion_Informe_Final = 151,
 
         Estado_Informe_Final = 154,
 
         
-        Jurisdiccion =116,
-        Actuaciones_Recomendadas=119,
-        Estados_Defensa_Judicial=120,
-        Estados_Reclamacion     = 126,
+        
         Estado_Novedad_Contractual = 157,
     }
 }
