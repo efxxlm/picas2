@@ -22,7 +22,6 @@ export class FormCostoVariableGogComponent implements OnInit {
     fuenteRecursos: [null, Validators.required],
     valorDescuento: [null, Validators.required]
   });
-  estaEditando = false;
   
   constructor( private fb: FormBuilder) { }
 
@@ -34,8 +33,26 @@ export class FormCostoVariableGogComponent implements OnInit {
     return alphanumeric.test(inputChar) ? true : false;
   }
   onSubmit() {
-    this.estaEditando = true;
-    this.addressForm.markAllAsTouched();
-    // console.log(this.addressForm.value);
+    console.log(this.addressForm.value);
+
+    const pOrdenGiro = {
+      solicitudPagoId: 29,
+      ordenGiroId: 1,
+      ordenGiroDetalle: {
+        ordenGiroDetalleId: 1,
+        ordenGiroDetalleDescuentoTecnica: {
+          ordenGiroDetalleDescuentoTecnicaId: 0,
+          ordenGiroDetalleDescuentoTecnicaAportante: [
+            {
+              ordenGiroDetalleDescuentoTecnicaAportanteId: 0,
+              solicitudPagoFaseFacturaDescuentoId: 10,
+              aportanteId: 1,
+              valorDescuento: 100000,
+              conceptoPagoCodigo: '1'
+            }
+          ]
+        }
+      }
+    }
   }
 }

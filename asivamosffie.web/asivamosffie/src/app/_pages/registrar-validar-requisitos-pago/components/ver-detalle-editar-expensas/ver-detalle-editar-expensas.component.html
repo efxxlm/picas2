@@ -1,0 +1,55 @@
+<section class="container text-center mb-2em" *ngIf="solicitudPago !== undefined">
+    <section class="container text-center">
+        <div class="text-right">
+            <a routerLink="/registrarValidarRequisitosPago" mat-button color="primary" class="btn-regresar">
+                <img src="assets/img/icon/regresar.svg" alt="Regresar">
+            </a>
+        </div>
+        <h1 class="title-menu--h1">
+            Ver detalle/Editar solicitud de pago {{ solicitudPago.numeroSolicitud }}
+        </h1>
+    </section>
+    <p class="info-sub-title supportBlack">
+        <span *ngIf="solicitudPago.tipoSolicitudCodigo === tipoSolicitudCodigo.contratoObra">Tipo de solicitud: <b>Contratos de obra</b></span>
+        <span *ngIf="solicitudPago.tipoSolicitudCodigo === tipoSolicitudCodigo.contratoInterventoria">Tipo de solicitud: <b>Contratos de interventoria</b></span>
+        <span *ngIf="solicitudPago.tipoSolicitudCodigo === tipoSolicitudCodigo.expensas">Tipo de solicitud: <b>Expensas</b></span>
+        <span *ngIf="solicitudPago.tipoSolicitudCodigo === tipoSolicitudCodigo.otrosCostos">Tipo de solicitud: <b>Otros costos/servicios</b></span>
+    </p>
+
+    <!-- Formulario de expensas -->
+    <app-form-solicitud-expensas [tipoSolicitud]="tipoSolicitudCodigo.expensas" [solicitudPago]="solicitudPago"></app-form-solicitud-expensas>
+
+    <div class="text-center">
+        <p class="info-container">
+            <span class="info-text sin-diligenciar">Sin diligenciar</span>
+            <span class="info-text en-proceso">En proceso</span>
+            <span class="info-text completo">Completo</span>
+        </p>
+    </div>
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforoAcordeon.estadoSemaforoListaChequeo">
+                    Lista de chequeo
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-form-listachequeo-expensas></app-form-listachequeo-expensas>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforoAcordeon.estadoSemaforoSoporteSolicitud">
+                    Soporte
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-form-soporte-solicitud-url [solicitudPago]="solicitudPago" [esExpensas]="true" *ngIf="registroCompletoAcordeones.registroCompletoListaChequeo === true"></app-form-soporte-solicitud-url>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <div style="margin-top: 1em;margin-bottom: 1em;">
+        <div class="d-flex align-items-center solbloq ml8 info-text en-alertaLibre mb-2em">
+            Los acordeones se habilitarán de forma secuencial, una vez se tenga completa la información de la
+            sección anterior
+        </div>
+    </div>
+</section>

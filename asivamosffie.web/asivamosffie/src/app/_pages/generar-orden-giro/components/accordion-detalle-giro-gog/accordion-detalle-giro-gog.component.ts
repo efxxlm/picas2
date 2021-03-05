@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-accordion-detalle-giro-gog',
@@ -7,9 +7,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AccordionDetalleGiroGogComponent implements OnInit {
 
-  constructor() { }
+    @Input() solicitudPago: any;
 
-  ngOnInit(): void {
-  }
+    constructor() { }
+
+    ngOnInit(): void {
+    }
 
 }

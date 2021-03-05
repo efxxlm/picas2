@@ -1029,12 +1029,12 @@ namespace asivamosffie.services
         }
 
         private bool ValidarSiTieneObservacionSeguimientoSemanal(int seguimientoSemanalId, bool esSupervisor)
-        { 
+        {
             return _context.SeguimientoSemanalObservacion
                                              .Where(r => r.SeguimientoSemanalId == seguimientoSemanalId
                                                  && r.EsSupervisor == esSupervisor
                                                  && r.TieneObservacion == true
-                                             ).Count() == 0; 
+                                             ).Count() == 0;
         }
 
         private void CreateOrEditObservacionAlertasRelevantes(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion)

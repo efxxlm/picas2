@@ -1,0 +1,403 @@
+<section class="container text-center">
+    <p>Nombre del descuento: <b>4x1000</b></p>
+    <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+            <div class="col-md-12" style="padding-left: 0;">
+                <div class="row">
+                    <div class="pr-1">
+                        <label class="label-left" for="criterios">Criterios a los cuales aplica el descuento</label>
+                    </div>
+                    <div class="col">
+                        <mat-form-field class="select-width">
+                            <mat-select formControlName="criterios" required multiple
+                                (selectionChange)="getvalues($event.value)">
+                                <mat-option *ngFor="let criterios of listaCriterios" [value]="criterios">
+                                    {{ criterios.nombre }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Para efectos de maquetacion-->
+        <div *ngIf="this.obj1==true">
+            <mat-card class="shipping-card">
+                <mat-card-header class="header-card header-card--margin">
+                    <mat-card-title class="header-card--text">
+                        Criterio 1
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content style="text-align: left;">
+                    <p><b>Tipo de pago:</b> <em>Costo Variable</em></p>
+                    <div class="row">
+                        <div class="col-md-12" style="padding-left: 0;">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label class="label-left" for="conceptosdePago">Conceptos de pago que aplican para
+                                        el descuento: </label>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field class="select-width">
+                                        <mat-select formControlName="conceptosdePago" required multiple
+                                            (selectionChange)="obtenerConceptos($event.value)">
+                                            <mat-option *ngFor="let conceptosdePago of listaConceptoPago"
+                                                [value]="conceptosdePago">
+                                                {{ conceptosdePago.nombre }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="this.objD1==true">
+                        <h2 class="card-subTitle"> Demolición</h2>
+                        <!-- se puso 2 aportantes quemados para efectos de maquetacion-->
+                        <div>
+                            <mat-card-title class="header-card--text">
+                                Aportante 1
+                            </mat-card-title>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="row">
+                                        <div class="pr-1">
+                                            <label class="label-left" for="tipoAportante">Tipo de aportante:</label>
+                                        </div>
+                                        <div class="col">
+                                            <mat-form-field class="select-width">
+                                                <mat-select formControlName="tipoAportante" required>
+                                                    <mat-option *ngFor="let tipoAportante of tipoAportantesArray"
+                                                        [value]="tipoAportante">
+                                                        {{ tipoAportante.nombre }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="row">
+                                        <div class="pr-1">
+                                            <label class="label-left" for="nombreAportante">Nombre del
+                                                aportante:</label>
+                                        </div>
+                                        <div class="col">
+                                            <mat-form-field class="select-width">
+                                                <mat-select formControlName="nombreAportante" required>
+                                                    <mat-option *ngFor="let nombreAportante of nombreAportantesArray"
+                                                        [value]="nombreAportante">
+                                                        {{ nombreAportante.nombre }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="row">
+                                        <div class="pr-1">
+                                            <label class="label-left" for="fuenteRecursos">Fuente de los
+                                                recursos:</label>
+                                        </div>
+                                        <div class="col">
+                                            <mat-form-field class="select-width">
+                                                <mat-select formControlName="fuenteRecursos" required>
+                                                    <mat-option *ngFor="let fuenteRecursos of fuenteRecursosArray"
+                                                        [value]="fuenteRecursos">
+                                                        {{ fuenteRecursos.nombre }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="row">
+                                        <div class="pr-1">
+                                            <label class="label-left" for="valorDescuento">
+                                                Valor del descuento
+                                            </label>
+                                        </div>
+                                        <div class="col d-flex">
+                                            <mat-form-field class="full-width">
+                                                <input matInput #valorDescuento maxlength="20" type="number" required
+                                                    formControlName="valorDescuento"
+                                                    (keypress)="validateNumberKeypress($event)"
+                                                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                                            </mat-form-field>
+                                            <span class="contador" [matTooltipPosition]="'above'"
+                                                matTooltip="Valor en ($) Pesos colombianos"
+                                                matTooltipClass="info-tooltip">{{20 -
+                                                valorDescuento.value.length}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 text-right">
+                                <button mat-button color="warn" type="button" class="btn-eliminar">
+                                    <img src="assets/img/icon/menos.svg" alt="Eliminar radicado">
+                                    Eliminar aportante
+                                </button>
+                            </div>
+                        </div>
+                        <div>
+                            <mat-card-title class="header-card--text">
+                                Aportante 2
+                            </mat-card-title>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="row">
+                                        <div class="pr-1">
+                                            <label class="label-left" for="tipoAportante">Tipo de aportante:</label>
+                                        </div>
+                                        <div class="col">
+                                            <mat-form-field class="select-width">
+                                                <mat-select formControlName="tipoAportante" required>
+                                                    <mat-option *ngFor="let tipoAportante of tipoAportantesArray"
+                                                        [value]="tipoAportante">
+                                                        {{ tipoAportante.nombre }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="row">
+                                        <div class="pr-1">
+                                            <label class="label-left" for="nombreAportante">Nombre del
+                                                aportante:</label>
+                                        </div>
+                                        <div class="col">
+                                            <mat-form-field class="select-width">
+                                                <mat-select formControlName="nombreAportante" required>
+                                                    <mat-option *ngFor="let nombreAportante of nombreAportantesArray"
+                                                        [value]="nombreAportante">
+                                                        {{ nombreAportante.nombre }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="row">
+                                        <div class="pr-1">
+                                            <label class="label-left" for="fuenteRecursos">Fuente de los
+                                                recursos:</label>
+                                        </div>
+                                        <div class="col">
+                                            <mat-form-field class="select-width">
+                                                <mat-select formControlName="fuenteRecursos" required>
+                                                    <mat-option *ngFor="let fuenteRecursos of fuenteRecursosArray"
+                                                        [value]="fuenteRecursos">
+                                                        {{ fuenteRecursos.nombre }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="row">
+                                        <div class="pr-1">
+                                            <label class="label-left" for="valorDescuento">
+                                                Valor del descuento
+                                            </label>
+                                        </div>
+                                        <div class="col d-flex">
+                                            <mat-form-field class="full-width">
+                                                <input matInput #valorDescuento maxlength="20" type="number" required
+                                                    formControlName="valorDescuento"
+                                                    (keypress)="validateNumberKeypress($event)"
+                                                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                                            </mat-form-field>
+                                            <span class="contador" [matTooltipPosition]="'above'"
+                                                matTooltip="Valor en ($) Pesos colombianos"
+                                                matTooltipClass="info-tooltip">{{20 -
+                                                valorDescuento.value.length}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 text-right">
+                                <button mat-button color="warn" type="button" class="btn-eliminar">
+                                    <img src="assets/img/icon/menos.svg" alt="Eliminar radicado">
+                                    Eliminar aportante
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-12 text-right">
+                            <button mat-button color="warn" type="button" class="btn-eliminar">
+                                <img src="assets/img/icon/menos.svg" alt="Eliminar radicado">
+                                Eliminar concepto para descuento
+                            </button>
+                            <button mat-button color="warn" type="button" class="btn-eliminar text-right">
+                                <img src="assets/img/icon/mas.svg" alt="Eliminar radicado">
+                                Agregar otro aportante
+                            </button>
+                        </div>
+                    </div>
+                    <div *ngIf="this.objD2==true">
+                        <h2 class="card-subTitle"> Cimentación</h2>
+                        <div>
+                            <mat-card-title class="header-card--text">
+                                Aportante 1
+                            </mat-card-title>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="row">
+                                        <div class="pr-1">
+                                            <label class="label-left" for="tipoAportante">Tipo de aportante:</label>
+                                        </div>
+                                        <div class="col">
+                                            <mat-form-field class="select-width">
+                                                <mat-select formControlName="tipoAportante" required>
+                                                    <mat-option *ngFor="let tipoAportante of tipoAportantesArray"
+                                                        [value]="tipoAportante">
+                                                        {{ tipoAportante.nombre }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="row">
+                                        <div class="pr-1">
+                                            <label class="label-left" for="nombreAportante">Nombre del
+                                                aportante:</label>
+                                        </div>
+                                        <div class="col">
+                                            <mat-form-field class="select-width">
+                                                <mat-select formControlName="nombreAportante" required>
+                                                    <mat-option *ngFor="let nombreAportante of nombreAportantesArray"
+                                                        [value]="nombreAportante">
+                                                        {{ nombreAportante.nombre }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="row">
+                                        <div class="pr-1">
+                                            <label class="label-left" for="fuenteRecursos">Fuente de los
+                                                recursos:</label>
+                                        </div>
+                                        <div class="col">
+                                            <mat-form-field class="select-width">
+                                                <mat-select formControlName="fuenteRecursos" required>
+                                                    <mat-option *ngFor="let fuenteRecursos of fuenteRecursosArray"
+                                                        [value]="fuenteRecursos">
+                                                        {{ fuenteRecursos.nombre }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="row">
+                                        <div class="pr-1">
+                                            <label class="label-left" for="valorDescuento">
+                                                Valor del descuento
+                                            </label>
+                                        </div>
+                                        <div class="col d-flex">
+                                            <mat-form-field class="full-width">
+                                                <input matInput #valorDescuento maxlength="20" type="number" required
+                                                    formControlName="valorDescuento"
+                                                    (keypress)="validateNumberKeypress($event)"
+                                                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                                            </mat-form-field>
+                                            <span class="contador" [matTooltipPosition]="'above'"
+                                                matTooltip="Valor en ($) Pesos colombianos"
+                                                matTooltipClass="info-tooltip">{{20 -
+                                                valorDescuento.value.length}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 text-right">
+                            <button mat-button color="warn" type="button" class="btn-eliminar">
+                                <img src="assets/img/icon/menos.svg" alt="Eliminar radicado">
+                                Eliminar concepto para descuento
+                            </button>
+                            <button mat-button color="warn" type="button" class="btn-eliminar text-right">
+                                <img src="assets/img/icon/mas.svg" alt="Eliminar radicado">
+                                Agregar otro aportante
+                            </button>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            <div class="col-md-12 text-right">
+                <button mat-button color="warn" type="button" class="btn-eliminar"  (click)="eliminarCriterio()">
+                    <img src="assets/img/icon/menos.svg" alt="Eliminar radicado">
+                    Eliminar criterio para descuento
+                </button>
+            </div>
+        </div>
+        <div *ngIf="this.obj2==true">
+            <mat-card class="shipping-card">
+                <mat-card-header class="header-card header-card--margin">
+                    <mat-card-title class="header-card--text">
+                        Criterio 2
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content style="text-align: left;">
+                    <p><b>Tipo de pago:</b> <em>Tipo de pago 3</em></p>
+                    <div class="row">
+                        <div class="col-md-12" style="padding-left: 0;">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label class="label-left" for="conceptosdePago">Conceptos de pago que aplican para
+                                        el descuento: </label>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field class="select-width">
+                                        <mat-select formControlName="conceptosdePago" required multiple
+                                            (selectionChange)="obtenerConceptos($event.value)">
+                                            <mat-option *ngFor="let conceptosdePago of listaConceptoPago"
+                                                [value]="conceptosdePago">
+                                                {{ conceptosdePago.nombre }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            <div class="col-md-12 text-right">
+                <button mat-button color="warn" type="button" class="btn-eliminar"  (click)="eliminarCriterio()">
+                    <img src="assets/img/icon/menos.svg" alt="Eliminar radicado">
+                    Eliminar criterio para descuento
+                </button>
+            </div>
+        </div>
+    </form>
+</section>

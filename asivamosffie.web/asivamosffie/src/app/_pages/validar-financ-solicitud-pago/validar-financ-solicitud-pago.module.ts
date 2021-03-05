@@ -1,3 +1,12 @@
+import { VerDetalleExpensasComponent } from './components/ver-detalle-expensas/ver-detalle-expensas.component';
+import { VerDetalleEditarExpensasComponent } from './components/ver-detalle-editar-expensas/ver-detalle-editar-expensas.component';
+import { RegistrarSolicitudPagoComponent } from './components/registrar-solicitud-pago/registrar-solicitud-pago.component';
+import { FormSolicitudExpensasComponent } from './components/form-solicitud-expensas/form-solicitud-expensas.component';
+import { DetalleFacturaProyectosComponent } from './components/detalle-factura-proyectos/detalle-factura-proyectos.component';
+import { DescuentosDireccionTecnicaComponent } from './components/descuentos-direccion-tecnica/descuentos-direccion-tecnica.component';
+import { DatosFacturaComponent } from './components/datos-factura/datos-factura.component';
+import { CriteriosPagoComponent } from './components/criterios-pago/criterios-pago.component';
+import { AmortizacionPagoComponent } from './components/amortizacion-pago/amortizacion-pago.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -20,7 +29,7 @@ import { DetalleValidListchqValidfspComponent } from './components/detalle-valid
 
 
 @NgModule({
-  declarations: [ValidarFinancSolicitudPagoComponent, FormValidarSolicitudValidfspComponent, DialogProyectosAsociadosValidfspComponent, DetalleRegSolPagoValidfspComponent, FormValidListchequeoValidfspComponent, DetalleFactProcasValidfspComponent, FormEditValidarSolicitudValidfspComponent, DialogRechazarSolicitudValidfspComponent, VerdetalleValidfspComponent, DialogObservacionesValidfspComponent, DetalleValidListchqValidfspComponent],
+  declarations: [ VerDetalleExpensasComponent, VerDetalleEditarExpensasComponent, RegistrarSolicitudPagoComponent, FormSolicitudExpensasComponent, DetalleFacturaProyectosComponent, DescuentosDireccionTecnicaComponent, DatosFacturaComponent, CriteriosPagoComponent, AmortizacionPagoComponent, ValidarFinancSolicitudPagoComponent, FormValidarSolicitudValidfspComponent, DialogProyectosAsociadosValidfspComponent, DetalleRegSolPagoValidfspComponent, FormValidListchequeoValidfspComponent, DetalleFactProcasValidfspComponent, FormEditValidarSolicitudValidfspComponent, DialogRechazarSolicitudValidfspComponent, VerdetalleValidfspComponent, DialogObservacionesValidfspComponent, DetalleValidListchqValidfspComponent],
   imports: [
     CommonModule,
     MaterialModule,
