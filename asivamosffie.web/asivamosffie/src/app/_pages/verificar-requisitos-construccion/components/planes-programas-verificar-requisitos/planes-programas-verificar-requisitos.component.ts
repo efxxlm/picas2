@@ -267,6 +267,7 @@ export class PlanesProgramasVerificarRequisitosComponent implements OnInit, OnCh
 
   guardarPlanes() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let construccion = {
       contratoConstruccionId: this.contratoConstruccionId,
       tieneObservacionesPlanesProgramasApoyo: this.addressForm.value.tieneObservaciones,

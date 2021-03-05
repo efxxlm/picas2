@@ -149,6 +149,7 @@ export class FormRegistrarNovedadComponent {
   onSubmit() {
     console.log(this.addressForm.value);
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
   }
 }

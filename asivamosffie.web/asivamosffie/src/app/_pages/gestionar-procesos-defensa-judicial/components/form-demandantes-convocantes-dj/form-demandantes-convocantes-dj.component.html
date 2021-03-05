@@ -64,16 +64,15 @@
         </mat-card-content>
     </mat-card>
     <mat-accordion formArrayName="perfiles" *ngIf="formContratista.get( 'numeroContratos' ).value !== null">
-        <mat-expansion-panel class="expansion-style sub-expansion" *ngFor="let perfil of perfiles.controls; index as i">
+        <mat-expansion-panel class="expansion-style sub-expansion" *ngFor="let perfil of perfiles.controls; index as i" [formGroup]="perfil">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" style="text-transform: capitalize;" [ngClass]="{'sin-diligenciar': nomConvocado.value==''
-                && nomConvocado.tipoIdentificacion =='' && nomConvocado.numIdentificacion=='', 'completo': nomConvocado.value!=''
-                && nomConvocado.tipoIdentificacion !='' && nomConvocado.numIdentificacion!=''}">
+                <mat-panel-title class="expansion-style--title 
+                {{ perfil.get('registroCompleto').value == null ? 'sin-diligenciar' : !perfil.get('registroCompleto').value ? 'en-proceso' : 'completo' }}">
                     {{textoConvocantes}} {{ i+1 }}
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <mat-card [formGroup]="perfil">
+            <mat-card>
                 <mat-card-content>
                     <div class="row">
                         <div class="col-md-12">
@@ -278,7 +277,9 @@
 <mat-accordion *ngIf="this.addressForm.value.demandaContraFFIE==true" class="animatedDown">
     <mat-expansion-panel class="expansion-style">
         <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title ">
+            <mat-panel-title class="expansion-style--title "
+            [ngClass]="{'sin-diligenciar':demandado_class===0,'en-proceso':demandado_class===1,'completo':demandado_class===2}"
+            >
                 Demandados
             </mat-panel-title>
         </mat-expansion-panel-header>

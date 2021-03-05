@@ -10,8 +10,7 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="antecedentes" 
-                            [ngClass]="{
+                            <label class="label-left" for="antecedentes" [ngClass]="{
                                 'color-secondaryColor':
                                   (addressForm.get('antecedentes').invalid && addressForm.get('antecedentes').touched) ||
                                   (addressForm.get('antecedentes').invalid && estaEditando)
@@ -26,8 +25,11 @@
                         <div class="d-flex align-items-center">
                             <div class="text-area-quill auxBox">
                                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
-                                    required (onContentChanged)="maxLength($event, 2000)"
-                                    formControlName="antecedentes" #antecedentes>
+                                    required (onContentChanged)="maxLength($event, 2000)" formControlName="antecedentes"
+                                    #antecedentes [class.invalid]="
+                                    (addressForm.get('antecedentes').invalid && addressForm.get('antecedentes').touched) ||
+                                  (addressForm.get('antecedentes').invalid && estaEditando)
+                                  ">
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.antecedentes.value">
@@ -53,8 +55,7 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="hechosRelevantes"
-                            [ngClass]="{
+                            <label class="label-left" for="hechosRelevantes" [ngClass]="{
                                 'color-secondaryColor':
                                   (addressForm.get('hechosRelevantes').invalid && addressForm.get('hechosRelevantes').touched) ||
                                   (addressForm.get('hechosRelevantes').invalid && estaEditando)
@@ -70,7 +71,10 @@
                             <div class="text-area-quill auxBox">
                                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                                     required (onContentChanged)="maxLength($event, 2000)"
-                                    formControlName="hechosRelevantes" #hechosRelevantes>
+                                    formControlName="hechosRelevantes" #hechosRelevantes [class.invalid]="
+                                    (addressForm.get('hechosRelevantes').invalid && addressForm.get('hechosRelevantes').touched) ||
+                                  (addressForm.get('hechosRelevantes').invalid && estaEditando)
+                                  ">
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.hechosRelevantes.value">
@@ -96,8 +100,7 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="jurisprudenciaDoctrina"
-                            [ngClass]="{
+                            <label class="label-left" for="jurisprudenciaDoctrina" [ngClass]="{
                                 'color-secondaryColor':
                                   (addressForm.get('jurisprudenciaDoctrina').invalid && addressForm.get('jurisprudenciaDoctrina').touched) ||
                                   (addressForm.get('jurisprudenciaDoctrina').invalid && estaEditando)
@@ -113,7 +116,10 @@
                             <div class="text-area-quill auxBox">
                                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                                     required (onContentChanged)="maxLength($event, 2000)"
-                                    formControlName="jurisprudenciaDoctrina" #jurisprudenciaDoctrina>
+                                    formControlName="jurisprudenciaDoctrina" #jurisprudenciaDoctrina [class.invalid]="
+                                    (addressForm.get('jurisprudenciaDoctrina').invalid && addressForm.get('jurisprudenciaDoctrina').touched) ||
+                                  (addressForm.get('jurisprudenciaDoctrina').invalid && estaEditando)
+                                  ">
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.jurisprudenciaDoctrina.value">
@@ -139,8 +145,7 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="decisionComite"
-                            [ngClass]="{
+                            <label class="label-left" for="decisionComite" [ngClass]="{
                                 'color-secondaryColor':
                                   (addressForm.get('decisionComite').invalid && addressForm.get('decisionComite').touched) ||
                                   (addressForm.get('decisionComite').invalid && estaEditando)
@@ -157,7 +162,10 @@
                             <div class="text-area-quill auxBox">
                                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                                     required (onContentChanged)="maxLength($event, 2000)"
-                                    formControlName="decisionComite" #decisionComite>
+                                    formControlName="decisionComite" #decisionComite [class.invalid]="
+                                    (addressForm.get('decisionComite').invalid && addressForm.get('decisionComite').touched) ||
+                                  (addressForm.get('decisionComite').invalid && estaEditando)
+                                  ">
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.decisionComite.value">
@@ -183,8 +191,7 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="analisisJuridico"
-                            [ngClass]="{
+                            <label class="label-left" for="analisisJuridico" [ngClass]="{
                                 'color-secondaryColor':
                                   (addressForm.get('analisisJuridico').invalid && addressForm.get('analisisJuridico').touched) ||
                                   (addressForm.get('analisisJuridico').invalid && estaEditando)
@@ -200,7 +207,10 @@
                             <div class="text-area-quill auxBox">
                                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                                     required (onContentChanged)="maxLength($event, 2000)"
-                                    formControlName="analisisJuridico" #analisisJuridico>
+                                    formControlName="analisisJuridico" #analisisJuridico [class.invalid]="
+                                    (addressForm.get('analisisJuridico').invalid && addressForm.get('analisisJuridico').touched) ||
+                                  (addressForm.get('analisisJuridico').invalid && estaEditando)
+                                  ">
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.analisisJuridico.value">
@@ -226,8 +236,7 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="recomendaciones"
-                            [ngClass]="{
+                            <label class="label-left" for="recomendaciones" [ngClass]="{
                                 'color-secondaryColor':
                                   (addressForm.get('recomendaciones').invalid && addressForm.get('recomendaciones').touched) ||
                                   (addressForm.get('recomendaciones').invalid && estaEditando)
@@ -243,7 +252,10 @@
                             <div class="text-area-quill auxBox">
                                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                                     required (onContentChanged)="maxLength($event, 2000)"
-                                    formControlName="recomendaciones" #recomendaciones>
+                                    formControlName="recomendaciones" #recomendaciones [class.invalid]="
+                                    (addressForm.get('recomendaciones').invalid && addressForm.get('recomendaciones').touched) ||
+                                  (addressForm.get('recomendaciones').invalid && estaEditando)
+                                  ">
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.recomendaciones.value">
@@ -269,8 +281,7 @@
                 <div class="col-md-12" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="procesoFichaComite"
-                            [ngClass]="{
+                            <label class="label-left" for="procesoFichaComite" [ngClass]="{
                                 'color-secondaryColor':
                                   (addressForm.get('procesoFichaComite').invalid && addressForm.get('procesoFichaComite').touched) ||
                                   (addressForm.get('procesoFichaComite').invalid && estaEditando)
@@ -297,43 +308,42 @@
             </div>
             <div class="row" *ngIf="this.addressForm.value.procesoFichaComite==true">
                 <div class="col-md-8">
-                  <div class="row">
-                    <div class="pr-1">
-                      <label class="label-left" for="fechaComiteDefensa"
-                      [ngClass]="{
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="fechaComiteDefensa" [ngClass]="{
                         'color-secondaryColor':
                           (addressForm.get('fechaComiteDefensa').invalid && addressForm.get('fechaComiteDefensa').touched) ||
                           (addressForm.get('fechaComiteDefensa').invalid && estaEditando)
                       }">Fecha de comité de defensa</label>
-                    </div>
-                    <div class="col d-flex align-items-center">
-                      <mat-form-field class="example-full-width">
-                        <input matInput formControlName="fechaComiteDefensa" [matDatepicker]="pickerFecha"  readonly
-                          (click)="pickerFecha.open()" required placeholder="DD/MM/AAAA">
-                        <mat-datepicker #pickerFecha></mat-datepicker>
-                      </mat-form-field>
-                      <button mat-button color="primary" type="button" (click)="pickerFecha.open()" class="btn-calendario">
-                        <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
-                      </button>
-                    </div>
-                    <span class="icon-incompleto">
-                        <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
-                            alt="este campo es requerido" [matTooltipPosition]="'above'"
-                            matTooltip="Debe ingresar la información en el campo para continuar"
-                            matTooltipClass="info-tooltip" *ngIf="
+                        </div>
+                        <div class="col d-flex align-items-center">
+                            <mat-form-field class="example-full-width">
+                                <input matInput formControlName="fechaComiteDefensa" [matDatepicker]="pickerFecha"
+                                    readonly (click)="pickerFecha.open()" required placeholder="DD/MM/AAAA">
+                                <mat-datepicker #pickerFecha></mat-datepicker>
+                            </mat-form-field>
+                            <button mat-button color="primary" type="button" (click)="pickerFecha.open()"
+                                class="btn-calendario">
+                                <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                            </button>
+                        </div>
+                        <span class="icon-incompleto">
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip" *ngIf="
                           (addressForm.get('fechaComiteDefensa').invalid && addressForm.get('fechaComiteDefensa').touched) ||
                           (addressForm.get('fechaComiteDefensa').invalid && estaEditando)
                           " />
-                    </span>
-                  </div>
+                        </span>
+                    </div>
                 </div>
             </div>
-            <div class="row"  *ngIf="this.addressForm.value.procesoFichaComite==true">
+            <div class="row" *ngIf="this.addressForm.value.procesoFichaComite==true">
                 <div class="col-md-12">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="recomendacionFinal"
-                            [ngClass]="{
+                            <label class="label-left" for="recomendacionFinal" [ngClass]="{
                                 'color-secondaryColor':
                                   (addressForm.get('recomendacionFinal').invalid && addressForm.get('recomendacionFinal').touched) ||
                                   (addressForm.get('recomendacionFinal').invalid && estaEditando)
@@ -342,14 +352,17 @@
                     </div>
                 </div>
             </div>
-            <div class="row"  *ngIf="this.addressForm.value.procesoFichaComite==true">
+            <div class="row" *ngIf="this.addressForm.value.procesoFichaComite==true">
                 <div class="col-md-12">
                     <div>
                         <div class="d-flex align-items-center">
                             <div class="text-area-quill auxBox">
                                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                                     required (onContentChanged)="maxLength($event, 2000)"
-                                    formControlName="recomendacionFinal" #recomendacionFinal>
+                                    formControlName="recomendacionFinal" #recomendacionFinal [class.invalid]="
+                                    (addressForm.get('recomendacionFinal').invalid && addressForm.get('recomendacionFinal').touched) ||
+                                  (addressForm.get('recomendacionFinal').invalid && estaEditando)
+                                  ">
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.recomendacionFinal.value">
@@ -375,8 +388,7 @@
                 <div class="col-md-12" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="aperturaFormalProceso"
-                            [ngClass]="{
+                            <label class="label-left" for="aperturaFormalProceso" [ngClass]="{
                                 'color-secondaryColor':
                                   (addressForm.get('aperturaFormalProceso').invalid && addressForm.get('aperturaFormalProceso').touched) ||
                                   (addressForm.get('aperturaFormalProceso').invalid && estaEditando)
@@ -405,8 +417,7 @@
                 <div class="col-md-10">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="tipoActuacionRecomendada"
-                            [ngClass]="{
+                            <label class="label-left" for="tipoActuacionRecomendada" [ngClass]="{
                                 'color-secondaryColor':
                                   (addressForm.get('tipoActuacionRecomendada').invalid && addressForm.get('tipoActuacionRecomendada').touched) ||
                                   (addressForm.get('tipoActuacionRecomendada').invalid && estaEditando)
@@ -437,8 +448,7 @@
                 <div class="col-md-12" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="actuacionRecomendadaAlComite"
-                            [ngClass]="{
+                            <label class="label-left" for="actuacionRecomendadaAlComite" [ngClass]="{
                                 'color-secondaryColor':
                                   (addressForm.get('actuacionRecomendadaAlComite').invalid && addressForm.get('actuacionRecomendadaAlComite').touched) ||
                                   (addressForm.get('actuacionRecomendadaAlComite').invalid && estaEditando)
@@ -476,8 +486,7 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="urlSoporte"
-                            [ngClass]="{
+                            <label class="label-left" for="urlSoporte" [ngClass]="{
                                 'color-secondaryColor':
                                   (addressForm.get('urlSoporte').invalid && addressForm.get('urlSoporte').touched) ||
                                   (addressForm.get('urlSoporte').invalid && estaEditando)

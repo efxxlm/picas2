@@ -101,7 +101,8 @@ export class DialogCargarActaSuscritaConstComponent implements OnInit {
     }
   }
   cargarActa(){
-    this.estaEditando = true
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     const inputNode: any = document.getElementById('file');
     this.archivo = inputNode.files[0].name;
     this.fechaSesion = new Date(this.addressForm.value.fechaFirmaContratistaObra);

@@ -324,7 +324,39 @@ namespace asivamosffie.services
                             defFicha.FechaCreacion = DateTime.Now;
                             defFicha.Eliminado = false;
                             defFicha.DefensaJudicialId = defensaJudicialBD.DefensaJudicialId;
+                            defFicha.RegistroCompleto = ValidarRegistroCompletoDemandadoConvocado(defFicha);
                             _context.DemandadoConvocado.Add(defFicha);
+                        }
+                        else
+                        {
+                            DemandadoConvocado demandadoConvocado = _context.DemandadoConvocado.Find(defFicha.DemandadoConvocadoId);
+
+                            demandadoConvocado.UsuarioModificacion = defensaJudicial.UsuarioCreacion;
+                            demandadoConvocado.FechaModificacion = DateTime.Now;
+                            demandadoConvocado.Eliminado = false;
+                            demandadoConvocado.DefensaJudicialId = defensaJudicialBD.DefensaJudicialId;
+                            demandadoConvocado.RegistroCompleto = ValidarRegistroCompletoDemandadoConvocado(defFicha);
+                            demandadoConvocado.Nombre = defFicha.Nombre;
+                            demandadoConvocado.TipoIdentificacionCodigo = defFicha.TipoIdentificacionCodigo;
+                            demandadoConvocado.NumeroIdentificacion = defFicha.NumeroIdentificacion;
+                            demandadoConvocado.Direccion = defFicha.Direccion;
+                            demandadoConvocado.Email = defFicha.Email;
+                            demandadoConvocado.EsDemandado = defFicha.EsDemandado;
+                            //pasiva
+                            if (demandadoConvocado.EsConvocado == true)
+                            {
+                                demandadoConvocado.ExisteConocimiento = defFicha.ExisteConocimiento;
+                                demandadoConvocado.ConvocadoAutoridadDespacho = defFicha.ConvocadoAutoridadDespacho;
+                                demandadoConvocado.LocalizacionIdMunicipio = defFicha.LocalizacionIdMunicipio;
+                                demandadoConvocado.RadicadoDespacho = defFicha.RadicadoDespacho;
+                                demandadoConvocado.FechaRadicado = defFicha.FechaRadicado;
+                                demandadoConvocado.MedioControlAccion = defFicha.MedioControlAccion;
+                                demandadoConvocado.EtapaProcesoFfiecodigo = defFicha.EtapaProcesoFfiecodigo;
+                                demandadoConvocado.CaducidadPrescripcion = defFicha.CaducidadPrescripcion;
+
+                            }
+
+                            _context.DemandadoConvocado.Update(demandadoConvocado);
                         }
                     }
                     foreach (var defFicha in defensaJudicial.DemandanteConvocante)
@@ -335,7 +367,25 @@ namespace asivamosffie.services
                             defFicha.FechaCreacion = DateTime.Now;
                             defFicha.Eliminado = false;
                             defFicha.DefensaJucicialId = defensaJudicialBD.DefensaJudicialId;
+                            defFicha.RegistroCompleto = ValidarRegistroCompletoDemandanteConvocante(defFicha);
                             _context.DemandanteConvocante.Add(defFicha);
+                        }
+                        else
+                        {
+                            DemandanteConvocante demandanteConvocante = _context.DemandanteConvocante.Find(defFicha.DemandanteConvocadoId);
+
+                            demandanteConvocante.UsuarioModificacion = defensaJudicial.UsuarioCreacion;
+                            demandanteConvocante.FechaModificacion = DateTime.Now;
+                            demandanteConvocante.Eliminado = false;
+                            demandanteConvocante.DefensaJucicialId = defensaJudicialBD.DefensaJudicialId;
+                            demandanteConvocante.RegistroCompleto = ValidarRegistroCompletoDemandanteConvocante(defFicha);
+                            demandanteConvocante.Nombre = defFicha.Nombre;
+                            demandanteConvocante.TipoIdentificacionCodigo = defFicha.TipoIdentificacionCodigo;
+                            demandanteConvocante.NumeroIdentificacion = defFicha.NumeroIdentificacion;
+                            demandanteConvocante.Direccion = defFicha.Direccion;
+                            demandanteConvocante.Email = defFicha.Email;
+
+                            _context.DemandanteConvocante.Update(demandanteConvocante);
                         }
                     }
                     defensaJudicialBD.EsCompleto = ValidarRegistroCompleto(defensaJudicialBD);
@@ -1466,6 +1516,115 @@ namespace asivamosffie.services
                     Code = ConstantMessagesJudicialDefense.Error,
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_procesos_Defensa_Judicial, ConstantMessagesJudicialDefense.Error, idAccion, pUsuarioModifico, ex.InnerException.ToString().Substring(0, 500))
                 };
+            }
+        }
+
+        private bool ValidarRegistroCompletoDemandadoConvocado(DemandadoConvocado demandadoConvocado)
+        {
+            bool retorno = true;
+
+            //Pasivo - acordeón demandado
+            if (demandadoConvocado.EsDemandado == true)
+            {
+                //valido detalle
+                if (string.IsNullOrEmpty(demandadoConvocado.Nombre) || string.IsNullOrEmpty(demandadoConvocado.TipoIdentificacionCodigo) || string.IsNullOrEmpty(demandadoConvocado.NumeroIdentificacion))
+                {
+                    retorno = false;
+                }
+            }else if (demandadoConvocado.EsConvocado == true)
+            {
+                if (demandadoConvocado.ExisteConocimiento == true)
+                {
+                    if (string.IsNullOrEmpty(demandadoConvocado.Nombre)
+                        || string.IsNullOrEmpty(demandadoConvocado.TipoIdentificacionCodigo)
+                        || string.IsNullOrEmpty(demandadoConvocado.TipoIdentificacionCodigo)
+                        || string.IsNullOrEmpty(demandadoConvocado.NumeroIdentificacion)
+                        || string.IsNullOrEmpty(demandadoConvocado.ConvocadoAutoridadDespacho)
+                        || (demandadoConvocado.LocalizacionIdMunicipio == null)
+                        || (demandadoConvocado.FechaRadicado == null)
+                        || string.IsNullOrEmpty(demandadoConvocado.MedioControlAccion)
+                        || string.IsNullOrEmpty(demandadoConvocado.EtapaProcesoFfiecodigo)
+                        || (demandadoConvocado.CaducidadPrescripcion == null))
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(demandadoConvocado.Nombre) || string.IsNullOrEmpty(demandadoConvocado.TipoIdentificacionCodigo) || string.IsNullOrEmpty(demandadoConvocado.NumeroIdentificacion))
+                    {
+                        retorno = false;
+                    }
+                }
+            }
+            else
+            {
+                //valido detalle
+                if (string.IsNullOrEmpty(demandadoConvocado.Nombre) || string.IsNullOrEmpty(demandadoConvocado.TipoIdentificacionCodigo) || string.IsNullOrEmpty(demandadoConvocado.NumeroIdentificacion) ||
+                    string.IsNullOrEmpty(demandadoConvocado.Direccion) || string.IsNullOrEmpty(demandadoConvocado.Email))
+                {
+                    retorno = false;
+                }
+            }
+
+            return retorno;
+        }
+
+        private bool ValidarRegistroCompletoDemandanteConvocante(DemandanteConvocante demandanteConvocante)
+        {
+            bool retorno = true;
+
+            //valido detalle
+            if (string.IsNullOrEmpty(demandanteConvocante.Nombre) || string.IsNullOrEmpty(demandanteConvocante.TipoIdentificacionCodigo) || string.IsNullOrEmpty(demandanteConvocante.NumeroIdentificacion) ||
+                string.IsNullOrEmpty(demandanteConvocante.Direccion) || string.IsNullOrEmpty(demandanteConvocante.Email))
+            {
+                retorno = false;
+            }
+
+            return retorno;
+        }
+
+        public async Task<Respuesta> ChangeStateLegitimacion(int pDefensaJudicialId, string code, string user)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Legitimacion_Defensa_Judicial, (int)EnumeratorTipoDominio.Acciones);
+            string CreateEdit = "";
+            try { 
+
+                DefensaJudicial defensaJudicial = await _context.DefensaJudicial.Where(d => d.DefensaJudicialId == pDefensaJudicialId).FirstOrDefaultAsync();
+
+                if (defensaJudicial != null)
+                {
+                    CreateEdit = "ACTUALIZAR LEGITIMACION CODIGO DEFENSA JUDICIAL";
+                    defensaJudicial.FechaModificacion = DateTime.Now;
+                    defensaJudicial.UsuarioModificacion = user;
+                    defensaJudicial.LegitimacionCodigo = code;
+                    _context.DefensaJudicial.Update(defensaJudicial);
+
+                    _context.SaveChanges();
+
+                }
+
+                return
+                new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_procesos_Defensa_Judicial, GeneralCodes.OperacionExitosa, idAccion, user, CreateEdit)
+                };
+            }
+            catch (Exception ex)
+            {
+                return
+                  new Respuesta
+                  {
+                      IsSuccessful = false,
+                      IsException = true,
+                      IsValidation = false,
+                      Code = GeneralCodes.Error,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_procesos_Defensa_Judicial, GeneralCodes.Error, idAccion, user, ex.InnerException.ToString())
+                  };
             }
         }
     }

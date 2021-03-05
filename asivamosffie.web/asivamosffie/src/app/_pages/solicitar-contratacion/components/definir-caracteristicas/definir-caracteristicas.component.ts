@@ -106,6 +106,7 @@ export class DefinirCaracteristicasComponent implements OnInit {
 
   onSubmit() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     this.contratacionProyecto.esReasignacion = this.addressForm.get('reasignacion').value;
     this.contratacionProyecto.esAvanceobra = this.addressForm.get('avanceObra').value;
     this.contratacionProyecto.porcentajeAvanceObra = this.addressForm.get('porcentajeAvanceObra').value;

@@ -57,6 +57,7 @@ export class ExpansionVerificarRequisitosComponent implements OnInit {
     if ( this.routes.getCurrentNavigation().extras.state ) {
       this.fechaPoliza = this.routes.getCurrentNavigation().extras.state.fechaPoliza;
       this.estaEditando = true;
+      this.addressForm.markAllAsTouched();
     }
   }
 
@@ -129,6 +130,7 @@ export class ExpansionVerificarRequisitosComponent implements OnInit {
                     // tslint:disable-next-line: no-string-literal
                     perfil[ 'verificarObservacion' ] = observacionTipo2[ observacionTipo2.length - 1 ].observacion;
                     this.estaEditando = true;
+                    this.addressForm.markAllAsTouched();
                     completo++;
                   }
                 }
@@ -182,6 +184,7 @@ export class ExpansionVerificarRequisitosComponent implements OnInit {
 
   onSubmit( perfil: ContratoPerfil ) {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     const observacionPerfil: ObservacionPerfil = {
       contratoPerfilId: perfil.contratoPerfilId,
       // tslint:disable-next-line: no-string-literal

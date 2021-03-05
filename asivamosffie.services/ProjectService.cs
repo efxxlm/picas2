@@ -198,28 +198,21 @@ namespace asivamosffie.services
             {
 
                 if (
-                       string.IsNullOrEmpty(proyecto.FechaSesionJunta.ToString())
+                       proyecto.FechaSesionJunta == null
                     || string.IsNullOrEmpty(proyecto.NumeroActaJunta.ToString())
-                    || string.IsNullOrEmpty(proyecto.TipoIntervencionCodigo.ToString())
-                    || string.IsNullOrEmpty(proyecto.LlaveMen.ToString())
-                    || string.IsNullOrEmpty(proyecto.LocalizacionIdMunicipio.ToString())
-                    || string.IsNullOrEmpty(proyecto.InstitucionEducativaId.ToString())
-                    || string.IsNullOrEmpty(proyecto.SedeId.ToString())
-                    || string.IsNullOrEmpty(proyecto.EnConvocatoria.ToString())
-                    //|| string.IsNullOrEmpty(proyecto.ConvocatoriaId.ToString())
-                    || string.IsNullOrEmpty(proyecto.CantPrediosPostulados.ToString())
-                    || string.IsNullOrEmpty(proyecto.TipoPredioCodigo.ToString())
-                    //|| string.IsNullOrEmpty(proyecto.PredioPrincipalId.ToString())
-                    //|| string.IsNullOrEmpty(proyecto.ValorObra.ToString())
-                    //|| string.IsNullOrEmpty(proyecto.ValorInterventoria.ToString())
-                    //|| string.IsNullOrEmpty(proyecto.ValorTotal.ToString())
-                    // || string.IsNullOrEmpty(proyecto.EstadoProyectoCodigo.ToString())
-                    // || string.IsNullOrEmpty(proyecto.EstadoJuridicoCodigo.ToString())
-                    || string.IsNullOrEmpty(proyecto.PlazoMesesObra.ToString())
-                    || string.IsNullOrEmpty(proyecto.PlazoDiasObra.ToString())
-                    || string.IsNullOrEmpty(proyecto.PlazoMesesInterventoria.ToString())
-                    || string.IsNullOrEmpty(proyecto.PlazoDiasInterventoria.ToString())
-                    || string.IsNullOrEmpty(proyecto.CoordinacionResponsableCodigo.ToString())
+                    || string.IsNullOrEmpty(proyecto.TipoIntervencionCodigo)
+                    || string.IsNullOrEmpty(proyecto.LlaveMen)
+                    || string.IsNullOrEmpty(proyecto.LocalizacionIdMunicipio)
+                    || proyecto.InstitucionEducativaId == null
+                    || proyecto.SedeId == null
+                    || proyecto.EnConvocatoria == null
+                    || proyecto.CantPrediosPostulados == null
+                    || string.IsNullOrEmpty(proyecto.TipoPredioCodigo)
+                    || proyecto.PlazoMesesObra == null
+                    || proyecto.PlazoDiasObra == null
+                    || proyecto.PlazoMesesInterventoria == null
+                    || proyecto.PlazoDiasInterventoria == null
+                    || string.IsNullOrEmpty(proyecto.CoordinacionResponsableCodigo)
 
                     )
                 {

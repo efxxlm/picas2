@@ -318,6 +318,7 @@ export class PlanesProgramasArtcComponent implements OnInit {
 
   guardarPlanes() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     const construccion = {
       contratoConstruccionId: this.contratoConstruccionId,
       tieneObservacionesPlanesProgramasSupervisor: this.addressForm.value.tieneObservaciones,

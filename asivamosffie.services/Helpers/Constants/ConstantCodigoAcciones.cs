@@ -268,5 +268,7 @@
         public const string Actualizar_Estado_validacion_informe_final = "202";
         public const string Enviar_A_supervisor_Informe_Final_Validacion = "203";
 
+        public const string Cambiar_Estado_Legitimacion_Defensa_Judicial = "216";
+
     }
 }   

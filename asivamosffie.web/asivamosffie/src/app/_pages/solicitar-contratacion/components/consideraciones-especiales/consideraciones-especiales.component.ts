@@ -36,6 +36,7 @@ export class ConsideracionesEspecialesComponent implements OnInit {
     setTimeout(() => {
       if ( this.contratacion[ 'contratista' ] !== undefined ) {
         this.estaEditando = true;
+        this.addressForm.markAllAsTouched();
       }
     }, 2000);
   }

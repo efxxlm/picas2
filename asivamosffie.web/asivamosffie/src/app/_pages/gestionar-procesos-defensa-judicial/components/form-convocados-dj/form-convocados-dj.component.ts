@@ -38,12 +38,29 @@ export class FormConvocadosDjComponent implements OnInit {
   cargarRegistro() {
     this.formContratista.get("numeroContratos").setValue(this.defensaJudicial.numeroDemandados);
       let i=0; 
+
       this.defensaJudicial.demandadoConvocado.forEach(element => {
+        this.perfiles.controls[i].get("demandadoConvocadoId").setValue(element.demandadoConvocadoId);
         this.perfiles.controls[i].get("nomConvocado").setValue(element.nombre);
         this.perfiles.controls[i].get("tipoIdentificacion").setValue(element.tipoIdentificacionCodigo);
         this.perfiles.controls[i].get("numIdentificacion").setValue(element.numeroIdentificacion);
         this.perfiles.controls[i].get("direccion").setValue(element.numeroIdentificacion);
         this.perfiles.controls[i].get("correo").setValue(element.email);
+        //this.perfiles.controls[i].get("registroCompleto").setValue(element.registroCompleto);
+        if( element.registroCompleto == null 
+          || (!element.registroCompleto 
+          && (element.nombre == null || element.nombre == '')
+          && (element.tipoIdentificacionCodigo == null || element.tipoIdentificacionCodigo == '')
+          && (element.numeroIdentificacion == null || element.numeroIdentificacion == '')
+          && (element.direccion == null || element.direccion == '') 
+          && (element.email == null || element.email == '') 
+          )){
+            this.perfiles.controls[i].get("registroCompleto").setValue(null);
+          }else if(!element.registroCompleto){
+            this.perfiles.controls[i].get("registroCompleto").setValue(false);
+          }else if(element.registroCompleto){
+            this.perfiles.controls[i].get("registroCompleto").setValue(true);
+          }
         i++;
       });      
   }
@@ -65,6 +82,8 @@ export class FormConvocadosDjComponent implements OnInit {
           this.perfiles.push( 
             this.fb.group(
               {
+                registroCompleto: [ null ],
+                demandadoConvocadoId: [ null ],
                 nomConvocado: [ null ],
                 tipoIdentificacion: [ null ],
                 numIdentificacion: [ null ],
@@ -140,10 +159,12 @@ export class FormConvocadosDjComponent implements OnInit {
 
   guardar () {
     this.estaEditando = true;
-    console.log( this.formContratista );
+    this.formContratista.markAllAsTouched();
+    // console.log( this.formContratista );
     let defContraProyecto:DemandadoConvocado[]=[];
     for(let perfil of this.perfiles.controls){
       defContraProyecto.push({
+        demandadoConvocadoId: perfil.get("demandadoConvocadoId").value,
         nombre:perfil.get("nomConvocado").value,
         tipoIdentificacionCodigo:perfil.get("tipoIdentificacion").value,
         numeroIdentificacion:perfil.get("numIdentificacion").value,

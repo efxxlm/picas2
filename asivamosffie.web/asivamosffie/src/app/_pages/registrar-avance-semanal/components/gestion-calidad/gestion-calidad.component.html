@@ -25,6 +25,39 @@
                           </div>
                         </div>
                     </div>
+
+                    <section class="text-center table-responsive size-table" style="margin-top: 2em;" *ngIf="dataHistorial.length > 0 && formGestionCalidad.get( 'seRealizaronEnsayosLaboratorio' ).value === false">
+                      <table mat-table [dataSource]="tablaHistorial" matSort>
+                    
+                          <ng-container matColumnDef="fechaRevision">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Fecha de revisión </th>
+                            <td mat-cell *matCellDef="let element" align="center" class="color-text"> <b>{{ element.fechaCreacion | date: 'dd/MM/yyyy' }}</b> </td>
+                          </ng-container>
+                    
+                          <ng-container matColumnDef="responsable">
+                              <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color w-20"> Responsable de la observación </th>
+                              <td mat-cell *matCellDef="let element" align="center" class="color-text">
+                                  <ng-container *ngIf="element.esSupervisor === true; else noEsSupervisor">
+                                      <p>Supervisor</p>
+                                  </ng-container>
+                                  <ng-template #noEsSupervisor>
+                                      <p>Apoyo a la supervisión</p>
+                                  </ng-template> 
+                              </td>
+                          </ng-container>
+                    
+                          <ng-container matColumnDef="historial">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Historial de observaciones </th>
+                            <td mat-cell *matCellDef="let element" align="center" class="color-text">
+                                <section [innerHTML]="element.observacion"></section>
+                            </td>
+                          </ng-container>
+                      
+                        <tr mat-header-row *matHeaderRowDef="displayedColumnsHistorial"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumnsHistorial;"></tr>
+                      </table>
+                    </section>
+
                     <div class="row" *ngIf="formGestionCalidad.get( 'seRealizaronEnsayosLaboratorio' ).value === true">
                         <div class="col-md-12">
                           <div class="row">
@@ -258,6 +291,38 @@
                           Eliminar ensayo de laboratorio
                         </button>
                     </div>
+
+                    <section class="text-center table-responsive size-table" style="margin-top: 2em;" *ngIf="ensayo.get( 'historial' ).value.length > 0">
+                      <table mat-table [dataSource]="getHistorialEnsayo( ensayo.get( 'historial' ).value )" matSort>
+                    
+                          <ng-container matColumnDef="fechaRevision">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Fecha de revisión </th>
+                            <td mat-cell *matCellDef="let element" align="center" class="color-text"> <b>{{ element.fechaCreacion | date: 'dd/MM/yyyy' }}</b> </td>
+                          </ng-container>
+                    
+                          <ng-container matColumnDef="responsable">
+                              <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color w-20"> Responsable de la observación </th>
+                              <td mat-cell *matCellDef="let element" align="center" class="color-text">
+                                  <ng-container *ngIf="element.esSupervisor === true; else noEsSupervisor">
+                                      <p>Supervisor</p>
+                                  </ng-container>
+                                  <ng-template #noEsSupervisor>
+                                      <p>Apoyo a la supervisión</p>
+                                  </ng-template> 
+                              </td>
+                          </ng-container>
+                    
+                          <ng-container matColumnDef="historial">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Historial de observaciones </th>
+                            <td mat-cell *matCellDef="let element" align="center" class="color-text">
+                                <section [innerHTML]="element.observacion"></section>
+                            </td>
+                          </ng-container>
+                      
+                        <tr mat-header-row *matHeaderRowDef="displayedColumnsHistorial"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumnsHistorial;"></tr>
+                      </table>
+                    </section>
                 </mat-expansion-panel>
             </mat-accordion>
         </div>

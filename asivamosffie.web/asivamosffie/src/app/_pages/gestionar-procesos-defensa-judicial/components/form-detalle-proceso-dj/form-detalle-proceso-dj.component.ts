@@ -154,6 +154,7 @@ export class FormDetalleProcesoDjComponent implements OnInit {
 
   onSubmit() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let defensaJudicial=this.defensaJudicial;
     if(!this.defensaJudicial.defensaJudicialId||this.defensaJudicial.defensaJudicialId==0)
     {

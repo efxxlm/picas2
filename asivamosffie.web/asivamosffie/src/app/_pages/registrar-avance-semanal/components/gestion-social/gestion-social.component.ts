@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-gestion-social',
@@ -14,11 +15,19 @@ export class GestionSocialComponent implements OnInit {
 
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
+    @Input() tipoObservacionSocial: any;
     formGestionSocial: FormGroup;
     seguimientoSemanalId: number;
     seguimientoSemanalGestionObraId: number;
     gestionSocial: any;
     seguimientoSemanalGestionObraSocialId = 0;
+    tablaHistorial = new MatTableDataSource();
+    dataHistorial: any[] = [];
+    displayedColumnsHistorial: string[]  = [
+        'fechaRevision',
+        'responsable',
+        'historial'
+    ];
     booleanosEnsayosLaboratorio: any[] = [
         { value: true, viewValue: 'Si' },
         { value: false, viewValue: 'No' }
@@ -61,6 +70,13 @@ export class GestionSocialComponent implements OnInit {
                 this.gestionSocial = this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSocial[0];
                 if ( this.gestionSocial !== undefined ) {
                     this.seguimientoSemanalGestionObraSocialId = this.gestionSocial.seguimientoSemanalGestionObraSocialId;
+                    this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalGestionObraSocialId, this.tipoObservacionSocial )
+                        .subscribe(
+                            response => {
+                                this.dataHistorial = response.filter( obs => obs.archivada === true );
+                                this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
+                            }
+                        );
                     this.formGestionSocial.setValue(
                         {
                             cantidadEmpleosDirectos:    this.gestionSocial.cantidadEmpleosDirectos !== undefined ?

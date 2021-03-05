@@ -231,7 +231,8 @@ export class FormGestionarFuentesAdministrativasComponent implements OnInit {
 
   onSubmit() {
     this.estaEditando = true;
-    console.log(this.addressForm.controls.fuentes.value);
+    this.addressForm.markAllAsTouched();
+    // console.log(this.addressForm.controls.fuentes.value);
     let mensaje="";
     this.addressForm.controls.fuentes.value.forEach(fuente => {
       let CreateFinancialFundingGestion={

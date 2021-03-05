@@ -248,6 +248,7 @@ export class FormOtrosTemasComponent implements OnInit {
 
   onSubmit() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let tema: SesionComiteTema = {
 
       sesionTemaId: this.sesionComiteTema.sesionTemaId,

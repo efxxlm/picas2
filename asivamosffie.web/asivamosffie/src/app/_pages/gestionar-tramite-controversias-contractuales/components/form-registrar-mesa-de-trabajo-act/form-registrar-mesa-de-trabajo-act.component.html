@@ -22,19 +22,14 @@
                             </mat-form-field>
                         </div>
                         <span class="icon-incompleto">
-                            <img
-                              class="icon-incompleto--img"
-                              src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
-                              [matTooltipPosition]="'above'"
-                              matTooltip="Debe ingresar la información en el campo para continuar"
-                              matTooltipClass="info-tooltip"
-                              *ngIf="
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip" *ngIf="
                                 (addressForm.get('estadoAvanceTramite').invalid && addressForm.get('estadoAvanceTramite').touched) ||
                                 (addressForm.get('estadoAvanceTramite').invalid && estaEditando)
-                              "
-                            />
-                          </span>
+                              " />
+                        </span>
                     </div>
                 </div>
             </div>
@@ -62,19 +57,14 @@
                             </button>
                         </div>
                         <span class="icon-incompleto">
-                            <img
-                              class="icon-incompleto--img"
-                              src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
-                              [matTooltipPosition]="'above'"
-                              matTooltip="Debe ingresar la información en el campo para continuar"
-                              matTooltipClass="info-tooltip"
-                              *ngIf="
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip" *ngIf="
                                 (addressForm.get('fechaActuacionAdelantada').invalid && addressForm.get('fechaActuacionAdelantada').touched) ||
                                 (addressForm.get('fechaActuacionAdelantada').invalid && estaEditando)
-                              "
-                            />
-                          </span>
+                              " />
+                        </span>
                     </div>
                 </div>
             </div>
@@ -98,7 +88,10 @@
                             <div class="text-area-quill auxBox">
                                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                                     required (onContentChanged)="maxLength($event, 500)"
-                                    formControlName="actuacionAdelantada" #actuacionAdelantada>
+                                    formControlName="actuacionAdelantada" #actuacionAdelantada [class.invalid]="
+                                        (addressForm.get('actuacionAdelantada').invalid && addressForm.get('actuacionAdelantada').touched) ||
+                                        (addressForm.get('actuacionAdelantada').invalid && estaEditando)
+                                      ">
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.actuacionAdelantada.value">
@@ -108,19 +101,14 @@
                                 500
                             </span>
                             <span class="icon-incompleto">
-                                <img
-                                  class="icon-incompleto--img"
-                                  src="assets/img/icon/incompleto.svg"
-                                  alt="este campo es requerido"
-                                  [matTooltipPosition]="'above'"
-                                  matTooltip="Debe ingresar la información en el campo para continuar"
-                                  matTooltipClass="info-tooltip"
-                                  *ngIf="
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
                                     (addressForm.get('actuacionAdelantada').invalid && addressForm.get('actuacionAdelantada').touched) ||
                                     (addressForm.get('actuacionAdelantada').invalid && estaEditando)
-                                  "
-                                />
-                              </span>
+                                  " />
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -146,7 +134,11 @@
                             <div class="text-area-quill auxBox">
                                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                                     required (onContentChanged)="maxLength($event, 500)"
-                                    formControlName="proximaActuacionRequerida" #proximaActuacionRequerida>
+                                    formControlName="proximaActuacionRequerida" #proximaActuacionRequerida
+                                    [class.invalid]="
+                                        (addressForm.get('proximaActuacionRequerida').invalid && addressForm.get('proximaActuacionRequerida').touched) ||
+                                        (addressForm.get('proximaActuacionRequerida').invalid && estaEditando)
+                                      ">
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.proximaActuacionRequerida.value">
@@ -156,19 +148,14 @@
                                 500
                             </span>
                             <span class="icon-incompleto">
-                                <img
-                                  class="icon-incompleto--img"
-                                  src="assets/img/icon/incompleto.svg"
-                                  alt="este campo es requerido"
-                                  [matTooltipPosition]="'above'"
-                                  matTooltip="Debe ingresar la información en el campo para continuar"
-                                  matTooltipClass="info-tooltip"
-                                  *ngIf="
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
                                     (addressForm.get('proximaActuacionRequerida').invalid && addressForm.get('proximaActuacionRequerida').touched) ||
                                     (addressForm.get('proximaActuacionRequerida').invalid && estaEditando)
-                                  "
-                                />
-                              </span>
+                                  " />
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -200,19 +187,14 @@
                                 7
                             </span>
                             <span class="icon-incompleto">
-                                <img
-                                  class="icon-incompleto--img"
-                                  src="assets/img/icon/incompleto.svg"
-                                  alt="este campo es requerido"
-                                  [matTooltipPosition]="'above'"
-                                  matTooltip="Debe ingresar la información en el campo para continuar"
-                                  matTooltipClass="info-tooltip"
-                                  *ngIf="
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
                                     (addressForm.get('diasVencimientoTerminos').invalid && addressForm.get('diasVencimientoTerminos').touched) ||
                                     (addressForm.get('diasVencimientoTerminos').invalid && estaEditando)
-                                  "
-                                />
-                              </span>
+                                  " />
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -241,19 +223,14 @@
                             </button>
                         </div>
                         <span class="icon-incompleto">
-                            <img
-                              class="icon-incompleto--img"
-                              src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
-                              [matTooltipPosition]="'above'"
-                              matTooltip="Debe ingresar la información en el campo para continuar"
-                              matTooltipClass="info-tooltip"
-                              *ngIf="
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip" *ngIf="
                                 (addressForm.get('fechaVencimientoTerminos').invalid && addressForm.get('fechaVencimientoTerminos').touched) ||
                                 (addressForm.get('fechaVencimientoTerminos').invalid && estaEditando)
-                              "
-                            />
-                          </span>
+                              " />
+                        </span>
                     </div>
                 </div>
             </div>
@@ -277,7 +254,10 @@
                             <div class="text-area-quill auxBox">
                                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                                     required (onContentChanged)="maxLength($event, 1000)"
-                                    formControlName="observaciones" #observaciones>
+                                    formControlName="observaciones" #observaciones [class.invalid]="
+                                        (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                                        (addressForm.get('observaciones').invalid && estaEditando)
+                                      ">
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.observaciones.value">
@@ -287,19 +267,14 @@
                                 1000
                             </span>
                             <span class="icon-incompleto">
-                                <img
-                                  class="icon-incompleto--img"
-                                  src="assets/img/icon/incompleto.svg"
-                                  alt="este campo es requerido"
-                                  [matTooltipPosition]="'above'"
-                                  matTooltip="Debe ingresar la información en el campo para continuar"
-                                  matTooltipClass="info-tooltip"
-                                  *ngIf="
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
                                     (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
                                     (addressForm.get('observaciones').invalid && estaEditando)
-                                  "
-                                />
-                              </span>
+                                  " />
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -323,19 +298,14 @@
                             <span class="required-form-group" style="margin-left: 1px;">*</span>
                         </div>
                         <span class="icon-incompleto">
-                            <img
-                              class="icon-incompleto--img"
-                              src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
-                              [matTooltipPosition]="'above'"
-                              matTooltip="Debe ingresar la información en el campo para continuar"
-                              matTooltipClass="info-tooltip"
-                              *ngIf="
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip" *ngIf="
                                 (addressForm.get('resultadoDefinitivo').invalid && addressForm.get('resultadoDefinitivo').touched) ||
                                 (addressForm.get('resultadoDefinitivo').invalid && estaEditando)
-                              "
-                            />
-                          </span>
+                              " />
+                        </span>
                     </div>
                 </div>
             </div>
@@ -366,19 +336,14 @@
                                 registro de la actuación de trámite</span>
                         </div>
                         <span class="icon-incompleto">
-                            <img
-                              class="icon-incompleto--img"
-                              src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
-                              [matTooltipPosition]="'above'"
-                              matTooltip="Debe ingresar la información en el campo para continuar"
-                              matTooltipClass="info-tooltip"
-                              *ngIf="
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip" *ngIf="
                                 (addressForm.get('urlSoporte').invalid && addressForm.get('urlSoporte').touched) ||
                                 (addressForm.get('urlSoporte').invalid && estaEditando)
-                              "
-                            />
-                          </span>
+                              " />
+                        </span>
                     </div>
                 </div>
             </div>

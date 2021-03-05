@@ -230,6 +230,7 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
 
   onSubmit() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     this.addressForm.get('nombresProponentes').setValue( null );
     this.procesoSeleccion.cantidadProponentesInvitados = this.addressForm.get('cuantosProponentes').value;
     // console.log(this.procesoSeleccion);

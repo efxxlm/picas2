@@ -19,7 +19,7 @@ export class DefensaJudicialService {
     return this.http.get<Contrato[]>( `${ this.url }/JudicialDefense/GetListContract` );
   }
 
-  GetListProyectsByContract( pContratoId: string ) {
+  GetListProyectsByContract( pContratoId: any ) {
     return this.http.get<any[]>( `${ this.url }/JudicialDefense/GetListProyectsByContract?pContratoId=${pContratoId}` );
   }
   
@@ -151,7 +151,9 @@ export interface DemandadoConvocado{
   etapaProcesoFfiecodigo?:string,
   caducidadPrescripcion?:Date,
   defensaJudicialId?:number,
-  existeConocimiento?:boolean
+  existeConocimiento?:boolean,
+  registroCompleto?: boolean,
+  esDemandado?: boolean,
 }
 
 export interface DemandanteConvocante{
@@ -162,7 +164,9 @@ export interface DemandanteConvocante{
   numeroIdentificacion?:string,
   direccion?:string,
   email?:string,  
-  defensaJudicialId?:number
+  defensaJudicialId?:number,
+  demandanteConvocadoId?:number,
+  registroCompleto?: boolean,
 }
 
 export interface FichaEstudio{  

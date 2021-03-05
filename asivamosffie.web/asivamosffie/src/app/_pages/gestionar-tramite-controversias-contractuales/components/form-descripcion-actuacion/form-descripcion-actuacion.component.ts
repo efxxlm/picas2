@@ -126,6 +126,7 @@ export class FormDescripcionActuacionComponent implements OnInit {
   onSubmit() {
     let actuacionTaiArray;
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let estadoAvanTramite;
     if (this.addressForm.value.estadoAvanceTramite != undefined || this.addressForm.value.estadoAvanceTramite != null) {
       if (!this.addressForm.value.estadoAvanceTramite.codigo) {

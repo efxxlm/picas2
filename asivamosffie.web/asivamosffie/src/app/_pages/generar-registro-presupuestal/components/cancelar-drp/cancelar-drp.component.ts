@@ -72,6 +72,7 @@ export class CancelarDrpComponent implements OnInit {
 
   onSubmit() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let DisponibilidadPresupuestalObservacion={DisponibilidadPresupuestalId:this.id,Observacion:this.addressForm.value.objeto};
     this.disponibilidadServices.SetCancelDDR(DisponibilidadPresupuestalObservacion).subscribe(listas => {
       console.log(listas);

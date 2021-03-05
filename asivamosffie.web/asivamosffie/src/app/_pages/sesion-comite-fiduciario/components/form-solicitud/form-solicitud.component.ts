@@ -246,6 +246,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
 
   onSubmit() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let tipoSolicitudCodigo: string;
 
     if (this.proyectos)
@@ -379,7 +380,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
       this.justificacion = this.sesionComiteSolicitud.procesoSeleccion.justificacion
     }
     this.estaEditando = true;
-
+    this.addressForm.markAllAsTouched();
   }
 
 

@@ -983,8 +983,8 @@
                       for="nombre"
                       class="label-left"
                       [class.color-secondaryColor]="
-                        (unionTemporalForm.get('nombre')?.invalid && unionTemporalForm.get('nombre').touched) ||
-                        (unionTemporalForm.get('nombre')?.invalid && estaEditando)
+                        (entidad.get('nombre')?.invalid && entidad.get('nombre').touched) ||
+                        (entidad.get('nombre')?.invalid && estaEditando)
                       "
                     >
                       Nombre
@@ -1011,8 +1011,8 @@
                         matTooltip="Debe ingresar la información en el campo para continuar"
                         matTooltipClass="info-tooltip"
                         *ngIf="
-                          (unionTemporalForm.get('nombre')?.invalid && unionTemporalForm.get('nombre').touched) ||
-                          (unionTemporalForm.get('nombre')?.invalid && estaEditando)
+                          (entidad.get('nombre')?.invalid && entidad.get('nombre').touched) ||
+                          (entidad.get('nombre')?.invalid && estaEditando)
                         "
                       />
                     </span>
@@ -1028,8 +1028,8 @@
                       for="porcentaje"
                       class="label-left"
                       [class.color-secondaryColor]="
-                        (unionTemporalForm.get('porcentaje')?.invalid && unionTemporalForm.get('porcentaje').touched) ||
-                        (unionTemporalForm.get('porcentaje')?.invalid && estaEditando)
+                        (entidad.get('porcentaje')?.invalid && entidad.get('porcentaje').touched) ||
+                        (entidad.get('porcentaje')?.invalid && estaEditando)
                       "
                     >
                       Porcentaje de participación
@@ -1060,9 +1060,8 @@
                         matTooltip="Debe ingresar la información en el campo para continuar"
                         matTooltipClass="info-tooltip"
                         *ngIf="
-                          (unionTemporalForm.get('porcentaje')?.invalid &&
-                            unionTemporalForm.get('porcentaje').touched) ||
-                          (unionTemporalForm.get('porcentaje')?.invalid && estaEditando)
+                          (entidad.get('porcentaje')?.invalid && entidad.get('porcentaje').touched) ||
+                          (entidad.get('porcentaje')?.invalid && estaEditando)
                         "
                       />
                     </span>

@@ -251,6 +251,7 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
   }
   onSubmit() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     this.fechaSesion = new Date(this.fechaCreacion);
     this.fechaSesionString = `${this.fechaSesion.getFullYear()}-${this.fechaSesion.getMonth() + 1}-${this.fechaSesion.getDate()}`;
     

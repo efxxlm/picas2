@@ -1,6 +1,7 @@
 <div class="container text-center">
     <div class="text-right">
-        <a routerLink="/registrarActuacionesControversiasContractuales/actualizarTramite/{{this.controversiaID}}" mat-button color="primary" class="btn-regresar">
+        <a routerLink="/registrarActuacionesControversiasContractuales/actualizarTramite/{{this.controversiaID}}"
+            mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
         </a>
     </div>
@@ -15,33 +16,54 @@
     <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
         <mat-card class="shipping-card">
             <mat-card-content align="left">
-                <p><strong>Actuación en la que se requiere participación o insumo de la fiduciaria: </strong>{{controversia?.numeroActuacionFormat}}</p>
+                <p><strong>Actuación en la que se requiere participación o insumo de la fiduciaria:
+                    </strong>{{controversia?.numeroActuacionFormat}}</p>
                 <p><strong>Fecha de la actuación adelantada: </strong>{{controversia?.fechaActuacion | date:
                     'dd/MM/yyyy'}}</p>
                 <div class="row">
                     <div class="col-md-8">
-                      <div class="row">
-                        <div class="pr-1">
-                          <label class="label-left" for="fechaActuacionDerivada">Fecha de la actuación derivada</label>
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left" for="fechaActuacionDerivada" [ngClass]="{
+                                    'color-secondaryColor':
+                                      (addressForm.get('fechaActuacionDerivada').invalid && addressForm.get('fechaActuacionDerivada').touched) ||
+                                      (addressForm.get('fechaActuacionDerivada').invalid && estaEditando)
+                                  }">Fecha de la actuación
+                                    derivada</label>
+                            </div>
+                            <div class="col d-flex align-items-center">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput formControlName="fechaActuacionDerivada"
+                                        [matDatepicker]="pickerFecha" readonly (click)="pickerFecha.open()" required
+                                        placeholder="DD/MM/AAAA">
+                                    <mat-datepicker #pickerFecha></mat-datepicker>
+                                </mat-form-field>
+                                <button mat-button color="primary" type="button" (click)="pickerFecha.open()"
+                                    class="btn-calendario">
+                                    <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                                </button>
+                            </div>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                                    (addressForm.get('fechaActuacionDerivada').invalid && addressForm.get('fechaActuacionDerivada').touched) ||
+                                    (addressForm.get('fechaActuacionDerivada').invalid && estaEditando)
+                                  " />
+                            </span>
                         </div>
-                        <div class="col d-flex align-items-center">
-                          <mat-form-field class="example-full-width">
-                            <input matInput formControlName="fechaActuacionDerivada" [matDatepicker]="pickerFecha"  readonly
-                              (click)="pickerFecha.open()" required placeholder="DD/MM/AAAA">
-                            <mat-datepicker #pickerFecha></mat-datepicker>
-                          </mat-form-field>
-                          <button mat-button color="primary" type="button" (click)="pickerFecha.open()" class="btn-calendario">
-                            <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
-                          </button>
-                        </div>
-                      </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
                         <div class="row">
                             <div class="pr-1">
-                                <label class="label-left" for="descripcionActuacionAdelantada">Próxima actuación requerida</label>
+                                <label class="label-left" for="descripcionActuacionAdelantada" [ngClass]="{
+                                    'color-secondaryColor':
+                                      (addressForm.get('descripcionActuacionAdelantada').invalid && addressForm.get('descripcionActuacionAdelantada').touched) ||
+                                      (addressForm.get('descripcionActuacionAdelantada').invalid && estaEditando)
+                                  }">Próxima actuación requerida</label>
                             </div>
                         </div>
                     </div>
@@ -51,16 +73,31 @@
                         <div>
                             <div class="d-flex align-items-center">
                                 <div class="text-area-quill auxBox">
-                                    <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
-                                        required (onContentChanged)="maxLength($event, 500)"
-                                        formControlName="descripcionActuacionAdelantada" #descripcionActuacionAdelantada>
+                                    <quill-editor class="quill-editor-style card" [styles]="editorStyle"
+                                        [modules]="config" required (onContentChanged)="maxLength($event, 500)"
+                                        formControlName="descripcionActuacionAdelantada" #descripcionActuacionAdelantada
+                                        [class.invalid]="
+                                        (addressForm.get('descripcionActuacionAdelantada').invalid && addressForm.get('descripcionActuacionAdelantada').touched) ||
+                                        (addressForm.get('descripcionActuacionAdelantada').invalid && estaEditando)
+                                      ">
                                     </quill-editor>
                                 </div>
-                                <span class="contador miles" *ngIf="addressForm.controls.descripcionActuacionAdelantada.value">
+                                <span class="contador miles"
+                                    *ngIf="addressForm.controls.descripcionActuacionAdelantada.value">
                                     {{500 - (textoLimpio(descripcionActuacionAdelantada.quillEditor,500))}}
                                 </span>
-                                <span class="contador miles" *ngIf="!addressForm.controls.descripcionActuacionAdelantada.value">
+                                <span class="contador miles"
+                                    *ngIf="!addressForm.controls.descripcionActuacionAdelantada.value">
                                     500
+                                </span>
+                                <span class="icon-incompleto">
+                                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip" *ngIf="
+                                        (addressForm.get('descripcionActuacionAdelantada').invalid && addressForm.get('descripcionActuacionAdelantada').touched) ||
+                                        (addressForm.get('descripcionActuacionAdelantada').invalid && estaEditando)
+                                      " />
                                 </span>
                             </div>
                         </div>
@@ -70,17 +107,32 @@
                     <div class="col-md-12">
                         <div class="row">
                             <div class="pr-1">
-                                <label class="label-left" for="estadoActuacionDerivada">Estado de la actuación derivada</label>
+                                <label class="label-left" for="estadoActuacionDerivada" [ngClass]="{
+                                    'color-secondaryColor':
+                                      (addressForm.get('estadoActuacionDerivada').invalid && addressForm.get('estadoActuacionDerivada').touched) ||
+                                      (addressForm.get('estadoActuacionDerivada').invalid && estaEditando)
+                                  }">Estado de la actuación
+                                    derivada</label>
                             </div>
                             <div class="col">
                                 <mat-form-field class="select-width">
                                     <mat-select formControlName="estadoActuacionDerivada" required>
-                                        <mat-option *ngFor="let estadoActuacionDerivada of estadoDerivadaArray" [value]="estadoActuacionDerivada">
+                                        <mat-option *ngFor="let estadoActuacionDerivada of estadoDerivadaArray"
+                                            [value]="estadoActuacionDerivada">
                                             {{ estadoActuacionDerivada.nombre }}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </div>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                                    (addressForm.get('estadoActuacionDerivada').invalid && addressForm.get('estadoActuacionDerivada').touched) ||
+                                    (addressForm.get('estadoActuacionDerivada').invalid && estaEditando)
+                                  " />
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -88,7 +140,11 @@
                     <div class="col-md-12">
                         <div class="row">
                             <div class="pr-1">
-                                <label class="label-left" for="observaciones">Observaciones</label>
+                                <label class="label-left" for="observaciones" [ngClass]="{
+                                    'color-secondaryColor':
+                                      (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                                      (addressForm.get('observaciones').invalid && estaEditando)
+                                  }">Observaciones</label>
                             </div>
                         </div>
                     </div>
@@ -98,9 +154,12 @@
                         <div>
                             <div class="d-flex align-items-center">
                                 <div class="text-area-quill auxBox">
-                                    <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
-                                        required (onContentChanged)="maxLength($event, 1000)"
-                                        formControlName="observaciones" #observaciones>
+                                    <quill-editor class="quill-editor-style card" [styles]="editorStyle"
+                                        [modules]="config" required (onContentChanged)="maxLength($event, 1000)"
+                                        formControlName="observaciones" #observaciones [class.invalid]="
+                                        (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                                        (addressForm.get('observaciones').invalid && estaEditando)
+                                      ">
                                     </quill-editor>
                                 </div>
                                 <span class="contador miles" *ngIf="addressForm.controls.observaciones.value">
@@ -108,6 +167,15 @@
                                 </span>
                                 <span class="contador miles" *ngIf="!addressForm.controls.observaciones.value">
                                     1000
+                                </span>
+                                <span class="icon-incompleto">
+                                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip" *ngIf="
+                                        (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                                        (addressForm.get('observaciones').invalid && estaEditando)
+                                      " />
                                 </span>
                             </div>
                         </div>
@@ -126,15 +194,28 @@
                     <div class="col-md-12">
                         <div class="row">
                             <div class="pr-1">
-                                <label class="label-left" for="urlSoporte">URL con soporte</label>
+                                <label class="label-left" for="urlSoporte" [ngClass]="{
+                                    'color-secondaryColor':
+                                      (addressForm.get('urlSoporte').invalid && addressForm.get('urlSoporte').touched) ||
+                                      (addressForm.get('urlSoporte').invalid && estaEditando)
+                                  }">URL con soporte</label>
                             </div>
                             <div class="col">
                                 <mat-form-field class="full-width">
-                                    <input matInput #urlSoporte type="text" formControlName="urlSoporte"
-                                      required>
+                                    <input matInput #urlSoporte type="text" formControlName="urlSoporte" required>
                                 </mat-form-field>
-                                <span class="info-url">Indique la ruta en la que se encuentran los documentos de soporte del registro de la actuación de trámite.</span>
+                                <span class="info-url">Indique la ruta en la que se encuentran los documentos de soporte
+                                    del registro de la actuación de trámite.</span>
                             </div>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                                    (addressForm.get('urlSoporte').invalid && addressForm.get('urlSoporte').touched) ||
+                                    (addressForm.get('urlSoporte').invalid && estaEditando)
+                                  " />
+                            </span>
                         </div>
                     </div>
                 </div>

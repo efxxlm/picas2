@@ -126,6 +126,7 @@ export class ExpansionValidarRequisitosComponent implements OnInit {
                     // tslint:disable-next-line: no-string-literal
                     perfil[ 'verificarObservacion' ] = observacionTipo3[ observacionTipo3.length - 1 ].observacion;
                     this.estaEditando = true;
+                    this.addressForm.markAllAsTouched();
                     completo++;
                   }
                 }
@@ -191,7 +192,8 @@ export class ExpansionValidarRequisitosComponent implements OnInit {
   }
 
   onSubmit( perfil: ContratoPerfil ) {
-    this.estaEditando = true
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     const observacionPerfil: ObservacionPerfil = {
       contratoPerfilId: perfil.contratoPerfilId,
       // tslint:disable-next-line: no-string-literal

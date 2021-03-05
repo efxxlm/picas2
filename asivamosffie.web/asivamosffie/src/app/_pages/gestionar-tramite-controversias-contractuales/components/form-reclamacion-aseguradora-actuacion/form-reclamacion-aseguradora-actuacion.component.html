@@ -18,7 +18,9 @@
         <div class="text-area-quill izqTitle auxBox">
           <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
             #resumenReclamacionFiduciaria (onContentChanged)="maxLength($event, 1000)"
-            formControlName="resumenReclamacionFiduciaria"></quill-editor>
+            formControlName="resumenReclamacionFiduciaria"
+            [class.invalid]="(addressForm.get('resumenReclamacionFiduciaria').invalid && addressForm.get('resumenReclamacionFiduciaria').touched) ||
+              (addressForm.get('resumenReclamacionFiduciaria').invalid && estaEditando)"></quill-editor>
         </div>
         <span class="contador miles" *ngIf="addressForm.controls.resumenReclamacionFiduciaria.value">
           {{1000 - (textoLimpio(resumenReclamacionFiduciaria.quillEditor,1000))}}

@@ -65,12 +65,50 @@ export class FormContratosAsociadosDjComponent implements OnInit {
       if(Object.keys(this.defensaJudicial).length>0)
       {
         this.formContratista.get( 'numeroContratos' ).setValue(this.defensaJudicial.cantContratos);
+
+        let listaContratos:any[]= [];
+
+        this.defensaJudicial.defensaJudicialContratacionProyecto.forEach(element => {
+          if ( listaContratos.filter( r => r.numeroContrato == element.numeroContrato ).length === 0)
+            listaContratos.push( this.contratos.filter(x=>x.numeroContrato==element.numeroContrato)[0] );
+        });
+
+        let i=0;
+        listaContratos.forEach( c =>{
+          //this.myControl.controls[i].setValue(c.numeroContrato);
+          this.perfiles.value.contrato = c.contratoId;
+          this.defensaService.GetListProyectsByContract(c.contratoId).subscribe(response=>{
+            this.listProyectosSeleccion=response;
+            this.dataTable=response;
+            let alguno=false;
+            this.dataTable.forEach(element2 => {
+              this.defensaJudicial.defensaJudicialContratacionProyecto.forEach(test => {
+                if(element2.proyectoId==test.contratacionProyecto.proyectoId)
+                {
+                  element2.checked=true;
+                  alguno=true;
+                }
+              });
+            });
+            this.dataSource[i] = new MatTableDataSource(this.dataTable);
+          this.dataSource[i].paginator = this.paginator;
+          this.dataSource[i].sort = this.sort;
+          this.listContrattoscompletos[i]=alguno;
+          this.myControl.controls[i].setValue(c.numeroContrato);
+          i++;
+        });
+
+      });
+
+
+        /*
         let i=0;
         this.defensaJudicial.defensaJudicialContratacionProyecto.forEach(element => {
           this.myControl.controls[i].setValue(element.numeroContrato);
           let contrato=this.contratos.filter(x=>x.numeroContrato==element.numeroContrato);
           this.perfiles.value.contrato = contrato[0].contratoId;
         this.defensaService.GetListProyectsByContract(contrato[0].contratoId).subscribe(response=>{
+          console.log(contrato[0].contratoId);
           this.listProyectosSeleccion=response;
           this.dataTable=response;
           let alguno=false;
@@ -84,18 +122,20 @@ export class FormContratosAsociadosDjComponent implements OnInit {
             });
           });
           this.dataSource[i] = new MatTableDataSource(this.dataTable);
+          console.log("Datatable: ",this.dataTable);
+          console.log("Datasource: ");
           this.dataSource[i].paginator = this.paginator;
           this.dataSource[i].sort = this.sort;
           this.listContrattoscompletos[i]=alguno;
           i++;
         });
         });
+        */
       }  
     //});
   }
 
   ngOnInit(): void {
-    
     this.defensaService.GetListContract().subscribe(response=>{
       this.contratosArray=response.map(x=>x.numeroContrato);
       this.contratos=response;
@@ -239,6 +279,7 @@ export class FormContratosAsociadosDjComponent implements OnInit {
 
   guardar () {
     this.estaEditando = true;
+    this.formContratista.markAllAsTouched();
     console.log( this.formContratista );
     console.log(this.listProyectos);
     let defContraProyecto:DefensaJudicialContratacionProyecto[]=[];

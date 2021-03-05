@@ -58,8 +58,8 @@ export class FormReciboASatisfaccionComponent implements OnInit {
   onSubmit() {
     //[disabled]="addressForm.invalid"
     //console.log(this.addressForm.value);
-    this.addressForm.markAllAsTouched();
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     this.createInformeFinal(this.addressForm.value);
     //this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
   }

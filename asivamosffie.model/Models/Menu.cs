@@ -7,6 +7,7 @@ namespace asivamosffie.model.Models
     {
         public Menu()
         {
+            LiquidacionContratacionObservacion = new HashSet<LiquidacionContratacionObservacion>();
             MensajesValidaciones = new HashSet<MensajesValidaciones>();
             MenuPerfil = new HashSet<MenuPerfil>();
             SolicitudPagoObservacion = new HashSet<SolicitudPagoObservacion>();
@@ -25,6 +26,7 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
         public bool? Eliminado { get; set; }
 
+        public virtual ICollection<LiquidacionContratacionObservacion> LiquidacionContratacionObservacion { get; set; }
         public virtual ICollection<MensajesValidaciones> MensajesValidaciones { get; set; }
         public virtual ICollection<MenuPerfil> MenuPerfil { get; set; }
         public virtual ICollection<SolicitudPagoObservacion> SolicitudPagoObservacion { get; set; }

@@ -25,6 +25,7 @@ export class DialogCargarSitioWebCesmlComponent implements OnInit {
     urlMonitoreo: [null, Validators.required]
   });
 
+  estaEditando = false;
   constructor(private services: MonitoringURLService, private fb: FormBuilder, public dialog: MatDialog, public matDialogRef: MatDialogRef<DialogCargarSitioWebCesmlComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { 
     if (data.id != undefined) {
       this.idProyecto = data.id;
@@ -72,6 +73,7 @@ export class DialogCargarSitioWebCesmlComponent implements OnInit {
     });
   };
   onSubmit(){
+    this.estaEditando = true;
     this.services.EditarURLMonitoreo(this.idProyecto,this.addressForm.value.urlMonitoreo).subscribe(resp=>{
       if(resp.code=="200"){
         this.openDialog( '', `<b>${ resp.message }</b>` );

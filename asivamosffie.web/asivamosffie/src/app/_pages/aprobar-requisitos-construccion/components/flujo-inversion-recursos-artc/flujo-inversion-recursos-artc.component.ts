@@ -150,6 +150,7 @@ export class FlujoInversionRecursosArtcComponent implements OnInit {
 
   guardarFlujo() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     const construccion = {
       contratoConstruccionId: this.contratoConstruccionId,
       tieneObservacionesFlujoInversionSupervisor: this.addressForm.value.tieneObservaciones,

@@ -6,7 +6,7 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <app-gestion-ambiental [seguimientoSemanal]="seguimientoSemanal"></app-gestion-ambiental>
+        <app-gestion-ambiental [seguimientoSemanal]="seguimientoSemanal" [tipoObservacionAmbiental]="tipoObservaciones.gestionAmbiental"></app-gestion-ambiental>
     </mat-expansion-panel>
 
     <mat-expansion-panel class="expansion-style sub-expansion">
@@ -16,7 +16,7 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <app-gestion-calidad [seguimientoSemanal]="seguimientoSemanal"></app-gestion-calidad>
+        <app-gestion-calidad [seguimientoSemanal]="seguimientoSemanal" [tipoObservacionCalidad]="tipoObservaciones.gestionCalidad"></app-gestion-calidad>
     </mat-expansion-panel>
 
     <mat-expansion-panel class="expansion-style sub-expansion">
@@ -26,7 +26,7 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <app-gestion-sst [seguimientoSemanal]="seguimientoSemanal"></app-gestion-sst>
+        <app-gestion-sst [seguimientoSemanal]="seguimientoSemanal" [tipoObservacionSst]="tipoObservaciones.gestionSst"></app-gestion-sst>
     </mat-expansion-panel>
 
     <mat-expansion-panel class="expansion-style sub-expansion">
@@ -36,7 +36,7 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <app-gestion-social [seguimientoSemanal]="seguimientoSemanal"></app-gestion-social>
+        <app-gestion-social [seguimientoSemanal]="seguimientoSemanal" [tipoObservacionSocial]="tipoObservaciones.gestionSocial"></app-gestion-social>
     </mat-expansion-panel>
 
     <mat-expansion-panel class="expansion-style sub-expansion">
@@ -46,7 +46,7 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <app-alertas-relevantes [seguimientoSemanal]="seguimientoSemanal"></app-alertas-relevantes>
+        <app-alertas-relevantes [seguimientoSemanal]="seguimientoSemanal" [tipoObservacionAlertas]="tipoObservaciones.alertasRelevantes"></app-alertas-relevantes>
     </mat-expansion-panel>
 </mat-accordion>
 
@@ -59,7 +59,7 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <app-gestion-ambiental [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true"></app-gestion-ambiental>
+        <app-gestion-ambiental [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true" [tipoObservacionAmbiental]="tipoObservaciones.gestionAmbiental"></app-gestion-ambiental>
     </mat-expansion-panel>
 
     <mat-expansion-panel class="expansion-style sub-expansion">
@@ -69,7 +69,7 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <app-gestion-calidad [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true"></app-gestion-calidad>
+        <app-gestion-calidad [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true" [tipoObservacionCalidad]="tipoObservaciones.gestionCalidad"></app-gestion-calidad>
     </mat-expansion-panel>
 
     <mat-expansion-panel class="expansion-style sub-expansion">
@@ -79,7 +79,7 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <app-gestion-sst [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true"></app-gestion-sst>
+        <app-gestion-sst [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true" [tipoObservacionSst]="tipoObservaciones.gestionSst"></app-gestion-sst>
     </mat-expansion-panel>
 
     <mat-expansion-panel class="expansion-style sub-expansion">
@@ -89,7 +89,7 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <app-gestion-social [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true"></app-gestion-social>
+        <app-gestion-social [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true" [tipoObservacionSocial]="tipoObservaciones.gestionSocial"></app-gestion-social>
     </mat-expansion-panel>
 
     <mat-expansion-panel class="expansion-style sub-expansion">
@@ -99,6 +99,6 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <app-alertas-relevantes [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true"></app-alertas-relevantes>
+        <app-alertas-relevantes [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true" [tipoObservacionAlertas]="tipoObservaciones.alertasRelevantes"></app-alertas-relevantes>
     </mat-expansion-panel>
 </mat-accordion>

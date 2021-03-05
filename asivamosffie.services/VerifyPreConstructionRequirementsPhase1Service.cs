@@ -36,13 +36,7 @@ namespace asivamosffie.services
             try
             {
                 List<Contrato> listContratos = await _context.Contrato
-                      .FromSqlRaw("SELECT c.* FROM dbo.Contrato AS c " +
-                      "INNER JOIN dbo.Contratacion AS ctr ON c.ContratacionId = ctr.ContratacionId " +
-                      "INNER JOIN dbo.DisponibilidadPresupuestal AS dp ON ctr.ContratacionId = dp.ContratacionId " +
-                      "INNER JOIN dbo.ContratoPoliza AS cp ON c.ContratoId = cp.ContratoId " +
-                      "WHERE dp.NumeroDRP IS NOT NULL " +     //Documento Registro Presupuestal
-                      "AND cp.FechaAprobacion is not null " + //Fecha Aprobacion Poliza
-                      "AND ctr.TipoSolicitudCodigo = 1")
+                      .FromSqlRaw(QuerySql.GetListContratacionVerificar)
                       .Include(r => r.ContratoPoliza)
                       .Include(r => r.Contratacion)
                          .ThenInclude(r => r.ContratacionProyecto)
@@ -125,14 +119,7 @@ namespace asivamosffie.services
             try
             {
                 List<Contrato> listContratos = await _context.Contrato
-                     .FromSqlRaw("SELECT c.* FROM dbo.Contrato AS c " +
-                     "INNER JOIN dbo.Contratacion AS ctr ON c.ContratacionId = ctr.ContratacionId " +
-                     "INNER JOIN dbo.DisponibilidadPresupuestal AS dp ON ctr.ContratacionId = dp.ContratacionId " +
-                     "INNER JOIN dbo.ContratoPoliza AS cp ON c.ContratoId = cp.ContratoId " +
-                     "WHERE dp.NumeroDRP IS NOT NULL " +     //Documento Registro Presupuestal
-                     "AND cp.FechaAprobacion is not null " + //Fecha Aprobacion Poliza
-                     "AND c.EstadoVerificacionCodigo is not null " +
-                     "AND ctr.TipoSolicitudCodigo = 2")  //Enviado al apoyo
+                     .FromSqlRaw(QuerySql.GetListContratacionVerificarInterventoria)  
                      .Include(r => r.ContratoPoliza)
                      .Include(r => r.Contratacion)
                         .ThenInclude(r => r.ContratacionProyecto)
@@ -163,8 +150,7 @@ namespace asivamosffie.services
                         }
                         if (c.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count() == CantidadProyectosConPerfilesAprobados)
                             RegistroCompleto = true;
-
-
+                         
                         listaContrats.Add(new
                         {
                             c.Contratacion.NumeroSolicitud,
@@ -184,7 +170,7 @@ namespace asivamosffie.services
             }
             catch (Exception ex)
             {
-                throw;
+              
             }
 
             return listaContrats.OrderByDescending(r => r.FechaAprobacion).ToList();
@@ -482,11 +468,8 @@ namespace asivamosffie.services
                         RegistroCompleto = false;
                 }
 
-                if (RegistroCompleto)
-                {
-                    contrato.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_verificados;
-                    // contrato.EstaDevuelto = false;
-                }
+                if (RegistroCompleto) 
+                    contrato.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_verificados; 
                 else
                     contrato.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.En_proceso_de_verificacion_de_requisitos_tecnicos;
 

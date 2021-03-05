@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-avance-financiero',
@@ -14,10 +15,13 @@ export class AvanceFinancieroComponent implements OnInit {
 
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
+    @Input() avanceFinancieroObs: string;
     formAvanceFinanciero: FormGroup;
     seguimientoSemanalId: number;
     seguimientoSemanalAvanceFinancieroId: number;
     avanceFinanciero: any;
+    tablaHistorial = new MatTableDataSource();
+    dataHistorial: any[] = [];
     editorStyle = {
         height: '45px'
     };
@@ -27,6 +31,11 @@ export class AvanceFinancieroComponent implements OnInit {
     booleanosEnsayosLaboratorio: any[] = [
         { value: true, viewValue: 'Si' },
         { value: false, viewValue: 'No' }
+    ];
+    displayedColumnsHistorial: string[]  = [
+        'fechaRevision',
+        'responsable',
+        'historial'
     ];
 
     constructor(
@@ -46,6 +55,13 @@ export class AvanceFinancieroComponent implements OnInit {
 
             if ( this.seguimientoSemanal.seguimientoSemanalAvanceFinanciero.length > 0 ) {
                 this.avanceFinanciero = this.seguimientoSemanal.seguimientoSemanalAvanceFinanciero[0];
+                this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalAvanceFinancieroId, this.avanceFinancieroObs )
+                    .subscribe(
+                        response => {
+                            this.dataHistorial = response.filter( obs => obs.archivada === true );
+                            this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
+                        }
+                    )
                 this.formAvanceFinanciero.setValue(
                     {
                         requiereObservacion:    this.avanceFinanciero.requiereObservacion !== undefined ?

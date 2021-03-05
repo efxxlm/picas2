@@ -434,6 +434,8 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
 
   onSubmitPersonaNatural() {
     this.estaEditando = true;
+    this.personaNaturalForm.markAllAsTouched();
+    this.myControl.markAllAsTouched();
     this.procesoSeleccion.procesoSeleccionProponente = [];
     let proponente: ProcesoSeleccionProponente = {
       procesoSeleccionProponenteId: this.personaNaturalForm.get('procesoSeleccionProponenteId').value,
@@ -457,6 +459,8 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
   onSubmitPersonaJuridicaIndividual() {
 
     this.estaEditando = true;
+    this.personaNaturalForm.markAllAsTouched();
+    this.myControl.markAllAsTouched();
     this.procesoSeleccion.procesoSeleccionProponente = [];
     let proponente: ProcesoSeleccionProponente = {
 
@@ -498,6 +502,8 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
 
   onSubmitUnionTemporal() {
     this.estaEditando = true;
+    this.personaNaturalForm.markAllAsTouched();
+    this.myControl.markAllAsTouched();
     let porcentaje: number = 0;
     this.procesoSeleccion.procesoSeleccionProponente = [];
     this.procesoSeleccion.procesoSeleccionIntegrante = [];
@@ -566,6 +572,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
             case "1": {
               this.estaEditando = true;
               this.personaNaturalForm.markAllAsTouched();
+              this.myControl.markAllAsTouched();
               this.personaNaturalForm.get('municipio').setValue(municipio);
               this.personaNaturalForm.get('depaetamento').setValue(departamentoSeleccionado);
               this.personaNaturalForm.get('procesoSeleccionProponenteId').setValue(proponente.procesoSeleccionProponenteId);
@@ -583,6 +590,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
             case "2": {
               this.estaEditando = true;
               this.personaNaturalForm.markAllAsTouched();
+              this.myControl.markAllAsTouched();
               this.personaJuridicaIndividualForm.get('depaetamento').setValue(departamentoSeleccionado);
               this.personaJuridicaIndividualForm.get('procesoSeleccionProponenteId').setValue(proponente.procesoSeleccionProponenteId);
               this.personaJuridicaIndividualForm.get('nombre').setValue(proponente.nombreProponente);
@@ -599,6 +607,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
             case "4": {
               this.estaEditando = true;
               this.personaNaturalForm.markAllAsTouched();
+              this.myControl.markAllAsTouched();
               (<FormArray>this.unionTemporalForm.get('entidades')).clear();
               let listaIntegrantes = this.unionTemporalForm.get('entidades') as FormArray;
 

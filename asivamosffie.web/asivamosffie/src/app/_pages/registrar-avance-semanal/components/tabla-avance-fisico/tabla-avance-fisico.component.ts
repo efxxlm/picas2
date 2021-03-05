@@ -17,7 +17,10 @@ export class TablaAvanceFisicoComponent implements OnInit {
 
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
+    @Input() avanceFisicoObs: string;
     tablaAvanceFisico = new MatTableDataSource();
+    tablaHistorial = new MatTableDataSource();
+    dataHistorial: any[] = [];
     avanceFisico: any[];
     seRealizoCambio = false;
     seguimientoSemanalId: number;
@@ -30,6 +33,11 @@ export class TablaAvanceFisicoComponent implements OnInit {
         'programacionCapitulo',
         'avanceFisicoCapitulo',
         'avanceFisicoSemana'
+    ];
+    displayedColumnsHistorial: string[]  = [
+        'fechaRevision',
+        'responsable',
+        'historial'
     ];
 
     constructor(
@@ -82,6 +90,14 @@ export class TablaAvanceFisicoComponent implements OnInit {
             this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0].seguimientoSemanalAvanceFisicoId : 0;
             const flujoInversion = this.seguimientoSemanal.flujoInversion;
             const seguimientoSemanalAvanceFisico = this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0];
+
+            this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalAvanceFisicoId, this.avanceFisicoObs )
+                .subscribe(
+                    response => {
+                        this.dataHistorial = response.filter( obs => obs.archivada === true );
+                        this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
+                    }
+                );
             if ( flujoInversion.length > 0 ) {
                 const avancePorCapitulo = [];
                 let duracionProgramacion = 0;
@@ -129,14 +145,16 @@ export class TablaAvanceFisicoComponent implements OnInit {
                         } );
                     }
 
-                    avancePorCapitulo.push(
-                        {
-                            programacionId: flujo.programacion.programacionId,
-                            capitulo: flujo.programacion.actividad,
-                            programacionCapitulo: this.verifyInteger( ( duracionItem / cantidadTotalDiasActividades ) * 100, false ),
-                            avanceFisicoCapitulo: flujo.programacion.avanceFisicoCapitulo !== null ? String( this.verifyInteger( Number( flujo.programacion.avanceFisicoCapitulo ), true ) ) : null
-                        }
-                    );
+                    if ( this.verifyInteger( ( duracionItem / cantidadTotalDiasActividades ) * 100, false ) > 0 ) {
+                        avancePorCapitulo.push(
+                            {
+                                programacionId: flujo.programacion.programacionId,
+                                capitulo: flujo.programacion.actividad,
+                                programacionCapitulo: this.verifyInteger( ( duracionItem / cantidadTotalDiasActividades ) * 100, false ),
+                                avanceFisicoCapitulo: flujo.programacion.avanceFisicoCapitulo !== null ? String( this.verifyInteger( Number( flujo.programacion.avanceFisicoCapitulo ), true ) ) : null
+                            }
+                        );
+                    }
 
                     duracionProgramacion += duracionItem;
                 }

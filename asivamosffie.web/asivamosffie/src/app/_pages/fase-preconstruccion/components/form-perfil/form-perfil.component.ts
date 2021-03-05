@@ -182,7 +182,6 @@ export class FormPerfilComponent implements OnInit {
         const numeroRadicados = [];
         const observacionInterventor = [];
         let semaforo;
-        observacionSupervisorSemaforo = null;
         if ( perfil.contratoPerfilNumeroRadicado.length === 0 ) {
           numeroRadicados.push(
             this.fb.group(
@@ -216,12 +215,14 @@ export class FormPerfilComponent implements OnInit {
             }
           }
         }
-        if ( observacionSupervisor.length > 0 ) {
-          observacionSupervisorSemaforo = true;
-        }
         if ( perfil.registroCompleto === true ) {
-          this.perfilesCompletos++;
-          semaforo = 'completo';
+          if ( perfil.tieneObservacionSupervisor === true ) {
+            semaforo = 'en-proceso';
+            this.perfilesEnProceso++;
+          } else {
+            this.perfilesCompletos++;
+            semaforo = 'completo';
+          }
         }
         if (  perfil.registroCompleto === false
               && perfil.perfilCodigo !== undefined
@@ -235,7 +236,7 @@ export class FormPerfilComponent implements OnInit {
         this.perfiles.push(
           this.fb.group(
             {
-              estadoSemaforo                : [ observacionSupervisorSemaforo === true ? 'en-proceso' : ( semaforo ? semaforo : 'sin-diligenciar' ), Validators.required ],
+              estadoSemaforo                : [ perfil.tieneObservacionSupervisor === true ? 'en-proceso' : ( semaforo ? semaforo : 'sin-diligenciar' ), Validators.required ],
               contratoPerfilId              : [ perfil.contratoPerfilId ? perfil.contratoPerfilId : 0, Validators.required ],
               perfilObservacion             : [ ( perfil.contratoPerfilObservacion.length === 0 )
                                                   ? 0 : perfil.contratoPerfilObservacion[0].contratoPerfilObservacionId, Validators.required ],
@@ -244,6 +245,7 @@ export class FormPerfilComponent implements OnInit {
               cantidadHvRecibidas           : [ perfil.cantidadHvRecibidas ? perfil.cantidadHvRecibidas : null, Validators.required ],
               cantidadHvAprobadas           : [ perfil.cantidadHvAprobadas ? perfil.cantidadHvAprobadas : null, Validators.required ],
               fechaAprobacion               : [ perfil.fechaAprobacion ? new Date( perfil.fechaAprobacion ) : null, Validators.required ],
+              tieneObservacionSupervisor    : [ perfil.tieneObservacionSupervisor !== undefined ? perfil.tieneObservacionSupervisor : null ],
               observacion                   : [ observacionInterventor.length > 0 ? observacionInterventor[ observacionInterventor.length - 1 ].observacion : null, Validators.required ],
               observacionSupervisor         : [ observacionSupervisor.length > 0 ? observacionSupervisor[ observacionSupervisor.length - 1 ].observacion : null, Validators.required ],
               contratoPerfilObservacionArray: [ perfil.contratoPerfilObservacion.length > 0 ? perfil.contratoPerfilObservacion : [] ],
@@ -460,7 +462,7 @@ export class FormPerfilComponent implements OnInit {
 
         perfilesArray.push(
           {
-            tieneObservacionSupervisor: perfil.dirty === true && perfil.get( 'observacionSupervisor' ).value !== null ? false : null,
+            tieneObservacionSupervisor: perfil.dirty === true && perfil.get( 'observacionSupervisor' ).value !== null ? false : perfil.get( 'tieneObservacionSupervisor' ).value,
             cantidadHvAprobadas: Number( perfil.get( 'cantidadHvAprobadas' ).value ),
             cantidadHvRecibidas: Number( perfil.get( 'cantidadHvRecibidas' ).value ),
             cantidadHvRequeridas: Number( perfil.get( 'cantidadHvRequeridas' ).value ),

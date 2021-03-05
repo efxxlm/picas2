@@ -391,6 +391,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let valoresCorrectos = true;
     let valorTotalSumado = 0;
     let totalAportantes = 0;
