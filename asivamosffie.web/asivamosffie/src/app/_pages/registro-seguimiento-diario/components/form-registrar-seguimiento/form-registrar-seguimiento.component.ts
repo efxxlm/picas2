@@ -59,6 +59,7 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
   editorStyle = {
     height: '45px'
   };
+
   config = {
     toolbar: [
       ['bold', 'italic', 'underline'],
@@ -80,25 +81,20 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
   causaBajaDisponibilidadProductividad = [];
 
 
-  textoLimpio(texto: string) {
-    if (texto) {
-      const textolimpio = texto.replace(/<[^>]*>/g, '');
-      return textolimpio.length;
+  maxLength(e: any, n: number) {
+    console.log(e.editor.getLength()+" "+n);
+    if (e.editor.getLength() > n) {
+      e.editor.deleteText(n-1, e.editor.getLength());
     }
   }
-  textoLimpioAux(texto,n) {
+  textoLimpio(texto,n) {
     if (texto!=undefined) {
       return texto.getLength() > n ? n : texto.getLength();
     }
   }
-  maxLength(e: any, n: number) {
-    if (e.editor.getLength() > n) {
-      e.editor.deleteText(n, e.editor.getLength());
-    }
-  }
 
   proyecto: any;
-
+  estaEditando = false;
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -221,6 +217,7 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
 
   onSubmit() {
     //console.log(this.addressForm.value);
+    this.estaEditando = true;
     let values = this.addressForm.value;
 
     let seguimiento: SeguimientoDiario = {
