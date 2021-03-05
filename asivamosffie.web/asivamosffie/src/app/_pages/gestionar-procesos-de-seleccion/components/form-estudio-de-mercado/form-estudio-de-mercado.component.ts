@@ -82,6 +82,7 @@ export class FormEstudioDeMercadoComponent implements OnInit {
       if (Formcotizaciones.cuantasCotizaciones > this.cotizaciones.length && Formcotizaciones.cuantasCotizaciones < 100) {
         while (this.cotizaciones.length < Formcotizaciones.cuantasCotizaciones) {
           this.cotizaciones.push(this.createCotizacion());
+          if( this.estaEditando) this.addressForm.markAllAsTouched();
         }
       } else if (Formcotizaciones.cuantasCotizaciones <= this.cotizaciones.length && Formcotizaciones.cuantasCotizaciones >= 0) {
         //valido si tiene algo

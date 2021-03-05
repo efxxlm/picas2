@@ -110,7 +110,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
             grupo.get('nombre').setValue(valorNombre);
 
             this.aportantes.push(grupo);
-
+            this.datosAportantes.markAllAsTouched();
 
             this.commonService.listaMunicipiosByIdDepartamento(idMunicipio.substring(0, 5)).subscribe(mun => {
 
@@ -133,6 +133,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
 
         });
       }
+      this.datosAportantes.markAllAsTouched();
     });
   }
 

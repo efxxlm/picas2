@@ -390,7 +390,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
      return false; 
     }
     this.estaEditando = true;
-    this.personaNaturalForm.markAllAsTouched();
+    this.personaJuridicaIndividualForm.markAllAsTouched();
     if(!this.noTanNuevo)
     {
       this.procesoSeleccion.procesoSeleccionProponente = [];
@@ -455,7 +455,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
      return false; 
     }
     this.estaEditando = true;
-    this.personaNaturalForm.markAllAsTouched();
+    this.unionTemporalForm.markAllAsTouched();
     let porcentaje: number = 0;
 
     if(!this.noTanNuevo)
