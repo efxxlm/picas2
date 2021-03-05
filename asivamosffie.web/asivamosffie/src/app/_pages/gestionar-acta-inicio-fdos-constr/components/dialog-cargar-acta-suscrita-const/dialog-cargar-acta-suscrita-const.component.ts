@@ -56,6 +56,7 @@ export class DialogCargarActaSuscritaConstComponent implements OnInit {
   public fecha2Titulo;
 
   esRojo: boolean = false;
+  estaEditando = false;
   constructor(private router: Router,public dialog: MatDialog, public matDialogRef: MatDialogRef<DialogCargarActaSuscritaConstComponent>, @Inject(MAT_DIALOG_DATA) public data: any, private services: ActaInicioConstruccionService) {
     this.declararInputFile();
     this.maxDate = new Date();
@@ -100,17 +101,25 @@ export class DialogCargarActaSuscritaConstComponent implements OnInit {
     }
   }
   cargarActa(){
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     const inputNode: any = document.getElementById('file');
     this.archivo = inputNode.files[0].name;
     this.fechaSesion = new Date(this.addressForm.value.fechaFirmaContratistaObra);
     this.fechaSesionString = `${this.fechaSesion.getFullYear()}-${this.fechaSesion.getMonth() + 1}-${this.fechaSesion.getDate()}`;
     this.fechaSesion2 = new Date(this.addressForm.value.fechaFirmaContratistaInterventoria);
     this.fechaSesionString2 = `${this.fechaSesion2.getFullYear()}-${this.fechaSesion2.getMonth() + 1}-${this.fechaSesion2.getDate()}`;
-    if (this.fechaSesionString == 'NaN-NaN-NaN' || this.fechaSesionString2 == 'NaN-NaN-NaN' || this.archivo == undefined) {
-      this.openDialog('', '<b>Falta registrar información.</b>');
-      this.esRojo = true;
-    }
-    else{
+
+    let pFile = inputNode.files[0];
+    pFile = pFile.name.split('.');
+    pFile = pFile[pFile.length - 1];
+
+    if (pFile === 'pdf') {
+      if (this.fechaSesionString == 'NaN-NaN-NaN' || this.fechaSesionString2 == 'NaN-NaN-NaN' || this.archivo == undefined) {
+        this.openDialog('', '<b>Falta registrar información.</b>');
+        this.esRojo = true;
+      }
+      else{
       this.services.EditCargarActaSuscritaContrato(this.idContrato,this.fechaSesionString,this.fechaSesionString2,inputNode.files[0],"usr3").subscribe(data=>{
         if(data.isSuccessful==true){
           this.openDialog('', `<b>${data.message}</b>`);
@@ -124,6 +133,11 @@ export class DialogCargarActaSuscritaConstComponent implements OnInit {
         }
       });
     }
+  } else {
+    this.openDialog('', '<b>El tipo de archivo que esta intentando cargar no es permitido en la plataforma.<br>El tipo de documento soportado es .pdf</b>');
+    return false;
+  }
+
   }
   close(){
     this.matDialogRef.close('aceptado');

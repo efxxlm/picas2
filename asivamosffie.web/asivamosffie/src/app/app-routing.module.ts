@@ -378,12 +378,12 @@ const routes: Routes = [
         .then(m => m.RegistrarValidarRequisitosPagoModule)
       },
       {
-        path: 'aprobarSolicitudesPago',
+        path: 'verificarSolicitudPago',
         loadChildren: () => import('./_pages/aprobar-solicitudes-pago/aprobar-solicitudes-pago.module')
         .then(m => m.AprobarSolicitudesPagoModule)
       },
       {
-        path: 'autorizarSolicitudDePago',
+        path: 'autorizarSolicitudPago',
         loadChildren: () => import('./_pages/autorizar-solicitud-pago/autorizar-solicitud-pago.module')
         .then(m => m.AutorizarSolicitudPagoModule)
       },      
@@ -422,6 +422,11 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/aprobar-incorporacion-rendimientos/aprobar-incorporacion-rendimientos.module')
         .then(m => m.AprobarIncorporacionRendimientosModule)
       },
+      {
+        path: 'gestionListaChequeo',
+        loadChildren: () => import( './_pages/gestionar-lista-chequeo/gestionar-lista-chequeo.module' )
+          .then( module => module.GestionarListaChequeoModule )
+      }
     ]
 
   },

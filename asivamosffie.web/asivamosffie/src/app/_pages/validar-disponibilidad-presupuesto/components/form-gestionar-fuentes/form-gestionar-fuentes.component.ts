@@ -90,6 +90,7 @@ export class FormGestionarFuentesComponent implements OnInit {
             fuentesarray.push(fuent);
             // console.log(fuentesarray);
             this.estaEditando = true;
+            this.addressForm.markAllAsTouched();
           }
         });
       }
@@ -219,6 +220,7 @@ export class FormGestionarFuentesComponent implements OnInit {
 
   onSubmit() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     // console.log(this.addressForm.controls.fuentes.value);
     let mensaje="";
     this.addressForm.controls.fuentes.value.forEach(fuente => {

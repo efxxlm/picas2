@@ -21,6 +21,15 @@ namespace asivamosffie.services
             _context = context;
         }
 
+        public async Task<dynamic> GetListMenu()
+        { 
+            return await _context.Menu.Select(m => new
+                                                     { 
+                                                        m.MenuId,
+                                                        m.Nombre 
+                                                     }).ToListAsync();
+        }
+
         public async Task<List<dynamic>> GetUsuarioByPerfil(int idPerfil)
         {
 
@@ -42,12 +51,30 @@ namespace asivamosffie.services
             return ListaUsuario;
         }
 
+        public async Task<string> EnumeradorSolicitudPagoExpensasAndOtros()
+        {
+            int cantidadDeResgistros = _context.SolicitudPago.Count();
+            string Nomeclatura = "SolPagoEspecial";
+            string consecutivo = (cantidadDeResgistros + 1).ToString("000");
+            return string.Concat(Nomeclatura, consecutivo);
+        }
+
+        public async Task<string> EnumeradorSolicitudPago(bool esObra)
+        {
+            int cantidadDeResgistros = _context.SolicitudPago.Count();
+            string Nomeclatura = "SolPagoI";
+            if (esObra)
+                Nomeclatura = "SolPagoO";
+            string consecutivo = (cantidadDeResgistros + 1).ToString("000");
+            return string.Concat(Nomeclatura, consecutivo);
+        }
+
         public async Task<string> EnumeradorComiteTecnico()
         {
-            int cantidadDeResgistros = _context.ComiteTecnico.Where( ct => ct.EsComiteFiduciario == false || ct.EsComiteFiduciario == false ).Count();
-            string Nomeclatura = "CT_"; 
+            int cantidadDeResgistros = _context.ComiteTecnico.Where(ct => ct.EsComiteFiduciario == false || ct.EsComiteFiduciario == false).Count();
+            string Nomeclatura = "CT_";
             string consecutivo = (cantidadDeResgistros + 1).ToString("000");
-            return string.Concat(Nomeclatura, consecutivo );
+            return string.Concat(Nomeclatura, consecutivo);
         }
 
         public async Task<string> EnumeradorComiteObra()
@@ -60,20 +87,20 @@ namespace asivamosffie.services
 
         public async Task<string> EnumeradorComiteFiduciario()
         {
-            int cantidadDeResgistros = _context.ComiteTecnico.Where( ct => ct.EsComiteFiduciario == true ).Count();
-            string Nomeclatura = "CF_"; 
+            int cantidadDeResgistros = _context.ComiteTecnico.Where(ct => ct.EsComiteFiduciario == true).Count();
+            string Nomeclatura = "CF_";
             string consecutivo = (cantidadDeResgistros + 1).ToString("000");
-            return string.Concat(Nomeclatura, consecutivo );
+            return string.Concat(Nomeclatura, consecutivo);
         }
-        
+
         public async Task<string> EnumeradorContratacion()
-        { 
-            int cantidadDeResgistros =  _context.Contratacion.Count();
+        {
+            int cantidadDeResgistros = _context.Contratacion.Count();
             string Nomeclatura = "PI_";
             string consecutivo = (cantidadDeResgistros + 1).ToString("000");
             return string.Concat(Nomeclatura, consecutivo);
         }
-         
+
         public async Task<List<MenuPerfil>> GetMenuByRol(int pUserId)
         {
             int IdPerfil = await _context.UsuarioPerfil.Where(r => r.UsuarioId == pUserId).Select(r => r.PerfilId).FirstOrDefaultAsync();
@@ -142,7 +169,7 @@ namespace asivamosffie.services
          
         public async Task<List<Localicacion>> GetListDepartamento()
         {
-            
+
             return await _context.Localizacion.Where(r => r.Nivel == 1)
             .Select(x => new Localicacion
             {
@@ -152,7 +179,7 @@ namespace asivamosffie.services
         }
 
         public async Task<List<Localicacion>> GetListMunicipioByIdDepartamento(string pIdDepartamento)
-        {            
+        {
             if (!string.IsNullOrEmpty(pIdDepartamento))
             {
                 return await _context.Localizacion.Where(r => r.IdPadre.Equals(pIdDepartamento)).Select(x => new Localicacion
@@ -243,14 +270,14 @@ namespace asivamosffie.services
 
         public async Task<ContratoPoliza> GetLastContratoPolizaByContratoId(int pContratoId)
         {
-            return await _context.ContratoPoliza.Where(r => r.ContratoId.Equals(pContratoId)).OrderByDescending(x=>x.ContratoPolizaId).FirstOrDefaultAsync();
+            return await _context.ContratoPoliza.Where(r => r.ContratoId.Equals(pContratoId)).OrderByDescending(x => x.ContratoPolizaId).FirstOrDefaultAsync();
         }
 
         public async Task<Contratacion> GetContratacionByContratacionId(int pContratacionId)
         {
             return await _context.Contratacion.Where(r => r.ContratacionId.Equals(pContratacionId)).FirstOrDefaultAsync();
         }
-      
+
         public async Task<Contratista> GetContratistaByContratistaId(int pContratistaId)
         {
             return await _context.Contratista.Where(r => r.ContratistaId.Equals(pContratistaId)).FirstOrDefaultAsync();
@@ -326,7 +353,7 @@ namespace asivamosffie.services
         {
             return await _context.Dominio.Where(r => r.DominioId == pDominioID).Select(r => r.Nombre).FirstOrDefaultAsync();
         }
-         
+
         public async Task<List<Localicacion>> GetListMunicipioByIdMunicipio(string idMunicipio)
         {
             var munactual = _context.Localizacion.Find(idMunicipio);
@@ -352,7 +379,7 @@ namespace asivamosffie.services
                  IdPadre = x.IdPadre
              }).ToListAsync();
         }
-         
+
         public async Task<InstitucionEducativaSede> GetInstitucionEducativaById(int InstitucionEducativaById)
         {
             return await _context.InstitucionEducativaSede.FindAsync(InstitucionEducativaById);
@@ -476,7 +503,7 @@ namespace asivamosffie.services
         /// <param name="dias">Cuantos dias habiles se agregan</param>
         /// <param name="pFechaCalcular">La fecha a calcular los dias habiles</param>
         /// <returns></returns>
-        public async Task <DateTime> CalculardiasLaborales(int pDias, DateTime pFechaCalcular)
+        public async Task<DateTime> CalculardiasLaborales(int pDias, DateTime pFechaCalcular)
         {
             DateTime fechaInicial = pFechaCalcular;
             DateTime fechadiasHabiles = pFechaCalcular;
@@ -605,7 +632,7 @@ namespace asivamosffie.services
             }
             return fechadiasHabiles;
         }
- 
+
     }
 
 }

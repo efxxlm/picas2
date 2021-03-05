@@ -44,7 +44,7 @@ namespace asivamosffie.api.Controllers
 
                 if (file.Length > 0 && file.FileName.Contains(".xls"))
                 {
-                    string strUsuario = User.Identity.Name;
+                    string strUsuario = User.Identity.Name.ToUpper();
                     respuesta = await _paymentAndPerformancesService.UploadFileToValidate(file, strUsuario, typeFile, saveSuccessProcess);
                 }
                 return Ok(respuesta);

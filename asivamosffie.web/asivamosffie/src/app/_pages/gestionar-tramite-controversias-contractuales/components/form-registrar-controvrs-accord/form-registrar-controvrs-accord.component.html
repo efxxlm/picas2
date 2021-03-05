@@ -131,7 +131,11 @@
                                 <div class="text-area-quill auxBox">
                                     <quill-editor class="quill-editor-style card" [styles]="editorStyle"
                                         [modules]="config" required (onContentChanged)="maxLength($event, 100)"
-                                        formControlName="cualOtroMotivo" #cualOtroMotivo>
+                                        formControlName="cualOtroMotivo" #cualOtroMotivo
+                                        [class.invalid]="
+                                        (addressForm.get('cualOtroMotivo').invalid && addressForm.get('cualOtroMotivo').touched) ||
+                                        (addressForm.get('cualOtroMotivo').invalid && estaEditando)
+                                      ">
                                     </quill-editor>
                                 </div>
                                 <span class="contador miles" *ngIf="addressForm.controls.cualOtroMotivo.value">
@@ -186,7 +190,10 @@
                             <div class="text-area-quill auxBox">
                                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                                     required (onContentChanged)="maxLength($event, 1000)" #conclusionComitePretecnico
-                                    formControlName="conclusionComitePretecnico">
+                                    formControlName="conclusionComitePretecnico" [class.invalid]="
+                                    (addressForm.get('conclusionComitePretecnico').invalid && addressForm.get('conclusionComitePretecnico').touched) ||
+                                    (addressForm.get('conclusionComitePretecnico').invalid && estaEditando)
+                                  ">
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.conclusionComitePretecnico.value">
@@ -218,7 +225,11 @@
                             <div class="text-area-quill auxBox">
                                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                                     required (onContentChanged)="maxLength($event, 1000)"
-                                    formControlName="resumenJustificacionSolicitud" #resumenJustificacionSolicitud>
+                                    formControlName="resumenJustificacionSolicitud" #resumenJustificacionSolicitud
+                                    [class.invalid]="
+                                    (addressForm.get('resumenJustificacionSolicitud').invalid && addressForm.get('resumenJustificacionSolicitud').touched) ||
+                                    (addressForm.get('resumenJustificacionSolicitud').invalid && estaEditando)
+                                  ">
                                 </quill-editor>
                             </div>
                             <span class="contador miles"
@@ -268,7 +279,11 @@
                             <div class="text-area-quill auxBox">
                                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                                     required (onContentChanged)="maxLength($event, 1000)"
-                                    formControlName="motivosRechazo" #motivosRechazo>
+                                    formControlName="motivosRechazo" #motivosRechazo
+                                    [class.invalid]="
+                                    (addressForm.get('motivosRechazo').invalid && addressForm.get('motivosRechazo').touched) ||
+                                    (addressForm.get('motivosRechazo').invalid && estaEditando)
+                                  ">
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.motivosRechazo.value">

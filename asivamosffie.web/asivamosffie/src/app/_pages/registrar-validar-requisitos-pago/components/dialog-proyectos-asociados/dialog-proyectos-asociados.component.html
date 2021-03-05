@@ -1,13 +1,13 @@
 <button mat-button mat-dialog-close class="modal--btn-cerrar">
     <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
 </button>
-<div style="padding: 30px 20px; text-align: center;">
+<div style="padding: 30px 20px; text-align: center;" *ngIf="contrato !== undefined">
     <h1 class="title-menu--h1 centerTrick">
-        Proyectos asociados contrato N801801
+        Proyectos asociados contrato {{ contrato.numeroContrato }}
     </h1>
     <p class="info-sub-title">
-        <span>Fecha de firma del contrato: <b>26/09/2020</b></span>
-        <span>Plazo: <b>24 Meses 13 Días</b></span>
+        <span>Fecha de firma del contrato: <b> {{ contrato.fechaAprobacion | date: 'dd/MM/yyyy' }} </b></span>
+        <span>Plazo: <b>{{ contrato.plazoMeses }} Meses {{ contrato.plazoDias }} Días</b></span>
     </p>
     <div class="table-responsive">
         <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
@@ -38,6 +38,5 @@
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
-        <!--<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>-->
     </div>
 </div>

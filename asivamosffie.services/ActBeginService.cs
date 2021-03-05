@@ -632,10 +632,14 @@ namespace asivamosffie.services
 
                 if (pContratoConstruccion.ConstruccionObservacion.FirstOrDefault().ConstruccionObservacionId == 0 || string.IsNullOrEmpty(pContratoConstruccion.ConstruccionObservacion.FirstOrDefault().ConstruccionObservacionId.ToString()))
                 {
-                    construccionObservacion.UsuarioCreacion = pUsuarioCreacion;
-                    construccionObservacion.FechaCreacion = DateTime.Now;
+                    ConstruccionObservacion observacion = pContratoConstruccion.ConstruccionObservacion.FirstOrDefault();
 
-                    _context.ConstruccionObservacion.Add(construccionObservacion);
+                    observacion.TipoObservacionConstruccion = construccionObservacion.TipoObservacionConstruccion;
+
+                    observacion.UsuarioCreacion = pUsuarioCreacion;
+                    observacion.FechaCreacion = DateTime.Now;
+
+                    _context.ConstruccionObservacion.Add(observacion);
                 }
                 else
                 {
@@ -1886,7 +1890,7 @@ namespace asivamosffie.services
             List<UsuarioPerfil> listaInterventor = getCorreos((int)EnumeratorPerfil.Interventor);
 
             //Con acta en proceso de firma - obra
-            if (pContrato.EstadoActaFase2 == "19")
+            if (pContrato.EstadoActaFase2 == "19" || pContrato.EstadoActaFase2 == "21")
             {
                 Contratacion contratacion = _context.Contratacion
                                                             .Where(p => p.ContratacionId == pContrato.ContratacionId)
@@ -1911,8 +1915,11 @@ namespace asivamosffie.services
                 }
             }
 
-            // Enviada por el supervisor - obra
-            if (pContrato.EstadoActaFase2 == "17")
+
+
+            // 17 -Enviada por el supervisor - obra
+            // 4 - Enviada por el supervisor - interventoria
+            if (pContrato.EstadoActaFase2 == "17" || pContrato.EstadoActaFase2 == "4")
             {
                 List<UsuarioPerfil> listaFinal = new List<UsuarioPerfil>();
                 listaFinal.AddRange(listaInterventor);

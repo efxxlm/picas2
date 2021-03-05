@@ -29,6 +29,7 @@ export class GestionSocialComponent implements OnInit {
     gestionSocial: any;
     seguimientoSemanalGestionObraSocialId = 0;
     seguimientoSemanalObservacionId = 0;
+    contadorObservacionApoyo = 0;
     observacionApoyo: any[] = [];
     displayedColumnsHistorial: string[]  = [
         'fechaRevision',
@@ -115,6 +116,11 @@ export class GestionSocialComponent implements OnInit {
     }
 
     guardar() {
+        if ( this.gestionSocial.tieneObservacionApoyo === true && this.formGestionSocial.get( 'tieneObservaciones' ).value === false && this.contadorObservacionApoyo === 0 ) {
+            this.contadorObservacionApoyo++;
+            this.openDialog( '', '<b>Le recomendamos verificar su respuesta;<br>Tenga en cuenta que el apoyo a la supervisión si tuvo observaciones.</b>' );
+            return;
+        }
         if ( this.formGestionSocial.get( 'tieneObservaciones' ).value === false && this.formGestionSocial.get( 'observaciones' ).value !== null ) {
             this.formGestionSocial.get( 'observaciones' ).setValue( '' );
         }

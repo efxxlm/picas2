@@ -38,7 +38,7 @@
                 <td mat-cell *matCellDef="let element" align="center"> 
                     <div *ngIf="element.estadoMesa==''"> Sin registro </div> 
                     <div *ngIf="element.estadoMesa=='1'"> En proceso de registro </div> 
-                    <div *ngIf="element.estadoMesa=='2'"> Finalizada </div> 
+                    <div *ngIf="element.estadoMesa=='2'"> Registrada </div> 
                 </td>
             </ng-container>
 
@@ -49,9 +49,9 @@
                         (click)="this.registrarNuevaMesa(element.actuacionId)">
                         Registrar nueva mesa de trabajo
                     </button>
-                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoMesa=='1'"
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoMesa=='1' && element.registroCompletoReclamacion=='Completo'"
                         (click)="this.finalizarMesaTrabajo(element.actuacionId)">
-                        Finalizar mesa de trabajo
+                        Registrar mesa de trabajo
                     </button>
                     <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoMesa=='1'"
                         (click)="this.verDetalleEditar(element.actuacionId,element.numeroMesa,element.mesaId)">

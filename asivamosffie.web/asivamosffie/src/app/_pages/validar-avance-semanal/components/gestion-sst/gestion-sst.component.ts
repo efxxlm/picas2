@@ -21,6 +21,7 @@ export class GestionSstComponent implements OnInit {
     seguimientoSemanalId: number;
     seguimientoSemanalGestionObraId: number;
     seguimientoSemanalObservacionId = 0;
+    contadorObservacionApoyo = 0;
     gestionObraSst: any;
     tablaHistorial = new MatTableDataSource();
     observacionApoyo: any[] = [];
@@ -136,6 +137,11 @@ export class GestionSstComponent implements OnInit {
     }
 
     guardar() {
+        if ( this.gestionObraSst.tieneObservacionApoyo === true && this.formGestionSst.get( 'tieneObservaciones' ).value === false && this.contadorObservacionApoyo === 0 ) {
+            this.contadorObservacionApoyo++;
+            this.openDialog( '', '<b>Le recomendamos verificar su respuesta;<br>Tenga en cuenta que el apoyo a la supervisión si tuvo observaciones.</b>' );
+            return;
+        }
         if ( this.formGestionSst.get( 'tieneObservaciones' ).value === false && this.formGestionSst.get( 'observaciones' ).value !== null ) {
             this.formGestionSst.get( 'observaciones' ).setValue( '' );
         }

@@ -1,6 +1,6 @@
-<section class="text-center" *ngIf="esVerDetalle === false && seguimientoDiario !== undefined">
+<section class="text-center" *ngIf="esVerDetalle === false && seguimientoSemanal !== undefined">
     <div class="colorMainColor">
-        <p>Estado de la obra: <b>Por integrar</b> </p>
+        <p>Estado de la obra: <b> {{ seguimientoSemanal.infoProyecto.estadoObra }} </b> </p>
     </div>
 
     <mat-accordion>
@@ -18,12 +18,8 @@
                             Disponibilidad de personal
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-
-                    <div class="colorMainColor">
-                        <p> <b>Disponiblidad personal: Por integrar</b> </p>
-                    </div>
         
-                    <app-tabla-avance-resumen-alertas [seguimientoDiario]="seguimientoDiario.seguimientoDiario"></app-tabla-avance-resumen-alertas>
+                    <app-tabla-avance-resumen-alertas [seguimientoDiario]="seguimientoSemanal.seguimientoDiario"></app-tabla-avance-resumen-alertas>
                 </mat-expansion-panel>
 
                 <mat-expansion-panel class="expansion-style sub-expansion-black">
@@ -33,13 +29,7 @@
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
-                    <div class="d-flex justify-content-center colorMainColor">
-                        <p><b>Disponiblidad de material</b>: Por integrar</p>
-                        <p style="margin-left: 2em;"> <b>Disponiblidad del equipo</b>: Por integrar </p>
-                        <p style="margin-left: 2em;"><b>Productividad</b>: Por integrar </p>
-                    </div>
-
-                    <app-tabla-disponibilidad-material [seguimientoDiario]="seguimientoDiario.seguimientoDiario"></app-tabla-disponibilidad-material>
+                    <app-tabla-disponibilidad-material [seguimientoDiario]="seguimientoSemanal.seguimientoDiario"></app-tabla-disponibilidad-material>
                 </mat-expansion-panel>
             </mat-accordion>
 
@@ -52,12 +42,16 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-tabla-avance-fisico [seguimientoDiario]="seguimientoDiario" *ngIf="seguimientoDiario.flujoInversion.length > 0"></app-tabla-avance-fisico>
+            <app-tabla-avance-fisico [seguimientoSemanal]="seguimientoSemanal" *ngIf="seguimientoSemanal.flujoInversion.length > 0"></app-tabla-avance-fisico>
         </mat-expansion-panel>
     </mat-accordion>
 </section>
 
 <section class="text-center" *ngIf="esVerDetalle === true">
+    <div>
+        <p>Estado de la obra: <b> {{ seguimientoSemanal.infoProyecto.estadoObra }} </b> </p>
+    </div>
+
     <mat-accordion>
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
@@ -73,12 +67,8 @@
                             Disponibilidad de personal
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-
-                    <div class="colorMainColor">
-                        <p> <b>Disponiblidad personal: Insuficiente</b> </p>
-                    </div>
         
-                    <app-tabla-avance-resumen-alertas [seguimientoDiario]="seguimientoDiario.seguimientoDiario"></app-tabla-avance-resumen-alertas>
+                    <app-tabla-avance-resumen-alertas [seguimientoDiario]="seguimientoSemanal.seguimientoDiario"></app-tabla-avance-resumen-alertas>
                 </mat-expansion-panel>
 
                 <mat-expansion-panel class="expansion-style sub-expansion-black">
@@ -88,13 +78,7 @@
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
-                    <div class="d-flex justify-content-center colorMainColor">
-                        <p><b>Disponiblidad de material</b>: Media</p>
-                        <p style="margin-left: 2em;"> <b>Disponiblidad del equipo</b>: Baja </p>
-                        <p style="margin-left: 2em;"><b>Productividad</b>: --- </p>
-                    </div>
-
-                    <app-tabla-disponibilidad-material [seguimientoDiario]="seguimientoDiario.seguimientoDiario"></app-tabla-disponibilidad-material>
+                    <app-tabla-disponibilidad-material [seguimientoDiario]="seguimientoSemanal.seguimientoDiario"></app-tabla-disponibilidad-material>
                 </mat-expansion-panel>
             </mat-accordion>
         </mat-expansion-panel>
@@ -106,7 +90,7 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-tabla-avance-fisico [seguimientoDiario]="seguimientoDiario" [esVerDetalle]="true"></app-tabla-avance-fisico>
+            <app-tabla-avance-fisico [seguimientoSemanal]="seguimientoSemanal" [avanceFisicoObs]="avanceFisicoObs" [esVerDetalle]="esVerDetalle"></app-tabla-avance-fisico>
         </mat-expansion-panel>
     </mat-accordion>
 </section>

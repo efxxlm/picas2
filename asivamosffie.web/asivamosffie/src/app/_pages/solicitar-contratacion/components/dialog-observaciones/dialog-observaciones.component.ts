@@ -22,7 +22,9 @@ export class DialogObservacionesComponent implements OnInit {
     this.projectContractingSvc.getListContratacionObservacion( this.data.contratacionId )
       .subscribe(
         response => {
-          this.contratacionProyecto = response[ 'contratacionProyecto' ];
+          console.log( response );
+          this.contratacionProyecto = response[ 'contratacionObservacion' ];
+          console.log( this.contratacionProyecto );
         }
       );
   }

@@ -11,11 +11,11 @@
     <mat-expansion-panel class="expansion-style" *ngFor="let contratacion of contratacionProyecto">
         <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title">
-                {{ contratacion.proyecto.llaveMen }} - {{ contratacion.proyecto.institucionEducativa.nombre }} - {{ contratacion.proyecto.sede.nombre }}
+              {{ contratacion.contratacionProyecto.proyecto.llaveMen }} - {{ contratacion.contratacionProyecto.proyecto.institucionEducativa.nombre }} - {{ contratacion.contratacionProyecto.proyecto.sede.nombre }}
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <section *ngIf="contratacion.sesionSolicitudObservacionProyecto.length === 0">
+        <section *ngIf="contratacion.observacion === undefined">
           <mat-card class="shipping-card w-80">
             <mat-card-content>
               <p style="color: #174193;">El proyecto no recibio observaciones.</p>
@@ -23,16 +23,14 @@
           </mat-card>
         </section>
           
-        <section *ngIf="contratacion.sesionSolicitudObservacionProyecto.length > 0">
-          <mat-card class="shipping-card w-80" *ngFor="let observacionesProyecto of contratacion.sesionSolicitudObservacionProyecto; index as i">
-            <mat-card-content>
-        
-              <section [innerHTML]="observacionesProyecto.observacion" align="left" class="padding-section">
-              </section>
-        
-            </mat-card-content>
-          </mat-card>
-        </section>
+        <mat-card class="shipping-card w-80" *ngIf="contratacion.observacion !== undefined">
+          <mat-card-content>
+
+            <section [innerHTML]="contratacion.observacion" align="left" class="padding-section">
+            </section>
+
+          </mat-card-content>
+        </mat-card>
 
     </mat-expansion-panel>
   </mat-accordion>

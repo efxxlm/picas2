@@ -41,6 +41,7 @@ export class FormActuacionReclamacionComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
   constructor(private services: ContractualControversyService, private common: CommonService, private fb: FormBuilder, public dialog: MatDialog, private router: Router) { }
 
   ngOnInit(): void {
@@ -90,6 +91,8 @@ export class FormActuacionReclamacionComponent implements OnInit {
   }
 
   onSubmit() {
+    this.estaEditando=true;
+    this.addressForm.markAllAsTouched();
     let actuacionTaiArray;
     if (this.isEditable == true) {
       actuacionTaiArray = {

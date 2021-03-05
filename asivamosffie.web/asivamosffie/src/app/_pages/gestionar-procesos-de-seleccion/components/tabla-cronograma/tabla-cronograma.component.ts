@@ -28,6 +28,7 @@ export class TablaCronogramaComponent implements OnInit {
 
   displayedColumns: string[] = [ 'tipo', 'numero', 'fechaSolicitud', 'numeroSolicitud', 'estadoDelSolicitud', 'id'];
   dataSource = new MatTableDataSource();
+  procesoSeleccionMonitoreoId = 0;
   
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -90,7 +91,16 @@ export class TablaCronogramaComponent implements OnInit {
       this.idProcesoSeleccion = parametro['id'];
 
       this.procesoSeleccionService.listaProcesoSeleccionCronogramaMonitoreo(this.idProcesoSeleccion).subscribe(monitoreo => {
-        if(monitoreo.length==0)
+        // no tiene monitoreo ó los monitoreos ya estan cerrados
+        let listaTemp = monitoreo.filter( r => r.estadoActividadCodigo === this.estadosProcesoSeleccionMonitoreo.DevueltoPorComiteTecnico ||
+                                               r.estadoActividadCodigo === this.estadosProcesoSeleccionMonitoreo.DevueltoPorComiteFiduciario ||
+                                               r.estadoActividadCodigo === this.estadosProcesoSeleccionMonitoreo.AprobadoPorComiteTecnico ||
+                                               r.estadoActividadCodigo === this.estadosProcesoSeleccionMonitoreo.EnTramite
+                                               //r.estadoActividadCodigo === this.estadosProcesoSeleccionMonitoreo.AprobadoPorComiteFiduciario 
+                                        )
+
+        console.log( listaTemp, monitoreo.filter( r => r.enviadoComiteTecnico != true ).length)
+        if(listaTemp.length === 0)
         {
           this.procesoSeleccionService.listaActividadesByIdProcesoSeleccion(this.idProcesoSeleccion).subscribe(lista => {
 
@@ -110,27 +120,30 @@ export class TablaCronogramaComponent implements OnInit {
     
           })
         }
+        // tiene monitoreos
         else{
-          let listaActividades = this.addressForm as FormArray;
-          this.listaCronograma = monitoreo[monitoreo.length-1].procesoSeleccionCronogramaMonitoreo;                
-          if(this.listaCronograma)
-          {
+          this.bitEditar=false;
+          // let listaActividades = this.addressForm as FormArray;
+
+          // this.listaCronograma = monitoreo[monitoreo.length-1].procesoSeleccionCronogramaMonitoreo.filter( r => r.eliminado !== true );                
+          // if(this.listaCronograma)
+          // {
             
-            this.listaCronograma.forEach(cronograma => {
-              let grupo = this.crearActividad();
-              const etapaActualproceso = this.listaetapaActualProceso.find(p => p.codigo === cronograma.etapaActualProcesoCodigo);
-              grupo.get('procesoSeleccionCronogramaId').setValue(cronograma.procesoSeleccionCronogramaId);
-              grupo.get('descripcion').setValue(cronograma.descripcion);
-              grupo.get('fecha').setValue(cronograma.fechaMaxima);
-              grupo.get('etapaActualProceso').setValue(etapaActualproceso),    
-              listaActividades.push(grupo);    
-              if(cronograma.estadoActividadCodigo!=EstadosSolicitudCronograma.Creada && cronograma.estadoActividadCodigo!=EstadosSolicitudCronograma.DevueltaPorComiteFiduciario &&
-                cronograma.estadoActividadCodigo!=EstadosSolicitudCronograma.DevueltaPorComiteTecnico)
-                {
-                  this.bitEditar=false;
-                }
-            })
-          }            
+          //   this.listaCronograma.forEach(cronograma => {
+          //     let grupo = this.crearActividad();
+          //     const etapaActualproceso = this.listaetapaActualProceso.find(p => p.codigo === cronograma.etapaActualProcesoCodigo);
+          //     grupo.get('procesoSeleccionCronogramaId').setValue(cronograma.procesoSeleccionCronogramaId);
+          //     grupo.get('descripcion').setValue(cronograma.descripcion);
+          //     grupo.get('fecha').setValue(cronograma.fechaMaxima);
+          //     grupo.get('etapaActualProceso').setValue(etapaActualproceso),    
+          //     listaActividades.push(grupo);    
+          //     if(cronograma.estadoActividadCodigo!=EstadosSolicitudCronograma.Creada && cronograma.estadoActividadCodigo!=EstadosSolicitudCronograma.DevueltaPorComiteFiduciario &&
+          //       cronograma.estadoActividadCodigo!=EstadosSolicitudCronograma.DevueltaPorComiteTecnico)
+          //       {
+          //         this.bitEditar=false;
+          //       }
+          //   })
+          // }            
         }
       });
       let listaProcesos: ProcesosElement[] = []; 
@@ -199,6 +212,8 @@ export class TablaCronogramaComponent implements OnInit {
       ])],
       fecha: [null, Validators.required],
       etapaActualProceso: [null, Validators.required],
+      procesoSeleccionCronogramaMonitoreoId: [],
+      
     });
   }
 
@@ -230,21 +245,26 @@ export class TablaCronogramaComponent implements OnInit {
   }
 
   borrarArray(borrarForm: any, i: number) {
+    let listaActividades = this.addressForm as FormArray;
+    console.log( listaActividades.controls[i].value );
     borrarForm.removeAt(i);
   }
 
   onSubmit() {
 
     let listaActividades = this.addressForm as FormArray;
-    let listaCronograma:ProcesoSeleccionMonitoreo={estadoActividadCodigo:null,
+    let listaCronograma:ProcesoSeleccionMonitoreo={
+      estadoActividadCodigo:null,
       numeroProceso:null,
       procesoSeleccionCronogramaMonitoreo:[],
-      procesoSeleccionId:null, procesoSeleccionMonitoreoId:null
+      procesoSeleccionId:this.idProcesoSeleccion, 
+      procesoSeleccionMonitoreoId:this.procesoSeleccionMonitoreoId
     };
 
     let i = 0;
     listaActividades.controls.forEach(control => {
       let procesoSeleccionCronograma: ProcesoSeleccionCronogramaMonitoreo = {
+        procesoSeleccionCronogramaMonitoreoId: control.get('procesoSeleccionCronogramaMonitoreoId').value,
         procesoSeleccionCronogramaId: control.get('procesoSeleccionCronogramaId').value,
         descripcion: control.get('descripcion').value,
         fechaMaxima: control.get('fecha').value,
@@ -284,21 +304,29 @@ export class TablaCronogramaComponent implements OnInit {
     console.log(id);
     let listaActividades = this.addressForm as FormArray;
     listaActividades.clear();
-    id.procesoSeleccionCronogramaMonitoreo.forEach(cronograma => {
+    id.procesoSeleccionCronogramaMonitoreo.filter( r => r.eliminado != true ).forEach(cronograma => {
       let grupo = this.crearActividad();
       const etapaActualproceso = this.listaetapaActualProceso.find(p => p.codigo === cronograma.etapaActualProcesoCodigo);
       grupo.get('procesoSeleccionCronogramaId').setValue(cronograma.procesoSeleccionCronogramaId);
+      grupo.get('procesoSeleccionCronogramaMonitoreoId').setValue(cronograma.procesoSeleccionCronogramaMonitoreoId);
       grupo.get('descripcion').setValue(cronograma.descripcion);
       grupo.get('fecha').setValue(cronograma.fechaMaxima);
       grupo.get('etapaActualProceso').setValue(etapaActualproceso),    
       
       listaActividades.push(grupo);
-      if(cronograma.estadoActividadCodigo!=EstadosSolicitudCronograma.Creada && cronograma.estadoActividadCodigo!=EstadosSolicitudCronograma.DevueltaPorComiteFiduciario &&
-        cronograma.estadoActividadCodigo!=EstadosSolicitudCronograma.DevueltaPorComiteTecnico)
-        {
-          this.bitEditar=false;
-        }
+      
     })
+
+    this.procesoSeleccionMonitoreoId = id.procesoSeleccionMonitoreoId;
+
+    if(id.estadoActividadCodigo!=EstadosSolicitudCronograma.Creada && id.estadoActividadCodigo!=EstadosSolicitudCronograma.DevueltaPorComiteFiduciario &&
+      id.estadoActividadCodigo!=EstadosSolicitudCronograma.DevueltaPorComiteTecnico)
+      {
+        this.bitEditar=false;
+      }else{
+        this.bitEditar=true;
+      }
+
     window.scroll(0,0);
     //location.reload();
   }

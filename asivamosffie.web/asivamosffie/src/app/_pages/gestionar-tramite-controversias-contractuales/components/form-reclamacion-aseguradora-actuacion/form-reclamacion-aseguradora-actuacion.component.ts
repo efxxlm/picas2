@@ -90,7 +90,8 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
 
   onSubmit() {
     this.estaEditando = true;
-    console.log(this.addressForm.value);
+    this.addressForm.markAllAsTouched();
+    // console.log(this.addressForm.value);
     let arrayReclam;
     let codeState;
     if(this.isEditable==true){

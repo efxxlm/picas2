@@ -22,7 +22,7 @@ namespace asivamosffie.api.Controllers
         {
             _contractualControversy = contractualControversy;
         }
-
+           
         [HttpPost]
         [Route("CreateEditarControversiaTAI")]
         public async Task<IActionResult> CreateEditarControversiaTAI(ControversiaContractual controversiaContractual)

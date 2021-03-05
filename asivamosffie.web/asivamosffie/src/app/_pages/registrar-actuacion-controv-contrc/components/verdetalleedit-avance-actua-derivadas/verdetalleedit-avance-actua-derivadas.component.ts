@@ -37,6 +37,8 @@ export class VerdetalleeditAvanceActuaDerivadasComponent implements OnInit {
   controversiaID: any;
   actuacionDerivadaID: any;
   controversia: any;
+  actuacionDerivadaInfo: any;
+  estaEditando = false;
   constructor(private fb: FormBuilder,private router: Router, private conServices:ContractualControversyService,
     public dialog: MatDialog,
     public commonServices: CommonService,
@@ -52,11 +54,22 @@ export class VerdetalleeditAvanceActuaDerivadasComponent implements OnInit {
     this.activatedRoute.params.subscribe( param => {
       this.controversiaID = param['id'];
       this.actuacionDerivadaID = param['editId'];
-      this.conServices.GetActuacionSeguimientoById(this.controversiaID).subscribe(
+      this.conServices.GetControversiaActuacionById(this.controversiaID).subscribe(
         response=>{
           this.controversia=response;          
         }
       );
+      this.conServices.GetSeguimientoActuacionDerivadabyId(this.actuacionDerivadaID).subscribe((data:any)=>{
+        this.actuacionDerivadaInfo = data;
+        this.addressForm.get('fechaActuacionDerivada').setValue(data.fechaActuacionDerivada);
+        this.addressForm.get('descripcionActuacionAdelantada').setValue(data.descripciondeActuacionAdelantada);
+        for (let i = 0; i < this.estadoDerivadaArray.length; i++) {
+          const estadoActDerSelected = this.estadoDerivadaArray.find(p => p.codigo == data.estadoActuacionDerivadaCodigo);
+          this.addressForm.get('estadoActuacionDerivada').setValue(estadoActDerSelected);
+        }
+        this.addressForm.get('observaciones').setValue(data.observaciones);
+        this.addressForm.get('urlSoporte').setValue(data.rutaSoporte);
+      });
     });
   }
   validateNumberKeypress(event: KeyboardEvent) {
@@ -77,14 +90,15 @@ export class VerdetalleeditAvanceActuaDerivadasComponent implements OnInit {
     }
   }
   onSubmit() {
+    this.estaEditando = true;
     let obj={
-      seguimientoActuacionDerivadaId:0,
+      seguimientoActuacionDerivadaId:this.actuacionDerivadaInfo.seguimientoActuacionDerivadaId,
       controversiaActuacionId:this.controversia.controversiaActuacionId,
       esRequiereFiduciaria:false,
       fechaActuacionDerivada :this.addressForm.get("fechaActuacionDerivada").value,
       descripciondeActuacionAdelantada :this.addressForm.get("descripcionActuacionAdelantada").value,
       rutaSoporte :this.addressForm.get("urlSoporte").value,
-      estadoActuacionDerivadaCodigo :this.addressForm.get("estadoActuacionDerivada").value,
+      estadoActuacionDerivadaCodigo :this.addressForm.value.estadoActuacionDerivada.codigo,
       observaciones :this.addressForm.get("observaciones").value,}
     this.conServices.CreateEditarSeguimientoDerivado(obj).subscribe(
       response=>{

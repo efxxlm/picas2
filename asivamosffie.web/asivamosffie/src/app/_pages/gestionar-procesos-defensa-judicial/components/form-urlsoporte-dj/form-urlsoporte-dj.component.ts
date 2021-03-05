@@ -17,6 +17,7 @@ export class FormUrlsoporteDjComponent implements OnInit {
   addressForm = this.fb.group({
     urlSoporte: [null, Validators.required]
   });
+  estaEditando = false;
   constructor(  private fb: FormBuilder,public commonService:CommonService,
     public defensaService:DefensaJudicialService,
     public dialog: MatDialog, private router: Router  ) { }
@@ -53,6 +54,8 @@ export class FormUrlsoporteDjComponent implements OnInit {
   }
 
   onSubmit() {
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let defensaJudicial=this.defensaJudicial;
     if(!this.defensaJudicial.defensaJudicialId||this.defensaJudicial.defensaJudicialId==0)
     {

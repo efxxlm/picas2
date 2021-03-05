@@ -127,8 +127,7 @@
                 <mat-form-field class="full-width">
                   <input matInput #numDocumento type="number" formControlName="numerodocumento" maxlength="10" readonly
                     required (keypress)="validateNumberKeypress($event)"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
                 </mat-form-field>
                 <span class="contador">{{10 - numDocumento.value.length}}</span>
               </div>
@@ -369,7 +368,7 @@
                     (change)="CambioNumeroRP()"
                     (keypress)="validateNumberKeypress($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   />
                 </mat-form-field>
                 <span
@@ -428,7 +427,7 @@
                           maxlength="50"
                           (keypress)="validateNumberKeypress($event)"
                           onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                          oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         />
                         <input type="hidden" formControlName="registroPresupuestalId" />
                       </mat-form-field>
@@ -636,7 +635,6 @@
                           required
                           (keypress)="validateNumberKeypress($event); validateonevige(j)"
                           onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                           [options]="{
                             prefix: '$ ',
                             thousands: '.',
@@ -703,7 +701,7 @@
                           required
                           (keypress)="validateNumberKeypress($event)"
                           onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                          oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         />
                       </mat-form-field>
                       <span
@@ -805,7 +803,6 @@
                                 required
                                 (keypress)="validateNumberKeypress($event)"
                                 onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                 [readonly]="vigencias1(j).controls.length == 1"
                                 [options]="{
                                   prefix: '$ ',
@@ -1186,6 +1183,17 @@
       <button mat-button color="warn" class="btn-guardar" type="submit">
         <img src="assets/img/icon/guardar.svg" alt="Guardar" />
       </button>
+        <button
+          mat-button
+          color="warn"
+          *ngIf="addressForm.value.fuenteRecursosArray.length === 1"
+          type="button"
+          class="btn-eliminar"
+          (click)="borrarArray(fuenteRecursosArray, 0, 2, 0)"          
+        >
+          <img src="assets/img/icon/Basu-secondary.svg" alt="Eliminar vigencia" class="height-basu" />
+          Eliminar Registro
+        </button>
     </div>
   </form>
 </div>

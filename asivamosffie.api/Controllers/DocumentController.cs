@@ -16,7 +16,7 @@ namespace asivamosffie.api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class DocumentController : ControllerBase
-    {
+    {  
 
         private readonly IDocumentService _documentService;
         private readonly IOptions<AppSettings> _settings;

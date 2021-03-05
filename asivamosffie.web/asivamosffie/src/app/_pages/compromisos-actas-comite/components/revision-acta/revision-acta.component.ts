@@ -146,6 +146,7 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
   //Submit de la data
   onSubmit() {
     this.estaEditando = true;
+    this.form.markAllAsTouched();
     if (this.form.invalid) {
       this.observacionInvalida = true;
       this.openDialog('', '<b>Falta registrar información.</b>');

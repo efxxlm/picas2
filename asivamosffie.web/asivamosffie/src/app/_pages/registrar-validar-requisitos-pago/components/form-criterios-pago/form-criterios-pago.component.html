@@ -1,4 +1,4 @@
-<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+<form [formGroup]="addressForm" novalidate (ngSubmit)="guardar()">
   <p class="info-sub-title supportBlack">
     <span><b>Monto máximo por pagar en esta factura:</b> $15.000.000</span>
     <span><b>Monto pendiente por pagar en la fase:</b> $30.000.000</span>
@@ -10,23 +10,20 @@
           <label class="label-left" for="criterioPago">Criterio de pago</label>
         </div>
         <div class="col">
-          <mat-form-field class="select-width">
+          <mat-form-field class="select-width" style="width: 99%;">
             <mat-select formControlName="criterioPago" multiple required (selectionChange)="getvalues($event.value)">
-              <mat-option *ngFor="let criterioPago of criteriosArray" [value]="criterioPago.value">
-                {{ criterioPago.name }}
-              </mat-option>
+              <mat-option *ngFor="let criterioPago of criteriosArray" [value]="criterioPago"> {{ criterioPago.nombre }} </mat-option>
             </mat-select>
           </mat-form-field>
         </div>
       </div>
     </div>
   </div>
-  <div style="margin-top: 3em;">
-    <mat-card class="shipping-card">
+
+  <div formArrayName="criterios" style="margin-top: 3em;" *ngFor="let criterio of criterios.controls; index as i">
+    <mat-card class="shipping-card" [formGroup]="criterio">
       <mat-card-header class="header-card header-card--margin">
-        <mat-card-title class="header-card--text">
-          Estudios y diseños interventoria hasta 90%
-        </mat-card-title>
+        <mat-card-title class="header-card--text"> {{ criterio.get( 'nombreCriterio' ).value }} </mat-card-title>
       </mat-card-header>
       <mat-card-content style="text-align: left;">
         <div class="row">
@@ -37,9 +34,9 @@
               </div>
               <div class="col">
                 <mat-form-field class="select-width">
-                  <mat-select formControlName="tipoPago" required>
-                    <mat-option *ngFor="let tipoPago of tipoPagoArray" [value]="tipoPago.value">
-                      {{ tipoPago.name }}
+                  <mat-select formControlName="tipoPago" required (ngModelChange)="getConceptosDePago( i, $event )">
+                    <mat-option *ngFor="let tipoPago of criterio.get( 'tiposDePago' ).value" [value]="tipoPago">
+                      {{ tipoPago.nombre }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -55,9 +52,10 @@
               </div>
               <div class="col">
                 <mat-form-field class="select-width">
-                  <mat-select formControlName="conceptoPago" required>
-                    <mat-option *ngFor="let conceptoPago of conceptoPagoArray" [value]="conceptoPago.value">
-                      {{ conceptoPago.name }}
+                  <mat-select formControlName="conceptoPago" multiple required
+                    (selectionChange)="getvaluesConcepto( $event.value, i )">
+                    <mat-option *ngFor="let conceptoPago of criterio.get( 'conceptosDePago' ).value" [value]="conceptoPago">
+                      {{ conceptoPago.nombre }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -65,24 +63,67 @@
             </div>
           </div>
         </div>
+        <!--
+          Get conceptos seleccionados
+        -->
+        <div formArrayName="conceptos" *ngFor="let concepto of getConceptos( i ).controls; index as j">
+          <mat-card-title class="header-card--text alineacion-titulos2" style="padding-left: 0em; margin-top: 0.5em;"> {{ concepto.get( 'conceptoPagoCriterioNombre' ).value }} </mat-card-title>
+          <div class="row" [formGroup]="concepto">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left" for="valorFacturado">
+                    Valor facturado al concepto
+                  </label>
+                </div>
+                <div class="col d-flex">
+                    <mat-form-field class="full-width">
+                        <input  matInput 
+                                #valorFacturadoConcepto
+                                currencyMask
+                                maxlength="20"
+                                required
+                                formControlName="valorFacturadoConcepto" (keypress)="validateNumberKeypress($event)"
+                                onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
+                                (ngModelChange)="getValorTotalConceptos( i )">
+                    </mat-form-field>
+                    <span   class="contador"
+                            [matTooltipPosition]="'above'"
+                            matTooltip="Campo numérico"
+                            matTooltipClass="info-tooltip">
+                            {{20 - valorFacturadoConcepto.value.length}}
+                    </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="row">
           <div class="col-md-8">
-            <div class="row">
+            <div class="row" style=" margin-top: 10px;">
               <div class="pr-1">
-                <label class="label-left" for="valorFacturado">
-                  Valor facturado al concepto
+                <label class="header-card--text" for="valorFacturado" style="padding-left: 0em;">
+                  <b> Valor total de los conceptos</b>
                 </label>
               </div>
               <div class="col d-flex">
-                <mat-form-field class="full-width">
-                  <input matInput #valorFacturado currencyMask maxlength="20" required formControlName="valorFacturado"
-                    (keypress)="validateNumberKeypress($event)"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                    [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
-                </mat-form-field>
-                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
-                  matTooltipClass="info-tooltip">{{20 - valorFacturado.value.length}}</span>
+                    <mat-form-field class="full-width">
+                        <input    matInput
+                                  #valorFacturado
+                                  currencyMask
+                                  maxlength="20"
+                                  required
+                                  formControlName="valorFacturado"
+                                  (keypress)="validateNumberKeypress($event)"
+                                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                  [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
+                    </mat-form-field>
+                    <span   class="contador"
+                            [matTooltipPosition]="'above'"
+                            matTooltip="Campo numérico"
+                            matTooltipClass="info-tooltip">{{20 - valorFacturado.value.length}}
+                    </span>
               </div>
             </div>
           </div>
@@ -90,15 +131,16 @@
       </mat-card-content>
     </mat-card>
     <div class="text-right">
-      <button mat-button color="warn" type="button" class="btn-eliminar">
-        <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
+      <button mat-button color="warn" type="button" class="btn-eliminar"
+        (click)="deleteCriterio( i, criterio.get( 'solicitudPagoFaseCriterioId' ).value, criterio.get( 'tipoCriterioCodigo' ).value )">
+        <img src="assets/img/icon/menos.svg">
         Eliminar criterio
       </button>
     </div>
-    <div class="text-center mb-2em">
-      <button mat-button color="warn" class="btn-guardar" type="submit">
-        <img src="assets/img/icon/guardar.svg" alt="Regresar">
-      </button>
-    </div>
+  </div>
+  <div class="text-center mb-2em">
+    <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="criterios.dirty === false">
+      <img src="assets/img/icon/guardar.svg">
+    </button>
   </div>
 </form>

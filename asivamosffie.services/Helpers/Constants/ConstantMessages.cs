@@ -705,8 +705,7 @@ namespace asivamosffie.services.Helpers.Constant
     }
 
     public class RegisterPreContructionPhase1
-    {
-
+    { 
         #region Mensajes Informativos
         public const string CanceladoCorrrectamente = "201";
         public const string DevueltoCorrrectamente = "202";
@@ -801,8 +800,7 @@ namespace asivamosffie.services.Helpers.Constant
         #endregion Mensajes Redireccion
 
     }
-
-
+     
     public class ConstanMessagesRegisterWeeklyProgress {
         #region Mensajes Informativos
 

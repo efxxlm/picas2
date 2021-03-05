@@ -47,6 +47,7 @@ export class FormRegistrarMesaDeTrabajoComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
   constructor(private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private common: CommonService, private router: Router) {
     this.common.listaEstadoAvanceMesaTrabajo().subscribe(a => {
       this.estadoAvanceTramiteArray = a;
@@ -96,7 +97,9 @@ export class FormRegistrarMesaDeTrabajoComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.addressForm.value);
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
+    // console.log(this.addressForm.value);
     let mesaTrabajoArray;
     if (this.isEditable == true) {
       mesaTrabajoArray =

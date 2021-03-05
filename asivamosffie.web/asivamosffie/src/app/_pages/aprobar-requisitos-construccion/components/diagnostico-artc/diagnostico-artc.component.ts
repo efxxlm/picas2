@@ -119,6 +119,7 @@ export class DiagnosticoArtcComponent implements OnInit {
 
   guardarDiagnostico() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     const construccion = {
       contratoConstruccionId: this.contratoConstruccionId,
       tieneObservacionesDiagnosticoSupervisor: this.addressForm.value.tieneObservaciones,

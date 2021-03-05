@@ -412,6 +412,7 @@ namespace asivamosffie.services
             {
                 Contratacion = await _context.Contratacion.Where(r => r.ContratacionId == pContratacionId)
                     .Where(r => !(bool)r.Eliminado)
+                    .Include(r => r.ContratacionObservacion)
                     .Include(r => r.Contratista)
                     .Include(r => r.ContratacionProyecto)
                         .ThenInclude(r => r.SesionSolicitudObservacionProyecto)
@@ -424,18 +425,16 @@ namespace asivamosffie.services
                     .FirstOrDefaultAsync();
 
                 List<Dominio> ListParametricas = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar || r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud).ToList();
-
-
+                  
                 if (!string.IsNullOrEmpty(Contratacion.TipoSolicitudCodigo))
                     Contratacion.TipoSolicitudCodigo = ListParametricas.Where(r => r.Codigo == Contratacion.TipoSolicitudCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar).FirstOrDefault().Nombre;
 
                 if (!string.IsNullOrEmpty(Contratacion.EstadoSolicitudCodigo))
                     Contratacion.EstadoSolicitudCodigo = ListParametricas.Where(r => r.Codigo == Contratacion.EstadoSolicitudCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud).FirstOrDefault().Nombre;
-
-
+                 
                 return Contratacion;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return Contratacion;
             }

@@ -194,7 +194,10 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
         this.addressForm.get('responsableAprob').setValue(responAprob);
       }
       this.dataLoad2(data);
-      if (data.nombreAseguradora) this.estaEditando = true
+      if (data.nombreAseguradora){
+        this.estaEditando = true;
+        this.addressForm.markAllAsTouched();
+      }
     });
   }
   dataLoad2(data) {
@@ -335,6 +338,7 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let polizasList;
     if (this.addressForm.value.polizasYSeguros != undefined || this.addressForm.value.polizasYSeguros != null) {
       polizasList = [this.addressForm.value.polizasYSeguros[0].codigo];

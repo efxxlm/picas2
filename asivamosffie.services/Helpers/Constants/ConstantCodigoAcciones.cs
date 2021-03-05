@@ -143,6 +143,8 @@
 
         public const string Aprobar_Seguimiento_Diario = "172";
         public const string Devolver_Seguimiento_Diario = "173";
+
+        
                 
 
         public const string Eliminar_Contrato_Perfil = "83";
@@ -157,7 +159,8 @@
 
         public const string Eliminar_Numero_Radicado = "99";
 
-        public const string Crear_Observacion_Contrato_Perfil = "100"; 
+        public const string Crear_Observacion_Contrato_Perfil = "100";
+        
 
         public const string Cambiar_Estado_Verificacion_Contrato = "103";
 
@@ -171,10 +174,10 @@
         public const string Crear_Editar_Actuacion_Seguimiento = "148";
 
         public const string Cambiar_estado_Controversia_Actuacion = "136";
-        public const string  Cambiar_estado_Controversia_Contractual = "137";
-        public const string  Notificacion_Controversia_Contractual= "140";
-        public const string  Cambiar_estado_Actuacion_Seguimiento= "150";
-        public const string  Crear_Editar_Controversia_Motivo= "153";        	
+        public const string Cambiar_estado_Controversia_Contractual = "137";
+        public const string Notificacion_Controversia_Contractual = "140";
+        public const string Cambiar_estado_Actuacion_Seguimiento = "150";
+        public const string Crear_Editar_Controversia_Motivo = "153";
 
         //4.2.2 Gestionar procesos de Defensa Judicial        
         public const string Crear_Editar_Ficha_Estudio = "145";
@@ -232,10 +235,10 @@
         public const string Crear_seguimiento_actuacion_derivada = "168";
         public const string Cambiar_estado_actuacion_derivada = "169";
         public const string Eliminar_Controversia_Actuacion_Derivada = "170";
-        public const string  Notificacion_Actuacion_Derivada= "171";     
-                      
-            
-        
+        public const string Notificacion_Actuacion_Derivada = "171";
+
+
+
         public const string Crear_Editar_Defensa_Judicial = "156";
         public const string Eliminar_Defensa_Judicial = "159";
         public const string Enviar_Defensa_Judicial = "177";
@@ -245,6 +248,22 @@
         public const string Visita_url = "179";
         public const string Cargar_Acta_Terminacion_Contrato = "180";
 
+
+        //4.1.7 Registrar y validar requisitos de pago
+        public const string Crear_Editar_Solicitud_De_Pago = "184";
+        public const string Eliminar_Criterio_Pago = "185";
+        public const string Eliminar_Criterio_Proyecto = "186";
+        public const string Eliminar_Llave_Criterio_Proyecto = "187";
+        public const string Eliminar_Solicitud_Pago = "188";
+        public const string Eliminar_Descuento = "189";
+        public const string Crear_Actualizar_Solicitud_Pago_Observacion = "190";
+        public const string Cambiar_Estado_Solicitud_Pago = "204";
+        public const string Devolver_Solicitud_Pago = "205";
+        	
+
+        //4.3.3 Generar Orden Giro
+        public const string Crear_Editar_Orden_Giro = "201";
+        
         //4.4.3 registro de pagos    	
         public const string Validar_Excel_Registro_Pagos = "191";
         public const string Comentar_Pagos = "197";
@@ -280,5 +299,7 @@
         public const string Crear_Editar_Remision_Documentos_Tecnicos = "213";
         public const string Crear_Editar_Acta_Bienes_Servicios = "214";
 
+        public const string Cambiar_Estado_Legitimacion_Defensa_Judicial = "216";
+
     }
-}   
+}

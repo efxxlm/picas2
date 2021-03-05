@@ -114,9 +114,11 @@ export class ControlDeRecursosComponent implements OnInit {
         });
         //this.listaVigencias = this.fuente.vigenciaAporte;
 
-        if (this.idControl > 0 )
-        this.estaEditando = true;
+        if (this.idControl > 0 ) {
+          this.estaEditando = true;
+          this.addressForm.markAllAsTouched();
           this.editMode();
+        }
 
       })
     })
@@ -158,6 +160,7 @@ export class ControlDeRecursosComponent implements OnInit {
 
   onSubmit(){
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     if (this.addressForm.valid){
 
       let rp = this.addressForm.get('rp').value;

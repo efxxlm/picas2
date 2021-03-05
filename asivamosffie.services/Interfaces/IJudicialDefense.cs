@@ -28,5 +28,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> DeleteActuation(int pDefensaJudicialId, string pUsuarioModifico);
         Task<Respuesta> FinalizeActuation(int pDefensaJudicialId, string pUsuarioModifico);
         Task<Respuesta> CerrarProceso(int pDefensaJudicialId, string pUsuarioModifico);
+        Task<Respuesta> ChangeStateLegitimacion(int pDefensaJudicialId, string code, string user);
+
     }
 }

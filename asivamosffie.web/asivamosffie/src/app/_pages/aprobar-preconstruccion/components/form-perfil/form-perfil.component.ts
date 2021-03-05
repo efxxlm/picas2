@@ -109,5 +109,6 @@ export class FormPerfilComponent {
   onSubmit() {
     console.log(this.addressForm.value);
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
   }
 }

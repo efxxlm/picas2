@@ -126,6 +126,7 @@ export class ManejoAnticipoArtcComponent implements OnInit {
 
   guardarManejo() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     const construccion = {
       contratoConstruccionId: this.contratoConstruccionId,
       tieneObservacionesManejoAnticipoSupervisor: this.addressForm.value.tieneObservaciones,

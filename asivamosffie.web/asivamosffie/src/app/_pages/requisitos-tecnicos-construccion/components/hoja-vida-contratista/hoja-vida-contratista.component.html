@@ -25,7 +25,7 @@
           required
           (keypress)="validateNumberKeypress($event)"
           onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+          oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
         />
       </mat-form-field>
       <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico" matTooltipClass="info-tooltip">
@@ -127,7 +127,7 @@
                       #cantidadHvRequeridas
                       (keypress)="validateNumberKeypress($event)"
                       onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                      oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     />
                   </mat-form-field>
                   <span
@@ -183,7 +183,7 @@
                       #cantidadHvRecibidas
                       (keypress)="validateNumberKeypress($event)"
                       onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                      oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     />
                   </mat-form-field>
                   <span
@@ -239,7 +239,7 @@
                       #cantidadHvAprobadas
                       (keypress)="validateNumberKeypress($event)"
                       onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                      oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     />
                   </mat-form-field>
                   <span

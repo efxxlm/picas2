@@ -56,7 +56,7 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
     ]
   };
   numReclamacion: any;
-
+  estaEditando = false;
   constructor(private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private common: CommonService, private router: Router) { }
 
   ngOnInit(): void {
@@ -127,6 +127,8 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
   }
 
   onSubmit() {
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let actuacionTaiArray;
     let completo: boolean;
     if (this.addressForm.valid) {
@@ -219,6 +221,8 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
     }
     this.services.CreateEditControversiaOtros(actuacionTaiArray).subscribe((data: any) => {
       if (data.isSuccessful == true) {
+        this.services.CambiarEstadoActuacionSeguimiento(data.data.controversiaActuacionId,"1").subscribe((data0:any)=>{
+        });
         this.openDialog("", `<b>${data.message}</b>`);
         this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
       }

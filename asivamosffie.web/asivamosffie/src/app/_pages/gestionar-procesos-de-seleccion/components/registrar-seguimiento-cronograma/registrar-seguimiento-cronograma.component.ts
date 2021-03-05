@@ -187,6 +187,7 @@ export class RegistrarSeguimientoCronogramaComponent implements OnInit {
 
   onSubmit() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let listaActividades = this.addressForm.get('actividades') as FormArray;
     this.listaCronograma = [];
 

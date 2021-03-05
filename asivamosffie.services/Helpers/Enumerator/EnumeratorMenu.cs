@@ -10,8 +10,8 @@ namespace asivamosffie.services.Helpers.Enumerator
         Proyecto = 10,
         Fuentes = 14,
         Aportantes = 15,
-        Contratacion_Proyecto = 17, 
-        Procesos_Seleccion = 18, 
+        Contratacion_Proyecto = 17,
+        Procesos_Seleccion = 18,
         Procesos_Seleccion_Cronograma = 20,
         Procesos_Seleccion_Grupo = 21,
         CargueMasivoOrdenes = 22,
@@ -37,10 +37,26 @@ namespace asivamosffie.services.Helpers.Enumerator
 		Registrar_solicitud_novedad_contractual= 50,
 		Gestionar_procesos_Defensa_Judicial = 52,
         Registrar_seguimiento_diario = 53,
-        Verificar_seguimiento_diario = 54,      
+        Verificar_seguimiento_diario = 54,
+
+        
         Registrar_Avance_Semanal = 55,
+        
+
+        
+        Registrar_actuaciones_controversias_contractuales = 57,
+
+        
+
+        Registrar_validar_requisitos_de_pago = 63,
+
+        Generar_Orden_de_giro = 68,
+
+        Autorizar_solicitud_de_pago = 70,
+        Verificar_solicitud_de_pago = 71,
+
         Registrar_Informe_Final = 64,
-        Registrar_actuaciones_controversias_contractuales=57,
+        
 
         RegistrarPagosRendimientos = 65,
         GestionarRendimientos = 66,
@@ -58,13 +74,13 @@ namespace asivamosffie.services.Helpers.Enumerator
         SolicitarContraseña = 53,
         CrearActualizarCofinanciacion = 55,
         Error = 56,
-        ValidarExcel = 63, 
+        ValidarExcel = 63,
         CargueProyectosMasivos = 69,
         DescargarExcelProyectos = 75,
         CargueOrdenesMasivos = 76,
         DescargarExcelOrdenes = 77,
-        Notificacion_Gestion_Poliza = 90, 
-        Crear_Editar_ProcesoSeleccion_Grupo= 29
+        Notificacion_Gestion_Poliza = 90,
+        Crear_Editar_ProcesoSeleccion_Grupo = 29
 
     }
 

@@ -25,10 +25,10 @@
       <img
         class="icon-incompleto--img"
         src="assets/img/icon/incompleto.svg"
-                      alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+        alt="este campo es requerido"
+        [matTooltipPosition]="'above'"
+        matTooltip="Debe ingresar la información en el campo para continuar"
+        matTooltipClass="info-tooltip"
         *ngIf="(tipoProponente.invalid && tipoProponente.touched) || (tipoProponente.invalid && estaEditando)"
       />
     </span>
@@ -83,10 +83,10 @@
           <img
             class="icon-incompleto--img"
             src="assets/img/icon/incompleto.svg"
-                          alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+            alt="este campo es requerido"
+            [matTooltipPosition]="'above'"
+            matTooltip="Debe ingresar la información en el campo para continuar"
+            matTooltipClass="info-tooltip"
             *ngIf="(myControl.invalid && myControl.touched) || (myControl.invalid && estaEditando)"
           />
         </span>
@@ -99,9 +99,9 @@
           for="numeroIdentificacion"
           class="label-left"
           [class.color-secondaryColor]="
-            (personaNaturalForm.get('numeroIdentificacion').invalid &&
+            (personaNaturalForm.get('numeroIdentificacion')?.invalid &&
               personaNaturalForm.get('numeroIdentificacion').touched) ||
-            (personaNaturalForm.get('numeroIdentificacion').invalid && estaEditando)
+            (personaNaturalForm.get('numeroIdentificacion')?.invalid && estaEditando)
           "
         >
           Número de identificación del proponente
@@ -118,7 +118,7 @@
             required
             (keypress)="validateNumberKeypress($event)"
             onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+            oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
           />
         </mat-form-field>
         <span
@@ -133,14 +133,14 @@
           <img
             class="icon-incompleto--img"
             src="assets/img/icon/incompleto.svg"
-                          alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+            alt="este campo es requerido"
+            [matTooltipPosition]="'above'"
+            matTooltip="Debe ingresar la información en el campo para continuar"
+            matTooltipClass="info-tooltip"
             *ngIf="
-              (personaNaturalForm.get('numeroIdentificacion').invalid &&
+              (personaNaturalForm.get('numeroIdentificacion')?.invalid &&
                 personaNaturalForm.get('numeroIdentificacion').touched) ||
-              (personaNaturalForm.get('numeroIdentificacion').invalid && estaEditando)
+              (personaNaturalForm.get('numeroIdentificacion')?.invalid && estaEditando)
             "
           />
         </span>
@@ -154,8 +154,8 @@
               for="depaetamento"
               class="label-left"
               [class.color-secondaryColor]="
-                (personaNaturalForm.get('depaetamento').invalid && personaNaturalForm.get('depaetamento').touched) ||
-                (personaNaturalForm.get('depaetamento').invalid && estaEditando)
+                (personaNaturalForm.get('depaetamento')?.invalid && personaNaturalForm.get('depaetamento').touched) ||
+                (personaNaturalForm.get('depaetamento')?.invalid && estaEditando)
               "
             >
               Departamento del domicilio del proponente
@@ -174,13 +174,13 @@
             <img
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
-                            alt="este campo es requerido"
+              alt="este campo es requerido"
               [matTooltipPosition]="'above'"
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
               *ngIf="
-                (personaNaturalForm.get('depaetamento').invalid && personaNaturalForm.get('depaetamento').touched) ||
-                (personaNaturalForm.get('depaetamento').invalid && estaEditando)
+                (personaNaturalForm.get('depaetamento')?.invalid && personaNaturalForm.get('depaetamento').touched) ||
+                (personaNaturalForm.get('depaetamento')?.invalid && estaEditando)
               "
             />
           </span>
@@ -195,8 +195,8 @@
               for="municipio"
               class="label-left"
               [class.color-secondaryColor]="
-                (personaNaturalForm.get('municipio').invalid && personaNaturalForm.get('municipio').touched) ||
-                (personaNaturalForm.get('municipio').invalid && estaEditando)
+                (personaNaturalForm.get('municipio')?.invalid && personaNaturalForm.get('municipio').touched) ||
+                (personaNaturalForm.get('municipio')?.invalid && estaEditando)
               "
             >
               Municipio del domicilio del proponente
@@ -215,13 +215,13 @@
             <img
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
-                            alt="este campo es requerido"
+              alt="este campo es requerido"
               [matTooltipPosition]="'above'"
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
               *ngIf="
-                (personaNaturalForm.get('municipio').invalid && personaNaturalForm.get('municipio').touched) ||
-                (personaNaturalForm.get('municipio').invalid && estaEditando)
+                (personaNaturalForm.get('municipio')?.invalid && personaNaturalForm.get('municipio').touched) ||
+                (personaNaturalForm.get('municipio')?.invalid && estaEditando)
               "
             />
           </span>
@@ -234,8 +234,8 @@
           for="direccion"
           class="label-left"
           [class.color-secondaryColor]="
-            (personaNaturalForm.get('direccion').invalid && personaNaturalForm.get('direccion').touched) ||
-            (personaNaturalForm.get('direccion').invalid && estaEditando)
+            (personaNaturalForm.get('direccion')?.invalid && personaNaturalForm.get('direccion').touched) ||
+            (personaNaturalForm.get('direccion')?.invalid && estaEditando)
           "
         >
           Dirección del proponente
@@ -243,9 +243,7 @@
       </div>
       <div class="col d-flex">
         <mat-form-field class="full-width">
-          <input matInput #direccion type="text" maxlength="500" formControlName="direccion"
-            
-            required>
+          <input matInput #direccion type="text" maxlength="500" formControlName="direccion" required />
         </mat-form-field>
         <span
           class="contador"
@@ -259,13 +257,13 @@
           <img
             class="icon-incompleto--img"
             src="assets/img/icon/incompleto.svg"
-                          alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+            alt="este campo es requerido"
+            [matTooltipPosition]="'above'"
+            matTooltip="Debe ingresar la información en el campo para continuar"
+            matTooltipClass="info-tooltip"
             *ngIf="
-              (personaNaturalForm.get('direccion').invalid && personaNaturalForm.get('direccion').touched) ||
-              (personaNaturalForm.get('direccion').invalid && estaEditando)
+              (personaNaturalForm.get('direccion')?.invalid && personaNaturalForm.get('direccion').touched) ||
+              (personaNaturalForm.get('direccion')?.invalid && estaEditando)
             "
           />
         </span>
@@ -279,8 +277,8 @@
               for="telefono"
               class="label-left"
               [class.color-secondaryColor]="
-                (personaNaturalForm.get('telefono').invalid && personaNaturalForm.get('telefono').touched) ||
-                (personaNaturalForm.get('telefono').invalid && estaEditando)
+                (personaNaturalForm.get('telefono')?.invalid && personaNaturalForm.get('telefono').touched) ||
+                (personaNaturalForm.get('telefono')?.invalid && estaEditando)
               "
             >
               Teléfono del proponente
@@ -297,7 +295,7 @@
                 required
                 (keypress)="validateNumberKeypress($event)"
                 onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />
             </mat-form-field>
             <span
@@ -312,13 +310,13 @@
               <img
                 class="icon-incompleto--img"
                 src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                alt="este campo es requerido"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
                 *ngIf="
-                  (personaNaturalForm.get('telefono').invalid && personaNaturalForm.get('telefono').touched) ||
-                  (personaNaturalForm.get('telefono').invalid && estaEditando)
+                  (personaNaturalForm.get('telefono')?.invalid && personaNaturalForm.get('telefono').touched) ||
+                  (personaNaturalForm.get('telefono')?.invalid && estaEditando)
                 "
               />
             </span>
@@ -332,9 +330,9 @@
           for="correoElectronico"
           class="label-left"
           [class.color-secondaryColor]="
-            (personaNaturalForm.get('correoElectronico').invalid &&
+            (personaNaturalForm.get('correoElectronico')?.invalid &&
               personaNaturalForm.get('correoElectronico').touched) ||
-            (personaNaturalForm.get('correoElectronico').invalid && estaEditando)
+            (personaNaturalForm.get('correoElectronico')?.invalid && estaEditando)
           "
         >
           Correo electrónico del proponente
@@ -358,14 +356,14 @@
           <img
             class="icon-incompleto--img"
             src="assets/img/icon/incompleto.svg"
-                          alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+            alt="este campo es requerido"
+            [matTooltipPosition]="'above'"
+            matTooltip="Debe ingresar la información en el campo para continuar"
+            matTooltipClass="info-tooltip"
             *ngIf="
-              (personaNaturalForm.get('correoElectronico').invalid &&
+              (personaNaturalForm.get('correoElectronico')?.invalid &&
                 personaNaturalForm.get('correoElectronico').touched) ||
-              (personaNaturalForm.get('correoElectronico').invalid && estaEditando)
+              (personaNaturalForm.get('correoElectronico')?.invalid && estaEditando)
             "
           />
         </span>
@@ -430,10 +428,10 @@
           <img
             class="icon-incompleto--img"
             src="assets/img/icon/incompleto.svg"
-                          alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+            alt="este campo es requerido"
+            [matTooltipPosition]="'above'"
+            matTooltip="Debe ingresar la información en el campo para continuar"
+            matTooltipClass="info-tooltip"
             *ngIf="(myJuridica.invalid && myJuridica.touched) || (myJuridica.invalid && estaEditando)"
           />
         </span>
@@ -447,9 +445,9 @@
               for="numeroIdentificacion"
               class="label-left"
               [class.color-secondaryColor]="
-                (personaJuridicaIndividualForm.get('numeroIdentificacion').invalid &&
+                (personaJuridicaIndividualForm.get('numeroIdentificacion')?.invalid &&
                   personaJuridicaIndividualForm.get('numeroIdentificacion').touched) ||
-                (personaJuridicaIndividualForm.get('numeroIdentificacion').invalid && estaEditando)
+                (personaJuridicaIndividualForm.get('numeroIdentificacion')?.invalid && estaEditando)
               "
             >
               Número de identificación tributaria (NIT)
@@ -466,7 +464,7 @@
                 required
                 (keypress)="validateNumberKeypress($event)"
                 onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />
             </mat-form-field>
             <span
@@ -481,14 +479,14 @@
               <img
                 class="icon-incompleto--img"
                 src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                alt="este campo es requerido"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
                 *ngIf="
-                  (personaJuridicaIndividualForm.get('numeroIdentificacion').invalid &&
+                  (personaJuridicaIndividualForm.get('numeroIdentificacion')?.invalid &&
                     personaJuridicaIndividualForm.get('numeroIdentificacion').touched) ||
-                  (personaJuridicaIndividualForm.get('numeroIdentificacion').invalid && estaEditando)
+                  (personaJuridicaIndividualForm.get('numeroIdentificacion')?.invalid && estaEditando)
                 "
               />
             </span>
@@ -504,9 +502,9 @@
               for="representanteLegal"
               class="label-left"
               [class.color-secondaryColor]="
-                (personaJuridicaIndividualForm.get('representanteLegal').invalid &&
+                (personaJuridicaIndividualForm.get('representanteLegal')?.invalid &&
                   personaJuridicaIndividualForm.get('representanteLegal').touched) ||
-                (personaJuridicaIndividualForm.get('representanteLegal').invalid && estaEditando)
+                (personaJuridicaIndividualForm.get('representanteLegal')?.invalid && estaEditando)
               "
             >
               Representante legal
@@ -535,14 +533,14 @@
               <img
                 class="icon-incompleto--img"
                 src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                alt="este campo es requerido"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
                 *ngIf="
-                  (personaJuridicaIndividualForm.get('representanteLegal').invalid &&
+                  (personaJuridicaIndividualForm.get('representanteLegal')?.invalid &&
                     personaJuridicaIndividualForm.get('representanteLegal').touched) ||
-                  (personaJuridicaIndividualForm.get('representanteLegal').invalid && estaEditando)
+                  (personaJuridicaIndividualForm.get('representanteLegal')?.invalid && estaEditando)
                 "
               />
             </span>
@@ -558,9 +556,9 @@
               for="cedulaRepresentanteLegal"
               class="label-left"
               [class.color-secondaryColor]="
-                (personaJuridicaIndividualForm.get('cedulaRepresentanteLegal').invalid &&
+                (personaJuridicaIndividualForm.get('cedulaRepresentanteLegal')?.invalid &&
                   personaJuridicaIndividualForm.get('cedulaRepresentanteLegal').touched) ||
-                (personaJuridicaIndividualForm.get('cedulaRepresentanteLegal').invalid && estaEditando)
+                (personaJuridicaIndividualForm.get('cedulaRepresentanteLegal')?.invalid && estaEditando)
               "
             >
               Cédula del representante legal
@@ -577,7 +575,7 @@
                 required
                 (keypress)="validateNumberKeypress($event)"
                 onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />
             </mat-form-field>
             <span
@@ -592,14 +590,14 @@
               <img
                 class="icon-incompleto--img"
                 src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                alt="este campo es requerido"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
                 *ngIf="
-                  (personaJuridicaIndividualForm.get('cedulaRepresentanteLegal').invalid &&
+                  (personaJuridicaIndividualForm.get('cedulaRepresentanteLegal')?.invalid &&
                     personaJuridicaIndividualForm.get('cedulaRepresentanteLegal').touched) ||
-                  (personaJuridicaIndividualForm.get('cedulaRepresentanteLegal').invalid && estaEditando)
+                  (personaJuridicaIndividualForm.get('cedulaRepresentanteLegal')?.invalid && estaEditando)
                 "
               />
             </span>
@@ -615,9 +613,9 @@
               for="depaetamento"
               class="label-left"
               [class.color-secondaryColor]="
-                (personaJuridicaIndividualForm.get('depaetamento').invalid &&
+                (personaJuridicaIndividualForm.get('depaetamento')?.invalid &&
                   personaJuridicaIndividualForm.get('depaetamento').touched) ||
-                (personaJuridicaIndividualForm.get('depaetamento').invalid && estaEditando)
+                (personaJuridicaIndividualForm.get('depaetamento')?.invalid && estaEditando)
               "
             >
               Departamento del domicilio del proponente
@@ -636,14 +634,14 @@
             <img
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
-                            alt="este campo es requerido"
+              alt="este campo es requerido"
               [matTooltipPosition]="'above'"
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
               *ngIf="
-                (personaJuridicaIndividualForm.get('depaetamento').invalid &&
+                (personaJuridicaIndividualForm.get('depaetamento')?.invalid &&
                   personaJuridicaIndividualForm.get('depaetamento').touched) ||
-                (personaJuridicaIndividualForm.get('depaetamento').invalid && estaEditando)
+                (personaJuridicaIndividualForm.get('depaetamento')?.invalid && estaEditando)
               "
             />
           </span>
@@ -658,9 +656,9 @@
               for="municipio"
               class="label-left"
               [class.color-secondaryColor]="
-                (personaJuridicaIndividualForm.get('municipio').invalid &&
+                (personaJuridicaIndividualForm.get('municipio')?.invalid &&
                   personaJuridicaIndividualForm.get('municipio').touched) ||
-                (personaJuridicaIndividualForm.get('municipio').invalid && estaEditando)
+                (personaJuridicaIndividualForm.get('municipio')?.invalid && estaEditando)
               "
             >
               Municipio del domicilio del proponente
@@ -679,14 +677,14 @@
             <img
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
-                            alt="este campo es requerido"
+              alt="este campo es requerido"
               [matTooltipPosition]="'above'"
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
               *ngIf="
-                (personaJuridicaIndividualForm.get('municipio').invalid &&
+                (personaJuridicaIndividualForm.get('municipio')?.invalid &&
                   personaJuridicaIndividualForm.get('municipio').touched) ||
-                (personaJuridicaIndividualForm.get('municipio').invalid && estaEditando)
+                (personaJuridicaIndividualForm.get('municipio')?.invalid && estaEditando)
               "
             />
           </span>
@@ -701,9 +699,9 @@
               for="direccion"
               class="label-left"
               [class.color-secondaryColor]="
-                (personaJuridicaIndividualForm.get('direccion').invalid &&
+                (personaJuridicaIndividualForm.get('direccion')?.invalid &&
                   personaJuridicaIndividualForm.get('direccion').touched) ||
-                (personaJuridicaIndividualForm.get('direccion').invalid && estaEditando)
+                (personaJuridicaIndividualForm.get('direccion')?.invalid && estaEditando)
               "
             >
               Dirección del proponente
@@ -711,8 +709,7 @@
           </div>
           <div class="col d-flex">
             <mat-form-field class="full-width">
-              <input matInput #direccion2 type="text" maxlength="500" formControlName="direccion"
-                 required>
+              <input matInput #direccion2 type="text" maxlength="500" formControlName="direccion" required />
             </mat-form-field>
             <span
               class="contador"
@@ -726,14 +723,14 @@
               <img
                 class="icon-incompleto--img"
                 src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                alt="este campo es requerido"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
                 *ngIf="
-                  (personaJuridicaIndividualForm.get('direccion').invalid &&
+                  (personaJuridicaIndividualForm.get('direccion')?.invalid &&
                     personaJuridicaIndividualForm.get('direccion').touched) ||
-                  (personaJuridicaIndividualForm.get('direccion').invalid && estaEditando)
+                  (personaJuridicaIndividualForm.get('direccion')?.invalid && estaEditando)
                 "
               />
             </span>
@@ -749,9 +746,9 @@
               for="telefono"
               class="label-left"
               [class.color-secondaryColor]="
-                (personaJuridicaIndividualForm.get('telefono').invalid &&
+                (personaJuridicaIndividualForm.get('telefono')?.invalid &&
                   personaJuridicaIndividualForm.get('telefono').touched) ||
-                (personaJuridicaIndividualForm.get('telefono').invalid && estaEditando)
+                (personaJuridicaIndividualForm.get('telefono')?.invalid && estaEditando)
               "
             >
               Teléfono del proponente
@@ -768,7 +765,7 @@
                 required
                 (keypress)="validateNumberKeypress($event)"
                 onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />
             </mat-form-field>
             <span
@@ -784,14 +781,14 @@
             <img
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
-                            alt="este campo es requerido"
+              alt="este campo es requerido"
               [matTooltipPosition]="'above'"
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
               *ngIf="
-                (personaJuridicaIndividualForm.get('telefono').invalid &&
+                (personaJuridicaIndividualForm.get('telefono')?.invalid &&
                   personaJuridicaIndividualForm.get('telefono').touched) ||
-                (personaJuridicaIndividualForm.get('telefono').invalid && estaEditando)
+                (personaJuridicaIndividualForm.get('telefono')?.invalid && estaEditando)
               "
             />
           </span>
@@ -806,9 +803,9 @@
               for="correoElectronico"
               class="label-left"
               [class.color-secondaryColor]="
-                (personaJuridicaIndividualForm.get('correoElectronico').invalid &&
+                (personaJuridicaIndividualForm.get('correoElectronico')?.invalid &&
                   personaJuridicaIndividualForm.get('correoElectronico').touched) ||
-                (personaJuridicaIndividualForm.get('correoElectronico').invalid && estaEditando)
+                (personaJuridicaIndividualForm.get('correoElectronico')?.invalid && estaEditando)
               "
             >
               Correo electrónico del proponente
@@ -832,14 +829,14 @@
               <img
                 class="icon-incompleto--img"
                 src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                alt="este campo es requerido"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
                 *ngIf="
-                  (personaJuridicaIndividualForm.get('correoElectronico').invalid &&
+                  (personaJuridicaIndividualForm.get('correoElectronico')?.invalid &&
                     personaJuridicaIndividualForm.get('correoElectronico').touched) ||
-                  (personaJuridicaIndividualForm.get('correoElectronico').invalid && estaEditando)
+                  (personaJuridicaIndividualForm.get('correoElectronico')?.invalid && estaEditando)
                 "
               />
             </span>
@@ -868,9 +865,9 @@
               for="cuantasEntidades"
               class="label-left"
               [class.color-secondaryColor]="
-                (unionTemporalForm.get('cuantasEntidades').invalid &&
+                (unionTemporalForm.get('cuantasEntidades')?.invalid &&
                   unionTemporalForm.get('cuantasEntidades').touched) ||
-                (unionTemporalForm.get('cuantasEntidades').invalid && estaEditando)
+                (unionTemporalForm.get('cuantasEntidades')?.invalid && estaEditando)
               "
             >
               ¿Cuántas entidades integran la unión temporal?
@@ -889,7 +886,7 @@
                 maxlength="2"
                 (keypress)="validateNumberKeypress($event)"
                 onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 required
               />
               <input type="hidden" formControlName="procesoSeleccionProponenteId" />
@@ -907,14 +904,14 @@
             <img
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
-                            alt="este campo es requerido"
+              alt="este campo es requerido"
               [matTooltipPosition]="'above'"
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
               *ngIf="
-                (unionTemporalForm.get('cuantasEntidades').invalid &&
+                (unionTemporalForm.get('cuantasEntidades')?.invalid &&
                   unionTemporalForm.get('cuantasEntidades').touched) ||
-                (unionTemporalForm.get('cuantasEntidades').invalid && estaEditando)
+                (unionTemporalForm.get('cuantasEntidades')?.invalid && estaEditando)
               "
             />
           </span>
@@ -934,9 +931,9 @@
                 for="nombreConsorcio"
                 class="label-left"
                 [class.color-secondaryColor]="
-                  (unionTemporalForm.get('nombreConsorcio').invalid &&
+                  (unionTemporalForm.get('nombreConsorcio')?.invalid &&
                     unionTemporalForm.get('nombreConsorcio').touched) ||
-                  (unionTemporalForm.get('nombreConsorcio').invalid && estaEditando)
+                  (unionTemporalForm.get('nombreConsorcio')?.invalid && estaEditando)
                 "
               >
                 Nombre de la UT o Consorcio
@@ -958,14 +955,14 @@
                 <img
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
                   *ngIf="
-                    (unionTemporalForm.get('nombreConsorcio').invalid &&
+                    (unionTemporalForm.get('nombreConsorcio')?.invalid &&
                       unionTemporalForm.get('nombreConsorcio').touched) ||
-                    (unionTemporalForm.get('nombreConsorcio').invalid && estaEditando)
+                    (unionTemporalForm.get('nombreConsorcio')?.invalid && estaEditando)
                   "
                 />
               </span>
@@ -986,8 +983,8 @@
                       for="nombre"
                       class="label-left"
                       [class.color-secondaryColor]="
-                        (unionTemporalForm.get('nombre').invalid && unionTemporalForm.get('nombre').touched) ||
-                        (unionTemporalForm.get('nombre').invalid && estaEditando)
+                        (entidad.get('nombre')?.invalid && entidad.get('nombre').touched) ||
+                        (entidad.get('nombre')?.invalid && estaEditando)
                       "
                     >
                       Nombre
@@ -1009,13 +1006,13 @@
                       <img
                         class="icon-incompleto--img"
                         src="assets/img/icon/incompleto.svg"
-                                      alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                        alt="este campo es requerido"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Debe ingresar la información en el campo para continuar"
+                        matTooltipClass="info-tooltip"
                         *ngIf="
-                          (unionTemporalForm.get('nombre').invalid && unionTemporalForm.get('nombre').touched) ||
-                          (unionTemporalForm.get('nombre').invalid && estaEditando)
+                          (entidad.get('nombre')?.invalid && entidad.get('nombre').touched) ||
+                          (entidad.get('nombre')?.invalid && estaEditando)
                         "
                       />
                     </span>
@@ -1031,8 +1028,8 @@
                       for="porcentaje"
                       class="label-left"
                       [class.color-secondaryColor]="
-                        (unionTemporalForm.get('porcentaje').invalid && unionTemporalForm.get('porcentaje').touched) ||
-                        (unionTemporalForm.get('porcentaje').invalid && estaEditando)
+                        (entidad.get('porcentaje')?.invalid && entidad.get('porcentaje').touched) ||
+                        (entidad.get('porcentaje')?.invalid && estaEditando)
                       "
                     >
                       Porcentaje de participación
@@ -1046,7 +1043,9 @@
                         type="number"
                         min="1"
                         max="100"
+                        maxLength="3"
                         formControlName="porcentaje"
+                        oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         required
                       />
                       <input type="hidden" formControlName="procesoSeleccionIntegranteId" />
@@ -1056,14 +1055,13 @@
                       <img
                         class="icon-incompleto--img"
                         src="assets/img/icon/incompleto.svg"
-                                      alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                        alt="este campo es requerido"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Debe ingresar la información en el campo para continuar"
+                        matTooltipClass="info-tooltip"
                         *ngIf="
-                          (unionTemporalForm.get('porcentaje').invalid &&
-                            unionTemporalForm.get('porcentaje').touched) ||
-                          (unionTemporalForm.get('porcentaje').invalid && estaEditando)
+                          (entidad.get('porcentaje')?.invalid && entidad.get('porcentaje').touched) ||
+                          (entidad.get('porcentaje')?.invalid && estaEditando)
                         "
                       />
                     </span>
@@ -1144,10 +1142,10 @@
                 <img
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
                   *ngIf="(myJuridica2.invalid && myJuridica2.touched) || (myJuridica2.invalid && estaEditando)"
                 />
               </span>
@@ -1163,9 +1161,9 @@
                 for="cedulaRepresentanteLegal"
                 class="label-left"
                 [class.color-secondaryColor]="
-                  (unionTemporalForm.get('cedulaRepresentanteLegal').invalid &&
+                  (unionTemporalForm.get('cedulaRepresentanteLegal')?.invalid &&
                     unionTemporalForm.get('cedulaRepresentanteLegal').touched) ||
-                  (unionTemporalForm.get('cedulaRepresentanteLegal').invalid && estaEditando)
+                  (unionTemporalForm.get('cedulaRepresentanteLegal')?.invalid && estaEditando)
                 "
               >
                 Cédula del representante legal
@@ -1197,14 +1195,14 @@
                 <img
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
                   *ngIf="
-                    (unionTemporalForm.get('cedulaRepresentanteLegal').invalid &&
+                    (unionTemporalForm.get('cedulaRepresentanteLegal')?.invalid &&
                       unionTemporalForm.get('cedulaRepresentanteLegal').touched) ||
-                    (unionTemporalForm.get('cedulaRepresentanteLegal').invalid && estaEditando)
+                    (unionTemporalForm.get('cedulaRepresentanteLegal')?.invalid && estaEditando)
                   "
                 />
               </span>
@@ -1220,8 +1218,8 @@
                 for="depaetamento"
                 class="label-left"
                 [class.color-secondaryColor]="
-                  (unionTemporalForm.get('depaetamento').invalid && unionTemporalForm.get('depaetamento').touched) ||
-                  (unionTemporalForm.get('depaetamento').invalid && estaEditando)
+                  (unionTemporalForm.get('depaetamento')?.invalid && unionTemporalForm.get('depaetamento').touched) ||
+                  (unionTemporalForm.get('depaetamento')?.invalid && estaEditando)
                 "
               >
                 Departamento del domicilio del proponente
@@ -1240,13 +1238,13 @@
               <img
                 class="icon-incompleto--img"
                 src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                alt="este campo es requerido"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
                 *ngIf="
-                  (unionTemporalForm.get('depaetamento').invalid && unionTemporalForm.get('depaetamento').touched) ||
-                  (unionTemporalForm.get('depaetamento').invalid && estaEditando)
+                  (unionTemporalForm.get('depaetamento')?.invalid && unionTemporalForm.get('depaetamento').touched) ||
+                  (unionTemporalForm.get('depaetamento')?.invalid && estaEditando)
                 "
               />
             </span>
@@ -1261,8 +1259,8 @@
                 for="municipio"
                 class="label-left"
                 [class.color-secondaryColor]="
-                  (unionTemporalForm.get('municipio').invalid && unionTemporalForm.get('municipio').touched) ||
-                  (unionTemporalForm.get('municipio').invalid && estaEditando)
+                  (unionTemporalForm.get('municipio')?.invalid && unionTemporalForm.get('municipio').touched) ||
+                  (unionTemporalForm.get('municipio')?.invalid && estaEditando)
                 "
               >
                 Municipio del domicilio del proponente
@@ -1281,13 +1279,13 @@
               <img
                 class="icon-incompleto--img"
                 src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                alt="este campo es requerido"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
                 *ngIf="
-                  (unionTemporalForm.get('municipio').invalid && unionTemporalForm.get('municipio').touched) ||
-                  (unionTemporalForm.get('municipio').invalid && estaEditando)
+                  (unionTemporalForm.get('municipio')?.invalid && unionTemporalForm.get('municipio').touched) ||
+                  (unionTemporalForm.get('municipio')?.invalid && estaEditando)
                 "
               />
             </span>
@@ -1302,8 +1300,8 @@
                 for="direccion"
                 class="label-left"
                 [class.color-secondaryColor]="
-                  (unionTemporalForm.get('direccion').invalid && unionTemporalForm.get('direccion').touched) ||
-                  (unionTemporalForm.get('direccion').invalid && estaEditando)
+                  (unionTemporalForm.get('direccion')?.invalid && unionTemporalForm.get('direccion').touched) ||
+                  (unionTemporalForm.get('direccion')?.invalid && estaEditando)
                 "
               >
                 Dirección del proponente
@@ -1325,13 +1323,13 @@
                 <img
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
                   *ngIf="
-                    (unionTemporalForm.get('direccion').invalid && unionTemporalForm.get('direccion').touched) ||
-                    (unionTemporalForm.get('direccion').invalid && estaEditando)
+                    (unionTemporalForm.get('direccion')?.invalid && unionTemporalForm.get('direccion').touched) ||
+                    (unionTemporalForm.get('direccion')?.invalid && estaEditando)
                   "
                 />
               </span>
@@ -1347,8 +1345,8 @@
                 for="telefono"
                 class="label-left"
                 [class.color-secondaryColor]="
-                  (unionTemporalForm.get('telefono').invalid && unionTemporalForm.get('telefono').touched) ||
-                  (unionTemporalForm.get('telefono').invalid && estaEditando)
+                  (unionTemporalForm.get('telefono')?.invalid && unionTemporalForm.get('telefono').touched) ||
+                  (unionTemporalForm.get('telefono')?.invalid && estaEditando)
                 "
               >
                 Teléfono del proponente
@@ -1380,13 +1378,13 @@
                 <img
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
                   *ngIf="
-                    (unionTemporalForm.get('telefono').invalid && unionTemporalForm.get('telefono').touched) ||
-                    (unionTemporalForm.get('telefono').invalid && estaEditando)
+                    (unionTemporalForm.get('telefono')?.invalid && unionTemporalForm.get('telefono').touched) ||
+                    (unionTemporalForm.get('telefono')?.invalid && estaEditando)
                   "
                 />
               </span>
@@ -1402,9 +1400,9 @@
                 for="correoElectronico"
                 class="label-left"
                 [class.color-secondaryColor]="
-                  (unionTemporalForm.get('correoElectronico').invalid &&
+                  (unionTemporalForm.get('correoElectronico')?.invalid &&
                     unionTemporalForm.get('correoElectronico').touched) ||
-                  (unionTemporalForm.get('correoElectronico').invalid && estaEditando)
+                  (unionTemporalForm.get('correoElectronico')?.invalid && estaEditando)
                 "
               >
                 Correo electrónico del proponente
@@ -1428,14 +1426,14 @@
                 <img
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
                   *ngIf="
-                    (unionTemporalForm.get('correoElectronico').invalid &&
+                    (unionTemporalForm.get('correoElectronico')?.invalid &&
                       unionTemporalForm.get('correoElectronico').touched) ||
-                    (unionTemporalForm.get('correoElectronico').invalid && estaEditando)
+                    (unionTemporalForm.get('correoElectronico')?.invalid && estaEditando)
                   "
                 />
               </span>

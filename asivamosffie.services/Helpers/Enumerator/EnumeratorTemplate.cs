@@ -61,5 +61,9 @@ namespace asivamosffie.services.Helpers.Enumerator
         Alerta5DiasEnvioGrupoNovedades5_1_3 = 71,
         NotificacionSupervisorDevolucion5_1_4 = 72,
         Alerta5DiasGrupoNovedades5_1_4 = 73,
+        Aprobado_Programacion_4_1_10 = 61,
+        Alerta_Automatica_5_Dias = 62,
+        AprobarRequisitosTecnicosFase2 = 76,
+        DevolverConObservacionesFase2 = 77
     }
 }

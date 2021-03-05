@@ -56,7 +56,8 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                respuesta =await _technicalRequirementsConstructionPhaseService.CambiarEstadoContratoEstadoVerificacionConstruccionCodigo(ContratoId, pEstado, HttpContext.User.FindFirst("User").Value);
+                respuesta =await _technicalRequirementsConstructionPhaseService.CambiarEstadoContratoEstadoVerificacionConstruccionCodigo(ContratoId, pEstado, HttpContext.User.FindFirst("User").Value
+                    , _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -409,7 +410,8 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                respuesta = await _technicalRequirementsConstructionPhaseService.AprobarInicio(pContratoId, HttpContext.User.FindFirst("User").Value);
+                respuesta = await _technicalRequirementsConstructionPhaseService.AprobarInicio(pContratoId, HttpContext.User.FindFirst("User").Value
+                    , _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 return Ok(respuesta);
             }
             catch (Exception ex)

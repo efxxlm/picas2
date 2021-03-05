@@ -69,7 +69,7 @@
               </mat-form-field>
             </td>
             <td class="mat-cell cdk-cell ng-star-inserted">
-              <button mat-raised-button color="accent" class="btn-table" (click)="borrarArray(addressForm, i)">
+              <button mat-raised-button color="accent" class="btn-table" (click)="borrarArray(addressForm, i)" [disabled]="bitEditar === false">
                 Eliminar
               </button>
             </td>
@@ -134,23 +134,44 @@
           <ng-container matColumnDef="id">
               <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
               <td mat-cell *matCellDef="let element">
-                  <button mat-raised-button color="accent" class="btn-table" (click)="onDetalle(element.id,0)"
-                      *ngIf=" element.id.estadoActividadCodigo == estadosProcesoSeleccionMonitoreo.Creada &&  element.id.enviadoComiteTecnico!=true">
+                  <button mat-raised-button 
+                      color="accent" 
+                      class="btn-table" 
+                      (click)="onDetalle(element.id,0)"
+                      *ngIf=" 
+                            (
+                              element.id.estadoActividadCodigo == estadosProcesoSeleccionMonitoreo.Creada ||
+                              element.id.estadoActividadCodigo == estadosProcesoSeleccionMonitoreo.DevueltoPorComiteTecnico || 
+                              element.id.estadoActividadCodigo == estadosProcesoSeleccionMonitoreo.DevueltoPorComiteFiduciario
+                            )">
                       Ver detalle/ Editar
                       </button>
 
                   <button mat-raised-button color="accent" class="btn-table" (click)="onEnviarSolicitud(element.id)"
-                      *ngIf=" element.id.estadoActividadCodigo == estadosProcesoSeleccionMonitoreo.Creada &&  element.id.enviadoComiteTecnico!=true ">
+                      *ngIf=" 
+                              (
+                                element.id.estadoActividadCodigo == estadosProcesoSeleccionMonitoreo.Creada ||
+                                element.id.estadoActividadCodigo == estadosProcesoSeleccionMonitoreo.DevueltoPorComiteTecnico || 
+                                element.id.estadoActividadCodigo == estadosProcesoSeleccionMonitoreo.DevueltoPorComiteFiduciario
+                              )">
                       Enviar solicitud a comité
                       </button>
 
                   <button mat-raised-button color="accent" class="btn-table" (click)="onEliminar(element.id)"
-                      *ngIf=" element.id.estadoActividadCodigo == estadosProcesoSeleccionMonitoreo.Creada &&  element.id.enviadoComiteTecnico!=true ">
+                      *ngIf=" element.id.estadoActividadCodigo == estadosProcesoSeleccionMonitoreo.Creada &&  element.id.enviadoComiteTecnico!=true "
+                      >
                       Eliminar
                       </button>
 
                   <button mat-raised-button color="accent" class="btn-table"  (click)="onDetalle(element.id,1)"
-                      *ngIf=" element.id.estadoActividadCodigo != estadosProcesoSeleccionMonitoreo.Creada   ">
+                      *ngIf="
+                            (
+                              element.id.estadoActividadCodigo == estadosProcesoSeleccionMonitoreo.AprobadoPorComiteTecnico ||
+                              element.id.estadoActividadCodigo == estadosProcesoSeleccionMonitoreo.AprobadoPorComiteFiduciario || 
+                              element.id.estadoActividadCodigo == estadosProcesoSeleccionMonitoreo.RechazadoPorComiteTecnico ||
+                              element.id.estadoActividadCodigo == estadosProcesoSeleccionMonitoreo.RechazadoPorComiteFiduciario ||
+                              element.id.estadoActividadCodigo == estadosProcesoSeleccionMonitoreo.EnTramite
+                            )">
                       Ver detalle
                       </button>
               </td>

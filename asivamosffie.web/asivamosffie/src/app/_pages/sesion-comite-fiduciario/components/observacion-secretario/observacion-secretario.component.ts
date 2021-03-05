@@ -66,6 +66,7 @@ export class ObservacionSecretarioComponent implements OnInit {
 
   onSubmit () {
     this.estaEditando = true;
+    this.reporte.markAllAsTouched();
     this.disabledBtn = true;
     if ( this.reporte.invalid ) {
       this.openDialog( '', '<b>Debe registrar la observación para continuar.</b>' );

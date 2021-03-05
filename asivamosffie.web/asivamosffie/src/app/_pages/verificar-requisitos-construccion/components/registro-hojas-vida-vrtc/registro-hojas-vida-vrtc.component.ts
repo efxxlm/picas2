@@ -135,6 +135,7 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
       this.perfilesCompletados.emit( 'sin-diligenciar' );
     } else {
       this.estaEditando = true;
+      this.formContratista.markAllAsTouched();
       this.formContratista.get( 'numeroPerfiles' ).setValue( String( this.perfilProyecto.length ) );
       this.formContratista.get( 'numeroPerfiles' ).setValidators( Validators.min( this.perfiles.length ) );
       this.formContratista.get( 'numeroPerfiles' ).valueChanges

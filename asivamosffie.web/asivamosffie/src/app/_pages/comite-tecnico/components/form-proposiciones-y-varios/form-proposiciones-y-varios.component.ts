@@ -113,7 +113,8 @@ export class FormProposicionesYVariosComponent implements OnInit {
 
   onSubmit() {
     alert('Thanks!');
-    this.estaEditando = true
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
   }
 
 }

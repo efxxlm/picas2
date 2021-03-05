@@ -33,7 +33,7 @@
                 <td mat-cell *matCellDef="let element">
                     <button mat-raised-button color="accent" class="btn-table"
                         *ngIf="element.estadoActa=='Sin revisión'"
-                        (click)="this.validarActaParaInicio(element.contratoId)">Revisar acta de inicio</button>
+                        (click)="this.validarActaParaInicio(element.contratoId)">Validar acta de inicio</button>
                     
                     <button mat-raised-button color="accent" class="btn-table"
                         *ngIf="element.estadoActa=='Con revisión sin observaciones' || element.estadoActa=='Con revisión con observaciones'"

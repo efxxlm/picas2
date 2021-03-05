@@ -117,7 +117,7 @@
                 name="plazoMeses"
                 (keypress)="validateNumberKeypress($event)"
                 onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />
             </mat-form-field>
             <span
@@ -174,7 +174,7 @@
                 (change)="validatenomore30()"
                 (keypress)="validateNumberKeypress($event)"
                 onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />
             </mat-form-field>
             <span
@@ -249,4 +249,9 @@
       </button>
     </div>
   </form>
+  <app-tabla-observaciones
+                          [DisponibilidadPresupuestal]="objetoDisponibilidad"
+                          *ngIf="objetoDisponibilidad && objetoDisponibilidad.estadoSolicitudCodigo === '2'"
+        >
+  </app-tabla-observaciones>
 </div>

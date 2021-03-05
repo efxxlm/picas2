@@ -134,11 +134,13 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
       this.plazoEjecucionConstrM = data.plazoFase2ConstruccionDias;
       this.plazoEjecucionConstrD = data.plazoFase2ConstruccionMeses;
       this.contrato = data.contrato;
+      this.contratoConstruccionId = data.contrato.contratoConstruccion[0].contratoConstruccionId;
       this.loadDataObservaciones(data.contrato.contratoConstruccion[0].contratoConstruccionId);
     });
     this.contratoId = id;
   }
   loadDataObservaciones(id) {
+    
     if (localStorage.getItem("editable") == "true") {
       this.services.GetConstruccionObservacionByIdContratoConstruccionId(id,true).subscribe((data0:any)=>{
         this.addressForm.get('observaciones').setValue(data0.observaciones);
@@ -161,7 +163,8 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
     }
   }
   loadData2(data) {
-    this.contratoConstruccionId = data.contratoConstruccionId;
+    console.log(data);
+    //this.contratoConstruccionId = data.contratoConstruccionId;
     this.contratoObservacionId = data.contratoObservacionId;
     this.esActa = data.esActa;
     this.esSupervision = data.esSupervision;
@@ -248,6 +251,7 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
   }
   onSubmit() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     this.fechaSesion = new Date(this.fechaCreacion);
     this.fechaSesionString = `${this.fechaSesion.getFullYear()}-${this.fechaSesion.getMonth() + 1}-${this.fechaSesion.getDate()}`;
     
@@ -273,6 +277,7 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
       'esSupervision':true,
       'esActa': true
     }];
+    console.log(this.contratoConstruccionId)
     editarObservacionArreglo=[{
       'contratoId':parseInt(this.contratoId),
       'contratoConstruccionId': this.contratoConstruccionId,

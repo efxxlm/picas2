@@ -218,7 +218,8 @@ export class FormOtrosTemasComponent implements OnInit {
   }
 
   onSubmit() {
-    this.estaEditando = true
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let tema: SesionComiteTema = {
       sesionTemaId: this.sesionComiteTema.sesionTemaId,
       comiteTecnicoId: this.sesionComiteTema.comiteTecnicoId,
@@ -315,8 +316,8 @@ export class FormOtrosTemasComponent implements OnInit {
             this.tieneVotacion = this.sesionComiteTema.requiereVotacion
           })
         this.estaEditando = true;
-        console.log(this.sesionComiteTema.estadoTemaCodigo);
-
+        this.addressForm.markAllAsTouched();
+        // console.log(this.sesionComiteTema.estadoTemaCodigo);
       }
     )
 

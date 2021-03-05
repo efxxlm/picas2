@@ -15,7 +15,6 @@ export class RegistrarResultadosEnsayoComponent implements OnInit {
 
     formMuestra: FormGroup;
     ensayoLaboratorio: any;
-    maxDate: Date;
     editorStyle = {
         height: '45px'
     };
@@ -41,7 +40,6 @@ export class RegistrarResultadosEnsayoComponent implements OnInit {
     {
         this.crearFormulario();
         this.getEnsayoLaboratorio();
-        this.maxDate = new Date();
     }
 
     ngOnInit(): void {
@@ -92,11 +90,11 @@ export class RegistrarResultadosEnsayoComponent implements OnInit {
                                 this.fb.group(
                                     {
                                         semaforoMuestra: [ 'sin-diligenciar' ],
-                                        ensayoLaboratorioMuestraId: 0,
-                                        gestionObraCalidadEnsayoLaboratorioId: this.ensayoLaboratorio.gestionObraCalidadEnsayoLaboratorioId,
-                                        fechaEntregaResultado: [null],
-                                        nombreMuestra: [''],
-                                        observacion: ['']
+                                        ensayoLaboratorioMuestraId: [ 0 ],
+                                        gestionObraCalidadEnsayoLaboratorioId: [ this.ensayoLaboratorio.gestionObraCalidadEnsayoLaboratorioId ],
+                                        fechaEntregaResultado: [ null ],
+                                        nombreMuestra: [ '' ],
+                                        observacion: [ null ]
                                     }
                                 )
                             );
@@ -116,6 +114,13 @@ export class RegistrarResultadosEnsayoComponent implements OnInit {
                 muestras: this.fb.array( [] )
             }
         );
+    }
+
+    getMaxDate( value: Date ) {
+        const date = new Date( value );
+        const dias = 30;
+        date.setDate( date.getDate() + dias );
+        return date;
     }
 
     maxLength(e: any, n: number) {

@@ -75,7 +75,7 @@
                 {{ element.numeroSemana !== element.cantidadSemanas && element.actaCargada === false ? 'Enviar a verificación' : 'Enviar para registrar informe final' }}
         </button>
         <button mat-raised-button
-                color="accent" 
+                color="accent"
                 class="btn-table"
                 *ngIf="element.verCargarActa === true"
                 (click)="openDialogCargarActa( element )">

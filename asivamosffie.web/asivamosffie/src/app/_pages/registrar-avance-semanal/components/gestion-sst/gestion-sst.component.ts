@@ -5,6 +5,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-gestion-sst',
@@ -15,11 +16,15 @@ export class GestionSSTComponent implements OnInit {
 
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
+    @Input() tipoObservacionSst: any;
     formSst: FormGroup;
     seguimientoSemanalId: number;
     seguimientoSemanalGestionObraId: number;
     seguimientoSemanalGestionObraSeguridadSaludId = 0;
+    causasDeAccidentes: Dominio[] = [];
     gestionObraSst: any;
+    tablaHistorial = new MatTableDataSource();
+    dataHistorial: any[] = [];
     editorStyle = {
         height: '45px'
     };
@@ -30,10 +35,14 @@ export class GestionSSTComponent implements OnInit {
         { value: true, viewValue: 'Si' },
         { value: false, viewValue: 'No' }
     ];
-    causasDeAccidentes: Dominio[] = [];
     resultadosRevision: any[] = [
         { value: true, viewValue: 'Cumple' },
         { value: false, viewValue: 'No cumple' }
+    ];
+    displayedColumnsHistorial: string[]  = [
+        'fechaRevision',
+        'responsable',
+        'historial'
     ];
 
     constructor(
@@ -60,25 +69,26 @@ export class GestionSSTComponent implements OnInit {
                 this.seguimientoSemanalGestionObraId =  this.seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ?
                 this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraId : 0;
 
-                if (    this.seguimientoSemanal.seguimientoSemanalGestionObra.length > 0
-                    && this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSeguridadSalud.length > 0 )
-                {
-                    this.gestionObraSst =
-                        this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSeguridadSalud[0];
-                    if (    this.gestionObraSst.seguridadSaludCausaAccidente !== undefined
-                            && this.gestionObraSst.seguridadSaludCausaAccidente.length > 0 )
-                    {
+                if ( this.seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 && this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSeguridadSalud.length > 0 ) {
+                    this.gestionObraSst = this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSeguridadSalud[0];
+                    if ( this.gestionObraSst.seguridadSaludCausaAccidente !== undefined && this.gestionObraSst.seguridadSaludCausaAccidente.length > 0 ) {
                         for ( const causa of this.gestionObraSst.seguridadSaludCausaAccidente ) {
-                            const causaSeleccionada = this.causasDeAccidentes.filter(
-                                value => value.codigo === causa.causaAccidenteCodigo
-                            );
+                            const causaSeleccionada = this.causasDeAccidentes.filter( value => value.codigo === causa.causaAccidenteCodigo );
                             causas.push( causaSeleccionada[0] );
                         }
                         this.formSst.get( 'seguridadSaludCausaAccidente' ).setValue( causas );
                     }
+
+                    this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.gestionObraSst.seguimientoSemanalGestionObraSeguridadSaludId, this.tipoObservacionSst )
+                        .subscribe(
+                            response => {
+                                this.dataHistorial = response.filter( obs => obs.archivada === true );
+                                this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
+                            }
+                        );
+
                     if ( this.gestionObraSst.cantidadAccidentes !== undefined ) {
-                        this.seguimientoSemanalGestionObraSeguridadSaludId =    this.gestionObraSst
-                                                                                .seguimientoSemanalGestionObraSeguridadSaludId;
+                        this.seguimientoSemanalGestionObraSeguridadSaludId = this.gestionObraSst.seguimientoSemanalGestionObraSeguridadSaludId;
                         this.formSst.get( 'cantidadAccidentes' ).setValue( this.gestionObraSst.cantidadAccidentes !== undefined ? `${ this.gestionObraSst.cantidadAccidentes }` : '' );
                         this.formSst.markAsDirty();
                     }
