@@ -32,9 +32,8 @@
         <mat-expansion-panel class="expansion-style sub-expansion" *ngFor="let perfil of perfiles.controls; index as i" [formGroup]="perfil">
             
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title "
-                [ngClass]="{'sin-diligenciar': perfil.get('registroCompleto').value == null,'en-proceso': !perfil.get('registroCompleto').value,'completo':perfil.get('registroCompleto').value}"
-                >
+                <mat-panel-title class="expansion-style--title 
+                {{ perfil.get('registroCompleto').value == null ? 'sin-diligenciar' : !perfil.get('registroCompleto').value ? 'en-proceso' : 'completo' }}">
                     Convocado {{ i+1 }}
                 </mat-panel-title>
             </mat-expansion-panel-header>

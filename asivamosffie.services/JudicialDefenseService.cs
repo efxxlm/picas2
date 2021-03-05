@@ -1583,5 +1583,49 @@ namespace asivamosffie.services
 
             return retorno;
         }
+
+        public async Task<Respuesta> ChangeStateLegitimacion(int pDefensaJudicialId, string code, string user)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Legitimacion_Defensa_Judicial, (int)EnumeratorTipoDominio.Acciones);
+            string CreateEdit = "";
+            try { 
+
+                DefensaJudicial defensaJudicial = await _context.DefensaJudicial.Where(d => d.DefensaJudicialId == pDefensaJudicialId).FirstOrDefaultAsync();
+
+                if (defensaJudicial != null)
+                {
+                    CreateEdit = "ACTUALIZAR LEGITIMACION CODIGO DEFENSA JUDICIAL";
+                    defensaJudicial.FechaModificacion = DateTime.Now;
+                    defensaJudicial.UsuarioModificacion = user;
+                    defensaJudicial.LegitimacionCodigo = code;
+                    _context.DefensaJudicial.Update(defensaJudicial);
+
+                    _context.SaveChanges();
+
+                }
+
+                return
+                new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_procesos_Defensa_Judicial, GeneralCodes.OperacionExitosa, idAccion, user, CreateEdit)
+                };
+            }
+            catch (Exception ex)
+            {
+                return
+                  new Respuesta
+                  {
+                      IsSuccessful = false,
+                      IsException = true,
+                      IsValidation = false,
+                      Code = GeneralCodes.Error,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_procesos_Defensa_Judicial, GeneralCodes.Error, idAccion, user, ex.InnerException.ToString())
+                  };
+            }
+        }
     }
 }

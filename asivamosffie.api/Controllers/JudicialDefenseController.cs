@@ -317,5 +317,23 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("ChangeStateLegitimacion")]
+        [HttpPost]
+        public async Task<IActionResult> ChangeStateLegitimacion([FromQuery] int pDefensaJudicialId, [FromQuery] string code)
+        {
+            try
+            {
+                Respuesta respuesta = new Respuesta();
+                string user = HttpContext.User.FindFirst("User").Value.ToUpper();
+                respuesta = await _judicialDefense.ChangeStateLegitimacion(pDefensaJudicialId, code, user);
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
     }
 }

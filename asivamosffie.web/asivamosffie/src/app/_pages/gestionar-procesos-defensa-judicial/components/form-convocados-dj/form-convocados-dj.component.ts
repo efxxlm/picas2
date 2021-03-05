@@ -46,7 +46,21 @@ export class FormConvocadosDjComponent implements OnInit {
         this.perfiles.controls[i].get("numIdentificacion").setValue(element.numeroIdentificacion);
         this.perfiles.controls[i].get("direccion").setValue(element.numeroIdentificacion);
         this.perfiles.controls[i].get("correo").setValue(element.email);
-        this.perfiles.controls[i].get("registroCompleto").setValue(element.registroCompleto);
+        //this.perfiles.controls[i].get("registroCompleto").setValue(element.registroCompleto);
+        if( element.registroCompleto == null 
+          || (!element.registroCompleto 
+          && (element.nombre == null || element.nombre == '')
+          && (element.tipoIdentificacionCodigo == null || element.tipoIdentificacionCodigo == '')
+          && (element.numeroIdentificacion == null || element.numeroIdentificacion == '')
+          && (element.direccion == null || element.direccion == '') 
+          && (element.email == null || element.email == '') 
+          )){
+            this.perfiles.controls[i].get("registroCompleto").setValue(null);
+          }else if(!element.registroCompleto){
+            this.perfiles.controls[i].get("registroCompleto").setValue(false);
+          }else if(element.registroCompleto){
+            this.perfiles.controls[i].get("registroCompleto").setValue(true);
+          }
         i++;
       });      
   }
