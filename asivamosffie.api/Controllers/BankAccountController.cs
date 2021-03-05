@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace asivamosffie.api.Controllers
-{
+{ 
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
