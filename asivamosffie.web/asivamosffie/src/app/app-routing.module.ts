@@ -409,6 +409,11 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/aprobar-incorporacion-rendimientos/aprobar-incorporacion-rendimientos.module')
         .then(m => m.AprobarIncorporacionRendimientosModule)
       },
+      {
+        path: 'gestionListaChequeo',
+        loadChildren: () => import( './_pages/gestionar-lista-chequeo/gestionar-lista-chequeo.module' )
+          .then( module => module.GestionarListaChequeoModule )
+      }
     ]
 
   },
