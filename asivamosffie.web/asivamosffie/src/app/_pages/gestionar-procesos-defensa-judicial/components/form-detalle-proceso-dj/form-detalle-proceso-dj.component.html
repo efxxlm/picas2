@@ -148,7 +148,11 @@
                             <div class="text-area-quill auxBox">
                                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                                     required (onContentChanged)="maxLength($event, 1000)"
-                                    formControlName="pretensiones" #pretensiones>
+                                    formControlName="pretensiones" #pretensiones
+                                    [class.invalid]="
+                                    (addressForm.get('pretensiones').invalid && addressForm.get('pretensiones').touched) ||
+                                    (addressForm.get('pretensiones').invalid && estaEditando)
+                                  ">
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.pretensiones.value">
