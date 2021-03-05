@@ -22,6 +22,7 @@ export class FormCostoVariableGogComponent implements OnInit {
     fuenteRecursos: [null, Validators.required],
     valorDescuento: [null, Validators.required]
   });
+  estaEditando = false;
   
   constructor( private fb: FormBuilder) { }
 

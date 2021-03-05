@@ -13,12 +13,11 @@
               <label
                 class="label-left"
                 for="tipoAportante"
-                 
-              >
-              <!-- [class.color-secondaryColor]="
+                [class.color-secondaryColor]="
                   (addressForm.get('tipoAportante').invalid && addressForm.get('tipoAportante').touched) ||
                   (addressForm.get('tipoAportante').invalid && estaEditando)
-                " -->
+                "
+              >
                 Tipo de aportante
               </label>
             </div>
@@ -39,12 +38,11 @@
               [matTooltipPosition]="'above'"
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
-                
-              />
-              <!-- *ngIf="
+                *ngIf="
                   (addressForm.get('tipoAportante').invalid && addressForm.get('tipoAportante').touched) ||
                   (addressForm.get('tipoAportante').invalid && estaEditando)
-                " -->
+                "
+              />
             </span>
           </div>
         </div>
@@ -56,12 +54,11 @@
               <label
                 class="label-left"
                 for="nombreAportante"
-                
-              >
-              <!-- [class.color-secondaryColor]="
+                [class.color-secondaryColor]="
                   (addressForm.get('nombreAportante').invalid && addressForm.get('nombreAportante').touched) ||
                   (addressForm.get('nombreAportante').invalid && estaEditando)
-                " -->
+                "
+              >
                 Nombre del aportante
               </label>
             </div>
@@ -82,14 +79,11 @@
               [matTooltipPosition]="'above'"
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
-                
-              />
-
-              <!-- *ngIf="
+                *ngIf="
                   (addressForm.get('nombreAportante').invalid && addressForm.get('nombreAportante').touched) ||
                   (addressForm.get('nombreAportante').invalid && estaEditando)
-                "  -->
-
+                "
+              />
             </span>
           </div>
         </div>
@@ -101,14 +95,11 @@
               <label
                 class="label-left"
                 for="fuenteRecursos"
-                
-              >
-
-              <!-- [class.color-secondaryColor]="
+                [class.color-secondaryColor]="
                   (addressForm.get('fuenteRecursos').invalid && addressForm.get('fuenteRecursos').touched) ||
                   (addressForm.get('fuenteRecursos').invalid && estaEditando)
-                " -->
-
+                "
+              >
                 Fuente de los recursos
               </label>
             </div>
@@ -129,14 +120,11 @@
               [matTooltipPosition]="'above'"
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
-                
-              />
-
-              <!-- *ngIf="
+                *ngIf="
                   (addressForm.get('fuenteRecursos').invalid && addressForm.get('fuenteRecursos').touched) ||
                   (addressForm.get('fuenteRecursos').invalid && estaEditando)
-                " -->
-
+                "
+              />
             </span>
           </div>
         </div>
@@ -148,14 +136,11 @@
               <label
                 class="label-left"
                 for="valorDescuento"
-                
-              >
-
-              <!-- [class.color-secondaryColor]="
+                [class.color-secondaryColor]="
                   (addressForm.get('valorDescuento').invalid && addressForm.get('valorDescuento').touched) ||
                   (addressForm.get('valorDescuento').invalid && estaEditando)
-                " -->
-
+                "
+              >
                 Valor del descuento
               </label>
             </div>
@@ -170,7 +155,6 @@
                   formControlName="valorDescuento"
                   (keypress)="validateNumberKeypress($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
                 />
               </mat-form-field>
@@ -190,14 +174,11 @@
               [matTooltipPosition]="'above'"
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
-                  
-                />
-
-                <!-- *ngIf="
+                  *ngIf="
                     (addressForm.get('valorDescuento').invalid && addressForm.get('valorDescuento').touched) ||
-                    (addressForm.get('valorDescuento').invalid && estaEditando)     
-                  " -->
-
+                    (addressForm.get('valorDescuento').invalid && estaEditando)
+                  "
+                />
               </span>
             </div>
           </div>
