@@ -218,6 +218,10 @@ export class PlanesProgramasComponent implements OnInit {
 
   getDataPlanes () {
 
+    /*
+      Se agregaron los campos 'fechaInicioEtapaObraTemporal' y 'fechaFinEtapaObraTemporal' a la interfaz 'Proyecto'
+      por el seiguiente error de compilacion 'La propiedad 'fechaInicioEtapaObraTemporal' no existe en el tipo 'Proyecto'.' - Carlos Molero
+    */
     this.minDate = this.proyecto.fechaInicioEtapaObraTemporal;
     this.maxDate = this.proyecto.fechaFinEtapaObraTemporal;
 

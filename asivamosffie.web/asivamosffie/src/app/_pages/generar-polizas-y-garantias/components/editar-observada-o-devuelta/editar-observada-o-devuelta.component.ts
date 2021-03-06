@@ -443,7 +443,8 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
     }
     this.polizaService.EditarContratoPoliza(contratoArray).subscribe(data => {
       if (data.isSuccessful == true) {
-        this.polizaService.createEditPolizaObservacion( observacionArray )
+        /* CreateEditPolizaObservacion - verificar este servicio con Julian */
+        this.polizaService.CreatePolizaObservacion( observacionArray )
           .subscribe( 
             () => this.realizoPeticion = true,
             err => this.openDialog('', `<b>${err.message}</b>`)
