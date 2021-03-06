@@ -1553,18 +1553,18 @@ namespace asivamosffie.services
 
                     pConstruccion.PlanInventarioArboreo == null ||
                     pConstruccion.PlanInventarioArboreo == 1 ||
-                    pConstruccion.InventarioArboreoFechaRadicado == null ||
-                    pConstruccion.InventarioArboreoFechaAprobacion == null ||
+                    (pConstruccion.PlanInventarioArboreo == 2 && pConstruccion.InventarioArboreoFechaRadicado == null ) ||
+                    (pConstruccion.PlanInventarioArboreo == 2 && pConstruccion.InventarioArboreoFechaAprobacion == null ) ||
 
                     pConstruccion.PlanAprovechamientoForestal == null ||
                     pConstruccion.PlanAprovechamientoForestal == 1 ||
-                    pConstruccion.AprovechamientoForestalApropiacionFechaRadicado == null ||
-                    pConstruccion.AprovechamientoForestalFechaAprobacion == null ||
+                    (pConstruccion.PlanAprovechamientoForestal == 2 && pConstruccion.AprovechamientoForestalApropiacionFechaRadicado == null ) ||
+                    (pConstruccion.PlanAprovechamientoForestal == 2 && pConstruccion.AprovechamientoForestalFechaAprobacion == null ) ||
 
                     pConstruccion.PlanManejoAguasLluvias == null ||
                     pConstruccion.PlanManejoAguasLluvias == 1 ||
-                    pConstruccion.ManejoAguasLluviasFechaRadicado == null ||
-                    pConstruccion.ManejoAguasLluviasFechaAprobacion == null ||
+                    (pConstruccion.PlanManejoAguasLluvias == 2 && pConstruccion.ManejoAguasLluviasFechaRadicado == null ) ||
+                    (pConstruccion.PlanManejoAguasLluvias == 2 && pConstruccion.ManejoAguasLluviasFechaAprobacion == null ) ||
 
                     string.IsNullOrEmpty(pConstruccion.PlanRutaSoporte)
             )

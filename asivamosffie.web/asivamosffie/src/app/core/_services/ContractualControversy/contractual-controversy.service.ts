@@ -143,6 +143,10 @@ export class ContractualControversyService implements OnInit{
   GetMesaByMesaId(pControversiaMesaID: number){
     return this.http.get<any>(`${environment.apiUrl}/ContractualControversy/GetMesaByMesaId?pControversiaMesaID=${pControversiaMesaID}`);
   }
+  //4.4.1
+  GetSeguimientoActuacionDerivadabyId(pSeguimientoActuacionDerivadaId: number){
+    return this.http.get<any>(`${environment.apiUrl}/ContractualControversy/GetSeguimientoActuacionDerivadabyId?pSeguimientoActuacionDerivadaId=${pSeguimientoActuacionDerivadaId}`);
+  }
   FinalizarActuacion(id: any) {
     return this.http.put<Respuesta>(`${environment.apiUrl}/ContractualControversy/FinalizarActuacion?pControversiaActuacionId=${id}`, null);
   }
