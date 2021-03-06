@@ -26,9 +26,7 @@
             [formGroup]="perfil">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title 
-                {{ perfil.get('registroCompleto').value == null ? 
-                'sin-diligenciar' : !perfil.get('registroCompleto').value ? 
-                        'en-proceso' : 'completo' }}">
+                {{ perfil.get('registroCompleto').value == null ? 'sin-diligenciar' : !perfil.get('registroCompleto').value ? 'en-proceso' : 'completo' }}">
                     Convocado {{ i+1 }}
                 </mat-panel-title>
             </mat-expansion-panel-header>

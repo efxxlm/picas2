@@ -214,19 +214,26 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
   estaIncompletocontratos(pProceso:DefensaJudicial):number{        
     
     let retorno:number=0;
-    if(pProceso.cantContratos>0 && pProceso.defensaJudicialContratacionProyecto.length>0)
-      {
-        retorno= 2;
+    let num_contratos: number = 0;
+    let listaContratos:any[]= [];
+    
+    if(pProceso != null){
+
+      num_contratos = pProceso.cantContratos;// total de contratos
+
+
+      this.defensaJudicial.defensaJudicialContratacionProyecto.forEach(element => {
+        if (!listaContratos.includes(element.contratacionProyecto.contratacionId))
+          listaContratos.push(element.contratacionProyecto.contratacionId);
+      });
+    }
+
+      if(listaContratos.length >= num_contratos){
+        retorno = 2;
+      }else if(listaContratos.length > 0 && listaContratos.length < num_contratos ){
+        retorno = 1;
       }
-      else{       
-        if(pProceso.cantContratos==null && pProceso.defensaJudicialContratacionProyecto.length==0)
-        {
-          retorno= 0;
-        }
-        else{       
-        retorno=1;
-        }    
-      }    
+
     return retorno;
   }
 

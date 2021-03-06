@@ -70,19 +70,32 @@ export class FormConvocadosPasivaDjComponent implements OnInit {
           this.perfiles.controls[i].get("numIdentificacion").setValue(element.numeroIdentificacion);
           this.perfiles.controls[i].get("conocimientoParteAutoridad").setValue(element.existeConocimiento);
           this.perfiles.controls[i].get("despacho").setValue(element.convocadoAutoridadDespacho);
-          this.commonService.listMunicipiosByIdMunicipio(element.localizacionIdMunicipio.toString()).subscribe(res=>{
-            this.perfiles.controls[i].get("departamento").setValue(res[0].idPadre);
-            this.municipioArray=res;
-            this.perfiles.controls[i].get("municipio").setValue(element.localizacionIdMunicipio);
-          });
-          
+          if(element.localizacionIdMunicipio != null){
+            this.commonService.listMunicipiosByIdMunicipio(element.localizacionIdMunicipio.toString()).subscribe(res=>{
+              this.perfiles.controls[i].get("departamento").setValue(res[0].idPadre);
+              this.municipioArray=res;
+              this.perfiles.controls[i].get("municipio").setValue(element.localizacionIdMunicipio);
+            });
+          }
           this.perfiles.controls[i].get("radicadoDespacho").setValue(element.radicadoDespacho);
           this.perfiles.controls[i].get("fechaRadicadoDespacho").setValue(element.fechaRadicado);
           this.perfiles.controls[i].get("accionAEvitar").setValue(element.medioControlAccion);
           this.perfiles.controls[i].get("etapaProcesoFFIE").setValue(element.etapaProcesoFfiecodigo);
           this.perfiles.controls[i].get("caducidad").setValue(element.caducidadPrescripcion);
-          this.perfiles.controls[i].get("registroCompleto").setValue(element.registroCompleto);
-
+          //this.perfiles.controls[i].get("registroCompleto").setValue(element.registroCompleto);
+          if( element.registroCompleto == null 
+            || (!element.registroCompleto 
+            && (element.nombre == null || element.nombre == '')
+            && (element.tipoIdentificacionCodigo == null || element.tipoIdentificacionCodigo == '')
+            && (element.numeroIdentificacion == null || element.numeroIdentificacion == '')
+            && (element.existeConocimiento == null) 
+            )){
+              this.perfiles.controls[i].get("registroCompleto").setValue(null);
+            }else if(!element.registroCompleto){
+              this.perfiles.controls[i].get("registroCompleto").setValue(false);
+            }else if(element.registroCompleto){
+              this.perfiles.controls[i].get("registroCompleto").setValue(true);
+            }
         i++;
       });     
   }
