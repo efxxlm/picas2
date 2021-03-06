@@ -222,16 +222,6 @@ namespace asivamosffie.services.Helpers.Enumerator
         Medio_Pago_Giro_Tercero = 158,
 
         Respuestas_Lista_Chequeo_Solicitud_Pago = 162,
-        Calificacion_Informe_Final = 151,
-
-
-        Jurisdiccion =116,
-        Actuaciones_Recomendadas=119,
-        Estados_Defensa_Judicial=120,
-
-        Estados_Reclamacion = 126,
-        
-        
         Estado_Novedad_Contractual = 157,
     }
 }

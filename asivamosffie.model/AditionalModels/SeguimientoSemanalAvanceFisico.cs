@@ -5,13 +5,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace asivamosffie.model.Models
 {
-    public partial class SesionComiteTema
+    public partial class SeguimientoSemanalAvanceFisico
     {
-        [NotMapped]
-        public string NombreResponsable { get; set; }
 
         [NotMapped]
-        public bool? RegistroCompletoActa { get; set; }
+        public string EstadoObraNombre { get; set; }
+
     }
-
 }
