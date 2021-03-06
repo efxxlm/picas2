@@ -436,6 +436,10 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
     this.estaEditando = true;
     this.personaNaturalForm.markAllAsTouched();
     this.myControl.markAllAsTouched();
+    if (this.personaNaturalForm.get('correoElectronico').invalid) {
+      this.openDialog('', `<b>Correo electrónico del proponente invalido</b>`);
+      return
+    } 
     this.procesoSeleccion.procesoSeleccionProponente = [];
     let proponente: ProcesoSeleccionProponente = {
       procesoSeleccionProponenteId: this.personaNaturalForm.get('procesoSeleccionProponenteId').value,
@@ -461,6 +465,11 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
     this.estaEditando = true;
     this.personaNaturalForm.markAllAsTouched();
     this.myControl.markAllAsTouched();
+
+    if (this.personaJuridicaIndividualForm.get('correoElectronico').invalid) {
+      this.openDialog('', `<b>Correo electrónico del proponente invalido</b>`);
+      return
+    } 
     this.procesoSeleccion.procesoSeleccionProponente = [];
     let proponente: ProcesoSeleccionProponente = {
 
@@ -504,6 +513,11 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
     this.estaEditando = true;
     this.personaNaturalForm.markAllAsTouched();
     this.myControl.markAllAsTouched();
+
+    if (this.unionTemporalForm.get('correoElectronico').invalid) {
+      this.openDialog('', `<b>Correo electrónico del proponente invalido</b>`);
+      return
+    } 
     let porcentaje: number = 0;
     this.procesoSeleccion.procesoSeleccionProponente = [];
     this.procesoSeleccion.procesoSeleccionIntegrante = [];
