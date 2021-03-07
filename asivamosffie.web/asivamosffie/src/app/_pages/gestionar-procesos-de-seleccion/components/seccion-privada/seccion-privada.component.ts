@@ -321,6 +321,13 @@ export class SeccionPrivadaComponent implements OnInit {
     return retorno;
   }
 
+  getStyleEvaluacion(){
+    if (this.procesoSeleccion.estadoProcesoSeleccionCodigo == this.estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario )
+      return 'auto'
+    else
+      return 'none'
+
+  }
 
   estaIncompletoEstudio(pProceso: any): number {
     let retorno = 0; // sin-diligenciar

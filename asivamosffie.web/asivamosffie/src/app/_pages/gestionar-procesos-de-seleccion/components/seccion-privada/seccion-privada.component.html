@@ -24,7 +24,8 @@
             </mat-expansion-panel-header>
             <button style="display: none;" type="button" (click)="descripcion.cargarRegistro()" id="botonDescripcion"></button>            
             <app-form-descripcion-del-proceso-de-seleccion [editar]="bitPuedoEditar"
-                #descripcion [procesoSeleccion]="procesoSeleccion" (guardar)="onSubmit()"
+                #descripcion [procesoSeleccion]="procesoSeleccion" (guardar)="onSubmit()" 
+                [style.pointer-events]="getStyleEvaluacion()"
                 >
             </app-form-descripcion-del-proceso-de-seleccion>
         </mat-expansion-panel>

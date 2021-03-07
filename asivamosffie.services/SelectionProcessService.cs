@@ -180,7 +180,7 @@ namespace asivamosffie.services
                 }
 
                 //si la cantidad que recibe de parametros no es la misma que tiene en datos, borro los anteriores
-                if (procesoSeleccion.ProcesoSeleccionProponente.Count() < _context.ProcesoSeleccionProponente.Where(x => x.ProcesoSeleccionId == procesoSeleccion.ProcesoSeleccionId && !(bool)x.Eliminado).Count())
+                if (procesoSeleccion.ProcesoSeleccionProponente.Count() < _context.ProcesoSeleccionProponente.Where(x => x.ProcesoSeleccionId == procesoSeleccion.ProcesoSeleccionId && x.Eliminado != true).Count())
                 {
                     foreach (var procesoseleccionprop in _context.ProcesoSeleccionProponente.Where(x => x.ProcesoSeleccionId == procesoSeleccion.ProcesoSeleccionId && !(bool)x.Eliminado))
                     {
@@ -758,6 +758,8 @@ namespace asivamosffie.services
                     ProcesoSeleccionProponenteAntiguo.TipoProponenteCodigo = procesoSeleccionProponente.TipoProponenteCodigo;
                     ProcesoSeleccionProponenteAntiguo.NombreProponente = procesoSeleccionProponente.NombreProponente;
                     ProcesoSeleccionProponenteAntiguo.TipoIdentificacionCodigo = procesoSeleccionProponente.TipoIdentificacionCodigo;
+                    ProcesoSeleccionProponenteAntiguo.NombreRepresentanteLegal = procesoSeleccionProponente.NombreRepresentanteLegal;
+                    ProcesoSeleccionProponenteAntiguo.CedulaRepresentanteLegal = procesoSeleccionProponente.CedulaRepresentanteLegal;
                     ProcesoSeleccionProponenteAntiguo.NumeroIdentificacion = procesoSeleccionProponente.NumeroIdentificacion;
                     ProcesoSeleccionProponenteAntiguo.LocalizacionIdMunicipio = procesoSeleccionProponente.LocalizacionIdMunicipio;
                     ProcesoSeleccionProponenteAntiguo.DireccionProponente = procesoSeleccionProponente.DireccionProponente;

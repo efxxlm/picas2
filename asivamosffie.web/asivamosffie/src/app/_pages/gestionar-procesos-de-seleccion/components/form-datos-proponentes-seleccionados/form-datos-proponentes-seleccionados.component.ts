@@ -470,12 +470,16 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
       this.openDialog('', `<b>Correo electrónico del proponente invalido</b>`);
       return
     } 
+    console.log(this.personaJuridicaIndividualForm.get('representanteLegal').value);
     this.procesoSeleccion.procesoSeleccionProponente = [];
     let proponente: ProcesoSeleccionProponente = {
 
       procesoSeleccionProponenteId: this.personaJuridicaIndividualForm.get('procesoSeleccionProponenteId').value,
       procesoSeleccionId: this.procesoSeleccion.procesoSeleccionId,
       tipoProponenteCodigo: this.tipoProponente.value ? this.tipoProponente.value.codigo : null,
+
+
+        
 
       nombreProponente: this.personaJuridicaIndividualForm.get('nombre').value ? this.personaJuridicaIndividualForm.get('nombre').value : this.myJuridica.value,
       numeroIdentificacion: this.personaJuridicaIndividualForm.get('numeroIdentificacion').value,
