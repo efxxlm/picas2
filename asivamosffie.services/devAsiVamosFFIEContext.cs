@@ -20,6 +20,8 @@ namespace asivamosffie.model.Models
         public virtual DbSet<ArchivoCargue> ArchivoCargue { get; set; }
         public virtual DbSet<Auditoria> Auditoria { get; set; }
         public virtual DbSet<AvanceFisicoFinanciero> AvanceFisicoFinanciero { get; set; }
+        public virtual DbSet<BalanceFinanciero> BalanceFinanciero { get; set; }
+        public virtual DbSet<BalanceFinancieroTranslado> BalanceFinancieroTranslado { get; set; }
         public virtual DbSet<CargueObservacion> CargueObservacion { get; set; }
         public virtual DbSet<CarguePagosRendimientos> CarguePagosRendimientos { get; set; }
         public virtual DbSet<Cofinanciacion> Cofinanciacion { get; set; }
@@ -55,7 +57,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<ControversiaActuacionMesaSeguimiento> ControversiaActuacionMesaSeguimiento { get; set; }
         public virtual DbSet<ControversiaContractual> ControversiaContractual { get; set; }
         public virtual DbSet<ControversiaMotivo> ControversiaMotivo { get; set; }
-        public virtual DbSet<CriterioTipoPago> CriterioTipoPago { get; set; }
+        public virtual DbSet<CriterioCodigoTipoPagoCodigo> CriterioCodigoTipoPagoCodigo { get; set; }
         public virtual DbSet<CronogramaSeguimiento> CronogramaSeguimiento { get; set; }
         public virtual DbSet<CuentaBancaria> CuentaBancaria { get; set; }
         public virtual DbSet<DefensaJudicial> DefensaJudicial { get; set; }
@@ -226,6 +228,14 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=asivamosffie.database.windows.net;Database=devAsiVamosFFIE;User ID=adminffie;Password=SaraLiam2020*;MultipleActiveResultSets=False;Connection Timeout=30;");
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -383,6 +393,36 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.VariableCodigo)
                     .HasMaxLength(10)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<BalanceFinanciero>(entity =>
+            {
+                entity.Property(e => e.EstadoBalanceCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UrlSoporte).HasMaxLength(1000);
+
+                entity.HasOne(d => d.ContratacionProyecto)
+                    .WithMany(p => p.BalanceFinanciero)
+                    .HasForeignKey(d => d.ContratacionProyectoId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_BalanceFinanciero_ContratacionProyecto");
+            });
+
+            modelBuilder.Entity<BalanceFinancieroTranslado>(entity =>
+            {
+                entity.HasOne(d => d.BalanceFinanciero)
+                    .WithMany(p => p.BalanceFinancieroTranslado)
+                    .HasForeignKey(d => d.BalanceFinancieroId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_BalanceFinancieroTranslado_BalanceFinanciero");
+
+                entity.HasOne(d => d.OrdenGiro)
+                    .WithMany(p => p.BalanceFinancieroTranslado)
+                    .HasForeignKey(d => d.OrdenGiroId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_BalanceFinancieroTranslado_OrdenGiro");
             });
 
             modelBuilder.Entity<CargueObservacion>(entity =>
@@ -1928,11 +1968,8 @@ namespace asivamosffie.model.Models
                     .HasConstraintName("FK_ControversiaMotivo_ControversiaContractual");
             });
 
-            modelBuilder.Entity<CriterioTipoPago>(entity =>
+            modelBuilder.Entity<CriterioCodigoTipoPagoCodigo>(entity =>
             {
-                entity.HasKey(e => e.CriterioCodigoTipoPagoCodigoId)
-                    .HasName("PK__Criterio__218FBC9DE3818948");
-
                 entity.Property(e => e.CriterioCodigo)
                     .IsRequired()
                     .HasMaxLength(2)
@@ -2843,7 +2880,7 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.RegistroCompletoEntregaEtc).HasColumnName("RegistroCompletoEntregaETC");
 
                 entity.Property(e => e.UrlActa)
-                    .HasMaxLength(500)
+                    .HasMaxLength(1000)
                     .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
@@ -4061,9 +4098,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaRevision).HasColumnType("datetime");
 
-                entity.Property(e => e.Observacion)
-                    .IsRequired()
-                    .HasMaxLength(3000);
+                entity.Property(e => e.Observacion).IsRequired();
 
                 entity.Property(e => e.UsuarioCreacion).HasMaxLength(400);
 
@@ -4215,10 +4250,6 @@ namespace asivamosffie.model.Models
                 entity.HasIndex(e => new { e.ProcesoSeleccionId, e.NombreOrganizacion, e.ValorCotizacion, e.UrlSoporte, e.Eliminado })
                     .HasName("UK_ProcesoSeleccion")
                     .IsUnique();
-
-                entity.Property(e => e.Descripcion)
-                    .HasMaxLength(3000)
-                    .IsUnicode(false);
 
                 entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 

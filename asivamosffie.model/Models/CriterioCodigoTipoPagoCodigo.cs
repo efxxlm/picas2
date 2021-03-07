@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace asivamosffie.model.Models
 {
-    public partial class CriterioTipoPago
+    public partial class CriterioCodigoTipoPagoCodigo
     {
         public int CriterioCodigoTipoPagoCodigoId { get; set; }
         public string CriterioCodigo { get; set; }
