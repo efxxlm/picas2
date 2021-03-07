@@ -1,0 +1,86 @@
+<section class="busqueda">
+    <mat-form-field appearance="outline" class="busqueda--input">
+      <mat-label>Buscador / Filtro</mat-label>
+      <input matInput #filtro (keyup)="applyFilter($event)">
+    </mat-form-field>
+    <button mat-button color="primary" class="busqueda--img" (click)="filtro.focus()">
+      <img src="assets/img/icon/lupa.svg" alt="Buscar">
+    </button>
+</section>
+
+<section class="table-responsive">
+  <table mat-table [dataSource]="tablaVerificar" matSort>
+
+    <ng-container matColumnDef="fechaGeneracion">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de generación de orden de giro </th>
+      <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.fechaGeneracion | date: 'dd/MM/yyyy' }} </b> </td>
+    </ng-container>
+
+    <ng-container matColumnDef="numeroOrden">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de orden de giro </th>
+      <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroOrden }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="modalidad">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Modalidad del contrato </th>
+      <td mat-cell *matCellDef="let element" align="center"> {{ element.modalidad }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="numeroContrato">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de contrato </th>
+      <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroContrato }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="estadoVerificacion">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la verificación </th>
+        <td mat-cell *matCellDef="let element" align="center"> {{ element.estadoVerificacion }} </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="gestion">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
+      <td mat-cell *matCellDef="let element">
+  
+        <button mat-raised-button
+                color="accent" 
+                class="btn-table"
+                [routerLink]="[ 'verificarOrdenGiro', element.id ]">
+                Verificar orden de giro
+        </button>
+        <button mat-raised-button
+                color="accent" 
+                class="btn-table"
+                [routerLink]="[ 'editarOrdenGiro', element.id ]">
+                Ver detalle/Editar
+        </button>
+        <button mat-raised-button
+                color="accent" 
+                class="btn-table"
+                (click)="openDialogEnviarAprobacion()">
+                Enviar para aprobación orden de giro
+        </button>
+        <button mat-raised-button
+                color="accent" 
+                class="btn-table"
+                [routerLink]="[ 'verDetalle', element.id ]">
+                Ver detalle
+        </button>
+        <button mat-raised-button
+                color="accent" 
+                class="btn-table">
+                Devolver orden de giro
+        </button>
+        <button mat-raised-button
+                color="accent" 
+                class="btn-table">
+                Descargar orden de giro
+        </button>
+
+      </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+</section>

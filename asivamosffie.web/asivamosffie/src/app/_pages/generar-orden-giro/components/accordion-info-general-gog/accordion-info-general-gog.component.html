@@ -11,7 +11,10 @@
                     <p><strong>Código SIFI:</strong> 357233</p>
                     <p><strong>Coordinación responsable:</strong> Andina</p>
                     <p><strong>Tipo de contrato:</strong> {{ getTipoSolicitudContrato( solicitudPago.contratoSon.contratacion.tipoSolicitudCodigo ) }} </p>
-                    <p><strong>Valor de la factura:</strong> ${{ solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseFactura[0].valorFacturado | currency:' ':'symbol-narrow':'.0-0' }} </p>
+                    <!--
+                        solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseFactura[0].valorFacturado
+                    -->
+                    <p><strong>Valor de la factura:</strong> ${{ 300000 | currency:' ':'symbol-narrow':'.0-0' }} </p>
                 </mat-card-content>
             </mat-card>
             <app-tabla-datos-solicitud-gog [listProyectos]="solicitudPago.contratoSon.listProyectos[1]"></app-tabla-datos-solicitud-gog>
@@ -60,7 +63,7 @@
             <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;">
                 <mat-card-content style="text-align: left;">
                     <p><strong>URL con soporte:</strong>
-                        {{ solicitudPago.solicitudPagoSoporteSolicitud[0].urlSoporte }}
+                        {{ solicitudPago.solicitudPagoSoporteSolicitud[0]?.urlSoporte }}
                     </p>
                 </mat-card-content>
             </mat-card>

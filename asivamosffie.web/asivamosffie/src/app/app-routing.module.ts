@@ -403,6 +403,11 @@ const routes: Routes = [
         .then(m => m.GenerarOrdenGiroModule)
       },
       {
+        path: 'verificarOrdenGiro',
+        loadChildren: () => import( './_pages/verificar-orden-giro/verificar-orden-giro.module' )
+          .then( module => module.VerificarOrdenGiroModule )
+      },
+      {
         path: 'gestionarProcesoDefensaJudicial',
         loadChildren: () => import('./_pages/gestionar-procesos-defensa-judicial/gestionar-procesos-defensa-judicial.module')
         .then(m => m.GestionarProcesosDefensaJudicialModule)
