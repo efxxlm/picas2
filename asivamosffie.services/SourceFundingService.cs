@@ -640,35 +640,38 @@ namespace asivamosffie.services
                         }
                     }
                 }
-                foreach (var dDisponibilidadProyecto in disponibilidad)
+                else
                 {
-                    if (dDisponibilidadProyecto.ProyectoAdministrativoId != null)
+                    foreach (var dDisponibilidadProyecto in disponibilidad)
                     {
-                        foreach (var pAdminsitrativoApo in dDisponibilidadProyecto.ProyectoAdministrativo.ProyectoAdministrativoAportante)
+                        if (dDisponibilidadProyecto.ProyectoAdministrativoId != null)
                         {
-                            foreach (var d in pAdminsitrativoApo.AportanteFuenteFinanciacion)
+                            foreach (var pAdminsitrativoApo in dDisponibilidadProyecto.ProyectoAdministrativo.ProyectoAdministrativoAportante)
                             {
-                                if (d.FuenteFinanciacionId != null)
+                                foreach (var d in pAdminsitrativoApo.AportanteFuenteFinanciacion)
                                 {
-                                    gestion.Add(Convert.ToInt32(d.FuenteFinanciacionId));
+                                    if (d.FuenteFinanciacionId != null)
+                                    {
+                                        gestion.Add(Convert.ToInt32(d.FuenteFinanciacionId));
+                                    }
                                 }
                             }
                         }
-                    }
-                    else
-                    {
-                        foreach (var pAdminsitrativoApo in dDisponibilidadProyecto.Proyecto.ProyectoAportante)
+                        else
                         {
-                            foreach (var d in pAdminsitrativoApo.Aportante.FuenteFinanciacion)
+                            foreach (var pAdminsitrativoApo in dDisponibilidadProyecto.Proyecto.ProyectoAportante)
                             {
-                                if (d.FuenteFinanciacionId != null)
+                                foreach (var d in pAdminsitrativoApo.Aportante.FuenteFinanciacion)
                                 {
-                                    gestion.Add(Convert.ToInt32(d.FuenteFinanciacionId));
+                                    if (d.FuenteFinanciacionId != null)
+                                    {
+                                        gestion.Add(Convert.ToInt32(d.FuenteFinanciacionId));
+                                    }
                                 }
                             }
                         }
-                    }
 
+                    }
                 }
             }
             var financiaciones = _context.FuenteFinanciacion.Where(x => gestion.Contains(x.FuenteFinanciacionId) && x.Eliminado == false).ToList();

@@ -3155,7 +3155,7 @@ namespace asivamosffie.services
         private bool? ValidarRegistroCompletoSesionComiteSolicitudActa(SesionComiteSolicitud sesionComiteSolicitud)
         {
             if (
-                ((sesionComiteSolicitud.RequiereVotacionFiduciario == false) || (sesionComiteSolicitud.RequiereVotacionFiduciario == true && string.IsNullOrEmpty(sesionComiteSolicitud.RutaSoporteVotacionFiduciario))) &&
+                ((sesionComiteSolicitud.RequiereVotacionFiduciario == null) || (sesionComiteSolicitud.RequiereVotacionFiduciario == true && string.IsNullOrEmpty(sesionComiteSolicitud.RutaSoporteVotacionFiduciario))) &&
                sesionComiteSolicitud.GeneraCompromisoFiduciario == null &&
                sesionComiteSolicitud.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_tecnico &&
                string.IsNullOrEmpty(sesionComiteSolicitud.ObservacionesFiduciario) &&

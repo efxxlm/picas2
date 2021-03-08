@@ -56,7 +56,10 @@ namespace asivamosffie.services.Helpers
                 contenido = contenido.Replace("\r\n", "");
                 contenido = contenido.Replace("\r\n", "");
                 contenido = contenido.Replace("\r\n", "");
-
+                contenido = contenido.Replace("<br>", "");
+                contenido = contenido.Replace("<br/>", "");
+                contenido = contenido.Replace("<br />", "");
+                contenido = contenido.Replace("</br>", "");
                 FontFactory.RegisterDirectories();
 
                 double margenIzquierdo = CentimetrosAMedidaPDF(margenes.Izquierda);

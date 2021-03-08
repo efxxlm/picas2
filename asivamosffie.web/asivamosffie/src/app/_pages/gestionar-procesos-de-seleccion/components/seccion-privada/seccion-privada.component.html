@@ -23,7 +23,6 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <button style="display: none;" type="button" (click)="descripcion.cargarRegistro()" id="botonDescripcion"></button>            
-            {{ bitPuedoEditar  }}
             <app-form-descripcion-del-proceso-de-seleccion [editar]="bitPuedoEditar"
                 #descripcion [procesoSeleccion]="procesoSeleccion" (guardar)="onSubmit()" 
                 [style.pointer-events]="getStyleEvaluacion()"
