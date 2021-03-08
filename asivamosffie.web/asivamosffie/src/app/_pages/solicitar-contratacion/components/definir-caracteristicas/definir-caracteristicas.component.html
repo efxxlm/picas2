@@ -35,7 +35,7 @@
               for="completada"
               [class.color-secondaryColor]="
                 (addressForm.get('completada').invalid && addressForm.get('completada').touched) ||
-                (addressForm.get('completada').invalid && estaEditando)
+                (addressForm.get('completada').invalid && estaEditando === true)
               "
             >
               ¿El proyecto tiene contemplada la obligación de disponer de servicio de monitoreo en tiempo real a través
@@ -59,7 +59,7 @@
               matTooltipClass="info-tooltip"
               *ngIf="
                 (addressForm.get('completada').invalid && addressForm.get('completada').touched) ||
-                (addressForm.get('completada').invalid && estaEditando)
+                (addressForm.get('completada').invalid && estaEditando === true)
               "
             />
           </span>
@@ -73,13 +73,13 @@
                   for="reasignacion"
                   [class.color-secondaryColor]="
                     (addressForm.get('reasignacion').invalid && addressForm.get('reasignacion').touched) ||
-                    (addressForm.get('reasignacion').invalid && estaEditando)
+                    (addressForm.get('reasignacion').invalid && estaEditando === true)
                   "
                 >
                   ¿El proyecto es una reasignación?
                 </label>
               </div>
-              <div class="col d-flex">
+              <div class="d-flex">
                 <mat-radio-group class="radioInput d-flex" formControlName="reasignacion">
                   <mat-radio-button [value]="true" class="mr-1em">Sí</mat-radio-button>
                   <mat-radio-button [value]="false">No</mat-radio-button>
@@ -96,7 +96,7 @@
               matTooltipClass="info-tooltip"
                   *ngIf="
                     (addressForm.get('reasignacion').invalid && addressForm.get('reasignacion').touched) ||
-                    (addressForm.get('reasignacion').invalid && estaEditando)
+                    (addressForm.get('reasignacion').invalid && estaEditando === true)
                   "
                 />
               </span>
@@ -112,13 +112,13 @@
                   for="avanceObra"
                   [class.color-secondaryColor]="
                     (addressForm.get('avanceObra').invalid && addressForm.get('avanceObra').touched) ||
-                    (addressForm.get('avanceObra').invalid && estaEditando)
+                    (addressForm.get('avanceObra').invalid && estaEditando === true)
                   "
                 >
                   ¿El proyecto tiene avance de obra?
                 </label>
               </div>
-              <div class="col d-flex">
+              <div class="d-flex">
                 <mat-radio-group class="radioInput d-flex" formControlName="avanceObra">
                   <mat-radio-button [value]="true" class="mr-1em">Sí</mat-radio-button>
                   <mat-radio-button [value]="false">No</mat-radio-button>
@@ -135,7 +135,7 @@
               matTooltipClass="info-tooltip"
                   *ngIf="
                     (addressForm.get('avanceObra').invalid && addressForm.get('avanceObra').touched) ||
-                    (addressForm.get('avanceObra').invalid && estaEditando)
+                    (addressForm.get('avanceObra').invalid && estaEditando === true)
                   "
                 />
               </span>
@@ -152,7 +152,7 @@
                   [class.color-secondaryColor]="
                     (addressForm.get('porcentajeAvanceObra').invalid &&
                       addressForm.get('porcentajeAvanceObra').touched) ||
-                    (addressForm.get('porcentajeAvanceObra').invalid && estaEditando)
+                    (addressForm.get('porcentajeAvanceObra').invalid && estaEditando === true)
                   "
                 >
                   ¿Cuál es el porcentaje de avance de obra?
@@ -182,7 +182,7 @@
                     *ngIf="
                       (addressForm.get('porcentajeAvanceObra').invalid &&
                         addressForm.get('porcentajeAvanceObra').touched) ||
-                      (addressForm.get('porcentajeAvanceObra').invalid && estaEditando)
+                      (addressForm.get('porcentajeAvanceObra').invalid && estaEditando === true)
                     "
                   />
                 </span>
@@ -207,13 +207,13 @@
                   for="requiereLicencias"
                   [class.color-secondaryColor]="
                     (addressForm.get('requiereLicencias').invalid && addressForm.get('requiereLicencias').touched) ||
-                    (addressForm.get('requiereLicencias').invalid && estaEditando)
+                    (addressForm.get('requiereLicencias').invalid && estaEditando === true)
                   "
                 >
                   ¿El proyecto requiere licencias?
                 </label>
               </div>
-              <div class="col d-flex">
+              <div class="d-flex">
                 <mat-radio-group
                   class="radioInput d-flex"
                   formControlName="requiereLicencias"
@@ -234,7 +234,7 @@
               matTooltipClass="info-tooltip"
                   *ngIf="
                     (addressForm.get('requiereLicencias').invalid && addressForm.get('requiereLicencias').touched) ||
-                    (addressForm.get('requiereLicencias').invalid && estaEditando)
+                    (addressForm.get('requiereLicencias').invalid && estaEditando === true)
                   "
                 />
               </span>
@@ -250,13 +250,13 @@
                   for="licenciaVigente"
                   [class.color-secondaryColor]="
                     (addressForm.get('licenciaVigente').invalid && addressForm.get('licenciaVigente').touched) ||
-                    (addressForm.get('licenciaVigente').invalid && estaEditando)
+                    (addressForm.get('licenciaVigente').invalid && estaEditando === true)
                   "
                 >
                   ¿El proyecto tiene licencia vigente?
                 </label>
               </div>
-              <div class="col d-flex">
+              <div class="d-flex">
                 <mat-radio-group class="radioInput d-flex" formControlName="licenciaVigente">
                   <mat-radio-button [value]="true" class="mr-1em">Sí</mat-radio-button>
                   <mat-radio-button [value]="false">No</mat-radio-button>
@@ -273,7 +273,7 @@
               matTooltipClass="info-tooltip"
                   *ngIf="
                     (addressForm.get('licenciaVigente').invalid && addressForm.get('licenciaVigente').touched) ||
-                    (addressForm.get('licenciaVigente').invalid && estaEditando)
+                    (addressForm.get('licenciaVigente').invalid && estaEditando === true)
                   "
                 />
               </span>
@@ -289,7 +289,7 @@
                   for="numeroLicencia"
                   [class.color-secondaryColor]="
                     (addressForm.get('numeroLicencia').invalid && addressForm.get('numeroLicencia').touched) ||
-                    (addressForm.get('numeroLicencia').invalid && estaEditando)
+                    (addressForm.get('numeroLicencia').invalid && estaEditando === true)
                   "
                 >
                   Número de licencia
@@ -324,7 +324,7 @@
               matTooltipClass="info-tooltip"
                     *ngIf="
                       (addressForm.get('numeroLicencia').invalid && addressForm.get('numeroLicencia').touched) ||
-                      (addressForm.get('numeroLicencia').invalid && estaEditando)
+                      (addressForm.get('numeroLicencia').invalid && estaEditando === true)
                     "
                   />
                 </span>
@@ -341,7 +341,7 @@
                   for="fechaVigencia"
                   [class.color-secondaryColor]="
                     (addressForm.get('fechaVigencia').invalid && addressForm.get('fechaVigencia').touched) ||
-                    (addressForm.get('fechaVigencia').invalid && estaEditando)
+                    (addressForm.get('fechaVigencia').invalid && estaEditando === true)
                   "
                 >
                   Fecha de vigencia
@@ -373,7 +373,7 @@
               matTooltipClass="info-tooltip"
                     *ngIf="
                       (addressForm.get('fechaVigencia').invalid && addressForm.get('fechaVigencia').touched) ||
-                      (addressForm.get('fechaVigencia').invalid && estaEditando)
+                      (addressForm.get('fechaVigencia').invalid && estaEditando === true)
                     "
                   />
                 </span>
