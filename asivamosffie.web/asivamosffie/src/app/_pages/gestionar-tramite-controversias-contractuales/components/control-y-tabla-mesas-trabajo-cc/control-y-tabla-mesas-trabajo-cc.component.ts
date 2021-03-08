@@ -53,7 +53,9 @@ export class ControlYTablaMesasTrabajoCcComponent implements OnInit {
   }
   finalizarMesaTrabajo(id){
     this.services.FinalizarMesa(id).subscribe((data:any)=>{
-      this.ngOnInit();
+      this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+        () => this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia'])
+      );
     });
   }
   verDetalleMesaTrabajo(id,codeMT,idMesa){

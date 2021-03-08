@@ -3522,10 +3522,8 @@ namespace asivamosffie.services
                         NumeroActuacion = "ACT controversia " + controversia.ControversiaActuacionId.ToString("000"),
 
                         NumeroActuacionReclamacion = "REC " + controversia.ControversiaActuacionId.ToString("0000"),
-
                         //RegistroCompletoReclamacion = controversia.EsCompletoReclamacion == null ? "Incompleto" : (bool)controversia.EsCompletoReclamacion ? "Completo" : "Incompleto",
-                        RegistroCompletoMesa = controversiamesa.EsCompleto == null ? "Incompleto" : (bool)controversiamesa.EsCompleto ? "Completo" : "Incompleto",
-                        
+                        RegistroCompletoMesa = controversiamesa == null ? "Incompleto" : (bool)controversiamesa.EsCompleto ? "Completo" : "Incompleto",
                         ProximaActuacionCodigo = strProximaActuacionCodigo,
                         ProximaActuacionNombre = strProximaActuacionNombre,
                         EstadoActuacionReclamacionCodigo = (controversia.EstadoActuacionReclamacionCodigo != null) ? controversia.EstadoActuacionReclamacionCodigo : "",
