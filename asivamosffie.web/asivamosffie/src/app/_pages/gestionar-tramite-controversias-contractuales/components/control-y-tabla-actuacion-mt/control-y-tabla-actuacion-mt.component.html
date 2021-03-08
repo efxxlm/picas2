@@ -18,7 +18,9 @@
     
             <ng-container matColumnDef="actuacion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Actuación </th>
-                <td mat-cell *matCellDef="let element" align="center"> {{ element.actuacion }} </td>
+                <td mat-cell *matCellDef="let element" align="center"> 
+                    <div [innerHtml]="element.actuacionAdelantada"></div>
+                </td>
             </ng-container>
     
             <ng-container matColumnDef="numeroActuacion">

@@ -139,7 +139,7 @@
                                     </quill-editor>
                                 </div>
                                 <span class="contador miles" *ngIf="addressForm.controls.cualOtroMotivo.value">
-                                    {{100 - (textoLimpio(addressForm.get('cualOtroMotivo').value))}}
+                                    {{1000 - (textoLimpio(cualOtroMotivo.quillEditor,1000))}}
                                 </span>
                                 <span class="contador miles" *ngIf="!addressForm.controls.cualOtroMotivo.value">
                                     100
@@ -197,7 +197,7 @@
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.conclusionComitePretecnico.value">
-                                {{ 1000 - textoLimpio(addressForm.get('conclusionComitePretecnico').value) }}
+                                {{1000 - (textoLimpio(conclusionComitePretecnico.quillEditor,1000))}}
                             </span>
                             <span class="contador miles" *ngIf="!addressForm.controls.conclusionComitePretecnico.value">
                                 1000
@@ -234,7 +234,7 @@
                             </div>
                             <span class="contador miles"
                                 *ngIf="addressForm.controls.resumenJustificacionSolicitud.value">
-                                {{ 1000 - textoLimpio(addressForm.get('resumenJustificacionSolicitud').value) }}
+                                {{1000 - (textoLimpio(resumenJustificacionSolicitud.quillEditor,1000))}}
                             </span>
                             <span class="contador miles"
                                 *ngIf="!addressForm.controls.resumenJustificacionSolicitud.value">
@@ -287,7 +287,7 @@
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.motivosRechazo.value">
-                                {{ 1000 - textoLimpio(addressForm.get('motivosRechazo').value) }}
+                                {{1000 - (textoLimpio(motivosRechazo.quillEditor,1000))}}
                             </span>
                             <span class="contador miles" *ngIf="!addressForm.controls.motivosRechazo.value">
                                 1000

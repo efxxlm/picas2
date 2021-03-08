@@ -20,7 +20,7 @@
               (addressForm.get('resumenReclamacionFiduciaria').invalid && estaEditando)"></quill-editor>
         </div>
         <span class="contador miles" *ngIf="addressForm.controls.resumenReclamacionFiduciaria.value">
-          {{1000 - (textoLimpio(addressForm.get('resumenReclamacionFiduciaria').value))}}
+          {{1000 - (textoLimpio(resumenReclamacionFiduciaria.quillEditor,1000))}}
         </span>
         <span class="contador miles" *ngIf="!addressForm.controls.resumenReclamacionFiduciaria.value"> 1000 </span>
       </div>
