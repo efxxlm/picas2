@@ -2613,15 +2613,18 @@ namespace asivamosffie.services
 
         public async Task<ProcesoSeleccion> GetProcesosSelecccionByProcesoSeleccionId(int pId)
         {
+            ProcesoSeleccion proceso = 
 
-            return await _context.ProcesoSeleccion
+            _context.ProcesoSeleccion
                .Where(r => r.ProcesoSeleccionId == pId)
                .IncludeFilter(r => r.ProcesoSeleccionCronograma.Where(r => !(bool)r.Eliminado))
                .IncludeFilter(r => r.ProcesoSeleccionGrupo.Where(r => !(bool)r.Eliminado))
                //Aqui falta filtrarlos proponentes ya que en model y en codigo no de guarda eliminado
                .Include(r => r.ProcesoSeleccionProponente)
                //.Include( r => r.ProcesoSeleccionIntegrante )
-               .FirstOrDefaultAsync();
+               .FirstOrDefault();
+
+            return proceso;
 
         }
 
@@ -2759,7 +2762,7 @@ namespace asivamosffie.services
 
                         case ConstanCodigoVariablesPlaceHolders.FECHA_CRONOGRAMA_PS:
                             RegistrosCronogramas = RegistrosCronogramas.Replace(placeholderDominio.Nombre,
-                             ProcesoSeleccionCronograma.FechaMaxima.Value.ToString("dd-MM-yyyy"));
+                             ProcesoSeleccionCronograma.FechaMaxima.HasValue ? ProcesoSeleccionCronograma.FechaMaxima.Value.ToString("dd-MM-yyyy") : null);
                             break;
                     }
                 }
