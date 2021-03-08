@@ -9,16 +9,60 @@ using Microsoft.EntityFrameworkCore;
 using asivamosffie.services.Helpers.Enumerator;
 using Z.EntityFramework.Plus;
 using System.Globalization;
+using asivamosffie.model.AditionalModels;
+using Microsoft.Extensions.Options;
+using System.Net.Mail;
+using System.Net;
 
 namespace asivamosffie.services
 {
     public class CommonService : ICommonService
     {
         private readonly devAsiVamosFFIEContext _context;
+        public model.AditionalModels.AppSettings _mailSettings { get; }
 
-        public CommonService(devAsiVamosFFIEContext context)
+        public CommonService(devAsiVamosFFIEContext context , IOptions<AppSettings> mailSettings)
         {
+            _mailSettings = mailSettings.Value;
             _context = context;
+        }
+        public bool EnviarCorreo(List<EnumeratorPerfil> pListPerfilesCorreo, Template pTemplate)
+        {
+            try
+            {
+                var ListEmails =
+                   _context.UsuarioPerfil
+                                       .Where(p => pListPerfilesCorreo
+                                       .Contains((EnumeratorPerfil)(int)p.PerfilId))
+                                       .Include(u => u.Usuario)
+                                       .Select(e => e.Usuario.Email)
+                                       .ToList();
+
+                MailMessage mail = new MailMessage();
+                SmtpClient SmtpServer = new SmtpClient(_mailSettings.MailServer);
+
+                mail.From = new MailAddress(_mailSettings.Sender);
+
+                foreach (var Destinatario in ListEmails)
+                {
+                    mail.To.Add(Destinatario);
+                }
+
+                mail.Subject = pTemplate.Asunto;
+                mail.IsBodyHtml = true;
+
+                mail.Body = pTemplate.Contenido;
+                SmtpServer.Port = _mailSettings.MailPort;
+                SmtpServer.Credentials = new NetworkCredential(_mailSettings.Sender, _mailSettings.Password);
+                SmtpServer.EnableSsl = false;
+                SmtpServer.Send(mail);
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         public async Task<dynamic> GetListMenu()

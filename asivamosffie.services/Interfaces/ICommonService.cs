@@ -4,11 +4,14 @@ using System.Text;
 using System.Threading.Tasks;
 using asivamosffie.model.Models;
 using asivamosffie.model.APIModels;
+using asivamosffie.services.Helpers.Enumerator;
 
 namespace asivamosffie.services.Interfaces
 {
     public interface ICommonService
     {
+        bool EnviarCorreo(List<EnumeratorPerfil> ListPerfilesCorreo, Template template);
+
         Task<dynamic> GetListMenu();
 
         Task<string> EnumeradorSolicitudPagoExpensasAndOtros();

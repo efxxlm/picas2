@@ -219,6 +219,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VRegistrarAvanceSemanal> VRegistrarAvanceSemanal { get; set; }
         public virtual DbSet<VRegistrarFase1> VRegistrarFase1 { get; set; }
         public virtual DbSet<VRegistrarPersonalObra> VRegistrarPersonalObra { get; set; }
+        public virtual DbSet<VReporteProyectos> VReporteProyectos { get; set; }
         public virtual DbSet<VRequisitosTecnicosConstruccionAprobar> VRequisitosTecnicosConstruccionAprobar { get; set; }
         public virtual DbSet<VRequisitosTecnicosInicioConstruccion> VRequisitosTecnicosInicioConstruccion { get; set; }
         public virtual DbSet<VRequisitosTecnicosPreconstruccion> VRequisitosTecnicosPreconstruccion { get; set; }
@@ -227,7 +228,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValidarSeguimientoSemanal> VValidarSeguimientoSemanal { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
-
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -5741,10 +5741,6 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(3000)
                     .IsUnicode(false);
 
-                entity.Property(e => e.DesarrolloSolicitudFiduciario)
-                    .HasMaxLength(3000)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.EstadoActaCodigo)
                     .HasMaxLength(200)
                     .IsUnicode(false);
@@ -5763,15 +5759,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ObservacionesFiduciario)
-                    .HasMaxLength(3000)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.RutaSoporteVotacion)
-                    .HasMaxLength(1000)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.RutaSoporteVotacionFiduciario)
                     .HasMaxLength(1000)
                     .IsUnicode(false);
 
@@ -6965,6 +6953,8 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<Template>(entity =>
             {
+                entity.Property(e => e.Asunto).HasMaxLength(255);
+
                 entity.Property(e => e.Contenido).IsRequired();
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
@@ -7647,6 +7637,31 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.TipoIntervencion)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VReporteProyectos>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_ReporteProyectos");
+
+                entity.Property(e => e.EstadoProyectoObra)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Fecha).HasColumnType("datetime");
+
+                entity.Property(e => e.InstitucionEducativa)
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.LocalizacionIdMunicipio)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoProyecto)
                     .HasMaxLength(100)
                     .IsUnicode(false);
             });

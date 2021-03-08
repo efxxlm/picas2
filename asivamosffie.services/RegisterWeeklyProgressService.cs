@@ -16,7 +16,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Org.BouncyCastle.Bcpg.OpenPgp;
 using Microsoft.EntityFrameworkCore.Internal;
 using asivamosffie.services.Helpers.Constants;
-
+using asivamosffie.services.Helpers;
 namespace asivamosffie.services
 {
     public class RegisterWeeklyProgressService : IRegisterWeeklyProgressService
@@ -806,7 +806,7 @@ namespace asivamosffie.services
                             ? true : false;
                         if (EnsayoLaboratorioMuestraOld.RegistroCompleto == false)
                             RegistroCompletoMuestras = false;
-                    } 
+                    }
                 }
 
 
@@ -829,7 +829,7 @@ namespace asivamosffie.services
                 seguimientoSemanalOld.UsuarioModificacion = pGestionObraCalidadEnsayoLaboratorio.UsuarioCreacion;
                 seguimientoSemanalOld.RegistroCompletoMuestras = RegistroCompletoMuestras;
 
-           
+
 
                 return new Respuesta
                 {
@@ -2251,12 +2251,48 @@ namespace asivamosffie.services
 
         #region Notificaciones Alertas 
 
+        #region Correos 
 
-        public void SendSeguimientoSemanalApoyoSupervision()
+        private async Task<bool> SendEmailWhenCompleteWeeklyProgress(int pSeguimientoSemanalId)
         {
+            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Seguimiento_Semanal_Completo));
+            ReplaceVariablesSeguimientoSemanal(template, pSeguimientoSemanalId);
+
+            List<EnumeratorPerfil> perfilsEnviarCorreo =
+                new List<EnumeratorPerfil>
+                {
+                                                EnumeratorPerfil.Apoyo
+                                          };
+
+            return _commonService.EnviarCorreo(perfilsEnviarCorreo, template);
+        }
+
+        private void ReplaceVariablesSeguimientoSemanal(Template template, int pSeguimientoSemanalId)
+        {
+            List<Dominio> ListTipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion && r.Activo == true).ToList();
+
+
+            SeguimientoSemanal seguimientoSemanal = _context.SeguimientoSemanal
+                .Where(ss => ss.SeguimientoSemanalId == pSeguimientoSemanalId)
+                .Include(cp => cp.ContratacionProyecto).ThenInclude(c => c.Contratacion).ThenInclude(ctr => ctr.Contrato)
+                .Include(cp => cp.ContratacionProyecto).ThenInclude(p => p.Proyecto).ThenInclude(id => id.InstitucionEducativa)
+                .Include(cp => cp.ContratacionProyecto).ThenInclude(p => p.Proyecto).ThenInclude(id => id.Sede).FirstOrDefault();
+
+
+            template.Contenido
+                       .Replace("[LLAVE_MEN]", seguimientoSemanal.ContratacionProyecto.Proyecto.LlaveMen)
+                       .Replace("[NUMERO_CONTRATO]", seguimientoSemanal.ContratacionProyecto.Contratacion.Contrato.FirstOrDefault().NumeroContrato)
+                       .Replace("[INTITUCION_EDUCATIVA]", seguimientoSemanal.ContratacionProyecto.Proyecto.InstitucionEducativa.Nombre)
+                       .Replace("[SEDE]", seguimientoSemanal.ContratacionProyecto.Proyecto.Sede.Nombre)
+                       .Replace("[TIPO_INTERVENCION]", ListTipoIntervencion.Where(lti => lti.Codigo == seguimientoSemanal.ContratacionProyecto.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre)
+                       .Replace("[FECHA_ULTIMO_REPORTE]", Convert.ToDateTime(seguimientoSemanal.FechaModificacion).ToString("dd/MM/yyy"));
 
         }
 
         #endregion
+     
+        #endregion
+
+
     }
 }
