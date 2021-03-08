@@ -3137,7 +3137,13 @@ namespace asivamosffie.services
                     prmMesa.FechaActuacionAdelantada == null ||
                     string.IsNullOrEmpty(prmMesa.ProximaActuacionRequerida) ||
                     string.IsNullOrEmpty(prmMesa.Observaciones) ||
-                    string.IsNullOrEmpty(prmMesa.RutaSoporte))
+                    string.IsNullOrEmpty(prmMesa.RutaSoporte)||
+                    prmMesa.CantDiasVencimiento == null ||
+                    prmMesa.FechaVencimiento == null ||
+                    string.IsNullOrEmpty(prmMesa.Observaciones)||
+                    prmMesa.ResultadoDefinitivo == null ||
+                    string.IsNullOrEmpty(prmMesa.RutaSoporte)||
+                    string.IsNullOrEmpty(prmMesa.EstadoAvanceMesaCodigo))
                 {
                     escompleto = false;
                 }
@@ -3517,8 +3523,9 @@ namespace asivamosffie.services
 
                         NumeroActuacionReclamacion = "REC " + controversia.ControversiaActuacionId.ToString("0000"),
 
-                        RegistroCompletoReclamacion = controversia.EsCompletoReclamacion == null ? "Incompleto" : (bool)controversia.EsCompletoReclamacion ? "Completo" : "Incompleto",
-
+                        //RegistroCompletoReclamacion = controversia.EsCompletoReclamacion == null ? "Incompleto" : (bool)controversia.EsCompletoReclamacion ? "Completo" : "Incompleto",
+                        RegistroCompletoMesa = (bool)controversiamesa.EsCompleto ? "Completo" : "Incompleto",
+                        
                         ProximaActuacionCodigo = strProximaActuacionCodigo,
                         ProximaActuacionNombre = strProximaActuacionNombre,
                         EstadoActuacionReclamacionCodigo = (controversia.EstadoActuacionReclamacionCodigo != null) ? controversia.EstadoActuacionReclamacionCodigo : "",
