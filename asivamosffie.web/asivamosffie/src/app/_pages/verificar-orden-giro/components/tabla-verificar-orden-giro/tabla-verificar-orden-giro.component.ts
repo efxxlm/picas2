@@ -30,6 +30,7 @@ export class TablaVerificarOrdenGiroComponent implements OnInit {
             modalidad: 'Tipo B',
             numeroContrato: 'N801801',
             estadoVerificacion: 'Sin verificación',
+            esExpensas: false,
             id: Math.round( Math.random() * 10 )
         },
         {
@@ -38,6 +39,7 @@ export class TablaVerificarOrdenGiroComponent implements OnInit {
             modalidad: 'No aplica',
             numeroContrato: 'N326326',
             estadoVerificacion: 'Sin verificación',
+            esExpensas: true,
             id: Math.round( Math.random() * 10 )
         },
         {
@@ -46,6 +48,7 @@ export class TablaVerificarOrdenGiroComponent implements OnInit {
             modalidad: 'Tipo B',
             numeroContrato: 'N801801',
             estadoVerificacion: 'Sin verificación',
+            esExpensas: false,
             id: Math.round( Math.random() * 10 )
         }
     ];

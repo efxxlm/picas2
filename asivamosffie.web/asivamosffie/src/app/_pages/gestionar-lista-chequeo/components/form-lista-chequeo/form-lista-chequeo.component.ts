@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -13,9 +13,20 @@ export class FormListaChequeoComponent implements OnInit {
 
     formLista: FormGroup;
     esRegistroNuevo: boolean;
+    esVerDetalle = false;
+    criteriosDePagoCodigo = '1';
     booleanosEstadoReq: any[] = [
-        { viewValue: 'Activo', value: true },
-        { viewValue: 'Inactivo', value: false }
+        { viewValue: 'Activo - Terminado', value: true },
+        { viewValue: 'Activo - En proceso', value: true },
+        { viewValue: 'Inactivo - En proceso', value: true },
+        { viewValue: 'Inactivo - Terminado', value: false }
+    ];
+    tiposListaChequeo = [
+        { codigo: '1', nombre: 'Criterios de pago' },
+        { codigo: '2', nombre: 'Expensas' },
+        { codigo: '3', nombre: 'Otros costos y servicios' },
+        { codigo: '4', nombre: 'Informe final' },
+        { codigo: '5', nombre: 'Construcción - Planes y programas' }
     ];
     listaCriterio = [
         { codigo: '1', nombre: 'Estudios y diseños interventoría hasta el 90%' },
@@ -40,11 +51,18 @@ export class FormListaChequeoComponent implements OnInit {
         // Registro nuevo === undefined
         // Editar === id del registro a editar
         console.log( this.activatedRoute.snapshot.params.id );
-        if ( activatedRoute.snapshot.params.id !== undefined ) {
-            this.esRegistroNuevo = false;
-        } else {
-            this.esRegistroNuevo = true;
-        }
+
+        this.activatedRoute.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
+            if ( urlSegment.path === 'crearListaChequeo' ) {
+                this.esRegistroNuevo = true;
+            }
+            if ( urlSegment.path === 'editarListaChequeo' ) {
+                this.esRegistroNuevo = false;
+            }
+            if ( urlSegment.path === 'verDetalleListaChequeo' ) {
+                this.esVerDetalle = true;
+            }
+        } );
     }
 
     ngOnInit(): void {
@@ -55,6 +73,7 @@ export class FormListaChequeoComponent implements OnInit {
             {
                 estadoLista: [ null, Validators.required ],
                 nombreLista: [ null, Validators.required ],
+                tipoLista: [ null, Validators.required ],
                 criterioPago: [ null, Validators.required ],
                 requisitos: this.fb.array( [
                     this.fb.group(
@@ -103,7 +122,7 @@ export class FormListaChequeoComponent implements OnInit {
 
     openDialog( modalTitle: string, modalText: string ) {
         this.dialog.open( ModalDialogComponent, {
-          width: '28em',
+          width: '30em',
           data: { modalTitle, modalText }
         });
     }

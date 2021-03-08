@@ -25,6 +25,10 @@ const routes: Routes = [
   {
     path: 'editarListaChequeo/:id',
     component: FormListaChequeoComponent
+  },
+  {
+    path: 'verDetalleListaChequeo/:id',
+    component: FormListaChequeoComponent
   }
 ];
 

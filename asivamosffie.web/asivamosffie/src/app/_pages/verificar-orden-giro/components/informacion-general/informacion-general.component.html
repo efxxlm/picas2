@@ -11,7 +11,8 @@
                 <p><b>Código SIFI:</b> <i>357233</i></p>
                 <p><b>Coordinación responsable:</b> <i>Andina</i></p>
                 <p><b>Grupo de contrato:</b> <i>Grupo 1</i></p>
-                <p><b>Tipo de contrato:</b> <i>Obra o interventoría</i></p>
+                <p *ngIf="esExpensas === true"><b>Tipo de intervención:</b> <i>Mejoramiento</i></p>
+                <p *ngIf="esExpensas === false"><b>Tipo de contrato:</b> <i>Obra o interventoría</i></p>
                 <p><b>Valor de la factura:</b> <i>$15.000.000</i></p>
             </mat-card-content>
         </mat-card>

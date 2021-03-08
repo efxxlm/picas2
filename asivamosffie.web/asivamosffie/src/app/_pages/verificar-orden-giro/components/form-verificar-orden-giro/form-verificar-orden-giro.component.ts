@@ -8,23 +8,31 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FormVerificarOrdenGiroComponent implements OnInit {
 
-  esRegistroNuevo = false;
-  esVerDetalle = false;
+    esRegistroNuevo = false;
+    esVerDetalle = false;
+    esExpensas = false;
 
-  constructor( private activatedRoute: ActivatedRoute )
-  {
-    // Verificar si es registro nuevo o un ver detalle/editar
-    this.activatedRoute.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
-      if ( urlSegment.path === 'verificarOrdenGiro' ) {
-        this.esRegistroNuevo = true;
-      }
-      if ( urlSegment.path === 'verDetalle' ) {
-        this.esVerDetalle = true;
-      }
-    } );
-  }
+    constructor( private activatedRoute: ActivatedRoute )
+    {
+      // Verificar si es registro nuevo o ver detalle/editar o ver detalle
+      this.activatedRoute.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
+        if ( urlSegment.path === 'verificarOrdenGiro' ) {
+          this.esRegistroNuevo = true;
+        }
+        if ( urlSegment.path === 'verDetalle' ) {
+          this.esVerDetalle = true;
+        }
+        if ( urlSegment.path === 'verificarOrdenGiroExpensas' || urlSegment.path === 'editarOrdenGiroExpensas' ) {
+          this.esExpensas = true;
+        }
+        if ( urlSegment.path === 'verDetalleExpensas' ) {
+            this.esExpensas = true;
+            this.esVerDetalle = true;
+        }
+      } );
+    }
 
-  ngOnInit(): void {
-  }
+    ngOnInit(): void {
+    }
 
 }

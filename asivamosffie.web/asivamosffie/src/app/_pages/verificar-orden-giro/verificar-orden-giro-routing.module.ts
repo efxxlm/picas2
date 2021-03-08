@@ -20,6 +20,18 @@ const routes: Routes = [
   {
     path: 'verDetalle/:id',
     component: FormVerificarOrdenGiroComponent
+  },
+  {
+    path: 'verificarOrdenGiroExpensas/:id',
+    component: FormVerificarOrdenGiroComponent
+  },
+  {
+    path: 'editarOrdenGiroExpensas/:id',
+    component: FormVerificarOrdenGiroComponent
+  },
+  {
+    path: 'verDetalleExpensas/:id',
+    component: FormVerificarOrdenGiroComponent
   }
 ];
 

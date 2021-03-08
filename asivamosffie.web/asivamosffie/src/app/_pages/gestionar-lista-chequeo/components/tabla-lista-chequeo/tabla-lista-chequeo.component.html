@@ -39,8 +39,27 @@
 
           <button mat-raised-button 
                   color="accent" 
+                  class="btn-table"
+                  [routerLink]="[ 'verDetalleListaChequeo', element.id ]">
+                  Ver detalle
+          </button>
+
+          <button mat-raised-button 
+                  color="accent" 
                   class="btn-table">
                   Desactivar
+          </button>
+
+          <button mat-raised-button 
+                  color="accent" 
+                  class="btn-table">
+                  Eliminar
+          </button>
+
+          <button mat-raised-button 
+                  color="accent" 
+                  class="btn-table">
+                  Activar
           </button>
     
         </td>

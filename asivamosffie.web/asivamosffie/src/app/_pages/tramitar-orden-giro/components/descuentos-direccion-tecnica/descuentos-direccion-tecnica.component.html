@@ -1,0 +1,179 @@
+<section *ngIf="esVerDetalle !== undefined">
+    <div class="d-flex justify-content-center align-items-center mt-1em">
+        <img src="./assets/img/icon/sim.svg" class="img-size">
+        <p><small>A continuación encontrará los tipos de pago asociados a la factura para que usted determine la distribución de los descuentos identificados por la Dirección Técnica.</small></p>
+    </div>
+    
+    <section class="d-flex justify-content-center table-responsive tabla-gris mt-1em">
+        <table mat-table [dataSource]="dataSource" matSort style="width: 90%">
+      
+            <ng-container matColumnDef="tipoDescuento">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Tipo de descuento </th>
+              <td mat-cell *matCellDef="let element; index as i" align="center"> {{ element.tipoDescuento }} </td>
+            </ng-container>
+      
+            <ng-container matColumnDef="valorDescuento">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20 back-color"> Valor del descuento </th>
+              <td mat-cell *matCellDef="let element; index as i" align="center"> {{ element.valorDescuento }} </td>
+            </ng-container>
+    
+            <ng-container matColumnDef="valorTotalDescuento">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20 back-color"> Valor total de descuentos </th>
+                <td mat-cell *matCellDef="let element; index as i" align="center"> {{ element.valorTotalDescuento }} </td>
+            </ng-container>
+    
+            <ng-container matColumnDef="valorNetoGiro">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20 back-color"> Valor neto de giro </th>
+                <td mat-cell *matCellDef="let element; index as i" align="center"> {{ element.valorNetoGiro }} </td>
+            </ng-container>
+        
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </section>
+    
+    <mat-accordion class="mt-3em">
+        <mat-expansion-panel class="expansion-style sub-expansion-black">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : 'completo'">
+                    Descuento 1
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+    
+            <div class="mt-1em text-center">
+                <p>Nombre del descuento: <b>4x1000</b></p>
+            </div>
+    
+            <div class="mb-2em text-center">
+                <p><b>Criterios a los cuales aplica el descuento:</b> <em>Estudios y diseños interventoria hasta 90%.</em></p>
+            </div>
+    
+            <mat-card class="shipping-card border" align="left">
+                <mat-card-header class="header-card">
+                    <mat-card-title class="header-card--text card-title-detalle">
+                        Estudios y diseños interventoria hasta 90%
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <p style="margin-left: 2em;"><b>Tipo de pago: </b> <i>Costo variable</i></p>
+                    <p style="margin-left: 2em;"><b>Conceptos de pago que aplican para el descuento: </b> <i>Demolición, Cimentación.</i></p>
+                    <h2 class="card-subTitle card-subTitle-detalle"> Demolición</h2>
+                    <h2 style="margin-left: 2em;"><b> Aportante 1 </b></h2>
+                    <div class="mt-1em">
+                        <p style="margin-left: 2em;"><b>Tipo de aportante: </b> <i>Entidad Territorial</i></p>
+                        <p style="margin-left: 2em;"><b>Nombre del aportante: </b> <i>Alcaldía de Susacón</i></p>
+                        <p style="margin-left: 2em;"><b>Fuente de recursos: </b> <i>Contingencias</i></p>
+                        <p style="margin-left: 2em;"><b>Valor del descuento: </b> <i>$15.000</i></p>
+                    </div>
+                    <h2 class="mt-1em" style="margin-left: 2em;"><b> Aportante 2 </b></h2>
+                    <div class="mt-1em">
+                        <p style="margin-left: 2em;"><b>Tipo de aportante: </b> <i>Tercero</i></p>
+                        <p style="margin-left: 2em;"><b>Nombre del aportante: </b> <i>Fundación Pies Descalzos</i></p>
+                        <p style="margin-left: 2em;"><b>Fuente de recursos: </b> <i>Recursos propios</i></p>
+                        <p style="margin-left: 2em;"><b>Valor del descuento: </b> <i>$15.000</i></p>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+    
+            <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+                <mat-card class="shipping-card border" align="left">
+                    <mat-card-header class="header-card">
+                      <mat-card-title class="header-card--text card-title-detalle">
+                        Observaciones de fiduciaria
+                      </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <p style="margin-left: 2em;"><b> 06/03/2021 </b></p>
+                        <p style="margin-left: 2em;"><b>¿Desde la fiduciaria tiene observaciones a los descuentos Dirección Técnica de este tipo de pago?</b>: Si</p>
+                        <p style="margin-left: 2em;"><b>¿Desde la fiduciaria tiene observaciones a los descuentos Dirección Técnica de este tipo de pago?</b>: No</p>
+                        <section [innerHTML]="'<p>test</p>'" style="margin-left: 2em;"></section>
+                    </mat-card-content>
+                </mat-card>
+            </ng-container>
+            <ng-template #noEsVerDetalle>
+                <form [formGroup]="formObservacion" novalidate (ngSubmit)="guardar()">
+                    <div class="row justify-content-center align-items-center">
+                        <div class="col-md-12">
+                            <div class="row justify-content-center align-items-center" style="width: 100%;">
+                                <div class="pr-1">
+                                    <label class="label-left" for="tieneObservaciones">¿Desde la fiduciaria tiene observaciones a los descuentos Dirección Técnica de este tipo de pago?</label>
+                                </div>
+                                <div>
+                                    <mat-radio-group class="radioInput" formControlName="tieneObservaciones">
+                                        <mat-radio-button [value]="true" [checked]="formObservacion.get( 'tieneObservaciones' ).value === true">Sí</mat-radio-button>
+                                        <mat-radio-button [value]="false" [checked]="formObservacion.get( 'tieneObservaciones' ).value === false">No</mat-radio-button>
+                                    </mat-radio-group>
+                                </div>
+                                <span class="required-form-group m-0 margin-required">*</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="formObservacion.value.tieneObservaciones == true" align="left">
+                        <div class="text-area-quill"
+                        [class.color-secondaryColor]="formObservacion.get('observaciones').invalid && formObservacion.get('observaciones').touched || formObservacion.get('observaciones').invalid && esRegistroNuevo === false">
+                            <label  class="text-area-quill--label align-left-label"
+                                    [class.colorMainColor]="!(formObservacion.get('observaciones').invalid && formObservacion.get('observaciones').touched || formObservacion.get('observaciones').invalid)">
+                                    Observaciones a descuento 1
+                            </label>
+                            <quill-editor   class="quill-editor-style ml-1em"
+                                            [styles]="editorStyle"
+                                            [modules]="config"
+                                            (onContentChanged)="maxLength($event, 1000)"
+                                            formControlName="observaciones"
+                                            #observacion
+                                            required>
+                            </quill-editor>
+                        </div>
+                        <span class="contador miles" *ngIf="formObservacion.get('observaciones').value !== null">
+                          {{1000 - textoLimpio( observacion.quillEditor, 1000 )}}
+                        </span>
+                        <span class="contador miles" *ngIf="formObservacion.get('observaciones').value === null">
+                          1000
+                        </span>
+                        <span class="icon-incompleto">
+                            <img
+                              class="icon-incompleto--img"
+                              src="assets/img/icon/incompleto.svg"
+                              alt="este campo es requerido"
+                              [matTooltipPosition]="'above'"
+                              matTooltip="Debe ingresar la información en el campo para continuar"
+                              matTooltipClass="info-tooltip"
+                              *ngIf="( formObservacion.get('observaciones').invalid && formObservacion.get('observaciones').touched ) || ( formObservacion.get('observaciones').invalid && esRegistroNuevo === false )"
+                            />
+                          </span>
+                    </div>
+                    <div class="text-center mt-1em">
+                        <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="formObservacion.get('tieneObservaciones').value === null">
+                            <img src="assets/img/icon/guardar.svg">
+                        </button>
+                    </div>
+                </form>
+    
+                <section class="text-center table-responsive tabla-gris" style="margin-top: 2em;" *ngIf="dataHistorial.length > 0">
+                    <table mat-table [dataSource]="tablaHistorial" matSort>
+                  
+                        <ng-container matColumnDef="fechaRevision">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Fecha de revisión </th>
+                          <td mat-cell *matCellDef="let element" align="center" class="color-text"> <b>{{ element.fechaCreacion | date: 'dd/MM/yyyy' }}</b> </td>
+                        </ng-container>
+                  
+                        <ng-container matColumnDef="responsable">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color w-20"> Responsable de la observación </th>
+                            <td mat-cell *matCellDef="let element" align="center" class="color-text"> {{ element.responsable }} </td>
+                        </ng-container>
+                  
+                        <ng-container matColumnDef="historial">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Historial de observaciones </th>
+                          <td mat-cell *matCellDef="let element" align="center" class="color-text">
+                              <section [innerHTML]="element.observacion"></section>
+                          </td>
+                        </ng-container>
+                    
+                      <tr mat-header-row *matHeaderRowDef="displayedColumnsHistorial"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumnsHistorial;"></tr>
+                    </table>
+                </section>
+            </ng-template>
+        </mat-expansion-panel>
+    </mat-accordion>
+</section>

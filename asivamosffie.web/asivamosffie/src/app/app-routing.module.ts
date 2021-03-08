@@ -408,6 +408,16 @@ const routes: Routes = [
           .then( module => module.VerificarOrdenGiroModule )
       },
       {
+        path: 'aprobarOrdenGiro',
+        loadChildren: () => import( './_pages/aprobar-orden-giro/aprobar-orden-giro.module' )
+          .then( module => module.AprobarOrdenGiroModule )
+      },
+      {
+        path: 'tramitarOrdenGiro',
+        loadChildren: () => import( './_pages/tramitar-orden-giro/tramitar-orden-giro.module' )
+          .then( module => module.TramitarOrdenGiroModule )
+      },
+      {
         path: 'gestionarProcesoDefensaJudicial',
         loadChildren: () => import('./_pages/gestionar-procesos-defensa-judicial/gestionar-procesos-defensa-judicial.module')
         .then(m => m.GestionarProcesosDefensaJudicialModule)
