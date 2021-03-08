@@ -344,4 +344,16 @@ export class InvitacionCerradaComponent implements OnInit {
     return retorno;
   }
 
+  mostrarAyudaProcesoAprobado(){
+    if ( 
+          this.procesoSeleccion.estadoProcesoSeleccionCodigo != this.estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario && 
+          this.procesoSeleccion.estadoProcesoSeleccionCodigo != this.estadosProcesoSeleccion.AprobadaSelecciónPorComiteFiduciario 
+       ){
+         return true;
+       }
+       else{
+         return false;
+       }
+  }
+
 }

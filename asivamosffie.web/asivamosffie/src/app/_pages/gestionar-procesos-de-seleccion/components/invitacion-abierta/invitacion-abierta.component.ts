@@ -201,7 +201,8 @@ export class InvitacionAbiertaComponent implements OnInit {
 
   estaIncompletoEvaluacion(pProceso:any):number{
     let retorno=0;    
-    if(pProceso.estadoProcesoSeleccionCodigo==null || pProceso.estadoProcesoSeleccionCodigo != EstadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario)
+    if(pProceso.estadoProcesoSeleccionCodigo==null || (pProceso.estadoProcesoSeleccionCodigo != EstadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario &&
+      pProceso.estadoProcesoSeleccionCodigo != EstadosProcesoSeleccion.AprobadaSelecciónPorComiteFiduciario))
     {
       retorno=3;
     }
@@ -227,7 +228,8 @@ export class InvitacionAbiertaComponent implements OnInit {
 
   estaIncompletoOrden(pProceso:ProcesoSeleccion):number{
     let retorno=0;    
-    if(pProceso.estadoProcesoSeleccionCodigo != EstadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario)
+    if(pProceso.estadoProcesoSeleccionCodigo != EstadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario &&
+      pProceso.estadoProcesoSeleccionCodigo != EstadosProcesoSeleccion.AprobadaSelecciónPorComiteFiduciario)
     {
       retorno=3;
     }
@@ -242,6 +244,26 @@ export class InvitacionAbiertaComponent implements OnInit {
       }
     }
     return retorno;
+  }
+
+  getStyleEvaluacion(){
+    if ( this.bitPuedoEditar )
+      return 'auto'
+    else
+      return 'none'
+
+  }
+
+  mostrarAyudaProcesoAprobado(){
+    if ( 
+          this.procesoSeleccion.estadoProcesoSeleccionCodigo != this.estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario && 
+          this.procesoSeleccion.estadoProcesoSeleccionCodigo != this.estadosProcesoSeleccion.AprobadaSelecciónPorComiteFiduciario 
+       ){
+         return true;
+       }
+       else{
+         return false;
+       }
   }
 
 }

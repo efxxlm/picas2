@@ -1315,6 +1315,8 @@ namespace asivamosffie.services
                                 ))
                             )
                             {
+                                //worksheet.Cells[2, 2].AddComment("Es valido", "Admin");
+
                                 temp.EstaValidado = true;
                                 _context.TempOrdenLegibilidad.Add(temp);
                                 _context.SaveChanges();
@@ -1347,6 +1349,9 @@ namespace asivamosffie.services
                                 {
                                     CantidadRegistrosInvalidos++;
                                 }
+
+                                //worksheet.Cells[2, 2].AddComment("Invalido", "Admin");
+
                                 //Auditoria
                                 temp.ArchivoCargueId = archivoCarge.ArchivoCargueId;
                                 temp.EstaValidado = false;
@@ -1380,6 +1385,11 @@ namespace asivamosffie.services
                         LlaveConsulta = archivoCarge.Nombre
 
                     };
+
+                    //byte[] bin = package.GetAsByteArray();
+                    //string pathFile = archivoCarge.Ruta + "/" + archivoCarge.Nombre + ".xlsx";
+                    //File.WriteAllBytes(pathFile, bin);
+
                     return new Respuesta
                     {
                         Data = archivoCargueRespuesta,

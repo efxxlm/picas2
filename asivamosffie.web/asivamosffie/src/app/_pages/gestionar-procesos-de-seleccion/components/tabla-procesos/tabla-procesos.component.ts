@@ -129,6 +129,26 @@ export class TablaProcesosComponent implements OnInit {
     });
   }
 
+  esCompleto( procesoSeleccion ){
+    let respuesta = false;
+
+    if ( procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario ){
+      switch (procesoSeleccion.tipoProcesoCodigo){
+        case TiposProcesoSeleccion.Abierta:
+          respuesta = procesoSeleccion.procesoSeleccionProponente.length>0
+        break;
+        case TiposProcesoSeleccion.Cerrada:
+          respuesta = procesoSeleccion.procesoSeleccionProponente.length>0
+        break;
+  
+      }
+    }else{
+     respuesta =  procesoSeleccion.esCompleto;
+    }
+    
+    return respuesta;
+  }
+
   // verDetalle(e: number): void {
     
   //   const dialogRef = this.dialog.open(VerDetalleTablaProcesosComponent, {

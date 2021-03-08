@@ -322,7 +322,7 @@ export class SeccionPrivadaComponent implements OnInit {
   }
 
   getStyleEvaluacion(){
-    if (this.procesoSeleccion.estadoProcesoSeleccionCodigo == this.estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario )
+    if ( this.bitPuedoEditar )
       return 'auto'
     else
       return 'none'
