@@ -103,4 +103,17 @@ export class FormEvaluacionComponent {
     this.addressForm.get('url').setValue( this.procesoSeleccion.urlSoporteEvaluacion );
 
   }
+
+  mostrarInfo(){
+    if (
+          this.procesoSeleccion.estadoProcesoSeleccionCodigo == this.estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario ||
+          this.procesoSeleccion.estadoProcesoSeleccionCodigo == this.estadosProcesoSeleccion.AprobadaSelecciónPorComiteFiduciario
+    ){
+      return true;
+    }else{
+      return false;
+    }
+
+
+  }
 }

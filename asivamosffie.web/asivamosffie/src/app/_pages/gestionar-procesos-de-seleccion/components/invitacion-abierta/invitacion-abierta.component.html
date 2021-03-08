@@ -36,7 +36,8 @@
             </mat-expansion-panel-header>
             <button style="display: none;" type="button" (click)="evaluacion.cargarRegistro()" id="botonevaluacion"></button>
             <app-form-evaluacion [editar]="bitPuedoEditar"
-            #evaluacion [procesoSeleccion]="procesoSeleccion" (guardar)="onSubmit()" >
+            #evaluacion [procesoSeleccion]="procesoSeleccion" (guardar)="onSubmit()" 
+            [style.pointer-events]="getStyleEvaluacion()">
         </app-form-evaluacion>
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">

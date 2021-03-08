@@ -95,13 +95,14 @@ export class TablaCronogramaComponent implements OnInit {
         let listaTemp = monitoreo.filter( r => r.estadoActividadCodigo === this.estadosProcesoSeleccionMonitoreo.DevueltoPorComiteTecnico ||
                                                r.estadoActividadCodigo === this.estadosProcesoSeleccionMonitoreo.DevueltoPorComiteFiduciario ||
                                                r.estadoActividadCodigo === this.estadosProcesoSeleccionMonitoreo.AprobadoPorComiteTecnico ||
-                                               r.estadoActividadCodigo === this.estadosProcesoSeleccionMonitoreo.EnTramite
+                                               r.estadoActividadCodigo === this.estadosProcesoSeleccionMonitoreo.EnTramite ||
+                                               r.estadoActividadCodigo === this.estadosProcesoSeleccionMonitoreo.Creada
                                                //r.estadoActividadCodigo === this.estadosProcesoSeleccionMonitoreo.AprobadoPorComiteFiduciario 
                                         )
 
-        console.log( listaTemp, monitoreo.filter( r => r.enviadoComiteTecnico != true ).length)
-        if(listaTemp.length === 0)
-        {
+        //console.log( listaTemp, monitoreo.filter( r => r.enviadoComiteTecnico != true ).length)
+
+        
           this.procesoSeleccionService.listaActividadesByIdProcesoSeleccion(this.idProcesoSeleccion).subscribe(lista => {
 
             let listaActividades = this.addressForm as FormArray;
@@ -119,6 +120,9 @@ export class TablaCronogramaComponent implements OnInit {
             })
     
           })
+
+        if(listaTemp.length === 0)
+        {
         }
         // tiene monitoreos
         else{
