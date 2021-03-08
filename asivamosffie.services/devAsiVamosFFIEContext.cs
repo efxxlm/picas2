@@ -228,14 +228,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=asivamosffie.database.windows.net;Database=devAsiVamosFFIE;User ID=adminffie;Password=SaraLiam2020*;MultipleActiveResultSets=False;Connection Timeout=30;");
-            }
-        }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -3776,11 +3769,6 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.OrdenGiroDetalleTerceroCausacionId)
                     .HasConstraintName("FK_OrdenGiroDetalle_OrdenGiroDetalleTerceroCausacion");
 
-                entity.HasOne(d => d.OrdenGiroObservacion)
-                    .WithMany(p => p.OrdenGiroDetalle)
-                    .HasForeignKey(d => d.OrdenGiroObservacionId)
-                    .HasConstraintName("FK_OrdenGiroDetalle_OrdenGiroObservacion");
-
                 entity.HasOne(d => d.OrdenGiroSoporte)
                     .WithMany(p => p.OrdenGiroDetalle)
                     .HasForeignKey(d => d.OrdenGiroSoporteId)
@@ -3896,17 +3884,32 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<OrdenGiroObservacion>(entity =>
             {
-                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.FechaCreacion)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.UsuarioCreacion)
-                    .HasMaxLength(200)
+                entity.Property(e => e.TipoObservacionCodigo)
+                    .HasMaxLength(2)
                     .IsUnicode(false);
 
-                entity.Property(e => e.UsuarioModificacion)
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
+                entity.Property(e => e.UsuarioCreacion).HasMaxLength(200);
+
+                entity.Property(e => e.UsuarioModificacion).HasMaxLength(200);
+
+                entity.HasOne(d => d.Menu)
+                    .WithMany(p => p.OrdenGiroObservacion)
+                    .HasForeignKey(d => d.MenuId)
+                    .HasConstraintName("FK_OrdenGiroObservacion_Menu");
+
+                entity.HasOne(d => d.OrdenGiro)
+                    .WithMany(p => p.OrdenGiroObservacion)
+                    .HasForeignKey(d => d.OrdenGiroId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OrdenGiroObservacion_OrdenGiro");
             });
 
             modelBuilder.Entity<OrdenGiroSoporte>(entity =>
@@ -4485,10 +4488,6 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.DireccionProponente)
                     .HasMaxLength(500)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.EmailProponente)
-                    .HasMaxLength(100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
