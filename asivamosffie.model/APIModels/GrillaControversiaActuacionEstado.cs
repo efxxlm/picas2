@@ -31,6 +31,8 @@ namespace asivamosffie.model.APIModels
         public string EstadoAvanceTramiteCodigo { get; set; }
         public bool? RequiereMesaTrabajo { get; set; }
         public string RegistroCompletoMesa { get; set; }
+        public string EstadoActuacionGeneral { get; set; }
+        public string EstadoActuacionCodigoGeneral { get; set; }
 
     }
 }

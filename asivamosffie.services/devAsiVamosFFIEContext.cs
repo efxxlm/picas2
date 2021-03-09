@@ -1719,6 +1719,10 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.EstadoCodigo).HasMaxLength(100);
 
+                entity.Property(e => e.EstadoCodigoActuacionDerivada)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.FechaActuacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
