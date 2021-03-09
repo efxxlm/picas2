@@ -49,8 +49,8 @@ namespace asivamosffie.services
             try
             {
                 SesionComiteSolicitud sesionComiteSolicitudOld = await
-                    _context.SesionComiteSolicitud.Where(r=> r.SesionComiteSolicitudId == pSesionComiteSolicitud.SesionComiteSolicitudId)
-                    .Include(r=> r.ComiteTecnico).FirstOrDefaultAsync();
+                    _context.SesionComiteSolicitud.Where(r => r.SesionComiteSolicitudId == pSesionComiteSolicitud.SesionComiteSolicitudId)
+                    .Include(r => r.ComiteTecnico).FirstOrDefaultAsync();
                 sesionComiteSolicitudOld.EstadoCodigo = pSesionComiteSolicitud.EstadoCodigo;
                 sesionComiteSolicitudOld.FechaModificacion = DateTime.Now;
                 sesionComiteSolicitudOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
@@ -58,8 +58,8 @@ namespace asivamosffie.services
                 //TODO :se cambia el estado tambien a la contratacion o solo a la contratacion?
 
                 Contratacion contratacion = _context.Contratacion
-                    .Where(r=> r.ContratacionId == pSesionComiteSolicitud.SolicitudId)
-                    .Include(r=> r.Contrato)
+                    .Where(r => r.ContratacionId == pSesionComiteSolicitud.SolicitudId)
+                    .Include(r => r.Contrato)
                     .Include(r => r.DisponibilidadPresupuestal)
                     .FirstOrDefault();
                 contratacion.EstadoSolicitudCodigo = pSesionComiteSolicitud.EstadoCodigo;
@@ -167,7 +167,7 @@ namespace asivamosffie.services
         }
 
         public string ReemplazarDatosPlantillaContratacion(string pPlantilla, Contratacion pContratacion, SesionComiteSolicitud pSesionComiteSolicitud)
-        { 
+        {
             pSesionComiteSolicitud.ComiteTecnico = _context.ComiteTecnico
                 .Where(r => !(bool)r.EsComiteFiduciario && r.ComiteTecnicoId == pSesionComiteSolicitud.ComiteTecnicoId)
                 .FirstOrDefault();
@@ -191,7 +191,7 @@ namespace asivamosffie.services
             {
                 foreach (var ProyectoAportante in ContratacionProyecto.Proyecto.ProyectoAportante.Where(r => !(bool)r.Eliminado))
                 {
-                    ProyectoAportante.Aportante.FuenteFinanciacion = _context.FuenteFinanciacion.Where( ff => ff.AportanteId == ProyectoAportante.Aportante.CofinanciacionAportanteId ).ToList();
+                    ProyectoAportante.Aportante.FuenteFinanciacion = _context.FuenteFinanciacion.Where(ff => ff.AportanteId == ProyectoAportante.Aportante.CofinanciacionAportanteId).ToList();
 
                     TotalPlantillaRegistrosAportante += PlantillaRegistrosAportante;
                     foreach (Dominio placeholderDominio in placeholders)
@@ -204,9 +204,11 @@ namespace asivamosffie.services
 
                                 string NombreAportante = "";
 
-                                if ( ProyectoAportante.Aportante.TipoAportanteId.Equals( ConstanTipoAportante.Ffie ) ){
+                                if (ProyectoAportante.Aportante.TipoAportanteId.Equals(ConstanTipoAportante.Ffie))
+                                {
                                     NombreAportante = ConstanStringTipoAportante.Ffie;
-                                }else if (ProyectoAportante.Aportante.TipoAportanteId.Equals(ConstanTipoAportante.Tercero))
+                                }
+                                else if (ProyectoAportante.Aportante.TipoAportanteId.Equals(ConstanTipoAportante.Tercero))
                                 {
                                     NombreAportante = ProyectoAportante.Aportante.NombreAportanteId == null
                                         ? "Error" :
@@ -309,7 +311,7 @@ namespace asivamosffie.services
                 {
 
                     ProyectoAportante proyectoAportante = ContratacionProyecto.Proyecto.ProyectoAportante.Where(r => !(bool)r.Eliminado).FirstOrDefault();
-                    
+
                     switch (placeholderDominio.Codigo)
                     {
                         case ConstanCodigoVariablesPlaceHolders.LLAVE_MEN:
@@ -345,9 +347,11 @@ namespace asivamosffie.services
                             try
                             {
 
-                                if ( proyectoAportante.Aportante.TipoAportanteId.Equals( ConstanTipoAportante.Ffie ) ){
+                                if (proyectoAportante.Aportante.TipoAportanteId.Equals(ConstanTipoAportante.Ffie))
+                                {
                                     nombreAportante = ConstanStringTipoAportante.Ffie;
-                                }else if (proyectoAportante.Aportante.TipoAportanteId.Equals(ConstanTipoAportante.Tercero))
+                                }
+                                else if (proyectoAportante.Aportante.TipoAportanteId.Equals(ConstanTipoAportante.Tercero))
                                 {
                                     nombreAportante = proyectoAportante.Aportante.NombreAportanteId == null
                                         ? "Error" :
@@ -381,7 +385,7 @@ namespace asivamosffie.services
 
                         case ConstanCodigoVariablesPlaceHolders.SALDO_ACTUAL_FUENTE:
 
-                            proyectoAportante.Aportante.FuenteFinanciacion = _context.FuenteFinanciacion.Where( ff => ff.AportanteId == proyectoAportante.Aportante.CofinanciacionAportanteId ).ToList();
+                            proyectoAportante.Aportante.FuenteFinanciacion = _context.FuenteFinanciacion.Where(ff => ff.AportanteId == proyectoAportante.Aportante.CofinanciacionAportanteId).ToList();
 
                             if (proyectoAportante.Aportante.FuenteFinanciacion.Count() > 0)
                             {
@@ -583,8 +587,8 @@ namespace asivamosffie.services
         }
 
         public async Task<List<VListaContratacionModificacionContractual>> GetListSesionComiteSolicitudV2()
-        { 
-            return await _context.VListaContratacionModificacionContractual.OrderByDescending(v => v.SesionComiteSolicitudId).ToListAsync(); 
+        {
+            return await _context.VListaContratacionModificacionContractual.OrderByDescending(v => v.SesionComiteSolicitudId).ToListAsync();
         }
 
         public async Task<List<SesionComiteSolicitud>> GetListSesionComiteSolicitud()
@@ -594,7 +598,7 @@ namespace asivamosffie.services
                 List<ComiteTecnico> ListComiteTecnicos = _context.ComiteTecnico
                     .Where(r => (bool)r.EsComiteFiduciario && r.EstadoActaCodigo == ConstantCodigoActas.Aprobada && !(bool)r.Eliminado)
                     .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
-                    .Include(r=> r.SesionComiteSolicitudComiteTecnico).ToList();
+                    .Include(r => r.SesionComiteSolicitudComiteTecnico).ToList();
 
                 ////ListComiteTecnicos = ListComiteTecnicos.Where(r => r.EstadoActaCodigo == ConstantCodigoActas.Aprobada).ToList();
 
@@ -701,11 +705,19 @@ namespace asivamosffie.services
                           .Include(r => r.Contratista)
                           .Include(r => r.Contrato)
                           .Include(r => r.ContratacionProyecto)
+
                               .ThenInclude(r => r.Proyecto)
                                 .ThenInclude(r => r.ProyectoAportante)
                                    .ThenInclude(r => r.Aportante)
                                      .ThenInclude(r => r.FuenteFinanciacion)
-                                        .ThenInclude(r => r.GestionFuenteFinanciacion)
+
+                          .Include(r => r.ContratacionProyecto)
+                              .ThenInclude(r => r.Proyecto)
+                                .ThenInclude(r => r.ProyectoAportante)
+                                   .ThenInclude(r => r.Aportante)
+                                     .ThenInclude(r => r.FuenteFinanciacion)
+                                        .ThenInclude(r => r.AportanteFuenteFinanciacion)
+
                           .Include(r => r.ContratacionProyecto)
                               .ThenInclude(r => r.Proyecto)
                                   .ThenInclude(r => r.InstitucionEducativa)
@@ -827,7 +839,7 @@ namespace asivamosffie.services
                 contratacionOld.RegistroCompleto = pContratacion.RegistroCompleto;
                 contratacionOld.FechaEnvioDocumentacion = pContratacion.FechaEnvioDocumentacion;
                 contratacionOld.Observaciones = pContratacion.Observaciones;
-                
+
                 //if (pFile != null && pFile.Length > 0)
                 contratacionOld.RutaMinuta = pContratacion.RutaMinuta;
                 contratacionOld.RegistroCompleto1 = ValidarCamposContratacion(contratacionOld);
@@ -883,7 +895,7 @@ namespace asivamosffie.services
             {
                 TextInfo myTI = new CultureInfo("en-US", false).TextInfo;
                 //TODO Validar Cuandos sea otro tipo de solicitud
-                 
+
                 bool blEnvioCorreo = false;
                 var usuariosecretario = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Fiduciaria).Select(x => x.Usuario.Email).ToList();
                 List<Dominio> ListDominio = _context.Dominio.ToList();
@@ -893,7 +905,7 @@ namespace asivamosffie.services
                     string template =
                         TemplateActaAprobada.Contenido
                         .Replace("_LinkF_", pDominioFront)
-                        .Replace("[TIPO_SOLICITUD]", ListDominio.Where(r=> r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud && r.Codigo == pSesionComiteSolicitud.TipoSolicitudCodigo).FirstOrDefault().Nombre)
+                        .Replace("[TIPO_SOLICITUD]", ListDominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud && r.Codigo == pSesionComiteSolicitud.TipoSolicitudCodigo).FirstOrDefault().Nombre)
                         .Replace("[NUMERO_DDP]", pSesionComiteSolicitud.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().NumeroDdp ?? " ")
                         .Replace("[OBJETO]", pSesionComiteSolicitud.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().Objeto ?? " ")
                         .Replace("[FECHA_COMITE_FIDUCIARIO]", pSesionComiteSolicitud.ComiteTecnico.FechaOrdenDia.HasValue ? ((DateTime)pSesionComiteSolicitud.ComiteTecnico.FechaOrdenDia).ToString("dd-MM-yy") : " ")
