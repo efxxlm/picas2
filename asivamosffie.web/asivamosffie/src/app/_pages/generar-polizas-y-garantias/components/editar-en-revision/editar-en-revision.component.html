@@ -15,7 +15,7 @@
     <span>Estado: <b>En revisión de pólizas</b></span>
   </p>
 </section>
-<section class="container">
+<section class="container" *ngIf="contrato !== undefined">
   <mat-card class="shipping-card var-main-gris">
     <mat-card-content>
       <p>
@@ -364,7 +364,6 @@
                     formControlName="valorAmparo"
                     (keypress)="validateNumberKeypress($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
                   />
                 </mat-form-field>
@@ -437,7 +436,7 @@
             />
           </span>
         </div>
-        <div *ngIf="this.obj1 == true">
+        <div class="animatedDown" *ngIf="this.obj1 == true">
           <mat-card-title class="header-card--text alineacion-titulos2 mt-1em" style="padding-left: 0px">
             Buen manejo y correcta inversión del anticipo
           </mat-card-title>
@@ -483,7 +482,7 @@
             </div>
           </div>
         </div>
-        <div *ngIf="this.obj2 == true">
+        <div class="animatedDown" *ngIf="this.obj2 == true">
           <mat-card-title class="header-card--text alineacion-titulos2 mt-1em" style="padding-left: 0px">
             Garantía de estabilidad y calidad de la obra
           </mat-card-title>
@@ -529,7 +528,7 @@
             </div>
           </div>
         </div>
-        <div *ngIf="this.obj3 == true">
+        <div class="animatedDown" *ngIf="this.obj3 == true">
           <mat-card-title class="header-card--text alineacion-titulos2 mt-1em" style="padding-left: 0px">
             Póliza de cumplimiento
           </mat-card-title>
@@ -575,7 +574,7 @@
             </div>
           </div>
         </div>
-        <div *ngIf="this.obj4 == true">
+        <div class="animatedDown" *ngIf="this.obj4 == true">
           <mat-card-title class="header-card--text alineacion-titulos2 mt-1em" style="padding-left: 0px">
             Pólizas y seguros
           </mat-card-title>
@@ -621,7 +620,8 @@
             </div>
           </div>
         </div>
-        <div
+        <div 
+        class="animatedDown"
           *ngIf="
             addressForm.get('polizasYSegurosCompleto').value != null ||
             addressForm.get('polizaYCoumplimiento').value != null ||
@@ -838,6 +838,7 @@
       </mat-card-content>
     </mat-card>
     <div
+    class="animatedDown"
       *ngIf="
         addressForm.get('condicionesGenerales').value != null &&
         addressForm.get('reciboDePago').value != null &&
@@ -948,7 +949,7 @@
               </div>
             </div>
           </div>
-          <div *ngIf="addressForm.get('estadoRevision').value && addressForm.get('estadoRevision').value.codigo == '2'">
+          <div class="animatedDown" *ngIf="addressForm.get('estadoRevision').value && addressForm.get('estadoRevision').value.codigo == '2'">
             <h2 class="card-subTitle">Aprobación</h2>
             <div class="row">
               <div class="col-md-8">
@@ -1092,7 +1093,9 @@
         </span>
       </div>
     </div>
-    <app-tabla-historial-observaciones-poliza></app-tabla-historial-observaciones-poliza>
+    <div *ngIf="contrato.polizaObservacion.length > 0">
+      <app-tabla-historial-observaciones-poliza [polizaObservacion]="contrato.polizaObservacion"></app-tabla-historial-observaciones-poliza>
+    </div>
     <div class="text-center mb-2em">
       <button mat-button color="warn" class="btn-guardar" type="submit">
         <img src="assets/img/icon/guardar.svg" alt="Regresar" />

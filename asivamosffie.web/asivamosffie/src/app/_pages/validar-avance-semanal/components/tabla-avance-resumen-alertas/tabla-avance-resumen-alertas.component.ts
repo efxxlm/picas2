@@ -72,10 +72,10 @@ export class TablaAvanceResumenAlertasComponent implements OnInit {
         }
     }
 
-    openDialogObservaciones( observacion: string, registro: any ) {
+    openDialogObservaciones( registro: any ) {
         this.dialog.open( DialogAvanceResumenAlertasComponent, {
             width: '60em',
-            data : { observacion, registro }
+            data : { registro, esDisponibilidadPersonal : true }
         } );
     }
 

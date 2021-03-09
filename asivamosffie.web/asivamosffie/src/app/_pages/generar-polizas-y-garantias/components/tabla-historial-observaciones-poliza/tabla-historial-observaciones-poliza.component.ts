@@ -11,6 +11,8 @@ import { PolizaGarantiaService } from 'src/app/core/_services/polizaGarantia/pol
   styleUrls: ['./tabla-historial-observaciones-poliza.component.scss']
 })
 export class TablaHistorialObservacionesPolizaComponent implements OnInit {
+
+  @Input() polizaObservacion: any[];
   displayedColumns: string[] = ['fechaRevision', 'observacion', 'estadoRevisionCodigo'];
   dataSource = new MatTableDataSource();
   @ViewChild( MatPaginator, {static: true} ) paginator: MatPaginator;
@@ -19,23 +21,14 @@ export class TablaHistorialObservacionesPolizaComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
-  dataTable: any[] = [];
-  loadTableObservaciones: Subscription;
-  constructor(private polizaService: PolizaGarantiaService) { }
+
+  constructor() { }
 
   ngOnInit(): void {
-    this.cargarTablaDeDatos();
+    this.dataSource = new MatTableDataSource(this.polizaObservacion);
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
   }
-  cargarTablaDeDatos(){
-    this.loadTableObservaciones = this.polizaService.loadTableObservaciones.subscribe((loadTableObservaciones: any) => {
-      console.log( loadTableObservaciones );
-      if(loadTableObservaciones!=''){
-        this.dataTable=loadTableObservaciones;
-        this.dataSource = new MatTableDataSource(this.dataTable);
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
-        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-      }
-    }); 
-  }
+
 }

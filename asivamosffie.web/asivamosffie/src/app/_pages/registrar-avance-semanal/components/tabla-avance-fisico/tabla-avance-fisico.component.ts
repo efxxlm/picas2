@@ -2,7 +2,7 @@ import { RegistrarAvanceSemanalService } from './../../../../core/_services/regi
 import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { MatTableDataSource } from '@angular/material/table';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogAvanceAcumuladoComponent } from '../dialog-avance-acumulado/dialog-avance-acumulado.component';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -18,6 +18,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
     @Input() avanceFisicoObs: string;
+    sinRegistros = false;
     tablaAvanceFisico = new MatTableDataSource();
     tablaHistorial = new MatTableDataSource();
     dataHistorial: any[] = [];
@@ -158,20 +159,26 @@ export class TablaAvanceFisicoComponent implements OnInit {
 
                     duracionProgramacion += duracionItem;
                 }
-                this.avanceFisico = [
-                    {
-                        semanaNumero: this.seguimientoSemanal.numeroSemana,
-                        periodoReporte: `${ this.datePipe.transform( this.seguimientoSemanal.fechaInicio, 'dd/MM/yyyy' ) } - ${ this.datePipe.transform( this.seguimientoSemanal.fechaFin, 'dd/MM/yyyy' ) }`,
-                        programacionSemana: this.verifyInteger( ( duracionProgramacion / cantidadTotalDiasActividades ) * 100,
-                                                                false ),
-                        avancePorCapitulo,
-                        avanceFisicoSemana: this.seguimientoSemanal.seguimientoSemanalAvanceFisico.length > 0 ?
-                                            this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0].avanceFisicoSemanal : 0
-                    }
-                ];
+                if ( avancePorCapitulo.length > 0 ) {
+                    this.avanceFisico = [
+                        {
+                            semanaNumero: this.seguimientoSemanal.numeroSemana,
+                            periodoReporte: `${ this.datePipe.transform( this.seguimientoSemanal.fechaInicio, 'dd/MM/yyyy' ) } - ${ this.datePipe.transform( this.seguimientoSemanal.fechaFin, 'dd/MM/yyyy' ) }`,
+                            programacionSemana: this.verifyInteger( ( duracionProgramacion / cantidadTotalDiasActividades ) * 100,
+                                                                    false ),
+                            avancePorCapitulo,
+                            avanceFisicoSemana: this.seguimientoSemanal.seguimientoSemanalAvanceFisico.length > 0 ?
+                                                this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0].avanceFisicoSemanal : 0
+                        }
+                    ];
+                }
             }
         }
-        this.tablaAvanceFisico = new MatTableDataSource( this.avanceFisico );
+        if ( this.avanceFisico !== undefined ) {
+            this.tablaAvanceFisico = new MatTableDataSource( this.avanceFisico );
+        } else {
+            this.sinRegistros = true;
+        }
     }
 
     valuePending( value: number, registro: any ) {
