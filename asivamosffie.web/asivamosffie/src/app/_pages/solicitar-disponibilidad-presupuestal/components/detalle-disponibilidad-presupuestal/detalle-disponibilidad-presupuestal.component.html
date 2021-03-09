@@ -25,15 +25,15 @@
         <mat-card-content align="left">
             <p>
                 <b>DDP:</b>
-                DDP_PI_007
+                {{ddpsolicitud}}
             </p>
             <p>
                 <b>Valor DDP:</b>
-                $60.000.000
+                {{ddpvalor|currency:'':'symbol':'3.0'}}
             </p>
             <p>
                 <b>Detalle de la modificación:</b>
-                Se realiza adición de recursos para obras complementarias
+                {{ddpdetalle}}
             </p>
         </mat-card-content>
     </mat-card>

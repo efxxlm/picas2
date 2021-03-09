@@ -27,6 +27,9 @@ export class DetalleDisponibilidadPresupuestalComponent implements OnInit {
   plazoMeses: number;
   proyectos:any[]=[];
   opcionContratarCodigo="";
+  ddpsolicitud: any;
+  ddpvalor: any;
+  ddpdetalle: any;
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private budgetAvailabilityService: BudgetAvailabilityService,
     private projectService: ProjectService) { }
@@ -52,6 +55,20 @@ export class DetalleDisponibilidadPresupuestalComponent implements OnInit {
       data0.disponibilidadPresupuestalProyecto.forEach(element => {
         this.cargarServicio2(element.proyectoId);
       });
+      if(this.tipoSolicitudColdigo=='3')//modificacionContractual
+      {
+      this.budgetAvailabilityService.getNovedadContractual(data0.contratacionId).subscribe( 
+        res => {
+          console.log(res);
+          this.ddpsolicitud=res[0].contrato.contratacion.disponibilidadPresupuestal[0].numeroDdp;
+          this.ddpvalor=res[0].contrato.contratacion.disponibilidadPresupuestal[0].valorSolicitud;
+          this.ddpdetalle=res[0].novedadContractualDescripcion[0].resumenJustificacion;          
+        },
+        err => {
+          console.log( err );
+        }
+      )
+    }  
       
     });
   }
