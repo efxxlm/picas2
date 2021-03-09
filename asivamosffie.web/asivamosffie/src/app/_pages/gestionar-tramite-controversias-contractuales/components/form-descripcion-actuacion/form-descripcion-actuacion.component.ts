@@ -76,13 +76,19 @@ export class FormDescripcionActuacionComponent implements OnInit {
     });
     if (this.isEditable == true) {
       this.services.GetControversiaActuacionById(this.idActuacionFromEdit).subscribe((data:any)=>{
-        const avanceTramSelected = this.estadoAvanceTramiteArrayDom.find(t => t.codigo === data.estadoAvanceTramiteCodigo);
-        this.addressForm.get('estadoAvanceTramite').setValue(avanceTramSelected);
+        for (let i = 0; i < this.estadoAvanceTramiteArrayDom.length; i++) {
+          const avanceTramSelected = this.estadoAvanceTramiteArrayDom.find(t => t.codigo === data.estadoAvanceTramiteCodigo);
+          this.addressForm.get('estadoAvanceTramite').setValue(avanceTramSelected);
+        }
         this.addressForm.get('fechaActuacionAdelantada').setValue(data.fechaActuacion);
-        const actuacionAdelantadaSelected = this.actuacionAdelantadaArrayDom.find(t => t.codigo === data.actuacionAdelantadaCodigo);
-        this.addressForm.get('actuacionAdelantada').setValue(actuacionAdelantadaSelected);
-        const actuacionRequeridaSelected = this.proximaActuacionRequeridaArrayDom.find(t => t.codigo === data.proximaActuacionCodigo);
-        this.addressForm.get('proximaActuacionRequerida').setValue(actuacionRequeridaSelected);
+        for (let i = 0; i < this.actuacionAdelantadaArrayDom.length; i++) {
+          const actuacionAdelantadaSelected = this.actuacionAdelantadaArrayDom.find(t => t.codigo === data.actuacionAdelantadaCodigo);
+          this.addressForm.get('actuacionAdelantada').setValue(actuacionAdelantadaSelected);
+        }
+        for (let i = 0; i < this.proximaActuacionRequeridaArrayDom.length; i++) {
+          const actuacionRequeridaSelected = this.proximaActuacionRequeridaArrayDom.find(t => t.codigo === data.proximaActuacionCodigo);
+          this.addressForm.get('proximaActuacionRequerida').setValue(actuacionRequeridaSelected);
+        }
         this.addressForm.get('cualOtroActuacionAdelantada').setValue(data.actuacionAdelantadaOtro);
         this.addressForm.get('cualOtroActuacionRequerida').setValue(data.proximaActuacionOtro);
         this.addressForm.get('diasVencimientoTerminos').setValue(data.cantDiasVencimiento.toString());
@@ -208,7 +214,7 @@ export class FormDescripcionActuacionComponent implements OnInit {
     }
     this.services.CreateEditControversiaOtros(actuacionTaiArray).subscribe((data: any) => {
       if(data.isSuccessful==true){
-        this.services.CambiarEstadoActuacionSeguimiento(data.data.controversiaActuacionId,"1").subscribe((data:any)=>{
+        this.services.CambiarEstadoActuacionSeguimiento(data.data.controversiaActuacionId,"1").subscribe((data0:any)=>{
         });
         /*
         this.services.CambiarEstadoControversiaActuacion(data.data.controversiaActuacionId,"1").subscribe((a:any)=>{
