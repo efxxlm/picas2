@@ -599,6 +599,7 @@ namespace asivamosffie.services
             }
             return retorno;
         }
+
         public async Task<Respuesta> CreateEditarDisponibilidadPresupuestal(DisponibilidadPresupuestal DP)
         {
             Respuesta respuesta = new Respuesta();
@@ -728,8 +729,7 @@ namespace asivamosffie.services
             }
             DisponibilidadPresupuestal disponibilidad = await _context.DisponibilidadPresupuestal
                 .Where(r => r.DisponibilidadPresupuestalId == id).FirstOrDefaultAsync();
-            //.Include(r => r.SesionComiteTema).FirstOrDefaultAsync();
-
+            
             if (disponibilidad == null)
             {
                 return Array.Empty<byte>();
@@ -804,16 +804,17 @@ namespace asivamosffie.services
                 int codtablauso = (int)ConstanCodigoPlantillas.DRP_TABLA_USOS;
                 var plantilla_fuentes = _context.Plantilla.Where(x => x.Codigo == codtablafuentes.ToString()).FirstOrDefault().Contenido;
                 var plantilla_uso = _context.Plantilla.Where(x => x.Codigo == codtablauso.ToString()).FirstOrDefault().Contenido;
-                //empuezo con fuentes
-                var gestionfuentes = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == pDisponibilidad.DisponibilidadPresupuestalId).
+                //empiezo con fuentes
+                var gestionfuentes = _context.GestionFuenteFinanciacion
+                    .Where(x => !(bool)x.Eliminado 
+                    && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == 
+                    pDisponibilidad.DisponibilidadPresupuestalId).
                     Include(x=>x.FuenteFinanciacion).
                         ThenInclude(x => x.Aportante).
                             ThenInclude(x=>x.CofinanciacionDocumento).
                     Include(x => x.DisponibilidadPresupuestalProyecto).
                         ThenInclude(x => x.Proyecto).
-                            ThenInclude(x => x.Sede)
-                    //.Include(x => x.DisponibilidadPresupuestal).
-                    //    ThenInclude(x => x.Contratacion)
+                            ThenInclude(x => x.Sede) 
                     .Include(x => x.DisponibilidadPresupuestalProyecto).
                         ThenInclude(x => x.Proyecto)
                             .ThenInclude( x => x.ProyectoAportante )
@@ -826,16 +827,23 @@ namespace asivamosffie.services
                 {
                     //el saldo actual de la fuente son todas las solicitudes a la fuentes
                     //var consignadoemnfuente = _context.ControlRecurso.Where(x => x.FuenteFinanciacionId == gestion.FuenteFinanciacionId).Sum(x => x.ValorConsignacion);
-                    var consignadoemnfuente = _context.FuenteFinanciacion.Where(x => x.FuenteFinanciacionId == gestion.FuenteFinanciacionId).Sum(x => x.ValorFuente);
+                    var consignadoemnfuente = _context.FuenteFinanciacion
+                        .Where(x => x.FuenteFinanciacionId == gestion.FuenteFinanciacionId)
+                        .Sum(x => x.ValorFuente);
+
                     var saldofuente = _context.GestionFuenteFinanciacion.Where(
                         x => x.FuenteFinanciacionId == gestion.FuenteFinanciacionId && 
-                        x.DisponibilidadPresupuestalProyectoId!=gestion.DisponibilidadPresupuestalProyectoId).Sum(x => x.ValorSolicitado);
+                        x.DisponibilidadPresupuestalProyectoId!=gestion.DisponibilidadPresupuestalProyectoId)
+                        .Sum(x => x.ValorSolicitado);
+
                     string fuenteNombre = _context.Dominio.Where(x => x.Codigo == gestion.FuenteFinanciacion.FuenteRecursosCodigo
                             && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
-                    //(decimal)font.FuenteFinanciacion.ValorFuente,
-                    // Saldo_actual_de_la_fuente = (decimal)font.FuenteFinanciacion.ValorFuente - saldofuente
+     
                     saldototal += (decimal)consignadoemnfuente - saldofuente;
-                    string institucion = _context.InstitucionEducativaSede.Where(x => x.InstitucionEducativaSedeId == gestion.DisponibilidadPresupuestalProyecto.Proyecto.Sede.PadreId).FirstOrDefault().Nombre;
+
+                    string institucion = _context.InstitucionEducativaSede
+                        .Where(x => x.InstitucionEducativaSedeId == gestion.DisponibilidadPresupuestalProyecto.Proyecto.Sede.PadreId)
+                        .FirstOrDefault().Nombre;
 
                     ProyectoAportante proyectoAportante = gestion.DisponibilidadPresupuestalProyecto.Proyecto.ProyectoAportante.Where(r => r.AportanteId == gestion.FuenteFinanciacion.Aportante.CofinanciacionAportanteId)?.FirstOrDefault();
 
@@ -854,22 +862,22 @@ namespace asivamosffie.services
                 }
 
                 //usos                    
-                var componenteAp = _context.ComponenteAportante.Where(x => x.ContratacionProyectoAportante.ContratacionProyecto.ContratacionId == pDisponibilidad.ContratacionId).
-                    Include(x => x.ComponenteUso).
+                var componenteAp = _context.ComponenteAportante
+                    .Where(x => x.ContratacionProyectoAportante.ContratacionProyecto.ContratacionId == pDisponibilidad.ContratacionId)
+                    .Include(x => x.ComponenteUso).
                     Include(x => x.ContratacionProyectoAportante).
                     ThenInclude(x => x.ContratacionProyecto).
                     ThenInclude(x => x.Proyecto).ToList();
+
+
                 foreach (var compAp in componenteAp)
                 {
                     List<string> uso = new List<string>();
-                    List<decimal> usovalor = new List<decimal>();
-                    decimal total = 0;
+                    List<decimal> usovalor = new List<decimal>(); 
                     var dom = _context.Dominio.Where(x => x.Codigo == compAp.TipoComponenteCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Componentes).ToList();
                     var strFase = _context.Dominio.Where(r => r.Codigo == compAp.FaseCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Fases).FirstOrDefault();
                     foreach (var comp in compAp.ComponenteUso)
-                    {
-                        
-
+                    { 
                         var usos = _context.Dominio.Where(x => x.Codigo == comp.TipoUsoCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Usos).ToList();
                         uso.Add(usos.Count() > 0 ? usos.FirstOrDefault().Nombre : "");
                         string llavemen = compAp.ContratacionProyectoAportante.ContratacionProyecto.Proyecto.LlaveMen;
@@ -892,11 +900,11 @@ namespace asivamosffie.services
                 int codtablaproyecto = (int)ConstanCodigoPlantillas.DDP_TR_Proyecto;
                 int codcabeceraproycto = (int)ConstanCodigoPlantillas.DDP_Cabecera_Proyecto;
                 var plantilla_proycto = _context.Plantilla.Where(x => x.Codigo == codtablaproyecto.ToString()).FirstOrDefault().Contenido;
-                
-                
-                
+                 
                 //empuezo con fuentes
-                var gestionfuentes = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == pDisponibilidad.DisponibilidadPresupuestalId).
+                var gestionfuentes = _context.GestionFuenteFinanciacion
+                    .Where(x => !(bool)x.Eliminado 
+                        && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == pDisponibilidad.DisponibilidadPresupuestalId).
                     Include(x => x.FuenteFinanciacion).
                         ThenInclude(x => x.Aportante).
                         ThenInclude(x => x.CofinanciacionDocumento).
@@ -958,7 +966,8 @@ namespace asivamosffie.services
                     
 
                 }
-                else if (pDisponibilidad.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo)
+                else 
+                if (pDisponibilidad.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo)
                 {
                     opcionContratarCodigo = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Disponibilidad_Presupuestal
                                     && r.Codigo == pDisponibilidad.TipoSolicitudCodigo).FirstOrDefault().Descripcion;
@@ -992,21 +1001,18 @@ namespace asivamosffie.services
                             aportanteTrDato = aportanteTrDato.Replace("[FUENTE_APORTANTE]", fuenteNombre);
                             aportanteTrDato = aportanteTrDato.Replace("[VALOR_NUMERO]", "$ "+String.Format("{0:n0}", saldofuente).ToString());
                             aportanteTrDato = aportanteTrDato.Replace("[VALOR_LETRAS]", CultureInfo.CurrentCulture.TextInfo
-                                        .ToTitleCase(Helpers.Conversores
-                                        .NumeroALetras(saldofuente).ToLower()));
+                                        .ToTitleCase(Conversores.NumeroALetras(saldofuente).ToLower()));
                             aportanteTr += aportanteTrDato;
-                        }
-
-
-                    }
-
+                        } 
+                    } 
                     tablaaportantes = aportanteTablaPrincipal.Replace("[TABLAAPORTANTES]", aportanteTr).
                         Replace("[TOTAL_DE_RECURSOS]", "2").
                         Replace("[TOTAL_DE_RECURSOSLETRAS]", "dos");
                 }
-                else//ddp especial
+                //ddp especial
+                else 
                 {
-                    //empuezo con fuentes
+                    //empiezo con fuentes
                     var gestionfuentesEspecial = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalId == pDisponibilidad.DisponibilidadPresupuestalId).
                         Include(x => x.FuenteFinanciacion).
                             ThenInclude(x => x.Aportante).
@@ -1040,11 +1046,7 @@ namespace asivamosffie.services
                                             .NumeroALetras(gestion.ValorSolicitado).ToLower()));
                         tablafuentes += tr2;
                         totales += gestion.ValorSolicitado;
-                    }
-
-
-
-
+                    } 
                     proyecto = "";
                     limitacionEspecial = "";
                     tablaaportantes = plantilla_fuentecabecera.Replace("[TABLAAPORTANTES]", tablafuentes).
@@ -1125,6 +1127,7 @@ namespace asivamosffie.services
 
                 }
             }
+
             return Helpers.Helpers.HtmlEntities(pStrContenido);
         }
 
@@ -1587,7 +1590,7 @@ namespace asivamosffie.services
             return Helpers.PDF.Convertir(plantilla);
         }
 
-        private string getNombreAportante(CofinanciacionAportante confinanciacion)
+        public string getNombreAportante(CofinanciacionAportante confinanciacion)
         {
             string nombreAportante;
             if (confinanciacion.TipoAportanteId.Equals(ConstanTipoAportante.Ffie))

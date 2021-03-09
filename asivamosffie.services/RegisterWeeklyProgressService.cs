@@ -2260,7 +2260,7 @@ namespace asivamosffie.services
 
             List<EnumeratorPerfil> perfilsEnviarCorreo =
                 new List<EnumeratorPerfil>
-                {
+                                          {
                                                 EnumeratorPerfil.Apoyo
                                           };
 

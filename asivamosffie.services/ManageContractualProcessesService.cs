@@ -30,11 +30,13 @@ namespace asivamosffie.services
 
         private readonly ICommonService _commonService;
         private readonly IDocumentService _documentService;
+        private readonly IBudgetAvailabilityService _budgetAvailabilityService;
         public readonly IConverter _converter;
         public readonly IProjectContractingService _ProjectContractingService;
 
-        public ManageContractualProcessesService(IProjectContractingService projectContractingService, IConverter converter, devAsiVamosFFIEContext context, ICommonService commonService, IDocumentService documentService)
+        public ManageContractualProcessesService(IBudgetAvailabilityService budgetAvailabilityService, IProjectContractingService projectContractingService, IConverter converter, devAsiVamosFFIEContext context, ICommonService commonService, IDocumentService documentService)
         {
+            _budgetAvailabilityService = budgetAvailabilityService;
             _ProjectContractingService = projectContractingService;
             _converter = converter;
             _context = context;
@@ -704,15 +706,19 @@ namespace asivamosffie.services
                     _context.Contratacion
                     .Where(r => r.ContratacionId == pContratacionId)
                     .Include(r => r.DisponibilidadPresupuestal)
+                       .ThenInclude(r => r.GestionFuenteFinanciacion)
+                           .ThenInclude(x => x.FuenteFinanciacion)
+                               .ThenInclude(x => x.Aportante)
+                                  .ThenInclude(x => x.CofinanciacionDocumento)
+
                     .Include(r => r.ContratacionProyecto)
                        .ThenInclude(r => r.Proyecto)
                            .ThenInclude(r => r.ProyectoAportante)
                                .ThenInclude(r => r.Aportante)
                                    .ThenInclude(r => r.FuenteFinanciacion)
-                                       .ThenInclude(r => r.GestionFuenteFinanciacion)
-                                           .ThenInclude(r => r.DisponibilidadPresupuestal)
+
                    .Include(r => r.Contratista)
-                   .Include(r => r.Contrato) 
+                   .Include(r => r.Contrato)
                   .Include(r => r.ContratacionProyecto)
                      .ThenInclude(r => r.Proyecto)
                          .ThenInclude(r => r.ProyectoAportante)
@@ -753,6 +759,7 @@ namespace asivamosffie.services
                         }
                     }
                 }
+
                 foreach (var ContratacionProyecto in contratacion.ContratacionProyecto)
                 {
 
@@ -780,12 +787,10 @@ namespace asivamosffie.services
                         }
                         if (ProyectoAportante.Aportante.NombreAportanteId > 0)
                         {
-
                             ProyectoAportante.Aportante.NombreAportanteString = LisParametricas
                                 .Where(r => r.DominioId == ProyectoAportante.Aportante.NombreAportanteId)
                                 .FirstOrDefault().Nombre;
                         }
-
 
                         foreach (var FuenteFinanciacion in ProyectoAportante.Aportante.FuenteFinanciacion)
                         {
@@ -799,11 +804,22 @@ namespace asivamosffie.services
                                       && r.Codigo == FuenteFinanciacion.FuenteRecursosCodigo
                                       ).FirstOrDefault().Nombre;
                             }
-
                         }
-
                     }
                 }
+
+               
+                foreach (var DisponibilidadPresupuestal in contratacion.DisponibilidadPresupuestal)
+                {
+                    foreach (var GestionFuenteFinanciacion in DisponibilidadPresupuestal.GestionFuenteFinanciacion)
+                    {
+                        GestionFuenteFinanciacion.FuenteNombre = _context.Dominio.Where(x => x.Codigo == GestionFuenteFinanciacion.FuenteFinanciacion.FuenteRecursosCodigo
+                                    && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
+                        GestionFuenteFinanciacion.AportanteNombre= _budgetAvailabilityService.getNombreAportante(GestionFuenteFinanciacion.FuenteFinanciacion.Aportante);
+
+                        GestionFuenteFinanciacion.ValorSolicitado = GestionFuenteFinanciacion.ValorSolicitado;
+                    }
+                } 
                 return contratacion;
             }
             catch (Exception ex)
@@ -818,7 +834,7 @@ namespace asivamosffie.services
 
             try
             {
-                string strFilePatch = "";
+                string strFilePatch = string.Empty;
 
                 if (pFile == null)
                 {
