@@ -49,7 +49,9 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
     contratacion: '2',
     modificacionContractual: '3',
     controversiaContractual: '4',
-    defensaJudicial: '5'
+    defensaJudicial: '5',
+    actualizacionProcesoSeleccion: '6',
+    evaluacionProceso: '7'
   }
 
   constructor(private routes: Router,
@@ -121,8 +123,8 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
           }
         };
 
-        for (let participante of this.acta.sesionParticipanteView) {
-          this.miembrosParticipantes.push(`${participante.nombres} ${participante.apellidos}`)
+        for (let participante of this.acta.sesionParticipante) {
+          this.miembrosParticipantes.push(`${participante.usuario.nombres} ${participante.usuario.apellidos}`);
         };
 
         this.technicalCommitteeSessionSvc.getComiteTecnicoByComiteTecnicoId(this.activatedRoute.snapshot.params.id)

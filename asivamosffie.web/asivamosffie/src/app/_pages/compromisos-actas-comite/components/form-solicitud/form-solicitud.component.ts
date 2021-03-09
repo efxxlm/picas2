@@ -36,7 +36,9 @@ export class FormSolicitudComponent implements OnInit {
     contratacion: '2',
     modificacionContractual: '3',
     controversiaContractual: '4',
-    defensaJudicial: '5'
+    defensaJudicial: '5',
+    actualizacionProcesoSeleccion: '6',
+    evaluacionProceso: '7'
   }
   listaTipoSolicitud: Dominio[] = [];
   listaEstadoSolicitud: Dominio[] = [];
@@ -77,6 +79,8 @@ export class FormSolicitudComponent implements OnInit {
 
       if ( estadoSolicitud !== undefined ) {
         return estadoSolicitud.nombre;
+      } else {
+        return estadoCodigo;
       }
     }
   }
@@ -86,7 +90,7 @@ export class FormSolicitudComponent implements OnInit {
       const observacionHtml = observacion.replace( '"', '' );
       return `<b>${ observacionHtml }</b>`;
     };
-  };
+  }
 
   resultadosVotaciones ( solicitud: any ) {
     if ( this.esComiteFiduciario === true ) {

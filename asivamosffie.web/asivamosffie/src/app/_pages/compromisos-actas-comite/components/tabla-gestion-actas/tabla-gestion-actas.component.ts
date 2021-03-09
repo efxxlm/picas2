@@ -3,6 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import moment from 'moment';
 import { FiduciaryCommitteeSessionService } from 'src/app/core/_services/fiduciaryCommitteeSession/fiduciary-committee-session.service';
 import { CompromisosActasComiteService } from '../../../../core/_services/compromisosActasComite/compromisos-actas-comite.service';
 import { TechnicalCommitteSessionService } from '../../../../core/_services/technicalCommitteSession/technical-committe-session.service';
@@ -57,6 +58,9 @@ export class TablaGestionActasComponent implements OnInit {
           }
         } );
         console.log( dataTable );
+        dataTable.forEach( registro => {
+          registro.fechaOrdenDia = moment( registro.fechaOrdenDia ).format( 'DD/MM/YYYY' );
+        } );
         this.dataSource = new MatTableDataSource( dataTable );
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
