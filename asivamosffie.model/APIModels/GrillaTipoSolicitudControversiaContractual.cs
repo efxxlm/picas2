@@ -23,5 +23,6 @@ namespace asivamosffie.model.APIModels
         public string EstadoControversiaCodigo { get; set; }
         public int ActuacionID { get; set; }
         public string EstadoReclamacion { get; set; }
+        public bool SePuedeCerrar { get; set; }
     }
 }

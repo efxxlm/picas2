@@ -46,31 +46,17 @@ export class TablaDecisionesActaComponent implements OnInit {
 
         const tipoSolicitud = response.filter( tipo => tipo.codigo === this.tipoSolicitudCodigo );
 
-        if ( tipoSolicitud[0].nombre === 'Apertura de proceso de selección' ) {
-          //this.compromisoActaSvc.getSelectionProcessById( this.contratacionId )
-          //  .subscribe( console.log );
-          //Por integrar
-        }
         if ( tipoSolicitud[0].nombre === 'Contratación' ) {
           this.projectContractingSvc.getContratacionByContratacionIdWithGrillaProyecto( this.contratacionId )
           .subscribe( ( resp: any ) => {
             this.contratacion = resp;
-            console.log( resp );
             for ( let contratacion of resp.contratacionProyecto ) {
-              this.data.push( { contratacion: contratacion.proyectoGrilla, sesionSolicitudObservacionProyecto: contratacion.sesionSolicitudObservacionProyecto, tipoSolicitudCodigo: resp.tipoSolicitudCodigo } )
+              console.log( contratacion.contratacionObservacion );
+              this.data.push( { contratacion: contratacion.proyectoGrilla, sesionSolicitudObservacionProyecto: contratacion.contratacionObservacion, tipoSolicitudCodigo: resp.tipoSolicitudCodigo } )
             }
             this.dataSource = new MatTableDataSource( this.data );
             this.dataSource.sort = this.sort;
           } )
-        }
-        if ( tipoSolicitud[0].nombre === 'Modificación contractual' ) {
-          //Por integrar
-        }
-        if ( tipoSolicitud[0].nombre === 'Controversias contractuales' ) {
-          //Por integrar
-        }
-        if ( tipoSolicitud[0].nombre === 'Defensa Judicial' ) {
-          //Por integrar
         }
         
       } )

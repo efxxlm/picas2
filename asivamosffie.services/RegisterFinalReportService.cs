@@ -68,7 +68,7 @@ namespace asivamosffie.services
             {
                 if (proyecto.InformeFinal.FirstOrDefault().EstadoInforme == ConstantCodigoEstadoInformeFinal.Con_Observaciones_del_supervisor || proyecto.InformeFinal.FirstOrDefault().EstadoInforme == ConstantCodigoEstadoInformeFinal.Modificado_interventor_completo)
                 {
-                    proyecto.InformeFinal.FirstOrDefault().HistorialInformeFinalInterventoriaObservaciones = _context.InformeFinalObservaciones.Where(r => r.EsSupervision == true && r.Archivado == true && r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId).ToList();
+                    proyecto.InformeFinal.FirstOrDefault().HistorialInformeFinalInterventoriaObservaciones = _context.InformeFinalObservaciones.Where(r => r.EsSupervision == true && r.Archivado == true && (r.EsApoyo == false || r.EsApoyo == null) && r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId).ToList();
                     proyecto.InformeFinal.FirstOrDefault().ObservacionVigenteSupervisor = _context.InformeFinalObservaciones.Where(r => r.EsSupervision == true && r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && (r.Archivado == false || r.Archivado == null)).FirstOrDefault();
                 }
             }
@@ -121,7 +121,7 @@ namespace asivamosffie.services
         public async Task<InformeFinalInterventoria> GetObservacionesByInformeFinalInterventoriaId(int pInformeFinalInterventoriaId)
         {
             InformeFinalInterventoria informeFinalInterventoria = await _context.InformeFinalInterventoria.Where(r => r.InformeFinalInterventoriaId == pInformeFinalInterventoriaId).FirstOrDefaultAsync();
-            informeFinalInterventoria.HistorialInformeFinalInterventoriaObservaciones = await _context.InformeFinalInterventoriaObservaciones.Where(r => r.EsSupervision == true && r.Archivado == true && r.InformeFinalInterventoriaId == pInformeFinalInterventoriaId).ToListAsync();
+            informeFinalInterventoria.HistorialInformeFinalInterventoriaObservaciones = await _context.InformeFinalInterventoriaObservaciones.Where(r => r.EsSupervision == true && r.Archivado == true && (r.EsApoyo == false || r.EsApoyo == null) && r.InformeFinalInterventoriaId == pInformeFinalInterventoriaId).ToListAsync();
             informeFinalInterventoria.ObservacionVigenteSupervisor = _context.InformeFinalInterventoriaObservaciones.Where(r => r.EsSupervision == true && r.InformeFinalInterventoriaId == pInformeFinalInterventoriaId && (r.Archivado == false || r.Archivado == null)).FirstOrDefault();
 
             return informeFinalInterventoria;

@@ -1026,7 +1026,7 @@ namespace asivamosffie.services
                 List<ControversiaActuacion> ListControversiasActuaciones = _context.ControversiaActuacion
                     .Where(r => !(bool)r.Eliminado
                     && r.EsRequiereComite == true
-                    //&& r.EstadoAvanceTramiteCodigo EstadoCodigo == "6"
+                    && r.EstadoCodigo == ConstantCodigoEstadoControversiaActuacion.Enviado_a_comite_tecnico
                     && r.FechaActuacion < pFechaOrdenDelDia
                     )
                     .Include( r => r.ControversiaContractual )
@@ -1179,7 +1179,7 @@ namespace asivamosffie.services
                     {
                         Id = controversiaActuacion.ControversiaActuacionId,
                         FechaSolicitud = Convert.ToDateTime(controversiaActuacion.FechaActuacion.Value.ToString("yyyy-MM-dd")),
-                        NumeroSolicitud = controversiaActuacion.ControversiaContractual.NumeroSolicitud,
+                        NumeroSolicitud = controversiaActuacion.ControversiaContractual.NumeroSolicitud + " - " + "ACT Controversia " + controversiaActuacion.ControversiaActuacionId.ToString("000"),
                         TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales).FirstOrDefault().Nombre,
                         tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales
                     });

@@ -24,7 +24,6 @@ export class DialogObservacionesComponent implements OnInit {
         response => {
           console.log( response );
           this.contratacionProyecto = response[ 'contratacionObservacion' ];
-          console.log( this.contratacionProyecto );
         }
       );
   }

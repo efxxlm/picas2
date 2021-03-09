@@ -63,12 +63,24 @@
                 <b>Solicitud {{ sesionComite.novedadContractual !== undefined ? sesionComite.novedadContractual.numeroSolicitud : sesionComite.numeroSolicitud }} </b>
               </mat-panel-title>
             </mat-expansion-panel-header>
-              <mat-expansion-panel-header
-                class="expansion-style--header"
-                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.controversiaContractual"
-              >
+              <mat-expansion-panel-header class="expansion-style--header"
+                                          *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.controversiaContractual">
                 <mat-panel-title class="expansion-style--title sub-expansion">
                   <b>Solicitud {{ sesionComite.controversiaContractual !== undefined ? sesionComite.controversiaContractual.numeroSolicitud : sesionComite.numeroSolicitud }} </b>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+
+              <mat-expansion-panel-header class="expansion-style--header"
+                                          *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.actualizacionProcesoSeleccion">
+                <mat-panel-title class="expansion-style--title sub-expansion">
+                  <b>Solicitud {{ sesionComite.numeroSolicitud }} </b>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+
+              <mat-expansion-panel-header class="expansion-style--header"
+                                          *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.evaluacionProceso">
+                <mat-panel-title class="expansion-style--title sub-expansion">
+                  <b>Solicitud {{ sesionComite.numeroSolicitud }} </b>
                 </mat-panel-title>
               </mat-expansion-panel-header>
 
@@ -109,6 +121,20 @@
               >
                 <mat-panel-title class="expansion-style--title sub-expansion">
                   <b>Solicitud {{ sesionComite.controversiaContractual.numeroSolicitud }} </b>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+
+              <mat-expansion-panel-header class="expansion-style--header"
+                                          *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.actualizacionProcesoSeleccion">
+                <mat-panel-title class="expansion-style--title sub-expansion">
+                  <b>Solicitud {{ sesionComite.numeroSolicitud }} </b>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+
+              <mat-expansion-panel-header class="expansion-style--header"
+                                          *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.evaluacionProceso">
+                <mat-panel-title class="expansion-style--title sub-expansion">
+                  <b>Solicitud {{ sesionComite.numeroSolicitud }} </b>
                 </mat-panel-title>
               </mat-expansion-panel-header>
 

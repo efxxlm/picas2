@@ -14,10 +14,10 @@
   </div>
 
   <div class="d-flex justify-content-center">
-    <p class="solicitud" *ngIf="objetoDisponibilidad.tipoSolicitudCodigo === '1'">
+    <p class="solicitud" *ngIf="objetoDisponibilidad.tipoSolicitudCodigo === '1' && !objetoDisponibilidad.esNovedadContractual">
       <strong>Contratación</strong>
     </p>
-    <p class="solicitud" *ngIf="objetoDisponibilidad.tipoSolicitudCodigo === '3'">
+    <p class="solicitud" *ngIf="objetoDisponibilidad.tipoSolicitudCodigo === '1' && objetoDisponibilidad.esNovedadContractual">
       <strong>Modificación Contractual</strong>
     </p>
     <p class="solicitud" *ngIf="objetoDisponibilidad.fechaComiteTecnicoNotMapped">
@@ -26,12 +26,12 @@
     </p>
   </div>
 
-  <mat-card class="shipping-card var-main-gris mt-1em" style="display: none">
+  <mat-card class="shipping-card var-main-gris mt-1em" *ngIf="objetoDisponibilidad.esNovedadContractual">
     <mat-card-content>
-      <p><b>DDP:</b>DDP_PI_007</p>
-      <p><b>Valor DDP:</b> $60.000.000</p>
+      <p><b>DDP:</b>{{ddpsolicitud}}</p>
+      <p><b>Valor DDP:</b> {{ddpvalor|currency:'':'symbol':'3.0'}}</p>
       <p><b>Detalle de la modificación:</b></p>
-      <p>Se realiza adición de recursos para obras complementarias</p>
+      <p>{{ddpdetalle}}</p>
     </mat-card-content>
   </mat-card>
 
@@ -118,6 +118,7 @@
                 (keypress)="validateNumberKeypress($event)"
                 onKeyPress="if(this.value.length>=this.maxLength) return false;"
                 oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                [readonly]="ddpsolicitud"
               />
             </mat-form-field>
             <span
@@ -175,6 +176,7 @@
                 (keypress)="validateNumberKeypress($event)"
                 onKeyPress="if(this.value.length>=this.maxLength) return false;"
                 oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                [readonly]="ddpsolicitud"
               />
             </mat-form-field>
             <span
@@ -231,8 +233,8 @@
           formControlName="objeto"
           #obsGestionSst
           required
-        >
-        </quill-editor>
+          [readonly]="ddpsolicitud"
+        ></quill-editor>
       </div>
       <span class="contador miles" *ngIf="addressForm.get('objeto').value">
         {{ 1000 - textoLimpio(obsGestionSst.quillEditor, 1000) }}
