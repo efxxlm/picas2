@@ -13,8 +13,12 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public dynamic AportanteNombre { get; set; }
 
+        [NotMapped]
+        public dynamic SaldoFuente { get; set; }   
+        
+        [NotMapped]
+        public dynamic ConsignadoEnFuente { get; set; }
 
- 
     }
 }
 

@@ -807,19 +807,26 @@ namespace asivamosffie.services
                         }
                     }
                 }
+                 
+                //Logica tomada de _budgetAvailabilityService  ReemplazarDatosDDP "FABER"
 
-               
                 foreach (var DisponibilidadPresupuestal in contratacion.DisponibilidadPresupuestal)
                 {
                     foreach (var GestionFuenteFinanciacion in DisponibilidadPresupuestal.GestionFuenteFinanciacion)
                     {
                         GestionFuenteFinanciacion.FuenteNombre = _context.Dominio.Where(x => x.Codigo == GestionFuenteFinanciacion.FuenteFinanciacion.FuenteRecursosCodigo
                                     && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
-                        GestionFuenteFinanciacion.AportanteNombre= _budgetAvailabilityService.getNombreAportante(GestionFuenteFinanciacion.FuenteFinanciacion.Aportante);
+                        GestionFuenteFinanciacion.AportanteNombre = _budgetAvailabilityService.getNombreAportante(GestionFuenteFinanciacion.FuenteFinanciacion.Aportante);
 
                         GestionFuenteFinanciacion.ValorSolicitado = GestionFuenteFinanciacion.ValorSolicitado;
+
+                        GestionFuenteFinanciacion.SaldoFuente = _context.GestionFuenteFinanciacion.Where(
+                              x => x.FuenteFinanciacionId == GestionFuenteFinanciacion.FuenteFinanciacionId &&
+                              x.DisponibilidadPresupuestalProyectoId != GestionFuenteFinanciacion.DisponibilidadPresupuestalProyectoId).Sum(x => x.ValorSolicitado);
+
+                        GestionFuenteFinanciacion.ConsignadoEnFuente = _context.FuenteFinanciacion.Where(x => x.FuenteFinanciacionId == GestionFuenteFinanciacion.FuenteFinanciacionId).Sum(x => x.ValorFuente);
                     }
-                } 
+                }
                 return contratacion;
             }
             catch (Exception ex)
