@@ -702,6 +702,9 @@ namespace asivamosffie.services
 
                 Contratacion contratacion = await _context.Contratacion.Where(r => r.ContratacionId == pContratacionId)
                           .Include(r => r.DisponibilidadPresupuestal)
+                             .ThenInclude(r => r.GestionFuenteFinanciacion)
+                                 .ThenInclude(r=> r.FuenteFinanciacion) 
+
                           .Include(r => r.Contratista)
                           .Include(r => r.Contrato)
                           .Include(r => r.ContratacionProyecto)
