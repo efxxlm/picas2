@@ -1,29 +1,37 @@
 <div class="container text-center">
     <div class="text-right">
         <!-- valor 1 es quemado-->
-        <a routerLink="/registrarActuacionesControversiasContractuales/actualizarTramite/1" mat-button color="primary"
+        <a routerLink="/registrarActuacionesControversiasContractuales/actualizarTramite/{{this.controversiaID}}" mat-button color="primary"
             class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
         </a>
     </div>
     <h1 class="title-menu--h1">
-        Ver detalle actuación derivada ACT_derivada0001
+        Ver detalle actuación derivada {{actuacionDerivadaInfo?.numeroActuacionDerivada}}
     </h1>
-    <p class="info-sub-title textoGris">
-        <span>Número de solicitud: <b>CO001</b></span>
-        <span>Número de contrato: <b>C223456789</b></span>
-        <span>Tipo de controversia: <b>Terminación anticipada por incumplimiento (TAI)</b></span>
+    <p class="info-sub-title">
+        <span>Número de solicitud: <b>{{controversia?.controversiaContractual.numeroSolicitud}}</b></span>
+        <span>Número de contrato: <b>{{controversia?.numeroContrato}}</b></span>
+        <span>Tipo de controversia: <b>{{controversia?.tipoControversia}}</b></span>
     </p>
     <mat-card class="shipping-card mainGris">
         <mat-card-content align="left">
-            <p><strong>Actuación en la que se requiere participación o insumo de la fiduciaria: </strong><em>Solicitar
-                descargos al contratista de obra</em></p>
-            <p><strong>Fecha de la actuación adelantada: </strong><em>20/07/2020</em></p>
+            <p><strong>Actuación en la que se requiere participación o insumo de la fiduciaria: </strong>{{controversia?.numeroActuacionFormat}}</p>
+            <p><strong>Fecha de la actuación adelantada: </strong>{{controversia?.fechaActuacion | date:
+                'dd/MM/yyyy'}}</p>
             <p><strong>Descripción de la actuación adelantada: </strong></p>
-            <p><em>Actuación 1 se cumple tiempo de desarrollo de esta</em></p>
-            <p><strong>Estado de la actuación derivada: </strong><em>Cumplida</em></p>
+            <p><em><div [innerHtml]="actuacionDerivadaInfo?.descripciondeActuacionAdelantada"></div></em></p>
+            <div *ngIf="actuacionDerivadaInfo?.estadoActuacionDerivadaCodigo=='1'">
+                <p><strong>Estado de la actuación derivada: </strong><em>Cumplida</em></p>
+            </div>
+            <div *ngIf="actuacionDerivadaInfo?.estadoActuacionDerivadaCodigo=='2'">
+                <p><strong>Estado de la actuación derivada: </strong><em>No cumplida</em></p>
+            </div>
+            <div *ngIf="actuacionDerivadaInfo?.estadoActuacionDerivadaCodigo=='3'">
+                <p><strong>Estado de la actuación derivada: </strong><em>Finalizada</em></p>
+            </div>
             <p><strong>Observaciones: </strong></p>
-            <p><em>Cumplida</em></p>
+            <p><em><div [innerHtml]="actuacionDerivadaInfo?.observaciones"></div></em></p>
         </mat-card-content>
     </mat-card>
     <mat-card class="shipping-card mainGris">
@@ -33,7 +41,7 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content style="text-align: left;">
-            <p><b>URL con soporte:</b> <em>http://www.asivamosffie.com</em></p>
+            <p><b>URL con soporte:</b> <em>{{actuacionDerivadaInfo?.rutaSoporte}}</em></p>
         </mat-card-content>
     </mat-card>
 </div>

@@ -1,6 +1,6 @@
 <div class="container text-center">
     <div class="text-right">
-        <a routerLink="/registrarActuacionesControversiasContractuales/actualizarTramite/{{this.controversiaID}}"
+        <a routerLink="/registrarActuacionesControversiasContractuales/actualizarTramite/{{this.controversiaID}}" mat-button color="primary" class="btn-regresar">
             mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
         </a>
@@ -16,8 +16,7 @@
     <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
         <mat-card class="shipping-card">
             <mat-card-content align="left">
-                <p><strong>Actuación en la que se requiere participación o insumo de la fiduciaria:
-                    </strong>{{controversia?.numeroActuacionFormat}}</p>
+                <p><strong>Actuación en la que se requiere participación o insumo de la fiduciaria: </strong>{{controversia?.numeroActuacionFormat}}</p>
                 <p><strong>Fecha de la actuación adelantada: </strong>{{controversia?.fechaActuacion | date:
                     'dd/MM/yyyy'}}</p>
                 <div class="row">
