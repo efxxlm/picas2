@@ -27,6 +27,6 @@ namespace asivamosffie.model.Models
         public dynamic TablaFinanciera { get; set; }
 
         [NotMapped]
-        public string InfoProyecto { get; set; }
+        public dynamic InfoProyecto { get; set; }
     }
 }
