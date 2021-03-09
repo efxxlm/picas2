@@ -248,6 +248,7 @@ export interface SesionTemaVoto{
 }
 
 export interface ComiteGrilla{
+    fechaOrdenDia: any;
     id?: number,
     fechaComite?: string,
     numeroComite?: string,
