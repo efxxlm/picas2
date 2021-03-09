@@ -71,10 +71,12 @@ export class FormContratacionComponent implements OnInit {
         this.commonSvc.modalidadesContrato()
         .subscribe( modalidadContrato => {
           this.contratacion = resp;
+          console.log( this.contratacion );
           if ( resp.contrato.length > 0 ) {
             let rutaDocumento;
             if ( resp.contrato[0].rutaDocumento !== undefined ) {
               rutaDocumento = resp.contrato[0].rutaDocumento.split( /[^\w\s]/gi );
+              console.log( rutaDocumento );
               rutaDocumento = `${ rutaDocumento[ rutaDocumento.length -2 ] }.${ rutaDocumento[ rutaDocumento.length -1 ] }`;
             } else {
               rutaDocumento = null;
