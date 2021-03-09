@@ -10,15 +10,14 @@
         Registrar avance en actuaciones derivadas
     </h1>
     <p class="info-sub-title">
-        <span>Número de solicitud: <b>{{controversia?.numeroActuacionFormat}}</b></span>
+        <span>Número de solicitud: <b>{{controversia?.controversiaContractual.numeroSolicitud}}</b></span>
         <span>Número de contrato: <b>{{controversia?.numeroContrato}}</b></span>
         <span>Tipo de controversia: <b>{{controversia?.tipoControversia}}</b></span>
     </p>
     <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
         <mat-card class="shipping-card">
             <mat-card-content align="left">
-                <p><strong>Actuación en la que se requiere participación o insumo de la fiduciaria: </strong></p>
-                <div [innerHtml]="controversia?.numeroActuacionFormat"></div>
+                <p><strong>Actuación en la que se requiere participación o insumo de la fiduciaria: </strong>{{controversia?.numeroActuacionFormat}}</p>
                 <p><strong>Fecha de la actuación adelantada: </strong>{{controversia?.fechaActuacion | date:
                     'dd/MM/yyyy'}}</p>
                 <div class="row">
