@@ -75,9 +75,9 @@ export class FormContratacionComponent implements OnInit {
           if ( resp.contrato.length > 0 ) {
             let rutaDocumento;
             if ( resp.contrato[0].rutaDocumento !== undefined ) {
-              rutaDocumento = resp.contrato[0].rutaDocumento.split( /[^\w\s]/gi );
+              rutaDocumento = resp.contrato[0].rutaDocumento.split( /\\/gi );
               console.log( rutaDocumento );
-              rutaDocumento = `${ rutaDocumento[ rutaDocumento.length -2 ] }.${ rutaDocumento[ rutaDocumento.length -1 ] }`;
+              rutaDocumento = rutaDocumento[ rutaDocumento.length -1 ];
             } else {
               rutaDocumento = null;
             };
@@ -153,7 +153,7 @@ export class FormContratacionComponent implements OnInit {
           anchor.click();
 
         },
-        err => this.openDialog( '', `<b>Archivo no encontrado.</b>` )
+        () => this.openDialog( '', `<b>Archivo no encontrado.</b>` )
       );
   };
 

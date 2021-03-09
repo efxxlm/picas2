@@ -85,12 +85,22 @@
               <p><b>Fecha de firma por parte del contratista</b>: {{ form.get( 'fechaFirmaPorParteContratista' ).value | date: 'dd/MM/yyyy' }} </p>
               <p><b>Fecha de envío para la firma de la fiduciaria</b>: {{ form.get( 'fechaEnvioParaFirmaFiduciaria' ).value | date: 'dd/MM/yyyy' }} </p>
               <p><b>Fecha de de firma por parte de la fiduciaria</b>: {{ form.get( 'fechaFirmaPorParteFiduciaria' ).value | date: 'dd/MM/yyyy' }} </p>
-              <p><b>Observaciones</b>: {{ form.get( 'observaciones' ).value}} </p>
-              <p><b>Adjuntar documento suscrito</b>: {{ form.get( 'rutaDocumento' ).value }} </p>
+              <section>
+                <b>Observaciones</b>
+                <div [innerHTML]="form.get( 'observaciones' ).value">
+                  
+                </div>
+              </section>
+              <p><b>Adjuntar documento suscrito</b>: {{ form.get( 'documento' ).value }} </p>
             </mat-card-content>
           </mat-card>
         </div>
 
+        <div class="text-center" style="width: 20%;display: inline-block;">
+          <button mat-raised-button color="accent" class="btn-table" (click)="getDocumento( form.get( 'rutaDocumento' ).value )">
+            Descargar documento
+          </button>
+        </div>
       </mat-expansion-panel>
     </mat-accordion>
   </div>
