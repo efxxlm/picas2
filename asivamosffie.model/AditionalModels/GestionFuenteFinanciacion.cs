@@ -19,6 +19,10 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public dynamic ConsignadoEnFuente { get; set; }
 
+        [NotMapped]
+        public dynamic TipoAportante { get; set; }
+
+
     }
 }
 

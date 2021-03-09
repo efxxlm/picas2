@@ -818,15 +818,20 @@ namespace asivamosffie.services
                                .Include(x => x.FuenteFinanciacion)
                                     .ThenInclude(x => x.Aportante)
                                     .ThenInclude(x => x.CofinanciacionDocumento)
+                                           .Include(x => x.FuenteFinanciacion)
+                                    .ThenInclude(x => x.Aportante)
+                                        .ThenInclude(x => x.TipoAportante)
+                                    .ThenInclude(x => x.CofinanciacionDocumento)
                               .Include(x => x.DisponibilidadPresupuestalProyecto)
-                            .ToList(); 
+                            .ToList();
+
                     DisponibilidadPresupuestal.GestionFuenteFinanciacion = ListGestionFuenteFinanciacion;
-                     
+
                     foreach (var GestionFuenteFinanciacion in DisponibilidadPresupuestal.GestionFuenteFinanciacion)
                     {
                         GestionFuenteFinanciacion.FuenteNombre = GestionFuenteFinanciacion.FuenteFinanciacion.FuenteRecursosCodigo;
                         GestionFuenteFinanciacion.AportanteNombre = _budgetAvailabilityService.getNombreAportante(GestionFuenteFinanciacion.FuenteFinanciacion.Aportante);
-
+                        GestionFuenteFinanciacion.TipoAportante = GestionFuenteFinanciacion.FuenteFinanciacion.Aportante.TipoAportante.Nombre;
                         GestionFuenteFinanciacion.ValorSolicitado = GestionFuenteFinanciacion.ValorSolicitado;
 
                         GestionFuenteFinanciacion.SaldoFuente = _context.GestionFuenteFinanciacion.Where(
