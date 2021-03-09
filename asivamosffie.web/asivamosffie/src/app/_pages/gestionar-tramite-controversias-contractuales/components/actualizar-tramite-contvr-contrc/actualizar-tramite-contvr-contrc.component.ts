@@ -23,50 +23,51 @@ export class ActualizarTramiteContvrContrcComponent implements OnInit {
     this.loadDataContrato(this.controversiaID);
   }
   cambiarTab(opc) {
-    this.selTab=opc;
+    this.selTab = opc;
   }
-  loadDataContrato(id){
-    this.services.GetControversiaContractualById(id).subscribe((data:any)=>{
-      switch(data.tipoControversiaCodigo){
+  loadDataContrato(id) {
+    this.services.GetControversiaContractualById(id).subscribe((data: any) => {
+      switch (data.tipoControversiaCodigo) {
         case '1':
           this.tipoControversia = 'Terminación anticipada por incumplimiento (TAI)';
-        break;
+          break;
         case '2':
           this.tipoControversia = 'Terminación anticipada por imposibilidad de ejecución (TAIE) a solicitud del contratista';
-        break;
+          break;
         case '3':
           this.tipoControversia = 'Arreglo Directo (AD) a solicitud del contratista';
-        break;
+          break;
         case '4':
           this.tipoControversia = 'Otras controversias contractuales (OCC) a solicitud del contratista';
-        break;
+          break;
         case '5':
           this.tipoControversia = 'Terminación anticipada por imposibilidad de ejecución (TAIE) a solicitud del contratante';
-        break;
+          break;
         case '6':
           this.tipoControversia = 'Arreglo Directo (AD) a solicitud del contratante';
-        break;
+          break;
         case '7':
           this.tipoControversia = 'Otras controversias contractuales (OCC) a solicitud del contratante';
-        break;
+          break;
       };
       this.fechaSolicitud = data.fechaSolicitud;
       this.codigoSolicitud = data.numeroSolicitud;
       this.numeroContrato = data.contrato.numeroContrato;
     });
-    this.services.GetListGrillaControversiaActuacion(id).subscribe((data0:any)=>{
+    this.services.GetListGrillaControversiaActuacion(id).subscribe((data0: any) => {
       //cuando hay reclamaciones
-      for(let estado of data0){
-        if(estado.estadoAvanceTramiteCodigo=='14'){
+      for (let estado of data0) {
+        if (estado.estadoAvanceTramiteCodigo == '14') {
           this.tieneReclamaciones.push(estado);
         }
       }
       //cuando hay mesas de trabajo
-      for(let estadoMT of data0){
-        if(estadoMT.requiereMesaTrabajo==true && estadoMT.estadoActuacionCodigo=='2'){
+      for (let estadoMT of data0) {
+        if (estadoMT.requiereMesaTrabajo == true && estadoMT.estadoActuacionCodigo == '2') {
           this.tieneMesasTrabajo.push(estadoMT);
           console.log(this.tieneMesasTrabajo);
+        }
       }
-    })
+    });
   }
 }
