@@ -63,9 +63,9 @@ export class ActualizarTramiteContvrContrcComponent implements OnInit {
       }
       //cuando hay mesas de trabajo
       for(let estadoMT of data0){
-        if(estadoMT.requiereMesaTrabajo==true){
+        if(estadoMT.requiereMesaTrabajo==true && estadoMT.estadoActuacionCodigo=='2'){
           this.tieneMesasTrabajo.push(estadoMT);
-        }
+          console.log(this.tieneMesasTrabajo);
       }
     })
   }

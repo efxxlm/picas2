@@ -29,7 +29,7 @@ export class ControlYTablaMesasTrabajoCcComponent implements OnInit {
   ngOnInit(): void {
     this.services.GetListGrillMesasByControversiaId(this.controversiaID).subscribe((data:any)=>{
       for (let mesas of data){
-        if(mesas.requiereMesaTrabajo==true){
+        if(mesas.requiereMesaTrabajo==true && mesas.estadoActuacionCodigoGeneral=='2'){
           this.dataTable.push(mesas);
         }
       }
