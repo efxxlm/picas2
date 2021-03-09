@@ -37,6 +37,13 @@ namespace asivamosffie.api.Controllers
             Lista.Add(((pMesesContrato - pMesesFase1) - (Lista[0] * 30)));
             return Lista;
         }
+        [Route("StringReplace")]
+        [HttpPost]
+        public async Task<string> StringReplace([FromQuery] string pstring)
+        {
+            pstring = pstring.Replace(@"\", "");
+            return pstring.Replace("/", "");
+        }
 
         [HttpGet]
         [Route("CalculardiasLaborales")]
