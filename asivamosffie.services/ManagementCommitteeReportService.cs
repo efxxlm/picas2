@@ -228,24 +228,47 @@ namespace asivamosffie.services
         {
             try
             {
-                List<ComiteTecnico> ListComiteTecnico = await _context.ComiteTecnico
+                List<ComiteTecnico> ListComiteTecnico = _context.ComiteTecnico
                                                                               .Where(r => r.ComiteTecnicoId == comiteTecnicoId)
                                                                                     .Include(r => r.SesionComentario)
                                                                                     .Include(r => r.SesionComiteTema).ThenInclude(r => r.TemaCompromiso)
-                                                                                    .Include(r => r.SesionParticipante).ThenInclude(r => r.Usuario)
+                                                                                    //.Include(r => r.SesionParticipante).ThenInclude(r => r.Usuario)
                                                                                     .Include(r => r.SesionComiteTecnicoCompromiso).ThenInclude(r => r.CompromisoSeguimiento)
                                                                                     .Include(r => r.SesionComiteSolicitudComiteTecnico).ThenInclude(r => r.SesionSolicitudVoto)
                                                                                     .Include(r => r.SesionComiteSolicitudComiteTecnico).ThenInclude(r => r.SesionSolicitudCompromiso)
                                                                                     .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario).ThenInclude(r => r.SesionSolicitudCompromiso)
                                                                                     .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario).ThenInclude(r => r.SesionSolicitudVoto)
-                                                                                    .ToListAsync();
+                                                                                    .ToList();
 
                 List<Dominio> ListParametricas = _context.Dominio.ToList();
                 List<Contratacion> ListContratacion = _context.Contratacion.ToList();
                 List<ProcesoSeleccion> ListProcesosSelecicon = _context.ProcesoSeleccion.ToList();
 
+                
+
                 foreach (var item in ListComiteTecnico)
                 {
+                    //item.SesionParticipante = new List<SesionParticipante>();
+                    item.SesionParticipante = _context.VSesionParticipante
+                                                                                .Where(r => r.ComiteTecnicoId == item.ComiteTecnicoId)
+                                                                                .ToList()
+                                                                                .ConvertAll(vSesionParticipante => new SesionParticipante() 
+                    //if (sesionParticipantes != null)
+                    {
+                        SesionParticipanteId = vSesionParticipante.SesionParticipanteId,
+                        ComiteTecnicoId = vSesionParticipante.ComiteTecnicoId,
+                        UsuarioId = vSesionParticipante.UsuarioId,
+                        Eliminado = vSesionParticipante.Eliminado,
+                        Usuario = new Usuario()
+                        {
+                            UsuarioId = vSesionParticipante.UsuarioId,
+                            Nombres = vSesionParticipante.Nombres,
+                            Apellidos = vSesionParticipante.Apellidos,
+                            NumeroIdentificacion = vSesionParticipante.NumeroIdentificacion,
+                        }
+                        
+                    });
+
                     if (item.SesionComiteTecnicoCompromiso.Count() > 0)
                     {
                         item.SesionComiteTecnicoCompromiso = item.SesionComiteTecnicoCompromiso.Where(r => !(bool)r.Eliminado).ToList();
