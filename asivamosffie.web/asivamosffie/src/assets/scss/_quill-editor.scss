@@ -83,6 +83,11 @@
     }
   }
 
+  &--max-height.card .ql-container.ql-snow {
+    max-height: calc(96% + 3px);
+    min-height: 3em;
+  }
+
   &.card {
     width: 100%;
 
@@ -116,6 +121,10 @@
         border-color: $secondaryColor;
       }
     }
+
+    &.invalid .ql-container.ql-snow {
+      border-color: $secondaryColor;
+    }
   }
 
   &[required] {
@@ -144,6 +153,3 @@
   }
 }
 
-.quill-editor-style.card.invalid .ql-container.ql-snow {
-  border-color: $secondaryColor;
-}
