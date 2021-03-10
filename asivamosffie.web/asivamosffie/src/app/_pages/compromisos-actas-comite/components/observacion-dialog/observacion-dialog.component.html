@@ -28,7 +28,7 @@
       <ng-container matColumnDef="observacion">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Observación </th>
         <td mat-cell *matCellDef="let element" align="center">
-          <section [innerHTML]="element.observacion"></section>
+          <section [innerHTML]="element.observacion" class="h-modal scroll"></section>
         </td>
       </ng-container>
 

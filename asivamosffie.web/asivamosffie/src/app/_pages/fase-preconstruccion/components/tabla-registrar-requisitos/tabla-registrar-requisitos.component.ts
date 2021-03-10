@@ -59,6 +59,10 @@ export class TablaRegistrarRequisitosComponent implements OnInit {
           this.estadosPreconstruccion = response;
           this.faseUnoPreconstruccionSvc.getListContratacion()
             .subscribe( listas => {
+              if ( listas.length > 0 ) {
+                listas.forEach( registro => registro.fechaAprobacion = registro.fechaAprobacion.split('T')[0].split('-').reverse().join('/') );
+              }
+
               this.dataSource = new MatTableDataSource( listas );
               this.dataSource.sort = this.sort;
               this.dataSource.paginator = this.paginator;

@@ -69,25 +69,17 @@ export class ExpansionInterValidarRequisitosComponent implements OnInit {
               let completo = 0;
 
               for ( const perfil of contratacionProyecto.proyecto.contratoPerfil ) {
-                // tslint:disable-next-line: no-string-literal
                 perfil[ 'tieneObservaciones' ] = null;
-                // tslint:disable-next-line: no-string-literal
-                perfil[ 'verificarObservacion' ] = '';
+                perfil[ 'verificarObservacion' ] = null;
 
                 const tipoPerfil = this.perfilesCv.filter( value => value.codigo === perfil.perfilCodigo );
-                // tslint:disable-next-line: no-string-literal
-                perfil[ 'nombre' ] = tipoPerfil[0].nombre;
-                // tslint:disable-next-line: no-string-literal
+                perfil[ 'nombre' ] = tipoPerfil[0] !== undefined ? tipoPerfil[0].nombre : '';
                 if ( perfil[ 'tieneObservacionSupervisor' ] === undefined ) {
-                  // tslint:disable-next-line: no-string-literal
                   perfil[ 'estadoSemaforo' ] = 'sin-diligenciar';
                   sinDiligenciar++;
                 }
-                // tslint:disable-next-line: no-string-literal
                 if ( perfil[ 'tieneObservacionSupervisor' ] === false ) {
-                  // tslint:disable-next-line: no-string-literal
                   perfil[ 'estadoSemaforo' ] = 'completo';
-                  // tslint:disable-next-line: no-string-literal
                   perfil[ 'tieneObservaciones' ] = false;
                   completo++;
                 }
@@ -99,26 +91,17 @@ export class ExpansionInterValidarRequisitosComponent implements OnInit {
                 }
 
                 if ( observacionTipo3.length > 0 ) {
-                  // tslint:disable-next-line: no-string-literal
                   if (  perfil[ 'tieneObservacionSupervisor' ] === true
                         && observacionTipo3[ observacionTipo3.length - 1 ].observacion === undefined ) {
-                          // tslint:disable-next-line: no-string-literal
                     perfil[ 'estadoSemaforo' ] = 'en-proceso';
-                    // tslint:disable-next-line: no-string-literal
                     perfil[ 'tieneObservaciones' ] = true;
-                    // tslint:disable-next-line: no-string-literal
                     perfil[ 'contratoPerfilObservacionId' ] = observacionTipo3[ observacionTipo3.length - 1 ].contratoPerfilObservacionId;
                   }
-                  // tslint:disable-next-line: no-string-literal
                   if (  perfil[ 'tieneObservacionSupervisor' ] === true
                         && observacionTipo3[ observacionTipo3.length - 1 ].observacion !== undefined ) {
-                    // tslint:disable-next-line: no-string-literal
                     perfil[ 'estadoSemaforo' ] = 'completo';
-                    // tslint:disable-next-line: no-string-literal
                     perfil[ 'tieneObservaciones' ] = true;
-                    // tslint:disable-next-line: no-string-literal
                     perfil[ 'contratoPerfilObservacionId' ] = observacionTipo3[ observacionTipo3.length - 1 ].contratoPerfilObservacionId;
-                    // tslint:disable-next-line: no-string-literal
                     perfil[ 'verificarObservacion' ] = observacionTipo3[ observacionTipo3.length - 1 ].observacion;
                     this.estaEditando = true;
                     this.addressForm.markAllAsTouched();
@@ -127,16 +110,13 @@ export class ExpansionInterValidarRequisitosComponent implements OnInit {
                 }
               }
               if ( sinDiligenciar === contratacionProyecto.proyecto.contratoPerfil.length ) {
-                // tslint:disable-next-line: no-string-literal
                 contratacionProyecto[ 'estadoSemaforo' ] = 'sin-diligenciar';
               }
               if ( completo === contratacionProyecto.proyecto.contratoPerfil.length ) {
-                // tslint:disable-next-line: no-string-literal
                 contratacionProyecto[ 'estadoSemaforo' ] = 'completo';
               }
               if (  ( completo > 0 && completo < contratacionProyecto.proyecto.contratoPerfil.length )
                     || ( sinDiligenciar > 0 && sinDiligenciar < contratacionProyecto.proyecto.contratoPerfil.length ) ) {
-                // tslint:disable-next-line: no-string-literal
                 contratacionProyecto[ 'estadoSemaforo' ] = 'en-proceso';
               }
             }

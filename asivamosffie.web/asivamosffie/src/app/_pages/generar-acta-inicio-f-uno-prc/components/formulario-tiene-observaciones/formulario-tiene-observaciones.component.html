@@ -45,10 +45,10 @@
         class="text-area-quill izqTitle helperWidthText"
         [class.color-secondaryColor]="
           (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
-          (addressForm.get('observaciones').invalid && estaEditando)
+          (addressForm.get('observaciones').invalid)
         "
       >
-        <label for="observaciones" class="text-area-quill--label" style="color: #174193; font-size: 16px">
+        <label for="observaciones" class="text-area-quill--label" [class.colorMainColor]="!(addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched || addressForm.get('observaciones').invalid)">
           Observaciones al acta de inicio
         </label>
         <quill-editor
@@ -66,7 +66,7 @@
       </span>
       <span
         class="contador miles"
-        *ngIf="addressForm.get('observaciones').value === '' || addressForm.get('observaciones').value === null"
+        *ngIf="addressForm.get('observaciones').value === null"
       >
         1000
       </span>
@@ -80,7 +80,7 @@
               matTooltipClass="info-tooltip"
           *ngIf="
             (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
-            (addressForm.get('observaciones').invalid && estaEditando)
+            (addressForm.get('observaciones').invalid)
           "
         />
       </span>

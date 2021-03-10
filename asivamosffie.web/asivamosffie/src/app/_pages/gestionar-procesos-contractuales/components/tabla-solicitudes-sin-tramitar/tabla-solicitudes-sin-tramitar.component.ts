@@ -63,6 +63,10 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
         this.estadoAcordeon.emit( 'en-proceso' );
       };
 
+      if ( dataTable.length > 0 ) {
+        dataTable.forEach( registro => registro.fechaSolicitud !== undefined ? registro.fechaSolicitud = registro.fechaSolicitud.split('T')[0].split('-').reverse().join('/') : '---' );
+      }
+
       this.dataSource = new MatTableDataSource( dataTable );
       this.dataSource.paginator              = this.paginator;
       this.dataSource.sort                   = this.sort;

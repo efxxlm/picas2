@@ -38,6 +38,11 @@ export class TablaRequisitosTecnicosComponent implements OnInit {
   cargarRegistros(){
     this.faseUnoConstruccionSvc.getContractsGrid()
       .subscribe( listas => {
+
+        if ( listas.length > 0 ) {
+          listas.forEach( registro => registro.fechaAprobacion = registro.fechaAprobacion.split('T')[0].split('-').reverse().join('/') );
+        }
+
         this.dataSource                        = new MatTableDataSource( listas );
         this.dataSource.paginator              = this.paginator;
         this.dataSource.sort                   = this.sort;

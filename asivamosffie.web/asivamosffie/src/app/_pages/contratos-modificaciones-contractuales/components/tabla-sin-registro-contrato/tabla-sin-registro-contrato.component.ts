@@ -69,7 +69,9 @@ export class TablaSinRegistroContratoComponent implements OnInit {
           this.sinData.emit( false );
           this.estadoSemaforo.emit( 'completo' );
           return;
-        };
+        } else {
+          this.dataTable.forEach( registro => registro.contratacion.fechaCreacion = registro.contratacion.fechaCreacion.split('T')[0].split('-').reverse().join('/') );
+        }
 
         this.dataSource                        = new MatTableDataSource( this.dataTable );
         this.dataSource.paginator              = this.paginator;

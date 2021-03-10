@@ -17,6 +17,7 @@ namespace asivamosffie.services
 {
     public class RegisterPreContructionPhase1Service : IRegisterPreContructionPhase1Service
     {
+        #region Constructor
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
 
@@ -25,7 +26,9 @@ namespace asivamosffie.services
             _commonService = commonService;
             _context = context;
         }
+        #endregion
 
+        #region Get
         public async Task<List<VRegistrarFase1>> GetListContratacion2()
         {
             return await _context.VRegistrarFase1.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString() && r.TieneFasePreconstruccion.Value > 0).OrderByDescending(r => r.FechaAprobacion).ToListAsync();
@@ -147,7 +150,9 @@ namespace asivamosffie.services
                 return new Contrato();
             }
         }
+        #endregion
 
+        #region CRUD
         public async Task<Respuesta> CreateEditContratoPerfil(Contrato pContrato)
         {
             string CreateEdit = string.Empty;
@@ -166,6 +171,8 @@ namespace asivamosffie.services
                         proyectoOld.FechaModificacion = DateTime.Now;
                         proyectoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
                     }
+                    if (ContratacionProyecto.Proyecto.ContratoPerfil.Count() == 0)
+                        RegistroCompletoContrato = false;
 
                     foreach (var ContratoPerfil in ContratacionProyecto.Proyecto.ContratoPerfil)
                     {
@@ -183,6 +190,9 @@ namespace asivamosffie.services
                             contratoPerfilOld.TieneObservacionApoyo = ContratoPerfil.TieneObservacionApoyo;
                             contratoPerfilOld.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(ContratoPerfil);
                             contratoPerfilOld.TieneObservacionSupervisor = ContratoPerfil.TieneObservacionSupervisor;
+
+                            if (contratoPerfilOld.RegistroCompleto == false)
+                                RegistroCompletoContrato = false;
 
                             foreach (var ContratoPerfilObservacion in ContratoPerfil.ContratoPerfilObservacion)
                             {
@@ -235,6 +245,9 @@ namespace asivamosffie.services
                             ContratoPerfil.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(ContratoPerfil);
                             _context.ContratoPerfil.Add(ContratoPerfil);
 
+                            if (ContratoPerfil.RegistroCompleto == false)
+                                RegistroCompletoContrato = false;
+
                             foreach (var ContratoPerfilObservacion in ContratoPerfil.ContratoPerfilObservacion)
                             {
                                 ContratoPerfilObservacion.Observacion = ContratoPerfilObservacion.Observacion == null ? null : ContratoPerfilObservacion.Observacion.ToUpper();
@@ -247,7 +260,6 @@ namespace asivamosffie.services
                             }
                             ContratoPerfil.ContratoPerfilNumeroRadicado.ToList().ForEach(ContratoPerfilNumeroRadicado =>
                             {
-
                                 if (ContratoPerfilNumeroRadicado.ContratoPerfilNumeroRadicadoId == 0)
                                 {
                                     ContratoPerfilNumeroRadicado.Eliminado = false;
@@ -541,13 +553,15 @@ namespace asivamosffie.services
                         .Where(c => c.ContratoPerfilId == ContratoPerfil.ContratoPerfilId)
                         .Update(
                                   c => new ContratoPerfil
-                                                          {
-                                                              TieneObservacionSupervisor = null,
-                                                              FechaModificacion = DateTime.Now
-                                                          }); 
+                                  {
+                                      TieneObservacionSupervisor = null,
+                                      FechaModificacion = DateTime.Now
+                                  });
             });
         }
+        #endregion
 
+        #region Correos y Alertas Automaticas
         /// <summary>
         /// Correos  Automaticos
         /// </summary>
@@ -612,7 +626,7 @@ namespace asivamosffie.services
 
         private async Task<bool> EnviarCorreo(Contrato contratoMod, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
-            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Tecnica).Include(y => y.Usuario);
+            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Supervisor).Include(y => y.Usuario);
 
             Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.AprobarInicio316);
 
@@ -836,5 +850,7 @@ namespace asivamosffie.services
                 }
             }
         }
+
+        #endregion
     }
 }
