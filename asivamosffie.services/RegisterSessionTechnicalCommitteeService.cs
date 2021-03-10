@@ -1179,7 +1179,7 @@ namespace asivamosffie.services
                     {
                         Id = controversiaActuacion.ControversiaActuacionId,
                         FechaSolicitud = Convert.ToDateTime(controversiaActuacion.FechaActuacion.Value.ToString("yyyy-MM-dd")),
-                        NumeroSolicitud = controversiaActuacion.ControversiaContractual.NumeroSolicitud + " - " + "ACT Controversia " + controversiaActuacion.ControversiaActuacionId.ToString("000"),
+                        NumeroSolicitud = controversiaActuacion.ControversiaContractual.NumeroSolicitud + " - " + controversiaActuacion.NumeroActuacion,
                         TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales).FirstOrDefault().Nombre,
                         tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales
                     });
