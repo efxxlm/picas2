@@ -17,6 +17,7 @@ namespace asivamosffie.services
 {
     public class RegisterPreContructionPhase1Service : IRegisterPreContructionPhase1Service
     {
+        #region Constructor
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
 
@@ -25,7 +26,9 @@ namespace asivamosffie.services
             _commonService = commonService;
             _context = context;
         }
+        #endregion
 
+        #region Get
         public async Task<List<VRegistrarFase1>> GetListContratacion2()
         {
             return await _context.VRegistrarFase1.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString() && r.TieneFasePreconstruccion.Value > 0).OrderByDescending(r => r.FechaAprobacion).ToListAsync();
@@ -147,7 +150,9 @@ namespace asivamosffie.services
                 return new Contrato();
             }
         }
+        #endregion
 
+        #region CRUD
         public async Task<Respuesta> CreateEditContratoPerfil(Contrato pContrato)
         {
             string CreateEdit = string.Empty;
@@ -541,13 +546,15 @@ namespace asivamosffie.services
                         .Where(c => c.ContratoPerfilId == ContratoPerfil.ContratoPerfilId)
                         .Update(
                                   c => new ContratoPerfil
-                                                          {
-                                                              TieneObservacionSupervisor = null,
-                                                              FechaModificacion = DateTime.Now
-                                                          }); 
+                                  {
+                                      TieneObservacionSupervisor = null,
+                                      FechaModificacion = DateTime.Now
+                                  });
             });
         }
-
+        #endregion
+         
+        #region Correos y Alertas Automaticas
         /// <summary>
         /// Correos  Automaticos
         /// </summary>
@@ -836,5 +843,7 @@ namespace asivamosffie.services
                 }
             }
         }
+
+        #endregion
     }
 }
