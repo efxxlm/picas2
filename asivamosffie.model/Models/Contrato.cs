@@ -83,6 +83,7 @@ namespace asivamosffie.model.Models
         public int? SupervisorId { get; set; }
         public int? ApoyoId { get; set; }
         public int? InterventorId { get; set; }
+        public string ObservacionConsideracionesEspeciales { get; set; }
 
         public virtual Contratacion Contratacion { get; set; }
         public virtual ICollection<ContratoConstruccion> ContratoConstruccion { get; set; }

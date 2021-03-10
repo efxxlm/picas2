@@ -209,6 +209,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<Usuario> Usuario { get; set; }
         public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
         public virtual DbSet<VCompromisoSeguimiento> VCompromisoSeguimiento { get; set; }
+        public virtual DbSet<VCuentaBancariaPago> VCuentaBancariaPago { get; set; }
         public virtual DbSet<VDefensaJudicialContratacionProyecto> VDefensaJudicialContratacionProyecto { get; set; }
         public virtual DbSet<VGestionarGarantiasPolizas> VGestionarGarantiasPolizas { get; set; }
         public virtual DbSet<VListaContratacionModificacionContractual> VListaContratacionModificacionContractual { get; set; }
@@ -226,9 +227,9 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VSesionParticipante> VSesionParticipante { get; set; }
         public virtual DbSet<VSolicitudPago> VSolicitudPago { get; set; }
         public virtual DbSet<VValidarSeguimientoSemanal> VValidarSeguimientoSemanal { get; set; }
-        public virtual DbSet<VCuentaBancariaPago> VCuentaBancariaPago { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -4953,22 +4954,20 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<RendimientosIncorporados>(entity =>
             {
+                entity.HasNoKey();
+
                 entity.Property(e => e.CuentaBancaria)
                     .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.FechaRendimientos)
-                   .HasColumnName("FechaRendimientos")
-                   .HasColumnType("datetime");
+                entity.Property(e => e.FechaRendimientos).HasColumnType("datetime");
+
+                entity.Property(e => e.Incorporados).HasColumnType("decimal(25, 3)");
 
                 entity.Property(e => e.ProvisionGravamenFinanciero).HasColumnType("decimal(25, 3)");
 
                 entity.Property(e => e.RendimientoIncorporar).HasColumnType("decimal(25, 3)");
-
-                entity.Property(e => e.Incorporados)
-                    .HasColumnName("Incorporados")
-                    .HasColumnType("decimal(25, 3)");
 
                 entity.Property(e => e.RendimientosIncorporadosId).ValueGeneratedOnAdd();
 
@@ -7240,6 +7239,23 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<VCuentaBancariaPago>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_CuentaBancariaPago");
+
+                entity.Property(e => e.NumeroCuentaBanco)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoPagoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorNetoGiro).HasColumnType("decimal(25, 3)");
+            });
+
             modelBuilder.Entity<VDefensaJudicialContratacionProyecto>(entity =>
             {
                 entity.HasNoKey();
@@ -7976,23 +7992,6 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.VigenciaAporte)
                     .HasForeignKey(d => d.FuenteFinanciacionId)
                     .HasConstraintName("FK_VigenciaAporte_FuenteFinanciacion");
-            });
-
-            modelBuilder.Entity<VCuentaBancariaPago>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToView("V_CuentaBancariaPago");
-
-                entity.Property(e => e.TipoCriterioCodigo)
-                   .HasMaxLength(2)
-                   .IsUnicode(false);
-
-                entity.Property(e => e.NumeroCuentaBanco)
-                   .HasMaxLength(50)
-                   .IsUnicode(false);
-
-                entity.Property(e => e.ValorNetoGiro).HasColumnType("decimal(25, 3)");
             });
 
             OnModelCreatingPartial(modelBuilder);
