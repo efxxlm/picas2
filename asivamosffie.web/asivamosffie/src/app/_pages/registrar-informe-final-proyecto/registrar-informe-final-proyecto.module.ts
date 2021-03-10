@@ -20,6 +20,8 @@ import { VerDetalleInformeFinalComponent } from './components/ver-detalle-inform
 import { DetalleReciboSatisfaccionComponent } from './components/detalle-recibo-satisfaccion/detalle-recibo-satisfaccion.component';
 import { TablaDetalleInformeAnexosComponent } from './components/tabla-detalle-informe-anexos/tabla-detalle-informe-anexos.component';
 import { DialogDetalleObservacionesComponent } from './components/dialog-detalle-observaciones/dialog-detalle-observaciones.component';
+import { TablaObservacionesComponent } from './components/tabla-observaciones/tabla-observaciones.component';
+import { TablaObservacionesReciboSatisfaccionComponent } from './components/tabla-observaciones-recibo-satisfaccion/tabla-observaciones-recibo-satisfaccion.component';
 
 
 @NgModule({
@@ -36,7 +38,9 @@ import { DialogDetalleObservacionesComponent } from './components/dialog-detalle
     VerDetalleInformeFinalComponent,
     DetalleReciboSatisfaccionComponent,
     TablaDetalleInformeAnexosComponent,
-    DialogDetalleObservacionesComponent
+    DialogDetalleObservacionesComponent,
+    TablaObservacionesComponent,
+    TablaObservacionesReciboSatisfaccionComponent
   ],
   entryComponents: [
     DialogTipoDocumentoComponent,

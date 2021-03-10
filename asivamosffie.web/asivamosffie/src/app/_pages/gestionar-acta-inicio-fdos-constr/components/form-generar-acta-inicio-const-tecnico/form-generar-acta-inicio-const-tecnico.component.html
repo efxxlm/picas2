@@ -236,6 +236,7 @@
                     required
                     (keypress)="number($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     type="number"
                     formControlName="mesPlazoEjFase2"
                     #mesPlazoEjFase2
@@ -283,6 +284,7 @@
                     required
                     (keypress)="number($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     type="number"
                     formControlName="diasPlazoEjFase2"
                     #diasPlazoEjFase2

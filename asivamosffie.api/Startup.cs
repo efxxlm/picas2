@@ -60,7 +60,7 @@ namespace asivamosffie.api
             });
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
-            services.Configure<asivamosffie.model.AditionalModels.AppSettings>(appSettingsSection);
+            services.Configure<asivamosffie.model.AditionalModels.MailSettings>(appSettingsSection);
             var appSettings = appSettingsSection.Get<AppSettings>();
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -115,15 +115,22 @@ namespace asivamosffie.api
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-
-
+         
         private void ConfigureDependencyInjection(IServiceCollection services)
         {
             services.AddDbContext<model.Models.devAsiVamosFFIEContext>(options
               => options.UseSqlServer(Configuration.GetConnectionString("asivamosffieDatabase")));
 
             //Agregar Interfaces y clases
+            services.AddTransient<IRegisterValidateSpinOrderService, RegisterValidateSpinOrderService>();
+            services.AddTransient<IRegisterProjectETCService, RegisterProjectETCService>();
+            services.AddTransient<IValidateFulfilmentFinalReportService, ValidateFulfilmentFinalReportService>();
+            services.AddTransient<IGenerateSpinOrderService, GenerateSpinOrderService>();
+            services.AddTransient<IPaymentRequierementsService, PaymentRequierementsService>();
+            services.AddTransient<IRegisterValidatePaymentRequierementsService, RegisterValidatePaymentRequierementsService>();
+            services.AddTransient<IManageCheckListService, ManageCheckListService>();
             services.AddTransient<IValidateFinalReportService, ValidateFinalReportService>();
+            services.AddTransient<IVerifyFinalReportService, VerifyFinalReportService>();
             services.AddTransient<IRegisterFinalReportService, RegisterFinalReportService>();
             services.AddTransient<IValidateWeeklyProgressService, ValidateWeeklyProgressService>();
             services.AddTransient<ICheckWeeklyProgressService, CheckWeeklyProgressService>();
@@ -155,24 +162,23 @@ namespace asivamosffie.api
             services.AddTransient<IDocumentService, DocumentService>();
             services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<IDailyFollowUpService, DailyFollowUpService>();
-            services.AddTransient<IManagementCommitteeReportService, ManagementCommitteeReportService>(); 
+            services.AddTransient<IManagementCommitteeReportService, ManagementCommitteeReportService>();
             services.AddTransient<IContractualControversy, ContractualControversyService>();
             services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>();
             services.AddTransient<IRegisterContractsAndContractualModificationsService, RegisterContractsAndContractualModificationsService>();
-            services.AddTransient<IManagePreContructionActPhase1Service, ManagePreContructionActPhase1Service>(); 
+            services.AddTransient<IManagePreContructionActPhase1Service, ManagePreContructionActPhase1Service>();
             services.AddTransient<IVerifyPreConstructionRequirementsPhase1Service, VerifyPreConstructionRequirementsPhase1Service>();
             services.AddTransient<IJudicialDefense, JudicialDefenseService>();
-            services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>(); 
+            services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>();
             services.AddTransient<IManageContractualProcessesService, ManageContractualProcessesService>();
             services.AddTransient<ITechnicalRequirementsConstructionPhaseService, TechnicalRequirementsConstructionPhaseService>();
-            services.AddTransient<IRegisterPayPerformanceService, RegisterPayPerformanceService>();
             services.AddTransient<ITechnicalCheckConstructionPhase2Service, TechnicalCheckConstructionPhase2Service>();
             services.AddTransient<IActBeginService, ActBeginService>();
             services.AddTransient<IResourceControlService, ResourceControlService>();
             services.AddTransient<IContractualModification, ContractualModificationService>();
             services.AddTransient<IDerivativeActionService, DerivativeActionService>();
             services.AddTransient<IMonitoringURL, MonitoringURLService>();
-            
+
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

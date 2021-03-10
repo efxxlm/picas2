@@ -9,37 +9,45 @@ import { DisponibilidadPresupuestalService } from 'src/app/core/_services/dispon
 export class MenuGenerarDisponibilidadComponent implements OnInit {
 
   verAyuda = false;
-  listaDisponibilidades: any[] = [];
+  listaDisponibilidades: any[]=[];
 
-  constructor(private disponibilidadServices: DisponibilidadPresupuestalService) { }
+  constructor(private disponibilidadServices: DisponibilidadPresupuestalService) {}
 
   ngOnInit(): void {
-    this.disponibilidadServices.GetListGenerarDisponibilidadPresupuestal().subscribe(respuesta => {
-      this.listaDisponibilidades = respuesta;
-
-      this.listaDisponibilidades.forEach(element => {
-        //determino si esta completo o incompleto
-
-        if (element.nombreEstado == 'Con validación presupuestal') {
-          element.completo = 'Completo';
-
-          element.disponibilidadPresupuestal.forEach(element2 => {
-
-            // esta validacion le cambia el estado mas adelante
-            if (element2.numeroDdp == null) {
-              if (element2.estadoRegistro) {
-                element2.estadoRegistro = false;
+    this.disponibilidadServices.GetListGenerarDisponibilidadPresupuestal().subscribe(respuesta => 
+      {
+        this.listaDisponibilidades=respuesta;
+        
+        this.listaDisponibilidades.forEach(element => {
+          //determino si esta completo o incompleto
+          
+          if(element.nombreEstado=='Con validación presupuestal')
+          {            
+            let cantcompleto=0;
+            element.disponibilidadPresupuestal.forEach(element2 => {
+              if(element2.estadoRegistro)
+              {
+                cantcompleto++;
               }
+            });
+            if(cantcompleto==element.disponibilidadPresupuestal.length)
+            {
+              element.completo='Completo';
             }
-
-            if (element2.estadoRegistro !== true) {
-              element.completo = 'Incompleto';
+            else{
+              if(element.disponibilidadPresupuestal.length>0)
+              {
+                element.completo='Incompleto';
+              }
+              else{
+                element.completo='';
+              }
+              
             }
-          });
-        }
-
-      });
-    }
+          }
+         
+        });
+      }
     );
   }
 

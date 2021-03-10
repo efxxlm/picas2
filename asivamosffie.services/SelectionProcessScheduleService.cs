@@ -195,15 +195,61 @@ namespace asivamosffie.services
             {
                 if (procesoSeleccionCronograma != null)
                 {
-                    if(procesoSeleccionCronograma.ProcesoSeleccionMonitoreoId>0)
+                    //Editar
+                    if (procesoSeleccionCronograma.ProcesoSeleccionMonitoreoId>0)
                     {
-                        procesoSeleccionCronograma.FechaModificacion = DateTime.Now;
-                        if (procesoSeleccionCronograma.EnviadoComiteTecnico == true)
+                        ProcesoSeleccionMonitoreo procesoSeleccionMonitoreo = _context.ProcesoSeleccionMonitoreo.Find(procesoSeleccionCronograma.ProcesoSeleccionMonitoreoId);
+
+                        procesoSeleccionMonitoreo.FechaModificacion = DateTime.Now;
+                        procesoSeleccionMonitoreo.EnviadoComiteTecnico = procesoSeleccionCronograma.EnviadoComiteTecnico;
+
+                        if (procesoSeleccionMonitoreo.EnviadoComiteTecnico == true)
                         {
-                            procesoSeleccionCronograma.EstadoActividadCodigo = ConstanCodigoEstadoActividadCronogramaProcesoSeleccion.EnTramite;
+                            procesoSeleccionMonitoreo.EstadoActividadCodigo = ConstanCodigoEstadoActividadCronogramaProcesoSeleccion.EnTramite;
                         }
-                        _context.Update(procesoSeleccionCronograma);
+
+                        // lista de cronograma monitoreo existentes
+                        List<ProcesoSeleccionCronogramaMonitoreo> listaCronogramaMonitoreo = _context.ProcesoSeleccionCronogramaMonitoreo
+                                                                                                        .Where(r => r.ProcesoSeleccionMonitoreoId == procesoSeleccionCronograma.ProcesoSeleccionMonitoreoId)
+                                                                                                        .ToList();
+
+                        // marco eliminados los que no vengan en el servicio
+                        foreach (ProcesoSeleccionCronogramaMonitoreo proceso in listaCronogramaMonitoreo)
+                        {
+                            if (procesoSeleccionCronograma.ProcesoSeleccionCronogramaMonitoreo.Where(r => r.ProcesoSeleccionCronogramaMonitoreoId == proceso.ProcesoSeleccionCronogramaMonitoreoId).Count() == 0)
+                            {
+                                proceso.Eliminado = true;
+                            }
+                        }
+
+
+                        foreach (var proceso in procesoSeleccionCronograma.ProcesoSeleccionCronogramaMonitoreo)
+                        {
+                            if (proceso.ProcesoSeleccionCronogramaMonitoreoId > 0)
+                            {
+                                ProcesoSeleccionCronogramaMonitoreo procesoSeleccionCronogramaMonitoreo = _context.ProcesoSeleccionCronogramaMonitoreo.Find(proceso.ProcesoSeleccionCronogramaMonitoreoId);
+
+                                procesoSeleccionCronogramaMonitoreo.Descripcion = proceso.Descripcion;
+                                procesoSeleccionCronogramaMonitoreo.Eliminado = proceso.Eliminado;
+                                procesoSeleccionCronogramaMonitoreo.EstadoActividadCodigo = proceso.EstadoActividadCodigo;
+                                procesoSeleccionCronogramaMonitoreo.FechaMaxima = proceso.FechaMaxima;
+                                procesoSeleccionCronogramaMonitoreo.FechaModificacion = DateTime.Now;
+                                procesoSeleccionCronogramaMonitoreo.NumeroActividad = proceso.NumeroActividad;
+                                procesoSeleccionCronogramaMonitoreo.UsuarioModificacion = procesoSeleccionCronograma.UsuarioCreacion;
+
+                            }
+                            else
+                            {
+                                proceso.FechaCreacion = DateTime.Now;
+                                proceso.UsuarioCreacion = procesoSeleccionCronograma.UsuarioCreacion;
+
+                                procesoSeleccionMonitoreo.ProcesoSeleccionCronogramaMonitoreo.Add(proceso);
+                                
+                            }
+                            
+                        }
                     }
+                    // nuevo
                     else
                     {
                         
@@ -211,6 +257,34 @@ namespace asivamosffie.services
                         procesoSeleccionCronograma.Eliminado = false;
                         procesoSeleccionCronograma.NumeroProceso = Helpers.Helpers.Consecutive("ACTCRONO", _context.ProcesoSeleccionMonitoreo.Count());
                         procesoSeleccionCronograma.EstadoActividadCodigo = ConstanCodigoEstadoActividadCronogramaProcesoSeleccion.Creado;
+
+                        List<ProcesoSeleccionCronograma> listaCronogramas = _context.ProcesoSeleccionCronograma
+                                                                                        .Where(r => r.ProcesoSeleccionId == procesoSeleccionCronograma.ProcesoSeleccionId)
+                                                                                        .ToList();
+
+                        // marco eliminados los que no vengan en el servicio
+                        foreach (ProcesoSeleccionCronograma proceso in listaCronogramas)
+                        {
+                            if (procesoSeleccionCronograma.ProcesoSeleccionCronogramaMonitoreo.Where(r => r.ProcesoSeleccionCronogramaId == proceso.ProcesoSeleccionCronogramaId).Count() == 0)
+                            {
+                                ProcesoSeleccionCronogramaMonitoreo procesoSeleccionCronogramaMonitoreo = new ProcesoSeleccionCronogramaMonitoreo()
+                                {
+                                    Descripcion = proceso.Descripcion,
+                                    Eliminado = true,
+                                    EstadoActividadCodigo = proceso.EstadoActividadCodigo,
+                                    //FechaCreacion = DateTime.Now,
+                                    FechaMaxima = proceso.FechaMaxima,
+                                    NumeroActividad = proceso.NumeroActividad,
+                                    ProcesoSeleccionCronogramaId = proceso.ProcesoSeleccionCronogramaId,
+                                    //ProcesoSeleccionMonitoreoId = proceso.
+                                    
+                                };
+
+
+                                procesoSeleccionCronograma.ProcesoSeleccionCronogramaMonitoreo.Add(procesoSeleccionCronogramaMonitoreo);
+                            }
+                        }
+
                         foreach (var proceso in procesoSeleccionCronograma.ProcesoSeleccionCronogramaMonitoreo)
                         {                            
                             proceso.FechaCreacion = DateTime.Now;

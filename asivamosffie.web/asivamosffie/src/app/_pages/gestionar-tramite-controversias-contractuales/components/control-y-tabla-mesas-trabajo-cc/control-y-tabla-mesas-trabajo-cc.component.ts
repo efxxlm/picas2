@@ -54,7 +54,7 @@ export class ControlYTablaMesasTrabajoCcComponent implements OnInit {
   finalizarMesaTrabajo(id){
     this.services.FinalizarMesa(id).subscribe((data:any)=>{
       this.router.navigateByUrl('/', { skipLocationChange: true }).then(
-        () => this.router.navigate(['gestionarTramiteControversiasContractuales/actualizarTramiteControversia'])
+        () => this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia'])
       );
     });
   }

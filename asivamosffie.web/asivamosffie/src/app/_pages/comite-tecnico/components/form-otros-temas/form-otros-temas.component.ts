@@ -90,7 +90,7 @@ export class FormOtrosTemasComponent implements OnInit {
 
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
-      e.editor.deleteText(n-1, e.editor.getLength());
+      e.editor.deleteText(n, e.editor.getLength())
     }
   }
 
@@ -203,7 +203,7 @@ export class FormOtrosTemasComponent implements OnInit {
       } else {
         this.openDialog(
           '',
-          '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos</b>'
+          'Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos'
         )
         this.addressForm.get('cuantosCompromisos').setValue(this.compromisos.length)
       }
@@ -218,7 +218,8 @@ export class FormOtrosTemasComponent implements OnInit {
   }
 
   onSubmit() {
-    this.estaEditando = true
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let tema: SesionComiteTema = {
       sesionTemaId: this.sesionComiteTema.sesionTemaId,
       comiteTecnicoId: this.sesionComiteTema.comiteTecnicoId,
@@ -315,8 +316,8 @@ export class FormOtrosTemasComponent implements OnInit {
             this.tieneVotacion = this.sesionComiteTema.requiereVotacion
           })
         this.estaEditando = true;
-        console.log(this.sesionComiteTema.estadoTemaCodigo);
-
+        this.addressForm.markAllAsTouched();
+        // console.log(this.sesionComiteTema.estadoTemaCodigo);
       }
     )
 

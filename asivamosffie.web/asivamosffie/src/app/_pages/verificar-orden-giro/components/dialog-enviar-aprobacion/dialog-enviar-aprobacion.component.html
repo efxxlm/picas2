@@ -1,0 +1,61 @@
+<button mat-button mat-dialog-close class="modal--btn-cerrar" [mat-dialog-close]="null">
+    <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
+</button>
+
+<div class="text-center">
+    <h1 class="title-menu--h1">URL con soporte de orden de giro firmada</h1>
+</div>
+
+<div class="d-flex justify-content-center mt-1em colorMainColor">
+    <p>Número de orden de giro: <b> ODG_Obr 001 </b></p>
+    <p style="margin-left: 2em;">Modalidad de contrato: <b>Tipo B</b></p>
+    <p style="margin-left: 2em;">Número de contrato: <b>N801801</b></p>
+</div>
+
+<section class="container text-center mt-3em" style="width: 95%;">
+    <form [formGroup]="formUrl" (ngSubmit)="guardar()">
+        <mat-card>
+            <div class="col-md-12">
+                <div class="row">
+                  <div class="pr-1">
+                        <label  class="label-left"
+                                for="urlSoporte"
+                                [class.color-secondaryColor]="( formUrl.get('urlSoporte').invalid && formUrl.get('urlSoporte').touched ) || ( formUrl.get('urlSoporte').invalid )">
+                                URL con soporte
+                        </label>
+                  </div>
+                  <div class="col d-flex">
+                        <mat-form-field>
+                            <input  matInput
+                                    type="text"
+                                    maxlength="400"
+                                    formControlName="urlSoporte"
+                                    required>
+                        </mat-form-field>
+                        <span class="icon-incompleto">
+                            <img    class="icon-incompleto--img"
+                                    src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido"
+                                    [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip"
+                                    *ngIf="( formUrl.get('urlSoporte').invalid && formUrl.get('urlSoporte').touched) || (formUrl.get('urlSoporte').invalid )"/>
+                        </span>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex justify-content-center size-text-descriptivo">
+                    <p class="color-text-descriptivo">
+                        <i> 
+                            Indique la ruta en la que se encuentran los documentos de soporte de orden de giro firmada
+                        </i>
+                    </p>
+              </div>
+        </mat-card>
+        <div class="text-center mt-1em">
+            <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="formUrl.dirty === false">
+                <img src="assets/img/icon/guardar.svg">
+            </button>
+        </div>
+    </form>
+</section>

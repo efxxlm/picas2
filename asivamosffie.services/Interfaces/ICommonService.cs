@@ -4,13 +4,24 @@ using System.Text;
 using System.Threading.Tasks;
 using asivamosffie.model.Models;
 using asivamosffie.model.APIModels;
+using asivamosffie.services.Helpers.Enumerator;
 
 namespace asivamosffie.services.Interfaces
 {
     public interface ICommonService
     {
+        bool EnviarCorreo(List<EnumeratorPerfil> ListPerfilesCorreo, Template template);
+
+        Task<dynamic> GetListMenu();
+
+        Task<string> EnumeradorSolicitudPagoExpensasAndOtros();
+
+        Task<string> EnumeradorSolicitudPago(bool esObra);
+
         Task<DateTime> CalculardiasLaborales(int pDias, DateTime pFechaCalcular);
-        Task<DateTime> CalculardiasLaboralesTranscurridos(int pDias, DateTime pFechaCalcular);        
+
+        Task<DateTime> CalculardiasLaboralesTranscurridos(int pDias, DateTime pFechaCalcular);
+
         Task<string> EnumeradorComiteTecnico();
 
         Task<string> EnumeradorComiteFiduciario();
@@ -20,7 +31,7 @@ namespace asivamosffie.services.Interfaces
         Task<string> EnumeradorComiteObra();
 
         Task<List<dynamic>> GetUsuarioByPerfil(int idPerfil);
-  
+
         string GetNombreLocalizacionByLocalizacionId(string pLocalizacionId);
         string GetNombreDepartamentoByIdMunicipio(string pIdMunicipio);
         string GetNombreRegionByIdMunicipio(string pIdDepartamento);
@@ -87,6 +98,6 @@ namespace asivamosffie.services.Interfaces
         Task<InstitucionEducativaSede> GetInstitucionEducativaById(int InstitucionEducativaById);
         Task<List<Usuario>> GetUsuariosByPerfil(int pIdPerfil);
 
-      
+
     }
 }

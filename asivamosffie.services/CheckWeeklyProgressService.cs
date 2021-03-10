@@ -38,22 +38,25 @@ namespace asivamosffie.services
         public async Task<bool> GetValidarRegistroCompletoObservaciones(int pSeguimientoSemanalId, bool esSupervisor)
         {
             try
-            { 
+            {
                 SeguimientoSemanal seguimientoSemanal = _context.SeguimientoSemanal.Find(pSeguimientoSemanalId);
-                _context.SeguimientoSemanal.Attach(seguimientoSemanal);
+                bool RegistroCompleto = await ValidarRegistroCompletoObservacion(seguimientoSemanal, esSupervisor);
                 if (esSupervisor)
                 {
-                    seguimientoSemanal.RegistroCompletoAvalar = await ValidarRegistroCompletoObservacion(seguimientoSemanal, esSupervisor);
-                    _context.Entry(seguimientoSemanal).Property(x => x.RegistroCompletoAvalar).IsModified = true;
+                    _context.Set<SeguimientoSemanal>().Where(s => s.SeguimientoSemanalId == pSeguimientoSemanalId)
+                                                   .Update(s => new SeguimientoSemanal
+                                                   {
+                                                       RegistroCompletoAvalar = RegistroCompleto
+                                                   });
                 }
                 else
                 {
-                    seguimientoSemanal.RegistroCompletoVerificar = await ValidarRegistroCompletoObservacion(seguimientoSemanal, esSupervisor);
-                    _context.Entry(seguimientoSemanal).Property(x => x.RegistroCompletoVerificar).IsModified = true;
+                    _context.Set<SeguimientoSemanal>().Where(s => s.SeguimientoSemanalId == pSeguimientoSemanalId)
+                                                  .Update(s => new SeguimientoSemanal
+                                                  {
+                                                      RegistroCompletoVerificar = RegistroCompleto
+                                                  });
                 }
-
-                _context.SaveChanges();
-
                 return true;
             }
             catch (Exception e)
@@ -585,7 +588,7 @@ namespace asivamosffie.services
                 //}
 
                 List<int> ListSeguimientoSemanalId = _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == seguimientoSemanal.ContratacionProyectoId).Select(r => r.SeguimientoSemanalId).ToList();
-             
+
                 List<Programacion> ListProgramacion = new List<Programacion>();
 
                 Parallel.ForEach(seguimientoSemanal.SeguimientoSemanalAvanceFisico.ToList(), item =>
@@ -885,7 +888,7 @@ namespace asivamosffie.services
 
             try
             {
-                if (pSeguimientoSemanalObservacion.TieneObservacion)
+                if ((bool)pSeguimientoSemanalObservacion.TieneObservacion)
                 {
                     if (pSeguimientoSemanalObservacion.EsSupervisor)
                     {
@@ -900,10 +903,16 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                    if (pSeguimientoSemanalObservacion.EsSupervisor) 
-                        seguimientoSemanal.FechaModificacionAvalar = DateTime.Now; 
-                    else 
-                        seguimientoSemanal.FechaModificacionVerificar = DateTime.Now;  
+                    if (pSeguimientoSemanalObservacion.EsSupervisor)
+                    {
+                        seguimientoSemanal.TieneObservacionSupervisor = ValidarSiTieneObservacionSeguimientoSemanal(pSeguimientoSemanalObservacion.SeguimientoSemanalId, pSeguimientoSemanalObservacion.EsSupervisor);
+                        seguimientoSemanal.FechaModificacionAvalar = DateTime.Now;
+                    }
+                    else
+                    {
+                        seguimientoSemanal.TieneObservacionApoyo = ValidarSiTieneObservacionSeguimientoSemanal(pSeguimientoSemanalObservacion.SeguimientoSemanalId, pSeguimientoSemanalObservacion.EsSupervisor);
+                        seguimientoSemanal.FechaModificacionVerificar = DateTime.Now;
+                    }
                 }
 
                 UpdateObservation(pSeguimientoSemanalObservacion);
@@ -1017,6 +1026,15 @@ namespace asivamosffie.services
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.Error, idAccion, pSeguimientoSemanalObservacion.UsuarioCreacion, ex.InnerException.ToString())
                 };
             }
+        }
+
+        private bool ValidarSiTieneObservacionSeguimientoSemanal(int seguimientoSemanalId, bool esSupervisor)
+        {
+            return _context.SeguimientoSemanalObservacion
+                                             .Where(r => r.SeguimientoSemanalId == seguimientoSemanalId
+                                                 && r.EsSupervisor == esSupervisor
+                                                 && r.TieneObservacion == true
+                                             ).Count() == 0;
         }
 
         private void CreateOrEditObservacionAlertasRelevantes(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion)
@@ -1455,7 +1473,7 @@ namespace asivamosffie.services
 
             if (pSeguimientoSemanalObservacion.TieneObservacion == false)
                 return true;
-             
+
             if (pSeguimientoSemanalObservacion.TieneObservacion == true && !string.IsNullOrEmpty(Helpers.Helpers.HtmlConvertirTextoPlano(Helpers.Helpers.HtmlConvertirTextoPlano(pSeguimientoSemanalObservacion.Observacion))))
                 return true;
 
@@ -1474,7 +1492,7 @@ namespace asivamosffie.services
             else
             {
                 SeguimientoSemanalObservacion seguimientoSemanalObservacionOld = _context.SeguimientoSemanalObservacion.Find(pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId);
-
+                seguimientoSemanalObservacionOld.TieneObservacion = pSeguimientoSemanalObservacion.TieneObservacion;
                 seguimientoSemanalObservacionOld.Observacion = pSeguimientoSemanalObservacion.Observacion;
                 seguimientoSemanalObservacionOld.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
                 seguimientoSemanalObservacionOld.FechaModificacion = DateTime.Now;

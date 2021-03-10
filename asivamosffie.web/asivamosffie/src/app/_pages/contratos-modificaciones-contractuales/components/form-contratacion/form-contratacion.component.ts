@@ -71,11 +71,13 @@ export class FormContratacionComponent implements OnInit {
         this.commonSvc.modalidadesContrato()
         .subscribe( modalidadContrato => {
           this.contratacion = resp;
+          console.log( this.contratacion );
           if ( resp.contrato.length > 0 ) {
             let rutaDocumento;
             if ( resp.contrato[0].rutaDocumento !== undefined ) {
-              rutaDocumento = resp.contrato[0].rutaDocumento.split( /[^\w\s]/gi );
-              rutaDocumento = `${ rutaDocumento[ rutaDocumento.length -2 ] }.${ rutaDocumento[ rutaDocumento.length -1 ] }`;
+              rutaDocumento = resp.contrato[0].rutaDocumento.split( /\\/gi );
+              console.log( rutaDocumento );
+              rutaDocumento = rutaDocumento[ rutaDocumento.length -1 ];
             } else {
               rutaDocumento = null;
             };
@@ -101,10 +103,7 @@ export class FormContratacionComponent implements OnInit {
   getModalidadContrato( modalidadCodigo: string ) {
     if ( this.modalidadContratoArray.length > 0 ) {
         const modalidad = this.modalidadContratoArray.filter( modalidad => modalidad.codigo === modalidadCodigo );
-        
-        if ( modalidad.length > 0 ) {
-          return modalidad[0].nombre;
-        }
+        return modalidad[0].nombre;
     }
   }
 
@@ -154,7 +153,7 @@ export class FormContratacionComponent implements OnInit {
           anchor.click();
 
         },
-        err => this.openDialog( '', `<b>Archivo no encontrado.</b>` )
+        () => this.openDialog( '', `<b>Archivo no encontrado.</b>` )
       );
   };
 

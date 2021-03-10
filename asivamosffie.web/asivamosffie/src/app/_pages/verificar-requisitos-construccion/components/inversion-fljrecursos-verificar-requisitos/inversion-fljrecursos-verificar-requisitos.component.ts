@@ -114,6 +114,7 @@ export class InversionFljrecursosVerificarRequisitosComponent implements OnInit,
 
   descargar() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     this.commonService.getFileById(this.contratoConstruccion.archivoCargueIdFlujoInversion)
       .subscribe(respuesta => {
         let documento = "FlujoInversion.xlsx";

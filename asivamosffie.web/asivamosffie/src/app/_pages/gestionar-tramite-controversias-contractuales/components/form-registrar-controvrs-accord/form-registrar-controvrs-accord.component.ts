@@ -272,6 +272,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
   }
 
   maxLength(e: any, n: number) {
+    // console.log(e.editor.getLength()+" "+n);
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n-1, e.editor.getLength());
     }
@@ -292,6 +293,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
   onSubmit() {
     console.log(this.addressForm.value);
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
 
     let fecha1 = Date.parse(this.addressForm.get('fechaSolicitud').value);
     this.fechaSesion = new Date(fecha1);
@@ -331,7 +333,8 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       if (this.estaCompleto == true && this.addressForm.value.procedeSolicitud == false && this.addressForm.value.motivosRechazo != null) {
         estadoControversia = "2";
       }
-      if (this.estaCompleto == false && this.addressForm.value.procedeSolicitud == true && this.addressForm.value.requeridoComite == null) {
+      if ((this.estaCompleto == false && this.addressForm.value.procedeSolicitud == true && this.addressForm.value.requeridoComite == null)
+        || (this.estaCompleto == true && this.addressForm.value.procedeSolicitud == true && this.addressForm.value.requeridoComite == false)) {
         estadoControversia = "3";
       }
       if (this.estaCompleto == true && this.addressForm.value.procedeSolicitud == true && this.addressForm.value.requeridoComite == true) {

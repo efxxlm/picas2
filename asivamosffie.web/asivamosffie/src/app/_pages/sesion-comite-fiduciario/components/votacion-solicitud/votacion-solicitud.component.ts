@@ -132,6 +132,7 @@ export class VotacionSolicitudComponent implements OnInit {
 
   onSubmit() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     console.log(this.data.sesionComiteSolicitud);
 
     let sesionComiteSolicitud: SesionComiteSolicitud = {

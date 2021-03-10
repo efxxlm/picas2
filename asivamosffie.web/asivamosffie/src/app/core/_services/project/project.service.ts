@@ -194,6 +194,8 @@ export interface Proyecto{
   enConvocatoria?:boolean,
   convocatoriaId?:number,
   cantPrediosPostulados?:number,
+  fechaInicioEtapaObraTemporal?: Date,
+  fechaFinEtapaObraTemporal?: Date,
   tipoPredioCodigo?:string,
   predioPrincipalId?:number,
   valorObra?:number,
@@ -214,8 +216,6 @@ export interface Proyecto{
   coordinacionResponsableCodigo?:string ,
   fechaInicioEtapaObra?: Date,
   fechaFinEtapaObra?: Date,
-  fechaInicioEtapaObraTemporal?: Date,
-  fechaFinEtapaObraTemporal?: Date,
 
   //no modelado
   cantidadAportantes?:number;

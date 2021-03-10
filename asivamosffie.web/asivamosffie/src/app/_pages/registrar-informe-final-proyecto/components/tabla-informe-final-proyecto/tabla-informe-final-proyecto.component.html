@@ -120,7 +120,7 @@
         </a> -->
         <a
           *ngIf="
-            element.estadoInformeCod === '3'
+            element.estadoInformeCod === '3' || element.estadoInformeCod === '7' ||  element.estadoInformeCod === '5' ||  element.estadoInformeCod === '6'
           "
           mat-button
           mat-raised-button
@@ -132,7 +132,7 @@
           Ver detalle
         </a>
         <button
-        *ngIf="element.estadoInformeCod === '2'"
+        *ngIf="element.estadoInformeCod === '2' || element.estadoInformeCod === '8'"
           mat-button
           mat-raised-button
           color="accent"
@@ -142,16 +142,17 @@
         >
         Enviar informe a validación
       </button>
-       <button
-       *ngIf="element.estadoInformeCod === '4'"
-          mat-button
-          mat-raised-button
-          color="accent"
-          class="btn-table"
-          type="button"
-        >
-        Ver observaciones de supervisor
-      </button>
+      <a
+      *ngIf="element.estadoInformeCod === '4' || element.estadoInformeCod === '8'"
+        mat-button
+        mat-raised-button
+        color="accent"
+        class="btn-table"
+        [routerLink]="['registrar', element.proyectoId]"
+      >
+        <span>Ver detalle / Editar
+        </span>
+      </a>
       </td>
     </ng-container>
 

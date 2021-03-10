@@ -1,4 +1,4 @@
-<div class="container" >
+<div class="container">
   <div class="text-right">
     <a routerLink="../../" mat-button color="primary" class="btn-regresar">
       <img src="assets/img/icon/regresar.svg" alt="Regresar">
@@ -9,7 +9,7 @@
       Registrar seguimiento diario {{ proyecto.llaveMen }}
     </h1>
     <p class="colorMainColor mt-05em">
-      <span class="mx-1em">{{ proyecto.fechaRegistroProyecto | date: 'dd/MM/yyyy' }}</span>      
+      <span class="mx-1em">{{ proyecto.fechaRegistroProyecto | date: 'dd/MM/yyyy' }}</span>
       <span class="mx-1em">{{ proyecto.tipoIntervencion }}</span>
       <span class="mx-1em">{{ proyecto.departamento }}</span>
       <span class="mx-1em">{{ proyecto.municipio }}</span>
@@ -26,20 +26,17 @@
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left"
-                  [class.color-secondaryColor]="addressForm.get('fechaSeguimiento').invalid && addressForm.get('fechaSeguimiento').touched">
+                <label class="label-left" for="fechaSeguimiento" [ngClass]="{
+                  'color-secondaryColor':
+                    (addressForm.get('fechaSeguimiento').invalid && addressForm.get('fechaSeguimiento').touched) ||
+                    (addressForm.get('fechaSeguimiento').invalid && estaEditando) }">
                   Fecha de seguimiento
                 </label>
               </div>
               <div class="col d-flex align-items-center">
                 <mat-form-field class="example-full-width">
-                  <input matInput 
-                    [matDatepicker]="picker" 
-                    [matDatepickerFilter]="filtroCalendario"
-                    placeholder="DD/MM/AAAA" 
-                    formControlName="fechaSeguimiento"
-                    required 
-                    readonly 
+                  <input matInput [matDatepicker]="picker" [matDatepickerFilter]="filtroCalendario"
+                    placeholder="DD/MM/AAAA" formControlName="fechaSeguimiento" required readonly
                     (click)="picker.open()">
                   <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
@@ -47,6 +44,14 @@
                   <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
                 </button>
               </div>
+              <span class="icon-incompleto">
+                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                  [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip" *ngIf="
+                  (addressForm.get('fechaSeguimiento').invalid && addressForm.get('fechaSeguimiento').touched) ||
+                  (addressForm.get('fechaSeguimiento').invalid && estaEditando)
+                  " />
+              </span>
             </div>
           </div>
         </div>
@@ -58,8 +63,10 @@
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left" for="disponibilidadPersonal"
-                  [class.color-secondaryColor]="addressForm.get('disponibilidadPersonal').invalid && addressForm.get('disponibilidadPersonal').touched">
+                <label class="label-left" for="disponibilidadPersonal" [ngClass]="{
+                  'color-secondaryColor':
+                    (addressForm.get('disponibilidadPersonal').invalid && addressForm.get('disponibilidadPersonal').touched) ||
+                    (addressForm.get('disponibilidadPersonal').invalid && estaEditando) }">
                   Disponibilidad de personal
                 </label>
               </div>
@@ -72,6 +79,14 @@
                   </mat-select>
                 </mat-form-field>
               </div>
+              <span class="icon-incompleto">
+                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                  [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip" *ngIf="
+                  (addressForm.get('disponibilidadPersonal').invalid && addressForm.get('disponibilidadPersonal').touched) ||
+                  (addressForm.get('disponibilidadPersonal').invalid && estaEditando)
+                  " />
+              </span>
             </div>
           </div>
         </div>
@@ -79,8 +94,10 @@
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left"
-                  [class.color-secondaryColor]="addressForm.get('cantidadPersonalOperativoProgramado').invalid && addressForm.get('cantidadPersonalOperativoProgramado').touched">
+                <label class="label-left" for="cantidadPersonalOperativoProgramado" [ngClass]="{
+                  'color-secondaryColor':
+                    (addressForm.get('cantidadPersonalOperativoProgramado').invalid && addressForm.get('cantidadPersonalOperativoProgramado').touched) ||
+                    (addressForm.get('cantidadPersonalOperativoProgramado').invalid && estaEditando) }">
                   Cantidad de personal operativo programado
                 </label>
               </div>
@@ -89,11 +106,20 @@
                   <input matInput #cantidadPersonalOperativoProgramado type="number"
                     formControlName="cantidadPersonalOperativoProgramado" maxlength="3" min="1" max="999" required
                     (keypress)="validateNumberKeypress($event)"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                 </mat-form-field>
                 <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
                   matTooltipClass="info-tooltip">{{3 - cantidadPersonalOperativoProgramado.value.length}}</span>
               </div>
+              <span class="icon-incompleto">
+                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                  [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip" *ngIf="
+                  (addressForm.get('cantidadPersonalOperativoProgramado').invalid && addressForm.get('cantidadPersonalOperativoProgramado').touched) ||
+                  (addressForm.get('cantidadPersonalOperativoProgramado').invalid && estaEditando)
+                  " />
+              </span>
             </div>
           </div>
         </div>
@@ -101,8 +127,10 @@
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left"
-                  [class.color-secondaryColor]="addressForm.get('cantidadPersonalOperativoTrabajando').invalid && addressForm.get('cantidadPersonalOperativoTrabajando').touched">
+                <label class="label-left" for="cantidadPersonalOperativoTrabajando" [ngClass]="{
+                  'color-secondaryColor':
+                    (addressForm.get('cantidadPersonalOperativoTrabajando').invalid && addressForm.get('cantidadPersonalOperativoTrabajando').touched) ||
+                    (addressForm.get('cantidadPersonalOperativoTrabajando').invalid && estaEditando) }">
                   Cantidad de personal operativo trabajando
                 </label>
               </div>
@@ -111,11 +139,20 @@
                   <input matInput #cantidadPersonalOperativoTrabajando type="number"
                     formControlName="cantidadPersonalOperativoTrabajando" maxlength="3" min="1" max="999" required
                     (keypress)="validateNumberKeypress($event)"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                 </mat-form-field>
                 <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
                   matTooltipClass="info-tooltip">{{3 - cantidadPersonalOperativoTrabajando.value.length}}</span>
               </div>
+              <span class="icon-incompleto">
+                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                  [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip" *ngIf="
+                  (addressForm.get('cantidadPersonalOperativoTrabajando').invalid && addressForm.get('cantidadPersonalOperativoTrabajando').touched) ||
+                  (addressForm.get('cantidadPersonalOperativoTrabajando').invalid && estaEditando)
+                  " />
+              </span>
             </div>
           </div>
         </div>
@@ -123,8 +160,10 @@
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left" for="retrasoPersonal"
-                  [class.color-secondaryColor]="addressForm.get('retrasoPersonal').invalid && addressForm.get('retrasoPersonal').touched">
+                <label class="label-left" for="retrasoPersonal" [ngClass]="{
+                  'color-secondaryColor':
+                    (addressForm.get('retrasoPersonal').invalid && addressForm.get('retrasoPersonal').touched) ||
+                    (addressForm.get('retrasoPersonal').invalid && estaEditando) }">
                   ¿Se generó retraso en la obra?
                 </label>
               </div>
@@ -136,6 +175,14 @@
                   </mat-select>
                 </mat-form-field>
               </div>
+              <span class="icon-incompleto">
+                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                  [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip" *ngIf="
+                  (addressForm.get('retrasoPersonal').invalid && addressForm.get('retrasoPersonal').touched) ||
+                  (addressForm.get('retrasoPersonal').invalid && estaEditando)
+                  " />
+              </span>
             </div>
           </div>
         </div>
@@ -143,8 +190,10 @@
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left"
-                  [class.color-secondaryColor]="addressForm.get('horasRetrasoPersonal').invalid && addressForm.get('horasRetrasoPersonal').touched">
+                <label class="label-left" for="horasRetrasoPersonal" [ngClass]="{
+                  'color-secondaryColor':
+                    (addressForm.get('horasRetrasoPersonal').invalid && addressForm.get('horasRetrasoPersonal').touched) ||
+                    (addressForm.get('horasRetrasoPersonal').invalid && estaEditando) }">
                   Número de horas de retraso generado
                 </label>
               </div>
@@ -152,38 +201,67 @@
                 <mat-form-field class="full-width">
                   <input matInput #horasRetrasoPersonal type="number" formControlName="horasRetrasoPersonal"
                     maxlength="1" min="1" max="9" required (keypress)="validateNumberKeypress($event)"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                 </mat-form-field>
                 <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
                   matTooltipClass="info-tooltip">{{1 - horasRetrasoPersonal.value.length}}</span>
               </div>
-            </div>
-          </div>
-        </div>
-        <div>
-          <div>
-            <span class="label-left"
-              [class.color-secondaryColor]="addressForm.get('disponibilidadPersonalObservaciones').invalid && addressForm.get('disponibilidadPersonalObservaciones').touched">
-              Observaciones
-            </span>
-          </div>
-          <div class="col d-flex">
-            <quill-editor class="quill-editor-style card position-relative" [styles]="editorStyle" [modules]="config"
-              (onContentChanged)="maxLength($event, 500)" formControlName="disponibilidadPersonalObservaciones"
-              [class.invalid]="addressForm.get('disponibilidadPersonalObservaciones').invalid && addressForm.get('disponibilidadPersonalObservaciones').touched"
-              required>
-            </quill-editor>
-            <div class="d-flex align-items-center">
-              <span class="contador miles mt-3em" *ngIf="addressForm.get('disponibilidadPersonalObservaciones').value">
-                {{500 - (textoLimpio(addressForm.get('disponibilidadPersonalObservaciones').value)>5000?5000:textoLimpio(addressForm.get('disponibilidadPersonalObservaciones').value))}}
-              </span>
-              <span class="contador miles mt-3em" *ngIf="!addressForm.get('disponibilidadPersonalObservaciones').value">
-                500
+              <span class="icon-incompleto">
+                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                  [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip" *ngIf="
+                  (addressForm.get('horasRetrasoPersonal').invalid && addressForm.get('horasRetrasoPersonal').touched) ||
+                  (addressForm.get('horasRetrasoPersonal').invalid && estaEditando)
+                  " />
               </span>
             </div>
           </div>
         </div>
-
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="disponibilidadPersonalObservaciones" [ngClass]="{
+                            'color-secondaryColor':
+                              (addressForm.get('disponibilidadPersonalObservaciones').invalid && addressForm.get('disponibilidadPersonalObservaciones').touched) ||
+                              (addressForm.get('disponibilidadPersonalObservaciones').invalid && estaEditando)
+                          }">Observaciones</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div>
+              <div class="d-flex align-items-center">
+                <div class="text-area-quill auxBox">
+                  <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config" required
+                    (onContentChanged)="maxLength($event, 500)" formControlName="disponibilidadPersonalObservaciones"
+                    #disponibilidadPersonalObservaciones [class.invalid]="
+                                (addressForm.get('disponibilidadPersonalObservaciones').invalid && addressForm.get('disponibilidadPersonalObservaciones').touched) ||
+                                (addressForm.get('disponibilidadPersonalObservaciones').invalid && estaEditando)
+                              ">
+                  </quill-editor>
+                </div>
+                <span class="contador miles" *ngIf="addressForm.controls.disponibilidadPersonalObservaciones.value">
+                  {{500 - (textoLimpio(disponibilidadPersonalObservaciones.quillEditor,500))}}
+                </span>
+                <span class="contador miles" *ngIf="!addressForm.controls.disponibilidadPersonalObservaciones.value">
+                  500
+                </span>
+                <span class="icon-incompleto">
+                  <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                    [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip" *ngIf="
+                                (addressForm.get('disponibilidadPersonalObservaciones').invalid && addressForm.get('disponibilidadPersonalObservaciones').touched) ||
+                                (addressForm.get('disponibilidadPersonalObservaciones').invalid && estaEditando)
+                              " />
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
         <mat-card-title class="header-card--text sub-text">
           Material
         </mat-card-title>
@@ -191,8 +269,11 @@
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left" for="disponibilidadMaterial"
-                  [class.color-secondaryColor]="addressForm.get('disponibilidadMaterial').invalid && addressForm.get('disponibilidadMaterial').touched">
+                <label class="label-left" for="disponibilidadMaterial" [ngClass]="{
+                  'color-secondaryColor':
+                    (addressForm.get('disponibilidadMaterial').invalid && addressForm.get('disponibilidadMaterial').touched) ||
+                    (addressForm.get('disponibilidadMaterial').invalid && estaEditando)
+                }">
                   Disponibilidad de material
                 </label>
               </div>
@@ -205,36 +286,61 @@
                   </mat-select>
                 </mat-form-field>
               </div>
+              <span class="icon-incompleto">
+                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                  [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip" *ngIf="
+                    (addressForm.get('disponibilidadMaterial').invalid && addressForm.get('disponibilidadMaterial').touched) ||
+                    (addressForm.get('disponibilidadMaterial').invalid && estaEditando)
+                  " />
+              </span>
             </div>
           </div>
         </div>
-        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadMaterial').value === '2' || addressForm.get('disponibilidadMaterial').value === '3'">
+        <div class="row animatedDown"
+          *ngIf="addressForm.get('disponibilidadMaterial').value === '2' || addressForm.get('disponibilidadMaterial').value === '3'">
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left" for="causaMaterial"
-                  [class.color-secondaryColor]="addressForm.get('causaMaterial').invalid && addressForm.get('causaMaterial').touched">
+                <label class="label-left" for="causaMaterial" [ngClass]="{
+                    'color-secondaryColor':
+                      (addressForm.get('causaMaterial').invalid && addressForm.get('causaMaterial').touched) ||
+                      (addressForm.get('causaMaterial').invalid && estaEditando)
+                  }">
                   Causa de baja disponibilidad
                 </label>
               </div>
               <div class="col">
                 <mat-form-field class="select-width">
                   <mat-select required formControlName="causaMaterial">
-                    <mat-option *ngFor="let selectValue of causaBajaDisponibilidadMaterial" [value]="selectValue.codigo">
+                    <mat-option *ngFor="let selectValue of causaBajaDisponibilidadMaterial"
+                      [value]="selectValue.codigo">
                       {{ selectValue.nombre }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>
+              <span class="icon-incompleto">
+                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                  [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip" *ngIf="
+                    (addressForm.get('causaMaterial').invalid && addressForm.get('causaMaterial').touched) ||
+                    (addressForm.get('causaMaterial').invalid && estaEditando)
+                  " />
+              </span>
             </div>
           </div>
         </div>
-        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadMaterial').value === '2' || addressForm.get('disponibilidadMaterial').value === '3'">
+        <div class="row animatedDown"
+          *ngIf="addressForm.get('disponibilidadMaterial').value === '2' || addressForm.get('disponibilidadMaterial').value === '3'">
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left" for="retrasoMaterial"
-                  [class.color-secondaryColor]="addressForm.get('retrasoMaterial').invalid && addressForm.get('retrasoMaterial').touched">
+                <label class="label-left" for="retrasoMaterial" [ngClass]="{
+                    'color-secondaryColor':
+                      (addressForm.get('retrasoMaterial').invalid && addressForm.get('retrasoMaterial').touched) ||
+                      (addressForm.get('retrasoMaterial').invalid && estaEditando)
+                  }">
                   ¿Se generó retraso en la obra?
                 </label>
               </div>
@@ -246,6 +352,14 @@
                   </mat-select>
                 </mat-form-field>
               </div>
+              <span class="icon-incompleto">
+                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                  [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip" *ngIf="
+                    (addressForm.get('retrasoMaterial').invalid && addressForm.get('retrasoMaterial').touched) ||
+                    (addressForm.get('retrasoMaterial').invalid && estaEditando)
+                  " />
+              </span>
             </div>
           </div>
         </div>
@@ -253,8 +367,11 @@
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left"
-                  [class.color-secondaryColor]="addressForm.get('horasRetrasoMaterial').invalid && addressForm.get('horasRetrasoMaterial').touched">
+                <label class="label-left" for="horasRetrasoMaterial" [ngClass]="{
+                    'color-secondaryColor':
+                      (addressForm.get('horasRetrasoMaterial').invalid && addressForm.get('horasRetrasoMaterial').touched) ||
+                      (addressForm.get('horasRetrasoMaterial').invalid && estaEditando)
+                  }">
                   Número de horas de retraso generado
                 </label>
               </div>
@@ -262,38 +379,67 @@
                 <mat-form-field class="full-width">
                   <input matInput #horasRetrasoMaterial type="number" formControlName="horasRetrasoMaterial"
                     maxlength="1" min="1" max="9" required (keypress)="validateNumberKeypress($event)"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                 </mat-form-field>
                 <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
                   matTooltipClass="info-tooltip">{{1 - horasRetrasoMaterial.value.length}}</span>
               </div>
-            </div>
-          </div>
-        </div>
-        <div>
-          <div>
-            <span class="label-left"
-              [class.color-secondaryColor]="addressForm.get('disponibilidadMaterialObservaciones').invalid && addressForm.get('disponibilidadMaterialObservaciones').touched">
-              Observaciones
-            </span>
-          </div>
-          <div class="col d-flex">
-            <quill-editor class="quill-editor-style card position-relative" [styles]="editorStyle" [modules]="config"
-              (onContentChanged)="maxLength($event, 500)" formControlName="disponibilidadMaterialObservaciones"
-              [class.invalid]="addressForm.get('disponibilidadMaterialObservaciones').invalid && addressForm.get('disponibilidadMaterialObservaciones').touched"
-              required>
-            </quill-editor>
-            <div class="d-flex align-items-center">
-              <span class="contador miles mt-3em" *ngIf="addressForm.get('disponibilidadMaterialObservaciones').value">
-                {{500 - (textoLimpio(addressForm.get('disponibilidadMaterialObservaciones').value)>5000?5000:textoLimpio(addressForm.get('disponibilidadMaterialObservaciones').value))}}
-              </span>
-              <span class="contador miles mt-3em" *ngIf="!addressForm.get('disponibilidadMaterialObservaciones').value">
-                500
+              <span class="icon-incompleto">
+                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                  [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip" *ngIf="
+                    (addressForm.get('horasRetrasoMaterial').invalid && addressForm.get('horasRetrasoMaterial').touched) ||
+                    (addressForm.get('horasRetrasoMaterial').invalid && estaEditando)
+                  " />
               </span>
             </div>
           </div>
         </div>
-
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="disponibilidadMaterialObservaciones" [ngClass]="{
+                          'color-secondaryColor':
+                            (addressForm.get('disponibilidadMaterialObservaciones').invalid && addressForm.get('disponibilidadMaterialObservaciones').touched) ||
+                            (addressForm.get('disponibilidadMaterialObservaciones').invalid && estaEditando)
+                        }">Observaciones</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div>
+              <div class="d-flex align-items-center">
+                <div class="text-area-quill auxBox">
+                  <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config" required
+                    (onContentChanged)="maxLength($event, 500)" formControlName="disponibilidadMaterialObservaciones"
+                    #disponibilidadMaterialObservaciones [class.invalid]="
+                              (addressForm.get('disponibilidadMaterialObservaciones').invalid && addressForm.get('disponibilidadMaterialObservaciones').touched) ||
+                              (addressForm.get('disponibilidadMaterialObservaciones').invalid && estaEditando)
+                            ">
+                  </quill-editor>
+                </div>
+                <span class="contador miles" *ngIf="addressForm.controls.disponibilidadMaterialObservaciones.value">
+                  {{500 - (textoLimpio(disponibilidadMaterialObservaciones.quillEditor,500))}}
+                </span>
+                <span class="contador miles" *ngIf="!addressForm.controls.disponibilidadMaterialObservaciones.value">
+                  500
+                </span>
+                <span class="icon-incompleto">
+                  <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                    [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip" *ngIf="
+                              (addressForm.get('disponibilidadMaterialObservaciones').invalid && addressForm.get('disponibilidadMaterialObservaciones').touched) ||
+                              (addressForm.get('disponibilidadMaterialObservaciones').invalid && estaEditando)
+                            " />
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
         <mat-card-title class="header-card--text sub-text">
           Equipo
         </mat-card-title>
@@ -301,8 +447,11 @@
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left" for="disponibilidadEquipo"
-                  [class.color-secondaryColor]="addressForm.get('disponibilidadEquipo').invalid && addressForm.get('disponibilidadEquipo').touched">
+                <label class="label-left" for="disponibilidadEquipo" [ngClass]="{
+                    'color-secondaryColor':
+                      (addressForm.get('disponibilidadEquipo').invalid && addressForm.get('disponibilidadEquipo').touched) ||
+                      (addressForm.get('disponibilidadEquipo').invalid && estaEditando)
+                  }">
                   Disponibilidad de equipo
                 </label>
               </div>
@@ -315,15 +464,27 @@
                   </mat-select>
                 </mat-form-field>
               </div>
+              <span class="icon-incompleto">
+                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                  [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip" *ngIf="
+                            (addressForm.get('disponibilidadEquipo').invalid && addressForm.get('disponibilidadEquipo').touched) ||
+                            (addressForm.get('disponibilidadEquipo').invalid && estaEditando)
+                          " />
+              </span>
             </div>
           </div>
         </div>
-        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadEquipo').value === '2' || addressForm.get('disponibilidadEquipo').value === '3'">
+        <div class="row animatedDown"
+          *ngIf="addressForm.get('disponibilidadEquipo').value === '2' || addressForm.get('disponibilidadEquipo').value === '3'">
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left" for="causaEquipo"
-                  [class.color-secondaryColor]="addressForm.get('causaEquipo').invalid && addressForm.get('causaEquipo').touched">
+                <label class="label-left" for="causaEquipo" [ngClass]="{
+                  'color-secondaryColor':
+                    (addressForm.get('causaEquipo').invalid && addressForm.get('causaEquipo').touched) ||
+                    (addressForm.get('causaEquipo').invalid && estaEditando)
+                }">
                   Causa de baja disponibilidad
                 </label>
               </div>
@@ -336,15 +497,28 @@
                   </mat-select>
                 </mat-form-field>
               </div>
+              <span class="icon-incompleto">
+                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                  [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip" *ngIf="
+                            (addressForm.get('causaEquipo').invalid && addressForm.get('causaEquipo').touched) ||
+                            (addressForm.get('causaEquipo').invalid && estaEditando)
+                          " />
+              </span>
             </div>
           </div>
         </div>
-        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadEquipo').value === '2' || addressForm.get('disponibilidadEquipo').value === '3'">
+        <div class="row animatedDown"
+          *ngIf="addressForm.get('disponibilidadEquipo').value === '2' || addressForm.get('disponibilidadEquipo').value === '3'">
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
                 <label class="label-left" for="retrasoEquipo"
-                  [class.color-secondaryColor]="addressForm.get('retrasoEquipo').invalid && addressForm.get('retrasoEquipo').touched">
+                [ngClass]="{
+                  'color-secondaryColor':
+                    (addressForm.get('retrasoEquipo').invalid && addressForm.get('retrasoEquipo').touched) ||
+                    (addressForm.get('retrasoEquipo').invalid && estaEditando)
+                }">
                   ¿Se generó retraso en la obra?
                 </label>
               </div>
@@ -356,6 +530,14 @@
                   </mat-select>
                 </mat-form-field>
               </div>
+              <span class="icon-incompleto">
+                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                  [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip" *ngIf="
+                            (addressForm.get('retrasoEquipo').invalid && addressForm.get('retrasoEquipo').touched) ||
+                            (addressForm.get('retrasoEquipo').invalid && estaEditando)
+                          " />
+              </span>
             </div>
           </div>
         </div>
@@ -363,47 +545,80 @@
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left"
-                  [class.color-secondaryColor]="addressForm.get('horasRetrasoEquipo').invalid && addressForm.get('horasRetrasoEquipo').touched">
+                <label class="label-left" for="horasRetrasoEquipo"
+                  [ngClass]="{
+                    'color-secondaryColor':
+                      (addressForm.get('horasRetrasoEquipo').invalid && addressForm.get('horasRetrasoEquipo').touched) ||
+                      (addressForm.get('horasRetrasoEquipo').invalid && estaEditando)
+                  }">
                   Número de horas de retraso generado
                 </label>
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #horasRetrasoEquipo type="number" formControlName="horasRetrasoEquipo"
-                    maxlength="1" min="1" max="9" required (keypress)="validateNumberKeypress($event)"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                  <input matInput #horasRetrasoEquipo type="number" formControlName="horasRetrasoEquipo" maxlength="1"
+                    min="1" max="9" required (keypress)="validateNumberKeypress($event)"
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                 </mat-form-field>
                 <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
                   matTooltipClass="info-tooltip">{{1 - horasRetrasoEquipo.value.length}}</span>
               </div>
-            </div>
-          </div>
-        </div>
-        <div>
-          <div>
-            <span class="label-left"
-              [class.color-secondaryColor]="addressForm.get('disponibilidadEquipoObservaciones').invalid && addressForm.get('disponibilidadEquipoObservaciones').touched">
-              Observaciones
-            </span>
-          </div>
-          <div class="col d-flex">
-            <quill-editor class="quill-editor-style card position-relative" [styles]="editorStyle" [modules]="config"
-              (onContentChanged)="maxLength($event, 500)" formControlName="disponibilidadEquipoObservaciones"
-              [class.invalid]="addressForm.get('disponibilidadEquipoObservaciones').invalid && addressForm.get('disponibilidadEquipoObservaciones').touched"
-              required>
-            </quill-editor>
-            <div class="d-flex align-items-center">
-              <span class="contador miles mt-3em" *ngIf="addressForm.get('disponibilidadEquipoObservaciones').value">
-                {{500 - (textoLimpio(addressForm.get('disponibilidadEquipoObservaciones').value)>5000?5000:textoLimpio(addressForm.get('disponibilidadEquipoObservaciones').value))}}
-              </span>
-              <span class="contador miles mt-3em" *ngIf="!addressForm.get('disponibilidadEquipoObservaciones').value">
-                500
+              <span class="icon-incompleto">
+                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                  [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip" *ngIf="
+                            (addressForm.get('horasRetrasoEquipo').invalid && addressForm.get('horasRetrasoEquipo').touched) ||
+                            (addressForm.get('horasRetrasoEquipo').invalid && estaEditando)
+                          " />
               </span>
             </div>
           </div>
         </div>
-
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="disponibilidadEquipoObservaciones" [ngClass]="{
+                          'color-secondaryColor':
+                            (addressForm.get('disponibilidadEquipoObservaciones').invalid && addressForm.get('disponibilidadEquipoObservaciones').touched) ||
+                            (addressForm.get('disponibilidadEquipoObservaciones').invalid && estaEditando)
+                        }">Observaciones</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div>
+              <div class="d-flex align-items-center">
+                <div class="text-area-quill auxBox">
+                  <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config" required
+                    (onContentChanged)="maxLength($event, 500)" formControlName="disponibilidadEquipoObservaciones"
+                    #disponibilidadEquipoObservaciones [class.invalid]="
+                              (addressForm.get('disponibilidadEquipoObservaciones').invalid && addressForm.get('disponibilidadEquipoObservaciones').touched) ||
+                              (addressForm.get('disponibilidadEquipoObservaciones').invalid && estaEditando)
+                            ">
+                  </quill-editor>
+                </div>
+                <span class="contador miles" *ngIf="addressForm.controls.disponibilidadEquipoObservaciones.value">
+                  {{500 - (textoLimpio(disponibilidadEquipoObservaciones.quillEditor,500))}}
+                </span>
+                <span class="contador miles" *ngIf="!addressForm.controls.disponibilidadEquipoObservaciones.value">
+                  500
+                </span>
+                <span class="icon-incompleto">
+                  <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                    [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip" *ngIf="
+                              (addressForm.get('disponibilidadEquipoObservaciones').invalid && addressForm.get('disponibilidadEquipoObservaciones').touched) ||
+                              (addressForm.get('disponibilidadEquipoObservaciones').invalid && estaEditando)
+                            " />
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
         <mat-card-title class="header-card--text sub-text">
           Productividad
         </mat-card-title>
@@ -412,7 +627,11 @@
             <div class="row">
               <div class="pr-1">
                 <label class="label-left" for="Productividad"
-                  [class.color-secondaryColor]="addressForm.get('Productividad').invalid && addressForm.get('Productividad').touched">
+                [ngClass]="{
+                  'color-secondaryColor':
+                    (addressForm.get('Productividad').invalid && addressForm.get('Productividad').touched) ||
+                    (addressForm.get('Productividad').invalid && estaEditando)
+                }">
                   Productividad
                 </label>
               </div>
@@ -425,6 +644,14 @@
                   </mat-select>
                 </mat-form-field>
               </div>
+              <span class="icon-incompleto">
+                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                  [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip" *ngIf="
+                            (addressForm.get('Productividad').invalid && addressForm.get('Productividad').touched) ||
+                            (addressForm.get('Productividad').invalid && estaEditando)
+                          " />
+              </span>
             </div>
           </div>
         </div>
@@ -433,19 +660,32 @@
             <div class="row">
               <div class="pr-1">
                 <label class="label-left" for="causaProductividad"
-                  [class.color-secondaryColor]="addressForm.get('causaProductividad').invalid && addressForm.get('causaProductividad').touched">
+                [ngClass]="{
+                  'color-secondaryColor':
+                    (addressForm.get('causaProductividad').invalid && addressForm.get('causaProductividad').touched) ||
+                    (addressForm.get('causaProductividad').invalid && estaEditando)
+                }">
                   Causa
                 </label>
               </div>
               <div class="col">
                 <mat-form-field class="select-width">
                   <mat-select required formControlName="causaProductividad">
-                    <mat-option *ngFor="let selectValue of causaBajaDisponibilidadProductividad" [value]="selectValue.codigo">
+                    <mat-option *ngFor="let selectValue of causaBajaDisponibilidadProductividad"
+                      [value]="selectValue.codigo">
                       {{ selectValue.nombre }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>
+              <span class="icon-incompleto">
+                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                  [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip" *ngIf="
+                            (addressForm.get('causaProductividad').invalid && addressForm.get('causaProductividad').touched) ||
+                            (addressForm.get('causaProductividad').invalid && estaEditando)
+                          " />
+              </span>
             </div>
           </div>
         </div>
@@ -454,7 +694,11 @@
             <div class="row">
               <div class="pr-1">
                 <label class="label-left" for="retrasoProductividad"
-                  [class.color-secondaryColor]="addressForm.get('retrasoProductividad').invalid && addressForm.get('retrasoProductividad').touched">
+                [ngClass]="{
+                  'color-secondaryColor':
+                    (addressForm.get('retrasoProductividad').invalid && addressForm.get('retrasoProductividad').touched) ||
+                    (addressForm.get('retrasoProductividad').invalid && estaEditando)
+                }">
                   ¿Se generó retraso en la obra?
                 </label>
               </div>
@@ -466,6 +710,14 @@
                   </mat-select>
                 </mat-form-field>
               </div>
+              <span class="icon-incompleto">
+                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                  [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip" *ngIf="
+                            (addressForm.get('retrasoProductividad').invalid && addressForm.get('retrasoProductividad').touched) ||
+                            (addressForm.get('retrasoProductividad').invalid && estaEditando)
+                          " />
+              </span>
             </div>
           </div>
         </div>
@@ -473,8 +725,12 @@
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left"
-                  [class.color-secondaryColor]="addressForm.get('horasRetrasoProductividad').invalid && addressForm.get('horasRetrasoProductividad').touched">
+                <label class="label-left" for="horasRetrasoProductividad"
+                [ngClass]="{
+                  'color-secondaryColor':
+                    (addressForm.get('horasRetrasoProductividad').invalid && addressForm.get('horasRetrasoProductividad').touched) ||
+                    (addressForm.get('horasRetrasoProductividad').invalid && estaEditando)
+                }">
                   Número de horas de retraso generado
                 </label>
               </div>
@@ -482,63 +738,93 @@
                 <mat-form-field class="full-width">
                   <input matInput #horasRetrasoProductividad type="number" formControlName="horasRetrasoProductividad"
                     maxlength="1" min="1" max="9" required (keypress)="validateNumberKeypress($event)"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                 </mat-form-field>
                 <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
                   matTooltipClass="info-tooltip">{{1 - horasRetrasoProductividad.value.length}}</span>
               </div>
+              <span class="icon-incompleto">
+                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                  [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip" *ngIf="
+                            (addressForm.get('horasRetrasoProductividad').invalid && addressForm.get('horasRetrasoProductividad').touched) ||
+                            (addressForm.get('horasRetrasoProductividad').invalid && estaEditando)
+                          " />
+              </span>
             </div>
           </div>
         </div>
-        <div>
-          <div>
-            <span class="label-left"
-              [class.color-secondaryColor]="addressForm.get('ProductividadObservaciones').invalid && addressForm.get('ProductividadObservaciones').touched">
-              Observaciones
-            </span>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="ProductividadObservaciones" [ngClass]="{
+                          'color-secondaryColor':
+                            (addressForm.get('ProductividadObservaciones').invalid && addressForm.get('ProductividadObservaciones').touched) ||
+                            (addressForm.get('ProductividadObservaciones').invalid && estaEditando)
+                        }">Observaciones</label>
+              </div>
+            </div>
           </div>
-          <div class="col d-flex">
-            <quill-editor class="quill-editor-style card position-relative" [styles]="editorStyle" [modules]="config"
-              (onContentChanged)="maxLength($event, 500)" formControlName="ProductividadObservaciones"
-              [class.invalid]="addressForm.get('ProductividadObservaciones').invalid && addressForm.get('ProductividadObservaciones').touched"
-              required>
-            </quill-editor>
-            <div class="d-flex align-items-center">
-              <span class="contador miles mt-3em" *ngIf="addressForm.get('ProductividadObservaciones').value">
-                {{500 - (textoLimpio(addressForm.get('ProductividadObservaciones').value)>5000?5000:textoLimpio(addressForm.get('ProductividadObservaciones').value))}}
-              </span>
-              <span class="contador miles mt-3em" *ngIf="!addressForm.get('ProductividadObservaciones').value">
-                500
-              </span>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div>
+              <div class="d-flex align-items-center">
+                <div class="text-area-quill auxBox">
+                  <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config" required
+                    (onContentChanged)="maxLength($event, 500)" formControlName="ProductividadObservaciones"
+                    #ProductividadObservaciones [class.invalid]="
+                              (addressForm.get('ProductividadObservaciones').invalid && addressForm.get('ProductividadObservaciones').touched) ||
+                              (addressForm.get('ProductividadObservaciones').invalid && estaEditando)
+                            ">
+                  </quill-editor>
+                </div>
+                <span class="contador miles" *ngIf="addressForm.controls.ProductividadObservaciones.value">
+                  {{500 - (textoLimpio(ProductividadObservaciones.quillEditor,500))}}
+                </span>
+                <span class="contador miles" *ngIf="!addressForm.controls.ProductividadObservaciones.value">
+                  500
+                </span>
+                <span class="icon-incompleto">
+                  <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                    [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip" *ngIf="
+                              (addressForm.get('ProductividadObservaciones').invalid && addressForm.get('ProductividadObservaciones').touched) ||
+                              (addressForm.get('ProductividadObservaciones').invalid && estaEditando)
+                            " />
+                </span>
+              </div>
             </div>
           </div>
         </div>
 
       </mat-card-content>
-      
+
     </mat-card>
     <div class="text-center mb-2em">
       <button mat-button color="warn" class="btn-guardar" type="submit">
         <img src="assets/img/icon/guardar.svg" alt="Guardar">
       </button>
     </div>
-    <mat-card class="shipping-card var-main-gris" *ngIf=" seguimiento !== undefined && seguimiento.observacionDevolucion !== undefined">
+    <mat-card class="shipping-card var-main-gris"
+      *ngIf=" seguimiento !== undefined && seguimiento.observacionDevolucion !== undefined">
       <mat-card-header class="header-card header-card--margin">
         <mat-card-title class="header-card--text">
           Observaciones de la supervisión
         </mat-card-title>
-    </mat-card-header>
+      </mat-card-header>
       <mat-card-content>
-    
+
         ¿Tiene observaciones al registro del seguimiento diario?: <span>{{ 'Si' }}</span>
         <br>
         <p>
           {{ seguimiento.observacionDevolucion.observaciones }}
         </p>
-    
+
       </mat-card-content>
     </mat-card>
-    
+
   </form>
 </div>
-

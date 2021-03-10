@@ -22,6 +22,7 @@ namespace asivamosffie.model.Models
         public bool? TieneObservacionSupervisor { get; set; }
         public string ValidacionCodigo { get; set; }
         public string AprobacionCodigo { get; set; }
+        public bool? TieneModificacionInterventor { get; set; }
 
         public virtual InformeFinal InformeFinal { get; set; }
         public virtual InformeFinalAnexo InformeFinalAnexo { get; set; }

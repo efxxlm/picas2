@@ -16,7 +16,6 @@ import { forkJoin } from 'rxjs';
   styleUrls: ['./tabla-orden-del-dia.component.scss']
 })
 export class TablaOrdenDelDiaComponent implements OnInit {
-
   estadosComite = EstadosComite;
   listaMiembrosComite: Dominio[] = [];
 
@@ -36,18 +35,17 @@ export class TablaOrdenDelDiaComponent implements OnInit {
     private technicalCommitteeSessionService: TechnicalCommitteSessionService,
     private router: Router,
     public dialog: MatDialog,
-    private commonService: CommonService,
-  ) {
-
-  }
+    private commonService: CommonService
+  ) {}
 
   ngOnInit(): void {
-
     forkJoin([
-      this.technicalCommitteeSessionService.getListComiteGrilla(),
+      this.technicalCommitteeSessionService.getListComiteGrilla()
       // this.commonService.listaMiembrosComiteTecnico(),
-
     ]).subscribe(response => {
+      response[0].forEach(element => {
+        element.fechaComite = element.fechaComite.split('T')[0].split('-').reverse().join('/');
+      });
       this.dataSource = new MatTableDataSource(response[0]);
       this.listaMiembrosComite;
       this.initPaginator();
@@ -64,9 +62,7 @@ export class TablaOrdenDelDiaComponent implements OnInit {
       length = Math.max(length, 0);
       const startIndex = page * pageSize;
       // If the start index exceeds the list length, do not try and fix the end index to the end.
-      const endIndex = startIndex < length ?
-        Math.min(startIndex + pageSize, length) :
-        startIndex + pageSize;
+      const endIndex = startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize;
       return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
     };
   }
@@ -83,20 +79,16 @@ export class TablaOrdenDelDiaComponent implements OnInit {
   }
 
   onConvocar(e: number) {
-
     const comite: ComiteTecnico = {
       comiteTecnicoId: e,
       estadoComiteCodigo: this.estadosComite.convocada
     };
 
-    this.technicalCommitteeSessionService.convocarComiteTecnico(comite)
-      .subscribe(respuesta => {
+    this.technicalCommitteeSessionService.convocarComiteTecnico(comite).subscribe(respuesta => {
+      this.openDialog('', `<b>${respuesta.message}</b>`);
 
-        this.openDialog('', `<b>${respuesta.message}</b>`);
-
-        this.ngOnInit();
-
-      });
+      this.ngOnInit();
+    });
   }
 
   openDialogSiNo(modalTitle: string, modalText: string, e: number) {
@@ -105,17 +97,16 @@ export class TablaOrdenDelDiaComponent implements OnInit {
       data: { modalTitle, modalText, siNoBoton: true }
     });
     dialogRef.afterClosed().subscribe(result => {
-      if (result===true) {
+      if (result === true) {
         this.OnDelete(e);
       }
     });
   }
 
   OnDelete(e: number) {
-    this.technicalCommitteeSessionService.deleteComiteTecnicoByComiteTecnicoId(e)
-      .subscribe(respuesta => {
-        this.openDialog('', `<b>${respuesta.message}</b>`);
-        this.ngOnInit();
-      });
+    this.technicalCommitteeSessionService.deleteComiteTecnicoByComiteTecnicoId(e).subscribe(respuesta => {
+      this.openDialog('', `<b>${respuesta.message}</b>`);
+      this.ngOnInit();
+    });
   }
 }

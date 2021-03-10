@@ -98,7 +98,8 @@ export class FormRegistrarMesaDeTrabajoComponent implements OnInit {
 
   onSubmit() {
     this.estaEditando = true;
-    console.log(this.addressForm.value);
+    this.addressForm.markAllAsTouched();
+    // console.log(this.addressForm.value);
     let mesaTrabajoArray;
     if (this.isEditable == true) {
       mesaTrabajoArray =

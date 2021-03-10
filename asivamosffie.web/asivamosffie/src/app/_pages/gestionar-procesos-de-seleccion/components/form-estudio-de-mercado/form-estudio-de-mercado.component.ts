@@ -82,6 +82,7 @@ export class FormEstudioDeMercadoComponent implements OnInit {
       if (Formcotizaciones.cuantasCotizaciones > this.cotizaciones.length && Formcotizaciones.cuantasCotizaciones < 100) {
         while (this.cotizaciones.length < Formcotizaciones.cuantasCotizaciones) {
           this.cotizaciones.push(this.createCotizacion());
+          if( this.estaEditando) this.addressForm.markAllAsTouched();
         }
       } else if (Formcotizaciones.cuantasCotizaciones <= this.cotizaciones.length && Formcotizaciones.cuantasCotizaciones >= 0) {
         //valido si tiene algo
@@ -151,32 +152,16 @@ export class FormEstudioDeMercadoComponent implements OnInit {
     });
   }
 
-  openDialogSiNo(modalTitle: string, modalText: string) {
-    const dialogRef = this.dialog.open(ModalDialogComponent, {
-      width: '28em',
-      data: { modalTitle, modalText, siNoBoton: true }
-    });
-
-    return dialogRef;
-  }
-
   borrarArray(borrarForm: any, i: number) {    
-
-    let dialogRef = this.openDialogSiNo('', '<b>¿Está seguro de eliminar este registro?</b>')
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result === true) {
-        this.procesoSeleccionService.deleteProcesoSeleccionCotizacionByID(borrarForm.value[i].procesoSeleccionCotizacionId)
-              .subscribe( respuesta => {
-                if ( respuesta.code == "200"){
-                  borrarForm.removeAt(i);
-                  //ajusto el contador  
-                  this.addressForm.get('cuantasCotizaciones').setValue(borrarForm.length);    
-                  this.openDialog('','<b>La información se ha eliminado correctamente.</b>')
-                }
-              }); 
-      }
-    });
+    
+    //consumo servicio
+    console.log(borrarForm.value[i]);
+    if(borrarForm.value[i].procesoSeleccionCotizacionId>0)
+    {
+      this.procesoSeleccionService.deleteProcesoSeleccionCotizacionByID(borrarForm.value[i].procesoSeleccionCotizacionId).subscribe(borrarForm.removeAt(i));
+    }
+    //ajusto el contador  
+    this.addressForm.get('cuantasCotizaciones').setValue(borrarForm.length);    
   }
 
   textoLimpio(texto: string) {
@@ -203,6 +188,7 @@ export class FormEstudioDeMercadoComponent implements OnInit {
   onSubmit() {
     //console.log(this.procesoSeleccion);return;
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     const listaCotizaciones = this.addressForm.get('cotizaciones') as FormArray;
 
     this.procesoSeleccion.procesoSeleccionCotizacion = [];

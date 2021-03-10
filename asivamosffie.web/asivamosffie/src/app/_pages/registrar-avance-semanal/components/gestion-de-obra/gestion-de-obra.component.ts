@@ -9,6 +9,7 @@ export class GestionDeObraComponent implements OnInit {
 
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
+    @Input() tipoObservaciones: any;
     @Output() estadoSemaforoGestionObra = new EventEmitter();
     semaforoAmbiental = 'sin-diligenciar';
     semaforoCalidad = 'sin-diligenciar';

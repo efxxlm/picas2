@@ -11,7 +11,7 @@ namespace asivamosffie.services.Interfaces
     public interface ITechnicalRequirementsConstructionPhaseService
     {
         Task<Respuesta> CreateEditObservacionConstruccionPerfilSave(ConstruccionPerfilObservacion pObservacion, string pUsuarioCreacion);
-        Task<Respuesta> CambiarEstadoContratoEstadoVerificacionConstruccionCodigo(int ContratoId, string pEstado, string pUsuarioMod);
+        Task<Respuesta> CambiarEstadoContratoEstadoVerificacionConstruccionCodigo(int ContratoId, string pEstado, string pUsuarioMod, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
         Task<Respuesta> CreateEditObservacion(ContratoConstruccion pContratoConstruccion, string pTipoObservacion, bool pEsSupervicion);
         Task<List<dynamic>> GetContractsGrid(int pUsuarioId);
         Task<Contrato> GetContratoByContratoId(int pContratoId, string pUsuarioCreacion);
@@ -39,9 +39,8 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CreateEditObservacionFlujoInversion(ContratoConstruccion pContratoConstruccion, bool esSupervisor);
         Task<Respuesta> EnviarAlSupervisor(int pContratoId, string pUsuarioCreacion, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
         Task<Respuesta> CreateEditObservacionPerfil(ConstruccionPerfil pPerfil, bool esSupervisor);
-        Task<Respuesta> AprobarInicio(int pContratoId, string pUsuarioCreacion);
+        Task<Respuesta> AprobarInicio(int pContratoId, string pUsuarioCreacion, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
         Proyecto CalcularFechaInicioContrato(int pContratoConstruccionId);
-        Proyecto CalcularYGuardarFechaInicioContrato(int pContratoConstruccionId, DateTime pFechaInicioObra, int pContratoId, int pProyectoId, string pUsuarioModificacion);
 
     }
 }

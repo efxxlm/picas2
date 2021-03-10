@@ -14,10 +14,10 @@
   </div>
 
   <div class="d-flex justify-content-center">
-    <p class="solicitud" *ngIf="objetoDisponibilidad.tipoSolicitudCodigo === '1'">
+    <p class="solicitud" *ngIf="objetoDisponibilidad.tipoSolicitudCodigo === '1' && !objetoDisponibilidad.esNovedadContractual">
       <strong>Contratación</strong>
     </p>
-    <p class="solicitud" *ngIf="objetoDisponibilidad.tipoSolicitudCodigo === '3'">
+    <p class="solicitud" *ngIf="objetoDisponibilidad.tipoSolicitudCodigo === '1' && objetoDisponibilidad.esNovedadContractual">
       <strong>Modificación Contractual</strong>
     </p>
     <p class="solicitud" *ngIf="objetoDisponibilidad.fechaComiteTecnicoNotMapped">
@@ -26,12 +26,12 @@
     </p>
   </div>
 
-  <mat-card class="shipping-card var-main-gris mt-1em" style="display: none">
+  <mat-card class="shipping-card var-main-gris mt-1em" *ngIf="objetoDisponibilidad.esNovedadContractual">
     <mat-card-content>
-      <p><b>DDP:</b>DDP_PI_007</p>
-      <p><b>Valor DDP:</b> $60.000.000</p>
+      <p><b>DDP:</b>{{ddpsolicitud}}</p>
+      <p><b>Valor DDP:</b> {{ddpvalor|currency:'':'symbol':'3.0'}}</p>
       <p><b>Detalle de la modificación:</b></p>
-      <p>Se realiza adición de recursos para obras complementarias</p>
+      <p>{{ddpdetalle}}</p>
     </mat-card-content>
   </mat-card>
 
@@ -74,10 +74,10 @@
                 <p>
                   <b>Valor del aportante:</b>
                   <!-- obra -->
-                  <span *ngIf="tipoSolicitudCodigo==='1'">{{ aportante.valorObra | currency }}</span>
+                  <span *ngIf="tipoSolicitudCodigo === '1'">{{ aportante.valorObra | currency }}</span>
 
                   <!-- interventoria -->
-                  <span *ngIf="tipoSolicitudCodigo==='2'">{{ aportante.valorInterventoria | currency }}</span>
+                  <span *ngIf="tipoSolicitudCodigo === '2'">{{ aportante.valorInterventoria | currency }}</span>
                 </p>
               </div>
             </div>
@@ -117,6 +117,8 @@
                 name="plazoMeses"
                 (keypress)="validateNumberKeypress($event)"
                 onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                [readonly]="ddpsolicitud"
               />
             </mat-form-field>
             <span
@@ -131,10 +133,10 @@
               <img
                 class="icon-incompleto--img"
                 src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                alt="este campo es requerido"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
                 *ngIf="
                   (addressForm.get('plazoMeses').invalid && addressForm.get('plazoMeses').touched) ||
                   (addressForm.get('plazoMeses').invalid && estaEditando)
@@ -173,6 +175,8 @@
                 (change)="validatenomore30()"
                 (keypress)="validateNumberKeypress($event)"
                 onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                [readonly]="ddpsolicitud"
               />
             </mat-form-field>
             <span
@@ -187,10 +191,10 @@
               <img
                 class="icon-incompleto--img"
                 src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                alt="este campo es requerido"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
                 *ngIf="
                   (addressForm.get('plazoDias').invalid && addressForm.get('plazoDias').touched) ||
                   (addressForm.get('plazoDias').invalid && estaEditando)
@@ -201,39 +205,49 @@
         </div>
       </div>
     </div>
-    <div class="d-flex align-items-center" style="margin: auto; width: 85%">
+    <div class="d-flex mt-2em align-items-center">
       <div
-        class="text-area-quill quill-sin-borde"
+        class="text-area-quill"
         [class.color-secondaryColor]="
           (addressForm.get('objeto').invalid && addressForm.get('objeto').touched) ||
           (addressForm.get('objeto').invalid && estaEditando)
         "
       >
-        <label for="objeto" class="text-area-quill--label title-objeto">Objeto</label>
+        <label
+          for="objeto"
+          class="text-area-quill--label align-left-label"
+          [class.colorMainColor]="
+            !(
+              (addressForm.get('objeto').invalid && addressForm.get('objeto').touched) ||
+              (addressForm.get('objeto').invalid && estaEditando)
+            )
+          "
+        >
+          Objeto
+        </label>
         <quill-editor
-          class="quill-editor-style card"
+          class="quill-editor-style ml-1em"
           [styles]="editorStyle"
           [modules]="config"
           (onContentChanged)="maxLength($event, 1000)"
           formControlName="objeto"
+          #obsGestionSst
           required
+          [readonly]="ddpsolicitud"
         ></quill-editor>
       </div>
-      <span class="contador miles" *ngIf="addressForm.get('objeto').value !== null">
-        {{
-          1000 -
-            (textoLimpio(addressForm.get('objeto').value) > 1000 ? 1000 : textoLimpio(addressForm.get('objeto').value))
-        }}
+      <span class="contador miles" *ngIf="addressForm.get('objeto').value">
+        {{ 1000 - textoLimpio(obsGestionSst.quillEditor, 1000) }}
       </span>
-      <span class="contador miles" *ngIf="addressForm.get('objeto').value === null"> 1000 </span>
+      <span class="contador miles" *ngIf="!addressForm.get('objeto').value"> 1000 </span>
       <span class="icon-incompleto">
         <img
           class="icon-incompleto--img"
           src="assets/img/icon/incompleto.svg"
-                        alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+          alt="este campo es requerido"
+          [matTooltipPosition]="'above'"
+          matTooltip="Debe ingresar la información en el campo para continuar"
+          matTooltipClass="info-tooltip"
           *ngIf="
             (addressForm.get('objeto').invalid && addressForm.get('objeto').touched) ||
             (addressForm.get('objeto').invalid && estaEditando)
@@ -248,8 +262,8 @@
     </div>
   </form>
   <app-tabla-observaciones
-                          [DisponibilidadPresupuestal]="objetoDisponibilidad"
-                          *ngIf="objetoDisponibilidad && objetoDisponibilidad.estadoSolicitudCodigo === '2'"
-        >
+    [DisponibilidadPresupuestal]="objetoDisponibilidad"
+    *ngIf="objetoDisponibilidad && objetoDisponibilidad.estadoSolicitudCodigo === '2'"
+  >
   </app-tabla-observaciones>
 </div>

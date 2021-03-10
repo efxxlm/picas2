@@ -25,5 +25,5 @@
 
   <app-datos-del-proyecto *ngIf="report" [report]="report"></app-datos-del-proyecto>
   <app-form-recibo-a-satisfaccion *ngIf="report" [report]="report" (formCompleto)="updateForm($event);"></app-form-recibo-a-satisfaccion>
-  <app-informe-final-anexos *ngIf="mostrarInforme" [id]="id" [llaveMen]="report.proyecto.llaveMen" [estadoInforme]="estadoInforme"></app-informe-final-anexos>
+  <app-tabla-informe-final-anexos *ngIf="mostrarInforme && report" [id]="id" [llaveMen]="report.proyecto.llaveMen" [report]="report"></app-tabla-informe-final-anexos>
 </section>

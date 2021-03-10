@@ -19,7 +19,6 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
   @Output() guardar: EventEmitter<any> = new EventEmitter();
   listaProponentes: ProcesoSeleccionProponente[] = [];
   estadosProcesoSeleccion = EstadosProcesoSeleccion;
-  sePuedeVer:boolean = false;
 
   addressForm = this.fb.group({
     cuantosProponentes: [null, Validators.compose([
@@ -71,12 +70,6 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
       }      
       this.addressForm.get('url').setValue(this.procesoSeleccion.urlSoporteProponentesSeleccionados);
     });
-
-    if (
-        this.procesoSeleccion.estadoProcesoSeleccionCodigo == this.estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario ||
-        this.procesoSeleccion.estadoProcesoSeleccionCodigo == this.estadosProcesoSeleccion.AprobadaSelecciónPorComiteFiduciario
-      )
-      this.sePuedeVer = true;
   }
 
   validateNumberKeypress(event: KeyboardEvent) {
@@ -151,6 +144,7 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
 
   onSubmit() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     this.noGuardado=false;
   }
 

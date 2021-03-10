@@ -41,6 +41,7 @@ export class ManejoAnticipoComponent implements OnInit {
 
   guardar () {
     this.estaEditando = true;
+    this.formAnticipo.markAllAsTouched();
     this.manejoAnticipo.emit( this.formAnticipo.value );
   }
 

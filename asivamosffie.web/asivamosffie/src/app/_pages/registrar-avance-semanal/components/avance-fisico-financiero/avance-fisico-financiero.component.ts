@@ -9,7 +9,9 @@ export class AvanceFisicoFinancieroComponent implements OnInit {
 
   @Input() esVerDetalle = false;
   @Input() seguimientoSemanal: any;
+  @Input() avanceFisicoObs: string;
   semaforoAvanceFisico = 'sin-diligenciar';
+  sinRegistros = false;
 
   constructor() { }
 

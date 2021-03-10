@@ -1,4 +1,4 @@
-<form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="addressForm" (ngSubmit)="onSubmit()" *ngIf="solicitudPago !== undefined">
     <mat-card class="shipping-card">
         <mat-card-content style="text-align: left;">
             <div class="row">
@@ -9,9 +9,9 @@
                         </div>
                         <div class="col">
                             <mat-form-field class="select-width">
-                                <mat-select formControlName="estrategiaPago" required>
-                                    <mat-option *ngFor="let contr of estrategiaPagoArray" [value]="contr.value">
-                                        {{ contr.name }}
+                                <mat-select formControlName="estrategiaPagoCodigo" required>
+                                    <mat-option *ngFor="let estrategia of estrategiaPagoArray" [value]="estrategia.codigo">
+                                        {{ estrategia.nombre }}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>

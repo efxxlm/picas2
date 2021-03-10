@@ -1,7 +1,6 @@
 <div align="center">
     <p class="info-sub-title" style="font-size: 14px;">
-        <span><b>Nombre del contratista: Interventores S.A.</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Número de
-                identificación: 900.879.765-2</b></span>
+        <span><b>Nombre del contratista: {{ solicitudPago.contrato.contratacion.contratista.nombre }} </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Número de identificación: {{ solicitudPago.contrato.contratacion.contratista.numeroIdentificacion }} </b></span>
     </p>
 </div>
 <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
@@ -11,14 +10,13 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="medioPagoGiroContrato">¿Cuál es el medio de pago para los
-                                giros del contrato?</label>
+                            <label class="label-left" for="medioPagoGiroContrato">¿Cuál es el medio de pago para los giros del contrato?</label>
                         </div>
                         <div class="col">
                             <mat-form-field class="select-width">
                                 <mat-select formControlName="medioPagoGiroContrato" required>
-                                    <mat-option *ngFor="let contr of medioPagoArray" [value]="contr.value">
-                                        {{ contr.name }}
+                                    <mat-option *ngFor="let medioPago of medioPagoArray" [value]="medioPago.codigo">
+                                        {{ medioPago.nombre }}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
@@ -26,7 +24,7 @@
                     </div>
                 </div>
             </div>
-            <div *ngIf="addressForm.value.medioPagoGiroContrato!=null">
+            <div *ngIf="addressForm.get( 'medioPagoGiroContrato' ).value !== null && listaMediosPagoCodigo.transferenciaElectronica === addressForm.get( 'medioPagoGiroContrato' ).value" formGroupName="transferenciaElectronica">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="row">
@@ -39,7 +37,7 @@
                                         formControlName="titularCuenta" required>
                                 </mat-form-field>
                                 <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico"
-                                    matTooltipClass="info-tooltip">{{100 - titularCuenta.value.length}}</span>
+                                    matTooltipClass="info-tooltip">{{100 - addressForm.get( 'transferenciaElectronica' ).get( 'titularCuenta' ).value.length }}</span>
                             </div>
                         </div>
                     </div>
@@ -53,10 +51,10 @@
                             <div class="col d-flex">
                                 <mat-form-field class="full-width">
                                     <input matInput #numIdentificacionTitular type="text" maxlength="10"
-                                        formControlName="numIdentificacionTitular" required>
+                                        formControlName="titularNumeroIdentificacion" required>
                                 </mat-form-field>
                                 <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico"
-                                    matTooltipClass="info-tooltip">{{10 - numIdentificacionTitular.value.length}}</span>
+                                    matTooltipClass="info-tooltip">{{10 - addressForm.get( 'transferenciaElectronica' ).get( 'titularNumeroIdentificacion' ).value.length }}</span>
                             </div>
                         </div>
                     </div>
@@ -73,7 +71,7 @@
                                         formControlName="numeroCuenta" required>
                                 </mat-form-field>
                                 <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico"
-                                    matTooltipClass="info-tooltip">{{50 - numeroCuenta.value.length}}</span>
+                                    matTooltipClass="info-tooltip">{{50 - addressForm.get( 'transferenciaElectronica' ).get( 'numeroCuenta' ).value.length }}</span>
                             </div>
                         </div>
                     </div>
@@ -86,9 +84,9 @@
                             </div>
                             <div class="col">
                                 <mat-form-field class="select-width">
-                                    <mat-select formControlName="banco" required>
-                                        <mat-option *ngFor="let contr of bancosArray" [value]="contr.value">
-                                            {{ contr.name }}
+                                    <mat-select formControlName="bancoCodigo" required>
+                                        <mat-option *ngFor="let banco of bancosArray" [value]="banco.codigo">
+                                            {{ banco.nombre }}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
@@ -103,7 +101,7 @@
                           <label class="label-left" for="tipoCuenta">Tipo de cuenta</label>
                         </div>
                         <div class="col">
-                          <mat-radio-group class="radioInput" formControlName="tipoCuenta" required>
+                          <mat-radio-group class="radioInput" formControlName="esCuentaAhorros" required>
                             <mat-radio-button [value]="true">Ahorros</mat-radio-button>
                             <mat-radio-button [value]="false">Corriente</mat-radio-button>
                           </mat-radio-group>
@@ -112,6 +110,42 @@
                       </div>
                     </div>
                   </div>
+            </div>
+            <div *ngIf="addressForm.get( 'medioPagoGiroContrato' ).value !== null && listaMediosPagoCodigo.chequeGerencia === addressForm.get( 'medioPagoGiroContrato' ).value" formGroupName="chequeGerencia">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left">Nombre del beneficiario</label>
+                            </div>
+                            <div class="col d-flex">
+                                <mat-form-field class="full-width">
+                                    <input matInput type="text" maxlength="100"
+                                        formControlName="nombreBeneficiario" required>
+                                </mat-form-field>
+                                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico"
+                                    matTooltipClass="info-tooltip">{{100 - addressForm.get( 'chequeGerencia' ).get( 'nombreBeneficiario' ).value.length }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left">Número de identificación del beneficiario</label>
+                            </div>
+                            <div class="col d-flex">
+                                <mat-form-field class="full-width">
+                                    <input matInput type="text" maxlength="50"
+                                        formControlName="numeroIdentificacionBeneficiario" required>
+                                </mat-form-field>
+                                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico"
+                                    matTooltipClass="info-tooltip">{{50 - addressForm.get( 'chequeGerencia' ).get( 'numeroIdentificacionBeneficiario' ).value.length }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </mat-card-content>
     </mat-card>

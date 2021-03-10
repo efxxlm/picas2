@@ -118,6 +118,7 @@
             required
             (keypress)="validateNumberKeypress($event)"
             onKeyPress="if(this.value.length>=this.maxLength) return false;"
+            oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
           />
         </mat-form-field>
         <span
@@ -294,6 +295,7 @@
                 required
                 (keypress)="validateNumberKeypress($event)"
                 onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />
             </mat-form-field>
             <span
@@ -462,6 +464,7 @@
                 required
                 (keypress)="validateNumberKeypress($event)"
                 onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />
             </mat-form-field>
             <span
@@ -572,6 +575,7 @@
                 required
                 (keypress)="validateNumberKeypress($event)"
                 onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />
             </mat-form-field>
             <span
@@ -761,6 +765,7 @@
                 required
                 (keypress)="validateNumberKeypress($event)"
                 onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />
             </mat-form-field>
             <span
@@ -881,6 +886,7 @@
                 maxlength="2"
                 (keypress)="validateNumberKeypress($event)"
                 onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 required
               />
               <input type="hidden" formControlName="procesoSeleccionProponenteId" />
@@ -977,8 +983,8 @@
                       for="nombre"
                       class="label-left"
                       [class.color-secondaryColor]="
-                        (unionTemporalForm.get('nombre')?.invalid && unionTemporalForm.get('nombre').touched) ||
-                        (unionTemporalForm.get('nombre')?.invalid && estaEditando)
+                        (entidad.get('nombre')?.invalid && entidad.get('nombre').touched) ||
+                        (entidad.get('nombre')?.invalid && estaEditando)
                       "
                     >
                       Nombre
@@ -1005,8 +1011,8 @@
                         matTooltip="Debe ingresar la información en el campo para continuar"
                         matTooltipClass="info-tooltip"
                         *ngIf="
-                          (unionTemporalForm.get('nombre')?.invalid && unionTemporalForm.get('nombre').touched) ||
-                          (unionTemporalForm.get('nombre')?.invalid && estaEditando)
+                          (entidad.get('nombre')?.invalid && entidad.get('nombre').touched) ||
+                          (entidad.get('nombre')?.invalid && estaEditando)
                         "
                       />
                     </span>
@@ -1022,8 +1028,8 @@
                       for="porcentaje"
                       class="label-left"
                       [class.color-secondaryColor]="
-                        (unionTemporalForm.get('porcentaje')?.invalid && unionTemporalForm.get('porcentaje').touched) ||
-                        (unionTemporalForm.get('porcentaje')?.invalid && estaEditando)
+                        (entidad.get('porcentaje')?.invalid && entidad.get('porcentaje').touched) ||
+                        (entidad.get('porcentaje')?.invalid && estaEditando)
                       "
                     >
                       Porcentaje de participación
@@ -1037,7 +1043,9 @@
                         type="number"
                         min="1"
                         max="100"
+                        maxLength="3"
                         formControlName="porcentaje"
+                        oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         required
                       />
                       <input type="hidden" formControlName="procesoSeleccionIntegranteId" />
@@ -1052,9 +1060,8 @@
                         matTooltip="Debe ingresar la información en el campo para continuar"
                         matTooltipClass="info-tooltip"
                         *ngIf="
-                          (unionTemporalForm.get('porcentaje')?.invalid &&
-                            unionTemporalForm.get('porcentaje').touched) ||
-                          (unionTemporalForm.get('porcentaje')?.invalid && estaEditando)
+                          (entidad.get('porcentaje')?.invalid && entidad.get('porcentaje').touched) ||
+                          (entidad.get('porcentaje')?.invalid && estaEditando)
                         "
                       />
                     </span>
@@ -1173,6 +1180,7 @@
                   required
                   (keypress)="validateNumberKeypress($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 />
               </mat-form-field>
               <span
@@ -1354,6 +1362,7 @@
                   formControlName="telefono"
                   (keypress)="validateNumberKeypress($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   required
                 />
               </mat-form-field>

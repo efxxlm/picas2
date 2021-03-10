@@ -180,7 +180,7 @@ namespace asivamosffie.services
                 }
 
                 //si la cantidad que recibe de parametros no es la misma que tiene en datos, borro los anteriores
-                if (procesoSeleccion.ProcesoSeleccionProponente.Count() < _context.ProcesoSeleccionProponente.Where(x => x.ProcesoSeleccionId == procesoSeleccion.ProcesoSeleccionId && !(bool)x.Eliminado).Count())
+                if (procesoSeleccion.ProcesoSeleccionProponente.Count() < _context.ProcesoSeleccionProponente.Where(x => x.ProcesoSeleccionId == procesoSeleccion.ProcesoSeleccionId && x.Eliminado != true).Count())
                 {
                     foreach (var procesoseleccionprop in _context.ProcesoSeleccionProponente.Where(x => x.ProcesoSeleccionId == procesoSeleccion.ProcesoSeleccionId && !(bool)x.Eliminado))
                     {
@@ -758,6 +758,8 @@ namespace asivamosffie.services
                     ProcesoSeleccionProponenteAntiguo.TipoProponenteCodigo = procesoSeleccionProponente.TipoProponenteCodigo;
                     ProcesoSeleccionProponenteAntiguo.NombreProponente = procesoSeleccionProponente.NombreProponente;
                     ProcesoSeleccionProponenteAntiguo.TipoIdentificacionCodigo = procesoSeleccionProponente.TipoIdentificacionCodigo;
+                    ProcesoSeleccionProponenteAntiguo.NombreRepresentanteLegal = procesoSeleccionProponente.NombreRepresentanteLegal;
+                    ProcesoSeleccionProponenteAntiguo.CedulaRepresentanteLegal = procesoSeleccionProponente.CedulaRepresentanteLegal;
                     ProcesoSeleccionProponenteAntiguo.NumeroIdentificacion = procesoSeleccionProponente.NumeroIdentificacion;
                     ProcesoSeleccionProponenteAntiguo.LocalizacionIdMunicipio = procesoSeleccionProponente.LocalizacionIdMunicipio;
                     ProcesoSeleccionProponenteAntiguo.DireccionProponente = procesoSeleccionProponente.DireccionProponente;
@@ -1313,6 +1315,8 @@ namespace asivamosffie.services
                                 ))
                             )
                             {
+                                //worksheet.Cells[2, 2].AddComment("Es valido", "Admin");
+
                                 temp.EstaValidado = true;
                                 _context.TempOrdenLegibilidad.Add(temp);
                                 _context.SaveChanges();
@@ -1345,6 +1349,9 @@ namespace asivamosffie.services
                                 {
                                     CantidadRegistrosInvalidos++;
                                 }
+
+                                //worksheet.Cells[2, 2].AddComment("Invalido", "Admin");
+
                                 //Auditoria
                                 temp.ArchivoCargueId = archivoCarge.ArchivoCargueId;
                                 temp.EstaValidado = false;
@@ -1378,6 +1385,11 @@ namespace asivamosffie.services
                         LlaveConsulta = archivoCarge.Nombre
 
                     };
+
+                    //byte[] bin = package.GetAsByteArray();
+                    //string pathFile = archivoCarge.Ruta + "/" + archivoCarge.Nombre + ".xlsx";
+                    //File.WriteAllBytes(pathFile, bin);
+
                     return new Respuesta
                     {
                         Data = archivoCargueRespuesta,
@@ -1428,6 +1440,20 @@ namespace asivamosffie.services
 
                 )
                     esCompleto = false;
+
+                procesoSeleccion.ProcesoSeleccionGrupo.Where(r => r.Eliminado != true).ToList().ForEach(psg =>
+                {
+                    if (
+                         string.IsNullOrEmpty(psg.NombreGrupo) ||
+                         string.IsNullOrEmpty(psg.TipoPresupuestoCodigo) ||
+                         (psg.TipoPresupuestoCodigo == "2" && psg.ValorMaximoCategoria == null) ||
+                         (psg.TipoPresupuestoCodigo == "2" && psg.ValorMinimoCategoria == null) ||
+                         (psg.TipoPresupuestoCodigo == "1" && psg.Valor == null) ||
+                         psg.PlazoMeses == null
+
+                       )
+                        esCompleto = false;
+                });
 
                 if (procesoSeleccion.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.AprobadaAperturaPorComiteFiduciario)
                 {
@@ -1509,6 +1535,21 @@ namespace asivamosffie.services
                              string.IsNullOrEmpty(psp.EmailProponente)
                        )
                            esCompleto = false;
+
+               });
+
+                procesoSeleccion.ProcesoSeleccionGrupo.Where( r => r.Eliminado != true).ToList().ForEach(psg =>
+               {
+                   if (
+                        string.IsNullOrEmpty( psg.NombreGrupo ) ||
+                        string.IsNullOrEmpty( psg.TipoPresupuestoCodigo ) ||
+                        ( psg.TipoPresupuestoCodigo == "2" && psg.ValorMaximoCategoria == null ) ||
+                        ( psg.TipoPresupuestoCodigo == "2" && psg.ValorMinimoCategoria == null ) ||
+                        ( psg.TipoPresupuestoCodigo == "1" && psg.Valor == null) ||
+                        psg.PlazoMeses == null
+
+                      )
+                       esCompleto = false;
                });
 
                 procesoSeleccion.ProcesoSeleccionCotizacion.ToList().ForEach(psc =>
@@ -1554,6 +1595,20 @@ namespace asivamosffie.services
                        esCompleto = false;
 
                });
+
+                procesoSeleccion.ProcesoSeleccionGrupo.Where(r => r.Eliminado != true).ToList().ForEach(psg =>
+                {
+                    if (
+                         string.IsNullOrEmpty(psg.NombreGrupo) ||
+                         string.IsNullOrEmpty(psg.TipoPresupuestoCodigo) ||
+                         (psg.TipoPresupuestoCodigo == "2" && psg.ValorMaximoCategoria == null) ||
+                         (psg.TipoPresupuestoCodigo == "2" && psg.ValorMinimoCategoria == null) ||
+                         (psg.TipoPresupuestoCodigo == "1" && psg.Valor == null) ||
+                         psg.PlazoMeses == null
+
+                       )
+                        esCompleto = false;
+                });
 
                 return esCompleto;
                        
@@ -1817,11 +1872,16 @@ namespace asivamosffie.services
             try
             {
                 var procesoSeleccionCot = _context.ProcesoSeleccionCronograma.Find(procesoSeleccionCotizacionId);
-                procesoSeleccionCot.Eliminado = true;
-                procesoSeleccionCot.UsuarioModificacion = usuarioModificacion;
-                procesoSeleccionCot.FechaModificacion = DateTime.Now;
-                _context.Update(procesoSeleccionCot);
-                _context.SaveChanges();
+
+                if (procesoSeleccionCot != null)
+                {
+                    procesoSeleccionCot.Eliminado = true;
+                    procesoSeleccionCot.UsuarioModificacion = usuarioModificacion;
+                    procesoSeleccionCot.FechaModificacion = DateTime.Now;
+                    _context.Update(procesoSeleccionCot);
+                    _context.SaveChanges();
+                }
+                
                 return respuesta =
                     new Respuesta
                     {

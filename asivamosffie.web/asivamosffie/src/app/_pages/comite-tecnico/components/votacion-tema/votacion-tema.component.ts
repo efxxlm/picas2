@@ -133,7 +133,7 @@ export class VotacionTemaComponent implements OnInit{
 
   onSubmit() {
     this.estaEditando = true;
-
+    this.addressForm.markAllAsTouched();
     let sesionComiteTema: SesionComiteTema = {
 
       sesionTemaId: this.data.sesionComiteTema.sesionTemaId,

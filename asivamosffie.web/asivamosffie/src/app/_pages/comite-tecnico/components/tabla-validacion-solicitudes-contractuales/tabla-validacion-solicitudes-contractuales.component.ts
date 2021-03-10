@@ -50,14 +50,9 @@ export class TablaValidacionSolicitudesContractualesComponent implements OnInit 
     };
   }
 
-  verSoporte(pTablaId: string, pRegistroId: number, numeroSolicitud: string, element: any) {
+  verSoporte(pTablaId: string, pRegistroId: number, numeroSolicitud: string) {
 
-    // cuando es actualizacion de cronograma y debe mostrar la ficha de procesos de seleccion
-    if (pTablaId == '6'){
-      pRegistroId = element.procesoSeleccionMonitoreo.procesoSeleccionId;
-      pTablaId = '1';
-    }
-
+    //console.log(pTablaId, pRegistroId)
     this.technicalCommitteSessionService.getPlantillaByTablaIdRegistroId(pTablaId, pRegistroId)
       .subscribe(resp => {
         console.log(resp);

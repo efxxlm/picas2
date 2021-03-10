@@ -42,6 +42,9 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
   estaEditando = false;
   tipoSolicitudCodigo;
   contratacion: Contratacion;
+  ddpsolicitud: any;
+  ddpvalor: any;
+  ddpdetalle: any;
 
   constructor(
     private fb: FormBuilder,
@@ -57,7 +60,8 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
       console.log(params);
       this.objetoDisponibilidad.contratacionId = params.idContratacion;
       this.objetoDisponibilidad.disponibilidadPresupuestalId = params.idDisponibilidadPresupuestal;
-      this.objetoDisponibilidad.tipoSolicitudCodigo = params.idTipoSolicitud;
+      this.objetoDisponibilidad.tipoSolicitudCodigo=params.idTipoSolicitud;
+      console.log(this.objetoDisponibilidad);
       if (this.objetoDisponibilidad.disponibilidadPresupuestalId > 0) {
         this.cargarDisponibilidadPre();
 
@@ -98,49 +102,61 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
     this.budgetAvailabilityService.getReuestCommittee()
       .subscribe(
         listaSolicitudes => {
-          listaSolicitudes.forEach(solicitud => {
-            if (solicitud.contratacionId == this.objetoDisponibilidad.contratacionId) {
-              this.objetoDisponibilidad.fechaSolicitud = solicitud.fechaSolicitud;
-              this.objetoDisponibilidad.numeroSolicitud = solicitud.numeroSolicitud;
-              this.objetoDisponibilidad.opcionContratarCodigo = solicitud.opcionContratar;
-              this.objetoDisponibilidad.valorSolicitud = solicitud.valorSolicitud;
-              this.objetoDisponibilidad.tipoSolicitudCodigo = solicitud.tipoSolicitudCodigo ? solicitud.tipoSolicitudCodigo : this.objetoDisponibilidad.tipoSolicitudCodigo;
-            }
+        listaSolicitudes.forEach( solicitud => {
+          if ( solicitud.contratacionId == this.objetoDisponibilidad.contratacionId ){
+            this.objetoDisponibilidad.fechaSolicitud = solicitud.fechaSolicitud;
+            this.objetoDisponibilidad.numeroSolicitud = solicitud.numeroSolicitud;
+            this.objetoDisponibilidad.opcionContratarCodigo = solicitud.opcionContratar;
+            this.objetoDisponibilidad.valorSolicitud = solicitud.valorSolicitud;
+            this.objetoDisponibilidad.tipoSolicitudCodigo = solicitud.tipoSolicitudCodigo? solicitud.tipoSolicitudCodigo:this.objetoDisponibilidad.tipoSolicitudCodigo;            
+          }
+          
+        }),
+        err => {
+          console.log( err );
+        }
 
-          }),
-            err => {
-              console.log(err);
-            }
-        })
-
-    this.projectContractingService.getContratacionByContratacionId(this.objetoDisponibilidad.contratacionId)
-      .subscribe(
-        contratacion => {
-          console.log(contratacion)
-          this.contratacion = contratacion;
-          this.tipoSolicitudCodigo = contratacion.tipoSolicitudCodigo;
-          this.objetoDisponibilidad.fechaComiteTecnicoNotMapped = contratacion.fechaComiteTecnicoNotMapped;
+        this.projectContractingService.getContratacionByContratacionId( this.objetoDisponibilidad.contratacionId )
+        .subscribe(
+          contratacion => {
+            this.objetoDisponibilidad.fechaComiteTecnicoNotMapped=contratacion.fechaComiteTecnicoNotMapped;
           contratacion.contratacionProyecto.forEach(cp => {
-            cp.proyecto.contratacionProyectoAportante = cp.contratacionProyectoAportante;
-
+            cp.proyecto.contratacionProyectoAportante=cp.contratacionProyectoAportante;
+            
             this.listaProyectos.push(cp.proyecto);
-            /*this.projectService.getProjectById(cp.proyectoId)
-              .subscribe(proyecto => {
-                let aporntantes=cp.contratacionProyectoAportante;
-                cp.proyecto = proyecto;
-                cp.proyecto.apo
-                console.log(proyecto);
-          
-                
-          
-              })*/
           });
           console.log(this.listaProyectos);
-        },
-        err => {
-          console.log(err);
-        }
-      );
+          },
+          err => {
+            console.log( err );
+          }
+        );
+      
+        if(this.objetoDisponibilidad.tipoSolicitudCodigo=='2')//modificacionContractual
+        {
+          this.budgetAvailabilityService.getNovedadContractual(this.objetoDisponibilidad.contratacionId).subscribe( 
+            res => {
+              console.log(res);
+              this.ddpsolicitud=res[0].contrato.contratacion.disponibilidadPresupuestal[0].numeroDdp;
+              this.ddpvalor=res[0].contrato.contratacion.disponibilidadPresupuestal[0].valorSolicitud;
+              this.ddpdetalle=res[0].novedadContractualDescripcion[0].resumenJustificacion;
+              this.objetoDisponibilidad.novedadContractualId = res[0].novedadContractualId;
+              this.objetoDisponibilidad.esNovedadContractual = true;          
+              this.objetoDisponibilidad.numeroSolicitud = res[0].numeroSolicitud;
+              this.objetoDisponibilidad.tipoSolicitudCodigo = '1';//tradicional
+              this.objetoDisponibilidad.valorSolicitud = res[0].novedadContractualDescripcion[0].presupuestoAdicionalSolicitado;
+              this.addressForm.get("plazoMeses").setValue(res[0].novedadContractualDescripcion[0].plazoAdicionalMeses);
+              this.addressForm.get("plazoDias").setValue(res[0].novedadContractualDescripcion[0].plazoAdicionalDias);
+              this.addressForm.get("objeto").setValue(res[0].novedadContractualDescripcion[0].resumenJustificacion);
+            },
+            err => {
+              console.log( err );
+            }
+          )
+        }  
+      })
+
+    
 
   }
 
@@ -196,6 +212,7 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
 
   onSubmit() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     if (this.addressForm.valid) {
       let plazoObra: number = 0;
       let plazoInterventoria: number = 0;

@@ -25,6 +25,7 @@ namespace asivamosffie.services
             _commonService = commonService;
             _context = context;
         }
+
         public async Task<List<VRegistrarFase1>> GetListContratacion2()
         {
             return await _context.VRegistrarFase1.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString() && r.TieneFasePreconstruccion.Value > 0).OrderByDescending(r => r.FechaAprobacion).ToListAsync();
@@ -36,27 +37,15 @@ namespace asivamosffie.services
             try
             {
                 List<Contrato> listContratos = await _context.Contrato
-              .FromSqlRaw("SELECT c.* FROM dbo.Contrato AS c " +
-              "INNER JOIN dbo.Contratacion AS ctr ON c.ContratacionId = ctr.ContratacionId " +
-              "INNER JOIN dbo.DisponibilidadPresupuestal AS dp ON ctr.ContratacionId = dp.ContratacionId " +
-              "INNER JOIN dbo.ContratoPoliza AS cp ON c.ContratoId = cp.ContratoId " +
-              "WHERE dp.NumeroDRP IS NOT NULL " +     //Documento Registro Presupuestal
-              "AND cp.FechaAprobacion is not null " + //Fecha Aprobacion Poliza
-              "AND ctr.TipoSolicitudCodigo = 1" +   //Solo contratos Tipo Obra
-              "OR  c.EstadoVerificacionCodigo = 1" +  //Sin aprobación de requisitos técnicos
-              "OR  c.EstadoVerificacionCodigo = 2" +  //En proceso de aprobación de requisitos técnicos
-              "OR  c.EstadoVerificacionCodigo = 3" +  //Con requisitos técnicos aprobados
-              "OR  c.EstadoVerificacionCodigo = 4" +  //Con requisitos técnicos aprobados
-              "OR  c.EstadoVerificacionCodigo = 10")  //Enviado al interventor -- Enviado por el supervisor
-
-              .Include(r => r.ContratoPoliza)
-              .Include(r => r.Contratacion)
-                 .ThenInclude(r => r.ContratacionProyecto)
-                     .ThenInclude(r => r.Proyecto)
-                          .ThenInclude(r => r.ContratoPerfil)
-              .Include(r => r.Contratacion)
-                .ThenInclude(r => r.DisponibilidadPresupuestal)
-             .ToListAsync();
+                  .FromSqlRaw(QuerySql.GetListContratacion)
+                  .Include(r => r.ContratoPoliza)
+                  .Include(r => r.Contratacion)
+                     .ThenInclude(r => r.ContratacionProyecto)
+                         .ThenInclude(r => r.Proyecto)
+                              .ThenInclude(r => r.ContratoPerfil)
+                  .Include(r => r.Contratacion)
+                    .ThenInclude(r => r.DisponibilidadPresupuestal)
+                                                                   .ToListAsync();
 
                 foreach (var c in listContratos)
                 {
@@ -98,7 +87,7 @@ namespace asivamosffie.services
                 }
             }
             catch (Exception ex)
-            { 
+            {
             }
 
             return listaContrats;
@@ -191,17 +180,9 @@ namespace asivamosffie.services
                             contratoPerfilOld.CantidadHvAprobadas = ContratoPerfil.CantidadHvAprobadas;
                             contratoPerfilOld.FechaAprobacion = ContratoPerfil.FechaAprobacion;
                             contratoPerfilOld.RutaSoporte = ContratoPerfil.RutaSoporte;
-
                             contratoPerfilOld.TieneObservacionApoyo = ContratoPerfil.TieneObservacionApoyo;
                             contratoPerfilOld.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(ContratoPerfil);
-
-                            if (contratoPerfilOld.RegistroCompleto) 
-                                if (contratoPerfilOld.TieneObservacionSupervisor.HasValue) 
-                                    contratoPerfilOld.TieneObservacionSupervisor = false; 
-                            else
-                            {
-                                RegistroCompletoContrato = false;
-                            }
+                            contratoPerfilOld.TieneObservacionSupervisor = ContratoPerfil.TieneObservacionSupervisor;
 
                             foreach (var ContratoPerfilObservacion in ContratoPerfil.ContratoPerfilObservacion)
                             {
@@ -253,23 +234,20 @@ namespace asivamosffie.services
                             ContratoPerfil.Eliminado = false;
                             ContratoPerfil.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(ContratoPerfil);
                             _context.ContratoPerfil.Add(ContratoPerfil);
-                            _context.SaveChanges();
 
                             foreach (var ContratoPerfilObservacion in ContratoPerfil.ContratoPerfilObservacion)
                             {
-
-                                if (!string.IsNullOrEmpty(ContratoPerfilObservacion.Observacion))
-                                    ContratoPerfilObservacion.Observacion = ContratoPerfilObservacion.Observacion.ToUpper();
+                                ContratoPerfilObservacion.Observacion = ContratoPerfilObservacion.Observacion == null ? null : ContratoPerfilObservacion.Observacion.ToUpper();
                                 ContratoPerfilObservacion.UsuarioCreacion = pContrato.UsuarioCreacion;
                                 ContratoPerfilObservacion.FechaCreacion = DateTime.Now;
                                 ContratoPerfilObservacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Interventoria;
                                 ContratoPerfilObservacion.Eliminado = false;
-                                 
+
                                 _context.ContratoPerfilObservacion.Add(ContratoPerfilObservacion);
                             }
-
-                            foreach (var ContratoPerfilNumeroRadicado in ContratoPerfil.ContratoPerfilNumeroRadicado)
+                            ContratoPerfil.ContratoPerfilNumeroRadicado.ToList().ForEach(ContratoPerfilNumeroRadicado =>
                             {
+
                                 if (ContratoPerfilNumeroRadicado.ContratoPerfilNumeroRadicadoId == 0)
                                 {
                                     ContratoPerfilNumeroRadicado.Eliminado = false;
@@ -284,21 +262,23 @@ namespace asivamosffie.services
                                     ContratoPerfilNumeroRadicado.UsuarioModificacion = pContrato.UsuarioCreacion;
                                     ContratoPerfilNumeroRadicado.FechaModificacion = DateTime.Now;
                                 }
-                            }
+                            });
                         }
                     }
                 }
 
                 //Cambiar Estado Contrato 
                 Contrato contratoOld = _context.Contrato.
-                    Where(r => r.ContratoId == pContrato.ContratoId)
-                    .Include(r => r.Contratacion)
-                    .Include(r => r.ContratoPerfil)
-                    .FirstOrDefault();
+                        Where(r => r.ContratoId == pContrato.ContratoId)
+                        .Include(r => r.Contratacion)
+                        .Include(r => r.ContratoPerfil)
+                        .FirstOrDefault();
+
+                contratoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
+                contratoOld.FechaModificacion = DateTime.Now;
 
                 if (contratoOld.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
                     contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.En_proceso_de_aprobacion_de_requisitos_tecnicos;
-
 
                 else
                 {
@@ -306,11 +286,7 @@ namespace asivamosffie.services
 
                     if (contratoOld.ContratoPerfil.Count() > 0 && RegistroCompletoContrato)
                         contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_verificados;
-
                 }
-                contratoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
-                contratoOld.FechaModificacion = DateTime.Now;
-
                 return
                     new Respuesta
                     {
@@ -318,7 +294,13 @@ namespace asivamosffie.services
                         IsException = false,
                         IsValidation = false,
                         Code = RegisterPreContructionPhase1.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Preconstruccion_Fase_1, RegisterPreContructionPhase1.OperacionExitosa, idAccion, pContrato.UsuarioCreacion, CreateEdit)
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                                                                                                    (int)enumeratorMenu.Preconstruccion_Fase_1,
+                                                                                                    RegisterPreContructionPhase1.OperacionExitosa,
+                                                                                                    idAccion,
+                                                                                                    pContrato.UsuarioCreacion,
+                                                                                                    CreateEdit
+                                                                                                )
                     };
             }
             catch (Exception ex)
@@ -340,14 +322,14 @@ namespace asivamosffie.services
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Contrato_Perfil, (int)EnumeratorTipoDominio.Acciones);
 
             try
-            { 
+            {
                 _context.Set<ContratoPerfil>().Where(cp => cp.ContratoPerfilId == ContratoPerfilId)
                                                                                                 .Update(cp => new ContratoPerfil
                                                                                                 {
                                                                                                     Eliminado = true,
                                                                                                     UsuarioModificacion = UsuarioModificacion,
-                                                                                                    FechaModificacion = DateTime.Now, 
-                                                                                                }); 
+                                                                                                    FechaModificacion = DateTime.Now,
+                                                                                                });
                 return
                     new Respuesta
                     {
@@ -381,9 +363,9 @@ namespace asivamosffie.services
                  || contratoPerfilOld.CantidadHvAprobadas == 0
                  || string.IsNullOrEmpty(contratoPerfilOld.FechaAprobacion.ToString())
                  || string.IsNullOrEmpty(contratoPerfilOld.RutaSoporte)
-                ) 
+                )
                 return false;
-           
+
             return true;
         }
 
@@ -454,6 +436,7 @@ namespace asivamosffie.services
                 //Enviar Correo Botón aprobar inicio 3.1.7
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_supervisor && contratoMod.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
                 {
+                    GetDeleteTieneObservacionSupervisor(pContratoId);
                     await EnviarCorreoSupervisor(ConstanCodigoTipoContratacionSTRING.Interventoria, contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
                     contratoMod.FechaAprobacionRequisitosApoyo = DateTime.Now;
                 }
@@ -461,6 +444,7 @@ namespace asivamosffie.services
                 //Enviar Correo Botón aprobar inicio 3.1.7
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_supervisor && contratoMod.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
                 {
+                    GetDeleteTieneObservacionSupervisor(pContratoId);
                     await EnviarCorreoSupervisor(ConstanCodigoTipoContratacionSTRING.Obra, contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
                     contratoMod.FechaAprobacionRequisitosApoyo = DateTime.Now;
                 }
@@ -548,6 +532,22 @@ namespace asivamosffie.services
                     };
             }
         }
+
+        private void GetDeleteTieneObservacionSupervisor(int pContratoId)
+        {
+            _context.ContratoPerfil.Where(cp => cp.ContratoId == pContratoId).ToList().ForEach(ContratoPerfil =>
+            {
+                _context.Set<ContratoPerfil>()
+                        .Where(c => c.ContratoPerfilId == ContratoPerfil.ContratoPerfilId)
+                        .Update(
+                                  c => new ContratoPerfil
+                                                          {
+                                                              TieneObservacionSupervisor = null,
+                                                              FechaModificacion = DateTime.Now
+                                                          }); 
+            });
+        }
+
         /// <summary>
         /// Correos  Automaticos
         /// </summary>

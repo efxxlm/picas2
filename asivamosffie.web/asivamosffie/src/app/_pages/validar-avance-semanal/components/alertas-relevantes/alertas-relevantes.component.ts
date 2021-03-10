@@ -28,6 +28,7 @@ export class AlertasRelevantesComponent implements OnInit {
     seguimientoSemanalGestionObraId: number;
     seguimientoSemanalGestionObraAlertaId = 0;
     seguimientoSemanalObservacionId = 0;
+    contadorObservacionApoyo = 0;
     gestionAlertas: any;
     observacionApoyo: any[] = [];
     displayedColumnsHistorial: string[]  = [
@@ -115,6 +116,11 @@ export class AlertasRelevantesComponent implements OnInit {
     }
 
     guardar() {
+        if ( this.gestionAlertas.tieneObservacionApoyo === true && this.formAlertasRelevantes.get( 'tieneObservaciones' ).value === false && this.contadorObservacionApoyo === 0 ) {
+            this.contadorObservacionApoyo++;
+            this.openDialog( '', '<b>Le recomendamos verificar su respuesta;<br>Tenga en cuenta que el apoyo a la supervisión si tuvo observaciones.</b>' );
+            return;
+        }
         if ( this.formAlertasRelevantes.get( 'tieneObservaciones' ).value === false && this.formAlertasRelevantes.get( 'observaciones' ).value !== null ) {
             this.formAlertasRelevantes.get( 'observaciones' ).setValue( '' );
         }

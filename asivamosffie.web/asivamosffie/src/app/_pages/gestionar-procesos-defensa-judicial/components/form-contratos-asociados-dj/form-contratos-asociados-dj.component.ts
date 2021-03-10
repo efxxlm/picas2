@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Form, FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -29,7 +30,6 @@ export class FormContratosAsociadosDjComponent implements OnInit {
   dataTable: any[] = [
   ];
   myControl= new FormArray([]);
-  myFilter = new FormControl();
   filteredName: Observable<string[]>;
   formContratista: FormGroup;
   editorStyle = {
@@ -44,24 +44,16 @@ export class FormContratosAsociadosDjComponent implements OnInit {
     ]
   };
   contratosArray = [];
-  contratos:any[]=[];
+  contratos=[];
   listProyectos: any[]=[];
   listProyectosSeleccion: any[]=[];
   listContrattoscompletos=[];
-
+  estaEditando = false;
   constructor ( private fb: FormBuilder, private defensaService:DefensaJudicialService,
     public dialog: MatDialog,    
     private route: ActivatedRoute,
     private router: Router ) {
     this.crearFormulario();    
-    this.defensaService.GetListContract().subscribe(response=>{
-      this.contratosArray=response.map(x=>x.numeroContrato);
-      this.contratos=response;
-    });
-    this.filteredName = this.myFilter.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value))
-    );
   }
   
   cargarRegistro() {
@@ -73,42 +65,81 @@ export class FormContratosAsociadosDjComponent implements OnInit {
       if(Object.keys(this.defensaJudicial).length>0)
       {
         this.formContratista.get( 'numeroContratos' ).setValue(this.defensaJudicial.cantContratos);
-        let i=0;
-        this.defensaJudicial.defensaJudicialContratacionProyecto.forEach(element => {
-          this.myControl.controls[i].setValue(element.numeroContrato);
-          console.log(this.myControl.controls[i]);
 
-          let contrato=this.contratos.filter(x=>x.numeroContrato==element.numeroContrato);
-          this.perfiles.value.contrato = contrato[0].contratoId;
-          console.log(this.perfiles.value.contrato);
-        this.defensaService.GetListProyectsByContract(contrato[0].contratoId).subscribe(response=>{
-          this.listProyectosSeleccion=response;
-          this.dataTable=response;
-          let alguno=false;      
-          this.dataTable.forEach(element2 => {
-            if(element2.proyectoId==element.contratacionProyecto.proyectoId)
-            {
-              element2.checked=true;
-              alguno=true;
-            }
-          });
-          this.dataSource[i] = new MatTableDataSource(this.dataTable);
+        let listaContratos:any[]= [];
+
+        this.defensaJudicial.defensaJudicialContratacionProyecto.forEach(element => {
+          if ( listaContratos.filter( r => r.numeroContrato == element.numeroContrato ).length === 0)
+            listaContratos.push( this.contratos.filter(x=>x.numeroContrato==element.numeroContrato)[0] );
+        });
+
+        let i=0;
+        listaContratos.forEach( c =>{
+          //this.myControl.controls[i].setValue(c.numeroContrato);
+          this.perfiles.value.contrato = c.contratoId;
+          this.defensaService.GetListProyectsByContract(c.contratoId).subscribe(response=>{
+            this.listProyectosSeleccion=response;
+            this.dataTable=response;
+            let alguno=false;
+            this.dataTable.forEach(element2 => {
+              this.defensaJudicial.defensaJudicialContratacionProyecto.forEach(test => {
+                if(element2.proyectoId==test.contratacionProyecto.proyectoId)
+                {
+                  element2.checked=true;
+                  alguno=true;
+                }
+              });
+            });
+            this.dataSource[i] = new MatTableDataSource(this.dataTable);
           this.dataSource[i].paginator = this.paginator;
           this.dataSource[i].sort = this.sort;
           this.listContrattoscompletos[i]=alguno;
-          console.log(this.dataSource);
+          this.myControl.controls[i].setValue(c.numeroContrato);
           i++;
         });
-        
-          
+
+      });
+
+
+        /*
+        let i=0;
+        this.defensaJudicial.defensaJudicialContratacionProyecto.forEach(element => {
+          this.myControl.controls[i].setValue(element.numeroContrato);
+          let contrato=this.contratos.filter(x=>x.numeroContrato==element.numeroContrato);
+          this.perfiles.value.contrato = contrato[0].contratoId;
+        this.defensaService.GetListProyectsByContract(contrato[0].contratoId).subscribe(response=>{
+          console.log(contrato[0].contratoId);
+          this.listProyectosSeleccion=response;
+          this.dataTable=response;
+          let alguno=false;
+          this.dataTable.forEach(element2 => {
+            this.defensaJudicial.defensaJudicialContratacionProyecto.forEach(test => {
+              if(element2.proyectoId==test.contratacionProyecto.proyectoId)
+              {
+                element2.checked=true;
+                alguno=true;
+              }
+            });
+          });
+          this.dataSource[i] = new MatTableDataSource(this.dataTable);
+          console.log("Datatable: ",this.dataTable);
+          console.log("Datasource: ");
+          this.dataSource[i].paginator = this.paginator;
+          this.dataSource[i].sort = this.sort;
+          this.listContrattoscompletos[i]=alguno;
+          i++;
         });
+        });
+        */
       }  
     //});
   }
 
   ngOnInit(): void {
-    
-
+    this.defensaService.GetListContract().subscribe(response=>{
+      this.contratosArray=response.map(x=>x.numeroContrato);
+      this.contratos=response;
+    });
     this.formContratista.get( 'numeroContratos' ).valueChanges
       .subscribe( value => {
         this.perfiles.clear();
@@ -120,14 +151,13 @@ export class FormContratosAsociadosDjComponent implements OnInit {
               }
             ) 
           )
-          /*
           let control=new FormControl();
-          this.filteredName[i] = control.valueChanges.pipe(
+          
+          this.filteredName = control.valueChanges.pipe(
             startWith(''),
             map(values => this._filter(values))
           );
           this.myControl.push(control);
-          */
         }
       } );
 
@@ -151,14 +181,18 @@ export class FormContratosAsociadosDjComponent implements OnInit {
   };
 
   private _filter(value: string): string[] {
+    console.log("intentnado filtrar"+value);
     const filterValue = value.toLowerCase();    
     if(value!="")
     {      
       let filtroportipo:string[]=[];
       this.contratos.forEach(element => {        
-        if(!filtroportipo.includes(element.numeroContrato))
+        if(element.numeroContrato==value)
         {
-          filtroportipo.push(element.numeroContrato);
+          if(!filtroportipo.includes(element.numeroContrato))
+          {
+            filtroportipo.push(element.numeroContrato);
+          }
         }
       });
       let ret= filtroportipo.filter(x=> x.toLowerCase().indexOf(filterValue) === 0);      
@@ -183,9 +217,6 @@ export class FormContratosAsociadosDjComponent implements OnInit {
       this.listContrattoscompletos[i]=false;
       console.log(this.dataSource);
     });
-    
-    
-    
   }
   textoLimpio (texto: string) {
     if ( texto ){
@@ -247,6 +278,8 @@ export class FormContratosAsociadosDjComponent implements OnInit {
   };
 
   guardar () {
+    this.estaEditando = true;
+    this.formContratista.markAllAsTouched();
     console.log( this.formContratista );
     console.log(this.listProyectos);
     let defContraProyecto:DefensaJudicialContratacionProyecto[]=[];
@@ -285,10 +318,13 @@ export class FormContratosAsociadosDjComponent implements OnInit {
     if(redirect)
     {
       dialogRef.afterClosed().subscribe(result => {
-          if(id>0)
+          if(id>0 && this.defensaJudicial.defensaJudicialId==0)
           {
             this.router.navigate(["/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial/"+id], {});
           }                  
+          else{
+            location.reload();
+          }                   
       });
     }
   }

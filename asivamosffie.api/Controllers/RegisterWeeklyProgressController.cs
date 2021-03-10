@@ -16,7 +16,8 @@ using Microsoft.AspNetCore.Authorization;
 namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController] 
+    [ApiController]
+    [Authorize]
     public class RegisterWeeklyProgressController : Controller
     {
 

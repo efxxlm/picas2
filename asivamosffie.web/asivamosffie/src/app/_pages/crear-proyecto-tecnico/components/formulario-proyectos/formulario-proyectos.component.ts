@@ -241,10 +241,6 @@ export class FormularioProyectosComponent implements OnInit {
           {
             this.bitPuedoEditar=false;
           }
-
-          this.valueVacioLatitud();
-          this.valueVacioLongitud();
-
           //this.proyecto.predioPrincipal.tipoPredioCodigo;
           // ajusto lartitud y longitud
           // console.log("viene predio?");
@@ -596,11 +592,10 @@ export class FormularioProyectosComponent implements OnInit {
   }
 
   openDialog(modalTitle: string, modalText: string) {
-    let dialogRef = this.dialog.open(ModalDialogComponent, {
+    this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
     });
-    return dialogRef;
   }
 
   openDialogSiNo(modalTitle: string, modalText: string,tipo:number,i:number) {
@@ -701,12 +696,9 @@ export class FormularioProyectosComponent implements OnInit {
           }
           else
           {
-            //  console.log(this.proyecto.proyectoPredio.length+1);
-            // this.proyecto.cantPrediosPostulados=this.proyecto.proyectoPredio.length+1;
-            let dialogRef = this.openDialog("","<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>");
-            dialogRef.afterClosed().subscribe( ()=> {
-              this.proyecto.cantPrediosPostulados=this.proyecto.proyectoPredio.length+1;
-            })
+            // console.log(this.proyecto.proyectoPredio.length+1);
+            this.proyecto.cantPrediosPostulados=this.proyecto.proyectoPredio.length+1;
+            this.openDialog("","<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>");
             
           }
         }
@@ -765,11 +757,8 @@ export class FormularioProyectosComponent implements OnInit {
           }
           else
           {            
-            let dialogRef = this.openDialog("","<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>");            
-            dialogRef.afterClosed().subscribe( ()=> {
-              this.proyecto.cantidadAportantes=this.proyecto.proyectoAportante.length;            
-            })
-            
+            this.proyecto.cantidadAportantes=this.proyecto.proyectoAportante.length;            
+            this.openDialog("","<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>");            
           }
         }
         else{
@@ -1085,10 +1074,10 @@ export class FormularioProyectosComponent implements OnInit {
   }
 
   valueVacioLatitud() {
-    if (this.proyecto.predioPrincipal.ubicacionLatitud === '°') this.proyecto.predioPrincipal.ubicacionLatitud = ''
+    if (this.proyecto.predioPrincipal && this.proyecto.predioPrincipal.ubicacionLatitud === '°') this.proyecto.predioPrincipal.ubicacionLatitud = ''
   }
   valueVacioLongitud() {
-    if (this.proyecto.predioPrincipal.ubicacionLongitud === '°') this.proyecto.predioPrincipal.ubicacionLongitud = ''
+    if (this.proyecto.predioPrincipal && this.proyecto.predioPrincipal.ubicacionLongitud === '°') this.proyecto.predioPrincipal.ubicacionLongitud = ''
   }
 
   validateKeypressLlave(event: KeyboardEvent) {

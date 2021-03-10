@@ -36,6 +36,7 @@ export class FormConvocadosPasivaDjComponent implements OnInit {
   ];
   intanciasArray = [
   ];
+  estaEditando = false;
   constructor ( private fb: FormBuilder,public commonService:CommonService,
     public defensaService:DefensaJudicialService,
     public dialog: MatDialog, private router: Router  ) {
@@ -52,26 +53,49 @@ export class FormConvocadosPasivaDjComponent implements OnInit {
   cargarRegistro() {
     console.log(this.defensaJudicial.numeroDemandados);
     this.formContratista.get("numeroContratos").setValue(this.defensaJudicial.numeroDemandados);
-      let i=0;      
+      let i=0; 
+
+      let listaConvocados:DemandadoConvocado[]= [];
+
       this.defensaJudicial.demandadoConvocado.forEach(element => {
-        console.log(this.perfiles.controls[i].get("nomConvocado"));
-        this.perfiles.controls[i].get("nomConvocado").setValue(element.nombre);
-        this.perfiles.controls[i].get("tipoIdentificacion").setValue(element.tipoIdentificacionCodigo);
-        this.perfiles.controls[i].get("numIdentificacion").setValue(element.numeroIdentificacion);
-        this.perfiles.controls[i].get("conocimientoParteAutoridad").setValue(element.existeConocimiento);
-        this.perfiles.controls[i].get("despacho").setValue(element.convocadoAutoridadDespacho);
-        this.commonService.listMunicipiosByIdMunicipio(element.localizacionIdMunicipio.toString()).subscribe(res=>{
-          this.perfiles.controls[i].get("departamento").setValue(res[0].idPadre);
-          this.municipioArray=res;
-          this.perfiles.controls[i].get("municipio").setValue(element.localizacionIdMunicipio);
-        });
-        
-        this.perfiles.controls[i].get("radicadoDespacho").setValue(element.radicadoDespacho);
-        this.perfiles.controls[i].get("fechaRadicadoDespacho").setValue(element.fechaRadicado);
-        this.perfiles.controls[i].get("accionAEvitar").setValue(element.medioControlAccion);
-        this.perfiles.controls[i].get("etapaProcesoFFIE").setValue(element.etapaProcesoFfiecodigo);
-        this.perfiles.controls[i].get("caducidad").setValue(element.caducidadPrescripcion);
-        
+        if (element.esConvocado == true)
+        listaConvocados.push(element);
+      });
+
+      listaConvocados.forEach(element => {
+          console.log(this.perfiles.controls[i].get("nomConvocado"));
+          this.perfiles.controls[i].get("demandadoConvocadoId").setValue(element.demandadoConvocadoId);
+          this.perfiles.controls[i].get("nomConvocado").setValue(element.nombre);
+          this.perfiles.controls[i].get("tipoIdentificacion").setValue(element.tipoIdentificacionCodigo);
+          this.perfiles.controls[i].get("numIdentificacion").setValue(element.numeroIdentificacion);
+          this.perfiles.controls[i].get("conocimientoParteAutoridad").setValue(element.existeConocimiento);
+          this.perfiles.controls[i].get("despacho").setValue(element.convocadoAutoridadDespacho);
+          if(element.localizacionIdMunicipio != null){
+            this.commonService.listMunicipiosByIdMunicipio(element.localizacionIdMunicipio.toString()).subscribe(res=>{
+              this.perfiles.controls[i].get("departamento").setValue(res[0].idPadre);
+              this.municipioArray=res;
+              this.perfiles.controls[i].get("municipio").setValue(element.localizacionIdMunicipio);
+            });
+          }
+          this.perfiles.controls[i].get("radicadoDespacho").setValue(element.radicadoDespacho);
+          this.perfiles.controls[i].get("fechaRadicadoDespacho").setValue(element.fechaRadicado);
+          this.perfiles.controls[i].get("accionAEvitar").setValue(element.medioControlAccion);
+          this.perfiles.controls[i].get("etapaProcesoFFIE").setValue(element.etapaProcesoFfiecodigo);
+          this.perfiles.controls[i].get("caducidad").setValue(element.caducidadPrescripcion);
+          //this.perfiles.controls[i].get("registroCompleto").setValue(element.registroCompleto);
+          if( element.registroCompleto == null 
+            || (!element.registroCompleto 
+            && (element.nombre == null || element.nombre == '')
+            && (element.tipoIdentificacionCodigo == null || element.tipoIdentificacionCodigo == '')
+            && (element.numeroIdentificacion == null || element.numeroIdentificacion == '')
+            && (element.existeConocimiento == null) 
+            )){
+              this.perfiles.controls[i].get("registroCompleto").setValue(null);
+            }else if(!element.registroCompleto){
+              this.perfiles.controls[i].get("registroCompleto").setValue(false);
+            }else if(element.registroCompleto){
+              this.perfiles.controls[i].get("registroCompleto").setValue(true);
+            }
         i++;
       });     
   }
@@ -96,6 +120,7 @@ export class FormConvocadosPasivaDjComponent implements OnInit {
           this.perfiles.push( 
             this.fb.group(
               {
+                demandadoConvocadoId: [ null ],
                 nomConvocado: [ null ],
                 tipoIdentificacion: [ null ],
                 numIdentificacion: [ null ],
@@ -107,7 +132,8 @@ export class FormConvocadosPasivaDjComponent implements OnInit {
                 fechaRadicadoDespacho: [ null ],
                 accionAEvitar: [ null ],
                 etapaProcesoFFIE: [ null ],
-                caducidad: [ null ]
+                caducidad: [ null ],
+                registroCompleto: [ null ],
               }
             ) 
           )
@@ -173,10 +199,13 @@ export class FormConvocadosPasivaDjComponent implements OnInit {
   };
 
   guardar () {
+    this.estaEditando = true;
+    this.formContratista.markAllAsTouched();
     console.log( this.formContratista );
     let defContraProyecto:DemandadoConvocado[]=[];
     for(let perfil of this.perfiles.controls){
       defContraProyecto.push({
+        demandadoConvocadoId:perfil.get("demandadoConvocadoId").value,
         nombre:perfil.get("nomConvocado").value,
         tipoIdentificacionCodigo:perfil.get("tipoIdentificacion").value,
         numeroIdentificacion:perfil.get("numIdentificacion").value,

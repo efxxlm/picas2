@@ -96,11 +96,8 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
 
   initForm() {
     this.addressForm = this.fb.group({
-      cuantosProponentes: [
-        this.procesoSeleccion.procesoSeleccionProponente
-          ? this.procesoSeleccion.procesoSeleccionProponente.length
-          : null,
-        Validators.compose([Validators.required, Validators.minLength(1), Validators.maxLength(2)])
+      cuantosProponentes: [this.procesoSeleccion.procesoSeleccionProponente.length, Validators.compose([
+        Validators.required, Validators.minLength(1), Validators.maxLength(2)])
       ],
       nombresProponentes: [null, Validators.required],
       tipoProponente: [null, Validators.required],
@@ -230,6 +227,7 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
 
   onSubmit() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     this.addressForm.get('nombresProponentes').setValue( null );
     this.procesoSeleccion.cantidadProponentesInvitados = this.addressForm.get('cuantosProponentes').value;
     // console.log(this.procesoSeleccion);

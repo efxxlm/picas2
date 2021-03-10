@@ -114,6 +114,7 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
   }
   onSubmit() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let dataObsrvacionWrite;
     if(this.addressForm.value.observaciones==null){
       dataObsrvacionWrite = "";

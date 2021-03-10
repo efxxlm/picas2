@@ -38,6 +38,7 @@ export class VerdetalleeditAvanceActuaDerivadasComponent implements OnInit {
   actuacionDerivadaID: any;
   controversia: any;
   actuacionDerivadaInfo: any;
+  estaEditando = false;
   constructor(private fb: FormBuilder,private router: Router, private conServices:ContractualControversyService,
     public dialog: MatDialog,
     public commonServices: CommonService,
@@ -89,6 +90,7 @@ export class VerdetalleeditAvanceActuaDerivadasComponent implements OnInit {
     }
   }
   onSubmit() {
+    this.estaEditando = true;
     let obj={
       seguimientoActuacionDerivadaId:this.actuacionDerivadaInfo.seguimientoActuacionDerivadaId,
       controversiaActuacionId:this.controversia.controversiaActuacionId,

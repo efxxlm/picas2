@@ -20,10 +20,6 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public Contratacion Contratacion { get; set; }
         [NotMapped]
-        public ControversiaContractual ControversiaContractual{ get; set; }
-        [NotMapped]
-        public NovedadContractual ModificacionContractual { get; set; }
-        [NotMapped]
         public string EstadoDelRegistro { get; set; } 
         [NotMapped]
         public bool EstadoRegistro { get; set; }

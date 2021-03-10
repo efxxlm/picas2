@@ -28,6 +28,7 @@
               #cantidadPerfiles
               required
               onKeyPress="if(this.value.length>=this.maxLength) return false;"
+              oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
             />
           </mat-form-field>
           <span
@@ -139,6 +140,7 @@
                       #cantidadHvRequeridas
                       (keypress)="validateNumberKeypress($event)"
                       onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                      oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                       formControlName="cantidadHvRequeridas"
                       required
                       (ngModelChange)="validateNumber($event, i, 'cantidadHvRequeridas')"
@@ -197,6 +199,7 @@
                       #cantidadHvRecibidas
                       (keypress)="validateNumberKeypress($event)"
                       onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                      oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                       formControlName="cantidadHvRecibidas"
                       required
                       (ngModelChange)="validateNumber($event, i, 'cantidadHvRecibidas')"
@@ -255,6 +258,7 @@
                       #cantidadHvAprobadas
                       (keypress)="validateNumberKeypress($event)"
                       onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                      oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                       formControlName="cantidadHvAprobadas"
                       required
                       (ngModelChange)="validateNumber($event, i, 'cantidadHvAprobadas')"

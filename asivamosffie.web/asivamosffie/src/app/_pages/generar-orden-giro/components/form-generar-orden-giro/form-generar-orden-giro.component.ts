@@ -1,4 +1,7 @@
+import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
+import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
+import { OrdenPagoService } from 'src/app/core/_services/ordenPago/orden-pago.service';
 
 @Component({
   selector: 'app-form-generar-orden-giro',
@@ -7,9 +10,37 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FormGenerarOrdenGiroComponent implements OnInit {
 
-  constructor() { }
+    solicitudPago: any;
+    contrato: any;
+    modalidadContratoArray: Dominio[] = [];
 
-  ngOnInit(): void {
-  }
+    constructor(
+        private activatedRoute: ActivatedRoute,
+        private ordenPagoSvc: OrdenPagoService,
+        private commonSvc: CommonService )
+    {
+        this.commonSvc.modalidadesContrato()
+        .subscribe( response => {
+            this.modalidadContratoArray = response;
+            this.ordenPagoSvc.getSolicitudPagoBySolicitudPagoId( this.activatedRoute.snapshot.params.id )
+                .subscribe(
+                    response => {
+                        this.solicitudPago = response;
+                        this.contrato = response[ 'contratoSon' ];
+                        console.log( this.solicitudPago );
+                    }
+                );
+        } );
+    }
+
+    ngOnInit(): void {
+    }
+
+    getModalidadContrato( modalidadCodigo: string ) {
+        if ( this.modalidadContratoArray.length > 0 ) {
+            const modalidad = this.modalidadContratoArray.filter( modalidad => modalidad.codigo === modalidadCodigo );
+            return modalidad[0].nombre;
+        }
+    }
 
 }

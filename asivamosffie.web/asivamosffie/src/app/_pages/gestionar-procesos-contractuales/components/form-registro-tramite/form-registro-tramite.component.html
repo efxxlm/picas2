@@ -64,7 +64,7 @@
         </quill-editor>
       </div>
       <span class="contador miles" *ngIf="dataFormulario.get('observaciones').value !== null" style="margin-top: 2.2em">
-        {{ 2000 - textoLimpio( observaciones.quillEditor, 2000 ) }}
+        {{ 2000 - textoLimpio( observaciones.quillEditor,1000 ) }}
       </span>
       <span class="contador miles" *ngIf="dataFormulario.get('observaciones').value === null" style="margin-top: 2.2em">
         2000

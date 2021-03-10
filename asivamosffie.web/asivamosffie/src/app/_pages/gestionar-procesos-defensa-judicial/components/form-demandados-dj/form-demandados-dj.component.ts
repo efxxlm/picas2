@@ -37,19 +37,28 @@ export class FormDemandadosDjComponent implements OnInit {
   @Input() tipoProceso:string;
   @Input() defensaJudicial:DefensaJudicial;
 
+  estaEditando = false;
   ngAfterViewInit(){
     this.cargarRegistro();
   }
 
   cargarRegistro() {
       this.formContratista.get("numeroContratos").setValue(this.defensaJudicial.numeroDemandados);
-      let i=0;      
-      this.defensaJudicial.demandanteConvocante.forEach(element => {
-        console.log(this.perfiles.controls[i].get("nomConvocado"));
-        this.perfiles.controls[i].get("nomConvocado").setValue(element.nombre);
-        this.perfiles.controls[i].get("tipoIdentificacion").setValue(element.tipoIdentificacionCodigo);
-        this.perfiles.controls[i].get("numIdentificacion").setValue(element.numeroIdentificacion);
-        
+      let i=0;  
+      
+      let listaDemandado:DemandadoConvocado[]= [];
+
+      this.defensaJudicial.demandadoConvocado.forEach(element => {
+        if (element.esDemandado == true)
+        listaDemandado.push(element);
+      });
+
+      listaDemandado.forEach(element => {
+          this.perfiles.controls[i].get("demandadoConvocadoId").setValue(element.demandadoConvocadoId);
+          this.perfiles.controls[i].get("nomConvocado").setValue(element.nombre);
+          this.perfiles.controls[i].get("tipoIdentificacion").setValue(element.tipoIdentificacionCodigo);
+          this.perfiles.controls[i].get("numIdentificacion").setValue(element.numeroIdentificacion);
+          this.perfiles.controls[i].get("registroCompleto").setValue(element.registroCompleto);
         i++;
       });
   }
@@ -65,9 +74,11 @@ export class FormDemandadosDjComponent implements OnInit {
           this.perfiles.push( 
             this.fb.group(
               {
+                demandadoConvocadoId: [ null ],
                 nomConvocado: [ null ],
                 tipoIdentificacion: [ null ],
-                numIdentificacion: [ null ]
+                numIdentificacion: [ null ],
+                registroCompleto: [ null ]
               }
             ) 
           )
@@ -133,14 +144,18 @@ export class FormDemandadosDjComponent implements OnInit {
   };
 
   guardar () {
-    console.log( this.formContratista );
+    this.estaEditando = true;
+    this.formContratista.markAllAsTouched();
+    // console.log( this.formContratista );
     let defContraProyecto:DemandadoConvocado[]=[];
     for(let perfil of this.perfiles.controls){
       defContraProyecto.push({
+        demandadoConvocadoId:perfil.get("demandadoConvocadoId").value,
         nombre:perfil.get("nomConvocado").value,
         tipoIdentificacionCodigo:perfil.get("tipoIdentificacion").value,
         numeroIdentificacion:perfil.get("numIdentificacion").value,        
-        esConvocado:false //para este modulo, no lo es
+        esConvocado:false, //para este modulo, no lo es
+        esDemandado:true //nuevo campo - diferenciar entre demandado y convocado
       });
     };
     
@@ -176,10 +191,13 @@ export class FormDemandadosDjComponent implements OnInit {
     if(redirect)
     {
       dialogRef.afterClosed().subscribe(result => {
-          if(id>0)
-          {
-            this.router.navigate(["/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial/"+id], {});
-          }                  
+        if(id>0 && this.defensaJudicial.defensaJudicialId==0)
+        {
+          this.router.navigate(["/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial/"+id], {});
+        }                  
+        else{
+          location.reload();
+        }                   
       });
     }
   }

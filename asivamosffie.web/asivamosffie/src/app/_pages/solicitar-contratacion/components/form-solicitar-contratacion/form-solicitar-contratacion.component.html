@@ -13,8 +13,8 @@
       <label class="label-left" for="esMultiple">¿Es multi proyecto?</label>
     </div>
     <mat-radio-group class="radioInput" [formControl]="esMultiple">
-      <mat-radio-button [value]="true">Sí</mat-radio-button>
-      <mat-radio-button [value]="false">No</mat-radio-button>
+      <mat-radio-button value="true">Sí</mat-radio-button>
+      <mat-radio-button value="false">No</mat-radio-button>
     </mat-radio-group>
     <span class="required-form-group">*</span>
   </div>
@@ -107,6 +107,7 @@
                       maxlength="8"
                       formControlName="llaveMEN"
                       onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     />
                   </mat-form-field>
                   <span

@@ -1,0 +1,80 @@
+<button mat-button mat-dialog-close class="modal--btn-cerrar" [mat-dialog-close]="null">
+  <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar" />
+</button>
+
+<div class="text-center">
+  <h1 class="title-menu--h1">
+    Observaciones
+    {{ data.llaveMen }}
+  </h1>
+  <p class="colorMainColor mt-05em">
+    <span class="mx-1em">
+      Estado del requisito:
+      <b> No cumple </b>
+    </span>
+    <span class="mx-1em" *ngIf="data.informe.informeFinalAnexo">
+      Tipo de anexo:
+      <b> {{ data.informe.informeFinalAnexo.tipoAnexoString }} </b>
+    </span>
+    <span class="mx-1em" *ngIf="data.informe.informeFinalAnexo && data.informe.informeFinalAnexo.urlSoporte">
+      URL:
+      <b> {{ data.informe.informeFinalAnexo.urlSoporte }} </b>
+    </span>
+    <span class="mx-1em" *ngIf="data.informe.informeFinalAnexo && data.informe.informeFinalAnexo.numRadicadoSac">
+      Número de radicado en SAC:
+      <b> {{ data.informe.informeFinalAnexo.numRadicadoSac }} </b>
+    </span>
+    <span class="mx-1em" *ngIf="data.informe.informeFinalAnexo && data.informe.informeFinalAnexo.fechaRadicado">
+      Fecha de radicado:
+      <b> {{ data.informe.informeFinalAnexo.fechaRadicado | date: 'dd/MM/yyyy' }} </b>
+    </span>
+  </p>
+  <p>
+    <b> {{ data.informe.informeFinalListaChequeo.posicion }}. </b>
+    {{ data.informe.informeFinalListaChequeo.nombre }}
+  </p>
+</div>
+
+<form [formGroup]="observaciones" novalidate (ngSubmit)="onSubmit()" *ngIf="!data.verDetalle">
+  <div class="d-flex align-items-center">
+    <div class="text-area-quill">
+      <label for="alcanceParticular" class="text-area-quill--label">Observaciones</label>
+      <quill-editor
+        class="quill-editor-style"
+        [styles]="editorStyle"
+        [modules]="config"
+        required
+        (onContentChanged)="maxLength($event, 500)"
+        formControlName="observaciones"
+      ></quill-editor>
+    </div>
+    <span class="contador miles" *ngIf="observaciones.get('observaciones').value">
+      {{
+        500 -
+          (textoLimpio(observaciones.get('observaciones').value) > 500
+            ? 500
+            : textoLimpio(observaciones.get('observaciones').value))
+      }}
+    </span>
+    <span class="contador miles" *ngIf="!observaciones.get('observaciones').value"> 500 </span>
+  </div>
+
+  <div class="text-center">
+    <button
+      mat-button
+      color="warn"
+      class="btn-guardar"
+      type="submit"
+      [disabled]="observaciones.get('observaciones').invalid"
+    >
+      <img src="assets/img/icon/guardar.svg" alt="Guardar" />
+    </button>
+  </div>
+</form>
+
+<mat-card class="shipping-card var-main-gris" *ngIf="data.verDetalle">
+  <mat-card-content>
+    <p [innerHTML]="observaciones.get('observaciones').value">
+    </p>
+  </mat-card-content>
+</mat-card>

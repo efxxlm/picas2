@@ -114,6 +114,7 @@ export class DiagnosticoVerificarRequisitosComponent implements OnInit, OnChange
 
   guardarDiagnostico() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let construccion = {
       contratoConstruccionId: this.contratoConstruccionId,
       tieneObservacionesDiagnosticoApoyo: this.addressForm.value.tieneObservaciones,

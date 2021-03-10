@@ -147,9 +147,6 @@ export class ContractualControversyService implements OnInit{
   GetSeguimientoActuacionDerivadabyId(pSeguimientoActuacionDerivadaId: number){
     return this.http.get<any>(`${environment.apiUrl}/ContractualControversy/GetSeguimientoActuacionDerivadabyId?pSeguimientoActuacionDerivadaId=${pSeguimientoActuacionDerivadaId}`);
   }
-  ChangeStateActuacion(pControversiaActuacionId: number){
-    return this.http.put<Respuesta>(`${environment.apiUrl}/ContractualControversy/ChangeStateActuacion?pControversiaActuacionId=${pControversiaActuacionId}`, null);
-  }
   FinalizarActuacion(id: any) {
     return this.http.put<Respuesta>(`${environment.apiUrl}/ContractualControversy/FinalizarActuacion?pControversiaActuacionId=${id}`, null);
   }

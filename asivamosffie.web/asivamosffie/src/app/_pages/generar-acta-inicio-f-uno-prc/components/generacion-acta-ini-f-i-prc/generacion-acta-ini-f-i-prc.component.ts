@@ -310,6 +310,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
   }
   onSubmit() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let mesPlazoFase2;
     let diasPlazoFase2;
     let esSupervisionBool;

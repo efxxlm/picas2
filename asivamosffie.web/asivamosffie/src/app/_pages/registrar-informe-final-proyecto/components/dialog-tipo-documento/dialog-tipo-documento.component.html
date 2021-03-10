@@ -7,16 +7,18 @@
     Tipo de documento
     {{ data.llaveMen }}
   </h1>
-  <p>
+  <p class="mt-05em">
     Estado del requisito:
-    <b> {{ data.informe.calificacionCodigoString }} </b>
+    <b *ngIf="!data.soloMostrarObservacion"> Cumple </b>
+    <b *ngIf="data.soloMostrarObservacion"> No aplica </b>
   </p>
   <p>
-    <b> {{ data.informe.nombre }}</b>
+    <b> {{ data.informe.posicion }}. </b>
+    {{ data.informe.nombre }}
   </p>
 </div>
 
-<form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="addressForm" (ngSubmit)="onSubmit()" *ngIf="!data.verDetalle && !data.soloMostrarObservacion">
   <mat-card class="shipping-card">
     <mat-card-content>
       <div class="row">
@@ -79,7 +81,6 @@
               matInput
               type="url"
               formControlName="urlSoporte"
-              maxlength="20"
               required
               [matTooltipPosition]="'above'"
               matTooltip="Campo alfanumérico"
@@ -126,7 +127,9 @@
                   formControlName="numRadicadoSac"
                   #numRadicadoSac
                   maxlength="10"
+                  (keypress)="validateNumberKeypress($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   required
                 />
               </mat-form-field>
@@ -220,11 +223,56 @@
       class="btn-guardar"
       type="submit"
       [disabled]="
-        (addressForm.get('tipoAnexo').invalid && addressForm.get('numRadicadoSac').invalid && addressForm.get('fechaRadicado').invalid) &&
-        (addressForm.get('tipoAnexo').invalid && addressForm.get('urlSoporte').invalid)
+        addressForm.get('tipoAnexo').invalid &&
+        addressForm.get('numRadicadoSac').invalid &&
+        addressForm.get('fechaRadicado').invalid &&
+        addressForm.get('tipoAnexo').invalid &&
+        addressForm.get('urlSoporte').invalid
       "
     >
       <img src="assets/img/icon/guardar.svg" alt="Guardar" />
     </button>
   </div>
 </form>
+
+<mat-card class="shipping-card var-main-gris" *ngIf="data.verDetalle && !data.soloMostrarObservacion">
+  <mat-card-content *ngIf="addressForm.get('tipoAnexo').value === '1'">
+    <p>
+      <strong> Tipo de anexo: </strong>
+      Físico
+    </p>
+    <p>
+      <strong> Número de radicado en SAC: </strong>
+      {{ addressForm.get('numRadicadoSac').value }}
+    </p>
+    <p>
+      <strong> Fecha de radicado: </strong>
+      {{ addressForm.get('fechaRadicado').value | date: 'dd/MM/yyyy' }}
+    </p>
+  </mat-card-content>
+  <mat-card-content *ngIf="addressForm.get('tipoAnexo').value === '2'">
+    <p>
+      <strong> Tipo de anexo: </strong>
+      Digital
+    </p>
+    <p>
+      <strong> Url con soporte: </strong>
+      {{ addressForm.get('urlSoporte').value }}
+    </p>
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="shipping-card var-main-gris" *ngIf="data.informe.tieneObservacionSupervisor && (data.informe.estadoInforme === '4' || data.informe.estadoInforme === '8')" [formGroup]="observacionesForm">
+  <mat-card-header class="header-card header-card--margin">
+    <mat-card-title class="mat-card-title header-card--text">
+      Observación del supervisor
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <strong> {{ observacionesForm.get('fechaCreacion').value | date: 'dd/MM/yyyy' }}</strong>
+    <p [innerHTML]="observacionesForm.get('observaciones').value">
+    </p>
+  </mat-card-content>
+</mat-card>
+
+<app-tabla-observaciones *ngIf="existe_historial && (data.informe.estadoInforme === '4' || data.informe.estadoInforme === '8')" [data]="anexos"></app-tabla-observaciones>

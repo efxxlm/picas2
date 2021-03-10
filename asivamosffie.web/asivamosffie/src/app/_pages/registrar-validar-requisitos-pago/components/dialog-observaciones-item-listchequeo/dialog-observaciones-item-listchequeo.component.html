@@ -3,21 +3,14 @@
 </button>
 <div style="padding: 30px 20px; text-align: center;">
     <h1 class="title-menu--h1 centerTrick">
-        Observaciones item 2
+        Observaciones item {{ data.jIndex + 1 }}
     </h1>
     <p class="info-sub-title">
-        <span>Número de solicitud: <b>SolPagoO0001</b></span>
-        <span>Número de contrato: <b>N801801</b></span>
+        <span>Número de solicitud: <b> {{ data.contrato.solicitudPagoOnly.numeroSolicitud }} </b></span>
+        <span>Número de contrato: <b> {{ data.contrato.numeroContrato }} </b></span>
     </p>
     <p>
-        Factura (Prefactura si tiene facturación electrónica) por costo variable del Contrato de Interventoría, cuyo
-        deudor es el
-        Patrimonio Autónomo del Fondo de Infraestructura Educativa FFIE, NIT 830.053.812-2. Indicar el lugar en el que
-        se presta el
-        servicio. Para la instrucción de pago se sugiere la siguiente nota: “Favor realizar transferencia electrónica
-        (consignación) a la cuenta
-        (mencionar el tipo: ahorro o corriente) No. XXXXX en el (nombre de banco), a nombre de (XXXXXXXXX) con NIT
-        (XXXXXXXX).
+        {{ data.registro.listaChequeoItem.nombre }}
     </p>
     <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
         <div class="row">

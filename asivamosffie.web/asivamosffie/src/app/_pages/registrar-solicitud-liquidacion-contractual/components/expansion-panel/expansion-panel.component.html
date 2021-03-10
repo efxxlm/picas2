@@ -1,0 +1,36 @@
+<div>
+  <p class="info-container text-center">
+    <span class="info-text sin-diligenciar">Sin diligenciar</span>
+    <span class="info-text en-proceso">En proceso</span>
+    <span class="info-text completo">Completo</span>
+  </p>
+
+  <mat-accordion>
+    <mat-expansion-panel class="expansion-style">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title
+          class="expansion-style--title"
+          [class.sin-diligenciar]="true"
+          [class.en-proceso]="false"
+          [class.completo]="false"
+        >
+          Liquidación de contrato de obra
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <app-tabla-liquidacion-contrato-obra></app-tabla-liquidacion-contrato-obra>
+    </mat-expansion-panel>
+    <mat-expansion-panel class="expansion-style">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title
+          class="expansion-style--title"
+          [class.sin-diligenciar]="true"
+          [class.en-proceso]="false"
+          [class.completo]="false"
+        >
+          Liquidación de contrato de interventoria
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

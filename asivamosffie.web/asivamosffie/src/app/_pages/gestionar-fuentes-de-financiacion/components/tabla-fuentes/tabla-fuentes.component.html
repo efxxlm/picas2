@@ -13,7 +13,7 @@
 
             <ng-container matColumnDef="fechaCreacion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de creación </th>
-                <td mat-cell *matCellDef="let element"> <b>{{element.fechaCreacion | date:'dd/MM/yyyy'}}</b> </td>
+                <td mat-cell *matCellDef="let element"> <b>{{element.fechaCreacion}}</b> </td>
             </ng-container>
 
             <ng-container matColumnDef="tipoAportante">
@@ -55,23 +55,13 @@
             <ng-container matColumnDef="id">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
                 <td mat-cell *matCellDef="let element">
-                    <button 
-                            mat-raised-button 
-                            color="accent" 
-                            class="btn-table"
-                            (click)="editarFuente( element.aportante.tipoAportanteId, element.aportanteId )">
-                    Ver detalle/<br>Editar
-                    </button>
-
-                    <button 
-                            mat-raised-button 
-                            color="accent" 
-                            class="btn-table" 
-                            [disabled]="!element.registroCompleto"
-                            (click)="controlRecursosFuente(element.fuenteFinanciacionId )">
-                    Control de recursos
-                    </button>
-
+                    <button mat-raised-button color="accent" class="btn-table"
+                        (click)="editarFuente( element.aportante.tipoAportanteId, element.aportanteId )">Ver
+                        detalle/<br>Editar</button>
+                    <button mat-raised-button color="accent" class="btn-table"
+                        (click)="eliminarFuente(element.fuenteFinanciacionId )">Eliminar</button>
+                    <button mat-raised-button color="accent" class="btn-table" [disabled]="!element.registroCompleto"
+                        (click)="controlRecursosFuente(element.fuenteFinanciacionId )">Control de recursos</button>
                 </td>
             </ng-container>
 

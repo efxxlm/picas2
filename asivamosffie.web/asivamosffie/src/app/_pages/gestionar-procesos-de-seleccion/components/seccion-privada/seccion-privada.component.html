@@ -24,7 +24,8 @@
             </mat-expansion-panel-header>
             <button style="display: none;" type="button" (click)="descripcion.cargarRegistro()" id="botonDescripcion"></button>            
             <app-form-descripcion-del-proceso-de-seleccion [editar]="bitPuedoEditar"
-                #descripcion [procesoSeleccion]="procesoSeleccion" (guardar)="onSubmit()"
+                #descripcion [procesoSeleccion]="procesoSeleccion" (guardar)="onSubmit()" 
+                [style.pointer-events]="getStyleEvaluacion()"
                 >
             </app-form-descripcion-del-proceso-de-seleccion>
         </mat-expansion-panel>
@@ -36,7 +37,8 @@
             </mat-expansion-panel-header>
             <button style="display: none;" type="button" (click)="estudio.cargarRegistro()" id="botonEstudio"></button>
             <app-form-estudio-de-mercado [editar]="bitPuedoEditar"
-            #estudio [procesoSeleccion]="procesoSeleccion" (guardar)="onSubmit()">
+            #estudio [procesoSeleccion]="procesoSeleccion" (guardar)="onSubmit()"
+            [style.pointer-events]="getStyleEvaluacion()">
         </app-form-estudio-de-mercado>
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
@@ -47,7 +49,8 @@
             </mat-expansion-panel-header>
             <button style="display: none;" type="button" (click)="proponente.cargarRegistro()" id="botonProponente"></button>
             <app-form-datos-proponentes-seleccionados [editar]="bitPuedoEditar"
-               #proponente [procesoSeleccion]="procesoSeleccion" (guardar)="onSubmit()">
+               #proponente [procesoSeleccion]="procesoSeleccion" (guardar)="onSubmit()"
+               [style.pointer-events]="getStyleEvaluacion()">
             </app-form-datos-proponentes-seleccionados>
         </mat-expansion-panel>
     </mat-accordion>

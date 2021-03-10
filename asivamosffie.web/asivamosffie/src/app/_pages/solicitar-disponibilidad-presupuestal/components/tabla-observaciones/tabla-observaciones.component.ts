@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild, Input, OnChanges, SimpleChanges } from '@angular/core'
+import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core'
 import { MatPaginator } from '@angular/material/paginator'
 import { MatSort } from '@angular/material/sort'
 import { MatTableDataSource } from '@angular/material/table'
@@ -16,24 +16,17 @@ const ELEMENT_DATA: any[] = [
   templateUrl: './tabla-observaciones.component.html',
   styleUrls: ['./tabla-observaciones.component.scss']
 })
-export class TablaObservacionesComponent implements OnInit, AfterViewInit, OnChanges {
-  displayedColumns: string[] = ['fechaCreacion', 'usuarioCreacion', 'observacion']
-  dataSource = new MatTableDataSource()
+export class TablaObservacionesComponent implements OnInit, AfterViewInit {
+  displayedColumns: string[] = ['fecha', 'autor', 'observacion']
+  dataSource = new MatTableDataSource(ELEMENT_DATA)
   @ViewChild(MatPaginator) paginator: MatPaginator
   @ViewChild(MatSort) sort: MatSort
 
-  @Input() DisponibilidadPresupuestal: any;
-
   constructor() {}
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.DisponibilidadPresupuestal)
-      console.log( this.DisponibilidadPresupuestal )
-  }
 
   ngOnInit(): void {}
 
   ngAfterViewInit() {
-    this.dataSource = new MatTableDataSource( this.DisponibilidadPresupuestal.disponibilidadPresupuestalObservacion )
     this.dataSource.sort = this.sort
     this.dataSource.paginator = this.paginator
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página'
@@ -48,13 +41,6 @@ export class TablaObservacionesComponent implements OnInit, AfterViewInit, OnCha
     this.dataSource.filter = filterValue.trim().toLowerCase()
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage()
-    }
-  }
-
-  innerObservacion( observacion: string ) {
-    if ( observacion !== undefined ) {
-      const observacionHtml = observacion.replace( '"', '' );
-      return observacionHtml;
     }
   }
 }

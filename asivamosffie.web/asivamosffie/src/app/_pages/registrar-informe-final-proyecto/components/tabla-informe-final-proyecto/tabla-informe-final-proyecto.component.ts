@@ -4,7 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-import { RegistrarInformeFinalProyectoService } from 'src/app/core/_services/registrar-informe-final-proyecto.service';
+import { RegistrarInformeFinalProyectoService } from 'src/app/core/_services/registrarInformeFinal/registrar-informe-final-proyecto.service';
 
 export interface RegistrarInterface {
   fechaTerminacionObra: Date,
@@ -56,7 +56,6 @@ export class TablaInformeFinalProyectoComponent implements OnInit, AfterViewInit
     this.registrarInformeFinalProyectoService.getListReportGrilla()
     .subscribe(report => {
       this.dataSource.data = report as RegistrarInterface[];
-      console.log("Aquí:",this.dataSource.data);
     });
   }
 
@@ -97,10 +96,9 @@ export class TablaInformeFinalProyectoComponent implements OnInit, AfterViewInit
   }
 
   enviarRegistroFinal(pProyectoId: number) {
-    console.log("Antes: ",pProyectoId);
     this.registrarInformeFinalProyectoService.sendFinalReportToSupervision(pProyectoId)
       .subscribe(respuesta => {
-        this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>');
+        this.openDialog('', '<b>La información ha sido guardada correctamente.</b>');
         this.ngOnInit();
       });
   }

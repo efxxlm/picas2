@@ -20,7 +20,6 @@
                                     [(ngModel)]="semana[0].seguimientoSemanalPersonalObra[0].cantidadPersonal"
                                     name="cantPersonal"
                                     required
-                                    #cantPersonal="ngModel"
                                     style="width: 2em;">
                         </mat-form-field>
                     </div>
@@ -34,12 +33,7 @@
                 </div>
                 <div class="border-semana">
                     <mat-form-field style="width: 2.5em;" *ngIf="semana[0] !== undefined && semana[0].seguimientoSemanalPersonalObra.length > 0">
-                        <input  matInput
-                                type="text"
-                                maxlength="3"
-                                [(ngModel)]="semana[0].seguimientoSemanalPersonalObra[0].cantidadPersonal"
-                                required
-                                style="width: 2em;">
+                        <input matInput type="text" maxlength="3" [(ngModel)]="semana[0].seguimientoSemanalPersonalObra[0].cantidadPersonal" required style="width: 2em;">
                     </mat-form-field>
                 </div>
             </section>

@@ -296,13 +296,26 @@ const routes: Routes = [
         loadChildren: () => import( './_pages/verificar-informe-final-proyecto/verificar-informe-final-proyecto.module' )
           .then( module => module.VerificarInformeFinalProyectoModule )
       },
-      /*
       {
         path: 'validarInformeFinalProyecto',
         loadChildren: () => import( './_pages/validar-informe-del-proyecto/validar-informe-del-proyecto.module' )
           .then( module => module.ValidarInformeDelProyectoModule )
       },
-      */
+      {
+        path: 'registrarTransferenciaProyectosETC',
+        loadChildren: () => import( './_pages/registrar-transferencia-etc/registrar-transferencia-etc.module' )
+          .then( module => module.RegistrarTransferenciaEtcModule )
+      },
+      {
+        path: 'registrarSolicitudLiquidacionContractual',
+        loadChildren: () => import( './_pages/registrar-solicitud-liquidacion-contractual/registrar-solicitud-liquidacion-contractual.module' )
+          .then( module => module.RegistrarSolicitudLiquidacionContractualModule )
+      },
+      {
+        path: 'validarCumplimientoInformeFinalProyecto',
+        loadChildren: () => import( './_pages/validar-cumplimiento-informe-final-proyecto/validar-cumplimiento-informe-final-proyecto.module' )
+          .then( module => module.ValidarCumplimientoInformeFinalProyectoModule )
+      },
     { 
         path: 'verificarSolicitudDeNovedades',
         loadChildren: () => import('./_pages/verificar-solicitud-de-novedades/verificar-solicitud-de-novedades.module')
@@ -365,12 +378,12 @@ const routes: Routes = [
         .then(m => m.RegistrarValidarRequisitosPagoModule)
       },
       {
-        path: 'aprobarSolicitudesPago',
+        path: 'verificarSolicitudPago',
         loadChildren: () => import('./_pages/aprobar-solicitudes-pago/aprobar-solicitudes-pago.module')
         .then(m => m.AprobarSolicitudesPagoModule)
       },
       {
-        path: 'autorizarSolicitudDePago',
+        path: 'autorizarSolicitudPago',
         loadChildren: () => import('./_pages/autorizar-solicitud-pago/autorizar-solicitud-pago.module')
         .then(m => m.AutorizarSolicitudPagoModule)
       },      
@@ -388,6 +401,21 @@ const routes: Routes = [
         path: 'generarOrdenDeGiro',
         loadChildren: () => import('./_pages/generar-orden-giro/generar-orden-giro.module')
         .then(m => m.GenerarOrdenGiroModule)
+      },
+      {
+        path: 'verificarOrdenGiro',
+        loadChildren: () => import( './_pages/verificar-orden-giro/verificar-orden-giro.module' )
+          .then( module => module.VerificarOrdenGiroModule )
+      },
+      {
+        path: 'aprobarOrdenGiro',
+        loadChildren: () => import( './_pages/aprobar-orden-giro/aprobar-orden-giro.module' )
+          .then( module => module.AprobarOrdenGiroModule )
+      },
+      {
+        path: 'tramitarOrdenGiro',
+        loadChildren: () => import( './_pages/tramitar-orden-giro/tramitar-orden-giro.module' )
+          .then( module => module.TramitarOrdenGiroModule )
       },
       {
         path: 'gestionarProcesoDefensaJudicial',
@@ -409,6 +437,11 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/aprobar-incorporacion-rendimientos/aprobar-incorporacion-rendimientos.module')
         .then(m => m.AprobarIncorporacionRendimientosModule)
       },
+      {
+        path: 'gestionListaChequeo',
+        loadChildren: () => import( './_pages/gestionar-lista-chequeo/gestionar-lista-chequeo.module' )
+          .then( module => module.GestionarListaChequeoModule )
+      }
     ]
 
   },

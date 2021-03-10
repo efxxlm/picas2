@@ -107,6 +107,9 @@ export class TablaProyectosTecnicoComponent {
   inicializar()
   {
     this.projectService.getListProjects().subscribe(respuesta => {
+      respuesta.forEach(element => {
+        element.fecha = element.fecha.split('T')[0].split('-').reverse().join('/');
+      });
       let datos:RegistrosCargados[]=[];
       console.log(respuesta);
       respuesta.forEach(element => {

@@ -4,6 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { ContratosModificacionesContractualesService } from 'src/app/core/_services/contratos-modificaciones-contractuales/contratos-modificaciones-contractuales.service';
 
 export interface VerificacionDiaria {
   id: string;
@@ -14,17 +15,6 @@ export interface VerificacionDiaria {
   estadoRegistro: string;
 }
 
-const ELEMENT_DATA: VerificacionDiaria[] = [
-  {
-    id: '1',
-    fechaSolicitud: '15/10/2020',
-    numeroSolicitud: 'NOV-001',
-    tipoNovedad: 'Modificación de Condiciones Contractuales',
-    estadoNovedad: 'En proceso de registro',
-    estadoRegistro: 'Completo',
-  }
-];
-
 @Component({
   selector: 'app-tabla-solicitud-novedad-contractual',
   templateUrl: './tabla-solicitud-novedad-contractual.component.html',
@@ -34,29 +24,38 @@ const ELEMENT_DATA: VerificacionDiaria[] = [
 export class TablaSolicitudNovedadContractualComponent implements AfterViewInit {
 
   displayedColumns: string[] = [
-    'fechaSolicitud',
+    'fechaSolictud',
     'numeroSolicitud',
-    'tipoNovedad',
-    'estadoNovedad',
-    'estadoRegistro',
-    'id'
+    'tipoNovedadNombre',
+    'estadoNovedadNombre',
+    'registroCompleto',
+    'novedadContractualId'
   ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor() { }
+  constructor(
+    private contratoServices: ContratosModificacionesContractualesService,
+    public dialog: MatDialog,
+  ) { }
 
   ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-    this.paginator._intl.nextPageLabel = 'Siguiente';
-    this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
-      return (page + 1).toString() + ' de ' + length.toString();
-    };
-    this.paginator._intl.previousPageLabel = 'Anterior';
+
+    this.contratoServices.getListGrillaNovedadContractual()
+      .subscribe(resp => {
+        this.dataSource = new MatTableDataSource(resp);
+
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+        this.paginator._intl.nextPageLabel = 'Siguiente';
+        this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
+          return (page + 1).toString() + ' de ' + length.toString();
+        };
+        this.paginator._intl.previousPageLabel = 'Anterior';
+      });
   }
 
   applyFilter(event: Event) {
@@ -76,8 +75,31 @@ export class TablaSolicitudNovedadContractualComponent implements AfterViewInit 
     console.log(`Aprobar solicitud ${id}`);
   }
 
-  eliminarSolicitud(id: string) {
-    console.log(`Aprobar solicitud ${id}`);
+  openDialog(modalTitle: string, modalText: string) {
+    this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+  }
+
+  openDialogSiNo(modalTitle: string, modalText: string, e: number) {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result===true) {
+        this.eliminarSolicitud(e);
+      }
+    });
+  }
+
+  eliminarSolicitud(id: number) {
+    this.contratoServices.eliminarNovedadContractual( id )
+      .subscribe(respuesta => {
+        this.openDialog('', `<b>${respuesta.message}</b>`);
+        this.ngAfterViewInit();
+      });
   }
 
 }

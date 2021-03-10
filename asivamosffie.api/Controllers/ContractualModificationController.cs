@@ -105,5 +105,20 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetProyectsByContract")]
+        public async Task<ActionResult<List<VProyectosXcontrato>>> GetProyectsByContract(int pContratoId)
+        {
+            try
+            {
+                return await _contractualModification.GetProyectsByContract(pContratoId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
     }
 }

@@ -38,11 +38,9 @@
                     <button mat-raised-button color="accent" class="btn-table"
                         *ngIf="element.estadoActa=='Con revisión sin observaciones' || element.estadoActa=='Con revisión con observaciones'"
                         (click)="this.verDetalleEditar(element.contratoId)">Ver detalle/Editar</button>
-                    <!--
                     <button mat-raised-button color="accent" class="btn-table"
                         *ngIf="element.estadoActa=='Con notificación al interventor'"
                         (click)="this.enviarInterventor(element.contratoId)">Enviar al interventor</button>
-                    -->
                     <button mat-raised-button color="accent" class="btn-table"
                         *ngIf="element.estadoActa=='Con notificación al interventor' || element.estadoActa=='Con acta generada' || element.estadoActa=='Con acta en proceso de firma' || element.estadoActa=='Con acta suscrita y cargada'"
                         (click)="this.verDetalle(element.contratoId)">Ver detalle</button>

@@ -4,7 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-import { ValidarInformeFinalService } from 'src/app/core/_services/validarInformeFinal/validar-informe-final.service';
+import { VerificarInformeFinalService } from 'src/app/core/_services/verificarInformeFinal/verificar-informe-final.service';
 
 export interface RegistrarInterface {
   fechaCreacion: Date,
@@ -13,8 +13,9 @@ export interface RegistrarInterface {
   institucionEducativa: string,
   sedeEducativa: string,
   proyectoId: number,
+  registroCompletoValidacion: boolean,
   estadoValidacion: string,
-  registroCompletoValidacion: boolean;
+  estadoValidacionString: string;
 }
 
 @Component({
@@ -31,7 +32,7 @@ export class TablaInformeFinalComponent implements OnInit, AfterViewInit {
     'tipoIntervencion',
     'institucionEducativa',
     'sedeEducativa',
-    'estadoValidacion',
+    'estadoValidacionString',
     'registroCompletoValidacion',
     'proyectoId'
   ];
@@ -40,7 +41,7 @@ export class TablaInformeFinalComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   constructor(
-    private verificarInformeFinalProyectoService: ValidarInformeFinalService,
+    private verificarInformeFinalProyectoService: VerificarInformeFinalService,
     public dialog: MatDialog
 
     ) { 
@@ -54,7 +55,6 @@ export class TablaInformeFinalComponent implements OnInit, AfterViewInit {
     this.verificarInformeFinalProyectoService.getListInformeFinal()
     .subscribe(report => {
       this.dataSource.data = report as RegistrarInterface[];
-      console.log("Aquí:",this.dataSource.data);
     });
   }
 
@@ -97,7 +97,7 @@ export class TablaInformeFinalComponent implements OnInit, AfterViewInit {
     console.log("Antes: ",pProyectoId);
     this.verificarInformeFinalProyectoService.sendFinalReportToSupervision(pProyectoId)
       .subscribe(respuesta => {
-        this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>');
+        this.openDialog('', '<b>La información ha sido enviada correctamente.</b>');
         this.ngOnInit();
       });
   }

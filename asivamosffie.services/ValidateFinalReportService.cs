@@ -33,33 +33,35 @@ namespace asivamosffie.services
         public async Task<List<InformeFinal>> GetListInformeFinal()
         {
             List<InformeFinal> list = await _context.InformeFinal
-                            .Where(r=> r.EstadoInforme == ConstantCodigoEstadoInformeFinal.Con_informe_enviado_para_validación)
+                            .Where(r=> r.EstadoValidacion == ConstantCodigoEstadoValidacionInformeFinal.Con_informe_enviado_al_supervisor || !String.IsNullOrEmpty(r.EstadoAprobacion))
                             .Include(r=> r.Proyecto)
                                 .ThenInclude(r => r.InstitucionEducativa)
                             .ToListAsync();
             List<Dominio> TipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).ToList();
             List<InstitucionEducativaSede> ListInstitucionEducativaSede = _context.InstitucionEducativaSede.ToList();
-            List<Dominio> TipoObraIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar).ToList();
-
-            List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
 
             foreach(var item in list)
             {
                 InstitucionEducativaSede Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == item.Proyecto.SedeId).FirstOrDefault();
-                Localizacion Municipio = ListLocalizacion.Where(r => r.LocalizacionId == item.Proyecto.LocalizacionIdMunicipio).FirstOrDefault();
-                item.Proyecto.MunicipioObj = Municipio;
-                item.Proyecto.DepartamentoObj = ListLocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
                 item.Proyecto.tipoIntervencionString = TipoIntervencion.Where(r => r.Codigo == item.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
                 item.Proyecto.Sede = Sede;
+                if (String.IsNullOrEmpty(item.EstadoAprobacion)|| item.EstadoAprobacion == "0")
+                {
+                    item.EstadoAprobacionString = "Sin validación";
+                }
+                else
+                {
+                    item.EstadoAprobacionString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.EstadoAprobacion, (int)EnumeratorTipoDominio.Estado_Aprobacion_Informe_Final);
+                }
             }
             return list;
         }
 
         public async Task<List<dynamic>> GetInformeFinalByProyectoId(int pProyectoId)
         {
-            String numeroContratoObra = "", nombreContratistaObra = "", numeroContratoInterventoria = "", nombreContratistaInterventoria = "";
-            String fechaTerminacionInterventoria = "";
-            String fechaTerminacionObra = "";
+            String numeroContratoObra = string.Empty, nombreContratistaObra = string.Empty, numeroContratoInterventoria = string.Empty, nombreContratistaInterventoria = string.Empty;
+            String fechaTerminacionInterventoria = string.Empty;
+            String fechaTerminacionObra = string.Empty;
 
             List<dynamic> ProyectoAjustado = new List<dynamic>();
             List<Dominio> TipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).ToList();
@@ -69,10 +71,10 @@ namespace asivamosffie.services
             List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
             Proyecto proyecto = await _context.Proyecto.Where(r => r.ProyectoId == pProyectoId)
                                                         .Include(r => r.InformeFinal)
-                                                              //.ThenInclude(r => r.InformeFinalInterventoria)
-                                                                //    .ThenInclude(r => r.InformeFinalInterventoriaObservaciones)
                                                          .Include(r => r.InstitucionEducativa)
                                                          .FirstOrDefaultAsync();
+            List<InformeFinalObservaciones> informeFinalObservacionesApoyo = _context.InformeFinalObservaciones.Where(r => r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && r.EsApoyo == true).ToList();
+            List<InformeFinalObservaciones> informeFinalObservacionesSupervisor = _context.InformeFinalObservaciones.Where(r => r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && r.EsSupervision == true).OrderByDescending(r=> r.FechaCreacion).ToList();
 
             InstitucionEducativaSede Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == proyecto.SedeId).FirstOrDefault();
             Localizacion Municipio = ListLocalizacion.Where(r => r.LocalizacionId == proyecto.LocalizacionIdMunicipio).FirstOrDefault();
@@ -80,6 +82,8 @@ namespace asivamosffie.services
             proyecto.DepartamentoObj = ListLocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
             proyecto.tipoIntervencionString = TipoIntervencion.Where(r => r.Codigo == proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
             proyecto.Sede = Sede;
+            proyecto.InformeFinal.FirstOrDefault().InformeFinalObservaciones = informeFinalObservacionesApoyo;
+            proyecto.InformeFinal.FirstOrDefault().InformeFinalObservacionesSupervisor = informeFinalObservacionesSupervisor;
             List<ContratacionProyecto> ListContratacion = await _context.ContratacionProyecto
                                                         .Where(r => r.ProyectoId == pProyectoId)
                                                         .Include(r => r.Contratacion)
@@ -87,7 +91,7 @@ namespace asivamosffie.services
                                                         .Include(r => r.Contratacion)
                                                          .ThenInclude(r => r.Contrato)
                                                         .ToListAsync();
-            ListContratacion[0].Contratacion.TipoContratacionCodigo = TipoObraIntervencion.Where(r => r.Codigo == ListContratacion[0].Contratacion.TipoSolicitudCodigo).Select(r => r.Nombre).FirstOrDefault();
+            ListContratacion.FirstOrDefault().Contratacion.TipoContratacionCodigo = TipoObraIntervencion.Where(r => r.Codigo == ListContratacion.FirstOrDefault().Contratacion.TipoSolicitudCodigo).Select(r => r.Nombre).FirstOrDefault();
 
             foreach (var item in ListContratacion)
             {
@@ -98,15 +102,15 @@ namespace asivamosffie.services
                     if (contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra)
                     {
 
-                        nombreContratistaObra = contratacion.Contratista != null ? contratacion.Contratista.Nombre : "";
-                        numeroContratoObra = contrato.NumeroContrato != null ? contrato.NumeroContrato : "";
-                        fechaTerminacionObra = contrato.FechaTerminacionFase2 != null ? Convert.ToDateTime(contrato.FechaTerminacionFase2).ToString("yyyy-MM-dd") : "";
+                        nombreContratistaObra = contratacion.Contratista != null ? contratacion.Contratista.Nombre : string.Empty;
+                        numeroContratoObra = contrato.NumeroContrato != null ? contrato.NumeroContrato : string.Empty;
+                        fechaTerminacionObra = contrato.FechaTerminacionFase2 != null ? Convert.ToDateTime(contrato.FechaTerminacionFase2).ToString("yyyy-MM-dd") : string.Empty;
                     }
                     else if (contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria)
                     {
-                        nombreContratistaInterventoria = contratacion.Contratista != null ? contratacion.Contratista.Nombre : "";
-                        numeroContratoInterventoria = contrato.NumeroContrato != null ? contrato.NumeroContrato : "";
-                        fechaTerminacionInterventoria = contrato.FechaTerminacionFase2 != null ? Convert.ToDateTime(contrato.FechaTerminacionFase2).ToString("yyyy-MM-dd") : "";
+                        nombreContratistaInterventoria = contratacion.Contratista != null ? contratacion.Contratista.Nombre : string.Empty;
+                        numeroContratoInterventoria = contrato.NumeroContrato != null ? contrato.NumeroContrato : string.Empty;
+                        fechaTerminacionInterventoria = contrato.FechaTerminacionFase2 != null ? Convert.ToDateTime(contrato.FechaTerminacionFase2).ToString("yyyy-MM-dd") : string.Empty;
 
                     }
                 }
@@ -127,59 +131,172 @@ namespace asivamosffie.services
 
         public async Task<List<InformeFinalInterventoria>> GetInformeFinalListaChequeoByInformeFinalId(int pInformeFinalId)
         {
+            int informeFinalInterventoriaObservacionesId = 0;
+            bool tieneObservacionNoCumple = false;
+            bool semaforo = false;
+
             List<InformeFinalInterventoria> ListInformeFinalChequeo = await _context.InformeFinalInterventoria
                                 .Where(r => r.InformeFinalId == pInformeFinalId)
                                 .Include(r => r.InformeFinalListaChequeo)
                                 .Include(r => r.InformeFinalAnexo)
+                                .OrderBy(r => r.InformeFinalListaChequeo.Posicion)
                                 .ToListAsync();
+            InformeFinal informeFinal = _context.InformeFinal.Find(pInformeFinalId);
 
+            if (informeFinal.EstadoAprobacion == ConstantCodigoEstadoAprobacionInformeFinal.En_proceso_aprobacion)
+            {
+                InformeFinalInterventoria no_seleccionado = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == informeFinal.InformeFinalId && (r.AprobacionCodigo != "0" && !String.IsNullOrEmpty(r.AprobacionCodigo))).FirstOrDefault();
+
+                if (no_seleccionado == null)
+                {
+                    semaforo = true;
+                }
+            }
+
+            foreach (var item in ListInformeFinalChequeo)
+            {
+                item.CalificacionCodigoString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.CalificacionCodigo, (int)EnumeratorTipoDominio.Calificacion_Informe_Final);
+                item.ValidacionCodigoString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.ValidacionCodigo, (int)EnumeratorTipoDominio.Calificacion_Informe_Final);
+
+                if (String.IsNullOrEmpty(item.AprobacionCodigo) || item.AprobacionCodigo == "0")
+                {
+                    item.AprobacionCodigoString = String.Empty;
+                }
+                else
+                {
+                    item.AprobacionCodigoString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.AprobacionCodigo, (int)EnumeratorTipoDominio.Calificacion_Informe_Final);
+                }
+
+                if (item.InformeFinalAnexoId != null)
+                {
+                    item.InformeFinalAnexo.TipoAnexoString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.InformeFinalAnexo.TipoAnexo, (int)EnumeratorTipoDominio.Tipo_Anexo_Informe_Final);
+                }
+                item.EstadoValidacion = informeFinal.EstadoValidacion;
+                item.RegistroCompletoValidacion = informeFinal.RegistroCompletoValidacion == null ? false : (bool) informeFinal.RegistroCompletoValidacion;
+                if (item.ValidacionCodigo == ConstantCodigoCalificacionInformeFinal.No_Cumple && item.AprobacionCodigo != ConstantCodigoCalificacionInformeFinal.No_Cumple)
+                {
+                    //Validar si tiene observaciones
+                    InformeFinalInterventoriaObservaciones informeFinalInterventoriaObservaciones = _context.InformeFinalInterventoriaObservaciones.Where(r => r.InformeFinalInterventoriaId == item.InformeFinalInterventoriaId && r.EsApoyo == true).FirstOrDefault();
+                    if (informeFinalInterventoriaObservaciones != null)
+                    {
+                        informeFinalInterventoriaObservacionesId = informeFinalInterventoriaObservaciones.InformeFinalInterventoriaObservacionesId;
+                        tieneObservacionNoCumple = true;
+                    }
+                    else
+                    {
+                        informeFinalInterventoriaObservacionesId = 0;
+                        tieneObservacionNoCumple = false;
+                    }
+                }else if (item.AprobacionCodigo == ConstantCodigoCalificacionInformeFinal.No_Cumple)
+                {
+                    InformeFinalInterventoriaObservaciones informeFinalInterventoriaObservaciones = _context.InformeFinalInterventoriaObservaciones.Where(r => r.InformeFinalInterventoriaId == item.InformeFinalInterventoriaId && r.EsSupervision == true).OrderByDescending(r => r.FechaCreacion).FirstOrDefault();
+                    if (informeFinalInterventoriaObservaciones != null)
+                    {
+                        informeFinalInterventoriaObservacionesId = informeFinalInterventoriaObservaciones.InformeFinalInterventoriaObservacionesId;
+                        if (informeFinalInterventoriaObservaciones.Archivado == null || informeFinalInterventoriaObservaciones.Archivado == false)
+                        {
+                            tieneObservacionNoCumple = true;
+                        }
+                        else
+                        {
+                            tieneObservacionNoCumple = false;
+                        }
+                    }
+                    else
+                    {
+                        informeFinalInterventoriaObservacionesId = 0;
+                        tieneObservacionNoCumple = false;
+                    }
+                }
+                else
+                {
+                    informeFinalInterventoriaObservacionesId = 0;
+                    tieneObservacionNoCumple = false;
+                }
+
+                item.InformeFinalInterventoriaObservacionesId = informeFinalInterventoriaObservacionesId;
+                item.TieneObservacionNoCumple = tieneObservacionNoCumple;
+                item.Semaforo = semaforo;
+            }
             return ListInformeFinalChequeo;
         }
 
-        public async Task<bool> VerificarInformeFinalValidacion(int pInformeFinalId)
+        private bool VerificarInformeFinalAprobacion(int pInformeFinalId)
         {
-            bool esCompleto = true;
-
-            List<InformeFinalInterventoria> ListInformeTotalInterventoria = await _context.InformeFinalInterventoria.Where(cc => cc.InformeFinalId == pInformeFinalId)
-                                                        .ToListAsync();
+            bool esCompleto = false;
 
             InformeFinal informeFinal = _context.InformeFinal.Where(r => r.InformeFinalId == pInformeFinalId).FirstOrDefault();
-
-            InformeFinalInterventoria existe_no_data = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == pInformeFinalId && r.ValidacionCodigo == null).FirstOrDefault();
-            if (existe_no_data != null)
+            //Validación # 1
+            if (informeFinal != null)
+            {
+                InformeFinalInterventoria existe_no_cumple = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == pInformeFinalId && r.AprobacionCodigo == ConstantCodigoCalificacionInformeFinal.No_Cumple).FirstOrDefault();
+                InformeFinalInterventoria existe_no_diligenciado = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == pInformeFinalId && (r.AprobacionCodigo == "0" || String.IsNullOrEmpty(r.AprobacionCodigo))).FirstOrDefault();
+                
+                if (existe_no_cumple != null)
+                {
+                    informeFinal.EstadoAprobacion = ConstantCodigoEstadoAprobacionInformeFinal.Con_observaciones_supervisor;
+                    return false;
+                }
+                if (existe_no_diligenciado != null)
+                {
+                    return false;
+                }
+            }
+            else
             {
                 return false;
             }
+            informeFinal.EstadoAprobacion = ConstantCodigoEstadoAprobacionInformeFinal.Con_aprobacion_supervisor;
 
-            _context.SaveChanges();
-            informeFinal.EstadoValidacion = ConstantCodigoEstadoValidacionInformeFinal.Con_informe_validado;
-            informeFinal.RegistroCompletoValidacion = true;
+            //_context.SaveChanges();
             return esCompleto;
         }
 
-        public async Task<Respuesta> UpdateInformeFinalObservacion(InformeFinal pinformeFinal)
+        public async Task<Respuesta> UpdateStateApproveInformeFinalInterventoriaByInformeFinal(InformeFinal informeFinal, string user)
         {
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Informe_Final, (int)EnumeratorTipoDominio.Acciones);
-            string CreateEdit = "";
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Actualizar_Estado_Aprobacion_Informe_Final, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = string.Empty;
+
             try
             {
-                InformeFinal informeFinal = _context.InformeFinal
-                        .Where(r => r.InformeFinalId == pinformeFinal.InformeFinalId).FirstOrDefault();
 
-                CreateEdit = "ACTUALIZAR INFORME FINAL INTERVENTORIA";
-                informeFinal.EstadoValidacion = ConstantCodigoEstadoValidacionInformeFinal.En_proceso_de_validacion;
-                informeFinal.FechaModificacion = DateTime.Now;
-                informeFinal.UsuarioModificacion = pinformeFinal.UsuarioCreacion;
+                foreach (InformeFinalInterventoria informeFinalInterventoria in informeFinal.InformeFinalInterventoria)
+                {
+                    informeFinalInterventoria.UsuarioCreacion = user.ToUpper();
+                    informeFinalInterventoria.TieneObservacionSupervisor = false;
+                    await this.UpdateStateApproveInformeFinalInterventoria(informeFinalInterventoria.InformeFinalInterventoriaId, informeFinalInterventoria.AprobacionCodigo,user);
 
-                _context.SaveChanges();
-                return
-                new Respuesta
+                    if (informeFinalInterventoria.AprobacionCodigo == ConstantCodigoCalificacionInformeFinal.No_Cumple)
+                    {
+                        ///Actualiza o crea observaciones segun el caso (Sólo SUPERVISIÓN)
+                        foreach (InformeFinalInterventoriaObservaciones informeFinalInterventoriaObservaciones in informeFinalInterventoria.InformeFinalInterventoriaObservaciones)
+                        {
+                            if (informeFinalInterventoriaObservaciones.EsApoyo == true)
+                            {
+                                informeFinalInterventoriaObservaciones.InformeFinalInterventoriaObservacionesId = 0;
+                                informeFinalInterventoriaObservaciones.EsApoyo = false;
+                                informeFinalInterventoriaObservaciones.EsSupervision = true;
+                            }
+
+                            informeFinalInterventoriaObservaciones.UsuarioCreacion = user.ToUpper();
+                            await this.CreateEditInformeFinalInterventoriaObservacion(informeFinalInterventoriaObservaciones);
+                        }
+                    }
+
+                }
+
+                VerificarInformeFinalAprobacion(informeFinal.InformeFinalId);
+
+                await _context.SaveChangesAsync();
+
+                return respuesta = new Respuesta
                 {
                     IsSuccessful = true,
                     IsException = false,
                     IsValidation = false,
                     Code = GeneralCodes.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Informe_Final, GeneralCodes.OperacionExitosa, idAccion, pinformeFinal.UsuarioCreacion, CreateEdit)
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.ValidarInformeFinalProyecto, GeneralCodes.OperacionExitosa, idAccion, informeFinal.UsuarioCreacion, strCrearEditar)
                 };
             }
             catch (Exception ex)
@@ -191,15 +308,15 @@ namespace asivamosffie.services
                       IsException = true,
                       IsValidation = false,
                       Code = GeneralCodes.Error,
-                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Informe_Final, GeneralCodes.Error, idAccion, pinformeFinal.UsuarioCreacion, ex.InnerException.ToString())
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.ValidarInformeFinalProyecto, GeneralCodes.Error, idAccion, informeFinal.UsuarioCreacion, ex.InnerException.ToString())
                   };
             }
         }
 
-        public async Task<Respuesta> UpdateStateValidateInformeFinalInterventoria(int pInformeFinalInterventoriaId,string code,string user)
+        public async Task<Respuesta> UpdateStateApproveInformeFinalInterventoria(int pInformeFinalInterventoriaId,string code,string user)
         {
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Actualizar_Estado_validacion_informe_final, (int)EnumeratorTipoDominio.Acciones);
-            string CreateEdit = "";
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Actualizar_Estado_Aprobacion_Informe_Final, (int)EnumeratorTipoDominio.Acciones);
+            string CreateEdit = string.Empty;
             try
             {
                 InformeFinalInterventoria informeFinalInterventoria = _context.InformeFinalInterventoria
@@ -208,12 +325,17 @@ namespace asivamosffie.services
                         .Where(r => r.InformeFinalId == informeFinalInterventoria.InformeFinalId).FirstOrDefault();
 
                 CreateEdit = "ACTUALIZAR INFORME FINAL INTERVENTORIA";
+                await _context.Set<InformeFinalInterventoria>()
+                                                  .Where(r => r.InformeFinalInterventoriaId == pInformeFinalInterventoriaId)
+                                                                      .UpdateAsync(r => new InformeFinalInterventoria()
+                                                                      {
+                                                                        FechaModificacion = DateTime.Now,
+                                                                        UsuarioModificacion = user,
+                                                                        TieneObservacionSupervisor = code == ConstantCodigoCalificacionInformeFinal.No_Cumple ? true : false,
+                                                                        AprobacionCodigo = code,//cumple,no aplica, no cumple
+                                                                      });
+                informeFinal.EstadoAprobacion = ConstantCodigoEstadoAprobacionInformeFinal.En_proceso_aprobacion;
 
-                informeFinalInterventoria.FechaModificacion = DateTime.Now;
-                informeFinalInterventoria.UsuarioModificacion = user;
-                informeFinalInterventoria.ValidacionCodigo = code;//cumple,no aplica, no cumple
-                informeFinal.EstadoValidacion = ConstantCodigoEstadoValidacionInformeFinal.En_proceso_de_validacion;
-                _context.SaveChanges();
                 return
                 new Respuesta
                 {
@@ -221,7 +343,7 @@ namespace asivamosffie.services
                     IsException = false,
                     IsValidation = false,
                     Code = GeneralCodes.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Informe_Final, GeneralCodes.OperacionExitosa, idAccion, user, CreateEdit)
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.ValidarInformeFinalProyecto, GeneralCodes.OperacionExitosa, idAccion, user, CreateEdit)
                 };
             }
             catch (Exception ex)
@@ -233,7 +355,123 @@ namespace asivamosffie.services
                       IsException = true,
                       IsValidation = false,
                       Code = GeneralCodes.Error,
-                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Informe_Final, GeneralCodes.Error, idAccion, user, ex.InnerException.ToString())
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.ValidarInformeFinalProyecto, GeneralCodes.Error, idAccion, user, ex.InnerException.ToString())
+                  };
+            }
+        }
+
+        public async Task<Respuesta> CreateEditObservacionInformeFinal(InformeFinalObservaciones pObservacion, bool tieneOBservaciones)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Informe_Final_Observacion, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = string.Empty;
+            try
+            {
+                InformeFinal informefinal = _context.InformeFinal.Find(pObservacion.InformeFinalId);
+
+                if (informefinal.EstadoAprobacion == ConstantCodigoEstadoAprobacionInformeFinal.Modificado_Apoyo_Supervision_Interventor && pObservacion.Archivado == true)
+                {
+                    pObservacion.InformeFinalObservacionesId = 0;
+                    pObservacion.Archivado = false;
+                }
+
+                if (pObservacion.InformeFinalObservacionesId == 0)
+                {
+                    await _context.Set<InformeFinal>().Where(r => r.InformeFinalId == pObservacion.InformeFinalId && (r.EstadoAprobacion == "0" || string.IsNullOrEmpty(r.EstadoAprobacion)))
+                                               .UpdateAsync(r => new InformeFinal()
+                                               {
+                                                   FechaModificacion = DateTime.Now,
+                                                   UsuarioModificacion = pObservacion.UsuarioCreacion,
+                                                   EstadoAprobacion = ConstantCodigoEstadoAprobacionInformeFinal.En_proceso_aprobacion,
+                                               });
+                    strCrearEditar = "CREAR INFORME FINAL OBSERVACIONES";
+                    pObservacion.FechaCreacion = DateTime.Now;
+                    _context.InformeFinalObservaciones.Add(pObservacion);
+                }
+                else
+                {
+                    strCrearEditar = "ACTUALIZAR INFORME FINAL OBSERVACION";
+
+                    await _context.Set<InformeFinalObservaciones>().Where(r => r.InformeFinalObservacionesId == pObservacion.InformeFinalObservacionesId)
+                                                                   .UpdateAsync(r => new InformeFinalObservaciones()
+                                                                   {
+                                                                       FechaModificacion = DateTime.Now,
+                                                                       UsuarioModificacion = pObservacion.UsuarioCreacion,
+                                                                       Observaciones = pObservacion.Observaciones,
+                                                                   });
+                }
+                await _context.Set<InformeFinal>().Where(r => r.InformeFinalId == pObservacion.InformeFinalId)
+                                               .UpdateAsync(r => new InformeFinal()
+                                               {
+                                                   FechaModificacion = DateTime.Now,
+                                                   UsuarioModificacion = pObservacion.UsuarioCreacion,
+                                                   TieneObservacionesSupervisor = tieneOBservaciones,
+                                               });
+                _context.SaveChanges();
+
+                return
+                new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.ValidarInformeFinalProyecto, GeneralCodes.OperacionExitosa, idAccion, pObservacion.UsuarioCreacion, strCrearEditar)
+                };
+            }
+            catch (Exception ex)
+            {
+                return
+                  new Respuesta
+                  {
+                      IsSuccessful = false,
+                      IsException = true,
+                      IsValidation = false,
+                      Code = GeneralCodes.Error,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.ValidarInformeFinalProyecto, GeneralCodes.Error, idAccion, pObservacion.UsuarioCreacion, ex.InnerException.ToString())
+                  };
+            }
+        }
+
+        public async Task<Respuesta> EditObservacionInformeFinal(InformeFinal pInformeFinal)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Informe_Final, (int)EnumeratorTipoDominio.Acciones);
+            string CreateEdit = string.Empty;
+            try
+            {
+
+                if (pInformeFinal.InformeFinalId != 0 && pInformeFinal != null) {
+                    CreateEdit = "ACTUALIZAR INFORME FINAL";
+                    await _context.Set<InformeFinal>()
+                              .Where(o => o.InformeFinalId == pInformeFinal.InformeFinalId)
+                                                                                  .UpdateAsync(r => new InformeFinal()
+                                                                                  {
+                                                                                      FechaModificacion = DateTime.Now,
+                                                                                      UsuarioModificacion = pInformeFinal.UsuarioCreacion,
+                                                                                      EstadoValidacion = pInformeFinal.EstadoValidacion == null || pInformeFinal.EstadoValidacion == "0" ? ConstantCodigoEstadoValidacionInformeFinal.En_proceso_de_validacion : pInformeFinal.EstadoValidacion,
+                                                                                      TieneObservacionesValidacion = pInformeFinal.TieneObservacionesValidacion,
+                                                                                  });
+                }
+
+                return
+                new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.ValidarInformeFinalProyecto, GeneralCodes.OperacionExitosa, idAccion, pInformeFinal.UsuarioCreacion, CreateEdit)
+                };
+            }
+            catch (Exception ex)
+            {
+                return
+                  new Respuesta
+                  {
+                      IsSuccessful = false,
+                      IsException = true,
+                      IsValidation = false,
+                      Code = GeneralCodes.Error,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.ValidarInformeFinalProyecto, GeneralCodes.Error, idAccion, pInformeFinal.UsuarioCreacion, ex.InnerException.ToString())
                   };
             }
         }
@@ -245,12 +483,18 @@ namespace asivamosffie.services
             Respuesta respuesta = new Respuesta();
             try
             {
-                string strCrearEditar = "";
+                string strCrearEditar = string.Empty;
                 if (pObservacion.EsSupervision == true)
                 {
+                    if (pObservacion.Archivado == true)
+                    {
+                        pObservacion.InformeFinalInterventoriaObservacionesId = 0;
+                        pObservacion.Archivado = false;
+                    }
+
                     if (pObservacion.InformeFinalInterventoriaObservacionesId == 0)
                     {
-                        strCrearEditar = "CREAR INFORME FINAL ANEXO";
+                        strCrearEditar = "CREAR INFORME FINAL OBSERVACION";
                         pObservacion.FechaCreacion = DateTime.Now;
 
                         _context.InformeFinalInterventoriaObservaciones.Add(pObservacion);
@@ -258,26 +502,37 @@ namespace asivamosffie.services
                         if (pObservacion.EsSupervision == true)
                         {
                             InformeFinalInterventoria informeFinalInterventoria = _context.InformeFinalInterventoria.Find(pObservacion.InformeFinalInterventoriaId);
-
-                            informeFinalInterventoria.CalificacionCodigo = ConstantCodigoEstadoInformeFinal.Con_Observaciones_del_supervisor;
+                            /*InformeFinal informeFinal = _context.InformeFinal.Find(informeFinalInterventoria.InformeFinalId);
+                            if (informeFinal.EstadoValidacion == ConstantCodigoEstadoValidacionInformeFinal.Con_informe_validado)
+                            {
+                                informeFinal.EstadoInforme = ConstantCodigoEstadoInformeFinal.Con_Observaciones_del_supervisor;
+                                informeFinal.RegistroCompleto = false;
+                            }*/
+                            informeFinalInterventoria.TieneObservacionSupervisor = true;
                         }
                     }
                     else
                     {
                         strCrearEditar = "ACTUALIZAR OBSERVACION INFORME FINAL INTERVENTORIA";
 
-                        InformeFinalInterventoriaObservaciones InformeFinalInterventoriaObservacionesOld = _context.InformeFinalInterventoriaObservaciones
-                            .Where(r => r.InformeFinalInterventoriaObservacionesId == pObservacion.InformeFinalInterventoriaObservacionesId).FirstOrDefault();
-
-                        if (InformeFinalInterventoriaObservacionesOld != null)
+                        await _context.Set<InformeFinalInterventoriaObservaciones>()
+                                              .Where(r => r.InformeFinalInterventoriaObservacionesId == pObservacion.InformeFinalInterventoriaObservacionesId)
+                                                                                                  .UpdateAsync(r => new InformeFinalInterventoriaObservaciones()
+                                                                                                  {
+                                                                                                    FechaModificacion = DateTime.Now,
+                                                                                                    UsuarioModificacion = pObservacion.UsuarioCreacion,
+                                                                                                    Observaciones = pObservacion.Observaciones,
+                                                                                                  });
+                        if (pObservacion.EsSupervision == true)
                         {
-                            InformeFinalInterventoriaObservacionesOld.FechaModificacion = DateTime.Now;
-                            InformeFinalInterventoriaObservacionesOld.UsuarioModificacion = pObservacion.UsuarioCreacion;
-                            InformeFinalInterventoriaObservacionesOld.Observaciones = pObservacion.Observaciones;
-                        }
-                        else
-                        {
-                            strCrearEditar = "NO SE PUDO ACTUALIZAR EL INFORME FINAL ANEXO";
+                            InformeFinalInterventoria informeFinalInterventoria = _context.InformeFinalInterventoria.Find(pObservacion.InformeFinalInterventoriaId);
+                            /*InformeFinal informeFinal = _context.InformeFinal.Find(informeFinalInterventoria.InformeFinalId);
+                            if (informeFinal.EstadoValidacion == ConstantCodigoEstadoValidacionInformeFinal.Con_informe_validado)
+                            {
+                                informeFinal.EstadoInforme = ConstantCodigoEstadoInformeFinal.Con_Observaciones_del_supervisor;
+                                informeFinal.RegistroCompleto = false;
+                            }*/
+                            informeFinalInterventoria.TieneObservacionSupervisor = true;
                         }
                     }
                 }
@@ -290,7 +545,7 @@ namespace asivamosffie.services
                     IsException = false,
                     IsValidation = false,
                     Code = GeneralCodes.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Informe_Final, GeneralCodes.OperacionExitosa, idAccion, pObservacion.UsuarioCreacion, strCrearEditar)
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.ValidarInformeFinalProyecto, GeneralCodes.OperacionExitosa, idAccion, pObservacion.UsuarioCreacion, strCrearEditar)
                 };
             }
             catch (Exception ex)
@@ -302,99 +557,44 @@ namespace asivamosffie.services
                         IsException = true,
                         IsValidation = false,
                         Code = GeneralCodes.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Informe_Final, GeneralCodes.Error, idAccion, pObservacion.UsuarioCreacion, ex.InnerException.ToString())
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.ValidarInformeFinalProyecto, GeneralCodes.Error, idAccion, pObservacion.UsuarioCreacion, ex.InnerException.ToString())
                     };
             }
         }
 
-        public async Task<Respuesta> SendFinalReportToSupervision(int pInformeFinalId, string pUsuario)
+        public async Task<Respuesta> SendFinalReportToInterventor(int pProyectoId, string pUsuario, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Enviar_A_supervisor_Informe_Final_Validacion, (int)EnumeratorTipoDominio.Acciones);
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Enviar_A_Interventor_Devolucion_Informe_Final, (int)EnumeratorTipoDominio.Acciones);
 
             try
             {
-                InformeFinal informeFinal = _context.InformeFinal.Where(r => r.InformeFinalId == pInformeFinalId).FirstOrDefault();
+                InformeFinal informeFinal = _context.InformeFinal.Where(r => r.ProyectoId == pProyectoId)
+                                                                 .Include(r => r.Proyecto)
+                                                                 .FirstOrDefault();
                 if (informeFinal != null)
                 {
-                    informeFinal.EstadoValidacion = ConstantCodigoEstadoValidacionInformeFinal.Con_informe_enviado_al_supervisor;
-                    informeFinal.UsuarioModificacion = pUsuario;
-                    informeFinal.FechaModificacion = DateTime.Now;
-                }
-
-                _context.SaveChanges();
-
-                return new Respuesta
-                {
-                    IsSuccessful = true,
-                    IsException = false,
-                    IsValidation = false,
-                    Code = GeneralCodes.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Informe_Final, GeneralCodes.OperacionExitosa, idAccion, pUsuario, "INFORME FINAL ")
-                };
-            }
-            catch (Exception ex)
-            {
-                return new Respuesta
-                {
-                    IsSuccessful = false,
-                    IsException = true,
-                    IsValidation = false,
-                    Code = ConstantSesionComiteTecnico.Error,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Informe_Final, GeneralCodes.Error, idAccion, pUsuario, ex.InnerException.ToString())
-                };
-            }
-        }
-
-        public async Task<Respuesta> ApproveInformeFinal(int pInformeFinalId, string pUsuario)
-        {
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Enviar_A_supervisor_Informe_Final_Validacion, (int)EnumeratorTipoDominio.Acciones);
-
-            try
-            {
-                InformeFinal informeFinal = _context.InformeFinal.Where(r => r.InformeFinalId == pInformeFinalId).FirstOrDefault();
-                if (informeFinal != null)
-                {
-                    informeFinal.EstadoValidacion = ConstantCodigoEstadoValidacionInformeFinal.Con_aprobacion_del_supervisor;
-                    informeFinal.UsuarioModificacion = pUsuario;
-                    informeFinal.FechaModificacion = DateTime.Now;
-                }
-
-                _context.SaveChanges();
-
-                return new Respuesta
-                {
-                    IsSuccessful = true,
-                    IsException = false,
-                    IsValidation = false,
-                    Code = GeneralCodes.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Informe_Final, GeneralCodes.OperacionExitosa, idAccion, pUsuario, "INFORME FINAL ")
-                };
-            }
-            catch (Exception ex)
-            {
-                return new Respuesta
-                {
-                    IsSuccessful = false,
-                    IsException = true,
-                    IsValidation = false,
-                    Code = ConstantSesionComiteTecnico.Error,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Informe_Final, GeneralCodes.Error, idAccion, pUsuario, ex.InnerException.ToString())
-                };
-            }
-        }
-
-        public async Task<Respuesta> NoApprovedInformeFinal(int pInformeFinalId, string pUsuario)
-        {
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Enviar_A_supervisor_Informe_Final_Validacion, (int)EnumeratorTipoDominio.Acciones);
-
-            try
-            {
-                InformeFinal informeFinal = _context.InformeFinal.Where(r => r.InformeFinalId == pInformeFinalId).FirstOrDefault();
-                if (informeFinal != null)
-                {
+                    informeFinal.EstadoAprobacion = ConstantCodigoEstadoAprobacionInformeFinal.Devuelta_por_supervisor;
+                    informeFinal.RegistroCompleto = false;
+                    informeFinal.EstadoInforme = ConstantCodigoEstadoInformeFinal.Con_Observaciones_del_supervisor;
                     informeFinal.EstadoValidacion = ConstantCodigoEstadoValidacionInformeFinal.Con_observaciones_del_supervisor;
+                    informeFinal.RegistroCompletoValidacion = false; 
                     informeFinal.UsuarioModificacion = pUsuario;
                     informeFinal.FechaModificacion = DateTime.Now;
+
+                    //Djear en false la columna TieneModificacionInterventor en todos los items 
+                    List<InformeFinalInterventoria> listAnexos = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == informeFinal.InformeFinalId).ToList();
+                    foreach (var item in listAnexos)
+                    {
+                        item.FechaModificacion = DateTime.Now;
+                        item.UsuarioModificacion = pUsuario;
+                        item.TieneModificacionInterventor = false;
+                    }
+
+                    //Enviar Correo a interventor 5.1.3
+                    await EnviarCorreoInterventor(informeFinal, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
+
+                    //Cambiar estado de validación
+                    await updateStateValidation(informeFinal.InformeFinalId, pUsuario);
                 }
 
                 _context.SaveChanges();
@@ -405,7 +605,7 @@ namespace asivamosffie.services
                     IsException = false,
                     IsValidation = false,
                     Code = GeneralCodes.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Informe_Final, GeneralCodes.OperacionExitosa, idAccion, pUsuario, "INFORME FINAL ")
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.ValidarInformeFinalProyecto, GeneralCodes.OperacionExitosa, idAccion, pUsuario, "INFORME FINAL ")
                 };
             }
             catch (Exception ex)
@@ -416,15 +616,194 @@ namespace asivamosffie.services
                     IsException = true,
                     IsValidation = false,
                     Code = ConstantSesionComiteTecnico.Error,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Informe_Final, GeneralCodes.Error, idAccion, pUsuario, ex.InnerException.ToString())
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.ValidarInformeFinalProyecto, GeneralCodes.Error, idAccion, pUsuario, ex.InnerException.ToString())
                 };
             }
         }
+
+        public async Task<Respuesta> SendFinalReportToFinalVerification(int pProyectoId, string pUsuario, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Enviar_Informe_Final_Ultima_Validacion, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                InformeFinal informeFinal = _context.InformeFinal.Where(r => r.ProyectoId == pProyectoId)
+                                                                    .Include(r => r.Proyecto)
+                                                                    .FirstOrDefault();
+                
+                if (informeFinal != null)
+                {
+                    informeFinal.EstadoAprobacion = ConstantCodigoEstadoAprobacionInformeFinal.Enviado_verificacion_liquidacion_novedades;
+                    informeFinal.EstadoInforme = ConstantCodigoEstadoInformeFinal.Enviado_verificacion_liquidaciones_novedades; // control de cambios
+                    informeFinal.EstadoValidacion = ConstantCodigoEstadoValidacionInformeFinal.Enviado_verificacion_liquidacion_novedades;//control de cambios
+                    informeFinal.FechaEnvioGrupoNovedades = DateTime.Now;
+                    informeFinal.UsuarioModificacion = pUsuario;
+                    informeFinal.FechaAprobacion = DateTime.Now;
+                    informeFinal.FechaModificacion = DateTime.Now;
+                }
+
+                //Enviar Correo a grupo novedades liquidaciones 5.1.3
+                await EnviarCorreoGrupoNovedades(informeFinal, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
+
+                //Cambiar estado de validación
+                await updateStateValidation(informeFinal.InformeFinalId, pUsuario);
+
+                _context.SaveChanges();
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.ValidarInformeFinalProyecto, GeneralCodes.OperacionExitosa, idAccion, pUsuario, "INFORME FINAL ")
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantSesionComiteTecnico.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.ValidarInformeFinalProyecto, GeneralCodes.Error, idAccion, pUsuario, ex.InnerException.ToString())
+                };
+            }
+        }
+        
         public async Task<InformeFinalInterventoriaObservaciones> GetInformeFinalInterventoriaObservacionByInformeFinalObservacion(int pObservacionId)
         {
             InformeFinalInterventoriaObservaciones informeFinalInterventoriaObservaciones = await _context.InformeFinalInterventoriaObservaciones.Where(r => r.InformeFinalInterventoriaObservacionesId == pObservacionId).FirstOrDefaultAsync();
-
             return informeFinalInterventoriaObservaciones;
+        }
+
+        public async Task<InformeFinalInterventoriaObservaciones> GetInformeFinalInterventoriaObservacionByInformeFinalInterventoria(int pInformeFinalInterventoriaId)
+        {
+            InformeFinalInterventoria informeFinalInterventoria = await _context.InformeFinalInterventoria.Where(r => r.InformeFinalInterventoriaId == pInformeFinalInterventoriaId).FirstOrDefaultAsync();
+            //InformeFinal informeFinal = await _context.InformeFinal.Where(r => r.InformeFinalId == informeFinalInterventoria.InformeFinalId).FirstOrDefaultAsync();
+             return await _context.InformeFinalInterventoriaObservaciones.Where(r => r.InformeFinalInterventoriaId == pInformeFinalInterventoriaId && r.EsSupervision == true).OrderByDescending(r => r.FechaCreacion).FirstOrDefaultAsync();
+        }
+
+        private async Task<bool> EnviarCorreoInterventor(InformeFinal informeFinal, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
+        {
+            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Interventor).Include(y => y.Usuario);
+
+            Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificacionInterventorDevolucion5_1_3);
+
+            string template = TemplateRecoveryPassword.Contenido
+                .Replace("_LinkF_", pDominioFront)
+                .Replace("[LLAVE_MEN]", informeFinal.Proyecto.LlaveMen);
+
+            bool blEnvioCorreo = false;
+
+            foreach (var item in usuarios)
+            {
+                blEnvioCorreo = Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Devolución por Supervisión - Informe Final", template, pSender, pPassword, pMailServer, pMailPort);
+            }
+            return blEnvioCorreo;
+        }
+
+        private async Task<bool> EnviarCorreoGrupoNovedades(InformeFinal informeFinal, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
+        {
+            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Tecnica).Include(y => y.Usuario);
+
+            Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificacionGrupoNovedadesInformeFinal5_1_3);
+
+            string template = TemplateRecoveryPassword.Contenido
+                .Replace("_LinkF_", pDominioFront)
+                .Replace("[LLAVE_MEN]", informeFinal.Proyecto.LlaveMen)
+                .Replace("[FECHA_VERIFICACION]", ((DateTime)informeFinal.FechaAprobacion).ToString("dd-MMM-yy"));
+
+            bool blEnvioCorreo = false;
+
+            foreach (var item in usuarios)
+            {
+                blEnvioCorreo = Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Validar informe final Grupo Novedades", template, pSender, pPassword, pMailServer, pMailPort);
+            }
+            return blEnvioCorreo;
+        }
+
+        //Alerta 5 días
+        public async Task GetInformeFinalNoEnviadoAGrupoNovedades(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
+        {
+            DateTime RangoFechaConDiasHabiles = await _commonService.CalculardiasLaborales(5, DateTime.Now);
+
+            List<InformeFinal> informeFinal = _context.InformeFinal
+                .Where(r => r.EstadoValidacion == ConstantCodigoEstadoValidacionInformeFinal.Con_informe_enviado_al_supervisor && r.EstadoAprobacion != ConstantCodigoEstadoAprobacionInformeFinal.Enviado_verificacion_liquidacion_novedades)
+                .Include(r => r.Proyecto)
+                .ToList();
+
+            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Apoyo || x.PerfilId == (int)EnumeratorPerfil.Supervisor).Include(y => y.Usuario);
+            Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.Alerta5DiasEnvioGrupoNovedades5_1_3);
+
+            foreach (var informe in informeFinal)
+            {
+
+                if (informeFinal.Count() > 0 && informe.FechaEnvioSupervisor > RangoFechaConDiasHabiles)
+                {
+                    string template = TemplateRecoveryPassword.Contenido
+                                .Replace("_LinkF_", pDominioFront)
+                                .Replace("[LLAVE_MEN]", informe.Proyecto.LlaveMen)
+                                .Replace("[ESTADO_APROBACION]", String.IsNullOrEmpty(informe.EstadoAprobacion) ? "Sin Validación" : await _commonService.GetNombreDominioByCodigoAndTipoDominio(informe.EstadoAprobacion, (int)EnumeratorTipoDominio.Estado_Aprobacion_Informe_Final))
+                                .Replace("[FECHA_ENVIO_SUPERVISOR]", ((DateTime)informe.FechaEnvioSupervisor).ToString("yyyy-MM-dd"));
+
+                    foreach (var item in usuarios)
+                    {
+                        Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "No se ha enviado el informe Final para revisión final. ", template, pSender, pPassword, pMailServer, pMailPort);
+                    }
+
+                }
+            }
+        }
+
+        //Actualizar ValidacionCodigo == AprobacionCodigo
+        private async Task<Respuesta> updateStateValidation(int informeFinalId, string user)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Actualizar_Estado_validacion_informe_final, (int)EnumeratorTipoDominio.Acciones);
+            string CreateEdit = string.Empty;
+            try
+            {
+                List<InformeFinalInterventoria> informeFinalInterventoria = _context.InformeFinalInterventoria
+                        .Where(r => r.InformeFinalId == informeFinalId).ToList();
+
+                foreach (var item in informeFinalInterventoria)
+                {
+                    if (item.ValidacionCodigo != item.AprobacionCodigo)
+                    {
+                        await _context.Set<InformeFinalInterventoria>()
+                                  .Where(r => r.InformeFinalInterventoriaId == item.InformeFinalInterventoriaId)
+                                                      .UpdateAsync(r => new InformeFinalInterventoria()
+                                                      {
+                                                          FechaModificacion = DateTime.Now,
+                                                          UsuarioModificacion = user,
+                                                          ValidacionCodigo = item.AprobacionCodigo,//cumple,no aplica, no cumple
+                                                                      });
+                    }
+                }
+
+                return
+                new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.ValidarInformeFinalProyecto, GeneralCodes.OperacionExitosa, idAccion, user, CreateEdit)
+                };
+            }
+            catch (Exception ex)
+            {
+                return
+                  new Respuesta
+                  {
+                      IsSuccessful = false,
+                      IsException = true,
+                      IsValidation = false,
+                      Code = GeneralCodes.Error,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.ValidarInformeFinalProyecto, GeneralCodes.Error, idAccion, user, ex.InnerException.ToString())
+                  };
+            }
         }
     }
 }

@@ -1508,39 +1508,63 @@ namespace asivamosffie.services
             if (
                     pConstruccion.PlanLicenciaVigente == null ||
                     pConstruccion.PlanLicenciaVigente == false ||
+                    pConstruccion.LicenciaFechaRadicado == null ||
+                    pConstruccion.LicenciaFechaAprobacion == null ||
 
                     pConstruccion.PlanCambioConstructorLicencia == null ||
                     pConstruccion.PlanCambioConstructorLicencia == false ||
+                    pConstruccion.CambioFechaAprobacion == null ||
+                    pConstruccion.CambioFechaRadicado == null ||
 
                     pConstruccion.PlanActaApropiacion == null ||
                     pConstruccion.PlanActaApropiacion == false ||
+                    pConstruccion.ActaApropiacionFechaRadicado == null ||
+                    pConstruccion.ActaApropiacionFechaAprobacion == null ||
 
                     pConstruccion.PlanResiduosDemolicion == null ||
                     pConstruccion.PlanResiduosDemolicion == false ||
+                    pConstruccion.ResiduosDemolicionFechaRadicado == null ||
+                    pConstruccion.ResiduosDemolicionFechaAprobacion == null ||
 
                     pConstruccion.PlanManejoTransito == null ||
                     pConstruccion.PlanManejoTransito == false ||
+                    pConstruccion.ManejoTransitoFechaRadicado == null ||
+                    pConstruccion.ManejoTransitoFechaAprobacion == null ||
 
                     pConstruccion.PlanManejoAmbiental == null ||
                     pConstruccion.PlanManejoAmbiental == false ||
+                    pConstruccion.ManejoAmbientalFechaRadicado == null ||
+                    pConstruccion.ManejoAmbientalFechaAprobacion == null ||
 
                     pConstruccion.PlanAseguramientoCalidad == null ||
                     pConstruccion.PlanAseguramientoCalidad == false ||
+                    pConstruccion.AseguramientoCalidadFechaRadicado == null ||
+                    pConstruccion.AseguramientoCalidadFechaAprobacion == null ||
 
                     pConstruccion.PlanProgramaSeguridad == null ||
                     pConstruccion.PlanProgramaSeguridad == false ||
+                    pConstruccion.ProgramaSeguridadFechaRadicado == null ||
+                    pConstruccion.ProgramaSeguridadFechaAprobacion == null ||
 
                     pConstruccion.PlanProgramaSalud == null ||
                     pConstruccion.PlanProgramaSalud == false ||
+                    pConstruccion.ProgramaSaludFechaRadicado == null ||
+                    pConstruccion.ProgramaSaludFechaAprobacion == null ||
 
                     pConstruccion.PlanInventarioArboreo == null ||
                     pConstruccion.PlanInventarioArboreo == 1 ||
+                    (pConstruccion.PlanInventarioArboreo == 2 && pConstruccion.InventarioArboreoFechaRadicado == null ) ||
+                    (pConstruccion.PlanInventarioArboreo == 2 && pConstruccion.InventarioArboreoFechaAprobacion == null ) ||
 
                     pConstruccion.PlanAprovechamientoForestal == null ||
                     pConstruccion.PlanAprovechamientoForestal == 1 ||
+                    (pConstruccion.PlanAprovechamientoForestal == 2 && pConstruccion.AprovechamientoForestalApropiacionFechaRadicado == null ) ||
+                    (pConstruccion.PlanAprovechamientoForestal == 2 && pConstruccion.AprovechamientoForestalFechaAprobacion == null ) ||
 
                     pConstruccion.PlanManejoAguasLluvias == null ||
                     pConstruccion.PlanManejoAguasLluvias == 1 ||
+                    (pConstruccion.PlanManejoAguasLluvias == 2 && pConstruccion.ManejoAguasLluviasFechaRadicado == null ) ||
+                    (pConstruccion.PlanManejoAguasLluvias == 2 && pConstruccion.ManejoAguasLluviasFechaAprobacion == null ) ||
 
                     string.IsNullOrEmpty(pConstruccion.PlanRutaSoporte)
             )
@@ -1789,13 +1813,11 @@ namespace asivamosffie.services
             return CalcularFechasContrato(contratoConstruccion.ProyectoId, contratoConstruccion.FechaInicioObra);
         }
 
-
-
         #endregion private
 
         #region business
 
-        public async Task<Respuesta> CambiarEstadoContratoEstadoVerificacionConstruccionCodigo(int ContratoId, string pEstado, string pUsuarioMod)
+        public async Task<Respuesta> CambiarEstadoContratoEstadoVerificacionConstruccionCodigo(int ContratoId, string pEstado, string pUsuarioMod, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Contrato_Construccion, (int)EnumeratorTipoDominio.Acciones);
 
@@ -1815,6 +1837,30 @@ namespace asivamosffie.services
 
                 if (pEstado == ConstanCodigoEstadoConstruccion.Enviado_al_interventor.ToString() || pEstado == ConstanCodigoEstadoConstruccion.Enviado_al_apoyo.ToString())
                 {
+                    Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.DevolverConObservacionesFase2);
+
+                    string ncontrato = "";
+                    string fechaContrato = "";
+                    string template = TemplateRecoveryPassword.Contenido.
+                        Replace("_Numero_Contrato_", contratoCambiarEstado.NumeroContrato).
+                        Replace("_LinkF_", pDominioFront).
+                        Replace("_Cantidad_Proyectos_Asociados_", _context.ContratoConstruccion.Where(x => x.RegistroCompleto == true && x.ContratoId == contratoCambiarEstado.ContratoId).Count().ToString()).
+                        Replace("_funcionalidad_", pEstado == ConstanCodigoEstadoConstruccion.Enviado_al_interventor.ToString() ? 
+                                "Registrar requisitos técnicos de inicio para fase 2- Construcción" :
+                                "Verificar requisitos técnicos de inicio para fase 2 - Construcción").
+                        Replace("_Obra_O_Interventoria_", contratoCambiarEstado.Contratacion.TipoSolicitudCodigo == "1" ? "obra" : "interventoría");//OBRA O INTERVENTORIA
+
+                    List<UsuarioPerfil> usuariosadmin = null;
+                    if (pEstado == ConstanCodigoEstadoConstruccion.Enviado_al_interventor.ToString())
+                        usuariosadmin = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Interventor).Include(y => y.Usuario).ToList();
+                    else
+                        usuariosadmin = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Apoyo).Include(y => y.Usuario).ToList();
+
+                    foreach (var usuarioadmin in usuariosadmin)
+                    {
+                        bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioadmin.Usuario.Email, "Devolucion de requisitos técnicos de inicio para fase 2-construcción", template, pSender, pPassword, pMailServer, pMailPort);
+                    }
+
                     foreach (var ContratoConstruccion in contratoCambiarEstado.ContratoConstruccion)
                     {
 
@@ -2179,15 +2225,36 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<Respuesta> AprobarInicio(int pContratoId, string pUsuarioCreacion)
+        public async Task<Respuesta> AprobarInicio(int pContratoId, string pUsuarioCreacion, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
             string CreateEdit = string.Empty;
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Aprobar_Inicio_Construccion, (int)EnumeratorTipoDominio.Acciones);
 
             try
             {
+                Contrato contrato = _context.Contrato.Where(c => c.ContratoId == pContratoId).Include(x => x.Contratacion).FirstOrDefault();
+                //envio correo
+                //envio correo a supervisor
+                Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.AprobarRequisitosTecnicosFase2);
 
-                Contrato contrato = _context.Contrato.Find(pContratoId);
+                string ncontrato = "";
+                string fechaContrato = "";
+                string template = TemplateRecoveryPassword.Contenido.
+                    Replace("[NUMEROCONTRATO]", contrato.NumeroContrato).
+                    Replace("_LinkF_", pDominioFront).
+                    Replace("[FECHAVERIFICACION]", DateTime.Now.ToString("dd/MM/yyyy")).
+                    Replace("[CANTIDADPROYECTOSASOCIADOS]", _context.ContratoConstruccion.Where(x => x.RegistroCompleto == true && x.ContratoId == contrato.ContratoId).Count().ToString()).
+                    Replace("[CANTIDADPROYECTOSVERIFICADOS]", _context.ContratoConstruccion.Where(x => x.RegistroCompleto == true && x.ContratoId == contrato.ContratoId).Count().ToString()).
+                    Replace("[TIPOCONTRATO]", contrato.Contratacion.TipoSolicitudCodigo == "1" ? "obra" : "interventoría");//OBRA O INTERVENTORIA
+
+
+                var usuariosadmin = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Apoyo).Include(y => y.Usuario).ToList();
+                foreach (var usuarioadmin in usuariosadmin)
+                {
+                    bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioadmin.Usuario.Email, "Aprobacion de requisitos técnicos de inicio para fase 2-construcción", template, pSender, pPassword, pMailServer, pMailPort);
+                }
+
+                //Contrato contrato = _context.Contrato.Find(pContratoId);
                 //jflorez, este evento solo sucede cuando esta completo y se aprueban los requisitos, por ello seteo el dato 20201202
                 contrato.FechaAprobacionRequisitosConstruccionInterventor = DateTime.Now;
                 contrato.UsuarioModificacion = pUsuarioCreacion;
@@ -3126,8 +3193,12 @@ namespace asivamosffie.services
 
                                 #endregion Capitulo
 
+                                string valorTemp = worksheet.Cells[i, k].Text;
+                                
+                                valorTemp = valorTemp.Replace("$", "").Replace(".", "").Replace(" ", "");
+
                                 //Valor
-                                temp.Valor = string.IsNullOrEmpty(worksheet.Cells[i, k].Text) ? 0 : decimal.Parse(worksheet.Cells[i, k].Text);
+                                temp.Valor = string.IsNullOrEmpty(worksheet.Cells[i, k].Text) ? 0 : decimal.Parse(valorTemp);
                                 sumaTotal += temp.Valor.Value;
 
                                 //Guarda Cambios en una tabla temporal

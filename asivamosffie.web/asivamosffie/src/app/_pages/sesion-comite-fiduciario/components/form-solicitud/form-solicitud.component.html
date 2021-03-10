@@ -352,9 +352,11 @@
                   type="number"
                   min="1"
                   max="10"
+                  maxLength="2"
                   formControlName="cuantosCompromisos"
                   (keyup)="CambioCantidadCompromisos()"
                   onkeyup="if(this.value>10) this.value = 10;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 />
               </mat-form-field>
               <span

@@ -1,38 +1,62 @@
-<button
-  mat-button
-  mat-dialog-close
-  class="modal--btn-cerrar"
-  [mat-dialog-close]="null"
->
+<button mat-button mat-dialog-close class="modal--btn-cerrar" [mat-dialog-close]="null">
   <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar" />
 </button>
 
 <div class="text-center">
-  <h1 class="title-menu--h1">Tipo de documento 
+  <h1 class="title-menu--h1">
+    Observaciones
     {{ data.llaveMen }}
   </h1>
-  <p>
-    Estado del requisito:
-    <b> {{ data.informe.calificacionCodigoString }} </b>
+  <p class="colorMainColor mt-05em">
+    <span class="mx-1em">
+      Estado del requisito:
+      <b> No cumple </b>
+    </span>
+    <span class="mx-1em">
+      Tipo de anexo:
+      <b *ngIf="data.informe.informeFinalAnexo"> {{ data.informe.informeFinalAnexo.tipoAnexoString }} </b>
+    </span>
+    <span class="mx-1em" *ngIf="data.informe.informeFinalAnexo && data.informe.informeFinalAnexo.urlSoporte">
+      URL:
+      <b> {{ data.informe.informeFinalAnexo.urlSoporte }} </b>
+    </span>
+    <span class="mx-1em" *ngIf="data.informe.informeFinalAnexo && data.informe.informeFinalAnexo.numRadicadoSac">
+      Número de radicado en SAC:
+      <b> {{ data.informe.informeFinalAnexo.numRadicadoSac }} </b>
+    </span>
+    <span class="mx-1em" *ngIf="data.informe.informeFinalAnexo && data.informe.informeFinalAnexo.fechaRadicado">
+      Fecha de radicado:
+      <b> {{ data.informe.informeFinalAnexo.fechaRadicado | date: 'dd/MM/yyyy' }} </b>
+    </span>
   </p>
   <p>
-    <b>{{ data.informe.nombre }}</b>  
+    <b> {{ data.informe.informeFinalListaChequeo.posicion }}. </b>
+    {{ data.informe.informeFinalListaChequeo.nombre }}
   </p>
 </div>
 
-<form [formGroup]="observaciones" novalidate (ngSubmit)="onSubmit()">
+<form [formGroup]="observaciones" novalidate (ngSubmit)="onSubmit()" *ngIf="!data.verDetalle || (data.informe.estadoValidacion === '6')">
   <div class="d-flex align-items-center">
     <div class="text-area-quill">
-        <label for="alcanceParticular" class="text-area-quill--label">Observaciones</label>
-        <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
-            (onContentChanged)="maxLength($event, 500)" formControlName="observaciones"></quill-editor>
+      <label for="alcanceParticular" class="text-area-quill--label">Observaciones</label>
+      <quill-editor
+        class="quill-editor-style"
+        [styles]="editorStyle"
+        [modules]="config"
+        required
+        (onContentChanged)="maxLength($event, 500)"
+        formControlName="observaciones"
+      ></quill-editor>
     </div>
     <span class="contador miles" *ngIf="observaciones.get('observaciones').value">
-        {{500 - (textoLimpio(observaciones.get('observaciones').value)>500?500:textoLimpio(observaciones.get('observaciones').value))}}
+      {{
+        500 -
+          (textoLimpio(observaciones.get('observaciones').value) > 500
+            ? 500
+            : textoLimpio(observaciones.get('observaciones').value))
+      }}
     </span>
-    <span class="contador miles" *ngIf="!observaciones.get('observaciones').value">
-        500
-    </span>
+    <span class="contador miles" *ngIf="!observaciones.get('observaciones').value"> 500 </span>
   </div>
 
   <div class="text-center">
@@ -47,3 +71,23 @@
     </button>
   </div>
 </form>
+
+<mat-card class="shipping-card var-main-gris" *ngIf="data.verDetalle && !(data.informe.estadoValidacion === '4' || data.informe.estadoValidacion === '6' || data.informe.estadoValidacion === '9')">
+    <mat-card-content>
+      <p [innerHTML]="observaciones.get('observaciones').value">
+      </p>
+    </mat-card-content>
+</mat-card>
+
+<mat-card class="shipping-card var-main-gris" *ngIf="data.verDetalle && (data.informe.estadoValidacion === '4' || data.informe.estadoValidacion === '6' || data.informe.estadoValidacion === '9')" [formGroup]="observacionesSupervisor">
+  <mat-card-header class="header-card header-card--margin">
+    <mat-card-title class="mat-card-title header-card--text">
+      Observación del supervisor
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <strong> {{ observacionesSupervisor.get('fechaCreacion').value | date: 'dd/MM/yyyy' }}</strong>
+    <p [innerHTML]="observacionesSupervisor.get('observaciones').value">
+    </p>
+  </mat-card-content>
+</mat-card>

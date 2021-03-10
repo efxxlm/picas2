@@ -73,6 +73,7 @@
                               required
                               maxLength="20"
                               onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                               [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }"
                               formControlName="valorAportanteProyecto"
                               (ngModelChange)="validarSaldoDisponible( $event, aportante.get( 'saldoDisponible' ).value, aportante.get( 'nombreAportante' ).value )">
@@ -172,6 +173,7 @@
                                   <mat-form-field class="full-width">
                                     <input matInput #valorUso currencyMask required maxLength="20"
                                       onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                       [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }"
                                       formControlName="valorUso">
                                       <input type="hidden" formControlName="componenteUsoId">

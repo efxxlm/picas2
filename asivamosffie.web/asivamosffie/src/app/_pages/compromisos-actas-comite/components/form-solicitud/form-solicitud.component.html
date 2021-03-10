@@ -32,7 +32,17 @@
         </div>
         <div class="col" *ngIf="solicitudes.tipoSolicitudCodigo === tipoSolicitudCodigo.controversiaContractual">
           <b class="label-left color-blue">
-            {{ solicitudes.controversiaContractual.numeroSolicitud }}
+            {{ solicitudes.controversiaContractual !== undefined ? solicitudes.controversiaContractual.numeroSolicitud : solicitudes.numeroSolicitud }}
+          </b>
+        </div>
+        <div class="col" *ngIf="solicitudes.tipoSolicitudCodigo === tipoSolicitudCodigo.actualizacionProcesoSeleccion">
+          <b class="label-left color-blue">
+            {{ solicitudes.numeroSolicitud }}
+          </b>
+        </div>
+        <div class="col" *ngIf="solicitudes.tipoSolicitudCodigo === tipoSolicitudCodigo.evaluacionProceso">
+          <b class="label-left color-blue">
+            {{ solicitudes.numeroSolicitud }}
           </b>
         </div>
       </div>
@@ -51,7 +61,21 @@
         <div class="pr-1">
           <label><b>Justificación</b></label>
         </div>
-        <div class="col color-blue" [innerHTML]="innerObservacion( solicitudes.procesoSeleccion.justificacion )"></div>
+        <div class="col color-blue" [innerHTML]="solicitudes.procesoSeleccion?.justificacion"></div>
+      </div>
+
+      <div class="row" *ngIf="solicitudes.tipoSolicitudCodigo === tipoSolicitudCodigo.actualizacionProcesoSeleccion" style="margin-top: .6em;">
+        <div class="pr-1">
+          <label><b>Justificación</b></label>
+        </div>
+        <div class="col color-blue" [innerHTML]="solicitudes.procesoSeleccionMonitoreo?.procesoSeleccion?.justificacion"></div>
+      </div>
+
+      <div class="row" *ngIf="solicitudes.tipoSolicitudCodigo === tipoSolicitudCodigo.evaluacionProceso" style="margin-top: .6em;">
+        <div class="pr-1">
+          <label><b>Justificación</b></label>
+        </div>
+        <div class="col color-blue" [innerHTML]="solicitudes.procesoSeleccion?.justificacion"></div>
       </div>
       
       <div style="margin-top: .6em;">
@@ -94,7 +118,7 @@
               <label><b>Estado de la solicitud</b></label>
             </div>
             <div class="col w-50">
-              <span class="color-blue"> <b>{{ solicitudes.estadoCodigo }}</b> </span>
+              <span class="color-blue"> <b>{{ getEstadoSolicitud( solicitudes.estadoCodigo ) }}</b> </span>
             </div>
           </div>
         </div>

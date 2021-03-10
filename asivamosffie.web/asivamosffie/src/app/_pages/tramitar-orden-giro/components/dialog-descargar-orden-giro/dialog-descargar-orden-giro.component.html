@@ -1,0 +1,107 @@
+<button mat-button mat-dialog-close class="modal--btn-cerrar" [mat-dialog-close]="null">
+    <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
+</button>
+
+<div class="text-center">
+    <h1 class="title-menu--h1">Descargar orden de giro para tramitar</h1>
+</div>
+
+<section class="container text-center mt-3em" style="width: 100%;">
+    <form [formGroup]="formDate" (ngSubmit)="descargar()">
+        <div class="d-flex justify-content-center">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label  class="label-left"
+                                    for="inicialDate"
+                                    style="margin-top: .9em;"
+                                    [class.color-secondaryColor]="(formDate.get('inicialDate').invalid && formDate.get('inicialDate').touched) || (formDate.get('inicialDate').invalid)">
+                                    Fecha inicial
+                            </label>
+                        </div>
+                        <div class="col d-flex">
+                            <mat-form-field>
+                                <input  matInput
+                                        [matDatepicker]="inicialDate"
+                                        formControlName="inicialDate"
+                                        placeholder="DD/MM/AAAA"
+                                        (click)="inicialDate.open()"
+                                        required
+                                        readonly/>
+                                <mat-datepicker #inicialDate></mat-datepicker>
+                            </mat-form-field>
+                            <button mat-button
+                                    color="primary"
+                                    type="button"
+                                    (click)="inicialDate.open()"
+                                    class="btn-calendario">
+                                    <img class="mr-bottom-1" src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario"/>
+                            </button>
+                            <span class="icon-incompleto" style="margin-top: .3em;">
+                                <img    class="icon-incompleto--img"
+                                        src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido"
+                                        [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip"
+                                        *ngIf="(formDate.get('inicialDate').invalid && formDate.get('inicialDate').touched) || (formDate.get('inicialDate').invalid)"/>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="margin-left: 4em;">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label  class="label-left"
+                                    for="finalDate"
+                                    style="margin-top: .9em;"
+                                    [class.color-secondaryColor]="(formDate.get('finalDate').invalid && formDate.get('finalDate').touched) || (formDate.get('finalDate').invalid)">
+                                    Fecha final
+                            </label>
+                        </div>
+                        <div class="col d-flex">
+                            <mat-form-field>
+                                <input  matInput
+                                        [matDatepicker]="finalDate"
+                                        formControlName="finalDate"
+                                        placeholder="DD/MM/AAAA"
+                                        (click)="finalDate.open()"
+                                        required
+                                        readonly/>
+                                <mat-datepicker #finalDate></mat-datepicker>
+                            </mat-form-field>
+                            <button mat-button
+                                    color="primary"
+                                    type="button"
+                                    (click)="finalDate.open()"
+                                    class="btn-calendario">
+                                    <img class="mr-bottom-1" src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario"/>
+                            </button>
+                            <span class="icon-incompleto" style="margin-top: .3em;">
+                                <img    class="icon-incompleto--img"
+                                        src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido"
+                                        [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip"
+                                        *ngIf="(formDate.get('finalDate').invalid && formDate.get('finalDate').touched) || (formDate.get('finalDate').invalid)"/>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-3em">
+            <button mat-raised-button
+                    color="accent"
+                    class="tabs--btn"
+                    type="submit"
+                    [disabled]="btnDisabled()">
+                    Descargar
+            </button>
+        </div>
+    </form>
+</section>

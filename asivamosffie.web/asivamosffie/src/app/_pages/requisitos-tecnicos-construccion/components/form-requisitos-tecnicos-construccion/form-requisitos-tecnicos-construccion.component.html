@@ -102,8 +102,7 @@
   
           <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
-              <mat-panel-title class="expansion-style--title" 
-                                                              [ngClass]="contratacion['estadoSemaforoPerfiles']">
+              <mat-panel-title class="expansion-style--title" [ngClass]="contratacion.proyecto['estadoSemaforo']">
                 Hojas de vida del contratista de obra
               </mat-panel-title>
             </mat-expansion-panel-header>
@@ -139,60 +138,11 @@
               </mat-panel-title>
             </mat-expansion-panel-header>
   
-            <div class="d-flex mt-2em text-center" style="justify-content: center;" >
-              <p class="mr-1em" style="margin-right: 2em;"> Fecha Inicio ejecución de obra: </p>
-              <div class="col d-flex">
-                <mat-form-field class="mt-min">
-                  <input
-                    matInput
-                    [matDatepicker]="fechaInicioObra"
-                    [(ngModel)]="contratacion.proyecto.contratoConstruccion[0].fechaInicioObra"
-                    [min]="minDate"
-                    
-                    placeholder="DD/MM/AAAA"
-                    required
-                    readonly
-                    (click)="fechaInicioObra.open()"
-                    *ngIf="contratacion.proyecto.contratoConstruccion.length > 0"
-                    (dateChange)="changeFechaInicioObra(contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId,contratacion.proyecto.proyectoId, fechaInicioObra, i)"
-                    [disabled]="contratacion.proyecto.contratoConstruccion[0].archivoCargueIdProgramacionObra !== undefined"
-                  />
-
-                  <input
-                    matInput
-                    [matDatepicker]="fechaInicioObra"
-                    [min]="minDate"
-                    
-                    placeholder="DD/MM/AAAA"
-                    required
-                    readonly
-                    (click)="fechaInicioObra.open()"
-                    *ngIf="contratacion.proyecto.contratoConstruccion.length == 0"
-                    (dateChange)="changeFechaInicioObra(0, contratacion.proyecto.proyectoId, fechaInicioObra, i)"
-                    
-                  />
-                  <mat-datepicker  #fechaInicioObra></mat-datepicker>
-                </mat-form-field>
-                <button
-                  mat-button
-                  color="primary"
-                  type="button"
-                  (click)="fechaInicioObra.open()"
-                  class="btn-calendario"
-                >
-                  <img class="mr-bottom-1" src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
-                </button>
-                
-              </div>
-            </div>
-
             <div class="d-flex mt-2em text-center" style="justify-content: center;">
-
               <p class="mr-1em" style="margin-right: 2em;">
-
-                <!-- Fecha Inicio: <b>{{ contratacion.proyecto.contratoConstruccion[0].fechaInicioObra | date: 'dd/MM/yyyy' }}</b></p>   -->
+                Fecha Inicio: <b>{{ contratacion.proyecto.fechaInicioEtapaObra | date: 'dd/MM/yyyy' }}</b></p>  
                 <p class="mr-1em" style="margin-right: 2em;">Fecha Fin: <b>{{ contratacion.proyecto.fechaFinEtapaObra | date: 'dd/MM/yyyy' }}</b></p>  
-                <p class="mr-1em" style="margin-right: 2em;">Duración en semanas del proyecto: <b>{{ contratacion.proyecto['plazoEnSemanas'] | number : '1.1-1' }}</b></p>
+                <p class="mr-1em" style="margin-right: 2em;">Duración en meses del proyecto: <b>{{ contratacion.proyecto['plazoEnSemanas'] | number : '1.1-1' }}</b></p>
                 <p class="mr-1em" style="margin-right: 2em;">Valor total del Proyecto: <b> {{ contratacion.proyecto.valorObra | currency:'COP':'symbol-narrow':'.0-0' }} </b></p>
   
             </div>
@@ -205,7 +155,6 @@
                                                     [archivoCargueIdProgramacionObra]="contratacion.proyecto.contratoConstruccion.length > 0 ? contratacion.proyecto.contratoConstruccion[0].archivoCargueIdProgramacionObra : undefined"
                                                     [proyectoId]="contratacion.proyecto.proyectoId"
                                                     [contrato]="contrato"
-                                                    [fechaInicioObra]="contratacion.proyecto.contratoConstruccion[0].fechaInicioObra"
                                                     (terminoCarga)="getCargaMasiva( $event )"
                                                     (realizoObservacion)="getCargaMasiva( $event )"></app-programacion-obra-flujo-inversion>
             </section>
@@ -237,7 +186,7 @@
               <p class="mr-1em" style="margin-right: 2em;">
                 Fecha Inicio: <b>{{ contratacion.proyecto.fechaInicioEtapaObra | date: 'dd/MM/yyyy' }}</b></p>  
                 <p class="mr-1em" style="margin-right: 2em;">Fecha Fin: <b>{{ contratacion.proyecto.fechaFinEtapaObra | date: 'dd/MM/yyyy' }}</b></p>  
-                <p class="mr-1em" style="margin-right: 2em;">Duración en semanas del proyecto: <b>{{ contratacion.proyecto['plazoEnSemanas'] | number : '1.1-1' }}</b></p>
+                <p class="mr-1em" style="margin-right: 2em;">Duración en meses del proyecto: <b>{{ contratacion.proyecto['plazoEnSemanas'] | number : '1.1-1' }}</b></p>
                 <p class="mr-1em" style="margin-right: 2em;">Valor total del Proyecto: <b> {{ contratacion.proyecto.valorObra | currency:'COP':'symbol-narrow':'.0-0' }} </b></p>
   
             </div>

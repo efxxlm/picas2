@@ -91,7 +91,7 @@ export class FormProposicionesVariosComponent implements OnInit {
   onSubmit() {
 
     this.estaEditando = true;
-
+    this.addressForm.markAllAsTouched();
     // console.log(this.addressForm)
 
     let temas: SesionComiteTema[] = []

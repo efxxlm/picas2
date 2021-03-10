@@ -1093,7 +1093,9 @@
         </span>
       </div>
     </div>
-    <app-tabla-historial-observaciones-poliza [polizaObservacion]="contrato.polizaObservacion"></app-tabla-historial-observaciones-poliza>
+    <div *ngIf="contrato.polizaObservacion.length > 0">
+      <app-tabla-historial-observaciones-poliza [polizaObservacion]="contrato.polizaObservacion"></app-tabla-historial-observaciones-poliza>
+    </div>
     <div class="text-center mb-2em">
       <button mat-button color="warn" class="btn-guardar" type="submit">
         <img src="assets/img/icon/guardar.svg" alt="Regresar" />

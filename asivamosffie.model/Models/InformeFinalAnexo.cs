@@ -16,7 +16,7 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public string TipoAnexo { get; set; }
-        public int? NumRadicadoSac { get; set; }
+        public decimal? NumRadicadoSac { get; set; }
         public DateTime? FechaRadicado { get; set; }
         public string UrlSoporte { get; set; }
 

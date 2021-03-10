@@ -118,7 +118,11 @@
                             <div class="text-area-quill auxBox">
                                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                                     required (onContentChanged)="maxLength($event, 500)"
-                                    formControlName="cualOtroActuacionAdelantada" #cualOtroActuacionAdelantada>
+                                    formControlName="cualOtroActuacionAdelantada" #cualOtroActuacionAdelantada
+                                    [class.invalid]="
+              (addressForm.get('cualOtroActuacionAdelantada').invalid && addressForm.get('cualOtroActuacionAdelantada').touched) ||
+              (addressForm.get('cualOtroActuacionAdelantada').invalid && estaEditando)
+            ">
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.cualOtroActuacionAdelantada.value">
@@ -195,7 +199,11 @@
                             <div class="text-area-quill auxBox">
                                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                                     required (onContentChanged)="maxLength($event, 500)"
-                                    formControlName="cualOtroActuacionRequerida" #cualOtroActuacionRequerida>
+                                    formControlName="cualOtroActuacionRequerida" #cualOtroActuacionRequerida
+                                    [class.invalid]="
+              (addressForm.get('cualOtroActuacionRequerida').invalid && addressForm.get('cualOtroActuacionRequerida').touched) ||
+              (addressForm.get('cualOtroActuacionRequerida').invalid && estaEditando)
+            ">
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.cualOtroActuacionRequerida.value">
@@ -231,6 +239,7 @@
                             <mat-form-field class="full-width">
                                 <input matInput (keypress)="validateNumberKeypress($event)"
                                     onKeyPress="if(this.value.length>=this.maxLength) return false;" type="number"
+                                    oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                     maxlength="7" formControlName="diasVencimientoTerminos" required
                                     #diasVencimientoTerminos>
                             </mat-form-field>
@@ -443,10 +452,12 @@
                       ">Observaciones</label>
                     <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                         #observaciones (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones"
-                        style="padding: 1.5em 0em 1.2em;"></quill-editor>
+                        style="padding: 1.5em 0em 1.2em;"
+                        [class.invalid]="(addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+              (addressForm.get('observaciones').invalid && estaEditando)"></quill-editor>
                 </div>
                 <span class="contador miles" *ngIf="addressForm.controls.observaciones.value">
-                    {{1000 - (textoLimpio(observaciones.quillEditor,500))}}
+                    {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
                 </span>
                 <span class="contador miles" *ngIf="!addressForm.controls.observaciones.value">
                     1000
@@ -487,8 +498,8 @@
                                 registro de la actuación de trámite</span>
                         </div>
                         <span class="icon-incompleto">
-                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
-                                [matTooltipPosition]="'above'"
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
                                 matTooltip="Debe ingresar la información en el campo para continuar"
                                 matTooltipClass="info-tooltip" *ngIf="
                             (addressForm.get('urlSoporte').invalid && addressForm.get('urlSoporte').touched) ||

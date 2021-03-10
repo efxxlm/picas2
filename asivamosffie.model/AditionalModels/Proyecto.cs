@@ -44,12 +44,6 @@ namespace asivamosffie.model.Models
         public DateTime FechaFinEtapaObra { get; set; }
 
         [NotMapped]
-        public DateTime FechaInicioEtapaObraTemporal { get; set; }
-
-        [NotMapped]
-        public DateTime FechaFinEtapaObraTemporal { get; set; }
-
-        [NotMapped]
         public double PlazoEnSemanas { get; set; }
 
         [NotMapped]
@@ -57,6 +51,12 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public VProyectosXcontrato InfoProyecto { get; set; }
+    
+        [NotMapped]
+        public DateTime? FechaInicioEtapaObraTemporal { get; set; }
+
+        [NotMapped]
+        public DateTime? FechaFinEtapaObraTemporal { get; set; }
 
     }
 }

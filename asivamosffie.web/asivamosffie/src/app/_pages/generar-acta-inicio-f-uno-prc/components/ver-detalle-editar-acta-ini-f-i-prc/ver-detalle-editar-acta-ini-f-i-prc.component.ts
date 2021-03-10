@@ -373,6 +373,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
   }
   onSubmit() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let esSupervisionBool;
     let fecha = Date.parse(this.addressForm.get('fechaActaInicioFUnoPreconstruccion').value);
     this.fechaSesion = new Date(fecha);

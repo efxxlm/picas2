@@ -121,7 +121,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
                             this.dataHistorial = response.filter( obs => obs.archivada === true );
                             this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
                             if ( observacionApoyo[0] !== undefined ) {
-                                if ( observacionApoyo[0].observacion.length > 0 ) {
+                                if ( observacionApoyo[0].observacion !== undefined && observacionApoyo[0].observacion.length > 0 ) {
                                     this.formAvanceFisico.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
                                 }
                             }

@@ -7,9 +7,11 @@ namespace asivamosffie.model.Models
     {
         public ContratacionProyecto()
         {
+            BalanceFinanciero = new HashSet<BalanceFinanciero>();
             ContratacionObservacion = new HashSet<ContratacionObservacion>();
             ContratacionProyectoAportante = new HashSet<ContratacionProyectoAportante>();
             DefensaJudicialContratacionProyecto = new HashSet<DefensaJudicialContratacionProyecto>();
+            LiquidacionContratacionObservacion = new HashSet<LiquidacionContratacionObservacion>();
             SeguimientoDiario = new HashSet<SeguimientoDiario>();
             SeguimientoSemanal = new HashSet<SeguimientoSemanal>();
             SesionSolicitudObservacionProyecto = new HashSet<SesionSolicitudObservacionProyecto>();
@@ -41,12 +43,23 @@ namespace asivamosffie.model.Models
         public string RutaCargaActaTerminacionContrato { get; set; }
         public decimal? AvanceFisicoSemanal { get; set; }
         public decimal? ProgramacionSemanal { get; set; }
+        public string EstadoVerificacionLiquidacionCodigo { get; set; }
+        public DateTime? FechaValidacionLiquidacion { get; set; }
+        public string EstadoAprobacionLiquidacionCodigo { get; set; }
+        public DateTime? FechaAprobacionLiquidacion { get; set; }
+        public string EstadoTramiteLiquidacion { get; set; }
+        public bool? RegistroCompletoVerificacionLiquidacion { get; set; }
+        public bool? RegistroCompletoAprobacionLiquidacion { get; set; }
+        public bool? RegistroCompletoTramiteLiquidacion { get; set; }
+        public DateTime? FechaTramiteLiquidacion { get; set; }
 
         public virtual Contratacion Contratacion { get; set; }
         public virtual Proyecto Proyecto { get; set; }
+        public virtual ICollection<BalanceFinanciero> BalanceFinanciero { get; set; }
         public virtual ICollection<ContratacionObservacion> ContratacionObservacion { get; set; }
         public virtual ICollection<ContratacionProyectoAportante> ContratacionProyectoAportante { get; set; }
         public virtual ICollection<DefensaJudicialContratacionProyecto> DefensaJudicialContratacionProyecto { get; set; }
+        public virtual ICollection<LiquidacionContratacionObservacion> LiquidacionContratacionObservacion { get; set; }
         public virtual ICollection<SeguimientoDiario> SeguimientoDiario { get; set; }
         public virtual ICollection<SeguimientoSemanal> SeguimientoSemanal { get; set; }
         public virtual ICollection<SesionSolicitudObservacionProyecto> SesionSolicitudObservacionProyecto { get; set; }

@@ -132,56 +132,77 @@ export class InvitacionAbiertaComponent implements OnInit {
   }
 
   estaIncompletoDescripcion(pProceso:ProcesoSeleccion):number{        
+  
     
-    let retorno:number=0;
-    if(pProceso.objeto !="" ||
-    pProceso.alcanceParticular!="" ||
-    pProceso.justificacion!="" ||
-    pProceso.criteriosSeleccion!="" ||
-    pProceso.tipoIntervencionCodigo!="" ||
-    pProceso.tipoAlcanceCodigo!="" ||
+    console.log(pProceso);
 
-    pProceso.condicionesAsignacionPuntaje!=null ||
-    pProceso.condicionesFinancierasHabilitantes!=null ||
-    pProceso.condicionesJuridicasHabilitantes!=null ||
-    pProceso.condicionesTecnicasHabilitantes!=null ||
-    pProceso.tipoAlcanceCodigo!="" ||
-    pProceso.tipoAlcanceCodigo!="" ||
-    pProceso.tipoAlcanceCodigo!="" ||
-    //pProceso.esDistribucionGrupos!="" ||
-    pProceso.responsableEstructuradorUsuarioid!=undefined ||
-    pProceso.responsableTecnicoUsuarioId!=undefined ||
-    pProceso.procesoSeleccionGrupo.length>=1||
-    pProceso.procesoSeleccionCronograma.length>=1)
-    {
-      if(pProceso.objeto !="" &&
-      pProceso.alcanceParticular!="" &&
-      pProceso.justificacion!="" &&
-      pProceso.criteriosSeleccion!="" &&
-      pProceso.tipoIntervencionCodigo!="" &&
-      pProceso.tipoAlcanceCodigo!="" &&
-      pProceso.condicionesAsignacionPuntaje!=null &&
-      pProceso.condicionesFinancierasHabilitantes!=null &&
-      pProceso.condicionesJuridicasHabilitantes!=null &&
-      pProceso.condicionesTecnicasHabilitantes!=null &&
-      //pProceso.esDistribucionGrupos!="" &&
-      pProceso.responsableEstructuradorUsuarioid!=undefined &&
-      pProceso.responsableTecnicoUsuarioId!=undefined &&
-      pProceso.procesoSeleccionGrupo.length>0 &&
-      pProceso.procesoSeleccionCronograma.length>0)
-      {
-        retorno= 2;
+    let retorno: number = 0; //sin-diligenciar
+
+    // verifico si hay algo registrado
+    if (
+      (pProceso.objeto !== "" && pProceso.objeto !== undefined) ||
+      (pProceso.alcanceParticular !== "" && pProceso.alcanceParticular !== undefined) ||
+      (pProceso.justificacion !== "" && pProceso.justificacion !== undefined) ||
+      //(pProceso.criteriosSeleccion !== "" && pProceso.criteriosSeleccion !== undefined) ||
+      (pProceso.tipoIntervencionCodigo !== "" && pProceso.tipoIntervencionCodigo !== undefined) ||
+      (pProceso.tipoAlcanceCodigo !== "" && pProceso.tipoAlcanceCodigo !== undefined) ||
+      (pProceso.esDistribucionGrupos !== undefined) ||
+      (pProceso.responsableEstructuradorUsuarioid !== undefined) ||
+      (pProceso.responsableTecnicoUsuarioId !== undefined) ||
+      (pProceso.condicionesAsignacionPuntaje !== undefined && pProceso.condicionesAsignacionPuntaje !== '' ) ||
+      (pProceso.condicionesFinancierasHabilitantes !== undefined && pProceso.condicionesFinancierasHabilitantes !== '' ) ||
+      (pProceso.condicionesJuridicasHabilitantes !== undefined && pProceso.condicionesJuridicasHabilitantes !== '' ) ||
+      (pProceso.condicionesTecnicasHabilitantes !== undefined && pProceso.condicionesTecnicasHabilitantes !== '' ) ||
+      (pProceso.procesoSeleccionGrupo !== undefined && pProceso.procesoSeleccionGrupo.length > 0) ||
+      (pProceso.procesoSeleccionCronograma !== undefined && pProceso.procesoSeleccionCronograma.length > 0)) {
+
+        retorno = 2; // completo
+
+      //Verifico si falta algo
+      if (
+        (pProceso.objeto === "" || pProceso.objeto === undefined) ||
+        (pProceso.alcanceParticular === "" || pProceso.alcanceParticular === undefined) ||
+        (pProceso.justificacion === "" || pProceso.justificacion === undefined) ||
+        // //(pProceso.criteriosSeleccion === "" || pProceso.criteriosSeleccion === undefined) ||
+        (pProceso.tipoIntervencionCodigo === "" || pProceso.tipoIntervencionCodigo === undefined) ||
+        (pProceso.tipoAlcanceCodigo === "" || pProceso.tipoAlcanceCodigo === undefined) ||
+        (pProceso.esDistribucionGrupos === undefined) ||
+        (pProceso.responsableEstructuradorUsuarioid === undefined) ||
+        (pProceso.responsableTecnicoUsuarioId === undefined) ||
+        (pProceso.condicionesAsignacionPuntaje === undefined || pProceso.condicionesAsignacionPuntaje === '' ) ||
+        (pProceso.condicionesFinancierasHabilitantes === undefined || pProceso.condicionesFinancierasHabilitantes === '' ) ||
+        (pProceso.condicionesJuridicasHabilitantes === undefined || pProceso.condicionesJuridicasHabilitantes === '' ) ||
+        (pProceso.condicionesTecnicasHabilitantes === undefined || pProceso.condicionesTecnicasHabilitantes === '' ) ||
+        (pProceso.procesoSeleccionGrupo === undefined || pProceso.procesoSeleccionGrupo.length === 0) ||
+        (pProceso.procesoSeleccionCronograma === undefined || pProceso.procesoSeleccionCronograma.length === 0)
+        ) {
+
+          retorno = 1; // en-proceso  
+
       }
-      else{       
-      retorno=1;
-      }
+
+      // grupos
+      pProceso.procesoSeleccionGrupo.forEach(psg => {
+        if (
+          psg.nombreGrupo === undefined ||
+          psg.tipoPresupuestoCodigo === undefined ||
+          (psg.tipoPresupuestoCodigo === "2" && psg.valorMaximoCategoria === undefined) ||
+          (psg.tipoPresupuestoCodigo === "2" && psg.valorMinimoCategoria === undefined) ||
+          (psg.tipoPresupuestoCodigo === "1" && psg.valor === undefined) ||
+          psg.plazoMeses === undefined
+        ) {
+          retorno = 1; // en-proceso   
+        }
+      });
+      
     }
     return retorno;
   }
 
   estaIncompletoEvaluacion(pProceso:any):number{
     let retorno=0;    
-    if(pProceso.estadoProcesoSeleccionCodigo==null || pProceso.estadoProcesoSeleccionCodigo != EstadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario)
+    if(pProceso.estadoProcesoSeleccionCodigo==null || (pProceso.estadoProcesoSeleccionCodigo != EstadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario &&
+      pProceso.estadoProcesoSeleccionCodigo != EstadosProcesoSeleccion.AprobadaSelecciónPorComiteFiduciario))
     {
       retorno=3;
     }
@@ -207,7 +228,8 @@ export class InvitacionAbiertaComponent implements OnInit {
 
   estaIncompletoOrden(pProceso:ProcesoSeleccion):number{
     let retorno=0;    
-    if(pProceso.estadoProcesoSeleccionCodigo != EstadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario)
+    if(pProceso.estadoProcesoSeleccionCodigo != EstadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario &&
+      pProceso.estadoProcesoSeleccionCodigo != EstadosProcesoSeleccion.AprobadaSelecciónPorComiteFiduciario)
     {
       retorno=3;
     }
@@ -222,6 +244,26 @@ export class InvitacionAbiertaComponent implements OnInit {
       }
     }
     return retorno;
+  }
+
+  getStyleEvaluacion(){
+    if ( this.bitPuedoEditar )
+      return 'auto'
+    else
+      return 'none'
+
+  }
+
+  mostrarAyudaProcesoAprobado(){
+    if ( 
+          this.procesoSeleccion.estadoProcesoSeleccionCodigo != this.estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario && 
+          this.procesoSeleccion.estadoProcesoSeleccionCodigo != this.estadosProcesoSeleccion.AprobadaSelecciónPorComiteFiduciario 
+       ){
+         return true;
+       }
+       else{
+         return false;
+       }
   }
 
 }

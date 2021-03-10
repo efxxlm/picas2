@@ -36,9 +36,12 @@ export class FormSolicitudComponent implements OnInit {
     contratacion: '2',
     modificacionContractual: '3',
     controversiaContractual: '4',
-    defensaJudicial: '5'
+    defensaJudicial: '5',
+    actualizacionProcesoSeleccion: '6',
+    evaluacionProceso: '7'
   }
   listaTipoSolicitud: Dominio[] = [];
+  listaEstadoSolicitud: Dominio[] = [];
 
   get compromisos() {
     return this.addressForm.get('compromisos') as FormArray;
@@ -50,14 +53,12 @@ export class FormSolicitudComponent implements OnInit {
   {
     this.commonSvc.listaTipoSolicitud()
       .subscribe( listaTipoSolicitud => this.listaTipoSolicitud = listaTipoSolicitud );
+    this.commonSvc.listaEstadoSolicitud()
+      .subscribe( listaEstadoSolicitud => this.listaEstadoSolicitud = listaEstadoSolicitud );
   };
 
   ngOnInit(): void {
-    this.resultadosVotaciones( this.solicitudes )
-    this.commonSvc.listaEstadoSolicitud()
-    .subscribe( ( resp: any[] ) => {
-      this.estadoSolicitud = resp.filter( estado => this.solicitudes.estadoCodigo === estado.codigo );
-    } );
+    this.resultadosVotaciones( this.solicitudes );
   };
 
   getSolicitudCodigo( tipoSolicitudCodigo: string ) {
@@ -72,12 +73,24 @@ export class FormSolicitudComponent implements OnInit {
     }
   }
 
+  getEstadoSolicitud( estadoCodigo: string ) {
+    if ( this.listaEstadoSolicitud.length > 0 ) {
+      const estadoSolicitud = this.listaEstadoSolicitud.find( estadoSolicitud => estadoSolicitud.codigo === estadoCodigo );
+
+      if ( estadoSolicitud !== undefined ) {
+        return estadoSolicitud.nombre;
+      } else {
+        return estadoCodigo;
+      }
+    }
+  }
+
   innerObservacion ( observacion: string ) {
     if ( observacion !== undefined ) {
       const observacionHtml = observacion.replace( '"', '' );
       return `<b>${ observacionHtml }</b>`;
     };
-  };
+  }
 
   resultadosVotaciones ( solicitud: any ) {
     if ( this.esComiteFiduciario === true ) {

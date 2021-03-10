@@ -31,6 +31,9 @@ export class TablaMonitoreoCompromisosComponent implements OnInit {
 
     this.technicalCommitteeSessionService.getListComite( 'False' )
       .subscribe(response => {
+        response.forEach(element => {
+          element.fechaOrdenDia = element.fechaOrdenDia.split('T')[0].split('-').reverse().join('/');
+        });
         // esponse = response.filter( c => c.estadoComiteCodigo == EstadosComite.conActaDeSesionAprobada )
         // console.log(response);
         this.dataSource = new MatTableDataSource(response);

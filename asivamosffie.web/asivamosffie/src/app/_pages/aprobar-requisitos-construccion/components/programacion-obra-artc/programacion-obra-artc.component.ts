@@ -130,6 +130,7 @@ export class ProgramacionObraArtcComponent implements OnInit {
 
   guardarProgramacion() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     const construccion = {
       contratoConstruccionId: this.contratoConstruccionId,
       tieneObservacionesProgramacionObraSupervisor: this.addressForm.value.tieneObservaciones,

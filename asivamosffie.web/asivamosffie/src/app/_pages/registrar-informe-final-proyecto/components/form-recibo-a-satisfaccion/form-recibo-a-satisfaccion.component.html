@@ -1,4 +1,4 @@
-<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit(false)" *ngIf="!verDetalle">
   <mat-card class="shipping-card">
     <mat-card-header class="header-card header-card--margin">
       <mat-card-title class="mat-card-title header-card--text"> Recibo a satisfacción </mat-card-title>
@@ -24,7 +24,6 @@
               #numeroRadicadoInput
               type="url"
               formControlName="urlActa"
-              maxlength="20"
               [matTooltipPosition]="'above'"
               matTooltip="Campo alfanumérico"
               matTooltipClass="info-tooltip"
@@ -105,9 +104,43 @@
       </div>
     </mat-card-content>
   </mat-card>
+
+  <mat-card class="shipping-card var-main-gris" *ngIf="tieneObservacionesSupervisor" [formGroup]="observacionesForm">
+    <mat-card-header class="header-card header-card--margin">
+      <mat-card-title class="mat-card-title header-card--text">
+        Observación del supervisor
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <strong> {{ observacionesForm.get('fechaCreacion').value | date: 'dd/MM/yyyy' }}</strong>
+      <p [innerHTML]="observacionesForm.get('observaciones').value">
+      </p>
+    </mat-card-content>
+  </mat-card>
+
+  <app-tabla-observaciones-recibo-satisfaccion *ngIf="existeHistorial" [data]="report.proyecto.informeFinal[0]"></app-tabla-observaciones-recibo-satisfaccion>
+  
   <div class="text-center mb-2em">
     <button mat-button color="warn" class="btn-guardar" type="submit">
       <img src="assets/img/icon/guardar.svg" alt="Guardar" />
     </button>
   </div>
 </form>
+
+<mat-card class="shipping-card var-main-gris" *ngIf="verDetalle">
+  <mat-card-header class="header-card header-card--margin">
+    <mat-card-title class="mat-card-title header-card--text">
+      Recibo a satisfacción
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <p>
+      <strong> URL Acta de recibo a satisfaccion - Obra: </strong>
+      {{ report.proyecto.informeFinal[0].urlActa }}
+    </p>
+    <p>
+      <strong> Fecha de suscripción: </strong>
+      {{ report.proyecto.informeFinal[0].fechaSuscripcion | date:'dd/MM/yyyy'}}
+    </p>
+  </mat-card-content>
+</mat-card>

@@ -7,6 +7,6 @@
     {
         public const string contratacion = "Contratación";
         public const string proyectoAdministrativo = "Proyecto administrativo";
-     
+        public const string novedadContractual = "Novedad contractual";
     }
 }

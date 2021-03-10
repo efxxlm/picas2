@@ -76,7 +76,11 @@
                       ">Actuación adelantada</label>
                     <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                         #actuacionAdelantada (onContentChanged)="maxLength($event, 500)"
-                        formControlName="actuacionAdelantada" style="padding: 1.5em 0em 1.2em;"></quill-editor>
+                        formControlName="actuacionAdelantada" style="padding: 1.5em 0em 1.2em;"
+                        [class.invalid]="
+                        (addressForm.get('actuacionAdelantada').invalid && addressForm.get('actuacionAdelantada').touched) ||
+                        (addressForm.get('actuacionAdelantada').invalid && estaEditando)
+                      "></quill-editor>
                 </div>
                 <span class="contador miles" *ngIf="addressForm.controls.actuacionAdelantada.value">
                     {{500 - (textoLimpio(actuacionAdelantada.quillEditor,500))}}
@@ -104,7 +108,11 @@
                       ">Próxima actuación requerida</label>
                     <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                         #proximaActuacionRequerida (onContentChanged)="maxLength($event, 500)"
-                        formControlName="proximaActuacionRequerida" style="padding: 1.5em 0em 1.2em;"></quill-editor>
+                        formControlName="proximaActuacionRequerida" style="padding: 1.5em 0em 1.2em;"
+                        [class.invalid]="
+                        (addressForm.get('proximaActuacionRequerida').invalid && addressForm.get('proximaActuacionRequerida').touched) ||
+                        (addressForm.get('proximaActuacionRequerida').invalid && estaEditando)
+                      "></quill-editor>
                 </div>
                 <span class="contador miles" *ngIf="addressForm.controls.proximaActuacionRequerida.value">
                     {{500 - (textoLimpio(proximaActuacionRequerida.quillEditor,500))}}
@@ -137,6 +145,7 @@
                             <mat-form-field class="full-width">
                                 <input matInput (keypress)="validateNumberKeypress($event)"
                                     onKeyPress="if(this.value.length>=this.maxLength) return false;" type="number"
+                                    oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                     maxlength="2" formControlName="diasVencimientoTerminos" required
                                     #diasVencimientoTerminos>
                             </mat-form-field>
@@ -205,7 +214,11 @@
                       ">Observaciones</label>
                     <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                         #observaciones (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones"
-                        style="padding: 1.5em 0em 1.2em;"></quill-editor>
+                        style="padding: 1.5em 0em 1.2em;" 
+                        [class.invalid]="
+                        (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                        (addressForm.get('observaciones').invalid && estaEditando)
+                      "></quill-editor>
                 </div>
                 <span class="contador miles" *ngIf="addressForm.controls.observaciones.value">
                     {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}

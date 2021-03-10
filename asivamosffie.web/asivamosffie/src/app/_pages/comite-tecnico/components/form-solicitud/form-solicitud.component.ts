@@ -85,7 +85,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
   }
 
   ActualizarProyectos(lista) {
-    //console.log(lista)
+    console.log(lista)
     this.proyectos = lista;
   }
 
@@ -213,7 +213,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
       }
       else {
 
-        this.openDialog('', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos</b>');
+        this.openDialog('', 'Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos');
         this.addressForm.get('cuantosCompromisos').setValue(this.compromisos.length);
 
       }
@@ -261,9 +261,8 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
 
   onSubmit() {
     this.estaEditando = true;
-    let tipoSolicitudCodigo: string;
-
-    
+    this.addressForm.markAllAsTouched();
+    let tipoSolicitudCodigo: string;    
 
     if (this.proyectos)
       this.proyectos.forEach(p => {
@@ -418,7 +417,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     }
 
     this.estaEditando = true;
-
+    this.addressForm.markAllAsTouched();
   }
 
 

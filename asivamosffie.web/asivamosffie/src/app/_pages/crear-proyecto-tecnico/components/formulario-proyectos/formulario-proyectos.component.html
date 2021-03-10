@@ -82,6 +82,7 @@
                   (keypress)="number($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
                   type="number"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 />
               </mat-form-field>
               <span
@@ -345,6 +346,7 @@
                   readonly
                   (keypress)="number($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   [matTooltipPosition]="'above'"
                   matTooltip="Espacio diligenciado por el sistema"
                   matTooltipClass="info-tooltip"
@@ -400,6 +402,7 @@
                   readonly
                   (keypress)="number($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   [matTooltipPosition]="'above'"
                   matTooltip="Espacio diligenciado por el sistema"
                   matTooltipClass="info-tooltip"
@@ -526,6 +529,7 @@
                   maxlength="3"
                   (keypress)="number($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   min="1"
                   max="99"
                   required
@@ -1036,6 +1040,7 @@
                   maxlength="2"
                   (keypress)="number($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   min="1"
                   max="99"
                   required
@@ -1255,9 +1260,9 @@
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left" [ngClass]="{ 'color-secondaryColor': !aportantes.valorObra && estaEditando }">
-                  Valor obra
-                </label>
+                <label class="label-left" [ngClass]="{ 'color-secondaryColor': !aportantes.valorObra && estaEditando }"
+                  >Valor obra</label
+                >
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
@@ -1283,7 +1288,7 @@
                 </span>
                 <span class="icon-incompleto">
                   <img
-                    *ngIf="!aportantes.valorObra && estaEditando"
+                    *ngIf="!proyecto.valorObra && estaEditando"
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
                     alt="este campo es requerido"
@@ -1303,9 +1308,8 @@
                 <label
                   class="label-left"
                   [ngClass]="{ 'color-secondaryColor': !aportantes.valorInterventoria && estaEditando }"
+                  >Valor interventoría</label
                 >
-                  Valor interventoría
-                </label>
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
@@ -1331,7 +1335,7 @@
                 </span>
                 <span class="icon-incompleto">
                   <img
-                    *ngIf="!aportantes.valorInterventoria && estaEditando"
+                    *ngIf="!proyecto.valorInterventoria && estaEditando"
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
                     alt="este campo es requerido"
@@ -1431,6 +1435,7 @@
                   required
                   (keypress)="number($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   type="number"
                   [matTooltipPosition]="'above'"
                   matTooltip="Campo numérico"
@@ -1466,6 +1471,7 @@
                   (keypress)="number($event)"
                   onkeyup="if(this.value>31) this.value = 31;"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   [matTooltipPosition]="'above'"
                   matTooltip="Campo numérico igual o menor a 31 días"
                   matTooltipClass="info-tooltip"
@@ -1508,6 +1514,7 @@
                   max="99"
                   (keypress)="number($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   required
                   type="number"
                   [matTooltipPosition]="'above'"
@@ -1544,6 +1551,7 @@
                   (keypress)="number($event)"
                   onkeyup="if(this.value>31) this.value = 31;"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   [matTooltipPosition]="'above'"
                   matTooltip="Campo numérico igual o menor a 31 días"
                   matTooltipClass="info-tooltip"
@@ -1619,6 +1627,7 @@
                     required
                     (keypress)="number($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     type="number"
                   />
                 </mat-form-field>

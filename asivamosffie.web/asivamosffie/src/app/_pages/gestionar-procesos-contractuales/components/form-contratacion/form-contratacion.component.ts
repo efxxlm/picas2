@@ -53,6 +53,10 @@ export class FormContratacionComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  listaTipoSolicitud = {
+    obra: '1',
+    interventoria: '2'
+  };
 
   constructor ( private fb: FormBuilder,
                 private activatedRoute: ActivatedRoute,
@@ -111,10 +115,16 @@ export class FormContratacionComponent implements OnInit {
           rutaDocumento: contratacion.rutaMinuta !== null ? contratacion.rutaMinuta : null
         });
 
-        for ( let contratacionProyecto of contratacion.contratacionProyecto ) {
-          this.valorTotalDdp += contratacionProyecto.proyecto.valorObra;
-          this.valorTotalDdp += contratacionProyecto.proyecto.valorInterventoria;
-        };
+        if ( contratacion.tipoSolicitudCodigo === this.listaTipoSolicitud.obra ) {
+          for ( let contratacionProyecto of contratacion.contratacionProyecto ) {
+            this.valorTotalDdp += contratacionProyecto.proyecto.valorObra;
+          };
+        }
+        if ( contratacion.tipoSolicitudCodigo === this.listaTipoSolicitud.interventoria ) {
+          for ( let contratacionProyecto of contratacion.contratacionProyecto ) {
+            this.valorTotalDdp += contratacionProyecto.proyecto.valorInterventoria;
+          };
+        }
 
       } );
 

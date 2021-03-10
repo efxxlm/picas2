@@ -60,7 +60,7 @@ export class DetalleConValidacionPresupuestalComponent implements OnInit {
     this.disponibilidadServices.GenerateDDP(this.detailavailabilityBudget.id).subscribe((listas:any) => {
       console.log(listas);
       const documento = `${ this.detailavailabilityBudget.numeroDDP }.pdf`;
-        const text = documento, 
+        const text = documento,
           blob = new Blob([listas], { type: 'application/pdf' }),
           anchor = document.createElement('a');
         anchor.download = documento;

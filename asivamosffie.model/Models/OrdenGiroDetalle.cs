@@ -26,7 +26,6 @@ namespace asivamosffie.model.Models
         public virtual OrdenGiroDetalleDescuentoTecnica OrdenGiroDetalleDescuentoTecnica { get; set; }
         public virtual OrdenGiroDetalleEstrategiaPago OrdenGiroDetalleEstrategiaPago { get; set; }
         public virtual OrdenGiroDetalleTerceroCausacion OrdenGiroDetalleTerceroCausacion { get; set; }
-        public virtual OrdenGiroObservacion OrdenGiroObservacion { get; set; }
         public virtual OrdenGiroSoporte OrdenGiroSoporte { get; set; }
         public virtual ICollection<OrdenGiro> OrdenGiro { get; set; }
     }

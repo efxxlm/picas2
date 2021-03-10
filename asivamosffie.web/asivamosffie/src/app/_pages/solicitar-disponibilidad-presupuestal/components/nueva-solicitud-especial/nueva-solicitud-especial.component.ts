@@ -283,6 +283,9 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
               this.budgetAvailabilityService.getAportanteTerritorial( this.proyecto.proyectoId, this.tipoAportante.aportanteEt )
                 .subscribe(
                   ( aportante: any ) => {
+
+                    this.nombreAportantes = [];
+
                     if ( aportante.length === 0 ) {
                       this.openDialog( '', '<b>El proyecto no tiene una entidad territorial como aportante.<br><br>La solicitud no se puede completar.</b>' );
                       this.seRecibioAportante = false;
@@ -374,6 +377,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
   onSubmit() {
     //if (this.addressForm.valid) {
       this.estaEditando = true;
+      this.addressForm.markAllAsTouched();
       let tipoDDP: Dominio = this.addressForm.get('tipo').value;
 
 

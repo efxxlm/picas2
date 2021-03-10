@@ -10,8 +10,9 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IBudgetAvailabilityService
     {
-        Task<DisponibilidadPresupuestal> GetDisponibilidadPresupuestalByID(int id);
-         
+        string getNombreAportante(CofinanciacionAportante confinanciacion);
+
+        Task<DisponibilidadPresupuestal> GetDisponibilidadPresupuestalByID(int id); 
         Task<List<DisponibilidadPresupuestalGrilla>> GetListDisponibilidadPresupuestal();
         Task<List<DisponibilidadPresupuestalGrilla>> GetListDisponibilidadPresupuestalByCodigoEstadoSolicitud(string pCodigoEstadoSolicitud);
         Task<List<EstadosDisponibilidad>> GetListGenerarDisponibilidadPresupuestal();

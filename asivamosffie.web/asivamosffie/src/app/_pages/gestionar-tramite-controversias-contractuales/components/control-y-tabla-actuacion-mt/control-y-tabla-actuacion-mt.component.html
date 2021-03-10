@@ -1,4 +1,4 @@
-<a routerLink="/gestionarTramiteControversiasContractuales/registrarNuevaMesaTrabajoAct" mat-raised-button color="accent" class="btn-cargar-proyecto">Registrar nueva mesa de trabajo</a><br>
+<a routerLink="/gestionarTramiteControversiasContractuales/registrarNuevaMesaTrabajoAct" mat-raised-button color="accent" class="btn-cargar-proyecto">Registrar actualización a mesa de trabajo</a><br>
 <div style="margin-top: 2em;">
     <div class="busqueda">
         <mat-form-field appearance="outline" class="busqueda--input">
@@ -18,7 +18,9 @@
     
             <ng-container matColumnDef="actuacion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Actuación </th>
-                <td mat-cell *matCellDef="let element" align="center"> {{ element.actuacion }} </td>
+                <td mat-cell *matCellDef="let element" align="center"> 
+                    <div [innerHtml]="element.actuacionAdelantada"></div>
+                </td>
             </ng-container>
     
             <ng-container matColumnDef="numeroActuacion">

@@ -9,7 +9,8 @@ import { DisponibilidadPresupuestalService } from '../disponibilidadPresupuestal
 @Injectable({
   providedIn: 'root'
 })
-export class BudgetAvailabilityService {  
+export class BudgetAvailabilityService {
+  
 
   constructor(
     private http: HttpClient
@@ -105,7 +106,9 @@ export class BudgetAvailabilityService {
     return this.http.get<any[]>( `${ environment.apiUrl }/RequestBudgetAvailability/GetContratos` );
   }
 
-  
+  getNovedadContractual(contratacionId: number) {
+    return this.http.get<any>( `${ environment.apiUrl }/RequestBudgetAvailability/getNovedadContractualByContratacionId?contratacionId=${contratacionId}`);
+  }  
 };
 interface TipoDDP{
   DDP_tradicional: string;

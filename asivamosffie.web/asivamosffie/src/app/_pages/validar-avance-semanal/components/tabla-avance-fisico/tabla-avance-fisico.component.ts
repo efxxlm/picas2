@@ -24,6 +24,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
     seRealizoCambio = false;
     seguimientoSemanalId: number;
     seguimientoSemanalAvanceFisicoId: number;
+    contadorObservacionApoyo = 0;
     seguimientoSemanalObservacionId = 0;
     seguimientoSemanalAvanceFisico: any;
     observacionApoyo: any[] = [];
@@ -241,6 +242,11 @@ export class TablaAvanceFisicoComponent implements OnInit {
     }
 
     guardar() {
+        if ( this.seguimientoSemanalAvanceFisico.tieneObservacionApoyo === true && this.formAvanceFisico.get( 'tieneObservaciones' ).value === false && this.contadorObservacionApoyo === 0 ) {
+            this.contadorObservacionApoyo++;
+            this.openDialog( '', '<b>Le recomendamos verificar su respuesta;<br>Tenga en cuenta que el apoyo a la supervisión si tuvo observaciones.</b>' );
+            return;
+        }
         if ( this.formAvanceFisico.get( 'tieneObservaciones' ).value === false && this.formAvanceFisico.get( 'observaciones' ).value !== null ) {
             this.formAvanceFisico.get( 'observaciones' ).setValue( '' );
         }
@@ -253,7 +259,6 @@ export class TablaAvanceFisicoComponent implements OnInit {
             tieneObservacion: this.formAvanceFisico.get( 'tieneObservaciones' ).value,
             esSupervisor: true
         }
-        console.log( pSeguimientoSemanalObservacion );
         this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( pSeguimientoSemanalObservacion )
             .subscribe(
                 response => {

@@ -18,17 +18,17 @@ export class SeccionPrivadaComponent implements OnInit {
   /*con este bit controlo los botones, esto lo hago ya sea por el estado del proyecto o en un futuro por el 
     permiso que tenga el usuario
     */
-  bitPuedoEditar=true;
+  bitPuedoEditar = true;
   listaTipoIntervencion: Dominio[] = [];
-  tiposProcesoSeleccion = TiposProcesoSeleccion; 
+  tiposProcesoSeleccion = TiposProcesoSeleccion;
   estadosProcesoSeleccion = EstadosProcesoSeleccion;
-  descripcion_class:number=0;
-  estudio_class:number=0;
-  datos_class:number=0;
+  descripcion_class: number = 0;
+  estudio_class: number = 0;
+  datos_class: number = 0;
   procesoSeleccion: ProcesoSeleccion = {
     alcanceParticular: '',
     criteriosSeleccion: '',
-    esDistribucionGrupos:false,
+    esDistribucionGrupos: false,
     justificacion: '',
     numeroProceso: '',
     objeto: '',
@@ -42,299 +42,317 @@ export class SeccionPrivadaComponent implements OnInit {
   };
 
   constructor(
-                private commonService: CommonService,
-                private fb: FormBuilder,      
-                private procesoSeleccionService: ProcesoSeleccionService,
-                private activatedRoute: ActivatedRoute,
-                public dialog: MatDialog,    
-                public router: Router      
-             ) 
-  { }
+    private commonService: CommonService,
+    private fb: FormBuilder,
+    private procesoSeleccionService: ProcesoSeleccionService,
+    private activatedRoute: ActivatedRoute,
+    public dialog: MatDialog,
+    public router: Router
+  ) { }
 
   ngOnInit() {
-    this.activatedRoute.params.subscribe( async parametro => {
+    this.activatedRoute.params.subscribe(async parametro => {
       //this.procesoSeleccion.tipoProcesoCodigo = parametro['tipoProceso'];
       this.procesoSeleccion.procesoSeleccionId = parametro['id'];
       this.procesoSeleccion.tipoProcesoCodigo = this.tiposProcesoSeleccion.Privada;
 
-      if (this.procesoSeleccion.procesoSeleccionId > 0)
-      {
+      if (this.procesoSeleccion.procesoSeleccionId > 0) {
         this.editMode();
-        
+
       }
 
     })
   }
 
-  async cargarRegistro(){
-    
-    return new Promise( resolve => {
+  async cargarRegistro() {
+
+    return new Promise(resolve => {
 
       forkJoin([
-        this.procesoSeleccionService.getProcesoSeleccionById( this.procesoSeleccion.procesoSeleccionId )
-      ]).subscribe( proceso => {
-          this.procesoSeleccion = proceso[0];
-          this.descripcion_class=this.estaIncompletoDescripcion(this.procesoSeleccion);
-          this.estudio_class=this.estaIncompletoEstudio(this.procesoSeleccion);
-          this.datos_class=this.estaIncompletoDatos(this.procesoSeleccion.procesoSeleccionProponente[0]);
-          setTimeout(() => { resolve(); },1000)
+        this.procesoSeleccionService.getProcesoSeleccionById(this.procesoSeleccion.procesoSeleccionId)
+      ]).subscribe(proceso => {
+        this.procesoSeleccion = proceso[0];
+        this.descripcion_class = this.estaIncompletoDescripcion(this.procesoSeleccion);
+        this.estudio_class = this.estaIncompletoEstudio(this.procesoSeleccion);
+        this.datos_class = this.estaIncompletoDatos(this.procesoSeleccion.procesoSeleccionProponente[0]);
+        setTimeout(() => { resolve(); }, 1000)
       });
     });
 
   }
 
-  async editMode(){
-    
-    
-    this.cargarRegistro().then(() => 
-    { 
+  async editMode() {
 
-        let botonDescripcion = document.getElementById('botonDescripcion');
-        let botonEstudio = document.getElementById('botonEstudio')
-        let botonProponente = document.getElementById('botonProponente')
-        
-        botonDescripcion.click();
-        botonEstudio.click();
-        botonProponente.click();
-        if(this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.Creado||
-          this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaAperturaPorComiteFiduciario||
-          this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaAperturaPorComiteTecnico ||
-          this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaSeleccionPorComiteFiduciario ||
-          this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaSeleccionPorComiteTecnico ||
-          this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltoPorComiteFiduciario ||
-          this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltoPorComiteTecnico)
-        {
-          this.bitPuedoEditar=true;
-        }
-        else{
-          this.bitPuedoEditar=false;
-        }
+
+    this.cargarRegistro().then(() => {
+
+      let botonDescripcion = document.getElementById('botonDescripcion');
+      let botonEstudio = document.getElementById('botonEstudio')
+      let botonProponente = document.getElementById('botonProponente')
+
+      botonDescripcion.click();
+      botonEstudio.click();
+      botonProponente.click();
+      if (this.procesoSeleccion.estadoProcesoSeleccionCodigo == this.estadosProcesoSeleccion.Creado ||
+        this.procesoSeleccion.estadoProcesoSeleccionCodigo == this.estadosProcesoSeleccion.DevueltaAperturaPorComiteFiduciario ||
+        this.procesoSeleccion.estadoProcesoSeleccionCodigo == this.estadosProcesoSeleccion.DevueltaAperturaPorComiteTecnico ||
+        this.procesoSeleccion.estadoProcesoSeleccionCodigo == this.estadosProcesoSeleccion.DevueltaSeleccionPorComiteFiduciario ||
+        this.procesoSeleccion.estadoProcesoSeleccionCodigo == this.estadosProcesoSeleccion.DevueltaSeleccionPorComiteTecnico ||
+        this.procesoSeleccion.estadoProcesoSeleccionCodigo == this.estadosProcesoSeleccion.DevueltoPorComiteFiduciario ||
+        this.procesoSeleccion.estadoProcesoSeleccionCodigo == this.estadosProcesoSeleccion.DevueltoPorComiteTecnico) {
+        this.bitPuedoEditar = true;
+      }
+      else {
+        this.bitPuedoEditar = false;
+      }
     });
 
   }
 
-  openDialog(modalTitle: string, modalText: string, redirect?:boolean, id?:any) {
-    let dialogRef =this.dialog.open(ModalDialogComponent, {
+  openDialog(modalTitle: string, modalText: string, redirect?: boolean, id?: any) {
+    let dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
-    });   
-    
-    if ( redirect )
-    {
+    });
+
+    if (redirect) {
       dialogRef.afterClosed().subscribe(result => {
-        
-          if(id.esCompleto)
-          {
-            this.router.navigate([`/seleccion/`]);            
-          }
-          else{
-            this.router.navigate([`/seleccion/seccionPrivada/${ id.procesoSeleccionId }`]);
-            setTimeout(() => {
-              location.reload();  
-            }, 1000);
-          }                    
-        
+
+        if (id.esCompleto) {
+          this.router.navigate([`/seleccion/`]);
+        }
+        else {
+          this.router.navigate([`/seleccion/seccionPrivada/${id.procesoSeleccionId}`]);
+          setTimeout(() => {
+            location.reload();
+          }, 1000);
+        }
+
       });
     }
   }
 
-  onSubmit(){
+  onSubmit() {
     console.log(this.procesoSeleccion);
-    this.procesoSeleccionService.guardarEditarProcesoSeleccion(this.procesoSeleccion).subscribe( respuesta => {
-      this.openDialog( "", respuesta.message,respuesta.code == "200",respuesta.data )
+    this.procesoSeleccionService.guardarEditarProcesoSeleccion(this.procesoSeleccion).subscribe(respuesta => {
+      this.openDialog("", respuesta.message, respuesta.code == "200", respuesta.data)
 
-      
+
       //console.log('respuesta',  respuesta );
     },
-    error => {
-      this.openDialog( "", error )
-      console.log('respuesta',  error );
-    },
-     () => {})
+      error => {
+        this.openDialog("", error)
+        console.log('respuesta', error);
+      },
+      () => { })
   }
 
-  estaIncompletoDescripcion(pProceso:any):number{    
+  estaIncompletoDescripcion(pProceso: any): number {
     console.log(pProceso);
-    
-    let retorno:number=0;
-    if(
-      ( pProceso.objeto !="" || pProceso.objeto !=undefined ) ||
-      ( pProceso.alcanceParticular !="" || pProceso.alcanceParticular != undefined ) ||
-      ( pProceso.justificacion !="" || pProceso.justificacion != undefined ) ||
-    //pProceso.criteriosSeleccion!="" ||
-      ( pProceso.tipoIntervencionCodigo!="" || pProceso.tipoIntervencionCodigo != undefined ) ||
-      ( pProceso.tipoAlcanceCodigo !="" || pProceso.tipoAlcanceCodigo != undefined ) ||
-    //pProceso.esDistribucionGrupos!="" ||
-    //pProceso.responsableEstructuradorUsuarioid!=undefined ||
-    //pProceso.responsableTecnicoUsuarioId!=undefined ||
-    pProceso.procesoSeleccionGrupo.length>=1||
-    pProceso.procesoSeleccionCronograma.length>=1)
-    {
-      if(
-          ( pProceso.objeto !="" && pProceso.objeto !=undefined ) &&
-          ( pProceso.alcanceParticular !="" && pProceso.alcanceParticular != undefined ) &&
-          ( pProceso.justificacion !="" && pProceso.justificacion != undefined ) &&
-     // pProceso.criteriosSeleccion!="" &&
-          ( pProceso.tipoIntervencionCodigo!="" && pProceso.tipoIntervencionCodigo != undefined ) &&
-          ( pProceso.tipoAlcanceCodigo !="" && pProceso.tipoAlcanceCodigo != undefined ) &&
-      //pProceso.esDistribucionGrupos!="" &&
-      //pProceso.responsableEstructuradorUsuarioid!=undefined &&
-      //pProceso.responsableTecnicoUsuarioId!=undefined &&
-      pProceso.procesoSeleccionGrupo.length>0 &&
-      pProceso.procesoSeleccionCronograma.length>0)
-      {
-        console.log(pProceso.justificacion!="", pProceso.justificacion ===undefined, pProceso.justificacion);
-        retorno= 2; // completo
-      }
-      else{
-        console.log(pProceso.objeto!="");
-      console.log(pProceso.alcanceParticular!="");
-      console.log(pProceso.justificacion!="");
 
-      console.log(pProceso.tipoIntervencionCodigo!="");
-      console.log(pProceso.tipoAlcanceCodigo!="");
-      console.log(pProceso.responsableEstructuradorUsuarioid!=undefined);
-      console.log(pProceso.responsableTecnicoUsuarioId!=undefined);
-      console.log(pProceso.procesoSeleccionGrupo.length>=1);
-      console.log(pProceso.procesoSeleccionCronograma.length>=1);
-      retorno=1; // en-proceso
+    let retorno: number = 0; //sin-diligenciar
+
+    // verifico si hay algo registrado
+    if (
+      (pProceso.objeto !== "" && pProceso.objeto !== undefined) ||
+
+      (pProceso.alcanceParticular !== "" && pProceso.alcanceParticular !== undefined) ||
+
+      (pProceso.justificacion !== "" && pProceso.justificacion !== undefined) ||
+
+      //(pProceso.criteriosSeleccion !== "" && pProceso.criteriosSeleccion !== undefined) ||
+
+      (pProceso.tipoIntervencionCodigo !== "" && pProceso.tipoIntervencionCodigo !== undefined) ||
+
+      (pProceso.tipoAlcanceCodigo !== "" && pProceso.tipoAlcanceCodigo !== undefined) ||
+
+      (pProceso.esDistribucionGrupos !== "" && pProceso.esDistribucionGrupos !== undefined) ||
+
+      (pProceso.responsableEstructuradorUsuarioid !== '' && pProceso.responsableEstructuradorUsuarioid !== undefined) ||
+
+      (pProceso.responsableTecnicoUsuarioId !== '' && pProceso.responsableTecnicoUsuarioId !== undefined) ||
+
+      (pProceso.procesoSeleccionGrupo !== undefined && pProceso.procesoSeleccionGrupo.length > 0) ||
+
+      (pProceso.procesoSeleccionCronograma !== undefined && pProceso.procesoSeleccionCronograma.length > 0)) {
+
+      retorno = 2; // completo
+
+      //Verifico si falta algo
+      if (
+        (pProceso.objeto === "" || pProceso.objeto === undefined) ||
+
+        (pProceso.alcanceParticular === "" || pProceso.alcanceParticular === undefined) ||
+
+        (pProceso.justificacion === "" || pProceso.justificacion === undefined) ||
+
+        // //(pProceso.criteriosSeleccion === "" || pProceso.criteriosSeleccion === undefined) ||
+
+        (pProceso.tipoIntervencionCodigo === "" || pProceso.tipoIntervencionCodigo === undefined) ||
+
+        (pProceso.tipoAlcanceCodigo === "" || pProceso.tipoAlcanceCodigo === undefined) ||
+
+        (pProceso.esDistribucionGrupos === "" || pProceso.esDistribucionGrupos === undefined) ||
+
+        (pProceso.responsableEstructuradorUsuarioid === '' || pProceso.responsableEstructuradorUsuarioid === undefined) ||
+
+        (pProceso.responsableTecnicoUsuarioId === '' || pProceso.responsableTecnicoUsuarioId === undefined) ||
+
+        (pProceso.procesoSeleccionGrupo === undefined || pProceso.procesoSeleccionGrupo.length === 0) ||
+
+        (pProceso.procesoSeleccionCronograma === undefined || pProceso.procesoSeleccionCronograma.length === 0)
+        ) {
+        retorno = 1; // en-proceso  
       }
+
+      // grupos
+      pProceso.procesoSeleccionGrupo.forEach(psg => {
+        if (
+          psg.nombreGrupo === undefined ||
+          psg.tipoPresupuestoCodigo === undefined ||
+          (psg.tipoPresupuestoCodigo === "2" && psg.valorMaximoCategoria === undefined) ||
+          (psg.tipoPresupuestoCodigo === "2" && psg.valorMinimoCategoria === undefined) ||
+          (psg.tipoPresupuestoCodigo === "1" && psg.valor === undefined) ||
+          psg.plazoMeses === undefined
+        ) {
+          retorno = 1; // en-proceso   
+        }
+      });
+      
     }
     return retorno;
   }
 
-  estaIncompletoDatos(pProceso:any):number{
-    let retorno=0;
+  estaIncompletoDatos(pProceso: any): number {
+    let retorno = 0;
 
 
-    if(pProceso)
-    {
+    if (pProceso) {
 
-      switch (pProceso.tipoProponenteCodigo)
-    {
-      case "1": {
-        if(
-          pProceso.procesoSeleccionProponenteId!="" ||
-        pProceso.direccionProponente!="" ||
-        pProceso.emailProponente!="" ||
-        pProceso.localizacionIdMunicipio!="" ||
-        pProceso.nombreProponente!="" ||
-        pProceso.numeroIdentificacion!="" ||
-        pProceso.telefonoProponente!="")
-        {
-          if(
-            pProceso.procesoSeleccionProponenteId!="" &&
-            pProceso.direccionProponente!="" &&
-            pProceso.emailProponente!="" &&
-            pProceso.localizacionIdMunicipio!="" &&
-            pProceso.nombreProponente!="" &&
-            pProceso.numeroIdentificacion!="" &&
-            pProceso.telefonoProponente!="")
-          {
-            retorno=2;
-          } 
-          else{
-            retorno=1;
-          }
-          
-        }break;
-          }
-          case "2": {
-            if(
-            pProceso.procesoSeleccionProponenteId!="" ||
-            pProceso.nombreProponente!="" ||
-            pProceso.nombreProponente!="" ||
-            pProceso.numeroIdentificacion!="" ||
-            pProceso.nombreRepresentanteLegal!="" ||
-            pProceso.cedulaRepresentanteLegal!="" ||
-            pProceso.direccionProponente!="" ||
-            pProceso.telefonoProponente!="" ||
-            pProceso.emailProponente!="")
-            {
-              if(
-                pProceso.procesoSeleccionProponenteId!="" &&
-                pProceso.nombreProponente!="" &&
-                pProceso.nombreProponente!="" &&
-                pProceso.numeroIdentificacion!="" &&
-                pProceso.nombreRepresentanteLegal!="" &&
-                pProceso.cedulaRepresentanteLegal!="" &&
-                pProceso.direccionProponente!="" &&
-                pProceso.telefonoProponente!="" &&
-                pProceso.emailProponente!="")
-                {
-                  retorno=2
-                }
-                else{
-                  retorno=1;
-                }              
+      switch (pProceso.tipoProponenteCodigo) {
+        case "1": {
+          if (
+            pProceso.procesoSeleccionProponenteId != "" ||
+            pProceso.direccionProponente != "" ||
+            pProceso.emailProponente != "" ||
+            pProceso.localizacionIdMunicipio != "" ||
+            pProceso.nombreProponente != "" ||
+            pProceso.numeroIdentificacion != "" ||
+            pProceso.telefonoProponente != "") {
+            if (
+              pProceso.procesoSeleccionProponenteId != "" &&
+              pProceso.direccionProponente != "" &&
+              pProceso.emailProponente != "" &&
+              pProceso.localizacionIdMunicipio != "" &&
+              pProceso.nombreProponente != "" &&
+              pProceso.numeroIdentificacion != "" &&
+              pProceso.telefonoProponente != "") {
+              retorno = 2;
             }
-            break;
-          }
-          case "4": {
-            if(
-            pProceso.procesoSeleccionProponenteId !="" ||
-            pProceso.nombreProponente!="" ||            
-            pProceso.nombreRepresentanteLegal!="" ||
-            pProceso.cedulaRepresentanteLegal!="" ||
-            pProceso.direccionProponente!="" ||
-            pProceso.telefonoProponente!="" ||
-            pProceso.emailProponente!="" ||
-            pProceso.procesoSeleccionIntegrante!=""
-            )
-            {
-              if(
-                pProceso.procesoSeleccionProponenteId !="" &&
-                pProceso.nombreProponente!=""  &&                
-                pProceso.nombreRepresentanteLegal!=""  &&
-                pProceso.cedulaRepresentanteLegal!=""  &&
-                pProceso.direccionProponente!=""  &&
-                pProceso.telefonoProponente!=""  &&
-                pProceso.emailProponente!=""  &&
-                pProceso.procesoSeleccionIntegrante!=""
-                )
-                {
-                  retorno=2;
-                }
-                else{
-                  retorno=1;
-                }
+            else {
+              retorno = 1;
             }
-            break;
+
+          } break;
+        }
+        case "2": {
+          if (
+            pProceso.procesoSeleccionProponenteId != "" ||
+            pProceso.nombreProponente != "" ||
+            pProceso.nombreProponente != "" ||
+            pProceso.numeroIdentificacion != "" ||
+            pProceso.nombreRepresentanteLegal != "" ||
+            pProceso.cedulaRepresentanteLegal != "" ||
+            pProceso.direccionProponente != "" ||
+            pProceso.telefonoProponente != "" ||
+            pProceso.emailProponente != "") {
+            if (
+              pProceso.procesoSeleccionProponenteId != "" &&
+              pProceso.nombreProponente != "" &&
+              pProceso.nombreProponente != "" &&
+              pProceso.numeroIdentificacion != "" &&
+              pProceso.nombreRepresentanteLegal != "" &&
+              pProceso.cedulaRepresentanteLegal != "" &&
+              pProceso.direccionProponente != "" &&
+              pProceso.telefonoProponente != "" &&
+              pProceso.emailProponente != "") {
+              retorno = 2
+            }
+            else {
+              retorno = 1;
+            }
           }
-        
+          break;
+        }
+        case "4": {
+          if (
+            pProceso.procesoSeleccionProponenteId != "" ||
+            pProceso.nombreProponente != "" ||
+            pProceso.nombreRepresentanteLegal != "" ||
+            pProceso.cedulaRepresentanteLegal != "" ||
+            pProceso.direccionProponente != "" ||
+            pProceso.telefonoProponente != "" ||
+            pProceso.emailProponente != "" ||
+            pProceso.procesoSeleccionIntegrante != ""
+          ) {
+            if (
+              pProceso.procesoSeleccionProponenteId != "" &&
+              pProceso.nombreProponente != "" &&
+              pProceso.nombreRepresentanteLegal != "" &&
+              pProceso.cedulaRepresentanteLegal != "" &&
+              pProceso.direccionProponente != "" &&
+              pProceso.telefonoProponente != "" &&
+              pProceso.emailProponente != "" &&
+              pProceso.procesoSeleccionIntegrante != ""
+            ) {
+              retorno = 2;
+            }
+            else {
+              retorno = 1;
+            }
+          }
+          break;
+        }
+
       }
     }
-    
+
 
     return retorno;
   }
 
+  getStyleEvaluacion(){
+    if ( this.bitPuedoEditar )
+      return 'auto'
+    else
+      return 'none'
 
-  estaIncompletoEstudio(pProceso:any):number{
-    let retorno=0; // sin-diligenciar
+  }
 
-    if( pProceso.cantidadCotizaciones || pProceso.procesoSeleccionCotizacion.length>0 )
-    {
-      retorno= 2; //completo
+  estaIncompletoEstudio(pProceso: any): number {
+    let retorno = 0; // sin-diligenciar
+
+    if (pProceso.cantidadCotizaciones || pProceso.procesoSeleccionCotizacion.length > 0) {
+      retorno = 2; //completo
 
       pProceso.procesoSeleccionCotizacion.forEach(psc => {
 
         console.log(psc);
         if (
-              psc.nombreOrganizacion === '' ||
-              psc.nombreOrganizacion === undefined ||
-              psc.valorCotizacion === '' ||
-              psc.valorCotizacion === undefined ||
-              psc.descripcion === undefined ||
-              psc.urlSoporte === '' ||
-              psc.urlSoporte === undefined
+          psc.nombreOrganizacion === '' ||
+          psc.nombreOrganizacion === undefined ||
+          psc.valorCotizacion === '' ||
+          psc.valorCotizacion === undefined ||
+          psc.descripcion === undefined ||
+          psc.urlSoporte === '' ||
+          psc.urlSoporte === undefined
         )
-        retorno =1; //en-proceso
-              
+          retorno = 1; //en-proceso
+
       });
     }
 
-    
+
     return retorno;
   }
 }

@@ -17,7 +17,7 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+ 
     public class ManageContractualProcessesController : ControllerBase
     {
         public readonly IManageContractualProcessesService _manageContractualProcessesService;

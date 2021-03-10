@@ -35,6 +35,9 @@ export class TablaSesionComiteTecnicoComponent implements OnInit {
 
     this.technicalCommitteeSessionService.getListComiteGrilla()
       .subscribe(response => {
+        response.forEach(element => {
+          element.fechaComite = element.fechaComite.split('T')[0].split('-').reverse().join('/');
+        });
         let lista: ComiteGrilla[] = response.filter(c => c.estadoComiteCodigo == this.estadosComite.convocada ||
           c.estadoComiteCodigo === this.estadosComite.aplazada);
         this.dataSource = new MatTableDataSource(lista);

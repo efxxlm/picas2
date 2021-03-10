@@ -11,7 +11,25 @@ export interface Report {
                 registroCompleto: boolean,
                 usuarioCreacion: string,
                 urlActa: string,
-                fechaSuscripcion: string
+                fechaSuscripcion: string,
+                informeFinalObservaciones: InformeFinalObservaciones[],
+                informeFinalObservacionesSupervisor: InformeFinalObservaciones[],
+                informeFinalObservacionesInterventoria: InformeFinalObservaciones[],
+                tieneObservacionesValidacion: boolean,
+                tieneObservacionesSupervisor: boolean,
+                tieneObservacionesCumplimiento: boolean,
+                fechaAprobacion: Date,
+                tieneObservacionesInterventoria: boolean,
+                fechaEnvioApoyoSupervisor: Date,
+                observacionVigenteSupervisor: {
+                    esSupervision: boolean,
+                    fechaCreacion: Date,
+                    informeFinalInterventoriaId: number,
+                    informeFinalInterventoriaObservacionesId: number,
+                    observaciones: string,
+                    usuarioCreacion: string
+                },
+                historialInformeFinalInterventoriaObservaciones : InformeFinalObservaciones[],
             }
         ],
         departamentoObj: {
@@ -217,4 +235,13 @@ export interface Report {
     nombreContratistaInterventoria: string,
     fechaTerminacionObra: string,
     fechaTerminacionInterventoria: string
+}
+
+
+export interface InformeFinalObservaciones{
+    informeFinalObservacionesId?:number,
+    informeFinalId?:number,
+    observaciones?: string,
+    esSupervision?: boolean,
+    esCalificacion: boolean
 }

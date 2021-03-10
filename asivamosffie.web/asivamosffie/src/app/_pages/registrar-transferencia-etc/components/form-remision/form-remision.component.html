@@ -1,0 +1,122 @@
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+  <mat-card class="shipping-card">
+    <mat-card-content>
+      <div class="row">
+        <div class="col-md-10">
+          <div class="row">
+            <div class="pr-1">
+              <label
+                class="label-left"
+                for="fechaEntregaDocumentos"
+                [class.color-secondaryColor]="
+                  (addressForm.get('fechaEntregaDocumentos').invalid &&
+                    addressForm.get('fechaEntregaDocumentos').touched) ||
+                  (addressForm.get('fechaEntregaDocumentos').invalid && estaEditando)
+                "
+              >
+                Fecha de entrega de los documentos técnicos
+              </label>
+            </div>
+            <div class="col d-flex">
+              <mat-form-field class="example-full-width">
+                <input
+                  matInput
+                  [matDatepicker]="pickerEntregaDocumentos"
+                  formControlName="fechaEntregaDocumentos"
+                  readonly
+                  (click)="pickerEntregaDocumentos.open()"
+                  placeholder="DD/MM/AAAA"
+                  required
+                />
+                <mat-datepicker #pickerEntregaDocumentos></mat-datepicker>
+              </mat-form-field>
+              <button
+                mat-button
+                color="primary"
+                type="button"
+                (click)="pickerEntregaDocumentos.open()"
+                class="btn-calendario"
+              >
+                <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
+              </button>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
+                  *ngIf="
+                    (addressForm.get('fechaEntregaDocumentos').invalid &&
+                      addressForm.get('fechaEntregaDocumentos').touched) ||
+                    (addressForm.get('fechaEntregaDocumentos').invalid && estaEditando)
+                  "
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-10">
+          <div class="row">
+            <div class="pr-1">
+              <label
+                class="label-left"
+                for="numeroRadicadoEntrega"
+                [class.color-secondaryColor]="
+                  (addressForm.get('numeroRadicadoEntrega').invalid &&
+                    addressForm.get('numeroRadicadoEntrega').touched) ||
+                  (addressForm.get('numeroRadicadoEntrega').invalid && estaEditando)
+                "
+              >
+                Número de radicado de la entrega
+              </label>
+            </div>
+            <div class="col d-flex">
+              <mat-form-field class="full-width">
+                <input
+                  matInput
+                  type="text"
+                  #numeroRadicadoEntrega
+                  formControlName="numeroRadicadoEntrega"
+                  maxlength="10"
+                  required
+                />
+              </mat-form-field>
+              <span
+                class="contador"
+                [matTooltipPosition]="'above'"
+                matTooltip="Campo numérico"
+                matTooltipClass="info-tooltip"
+              >
+                {{ 10 - numeroRadicadoEntrega.value.length }}
+              </span>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
+                  *ngIf="
+                    (addressForm.get('numeroRadicadoEntrega').invalid &&
+                      addressForm.get('numeroRadicadoEntrega').touched) ||
+                    (addressForm.get('numeroRadicadoEntrega').invalid && estaEditando)
+                  "
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <div class="text-center">
+    <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="addressForm.invalid">
+      <img src="assets/img/icon/guardar.svg" alt="Guardar" />
+    </button>
+  </div>
+</form>

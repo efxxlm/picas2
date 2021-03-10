@@ -54,10 +54,10 @@
           <img
             class="icon-incompleto--img"
             src="assets/img/icon/incompleto.svg"
-            alt="este campo es requerido"
-            [matTooltipPosition]="'above'"
-            matTooltip="Debe ingresar la información en el campo para continuar"
-            matTooltipClass="info-tooltip"
+                          alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
             *ngIf="
               (addressForm.get('tieneObservaciones').invalid && addressForm.get('tieneObservaciones').touched) ||
               (addressForm.get('tieneObservaciones').invalid && estaEditando)
@@ -92,22 +92,17 @@
         </quill-editor>
       </div>
       <span class="contador miles" *ngIf="addressForm.get('observaciones').value !== null">
-        {{
-          1000 -
-            (textoLimpio(addressForm.get('observaciones').value) > 1000
-              ? 1000
-              : textoLimpio(addressForm.get('observaciones').value))
-        }}
+        {{ 1000 - textoLimpio(addressForm.get('observaciones').value) }}
       </span>
       <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null"> 1000 </span>
       <span class="icon-incompleto">
         <img
           class="icon-incompleto--img"
           src="assets/img/icon/incompleto.svg"
-          alt="este campo es requerido"
-          [matTooltipPosition]="'above'"
-          matTooltip="Debe ingresar la información en el campo para continuar"
-          matTooltipClass="info-tooltip"
+                        alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
           *ngIf="
             (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
             (addressForm.get('observaciones').invalid && estaEditando)

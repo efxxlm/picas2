@@ -128,6 +128,7 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
 
   onSubmit() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let actuacionTaiArray;
     let completo: boolean;
     if (this.addressForm.valid) {

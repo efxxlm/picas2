@@ -135,6 +135,7 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
       this.perfilesCompletados.emit( 'sin-diligenciar' );
     } else {
       this.estaEditando = true;
+      this.formContratista.markAllAsTouched();
       this.formContratista.get( 'numeroPerfiles' ).setValue( String( this.perfilProyecto.length ) );
       this.formContratista.get( 'numeroPerfiles' ).setValidators( Validators.min( this.perfiles.length ) );
       this.formContratista.get( 'numeroPerfiles' ).valueChanges
@@ -255,8 +256,6 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
       if ( this.perfilesCompletos === 0 && this.perfilesEnProceso === 0 && this.perfilProyecto.length > 0 ) {
         this.perfilesCompletados.emit( 'sin-diligenciar' );
       }
-      this.estaEditando = true;
-      this.formContratista.markAllAsTouched();
     }
   }
 
@@ -430,8 +429,6 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
 
 
   guardar() {
-    this.estaEditando = true;
-    this.formContratista.markAllAsTouched();
     const perfiles: ContratoPerfil[] = this.formContratista.get( 'perfiles' ).value;
 
     if ( this.perfilProyecto.length === 0 ) {

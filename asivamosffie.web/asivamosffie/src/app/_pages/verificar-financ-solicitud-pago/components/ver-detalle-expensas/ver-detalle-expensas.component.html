@@ -1,0 +1,70 @@
+<section class="container text-center mb-2em" *ngIf="solicitudPago !== undefined">
+    <section class="container text-center">
+        <div class="text-right">
+            <a routerLink="/verificarFinancieramenteSolicitudDePago" mat-button color="primary" class="btn-regresar">
+                <img src="assets/img/icon/regresar.svg" alt="Regresar">
+            </a>
+        </div>
+        <h1 class="title-menu--h1">
+            Ver detalle solicitud de pago {{ solicitudPago.numeroSolicitud }}
+        </h1>
+    </section>
+    <p class="info-sub-title supportBlack">
+        <span *ngIf="solicitudPago.tipoSolicitudCodigo === tipoSolicitudCodigo.expensas">Tipo de solicitud: <b>Expensas</b></span>
+    </p>
+    <app-form-solicitud-expensas [tipoSolicitud]="tipoSolicitudCodigo.expensas" [solicitudPago]="solicitudPago"></app-form-solicitud-expensas>
+
+    <div class="text-center">
+        <p class="info-container">
+            <span class="info-text sin-diligenciar">Sin diligenciar</span>
+            <span class="info-text en-proceso">En proceso</span>
+            <span class="info-text completo">Completo</span>
+        </p>
+    </div>
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Radicación SAC a financiera
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <mat-card class="shipping-card var-main-gris">
+                <mat-card-content style="text-align: left;">
+                    <p><strong>Fecha de Radicación SAC a financiera:</strong> 10/10/2020 </p>
+                    <p><strong>Número de radicación SAC a financiera:</strong> 009898 </p>
+                    <p><strong>Fecha de asignación:</strong> 11/10/2020 </p>
+                </mat-card-content>
+            </mat-card>
+
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Validar lista de chequeo
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <app-form-valid-listchequeo-vfsp></app-form-valid-listchequeo-vfsp>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Soporte de la solicitud
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <mat-card class="shipping-card var-main-gris">
+                <mat-card-header class="header-card header-card--margin">
+                    <mat-card-title class="header-card--text textoGris">
+                        Soporte de la solicitud de pago
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content style="text-align: left;">
+                    <p><strong>URL con soporte:</strong> {{ solicitudPago.solicitudPagoSoporteSolicitud[0].urlSoporte }} </p>
+                </mat-card-content>
+            </mat-card>
+
+        </mat-expansion-panel>
+    </mat-accordion>
+</section>

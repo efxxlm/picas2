@@ -15,7 +15,6 @@ export class FormEvaluacionComponent {
   @Input() editar:boolean;
   @Output() guardar: EventEmitter<any> = new EventEmitter(); 
   estadosProcesoSeleccion = EstadosProcesoSeleccion;
-  puedeVer:boolean = false;
 
   addressForm = this.fb.group({
     procesoSeleccionId: [],
@@ -84,6 +83,7 @@ export class FormEvaluacionComponent {
 
   onSubmit() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     // console.log(this.addressForm.value);
 
     this.procesoSeleccion.procesoSeleccionId = this.addressForm.get('procesoSeleccionId').value,
@@ -102,12 +102,18 @@ export class FormEvaluacionComponent {
     this.addressForm.get('descricion').setValue( this.procesoSeleccion.evaluacionDescripcion );
     this.addressForm.get('url').setValue( this.procesoSeleccion.urlSoporteEvaluacion );
 
-    if ( 
-        this.procesoSeleccion.estadoProcesoSeleccionCodigo == this.estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario ||
-        this.procesoSeleccion.estadoProcesoSeleccionCodigo == this.estadosProcesoSeleccion.AprobadaSelecciónPorComiteFiduciario 
-        )
+  }
 
-        this.puedeVer = true;
+  mostrarInfo(){
+    if (
+          this.procesoSeleccion.estadoProcesoSeleccionCodigo == this.estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario ||
+          this.procesoSeleccion.estadoProcesoSeleccionCodigo == this.estadosProcesoSeleccion.AprobadaSelecciónPorComiteFiduciario
+    ){
+      return true;
+    }else{
+      return false;
+    }
+
 
   }
 }

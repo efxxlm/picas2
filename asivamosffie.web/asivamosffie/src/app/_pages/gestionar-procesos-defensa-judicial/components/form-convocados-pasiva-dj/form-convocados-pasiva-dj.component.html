@@ -1,29 +1,47 @@
 <form autocomplete="off" [formGroup]="formContratista" (ngSubmit)="guardar()">
     <div class="d-flex mt-1em col-md-6" style="margin: 0 auto;">
-        <label class="mr-label" class="label-left"><b>Número de convocados</b></label>
+        <label class="mr-label" class="label-left" [ngClass]="{
+            'color-secondaryColor':
+              (formContratista.get('numeroContratos').invalid && formContratista.get('numeroContratos').touched) ||
+              (formContratista.get('numeroContratos').invalid && estaEditando)
+          }"><b>Número de convocados</b></label>
         <div class="col d-flex">
             <mat-form-field class="w-70">
                 <input matInput type="text" maxlength="2" formControlName="numeroContratos" required>
             </mat-form-field>
             <span class="contador">{{2 - formContratista.get( 'numeroContratos' ).value?.toString().length}}</span>
         </div>
+        <span class="icon-incompleto">
+            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip" *ngIf="
+                (formContratista.get('numeroContratos').invalid && formContratista.get('numeroContratos').touched) ||
+                (formContratista.get('numeroContratos').invalid && estaEditando)
+              " />
+        </span>
     </div>
 
     <mat-accordion formArrayName="perfiles" *ngIf="formContratista.get( 'numeroContratos' ).value !== null">
-        <mat-expansion-panel class="expansion-style sub-expansion" *ngFor="let perfil of perfiles.controls; index as i">
+        <mat-expansion-panel class="expansion-style sub-expansion" *ngFor="let perfil of perfiles.controls; index as i"
+            [formGroup]="perfil">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                <mat-panel-title class="expansion-style--title 
+                {{ perfil.get('registroCompleto').value == null ? 'sin-diligenciar' : !perfil.get('registroCompleto').value ? 'en-proceso' : 'completo' }}">
                     Convocado {{ i+1 }}
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <mat-card [formGroup]="perfil">
+            <mat-card>
                 <mat-card-content>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="row">
                                 <div class="pr-1">
-                                    <label for="nomConvocado" class="label-left">Nombre del demandado</label>
+                                    <label for="nomConvocado" class="label-left" [ngClass]="{
+                                        'color-secondaryColor':
+                                          (perfil.get('nomConvocado').invalid && perfil.get('nomConvocado').touched) ||
+                                          (perfil.get('nomConvocado').invalid && estaEditando)
+                                      }">Nombre del demandado</label>
                                 </div>
                                 <div class="col d-flex">
                                     <mat-form-field class="full-width">
@@ -32,6 +50,15 @@
                                     </mat-form-field>
                                     <span class="contador">{{100 - nomConvocado.value.length}}</span>
                                 </div>
+                                <span class="icon-incompleto">
+                                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip" *ngIf="
+                                      (perfil.get('nomConvocado').invalid && perfil.get('nomConvocado').touched) ||
+                                      (perfil.get('nomConvocado').invalid && estaEditando)
+                                      " />
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -39,7 +66,11 @@
                         <div class="col-md-12">
                             <div class="row">
                                 <div class="pr-1">
-                                    <label class="label-left" for="tipoIdentificacion">Tipo de identificación del
+                                    <label class="label-left" for="tipoIdentificacion" [ngClass]="{
+                                        'color-secondaryColor':
+                                          (perfil.get('tipoIdentificacion').invalid && perfil.get('tipoIdentificacion').touched) ||
+                                          (perfil.get('tipoIdentificacion').invalid && estaEditando)
+                                      }">Tipo de identificación del
                                         demandado</label>
                                 </div>
                                 <div class="col">
@@ -52,6 +83,15 @@
                                         </mat-select>
                                     </mat-form-field>
                                 </div>
+                                <span class="icon-incompleto">
+                                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip" *ngIf="
+                                      (perfil.get('tipoIdentificacion').invalid && perfil.get('tipoIdentificacion').touched) ||
+                                      (perfil.get('tipoIdentificacion').invalid && estaEditando)
+                                      " />
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -59,7 +99,11 @@
                         <div class="col-md-8">
                             <div class="row">
                                 <div class="pr-1">
-                                    <label for="numIdentificacion" class="label-left">Número de identificación
+                                    <label for="numIdentificacion" class="label-left" [ngClass]="{
+                                        'color-secondaryColor':
+                                          (perfil.get('numIdentificacion').invalid && perfil.get('numIdentificacion').touched) ||
+                                          (perfil.get('numIdentificacion').invalid && estaEditando)
+                                      }">Número de identificación
                                         demandado</label>
                                 </div>
                                 <div class="col d-flex">
@@ -69,6 +113,15 @@
                                     </mat-form-field>
                                     <span class="contador">{{9 - numIdentificacion.value.length}}</span>
                                 </div>
+                                <span class="icon-incompleto">
+                                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip" *ngIf="
+                                      (perfil.get('numIdentificacion').invalid && perfil.get('numIdentificacion').touched) ||
+                                      (perfil.get('numIdentificacion').invalid && estaEditando)
+                                      " />
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -76,7 +129,11 @@
                         <div class="col-md-12">
                             <div class="row">
                                 <div class="pr-1">
-                                    <label class="label-left" for="conocimientoParteAutoridad">¿Existe conocimiento del
+                                    <label class="label-left" for="conocimientoParteAutoridad" [ngClass]="{
+                                        'color-secondaryColor':
+                                          (perfil.get('conocimientoParteAutoridad').invalid && perfil.get('conocimientoParteAutoridad').touched) ||
+                                          (perfil.get('conocimientoParteAutoridad').invalid && estaEditando)
+                                      }">¿Existe conocimiento del
                                         proceso por parte de la autoridad o un despacho de conocimiento?</label>
                                 </div>
                                 <div>
@@ -87,6 +144,15 @@
                                     </mat-radio-group>
                                     <span class="required-form-group" style="margin-left: 1px;">*</span>
                                 </div>
+                                <span class="icon-incompleto">
+                                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip" *ngIf="
+                                      (perfil.get('conocimientoParteAutoridad').invalid && perfil.get('conocimientoParteAutoridad').touched) ||
+                                      (perfil.get('conocimientoParteAutoridad').invalid && estaEditando)
+                                      " />
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -94,7 +160,11 @@
                         <div class="col-md-8">
                             <div class="row">
                                 <div class="pr-1">
-                                    <label for="despacho" class="label-left">Autoridad / Despacho de
+                                    <label for="despacho" class="label-left" [ngClass]="{
+                                        'color-secondaryColor':
+                                          (perfil.get('despacho').invalid && perfil.get('despacho').touched) ||
+                                          (perfil.get('despacho').invalid && estaEditando)
+                                      }">Autoridad / Despacho de
                                         conocimiento</label>
                                 </div>
                                 <div class="col d-flex">
@@ -104,6 +174,15 @@
                                     </mat-form-field>
                                     <span class="contador">{{100 - despacho.value.length}}</span>
                                 </div>
+                                <span class="icon-incompleto">
+                                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip" *ngIf="
+                                      (perfil.get('despacho').invalid && perfil.get('despacho').touched) ||
+                                      (perfil.get('despacho').invalid && estaEditando)
+                                      " />
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -111,7 +190,11 @@
                         <div class="col-md-8">
                             <div class="row">
                                 <div class="pr-1">
-                                    <label class="label-left" for="departamento">Departamento</label>
+                                    <label class="label-left" for="departamento" [ngClass]="{
+                                        'color-secondaryColor':
+                                          (perfil.get('departamento').invalid && perfil.get('departamento').touched) ||
+                                          (perfil.get('departamento').invalid && estaEditando)
+                                      }">Departamento</label>
                                 </div>
                                 <div class="col">
                                     <mat-form-field class="select-width">
@@ -124,14 +207,27 @@
                                         </mat-select>
                                     </mat-form-field>
                                 </div>
+                                <span class="icon-incompleto">
+                                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip" *ngIf="
+                                      (perfil.get('departamento').invalid && perfil.get('departamento').touched) ||
+                                      (perfil.get('departamento').invalid && estaEditando)
+                                      " />
+                                </span>
                             </div>
                         </div>
                     </div>
-                    <div class="row"  *ngIf="perfil.controls.conocimientoParteAutoridad.value == true">
+                    <div class="row" *ngIf="perfil.controls.conocimientoParteAutoridad.value == true">
                         <div class="col-md-8">
                             <div class="row">
                                 <div class="pr-1">
-                                    <label class="label-left" for="municipio">Municipio</label>
+                                    <label class="label-left" for="municipio" [ngClass]="{
+                                        'color-secondaryColor':
+                                          (perfil.get('municipio').invalid && perfil.get('municipio').touched) ||
+                                          (perfil.get('municipio').invalid && estaEditando)
+                                      }">Municipio</label>
                                 </div>
                                 <div class="col">
                                     <mat-form-field class="select-width">
@@ -143,6 +239,15 @@
                                         </mat-select>
                                     </mat-form-field>
                                 </div>
+                                <span class="icon-incompleto">
+                                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip" *ngIf="
+                                      (perfil.get('municipio').invalid && perfil.get('municipio').touched) ||
+                                      (perfil.get('municipio').invalid && estaEditando)
+                                      " />
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -150,7 +255,11 @@
                         <div class="col-md-8">
                             <div class="row">
                                 <div class="pr-1">
-                                    <label for="radicadoDespacho" class="label-left">Radicado en despacho de
+                                    <label for="radicadoDespacho" class="label-left" [ngClass]="{
+                                        'color-secondaryColor':
+                                          (perfil.get('radicadoDespacho').invalid && perfil.get('radicadoDespacho').touched) ||
+                                          (perfil.get('radicadoDespacho').invalid && estaEditando)
+                                      }">Radicado en despacho de
                                         conocimiento</label>
                                 </div>
                                 <div class="col d-flex">
@@ -160,6 +269,15 @@
                                     </mat-form-field>
                                     <span class="contador">{{20 - radicadoDespacho.value.length}}</span>
                                 </div>
+                                <span class="icon-incompleto">
+                                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip" *ngIf="
+                                      (perfil.get('radicadoDespacho').invalid && perfil.get('radicadoDespacho').touched) ||
+                                      (perfil.get('radicadoDespacho').invalid && estaEditando)
+                                      " />
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -167,7 +285,11 @@
                         <div class="col-md-8">
                             <div class="row">
                                 <div class="pr-1">
-                                    <label class="label-left" for="fechaRadicadoDespacho">Fecha de radicado en despacho
+                                    <label class="label-left" for="fechaRadicadoDespacho" [ngClass]="{
+                                        'color-secondaryColor':
+                                          (perfil.get('fechaRadicadoDespacho').invalid && perfil.get('fechaRadicadoDespacho').touched) ||
+                                          (perfil.get('fechaRadicadoDespacho').invalid && estaEditando)
+                                      }">Fecha de radicado en despacho
                                         de conocimiento</label>
                                 </div>
                                 <div class="col d-flex align-items-center">
@@ -182,6 +304,15 @@
                                         <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
                                     </button>
                                 </div>
+                                <span class="icon-incompleto">
+                                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip" *ngIf="
+                                      (perfil.get('fechaRadicadoDespacho').invalid && perfil.get('fechaRadicadoDespacho').touched) ||
+                                      (perfil.get('fechaRadicadoDespacho').invalid && estaEditando)
+                                      " />
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -189,7 +320,11 @@
                         <div class="col-md-12">
                             <div class="row">
                                 <div class="pr-1">
-                                    <label class="label-left" for="accionAEvitar">Medio de Control/Acción a
+                                    <label class="label-left" for="accionAEvitar" [ngClass]="{
+                                        'color-secondaryColor':
+                                          (perfil.get('accionAEvitar').invalid && perfil.get('accionAEvitar').touched) ||
+                                          (perfil.get('accionAEvitar').invalid && estaEditando)
+                                      }">Medio de Control/Acción a
                                         evitar</label>
                                 </div>
                             </div>
@@ -202,11 +337,23 @@
                                     <div class="text-area-quill auxBox">
                                         <quill-editor class="quill-editor-style card" [styles]="editorStyle"
                                             [modules]="config" required (onContentChanged)="maxLength($event, 1000)"
-                                            formControlName="accionAEvitar">
+                                            formControlName="accionAEvitar" [class.invalid]="
+                                            (perfil.get('accionAEvitar').invalid && perfil.get('accionAEvitar').touched) ||
+                                            (perfil.get('accionAEvitar').invalid && estaEditando)
+                                          ">
                                         </quill-editor>
                                     </div>
                                     <span class="contador miles">
                                         {{1000 - perfil.get( 'accionAEvitar' ).value}}
+                                    </span>
+                                    <span class="icon-incompleto">
+                                        <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                            alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                            matTooltip="Debe ingresar la información en el campo para continuar"
+                                            matTooltipClass="info-tooltip" *ngIf="
+                                          (perfil.get('accionAEvitar').invalid && perfil.get('accionAEvitar').touched) ||
+                                          (perfil.get('accionAEvitar').invalid && estaEditando)
+                                          " />
                                     </span>
                                 </div>
                             </div>
@@ -216,7 +363,11 @@
                         <div class="col-md-12">
                             <div class="row">
                                 <div class="pr-1">
-                                    <label class="label-left" for="etapaProcesoFFIE">Etapa en la que se encuentra el
+                                    <label class="label-left" for="etapaProcesoFFIE" [ngClass]="{
+                                        'color-secondaryColor':
+                                          (perfil.get('etapaProcesoFFIE').invalid && perfil.get('etapaProcesoFFIE').touched) ||
+                                          (perfil.get('etapaProcesoFFIE').invalid && estaEditando)
+                                      }">Etapa en la que se encuentra el
                                         proceso al momento de llegar al FFIE</label>
                                 </div>
                                 <div class="col">
@@ -228,6 +379,15 @@
                                         </mat-select>
                                     </mat-form-field>
                                 </div>
+                                <span class="icon-incompleto">
+                                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip" *ngIf="
+                                      (perfil.get('etapaProcesoFFIE').invalid && perfil.get('etapaProcesoFFIE').touched) ||
+                                      (perfil.get('etapaProcesoFFIE').invalid && estaEditando)
+                                      " />
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -235,7 +395,11 @@
                         <div class="col-md-8">
                             <div class="row">
                                 <div class="pr-1">
-                                    <label class="label-left" for="caducidad">Caducidad o Prescripción</label>
+                                    <label class="label-left" for="caducidad" [ngClass]="{
+                                        'color-secondaryColor':
+                                          (perfil.get('caducidad').invalid && perfil.get('caducidad').touched) ||
+                                          (perfil.get('caducidad').invalid && estaEditando)
+                                      }">Caducidad o Prescripción</label>
                                 </div>
                                 <div class="col d-flex align-items-center">
                                     <mat-form-field class="example-full-width">
@@ -248,6 +412,15 @@
                                         <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
                                     </button>
                                 </div>
+                                <span class="icon-incompleto">
+                                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip" *ngIf="
+                                      (perfil.get('caducidad').invalid && perfil.get('caducidad').touched) ||
+                                      (perfil.get('caducidad').invalid && estaEditando)
+                                      " />
+                                </span>
                             </div>
                         </div>
                     </div>

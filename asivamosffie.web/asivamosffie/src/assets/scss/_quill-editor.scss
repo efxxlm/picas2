@@ -83,15 +83,19 @@
     }
   }
 
-  &.card {
-      width: 100%;
+  &--max-height.card .ql-container.ql-snow {
+    max-height: calc(96% + 3px);
+    min-height: 3em;
+  }
 
-      .ql-container.ql-snow {
-        border-bottom: $fontColor solid 1px;
+  &.card {
+    width: 100%;
+
+    .ql-container.ql-snow {
+      border-bottom: $fontColor solid 1px;
 
       &.invalid {
         .ql-container.ql-snow {
-          max-width: 70em;
           border-bottom: $secondaryColor solid 1px;
         }
       }
@@ -116,6 +120,10 @@
       &.invalid .ql-container.ql-snow {
         border-color: $secondaryColor;
       }
+    }
+
+    &.invalid .ql-container.ql-snow {
+      border-color: $secondaryColor;
     }
   }
 

@@ -73,7 +73,7 @@
             <mat-select
               [(ngModel)]="element.compromisoSeleccionado"
               (selectionChange)="onChange(element, $event.value)"
-              [disabled]="element['esCumplido'] === true && element.nombreEstado === 'Finalizado'"
+              
               style="width: 8.5em; margin: 0px 30px 0 0"
             >
               <mat-option *ngFor="let estado of estaCumplido" [value]="estado">

@@ -7,9 +7,9 @@ namespace asivamosffie.model.Models
 {
     public partial class SeguimientoSemanalAvanceFisico
     {
-         
+
         [NotMapped]
-        public string EstadoObraNombre { get; set; }     
-         
+        public string EstadoObraNombre { get; set; }
+
     }
 }

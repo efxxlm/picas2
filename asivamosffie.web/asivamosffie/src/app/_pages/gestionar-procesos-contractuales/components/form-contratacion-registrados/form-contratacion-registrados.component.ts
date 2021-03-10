@@ -45,6 +45,7 @@ export class FormContratacionRegistradosComponent implements OnInit {
   crearFormulario () {
     this.form = this.fb.group({
       numeroContrato                : [ '', Validators.required ],
+      modalidadContrato             : [ null ],
       fechaEnvioParaFirmaContratista: [ null ],
       fechaFirmaPorParteContratista : [ null ],
       fechaEnvioParaFirmaFiduciaria : [ null ],
@@ -59,9 +60,7 @@ export class FormContratacionRegistradosComponent implements OnInit {
   getModalidadContrato( modalidadCodigo: string ) {
     if ( this.modalidadContratoArray.length > 0 ) {
       const modalidad = this.modalidadContratoArray.filter( modalidad => modalidad.codigo === modalidadCodigo );
-      if ( modalidad.length > 0 ) {
-        return modalidad[0].nombre;
-      }
+      return modalidad[0].nombre;
     }
   }
 
@@ -73,15 +72,29 @@ export class FormContratacionRegistradosComponent implements OnInit {
         };
         this.contratacion = resp;
         console.log( resp );
-        this.form.reset({
-          numeroContrato: resp.contrato[0].numeroContrato || '',
-          fechaEnvioParaFirmaContratista: resp.contrato[0].fechaEnvioFirma || null,
-          fechaFirmaPorParteContratista: resp.contrato[0].fechaFirmaContratista || null,
-          fechaEnvioParaFirmaFiduciaria: resp.contrato[0].fechaFirmaFiduciaria || null,
-          fechaFirmaPorParteFiduciaria: resp.contrato[0].fechaFirmaContrato || null,
-          observaciones: this.textoLimpioMessage( resp.contrato[0].observaciones ) || null,
-          rutaDocumento: resp.contrato[0].rutaDocumento || null
-        });
+        if ( resp.contrato.length > 0 ) {
+          let rutaDocumento;
+          if ( resp.contrato[0].rutaDocumento !== undefined ) {
+            rutaDocumento = resp.contrato[0].rutaDocumento.split( /\\/gi );
+            console.log( rutaDocumento );
+            rutaDocumento = rutaDocumento[ rutaDocumento.length -1 ];
+          } else {
+            rutaDocumento = null;
+          };
+          console.log( resp.contrato[0] );
+          this.form.reset({
+            numeroContrato: resp.contrato[0].numeroContrato || '',
+            modalidadContrato: resp.contrato[0].modalidadCodigo,
+            fechaEnvioParaFirmaContratista: resp.contrato[0].fechaEnvioFirma || null,
+            fechaFirmaPorParteContratista: resp.contrato[0].fechaFirmaContratista || null,
+            fechaEnvioParaFirmaFiduciaria: resp.contrato[0].fechaFirmaFiduciaria || null,
+            fechaFirmaPorParteFiduciaria: resp.contrato[0].fechaFirmaContrato || null,
+            observaciones: resp.contrato[0].observaciones || null,
+            documento: rutaDocumento,
+            rutaDocumento: resp.contrato[0].rutaDocumento !== undefined ? resp.contrato[0].rutaDocumento : null
+          });
+          console.log( this.form.value );
+        };
       } );
   };
 
@@ -94,7 +107,7 @@ export class FormContratacionRegistradosComponent implements OnInit {
 
   getEstadoCodigo () {
     if ( this.routes.getCurrentNavigation().extras.replaceUrl || this.routes.getCurrentNavigation().extras.skipLocationChange === false ) {
-      this.routes.navigate( [ '/procesosContractuales' ] );
+      this.routes.navigate( [ '/contratosModificacionesContractuales' ] );
       return;
     }
     
@@ -124,7 +137,7 @@ export class FormContratacionRegistradosComponent implements OnInit {
           anchor.click();
 
         },
-        err => this.openDialog( '', `<b>Archivo no encontrado.</b>` )
+        () => this.openDialog( '', `<b>Archivo no encontrado.</b>` )
       );
   };
 

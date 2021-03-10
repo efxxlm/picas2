@@ -14,10 +14,7 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public int UsuarioId { get; set; }
         [NotMapped]
-        public bool esVotoAprobado  { get; set; }
-
-        [NotMapped]
-        public List<VSesionParticipante> SesionParticipanteView { get; set; }
+        public bool esVotoAprobado  { get; set; } 
     }
 
 }

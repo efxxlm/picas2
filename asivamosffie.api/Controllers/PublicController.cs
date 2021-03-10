@@ -16,7 +16,6 @@ namespace asivamosffie.api.Controllers
     [ApiController]
     public class PublicController : ControllerBase
     {
-        public readonly IRegisterPersonalProgrammingService _registerPersonalProgrammingService;
         public readonly IRegisterPreContructionPhase1Service _RegisterPreContructionPhase1Service;
         public readonly ISourceFundingService _sourceFunding;
         public readonly ISelectionProcessService _selectionProcess;
@@ -25,10 +24,24 @@ namespace asivamosffie.api.Controllers
         public readonly IOptions<AppSettings> _settings;
         public readonly IManagePreContructionActPhase1Service _managePreContructionActPhase1Service;
         public readonly IActBeginService _actBeginService;
+        public readonly IRegisterFinalReportService _RegisterFinalReportService;
+        public readonly IVerifyFinalReportService _VerifyFinalReportService;
+        public readonly IValidateFinalReportService _ValidateFinalReportService;
+        public readonly IValidateFulfilmentFinalReportService _ValidateFulfilmentFinalReportService;
+        public readonly IRegisterWeeklyProgressService _registerWeeklyProgressService;
 
-        public PublicController(IRegisterPersonalProgrammingService registerPersonalProgrammingService, IManagePreContructionActPhase1Service managePreContructionActPhase1Service, IRegisterPreContructionPhase1Service registerPreContructionPhase1Service, IManagementCommitteeReportService managementCommitteeReportService, ISourceFundingService sourceFunding, ISelectionProcessService selectionProcess, IOptions<AppSettings> settings, IGuaranteePolicyService guaranteePolicy, IActBeginService actBeginService)
+        public PublicController(
+                                IManagePreContructionActPhase1Service managePreContructionActPhase1Service,
+                                IRegisterPreContructionPhase1Service registerPreContructionPhase1Service,
+                                IManagementCommitteeReportService managementCommitteeReportService,
+                                ISourceFundingService sourceFunding,
+                                ISelectionProcessService selectionProcess,
+                                IOptions<AppSettings> settings,
+                                IGuaranteePolicyService guaranteePolicy,
+                                IActBeginService actBeginService,
+                                IRegisterWeeklyProgressService registerWeeklyProgressService
+                            )
         {
-            _registerPersonalProgrammingService = registerPersonalProgrammingService;
             _managePreContructionActPhase1Service = managePreContructionActPhase1Service;
             _RegisterPreContructionPhase1Service = registerPreContructionPhase1Service;
             _sourceFunding = sourceFunding;
@@ -37,12 +50,14 @@ namespace asivamosffie.api.Controllers
             _managementCommitteeReportService = managementCommitteeReportService;
             _guaranteePolicy = guaranteePolicy;
             _actBeginService = actBeginService;
+            _registerWeeklyProgressService = registerWeeklyProgressService;
         }
 
         public AppSettingsService ToAppSettingsService(IOptions<AppSettings> appSettings)
         {
             AppSettingsService appSettingsService = new AppSettingsService
             {
+                DominioFront = appSettings.Value.DominioFront,
                 MailPort = appSettings.Value.MailPort,
                 MailServer = appSettings.Value.MailServer,
                 Password = appSettings.Value.Password,
@@ -51,77 +66,29 @@ namespace asivamosffie.api.Controllers
             return appSettingsService;
         }
 
+
+        #region Seguimiento Semanal 
         /// <summary>
-        /// JMartinez
-        /// 4.1.10  5 Dias de aprobacion del acta y sin gestion de programacion personal de obra
+        /// JMARTINEZ SEGUIMIENTO SEMANAL
+        /// Cuando no se realiza seguimiento semanal por mas de 1 semana
         /// </summary>
-        /// <returns></returns>
-        [HttpGet("GetProyectosSinGestionProgramacionObra")]
-        public async Task TareaProgramada()
+        [HttpGet("SendEmailWhenNoWeeklyProgress")]
+        public async Task SendEmailWhenNoWeeklyProgress()
         {
             try
-            {
-               await _registerPersonalProgrammingService.TareaProgramada(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender); 
+            { 
+                await _registerWeeklyProgressService.SendEmailWhenNoWeeklyProgress();
             }
             catch (Exception ex)
-            {
-
-                throw ex;
+            { 
             }
-        }
+        } 
+        #endregion
 
 
 
-        [HttpGet("GetConsignationValue")]
-        public async Task GetConsignationValue()
-        {
-            try
-            {
-                await _sourceFunding.GetConsignationValue(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
-                //return result;
-            }
-            catch (Exception ex)
-            {
 
-                throw ex;
-            }
-        }
-
-        [HttpGet("GetMonitorWithoutFollow")]
-        public async Task GetMonitorWithoutFollow()
-        {
-            try
-            {
-                await _selectionProcess.getActividadesVencidas(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
-                //return result;
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-        }
-
-        [HttpGet("NoApprovedLegalFiduciaryPolicy4d")]
-        public async Task NoApprovedLegalFiduciaryPolicy4d()
-        {
-            //Task task1;
-            try
-            {
-                //paquete 1: no tienen registro inicial contrato poliza
-                await _guaranteePolicy.EnviarCorreoSupervisor4dPolizaNoAprobada(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
-
-                //paquete 2: estado diferente a Aprobado
-                await _guaranteePolicy.EnviarCorreoSupervisor4dPolizaNoAprobada2(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
-                //return result;
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-        }
-
+        #region PreConstruccion
         /// <summary>
         /// JMartinez
         // Aprobar Actas de
@@ -229,6 +196,64 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
+        #endregion
+
+        #region Informe Final 
+        //5.1.1
+        [HttpGet("GetInformeFinalSinGestionar")]
+        public async Task GetInformeFinalSinGestionar()
+        {
+            try
+            {
+                await _RegisterFinalReportService.GetInformeFinalSinGestionar(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        //5.1.2
+        [HttpGet("GetInformeFinalNoEnviadoASupervisor")]
+        public async Task GetInformeFinalNoEnviadoASupervisor()
+        {
+            try
+            {
+                await _VerifyFinalReportService.GetInformeFinalNoEnviadoASupervisor(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        //5.1.3
+        [HttpGet("GetInformeFinalNoEnviadoAGrupoNovedades")]
+        public async Task GetInformeFinalNoEnviadoAGrupoNovedades()
+        {
+            try
+            {
+                await _ValidateFinalReportService.GetInformeFinalNoEnviadoAGrupoNovedades(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        //5.1.4
+        [HttpGet("GetInformeFinalNoCumplimiento")]
+        public async Task GetInformeFinalNoCumplimiento()
+        {
+            try
+            {
+                await _ValidateFulfilmentFinalReportService.GetInformeFinalNoCumplimiento(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        #endregion
+
 
         [HttpGet("GetDiasHabilesActaConstruccionEnviada")]
         public async Task GetDiasHabilesActaConstruccionEnviada()
@@ -254,6 +279,56 @@ namespace asivamosffie.api.Controllers
             }
             catch (Exception ex)
             {
+                throw ex;
+            }
+        }
+
+        [HttpGet("GetConsignationValue")]
+        public async Task GetConsignationValue()
+        {
+            try
+            {
+                await _sourceFunding.GetConsignationValue(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                //return result;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        [HttpGet("GetMonitorWithoutFollow")]
+        public async Task GetMonitorWithoutFollow()
+        {
+            try
+            {
+                await _selectionProcess.getActividadesVencidas(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                //return result;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        [HttpGet("NoApprovedLegalFiduciaryPolicy4d")]
+        public async Task NoApprovedLegalFiduciaryPolicy4d()
+        {
+            //Task task1;
+            try
+            {
+                //paquete 1: no tienen registro inicial contrato poliza
+                await _guaranteePolicy.EnviarCorreoSupervisor4dPolizaNoAprobada(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+
+                //paquete 2: estado diferente a Aprobado
+                await _guaranteePolicy.EnviarCorreoSupervisor4dPolizaNoAprobada2(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                //return result;
+            }
+            catch (Exception ex)
+            {
+
                 throw ex;
             }
         }

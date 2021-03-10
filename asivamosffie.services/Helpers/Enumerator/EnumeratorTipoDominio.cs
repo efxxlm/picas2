@@ -129,7 +129,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         Tipos_De_Ensayos_De_Laboratorio = 74,
 
         Causas_De_Accidentes_Laborales = 75,
-         
+
         Tiempo_Aprobar_Acta = 84,
 
         Disponibilidad_Material = 92,
@@ -140,8 +140,8 @@ namespace asivamosffie.services.Helpers.Enumerator
         Causa_Baja_Disponibilidad_Equipo = 96,
         Causa_Baja_Disponibilidad_Productividad = 97,
         Estados_Seguimiento_Diario = 98,
-        
-        Estado_controversia= 89,
+
+        Estado_controversia = 89,
 
         Estados_actas_inicio_obra = 85,
 
@@ -164,12 +164,11 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Proxima_actuacion_requerida = 103,
 
+        Procesos_judiciales = 105,
         Actuacion_adelantada = 104,
 
-        Procesos_judiciales =105,
-
         Tipo_accion_judicial = 106,
-        Estados_Actuacion=110,
+        Estados_Actuacion = 110,
         Estados_Actuacion_Derivada = 114,
 
         Tipo_Actividad = 109,
@@ -178,17 +177,51 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Estado_Reporte_Semanal_Y_Muestras = 112,
 
+        Tipo_Novedad_Modificacion_Contractual = 113,
+
         Tipo_Observacion_Seguimiento_Semanal = 123,
 
-        Calificacion_Informe_Final = 151,
+        //informe final - paquete 6
 
-        Estado_Informe_Final = 154,
+        Calificacion_Informe_Final = 151, // cumple- no cumple - no aplica
 
-        
-        Jurisdiccion =116,
-        Actuaciones_Recomendadas=119,
-        Estados_Defensa_Judicial=120,
+        Estado_Informe_Final = 154, //5.1.1
 
-        Estados_Reclamacion = 126,
+        Estado_Validacion_Informe_Final = 160, //5.1.2
+
+        Tipo_Anexo_Informe_Final = 155, //Fisico - dgital
+
+        Estado_Aprobacion_Informe_Final = 161, //5.1.3
+
+        Estado_validacion_cumplimiento_informe_Final = 163, //5.1.4
+
+        Estado_Entrega_ETC_proyecto = 164, //5.1.5
+        Jurisdiccion = 116,
+        Actuaciones_Recomendadas = 119,
+        Estados_Defensa_Judicial = 120,
+
+        Estados_Reclamacion = 120,
+
+        Tipo_Solicitud_Contrato_Requisitos_Pago = 131,
+
+        Modalidad_Contrato = 132,
+
+        //4.1.7
+        Formas_Pago = 134,
+        Criterios_Pago = 135,
+        Estados_Solicitud_Pago = 136,
+        Tipo_Pago_Obra_Interventoria = 144,
+        Concepto_Pago_Criterio_Obra_Interventoria = 145,
+        Tipo_Descuento = 146,
+        Tipo_Pago_Expensas = 147,
+        Concepto_Pago_Criterio_Expensas = 148,
+        Tipo_Perfil_Observacion_Solicitud_Pago = 149,
+        Tipo_Observacion_Solicitud_Pago = 150,
+        Estado_Orden_Giro = 156, 
+
+        Medio_Pago_Giro_Tercero = 158,
+
+        Respuestas_Lista_Chequeo_Solicitud_Pago = 162,
+        Estado_Novedad_Contractual = 157,
     }
 }

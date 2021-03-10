@@ -82,8 +82,9 @@ export class ValidarNovedadContratoObraComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.addressForm.value);
+    // console.log(this.addressForm.value);
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
   }
 
