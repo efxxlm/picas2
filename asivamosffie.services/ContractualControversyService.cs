@@ -57,10 +57,14 @@ namespace asivamosffie.services
                     {
                         strCrearEditar = "REGISTRAR CONTROVERSIA ACTUACION";
 
-                        //Auditoria
-                        strCrearEditar = "REGISTRAR AVANCE COMPROMISOS";
+                        int consecutivo = _context.ControversiaActuacion
+                                                        .Where(r => r.ControversiaContractualId == controversiaActuacion.ControversiaContractualId)
+                                                        .Count();
+                                                                            
+
                         controversiaActuacion.FechaCreacion = DateTime.Now;
                         //controversiaActuacion.UsuarioCreacion = compromisoSeguimiento.UsuarioCreacion;
+                        controversiaActuacion.NumeroActuacion = "ACT controversia " + (consecutivo + 1).ToString("000");
                         controversiaActuacion.Observaciones = Helpers.Helpers.CleanStringInput(controversiaActuacion.Observaciones);
                         controversiaActuacion.ResumenPropuestaFiduciaria = Helpers.Helpers.CleanStringInput(controversiaActuacion.ResumenPropuestaFiduciaria);
 
@@ -253,7 +257,7 @@ namespace asivamosffie.services
                 Include(x => x.ControversiaContractual).
                     ThenInclude(x => x.Contrato).
                 Include(x => x.SeguimientoActuacionDerivada).FirstOrDefault();
-            controversiaActuacion.NumeroActuacionFormat = "ACT controversia " + controversiaActuacion.ControversiaActuacionId.ToString("000");
+            controversiaActuacion.NumeroActuacionFormat = controversiaActuacion.NumeroActuacion;
 
             var estado = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.EstadoActuacionReclamacionCodigo, (int)EnumeratorTipoDominio.Estados_Reclamacion);
             var vTipoControversiaCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.ControversiaContractual.TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipo_de_controversia);
@@ -285,10 +289,8 @@ namespace asivamosffie.services
                 Include(x => x.ControversiaActuacion).
                 ThenInclude(x => x.SeguimientoActuacionDerivada)
                 .FirstOrDefault();
-
+            actuacionSeguimiento.NumeroReclamacion = actuacionSeguimiento == null ? "" :  actuacionSeguimiento.NumeroActuacionReclamacion;
             //actuacionSeguimiento.NumeroReclamacion = "REC " + actuacionSeguimiento.ActuacionSeguimientoId.ToString("0000");
-            actuacionSeguimiento.NumeroReclamacion = actuacionSeguimiento == null ? "" : actuacionSeguimiento.NumeroActuacionReclamacion;
-
             //    NumeroActuacionFormat = "ACT controversia " + actuacionSeguimiento.ActuacionSeguimientoId.ToString("0000"),
             var vTipoControversiaCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(actuacionSeguimiento.ControversiaActuacion.ControversiaContractual.TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipo_de_controversia);
             actuacionSeguimiento.NumeroContrato = actuacionSeguimiento.ControversiaActuacion.ControversiaContractual.Contrato.NumeroContrato;
@@ -1074,19 +1076,7 @@ namespace asivamosffie.services
                 actuacionSeguimientoOld = _context.ControversiaActuacion.Find(pActuacionSeguimientoId);
                 actuacionSeguimientoOld.UsuarioModificacion = pUsuarioModifica;
                 actuacionSeguimientoOld.FechaModificacion = DateTime.Now;
-
-                //cambio solicitado por andres, si esta marcado como es Requiere comite se deja en el nuevo estado 3
-                if(actuacionSeguimientoOld.EsRequiereComite != null && pEstadoReclamacionCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada)
-                {
-                    if ((bool)actuacionSeguimientoOld.EsRequiereComite)
-                    {
-                        actuacionSeguimientoOld.EstadoCodigo = ConstantCodigoEstadoControversiaActuacion.Enviado_a_comite_tecnico;
-                    }
-                }
-                else
-                {
-                    actuacionSeguimientoOld.EstadoCodigo = pEstadoReclamacionCodigo;
-                }
+                actuacionSeguimientoOld.EstadoCodigo = pEstadoReclamacionCodigo;
 
                 _context.SaveChanges();
 
@@ -1379,7 +1369,8 @@ namespace asivamosffie.services
                     controversiaActuacion.EsRequiereSupervisor == null ||
                     controversiaActuacion.EsRequiereFiduciaria == null ||
                     controversiaActuacion.EsRequiereComite == null ||
-                    string.IsNullOrEmpty(controversiaActuacion.Observaciones)
+                    string.IsNullOrEmpty(controversiaActuacion.Observaciones) ||
+                    string.IsNullOrEmpty(controversiaActuacion.RutaSoporte)
                 )
             {
                 return false;
@@ -1498,10 +1489,9 @@ namespace asivamosffie.services
                     if (string.IsNullOrEmpty(actuacionSeguimiento.ActuacionSeguimientoId.ToString()) || actuacionSeguimiento.ActuacionSeguimientoId == 0)
                     {
                         strCrearEditar = "REGISTRAR ACTUACION SEGUIMIENTO";
-
                         int consecutivo = _context.ActuacionSeguimiento
-                                            .Where(r => r.ControversiaActuacionId == actuacionSeguimiento.ControversiaActuacionId)
-                                            .Count();
+                                    .Where(r => r.ControversiaActuacionId == actuacionSeguimiento.ControversiaActuacionId)
+                                    .Count();
                         //Auditoria
                         //strCrearEditar = "REGISTRAR AVANCE COMPROMISOS";
                         actuacionSeguimiento.FechaCreacion = DateTime.Now;
@@ -1511,7 +1501,9 @@ namespace asivamosffie.services
 
                         actuacionSeguimiento.RegistroCompleto = ValidarRegistroCompletoControversiaActuacionSeguimiento(actuacionSeguimiento);
                         actuacionSeguimiento.Eliminado = false;
+
                         actuacionSeguimiento.NumeroActuacionReclamacion = "REC " + (consecutivo + 1).ToString("000");
+
                         _context.ActuacionSeguimiento.Add(actuacionSeguimiento);
                         await _context.SaveChangesAsync();
 
@@ -2122,20 +2114,19 @@ namespace asivamosffie.services
                     #region diferentes a TAI
 
                     // diferente a TAI
-                    if (controversia.TipoControversiaCodigo != "1")
+                    if ( controversia.TipoControversiaCodigo != "1" )
                     {
                         // obtengo las mesas asociadas a las actuaciones
                         List<ControversiaActuacionMesa> listaMesas = new List<ControversiaActuacionMesa>();
                         listaActuaciones.ForEach(actuacion =>
                         {
-                            //listaMesas.AddRange(_context.ControversiaActuacionMesa.Where(ca => ca.ControversiaActuacionId == actuacion.ControversiaActuacionId).ToList());
                             List<ControversiaActuacionMesa> controversiaActuacionMesa = _context.ControversiaActuacionMesa
-                                     .Where(ca => ca.ControversiaActuacionId == actuacion.ControversiaActuacionId)?.ToList();
-
-                            if (controversiaActuacionMesa != null)
-                            {
+                                                                 .Where(ca => ca.ControversiaActuacionId == actuacion.ControversiaActuacionId)?.ToList();
+                            
+                            if (controversiaActuacionMesa != null) {
                                 listaMesas.AddRange(controversiaActuacionMesa);
                             }
+
                         });
 
                         // cantidad de registros con marca cerrada
@@ -2170,7 +2161,7 @@ namespace asivamosffie.services
                     int cantidadSeguimientoCerradas = listaSeguimiento.Where(r => r.EsResultadoDefinitivo == true && r.EstadoDerivadaCodigo == "2").Count();
 
                     // se validad si la controversia se puede cerrar 
-                    if (cantidadSeguimientoCerradas > 0)
+                    if (cantidadSeguimientoCerradas > 0 )
                     {
                         sePuedeCerrar = true;
                     }
@@ -2195,7 +2186,7 @@ namespace asivamosffie.services
                         Actuacion = "PENDIENTE",
                         FechaActuacion = "PENDIENTE",
                         EstadoActuacion = "PENDIENTE",
-
+                        SePuedeCerrar = sePuedeCerrar,
 
 
                     };
@@ -2460,7 +2451,8 @@ namespace asivamosffie.services
                             EstadoReclamacion = strEstadoReclamacion,
                             EstadoReclamacionCodigo = actuacionSeguimiento.EstadoReclamacionCodigo,
                             FechaActualizacion = actuacionSeguimiento.FechaModificacion != null ? Convert.ToDateTime(actuacionSeguimiento.FechaModificacion).ToString("dd/MM/yyyy") : actuacionSeguimiento.FechaModificacion.ToString(),
-                            NumeroReclamacion = "REC " + actuacionSeguimiento.ActuacionSeguimientoId.ToString("0000"),
+                            //NumeroReclamacion = "REC " + actuacionSeguimiento.ActuacionSeguimientoId.ToString("0000"),
+                            NumeroReclamacion = actuacionSeguimiento.NumeroActuacionReclamacion,
                             Actuacion = "Actuación " + actuacionSeguimiento.ActuacionSeguimientoId.ToString(),
                             ControversiaActuacionId = actuacionSeguimiento.ControversiaActuacionId,
                             //RegistroCompletoActuacion = (bool)controversia.EsCompleto ? "Completo" : "Incompleto",                        
@@ -2669,13 +2661,14 @@ namespace asivamosffie.services
 
                     string strEstadoActuacion = string.Empty;
                     string strEstadoActuacionCodigo = string.Empty;
-                    var EstadoActuacion = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.EstadoCodigo, (int)EnumeratorTipoDominio.Estados_Actuacion);
+                    var EstadoActuacion = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.EstadoCodigo, (int)EnumeratorTipoDominio.Estados_Actuacion_Derivada);
                     if (EstadoActuacion != null)
                     {
                         strEstadoActuacion = EstadoActuacion.Nombre;
                         strEstadoActuacionCodigo = EstadoActuacion.Codigo;
 
                     }
+
 
 
                     string EstadoActuacionReclamacionCodigoTmp = "";
@@ -2709,7 +2702,7 @@ namespace asivamosffie.services
                         ActuacionId = controversia.ControversiaActuacionId,
                         EstadoActuacion = strEstadoActuacion,
                         EstadoActuacionCodigo = strEstadoActuacionCodigo,
-                        NumeroActuacion = "ACT Controversia " + controversia.ControversiaActuacionId.ToString("000"),
+                        NumeroActuacion = controversia.NumeroActuacion, //"ACT Controversia " + controversia.ControversiaActuacionId.ToString("000"),
                         NumeroActuacionReclamacion = "ACT_REC " + controversia.ControversiaActuacionId.ToString("0000"),
                         RegistroCompletoActuacion = (bool)controversia.EsCompleto ? "Completo" : "Incompleto",
                         ProximaActuacionCodigo = strProximaActuacionCodigo,
@@ -2767,7 +2760,7 @@ namespace asivamosffie.services
             {
                 foreach (var controversiaActuacion in controversia.ControversiaActuacion)
                 {
-                    if (controversiaActuacion.EsRequiereFiduciaria != null && (bool)controversiaActuacion.EsRequiereFiduciaria && (controversiaActuacion.EstadoCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada || controversiaActuacion.EstadoCodigo == ConstantCodigoEstadoControversiaActuacion.Enviado_a_comite_tecnico))
+                    if (controversiaActuacion.EsRequiereFiduciaria != null && (bool)controversiaActuacion.EsRequiereFiduciaria)
                     {
                         try
                         {
@@ -2790,7 +2783,7 @@ namespace asivamosffie.services
 
                             if (contrato != null)
                             {
-                                TipoControversiaCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipos_Controversia);
+                                TipoControversiaCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipo_de_controversia);
                                 if (TipoControversiaCodigo != null)
                                 {
                                     strTipoControversiaCodigo = TipoControversiaCodigo.Codigo;
@@ -2811,10 +2804,10 @@ namespace asivamosffie.services
                                 //    strEstadoSolicitudCodigoContratoPoliza = EstadoSolicitudCodigoContratoPoliza.Nombre;
 
                             }
-                            //var dmActuacion = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.ProximaActuacionCodigo, (int)EnumeratorTipoDominio.Proxima_actuacion_requerida);
                             var dmActuacion = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.ActuacionAdelantadaCodigo, (int)EnumeratorTipoDominio.Actuacion_adelantada);
-                            var dmActuacionEstado = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.EstadoCodigoActuacionDerivada, (int)EnumeratorTipoDominio.Estados_Actuacion_Derivada);
+                            var dmActuacionEstado = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.EstadoCodigo, (int)EnumeratorTipoDominio.Estados_Actuacion_Derivada);
                             var dmReclamacionEstado = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.EstadoActuacionReclamacionCodigo, (int)EnumeratorTipoDominio.Estados_Reclamacion);
+
                             string actuacion = dmActuacion == null ? "" : dmActuacion.Nombre;
                             string estado = dmActuacionEstado == null ? "Sin registro" : dmActuacionEstado.Nombre;
 
@@ -2892,8 +2885,7 @@ namespace asivamosffie.services
                 actuacionSeguimientoOld = _context.ControversiaActuacion.Find(pControversiaActuacionId);
                 actuacionSeguimientoOld.UsuarioModificacion = pUsuarioModifica;
                 actuacionSeguimientoOld.FechaModificacion = DateTime.Now;
-                //actuacionSeguimientoOld.EstadoActuacionReclamacionCodigo = "3";//cambiar
-                actuacionSeguimientoOld.EstadoCodigoActuacionDerivada = ConstantCodigoEstadoActuacionDerivada.Finalizada;
+                actuacionSeguimientoOld.EstadoCodigo = "2";//cambiar
 
                 _context.SaveChanges();
 
@@ -2953,7 +2945,6 @@ namespace asivamosffie.services
                     int consecutivo = _context.SeguimientoActuacionDerivada
                                      .Where(r => r.ControversiaActuacionId == actuacionSeguimiento.ControversiaActuacionId)
                                      .Count();
-
                     actuacionSeguimiento.NumeroActuacionDerivada = "Act_derivada " + (consecutivo + 1).ToString("000");
                     actuacionSeguimiento.FechaCreacion = DateTime.Now;
                     _context.SeguimientoActuacionDerivada.Add(actuacionSeguimiento);
@@ -2961,7 +2952,6 @@ namespace asivamosffie.services
                 //al papa le cambio el estado
                 var controversia = _context.ControversiaActuacion.Find(actuacionSeguimiento.ControversiaActuacionId);
                 controversia.EstadoActuacionReclamacionCodigo = "2";//en proceso
-                controversia.EstadoCodigoActuacionDerivada = ConstantCodigoEstadoActuacionDerivada.En_proceso_de_registro;
                 controversia.FechaModificacion = DateTime.Now;
                 controversia.UsuarioModificacion = actuacionSeguimiento.UsuarioCreacion == null ? actuacionSeguimiento.UsuarioModificacion : actuacionSeguimiento.UsuarioCreacion;
                 _context.ControversiaActuacion.Update(controversia);
@@ -3124,22 +3114,35 @@ namespace asivamosffie.services
 
                     }
 
-                    int ActuacionSeguimientoIdTmp = 0;
+                    string strEstadoActuacionGeneral = string.Empty;
+                    string strEstadoActuacionCodigoGeneral = string.Empty;
+                    var EstadoActuacionGeneral = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.EstadoCodigo, (int)EnumeratorTipoDominio.Estados_Actuacion_Derivada);
+                    if (EstadoActuacionGeneral != null)
+                    {
+                        strEstadoActuacionGeneral = EstadoActuacionGeneral.Nombre;
+                        strEstadoActuacionCodigoGeneral = EstadoActuacionGeneral.Codigo;
 
+                    }
+
+                    int ActuacionSeguimientoIdTmp = 0;
+                    List<Dominio> listaDominioActuacionActualizada = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Actuacion_adelantada).ToList();
+                    
                     GrillaControversiaActuacionEstado RegistroControversiaContractual = new GrillaControversiaActuacionEstado
                     {
                         ControversiaContractualId = controversia.ControversiaContractualId,
                         FechaActualizacion = controversia.FechaModificacion != null ? Convert.ToDateTime(controversia.FechaModificacion).ToString("dd/MM/yyyy") : controversia.FechaModificacion.ToString(),
-                        DescripcionActuacion = "Actuación " + controversia.ControversiaActuacionId.ToString(),
+                        //DescripcionActuacion = "Actuación " + controversia.ControversiaActuacionId.ToString(),
+                        DescripcionActuacion = listaDominioActuacionActualizada.Where(r => r.Codigo == controversia.ActuacionAdelantadaCodigo)?.FirstOrDefault()?.Nombre,
                         //DescripcionActuacion = "ACT" + controversia.ControversiaActuacionId.ToString(),
                         ActuacionId = controversia.ControversiaActuacionId,
 
                         EstadoActuacion = strEstadoAvanceTramite,//controversia.EstadoAvanceTramiteCodigo
                         EstadoActuacionCodigo = strEstadoAvanceTramiteCodigo,//controversia.EstadoAvanceTramiteCodigo
 
-                        NumeroActuacion = "ACT controversia " + controversia.ControversiaActuacionId.ToString("000"),
+                        NumeroActuacion = controversia.NumeroActuacion,// "ACT controversia " + controversia.ControversiaActuacionId.ToString("000"),
 
                         NumeroActuacionReclamacion = "REC " + controversia.ControversiaActuacionId.ToString("0000"),
+                        //NumeroActuacionReclamacion = controversia.EsCompletoReclamacion == null || !(bool)controversia.EsCompletoReclamacion ? "" : "REC 0001",
 
                         RegistroCompletoReclamacion = controversia.EsCompletoReclamacion == null ? "Incompleto" : (bool)controversia.EsCompletoReclamacion ? "Completo" : "Incompleto",
 
@@ -3148,6 +3151,8 @@ namespace asivamosffie.services
                         EstadoActuacionReclamacionCodigo = (controversia.EstadoActuacionReclamacionCodigo != null) ? controversia.EstadoActuacionReclamacionCodigo : "",
                         EstadoActuacionReclamacion = EstadoActuacionReclamacionTmp,
                         ActuacionSeguimientoId = ActuacionSeguimientoIdTmp,
+                        EstadoActuacionGeneral = strEstadoActuacionGeneral,
+                        EstadoActuacionCodigoGeneral = strEstadoActuacionCodigoGeneral,
                     };
                     ListControversiaContractualGrilla.Add(RegistroControversiaContractual);
                 }
@@ -3239,13 +3244,7 @@ namespace asivamosffie.services
                     prmMesa.FechaActuacionAdelantada == null ||
                     string.IsNullOrEmpty(prmMesa.ProximaActuacionRequerida) ||
                     string.IsNullOrEmpty(prmMesa.Observaciones) ||
-                    string.IsNullOrEmpty(prmMesa.RutaSoporte)||
-                    prmMesa.CantDiasVencimiento == null ||
-                    prmMesa.FechaVencimiento == null ||
-                    string.IsNullOrEmpty(prmMesa.Observaciones)||
-                    prmMesa.ResultadoDefinitivo == null ||
-                    string.IsNullOrEmpty(prmMesa.RutaSoporte)||
-                    string.IsNullOrEmpty(prmMesa.EstadoAvanceMesaCodigo))
+                    string.IsNullOrEmpty(prmMesa.RutaSoporte))
                 {
                     escompleto = false;
                 }
@@ -3266,8 +3265,9 @@ namespace asivamosffie.services
                 else
                 {
                     int consecutivo = _context.ControversiaActuacionMesa
-                                     .Where(r => r.ControversiaActuacionId == prmMesa.ControversiaActuacionId)
-                                     .Count();
+                                .Where(r => r.ControversiaActuacionId == prmMesa.ControversiaActuacionId)
+                                .Count();
+
                     prmMesa.FechaCreacion = DateTime.Now;
                     prmMesa.EstadoRegistroCodigo = "1";
                     prmMesa.NumeroMesaTrabajo = "MT " + (consecutivo + 1).ToString("000");
@@ -3438,13 +3438,7 @@ namespace asivamosffie.services
                     controversiaActuacionMesa.EstadoRegistroCodigo = "1";
                     _context.ControversiaActuacionMesaSeguimiento.Add(controversiaActuacionMesa);
                     _context.SaveChanges();
-
-                    int consecutivo = _context.ControversiaActuacionMesaSeguimiento
-                                     .Where(r => r.ControversiaActuacionMesaId == controversiaActuacionMesa.ControversiaActuacionMesaId)
-                                     .Count();
-                    controversiaActuacionMesa.NumeroActuacionSeguimiento = "ACT MT " + (consecutivo + 1).ToString("000");
-
-                    //controversiaActuacionMesa.NumeroActuacionSeguimiento = "ACT MT " + controversiaActuacionMesa.ControversiaActuacionMesaSeguimientoId.ToString("000");
+                    controversiaActuacionMesa.NumeroActuacionSeguimiento = "ACT MT " + controversiaActuacionMesa.ControversiaActuacionMesaSeguimientoId.ToString("000");
                     _context.ControversiaActuacionMesaSeguimiento.Update(controversiaActuacionMesa);
                 }
                 _context.SaveChanges();
@@ -3631,13 +3625,14 @@ namespace asivamosffie.services
 
                     List<Dominio> listaDominioActuacionActualizada = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Actuacion_adelantada).ToList();
 
-
                     GrillaControversiaActuacionEstado RegistroControversiaContractual = new GrillaControversiaActuacionEstado
                     {
+
                         ControversiaContractualId = controversia.ControversiaContractualId,
                         FechaActualizacion = controversia.FechaActuacion != null ? Convert.ToDateTime(controversia.FechaActuacion).ToString("dd/MM/yyyy") : "",
-                        //DescripcionActuacion = "ACT" + controversia.ControversiaActuacionId.ToString(),
+                        //DescripcionActuacion = "Actuación " + controversia.ControversiaActuacionId.ToString(),
                         DescripcionActuacion = listaDominioActuacionActualizada.Where(r => r.Codigo == controversia.ActuacionAdelantadaCodigo)?.FirstOrDefault()?.Nombre,
+                        //DescripcionActuacion = "ACT" + controversia.ControversiaActuacionId.ToString(),
                         ActuacionId = controversia.ControversiaActuacionId,
 
                         EstadoActuacion = strEstadoAvanceTramite,//controversia.EstadoAvanceTramiteCodigo
@@ -3646,18 +3641,20 @@ namespace asivamosffie.services
                         EstadoActuacionGeneral = strEstadoActuacionGeneral,
                         EstadoActuacionCodigoGeneral = strEstadoActuacionCodigoGeneral,
 
-                        NumeroActuacion = "ACT controversia " + controversia.ControversiaActuacionId.ToString("000"),
+                        NumeroActuacion = controversia.NumeroActuacion,// "ACT controversia " + controversia.ControversiaActuacionId.ToString("000"),
 
                         NumeroActuacionReclamacion = "REC " + controversia.ControversiaActuacionId.ToString("0000"),
-                        //RegistroCompletoReclamacion = controversia.EsCompletoReclamacion == null ? "Incompleto" : (bool)controversia.EsCompletoReclamacion ? "Completo" : "Incompleto",
-                        RegistroCompletoMesa = controversiamesa == null ? "Incompleto" : (bool)controversiamesa.EsCompleto ? "Completo" : "Incompleto",
+                        //NumeroActuacionReclamacion = controversia.EsCompletoReclamacion == null || !(bool)controversia.EsCompletoReclamacion ? "" : "REC 0001",
+
+
+                        RegistroCompletoReclamacion = controversia.EsCompletoReclamacion == null ? "Incompleto" : (bool)controversia.EsCompletoReclamacion ? "Completo" : "Incompleto",
+
                         ProximaActuacionCodigo = strProximaActuacionCodigo,
                         ProximaActuacionNombre = strProximaActuacionNombre,
                         EstadoActuacionReclamacionCodigo = (controversia.EstadoActuacionReclamacionCodigo != null) ? controversia.EstadoActuacionReclamacionCodigo : "",
                         EstadoActuacionReclamacion = EstadoActuacionReclamacionTmp,
                         ActuacionSeguimientoId = ActuacionSeguimientoIdTmp,
                         NumeroMesa = controversiamesa == null ? "" : controversiamesa.NumeroMesaTrabajo,
-
                         //NumeroMesa = controversiamesa == null ? "" : "MT " + controversiamesa.ControversiaActuacionMesaId.ToString("0000"),
                         EstadoMesa = controversiamesa == null ? "" : controversiamesa.EstadoRegistroCodigo,
                         EstadoCodigoMesa = stadomesa,
@@ -3693,7 +3690,7 @@ namespace asivamosffie.services
 
         public async Task<List<ControversiaActuacionMesaSeguimiento>> GetActuacionesMesasByActuacionId(int pActuacionId)
         {
-            var mesas = _context.ControversiaActuacionMesaSeguimiento.Where(x => x.ControversiaActuacionMesa.ControversiaActuacionId == pActuacionId && !(bool)x.Eliminado).Include(x => x.ControversiaActuacionMesa).ToList();
+            var mesas = _context.ControversiaActuacionMesaSeguimiento.Where(x => x.ControversiaActuacionMesa.ControversiaActuacionId == pActuacionId).Include(x => x.ControversiaActuacionMesa).ToList();
             foreach (var mesa in mesas)
             {
                 var EstadoActuacionReclamacion = await _commonService.GetDominioByNombreDominioAndTipoDominio(mesa.EstadoRegistroCodigo, (int)EnumeratorTipoDominio.Estados_Actuacion);
@@ -3800,8 +3797,7 @@ namespace asivamosffie.services
                 actuacionSeguimientoOld = _context.ControversiaActuacion.Find(pControversiaActuacionId);
                 actuacionSeguimientoOld.UsuarioModificacion = pUsuarioModifica;
                 actuacionSeguimientoOld.FechaModificacion = DateTime.Now;
-                actuacionSeguimientoOld.EstadoCodigoActuacionDerivada = ConstantCodigoEstadoActuacionDerivada.En_proceso_de_registro;
-                //actuacionSeguimientoOld.EstadoActuacionReclamacionCodigo = "2";//Actualizar trámite
+                actuacionSeguimientoOld.EstadoCodigo = "1";//Actualizar trámite
 
                 _context.SaveChanges();
 

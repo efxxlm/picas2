@@ -43,18 +43,11 @@ export class ControlYTablaActuacionesNoTaiComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
   finalizarAct(id){
-    this.services.CambiarEstadoActuacionSeguimiento(id,'3').subscribe((data:any)=>{
+    this.services.CambiarEstadoActuacionSeguimiento(id,'2').subscribe((data:any)=>{
       if(data.isSuccessful==true){
         this.router.navigateByUrl('/', { skipLocationChange: true }).then(
           () => this.router.navigate(['gestionarTramiteControversiasContractuales/actualizarTramiteControversia'])
         );
-      }
-    });
-  }
-  enviarComiteTecnicoTramAct(id){
-    this.services.CambiarEstadoActuacionSeguimiento(id,'3').subscribe((data:any)=>{
-      if(data.isSuccessful==true){
-        this.ngOnInit();
       }
     });
   }
@@ -66,7 +59,9 @@ export class ControlYTablaActuacionesNoTaiComponent implements OnInit {
   }
   eliminarActuacion(id){
     this.services.EliminarControversiaActuacion(id).subscribe((data:any)=>{
-      this.ngOnInit();
+      this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+        () => this.router.navigate(['gestionarTramiteControversiasContractuales/actualizarTramiteControversia'])
+      );
     });
   }
   verDetalleActuacion(id){
