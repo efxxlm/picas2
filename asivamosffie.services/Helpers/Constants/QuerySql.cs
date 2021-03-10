@@ -1,7 +1,8 @@
 ﻿namespace asivamosffie.services.Helpers.Constant
 {
     public static class QuerySql
-    {
+    { 
+        #region Preconstruccion 
         //Preconstruccion Registrar
         //Lista Contratacion
         public const string GetListContratacion = "SELECT c.* FROM dbo.Contrato AS c " +
@@ -16,8 +17,6 @@
               "OR  c.EstadoVerificacionCodigo = 3" +  //Con requisitos técnicos aprobados
               "OR  c.EstadoVerificacionCodigo = 4" +  //Con requisitos técnicos aprobados
               "OR  c.EstadoVerificacionCodigo = 10"; //Enviado al interventor -- Enviado por el supervisor; 
-
-
 
         //Preconstruccion Verificar
         //Lista Contratacion      
@@ -37,7 +36,7 @@
                      "AND cp.FechaAprobacion is not null " + //Fecha Aprobacion Poliza
                      "AND c.EstadoVerificacionCodigo is not null " +
                      "AND ctr.TipoSolicitudCodigo = 2"; //Enviado al apoyo
-         
+
         //Preconstruccion Validar
         //Lista Contratacion
         public const string GetListContratacionValidar = "SELECT c.* FROM dbo.Contrato AS c " +
@@ -47,5 +46,16 @@
                 "WHERE dp.NumeroDRP IS NOT NULL " + //Documento Registro Presupuestal
                 "AND c.EstadoVerificacionCodigo is not null " +
                 "AND cp.FechaAprobacion IS NOT NULL ";//Enviado al apoyo
+
+        #endregion
+
+        #region Compromisos y Actas
+        public const string GetManagementReport = 
+                 "SELECT ComiteTecnico.*" +
+                " FROM  dbo.ComiteTecnico " +
+                "INNER JOIN dbo.SesionParticipante  ON   ComiteTecnico.ComiteTecnicoId = SesionParticipante.ComiteTecnicoId " +
+                "WHERE  SesionParticipante.UsuarioId = [pUserId] AND   ComiteTecnico.Eliminado = 0 AND  SesionParticipante.Eliminado = 0";
+        #endregion
+
     }
 }

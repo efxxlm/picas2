@@ -129,7 +129,6 @@ namespace asivamosffie.services
 
             try
             {
-
                 Contrato ContratoOld = await _context.Contrato.Where(r => r.ContratoId == pContrato.ContratoId)
                     .Include(r => r.Contratacion)
                     .Include(r => r.ContratoObservacion).FirstOrDefaultAsync();
@@ -140,6 +139,7 @@ namespace asivamosffie.services
                 ContratoOld.PlazoFase1PreDias = pContrato.PlazoFase1PreDias;
                 ContratoOld.PlazoFase2ConstruccionDias = pContrato.PlazoFase2ConstruccionDias;
                 ContratoOld.PlazoFase2ConstruccionMeses = pContrato.PlazoFase2ConstruccionMeses;
+                ContratoOld.ObservacionConsideracionesEspeciales = pContrato.ObservacionConsideracionesEspeciales;
                 ContratoOld.ConObervacionesActa = pContrato.ConObervacionesActa;
 
                 if (ContratoOld.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra)
