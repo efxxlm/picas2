@@ -115,7 +115,7 @@ namespace asivamosffie.services
 
                                         break;
                                     }
-                                case ConstanCodigoTipoSolicitud.Evaluación_De_Proceso:
+                                case ConstanCodigoTipoSolicitud.Evaluacion_De_Proceso:
                                     {
                                         ProcesoSeleccion procesoSeleccion = _context.ProcesoSeleccion.Find(ss.SolicitudId);
 
@@ -126,7 +126,7 @@ namespace asivamosffie.services
                                                 IdSolicitud = ss.SesionComiteSolicitudId,
                                                 FechaSolicitud = (DateTime?)(procesoSeleccion.FechaCreacion),
                                                 NumeroSolicitud = procesoSeleccion.NumeroProceso,
-                                                TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Evaluación_De_Proceso).FirstOrDefault().Nombre,
+                                                TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Evaluacion_De_Proceso).FirstOrDefault().Nombre,
                                                 tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion
                                             });
 
@@ -527,7 +527,7 @@ namespace asivamosffie.services
                                 }
                                 break;
                             }
-                        case ConstanCodigoTipoSolicitud.Evaluación_De_Proceso:
+                        case ConstanCodigoTipoSolicitud.Evaluacion_De_Proceso:
                             {
                                 ProcesoSeleccion procesoSeleccion = _context.ProcesoSeleccion.Find(ss.SolicitudId);
 
@@ -535,7 +535,7 @@ namespace asivamosffie.services
                                 {
                                     ss.NumeroSolicitud = procesoSeleccion.NumeroProceso;
                                     ss.FechaSolicitud = (DateTime?)(procesoSeleccion.FechaCreacion);
-                                    ss.TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Evaluación_De_Proceso).FirstOrDefault().Nombre;
+                                    ss.TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Evaluacion_De_Proceso).FirstOrDefault().Nombre;
                                 }
                                 break;
                             }
@@ -639,7 +639,7 @@ namespace asivamosffie.services
                         case ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion:
                             item.NumeroSolicitud = _context.ProcesoSeleccion.Find(item.SolicitudId).NumeroProceso;
                             break;
-                        case ConstanCodigoTipoSolicitud.Evaluación_De_Proceso:
+                        case ConstanCodigoTipoSolicitud.Evaluacion_De_Proceso:
                             item.NumeroSolicitud = _context.ProcesoSeleccion.Find(item.SolicitudId).NumeroProceso;
                             break;
                         case ConstanCodigoTipoSolicitud.Actualizacion_Cronograma_Proceso_Seleccion:
@@ -849,7 +849,7 @@ namespace asivamosffie.services
 
                         break;
 
-                    case ConstanCodigoTipoSolicitud.Evaluación_De_Proceso:
+                    case ConstanCodigoTipoSolicitud.Evaluacion_De_Proceso:
                     case ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion:
                         sesionComiteSolicitud.FechaSolicitud = ListProcesoSeleccion
                           .Where(r => r.ProcesoSeleccionId == sesionComiteSolicitud.SolicitudId)
@@ -2644,7 +2644,7 @@ namespace asivamosffie.services
                 #region Inicio Proceso Seleccion
 
                 if (pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion || 
-                    pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Evaluación_De_Proceso)
+                    pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Evaluacion_De_Proceso)
                 {
                     ProcesoSeleccion procesoSeleccion = _context.ProcesoSeleccion.Find(sesionComiteSolicitudOld.SolicitudId);
                     if (procesoSeleccion != null)

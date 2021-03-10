@@ -36,7 +36,8 @@ namespace asivamosffie.model.Models
         public NovedadContractual ModificacionContractual { get; set; }
         [NotMapped]
         public ControversiaActuacion ControversiaActuacion { get; set; }
-
+        [NotMapped]
+        public DefensaJudicial DefensaJudicial { get; set; }
     }
 
 }
