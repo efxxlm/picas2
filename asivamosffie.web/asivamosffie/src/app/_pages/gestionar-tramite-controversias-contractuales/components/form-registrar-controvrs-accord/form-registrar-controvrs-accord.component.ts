@@ -175,7 +175,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
     this.estadoSemaforo.emit('sin-diligenciar');
     switch (this.addressForm.value.tipoControversia.codigo) {
       case '1':
-        if (this.addressForm.value.tipoControversia.codigo == '1' && this.addressForm.value.fechaSolicitud != null && this.addressForm.value.motivosSolicitud != null
+        if (this.addressForm.value.tipoControversia.codigo == '1' && this.addressForm.value.fechaSolicitud != null && ((this.addressForm.value.motivosSolicitud != null && this.addressForm.value.cualOtroMotivo == null) || (this.addressForm.value.motivosSolicitud != null && this.addressForm.value.cualOtroMotivo != null))
           && this.addressForm.value.fechaComitePretecnico != null && this.addressForm.value.conclusionComitePretecnico != null
           && ((this.addressForm.value.procedeSolicitud == true && this.addressForm.value.motivosRechazo == null) || (this.addressForm.value.procedeSolicitud == false && this.addressForm.value.motivosRechazo != null))
           && ((this.addressForm.value.procedeSolicitud == true && this.addressForm.value.requeridoComite != null) || (this.addressForm.value.procedeSolicitud == false && this.addressForm.value.requeridoComite == null))) {
@@ -188,7 +188,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
         }
         break;
       case '2':
-        if (this.addressForm.value.tipoControversia.codigo == '2' && this.addressForm.value.fechaRadicadoSAC != null && this.addressForm.value.motivosSolicitud != null
+        if (this.addressForm.value.tipoControversia.codigo == '2' && this.addressForm.value.fechaRadicadoSAC != null && ((this.addressForm.value.motivosSolicitud != null && this.addressForm.value.cualOtroMotivo == null) || (this.addressForm.value.motivosSolicitud != null && this.addressForm.value.cualOtroMotivo != null))
           && this.addressForm.value.numeroRadicadoSAC != null && this.addressForm.value.resumenJustificacionSolicitud != null) {
           this.estadoSemaforo.emit('completo');
           this.estaCompleto = true;
@@ -199,7 +199,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
         }
         break;
       case '3':
-        if (this.addressForm.value.tipoControversia.codigo == '3' && this.addressForm.value.fechaRadicadoSAC != null && this.addressForm.value.motivosSolicitud != null
+        if (this.addressForm.value.tipoControversia.codigo == '3' && this.addressForm.value.fechaRadicadoSAC != null && ((this.addressForm.value.motivosSolicitud != null && this.addressForm.value.cualOtroMotivo == null) || (this.addressForm.value.motivosSolicitud != null && this.addressForm.value.cualOtroMotivo != null))
           && this.addressForm.value.numeroRadicadoSAC != null && this.addressForm.value.resumenJustificacionSolicitud != null) {
           this.estadoSemaforo.emit('completo');
           this.estaCompleto = true;
@@ -210,7 +210,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
         }
         break;
       case '4':
-        if (this.addressForm.value.tipoControversia.codigo == '4' && this.addressForm.value.fechaRadicadoSAC != null && this.addressForm.value.motivosSolicitud != null
+        if (this.addressForm.value.tipoControversia.codigo == '4' && this.addressForm.value.fechaRadicadoSAC != null && ((this.addressForm.value.motivosSolicitud != null && this.addressForm.value.cualOtroMotivo == null) || (this.addressForm.value.motivosSolicitud != null && this.addressForm.value.cualOtroMotivo != null))
           && this.addressForm.value.numeroRadicadoSAC != null && this.addressForm.value.resumenJustificacionSolicitud != null) {
           this.estadoSemaforo.emit('completo');
           this.estaCompleto = true;
@@ -221,7 +221,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
         }
         break;
       case '5':
-        if (this.addressForm.value.tipoControversia.codigo == '5' && this.addressForm.value.fechaSolicitud != null && this.addressForm.value.motivosSolicitud != null
+        if (this.addressForm.value.tipoControversia.codigo == '5' && this.addressForm.value.fechaSolicitud != null && ((this.addressForm.value.motivosSolicitud != null && this.addressForm.value.cualOtroMotivo == null) || (this.addressForm.value.motivosSolicitud != null && this.addressForm.value.cualOtroMotivo != null))
           && this.addressForm.value.resumenJustificacionSolicitud != null) {
           this.estadoSemaforo.emit('completo');
           this.estaCompleto = true;
@@ -232,7 +232,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
         }
         break;
       case '6':
-        if (this.addressForm.value.tipoControversia.codigo == '6' && this.addressForm.value.fechaSolicitud != null && this.addressForm.value.motivosSolicitud != null
+        if (this.addressForm.value.tipoControversia.codigo == '6' && this.addressForm.value.fechaSolicitud != null && ((this.addressForm.value.motivosSolicitud != null && this.addressForm.value.cualOtroMotivo == null) || (this.addressForm.value.motivosSolicitud != null && this.addressForm.value.cualOtroMotivo != null))
           && this.addressForm.value.resumenJustificacionSolicitud != null) {
           this.estadoSemaforo.emit('completo');
           this.estaCompleto = true;
@@ -243,7 +243,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
         }
         break;
       case '7':
-        if (this.addressForm.value.tipoControversia.codigo == '7' && this.addressForm.value.fechaSolicitud != null && this.addressForm.value.motivosSolicitud != null
+        if (this.addressForm.value.tipoControversia.codigo == '7' && this.addressForm.value.fechaSolicitud != null && ((this.addressForm.value.motivosSolicitud != null && this.addressForm.value.cualOtroMotivo == null) || (this.addressForm.value.motivosSolicitud != null && this.addressForm.value.cualOtroMotivo != null))
           && this.addressForm.value.resumenJustificacionSolicitud != null) {
           this.estadoSemaforo.emit('completo');
           this.estaCompleto = true;
