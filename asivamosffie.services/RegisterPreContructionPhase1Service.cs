@@ -171,6 +171,8 @@ namespace asivamosffie.services
                         proyectoOld.FechaModificacion = DateTime.Now;
                         proyectoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
                     }
+                    if (ContratacionProyecto.Proyecto.ContratoPerfil.Count() == 0)
+                        RegistroCompletoContrato = false;
 
                     foreach (var ContratoPerfil in ContratacionProyecto.Proyecto.ContratoPerfil)
                     {
@@ -188,6 +190,9 @@ namespace asivamosffie.services
                             contratoPerfilOld.TieneObservacionApoyo = ContratoPerfil.TieneObservacionApoyo;
                             contratoPerfilOld.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(ContratoPerfil);
                             contratoPerfilOld.TieneObservacionSupervisor = ContratoPerfil.TieneObservacionSupervisor;
+
+                            if (contratoPerfilOld.RegistroCompleto == false)
+                                RegistroCompletoContrato = false;
 
                             foreach (var ContratoPerfilObservacion in ContratoPerfil.ContratoPerfilObservacion)
                             {
@@ -240,6 +245,9 @@ namespace asivamosffie.services
                             ContratoPerfil.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(ContratoPerfil);
                             _context.ContratoPerfil.Add(ContratoPerfil);
 
+                            if (ContratoPerfil.RegistroCompleto == false)
+                                RegistroCompletoContrato = false;
+
                             foreach (var ContratoPerfilObservacion in ContratoPerfil.ContratoPerfilObservacion)
                             {
                                 ContratoPerfilObservacion.Observacion = ContratoPerfilObservacion.Observacion == null ? null : ContratoPerfilObservacion.Observacion.ToUpper();
@@ -252,7 +260,6 @@ namespace asivamosffie.services
                             }
                             ContratoPerfil.ContratoPerfilNumeroRadicado.ToList().ForEach(ContratoPerfilNumeroRadicado =>
                             {
-
                                 if (ContratoPerfilNumeroRadicado.ContratoPerfilNumeroRadicadoId == 0)
                                 {
                                     ContratoPerfilNumeroRadicado.Eliminado = false;
@@ -553,7 +560,7 @@ namespace asivamosffie.services
             });
         }
         #endregion
-         
+
         #region Correos y Alertas Automaticas
         /// <summary>
         /// Correos  Automaticos
