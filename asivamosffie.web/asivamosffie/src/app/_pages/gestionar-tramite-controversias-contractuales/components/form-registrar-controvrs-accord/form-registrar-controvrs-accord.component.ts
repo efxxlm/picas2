@@ -22,7 +22,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
     tipoControversia: [null, Validators.required],
     fechaSolicitud: [null, Validators.required],
     motivosSolicitud: [null, Validators.required],
-    cualOtroMotivo: [null],
+    cualOtroMotivo: [null ,Validators.compose([Validators.required, Validators.minLength(1), Validators.maxLength(100)])],
     fechaComitePretecnico: [null, Validators.required],
     conclusionComitePretecnico: ['', Validators.required],
     procedeSolicitud: [null, Validators.required],
