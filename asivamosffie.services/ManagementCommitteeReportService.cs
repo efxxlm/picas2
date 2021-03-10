@@ -22,9 +22,7 @@ namespace asivamosffie.services
       PARAMETRICAS
         1. Estado Compromisos -> TipoDominioId = 45 { Sin iniciar, En proceso, Finalizado}
     */
-
-
-
+     
     public class ManagementCommitteeReportService : IManagementCommitteeReportService
     {
         private readonly devAsiVamosFFIEContext _context;
@@ -273,15 +271,12 @@ namespace asivamosffie.services
                     {
                         if (SesionComiteTema.TemaCompromiso.Count() > 0)
                             SesionComiteTema.TemaCompromiso = SesionComiteTema.TemaCompromiso.Where(r => !(bool)r.Eliminado).ToList();
-
-
-
+                         
                         if (!string.IsNullOrEmpty(SesionComiteTema.ResponsableCodigo))
                             SesionComiteTema.ResponsableCodigo = ListParametricas
                                 .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Miembros_Comite_Tecnico && r.Codigo == SesionComiteTema.ResponsableCodigo)
                                 .FirstOrDefault().Nombre;
-
-
+                         
                         if (!string.IsNullOrEmpty(SesionComiteTema.EstadoTemaCodigo))
                             SesionComiteTema.EstadoTemaCodigo = ListParametricas
                                 .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Sesion_Comite_Solicitud && r.Codigo == SesionComiteTema.EstadoTemaCodigo)
@@ -313,6 +308,7 @@ namespace asivamosffie.services
                            }
                        });
                     }
+
                     foreach (var SesionComiteSolicitudComiteTecnico in item.SesionComiteSolicitudComiteTecnico)
                     {
                         if (BorrarCompromisosFiduciarios && SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Count() > 0)

@@ -60,7 +60,7 @@ namespace asivamosffie.services
                         int consecutivo = _context.ControversiaActuacion
                                                         .Where(r => r.ControversiaContractualId == controversiaActuacion.ControversiaContractualId)
                                                         .Count();
-                                                                            
+
 
                         controversiaActuacion.FechaCreacion = DateTime.Now;
                         //controversiaActuacion.UsuarioCreacion = compromisoSeguimiento.UsuarioCreacion;
@@ -289,7 +289,7 @@ namespace asivamosffie.services
                 Include(x => x.ControversiaActuacion).
                 ThenInclude(x => x.SeguimientoActuacionDerivada)
                 .FirstOrDefault();
-            actuacionSeguimiento.NumeroReclamacion = actuacionSeguimiento == null ? "" :  actuacionSeguimiento.NumeroActuacionReclamacion;
+            actuacionSeguimiento.NumeroReclamacion = actuacionSeguimiento == null ? "" : actuacionSeguimiento.NumeroActuacionReclamacion;
             //actuacionSeguimiento.NumeroReclamacion = "REC " + actuacionSeguimiento.ActuacionSeguimientoId.ToString("0000");
             //    NumeroActuacionFormat = "ACT controversia " + actuacionSeguimiento.ActuacionSeguimientoId.ToString("0000"),
             var vTipoControversiaCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(actuacionSeguimiento.ControversiaActuacion.ControversiaContractual.TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipo_de_controversia);
@@ -938,14 +938,16 @@ namespace asivamosffie.services
             return _converter.Convert(pdf);
         }
 
-        public async Task<List<Contrato>> GetListContratos(/*int id*/)
+        public async Task<List<Contrato>> GetListContratos()
         {
             List<Contrato> ListContratos = new List<Contrato>();
 
             try
             {
-                ListContratos = await _context.Contrato.Where(r => !(bool)r.Eliminado && (r.EstadoActa == "5" || r.EstadoActa == "20")).ToListAsync();//no encontré el 20 en constante
-
+                ListContratos = await _context.Contrato
+                    .Include(c => c.Contratacion)
+                    .Where(ctr => ctr.Contratacion.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Firmado)
+                    .ToListAsync();
                 return ListContratos.OrderByDescending(r => r.ContratoId).ToList();
             }
             catch (Exception ex)
@@ -1440,7 +1442,7 @@ namespace asivamosffie.services
                         completo = false;
                     }
                     break;
-                
+
                 case "2": // TAIE contratista
                 case "3": // AD contratista
                 case "4": // OCC contratista 
@@ -1739,7 +1741,7 @@ namespace asivamosffie.services
                     if (contrato != null)
                     {
                         contratacion = _context.Contratacion.Where(r => r.ContratacionId == contrato.ContratacionId)
-                                                            .Include(r =>r.DisponibilidadPresupuestal)
+                                                            .Include(r => r.DisponibilidadPresupuestal)
                                                             .FirstOrDefault();
 
                         //FechaFinContratoTmp = contrato.FechaTerminacionFase2 != null ? Convert.ToDateTime(contrato.FechaTerminacionFase2).ToString("dd/MM/yyyy") : contrato.FechaTerminacionFase2.ToString();
@@ -2141,7 +2143,7 @@ namespace asivamosffie.services
                     #region diferentes a TAI
 
                     // diferente a TAI
-                    if ( controversia.TipoControversiaCodigo != "1" )
+                    if (controversia.TipoControversiaCodigo != "1")
                     {
                         // obtengo las mesas asociadas a las actuaciones
                         List<ControversiaActuacionMesa> listaMesas = new List<ControversiaActuacionMesa>();
@@ -2149,8 +2151,9 @@ namespace asivamosffie.services
                         {
                             List<ControversiaActuacionMesa> controversiaActuacionMesa = _context.ControversiaActuacionMesa
                                                                  .Where(ca => ca.ControversiaActuacionId == actuacion.ControversiaActuacionId)?.ToList();
-                            
-                            if (controversiaActuacionMesa != null) {
+
+                            if (controversiaActuacionMesa != null)
+                            {
                                 listaMesas.AddRange(controversiaActuacionMesa);
                             }
 
@@ -2188,7 +2191,7 @@ namespace asivamosffie.services
                     int cantidadSeguimientoCerradas = listaSeguimiento.Where(r => r.EsResultadoDefinitivo == true && r.EstadoDerivadaCodigo == "2").Count();
 
                     // se validad si la controversia se puede cerrar 
-                    if (cantidadSeguimientoCerradas > 0 )
+                    if (cantidadSeguimientoCerradas > 0)
                     {
                         sePuedeCerrar = true;
                     }
@@ -2791,8 +2794,8 @@ namespace asivamosffie.services
                 {
                     //if (controversiaActuacion.EsRequiereFiduciaria != null && (bool)controversiaActuacion.EsRequiereFiduciaria)
                     if (controversiaActuacion.EsRequiereFiduciaria != null && (bool)controversiaActuacion.EsRequiereFiduciaria && (controversiaActuacion.EstadoCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada || controversiaActuacion.EstadoCodigo == ConstantCodigoEstadoControversiaActuacion.Enviado_a_comite_tecnico))
-                        {
-                            try
+                    {
+                        try
                         {
                             Contrato contrato = null;
 
@@ -3156,7 +3159,7 @@ namespace asivamosffie.services
 
                     int ActuacionSeguimientoIdTmp = 0;
                     List<Dominio> listaDominioActuacionActualizada = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Actuacion_adelantada).ToList();
-                    
+
                     GrillaControversiaActuacionEstado RegistroControversiaContractual = new GrillaControversiaActuacionEstado
                     {
                         ControversiaContractualId = controversia.ControversiaContractualId,

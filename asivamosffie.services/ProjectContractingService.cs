@@ -406,8 +406,7 @@ namespace asivamosffie.services
 
         public async Task<Contratacion> GetListContratacionObservacion(int pContratacionId)
         {
-            Contratacion Contratacion = new Contratacion();
-
+            Contratacion Contratacion = new Contratacion(); 
             try
             {
                 Contratacion = await _context.Contratacion.Where(r => r.ContratacionId == pContratacionId)
@@ -432,7 +431,14 @@ namespace asivamosffie.services
                 if (!string.IsNullOrEmpty(Contratacion.EstadoSolicitudCodigo))
                     Contratacion.EstadoSolicitudCodigo = ListParametricas.Where(r => r.Codigo == Contratacion.EstadoSolicitudCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud).FirstOrDefault().Nombre;
 
-                return Contratacion;
+
+                if (string.IsNullOrEmpty(Contratacion?.ContratacionObservacion?.FirstOrDefault()?.Observacion))
+                { 
+
+                }
+
+
+                    return Contratacion;
             }
             catch (Exception)
             {
@@ -442,24 +448,16 @@ namespace asivamosffie.services
 
         public async Task<List<Contratacion>> GetListContratacion()
         {
-            List<Contratacion> ListContratacion = new List<Contratacion>();
-
+            List<Contratacion> ListContratacion = new List<Contratacion>(); 
             try
             {
                 ListContratacion = await _context.Contratacion
-                    .Where(r => !(bool)r.Eliminado)
-                    //.Include(r => r.Contratista)
-                    //.Include(r => r.ContratacionProyecto)
-                    //    .ThenInclude(r => r.SesionSolicitudObservacionProyecto)
-                    // .Include(r => r.ContratacionProyecto)
-                    //    .ThenInclude(r => r.Proyecto)
-                    //         .ThenInclude(r => r.Sede)
-                    //.Include(r => r.ContratacionProyecto)
-                    //    .ThenInclude(r => r.Proyecto)
-                    //             .ThenInclude(r => r.InstitucionEducativa)
+                    .Where(r => !(bool)r.Eliminado) 
                     .ToListAsync();
 
-                List<Dominio> ListParametricas = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar || r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud).ToList();
+                List<Dominio> ListParametricas =
+                    _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar 
+                                        || r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud).ToList();
 
                 foreach (var Contratacion in ListContratacion)
                 {
@@ -520,7 +518,7 @@ namespace asivamosffie.services
             string pMunicipio,
             int pIdInstitucionEducativa,
             int pIdSede)
-        { 
+        {
             //estado de registro “Completo”, que tienen viabilidad jurídica y técnica
             List<ProyectoGrilla> ListProyectoGrilla = new List<ProyectoGrilla>();
             List<Proyecto> ListProyectos = new List<Proyecto>();
