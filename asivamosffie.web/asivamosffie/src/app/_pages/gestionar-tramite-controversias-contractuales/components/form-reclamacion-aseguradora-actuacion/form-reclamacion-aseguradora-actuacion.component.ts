@@ -39,7 +39,7 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
     if(this.isEditable==true){
       this.services.GetControversiaActuacionById(this.controversiaAct).subscribe((a:any)=>{
         this.addressForm.get('resumenReclamacionFiduciaria').setValue(a.resumenPropuestaFiduciaria!== undefined ? a.resumenPropuestaFiduciaria : null);
-        this.addressForm.get('requereReclamacionComiteTecnico').setValue(true);
+        this.addressForm.get('requereReclamacionComiteTecnico').setValue(a.esRequiereComiteReclamacion);
         this.addressForm.get('urlSoporte').setValue(a.rutaSoporte);
         this.numReclamacion.emit(localStorage.getItem("numReclamacion"));
         this.actuacion.emit(localStorage.getItem("actuacion"));
