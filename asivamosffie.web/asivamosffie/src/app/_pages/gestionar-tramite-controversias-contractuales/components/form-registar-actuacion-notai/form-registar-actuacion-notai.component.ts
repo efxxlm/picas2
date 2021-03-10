@@ -84,8 +84,8 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
           const actuacionRequeridaSelected = this.proximaActuacionRequeridaArrayDom.find(t => t.codigo === data.proximaActuacionCodigo);
           this.addressForm.get('proximaActuacionRequerida').setValue(actuacionRequeridaSelected);
         }
-        this.addressForm.get('cualOtroActuacionAdelantada').setValue(data.actuacionAdelantadaOtro);
-        this.addressForm.get('cualOtroActuacionRequerida').setValue(data.proximaActuacionOtro);
+        this.addressForm.get('cualOtroActuacionAdelantada').setValue(data.actuacionAdelantadaOtro!== undefined ? data.actuacionAdelantadaOtro : null);
+        this.addressForm.get('cualOtroActuacionRequerida').setValue(data.proximaActuacionOtro!== undefined ? data.proximaActuacionOtro : null);
         this.addressForm.get('diasVencimientoTerminos').setValue(data.cantDiasVencimiento.toString());
         this.addressForm.get('fechaVencimientoTerminos').setValue(data.fechaVencimiento);
         this.addressForm.get('participacionContratista').setValue(data.esRequiereContratista);
@@ -93,7 +93,7 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
         this.addressForm.get('participacionSupervisorContrato').setValue(data.esRequiereSupervisor);
         this.addressForm.get('participacionFiduciaria').setValue(data.esRequiereFiduciaria);
         this.addressForm.get('requiereComiteTecnico').setValue(data.esRequiereComite);
-        this.addressForm.get('observaciones').setValue(data.observaciones);
+        this.addressForm.get('observaciones').setValue(data.observaciones!== undefined ? data.observaciones : null);
         this.addressForm.get('urlSoporte').setValue(data.rutaSoporte);
         this.addressForm.get('requiereMesaDeTrabajo').setValue(data.esRequiereMesaTrabajo);
         this.addressForm.get('resultadoDefinitivoyCerrado').setValue(data.esprocesoResultadoDefinitivo);

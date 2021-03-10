@@ -38,7 +38,7 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
   ngOnInit(): void {
     if(this.isEditable==true){
       this.services.GetControversiaActuacionById(this.controversiaAct).subscribe((a:any)=>{
-        this.addressForm.get('resumenReclamacionFiduciaria').setValue(a.resumenPropuestaFiduciaria);
+        this.addressForm.get('resumenReclamacionFiduciaria').setValue(a.resumenPropuestaFiduciaria!== undefined ? a.resumenPropuestaFiduciaria : null);
         this.addressForm.get('requereReclamacionComiteTecnico').setValue(true);
         this.addressForm.get('urlSoporte').setValue(a.rutaSoporte);
         this.numReclamacion.emit(localStorage.getItem("numReclamacion"));

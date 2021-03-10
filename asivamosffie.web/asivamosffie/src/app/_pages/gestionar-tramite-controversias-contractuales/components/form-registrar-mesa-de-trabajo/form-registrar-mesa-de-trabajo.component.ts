@@ -62,11 +62,11 @@ export class FormRegistrarMesaDeTrabajoComponent implements OnInit {
           this.addressForm.get('estadoAvanceTramite').setValue(estadoAvanceTramiteSelected);
         }
         this.addressForm.get('fechaActuacionAdelantada').setValue(data.fechaActuacionAdelantada);
-        this.addressForm.get('actuacionAdelantada').setValue(data.actuacionAdelantada);
-        this.addressForm.get('proximaActuacionRequerida').setValue(data.proximaActuacionRequerida);
+        this.addressForm.get('actuacionAdelantada').setValue(data.actuacionAdelantada !== undefined ? data.actuacionAdelantada : null);
+        this.addressForm.get('proximaActuacionRequerida').setValue(data.proximaActuacionRequerida !== undefined ? data.proximaActuacionRequerida : null);
         this.addressForm.get('diasVencimientoTerminos').setValue(data.cantDiasVencimiento);
         this.addressForm.get('fechaVencimientoTerminos').setValue(data.fechaVencimiento);
-        this.addressForm.get('observaciones').setValue(data.observaciones);
+        this.addressForm.get('observaciones').setValue(data.observaciones !== undefined ? data.observaciones : null);
         this.addressForm.get('resultadoDefinitivo').setValue(data.resultadoDefinitivo);
         this.addressForm.get('urlSoporte').setValue(data.rutaSoporte);
       });
