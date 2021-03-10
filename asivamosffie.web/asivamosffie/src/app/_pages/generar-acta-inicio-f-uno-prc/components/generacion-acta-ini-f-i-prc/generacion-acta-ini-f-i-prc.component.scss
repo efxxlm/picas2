@@ -113,3 +113,14 @@
   .auxMarg{
     margin-top: 5%;
   }
+
+.text-area-quill .quill-editor-style[required]::after {
+    top: calc(50% + 1.7em);
+}
+
+.img-size {
+  width: 1.9em;
+  height: 1.9em;
+  margin-right: 1em;
+  margin-bottom: .5em;
+}

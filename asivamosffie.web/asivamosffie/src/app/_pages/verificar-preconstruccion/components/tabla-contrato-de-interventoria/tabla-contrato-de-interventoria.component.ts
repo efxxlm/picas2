@@ -57,6 +57,13 @@ export class TablaContratoDeInterventoriaComponent implements OnInit {
                 dataTable.push( lista );
               }
               } );
+
+              if ( dataTable.length > 0 ) {
+                dataTable.forEach( registro => registro.fechaAprobacion = registro.fechaAprobacion.split('T')[0].split('-').reverse().join('/') );
+              }
+
+              console.log( dataTable );
+
               this.dataSource = new MatTableDataSource( dataTable );
               this.dataSource.sort = this.sort;
               this.dataSource.paginator = this.paginator;

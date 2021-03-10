@@ -67,19 +67,21 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
   crearFormulario() {
     return this.fb.group({
       tieneObservaciones: ['', Validators.required],
-      observaciones:["", Validators.required],
+      observaciones:[ null , Validators.required],
     })
   }
   maxLength(e: any, n: number) {
-    // console.log(e.editor.getLength()+" "+n);
     if (e.editor.getLength() > n) {
-      e.editor.deleteText(n-1, e.editor.getLength());
+        e.editor.deleteText(n - 1, e.editor.getLength());
     }
   }
-  textoLimpio(texto,n) {
-    if (texto!=undefined) {
-      return texto.getLength() > n ? n : texto.getLength();
-    }
+
+  textoLimpio( evento: any, n: number ) {
+      if ( evento !== undefined ) {
+          return evento.getLength() > n ? n : evento.getLength();
+      } else {
+          return 0;
+      }
   }
   loadService(id){
     this.service.GetListContratoObservacionByContratoId(id).subscribe(data=>{
@@ -93,9 +95,10 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
           this.contratoObservacionId = this.dataElements[i].contratoObservacionId;
         }
       }
+      console.log( this.observacionesUltimas );
       if(localStorage.getItem("editable")=="true"){
         this.addressForm.get('tieneObservaciones').setValue(this.tieneObservacionesBool);
-        this.addressForm.get('observaciones').setValue(this.observacionesUltimas);
+        this.addressForm.get('observaciones').setValue(this.observacionesUltimas !== undefined ? ( this.observacionesUltimas.length > 0 ? this.observacionesUltimas : null ) : null );
       }
     });
   }
@@ -132,7 +135,7 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
       };
       this.service.CreateEditObservacionesActa(contratoObservacion).subscribe((data:any)=>{
         if(data.code=="200"){
-          if(this.addressForm.value.tieneObservaciones==true && this.addressForm.value.observaciones!=null){
+          if(this.addressForm.get( 'tieneObservaciones' ).value === true && this.addressForm.get( 'observaciones' ).value !== null){
             if(localStorage.getItem("origin")=="interventoria"){
               this.service.CambiarEstadoActa(this.contratoId,"8").subscribe(data0=>{
             
@@ -144,7 +147,7 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
               });
             }
           }
-          else if(this.addressForm.value.tieneObservaciones==true && this.addressForm.value.observaciones==null){
+          else if( this.addressForm.get( 'tieneObservaciones' ).value === true && this.addressForm.get( 'observaciones' ).value === null){
             if(localStorage.getItem("origin")=="interventoria"){
               this.service.CambiarEstadoActa(this.contratoId,"5").subscribe(data0=>{
             
@@ -188,25 +191,27 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
       };
       this.service.CreateEditObservacionesActa(contratoObservacion).subscribe((data2:any)=>{
         if(data2.code=="200"){
-          if(this.addressForm.value.tieneObservaciones==true && this.addressForm.value.observaciones!=''){
+          if(this.addressForm.get( 'tieneObservaciones' ).value === true && this.addressForm.get( 'observaciones' ).value !== null){
             if(localStorage.getItem("origin")=="interventoria"){
               this.service.CambiarEstadoActa(this.contratoId,"8").subscribe(data0=>{
             
               });
             }
             else{
+              console.log( 'condicion 1' );
               this.service.CambiarEstadoActa(this.contratoId,"16").subscribe(data0=>{
             
               });
             }
           }
-          else if(this.addressForm.value.tieneObservaciones==true && this.addressForm.value.observaciones==null){
+          else if(this.addressForm.get( 'tieneObservaciones' ).value === true && this.addressForm.get( 'observaciones' ).value === null){
             if(localStorage.getItem("origin")=="interventoria"){
               this.service.CambiarEstadoActa(this.contratoId,"5").subscribe(data0=>{
             
               });
             }
             else{
+              console.log( 'condicion' );
               this.service.CambiarEstadoActa(this.contratoId,"15").subscribe(data0=>{
             
               });

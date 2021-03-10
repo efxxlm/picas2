@@ -29,7 +29,6 @@ export class FaseUnoAprobarPreconstruccionService {
     );
   }
 
-  // Estados verificar preconstrucción
   listaEstadosAprobarContrato( tipoContrato: string ) {
     const estadoPreconstruccion: estadosPreconstruccion = {};
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=53`)
@@ -41,7 +40,7 @@ export class FaseUnoAprobarPreconstruccionService {
                 if ( value.codigo === '6' ) {
                   estadoPreconstruccion.enviadoAlSupervisor = {
                     codigo: value.codigo,
-                    nombre: value[ 'descripcion' ]
+                    nombre: value.nombre
                   };
                 }
                 if ( value.codigo === '7' ) {
@@ -76,7 +75,7 @@ export class FaseUnoAprobarPreconstruccionService {
                 if ( value.codigo === '6' ) {
                   estadoPreconstruccion.enviadoAlSupervisor = {
                     codigo: value.codigo,
-                    nombre: value[ 'descripcion' ]
+                    nombre: value.nombre
                   };
                 }
                 if ( value.codigo === '7' ) {

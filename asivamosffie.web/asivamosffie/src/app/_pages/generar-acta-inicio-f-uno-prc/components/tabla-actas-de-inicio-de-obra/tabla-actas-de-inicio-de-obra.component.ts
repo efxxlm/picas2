@@ -50,6 +50,11 @@ export class TablaActasDeInicioDeObraComponent implements OnInit {
         };
       };
       console.log(this.dataTable);
+
+      if ( this.dataTable.length > 0 ) {
+        this.dataTable.forEach( registro => registro.fechaAprobacionRequisitosDate = registro.fechaAprobacionRequisitosDate.split('T')[0].split('-').reverse().join('/') );
+      }
+
       this.dataSource = new MatTableDataSource(this.dataTable);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;

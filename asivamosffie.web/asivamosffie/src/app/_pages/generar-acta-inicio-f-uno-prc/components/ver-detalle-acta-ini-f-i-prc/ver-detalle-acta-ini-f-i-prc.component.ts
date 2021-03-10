@@ -62,6 +62,8 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
   rutaDocumento: any;
   tipoCodigo: any;
   observacionesUltimasSup: any;
+  contrato: any;
+
   constructor( private activatedRoute: ActivatedRoute, private service: GestionarActPreConstrFUnoService,  private commonSvc: CommonService) { }
 
   ngOnInit(): void {
@@ -85,6 +87,8 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
   loadData(id){
     this.service.GetContratoByContratoId(id).subscribe((data:any)=>{
       this.cargarDataParaInsercion(data);
+      this.contrato = data;
+      console.log( data );
       this.numContrato = data.numeroContrato;
       this.fechaFirmaContrato = data.fechaFirmaContrato;
       this.fechaActaFase1Prc = data.fechaActaInicioFase1;
@@ -93,6 +97,7 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
       this.mesesFase1 = data.plazoFase1PreMeses;
       this.diasFase2 = data.plazoFase2ConstruccionDias;
       this.mesesFase2 = data.plazoFase2ConstruccionMeses;
+
       if(data.observaciones==undefined || data.observaciones==null || data.observaciones=="") {
         this.observaciones = "-----";
       }

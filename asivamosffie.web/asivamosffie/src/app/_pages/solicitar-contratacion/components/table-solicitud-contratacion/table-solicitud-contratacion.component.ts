@@ -43,6 +43,9 @@ export class TableSolicitudContratacionComponent implements OnInit {
 
   ngOnInit(): void {
     this.projectContractingService.getListContratacion().subscribe(response => {
+
+      response.forEach( registro => registro[ 'fechaCreacion' ] = registro[ 'fechaCreacion' ].split('T')[0].split('-').reverse().join('/') );
+
       this.dataSource = new MatTableDataSource(response);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;

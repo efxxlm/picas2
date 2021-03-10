@@ -366,8 +366,8 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
             polizaObservacionId: 0,
             contratoPolizaId: rep1.contratoPolizaId,
             observacion: this.addressForm.get( 'observacionesGenerales' ).value !== null ? this.addressForm.get( 'observacionesGenerales' ).value : '',
-            fechaRevision: this.addressForm.get( 'fechaRevision' ).value !== null ? new Date( this.addressForm.get( 'fechaRevision' ).value ).toISOString() : null,
-            estadoRevisionCodigo: this.addressForm.get( 'estadoRevision' ).value !== null ? this.addressForm.get( 'estadoRevision' ).value.codigo : null
+            fechaRevision: this.addressForm.get( 'fechaRevision' ).value !== null ? new Date( this.addressForm.get( 'fechaRevision' ).value ).toISOString() : new Date().toISOString(),
+            estadoRevisionCodigo: this.addressForm.get( 'estadoRevision' ).value !== null ? this.addressForm.get( 'estadoRevision' ).value.codigo : this.estadosPoliza.enRevision
           }
           this.polizaService.createEditPolizaObservacion( observacionArray )
             .subscribe(

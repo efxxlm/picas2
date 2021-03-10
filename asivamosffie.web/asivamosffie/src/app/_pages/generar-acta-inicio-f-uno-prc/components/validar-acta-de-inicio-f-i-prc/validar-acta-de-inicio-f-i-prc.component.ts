@@ -61,6 +61,8 @@ export class ValidarActaDeInicioFIPreconstruccionComponent implements OnInit {
   tieneObservacionesBool: any;
   observacionesUltimas: any;
   fechaCreacionObs: any;
+  contrato: any;
+
   constructor(private activatedRoute: ActivatedRoute, private service: GestionarActPreConstrFUnoService, private router: Router,public dialog: MatDialog, private fb: FormBuilder) { }
 
   ngOnInit(): void {
@@ -83,6 +85,7 @@ export class ValidarActaDeInicioFIPreconstruccionComponent implements OnInit {
   loadData(id){
     this.service.GetContratoByContratoId(id).subscribe((data:any)=>{
       this.cargarDataParaInsercion(data);
+      this.contrato = data;
       this.fechaActaFase1Prc = data.fechaActaInicioFase1;
       this.numContrato = data.numeroContrato;
       this.fechaFirmaContrato = data.fechaFirmaContrato;

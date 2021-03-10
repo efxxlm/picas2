@@ -45,6 +45,11 @@ export class TablaGestionCompromisosComponent implements OnInit {
 
     this.compromisosSvc.getGrillaCompromisos()
       .subscribe( ( resp: any[] ) => {
+        
+        if ( resp.length > 0 ) {
+          resp.forEach( registro => registro.fechaComite = registro.fechaComite.split('T')[0].split('-').reverse().join('/') );
+        }
+
         this.dataSource = new MatTableDataSource( resp );
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;

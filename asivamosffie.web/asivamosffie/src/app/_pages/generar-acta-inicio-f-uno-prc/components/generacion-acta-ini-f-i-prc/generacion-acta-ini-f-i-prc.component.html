@@ -424,13 +424,13 @@
           <div
             class="text-area-quill noDecorated"
             [class.color-secondaryColor]="
-              (addressForm.get('objeto')?.invalid && addressForm.get('objeto').touched) ||
-              (addressForm.get('objeto')?.invalid && estaEditando)
+              (addressForm.get('observacionesEspeciales')?.invalid && addressForm.get('observacionesEspeciales').touched) ||
+              (addressForm.get('observacionesEspeciales')?.invalid && estaEditando)
             "
           >
-            <label class="label-left" for="observacionesEspeciales">Observaciones o consideraciones especiales</label>
+            <label class="label-left" for="observacionesEspeciales" >Observaciones o consideraciones especiales</label>
             <quill-editor
-              class="quill-editor-style card "
+              class="quill-editor-style card"
               [styles]="editorStyle"
               [modules]="config"
               (onContentChanged)="maxLength($event, 500)"
@@ -446,7 +446,7 @@
           <span class="contador auxMarg" *ngIf="addressForm.get('observacionesEspeciales').value === null">
               500
           </span>
-          <span class="icon-incompleto">
+          <span class="icon-incompleto" style="margin-top: 3.5em;">
             <img
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
@@ -464,7 +464,13 @@
         </div>
       </mat-card-content>
     </mat-card>
-    <div class="text-center">
+
+    <div class="d-flex justify-content-center align-items-center mt-1em">
+      <img src="./assets/img/icon/sim.svg" class="img-size">
+      <p><small>La fecha prevista de terminación se calculará una vez se ingresen todos los valores requeridos.</small></p>
+  </div>
+
+    <div class="text-center mb-3em">
       <button mat-button color="warn" class="btn-guardar" type="submit">
         <img src="assets/img/icon/guardar.svg" alt="Guardar" />
       </button>

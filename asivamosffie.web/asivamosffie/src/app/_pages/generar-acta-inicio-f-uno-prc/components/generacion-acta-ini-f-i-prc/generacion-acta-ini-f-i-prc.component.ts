@@ -192,6 +192,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
     this.idContrato = id;
   }
   cargarDataParaInsercion(data) {
+    console.log( data );
     this.numContrato = data.numeroContrato;
     this.fechaAprobacionRequisitos = data.fechaAprobacionRequisitosSupervisor;
     this.fechaFirmaContrato = data.fechaFirmaContrato;
@@ -338,7 +339,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
         else {
           const arrayObservacion=[{
             'ContratoId':this.idContrato,
-            "observaciones":this.addressForm.value.observacionesEspeciales,
+            "observaciones":this.addressForm.get( 'observacionesEspeciales' ).value,
             'esActa':false,
             'esActaFase1':true,
             'esSupervision': this.rolAsignado !== 11 ? true : false//perfil 8 es supervisor
@@ -361,11 +362,10 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
             plazoFase1PreDias: this.addressForm.value.diasPlazoEjFase1,
             plazoFase2ConstruccionMeses: mesPlazoFase2,
             plazoFase2ConstruccionDias: diasPlazoFase2,
-            observaciones: this.addressForm.value.observacionesEspeciales,
+            observacionConsideracionesEspeciales: this.addressForm.get( 'observacionesEspeciales' ).value,
             conObervacionesActa: true,
             registroCompleto: true,
             contratoConstruccion: [],
-            contratoObservacion: arrayObservacion,
             contratoPerfil: [],
             contratoPoliza: []
           };
@@ -418,7 +418,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
             "observaciones":this.addressForm.value.observacionesEspeciales,
             'esActa':false,
             'esActaFase1':true,
-            'esSupervision':esSupervisionBool
+            'esSupervision': this.rolAsignado !== 11 ? true : false
           }];
           const arrayContrato2: EditContrato = {
             contratoId: this.idContrato,
@@ -436,13 +436,12 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
             fechaTerminacion: this.addressForm.value.fechaPrevistaTerminacion,
             plazoFase1PreMeses: this.addressForm.value.mesPlazoEjFase1,
             plazoFase1PreDias: this.addressForm.value.diasPlazoEjFase1,
-            plazoFase2ConstruccionMeses: this.addressForm.value.mesPlazoEjFase2,
-            plazoFase2ConstruccionDias: this.addressForm.value.diasPlazoEjFase2,
-            observaciones: this.addressForm.value.observacionesEspeciales,
+            plazoFase2ConstruccionMeses: this.addressForm.get( 'mesPlazoEjFase2' ).value,
+            plazoFase2ConstruccionDias: this.addressForm.get( 'diasPlazoEjFase2' ).value,
+            observacionConsideracionesEspeciales: this.addressForm.get( 'observacionesEspeciales' ).value,
             conObervacionesActa: true,
             registroCompleto: true,
             contratoConstruccion: [],
-            contratoObservacion: arrayObservacion2,
             contratoPerfil: [],
             contratoPoliza: []
           };

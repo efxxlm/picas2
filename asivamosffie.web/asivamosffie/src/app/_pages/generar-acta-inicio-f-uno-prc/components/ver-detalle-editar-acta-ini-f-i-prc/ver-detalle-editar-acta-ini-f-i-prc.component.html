@@ -123,7 +123,6 @@
                       readonly
                       (click)="picker.open()"
                       formControlName="fechaActaInicioFUnoPreconstruccion"
-                      (dateInput)="generarFechaRestante()"
                     />
                     <mat-datepicker #picker></mat-datepicker>
                   </mat-form-field>
@@ -420,54 +419,71 @@
               </div>
             </div>
           </div>
-          <div class="row">
+          <div class="d-flex align-items-start">
             <div
               class="text-area-quill noDecorated"
               [class.color-secondaryColor]="
-                (addressForm.get('objeto')?.invalid && addressForm.get('objeto').touched) ||
-                (addressForm.get('objeto')?.invalid && estaEditando)
+                (addressForm.get('observacionesEspeciales')?.invalid && addressForm.get('observacionesEspeciales').touched) ||
+                (addressForm.get('observacionesEspeciales')?.invalid && estaEditando)
               "
             >
-              <label class="label-left" for="observacionesEspeciales">Observaciones o consideraciones especiales</label>
+              <label class="label-left" for="observacionesEspeciales" >Observaciones o consideraciones especiales</label>
               <quill-editor
                 class="quill-editor-style card"
                 [styles]="editorStyle"
                 [modules]="config"
                 (onContentChanged)="maxLength($event, 500)"
                 formControlName="observacionesEspeciales"
+                #observaciones
+                required
               >
               </quill-editor>
             </div>
-            <span class="contador auxMarg" *ngIf="addressForm.get('observacionesEspeciales').value">
-              {{ 500 - textoLimpio(addressForm.get('observacionesEspeciales').value) }}
+            <span class="contador auxMarg" *ngIf="addressForm.get('observacionesEspeciales').value !== null">
+              {{500 - (textoLimpio(observaciones.quillEditor,500))}}
             </span>
-            <span
-              class="contador auxMarg"
-              *ngIf="
-                addressForm.get('observacionesEspeciales').value === null ||
-                addressForm.get('observacionesEspeciales').value === ''
-              "
-            >
-              500
+            <span class="contador auxMarg" *ngIf="addressForm.get('observacionesEspeciales').value === null">
+                500
             </span>
-            <span class="icon-incompleto">
+            <span class="icon-incompleto auxMarg">
               <img
                 class="icon-incompleto--img"
                 src="assets/img/icon/incompleto.svg"
                               alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
                 *ngIf="
-                  (addressForm.get('observacionesEspeciales')?.invalid &&
+                  (addressForm.get('observacionesEspeciales').invalid &&
                     addressForm.get('observacionesEspeciales').touched) ||
-                  (addressForm.get('observacionesEspeciales')?.invalid && estaEditando)
+                  (addressForm.get('observacionesEspeciales').invalid && estaEditando)
                 "
               />
             </span>
           </div>
         </mat-card-content>
       </mat-card>
+
+      <div *ngIf="obsSupervisor !== undefined">
+        <mat-card class="shipping-card mainGris">
+            <mat-card-header class="header-card">
+                <mat-card-title class="header-card--text textoGris">
+                    Revisión de la supervisión
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <p style="margin-left: 2em;"><strong>{{ obsSupervisor.fechaCreacion | date:'dd/MM/yyyy' }}</strong></p>
+                <div *ngIf="obsSupervisor.esActaFase1 === false" style="margin-left: 2em;">
+                    <p><strong>¿Tiene observaciones al acta de inicio? : No</strong></p>
+                </div>
+                <div *ngIf="obsSupervisor.esActaFase1 === true" style="margin-left: 2em;">
+                    <p><strong>¿Tiene observaciones al acta de inicio? : Sí</strong></p>
+                    <div [innerHtml]="obsSupervisor.observaciones"></div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+      </div>
+
       <div class="text-center">
         <button mat-button color="warn" class="btn-guardar" type="submit">
           <img src="assets/img/icon/guardar.svg" alt="Guardar" />
@@ -475,19 +491,4 @@
       </div>
     </form>
   </div>
-  <!--
-    <div *ngIf="this.anotacionesSupervisor==true">
-        <mat-card class="shipping-card mainGris">
-            <mat-card-header class="header-card">
-                <mat-card-title class="header-card--text textoGris">
-                    Observaciones al acta de inicio
-                </mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-                <p><strong>{{this.fechaCreacion | date: 'dd/MM/yyyy'}}</strong></p>
-                <div [innerHtml]="this.observacionSupervisor"></div>
-            </mat-card-content>
-        </mat-card>
-    </div>
-    -->
 </section>

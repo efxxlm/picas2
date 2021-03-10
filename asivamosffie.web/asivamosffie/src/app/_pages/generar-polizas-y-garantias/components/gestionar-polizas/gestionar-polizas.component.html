@@ -1091,7 +1091,7 @@
       </mat-card>
       <div class="d-flex align-items-center">
         <div class="text-area-quill">
-          <label for="alcanceParticular" class="text-area-quill--label">Observaciones generales</label>
+          <label for="alcanceParticular" class="text-area-quill--label colorMainColor">Observaciones generales</label>
           <quill-editor
             class="quill-editor-style"
             [styles]="editorStyle"
@@ -1108,27 +1108,12 @@
         <span class="contador miles" *ngIf="addressForm.get('observacionesGenerales').value === null">
             2000
         </span>
-        <span class="icon-incompleto">
-          <img
-            class="icon-incompleto--img"
-            src="assets/img/icon/incompleto.svg"
-                          alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
-            *ngIf="
-              (addressForm.get('observacionesGenerales').invalid &&
-                addressForm.get('observacionesGenerales').touched) ||
-              (addressForm.get('observacionesGenerales').invalid && estaEditando)
-            "
-          />
-        </span>
       </div>
     </div>
 
     <div class="text-center mb-2em">
-      <button mat-button color="warn" class="btn-guardar" type="submit">
-        <img src="assets/img/icon/guardar.svg" alt="Regresar" />
+      <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="addressForm.dirty === false">
+        <img src="assets/img/icon/guardar.svg">
       </button>
     </div>
   </form>

@@ -117,11 +117,10 @@ export interface EditContrato {
   plazoFase1PreDias:number;
   plazoFase2ConstruccionMeses:number;
   plazoFase2ConstruccionDias:number;
-  observaciones: string;
+  observacionConsideracionesEspeciales: string;
   conObervacionesActa: boolean;
   registroCompleto: boolean;
   contratoConstruccion: any[];
-  contratoObservacion: any[];
   contratoPerfil: any[];
   contratoPoliza: any[];
 }
