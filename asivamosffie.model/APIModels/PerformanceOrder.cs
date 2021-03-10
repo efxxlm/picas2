@@ -142,7 +142,8 @@ namespace asivamosffie.model.APIModels
             set { performancesToAdd = value; }
         }
 
-        
+        [JsonProperty(PropertyName = "Consistente")]
+        public bool IsConsistent { get; set; }
 
 
         // TODO calculate rows here or in other inherited class
@@ -233,7 +234,9 @@ namespace asivamosffie.model.APIModels
         ///// Acumulado de gravamen financiero descontado no exentos
         ///// </summary>
         //[JsonProperty(PropertyName = "Acumulado de gravamen financiero descontado no exentos")]
+        [JsonProperty(PropertyName = "Acumulado de gravamen financiero descontado no exentos")]
         public new decimal LiableDiscountedCharge { get; set; }
+        [JsonProperty(PropertyName = "Total de rendimientos generados")]
         public new decimal GeneratedPerformances { get; }
         public new decimal FinancialLienProvision { get; }
         public new decimal BankCharges { get; }

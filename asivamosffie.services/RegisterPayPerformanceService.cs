@@ -18,12 +18,7 @@ using Z.EntityFramework.Plus;
 using Microsoft.Extensions.Options;
 using asivamosffie.model.AditionalModels;
 using asivamosffie.services.Helpers.Extensions;
-using Microsoft.VisualBasic;
 using DinkToPdf;
-using System.Reflection.Metadata.Ecma335;
-using System.Reflection.Metadata;
-using System.Text.Json.Serialization;
-using DocumentFormat.OpenXml.Bibliography;
 
 namespace asivamosffie.services
 {
@@ -719,15 +714,6 @@ namespace asivamosffie.services
             int actionId = await GetActionIdAudit(action);
             string actionMesage = ConstantCommonMessages.Performances.TRAMITAR_RENDIMIENTOS;
 
-            // Query Previous Month
-            // Query Fuente by Valor Disponible > #8 Consistente
-            // Query Fuente < Inconsistente
-
-            // SELECT FROM Performance WHERE uploadedOrderId  =  uploadedOrderId
-            // GROUP BY account numer, get month 
-
-            // Check if is valid to prevent error 
-
             var collection = await _context.CarguePagosRendimientos.FindAsync(uploadedOrderId);
 
             List<PerformanceOrder> performanceOrders = new List<PerformanceOrder>();
@@ -741,23 +727,41 @@ namespace asivamosffie.services
             decimal valorAporteEnCuenta = 0;
             int registrosConsistentes = 0;
 
-            // performancesOrders 
+            DateTime currentMonthPerformances = DateTime.ParseExact(performanceOrders.First().PerformancesDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            DateTime beforeMonth = new DateTime(currentMonthPerformances.Year, currentMonthPerformances.Month, 1);
+            DateTime lastDayMonth = beforeMonth.AddDays(-1);
 
-            // decimal rendimientosIncorporados = 
+
+            var performancesIncorporated = await _context.RendimientosIncorporados
+                .Where(x => x.FechaRendimientos >= beforeMonth && x.FechaRendimientos <= lastDayMonth)
+                .AsNoTracking().ToListAsync();
+
+            decimal? performances = 0;
+            if(performancesIncorporated.Count > 0)
+            {
+                performances = performancesIncorporated.Sum(x => x.Incorporados);
+            }
+
             // CarguePagos rendimientos where Deserilize Performances, < = Month before incorporados = true, 
             // Consistente , or save month or orders process ?
+            
 
             foreach (var accountOrder in performanceOrders)
             {
                 valorAporteEnCuenta = 0;
-                var accounts = await _context.CuentaBancaria.SingleOrDefaultAsync(x => x.NumeroCuentaBanco == accountOrder.AccountNumber);
 
-                if (accounts == null)
+                var accountPayments = _context.VCuentaBancariaPago.Where(acc => acc.NumeroCuentaBanco == accountOrder.AccountNumber);
+
+                var visitas  = accountPayments.Sum(v => v.ValorNetoGiro);
+                var account = _context.CuentaBancaria.Where(x => x.NumeroCuentaBanco == accountOrder.AccountNumber).FirstOrDefault();
+        
+
+                if (account == null)
                 {
                     new Exception("La cuenta asignada no existe");
                 }
                 var fundingSources = await _context.FuenteFinanciacion.
-                    Where(r => !(bool)r.Eliminado && accounts.FuenteFinanciacionId == r.FuenteFinanciacionId).
+                    Where(r => !(bool)r.Eliminado && account.FuenteFinanciacionId == r.FuenteFinanciacionId).
                     Include(r => r.Aportante).ToListAsync();
 
                 foreach (var fundingSource in fundingSources)
@@ -774,28 +778,37 @@ namespace asivamosffie.services
                     }
                 }
 
-                //_fundingSourceService.GetListFuentesFinanciacionshort();
-                //_commonService.listaFuenteRecursos()
                 // Rendimientos a incorporar
 
                 accountOrder.PerformancesToAdd = accountOrder.GeneratedPerformances
-                    - 0 // Rendimientos incorporados
+                    - (performances.HasValue ? performances.Value : 0)
                     - accountOrder.FinancialLienProvision
                     - accountOrder.BankCharges
                     - accountOrder.DiscountedCharge
-                    - 0 // Visitas
-                    ;
-                accountOrder.Status = "Inconsistente";
-                if (valorAporteEnCuenta >= accountOrder.PerformancesToAdd)
+                    - (visitas.HasValue ? visitas.Value : 0);
+                accountOrder.IsConsistent = false;
+                if (accountOrder.PerformancesToAdd < valorAporteEnCuenta)
                 {
-                    accountOrder.Status = "Consistente";
+                    accountOrder.IsConsistent = true;
                     registrosConsistentes += 1;
                 }
-            }
 
-            response.Data = performanceOrders;
-            response.IsSuccessful = true;
-            response.Code = GeneralCodes.OperacionExitosa;
+                var performanceEntity = new RendimientosIncorporados
+                {
+                    CarguePagosRendimientosId = uploadedOrderId,
+                    FechaRendimientos = DateTime.ParseExact(accountOrder.PerformancesDate, "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                    CuentaBancaria = accountOrder.AccountNumber,
+                    TotalRendimientosGenerados = accountOrder.GeneratedPerformances,
+                    Incorporados = (performances.HasValue ? performances.Value : 0),
+                    ProvisionGravamenFinanciero = accountOrder.FinancialLienProvision,
+                    TotalGastosBancarios = accountOrder.BankCharges,
+                    TotalGravamenFinancieroDescontado = accountOrder.LiableDiscountedCharge,
+                    Visitas = (visitas.HasValue ? visitas.Value : 0),
+                    RendimientoIncorporar = accountOrder.PerformancesToAdd,
+                    Consistente = accountOrder.IsConsistent,
+                };
+                _context.RendimientosIncorporados.Add(performanceEntity);
+            }
             
             var tramite = JsonConvert.SerializeObject(performanceOrders);
             try
@@ -809,7 +822,10 @@ namespace asivamosffie.services
                       RegistrosConsistentes = registrosConsistentes,
                       RegistrosInconsistentes = performanceOrders.Count - registrosConsistentes,
                   }); ;
-
+                await _context.SaveChangesAsync();
+                response.Data = performanceOrders;
+                response.IsSuccessful = true;
+                response.Code = GeneralCodes.OperacionExitosa;
             }
             catch (Exception ex)
             {
