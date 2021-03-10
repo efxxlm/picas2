@@ -1738,13 +1738,24 @@ namespace asivamosffie.services
                     ContratacionProyecto contratacionProyecto = null;
                     if (contrato != null)
                     {
-                        contratacion = _context.Contratacion.Where(r => r.ContratacionId == contrato.ContratacionId).FirstOrDefault();
+                        contratacion = _context.Contratacion.Where(r => r.ContratacionId == contrato.ContratacionId)
+                                                            .Include(r =>r.DisponibilidadPresupuestal)
+                                                            .FirstOrDefault();
 
-                        FechaFinContratoTmp = contrato.FechaTerminacionFase2 != null ? Convert.ToDateTime(contrato.FechaTerminacionFase2).ToString("dd/MM/yyyy") : contrato.FechaTerminacionFase2.ToString();
-                        FechaInicioContratoTmp = contrato.FechaActaInicioFase2 != null ? Convert.ToDateTime(contrato.FechaActaInicioFase2).ToString("dd/MM/yyyy") : contrato.FechaActaInicioFase2.ToString();
+                        //FechaFinContratoTmp = contrato.FechaTerminacionFase2 != null ? Convert.ToDateTime(contrato.FechaTerminacionFase2).ToString("dd/MM/yyyy") : contrato.FechaTerminacionFase2.ToString();
+                        //FechaInicioContratoTmp = contrato.FechaActaInicioFase2 != null ? Convert.ToDateTime(contrato.FechaActaInicioFase2).ToString("dd/MM/yyyy") : contrato.FechaActaInicioFase2.ToString();
 
                         NumeroContratoTmp = contrato.NumeroContrato;
-                        PlazoFormatTmp = Convert.ToInt32(contrato.PlazoFase2ConstruccionMeses).ToString("00") + " meses / " + Convert.ToInt32(contrato.PlazoFase2ConstruccionDias).ToString("00") + " dias ";
+                        //PlazoFormatTmp = Convert.ToInt32(contrato.PlazoFase2ConstruccionMeses).ToString("00") + " meses / " + Convert.ToInt32(contrato.PlazoFase2ConstruccionDias).ToString("00") + " dias ";
+                        if (contratacion != null)
+                        {
+
+                            PlazoFormatTmp = Convert.ToInt32(contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoMeses).ToString("00") + " meses / " + Convert.ToInt32(contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoDias).ToString("00") + " dias ";
+                            FechaInicioContratoTmp = contrato.FechaFirmaContrato != null ? Convert.ToDateTime(contrato.FechaFirmaContrato).ToString("dd/MM/yyyy") : contrato.FechaFirmaContrato.ToString();
+                            FechaFinContratoTmp = contrato.FechaFirmaContrato != null ? Convert.ToDateTime(contrato.FechaFirmaContrato).AddMonths((int)contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoMeses).AddDays((double)contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoDias).ToString("dd/MM/yyyy") : contrato.FechaTerminacionFase2.ToString();
+
+                        }
+
 
                     }
 
