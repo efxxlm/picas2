@@ -490,26 +490,26 @@
                 <input matInput type="text" formControlName="rutaSoporte" required />
               </mat-form-field>
             </div>
+            <span class="icon-incompleto">
+              <img
+                class="icon-incompleto--img"
+                src="assets/img/icon/incompleto.svg"
+                alt="este campo es requerido"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
+                *ngIf="
+                  (perfil.get('rutaSoporte').invalid && perfil.get('rutaSoporte').touched) ||
+                  (perfil.get('rutaSoporte').invalid && estaEditando)
+                "
+              />
+            </span>
           </section>
           <div class="d-flex justify-content-center size-text-descriptivo">
             <span class="info-url">
               Indique la ruta en la que se encuentra el soporte de las hojas de vida y el Acta de aprobación de personal
             </span>
           </div>
-          <span class="icon-incompleto">
-            <img
-              class="icon-incompleto--img"
-              src="assets/img/icon/incompleto.svg"
-              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
-              *ngIf="
-                (perfil.get('rutaSoporte').invalid && perfil.get('rutaSoporte').touched) ||
-                (perfil.get('rutaSoporte').invalid && estaEditando)
-              "
-            />
-          </span>
         </mat-card-content>
       </mat-card>
       <div class="text-right" *ngIf="perfiles.controls.length > 1">

@@ -378,6 +378,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
     //if (this.addressForm.valid) {
       this.estaEditando = true;
       this.addressForm.markAllAsTouched();
+      this.myFilter.markAllAsTouched();
       let tipoDDP: Dominio = this.addressForm.get('tipo').value;
 
 

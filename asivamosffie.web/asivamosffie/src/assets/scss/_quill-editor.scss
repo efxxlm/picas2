@@ -84,8 +84,7 @@
   }
 
   &--max-height.card .ql-container.ql-snow {
-    max-height: calc(96% + 3px);
-    min-height: 3em;
+    height: calc(100% - 40px);
   }
 
   &.card {

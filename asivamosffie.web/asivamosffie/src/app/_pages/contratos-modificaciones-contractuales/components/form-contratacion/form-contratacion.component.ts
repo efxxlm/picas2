@@ -24,6 +24,7 @@ export class FormContratacionComponent implements OnInit {
   contratacion: any;
   modalidadContratoArray: Dominio[] = [];
   fechaTramite: Date = new Date();
+  estaEditando = false;
 
   constructor ( private fb: FormBuilder,
                 private activatedRoute: ActivatedRoute,
@@ -43,15 +44,15 @@ export class FormContratacionComponent implements OnInit {
   crearFormulario () {
     this.form = this.fb.group({
       numeroContrato                : [ '', Validators.required ],
-      modalidadContrato             : [ null ],
-      fechaEnvioParaFirmaContratista: [ null ],
-      fechaFirmaPorParteContratista : [ null ],
-      fechaEnvioParaFirmaFiduciaria : [ null ],
-      fechaFirmaPorParteFiduciaria  : [ null ],
-      observaciones                 : [ null ],
-      documento                     : [ null ],
-      rutaDocumento                 : [ null ],
-      documentoFile                 : [ null ]
+      modalidadContrato             : [ null, Validators.required ],
+      fechaEnvioParaFirmaContratista: [ null, Validators.required ],
+      fechaFirmaPorParteContratista : [ null, Validators.required ],
+      fechaEnvioParaFirmaFiduciaria : [ null, Validators.required ],
+      fechaFirmaPorParteFiduciaria  : [ null, Validators.required ],
+      observaciones                 : [ null, Validators.required ],
+      documento                     : [ null, Validators.required ],
+      rutaDocumento                 : [ null, Validators.required ],
+      documentoFile                 : [ null, Validators.required ]
     });
   };
 
@@ -95,6 +96,7 @@ export class FormContratacionComponent implements OnInit {
               rutaDocumento: resp.contrato[0].rutaDocumento !== undefined ? resp.contrato[0].rutaDocumento : null
             });
             console.log( this.form.value );
+            this.estaEditando = true;
           };
         } );
       } );

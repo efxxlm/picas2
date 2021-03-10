@@ -56,29 +56,49 @@
                 </mat-panel-title>
               </mat-expansion-panel-header>
               <mat-expansion-panel-header
-              class="expansion-style--header"
-              *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.modificacionContractual"
-            >
-              <mat-panel-title class="expansion-style--title sub-expansion">
-                <b>Solicitud {{ sesionComite.novedadContractual !== undefined ? sesionComite.novedadContractual.numeroSolicitud : sesionComite.numeroSolicitud }} </b>
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-              <mat-expansion-panel-header class="expansion-style--header"
-                                          *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.controversiaContractual">
+                class="expansion-style--header"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.modificacionContractual"
+              >
                 <mat-panel-title class="expansion-style--title sub-expansion">
-                  <b>Solicitud {{ sesionComite.controversiaContractual !== undefined ? sesionComite.controversiaContractual.numeroSolicitud : sesionComite.numeroSolicitud }} </b>
+                  <b
+                    >Solicitud
+                    {{
+                      sesionComite.novedadContractual !== undefined
+                        ? sesionComite.novedadContractual.numeroSolicitud
+                        : sesionComite.numeroSolicitud
+                    }}
+                  </b>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <mat-expansion-panel-header
+                class="expansion-style--header"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.controversiaContractual"
+              >
+                <mat-panel-title class="expansion-style--title sub-expansion">
+                  <b
+                    >Solicitud
+                    {{
+                      sesionComite.controversiaContractual !== undefined
+                        ? sesionComite.controversiaContractual.numeroSolicitud
+                        : sesionComite.numeroSolicitud
+                    }}
+                  </b>
                 </mat-panel-title>
               </mat-expansion-panel-header>
 
-              <mat-expansion-panel-header class="expansion-style--header"
-                                          *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.actualizacionProcesoSeleccion">
+              <mat-expansion-panel-header
+                class="expansion-style--header"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.actualizacionProcesoSeleccion"
+              >
                 <mat-panel-title class="expansion-style--title sub-expansion">
                   <b>Solicitud {{ sesionComite.numeroSolicitud }} </b>
                 </mat-panel-title>
               </mat-expansion-panel-header>
 
-              <mat-expansion-panel-header class="expansion-style--header"
-                                          *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.evaluacionProceso">
+              <mat-expansion-panel-header
+                class="expansion-style--header"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.evaluacionProceso"
+              >
                 <mat-panel-title class="expansion-style--title sub-expansion">
                   <b>Solicitud {{ sesionComite.numeroSolicitud }} </b>
                 </mat-panel-title>
@@ -108,13 +128,13 @@
                 </mat-panel-title>
               </mat-expansion-panel-header>
               <mat-expansion-panel-header
-              class="expansion-style--header"
-              *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.modificacionContractual"
-            >
-              <mat-panel-title class="expansion-style--title sub-expansion">
-                <b>Solicitud {{ sesionComite.novedadContractual.numeroSolicitud }} </b>
-              </mat-panel-title>
-            </mat-expansion-panel-header>
+                class="expansion-style--header"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.modificacionContractual"
+              >
+                <mat-panel-title class="expansion-style--title sub-expansion">
+                  <b>Solicitud {{ sesionComite.novedadContractual.numeroSolicitud }} </b>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
               <mat-expansion-panel-header
                 class="expansion-style--header"
                 *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.controversiaContractual"
@@ -124,15 +144,19 @@
                 </mat-panel-title>
               </mat-expansion-panel-header>
 
-              <mat-expansion-panel-header class="expansion-style--header"
-                                          *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.actualizacionProcesoSeleccion">
+              <mat-expansion-panel-header
+                class="expansion-style--header"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.actualizacionProcesoSeleccion"
+              >
                 <mat-panel-title class="expansion-style--title sub-expansion">
                   <b>Solicitud {{ sesionComite.numeroSolicitud }} </b>
                 </mat-panel-title>
               </mat-expansion-panel-header>
 
-              <mat-expansion-panel-header class="expansion-style--header"
-                                          *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.evaluacionProceso">
+              <mat-expansion-panel-header
+                class="expansion-style--header"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.evaluacionProceso"
+              >
                 <mat-panel-title class="expansion-style--title sub-expansion">
                   <b>Solicitud {{ sesionComite.numeroSolicitud }} </b>
                 </mat-panel-title>
@@ -378,19 +402,28 @@
     </button>
   </div>
 
-  <div *ngIf="comentarActa">
+  <!-- <div *ngIf="comentarActa"> -->
+  <div>
     <form autocomplete="off" [formGroup]="form" (ngSubmit)="onSubmit()">
-      <mat-card style="margin-bottom: 1em">
-        <mat-card-title
-          class="text-area-quill--label text-color"
+      <div class="d-flex mt-2em align-items-center animatedDown">
+        <div
+          class="text-area-quill"
           [class.color-secondaryColor]="
             (form.get('comentarioActa').invalid && form.get('comentarioActa').touched) ||
             (form.get('comentarioActa').invalid && estaEditando)
           "
         >
-          Comentarios al acta
-        </mat-card-title>
-        <mat-card-content>
+          <label
+            class="text-area-quill--label align-left-label"
+            [class.colorMainColor]="
+              !(
+                (form.get('comentarioActa').invalid && form.get('comentarioActa').touched) ||
+                (form.get('comentarioActa').invalid && estaEditando)
+              )
+            "
+          >
+            Comentarios al acta
+          </label>
           <p class="padding-p">
             Fecha:
             <b class="text-color">
@@ -401,37 +434,35 @@
               }}
             </b>
           </p>
-          <div class="d-flex align-items-center">
-            <quill-editor
-              class="quill-editor-style card position-relative"
-              [styles]="editorStyle"
-              [modules]="config"
-              (onContentChanged)="maxLength($event, 1000)"
-              formControlName="comentarioActa"
-              required
-            >
-            </quill-editor>
-            <span class="contador" *ngIf="form.get('comentarioActa').value !== null" style="margin-top: 2em;">
-              {{ 1000 - textoLimpio(form.get('comentarioActa').value, 1000) }}
-            </span>
-            <span class="contador" *ngIf="form.get('comentarioActa').value === null" style="margin-top: 2em;"> 1000 </span>
-            <span class="icon-incompleto">
-              <img
-                class="icon-incompleto--img"
-                src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
-                *ngIf="
-                  (form.get('comentarioActa').invalid && form.get('comentarioActa').touched) ||
-                  (form.get('comentarioActa').invalid && estaEditando)
-                "
-              />
-            </span>
-          </div>
-        </mat-card-content>
-      </mat-card>
+          <quill-editor
+            class="quill-editor-style ml-1em"
+            [styles]="editorStyle"
+            [modules]="config"
+            (onContentChanged)="maxLength($event, 1000)"
+            formControlName="comentarioActa"
+            required
+          >
+          </quill-editor>
+        </div>
+        <span class="contador miles" *ngIf="form.get('comentarioActa').value !== null">
+          {{ 1000 - textoLimpio(form.get('comentarioActa').value, 1000) }}
+        </span>
+        <span class="contador miles" *ngIf="form.get('comentarioActa').value === null"> 1000 </span>
+        <span class="icon-incompleto">
+          <img
+            class="icon-incompleto--img"
+            src="assets/img/icon/incompleto.svg"
+            alt="este campo es requerido"
+            [matTooltipPosition]="'above'"
+            matTooltip="Debe ingresar la información en el campo para continuar"
+            matTooltipClass="info-tooltip"
+            *ngIf="
+              (form.get('comentarioActa').invalid && form.get('comentarioActa').touched) ||
+              (form.get('comentarioActa').invalid && estaEditando)
+            "
+          />
+        </span>
+      </div>
 
       <div class="text-center" class="flex-text-center">
         <img src="assets/img/icon/sim.svg" style="width: 2.5%" />

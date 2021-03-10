@@ -177,12 +177,27 @@
   </table>
   <section class="text-center container w-100 mt-2em">
     <div class="d-flex mt-1em">
-      <label class="ml-5em"><b>URL con soporte</b></label>
+      <label
+        class="ml-5em"
+        [class.color-secondaryColor]="(urlSoporte === null && estaEditando) || (urlSoporte === '' && estaEditando)"
+        ><b>URL con soporte</b></label
+      >
       <div class="w-80">
         <mat-form-field>
           <input matInput type="text" [(ngModel)]="urlSoporte" required />
         </mat-form-field>
       </div>
+      <span class="icon-incompleto">
+        <img
+          class="icon-incompleto--img"
+          src="assets/img/icon/incompleto.svg"
+          alt="este campo es requerido"
+          [matTooltipPosition]="'above'"
+          matTooltip="Debe ingresar la información en el campo para continuar"
+          matTooltipClass="info-tooltip"
+          *ngIf="(urlSoporte === null && estaEditando) || (urlSoporte === '' && estaEditando)"
+        />
+      </span>
     </div>
 
     <div class="text-center">

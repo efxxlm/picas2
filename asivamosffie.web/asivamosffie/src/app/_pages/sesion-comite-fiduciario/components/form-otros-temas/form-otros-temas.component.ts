@@ -93,6 +93,9 @@ export class FormOtrosTemasComponent implements OnInit {
 
           this.responsable = this.listaResponsables.find(r => r.codigo == this.sesionComiteTema.responsableCodigo)
 
+          this.estaEditando = true;
+          this.addressForm.markAllAsTouched();
+          
           resolve();
 
         })

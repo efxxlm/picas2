@@ -83,8 +83,7 @@
         </div>
         <div class="col d-flex">
           <quill-editor
-            class="quill-editor-style card position-relative"
-            [styles]="editorStyle"
+            class="quill-editor-style card position-relative quill-editor-style--max-height"
             [modules]="config"
             (onContentChanged)="maxLength($event, 5000)"
             formControlName="desarrolloSolicitud"
@@ -214,8 +213,7 @@
         </div>
         <div class="col d-flex">
           <quill-editor
-            class="quill-editor-style card position-relative"
-            [styles]="editorStyle"
+            class="quill-editor-style card position-relative quill-editor-style--max-height"
             [modules]="config"
             (onContentChanged)="maxLength($event, 5000)"
             formControlName="observaciones"

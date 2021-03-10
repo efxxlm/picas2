@@ -16,14 +16,7 @@
         </div>
         <div class="col d-flex">
           <mat-form-field>
-            <input
-              matInput
-              type="text"
-              maxlength="10"
-              formControlName="numeroContrato"
-              [class.invalid]="campoSinDiligenciar('numeroContrato')"
-              required
-            />
+            <input matInput type="text" maxlength="10" formControlName="numeroContrato" required />
           </mat-form-field>
           <span
             class="contador"
@@ -37,7 +30,7 @@
             <img
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
-                            alt="este campo es requerido"
+              alt="este campo es requerido"
               [matTooltipPosition]="'above'"
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
@@ -54,43 +47,59 @@
 
   <div class="row">
     <div class="col-md-8">
-        <div class="row">
-            <div class="pr-1">
-                <label class="label-left" for="modalidadContrato">Modalidad del contrato</label>
-            </div>
-            <div class="col d-flex">
-                <mat-form-field class="select-width">
-                    <mat-select formControlName="modalidadContrato" required>
-                        <mat-option *ngFor="let modalidad of modalidadContratoArray" [value]="modalidad.codigo">
-                            {{ modalidad.nombre }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-
-                <span [matTooltipPosition]="'above'"
-                      matTooltip="Campo de selección unica"
-                      matTooltipClass="info-tooltip"></span>
-
-                <span class="icon-incompleto" style="margin-left: 3.2em;">
-                  <img
-                    class="icon-incompleto--img"
-                    src="assets/img/icon/incompleto.svg"
-                                  alt="este campo es requerido"
-                    [matTooltipPosition]="'above'"
-                    matTooltip="Debe ingresar la información en el campo para continuar"
-                    matTooltipClass="info-tooltip"
-                    *ngIf="
-                      (dataFormulario.get('numeroContrato').invalid && dataFormulario.get('numeroContrato').touched) ||
-                      (dataFormulario.get('numeroContrato').invalid && estaEditando)
-                    "
-                  />
-                </span>
-            </div>
+      <div class="row">
+        <div class="pr-1">
+          <label
+            class="label-left"
+            for="modalidadContrato"
+            [class.color-secondaryColor]="
+              (dataFormulario.get('modalidadContrato').invalid && dataFormulario.get('modalidadContrato').touched) ||
+              (dataFormulario.get('modalidadContrato').invalid && estaEditando)
+            "
+          >
+            Modalidad del contrato
+          </label>
         </div>
+        <div class="col d-flex">
+          <mat-form-field class="select-width">
+            <mat-select formControlName="modalidadContrato" required>
+              <mat-option *ngFor="let modalidad of modalidadContratoArray" [value]="modalidad.codigo">
+                {{ modalidad.nombre }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <span
+            [matTooltipPosition]="'above'"
+            matTooltip="Campo de selección unica"
+            matTooltipClass="info-tooltip"
+          ></span>
+
+          <span class="icon-incompleto" style="margin-left: 3.2em">
+            <img
+              class="icon-incompleto--img"
+              src="assets/img/icon/incompleto.svg"
+              alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
+              *ngIf="
+                (dataFormulario.get('numeroContrato').invalid && dataFormulario.get('numeroContrato').touched) ||
+                (dataFormulario.get('numeroContrato').invalid && estaEditando)
+              "
+            />
+          </span>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="row" *ngIf="dataFormulario.get('modalidadContrato').value !== null && dataFormulario.get('numeroContrato').value.length > 0">
+  <div
+    class="row"
+    *ngIf="
+      dataFormulario.get('modalidadContrato').value !== null && dataFormulario.get('numeroContrato').value.length > 0
+    "
+  >
     <div class="col-md-8">
       <div class="row">
         <div class="pr-1">
@@ -134,7 +143,7 @@
             <img
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
-                            alt="este campo es requerido"
+              alt="este campo es requerido"
               [matTooltipPosition]="'above'"
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
@@ -194,7 +203,7 @@
             <img
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
-                            alt="este campo es requerido"
+              alt="este campo es requerido"
               [matTooltipPosition]="'above'"
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
@@ -254,7 +263,7 @@
             <img
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
-                            alt="este campo es requerido"
+              alt="este campo es requerido"
               [matTooltipPosition]="'above'"
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
@@ -314,7 +323,7 @@
             <img
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
-                            alt="este campo es requerido"
+              alt="este campo es requerido"
               [matTooltipPosition]="'above'"
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
@@ -334,13 +343,15 @@
     <div class="col-md-12">
       <div class="row">
         <div class="pr-1">
-          <label class="label-left" 
-          [class.color-secondaryColor]="
-            (dataFormulario.get('observaciones').invalid && dataFormulario.get('observaciones').touched) ||
-            (dataFormulario.get('observaciones').invalid && estaEditando)
-          ">
-          Observaciones
-        </label>
+          <label
+            class="label-left"
+            [class.color-secondaryColor]="
+              (dataFormulario.get('observaciones').invalid && dataFormulario.get('observaciones').touched) ||
+              (dataFormulario.get('observaciones').invalid && estaEditando)
+            "
+          >
+            Observaciones
+          </label>
         </div>
         <div class="col d-flex">
           <quill-editor
@@ -349,6 +360,10 @@
             [modules]="config"
             (onContentChanged)="maxLength($event, 2000)"
             formControlName="observaciones"
+            [class.invalid]="
+              (dataFormulario.get('observaciones').invalid && dataFormulario.get('observaciones').touched) ||
+              (dataFormulario.get('observaciones').invalid && estaEditando)
+            "
             required
           >
           </quill-editor>
@@ -375,7 +390,7 @@
             <img
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
-                            alt="este campo es requerido"
+              alt="este campo es requerido"
               [matTooltipPosition]="'above'"
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
@@ -394,16 +409,27 @@
     <div class="col-md-12">
       <div class="row">
         <div class="pr-1">
-          <label class="label-left" style="margin-top: 1.4em"
-          [class.color-secondaryColor]="
-            (dataFormulario.get('documentoFile').invalid && dataFormulario.get('documentoFile').touched) ||
-            (dataFormulario.get('documentoFile').invalid && estaEditando)
-          ">
-           Adjuntar documento suscrito 
+          <label
+            class="label-left"
+            style="margin-top: 1.4em"
+            [class.color-secondaryColor]="
+              (dataFormulario.get('documentoFile').invalid && dataFormulario.get('documentoFile').touched) ||
+              (dataFormulario.get('documentoFile').invalid && estaEditando)
+            "
+          >
+            Adjuntar documento suscrito
           </label>
         </div>
         <div class="col d-flex">
-          <span class="input-file-text text-center required" (click)="fileInput.click()" style="width: 100%">
+          <span
+            class="input-file-text text-center required"
+            (click)="fileInput.click()"
+            style="width: 100%"
+            [class.invalid]="
+              (dataFormulario.get('documentoFile').invalid && dataFormulario.get('documentoFile').touched) ||
+              (dataFormulario.get('documentoFile').invalid && estaEditando)
+            "
+          >
             {{ archivo || dataFormulario.get('documento').value }}
           </span>
           <button mat-raised-button color="primary" type="button" (click)="fileInput.click()" class="input-file--btn">
@@ -426,7 +452,7 @@
           <img
             class="icon-incompleto--img"
             src="assets/img/icon/incompleto.svg"
-                          alt="este campo es requerido"
+            alt="este campo es requerido"
             [matTooltipPosition]="'above'"
             matTooltip="Debe ingresar la información en el campo para continuar"
             matTooltipClass="info-tooltip"
