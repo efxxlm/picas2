@@ -14,8 +14,7 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public DateTime? FechaSolicitud { get; set; }
         [NotMapped]
-        public string TipoSolicitud { get; set; }
-
+        public string TipoSolicitud { get; set; } 
         [NotMapped]
         public bool? RegistroCompletoActa { get; set; }
         [NotMapped]
