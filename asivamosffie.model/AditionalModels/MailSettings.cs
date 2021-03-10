@@ -5,7 +5,7 @@ using System.Text;
 
 namespace asivamosffie.model.AditionalModels
 {
-    public class AppSettings : AppSettingsService
+    public class MailSettings : AppSettingsService
     {
         public new string DominioFront { get; set; }
         public new string MailServer { get; set; }

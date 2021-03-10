@@ -60,6 +60,7 @@ namespace asivamosffie.api
             });
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
+            services.Configure<asivamosffie.model.AditionalModels.MailSettings>(appSettingsSection);
             var appSettings = appSettingsSection.Get<AppSettings>();
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -114,8 +115,7 @@ namespace asivamosffie.api
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-
-
+         
         private void ConfigureDependencyInjection(IServiceCollection services)
         {
             services.AddDbContext<model.Models.devAsiVamosFFIEContext>(options

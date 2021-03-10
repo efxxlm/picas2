@@ -13,30 +13,40 @@ using asivamosffie.model.AditionalModels;
 using Microsoft.Extensions.Options;
 using System.Net.Mail;
 using System.Net;
+using Microsoft.Extensions.Options;
+
 
 namespace asivamosffie.services
 {
     public class CommonService : ICommonService
     {
         private readonly devAsiVamosFFIEContext _context;
-        public model.AditionalModels.AppSettings _mailSettings { get; }
+        public MailSettings _mailSettings { get; }
 
-        public CommonService(devAsiVamosFFIEContext context , IOptions<AppSettings> mailSettings)
+        public CommonService(
+                                devAsiVamosFFIEContext context,
+                               IOptions<MailSettings> mailSettings
+                            )
         {
             _mailSettings = mailSettings.Value;
             _context = context;
         }
+
         public bool EnviarCorreo(List<EnumeratorPerfil> pListPerfilesCorreo, Template pTemplate)
         {
             try
             {
+                pTemplate.Contenido = pTemplate.Contenido
+                                                   .Replace("_LinkF_", _mailSettings.DominioFront)
+                                                   .Replace("[URL]", _mailSettings.DominioFront);
+
                 var ListEmails =
-                   _context.UsuarioPerfil
-                                       .Where(p => pListPerfilesCorreo
-                                       .Contains((EnumeratorPerfil)(int)p.PerfilId))
-                                       .Include(u => u.Usuario)
-                                       .Select(e => e.Usuario.Email)
-                                       .ToList();
+                               _context.UsuarioPerfil
+                                                   .Where(p => pListPerfilesCorreo
+                                                   .Contains((EnumeratorPerfil)(int)p.PerfilId))
+                                                   .Include(u => u.Usuario)
+                                                   .Select(e => e.Usuario.Email)
+                                                   .ToList();
 
                 MailMessage mail = new MailMessage();
                 SmtpClient SmtpServer = new SmtpClient(_mailSettings.MailServer);
@@ -61,17 +71,16 @@ namespace asivamosffie.services
             {
                 return false;
             }
-
             return true;
         }
 
         public async Task<dynamic> GetListMenu()
-        { 
+        {
             return await _context.Menu.Select(m => new
-                                                     { 
-                                                        m.MenuId,
-                                                        m.Nombre 
-                                                     }).ToListAsync();
+            {
+                m.MenuId,
+                m.Nombre
+            }).ToListAsync();
         }
 
         public async Task<List<dynamic>> GetUsuarioByPerfil(int idPerfil)
@@ -148,7 +157,7 @@ namespace asivamosffie.services
         public async Task<List<MenuPerfil>> GetMenuByRol(int pUserId)
         {
             int IdPerfil = await _context.UsuarioPerfil.Where(r => r.UsuarioId == pUserId).Select(r => r.PerfilId).FirstOrDefaultAsync();
-            return _context.MenuPerfil.Where(r => r.PerfilId == IdPerfil && (bool)r.Activo).IncludeFilter(r => r.Menu).OrderBy(z=>z.Menu.Posicion).ToList();
+            return _context.MenuPerfil.Where(r => r.PerfilId == IdPerfil && (bool)r.Activo).IncludeFilter(r => r.Menu).OrderBy(z => z.Menu.Posicion).ToList();
         }
 
         public string GetNombreDepartamentoByIdMunicipio(string pIdMunicipio)
@@ -201,7 +210,7 @@ namespace asivamosffie.services
         {
             var retorno = await _context.MensajesValidaciones.Where(r => (bool)r.Activo && r.MenuId == pMenu && r.Codigo.Equals(pCodigo)).FirstOrDefaultAsync();
             /*almaceno auditoria*/
-            _context.Auditoria.Add(new Auditoria { AccionId = pAccionId, MensajesValidacionesId = retorno.MensajesValidacionesId, Usuario = pUsuario==null?"":pUsuario.ToUpper(), Observacion = pObservaciones.ToUpper(), Fecha = DateTime.Now });
+            _context.Auditoria.Add(new Auditoria { AccionId = pAccionId, MensajesValidacionesId = retorno.MensajesValidacionesId, Usuario = pUsuario == null ? "" : pUsuario.ToUpper(), Observacion = pObservaciones.ToUpper(), Fecha = DateTime.Now });
             _context.SaveChanges();
             return retorno.Mensaje;
         }
@@ -210,7 +219,7 @@ namespace asivamosffie.services
         {
             return await _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(pCodigo) && r.TipoDominioId == pTipoDominioId).Select(r => r.DominioId).FirstOrDefaultAsync();
         }
-         
+
         public async Task<List<Localicacion>> GetListDepartamento()
         {
 
@@ -372,7 +381,7 @@ namespace asivamosffie.services
         {
             return await _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(pCodigo) && r.TipoDominioId == pTipoDominioId).FirstOrDefaultAsync();
         }
-         
+
         public async Task<List<InstitucionEducativaSede>> ListIntitucionEducativaByMunicipioId(string pIdMunicipio)
         {
             return await _context.InstitucionEducativaSede.Where(r => (bool)r.Activo && r.PadreId == null && r.LocalizacionIdMunicipio.Trim().Equals(pIdMunicipio.Trim())).ToListAsync();
@@ -409,7 +418,7 @@ namespace asivamosffie.services
                  IdPadre = x.IdPadre
              }).ToListAsync();
         }
-         
+
         public async Task<List<Localicacion>> GetListDepartamentoByIdMunicipio(string idMunicipio)
         {
             var munactual = _context.Localizacion.Find(idMunicipio);
@@ -438,7 +447,7 @@ namespace asivamosffie.services
             }
             return fechaRetorno;
         }
-        
+
         public static DateTime[] DiasFestivosAnio(int anio)
         {
             List<DateTime> fechas = new List<DateTime>
@@ -538,8 +547,8 @@ namespace asivamosffie.services
 
             return new DateTime(anyo, mes, dia);
         }
-        
-        
+
+
 
         /// <summary>
         /// Julian Martinez
