@@ -23,7 +23,7 @@ namespace asivamosffie.services
         private readonly ICommonService _commonService;
         private readonly IDocumentService _documentService;
         private readonly IRegisterSessionTechnicalCommitteeService _registerSessionTechnicalCommitteeService;
-         
+
         public ManagePreContructionActPhase1Service(IDocumentService documentService, devAsiVamosFFIEContext context, ICommonService commonService, IRegisterSessionTechnicalCommitteeService registerSessionTechnicalCommitteeService)
         {
             _documentService = documentService;
@@ -145,7 +145,7 @@ namespace asivamosffie.services
                     ContratoOld.EstadoActa = ConstanCodigoEstadoActaContrato.Con_acta_generada;
                 else
                     ContratoOld.EstadoActa = ConstanCodigoEstadoActaContrato.Con_acta_preliminar_generada;
-                 
+
                 if (ContratoOld.ConObervacionesActa.HasValue)
                 {
                     foreach (var ContratoObservacion in pContrato.ContratoObservacion)
@@ -274,19 +274,12 @@ namespace asivamosffie.services
                 Contrato contratoOld = _context.Contrato.Find(pContratoId);
                 contratoOld.FechaModificacion = DateTime.Now;
                 contratoOld.UsuarioModificacion = pUsuarioModificacion;
-                contratoOld.EstadoActa = pCodigoEstadoActa;
+              //  contratoOld.EstadoActa = pCodigoEstadoActa;
                 _context.SaveChanges();
                 //jflorez 2020 122 10 envionotificacioncambiar por constante
                 if (pCodigoEstadoActa == "17")
                 {
-
-                    var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Interventor).Include(y => y.Usuario).ToList();
-                    foreach (var usuario in usuarios)
-                    {
-                        this.sendMailNotificarAInterventor(contratoOld, usuario.Usuario.Email, appSettingsService);
-                    }
-
-
+                    this.SendMailNotificarAInterventor(contratoOld);
                 }
 
                 return
@@ -313,35 +306,38 @@ namespace asivamosffie.services
             }
         }
 
-        private void sendMailNotificarAInterventor(Contrato prmContrato, string prmMail, AppSettingsService appSettingsService)
-        {
-            //deboenviarcorreoal contratista
-            Template TemplateMail = _context.Template.Find((int)enumeratorTemplate.Notificarinterventor);
-            string template = TemplateMail.Contenido
-                            .Replace("_LinkF_", appSettingsService.DominioFront)
+        private void SendMailNotificarAInterventor(Contrato prmContrato)
+        { 
+            List<EnumeratorPerfil> enumeratorPerfils = 
+                                            new List<EnumeratorPerfil>
+                                                                    {
+                                                                      EnumeratorPerfil.Interventor
+                                                                    };
+             
+            Template TemplateMail = _context.Template.Find((int)enumeratorTemplate.NotificarInterventor);
+
+            TemplateMail.Contenido = TemplateMail.Contenido
                             .Replace("[NUMERO_CONTRATO]", prmContrato.NumeroContrato);
-            Helpers.Helpers.EnviarCorreo(prmMail,
-            "Acta Notificada", template, appSettingsService.Sender, appSettingsService.Password, appSettingsService.MailServer, appSettingsService.MailPort);
+
+            _commonService.EnviarCorreo(enumeratorPerfils, TemplateMail);
         }
 
         public async Task<byte[]> GetActaByIdPerfil(int pContratoId, int pUserId, AppSettingsService pAppSettingsService, bool pEsContruccion)
         {
-            Contrato contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).Include(r => r.Contratacion).FirstOrDefault();
+            Contrato contrato = await GetContratoByContratoId(pContratoId, pUserId);
 
             //Enviar correo
-            await GetEnviarActaParaFirmar(pAppSettingsService, pContratoId);
+            await GetEnviarActaParaFirmar(contrato);
 
             if (contrato.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
-                return await ReplacePlantillaObra(pContratoId, pUserId, pEsContruccion);
+                return await ReplacePlantillaObra(contrato, pEsContruccion);
             else
-                return await ReplacePlantillaInterventoria(pContratoId, pUserId, pEsContruccion);
+                return await ReplacePlantillaInterventoria(contrato, pEsContruccion);
         }
 
-        public async Task<byte[]> ReplacePlantillaObra(int pContratoId, int pUserId, bool pEsContruccion)
+        public async Task<byte[]> ReplacePlantillaObra(Contrato contrato, bool pEsContruccion)
         {
             CultureInfo ci = new CultureInfo("es-MX");
-
-            Contrato contrato = await GetContratoByContratoId(pContratoId, pUserId);
 
             Plantilla plantilla = new Plantilla();
             if (pEsContruccion)
@@ -358,7 +354,7 @@ namespace asivamosffie.services
                    .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Contrato_Acta_Obra_Preconstruccion)
                    .ToString()).FirstOrDefaultAsync();
             }
-
+            //TODO: cuando se termine caso de uso usuario reemplazar este codigo
             Usuario Supervisor = contrato.UsuarioInterventoria;
 
             //Registros Proyectos 
@@ -447,13 +443,13 @@ namespace asivamosffie.services
             plantilla.Contenido = plantilla.Contenido.Replace("[CARGO]", " ");
             plantilla.Contenido = plantilla.Contenido.Replace("[CEDULA_REPRESENTANTE_LEGAL_CONTRATISTA_OBRA]", contrato?.Contratacion?.Contratista?.RepresentanteLegalNumeroIdentificacion);
             plantilla.Contenido = plantilla.Contenido.Replace("[CC_REPRESENTANTE_LEGAL]", contrato?.Contratacion?.Contratista?.RepresentanteLegalNumeroIdentificacion ?? " ");
-             
+
             return _registerSessionTechnicalCommitteeService.ConvertirPDF(plantilla);
         }
 
-        public async Task<byte[]> ReplacePlantillaInterventoria(int pContratoId, int pUserId, bool pEsContruccion)
+        public async Task<byte[]> ReplacePlantillaInterventoria(Contrato contrato, bool pEsContruccion)
         {
-            Contrato contrato = await GetContratoByContratoId(pContratoId, pUserId);
+
             Plantilla plantilla = new Plantilla();
             if (pEsContruccion)
             {
@@ -499,7 +495,6 @@ namespace asivamosffie.services
                     .Replace("[INSTITUCION_EDUCATIVA]", InstitucionEducativa == null ? "" : InstitucionEducativa.Nombre)
                     .Replace("[SEDE]", Sede.Nombre);
             }
-
 
             string MesesFase1 = string.Empty;
             string DiasFase1 = string.Empty;
@@ -559,7 +554,6 @@ namespace asivamosffie.services
             plantilla.Contenido = plantilla.Contenido.Replace("[CEDULA_REPRESENTANTE_LEGAL_CONTRATISTA_OBRA]", contrato?.Contratacion?.Contratista?.RepresentanteLegalNumeroIdentificacion);
             plantilla.Contenido = plantilla.Contenido.Replace("[CC_REPRESENTANTE_LEGAL]", contrato?.Contratacion?.Contratista?.RepresentanteLegalNumeroIdentificacion ?? " ");
 
-            //   return Helpers.PDF.Convertir(plantilla);
             return _registerSessionTechnicalCommitteeService.ConvertirPDF(plantilla);
         }
 
@@ -712,42 +706,33 @@ namespace asivamosffie.services
 
         }
 
-        public async Task GetEnviarActaParaFirmar(AppSettingsService appSettingsService, int ContratoId)
+        public async Task GetEnviarActaParaFirmar(Contrato contrato)
         {
-            List<Contrato> contratos = _context.Contrato.Where(r => r.ContratoId == ContratoId)
-                .Include(r => r.ContratoPoliza)
-                .Include(r => r.Contratacion)
-                   .ThenInclude(r => r.ContratacionProyecto)
-                .Include(r => r.Contratacion)
-                   .ThenInclude(r => r.DisponibilidadPresupuestal)
-                .ToList();
-
-            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Interventor || x.PerfilId == (int)EnumeratorPerfil.Supervisor || x.PerfilId == (int)EnumeratorPerfil.Apoyo).Include(y => y.Usuario);
             Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.EnviarActaParaFirmar319);
-            foreach (var contrato in contratos)
-            {
-                int Dias = 0, Meses = 0;
-                Dias = contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().PlazoDias ?? 0;
-                Meses = contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().PlazoMeses ?? 0;
 
-                string template = TemplateRecoveryPassword.Contenido
-                            .Replace("_LinkF_", appSettingsService.DominioFront)
-                            .Replace("[TIPO_CONTRATO]", contrato.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString() ? ConstanCodigoTipoContratacionSTRING.Obra : ConstanCodigoTipoContratacionSTRING.Interventoria)
-                            .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
-                            .Replace("[FECHA_PREVISTA_TERMINACION]", ((DateTime)contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().FechaSolicitud.AddDays(Dias).AddMonths(Meses)).ToString("dd-MM-yy"))
-                            .Replace("[FECHA_POLIZA]", ((DateTime)contrato.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MM-yy"))
-                            .Replace("[FECHA_ACTA_INICIO]", contrato.FechaActaInicioFase1.HasValue ? ((DateTime)contrato.FechaActaInicioFase1).ToString("dd-MM-yy") : " ")
-                            .Replace("[CANTIDAD_PROYECTOS]", contrato.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
+            int Dias = 0, Meses = 0;
+            Dias = contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().PlazoDias ?? 0;
+            Meses = contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().PlazoMeses ?? 0;
 
-                foreach (var item in usuarios)
-                {
-                    Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Generación de acta para fase 1 - Preconstrucción", template, appSettingsService.Sender, appSettingsService.Password, appSettingsService.MailServer, appSettingsService.MailPort);
-                }
+            TemplateRecoveryPassword.Contenido =
+                TemplateRecoveryPassword.Contenido
+                        .Replace("[TIPO_CONTRATO]", contrato.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString() ? ConstanCodigoTipoContratacionSTRING.Obra : ConstanCodigoTipoContratacionSTRING.Interventoria)
+                        .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
+                        .Replace("[FECHA_PREVISTA_TERMINACION]", ((DateTime)contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().FechaSolicitud.AddDays(Dias).AddMonths(Meses)).ToString("dd-MM-yyyy"))
+                        .Replace("[FECHA_POLIZA]", ((DateTime)contrato.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MM-yyyy"))
+                        .Replace("[FECHA_ACTA_INICIO]", contrato.FechaActaInicioFase1.HasValue ? ((DateTime)contrato.FechaActaInicioFase1).ToString("dd-MM-yyyy") : " ")
+                        .Replace("[CANTIDAD_PROYECTOS]", contrato.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
 
-            }
+            List<EnumeratorPerfil> enumeratorPerfilsEmails =
+                new List<EnumeratorPerfil>   {
+                                                  EnumeratorPerfil.Interventor,
+                                                  EnumeratorPerfil.Supervisor,
+                                                  EnumeratorPerfil.Apoyo
+                                            };
 
+            _commonService.EnviarCorreo(enumeratorPerfilsEmails, TemplateRecoveryPassword);
         }
-    }
 
+    }
 }
 

@@ -44,7 +44,7 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         AlertaJuridicaDerivadaCumplida4_4_1 = 51,
         EnviarActaCargada319 = 46,
-        Notificarinterventor = 48,
+        NotificarInterventor = 48,
         ObservacionesActaInicioFase2 = 50,
         NotificacionCompromisos = 53,
         msjAprobacion4_1_10 = 54,
