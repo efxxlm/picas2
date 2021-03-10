@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 using Z.EntityFramework.Plus;
 using Z.Expressions;
 
-namespace asivamosffie.services      
+namespace asivamosffie.services
 {
     /*
       PARAMETRICAS
@@ -256,7 +256,7 @@ namespace asivamosffie.services
                 List<ControversiaContractual> ListControversiasContractuales = _context.ControversiaContractual.ToList();
                 List<NovedadContractual> ListModificacionesContractuales = _context.NovedadContractual.ToList();
                 List<SesionParticipanteVoto> ListParticipanteVotos = _context.SesionParticipanteVoto.ToList();
-
+                List<ControversiaActuacion> ListControversiaActuacion = _context.ControversiaActuacion.ToList();
                 foreach (var item in ListComiteTecnico)
                 {
                     bool BorrarCompromisosFiduciarios = item.EsComiteFiduciario ?? false;
@@ -349,6 +349,18 @@ namespace asivamosffie.services
                                     .FirstOrDefault();
                             }
                         }
+                        if (SesionComiteSolicitudComiteTecnico.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales)
+                        {
+                            if (SesionComiteSolicitudComiteTecnico.SolicitudId > 0)
+                            {
+                                SesionComiteSolicitudComiteTecnico.ControversiaActuacion =
+                                    ListControversiaActuacion
+                                    .Where(r => r.ControversiaActuacionId == SesionComiteSolicitudComiteTecnico.SolicitudId)
+                                    .FirstOrDefault();
+                            }
+                        }
+
+
                         if (!string.IsNullOrEmpty(SesionComiteSolicitudComiteTecnico.EstadoCodigo))
                         {
                             SesionComiteSolicitudComiteTecnico.EstadoCodigo = ListParametricas
@@ -397,6 +409,16 @@ namespace asivamosffie.services
                                 SesionComiteSolicitudComiteTecnico.ModificacionContractual =
                                     ListModificacionesContractuales
                                     .Where(r => r.NovedadContractualId == SesionComiteSolicitudComiteTecnico.SolicitudId)
+                                    .FirstOrDefault();
+                            }
+                        }
+                        if (SesionComiteSolicitudComiteTecnico.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales)
+                        {
+                            if (SesionComiteSolicitudComiteTecnico.SolicitudId > 0)
+                            {
+                                SesionComiteSolicitudComiteTecnico.ControversiaActuacion =
+                                    ListControversiaActuacion
+                                    .Where(r => r.ControversiaActuacionId == SesionComiteSolicitudComiteTecnico.SolicitudId)
                                     .FirstOrDefault();
                             }
                         }
@@ -835,14 +857,14 @@ namespace asivamosffie.services
 
             if (pComiteTecnico.SesionComentario
                                            .Where(r => r.EstadoActaVoto == ConstantCodigoActas.Aprobada).Count()
-                                                                      == pComiteTecnico.SesionComentario.Count()) 
+                                                                      == pComiteTecnico.SesionComentario.Count())
                 EstadoActa = ConstantCodigoActas.Aprobada;
-             
+
             //Reiniciar los votos Cuando ya todos estan  
             if (EstadoActa == ConstantCodigoActas.Devuelta)
             {
                 List<SesionComentario> ListSesionComientario = _context.SesionComentario.Where(r => r.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId).ToList();
-                 
+
                 foreach (var SesionComientario in ListSesionComientario)
                 {
                     _context.Set<SesionComentario>()
@@ -853,7 +875,7 @@ namespace asivamosffie.services
                                                                                                    ValidacionVoto = false,
                                                                                                    FechaModificacion = DateTime.Now
                                                                                                });
-                } 
+                }
             }
             return EstadoActa;
         }
