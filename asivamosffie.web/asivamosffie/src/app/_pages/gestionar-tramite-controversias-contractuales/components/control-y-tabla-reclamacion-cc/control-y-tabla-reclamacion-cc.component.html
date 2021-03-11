@@ -27,7 +27,10 @@
 
             <ng-container matColumnDef="numReclamacion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de reclamación </th>
-                <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroActuacionReclamacion }} </td>
+                <td mat-cell *matCellDef="let element" align="center"> 
+                    <div *ngIf="element.numeroActuacionReclamacion==null">----</div>
+                    <div *ngIf="element.numeroActuacionReclamacion!=null">{{ element.numeroActuacionReclamacion }}</div> 
+                </td>
             </ng-container>
 
             <ng-container matColumnDef="estadoReclamacion">
@@ -46,7 +49,8 @@
                 <td mat-cell *matCellDef="let element">
                     <!---->
                     <button mat-raised-button color="accent" class="btn-table"
-                    *ngIf="element.estadoActuacionReclamacionCodigo=='5'"
+                    *ngIf="element.estadoActuacionReclamacionCodigo=='5' || 
+                    (element.estadoActuacionReclamacionCodigo=='2'&& element.registroCompletoReclamacion=='Completo'&& element.esRequiereComiteReclamacion==false)"
                         (click)="this.actualizarReclamacionAseguradora(element.actuacionId,element.numeroReclamacion)">
                         Actualizar reclamación ante la aseguradora
                     </button>
@@ -56,7 +60,8 @@
                         Registrar reclamación ante la aseguradora
                     </button>
                     <button mat-raised-button color="accent" class="btn-table"
-                        *ngIf="(element.estadoActuacionReclamacionCodigo=='2'&& element.registroCompletoReclamacion=='Completo') || element.estadoActuacionReclamacionCodigo=='4'"
+                        *ngIf="((element.estadoActuacionReclamacionCodigo=='2'&& element.registroCompletoReclamacion=='Completo') || element.estadoActuacionReclamacionCodigo=='4')
+                        && element.esRequiereComiteReclamacion==true"
                         (click)="this.enviarReclamacionComiteTecnico(element.actuacionId)">
                         Enviar reclamación a comité técnico
                     </button>
