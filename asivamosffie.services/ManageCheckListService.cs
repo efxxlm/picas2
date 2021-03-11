@@ -25,8 +25,10 @@ namespace asivamosffie.services
     {
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
-        public ManageCheckListService(devAsiVamosFFIEContext context)
+
+        public ManageCheckListService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
+            _commonService = commonService;
             _context = context;
         }
 
@@ -42,7 +44,7 @@ namespace asivamosffie.services
 
         public async Task<Respuesta> CreateEditItem(ListaChequeoItem pListaChequeoItem)
         {
-
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Create_Edit_Item_Lista_Chequeo, (int)EnumeratorTipoDominio.Acciones);
 
             try
             {
@@ -63,54 +65,74 @@ namespace asivamosffie.services
                                   FechaModificacion = DateTime.Now,
                                   UsuarioModificacion = pListaChequeoItem.UsuarioCreacion
                               });
-
                 }
                 return new Respuesta
                 {
                     IsSuccessful = true,
                     IsException = false,
                     IsValidation = false,
-                    Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
-                    //   Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, compromisoSeguimiento.UsuarioCreacion, strCrearEditar)
-
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_Lista_Chequeo, GeneralCodes.OperacionExitosa, idAccion, pListaChequeoItem.UsuarioCreacion, "CREAR EDITAR ITEM LISTA CHEQUEO")
                 };
             }
-            catch (Exception)
+
+            catch (Exception e)
             {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = GeneralCodes.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_Lista_Chequeo, GeneralCodes.Error, idAccion, pListaChequeoItem.UsuarioCreacion, e.InnerException.ToString())
+                };
+            } 
+        }
+
+        public async Task<Respuesta> CreateEditCheckList(ListaChequeo pListaChequeo)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Create_Edit_Item_Lista_Chequeo, (int)EnumeratorTipoDominio.Acciones);
+             
+            try
+            {
+                if (pListaChequeo.ListaChequeoId == 0)
+                {
+                    pListaChequeo.FechaCreacion = DateTime.Now;
+                    pListaChequeo.Eliminado = false;
+                    await _context.ListaChequeo.AddAsync(pListaChequeo);
+                }
+                else
+                {
+                    await _context.Set<ListaChequeo>()
+                            .Where(l => l.ListaChequeoId == pListaChequeo.ListaChequeoId)
+                            .UpdateAsync(l => new ListaChequeo
+                            {
+                                Nombre = pListaChequeo.Nombre,
+                                EstadoCodigo = pListaChequeo.EstadoCodigo,
+                                FechaModificacion = DateTime.Now,
+                                UsuarioModificacion = pListaChequeo.UsuarioCreacion
+                            });
+                }
                 return new Respuesta
                 {
                     IsSuccessful = true,
                     IsException = false,
                     IsValidation = false,
-                    Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
-                    //  Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, compromisoSeguimiento.UsuarioCreacion, strCrearEditar)
-
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_Lista_Chequeo, GeneralCodes.OperacionExitosa, idAccion, pListaChequeo.UsuarioCreacion, "CREAR EDITAR LISTA CHEQUEO")
                 };
             }
-
-        }
-
-        public async Task<Respuesta> CreateEditCheckList(ListaChequeo pListaChequeo)
-        {
-            if (pListaChequeo.ListaChequeoId == 0)
+            catch (Exception e)
             {
-                pListaChequeo.FechaCreacion = DateTime.Now;
-                pListaChequeo.Eliminado = false;
-                await _context.ListaChequeo.AddAsync(pListaChequeo);
-            }
-            else
-            {
-                await _context.Set<ListaChequeo>()
-                        .Where(l => l.ListaChequeoId == pListaChequeo.ListaChequeoId)
-                        .UpdateAsync(l => new ListaChequeo
-                        {
-                            Nombre = pListaChequeo.Nombre,
-                            EstadoCodigo = pListaChequeo.EstadoCodigo,
-                            FechaModificacion = DateTime.Now,
-                            UsuarioModificacion = pListaChequeo.UsuarioCreacion
-                        });
-            }
-            return new Respuesta();
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = GeneralCodes.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_Lista_Chequeo, GeneralCodes.Error, idAccion, pListaChequeo.UsuarioCreacion, e.InnerException.ToString())
+                };
+            } 
         }
 
         public async Task<ListaChequeoItem> GetListaChequeoItemByListaChequeoItemId(int ListaChequeoItemId)

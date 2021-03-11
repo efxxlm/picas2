@@ -144,8 +144,8 @@
         public const string Aprobar_Seguimiento_Diario = "172";
         public const string Devolver_Seguimiento_Diario = "173";
 
-        
-                
+
+
 
         public const string Eliminar_Contrato_Perfil = "83";
 
@@ -160,7 +160,7 @@
         public const string Eliminar_Numero_Radicado = "99";
 
         public const string Crear_Observacion_Contrato_Perfil = "100";
-        
+
 
         public const string Cambiar_Estado_Verificacion_Contrato = "103";
 
@@ -259,11 +259,11 @@
         public const string Crear_Actualizar_Solicitud_Pago_Observacion = "190";
         public const string Cambiar_Estado_Solicitud_Pago = "204";
         public const string Devolver_Solicitud_Pago = "205";
-        	
+
 
         //4.3.3 Generar Orden Giro
         public const string Crear_Editar_Orden_Giro = "201";
-        
+
         //4.4.3 registro de pagos    	
         public const string Validar_Excel_Registro_Pagos = "191";
         public const string Comentar_Pagos = "197";
@@ -277,7 +277,7 @@
         public const string Tramitar_Rendimientos = "200";
         public const string Notificar_Inconsistencias = "2001";
         public const string Notificar_Solicitud_Aprobacion = "2002";
-        
+
         //Informe final
         public const string Crear_Informe_Final = "192";
         public const string Crear_Editar_Informe_Final_Interventoria = "193";
@@ -300,6 +300,9 @@
         public const string Crear_Editar_Acta_Bienes_Servicios = "214";
 
         public const string Cambiar_Estado_Legitimacion_Defensa_Judicial = "216";
+
+        public const string Create_Edit_Item_Lista_Chequeo = "217";
+        public const string Create_Edit_Lista_Chequeo = "218";
 
     }
 }

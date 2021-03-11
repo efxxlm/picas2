@@ -228,8 +228,7 @@ namespace asivamosffie.services.Helpers.Constant
         public const string Error = "500";
         #endregion
     }
-
-
+     
     public class ConstantMessagesFuentesFinanciacion
     {
 
@@ -565,6 +564,7 @@ namespace asivamosffie.services.Helpers.Constant
         public const string Error = "500";
         #endregion
     }
+
     public class ConstantMessagesGenerateBudget
     {
 
@@ -610,8 +610,7 @@ namespace asivamosffie.services.Helpers.Constant
         public const string Error = "500";
         #endregion
     }
-
-
+     
     public class ConstantMessagesProcesoSeleccion
     {
         #region Mensajes Error

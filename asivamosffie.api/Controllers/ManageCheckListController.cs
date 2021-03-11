@@ -17,7 +17,7 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+ 
     public class ManageCheckListController : ControllerBase
     {
         public readonly IManageCheckListService _manageCheckListService;
@@ -35,6 +35,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
+                pListaChequeoItem.UsuarioCreacion = User.Identity.Name;
                 var result = await _manageCheckListService.CreateEditItem(pListaChequeoItem);
                 return Ok(result);
             }
@@ -50,6 +51,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
+                pListaChequeo.UsuarioCreacion = User.Identity.Name;
                 var result = await _manageCheckListService.CreateEditCheckList(pListaChequeo);
                 return Ok(result);
             }
@@ -73,8 +75,8 @@ namespace asivamosffie.api.Controllers
                 return BadRequest();
             }
         }
-        
-        [Route("GetListItem")]
+
+        [Route("GetCheckList")]
         [HttpGet]
         public async Task<IActionResult> GetCheckList()
         {
