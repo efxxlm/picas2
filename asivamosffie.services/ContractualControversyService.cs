@@ -1094,6 +1094,14 @@ namespace asivamosffie.services
                 {
                     actuacionSeguimientoOld.EstadoCodigo = pEstadoReclamacionCodigo;
                 }
+                if (actuacionSeguimientoOld.NumeroActuacionReclamacion == null && actuacionSeguimientoOld.EstadoAvanceTramiteCodigo == "14")
+                {
+                    int consecutivo = _context.ControversiaActuacion
+                                    .Where(r => r.ControversiaContractualId == actuacionSeguimientoOld.ControversiaContractualId
+                                    && actuacionSeguimientoOld.EstadoAvanceTramiteCodigo == "14")
+                                    .Count();
+                    actuacionSeguimientoOld.NumeroActuacionReclamacion = "REC " + (consecutivo + 1).ToString("000");
+                }
                 //actuacionSeguimientoOld.EstadoCodigo = pEstadoReclamacionCodigo;
 
                 _context.SaveChanges();
@@ -3164,8 +3172,9 @@ namespace asivamosffie.services
 
                         NumeroActuacion = controversia.NumeroActuacion,// "ACT controversia " + controversia.ControversiaActuacionId.ToString("000"),
 
-                        NumeroActuacionReclamacion = "REC " + controversia.ControversiaActuacionId.ToString("0000"),
+                        //NumeroActuacionReclamacion = "REC " + controversia.ControversiaActuacionId.ToString("0000"),
                         //NumeroActuacionReclamacion = controversia.EsCompletoReclamacion == null || !(bool)controversia.EsCompletoReclamacion ? "" : "REC 0001",
+                        NumeroActuacionReclamacion = controversia.NumeroActuacionReclamacion,
 
                         RegistroCompletoReclamacion = controversia.EsCompletoReclamacion == null ? "Incompleto" : (bool)controversia.EsCompletoReclamacion ? "Completo" : "Incompleto",
 
@@ -3222,6 +3231,15 @@ namespace asivamosffie.services
                     controversiaActuacionActual.EsRequiereComiteReclamacion = prmControversiaActuacion.EsRequiereComiteReclamacion;
                     controversiaActuacionActual.FechaModificacion = DateTime.Now;
                     controversiaActuacionActual.EsCompletoReclamacion = !string.IsNullOrEmpty(prmControversiaActuacion.ResumenPropuestaFiduciaria) && !string.IsNullOrEmpty(prmControversiaActuacion.RutaSoporte);
+
+                    if (controversiaActuacionActual.NumeroActuacionReclamacion == null && controversiaActuacionActual.EstadoAvanceTramiteCodigo == "14")
+                    {
+                        int consecutivo = _context.ControversiaActuacion
+                                        .Where(r => r.ControversiaContractualId == controversiaActuacionActual.ControversiaContractualId
+                                        && controversiaActuacionActual.EstadoAvanceTramiteCodigo == "14")
+                                        .Count();
+                        controversiaActuacionActual.NumeroActuacionReclamacion = "REC " + (consecutivo + 1).ToString("000");
+                    }
                     _context.ControversiaActuacion.Update(controversiaActuacionActual);
                     _context.SaveChanges();
 

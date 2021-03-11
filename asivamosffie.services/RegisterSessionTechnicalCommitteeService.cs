@@ -1032,6 +1032,16 @@ namespace asivamosffie.services
                     .Include( r => r.ControversiaContractual )
                     .OrderByDescending(r => r.ControversiaContractualId).ToList();
 
+
+                List<ControversiaActuacion> ListControversiasActuacionReclmacion = _context.ControversiaActuacion
+                    .Where(r => !(bool)r.Eliminado
+                    && r.EsRequiereComiteReclamacion == true
+                    && r.EstadoActuacionReclamacionCodigo == "3" //enviado a comite
+                    && r.FechaActuacion < pFechaOrdenDelDia
+                    )
+                    .Include(r => r.ControversiaContractual)
+                    .OrderByDescending(r => r.ControversiaContractualId).ToList();
+
                 List<DefensaJudicial> ListDefensaJudicial = _context.DefensaJudicial
                     .Where(r => !(bool)r.Eliminado
                     && r.FichaEstudio.FirstOrDefault().EsActuacionTramiteComite == true
@@ -1184,6 +1194,20 @@ namespace asivamosffie.services
                         tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales
                     });
                 };
+
+
+                foreach (var controversiaActuacion in ListControversiasActuacionReclmacion)
+                {
+                    ListValidacionSolicitudesContractualesGrilla.Add(new
+                    {
+                        Id = controversiaActuacion.ControversiaActuacionId,
+                        FechaSolicitud = Convert.ToDateTime(controversiaActuacion.FechaActuacion.Value.ToString("yyyy-MM-dd")),
+                        NumeroSolicitud = controversiaActuacion.ControversiaContractual.NumeroSolicitud + " - " + controversiaActuacion.NumeroActuacionReclamacion,
+                        TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales).FirstOrDefault().Nombre,
+                        tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales
+                    });
+                };
+                
 
                 foreach (var defensa in ListDefensaJudicial)
                 {
