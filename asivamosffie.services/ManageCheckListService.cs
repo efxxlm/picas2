@@ -50,11 +50,11 @@ namespace asivamosffie.services
             {
                 ListaChequeoItem ListaChequeoItem = _context.ListaChequeoItem.Where(r => r.ListaChequeoItemId == pListaChequeoItem.ListaChequeoItemId)
                     .Include(r => r.ListaChequeoListaChequeoItem)
-                       .ThenInclude(l=> l.ListaChequeo)
+                       .ThenInclude(l => l.ListaChequeo)
                                 .FirstOrDefault();
-                 
+
                 if (ListaChequeoItem.ListaChequeoListaChequeoItem
-                    .Any(l=> l.ListaChequeo.EstadoCodigo == ConstanCodigoEstadoListaChequeo.Activo_En_proceso 
+                    .Any(l => l.ListaChequeo.EstadoCodigo == ConstanCodigoEstadoListaChequeo.Activo_En_proceso
                           || l.ListaChequeo.EstadoCodigo == ConstanCodigoEstadoListaChequeo.Activo_Terminado))
                 {
                     return new Respuesta
@@ -66,12 +66,12 @@ namespace asivamosffie.services
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_Lista_Chequeo, GeneralCodes.InformacionDependiente, idAccion, pListaChequeoItem.UsuarioCreacion, "El registro del banco de requerimientos solo se puede desactivar si no esta asociada a una lista de chequeo activa.".ToUpper())
                     };
                 }
-                 
+
                 await _context.Set<ListaChequeoItem>()
                            .Where(l => l.ListaChequeoItemId == pListaChequeoItem.ListaChequeoItemId)
                                .UpdateAsync(l => new ListaChequeoItem
                                {
-                                   Activo = pListaChequeoItem.Activo,  
+                                   Activo = pListaChequeoItem.Activo,
                                    FechaModificacion = DateTime.Now,
                                    UsuarioModificacion = pListaChequeoItem.UsuarioCreacion
                                });
@@ -166,6 +166,8 @@ namespace asivamosffie.services
                     pListaChequeo.FechaCreacion = DateTime.Now;
                     pListaChequeo.Eliminado = false;
                     await _context.ListaChequeo.AddAsync(pListaChequeo);
+
+                    CreateEditListaChequeoListaChequeoItem(pListaChequeo);
                 }
                 else
                 {
@@ -177,7 +179,8 @@ namespace asivamosffie.services
                                 EstadoCodigo = pListaChequeo.EstadoCodigo,
                                 FechaModificacion = DateTime.Now,
                                 UsuarioModificacion = pListaChequeo.UsuarioCreacion
-                            });
+                            }); 
+                    CreateEditListaChequeoListaChequeoItem(pListaChequeo); 
                 }
                 return new Respuesta
                 {
@@ -199,6 +202,30 @@ namespace asivamosffie.services
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_Lista_Chequeo, GeneralCodes.Error, idAccion, pListaChequeo.UsuarioCreacion, e.InnerException.ToString())
                 };
             }
+        }
+
+        private void CreateEditListaChequeoListaChequeoItem(ListaChequeo pListaChequeo)
+        {
+            pListaChequeo.ListaChequeoListaChequeoItem
+                .ToList().ForEach(lclci =>
+                        {
+                            if (lclci.ListaChequeoListaChequeoItemId == 0)
+                            {
+                                lclci.UsuarioCreacion = pListaChequeo.UsuarioCreacion;
+                                lclci.FechaCreacion = DateTime.Now;
+                                lclci.Eliminado = false;
+                                _context.ListaChequeoListaChequeoItem.Add(lclci);
+                            }
+                            else
+                            {
+                                _context.Set<ListaChequeoListaChequeoItem>()
+                                    .Where(l => l.ListaChequeoListaChequeoItemId == lclci.ListaChequeoListaChequeoItemId)
+                                    .Update(lc => new ListaChequeoListaChequeoItem()
+                                    {
+                                        Eliminado = lclci.Eliminado
+                                    });
+                            }
+                        });
         }
 
         public async Task<ListaChequeoItem> GetListaChequeoItemByListaChequeoItemId(int ListaChequeoItemId)
