@@ -234,10 +234,6 @@ namespace asivamosffie.model.Models
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
             {
-                entity.Property(e => e.ActuacionAdelantada)
-                    .HasMaxLength(500)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.EstadoDerivadaCodigo)
@@ -258,14 +254,6 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaVencimiento).HasColumnType("datetime");
 
                 entity.Property(e => e.NumeroActuacionReclamacion).HasMaxLength(100);
-
-                entity.Property(e => e.Observaciones)
-                    .HasMaxLength(1000)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.ProximaActuacion)
-                    .HasMaxLength(500)
-                    .IsUnicode(false);
 
                 entity.Property(e => e.RutaSoporte)
                     .HasMaxLength(300)
