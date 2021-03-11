@@ -1540,11 +1540,21 @@ namespace asivamosffie.services
                         ActuacionSeguimiento actuacionSeguimientoBD = null;
                         actuacionSeguimientoBD = _context.ActuacionSeguimiento.Where(r => r.ActuacionSeguimientoId == actuacionSeguimiento.ActuacionSeguimientoId).FirstOrDefault();
 
-                        actuacionSeguimiento.Observaciones = Helpers.Helpers.CleanStringInput(actuacionSeguimiento.Observaciones);
+                        //actuacionSeguimiento.Observaciones = Helpers.Helpers.CleanStringInput(actuacionSeguimiento.Observaciones);
                         //actuacionSeguimiento.ConclusionComitePreTecnico = Helpers.Helpers.CleanStringInput(actuacionSeguimiento.ConclusionComitePreTecnico);
                         //ControversiaContractual.FechaCreacion = DateTime.Now;
                         //contratoPoliza.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
                         //contratoPoliza.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+
+                        actuacionSeguimientoBD.EstadoReclamacionCodigo = actuacionSeguimiento.EstadoReclamacionCodigo;
+                        actuacionSeguimientoBD.ActuacionAdelantada = actuacionSeguimiento.ActuacionAdelantada;
+                        actuacionSeguimientoBD.ProximaActuacion = actuacionSeguimiento.ProximaActuacion;
+                        actuacionSeguimientoBD.Observaciones = actuacionSeguimiento.Observaciones;
+                        actuacionSeguimientoBD.RutaSoporte = actuacionSeguimiento.RutaSoporte;
+                        actuacionSeguimientoBD.EsResultadoDefinitivo = actuacionSeguimiento.EsResultadoDefinitivo;
+                        actuacionSeguimientoBD.CantDiasVencimiento = actuacionSeguimiento.CantDiasVencimiento;
+                        actuacionSeguimientoBD.FechaActuacionAdelantada = actuacionSeguimiento.FechaActuacionAdelantada;
+                        actuacionSeguimientoBD.FechaVencimiento = actuacionSeguimiento.FechaVencimiento;
 
                         actuacionSeguimientoBD.RegistroCompleto = ValidarRegistroCompletoControversiaActuacionSeguimiento(actuacionSeguimientoBD);
                         actuacionSeguimientoBD.FechaModificacion = DateTime.Now;
