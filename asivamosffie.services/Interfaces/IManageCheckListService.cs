@@ -18,6 +18,8 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> CreateEditCheckList(ListaChequeo pListaChequeo);
 
+        Task<Respuesta> ActivateDeactivateListaChequeoItem(ListaChequeoItem pListaChequeoItem);
+
         Task<ListaChequeo> GetListaChequeoItemByListaChequeoId(int ListaChequeoId);
 
         Task<ListaChequeoItem> GetListaChequeoItemByListaChequeoItemId(int ListaChequeoItemId);

@@ -29,6 +29,22 @@ namespace asivamosffie.api.Controllers
             _settings = settings;
         }
 
+        [Route("ActivateDeactivateListaChequeoItem")]
+        [HttpPost]
+        public async Task<IActionResult> ActivateDeactivateListaChequeoItem([FromBody] ListaChequeoItem pListaChequeoItem)
+        {
+            try
+            {
+                pListaChequeoItem.UsuarioCreacion = User.Identity.Name;
+                var result = await _manageCheckListService.ActivateDeactivateListaChequeoItem(pListaChequeoItem);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+         
         [Route("CreateEditItem")]
         [HttpPost]
         public async Task<IActionResult> CreateEditItem([FromBody] ListaChequeoItem pListaChequeoItem)

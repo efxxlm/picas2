@@ -42,6 +42,62 @@ namespace asivamosffie.services
             return await _context.ListaChequeo.Where(c => c.Eliminado != true).OrderByDescending(o => o.ListaChequeoId).ToListAsync();
         }
 
+        public async Task<Respuesta> ActivateDeactivateListaChequeoItem(ListaChequeoItem pListaChequeoItem)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Activar_Desactivar_Lista_Chequeo, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                ListaChequeoItem ListaChequeoItem = _context.ListaChequeoItem.Where(r => r.ListaChequeoItemId == pListaChequeoItem.ListaChequeoItemId)
+                    .Include(r => r.ListaChequeoListaChequeoItem)
+                       .ThenInclude(l=> l.ListaChequeo)
+                                .FirstOrDefault();
+                 
+                if (ListaChequeoItem.ListaChequeoListaChequeoItem
+                    .Any(l=> l.ListaChequeo.EstadoCodigo == ConstanCodigoEstadoListaChequeo.Activo_En_proceso 
+                          || l.ListaChequeo.EstadoCodigo == ConstanCodigoEstadoListaChequeo.Activo_Terminado))
+                {
+                    return new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = GeneralCodes.InformacionDependiente,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_Lista_Chequeo, GeneralCodes.InformacionDependiente, idAccion, pListaChequeoItem.UsuarioCreacion, "El registro del banco de requerimientos solo se puede desactivar si no esta asociada a una lista de chequeo activa.".ToUpper())
+                    };
+                }
+                 
+                await _context.Set<ListaChequeoItem>()
+                           .Where(l => l.ListaChequeoItemId == pListaChequeoItem.ListaChequeoItemId)
+                               .UpdateAsync(l => new ListaChequeoItem
+                               {
+                                   Activo = pListaChequeoItem.Activo,  
+                                   FechaModificacion = DateTime.Now,
+                                   UsuarioModificacion = pListaChequeoItem.UsuarioCreacion
+                               });
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_Lista_Chequeo, GeneralCodes.OperacionExitosa, idAccion, pListaChequeoItem.UsuarioCreacion, "CREAR EDITAR ITEM LISTA CHEQUEO")
+                };
+            }
+            catch (Exception e)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = GeneralCodes.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_Lista_Chequeo, GeneralCodes.Error, idAccion, pListaChequeoItem.UsuarioCreacion, e.InnerException.ToString())
+                };
+            }
+        }
+
         public async Task<Respuesta> CreateEditItem(ListaChequeoItem pListaChequeoItem)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Create_Edit_Item_Lista_Chequeo, (int)EnumeratorTipoDominio.Acciones);
@@ -50,7 +106,7 @@ namespace asivamosffie.services
             {
                 //Validar si el ya existe Nombre
                 if (_context.ListaChequeoItem.Where(lc => lc.Nombre.Trim().ToUpper() == pListaChequeoItem.Nombre.Trim().ToUpper()).Count() > 0)
-                { 
+                {
                     return new Respuesta
                     {
                         IsSuccessful = true,
@@ -62,7 +118,7 @@ namespace asivamosffie.services
                 }
 
                 if (pListaChequeoItem.ListaChequeoItemId == 0)
-                { 
+                {
                     await _context.ListaChequeoItem.AddAsync(pListaChequeoItem);
                 }
                 else
