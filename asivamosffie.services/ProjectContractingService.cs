@@ -432,7 +432,7 @@ namespace asivamosffie.services
                     Contratacion.EstadoSolicitudCodigo = ListParametricas.Where(r => r.Codigo == Contratacion.EstadoSolicitudCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud).FirstOrDefault().Nombre;
 
 
-                if (string.IsNullOrEmpty(Contratacion?.ContratacionObservacion?.FirstOrDefault()?.Observacion))
+                if (!string.IsNullOrEmpty(Contratacion?.ContratacionObservacion?.FirstOrDefault()?.Observacion))
                 {
                     Contratacion.ObservacionNotMapped = Contratacion.ContratacionObservacion.FirstOrDefault().Observacion;
                 }
