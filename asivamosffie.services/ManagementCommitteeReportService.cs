@@ -22,7 +22,7 @@ namespace asivamosffie.services
       PARAMETRICAS
         1. Estado Compromisos -> TipoDominioId = 45 { Sin iniciar, En proceso, Finalizado}
     */
-     
+
     public class ManagementCommitteeReportService : IManagementCommitteeReportService
     {
         private readonly devAsiVamosFFIEContext _context;
@@ -217,7 +217,7 @@ namespace asivamosffie.services
 
             ListComiteTecnico.ForEach(l =>
             {
-                l.esVotoAprobado = l.SesionComentario.Where(r => r.MiembroSesionParticipanteId == pUserId && r.EstadoActaVoto == ConstantCodigoActas.Aprobada).Count() > 0 ? true : false;
+                l.esVotoAprobado = l.SesionComentario.Where(r => r.MiembroSesionParticipanteId == pUserId && r.ValidacionVoto == false && (r.EstadoActaVoto == ConstantCodigoActas.Aprobada || r.EstadoActaVoto == ConstantCodigoActas.Devuelta)).Count() > 0 ? true : false;
             });
             return ListComiteTecnico;
         }
@@ -271,12 +271,12 @@ namespace asivamosffie.services
                     {
                         if (SesionComiteTema.TemaCompromiso.Count() > 0)
                             SesionComiteTema.TemaCompromiso = SesionComiteTema.TemaCompromiso.Where(r => !(bool)r.Eliminado).ToList();
-                         
+
                         if (!string.IsNullOrEmpty(SesionComiteTema.ResponsableCodigo))
                             SesionComiteTema.ResponsableCodigo = ListParametricas
                                 .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Miembros_Comite_Tecnico && r.Codigo == SesionComiteTema.ResponsableCodigo)
                                 .FirstOrDefault().Nombre;
-                         
+
                         if (!string.IsNullOrEmpty(SesionComiteTema.EstadoTemaCodigo))
                             SesionComiteTema.EstadoTemaCodigo = ListParametricas
                                 .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Sesion_Comite_Solicitud && r.Codigo == SesionComiteTema.EstadoTemaCodigo)
@@ -390,7 +390,7 @@ namespace asivamosffie.services
                                     .Where(r => r.ControversiaActuacionId == SesionComiteSolicitudComiteTecnico.SolicitudId)
                                     .FirstOrDefault();
                             }
-                        } 
+                        }
                     }
 
                     foreach (var SesionComiteSolicitudComiteTecnico in item.SesionComiteSolicitudComiteTecnicoFiduciario)
@@ -474,7 +474,7 @@ namespace asivamosffie.services
                                     .Where(r => r.ControversiaActuacionId == SesionComiteSolicitudComiteTecnico.SolicitudId)
                                     .FirstOrDefault();
                             }
-                        } 
+                        }
                     }
                 }
 
@@ -548,39 +548,34 @@ namespace asivamosffie.services
         public async Task<Respuesta> CreateOrEditCommentReport(SesionComentario SesionComentario)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Comentario_Acta, (int)EnumeratorTipoDominio.Acciones);
-            ComiteTecnico comiteTecnicoOld = _context.ComiteTecnico.Find(SesionComentario.ComiteTecnicoId);
+            ComiteTecnico comiteTecnicoOld = _context.ComiteTecnico
+                .Where(r => r.ComiteTecnicoId == SesionComentario.ComiteTecnicoId)
+                .Include(sc => sc.SesionParticipante)
+                .Include(sc => sc.SesionComentario)
+                .FirstOrDefault();
             try
-            {
-                string strCrearEditar;
-                if (string.IsNullOrEmpty(SesionComentario.SesionComentarioId.ToString()) || SesionComentario.SesionComentarioId == 0)
+            { 
+                SesionComentario sesionComentario = new SesionComentario
                 {
-                    //Auditoria
-                    strCrearEditar = ConstantCommonMessages.COMENTAR_Y_DEVOLVER_ACTA;
-                    SesionComentario.Fecha = DateTime.Now;
-                    SesionComentario.FechaCreacion = DateTime.Now;
-                    SesionComentario.UsuarioCreacion = SesionComentario.UsuarioCreacion;
-
-                    _context.SesionComentario.Add(SesionComentario);
-                }
-                else
-                {
-                    strCrearEditar = ConstantCommonMessages.EDITAR_COMENTAR_ACTA;
-                    SesionComentario SesionComentarioAntiguo = _context.SesionComentario.Find(SesionComentario.SesionComentarioId);
-
-                    //Auditoria
-                    SesionComentarioAntiguo.UsuarioModificacion = SesionComentario.UsuarioModificacion;
-                    SesionComentarioAntiguo.FechaModificacion = DateTime.Now;
-
-                    //Registros
-                    SesionComentarioAntiguo.Fecha = SesionComentario.Fecha;
-                    SesionComentarioAntiguo.Observacion = SesionComentario.Observacion;
-                }
+                    Fecha = DateTime.Now,
+                    Observacion = SesionComentario.Observacion,
+                    FechaCreacion = DateTime.Now,
+                    UsuarioCreacion = SesionComentario.UsuarioCreacion,
+                    ComiteTecnicoId = SesionComentario.ComiteTecnicoId,
+                    MiembroSesionParticipanteId = SesionComentario.MiembroSesionParticipanteId,
+                    EstadoActaVoto = ConstantCodigoActas.Devuelta,
+                    ValidacionVoto = false
+                };
+                 
+                _context.SesionComentario.Add(sesionComentario);
+                 
+                _context.SaveChanges();
 
                 if ((bool)ValidarTodosVotacion(comiteTecnicoOld))
                 {
                     comiteTecnicoOld.EstadoActaCodigo = ValidarEstadoActaVotacion(comiteTecnicoOld);
                     comiteTecnicoOld.EsCompleto = false;
-                    //Validar sesionComentario 
+
                     foreach (var SesionComentarios in comiteTecnicoOld.SesionComentario)
                     {
                         SesionComentarios.ValidacionVoto = true;
@@ -594,7 +589,7 @@ namespace asivamosffie.services
                     IsValidation = false,
                     Data = SesionComentario,
                     Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, SesionComentario.UsuarioCreacion, strCrearEditar)
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, SesionComentario.UsuarioCreacion, "COMENTAR DEVOLVER ACTA")
 
                 };
             }
@@ -623,14 +618,16 @@ namespace asivamosffie.services
             string strCrearEditar = ConstantCommonMessages.APROBAR_ACTA;
             try
             {
-                ComiteTecnico comiteTecnico = await _context.ComiteTecnico.Where(r => r.ComiteTecnicoId == comiteTecnicoId)
+                ComiteTecnico comiteTecnico =
+                    await _context.ComiteTecnico.Where(r => r.ComiteTecnicoId == comiteTecnicoId)
                      .Include(r => r.SesionParticipante)
+                     .Include(sc => sc.SesionComentario)
                      .FirstOrDefaultAsync();
 
                 SesionComentario sesionComentario = new SesionComentario
                 {
                     Fecha = DateTime.Now,
-                    Observacion = ConstantCommonMessages.APROBADA_POR + pUser.Email,
+                    Observacion = ConstantCommonMessages.APROBADA_POR + pUser.Email.ToUpper(),
                     FechaCreacion = DateTime.Now,
                     UsuarioCreacion = pUser.Email,
                     ComiteTecnicoId = comiteTecnicoId,
@@ -640,8 +637,6 @@ namespace asivamosffie.services
                 };
                 _context.SesionComentario.Add(sesionComentario);
                 _context.SaveChanges();
-
-                comiteTecnico.SesionComentario = _context.SesionComentario.Where(r => r.ComiteTecnicoId == comiteTecnicoId && !(bool)r.ValidacionVoto).ToList();
 
                 //ValidarVotacion
                 if ((bool)ValidarTodosVotacion(comiteTecnico))
@@ -655,12 +650,11 @@ namespace asivamosffie.services
                         await EnviarActaAprobada(comiteTecnicoId, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
                         await NotificarCompromisos(comiteTecnicoId, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
                     }
-
-                    //Validar sesionComentario 
-                    foreach (var SesionComentario in comiteTecnico.SesionComentario)
+                    foreach (var SesionComentarios in comiteTecnico.SesionComentario)
                     {
-                        SesionComentario.ValidacionVoto = true;
+                        SesionComentarios.ValidacionVoto = true;
                     }
+
                     //valido si el comite tiene relacionado un proceso de selección, solo para fiduciario
                     if (comiteTecnico.TipoTemaFiduciarioCodigo != null)
                     {
@@ -827,10 +821,10 @@ namespace asivamosffie.services
 
                 bool blEnvioCorreo = false;
 
-                foreach (var sesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnico)
+                foreach (var sesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnico.Distinct())
                 {
                     sesionComiteSolicitud.SesionSolicitudCompromiso = sesionComiteSolicitud.SesionSolicitudCompromiso.Where(r => r.EsFiduciario != true).ToList();
-                    foreach (var sesionSolicitudCompromiso in sesionComiteSolicitud.SesionSolicitudCompromiso)
+                    foreach (var sesionSolicitudCompromiso in sesionComiteSolicitud.SesionSolicitudCompromiso.Distinct())
                     {
                         if (!string.IsNullOrEmpty(sesionSolicitudCompromiso?.ResponsableSesionParticipante?.Usuario?.Email))
                         {
@@ -848,10 +842,10 @@ namespace asivamosffie.services
                     }
                 }
 
-                foreach (var sesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario)
+                foreach (var sesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario.Distinct())
                 {
                     sesionComiteSolicitud.SesionSolicitudCompromiso = sesionComiteSolicitud.SesionSolicitudCompromiso.Where(r => r.EsFiduciario == true).ToList();
-                    foreach (var sesionSolicitudCompromiso in sesionComiteSolicitud.SesionSolicitudCompromiso)
+                    foreach (var sesionSolicitudCompromiso in sesionComiteSolicitud.SesionSolicitudCompromiso.Distinct())
                     {
                         if (!string.IsNullOrEmpty(sesionSolicitudCompromiso?.ResponsableSesionParticipante?.Usuario?.Email))
                         {
@@ -903,36 +897,21 @@ namespace asivamosffie.services
             string EstadoActa = ConstantCodigoActas.Devuelta;
 
             if (pComiteTecnico.SesionComentario
-                                           .Where(r => r.EstadoActaVoto == ConstantCodigoActas.Aprobada).Count()
-                                                                      == pComiteTecnico.SesionComentario.Count())
-                EstadoActa = ConstantCodigoActas.Aprobada;
+                                           .Where(r => r.EstadoActaVoto == ConstantCodigoActas.Aprobada && r.ValidacionVoto == false).Count()
+                                                                      == pComiteTecnico.SesionComentario.Where(r=> r.ValidacionVoto == false).Count())
+                EstadoActa = ConstantCodigoActas.Aprobada; 
 
-            //Reiniciar los votos Cuando ya todos estan  
-            if (EstadoActa == ConstantCodigoActas.Devuelta)
-            {
-                List<SesionComentario> ListSesionComientario = _context.SesionComentario.Where(r => r.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId).ToList();
-
-                foreach (var SesionComientario in ListSesionComientario)
-                {
-                    _context.Set<SesionComentario>()
-                                   .Where(s => s.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId)
-                                                                                               .Update(s => new SesionComentario
-                                                                                               {
-                                                                                                   EstadoActaVoto = string.Empty,
-                                                                                                   ValidacionVoto = false,
-                                                                                                   FechaModificacion = DateTime.Now
-                                                                                               });
-                }
-            }
             return EstadoActa;
         }
 
         private bool ValidarTodosVotacion(ComiteTecnico pComiteTecnico)
         {
             return (
-                pComiteTecnico.SesionParticipante
-                    .Count() == pComiteTecnico.SesionComentario
-                    .Where(r => r.EstadoActaVoto != null && !(bool)r.ValidacionVoto)
+                pComiteTecnico.SesionParticipante.Count()
+
+
+                == pComiteTecnico.SesionComentario
+                    .Where(r => r.EstadoActaVoto != null && r.ValidacionVoto != true)
                     .Select(r => r.MiembroSesionParticipanteId)
                     .Distinct().Count()
                 );
