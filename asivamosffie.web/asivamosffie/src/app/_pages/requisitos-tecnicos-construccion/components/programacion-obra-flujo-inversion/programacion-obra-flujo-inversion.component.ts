@@ -49,7 +49,7 @@ export class ProgramacionObraFlujoInversionComponent implements OnInit {
 
   openDialog (modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
-      width: '40em',
+      width: '28em',
       data : { modalTitle, modalText }
     });
   };

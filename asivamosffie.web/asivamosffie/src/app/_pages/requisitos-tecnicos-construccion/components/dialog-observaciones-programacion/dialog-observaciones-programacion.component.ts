@@ -75,14 +75,14 @@ export class DialogObservacionesProgramacionComponent implements OnInit {
   };
   openDialog (modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
-      width: '40em',
+      width: '28em',
       data : { modalTitle, modalText }
     });
   };
 
   guardar() {
     if ( this.formObservacion.get( 'observaciones' ).value === null ) {
-      this.openDialog( '', 'Falta registrar información.' );
+      this.openDialog( '', '<b>Falta registrar información.</b>' );
       return;
     };
     this.faseUnoConstruccionSvc.createEditObservacionesCarga( this.data.pArchivoCargueId, this.formObservacion.get( 'observaciones' ).value )
