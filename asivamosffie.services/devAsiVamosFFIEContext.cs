@@ -230,6 +230,8 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -7121,6 +7123,10 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false)
                     .HasComment("Contraseña del Usuario, campo cifrado");
 
+                entity.Property(e => e.DependenciaCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Eliminado)
                     .HasDefaultValueSql("((0))")
                     .HasComment("Indica que el usuario fue eliminado (0)Usuario vigente (1)Usuario Eliminado");
@@ -7131,9 +7137,13 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false)
                     .HasComment("Identificación de usuario definido por correo electrónico");
 
+                entity.Property(e => e.FechaCambioPassword).HasColumnType("datetime");
+
                 entity.Property(e => e.FechaCreacion)
                     .HasColumnType("datetime")
                     .HasComment("Fecha de creación del Usuario");
+
+                entity.Property(e => e.FechaExpiracion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion)
                     .HasColumnType("datetime")
@@ -7142,6 +7152,10 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaUltimoIngreso)
                     .HasColumnType("datetime")
                     .HasComment("Fecha que se registra y actualiza apenas ingresa el usuario al sistema.");
+
+                entity.Property(e => e.GrupoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.IntentosFallidos).HasComment("Cantidad de intentos de ingreso fallidos por contraseña.");
 
@@ -7154,6 +7168,10 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasComment("Ip proxy de la conexión del usuario");
+
+                entity.Property(e => e.MunicipioId)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NombreMaquina)
                     .HasMaxLength(100)
@@ -7170,10 +7188,25 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Observaciones)
-                    .HasMaxLength(400)
-                    .IsUnicode(false)
-                    .HasComment("Se incluyen algunas observaciones si las hay al momento de CRUD del usuario.");
+                entity.Property(e => e.Observaciones).HasMaxLength(1000);
+
+                entity.Property(e => e.ProcedenciaCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TelefonoCelular)
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TelefonoFijo)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoDocumentoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UrlSoporteDocumentacion).HasMaxLength(500);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
@@ -7184,6 +7217,11 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false)
                     .HasComment("Usuario que realizo la modificación de los datos no de auditoria");
+
+                entity.HasOne(d => d.Municipio)
+                    .WithMany(p => p.Usuario)
+                    .HasForeignKey(d => d.MunicipioId)
+                    .HasConstraintName("FK_Usuario_Municipio");
             });
 
             modelBuilder.Entity<UsuarioPerfil>(entity =>
