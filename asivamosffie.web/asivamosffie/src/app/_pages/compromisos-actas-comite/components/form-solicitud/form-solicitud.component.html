@@ -42,7 +42,12 @@
         </div>
         <div class="col" *ngIf="solicitudes.tipoSolicitudCodigo === tipoSolicitudCodigo.evaluacionProceso">
           <b class="label-left color-blue">
-            {{ solicitudes.numeroSolicitud }}
+            {{ solicitudes.procesoSeleccion.numeroProceso }}
+          </b>
+        </div>
+        <div class="col" *ngIf="solicitudes.tipoSolicitudCodigo === tipoSolicitudCodigo.ActuacionesControversias">
+          <b class="label-left color-blue">
+            {{ solicitudes.controversiaActuacion.controversiaContractual.numeroSolicitud }}
           </b>
         </div>
       </div>

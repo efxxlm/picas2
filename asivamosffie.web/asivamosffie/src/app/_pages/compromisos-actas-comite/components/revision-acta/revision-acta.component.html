@@ -104,6 +104,15 @@
                 </mat-panel-title>
               </mat-expansion-panel-header>
 
+              <mat-expansion-panel-header
+                class="expansion-style--header"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.ActuacionesControversias"
+              >
+                <mat-panel-title class="expansion-style--title sub-expansion">
+                  <b>Solicitud {{ sesionComite.controversiaActuacioncontroversiaContractual.numeroSolicitud }} </b>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+
               <app-form-solicitud [solicitudes]="sesionComite" [esComiteFiduciario]="false"></app-form-solicitud>
             </mat-expansion-panel>
           </mat-accordion>
@@ -158,7 +167,16 @@
                 *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.evaluacionProceso"
               >
                 <mat-panel-title class="expansion-style--title sub-expansion">
-                  <b>Solicitud {{ sesionComite.numeroSolicitud }} </b>
+                  <b>Solicitud {{ sesionComite.procesoSeleccion.numeroProceso }} </b>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+
+              <mat-expansion-panel-header
+                class="expansion-style--header"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.ActuacionesControversias"
+              >
+                <mat-panel-title class="expansion-style--title sub-expansion">
+                  <b>Solicitud {{ sesionComite.controversiaActuacion.controversiaContractual.numeroSolicitud }} </b>
                 </mat-panel-title>
               </mat-expansion-panel-header>
 
@@ -402,8 +420,7 @@
     </button>
   </div>
 
-  <!-- <div *ngIf="comentarActa"> -->
-  <div>
+  <div *ngIf="comentarActa">
     <form autocomplete="off" [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="d-flex mt-2em align-items-center animatedDown">
         <div

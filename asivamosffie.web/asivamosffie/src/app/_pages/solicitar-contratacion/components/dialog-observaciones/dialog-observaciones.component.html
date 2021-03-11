@@ -7,7 +7,7 @@
     Observaciones de la solicitud {{ data.numeroSolicitud }}
   </h1>
 
-  <mat-accordion>
+  <mat-accordion *ngIf="contratacionProyecto.length > 0">
     <mat-expansion-panel class="expansion-style" *ngFor="let contratacion of contratacionProyecto">
         <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title">
@@ -34,4 +34,13 @@
 
     </mat-expansion-panel>
   </mat-accordion>
+
+  <mat-card class="shipping-card w-80" *ngIf="contratacionProyecto.length === 0 && observacion !== undefined">
+    <mat-card-content class="h-modal scroll">
+
+      <section [innerHTML]="observacion" align="left" class="padding-section">
+      </section>
+
+    </mat-card-content>
+  </mat-card>
 </div>

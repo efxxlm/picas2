@@ -51,7 +51,8 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
     controversiaContractual: '4',
     defensaJudicial: '5',
     actualizacionProcesoSeleccion: '6',
-    evaluacionProceso: '7'
+    evaluacionProceso: '7',
+    ActuacionesControversias: '8'
   }
 
   constructor(private routes: Router,
@@ -123,8 +124,8 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
           }
         };
 
-        for (let participante of this.acta.sesionParticipante) {
-          this.miembrosParticipantes.push(`${participante.usuario.nombres} ${participante.usuario.apellidos}`);
+        for (let participante of this.acta.sesionParticipanteView) {
+          this.miembrosParticipantes.push(`${participante.nombres} ${participante.apellidos}`);
         };
 
         this.technicalCommitteeSessionSvc.getComiteTecnicoByComiteTecnicoId(this.activatedRoute.snapshot.params.id)

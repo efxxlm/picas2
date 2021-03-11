@@ -10,6 +10,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class DialogObservacionesComponent implements OnInit {
 
   contratacionProyecto: any;
+  observacion: string;
 
   constructor (
     @Inject(MAT_DIALOG_DATA) public data,
@@ -22,8 +23,8 @@ export class DialogObservacionesComponent implements OnInit {
     this.projectContractingSvc.getListContratacionObservacion( this.data.contratacionId )
       .subscribe(
         response => {
-          console.log( response );
           this.contratacionProyecto = response[ 'contratacionObservacion' ];
+          this.observacion = response[ 'observacionNotMapped' ];
         }
       );
   }

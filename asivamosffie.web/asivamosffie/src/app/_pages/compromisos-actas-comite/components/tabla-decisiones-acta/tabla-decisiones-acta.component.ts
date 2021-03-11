@@ -51,7 +51,6 @@ export class TablaDecisionesActaComponent implements OnInit {
           .subscribe( ( resp: any ) => {
             this.contratacion = resp;
             for ( let contratacion of resp.contratacionProyecto ) {
-              console.log( contratacion.contratacionObservacion );
               this.data.push( { contratacion: contratacion.proyectoGrilla, sesionSolicitudObservacionProyecto: contratacion.contratacionObservacion, tipoSolicitudCodigo: resp.tipoSolicitudCodigo } )
             }
             this.dataSource = new MatTableDataSource( this.data );
