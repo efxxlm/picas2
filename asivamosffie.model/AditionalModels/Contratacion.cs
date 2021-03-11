@@ -25,9 +25,6 @@ namespace asivamosffie.model.Models
         /*jflorez, dejo el notmapped en el nombre par no generar confusión*/
         [NotMapped]
         public DateTime? FechaComiteTecnicoNotMapped { get; set; }
-
-        [NotMapped]
-        public SesionComiteSolicitud SesionComiteSolicitud { get; set; }
          
         [NotMapped]
         public string ObservacionNotMapped { get; set; }

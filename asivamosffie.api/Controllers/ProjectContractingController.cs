@@ -14,7 +14,7 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+   
     public class ProjectContractingController : ControllerBase
     {
         private readonly IDocumentService _documentService;
