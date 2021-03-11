@@ -24,7 +24,7 @@ namespace asivamosffie.services
     public class ManageCheckListService : IManageCheckListService
     {
         private readonly devAsiVamosFFIEContext _context;
-
+        private readonly ICommonService _commonService;
         public ManageCheckListService(devAsiVamosFFIEContext context)
         {
             _context = context;
@@ -42,26 +42,52 @@ namespace asivamosffie.services
 
         public async Task<Respuesta> CreateEditItem(ListaChequeoItem pListaChequeoItem)
         {
-            if (pListaChequeoItem.ListaChequeoItemId == 0)
-            {
-                pListaChequeoItem.FechaCreacion = DateTime.Now;
-                pListaChequeoItem.Eliminado = false;
-                await _context.ListaChequeoItem.AddAsync(pListaChequeoItem);
-            }
-            else
-            {
-                await _context.Set<ListaChequeoItem>()
-                          .Where(l => l.ListaChequeoItemId == pListaChequeoItem.ListaChequeoItemId)
-                          .UpdateAsync(l => new ListaChequeoItem
-                          {
-                              Estado = pListaChequeoItem.Estado,
-                              Nombre = pListaChequeoItem.Nombre,
-                              FechaModificacion = DateTime.Now,
-                              UsuarioModificacion = pListaChequeoItem.UsuarioCreacion
-                          });
 
+
+            try
+            {
+                if (pListaChequeoItem.ListaChequeoItemId == 0)
+                {
+                    pListaChequeoItem.FechaCreacion = DateTime.Now;
+                    pListaChequeoItem.Eliminado = false;
+                    await _context.ListaChequeoItem.AddAsync(pListaChequeoItem);
+                }
+                else
+                {
+                    await _context.Set<ListaChequeoItem>()
+                              .Where(l => l.ListaChequeoItemId == pListaChequeoItem.ListaChequeoItemId)
+                              .UpdateAsync(l => new ListaChequeoItem
+                              {
+                                  Activo = pListaChequeoItem.Activo,
+                                  Nombre = pListaChequeoItem.Nombre,
+                                  FechaModificacion = DateTime.Now,
+                                  UsuarioModificacion = pListaChequeoItem.UsuarioCreacion
+                              });
+
+                }
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
+                    //   Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, compromisoSeguimiento.UsuarioCreacion, strCrearEditar)
+
+                };
             }
-            return new Respuesta();
+            catch (Exception)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
+                    //  Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, compromisoSeguimiento.UsuarioCreacion, strCrearEditar)
+
+                };
+            }
+
         }
 
         public async Task<Respuesta> CreateEditCheckList(ListaChequeo pListaChequeo)
@@ -89,7 +115,7 @@ namespace asivamosffie.services
 
         public async Task<ListaChequeoItem> GetListaChequeoItemByListaChequeoItemId(int ListaChequeoItemId)
         {
-              return await _context.ListaChequeoItem.FindAsync(ListaChequeoItemId);
+            return await _context.ListaChequeoItem.FindAsync(ListaChequeoItemId);
         }
 
         public async Task<ListaChequeo> GetListaChequeoItemByListaChequeoId(int ListaChequeoId)

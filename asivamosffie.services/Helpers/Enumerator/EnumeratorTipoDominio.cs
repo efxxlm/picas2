@@ -223,5 +223,8 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Respuestas_Lista_Chequeo_Solicitud_Pago = 162,
         Estado_Novedad_Contractual = 157,
+
+        //Lista de chequeo
+        Estados_Lista_Chequeo = 165,
     }
 }

@@ -64,7 +64,8 @@ namespace asivamosffie.services.Helpers.Enumerator
         VerificarInformeFinalProyecto = 69,
         ValidarInformeFinalProyecto = 72,
         ValidarCumplimientoInformeFinalProyecto = 73,
-        RegistrarTransferenciaProyectoETC = 74
+        RegistrarTransferenciaProyectoETC = 74,
+        Gestionar_Lista_Chequeo = 75
     }
 
     public enum enumeratorAccion
