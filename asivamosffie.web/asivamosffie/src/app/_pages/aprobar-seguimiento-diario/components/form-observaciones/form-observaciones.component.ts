@@ -59,11 +59,10 @@ export class FormObservacionesComponent {
     this.route.params.subscribe((params: Params) => {
       this.seguimientoId = params.id;
       console.log(this.seguimientoId, this.observacionObjeto, this.tieneObservaciones);
-
+      this.estaEditando = true;
+      this.addressForm.markAllAsTouched();
       this.addressForm.get('observacion').setValue(this.observacionObjeto ? this.observacionObjeto.observaciones : null);
       this.addressForm.get('tieneObservaciones').setValue(this.tieneObservaciones);
-
-
     });
   }
 

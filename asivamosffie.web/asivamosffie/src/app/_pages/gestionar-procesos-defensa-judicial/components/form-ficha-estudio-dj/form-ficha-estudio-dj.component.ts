@@ -68,6 +68,8 @@ export class FormFichaEstudioDjComponent implements OnInit {
       console.log(this.tipoProceso);      
       if(this.defensaJudicial.fichaEstudio.length>0)
       {
+        this.estaEditando = true;
+        this.addressForm.markAllAsTouched();
         console.log("Nuevos campos: ",this.defensaJudicial.fichaEstudio[0]);
         this.addressForm.get("fichaEstudioId").setValue(this.defensaJudicial.fichaEstudio[0].fichaEstudioId);
         this.addressForm.get("defensaJudicialId").setValue(this.defensaJudicial.fichaEstudio[0].defensaJudicialId);

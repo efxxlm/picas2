@@ -55,6 +55,8 @@ export class FormDetalleProcesoDjComponent implements OnInit {
   }
 
   cargarRegistro() {    
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
       this.addressForm.get("tipoAccion").setValue(this.defensaJudicial.tipoAccionCodigo);
       this.addressForm.get("jurisdiccion").setValue(this.defensaJudicial.jurisdiccionCodigo);
       this.addressForm.get("pretensiones").setValue(this.defensaJudicial.pretensiones);

@@ -52,6 +52,8 @@ export class FormConvocadosPasivaDjComponent implements OnInit {
   }
   cargarRegistro() {
     console.log(this.defensaJudicial.numeroDemandados);
+    this.estaEditando = true;
+    this.formContratista.markAllAsTouched();
     this.formContratista.get("numeroContratos").setValue(this.defensaJudicial.numeroDemandados);
       let i=0; 
 
@@ -64,6 +66,7 @@ export class FormConvocadosPasivaDjComponent implements OnInit {
 
       listaConvocados.forEach(element => {
           console.log(this.perfiles.controls[i].get("nomConvocado"));
+          this.perfiles.controls[i].markAllAsTouched();
           this.perfiles.controls[i].get("demandadoConvocadoId").setValue(element.demandadoConvocadoId);
           this.perfiles.controls[i].get("nomConvocado").setValue(element.nombre);
           this.perfiles.controls[i].get("tipoIdentificacion").setValue(element.tipoIdentificacionCodigo);
@@ -201,6 +204,7 @@ export class FormConvocadosPasivaDjComponent implements OnInit {
   guardar () {
     this.estaEditando = true;
     this.formContratista.markAllAsTouched();
+    this.perfiles.markAllAsTouched();
     console.log( this.formContratista );
     let defContraProyecto:DemandadoConvocado[]=[];
     for(let perfil of this.perfiles.controls){

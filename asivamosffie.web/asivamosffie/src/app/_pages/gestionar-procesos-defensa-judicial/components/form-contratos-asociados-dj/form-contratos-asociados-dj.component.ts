@@ -63,7 +63,9 @@ export class FormContratosAsociadosDjComponent implements OnInit {
       console.log(this.legitimacion);
       console.log(this.tipoProceso);
       if(Object.keys(this.defensaJudicial).length>0)
-      {
+      { 
+        this.estaEditando = true;
+        this.formContratista.markAllAsTouched();
         this.formContratista.get( 'numeroContratos' ).setValue(this.defensaJudicial.cantContratos);
 
         let listaContratos:any[]= [];

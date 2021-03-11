@@ -30,6 +30,8 @@ export class FormUrlsoporteDjComponent implements OnInit {
   @Input() defensaJudicial:DefensaJudicial;
   cargarRegistro() {
     //this.ngOnInit().then(() => {
+      this.estaEditando = true;
+      this.addressForm.markAllAsTouched();
       console.log(this.defensaJudicial.urlSoporteProceso);
       this.addressForm.get("urlSoporte").setValue(this.defensaJudicial.urlSoporteProceso);  
   }

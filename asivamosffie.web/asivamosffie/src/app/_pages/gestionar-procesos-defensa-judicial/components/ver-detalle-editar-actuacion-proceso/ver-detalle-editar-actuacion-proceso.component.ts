@@ -47,7 +47,9 @@ export class VerDetalleEditarActuacionProcesoComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe( param => {
-      this.controlJudicialId = param['id'];
+      this.controlJudicialId = param['id'];    
+      this.estaEditando = true;
+      this.addressForm.markAllAsTouched();
       this.judicialServices.GetDefensaJudicialById(this.controlJudicialId).subscribe(respose=>{
         this.defensaJudicial=respose;
       });

@@ -152,6 +152,8 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
   }
 
   editMode(){
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     this.dailyFollowUpService.getDailyFollowUpById( this.seguimientoId )
       .subscribe( seguimiento => {
 
@@ -230,6 +232,7 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
   onSubmit() {
     //console.log(this.addressForm.value);
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let values = this.addressForm.value;
 
     let seguimiento: SeguimientoDiario = {

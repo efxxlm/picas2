@@ -60,6 +60,8 @@ export class VerdetalleeditAvanceActuaDerivadasComponent implements OnInit {
         }
       );
       this.conServices.GetSeguimientoActuacionDerivadabyId(this.actuacionDerivadaID).subscribe((data:any)=>{
+        this.estaEditando = true;
+        this.addressForm.markAllAsTouched();
         this.actuacionDerivadaInfo = data;
         this.addressForm.get('fechaActuacionDerivada').setValue(data.fechaActuacionDerivada);
         this.addressForm.get('descripcionActuacionAdelantada').setValue(data.descripciondeActuacionAdelantada);
@@ -91,6 +93,7 @@ export class VerdetalleeditAvanceActuaDerivadasComponent implements OnInit {
   }
   onSubmit() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let obj={
       seguimientoActuacionDerivadaId:this.actuacionDerivadaInfo.seguimientoActuacionDerivadaId,
       controversiaActuacionId:this.controversia.controversiaActuacionId,

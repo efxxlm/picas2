@@ -113,6 +113,7 @@ export class RegistrarAvanceActuaDerivadasComponent implements OnInit {
   }
   onSubmit() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let obj={
       seguimientoActuacionDerivadaId:this.actuacionDerivadaID,
       controversiaActuacionId:this.controversia.controversiaActuacionId,

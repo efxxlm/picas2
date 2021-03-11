@@ -43,6 +43,9 @@ export class FormDemandadosDjComponent implements OnInit {
   }
 
   cargarRegistro() {
+    this.estaEditando = true;
+    this.formContratista.markAllAsTouched();
+    
       this.formContratista.get("numeroContratos").setValue(this.defensaJudicial.numeroDemandados);
       let i=0;  
       
@@ -54,6 +57,7 @@ export class FormDemandadosDjComponent implements OnInit {
       });
 
       listaDemandado.forEach(element => {
+          this.perfiles.controls[i].markAllAsTouched();
           this.perfiles.controls[i].get("demandadoConvocadoId").setValue(element.demandadoConvocadoId);
           this.perfiles.controls[i].get("nomConvocado").setValue(element.nombre);
           this.perfiles.controls[i].get("tipoIdentificacion").setValue(element.tipoIdentificacionCodigo);
@@ -146,6 +150,7 @@ export class FormDemandadosDjComponent implements OnInit {
   guardar () {
     this.estaEditando = true;
     this.formContratista.markAllAsTouched();
+    this.perfiles.markAllAsTouched();
     // console.log( this.formContratista );
     let defContraProyecto:DemandadoConvocado[]=[];
     for(let perfil of this.perfiles.controls){
