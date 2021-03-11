@@ -21,12 +21,13 @@ export class VerDetalleRegistroComponent implements OnInit {
   ) 
   { 
     if (this.router.getCurrentNavigation().extras.replaceUrl) {
-      this.router.navigateByUrl('/aprobarSeguimientoDiario');
+      this.router.navigateByUrl('/registroSeguimientoDiario');
       return;
     };
 
     if (this.router.getCurrentNavigation().extras.state)
       this.proyecto = this.router.getCurrentNavigation().extras.state.proyecto;
+      console.log( this.proyecto )
   }
 
   ngOnInit(): void {
@@ -44,7 +45,8 @@ export class VerDetalleRegistroComponent implements OnInit {
   }
 
   volver(){
-    this.router.navigate(['/registroSeguimientoDiario/verBitacora', this.seguimiento.contratacionProyectoId]);
+    //this.router.navigate(['/registroSeguimientoDiario/verBitacora', this.proyecto.contratacionProyectoId]);
+    this.router.navigate( [ '/registroSeguimientoDiario/verBitacora', this.proyecto.contratacionProyectoId ], { state: { proyecto: this.proyecto } } )
   }
 
   innerObservacion ( observacion: string ) {

@@ -76,6 +76,10 @@ export class TablaRegistroSeguimientoDiarioComponent implements AfterViewInit {
     this.router.navigate( [ '/registroSeguimientoDiario/verDetalle', proyecto.seguimientoDiarioId ? proyecto.seguimientoDiarioId : 0 ], { state: { proyecto } } )
   }
 
+  VerBitacora( proyecto ){
+    this.router.navigate( [ '/registroSeguimientoDiario/verBitacora', proyecto.contratacionProyectoId ], { state: { proyecto } } )
+  }
+
   openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
       width: '28em',
