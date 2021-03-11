@@ -86,6 +86,8 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
     let lista: any[] = [];
     if (this.isEditable == true) {
       //this.loadtipoControversias();
+      this.estaEditando = true;
+      this.addressForm.markAllAsTouched();
       this.services.GetControversiaContractualById(this.idControversia).subscribe((resp: any) => {
         for (let i = 0; i < this.tipoControversiaArrayDom.length; i++) {
           const controversiaSelected = this.tipoControversiaArrayDom.find(p => p.codigo == resp.tipoControversiaCodigo);

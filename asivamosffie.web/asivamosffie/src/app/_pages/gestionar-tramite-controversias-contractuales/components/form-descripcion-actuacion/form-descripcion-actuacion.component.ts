@@ -75,6 +75,8 @@ export class FormDescripcionActuacionComponent implements OnInit {
       this.proximaActuacionRequeridaArrayDom = rep2;
     });
     if (this.isEditable == true) {
+      this.estaEditando = true;
+      this.addressForm.markAllAsTouched();
       this.services.GetControversiaActuacionById(this.idActuacionFromEdit).subscribe((data: any) => {
         for (let i = 0; i < this.estadoAvanceTramiteArrayDom.length; i++) {
           const avanceTramSelected = this.estadoAvanceTramiteArrayDom.find(t => t.codigo === data.estadoAvanceTramiteCodigo);

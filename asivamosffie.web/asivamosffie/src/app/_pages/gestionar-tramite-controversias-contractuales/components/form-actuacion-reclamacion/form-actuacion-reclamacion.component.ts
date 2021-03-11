@@ -49,6 +49,8 @@ export class FormActuacionReclamacionComponent implements OnInit {
       this.estadoAvanceTramiteArrayDom = rep;
     });
     if (this.isEditable == true) {
+      this.estaEditando = true;
+      this.addressForm.markAllAsTouched();
       this.services.GetActuacionSeguimientoById(this.idReclamacionActuacion).subscribe((data: any) => {
         for (let i = 0; i < this.estadoAvanceTramiteArrayDom.length; i++) {
           const avanceTramSelected = this.estadoAvanceTramiteArrayDom.find(t => t.codigo === data.estadoReclamacionCodigo);

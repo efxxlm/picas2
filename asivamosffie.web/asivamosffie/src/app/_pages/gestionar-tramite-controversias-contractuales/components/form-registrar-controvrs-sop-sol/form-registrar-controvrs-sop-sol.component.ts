@@ -23,6 +23,8 @@ export class FormRegistrarControvrsSopSolComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.isEditable == true) {
+      this.estaEditando = true;
+      this.addressForm.markAllAsTouched();
       this.services.GetControversiaContractualById(this.idControversia).subscribe((resp: any) => {
         console.log(resp.rutaSoporte);
         this.addressForm.get('urlSoporte').setValue(resp.rutaSoporte);

@@ -57,6 +57,8 @@ export class FormRegistrarMesaDeTrabajoActComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.isEditable == true) {
+      this.estaEditando = true;
+      this.addressForm.markAllAsTouched();
       this.services.GetActuacionMesaByActuacionMesaId(this.idSeguimientoMesa).subscribe((resp: any) => {
         for (let i = 0; i < this.estadoAvanceTramiteArray.length; i++) {
           const estadoAvanceTramiteSelected = this.estadoAvanceTramiteArray.find(p => p.codigo === resp.estadoAvanceMesaCodigo);
