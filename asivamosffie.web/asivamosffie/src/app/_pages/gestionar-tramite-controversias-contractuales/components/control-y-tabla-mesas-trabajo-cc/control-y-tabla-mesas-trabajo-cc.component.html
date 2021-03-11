@@ -49,7 +49,7 @@
                         (click)="this.registrarNuevaMesa(element.actuacionId)">
                         Registrar nueva mesa de trabajo
                     </button>
-                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoMesa=='1' && element.registroCompletoReclamacion=='Completo'"
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoMesa=='1' && element.registroCompletoMesa=='Completo'"
                         (click)="this.finalizarMesaTrabajo(element.actuacionId)">
                         Registrar mesa de trabajo
                     </button>
@@ -59,7 +59,7 @@
                     </button>
                     <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoMesa=='2'"
                         (click)="this.actualizarMesaTrabajo(element.actuacionId,element.numeroMesa,element.mesaId)">
-                        Actualizar mesa de trabajo
+                        Registrar nueva mesa de trabajo
                     </button>
                     <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoMesa=='2'"
                         (click)="this.verDetalleMesaTrabajo(element.actuacionId,element.numeroMesa,element.mesaId)">
