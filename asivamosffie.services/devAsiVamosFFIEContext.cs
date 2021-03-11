@@ -231,7 +231,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -3131,13 +3130,19 @@ namespace asivamosffie.model.Models
                     .HasName("Index_Nombre")
                     .IsUnique();
 
-                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+                entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.FechaCreacion)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.Nombre)
                     .IsRequired()
-                    .HasMaxLength(1000);
+                    .HasMaxLength(1500);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(250)

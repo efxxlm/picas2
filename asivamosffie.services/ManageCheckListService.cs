@@ -48,10 +48,21 @@ namespace asivamosffie.services
 
             try
             {
+                //Validar si el ya existe Nombre
+                if (_context.ListaChequeoItem.Where(lc => lc.Nombre.Trim().ToUpper() == pListaChequeoItem.Nombre.Trim().ToUpper()).Count() > 0)
+                { 
+                    return new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = GeneralCodes.RegistroDuplicado,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_Lista_Chequeo, GeneralCodes.RegistroDuplicado, idAccion, pListaChequeoItem.UsuarioCreacion, "REGISTRO DUPLICADO")
+                    };
+                }
+
                 if (pListaChequeoItem.ListaChequeoItemId == 0)
-                {
-                    pListaChequeoItem.FechaCreacion = DateTime.Now;
-                    pListaChequeoItem.Eliminado = false;
+                { 
                     await _context.ListaChequeoItem.AddAsync(pListaChequeoItem);
                 }
                 else
@@ -75,7 +86,6 @@ namespace asivamosffie.services
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_Lista_Chequeo, GeneralCodes.OperacionExitosa, idAccion, pListaChequeoItem.UsuarioCreacion, "CREAR EDITAR ITEM LISTA CHEQUEO")
                 };
             }
-
             catch (Exception e)
             {
                 return new Respuesta
@@ -86,13 +96,13 @@ namespace asivamosffie.services
                     Code = GeneralCodes.Error,
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_Lista_Chequeo, GeneralCodes.Error, idAccion, pListaChequeoItem.UsuarioCreacion, e.InnerException.ToString())
                 };
-            } 
+            }
         }
 
         public async Task<Respuesta> CreateEditCheckList(ListaChequeo pListaChequeo)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Create_Edit_Item_Lista_Chequeo, (int)EnumeratorTipoDominio.Acciones);
-             
+
             try
             {
                 if (pListaChequeo.ListaChequeoId == 0)
@@ -132,7 +142,7 @@ namespace asivamosffie.services
                     Code = GeneralCodes.Error,
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_Lista_Chequeo, GeneralCodes.Error, idAccion, pListaChequeo.UsuarioCreacion, e.InnerException.ToString())
                 };
-            } 
+            }
         }
 
         public async Task<ListaChequeoItem> GetListaChequeoItemByListaChequeoItemId(int ListaChequeoItemId)

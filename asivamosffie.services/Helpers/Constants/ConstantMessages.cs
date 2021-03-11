@@ -903,7 +903,7 @@ namespace asivamosffie.services.Helpers.Constant
 
         public const string NoExitenArchivos = "100";
         public const string CamposVacios = "101";
-
+        public const string RegistroDuplicado = "102";
         #endregion Mensajes Informativos
 
         #region Mensajes Exitoso
