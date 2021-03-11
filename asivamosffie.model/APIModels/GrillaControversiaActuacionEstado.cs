@@ -33,6 +33,8 @@ namespace asivamosffie.model.APIModels
         public string RegistroCompletoMesa { get; set; }
         public string EstadoActuacionGeneral { get; set; }
         public string EstadoActuacionCodigoGeneral { get; set; }
+        public bool? RequiereComite { get; set; }
+
 
     }
 }

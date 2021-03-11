@@ -2735,6 +2735,7 @@ namespace asivamosffie.services
                         EstadoAvanceTramite = listaDominioAvanceTramiteActuacion.Where(r => r.Codigo == controversia.EstadoAvanceTramiteCodigo)?.FirstOrDefault()?.Nombre,
                         EstadoAvanceTramiteCodigo = controversia.EstadoAvanceTramiteCodigo,
                         RequiereMesaTrabajo = controversia.EsRequiereMesaTrabajo,
+                        RequiereComite = controversia.EsRequiereComite,
 
                     };
 
@@ -3266,7 +3267,12 @@ namespace asivamosffie.services
                     prmMesa.FechaActuacionAdelantada == null ||
                     string.IsNullOrEmpty(prmMesa.ProximaActuacionRequerida) ||
                     string.IsNullOrEmpty(prmMesa.Observaciones) ||
-                    string.IsNullOrEmpty(prmMesa.RutaSoporte))
+                    string.IsNullOrEmpty(prmMesa.RutaSoporte) ||
+                    prmMesa.CantDiasVencimiento == null ||
+                    prmMesa.FechaVencimiento == null ||
+                    string.IsNullOrEmpty(prmMesa.Observaciones) ||
+                    prmMesa.ResultadoDefinitivo == null ||
+                    string.IsNullOrEmpty(prmMesa.EstadoAvanceMesaCodigo))
                 {
                     escompleto = false;
                 }
