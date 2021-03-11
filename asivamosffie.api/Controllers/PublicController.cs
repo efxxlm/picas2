@@ -68,25 +68,43 @@ namespace asivamosffie.api.Controllers
 
 
         #region Seguimiento Semanal 
-        /// <summary>
-        /// JMARTINEZ SEGUIMIENTO SEMANAL
-        /// Cuando no se realiza seguimiento semanal por mas de 1 semana
-        /// </summary>
-        [HttpGet("SendEmailWhenNoWeeklyProgress")]
+        ///4.1.12
+        [HttpGet("GetSendEmailWhenNoWeeklyProgress")]
         public async Task SendEmailWhenNoWeeklyProgress()
         {
             try
-            { 
+            {
                 await _registerWeeklyProgressService.SendEmailWhenNoWeeklyProgress();
             }
             catch (Exception ex)
-            { 
+            {
             }
-        } 
+        }
+        ///4.1.20
+        [HttpGet("GetSendEmailWhenNoWeeklyValidate")]
+        public async Task SendEmailWhenNoWeeklyValidate()
+        {
+            try
+            {
+                await _registerWeeklyProgressService.SendEmailWhenNoWeeklyValidate();
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+        ///4.1.21
+        [HttpGet("GetSendEmailWhenNoWeeklyAproved")]
+        public async Task SendEmailWhenNoWeeklyAproved()
+        {
+            try
+            {
+                await _registerWeeklyProgressService.SendEmailWhenNoWeeklyAproved();
+            }
+            catch (Exception ex)
+            {
+            }
+        }
         #endregion
-
-
-
 
         #region PreConstruccion
         /// <summary>

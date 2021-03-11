@@ -46,6 +46,7 @@ namespace asivamosffie.services
                     _context.Set<SeguimientoSemanal>().Where(s => s.SeguimientoSemanalId == pSeguimientoSemanalId)
                                                    .Update(s => new SeguimientoSemanal
                                                    {
+                                                       FechaModificacionAvalar = DateTime.Now,
                                                        RegistroCompletoAvalar = RegistroCompleto
                                                    });
                 }
@@ -54,6 +55,7 @@ namespace asivamosffie.services
                     _context.Set<SeguimientoSemanal>().Where(s => s.SeguimientoSemanalId == pSeguimientoSemanalId)
                                                   .Update(s => new SeguimientoSemanal
                                                   {
+                                                      FechaModificacionVerificar = DateTime.Now,
                                                       RegistroCompletoVerificar = RegistroCompleto
                                                   });
                 }
@@ -1468,12 +1470,12 @@ namespace asivamosffie.services
 
         private bool CompleteRecordObservation(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion)
         {
-            if (pSeguimientoSemanalObservacion.TieneObservacion == true && string.IsNullOrEmpty(pSeguimientoSemanalObservacion.Observacion))
-                return false;
-
             if (pSeguimientoSemanalObservacion.TieneObservacion == false)
                 return true;
 
+            if (pSeguimientoSemanalObservacion.TieneObservacion == true && string.IsNullOrEmpty(pSeguimientoSemanalObservacion.Observacion))
+                return false;
+             
             if (pSeguimientoSemanalObservacion.TieneObservacion == true && !string.IsNullOrEmpty(Helpers.Helpers.HtmlConvertirTextoPlano(Helpers.Helpers.HtmlConvertirTextoPlano(pSeguimientoSemanalObservacion.Observacion))))
                 return true;
 
@@ -1501,8 +1503,7 @@ namespace asivamosffie.services
 
             return pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
         }
-
-        //TODO : VAlidar EXCEPTIONS
+         
         private void CreateOrEditObservacionGestionObra(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion)
         {
             throw new NotImplementedException();

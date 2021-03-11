@@ -65,7 +65,13 @@ namespace asivamosffie.services.Helpers.Enumerator
         Alerta_Automatica_5_Dias = 62,
         AprobarRequisitosTecnicosFase2 = 76,
         DevolverConObservacionesFase2 = 77,
+        //4.1.12
         Seguimiento_Semanal_Completo = 79,
         Sin_Seguimiento_Semanal_X_Una_Semana = 80,
+        //4.1.20
+        Enviar_Supervisor_4_1_20 = 83,
+        Alerta_4_1_20 = 84,
+        //4.1.21
+        Alerta_4_1_21 = 85, 
     }
 }

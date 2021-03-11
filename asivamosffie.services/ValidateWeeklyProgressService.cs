@@ -47,7 +47,7 @@ namespace asivamosffie.services
                 seguimientoSemanal.UsuarioModificacion = pUsuarioMod;
                 seguimientoSemanal.FechaModificacion = DateTime.Now;
             
-                seguimientoSemanal.FechaEnvioSupervisor = null; 
+                seguimientoSemanal.FechaRegistroCompletoInterventor = null; 
                 seguimientoSemanal.RegistroCompleto = false;
                 seguimientoSemanal.RegistroCompletoVerificar = false;
                 seguimientoSemanal.RegistroCompletoAvalar = false;

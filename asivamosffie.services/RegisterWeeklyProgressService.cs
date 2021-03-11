@@ -577,9 +577,9 @@ namespace asivamosffie.services
                 seguimientoSemanalMod.FechaModificacion = DateTime.Now;
 
                 if (ValidarRegistroCompletoSeguimientoSemanal(seguimientoSemanalMod))
-                    seguimientoSemanalMod.FechaEnvioSupervisor = DateTime.Now;
+                    seguimientoSemanalMod.FechaRegistroCompletoInterventor = DateTime.Now;
                 else
-                    seguimientoSemanalMod.FechaEnvioSupervisor = null;
+                    seguimientoSemanalMod.FechaRegistroCompletoInterventor = null;
 
                 _context.Update(seguimientoSemanalMod);
                 _context.SaveChanges();
@@ -700,6 +700,38 @@ namespace asivamosffie.services
                 {
                     await SendEmailWhenCompleteWeeklyProgress(seguimientoSemanalMod.SeguimientoSemanalId);
                     seguimientoSemanalMod.RegistroCompleto = true;
+                    seguimientoSemanalMod.FechaRegistroCompletoInterventor = DateTime.Now;
+                }
+                if (pEstadoMod == ConstanCodigoEstadoSeguimientoSemanal.Enviado_Validacion)
+                {
+                    await SendEmailToAproved(seguimientoSemanalMod.SeguimientoSemanalId);
+                    seguimientoSemanalMod.FechaRegistroCompletoApoyo = DateTime.Now;
+                }
+
+                if (pEstadoMod == ConstanCodigoEstadoSeguimientoSemanal.Validado_Supervisor)
+                {
+                    seguimientoSemanalMod.FechaRegistroCompletoSupervisor = DateTime.Now;
+                }
+
+                if (pEstadoMod == ConstanCodigoEstadoSeguimientoSemanal.Devuelto_Supervisor)
+                {
+                    seguimientoSemanalMod.FechaRegistroCompletoInterventor = null;
+                    seguimientoSemanalMod.RegistroCompleto = false;
+                    seguimientoSemanalMod.RegistroCompletoVerificar = false;
+                    seguimientoSemanalMod.RegistroCompletoAvalar = false;
+                    seguimientoSemanalMod.EstadoSeguimientoSemanalCodigo = ConstanCodigoEstadoSeguimientoSemanal.Devuelto_Supervisor;
+
+                    List<SeguimientoSemanalObservacion> ListSeguimientoSemanalObservacion =
+                                            _context.SeguimientoSemanalObservacion
+                                            .Where(r => r.SeguimientoSemanalId == seguimientoSemanalMod.SeguimientoSemanalId)
+                                                                                                        .ToList();
+
+                    ListSeguimientoSemanalObservacion.ForEach(s =>
+                    {
+                        s.Archivada = true;
+                        s.FechaModificacion = DateTime.Now;
+                        s.UsuarioModificacion = pUsuarioMod;
+                    });
                 }
 
                 string strNombreSEstadoObraCodigo = _context.Dominio.Where(r => r.Codigo == pEstadoMod && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Reporte_Semanal_Y_Muestras).FirstOrDefault().Nombre;
@@ -2253,60 +2285,6 @@ namespace asivamosffie.services
         #endregion
 
         #region Notificaciones Alertas 
-
-        #region Correos 
-        /// <summary>
-        /// Envio de correo cuando envian un seguimiento semanal a validación
-        /// </summary>
-        /// <param name="pSeguimientoSemanalId"></param>
-        /// <returns></returns>
-        private async Task<bool> SendEmailWhenCompleteWeeklyProgress(int pSeguimientoSemanalId)
-        {
-            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Seguimiento_Semanal_Completo));
-            ReplaceVariablesSeguimientoSemanal(template.Contenido, pSeguimientoSemanalId);
-
-            List<EnumeratorPerfil> perfilsEnviarCorreo =
-                new List<EnumeratorPerfil>
-                                          {
-                                                EnumeratorPerfil.Apoyo
-                                          };
-
-            return _commonService.EnviarCorreo(perfilsEnviarCorreo, template);
-        }
-        /// <summary>
-        /// Alertas automaticas Cuando No se ha realizado seguimiento semanal por mas de 1 semana
-        /// </summary>
-        /// <param name="template"></param>
-        /// <param name="pSeguimientoSemanalId"></param>
-
-        public async Task SendEmailWhenNoWeeklyProgress()
-        {
-            DateTime dateTimeOneWeeklyOverdue = await _commonService.CalculardiasLaborales(5, DateTime.Now);
-
-            List<SeguimientoSemanal> ListSeguimientoSemanal =
-                _context.SeguimientoSemanal
-                                        .Where(
-                                                 r => r.RegistroCompleto != true
-                                                 && r.FechaFin > dateTimeOneWeeklyOverdue
-                                                 && r.FechaModificacion.HasValue
-                                               ).OrderByDescending(r => r.SeguimientoSemanalId).ToList();
-
-            List<EnumeratorPerfil> perfilsEnviarCorreo =
-                              new List<EnumeratorPerfil>{
-                                                          EnumeratorPerfil.Interventor
-                                                        };
-
-            Template templatePlaceHolder = _context.Template.Find((int)(enumeratorTemplate.Sin_Seguimiento_Semanal_X_Una_Semana));
-
-           ListSeguimientoSemanal.ForEach(ss =>
-             {
-                 Template templateReplace = new Template();
-                 templateReplace.Asunto = templatePlaceHolder.Asunto + " # " + ss.NumeroSemana;
-                 templateReplace.Contenido = ReplaceVariablesSeguimientoSemanal(templatePlaceHolder.Contenido, ss.SeguimientoSemanalId);
-                 _commonService.EnviarCorreo(perfilsEnviarCorreo, templateReplace);
-             });
-        }
-
         private string ReplaceVariablesSeguimientoSemanal(string template, int pSeguimientoSemanalId)
         {
             List<Dominio> ListTipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion && r.Activo == true).ToList();
@@ -2323,11 +2301,155 @@ namespace asivamosffie.services
                       .Replace("[INTITUCION_EDUCATIVA]", seguimientoSemanal.ContratacionProyecto.Proyecto.InstitucionEducativa.Nombre)
                       .Replace("[SEDE]", seguimientoSemanal.ContratacionProyecto.Proyecto.Sede.Nombre)
                       .Replace("[TIPO_INTERVENCION]", ListTipoIntervencion.Where(lti => lti.Codigo == seguimientoSemanal.ContratacionProyecto.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre)
-                      .Replace("[FECHA_ULTIMO_REPORTE]", seguimientoSemanal.FechaModificacion.HasValue ? Convert.ToDateTime(seguimientoSemanal.FechaModificacion).ToString("dd/MM/yyy") : "Sin fecha de reporte");
+                      .Replace("[FECHA_ULTIMO_REPORTE]", seguimientoSemanal.FechaModificacion.HasValue ? Convert.ToDateTime(seguimientoSemanal.FechaModificacion).ToString("dd/MM/yyy") : "Sin fecha de reporte")
+                      .Replace("[FECHA_INICIAl]", seguimientoSemanal.FechaInicio.HasValue ? Convert.ToDateTime(seguimientoSemanal.FechaModificacion).ToString("dd/MM/yyy") : "Sin fecha inicial")
+                      .Replace("[FECHA_FINAL]", seguimientoSemanal.FechaFin.HasValue ? Convert.ToDateTime(seguimientoSemanal.FechaModificacion).ToString("dd/MM/yyy") : "Sin fecha final");
 
             return template;
         }
 
+        #region Correos 
+        /// <summary> 4.1.12
+        /// Envio de correo cuando envian un seguimiento semanal a validación
+        /// </summary> 
+        private async Task<bool> SendEmailWhenCompleteWeeklyProgress(int pSeguimientoSemanalId)
+        {
+            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Seguimiento_Semanal_Completo));
+            ReplaceVariablesSeguimientoSemanal(template.Contenido, pSeguimientoSemanalId);
+
+            List<EnumeratorPerfil> perfilsEnviarCorreo =
+                new List<EnumeratorPerfil>
+                                          {
+                                                EnumeratorPerfil.Apoyo
+                                          };
+
+            return _commonService.EnviarCorreo(perfilsEnviarCorreo, template);
+        }
+
+        /// <summary> 4.1.12
+        /// Si ha pasado una semana sin que se haya realizado el registro de seguimiento 
+        /// semanal deberá enviarse una notificación de alerta al usuario.
+        /// </summary> 
+        public async Task SendEmailWhenNoWeeklyProgress()
+        {
+            DateTime dateTimeOneWeeklyOverdue = await _commonService.CalculardiasLaborales(5, DateTime.Now);
+
+            List<SeguimientoSemanal> ListSeguimientoSemanal =
+                _context.SeguimientoSemanal
+                                        .Where(
+                                                 r => r.RegistroCompleto != true
+                                                 && r.FechaFin > dateTimeOneWeeklyOverdue 
+                                               ).OrderByDescending(r => r.SeguimientoSemanalId).ToList();
+
+            List<EnumeratorPerfil> perfilsEnviarCorreo =
+                              new List<EnumeratorPerfil>{
+                                                          EnumeratorPerfil.Interventor
+                                                        };
+
+            Template templatePlaceHolder = _context.Template.Find((int)(enumeratorTemplate.Sin_Seguimiento_Semanal_X_Una_Semana));
+
+            ListSeguimientoSemanal.ForEach(ss =>
+              {
+                  Template templateReplace = new Template();
+                  templateReplace.Asunto = templatePlaceHolder.Asunto + " # " + ss.NumeroSemana;
+                  templateReplace.Contenido = ReplaceVariablesSeguimientoSemanal(templatePlaceHolder.Contenido, ss.SeguimientoSemanalId);
+                  _commonService.EnviarCorreo(perfilsEnviarCorreo, templateReplace);
+              });
+        }
+
+        /// <summary> 4.1.20
+        /// Envio de correo cuando enviar a supervisor
+        /// </summary>
+        private async Task<bool> SendEmailToAproved(int pSeguimientoSemanalId)
+        {
+
+            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Enviar_Supervisor_4_1_20));
+            ReplaceVariablesSeguimientoSemanal(template.Contenido, pSeguimientoSemanalId);
+
+            List<EnumeratorPerfil> perfilsEnviarCorreo =
+                new List<EnumeratorPerfil>
+                                          {
+                                                EnumeratorPerfil.Supervisor
+                                          };
+            return _commonService.EnviarCorreo(perfilsEnviarCorreo, template);
+
+        }
+
+        /// <summary> 4.1.20
+        /// Si han pasado un (1) día hábil desde el registro del seguimiento 
+        /// semanal por parte del interventor y el apoyo a la supervisión no
+        /// ha validado el seguimiento, el sistema deberá remitir una notificación 
+        /// de alerta al apoyo a la supervisión y al supervisor.
+        /// </summary>
+        public async Task SendEmailWhenNoWeeklyValidate()
+        {
+            DateTime dateTimeOneWeeklyOverdue = await _commonService.CalculardiasLaborales(1, DateTime.Now);
+
+            List<SeguimientoSemanal> ListSeguimientoSemanal =
+                _context.SeguimientoSemanal
+                                        .Where(
+                                                 r => r.RegistroCompleto == true
+                                                 && r.FechaRegistroCompletoInterventor.HasValue
+                                                 && r.RegistroCompletoVerificar == false
+                                                 && r.FechaRegistroCompletoInterventor > dateTimeOneWeeklyOverdue
+                                               ).OrderByDescending(r => r.SeguimientoSemanalId).ToList();
+
+            List<EnumeratorPerfil> perfilsEnviarCorreo =
+                              new List<EnumeratorPerfil>{
+                                                          EnumeratorPerfil.Apoyo,
+                                                          EnumeratorPerfil.Supervisor,
+                                                        };
+
+            Template templatePlaceHolder = _context.Template.Find((int)(enumeratorTemplate.Alerta_4_1_20));
+
+            ListSeguimientoSemanal.ForEach(ss =>
+            {
+                Template templateReplace = new Template
+                {
+                    Asunto = templatePlaceHolder.Asunto + " # " + ss.NumeroSemana,
+                    Contenido = ReplaceVariablesSeguimientoSemanal(templatePlaceHolder.Contenido, ss.SeguimientoSemanalId)
+                };
+                _commonService.EnviarCorreo(perfilsEnviarCorreo, templateReplace);
+            });
+        }
+
+        /// <summary> 4.1.1
+        ///Si han pasado un (1) día hábil desde la validación del seguimiento 
+        ///semanal por parte del apoyo a la supervisión y el supervisor no ha
+        ///enviado la retroalimentación, el sistema deberá remitir una 
+        ///notificación de alerta al apoyo a la supervisión y al supervisor.
+        /// </summary>
+        public async Task SendEmailWhenNoWeeklyAproved()
+        {
+            DateTime dateTimeOneWeeklyOverdue = await _commonService.CalculardiasLaborales(1, DateTime.Now);
+
+            List<SeguimientoSemanal> ListSeguimientoSemanal =
+                _context.SeguimientoSemanal
+                                        .Where(
+                                                    r => r.RegistroCompletoVerificar == true
+                                                 && r.FechaModificacionVerificar > dateTimeOneWeeklyOverdue
+                                                 && r.RegistroCompletoAvalar != true
+                                               )
+                                                .OrderByDescending(r => r.SeguimientoSemanalId).ToList();
+
+            List<EnumeratorPerfil> perfilsEnviarCorreo =
+                              new List<EnumeratorPerfil>{
+                                                          EnumeratorPerfil.Apoyo,
+                                                          EnumeratorPerfil.Supervisor
+                                                        };
+
+            Template templatePlaceHolder = _context.Template.Find((int)(enumeratorTemplate.Alerta_4_1_21));
+
+            ListSeguimientoSemanal.ForEach(ss =>
+            {
+                Template templateReplace = new Template
+                {
+                    Asunto = templatePlaceHolder.Asunto + " # " + ss.NumeroSemana,
+                    Contenido = ReplaceVariablesSeguimientoSemanal(templatePlaceHolder.Contenido, ss.SeguimientoSemanalId)
+                };
+                _commonService.EnviarCorreo(perfilsEnviarCorreo, templateReplace);
+            });
+        }
         #endregion
 
         #endregion

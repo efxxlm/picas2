@@ -9,6 +9,10 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IRegisterWeeklyProgressService
     {
+        Task SendEmailWhenNoWeeklyAproved();
+
+        Task SendEmailWhenNoWeeklyValidate();
+
         Task SendEmailWhenNoWeeklyProgress();
 
         Task<Respuesta> UploadContractTerminationCertificate(ContratacionProyecto pContratacionProyecto, AppSettingsService appSettingsService);

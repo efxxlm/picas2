@@ -977,7 +977,7 @@ namespace asivamosffie.model.Models
             modelBuilder.Entity<Contratacion>(entity =>
             {
                 entity.Property(e => e.EstadoSolicitudCodigo)
-                    .HasMaxLength(100)
+                    .HasMaxLength(2)
                     .IsUnicode(false);
 
                 entity.Property(e => e.FechaAprobacion).HasColumnType("datetime");
@@ -1000,12 +1000,12 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.TipoContratacionCodigo)
-                    .HasMaxLength(100)
+                    .HasMaxLength(2)
                     .IsUnicode(false);
 
                 entity.Property(e => e.TipoSolicitudCodigo)
                     .IsRequired()
-                    .HasMaxLength(100)
+                    .HasMaxLength(2)
                     .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
@@ -1705,10 +1705,6 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ActuacionAdelantadaOtro)
-                    .HasMaxLength(1000)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.EstadoActuacionReclamacionCodigo)
@@ -1735,16 +1731,8 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.NumeroActuacion).HasMaxLength(100);
 
-                entity.Property(e => e.Observaciones)
-                    .HasMaxLength(3000)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.ProximaActuacionCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.ProximaActuacionOtro)
-                    .HasMaxLength(1000)
                     .IsUnicode(false);
 
                 entity.Property(e => e.ResumenPropuestaFiduciaria)
@@ -3489,14 +3477,20 @@ namespace asivamosffie.model.Models
             {
                 entity.Property(e => e.MenuPerfilId).HasComment("Identificador de la tabla");
 
-                entity.Property(e => e.Activo).HasComment("Indica si el registro esta activo (0) Inactivo (1) Activo");
+                entity.Property(e => e.Activo)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))")
+                    .HasComment("Indica si el registro esta activo (0) Inactivo (1) Activo");
 
                 entity.Property(e => e.Crud)
+                    .IsRequired()
                     .HasColumnName("CRUD")
+                    .HasDefaultValueSql("((1))")
                     .HasComment("Indica si el perfil tiene permisos de CRUD en la funcionalidad");
 
                 entity.Property(e => e.FechaCreacion)
                     .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())")
                     .HasComment("Fecha de Creación del registro");
 
                 entity.Property(e => e.MenuId).HasComment("Identificador del Menú");
@@ -5181,8 +5175,6 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaEnvioSupervisor).HasColumnType("datetime");
-
                 entity.Property(e => e.FechaFin).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaInicio).HasColumnType("datetime");
@@ -5192,6 +5184,12 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaModificacionAvalar).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacionVerificar).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaRegistroCompletoApoyo).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaRegistroCompletoInterventor).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaRegistroCompletoSupervisor).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
@@ -7568,7 +7566,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.TipoContrato)
                     .IsRequired()
-                    .HasMaxLength(100)
+                    .HasMaxLength(2)
                     .IsUnicode(false);
 
                 entity.Property(e => e.TipoIntervencion)
