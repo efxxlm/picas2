@@ -406,7 +406,7 @@ namespace asivamosffie.services
 
         public async Task<Contratacion> GetListContratacionObservacion(int pContratacionId)
         {
-            Contratacion Contratacion = new Contratacion(); 
+            Contratacion Contratacion = new Contratacion();
             try
             {
                 Contratacion = await _context.Contratacion.Where(r => r.ContratacionId == pContratacionId)
@@ -433,12 +433,23 @@ namespace asivamosffie.services
 
 
                 if (string.IsNullOrEmpty(Contratacion?.ContratacionObservacion?.FirstOrDefault()?.Observacion))
-                { 
+                {
+                    Contratacion.ObservacionNotMapped = Contratacion.ContratacionObservacion.FirstOrDefault().Observacion;
+                }
+                else
+                {
+                    SesionComiteSolicitud SesionComiteSolicitud = _context.SesionComiteSolicitud
+                                        .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion
+                                        && r.SolicitudId == Contratacion.ContratacionId).Include(r => r.ComiteTecnico)
+                                        .FirstOrDefault();
 
+                    if (SesionComiteSolicitud.ComiteTecnico.EsComiteFiduciario != true)
+                        Contratacion.ObservacionNotMapped = SesionComiteSolicitud.Observaciones;
+                    else
+                        Contratacion.ObservacionNotMapped = SesionComiteSolicitud.ObservacionesFiduciario;
                 }
 
-
-                    return Contratacion;
+                return Contratacion;
             }
             catch (Exception)
             {
@@ -448,25 +459,32 @@ namespace asivamosffie.services
 
         public async Task<List<Contratacion>> GetListContratacion()
         {
-            List<Contratacion> ListContratacion = new List<Contratacion>(); 
+            List<Contratacion> ListContratacion = new List<Contratacion>();
             try
             {
                 ListContratacion = await _context.Contratacion
-                    .Where(r => !(bool)r.Eliminado) 
+                    .Where(r => !(bool)r.Eliminado)
+                    .Include(c => c.Contratista)
                     .ToListAsync();
 
+                //List<SesionComiteSolicitud> sesionComiteSolicituds = _context.SesionComiteSolicitud
+                //                    .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion).Include(r => r.ComiteTecnico)
+                //                    .FirstOrDefault();
+
                 List<Dominio> ListParametricas =
-                    _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar 
+                    _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar
                                         || r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud).ToList();
 
-                foreach (var Contratacion in ListContratacion)
-                {
-                    if (!string.IsNullOrEmpty(Contratacion.TipoSolicitudCodigo))
-                        Contratacion.TipoSolicitudCodigo = ListParametricas.Where(r => r.Codigo == Contratacion.TipoSolicitudCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar).FirstOrDefault().Nombre;
+                ListContratacion.ForEach(Contratacion =>
+                   {
+                       if (!string.IsNullOrEmpty(Contratacion.TipoSolicitudCodigo))
+                           Contratacion.TipoSolicitudCodigo = ListParametricas.Where(r => r.Codigo == Contratacion.TipoSolicitudCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar).FirstOrDefault().Nombre;
 
-                    if (!string.IsNullOrEmpty(Contratacion.EstadoSolicitudCodigo))
-                        Contratacion.EstadoSolicitudCodigo = ListParametricas.Where(r => r.Codigo == Contratacion.EstadoSolicitudCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud).FirstOrDefault().Nombre;
-                }
+                       if (!string.IsNullOrEmpty(Contratacion.EstadoSolicitudCodigo))
+                           Contratacion.EstadoSolicitudCodigo = ListParametricas.Where(r => r.Codigo == Contratacion.EstadoSolicitudCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud).FirstOrDefault().Nombre;
+
+                       //  Contratacion.sesionComiteSolicitud = ListSesionComiteSolicitud.Where(t => t.SolicitudId == Contratacion.ContratacionId).ToList();
+                   });
                 return ListContratacion.OrderByDescending(r => r.ContratacionId).ToList();
             }
             catch (Exception ex)

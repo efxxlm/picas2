@@ -946,7 +946,7 @@ namespace asivamosffie.services
             {
                 ListContratos = await _context.Contrato
                     .Include(c => c.Contratacion)
-                    .Where(ctr => ctr.Contratacion.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Firmado)
+                    .Where(ctr => ctr.Contratacion.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Registrados)
                     .ToListAsync();
                 return ListContratos.OrderByDescending(r => r.ContratoId).ToList();
             }
@@ -1822,18 +1822,7 @@ namespace asivamosffie.services
             catch (Exception e)
             {
                 vistaContratoContratista = new VistaContratoContratista
-                {
-                    IdContratista = 0,
-                    FechaFinContrato = e.InnerException.ToString(),
-                    FechaInicioContrato = e.ToString(),
-                    NombreContratista = "ERROR",
-                    NumeroContrato = "ERROR",
-                    PlazoFormat = "ERROR",
-
-                    TipoDocumentoContratista = "ERROR",
-                    NumeroIdentificacion = "ERROR",
-                    TipoIntervencion = "ERROR",
-                    TipoIntervencionCodigo = "ERROR",
+                { 
                 };
 
             }

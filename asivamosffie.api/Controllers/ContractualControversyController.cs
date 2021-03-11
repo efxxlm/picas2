@@ -244,8 +244,7 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
-        [Route("GetListGrillaControversiaReclamacion")]
-
+        [Route("GetListGrillaControversiaReclamacion")] 
         public async Task<ActionResult<List<GrillaControversiaActuacionEstado>>> GetListGrillaControversiaReclamacion(int id = 0)
         {
             try
@@ -288,11 +287,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-
-
-
-
-
+         
         [Route("EliminarControversiaContractual")]
         [HttpPost]
         public async Task<IActionResult> EliminarControversiaContractual(int pControversiaContractualId)
@@ -310,8 +305,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(ex.ToString());
             }
         }
-
-
+         
         [Route("GetControversiaContractualById")]
         [HttpGet]
 
