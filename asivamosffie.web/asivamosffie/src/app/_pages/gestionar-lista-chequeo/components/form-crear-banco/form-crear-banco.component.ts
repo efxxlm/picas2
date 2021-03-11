@@ -1,3 +1,4 @@
+import { GestionarListaChequeoService } from './../../../../core/_services/gestionarListaChequeo/gestionar-lista-chequeo.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,20 +14,21 @@ export class FormCrearBancoComponent implements OnInit {
 
     formBanco: FormGroup;
     esRegistroNuevo: boolean;
+    listaChequeoItemId = 0;
     booleanosEstadoReq: any[] = [
         { viewValue: 'Activo', value: true },
         { viewValue: 'Inactivo', value: false }
-    ]
+    ];
 
     constructor(
         private activatedRoute: ActivatedRoute,
         private routes: Router,
         private fb: FormBuilder,
-        private dialog: MatDialog )
+        private dialog: MatDialog,
+        private listaChequeoSvc: GestionarListaChequeoService )
     {
         // Registro nuevo === undefined
         // Editar === id del registro a editar
-        console.log( this.activatedRoute.snapshot.params.id );
         this.formBanco = this.crearFormulario();
         if ( activatedRoute.snapshot.params.id !== undefined ) {
             this.esRegistroNuevo = false;
@@ -56,8 +58,23 @@ export class FormCrearBancoComponent implements OnInit {
 
     guardar() {
         console.log( this.formBanco );
-        this.openDialog( '', '<b>El requisito se ha creado exitosamente</b>' );
-        this.openDialog( '', '<b>El nombre de requisito ya fue utilizado, por favor verifique la información</b>' );
+        // this.openDialog( '', '<b>El requisito se ha creado exitosamente</b>' );
+        // this.openDialog( '', '<b>El nombre de requisito ya fue utilizado, por favor verifique la información</b>' );
+
+        const pListaChequeoItem = {
+            listaChequeoItemId: this.listaChequeoItemId,
+            nombre: this.formBanco.get( 'nombreRequisito' ).value,
+            activo: this.formBanco.get( 'estadoRequisito' ).value
+        };
+
+        this.listaChequeoSvc.createEditItem( pListaChequeoItem )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', { skipLocationChange: true } ).then( () => this.routes.navigate( [ '/gestionListaChequeo' ] ) );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }

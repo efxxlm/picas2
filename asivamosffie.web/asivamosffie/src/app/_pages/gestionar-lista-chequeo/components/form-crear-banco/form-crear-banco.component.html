@@ -25,7 +25,7 @@
                             <mat-form-field>
                                 <input  matInput
                                         type="text"
-                                        maxlength="200"
+                                        maxlength="1000"
                                         #nombreRequisito
                                         formControlName="nombreRequisito"
                                         style="width: 98%;"
@@ -35,7 +35,7 @@
                                     [matTooltipPosition]="'above'"
                                     matTooltip="Campo alfanumérico"
                                     matTooltipClass="info-tooltip">
-                                    {{ 200 - nombreRequisito.value.length }}
+                                    {{ 1000 - nombreRequisito.value.length }}
                             </span>
                         </div>
                         <span class="icon-incompleto">

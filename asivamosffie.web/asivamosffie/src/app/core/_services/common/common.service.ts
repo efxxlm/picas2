@@ -394,6 +394,10 @@ listaEstadosPoliza(){
     // Lista del campo "Revision tecnica" para las listas de chequeo.
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=162`);
   }
+  listaEstadoListaChequeo() {
+    // Estados de la lista de chequeo CU 6.4.
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=165`);
+  }
 
   public listaUsuarios(){
 
