@@ -85,7 +85,7 @@
                 color="accent" 
                 class="btn-table"
                 *ngIf="element.verReportarSeguimientoSemanal === true && element.fechaUltimoReporte !== 'Sin registro' && element.fechaModificacion !== undefined"
-                [routerLink]="[ 'registroSeguimientoSemanal', element.contratacionProyectoId ]">
+                [routerLink]="[ 'verDetalleEditar', element.contratacionProyectoId ]">
                 Ver detalle/Editar
         </button>
         <button mat-raised-button

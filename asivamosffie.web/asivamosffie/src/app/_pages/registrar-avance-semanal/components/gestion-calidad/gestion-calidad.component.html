@@ -26,7 +26,7 @@
                         </div>
                     </div>
 
-                    <section class="text-center table-responsive size-table" style="margin-top: 2em;" *ngIf="dataHistorial.length > 0 && formGestionCalidad.get( 'seRealizaronEnsayosLaboratorio' ).value === false">
+                    <section class="text-center table-responsive size-table" style="margin-top: 2em;" *ngIf="dataHistorial.length > 0 && formGestionCalidad.get( 'seRealizaronEnsayosLaboratorio' ).value === false && esVerDetalle === false">
                       <table mat-table [dataSource]="tablaHistorial" matSort>
                     
                           <ng-container matColumnDef="fechaRevision">
@@ -292,7 +292,7 @@
                         </button>
                     </div>
 
-                    <section class="text-center table-responsive size-table" style="margin-top: 2em;" *ngIf="ensayo.get( 'historial' ).value.length > 0">
+                    <section class="text-center table-responsive size-table" style="margin-top: 2em;" *ngIf="ensayo.get( 'historial' ).value.length > 0 && esVerDetalle === false">
                       <table mat-table [dataSource]="getHistorialEnsayo( ensayo.get( 'historial' ).value )" matSort>
                     
                           <ng-container matColumnDef="fechaRevision">

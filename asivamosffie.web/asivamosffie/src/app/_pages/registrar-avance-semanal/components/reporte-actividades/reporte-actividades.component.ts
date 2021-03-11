@@ -63,15 +63,17 @@ export class ReporteActividadesComponent implements OnInit {
 
             if ( this.seguimientoSemanal.seguimientoSemanalReporteActividad.length > 0 ) {
                 this.reporteActividad = this.seguimientoSemanal.seguimientoSemanalReporteActividad[0];
-                this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalReporteActividadId, this.tipoReporteActividad.actividadEstadoObra )
-                .subscribe(
-                    response => {
-                        if ( response.length > 0 ) {
-                            this.dataHistorial = response.filter( obs => obs.archivada === true );
-                            this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
-                        }
-                    }
-                );
+                if ( this.esVerDetalle === false ) {
+                    this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalReporteActividadId, this.tipoReporteActividad.actividadEstadoObra )
+                        .subscribe(
+                            response => {
+                                if ( response.length > 0 ) {
+                                    this.dataHistorial = response.filter( obs => obs.archivada === true );
+                                    this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
+                                }
+                            }
+                        );
+                }
                 this.formResumenGeneral.setValue(
                     {
                         resumenEstadoContrato:  this.reporteActividad.resumenEstadoContrato !== undefined ?

@@ -97,26 +97,31 @@ export class GestionAmbientalComponent implements OnInit {
                 if ( this.formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === false ) {
                     // ID gestionAmbiental
                     this.gestionAmbientalId = this.gestionObraAmbiental.seguimientoSemanalGestionObraAmbientalId;
-                    this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.gestionAmbientalId, this.tipoObservacionAmbiental.gestionAmbientalCodigo )
-                        .subscribe(
-                            response => {
-                                this.historialGestionAmbiental = response.filter( obs => obs.archivada === true );
-                                this.tablaHistorialgestionAmbiental = new MatTableDataSource( this.historialGestionAmbiental );
-                            }
-                        );
+
+                    if ( this.esVerDetalle === false ) {
+                        this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.gestionAmbientalId, this.tipoObservacionAmbiental.gestionAmbientalCodigo )
+                            .subscribe(
+                                response => {
+                                    this.historialGestionAmbiental = response.filter( obs => obs.archivada === true );
+                                    this.tablaHistorialgestionAmbiental = new MatTableDataSource( this.historialGestionAmbiental );
+                                }
+                            );
+                    }
                 }
                 if ( this.gestionObraAmbiental.tieneManejoMaterialesInsumo === true ) {
                     // ID manejo de materiales e insumos
                     if ( this.gestionObraAmbiental.manejoMaterialesInsumo !== undefined ) {
                         this.manejoMaterialInsumoId = this.gestionObraAmbiental.manejoMaterialesInsumo.manejoMaterialesInsumosId;
                     }
-                    this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.manejoMaterialInsumoId, this.tipoObservacionAmbiental.manejoMateriales )
-                        .subscribe(
-                            response => {
-                                this.historialManejoMateriales = response.filter( obs => obs.archivada === true );
-                                this.tablaHistorialManejoMateriales = new MatTableDataSource( this.historialManejoMateriales );
-                            }
-                        );
+                    if ( this.esVerDetalle === false ) {
+                        this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.manejoMaterialInsumoId, this.tipoObservacionAmbiental.manejoMateriales )
+                            .subscribe(
+                                response => {
+                                    this.historialManejoMateriales = response.filter( obs => obs.archivada === true );
+                                    this.tablaHistorialManejoMateriales = new MatTableDataSource( this.historialManejoMateriales );
+                                }
+                            );                        
+                    }
                     this.cantidadActividades++;
                 }
                 if ( this.gestionObraAmbiental.tieneManejoResiduosConstruccionDemolicion === true ) {
@@ -124,13 +129,15 @@ export class GestionAmbientalComponent implements OnInit {
                     if ( this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion !== undefined ) {
                         this.residuosConstruccionId = this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion.manejoResiduosConstruccionDemolicionId;
                     }
-                    this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.residuosConstruccionId, this.tipoObservacionAmbiental.residuosConstruccion )
-                        .subscribe(
-                            response => {
-                                this.historialResiduosConstruccion = response.filter( obs => obs.archivada === true );
-                                this.tablaHistorialResiduosConstruccion = new MatTableDataSource( this.historialResiduosConstruccion );
-                            }
-                        );
+                    if ( this.esVerDetalle === false ) {
+                        this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.residuosConstruccionId, this.tipoObservacionAmbiental.residuosConstruccion )
+                            .subscribe(
+                                response => {
+                                    this.historialResiduosConstruccion = response.filter( obs => obs.archivada === true );
+                                    this.tablaHistorialResiduosConstruccion = new MatTableDataSource( this.historialResiduosConstruccion );
+                                }
+                            );
+                    }
                     this.cantidadActividades++;
                 }
                 if ( this.gestionObraAmbiental.tieneManejoResiduosPeligrososEspeciales === true ) {
@@ -138,13 +145,15 @@ export class GestionAmbientalComponent implements OnInit {
                     if ( this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales !== undefined ) {
                         this.residuosPeligrososId = this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales.manejoResiduosPeligrososEspecialesId;
                     }
-                    this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.residuosPeligrososId, this.tipoObservacionAmbiental.residuosPeligrosos )
-                        .subscribe(
-                            response => {
-                                this.historialResiduosPeligrosos = response.filter( obs => obs.archivada === true );
-                                this.tablaHistorialResiduosPeligrosos = new MatTableDataSource( this.historialResiduosPeligrosos );
-                            }
-                        )
+                    if ( this.esVerDetalle === false ) {
+                        this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.residuosPeligrososId, this.tipoObservacionAmbiental.residuosPeligrosos )
+                            .subscribe(
+                                response => {
+                                    this.historialResiduosPeligrosos = response.filter( obs => obs.archivada === true );
+                                    this.tablaHistorialResiduosPeligrosos = new MatTableDataSource( this.historialResiduosPeligrosos );
+                                }
+                            )
+                    }
                     this.cantidadActividades++;
                 }
                 if ( this.gestionObraAmbiental.tieneManejoOtro === true ) {
@@ -152,13 +161,15 @@ export class GestionAmbientalComponent implements OnInit {
                     if ( this.gestionObraAmbiental.manejoOtro !== undefined ) {
                         this.manejoOtrosId = this.gestionObraAmbiental.manejoOtro.manejoOtroId;
                     }
-                    this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.manejoOtrosId, this.tipoObservacionAmbiental.manejoOtra )
-                        .subscribe(
-                            response => {
-                                this.historialManejoOtros = response.filter( obs => obs.archivada === true );
-                                this.tablaHistorialManejoOtros = new MatTableDataSource( this.historialManejoOtros );
-                            }
-                        )
+                    if ( this.esVerDetalle === false ) {
+                        this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.manejoOtrosId, this.tipoObservacionAmbiental.manejoOtra )
+                            .subscribe(
+                                response => {
+                                    this.historialManejoOtros = response.filter( obs => obs.archivada === true );
+                                    this.tablaHistorialManejoOtros = new MatTableDataSource( this.historialManejoOtros );
+                                }
+                            )
+                    }
                     this.cantidadActividades++;
                 }
                 if ( this.gestionObraAmbiental.seEjecutoGestionAmbiental === true ) {

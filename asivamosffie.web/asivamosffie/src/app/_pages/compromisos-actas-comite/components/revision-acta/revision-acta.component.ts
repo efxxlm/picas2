@@ -197,9 +197,16 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
     };
 
     const value = this.form.get('comentarioActa').value;
+    let sesionComentarioId = 0;
+    if ( this.acta.sesionComentario !== undefined ) {
+      if ( this.acta.sesionComentario.length > 0 ) {
+        sesionComentarioId = this.acta.sesionComentario[0].sesionComentarioId;
+      }
+    }
     const observaciones = {
       comiteTecnicoId: this.acta.comiteTecnicoId,
-      observaciones: value
+      observaciones: value,
+      sesionComentarioId
     };
 
     this.compromisoSvc.postComentariosActa(observaciones)

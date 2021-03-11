@@ -1,4 +1,4 @@
-<section class="container" *ngIf="seguimientoSemanal !== undefined">
+<section class="container" *ngIf="seguimientoSemanal !== undefined && esVerDetalleMuestras !== undefined">
     <div class="text-right">
         <a mat-button color="primary" class="btn-regresar" (click)="getRutaAnterior()">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
@@ -7,7 +7,7 @@
 
     <div class="text-center">
         <h1 class="title-menu--h1">
-            Ver detalle registro de seguimiento semanal {{ seguimientoSemanal.infoProyecto.llaveMen }}
+            {{ esVerDetalleMuestras === true ? 'Ver detalle' : 'Ver detalle/Editar' }} registro de avance semanal {{ seguimientoSemanal.infoProyecto.llaveMen }}
         </h1>
     </div>
 
@@ -56,7 +56,7 @@
                         Avance físico
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-avance-fisico-financiero [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true"></app-avance-fisico-financiero>
+                <app-avance-fisico-financiero [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true" [avanceFisicoObs]="tipoObservaciones.avanceFisico"></app-avance-fisico-financiero>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
@@ -65,7 +65,7 @@
                         Avance financiero
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-avance-financiero [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true" *ngIf="seguimientoSemanal.numeroSemana % 5 === 0"></app-avance-financiero>
+                <app-avance-financiero [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true" *ngIf="seguimientoSemanal.numeroSemana % 5 === 0" [avanceFinancieroObs]="tipoObservaciones.avanceFinanciero"></app-avance-financiero>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
@@ -74,7 +74,7 @@
                         Gestión de la obra
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-gestion-de-obra [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true" (estadoSemaforoGestionObra)="valuePendingSemaforo( $event, 'gestionObra' )"></app-gestion-de-obra>
+                <app-gestion-de-obra [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true" (estadoSemaforoGestionObra)="valuePendingSemaforo( $event, 'gestionObra' )" [tipoObservaciones]="tipoObservaciones"></app-gestion-de-obra>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
@@ -83,7 +83,7 @@
                         Reporte de actividades
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-reporte-actividades [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true"></app-reporte-actividades>
+                <app-reporte-actividades [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true" [tipoReporteActividad]="tipoObservaciones.reporteActividades"></app-reporte-actividades>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
@@ -92,7 +92,7 @@
                         Registro fotográfico
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-registro-fotografico [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true"></app-registro-fotografico>
+                <app-registro-fotografico [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true" [tipoRegistroFotografico]="tipoObservaciones.registroFotografico"></app-registro-fotografico>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
@@ -101,7 +101,7 @@
                         Comité de obra
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-comite-obra [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true"></app-comite-obra>
+                <app-comite-obra [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true" [tipoComiteObra]="tipoObservaciones.comiteObra"></app-comite-obra>
             </mat-expansion-panel>
         </mat-accordion>
         <div class="d-flex justify-content-center align-items-center mt-1em" *ngIf="seguimientoSemanal.numeroSemana % 5 !== 0">

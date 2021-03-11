@@ -141,6 +141,7 @@ export class CompromisosActasComiteService {
   postComentariosActa ( acta: any ) {
     this.devolverActa.comiteTecnicoId = acta.comiteTecnicoId;
     this.devolverActa.observacion = acta.observaciones;
+    this.devolverActa.sesionComentarioId = acta.sesionComentarioId;
 
     return this.http.post( `${ this.url }/CreateOrEditCommentReport`, this.devolverActa )
   };

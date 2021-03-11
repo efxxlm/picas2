@@ -215,7 +215,7 @@
     </div>
 </section>
 
-<section class="text-center table-responsive size-table" style="margin-top: 2em;" *ngIf="dataHistorial.length > 0">
+<section class="text-center table-responsive size-table" style="margin-top: 2em;" *ngIf="dataHistorial.length > 0 && esVerDetalle === false">
     <table mat-table [dataSource]="tablaHistorial" matSort>
   
         <ng-container matColumnDef="fechaRevision">

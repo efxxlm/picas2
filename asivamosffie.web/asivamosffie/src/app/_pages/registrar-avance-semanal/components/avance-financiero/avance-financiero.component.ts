@@ -55,13 +55,17 @@ export class AvanceFinancieroComponent implements OnInit {
 
             if ( this.seguimientoSemanal.seguimientoSemanalAvanceFinanciero.length > 0 ) {
                 this.avanceFinanciero = this.seguimientoSemanal.seguimientoSemanalAvanceFinanciero[0];
-                this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalAvanceFinancieroId, this.avanceFinancieroObs )
+
+                if ( this.esVerDetalle === false ) {
+                    this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalAvanceFinancieroId, this.avanceFinancieroObs )
                     .subscribe(
                         response => {
                             this.dataHistorial = response.filter( obs => obs.archivada === true );
                             this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
                         }
                     )
+                }
+
                 this.formAvanceFinanciero.setValue(
                     {
                         requiereObservacion:    this.avanceFinanciero.requiereObservacion !== undefined ?

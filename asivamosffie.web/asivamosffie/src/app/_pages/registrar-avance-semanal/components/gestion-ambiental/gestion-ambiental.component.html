@@ -26,7 +26,7 @@
                       </div>
                   </div>
 
-                  <section class="text-center table-responsive size-table" style="margin-top: 2em;" *ngIf="historialGestionAmbiental.length > 0 && formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === false">
+                  <section class="text-center table-responsive size-table" style="margin-top: 2em;" *ngIf="historialGestionAmbiental.length > 0 && formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === false && esVerDetalle === false">
                     <table mat-table [dataSource]="tablaHistorialgestionAmbiental" matSort>
                   
                         <ng-container matColumnDef="fechaRevision">
@@ -134,7 +134,7 @@
                             </app-manejo-material-insumo>
 
 
-                            <section class="text-center table-responsive size-table" style="margin-top: 2em;" *ngIf="actividad.get( 'tipoActividad' ).value !== null && formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === true && actividad.get( 'tipoActividad' ).value.codigo === tipoActividadesCodigo.manejoMaterialInsumo && historialManejoMateriales.length > 0">
+                            <section class="text-center table-responsive size-table" style="margin-top: 2em;" *ngIf="actividad.get( 'tipoActividad' ).value !== null && formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === true && actividad.get( 'tipoActividad' ).value.codigo === tipoActividadesCodigo.manejoMaterialInsumo && historialManejoMateriales.length > 0 && esVerDetalle === false">
                               <table mat-table [dataSource]="tablaHistorialManejoMateriales" matSort>
                             
                                   <ng-container matColumnDef="fechaRevision">
@@ -175,7 +175,7 @@
                                                               class="mt-1em">
                             </app-manejo-residuos-construccion>
 
-                            <section class="text-center table-responsive size-table" style="margin-top: 2em;" *ngIf="historialResiduosConstruccion.length > 0 && actividad.get( 'tipoActividad' ).value !== null && formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === true && actividad.get( 'tipoActividad' ).value.codigo === tipoActividadesCodigo.manejoResiduosConstruccion">
+                            <section class="text-center table-responsive size-table" style="margin-top: 2em;" *ngIf="historialResiduosConstruccion.length > 0 && actividad.get( 'tipoActividad' ).value !== null && formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === true && actividad.get( 'tipoActividad' ).value.codigo === tipoActividadesCodigo.manejoResiduosConstruccion && esVerDetalle === false">
                               <table mat-table [dataSource]="tablaHistorialResiduosConstruccion" matSort>
                             
                                   <ng-container matColumnDef="fechaRevision">
@@ -216,7 +216,7 @@
                                                             class="mt-1em">
                             </app-manejo-residuos-peligrosos>
 
-                            <section class="text-center table-responsive size-table" style="margin-top: 2em;" *ngIf="historialResiduosPeligrosos.length > 0 && actividad.get( 'tipoActividad' ).value !== null && formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === true && actividad.get( 'tipoActividad' ).value.codigo === tipoActividadesCodigo.manejoResiduosPeligrosos">
+                            <section class="text-center table-responsive size-table" style="margin-top: 2em;" *ngIf="historialResiduosPeligrosos.length > 0 && actividad.get( 'tipoActividad' ).value !== null && formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === true && actividad.get( 'tipoActividad' ).value.codigo === tipoActividadesCodigo.manejoResiduosPeligrosos && esVerDetalle === false">
                               <table mat-table [dataSource]="tablaHistorialResiduosPeligrosos" matSort>
                             
                                   <ng-container matColumnDef="fechaRevision">
@@ -257,7 +257,7 @@
                                                 class="mt-1em">
                             </app-otros-manejos>
 
-                            <section class="text-center table-responsive size-table" style="margin-top: 2em;" *ngIf="historialManejoOtros.length > 0 && actividad.get( 'tipoActividad' ).value !== null && formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === true && actividad.get( 'tipoActividad' ).value.codigo === tipoActividadesCodigo.otra">
+                            <section class="text-center table-responsive size-table" style="margin-top: 2em;" *ngIf="historialManejoOtros.length > 0 && actividad.get( 'tipoActividad' ).value !== null && formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === true && actividad.get( 'tipoActividad' ).value.codigo === tipoActividadesCodigo.otra && esVerDetalle === false">
                               <table mat-table [dataSource]="tablaHistorialManejoOtros" matSort>
                             
                                   <ng-container matColumnDef="fechaRevision">

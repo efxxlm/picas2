@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-avance-fisico-financiero',
@@ -10,6 +10,7 @@ export class AvanceFisicoFinancieroComponent implements OnInit {
   @Input() esVerDetalle = false;
   @Input() seguimientoSemanal: any;
   @Input() avanceFisicoObs: string;
+  @Output() estadoSemaforoAvanceFisico = new EventEmitter<string>();
   semaforoAvanceFisico = 'sin-diligenciar';
   sinRegistros = false;
 

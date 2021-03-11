@@ -21,6 +21,14 @@ const routes: Routes = [
     component: RegistrarResultadosEnsayoComponent
   },
   {
+    path: 'verDetalleEditar/:id',
+    component: FormRegistrarSeguimientoSemanalComponent
+  },
+  {
+    path: 'verDetalleEditar/:id/registroResultadosEnsayo/:idEnsayo',
+    component: RegistrarResultadosEnsayoComponent
+  },
+  {
     path: 'consultarEditarBitacora/:id',
     component: ConsultarEditarBitacoraComponent
   },
@@ -34,6 +42,18 @@ const routes: Routes = [
   },
   {
     path: 'consultarEditarBitacora/:id/verDetalleAvanceSemanal/:idAvance/verDetalleMuestras/:idEnsayo',
+    component: VerDetalleMuestrasComponent
+  },
+  {
+    path: 'consultarEditarBitacora/:id/verDetalleAvanceSemanalMuestras/:idAvance',
+    component: VerDetalleAvanceSemanalComponent
+  },
+  {
+    path: 'consultarEditarBitacora/:id/verDetalleAvanceSemanalMuestras/:idAvance/registroResultadosEnsayo/:idEnsayo',
+    component: RegistrarResultadosEnsayoComponent
+  },
+  {
+    path: 'consultarEditarBitacora/:id/verDetalleAvanceSemanalMuestras/:idAvance/verDetalleMuestras/:idEnsayo',
     component: VerDetalleMuestrasComponent
   }
 ];

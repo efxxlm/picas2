@@ -18,6 +18,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
     @Input() avanceFisicoObs: string;
+    @Output() estadoSemaforoAlerta = new EventEmitter<string>();
     sinRegistros = false;
     tablaAvanceFisico = new MatTableDataSource();
     tablaHistorial = new MatTableDataSource();
@@ -40,6 +41,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
         'responsable',
         'historial'
     ];
+    primeraSemana = 1;
 
     constructor(
         private dialog: MatDialog,
@@ -92,13 +94,16 @@ export class TablaAvanceFisicoComponent implements OnInit {
             const flujoInversion = this.seguimientoSemanal.flujoInversion;
             const seguimientoSemanalAvanceFisico = this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0];
 
-            this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalAvanceFisicoId, this.avanceFisicoObs )
-                .subscribe(
-                    response => {
-                        this.dataHistorial = response.filter( obs => obs.archivada === true );
-                        this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
-                    }
-                );
+            if ( this.esVerDetalle === false ) {
+                this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalAvanceFisicoId, this.avanceFisicoObs )
+                    .subscribe(
+                        response => {
+                            this.dataHistorial = response.filter( obs => obs.archivada === true );
+                            this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
+                        }
+                    );
+            }
+
             if ( flujoInversion.length > 0 ) {
                 const avancePorCapitulo = [];
                 let duracionProgramacion = 0;
@@ -178,6 +183,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
             this.tablaAvanceFisico = new MatTableDataSource( this.avanceFisico );
         } else {
             this.sinRegistros = true;
+            this.estadoSemaforoAlerta.emit( 'en-alerta' );
         }
     }
 

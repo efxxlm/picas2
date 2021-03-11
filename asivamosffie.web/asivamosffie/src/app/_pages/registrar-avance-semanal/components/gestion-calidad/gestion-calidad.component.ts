@@ -121,13 +121,15 @@ export class GestionCalidadComponent implements OnInit {
                     this.formGestionCalidad.markAsDirty();
 
                     if ( this.formGestionCalidad.get( 'seRealizaronEnsayosLaboratorio' ).value === false ) {
-                        this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.SeguimientoSemanalGestionObraCalidadId, this.tipoObservacionCalidad.gestionCalidadCodigo )
-                            .subscribe(
-                                response => {
-                                    this.dataHistorial = response.filter( obs => obs.archivada === true );
-                                    this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
-                                }
-                            );
+                        if ( this.esVerDetalle === false ) {
+                            this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.SeguimientoSemanalGestionObraCalidadId, this.tipoObservacionCalidad.gestionCalidadCodigo )
+                                .subscribe(
+                                    response => {
+                                        this.dataHistorial = response.filter( obs => obs.archivada === true );
+                                        this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
+                                    }
+                                );
+                        }
                     }
                 }
             }
@@ -168,12 +170,14 @@ export class GestionCalidadComponent implements OnInit {
                             {
                                 semaforoEnsayo = 'en-proceso';
                             }
-                            this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, ensayo.gestionObraCalidadEnsayoLaboratorioId, this.tipoObservacionCalidad.ensayosLaboratorio )
-                                .subscribe(
-                                    response => {
-                                        historial = response.filter( obs => obs.archivada === true );
-                                    }
-                                );
+                            if ( this.esVerDetalle === false ) {
+                                this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, ensayo.gestionObraCalidadEnsayoLaboratorioId, this.tipoObservacionCalidad.ensayosLaboratorio )
+                                    .subscribe(
+                                        response => {
+                                            historial = response.filter( obs => obs.archivada === true );
+                                        }
+                                    );
+                            }
                             this.ensayosLaboratorio.push(
                                 this.fb.group(
                                     {

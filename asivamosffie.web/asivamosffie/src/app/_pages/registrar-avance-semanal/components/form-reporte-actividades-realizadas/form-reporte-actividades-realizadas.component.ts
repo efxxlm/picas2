@@ -71,24 +71,26 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
                         this.reporteActividad.actividadAdministrativaFinancieraSiguiente : null
                 }
             );
-            this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanal.seguimientoSemanalId, this.seguimientoSemanalReporteActividadId, this.tipoReporteActividad.actividadRealizada )
-            .subscribe(
-                response => {
-                    if ( response.length > 0 ) {
-                        this.dataHistorial = response.filter( obs => obs.archivada === true );
-                        this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
-                    }
-                }
-            );
-        this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanal.seguimientoSemanalId, this.seguimientoSemanalReporteActividadId, this.tipoReporteActividad.actividadRealizadaSiguiente )
-            .subscribe(
-                response => {
-                    if ( response.length > 0 ) {
-                        this.dataHistorialSiguiente = response.filter( obs => obs.archivada === true );
-                        this.tablaHistorialSiguiente = new MatTableDataSource( this.dataHistorialSiguiente );
-                    }
-                }
-            );
+            if ( this.esVerDetalle === false ) {
+                this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanal.seguimientoSemanalId, this.seguimientoSemanalReporteActividadId, this.tipoReporteActividad.actividadRealizada )
+                    .subscribe(
+                        response => {
+                            if ( response.length > 0 ) {
+                                this.dataHistorial = response.filter( obs => obs.archivada === true );
+                                this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
+                            }
+                        }
+                    );
+                this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanal.seguimientoSemanalId, this.seguimientoSemanalReporteActividadId, this.tipoReporteActividad.actividadRealizadaSiguiente )
+                    .subscribe(
+                        response => {
+                            if ( response.length > 0 ) {
+                                this.dataHistorialSiguiente = response.filter( obs => obs.archivada === true );
+                                this.tablaHistorialSiguiente = new MatTableDataSource( this.dataHistorialSiguiente );
+                            }
+                        }
+                    );
+            }
         }
     }
 

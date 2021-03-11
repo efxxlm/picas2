@@ -79,13 +79,15 @@ export class GestionSSTComponent implements OnInit {
                         this.formSst.get( 'seguridadSaludCausaAccidente' ).setValue( causas );
                     }
 
-                    this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.gestionObraSst.seguimientoSemanalGestionObraSeguridadSaludId, this.tipoObservacionSst )
-                        .subscribe(
-                            response => {
-                                this.dataHistorial = response.filter( obs => obs.archivada === true );
-                                this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
-                            }
-                        );
+                    if ( this.esVerDetalle === false ) {
+                        this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.gestionObraSst.seguimientoSemanalGestionObraSeguridadSaludId, this.tipoObservacionSst )
+                            .subscribe(
+                                response => {
+                                    this.dataHistorial = response.filter( obs => obs.archivada === true );
+                                    this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
+                                }
+                            );
+                    }
 
                     if ( this.gestionObraSst.cantidadAccidentes !== undefined ) {
                         this.seguimientoSemanalGestionObraSeguridadSaludId = this.gestionObraSst.seguimientoSemanalGestionObraSeguridadSaludId;

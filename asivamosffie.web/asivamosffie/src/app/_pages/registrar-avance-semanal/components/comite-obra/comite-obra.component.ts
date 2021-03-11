@@ -50,13 +50,15 @@ export class ComiteObraComponent implements OnInit {
             if ( this.seguimientoSemanal.seguimientoSemanalRegistrarComiteObra.length > 0 ) {
                 this.gestionComiteObra = this.seguimientoSemanal.seguimientoSemanalRegistrarComiteObra[0];
                 this.numeroComiteObra = this.gestionComiteObra.numeroComite;
-                this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalRegistrarComiteObraId, this.tipoComiteObra )
-                    .subscribe(
-                        response => {
-                            this.dataHistorial = response.filter( obs => obs.archivada === true );
-                            this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
-                        }
-                    );
+                if ( this.esVerDetalle === false ) {
+                    this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalRegistrarComiteObraId, this.tipoComiteObra )
+                        .subscribe(
+                            response => {
+                                this.dataHistorial = response.filter( obs => obs.archivada === true );
+                                this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
+                            }
+                        );
+                }
                 this.formComiteObra.setValue(
                     {
                         fechaComite:    this.gestionComiteObra.fechaComite !== undefined ?

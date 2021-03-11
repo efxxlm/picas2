@@ -57,13 +57,15 @@ export class RegistroFotograficoComponent implements OnInit {
 
             if ( this.seguimientoSemanal.seguimientoSemanalRegistroFotografico.length > 0 ) {
                 this.reporteFotografico = this.seguimientoSemanal.seguimientoSemanalRegistroFotografico[0];
-                this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.reporteFotografico.seguimientoSemanalRegistroFotograficoId, this.tipoRegistroFotografico )
-                .subscribe(
-                    response => {
-                        this.dataHistorial = response.filter( obs => obs.archivada === true );
-                        this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
-                    }
-                );
+                if ( this.esVerDetalle === false ) {
+                    this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.reporteFotografico.seguimientoSemanalRegistroFotograficoId, this.tipoRegistroFotografico )
+                        .subscribe(
+                            response => {
+                                this.dataHistorial = response.filter( obs => obs.archivada === true );
+                                this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
+                            }
+                        );
+                }
                 this.formRegistroFotografico.setValue(
                     {
                         urlSoporteFotografico:  this.reporteFotografico.urlSoporteFotografico !== undefined ?

@@ -1,4 +1,4 @@
-<section class="container mb-2em" *ngIf="seguimientoSemanal !== undefined">
+<section class="container mb-2em" *ngIf="seguimientoSemanal !== undefined && esRegistroNuevo !== undefined">
     <div class="text-right">
         <a routerLink="/registrarAvanceSemanal" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
@@ -7,7 +7,7 @@
 
     <div class="text-center">
         <h1 class="title-menu--h1">
-            Registrar avance semanal {{ seguimientoSemanal.infoProyecto.llaveMen }}
+            {{ esRegistroNuevo === true ? 'Registrar' : 'Ver detalle/Editar' }} avance semanal {{ seguimientoSemanal.infoProyecto.llaveMen }}
         </h1>
     </div>
 
@@ -57,7 +57,7 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-avance-fisico-financiero [seguimientoSemanal]="seguimientoSemanal" [avanceFisicoObs]="tipoObservaciones.avanceFisico"></app-avance-fisico-financiero>
+                <app-avance-fisico-financiero [seguimientoSemanal]="seguimientoSemanal" [avanceFisicoObs]="tipoObservaciones.avanceFisico" (estadoSemaforoAvanceFisico)="semaforoAvanceFisico = $event"></app-avance-fisico-financiero>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">

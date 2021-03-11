@@ -1,7 +1,8 @@
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, UrlSegment } from '@angular/router';
 import { RegistrarAvanceSemanalService } from './../../../../core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
+import { VerificarAvanceSemanalService } from 'src/app/core/_services/verificarAvanceSemanal/verificar-avance-semanal.service';
 
 @Component({
   selector: 'app-ver-detalle-avance-semanal',
@@ -11,21 +12,35 @@ import { Location } from '@angular/common';
 export class VerDetalleAvanceSemanalComponent implements OnInit {
 
     seguimientoSemanal: any;
+    tipoObservaciones: any;
     semaforoGestionObra = 'sin-diligenciar';
+    esVerDetalleMuestras: any;
 
     constructor(
         private location: Location,
+        private verificarAvanceSemanalSvc: VerificarAvanceSemanalService,
         private avanceSemanalSvc: RegistrarAvanceSemanalService,
         private activatedRoute: ActivatedRoute )
     {
-        this.avanceSemanalSvc
-            .getLastSeguimientoSemanalContratacionProyectoIdOrSeguimientoSemanalId( 0,  this.activatedRoute.snapshot.params.idAvance )
-                .subscribe(
-                  seguimiento => {
-                      this.seguimientoSemanal = seguimiento;
-                      console.log( this.seguimientoSemanal );
-                  }
-                );
+        this.activatedRoute.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
+            if ( urlSegment.path === 'verDetalleAvanceSemanal' ) {
+                this.esVerDetalleMuestras = true;
+            }
+            if ( urlSegment.path === 'verDetalleAvanceSemanalMuestras' ) {
+                this.esVerDetalleMuestras = false;
+            }
+        } );
+        this.avanceSemanalSvc.getLastSeguimientoSemanalContratacionProyectoIdOrSeguimientoSemanalId( 0,  this.activatedRoute.snapshot.params.idAvance )
+            .subscribe(
+                seguimiento => {
+                    this.verificarAvanceSemanalSvc.tipoObservaciones()
+                        .subscribe( tipoObservaciones => {
+                            this.tipoObservaciones = tipoObservaciones;
+                            this.seguimientoSemanal = seguimiento;
+                            console.log( this.seguimientoSemanal );
+                        } )
+                }
+            );
     }
 
     ngOnInit(): void {

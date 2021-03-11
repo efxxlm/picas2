@@ -70,13 +70,15 @@ export class GestionSocialComponent implements OnInit {
                 this.gestionSocial = this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSocial[0];
                 if ( this.gestionSocial !== undefined ) {
                     this.seguimientoSemanalGestionObraSocialId = this.gestionSocial.seguimientoSemanalGestionObraSocialId;
-                    this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalGestionObraSocialId, this.tipoObservacionSocial )
-                        .subscribe(
-                            response => {
-                                this.dataHistorial = response.filter( obs => obs.archivada === true );
-                                this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
-                            }
-                        );
+                    if ( this.esVerDetalle === false ) {
+                        this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalGestionObraSocialId, this.tipoObservacionSocial )
+                            .subscribe(
+                                response => {
+                                    this.dataHistorial = response.filter( obs => obs.archivada === true );
+                                    this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
+                                }
+                            );
+                    }
                     this.formGestionSocial.setValue(
                         {
                             cantidadEmpleosDirectos:    this.gestionSocial.cantidadEmpleosDirectos !== undefined ?

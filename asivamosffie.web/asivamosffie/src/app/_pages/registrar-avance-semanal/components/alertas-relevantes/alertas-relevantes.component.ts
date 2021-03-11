@@ -65,13 +65,15 @@ export class AlertasRelevantesComponent implements OnInit {
                 this.gestionAlertas = this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAlerta[0];
                 if ( this.gestionAlertas !== undefined ) {
                     this.seguimientoSemanalGestionObraAlertaId = this.gestionAlertas.seguimientoSemanalGestionObraAlertaId;
-                    this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalGestionObraAlertaId, this.tipoObservacionAlertas )
-                        .subscribe(
-                            response => {
-                                this.dataHistorial = response.filter( obs => obs.archivada === true );
-                                this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
-                            }
-                        );
+                    if ( this.esVerDetalle === false ) {
+                        this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalGestionObraAlertaId, this.tipoObservacionAlertas )
+                            .subscribe(
+                                response => {
+                                    this.dataHistorial = response.filter( obs => obs.archivada === true );
+                                    this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
+                                }
+                            );
+                    }
                     this.formAlertasRelevantes.setValue(
                         {
                             seIdentificaronAlertas: this.gestionAlertas.seIdentificaronAlertas !== undefined ?

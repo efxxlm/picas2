@@ -47,7 +47,7 @@
         </div>
         <div class="col" *ngIf="solicitudes.tipoSolicitudCodigo === tipoSolicitudCodigo.ActuacionesControversias">
           <b class="label-left color-blue">
-            {{ solicitudes.controversiaActuacion.controversiaContractual.numeroSolicitud }}
+            {{ solicitudes.controversiaActuacion !== undefined ? solicitudes.controversiaActuacion.controversiaContractual.numeroSolicitud : solicitudes.numeroSolicitud }}
           </b>
         </div>
       </div>
