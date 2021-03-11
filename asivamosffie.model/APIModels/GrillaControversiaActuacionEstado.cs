@@ -34,7 +34,7 @@ namespace asivamosffie.model.APIModels
         public string EstadoActuacionGeneral { get; set; }
         public string EstadoActuacionCodigoGeneral { get; set; }
         public bool? RequiereComite { get; set; }
-
+        public bool? EsRequiereComiteReclamacion { get; set; }
 
     }
 }

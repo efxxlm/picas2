@@ -1094,7 +1094,7 @@ namespace asivamosffie.services
                 {
                     actuacionSeguimientoOld.EstadoCodigo = pEstadoReclamacionCodigo;
                 }
-                if (actuacionSeguimientoOld.NumeroActuacionReclamacion == null && actuacionSeguimientoOld.EstadoAvanceTramiteCodigo == "14")
+                if (string.IsNullOrEmpty(actuacionSeguimientoOld.NumeroActuacionReclamacion) && actuacionSeguimientoOld.EstadoAvanceTramiteCodigo == "14" && pEstadoReclamacionCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada)
                 {
                     int consecutivo = _context.ControversiaActuacion
                                     .Where(r => r.ControversiaContractualId == actuacionSeguimientoOld.ControversiaContractualId
@@ -3185,6 +3185,7 @@ namespace asivamosffie.services
                         ActuacionSeguimientoId = ActuacionSeguimientoIdTmp,
                         EstadoActuacionGeneral = strEstadoActuacionGeneral,
                         EstadoActuacionCodigoGeneral = strEstadoActuacionCodigoGeneral,
+                        EsRequiereComiteReclamacion = controversia.EsRequiereComiteReclamacion,
                     };
                     ListControversiaContractualGrilla.Add(RegistroControversiaContractual);
                 }
@@ -3232,7 +3233,7 @@ namespace asivamosffie.services
                     controversiaActuacionActual.FechaModificacion = DateTime.Now;
                     controversiaActuacionActual.EsCompletoReclamacion = !string.IsNullOrEmpty(prmControversiaActuacion.ResumenPropuestaFiduciaria) && !string.IsNullOrEmpty(prmControversiaActuacion.RutaSoporte);
 
-                    if (controversiaActuacionActual.NumeroActuacionReclamacion == null && controversiaActuacionActual.EstadoAvanceTramiteCodigo == "14")
+                    if (string.IsNullOrEmpty(controversiaActuacionActual.NumeroActuacionReclamacion) && controversiaActuacionActual.EstadoAvanceTramiteCodigo == "14")
                     {
                         int consecutivo = _context.ControversiaActuacion
                                         .Where(r => r.ControversiaContractualId == controversiaActuacionActual.ControversiaContractualId
