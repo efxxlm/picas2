@@ -31,7 +31,10 @@ export interface DetalleProgramacionPersonal {
 
 export interface ContratoConstruccion {
     contratoConstruccionId: number;
-    programacionPersonalContratoConstruccion: ProgramacionPersonalContratoConstruccion[];
+    contratoId?: number;
+    proyectoId?: number;
+    programacionPersonalContratoConstruccion?: ProgramacionPersonalContratoConstruccion[];
+    fechaInicioObra?: Date;
 }
 
 interface ProgramacionPersonalContratoConstruccion {

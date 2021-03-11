@@ -80,8 +80,8 @@ export class CrearActaComponent implements OnInit {
 
             this.objetoComiteTecnico.sesionParticipante.forEach(p => {
               let usuario: Usuario = this.listaMiembros.find(m => m.usuarioId == p.usuarioId)
-
-              this.nombresParticipantes = `${this.nombresParticipantes} ${usuario.nombres} ${usuario.apellidos} , `
+              if ( usuario )
+                this.nombresParticipantes = `${this.nombresParticipantes} ${usuario.nombres} ${usuario.apellidos} , `
 
             });
 
@@ -106,8 +106,8 @@ export class CrearActaComponent implements OnInit {
 
   validarCompletos() {
     this.solicitudesCompletas = null;
-    this.temasCompletos = true;
-    this.proposicionesCompletos = true;
+    this.temasCompletos = null;
+    this.proposicionesCompletos = null;
 
     if (this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico && this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico.length > 0 ) {
       this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico.forEach(cs => {
@@ -123,15 +123,36 @@ export class CrearActaComponent implements OnInit {
       this.solicitudesCompletas = true;
     }
 
-    this.listaTemas.forEach(t => {
-      if (!t.registroCompleto)
-        this.temasCompletos = false;
-    })
 
-    this.listaProposiciones.forEach(p => {
-      if (!p.registroCompleto)
-        this.proposicionesCompletos = false;
-    })
+    if (this.listaTemas && this.listaTemas.length>0){
+      this.listaTemas.forEach(t => {
+        if (t.registroCompletoActa === true)
+          this.temasCompletos = true;
+       });
+  
+       this.listaTemas.forEach(t => {
+        if (t.registroCompletoActa === false)
+          this.temasCompletos = false;
+       });
+    }else{
+      this.temasCompletos = true;
+    }
+ 
+
+    if (this.listaProposiciones && this.listaProposiciones.length > 0){
+      this.listaProposiciones.forEach(p => {
+        if (p.registroCompletoActa === true)
+          this.proposicionesCompletos = true;
+      })
+  
+      this.listaProposiciones.forEach(p => {
+        if (p.registroCompletoActa === false)
+          this.proposicionesCompletos = false;
+      })
+    }else{
+      this.proposicionesCompletos = true;
+    }
+    
 
   }
 

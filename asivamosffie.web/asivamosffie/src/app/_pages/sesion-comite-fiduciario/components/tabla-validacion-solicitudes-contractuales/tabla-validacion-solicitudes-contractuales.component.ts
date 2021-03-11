@@ -3,7 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { FiduciaryCommitteeSessionService } from 'src/app/core/_services/fiduciaryCommitteeSession/fiduciary-committee-session.service';
-import { ComiteTecnico } from 'src/app/_interfaces/technicalCommitteSession';
+import { ComiteTecnico, SesionComiteSolicitud } from 'src/app/_interfaces/technicalCommitteSession';
 
 export interface OrdenDelDia {
   id: number;
@@ -57,7 +57,12 @@ export class TablaValidacionSolicitudesContractualesComponent implements OnInit 
     };
   }
 
-  verSoporte(pTablaId: string, pRegistroId: number, numeroSolicitud: string) {
+  verSoporte(pTablaId: string, pRegistroId: number, numeroSolicitud: string, element: any ) {
+    
+    if (pTablaId == '6'){
+      pRegistroId = element.procesoSeleccionMonitoreo.procesoSeleccionId;
+      pTablaId = '1';
+    }
 
     //console.log(pTablaId, pRegistroId)
     this.fiduciaryCommitteeSessionService.getPlantillaByTablaIdRegistroId(pTablaId, pRegistroId)

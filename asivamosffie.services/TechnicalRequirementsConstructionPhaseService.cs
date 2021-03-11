@@ -1553,8 +1553,8 @@ namespace asivamosffie.services
 
                     pConstruccion.PlanInventarioArboreo == null ||
                     pConstruccion.PlanInventarioArboreo == 1 ||
-                    (pConstruccion.PlanInventarioArboreo == 2 && pConstruccion.InventarioArboreoFechaRadicado == null ) ||
-                    (pConstruccion.PlanInventarioArboreo == 2 && pConstruccion.InventarioArboreoFechaAprobacion == null ) ||
+                    pConstruccion.InventarioArboreoFechaRadicado == null ||
+                    pConstruccion.InventarioArboreoFechaAprobacion == null ||
 
                     pConstruccion.PlanAprovechamientoForestal == null ||
                     pConstruccion.PlanAprovechamientoForestal == 1 ||

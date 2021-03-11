@@ -16,5 +16,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> UpdateSeguimientoSemanalPersonalObra(List<SeguimientoSemanal> pSeguimientoSemanal);
        
         Task<Respuesta> ChangeStatusProgramacionContratoPersonal(int pContratoConstruccionId, string pEstadoProgramacionCodigo, string pUsuario);
+
+        Task TareaProgramada(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
     }
 }

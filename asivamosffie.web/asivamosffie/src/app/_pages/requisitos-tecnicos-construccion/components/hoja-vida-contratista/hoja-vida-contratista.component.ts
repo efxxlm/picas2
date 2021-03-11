@@ -246,7 +246,7 @@ export class HojaVidaContratistaComponent implements OnInit {
               cantidadHvRecibidas         : [ perfil.cantidadHvRecibidas ? String( perfil.cantidadHvRecibidas ) : '' ],
               cantidadHvAprobadas         : [ perfil.cantidadHvAprobadas ? String( perfil.cantidadHvAprobadas ) : '' ],
               fechaAprobacion             : [ perfil.fechaAprobacion ? new Date( perfil.fechaAprobacion ) : null ],
-              observacion                 : [ observaciones ],
+              observacion                 : [ perfil.observaciones ],
               observacionDevolucion       : [ perfil.observacionDevolucion],
               observacionSupervisor       : [ observacionSupervisor ],
               fechaObservacion            : [ fechaObservacion ],
@@ -414,7 +414,8 @@ export class HojaVidaContratistaComponent implements OnInit {
         value.cantidadHvRecibidas                 = Number( value.cantidadHvRecibidas );
         value.cantidadHvRequeridas                = Number( value.cantidadHvRequeridas );
         value['construccionPerfilNumeroRadicado'] = ( value.contratoPerfilNumeroRadicado[0][ 'numeroRadicado' ].length === 0 ) ? null : value.contratoPerfilNumeroRadicado;
-        value['construccionPerfilObservacion']    = value.observacion ? [{ observacion: value.observacion }] : null;
+        //value['construccionPerfilObservacion']    = value.observacion ? [{ observacion: value.observacion }] : null;
+        value['observaciones']                    = value.observacion;
         value.fechaAprobacion                     = value.fechaAprobacion ? new Date( value.fechaAprobacion ).toISOString() : null;
         value.contratoId                          = this.contratoId;
         value.proyectoId                          = this.proyectoId;

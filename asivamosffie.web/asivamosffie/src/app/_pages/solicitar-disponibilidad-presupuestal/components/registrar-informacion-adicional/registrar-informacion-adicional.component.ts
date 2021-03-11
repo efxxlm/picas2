@@ -102,28 +102,42 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
     this.budgetAvailabilityService.getReuestCommittee()
       .subscribe(
         listaSolicitudes => {
-        listaSolicitudes.forEach( solicitud => {
-          if ( solicitud.contratacionId == this.objetoDisponibilidad.contratacionId ){
-            this.objetoDisponibilidad.fechaSolicitud = solicitud.fechaSolicitud;
-            this.objetoDisponibilidad.numeroSolicitud = solicitud.numeroSolicitud;
-            this.objetoDisponibilidad.opcionContratarCodigo = solicitud.opcionContratar;
-            this.objetoDisponibilidad.valorSolicitud = solicitud.valorSolicitud;
-            this.objetoDisponibilidad.tipoSolicitudCodigo = solicitud.tipoSolicitudCodigo? solicitud.tipoSolicitudCodigo:this.objetoDisponibilidad.tipoSolicitudCodigo;            
-          }
-          
-        }),
-        err => {
-          console.log( err );
-        }
+          listaSolicitudes.forEach(solicitud => {
+            if (solicitud.contratacionId == this.objetoDisponibilidad.contratacionId) {
+              this.objetoDisponibilidad.fechaSolicitud = solicitud.fechaSolicitud;
+              this.objetoDisponibilidad.numeroSolicitud = solicitud.numeroSolicitud;
+              this.objetoDisponibilidad.opcionContratarCodigo = solicitud.opcionContratar;
+              this.objetoDisponibilidad.valorSolicitud = solicitud.valorSolicitud;
+              this.objetoDisponibilidad.tipoSolicitudCodigo = solicitud.tipoSolicitudCodigo ? solicitud.tipoSolicitudCodigo : this.objetoDisponibilidad.tipoSolicitudCodigo;
+            }
 
-        this.projectContractingService.getContratacionByContratacionId( this.objetoDisponibilidad.contratacionId )
-        .subscribe(
-          contratacion => {
-            this.objetoDisponibilidad.fechaComiteTecnicoNotMapped=contratacion.fechaComiteTecnicoNotMapped;
+          }),
+            err => {
+              console.log(err);
+            }
+        })
+
+    this.projectContractingService.getContratacionByContratacionId(this.objetoDisponibilidad.contratacionId)
+      .subscribe(
+        contratacion => {
+          console.log(contratacion)
+          this.contratacion = contratacion;
+          this.tipoSolicitudCodigo = contratacion.tipoSolicitudCodigo;
+          this.objetoDisponibilidad.fechaComiteTecnicoNotMapped = contratacion.fechaComiteTecnicoNotMapped;
           contratacion.contratacionProyecto.forEach(cp => {
-            cp.proyecto.contratacionProyectoAportante=cp.contratacionProyectoAportante;
-            
+            cp.proyecto.contratacionProyectoAportante = cp.contratacionProyectoAportante;
+
             this.listaProyectos.push(cp.proyecto);
+            /*this.projectService.getProjectById(cp.proyectoId)
+              .subscribe(proyecto => {
+                let aporntantes=cp.contratacionProyectoAportante;
+                cp.proyecto = proyecto;
+                cp.proyecto.apo
+                console.log(proyecto);
+          
+                
+          
+              })*/
           });
           console.log(this.listaProyectos);
           },
@@ -154,9 +168,7 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
             }
           )
         }  
-      })
-
-    
+      //})
 
   }
 

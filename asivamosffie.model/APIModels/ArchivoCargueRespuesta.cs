@@ -11,7 +11,11 @@ namespace asivamosffie.model.APIModels
         public string CantidadDeRegistrosValidos { get; set; }
 
         public string CantidadDeRegistrosInvalidos { get; set; }
-        public bool CargaValida { get; set; }
+        
+        public bool? CargaValida { get; set; }
+
         public string Mensaje { get; set; }
+
+
     }
 }

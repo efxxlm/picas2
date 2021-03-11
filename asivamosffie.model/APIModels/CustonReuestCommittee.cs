@@ -19,7 +19,8 @@ namespace asivamosffie.model.APIModels
         public string OpcionContratar { get; set; }
         public decimal ValorSolicitud { get; set; }        
         public DateTime FechaComite { get; set; }
-        public int TipoAportanteId{ get; set; }        
+        public decimal ValorSolicitado { get; set; }
+		public int TipoAportanteId{ get; set; }        
         public string EstadoSolicitudCodigo { get; set; }
         public string EstadoSolicitudText { get; set; }
         

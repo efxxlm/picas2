@@ -91,7 +91,7 @@
             <app-form-seleccion-proponente-a-invitar #proponenteInvitar
                 [editar]="bitPuedoEditar"    
                 [procesoSeleccion]="procesoSeleccion"               
-                (guardar)="onSubmit()">
+                (guardar)="onSubmit()" [style.pointer-events]="getStyleEvaluacion()">
             </app-form-seleccion-proponente-a-invitar>
 
         </mat-expansion-panel>

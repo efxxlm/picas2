@@ -129,6 +129,7 @@ namespace asivamosffie.services
             if(resultado.AportanteId>0)
             {
                 resultado.stringAportante = getNombreAportante(_context.CofinanciacionAportante.Find(resultado.AportanteId));
+                resultado.stringTipoAportante = getNombreTipoAportante(_context.CofinanciacionAportante.Find(resultado.AportanteId)); 
             }
             
             return resultado;
@@ -741,7 +742,7 @@ namespace asivamosffie.services
 
             plantilla.Contenido = ReemplazarDatosDDP(plantilla.Contenido, disponibilidad,false);
             //return ConvertirPDF(plantilla);
-            return Helpers.PDF.Convertir(plantilla);
+            return Helpers.PDF.Convertir(plantilla, true);
         }
 
         private byte[] ConvertirPDF(Plantilla pPlantilla)
@@ -875,7 +876,8 @@ namespace asivamosffie.services
                 foreach (var compAp in componenteAp)
                 {
                     List<string> uso = new List<string>();
-                    List<decimal> usovalor = new List<decimal>(); 
+                    List<decimal> usovalor = new List<decimal>();
+                    decimal total = 0;
                     var dom = _context.Dominio.Where(x => x.Codigo == compAp.TipoComponenteCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Componentes).ToList();
                     var strFase = _context.Dominio.Where(r => r.Codigo == compAp.FaseCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Fases).FirstOrDefault();
                     foreach (var comp in compAp.ComponenteUso)
@@ -1110,7 +1112,8 @@ namespace asivamosffie.services
                         
                     case ConstanCodigoVariablesPlaceHolders.DDP_FECHA_COMITE_TECNICO: pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.FechaCreacion.ToString("dd/MM/yyyy")); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_NUMERO_COMITE: pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.NumeroSolicitud); break;
-                    
+                    case ConstanCodigoVariablesPlaceHolders.DDP_OBJETO: pStrContenido = pStrContenido.Replace(place.Nombre, Helpers.Helpers.HtmlStringLimpio(pDisponibilidad.Objeto)); break;
+                    //case ConstanCodigoVariablesPlaceHolders.DDP_OBJETO: pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.Objeto); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_TABLAAPORTANTES: pStrContenido = pStrContenido.Replace(place.Nombre, tablaaportantes); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_TOTAL_DE_RECURSOS: pStrContenido = pStrContenido.Replace(place.Nombre, ""); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_TOTAL_DE_RECURSOSLETRAS: pStrContenido = pStrContenido.Replace(place.Nombre, ""); break;
@@ -1144,7 +1147,6 @@ namespace asivamosffie.services
                         pStrContenido = pStrContenido.Replace(place.Nombre, contratotd);break;
                     case ConstanCodigoVariablesPlaceHolders.TIPONOVEDADTD:
                         pStrContenido = pStrContenido.Replace(place.Nombre, novedadtd); break;
-                    case ConstanCodigoVariablesPlaceHolders.DDP_OBJETO: pStrContenido = pStrContenido.Replace(place.Nombre, objetotd); break;
                 }
             }
 
@@ -1607,7 +1609,7 @@ namespace asivamosffie.services
             string contenido = ReemplazarDatosDDP(plantilla.Contenido, disponibilidad, true);
             plantilla.Contenido = contenido;
             //return ConvertirPDF(plantilla);
-            return Helpers.PDF.Convertir(plantilla);
+            return Helpers.PDF.Convertir(plantilla, true);
         }
 
         public string getNombreAportante(CofinanciacionAportante confinanciacion)
@@ -1639,6 +1641,31 @@ namespace asivamosffie.services
                 }
             }
             return nombreAportante;
+        }
+
+        private string getNombreTipoAportante(CofinanciacionAportante confinanciacion)
+        {
+            string nombreTipoAportante;
+            if (confinanciacion.TipoAportanteId.Equals(ConstanTipoAportante.Ffie))
+            {
+                nombreTipoAportante = ConstanStringTipoAportante.Ffie;
+            }
+            else if (confinanciacion.TipoAportanteId.Equals(ConstanTipoAportante.Tercero))
+            {
+                nombreTipoAportante = "Tercero";
+            }
+            else
+            {
+                if (confinanciacion.MunicipioId == null)
+                {
+                    nombreTipoAportante = "Gobernación";
+                }
+                else
+                {
+                    nombreTipoAportante = "Alcaldía";
+                }
+            }
+            return nombreTipoAportante;
         }
     }
 }
