@@ -1,3 +1,5 @@
+import { Dominio } from './../../../../core/_services/common/common.service';
+import { CommonService } from 'src/app/core/_services/common/common.service';
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -14,20 +16,10 @@ export class FormListaChequeoComponent implements OnInit {
     formLista: FormGroup;
     esRegistroNuevo: boolean;
     esVerDetalle = false;
-    criteriosDePagoCodigo = '1';
-    booleanosEstadoReq: any[] = [
-        { viewValue: 'Activo - Terminado', value: true },
-        { viewValue: 'Activo - En proceso', value: true },
-        { viewValue: 'Inactivo - En proceso', value: true },
-        { viewValue: 'Inactivo - Terminado', value: false }
-    ];
-    tiposListaChequeo = [
-        { codigo: '1', nombre: 'Criterios de pago' },
-        { codigo: '2', nombre: 'Expensas' },
-        { codigo: '3', nombre: 'Otros costos y servicios' },
-        { codigo: '4', nombre: 'Informe final' },
-        { codigo: '5', nombre: 'Construcción - Planes y programas' }
-    ];
+    listaCriteriosDePago: Dominio[] = [];
+    criteriosDePagoCodigo: string;
+    listaEstadoListaChequeo: Dominio[] = [];
+    listaChequeoMenu: Dominio[] = [];
     listaCriterio = [
         { codigo: '1', nombre: 'Estudios y diseños interventoría hasta el 90%' },
         { codigo: '2', nombre: 'Precontrucción-Obra' }
@@ -45,12 +37,24 @@ export class FormListaChequeoComponent implements OnInit {
         private activatedRoute: ActivatedRoute,
         private routes: Router,
         private fb: FormBuilder,
-        private dialog: MatDialog )
+        private dialog: MatDialog,
+        private commonSvc: CommonService )
     {
+
         this.formLista = this.crearFormulario();
         // Registro nuevo === undefined
         // Editar === id del registro a editar
         console.log( this.activatedRoute.snapshot.params.id );
+
+        this.commonSvc.listaEstadoListaChequeo()
+            .subscribe( listaEstadoListaChequeo => this.listaEstadoListaChequeo = listaEstadoListaChequeo );
+        this.commonSvc.listaChequeoMenu()
+            .subscribe( listaChequeoMenu => {
+                console.log( listaChequeoMenu );
+                this.listaChequeoMenu = listaChequeoMenu;
+            } );
+        this.commonSvc.criteriosDePago()
+            .subscribe( criteriosDePago => this.listaCriteriosDePago = criteriosDePago );
 
         this.activatedRoute.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
             if ( urlSegment.path === 'crearListaChequeo' ) {

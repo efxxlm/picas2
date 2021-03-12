@@ -398,6 +398,10 @@ listaEstadosPoliza(){
     // Estados de la lista de chequeo CU 6.4.
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=165`);
   }
+  listaChequeoMenu() {
+    // Lista desplegable de seleccion unica para el campo "La lista de chequeo está asociada a" de la lista de chequeo CU 6.4.
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=166`);
+  }
 
   public listaUsuarios(){
 

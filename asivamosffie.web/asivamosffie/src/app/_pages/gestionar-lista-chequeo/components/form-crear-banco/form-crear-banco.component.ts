@@ -30,8 +30,21 @@ export class FormCrearBancoComponent implements OnInit {
         // Registro nuevo === undefined
         // Editar === id del registro a editar
         this.formBanco = this.crearFormulario();
-        if ( activatedRoute.snapshot.params.id !== undefined ) {
+        if ( this.activatedRoute.snapshot.params.id !== undefined ) {
             this.esRegistroNuevo = false;
+
+            this.listaChequeoSvc.getListaChequeoItemByListaChequeoItemId( this.activatedRoute.snapshot.params.id )
+                .subscribe(
+                    item => {
+                        console.log( item );
+                        this.formBanco.setValue(
+                            {
+                                nombreRequisito: item.nombre !== undefined ? item.nombre : null,
+                                estadoRequisito: item.activo !== undefined ? item.activo : null
+                            }
+                        );
+                    }
+                );
         } else {
             this.esRegistroNuevo = true;
         }

@@ -1,7 +1,11 @@
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { GestionarListaChequeoService } from './../../../../core/_services/gestionarListaChequeo/gestionar-lista-chequeo.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-tabla-bancos',
@@ -15,26 +19,51 @@ export class TablaBancosComponent implements OnInit {
     @ViewChild( MatSort, { static: true } ) sort: MatSort;
     displayedColumns: string[] = [ 'nombreRequisito', 'estadoRequisito', 'gestion' ];
 
-    constructor() { }
+    constructor(
+        private listaChequeoSvc: GestionarListaChequeoService,
+        private dialog: MatDialog,
+        private routes: Router )
+    {
+        this.listaChequeoSvc.getListItem()
+            .subscribe(
+                listas => {
+                    this.dataSource = new MatTableDataSource( listas );
+                    this.dataSource.paginator = this.paginator;
+                    this.dataSource.sort = this.sort;
+                    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+                }
+            );
+    }
 
     ngOnInit(): void {
-        const dataTable = [
-            {
-                nombreRequisito: 'NIT actualizado del contratista a cargo de la obra',
-                estadoRequisito: 'Activo',
-                id: 1,
-            }
-        ];
-
-        this.dataSource = new MatTableDataSource( dataTable );
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
     }
 
     applyFilter(event: Event) {
         const filterValue = (event.target as HTMLInputElement).value;
         this.dataSource.filter = filterValue.trim().toLowerCase();
+    }
+
+    openDialog( modalTitle: string, modalText: string ) {
+        this.dialog.open( ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle, modalText }
+        });
+    }
+
+    activarDesactivarItem( registro: any ) {
+        const pListaChequeoItem = {
+            listaChequeoItemId: registro.listaChequeoItemId,
+            activo: !registro.activo
+        }
+
+        this.listaChequeoSvc.activateDeactivateListaChequeoItem( pListaChequeoItem )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', { skipLocationChange: true } ).then( () => this.routes.navigate( [ '/gestionListaChequeo' ] ) );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }

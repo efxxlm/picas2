@@ -12,8 +12,21 @@ export class GestionarListaChequeoService {
 
   constructor( private http: HttpClient ) { }
 
+  /* Banco de requisitos */
   createEditItem( pListaChequeoItem: any ) {
     return this.http.post<Respuesta>( `${ this.urlApi }/CreateEditItem`, pListaChequeoItem );
+  }
+
+  getListItem() {
+    return this.http.get<any[]>( `${ this.urlApi }/GetListItem` );
+  }
+
+  getListaChequeoItemByListaChequeoItemId( listaChequeoItemId: number ) {
+    return this.http.get<any>( `${ this.urlApi }/GetListaChequeoItemByListaChequeoItemId?ListaChequeoItemId=${ listaChequeoItemId }` );
+  }
+
+  activateDeactivateListaChequeoItem( pListaChequeoItem: any ) {
+    return this.http.post<Respuesta>( `${ this.urlApi }/ActivateDeactivateListaChequeoItem`, pListaChequeoItem );
   }
 
 }

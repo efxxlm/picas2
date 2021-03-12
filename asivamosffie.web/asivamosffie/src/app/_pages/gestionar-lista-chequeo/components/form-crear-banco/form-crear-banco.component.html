@@ -17,7 +17,7 @@
                           <label    class="label-left"
                                     style="margin-top: .9em;"
                                     for="nombreRequisito"
-                                    [class.color-secondaryColor]="( formBanco.get('nombreRequisito').invalid && formBanco.get('nombreRequisito').touched) || ( formBanco.get('nombreRequisito') && esRegistroNuevo === false )">
+                                    [class.color-secondaryColor]="( formBanco.get('nombreRequisito').invalid && formBanco.get('nombreRequisito').touched) || ( formBanco.get('nombreRequisito').invalid && esRegistroNuevo === false )">
                                     Nombre del requisito
                           </label>
                         </div>
@@ -60,7 +60,7 @@
                           <label    class="label-left"
                                     style="margin-top: 1.8em;"
                                     for="estadoRequisito"
-                                    [class.color-secondaryColor]="( formBanco.get('estadoRequisito').invalid && formBanco.get('estadoRequisito').touched) || ( formBanco.get('estadoRequisito') && esRegistroNuevo === false )">
+                                    [class.color-secondaryColor]="( formBanco.get('estadoRequisito').invalid && formBanco.get('estadoRequisito').touched) || ( formBanco.get('estadoRequisito').invalid && esRegistroNuevo === false )">
                                     Estado del requisito
                           </label>
                         </div>
