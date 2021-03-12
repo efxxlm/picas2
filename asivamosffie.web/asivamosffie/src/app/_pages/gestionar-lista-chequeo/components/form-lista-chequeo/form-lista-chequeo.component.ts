@@ -145,7 +145,14 @@ export class FormListaChequeoComponent implements OnInit {
                     if ( value === true ) {
                         this.listaItems.push( this.requisitos.controls[ index ].get( 'nombreRequisito' ).value );
                         this.requisitos.removeAt( index );
-                        this.openDialog( '', '<b>Pendiente servicio...</b>' );
+                        this.listaChequeoSvc.deleteListaChequeoItem( this.requisitos.controls[ index ].get( 'listaChequeoListaChequeoItemId' ).value )
+                            .subscribe(
+                                response => {
+                                    this.openDialog( '', `<b>${ response.message }</b>` );
+                                    this.routes.navigateByUrl( '/', { skipLocationChange: true } ).then( () => this.routes.navigate( [ '/gestionListaChequeo' ] ) );
+                                },
+                                err => this.openDialog( '', `<b>${ err.message }</b>` )
+                            );
                     }
                 } );
         }
@@ -197,7 +204,14 @@ export class FormListaChequeoComponent implements OnInit {
             listaChequeoListaChequeoItem: getListaChequeoItem()
         }
 
-        console.log( pListaChequeo );
+        this.listaChequeoSvc.createEditCheckList( pListaChequeo )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', { skipLocationChange: true } ).then( () => this.routes.navigate( [ '/gestionListaChequeo' ] ) );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }

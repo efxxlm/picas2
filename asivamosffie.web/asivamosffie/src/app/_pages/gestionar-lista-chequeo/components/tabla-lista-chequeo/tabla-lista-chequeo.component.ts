@@ -1,7 +1,9 @@
+import { GestionarListaChequeoService } from './../../../../core/_services/gestionarListaChequeo/gestionar-lista-chequeo.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import moment from 'moment';
 
 @Component({
   selector: 'app-tabla-lista-chequeo',
@@ -15,22 +17,25 @@ export class TablaListaChequeoComponent implements OnInit {
     @ViewChild( MatSort, { static: true } ) sort: MatSort;
     displayedColumns: string[] = [ 'fechaCreacion', 'nombreRequisito', 'estadoRequisito', 'gestion' ];
 
-    constructor() { }
+    constructor(
+        private listaChequeoSvc: GestionarListaChequeoService )
+    {
+        this.listaChequeoSvc.getCheckList()
+            .subscribe(
+                listas => {
+                    if ( listas.length > 0 ) {
+                        listas.forEach( registro => registro.fechaCreacion !== undefined ? registro.fechaCreacion = moment( registro.fechaCreacion ).format( 'DD/MM/YYYY' ) : '' );
+                    }
+                    console.log( listas );
+                    this.dataSource = new MatTableDataSource( listas );
+                    this.dataSource.paginator = this.paginator;
+                    this.dataSource.sort = this.sort;
+                    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+                }
+            );
+    }
 
     ngOnInit(): void {
-        const dataTable = [
-            {
-                fechaCreacion: new Date(),
-                nombreRequisito: 'Requerimientos de obra para fase Preconstrucción',
-                estadoRequisito: 'Activo',
-                id: 1
-            }
-        ];
-
-        this.dataSource = new MatTableDataSource( dataTable );
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
     }
 
     applyFilter(event: Event) {

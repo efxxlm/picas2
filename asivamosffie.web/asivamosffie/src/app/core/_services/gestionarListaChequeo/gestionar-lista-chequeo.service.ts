@@ -34,4 +34,12 @@ export class GestionarListaChequeoService {
     return this.http.post<Respuesta>( `${ this.urlApi }/CreateEditCheckList`, pListaChequeo );
   }
 
+  deleteListaChequeoItem( pListaChequeoListaChequeoItemId: number ) {
+    return this.http.post<Respuesta>( `${ this.urlApi }/DeleteListaChequeoItem?pListaChequeoListaChequeoItemId=${ pListaChequeoListaChequeoItemId }`, '' );
+  }
+
+  getCheckList() {
+    return this.http.get<any[]>( `${ this.urlApi }/GetCheckList` );
+  }
+
 }
