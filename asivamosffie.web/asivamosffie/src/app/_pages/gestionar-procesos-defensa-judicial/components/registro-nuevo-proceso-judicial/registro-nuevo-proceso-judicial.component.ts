@@ -82,7 +82,17 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
           defensaJudicial.fichaEstudio[0].jurisprudenciaDoctrina!=null &&
           defensaJudicial.fichaEstudio[0].decisionComiteDirectrices!=null &&
           defensaJudicial.fichaEstudio[0].analisisJuridico!=null &&
-          defensaJudicial.fichaEstudio[0].recomendaciones!=null)
+          defensaJudicial.fichaEstudio[0].recomendaciones!=null &&
+          ((defensaJudicial.fichaEstudio[0].esPresentadoAnteComiteFfie==true && 
+            defensaJudicial.fichaEstudio[0].fechaComiteDefensa!=null && 
+            defensaJudicial.fichaEstudio[0].recomendacionFinalComite!=null)||
+            (defensaJudicial.fichaEstudio[0].esPresentadoAnteComiteFfie==false && 
+              defensaJudicial.fichaEstudio[0].fechaComiteDefensa==null && 
+              defensaJudicial.fichaEstudio[0].recomendacionFinalComite==null))
+          && defensaJudicial.fichaEstudio[0].esAprobadoAperturaProceso!=null
+          && defensaJudicial.fichaEstudio[0].tipoActuacionCodigo!=null
+          &&  defensaJudicial.fichaEstudio[0].esActuacionTramiteComite!=null
+          && defensaJudicial.fichaEstudio[0].rutaSoporte!=null)
           {
             retorno= 2;
           }

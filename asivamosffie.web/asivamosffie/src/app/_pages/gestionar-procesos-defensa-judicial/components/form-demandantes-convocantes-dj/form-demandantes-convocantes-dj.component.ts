@@ -31,6 +31,7 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
   ];
 
   textoConvocantes = "demandante";
+  textoConvocantesCapital = "Demandante";
   demandado_class: number = 0;
   convocado_class: number = 0;
   estaEditando = false;
@@ -258,7 +259,8 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
   }
 
   cambioTipoTexto() {
-    this.textoConvocantes = this.addressForm.value.demandaContraFFIE ? "Convocante" : "Demandante";
+    this.textoConvocantes = this.addressForm.value.demandaContraFFIE ? "convocante" : "demandante";
+    this.textoConvocantesCapital = this.addressForm.value.demandaContraFFIE ? "Convocante" : "Demandante";
   }
 
   estaIncompletoDemandado(defensaJudicial: DefensaJudicial): number {

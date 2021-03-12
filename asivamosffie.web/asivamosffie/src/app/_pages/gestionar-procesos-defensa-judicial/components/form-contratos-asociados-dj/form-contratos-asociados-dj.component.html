@@ -45,8 +45,7 @@
                                 <div class="pr-1">
                                     <label class="label-left" for="contrato" [ngClass]="{
                                         'color-secondaryColor':
-                                          (perfil.get('contrato').invalid && perfil.get('contrato').touched) ||
-                                          (perfil.get('contrato').invalid && estaEditando)
+                                        myControl.controls[i].invalid && myControl.controls[i].touched
                                       }">Número de contrato</label>
                                 </div>
                                 <div class="col d-flex">

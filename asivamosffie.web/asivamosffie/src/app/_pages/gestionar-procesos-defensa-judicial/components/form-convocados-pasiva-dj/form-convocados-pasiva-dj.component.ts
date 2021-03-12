@@ -178,7 +178,11 @@ export class FormConvocadosPasivaDjComponent implements OnInit {
       e.editor.deleteText(n, e.editor.getLength());
     };
   };
-
+  textoLimpioNew(texto,n) {
+    if (texto!=undefined) {
+      return texto.getLength() > n ? n : texto.getLength();
+    }
+  }
   crearFormulario () {
     this.formContratista = this.fb.group({
       numeroContratos: [ '' ],
