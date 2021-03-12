@@ -77,7 +77,7 @@ namespace asivamosffie.services
             try
             {
                 await _context.Set<ListaChequeoListaChequeoItem>()
-                              .Where(l => l.ListaChequeoId == pListaChequeoListaChequeoItemId)
+                              .Where(l => l.ListaChequeoListaChequeoItemId == pListaChequeoListaChequeoItemId)
                               .UpdateAsync(l => new ListaChequeoListaChequeoItem
                               {
                                   UsuarioModificacion = pAutor,
