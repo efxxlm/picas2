@@ -29,11 +29,11 @@ namespace asivamosffie.services
 
         #region Get
 
-        public async Task<bool> GetValidateExistNameCheckList(string pNameCheckList)
+        public async Task<bool> GetValidateExistNameCheckList(ListaChequeo pListaChequeo)
         {  
             if (await _context.ListaChequeo
                 .AnyAsync(lc => lc.Eliminado != true
-                && lc.Nombre.Trim().ToLower().Equals(pNameCheckList.Trim().ToLower())))
+                && lc.Nombre.Trim().ToLower().Equals(pListaChequeo.Nombre.Trim().ToLower())))
                 return true;
             return false;
         }

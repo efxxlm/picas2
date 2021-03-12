@@ -109,11 +109,11 @@ namespace asivamosffie.api.Controllers
         
         [Route("GetValidateExistNameCheckList")]
         [HttpPost]
-        public async Task<IActionResult> GetValidateExistNameCheckList([FromBody] string pNameCheckList)
+        public async Task<IActionResult> GetValidateExistNameCheckList([FromBody] ListaChequeo plistaChequeo)
         {
             try
             {
-                var result = await _manageCheckListService.GetValidateExistNameCheckList(pNameCheckList);
+                var result = await _manageCheckListService.GetValidateExistNameCheckList(listaChequeo);
                 return Ok(result);
             }
             catch (Exception ex)
