@@ -82,6 +82,7 @@ namespace asivamosffie.services
                               {
                                   UsuarioModificacion = pAutor,
                                   FechaModificacion = DateTime.Now,
+                                  Orden = string.Empty,
                                   Eliminado = true
                               });
 
@@ -90,8 +91,8 @@ namespace asivamosffie.services
                     IsSuccessful = true,
                     IsException = false,
                     IsValidation = false,
-                    Code = GeneralCodes.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_Lista_Chequeo, GeneralCodes.OperacionExitosa, idAccion, pAutor, "ELIMINAR ITEM DE LISTA DE CHEQUEO")
+                    Code = GeneralCodes.EliminacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_Lista_Chequeo, GeneralCodes.EliminacionExitosa, idAccion, pAutor, "ELIMINAR ITEM DE LISTA DE CHEQUEO")
                 };
             }
             catch (Exception e)
