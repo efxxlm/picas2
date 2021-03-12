@@ -1094,11 +1094,10 @@ namespace asivamosffie.services
                 {
                     actuacionSeguimientoOld.EstadoCodigo = pEstadoReclamacionCodigo;
                 }
-                if (string.IsNullOrEmpty(actuacionSeguimientoOld.NumeroActuacionReclamacion) && actuacionSeguimientoOld.EstadoAvanceTramiteCodigo == "14" && pEstadoReclamacionCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada)
+                if (string.IsNullOrEmpty(actuacionSeguimientoOld.NumeroActuacionReclamacion) && actuacionSeguimientoOld.EstadoAvanceTramiteCodigo == ConstanCodigoEstadoAvanceTramite.RemisiondeComunicaciondedecisiondeTAIporAlianzaFiduciariaalaAseguradora && (pEstadoReclamacionCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada || pEstadoReclamacionCodigo == ConstantCodigoEstadoControversiaActuacion.Enviado_a_comite_tecnico))
                 {
                     int consecutivo = _context.ControversiaActuacion
-                                    .Where(r => r.ControversiaContractualId == actuacionSeguimientoOld.ControversiaContractualId
-                                    && actuacionSeguimientoOld.EstadoAvanceTramiteCodigo == "14")
+                                    .Where(r => r.ControversiaContractualId == actuacionSeguimientoOld.ControversiaContractualId && actuacionSeguimientoOld.EstadoAvanceTramiteCodigo.Equals(ConstanCodigoEstadoAvanceTramite.RemisiondeComunicaciondedecisiondeTAIporAlianzaFiduciariaalaAseguradora))
                                     .Count();
                     actuacionSeguimientoOld.NumeroActuacionReclamacion = "REC " + (consecutivo + 1).ToString("000");
                 }
@@ -3249,11 +3248,11 @@ namespace asivamosffie.services
                     controversiaActuacionActual.FechaModificacion = DateTime.Now;
                     controversiaActuacionActual.EsCompletoReclamacion = !string.IsNullOrEmpty(prmControversiaActuacion.ResumenPropuestaFiduciaria) && !string.IsNullOrEmpty(prmControversiaActuacion.RutaSoporte);
 
-                    if (string.IsNullOrEmpty(controversiaActuacionActual.NumeroActuacionReclamacion) && controversiaActuacionActual.EstadoAvanceTramiteCodigo == "14")
+                    if (string.IsNullOrEmpty(controversiaActuacionActual.NumeroActuacionReclamacion) && controversiaActuacionActual.EstadoAvanceTramiteCodigo == ConstanCodigoEstadoAvanceTramite.RemisiondeComunicaciondedecisiondeTAIporAlianzaFiduciariaalaAseguradora)
                     {
                         int consecutivo = _context.ControversiaActuacion
                                         .Where(r => r.ControversiaContractualId == controversiaActuacionActual.ControversiaContractualId
-                                        && controversiaActuacionActual.EstadoAvanceTramiteCodigo == "14")
+                                        && controversiaActuacionActual.EstadoAvanceTramiteCodigo == ConstanCodigoEstadoAvanceTramite.RemisiondeComunicaciondedecisiondeTAIporAlianzaFiduciariaalaAseguradora)
                                         .Count();
                         controversiaActuacionActual.NumeroActuacionReclamacion = "REC " + (consecutivo + 1).ToString("000");
                     }
