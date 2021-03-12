@@ -441,6 +441,11 @@ const routes: Routes = [
         path: 'gestionListaChequeo',
         loadChildren: () => import( './_pages/gestionar-lista-chequeo/gestionar-lista-chequeo.module' )
           .then( module => module.GestionarListaChequeoModule )
+      },
+      {
+        path: 'crearRoles',
+        loadChildren: () => import( './_pages/crear-roles/crear-roles.module' )
+          .then( module => module.CrearRolesModule )
       }
     ]
 

@@ -1,0 +1,9 @@
+.side-left {
+  padding-left: 3em;
+
+  &::before{
+    content: attr( data-line );
+    background-color: #fdc101;
+    height: 3em;
+  }
+}

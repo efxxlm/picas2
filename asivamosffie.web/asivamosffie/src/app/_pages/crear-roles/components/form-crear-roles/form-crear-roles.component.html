@@ -1,0 +1,108 @@
+<section class="container text-center mb-2em" *ngIf="esRegistroNuevo !== undefined">
+    <div class="text-right">
+        <a routerLink="/crearRoles" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+
+    <h1 class="title-menu--h1"> {{ esRegistroNuevo === true ? 'Crear rol' : 'Ver Detalle/Editar rol' }} </h1>
+
+    <form [formGroup]="formRoles" (ngSubmit)="guardar()" class="mt-3em">
+        <mat-card align="left">
+            <mat-card-content>
+                <div class="row">
+                    <div class="col-md-12">
+                      <div class="row">
+                            <div class="pr-1">
+                                <label    class="label-left"
+                                          style="margin-top: .9em;"
+                                          for="nombreRol"
+                                          [class.color-secondaryColor]="( formRoles.get('nombreRol').invalid && formRoles.get('nombreRol').touched) || ( formRoles.get('nombreRol').invalid && esRegistroNuevo === false )">
+                                          Nombre del rol
+                                </label>
+                            </div>
+                            <div class="col d-flex">
+                                <mat-form-field>
+                                    <input  matInput
+                                            type="text"
+                                            maxlength="80"
+                                            #nombreRol
+                                            formControlName="nombreRol"
+                                            style="width: 98%;"
+                                            required>
+                                </mat-form-field>
+                                <span   class="contador"
+                                        [matTooltipPosition]="'above'"
+                                        matTooltip="Campo alfanumérico"
+                                        matTooltipClass="info-tooltip">
+                                        {{ 80 - nombreRol.value.length }}
+                                </span>
+                            </div>
+                            <span class="icon-incompleto">
+                                <img
+                                  class="icon-incompleto--img"
+                                  src="assets/img/icon/incompleto.svg"
+                                  alt="este campo es requerido"
+                                  [matTooltipPosition]="'above'"
+                                  matTooltip="Debe ingresar la información en el campo para continuar"
+                                  matTooltipClass="info-tooltip"
+                                  *ngIf="( formRoles.get('nombreRol').invalid && formRoles.get('nombreRol').touched ) || ( formRoles.get('nombreRol').invalid && esRegistroNuevo === false )"
+                                />
+                            </span>
+                      </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <div class="table-responsive side-left" data-line="Fase de inicio">
+            <table mat-table [dataSource]="dataSource" matSort>
+          
+              <ng-container matColumnDef="fechaCreacion">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de creación </th>
+                  <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.fechaCreacion }} </b> </td>
+              </ng-container>
+        
+              <ng-container matColumnDef="nombreRol">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre de la lista </th>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.nombreRol }} </td>
+              </ng-container>
+        
+              <ng-container matColumnDef="estadoRol">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la lista </th>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.estadoRol }} </td>
+              </ng-container>
+            
+              <ng-container matColumnDef="gestion">
+                <th class="w-20" mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
+                <td mat-cell *matCellDef="let element">
+            
+                  <button mat-raised-button
+                          color="accent" 
+                          class="btn-table"
+                          [routerLink]="[ 'editarRol', element.id ]">
+                          Ver detalle/Editar
+                  </button>
+        
+                  <button mat-raised-button
+                          color="accent" 
+                          class="btn-table">
+                          Desactivar
+                  </button>
+        
+                  <button mat-raised-button
+                          color="accent" 
+                          class="btn-table">
+                          Activar
+                  </button>
+            
+                </td>
+              </ng-container>
+            
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+        </div>
+    </form>
+</section>

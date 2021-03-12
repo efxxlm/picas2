@@ -61,7 +61,6 @@ export class TablaListaChequeoComponent implements OnInit {
                             if ( listas.length > 0 ) {
                                 listas.forEach( registro => registro.fechaCreacion !== undefined ? registro.fechaCreacion = moment( registro.fechaCreacion ).format( 'DD/MM/YYYY' ) : '' );
                             }
-                            console.log( listas );
                             this.dataSource = new MatTableDataSource( listas );
                             this.dataSource.paginator = this.paginator;
                             this.dataSource.sort = this.sort;
