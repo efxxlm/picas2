@@ -108,8 +108,8 @@ namespace asivamosffie.api.Controllers
 
         
         [Route("GetValidateExistNameCheckList")]
-        [HttpGet]
-        public async Task<IActionResult> GetValidateExistNameCheckList([FromQuery] string pNameCheckList)
+        [HttpPost]
+        public async Task<IActionResult> GetValidateExistNameCheckList([FromBody] string pNameCheckList)
         {
             try
             {
