@@ -8,6 +8,8 @@ using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+
 
 namespace asivamosffie.api.Controllers
 {
@@ -17,12 +19,15 @@ namespace asivamosffie.api.Controllers
     public class ContractualControversyController : ControllerBase
     {
         public readonly IContractualControversy _contractualControversy;
+        private readonly IOptions<AppSettings> _settings;
 
-        public ContractualControversyController(IContractualControversy contractualControversy)
+
+        public ContractualControversyController(IContractualControversy contractualControversy, IOptions<AppSettings> settings)
         {
             _contractualControversy = contractualControversy;
+            _settings = settings;
         }
-           
+
         [HttpPost]
         [Route("CreateEditarControversiaTAI")]
         public async Task<IActionResult> CreateEditarControversiaTAI(ControversiaContractual controversiaContractual)
@@ -415,7 +420,7 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                respuesta = await _contractualControversy.CambiarEstadoActuacionSeguimiento(pActuacionSeguimientoId, pEstadoReclamacionCodigo, HttpContext.User.FindFirst("User").Value);
+                respuesta = await _contractualControversy.CambiarEstadoActuacionSeguimiento(pActuacionSeguimientoId, pEstadoReclamacionCodigo, HttpContext.User.FindFirst("User").Value, _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 return Ok(respuesta);
             }
             catch (Exception ex)

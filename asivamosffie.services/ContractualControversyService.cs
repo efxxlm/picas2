@@ -1067,7 +1067,7 @@ namespace asivamosffie.services
 
         }
 
-        public async Task<Respuesta> CambiarEstadoActuacionSeguimiento(int pActuacionSeguimientoId, string pEstadoReclamacionCodigo, string pUsuarioModifica)
+        public async Task<Respuesta> CambiarEstadoActuacionSeguimiento(int pActuacionSeguimientoId, string pEstadoReclamacionCodigo, string pUsuarioModifica, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_estado_Actuacion_Seguimiento, (int)EnumeratorTipoDominio.Acciones);
 
@@ -1108,7 +1108,7 @@ namespace asivamosffie.services
 
                 if (pEstadoReclamacionCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada)
                 {
-                    await SendMailParticipation(pActuacionSeguimientoId);
+                    await SendMailParticipation(pActuacionSeguimientoId, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
                 }
 
                 return new Respuesta
@@ -3993,7 +3993,7 @@ namespace asivamosffie.services
 
         #region Correos 
         /// Envio de correo cuando finaliza el proceso de actuación en 4.2.1 y tiene algun check en true (EsRequiereContratista,EsRequiereInterventor,EsRequiereSupervisor,EsRequiereFiduciaria)
-        private async Task<bool> SendMailParticipation(int pControversiaActuacionId)
+        private async Task<bool> SendMailParticipation(int pControversiaActuacionId, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
             Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Participacion_Insumo_Realizar_Actuación_4_2_1));
             ControversiaActuacion controversia = _context.ControversiaActuacion
@@ -4002,14 +4002,39 @@ namespace asivamosffie.services
                             && (r.EsRequiereContratista == true || r.EsRequiereInterventor == true || r.EsRequiereSupervisor == true || r.EsRequiereFiduciaria == true))
                 .Include(r => r.ControversiaContractual)
                     .ThenInclude(r => r.Contrato)
+                        .ThenInclude(r => r.Contratacion)
                 .FirstOrDefault();
 
             List<EnumeratorPerfil> perfilsEnviarCorreo = new List<EnumeratorPerfil>();
 
             if (controversia != null)
             {
+                Dominio ProximaActuacionCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.ProximaActuacionCodigo, (int)EnumeratorTipoDominio.Proxima_actuacion_requerida);
+
                 if ((bool)controversia.EsRequiereContratista)
                 {
+                    if (controversia.ControversiaContractual.Contrato.Contratacion.ContratistaId != null)
+                    {
+                        Usuario user = new Usuario();
+                        Contratista contratista = _context.Contratista.Find(controversia.ControversiaContractual.Contrato.Contratacion.ContratistaId);
+                        
+                        if (contratista != null) {
+                            user = _context.Usuario.Where(r => r.NumeroIdentificacion.Equals(contratista.NumeroIdentificacion)).FirstOrDefault();
+                        }
+
+                        string template2 = template.Contenido
+                                        .Replace("_LinkF_", pDominioFront)
+                                        .Replace("[NUMERO_CONTRATO]", controversia.ControversiaContractual.Contrato.NumeroContrato)
+                                        .Replace("[PROXIMA_ACTUACION]", ProximaActuacionCodigo != null ? ProximaActuacionCodigo.Nombre : String.Empty)
+                                        .Replace("[FECHA_SOLICITUD_CONTROVERSIA]", ((DateTime)controversia.FechaVencimiento).ToString("yyyy-MM-dd"))
+                                        .Replace("[NUMERO_SOLICITUD]", ((DateTime)controversia.ControversiaContractual.FechaSolicitud).ToString("yyyy-MM-dd"))
+                                        .Replace("[TIPO_CONTROVERSIA]", controversia.ControversiaContractual.NumeroSolicitud);
+
+                        if (user != null && user.UsuarioId > 0) {
+                            Helpers.Helpers.EnviarCorreo(user.Email, template.Asunto, template2, pSender, pPassword, pMailServer, pMailPort);
+                        }
+                    }
+
                     perfilsEnviarCorreo.Add(EnumeratorPerfil.Tecnica);//que rol tiene el contratista??
                 }
                 if ((bool)controversia.EsRequiereInterventor)
@@ -4026,8 +4051,6 @@ namespace asivamosffie.services
                 }
                 if (perfilsEnviarCorreo.Count() > 0)
                 {
-                    Dominio ProximaActuacionCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.ProximaActuacionCodigo, (int)EnumeratorTipoDominio.Proxima_actuacion_requerida);
-
                     template.Contenido
                                 .Replace("[NUMERO_CONTRATO]", controversia.ControversiaContractual.Contrato.NumeroContrato)
                                 .Replace("[PROXIMA_ACTUACION]", ProximaActuacionCodigo != null ? ProximaActuacionCodigo.Nombre : String.Empty)
