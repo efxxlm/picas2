@@ -64,7 +64,7 @@ namespace asivamosffie.services
         {
             return await _context.ListaChequeo
                     .Where(r => r.ListaChequeoId == ListaChequeoId)
-                    .Include(lci => lci.ListaChequeoListaChequeoItem)
+                    .IncludeFilter(lci => lci.ListaChequeoListaChequeoItem.Where(r=> r.Eliminado == false))
                     .FirstOrDefaultAsync();
         }
         #endregion 
