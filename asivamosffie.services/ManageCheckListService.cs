@@ -30,7 +30,7 @@ namespace asivamosffie.services
         #region Get
 
         public async Task<bool> GetValidateExistNameCheckList(ListaChequeo pListaChequeo)
-        {  
+        {
             if (await _context.ListaChequeo
                 .AnyAsync(lc => lc.Eliminado != true
                 && lc.Nombre.Trim().ToLower().Equals(pListaChequeo.Nombre.Trim().ToLower())))
@@ -64,7 +64,7 @@ namespace asivamosffie.services
         {
             return await _context.ListaChequeo
                     .Where(r => r.ListaChequeoId == ListaChequeoId)
-                    .IncludeFilter(lci => lci.ListaChequeoListaChequeoItem.Where(r=> r.Eliminado == false))
+                    .IncludeFilter(lci => lci.ListaChequeoListaChequeoItem.Where(r => r.Eliminado == false))
                     .FirstOrDefaultAsync();
         }
         #endregion 
@@ -93,6 +93,43 @@ namespace asivamosffie.services
                     IsValidation = false,
                     Code = GeneralCodes.EliminacionExitosa,
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_Lista_Chequeo, GeneralCodes.EliminacionExitosa, idAccion, pAutor, "ELIMINAR ITEM DE LISTA DE CHEQUEO")
+                };
+            }
+            catch (Exception e)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = GeneralCodes.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_Lista_Chequeo, GeneralCodes.Error, idAccion, pAutor, e.InnerException.ToString())
+                };
+            }
+        }
+
+        public async Task<Respuesta> DeleteListaChequeo(int pListaChequeoId, string pAutor)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Elemento_Lista_Chequeo, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                await _context.Set<ListaChequeo>()
+                              .Where(l => l.ListaChequeoId == pListaChequeoId)
+                              .UpdateAsync(l => new ListaChequeo
+                              {
+                                  UsuarioModificacion = pAutor,
+                                  FechaModificacion = DateTime.Now,
+                                  Eliminado = true
+                              });
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.EliminacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_Lista_Chequeo, GeneralCodes.EliminacionExitosa, idAccion, pAutor, "ELIMINAR LISTA DE CHEQUEO")
                 };
             }
             catch (Exception e)

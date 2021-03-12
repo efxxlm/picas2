@@ -26,13 +26,28 @@ namespace asivamosffie.api.Controllers
         {
             _manageCheckListService = manageCheckListService;
         }
- 
+
+        [Route("DeleteListaChequeo")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteListaChequeo([FromQuery] int pListaChequeoId)
+        {
+            try
+            {
+                var result = await _manageCheckListService.DeleteListaChequeo(pListaChequeoId, User.Identity.Name);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
         [Route("DeleteListaChequeoItem")]
         [HttpPost]
         public async Task<IActionResult> DeleteListaChequeoItem([FromQuery] int pListaChequeoListaChequeoItemId)
         {
             try
-            { 
+            {
                 var result = await _manageCheckListService.DeleteListaChequeoItem(pListaChequeoListaChequeoItemId, User.Identity.Name);
                 return Ok(result);
             }
@@ -40,7 +55,7 @@ namespace asivamosffie.api.Controllers
             {
                 return BadRequest();
             }
-        }      
+        }
 
         [Route("ActivateDeactivateListaChequeo")]
         [HttpPost]
@@ -105,8 +120,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest();
             }
         }
-
-        
+         
         [Route("GetValidateExistNameCheckList")]
         [HttpPost]
         public async Task<IActionResult> GetValidateExistNameCheckList([FromBody] ListaChequeo plistaChequeo)
@@ -120,8 +134,8 @@ namespace asivamosffie.api.Controllers
             {
                 return BadRequest();
             }
-        }     
-        
+        }
+
         [Route("GetListItem")]
         [HttpGet]
         public async Task<IActionResult> GetListItem()
@@ -166,7 +180,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest();
             }
         }
-         
+
         [Route("GetListaChequeoItemByListaChequeoItemId")]
         [HttpGet]
         public async Task<IActionResult> GetListaChequeoItemByListaChequeoItemId([FromQuery] int ListaChequeoItemId)

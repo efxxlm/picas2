@@ -10,6 +10,8 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IManageCheckListService
     {
+        Task<Respuesta> DeleteListaChequeo(int pListaChequeoId, string pAutor);
+
         Task<bool> GetValidateExistNameCheckList(ListaChequeo pListaChequeo);
 
         Task<Respuesta> DeleteListaChequeoItem(int pListaChequeoListaChequeoItemId, string pAutor);
