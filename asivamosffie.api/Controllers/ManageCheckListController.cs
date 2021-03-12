@@ -26,7 +26,21 @@ namespace asivamosffie.api.Controllers
         {
             _manageCheckListService = manageCheckListService;
         }
-
+ 
+        [Route("DeleteListaChequeoItem")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteListaChequeoItem([FromQuery] int pListaChequeoListaChequeoItemId)
+        {
+            try
+            { 
+                var result = await _manageCheckListService.DeleteListaChequeoItem(pListaChequeoListaChequeoItemId, User.Identity.Name);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }      
         [Route("ActivateDeactivateListaChequeo")]
         [HttpPost]
         public async Task<IActionResult> ActivateDeactivateListaChequeo([FromBody] ListaChequeo pListaChequeo)

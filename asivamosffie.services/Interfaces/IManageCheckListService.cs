@@ -10,6 +10,8 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IManageCheckListService
     {
+        Task<Respuesta> DeleteListaChequeoItem(int pListaChequeoListaChequeoItemId, string pAutor);
+
         Task<bool> SendEmailWhenDesactiveListaChequeo(int pListaChequeoId);
 
         Task<Respuesta> ActivateDeactivateListaChequeo(ListaChequeo pListaChequeo);

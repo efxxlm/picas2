@@ -22,6 +22,7 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public bool? EsObra { get; set; }
         public bool? Activo { get; set; }
+        public string EstadoMenuCodigo { get; set; }
 
         public virtual ICollection<ListaChequeoListaChequeoItem> ListaChequeoListaChequeoItem { get; set; }
         public virtual ICollection<SolicitudPagoListaChequeo> SolicitudPagoListaChequeo { get; set; }

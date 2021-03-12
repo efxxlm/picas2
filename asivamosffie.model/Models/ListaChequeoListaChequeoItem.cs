@@ -12,6 +12,8 @@ namespace asivamosffie.model.Models
         public DateTime? FechaCreacion { get; set; }
         public bool? Eliminado { get; set; }
         public string Orden { get; set; }
+        public string UsuarioModificacion { get; set; }
+        public DateTime? FechaModificacion { get; set; }
 
         public virtual ListaChequeo ListaChequeo { get; set; }
         public virtual ListaChequeoItem ListaChequeoItem { get; set; }

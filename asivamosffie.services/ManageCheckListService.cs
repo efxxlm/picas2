@@ -38,6 +38,7 @@ namespace asivamosffie.services
         {
             return await _context.ListaChequeo
                 .Where(c => c.Eliminado != true)
+                .IncludeFilter(lclci => lclci.ListaChequeoListaChequeoItem.Where(lc => lc.Eliminado != null))
                 .OrderByDescending(o => o.ListaChequeoId)
                 .ToListAsync();
         }
@@ -54,6 +55,43 @@ namespace asivamosffie.services
         #endregion
 
         #region Create Edit Business
+        public async Task<Respuesta> DeleteListaChequeoItem(int pListaChequeoListaChequeoItemId , string pAutor)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Elemento_Lista_Chequeo, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                await _context.Set<ListaChequeoListaChequeoItem>()
+                              .Where(l => l.ListaChequeoId == pListaChequeoListaChequeoItemId)
+                              .UpdateAsync(l => new ListaChequeoListaChequeoItem
+                              { 
+                                  UsuarioModificacion = pAutor,
+                                  FechaModificacion = DateTime.Now,
+                                  Eliminado = true
+                              });
+  
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_Lista_Chequeo, GeneralCodes.OperacionExitosa, idAccion, pAutor, "ELIMINAR ITEM DE LISTA DE CHEQUEO")
+                };
+            }
+            catch (Exception e)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = GeneralCodes.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_Lista_Chequeo, GeneralCodes.Error, idAccion, pAutor, e.InnerException.ToString())
+                };
+            }
+        }
+         
         public async Task<Respuesta> ActivateDeactivateListaChequeo(ListaChequeo pListaChequeo)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Activar_Desactivar_Lista_Chequeo, (int)EnumeratorTipoDominio.Acciones);
@@ -272,11 +310,13 @@ namespace asivamosffie.services
                             else
                             {
                                 _context.Set<ListaChequeoListaChequeoItem>()
-                                    .Where(l => l.ListaChequeoListaChequeoItemId == lclci.ListaChequeoListaChequeoItemId)
-                                    .Update(lc => new ListaChequeoListaChequeoItem()
-                                    {
-                                        Eliminado = lclci.Eliminado
-                                    });
+                                        .Where(l => l.ListaChequeoListaChequeoItemId == lclci.ListaChequeoListaChequeoItemId)
+                                        .Update(lc => new ListaChequeoListaChequeoItem()
+                                        {
+                                            FechaModificacion = DateTime.Now,
+                                            UsuarioModificacion = pListaChequeo.UsuarioCreacion,
+                                            Eliminado = lclci.Eliminado
+                                        });
                             }
                         });
         }
