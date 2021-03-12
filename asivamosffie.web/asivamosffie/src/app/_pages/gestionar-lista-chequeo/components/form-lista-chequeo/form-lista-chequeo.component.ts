@@ -1,3 +1,4 @@
+import { GestionarListaChequeoService } from './../../../../core/_services/gestionarListaChequeo/gestionar-lista-chequeo.service';
 import { Dominio } from './../../../../core/_services/common/common.service';
 import { CommonService } from 'src/app/core/_services/common/common.service';
 import { Component, OnInit } from '@angular/core';
@@ -16,10 +17,12 @@ export class FormListaChequeoComponent implements OnInit {
     formLista: FormGroup;
     esRegistroNuevo: boolean;
     esVerDetalle = false;
+    listaChequeoId = 0;
     listaCriteriosDePago: Dominio[] = [];
     criteriosDePagoCodigo: string;
     listaEstadoListaChequeo: Dominio[] = [];
     listaChequeoMenu: Dominio[] = [];
+    listaItems: { nombre: string, listaChequeoItemId: number }[] = [];
     listaCriterio = [
         { codigo: '1', nombre: 'Estudios y diseños interventoría hasta el 90%' },
         { codigo: '2', nombre: 'Precontrucción-Obra' }
@@ -38,6 +41,7 @@ export class FormListaChequeoComponent implements OnInit {
         private routes: Router,
         private fb: FormBuilder,
         private dialog: MatDialog,
+        private listaChequeoSvc: GestionarListaChequeoService,
         private commonSvc: CommonService )
     {
 
@@ -50,11 +54,23 @@ export class FormListaChequeoComponent implements OnInit {
             .subscribe( listaEstadoListaChequeo => this.listaEstadoListaChequeo = listaEstadoListaChequeo );
         this.commonSvc.listaChequeoMenu()
             .subscribe( listaChequeoMenu => {
-                console.log( listaChequeoMenu );
                 this.listaChequeoMenu = listaChequeoMenu;
+                const criterioPagoDominio = listaChequeoMenu.find( menu => menu.nombre === 'Criterios de pago' );
+
+                if ( criterioPagoDominio !== undefined ) {
+                    this.criteriosDePagoCodigo = criterioPagoDominio.codigo;
+                }
             } );
         this.commonSvc.criteriosDePago()
             .subscribe( criteriosDePago => this.listaCriteriosDePago = criteriosDePago );
+        this.listaChequeoSvc.getListItem()
+            .subscribe(
+                items => {
+                    items.forEach( item => {
+                        this.listaItems.push( { nombre: item.nombre, listaChequeoItemId: item.listaChequeoItemId } );
+                    } );
+                }
+            );
 
         this.activatedRoute.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
             if ( urlSegment.path === 'crearListaChequeo' ) {
@@ -82,7 +98,7 @@ export class FormListaChequeoComponent implements OnInit {
                 requisitos: this.fb.array( [
                     this.fb.group(
                         {
-                            nombreRequisitoId: [ 0, Validators.required ],
+                            listaChequeoListaChequeoItemId: [ 0, Validators.required ],
                             nombreRequisito: [ null, Validators.required ]
                         }
                     )
@@ -91,19 +107,19 @@ export class FormListaChequeoComponent implements OnInit {
         );
     }
 
-    getRequisitoValue( requisitoCod: any ) {
-        this.listaRequisitos.forEach( ( requisito, index ) => {
-            if ( requisito.codigo === requisitoCod.codigo ) {
-                this.listaRequisitos.splice( index, 1 );
+    getRequisitoValue( item: { nombre: string, listaChequeoItemId: number } ) {
+        this.listaItems.forEach( ( itemValue, index ) => {
+            if ( itemValue.listaChequeoItemId === item.listaChequeoItemId ) {
+                this.listaItems.splice( index, 1 );
             }
-        } )
+        } );
     }
 
     addRequisito() {
         if ( this.listaRequisitos.length > 0 ) {
             this.requisitos.push( this.fb.group(
                 {
-                    nombreRequisitoId: [ 0, Validators.required ],
+                    listaChequeoListaChequeoItemId: [ 0, Validators.required ],
                     nombreRequisito: [ null, Validators.required ]
                 }
             ) );
@@ -114,14 +130,26 @@ export class FormListaChequeoComponent implements OnInit {
 
     deleteRequisito( index: number ) {
 
-        this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
-            .subscribe( value => {
-                if ( value === true ) {
-                    this.listaRequisitos.push( this.requisitos.controls[ index ].get( 'nombreRequisito' ).value );
-                    this.requisitos.removeAt( index );
-                    this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
-                }
-            } );
+        if ( this.requisitos.controls[ index ].get( 'listaChequeoListaChequeoItemId' ).value === 0 ) {
+            this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
+                .subscribe( value => {
+                    if ( value === true ) {
+                        this.listaItems.push( this.requisitos.controls[ index ].get( 'nombreRequisito' ).value );
+                        this.requisitos.removeAt( index );
+                        this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
+                    }
+                } );
+        } else {
+            this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
+                .subscribe( value => {
+                    if ( value === true ) {
+                        this.listaItems.push( this.requisitos.controls[ index ].get( 'nombreRequisito' ).value );
+                        this.requisitos.removeAt( index );
+                        this.openDialog( '', '<b>Pendiente servicio...</b>' );
+                    }
+                } );
+        }
+
     }
 
     openDialog( modalTitle: string, modalText: string ) {
@@ -143,8 +171,33 @@ export class FormListaChequeoComponent implements OnInit {
 
     guardar() {
         console.log( this.formLista );
-        // this.openDialog( '', '<b>El requisito se ha creado exitosamente</b>' );
-        // this.openDialog( '', '<b>El nombre de requisito ya fue utilizado, por favor verifique la información</b>' );
+
+        const getListaChequeoItem = () => {
+            const listaChequeo = [];
+            this.requisitos.controls.forEach( ( control, index ) => {
+                listaChequeo.push(
+                    {
+                        orden: index + 1,
+                        listaChequeoId: this.listaChequeoId,
+                        listaChequeoItemId: control.get( 'nombreRequisito' ).value.listaChequeoItemId,
+                        listaChequeoListaChequeoItemId: control.get( 'listaChequeoListaChequeoItemId' ).value
+                    }
+                );
+            } );
+
+            return listaChequeo;
+        };
+
+        const pListaChequeo = {
+            listaChequeoId: this.listaChequeoId,
+            estadoCodigo: this.formLista.get( 'estadoLista' ).value,
+            nombre: this.formLista.get( 'nombreLista' ).value,
+            estadoMenuCodigo: this.formLista.get( 'tipoLista' ).value,
+            criterioPagoCodigo: this.formLista.get( 'criterioPago' ).value,
+            listaChequeoListaChequeoItem: getListaChequeoItem()
+        }
+
+        console.log( pListaChequeo );
     }
 
 }

@@ -29,4 +29,9 @@ export class GestionarListaChequeoService {
     return this.http.post<Respuesta>( `${ this.urlApi }/ActivateDeactivateListaChequeoItem`, pListaChequeoItem );
   }
 
+  /* Listas de chequeo */
+  createEditCheckList( pListaChequeo: any ) {
+    return this.http.post<Respuesta>( `${ this.urlApi }/CreateEditCheckList`, pListaChequeo );
+  }
+
 }
