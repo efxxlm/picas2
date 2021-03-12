@@ -18,7 +18,9 @@ export class DefensaJudicialService {
   GetListContract( ) {
     return this.http.get<Contrato[]>( `${ this.url }/JudicialDefense/GetListContract` );
   }
-
+  GetListContractAutoComplete(pNumeroContrato : any) {
+    return this.http.get<any[]>( `${ this.url }/RegisterValidatePaymentRequierements/GetContratoByTipoSolicitudCodigoModalidadContratoCodigoOrNumeroContrato?pNumeroContrato=${pNumeroContrato}` );
+  }
   GetListProyectsByContract( pContratoId: any ) {
     return this.http.get<any[]>( `${ this.url }/JudicialDefense/GetListProyectsByContract?pContratoId=${pContratoId}` );
   }

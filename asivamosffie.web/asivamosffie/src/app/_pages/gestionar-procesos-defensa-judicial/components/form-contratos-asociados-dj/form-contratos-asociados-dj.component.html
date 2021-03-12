@@ -51,17 +51,16 @@
                                 </div>
                                 <div class="col d-flex">
                                     <mat-form-field class="full-width">
-                                        <input matInput #nombre type="text" [formControl]="myControl.controls[i]" maxlength="100" required
-                                            [matAutocomplete]="auto">
+                                        <input matInput #contrato="matAutocompleteTrigger" type="text" maxlength="100" required [matAutocomplete]="auto"  
+                                        [formControl]="myControl.controls[i]"  formControlName="contrato">
                                         <mat-autocomplete #auto="matAutocomplete">
-                                            <mat-option (click)="seleccionAutocomplete(nombres,i)"
-                                                *ngFor="let nombres of contratosArray" [value]="nombres">
-                                                {{nombres}}
+                                            <mat-option *ngFor="let contrato of contratosArray" [value]="contrato.numeroContrato" (click)="seleccionAutocomplete(contrato,i)">
+                                                {{ contrato.numeroContrato }}
                                             </mat-option>
                                         </mat-autocomplete>
                                         <input type="hidden" formControlName="contrato">
                                     </mat-form-field>
-                                    <button mat-button type="button" color="primary" class="busqueda--img">
+                                    <button mat-button type="button" color="primary" class="busqueda--img" (click)="getContratos(myControl.controls[i].value, i); $event.stopPropagation()">
                                         <img src="assets/img/icon/lupa.svg" alt="Buscar">
                                     </button>
                                 </div>
