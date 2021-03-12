@@ -191,6 +191,48 @@ namespace asivamosffie.services
 
                                         break;
                                     }
+
+                                case ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Reclamaciones:
+                                    {
+                                        ControversiaActuacion controversiaActuacion = _context.ControversiaActuacion
+                                                                                                    .Where(ca => ca.ControversiaActuacionId == ss.SolicitudId)
+                                                                                                    .Include(r => r.ControversiaContractual)
+                                                                                                    .FirstOrDefault();
+
+                                        if (controversiaActuacion != null)
+                                            comite.data.Add(new
+                                            {
+                                                Id = controversiaActuacion.ControversiaActuacionId,
+                                                IdSolicitud = ss.SesionComiteSolicitudId,
+                                                FechaSolicitud = (DateTime?)(controversiaActuacion.FechaActuacion),
+                                                NumeroSolicitud = controversiaActuacion.ControversiaContractual.NumeroSolicitud,
+                                                TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Reclamaciones).FirstOrDefault().Nombre,
+                                                tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Reclamaciones
+                                            });
+
+                                        break;
+                                    }
+
+                                case ConstanCodigoTipoSolicitud.Defensa_judicial:
+                                    {
+                                        DefensaJudicial defensaJudicial = _context.DefensaJudicial
+                                                                                        .Where(r => r.DefensaJudicialId == ss.SolicitudId)
+                                                                                        //.Include(r => r.ControversiaContractual)
+                                                                                        .FirstOrDefault();
+
+                                        if (defensaJudicial != null)
+                                            comite.data.Add(new
+                                            {
+                                                Id = defensaJudicial.DefensaJudicialId,
+                                                IdSolicitud = ss.SesionComiteSolicitudId,
+                                                FechaSolicitud = (DateTime?)(defensaJudicial.FechaCreacion),
+                                                NumeroSolicitud = defensaJudicial.NumeroProceso,
+                                                TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Defensa_judicial).FirstOrDefault().Nombre,
+                                                tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.Defensa_judicial
+                                            });
+
+                                        break;
+                                    }
                             }
                     }
                     if (comite.data.Count > 0)
@@ -907,6 +949,32 @@ namespace asivamosffie.services
                         sesionComiteSolicitud.NumeroSolicitud = controversiaActuacion.ControversiaContractual.NumeroSolicitud;
 
                         sesionComiteSolicitud.NumeroHijo = "ACT controversia " + controversiaActuacion.ControversiaActuacionId.ToString("000");;
+
+                        break;
+                    case ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Reclamaciones:
+
+                        ControversiaActuacion controversiaActuacionReclamaciones = _context.ControversiaActuacion
+                                                                                .Where(r => r.ControversiaActuacionId == sesionComiteSolicitud.SolicitudId)
+                                                                                .Include(r => r.ControversiaContractual)
+                                                                                .FirstOrDefault();
+
+                        sesionComiteSolicitud.FechaSolicitud = controversiaActuacionReclamaciones.FechaActuacion;
+
+                        sesionComiteSolicitud.NumeroSolicitud = controversiaActuacionReclamaciones.ControversiaContractual.NumeroSolicitud;
+
+                        sesionComiteSolicitud.NumeroHijo = "ACT controversia " + controversiaActuacionReclamaciones.NumeroActuacionReclamacion;
+
+                        break;
+                    case ConstanCodigoTipoSolicitud.Defensa_judicial:
+
+                        DefensaJudicial defensaJudicial = _context.DefensaJudicial
+                                                                                .Where(r => r.DefensaJudicialId == sesionComiteSolicitud.SolicitudId)
+                                                                                //.Include(r => r.ControversiaContractual)
+                                                                                .FirstOrDefault();
+
+                        sesionComiteSolicitud.FechaSolicitud = defensaJudicial.FechaCreacion;
+
+                        sesionComiteSolicitud.NumeroSolicitud = defensaJudicial.NumeroProceso;
 
                         break;
                 }
@@ -2839,6 +2907,59 @@ namespace asivamosffie.services
 
                 #endregion
 
+                #region Actuaciones Controversia Reclamación
+
+                if (pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Reclamaciones)
+                {
+                    ControversiaActuacion controversiaActuacion = _context.ControversiaActuacion.Find(sesionComiteSolicitudOld.SolicitudId);
+
+                    if (controversiaActuacion != null)
+                    {
+                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario)
+                        {
+                            controversiaActuacion.EstadoActuacionReclamacionCodigo = ConstanCodigoEstadosActuacionReclamacion.Aprobado_en_comite_fiduciario;
+                        }
+                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario)
+                        {
+                            controversiaActuacion.EstadoActuacionReclamacionCodigo = ConstanCodigoEstadosActuacionReclamacion.Rechazado_por_comite_fiduciario;
+                        }
+                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario)
+                        {
+                            controversiaActuacion.EstadoActuacionReclamacionCodigo = ConstanCodigoEstadosActuacionReclamacion.Devuelto_por_comite_fiduciario;
+                        }
+
+                    }
+
+                }
+
+                #endregion Actuaciones Controversia Reclamación
+
+                #region Defensa Judicial
+
+                if (pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Defensa_judicial)
+                {
+                    DefensaJudicial defensaJudicial = _context.DefensaJudicial.Find(sesionComiteSolicitudOld.SolicitudId);
+
+                    if (defensaJudicial != null)
+                    {
+                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario)
+                        {
+                            defensaJudicial.EstadoProcesoCodigo = ConstanCodigoEstadosDefensaJudicial.Aprobado_en_comite_fiduciario;
+                        }
+                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario)
+                        {
+                            defensaJudicial.EstadoProcesoCodigo = ConstanCodigoEstadosDefensaJudicial.Rechazado_por_comite_fiduciario;
+                        }
+                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario)
+                        {
+                            defensaJudicial.EstadoProcesoCodigo = ConstanCodigoEstadosDefensaJudicial.Devuelto_por_comite_fiduciario;
+                        }
+
+                    }
+
+                }
+
+                #endregion Defensa Judicial
 
                 foreach (var SesionSolicitudCompromiso in pSesionComiteSolicitud.SesionSolicitudCompromiso)
                 {

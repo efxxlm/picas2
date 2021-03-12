@@ -278,3 +278,4 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
 
   }
 }
+

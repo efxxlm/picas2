@@ -983,6 +983,8 @@ namespace asivamosffie.services
                  “Procesos de defensa judicial”. */
                 pFechaOrdenDelDia = pFechaOrdenDelDia.AddDays(-CantidadDiasComite);
 
+                #region Buscar Solicitudes
+
                 List<ProcesoSeleccion> ListProcesoSeleccion =
                     _context.ProcesoSeleccion
                     .Where(r => !(bool)r.Eliminado
@@ -1036,7 +1038,7 @@ namespace asivamosffie.services
                 List<ControversiaActuacion> ListControversiasActuacionReclmacion = _context.ControversiaActuacion
                     .Where(r => !(bool)r.Eliminado
                     && r.EsRequiereComiteReclamacion == true
-                    && r.EstadoActuacionReclamacionCodigo == "3" //enviado a comite
+                    && r.EstadoActuacionReclamacionCodigo == ConstanCodigoEstadosActuacionReclamacion.Enviado_a_comite_tecnico //enviado a comite
                     && r.FechaActuacion < pFechaOrdenDelDia
                     )
                     .Include(r => r.ControversiaContractual)
@@ -1045,12 +1047,14 @@ namespace asivamosffie.services
                 List<DefensaJudicial> ListDefensaJudicial = _context.DefensaJudicial
                     .Where(r => !(bool)r.Eliminado
                     && r.FichaEstudio.FirstOrDefault().EsActuacionTramiteComite == true
-                    && r.EstadoProcesoCodigo == "2"
-                    //&& r.FechaCreacion < pFechaOrdenDelDia no estoy seguro de esto
+                    && r.EstadoProcesoCodigo == ConstanCodigoEstadosDefensaJudicial.Enviado_a_comite_tecnico
+                    && r.FechaCreacion < pFechaOrdenDelDia // no estoy seguro de esto
                     )                    
                     .OrderByDescending(r => r.DefensaJudicialId).ToList();
 
-                //Quitar los que ya estan en sesionComiteSolicitud
+                #endregion Buscar Solicitudes
+
+                #region Quitar los que ya estan en sesionComiteSolicitud
 
                 List<int> LisIdContratacion = _context.SesionComiteSolicitud
                                                 .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion.ToString() &&
@@ -1130,6 +1134,10 @@ namespace asivamosffie.services
                 ListControversiasActuaciones.RemoveAll(item => ListIdControversiasActuaciones.Contains(item.ControversiaActuacionId));
                 ListControversiasActuacionReclmacion.RemoveAll(item => ListIdControversiasActuacionesReclamaciones.Contains(item.ControversiaActuacionId));
                 ListDefensaJudicial.RemoveAll(item => ListIdDefensaJudicial.Contains(item.DefensaJudicialId));
+
+                #endregion Quitar los que ya estan en sesionComiteSolicitud
+
+                #region Carga las solicitudes
 
                 List<Dominio> ListTipoSolicitud = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud).ToList();
 
@@ -1230,6 +1238,8 @@ namespace asivamosffie.services
                         tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.Defensa_judicial
                     });
                 };
+
+                #endregion Carga las solicitudes
 
             }
             catch (Exception ex)
@@ -1721,6 +1731,33 @@ namespace asivamosffie.services
                         sesionComiteSolicitud.NumeroSolicitud = controversiaActuacion.ControversiaContractual.NumeroSolicitud;
 
                         sesionComiteSolicitud.NumeroHijo = "ACT controversia " + controversiaActuacion.ControversiaActuacionId.ToString("000");
+
+                        break;
+
+                    case ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Reclamaciones:
+
+                        ControversiaActuacion controversiaActuacionReclamacion = _context.ControversiaActuacion
+                                                                                .Where(r => r.ControversiaActuacionId == sesionComiteSolicitud.SolicitudId)
+                                                                                .Include(r => r.ControversiaContractual)
+                                                                                .FirstOrDefault();
+
+                        sesionComiteSolicitud.FechaSolicitud = controversiaActuacionReclamacion.FechaActuacion;
+
+                        sesionComiteSolicitud.NumeroSolicitud = controversiaActuacionReclamacion.ControversiaContractual.NumeroSolicitud;
+
+                        sesionComiteSolicitud.NumeroHijo = "ACT controversia " + controversiaActuacionReclamacion.NumeroActuacionReclamacion;
+
+                        break;
+                    case ConstanCodigoTipoSolicitud.Defensa_judicial:
+
+                        DefensaJudicial defensaJudicial = _context.DefensaJudicial
+                                                                                .Where(r => r.DefensaJudicialId == sesionComiteSolicitud.SolicitudId)
+                                                                                //.Include(r => r.ControversiaContractual)
+                                                                                .FirstOrDefault();
+
+                        sesionComiteSolicitud.FechaSolicitud = defensaJudicial.FechaCreacion;
+
+                        sesionComiteSolicitud.NumeroSolicitud = defensaJudicial.NumeroProceso;
 
                         break;
 
@@ -2560,6 +2597,59 @@ namespace asivamosffie.services
 
                 #endregion
 
+                #region Actuaciones Controversia Reclamación
+
+                if (pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Reclamaciones)
+                {
+                    ControversiaActuacion controversiaActuacion = _context.ControversiaActuacion.Find(sesionComiteSolicitudOld.SolicitudId);
+
+                    if (controversiaActuacion != null)
+                    {
+                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_tecnico)
+                        {
+                            controversiaActuacion.EstadoActuacionReclamacionCodigo = ConstanCodigoEstadosActuacionReclamacion.Aprobada_por_comite_tecnico;
+                        }
+                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_tecnico)
+                        {
+                            controversiaActuacion.EstadoActuacionReclamacionCodigo = ConstanCodigoEstadosActuacionReclamacion.Rechazado_por_comite_tecnico;
+                        }
+                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_tecnico)
+                        {
+                            controversiaActuacion.EstadoActuacionReclamacionCodigo = ConstanCodigoEstadosActuacionReclamacion.Devuelta_por_comite_tecnico;
+                        }
+
+                    }
+
+                }
+
+                #endregion Actuaciones Controversia Reclamación
+
+                #region Defensa Judicial
+
+                if (pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Defensa_judicial)
+                {
+                    DefensaJudicial defensaJudicial = _context.DefensaJudicial.Find(sesionComiteSolicitudOld.SolicitudId);
+
+                    if (defensaJudicial != null)
+                    {
+                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_tecnico)
+                        {
+                            defensaJudicial.EstadoProcesoCodigo = ConstanCodigoEstadosDefensaJudicial.Aprobada_por_comite_tecnico;
+                        }
+                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_tecnico)
+                        {
+                            defensaJudicial.EstadoProcesoCodigo = ConstanCodigoEstadosDefensaJudicial.Rechazado_por_comite_tecnico;
+                        }
+                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_tecnico)
+                        {
+                            defensaJudicial.EstadoProcesoCodigo = ConstanCodigoEstadosDefensaJudicial.Devuelta_por_comite_tecnico;
+                        }
+
+                    }
+
+                }
+
+                #endregion Defensa Judicial
 
                 foreach (var SesionSolicitudCompromiso in pSesionComiteSolicitud.SesionSolicitudCompromiso)
                 {
