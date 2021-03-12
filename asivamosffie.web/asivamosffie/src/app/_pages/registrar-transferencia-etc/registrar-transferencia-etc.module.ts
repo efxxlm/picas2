@@ -13,6 +13,7 @@ import { FormRecorridoObraComponent } from './components/form-recorrido-obra/for
 import { FormRemisionComponent } from './components/form-remision/form-remision.component';
 import { FormActaEntregaBienesYServiciosComponent } from './components/form-acta-entrega-bienes-y-servicios/form-acta-entrega-bienes-y-servicios.component';
 import { FormRepresentanteComponent } from './components/form-representante/form-representante.component';
+import { DetalleInformeComponent } from './components/detalle-informe/detalle-informe.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { FormRepresentanteComponent } from './components/form-representante/form
     FormRecorridoObraComponent,
     FormRemisionComponent,
     FormActaEntregaBienesYServiciosComponent,
-    FormRepresentanteComponent
+    FormRepresentanteComponent,
+    DetalleInformeComponent
   ],
   imports: [
     CommonModule,
