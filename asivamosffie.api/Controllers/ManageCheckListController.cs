@@ -113,7 +113,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                var result = await _manageCheckListService.GetValidateExistNameCheckList(listaChequeo);
+                var result = await _manageCheckListService.GetValidateExistNameCheckList(plistaChequeo);
                 return Ok(result);
             }
             catch (Exception ex)
