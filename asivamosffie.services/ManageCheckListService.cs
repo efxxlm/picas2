@@ -50,9 +50,12 @@ namespace asivamosffie.services
 
         public async Task<ListaChequeo> GetListaChequeoItemByListaChequeoId(int ListaChequeoId)
         {
-            return await _context.ListaChequeo.FindAsync(ListaChequeoId);
+            return await _context.ListaChequeo
+                    .Where(r=> r.ListaChequeoId == ListaChequeoId)
+                    .Include(lci=> lci.ListaChequeoListaChequeoItem)
+                    .FirstOrDefaultAsync();
         }
-        #endregion
+        #endregion 
 
         #region Create Edit Business
         public async Task<Respuesta> DeleteListaChequeoItem(int pListaChequeoListaChequeoItemId , string pAutor)
