@@ -67,7 +67,7 @@ export class TablaBancosComponent implements OnInit {
         }
 
         if ( pListaChequeoItem.activo === false ) {
-            this.openDialogTrueFalse( '', `<b>¿Esta seguro que desea desactivar la lista de chequeo ${ registro.nombre }?</b>` )
+            this.openDialogTrueFalse( '', `<b>¿Esta seguro que desea desactivar el requisito "${ registro.nombre }"?</b>` )
                 .subscribe(
                     value => {
                         if ( value === true ) {
