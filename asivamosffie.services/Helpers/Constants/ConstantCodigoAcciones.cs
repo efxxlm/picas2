@@ -303,7 +303,9 @@
 
         public const string Create_Edit_Item_Lista_Chequeo = "217";
         public const string Create_Edit_Lista_Chequeo = "218";   
-        public const string Activar_Desactivar_Lista_Chequeo = "219";
+        public const string Activar_Desactivar_Item_Lista_Chequeo = "219";
+        public const string Activar_Desactivar_Lista_Chequeo = "220";
+
 
     }
 }

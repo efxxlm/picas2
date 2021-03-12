@@ -72,6 +72,9 @@ namespace asivamosffie.services.Helpers.Enumerator
         Enviar_Supervisor_4_1_20 = 83,
         Alerta_4_1_20 = 84,
         //4.1.21
-        Alerta_4_1_21 = 85, 
+        Alerta_4_1_21 = 85,
+
+        //6.4 Lista chequeo
+        ListaChequeoDesactivada = 86,
     }
 }

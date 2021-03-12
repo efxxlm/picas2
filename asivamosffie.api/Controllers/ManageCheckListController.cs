@@ -17,16 +17,30 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
- 
+
     public class ManageCheckListController : ControllerBase
     {
         public readonly IManageCheckListService _manageCheckListService;
-        private readonly IOptions<AppSettings> _settings;
 
-        public ManageCheckListController(IOptions<AppSettings> settings, IManageCheckListService manageCheckListService)
+        public ManageCheckListController(IManageCheckListService manageCheckListService)
         {
-            _manageCheckListService = manageCheckListService;
-            _settings = settings;
+            _manageCheckListService = manageCheckListService; 
+        }
+
+        [Route("ActivateDeactivateListaChequeo")]
+        [HttpPost]
+        public async Task<IActionResult> ActivateDeactivateListaChequeo([FromBody] ListaChequeo pListaChequeo)
+        {
+            try
+            {
+                pListaChequeo.UsuarioCreacion = User.Identity.Name;
+                var result = await _manageCheckListService.ActivateDeactivateListaChequeo(pListaChequeo);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
         }
 
         [Route("ActivateDeactivateListaChequeoItem")]
@@ -44,7 +58,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest();
             }
         }
-         
+
         [Route("CreateEditItem")]
         [HttpPost]
         public async Task<IActionResult> CreateEditItem([FromBody] ListaChequeoItem pListaChequeoItem)

@@ -9,7 +9,9 @@ using Microsoft.AspNetCore.Http;
 namespace asivamosffie.services.Interfaces
 {
     public interface IManageCheckListService
-    { 
+    {
+        Task<Respuesta> ActivateDeactivateListaChequeo(ListaChequeo pListaChequeo);
+
         Task<List<ListaChequeoItem>> GetListItem();
 
         Task<List<ListaChequeo>> GetCheckList();
