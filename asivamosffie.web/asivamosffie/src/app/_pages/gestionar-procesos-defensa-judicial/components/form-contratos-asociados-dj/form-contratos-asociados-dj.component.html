@@ -54,7 +54,7 @@
                                         <input matInput #contrato="matAutocompleteTrigger" type="text" maxlength="100" required [matAutocomplete]="auto"  
                                         [formControl]="myControl.controls[i]"  formControlName="contrato">
                                         <mat-autocomplete #auto="matAutocomplete">
-                                            <mat-option *ngFor="let contrato of contratosArray" [value]="contrato.numeroContrato" (click)="seleccionAutocomplete(contrato,i)">
+                                            <mat-option *ngFor="let contrato of contratosArray[i]" [value]="contrato.numeroContrato" (click)="seleccionAutocomplete(contrato,i)">
                                                 {{ contrato.numeroContrato }}
                                             </mat-option>
                                         </mat-autocomplete>

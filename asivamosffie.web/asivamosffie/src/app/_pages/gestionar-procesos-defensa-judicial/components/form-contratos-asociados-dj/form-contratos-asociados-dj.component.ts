@@ -204,7 +204,7 @@ export class FormContratosAsociadosDjComponent implements OnInit {
     if (this.formContratista.get('perfiles').value[i].contrato !== null) {
         this.defensaService.GetListContractAutoComplete(this.formContratista.get('perfiles').value[i].contrato)
           .subscribe(response => {
-            this.contratosArray = response;
+            this.contratosArray[i] = response;
             if ( response.length > 0 ) {
               trigger.openPanel();
             }
