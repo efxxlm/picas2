@@ -1,4 +1,4 @@
-<section class="container text-center mb-2em" *ngIf="criteriosDePagoCodigo !== undefined">
+<section class="container text-center mb-2em" *ngIf="listaItems.length > 0">
     <div class="text-right">
         <a routerLink="/gestionListaChequeo" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
@@ -10,11 +10,14 @@
 
         <mat-card class="border mt-3em" align="left">
             <mat-card-content>
-                <p><b>Estado de la lista: </b> <i>Activo - Terminado</i></p>
-                <p><b>Nombre de la lista: </b> <i>Requerimientos de obra para fase Preconstrucción</i></p>
-                <p><b>La lista de chequeo está asociada a: </b> <i>Criterios de pago</i></p>
-                <p><b>Criterio de pago: </b> <i>Estudios y diseños interventoría hasta el 90%</i></p>
-                <p><b>Nombre del requisito 1: </b> <i>NIT actualizado del contratista a cargo de la obra</i></p>
+                <p><b>Estado de la lista: </b> <i> {{ getEstado( formLista.get( 'estadoLista' ).value ) }} </i></p>
+                <p><b>Nombre de la lista: </b> <i> {{ formLista.get( 'nombreLista' ).value }} </i></p>
+                <p><b>La lista de chequeo está asociada a: </b> <i> {{ getTipoLista( formLista.get( 'tipoLista' ).value ) }} </i></p>
+                <p *ngIf="formLista.get( 'criterioPago' ).value !== null"><b>Criterio de pago: </b> <i> {{ getTipoCriterio( formLista.get( 'criterioPago' ).value ) }} </i></p>
+                <div *ngFor="let requisito of requisitos.controls; index as i" class="mt-1em">
+                  <b>Nombre del requisito {{ i + 1 }} </b>
+                  <i> <section [innerHTML]="requisito.get( 'nombreRequisito' ).value?.nombre"></section> </i>
+                </div>
             </mat-card-content>
         </mat-card>
     </ng-container>

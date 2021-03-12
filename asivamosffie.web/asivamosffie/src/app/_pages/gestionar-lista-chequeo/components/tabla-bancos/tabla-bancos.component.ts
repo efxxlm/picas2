@@ -50,20 +50,48 @@ export class TablaBancosComponent implements OnInit {
         });
     }
 
+    openDialogTrueFalse(modalTitle: string, modalText: string) {
+
+        const dialogRef = this.dialog.open(ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle, modalText, siNoBoton: true }
+        });
+
+        return dialogRef.afterClosed();
+    }
+
     activarDesactivarItem( registro: any ) {
         const pListaChequeoItem = {
             listaChequeoItemId: registro.listaChequeoItemId,
             activo: !registro.activo
         }
 
-        this.listaChequeoSvc.activateDeactivateListaChequeoItem( pListaChequeoItem )
-            .subscribe(
-                response => {
-                    this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.routes.navigateByUrl( '/', { skipLocationChange: true } ).then( () => this.routes.navigate( [ '/gestionListaChequeo' ] ) );
-                },
-                err => this.openDialog( '', `<b>${ err.message }</b>` )
-            );
+        if ( pListaChequeoItem.activo === false ) {
+            this.openDialogTrueFalse( '', `<b>¿Esta seguro que desea desactivar la lista de chequeo ${ registro.nombre }?</b>` )
+                .subscribe(
+                    value => {
+                        if ( value === true ) {
+                            this.listaChequeoSvc.activateDeactivateListaChequeoItem( pListaChequeoItem )
+                                .subscribe(
+                                    response => {
+                                        this.openDialog( '', `<b>${ response.message }</b>` );
+                                        this.routes.navigateByUrl( '/', { skipLocationChange: true } ).then( () => this.routes.navigate( [ '/gestionListaChequeo' ] ) );
+                                    },
+                                    err => this.openDialog( '', `<b>${ err.message }</b>` )
+                                );
+                        }
+                    }
+                );
+        } else {
+            this.listaChequeoSvc.activateDeactivateListaChequeoItem( pListaChequeoItem )
+                .subscribe(
+                    response => {
+                        this.openDialog( '', `<b>${ response.message }</b>` );
+                        this.routes.navigateByUrl( '/', { skipLocationChange: true } ).then( () => this.routes.navigate( [ '/gestionListaChequeo' ] ) );
+                    },
+                    err => this.openDialog( '', `<b>${ err.message }</b>` )
+                );
+        }
     }
 
 }

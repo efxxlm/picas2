@@ -42,4 +42,20 @@ export class GestionarListaChequeoService {
     return this.http.get<any[]>( `${ this.urlApi }/GetCheckList` );
   }
 
+  getListaChequeoItemByListaChequeoId( listaChequeoId: number ) {
+    return this.http.get<any>( `${ this.urlApi }/GetListaChequeoItemByListaChequeoId?ListaChequeoId=${ listaChequeoId }` );
+  }
+
+  getValidateExistNameCheckList( pListaChequeo: any ) {
+    return this.http.post( `${ this.urlApi }/GetValidateExistNameCheckList`, pListaChequeo );
+  }
+
+  activateDeactivateListaChequeo( pListaChequeo: any ) {
+    return this.http.post<Respuesta>( `${ this.urlApi }/ActivateDeactivateListaChequeo`, pListaChequeo );
+  }
+
+  deleteListaChequeo( pListaChequeoId: number ) {
+    return this.http.post<Respuesta>( `${ this.urlApi }/DeleteListaChequeo?pListaChequeoId=${ pListaChequeoId }`, '' );
+  }
+
 }

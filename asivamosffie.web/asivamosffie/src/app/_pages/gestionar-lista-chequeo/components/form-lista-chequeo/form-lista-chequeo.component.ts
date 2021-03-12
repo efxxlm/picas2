@@ -1,3 +1,4 @@
+import { delay } from 'rxjs/operators';
 import { GestionarListaChequeoService } from './../../../../core/_services/gestionarListaChequeo/gestionar-lista-chequeo.service';
 import { Dominio } from './../../../../core/_services/common/common.service';
 import { CommonService } from 'src/app/core/_services/common/common.service';
@@ -46,46 +47,143 @@ export class FormListaChequeoComponent implements OnInit {
     {
 
         this.formLista = this.crearFormulario();
-        // Registro nuevo === undefined
-        // Editar === id del registro a editar
-        console.log( this.activatedRoute.snapshot.params.id );
-
+        // GET estado del campo "Estado de la lista"
         this.commonSvc.listaEstadoListaChequeo()
-            .subscribe( listaEstadoListaChequeo => this.listaEstadoListaChequeo = listaEstadoListaChequeo );
-        this.commonSvc.listaChequeoMenu()
-            .subscribe( listaChequeoMenu => {
-                this.listaChequeoMenu = listaChequeoMenu;
-                const criterioPagoDominio = listaChequeoMenu.find( menu => menu.nombre === 'Criterios de pago' );
+            .subscribe( listaEstadoListaChequeo => {
+                this.listaEstadoListaChequeo = listaEstadoListaChequeo;
+                // GET lista desplegable del campo "La lista de chequeo está asociada a"
+                this.commonSvc.listaChequeoMenu()
+                    .subscribe( listaChequeoMenu => {
+                        this.listaChequeoMenu = listaChequeoMenu;
+                        const criterioPagoDominio = listaChequeoMenu.find( menu => menu.nombre === 'Criterios de pago' );
 
-                if ( criterioPagoDominio !== undefined ) {
-                    this.criteriosDePagoCodigo = criterioPagoDominio.codigo;
+                        if ( criterioPagoDominio !== undefined ) {
+                            this.criteriosDePagoCodigo = criterioPagoDominio.codigo;
+                        }
+                        // GET lista desplegable del campo "Criterio de pago"
+                        this.commonSvc.criteriosDePago()
+                            .subscribe( criteriosDePago => {
+                                this.listaCriteriosDePago = criteriosDePago;
+                                // GET lista desplegable del campo "Nombre del requisito"
+                                this.listaChequeoSvc.getListItem()
+                                    .subscribe(
+                                        items => {
+                                            items.forEach( item => {
+                                                if ( item.activo === true ) {
+                                                    this.listaItems.push( { nombre: item.nombre, listaChequeoItemId: item.listaChequeoItemId } );
+                                                }
+                                            } );
+                                            // Registro nuevo === undefined
+                                            // Editar === id del registro a editar
+                                            if ( this.activatedRoute.snapshot.params.id !== undefined ) {
+                                                // GET data de la lista de chequeo
+                                                this.listaChequeoSvc.getListaChequeoItemByListaChequeoId( this.activatedRoute.snapshot.params.id )
+                                                    .subscribe(
+                                                        listaChequeo => {
+                                                            this.formLista.get( 'estadoLista' ).setValue( listaChequeo.estadoCodigo !== undefined ? this.listaEstadoListaChequeo.find( estado => estado.codigo === listaChequeo.estadoCodigo ).codigo : null );
+                                                            this.formLista.get( 'nombreLista' ).setValue( listaChequeo.nombre !== undefined ? listaChequeo.nombre : null );
+                                                            this.formLista.get( 'tipoLista' ).setValue( listaChequeo.estadoMenuCodigo !== undefined ? this.listaChequeoMenu.find( estado => estado.codigo === listaChequeo.estadoMenuCodigo ).codigo : null );
+                                                            this.formLista.get( 'criterioPago' ).setValue( listaChequeo.criterioPagoCodigo !== undefined ? this.listaCriteriosDePago.find( estado => estado.codigo === listaChequeo.criterioPagoCodigo ).codigo : null );
+                                                            
+                                                            if ( listaChequeo.listaChequeoListaChequeoItem.length > 0 ) {
+                                                                this.requisitos.clear();
+
+                                                                listaChequeo.listaChequeoListaChequeoItem.forEach( item => {
+
+                                                                    const requisito = this.listaItems.find( itemValue => itemValue.listaChequeoItemId === item.listaChequeoItemId );
+
+                                                                    if ( requisito !== undefined ) {
+                                                                        this.requisitos.push(
+                                                                            this.fb.group(
+                                                                                {
+                                                                                    listaChequeoListaChequeoItemId: [ item.listaChequeoListaChequeoItemId, Validators.required ],
+                                                                                    nombreRequisito: [ requisito, Validators.required ]
+                                                                                }
+                                                                            )
+                                                                        );
+
+                                                                        const listaItemsIndex = this.listaItems.findIndex( itemValue => itemValue === requisito );
+                                                                        this.listaItems.splice( listaItemsIndex, 1 );
+                                                                    }
+                                                                } );
+                                                            }
+                                                            console.log( listaChequeo );
+                                                        }
+                                                    );
+                                            }
+                                        }
+                                    );
+                            } );
+                    } );
+            } );
+
+        this.formLista.get( 'nombreLista' ).valueChanges
+            .pipe(
+                delay( 2000 )
+            )
+            .subscribe( nombre => {
+                if ( this.formLista.get( 'nombreLista' ).dirty === true && this.formLista.get( 'nombreLista' ).value !== null ) {
+                    const pListaChequeo = { nombre };
+                    this.listaChequeoSvc.getValidateExistNameCheckList( pListaChequeo )
+                        .subscribe(
+                            response => {
+                                console.log( response );
+                                if ( response === true && this.formLista.get( 'nombreLista' ).value === nombre ) {
+                                    this.openDialog( '', '<b>El nombre de la lista de chequeo ya fue utilizado, por favor verifique la información.</b>' );
+                                    this.formLista.get( 'nombreLista' ).setValue( null );
+                                }
+                            }
+                        );
                 }
             } );
-        this.commonSvc.criteriosDePago()
-            .subscribe( criteriosDePago => this.listaCriteriosDePago = criteriosDePago );
-        this.listaChequeoSvc.getListItem()
-            .subscribe(
-                items => {
-                    items.forEach( item => {
-                        this.listaItems.push( { nombre: item.nombre, listaChequeoItemId: item.listaChequeoItemId } );
-                    } );
-                }
-            );
 
         this.activatedRoute.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
             if ( urlSegment.path === 'crearListaChequeo' ) {
                 this.esRegistroNuevo = true;
+                return;
             }
             if ( urlSegment.path === 'editarListaChequeo' ) {
                 this.esRegistroNuevo = false;
+                return;
             }
             if ( urlSegment.path === 'verDetalleListaChequeo' ) {
                 this.esVerDetalle = true;
+                return;
             }
         } );
     }
 
     ngOnInit(): void {
+    }
+
+    getEstado( codigo: string ) {
+        if ( this.listaEstadoListaChequeo.length > 0 ) {
+            const listaEstado = this.listaEstadoListaChequeo.find( estado => estado.codigo === codigo );
+
+            if ( listaEstado !== undefined ) {
+                return listaEstado.nombre;
+            }
+        }
+    }
+
+    getTipoLista( codigo: string ) {
+        if ( this.listaChequeoMenu.length > 0 ) {
+            const tipoLista = this.listaChequeoMenu.find( tipo => tipo.codigo === codigo );
+
+            if ( tipoLista !== undefined ) {
+                return tipoLista.nombre;
+            }
+        }
+    }
+
+    getTipoCriterio( codigo: string ) {
+        if ( this.listaCriteriosDePago.length > 0 && codigo !== null ) {
+            const criterio = this.listaCriteriosDePago.find( criterio => criterio.codigo === codigo );
+
+            if ( criterio !== undefined ) {
+                return criterio.nombre;
+            }
+        }
     }
 
     crearFormulario(): FormGroup {
@@ -149,7 +247,6 @@ export class FormListaChequeoComponent implements OnInit {
                             .subscribe(
                                 response => {
                                     this.openDialog( '', `<b>${ response.message }</b>` );
-                                    this.routes.navigateByUrl( '/', { skipLocationChange: true } ).then( () => this.routes.navigate( [ '/gestionListaChequeo' ] ) );
                                 },
                                 err => this.openDialog( '', `<b>${ err.message }</b>` )
                             );

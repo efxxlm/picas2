@@ -17,48 +17,56 @@
         </ng-container>
 
       <ng-container matColumnDef="nombreRequisito">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre de la lista </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 60%;"> Nombre de la lista </th>
         <td mat-cell *matCellDef="let element" align="center"> {{ element.nombre }} </td>
       </ng-container>
 
       <ng-container matColumnDef="estadoRequisito">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la lista </th>
-        <td mat-cell *matCellDef="let element" align="center"> {{ element.estadoCodigo }} </td>
+        <td mat-cell *matCellDef="let element" align="center"> {{ getEstado( element.estadoCodigo ) }} </td>
       </ng-container>
     
       <ng-container matColumnDef="gestion">
         <th class="w-20" mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
         <td mat-cell *matCellDef="let element">
     
-          <button mat-raised-button 
+          <button mat-raised-button
                   color="accent" 
                   class="btn-table"
-                  [routerLink]="[ 'editarListaChequeo', element.id ]">
+                  [routerLink]="[ 'editarListaChequeo', element.listaChequeoId ]"
+                  *ngIf="element.estadoCodigo === listaEstadoChequeo.estadoActivoEnProceso.codigo">
                   Ver detalle/Editar
           </button>
 
-          <button mat-raised-button 
+          <button mat-raised-button
                   color="accent" 
                   class="btn-table"
-                  [routerLink]="[ 'verDetalleListaChequeo', element.id ]">
+                  [routerLink]="[ 'verDetalleListaChequeo', element.listaChequeoId ]"
+                  *ngIf="element.estadoCodigo !== listaEstadoChequeo.estadoActivoEnProceso.codigo">
                   Ver detalle
           </button>
 
-          <button mat-raised-button 
+          <button mat-raised-button
                   color="accent" 
-                  class="btn-table">
+                  class="btn-table"
+                  *ngIf="element.estadoCodigo === listaEstadoChequeo.estadoActivoEnProceso.codigo || element.estadoCodigo === listaEstadoChequeo.estadoActivoTerminado.codigo"
+                  (click)="activarDesactivarLista( element, false )">
                   Desactivar
           </button>
 
-          <button mat-raised-button 
+          <button mat-raised-button
                   color="accent" 
-                  class="btn-table">
+                  class="btn-table"
+                  *ngIf="element.estadoCodigo === listaEstadoChequeo.estadoActivoEnProceso.codigo || element.estadoCodigo === listaEstadoChequeo.inactivoEnProceso.codigo"
+                  (click)="deleteListaChequeo( element.listaChequeoId )">
                   Eliminar
           </button>
 
-          <button mat-raised-button 
+          <button mat-raised-button
                   color="accent" 
-                  class="btn-table">
+                  class="btn-table"
+                  *ngIf="element.estadoCodigo === listaEstadoChequeo.inactivoEnProceso.codigo || element.estadoCodigo === listaEstadoChequeo.inactivoTerminado.codigo"
+                  (click)="activarDesactivarLista( element, true )">
                   Activar
           </button>
     
