@@ -243,5 +243,6 @@ export interface InformeFinalObservaciones{
     informeFinalId?:number,
     observaciones?: string,
     esSupervision?: boolean,
-    esCalificacion: boolean
+    esCalificacion: boolean,
+    fechaCreacion?: Date,
 }

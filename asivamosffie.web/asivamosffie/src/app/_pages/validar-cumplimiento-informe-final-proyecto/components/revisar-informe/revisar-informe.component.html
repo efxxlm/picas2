@@ -1,4 +1,4 @@
-<section class="container">
+<section class="container" *ngIf="report">
   <div class="text-right">
     <a routerLink="../../" mat-button color="primary" class="btn-regresar">
       <img src="assets/img/icon/regresar.svg" alt="Regresar">
@@ -28,5 +28,5 @@
   <app-datos-del-proyecto *ngIf="report" [report]="report"></app-datos-del-proyecto>
   <app-recibo-satisfaccion *ngIf="report" [report]="report"></app-recibo-satisfaccion>
   <app-form-observaciones-recibo-satisfaccion *ngIf="report" [report]="report"></app-form-observaciones-recibo-satisfaccion>
-  <app-tabla-informe-final-anexos *ngIf="report" [id]="report.proyecto.informeFinal[0].informeFinalId" [llaveMen]="report.proyecto.llaveMen"></app-tabla-informe-final-anexos>
+  <app-tabla-informe-final-anexos *ngIf="report" [id]="report.proyecto.informeFinal[0].informeFinalId" [llaveMen]="report.proyecto.llaveMen" [report]="report"></app-tabla-informe-final-anexos>
 </section>

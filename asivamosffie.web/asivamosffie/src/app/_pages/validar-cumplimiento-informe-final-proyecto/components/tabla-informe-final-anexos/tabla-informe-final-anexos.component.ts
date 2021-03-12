@@ -7,6 +7,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 import { ListaChequeo } from 'src/app/_interfaces/proyecto-final-anexos.model'
 import { FormGroup } from '@angular/forms'
 import { ValidarCumplimientoInformeFinalService } from 'src/app/core/_services/validarCumplimientoInformeFinal/validar-cumplimiento-informe-final.service'
+import { Report } from 'src/app/_interfaces/proyecto-final.model'
 
 @Component({
   selector: 'app-tabla-informe-final-anexos',
@@ -17,6 +18,8 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   ELEMENT_DATA : ListaChequeo[] = [];
   @Input() id: number;
   @Input() llaveMen: string; 
+  @Input() report: Report;
+
   listChequeo: any;
   displayedColumns: string[] = [
     'No',

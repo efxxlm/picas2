@@ -81,7 +81,9 @@
       </th>
       <td mat-cell *matCellDef="let element">
         <button
-          *ngIf="!element.tieneObservacionesInterventoria && element.estadoCumplimiento === '1'"
+          *ngIf="element.registroCompletoCumplimiento != null && element.registroCompletoCumplimiento 
+                  && !element.tieneObservacionesInterventoria && !element.tieneObservacionesCumplimiento 
+                  && element.estadoCumplimiento === '1'"
             mat-button
             mat-raised-button
             color="accent"
@@ -92,7 +94,9 @@
           Validar Informe Final <!--TieneObservacionesInterventoria (false) && en proceso de validación cumplimiento-->
         </button>
         <button
-          *ngIf="element.tieneObservacionesInterventoria && element.estadoCumplimiento === '1'"
+          *ngIf="element.registroCompletoCumplimiento!= null && element.registroCompletoCumplimiento 
+                  && (element.tieneObservacionesInterventoria || element.tieneObservacionesCumplimiento) 
+                  && element.estadoCumplimiento === '1'"
             mat-button
             mat-raised-button
             color="accent"

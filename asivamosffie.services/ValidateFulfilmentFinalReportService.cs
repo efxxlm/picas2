@@ -33,7 +33,7 @@ namespace asivamosffie.services
         public async Task<List<InformeFinal>> GetListInformeFinal()
         {
             List<InformeFinal> list = await _context.InformeFinal
-                            .Where(r=> r.EstadoAprobacion == ConstantCodigoEstadoAprobacionInformeFinal.Enviado_verificacion_liquidacion_novedades)
+                            .Where(r=> r.EstadoAprobacion == ConstantCodigoEstadoAprobacionInformeFinal.Enviado_verificacion_liquidacion_novedades || r.EstadoAprobacion == ConstantCodigoEstadoAprobacionInformeFinal.Con_observaciones_liquidaciones_novedades)
                             .Include(r=> r.Proyecto)
                                 .ThenInclude(r => r.InstitucionEducativa)
                             .ToListAsync();
@@ -196,6 +196,7 @@ namespace asivamosffie.services
                                                    FechaModificacion = DateTime.Now,
                                                    UsuarioModificacion = pObservacion.UsuarioCreacion,
                                                    TieneObservacionesCumplimiento = tieneOBservaciones,
+                                                   RegistroCompletoCumplimiento = validateRegistroCompleto(pObservacion.InformeFinalId)
                                                });
                 _context.SaveChanges();
 
@@ -253,7 +254,8 @@ namespace asivamosffie.services
                                                    FechaModificacion = DateTime.Now,
                                                    UsuarioModificacion = pObservacion.UsuarioCreacion,
                                                    TieneObservacionesInterventoria = tieneOBservaciones,
-                                                   EstadoCumplimiento = ConstantCodigoEstadoCumplimientoInformeFinal.En_proceso_validacion_cumplimiento
+                                                   EstadoCumplimiento = ConstantCodigoEstadoCumplimientoInformeFinal.En_proceso_validacion_cumplimiento,
+                                                   RegistroCompletoCumplimiento = validateRegistroCompleto(pObservacion.InformeFinalId),
                                                });
                 _context.SaveChanges();
 
@@ -296,6 +298,7 @@ namespace asivamosffie.services
                     informeFinal.EstadoAprobacion = ConstantCodigoEstadoAprobacionInformeFinal.Con_observaciones_liquidaciones_novedades;
                     informeFinal.EstadoInforme = ConstantCodigoEstadoInformeFinal.Con_observaciones_liquidaciones_novedades; // control de cambios
                     informeFinal.EstadoValidacion = ConstantCodigoEstadoValidacionInformeFinal.Con_observaciones_liquidaciones_novedades; // control de cambios
+                    informeFinal.EstadoCumplimiento = ConstantCodigoEstadoCumplimientoInformeFinal.Con_observaciones_liquidaciones_novedades;
                     informeFinal.UsuarioModificacion = pUsuario;
                     informeFinal.FechaModificacion = DateTime.Now;
 
@@ -418,6 +421,24 @@ namespace asivamosffie.services
 
                 }
             }
+        }
+
+        private bool validateRegistroCompleto(int pInformeFinalId)
+        {
+            InformeFinal informeFinal = _context.InformeFinal.Find(pInformeFinalId);
+
+            if (informeFinal != null)
+            {
+                if(informeFinal.TieneObservacionesCumplimiento == null || informeFinal.TieneObservacionesInterventoria == null){
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

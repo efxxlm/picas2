@@ -16,7 +16,8 @@ export interface RegistrarInterface {
   institucionEducativa: string,
   sedeEducativa: string,
   estadoCumplimientoString: string,
-  estadoCumplimiento: string
+  estadoCumplimiento: string,
+  registroCompletoCumplimiento: boolean
 }
 
 
@@ -56,6 +57,7 @@ export class TablaInformeFinalComponent implements OnInit, AfterViewInit {
     this.validarCumplimientoInformeFinalService.getListInformeFinal()
     .subscribe(report => {
       this.dataSource.data = report as RegistrarInterface[];
+      console.log(this.dataSource.data);
     });
   }
   
