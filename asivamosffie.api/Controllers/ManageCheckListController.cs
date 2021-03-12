@@ -24,7 +24,7 @@ namespace asivamosffie.api.Controllers
 
         public ManageCheckListController(IManageCheckListService manageCheckListService)
         {
-            _manageCheckListService = manageCheckListService; 
+            _manageCheckListService = manageCheckListService;
         }
 
         [Route("ActivateDeactivateListaChequeo")]
@@ -135,7 +135,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest();
             }
         }
-
+         
         [Route("GetListaChequeoItemByListaChequeoItemId")]
         [HttpGet]
         public async Task<IActionResult> GetListaChequeoItemByListaChequeoItemId([FromQuery] int ListaChequeoItemId)
@@ -148,6 +148,20 @@ namespace asivamosffie.api.Controllers
             catch (Exception ex)
             {
                 return BadRequest();
+            }
+        }
+
+        [Route("SendEmailWhenDesactiveListaChequeo")]
+        [HttpGet]
+        public async Task<bool> SendEmailWhenDesactiveListaChequeo([FromQuery] int pListaChequeoId)
+        {
+            try
+            {
+                return await _manageCheckListService.SendEmailWhenDesactiveListaChequeo(pListaChequeoId);
+            }
+            catch (Exception ex)
+            {
+                return false;
             }
         }
 

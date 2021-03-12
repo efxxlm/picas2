@@ -2315,7 +2315,7 @@ namespace asivamosffie.services
         private async Task<bool> SendEmailWhenCompleteWeeklyProgress(int pSeguimientoSemanalId)
         {
             Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Seguimiento_Semanal_Completo));
-            ReplaceVariablesSeguimientoSemanal(template.Contenido, pSeguimientoSemanalId);
+            template.Contenido = ReplaceVariablesSeguimientoSemanal(template.Contenido, pSeguimientoSemanalId);
 
             List<EnumeratorPerfil> perfilsEnviarCorreo =
                 new List<EnumeratorPerfil>
@@ -2338,7 +2338,7 @@ namespace asivamosffie.services
                 _context.SeguimientoSemanal
                                         .Where(
                                                  r => r.RegistroCompleto != true
-                                                 && r.FechaFin > dateTimeOneWeeklyOverdue 
+                                                 && r.FechaFin > dateTimeOneWeeklyOverdue
                                                ).OrderByDescending(r => r.SeguimientoSemanalId).ToList();
 
             List<EnumeratorPerfil> perfilsEnviarCorreo =
@@ -2364,7 +2364,7 @@ namespace asivamosffie.services
         {
 
             Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Enviar_Supervisor_4_1_20));
-            ReplaceVariablesSeguimientoSemanal(template.Contenido, pSeguimientoSemanalId);
+            template.Contenido = ReplaceVariablesSeguimientoSemanal(template.Contenido, pSeguimientoSemanalId);
 
             List<EnumeratorPerfil> perfilsEnviarCorreo =
                 new List<EnumeratorPerfil>
