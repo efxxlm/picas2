@@ -41,6 +41,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest();
             }
         }      
+
         [Route("ActivateDeactivateListaChequeo")]
         [HttpPost]
         public async Task<IActionResult> ActivateDeactivateListaChequeo([FromBody] ListaChequeo pListaChequeo)
@@ -105,6 +106,22 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        
+        [Route("GetValidateExistNameCheckList")]
+        [HttpGet]
+        public async Task<IActionResult> GetValidateExistNameCheckList(string pNameCheckList)
+        {
+            try
+            {
+                var result = await _manageCheckListService.GetValidateExistNameCheckList(pNameCheckList);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }     
+        
         [Route("GetListItem")]
         [HttpGet]
         public async Task<IActionResult> GetListItem()

@@ -1,14 +1,16 @@
 ﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
-using asivamosffie.services.Interfaces; 
+using asivamosffie.services.Interfaces;
 using System;
-using System.Collections.Generic; 
-using System.Threading.Tasks; 
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using asivamosffie.services.Helpers.Enumerator; 
-using asivamosffie.services.Helpers.Constant; 
+using asivamosffie.services.Helpers.Enumerator;
+using asivamosffie.services.Helpers.Constant;
 using Z.EntityFramework.Plus;
+using System.Text.RegularExpressions;
+
 
 namespace asivamosffie.services
 {
@@ -26,6 +28,16 @@ namespace asivamosffie.services
         #endregion
 
         #region Get
+
+        public async Task<bool> GetValidateExistNameCheckList(string pNameCheckList)
+        {  
+            if (await _context.ListaChequeo
+                .AnyAsync(lc => lc.Eliminado != true
+                && lc.Nombre.Trim().ToLower().Equals(pNameCheckList.Trim().ToLower())))
+                return true;
+            return false;
+        }
+
         public async Task<List<ListaChequeoItem>> GetListItem()
         {
             return await _context.ListaChequeoItem
@@ -51,14 +63,14 @@ namespace asivamosffie.services
         public async Task<ListaChequeo> GetListaChequeoItemByListaChequeoId(int ListaChequeoId)
         {
             return await _context.ListaChequeo
-                    .Where(r=> r.ListaChequeoId == ListaChequeoId)
-                    .Include(lci=> lci.ListaChequeoListaChequeoItem)
+                    .Where(r => r.ListaChequeoId == ListaChequeoId)
+                    .Include(lci => lci.ListaChequeoListaChequeoItem)
                     .FirstOrDefaultAsync();
         }
         #endregion 
 
         #region Create Edit Business
-        public async Task<Respuesta> DeleteListaChequeoItem(int pListaChequeoListaChequeoItemId , string pAutor)
+        public async Task<Respuesta> DeleteListaChequeoItem(int pListaChequeoListaChequeoItemId, string pAutor)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Elemento_Lista_Chequeo, (int)EnumeratorTipoDominio.Acciones);
 
@@ -67,12 +79,12 @@ namespace asivamosffie.services
                 await _context.Set<ListaChequeoListaChequeoItem>()
                               .Where(l => l.ListaChequeoId == pListaChequeoListaChequeoItemId)
                               .UpdateAsync(l => new ListaChequeoListaChequeoItem
-                              { 
+                              {
                                   UsuarioModificacion = pAutor,
                                   FechaModificacion = DateTime.Now,
                                   Eliminado = true
                               });
-  
+
                 return new Respuesta
                 {
                     IsSuccessful = true,
@@ -94,7 +106,7 @@ namespace asivamosffie.services
                 };
             }
         }
-         
+
         public async Task<Respuesta> ActivateDeactivateListaChequeo(ListaChequeo pListaChequeo)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Activar_Desactivar_Lista_Chequeo, (int)EnumeratorTipoDominio.Acciones);
@@ -325,7 +337,7 @@ namespace asivamosffie.services
                         });
         }
         #endregion
-         
+
         #region  Emails 
         public async Task<bool> SendEmailWhenDesactiveListaChequeo(int pListaChequeoId)
         {
@@ -340,7 +352,7 @@ namespace asivamosffie.services
 
             return _commonService.EnviarCorreo(perfilsEnviarCorreo, template);
         }
-         
+
         private string ReplaceVariablesListaChequeo(string template, int pListaChequeoId)
         {
             ListaChequeo listaChequeo = _context.ListaChequeo.Find(pListaChequeoId);
