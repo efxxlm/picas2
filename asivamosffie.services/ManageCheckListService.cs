@@ -314,6 +314,7 @@ namespace asivamosffie.services
                                         .Update(lc => new ListaChequeoListaChequeoItem()
                                         {
                                             FechaModificacion = DateTime.Now,
+                                            Orden = lclci.Orden,
                                             UsuarioModificacion = pListaChequeo.UsuarioCreacion,
                                             Eliminado = lclci.Eliminado
                                         });
