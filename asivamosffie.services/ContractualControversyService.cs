@@ -1106,6 +1106,11 @@ namespace asivamosffie.services
 
                 _context.SaveChanges();
 
+                if (pEstadoReclamacionCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada)
+                {
+                    await SendMailParticipation(pActuacionSeguimientoId);
+                }
+
                 return new Respuesta
                 {
                     IsSuccessful = true,
@@ -3887,5 +3892,157 @@ namespace asivamosffie.services
                 };
             }
         }
+
+        #region Alertas 
+
+        //Alerta - usuario juridica (antes de 3/2 o 1 dia de que se cumpla la Fecha de vencimiento de términos para la próxima actuación requerida)
+        public async Task VencimientoTerminosContrato()
+        {
+            DateTime RangoFechaCon3DiasHabiles = await _commonService.CalculardiasLaborales(3, DateTime.Now);
+            DateTime RangoFechaCon2DiasHabiles = await _commonService.CalculardiasLaborales(2, DateTime.Now);
+            DateTime RangoFechaCon1DiasHabiles = await _commonService.CalculardiasLaborales(1, DateTime.Now);
+            List<ControversiaActuacion> controversiaActuacion3dias = _context.ControversiaActuacion
+                .Where(r => (r.EstadoCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada || r.EstadoCodigo == ConstantCodigoEstadoControversiaActuacion.Enviado_a_comite_tecnico) && r.FechaVencimiento == RangoFechaCon3DiasHabiles)
+                .Include(r => r.ControversiaContractual)
+                    .ThenInclude(r => r.Contrato)
+                .ToList();
+
+            List<ControversiaActuacion> controversiaActuacion2dias = _context.ControversiaActuacion
+                .Where(r => (r.EstadoCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada || r.EstadoCodigo == ConstantCodigoEstadoControversiaActuacion.Enviado_a_comite_tecnico) && r.FechaVencimiento == RangoFechaCon2DiasHabiles)
+                .Include(r => r.ControversiaContractual)
+                    .ThenInclude(r => r.Contrato)
+                .ToList();
+
+            List<ControversiaActuacion> controversiaActuacion1dias = _context.ControversiaActuacion
+                .Where(r => (r.EstadoCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada || r.EstadoCodigo == ConstantCodigoEstadoControversiaActuacion.Enviado_a_comite_tecnico) && r.FechaVencimiento == RangoFechaCon1DiasHabiles)
+                .Include(r => r.ControversiaContractual)
+                    .ThenInclude(r => r.Contrato)
+                .ToList();
+
+            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Juridica).Include(y => y.Usuario);
+            List<EnumeratorPerfil> perfilsEnviarCorreo =new List<EnumeratorPerfil>{EnumeratorPerfil.Juridica};
+            Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.FechaVencimientoProximaActuacionJuridica_4_2_1);
+
+            foreach (var controversia in controversiaActuacion3dias)
+            {
+
+                if (controversiaActuacion3dias.Count() > 0)
+                {
+                    Dominio ProximaActuacionCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.ProximaActuacionCodigo, (int)EnumeratorTipoDominio.Proxima_actuacion_requerida);
+
+                    TemplateRecoveryPassword.Contenido
+                                .Replace("[NUMERO_CONTRATO]", controversia.ControversiaContractual.Contrato.NumeroContrato)
+                                .Replace("[PROXIMA_ACTUACION]", ProximaActuacionCodigo != null ? ProximaActuacionCodigo.Nombre : String.Empty)
+                                .Replace("[FECHA_VENCIMIENTO]", ((DateTime)controversia.FechaVencimiento).ToString("yyyy-MM-dd"))
+                                .Replace("[DIAS]", "tres (3) días")
+                                .Replace("[FECHA_SOLICITUD_CONTROVERSIA]", ((DateTime)controversia.FechaVencimiento).ToString("yyyy-MM-dd"))
+                                .Replace("[NUMERO_SOLICITUD]", ((DateTime) controversia.ControversiaContractual.FechaSolicitud).ToString("yyyy-MM-dd"))
+                                .Replace("[TIPO_CONTROVERSIA]", controversia.ControversiaContractual.NumeroSolicitud);
+
+
+                    _commonService.EnviarCorreo(perfilsEnviarCorreo, TemplateRecoveryPassword);
+
+                }
+            }
+
+            foreach (var controversia in controversiaActuacion2dias)
+            {
+
+                if (controversiaActuacion3dias.Count() > 0)
+                {
+                    Dominio ProximaActuacionCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.ProximaActuacionCodigo, (int)EnumeratorTipoDominio.Proxima_actuacion_requerida);
+
+                    TemplateRecoveryPassword.Contenido
+                                .Replace("[NUMERO_CONTRATO]", controversia.ControversiaContractual.Contrato.NumeroContrato)
+                                .Replace("[PROXIMA_ACTUACION]", ProximaActuacionCodigo != null ? ProximaActuacionCodigo.Nombre : String.Empty)
+                                .Replace("[FECHA_VENCIMIENTO]", ((DateTime)controversia.FechaVencimiento).ToString("yyyy-MM-dd"))
+                                .Replace("[DIAS]", "dos (2) días")
+                                .Replace("[FECHA_SOLICITUD_CONTROVERSIA]", ((DateTime)controversia.FechaVencimiento).ToString("yyyy-MM-dd"))
+                                .Replace("[NUMERO_SOLICITUD]", ((DateTime)controversia.ControversiaContractual.FechaSolicitud).ToString("yyyy-MM-dd"))
+                                .Replace("[TIPO_CONTROVERSIA]", controversia.ControversiaContractual.NumeroSolicitud);
+
+
+                    _commonService.EnviarCorreo(perfilsEnviarCorreo, TemplateRecoveryPassword);
+
+                }
+            }
+
+            foreach (var controversia in controversiaActuacion1dias)
+            {
+
+                if (controversiaActuacion3dias.Count() > 0)
+                {
+                    Dominio ProximaActuacionCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.ProximaActuacionCodigo, (int)EnumeratorTipoDominio.Proxima_actuacion_requerida);
+
+                    TemplateRecoveryPassword.Contenido
+                                .Replace("[NUMERO_CONTRATO]", controversia.ControversiaContractual.Contrato.NumeroContrato)
+                                .Replace("[PROXIMA_ACTUACION]", ProximaActuacionCodigo != null ? ProximaActuacionCodigo.Nombre : String.Empty)
+                                .Replace("[FECHA_VENCIMIENTO]", ((DateTime)controversia.FechaVencimiento).ToString("yyyy-MM-dd"))
+                                .Replace("[DIAS]", "(1) día")
+                                .Replace("[FECHA_SOLICITUD_CONTROVERSIA]", ((DateTime)controversia.FechaVencimiento).ToString("yyyy-MM-dd"))
+                                .Replace("[NUMERO_SOLICITUD]", ((DateTime)controversia.ControversiaContractual.FechaSolicitud).ToString("yyyy-MM-dd"))
+                                .Replace("[TIPO_CONTROVERSIA]", controversia.ControversiaContractual.NumeroSolicitud);
+
+
+                    _commonService.EnviarCorreo(perfilsEnviarCorreo, TemplateRecoveryPassword);
+
+                }
+            }
+        }
+        #endregion
+
+        #region Correos 
+        /// Envio de correo cuando finaliza el proceso de actuación en 4.2.1 y tiene algun check en true (EsRequiereContratista,EsRequiereInterventor,EsRequiereSupervisor,EsRequiereFiduciaria)
+        private async Task<bool> SendMailParticipation(int pControversiaActuacionId)
+        {
+            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Participacion_Insumo_Realizar_Actuación_4_2_1));
+            ControversiaActuacion controversia = _context.ControversiaActuacion
+                .Where(r => (r.EstadoCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada || r.EstadoCodigo == ConstantCodigoEstadoControversiaActuacion.Enviado_a_comite_tecnico) 
+                            && r.ControversiaActuacionId == pControversiaActuacionId
+                            && (r.EsRequiereContratista == true || r.EsRequiereInterventor == true || r.EsRequiereSupervisor == true || r.EsRequiereFiduciaria == true))
+                .Include(r => r.ControversiaContractual)
+                    .ThenInclude(r => r.Contrato)
+                .FirstOrDefault();
+
+            List<EnumeratorPerfil> perfilsEnviarCorreo = new List<EnumeratorPerfil>();
+
+            if (controversia != null)
+            {
+                if ((bool)controversia.EsRequiereContratista)
+                {
+                    perfilsEnviarCorreo.Add(EnumeratorPerfil.Tecnica);//que rol tiene el contratista??
+                }
+                if ((bool)controversia.EsRequiereInterventor)
+                {
+                    perfilsEnviarCorreo.Add(EnumeratorPerfil.Interventor);
+                }
+                if ((bool)controversia.EsRequiereSupervisor)
+                {
+                    perfilsEnviarCorreo.Add(EnumeratorPerfil.Supervisor);
+                }
+                if ((bool)controversia.EsRequiereFiduciaria)
+                {
+                    perfilsEnviarCorreo.Add(EnumeratorPerfil.Fiduciaria);
+                }
+                if (perfilsEnviarCorreo.Count() > 0)
+                {
+                    Dominio ProximaActuacionCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.ProximaActuacionCodigo, (int)EnumeratorTipoDominio.Proxima_actuacion_requerida);
+
+                    template.Contenido
+                                .Replace("[NUMERO_CONTRATO]", controversia.ControversiaContractual.Contrato.NumeroContrato)
+                                .Replace("[PROXIMA_ACTUACION]", ProximaActuacionCodigo != null ? ProximaActuacionCodigo.Nombre : String.Empty)
+                                .Replace("[FECHA_SOLICITUD_CONTROVERSIA]", ((DateTime)controversia.FechaVencimiento).ToString("yyyy-MM-dd"))
+                                .Replace("[NUMERO_SOLICITUD]", ((DateTime)controversia.ControversiaContractual.FechaSolicitud).ToString("yyyy-MM-dd"))
+                                .Replace("[TIPO_CONTROVERSIA]", controversia.ControversiaContractual.NumeroSolicitud);
+
+                   return _commonService.EnviarCorreo(perfilsEnviarCorreo, template);
+                }
+            }
+
+            return false;
+        }
+
+        #endregion
+
     }
 }

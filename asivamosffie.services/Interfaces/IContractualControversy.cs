@@ -78,6 +78,7 @@ namespace asivamosffie.services.Interfaces
         Task<ControversiaActuacionMesa> GetMesaByMesaId(int pControversiaMesaID);
         Task<SeguimientoActuacionDerivada> GetSeguimientoActuacionDerivadabyId(int pSeguimientoActuacionDerivadaId);
         Task<Respuesta> ChangeStateActuacion(int pControversiaActuacionId, string value);
+        Task VencimientoTerminosContrato();
 
     }
 }

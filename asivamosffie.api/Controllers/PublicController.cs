@@ -29,6 +29,7 @@ namespace asivamosffie.api.Controllers
         public readonly IValidateFinalReportService _ValidateFinalReportService;
         public readonly IValidateFulfilmentFinalReportService _ValidateFulfilmentFinalReportService;
         public readonly IRegisterWeeklyProgressService _registerWeeklyProgressService;
+        public readonly IContractualControversy _ContractualControversyService;
 
         public PublicController(
                                 IManagePreContructionActPhase1Service managePreContructionActPhase1Service,
@@ -347,6 +348,20 @@ namespace asivamosffie.api.Controllers
             catch (Exception ex)
             {
 
+                throw ex;
+            }
+        }
+
+        //4.2.1 - alerta
+        [HttpGet("GetVencimientoTerminosContrato")]
+        public async Task VencimientoTerminosContrato()
+        {
+            try
+            {
+                await _ContractualControversyService.VencimientoTerminosContrato();
+            }
+            catch (Exception ex)
+            {
                 throw ex;
             }
         }

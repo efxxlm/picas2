@@ -76,5 +76,9 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         //6.4 Lista chequeo
         ListaChequeoDesactivada = 86,
+
+        //4.2.1
+        FechaVencimientoProximaActuacionJuridica_4_2_1 = 88,
+        Participacion_Insumo_Realizar_Actuación_4_2_1 = 91,
     }
 }
