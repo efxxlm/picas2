@@ -8,6 +8,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { Respuesta } from 'src/app/core/_services/common/common.service';
 import { ContratosModificacionesContractualesService } from 'src/app/core/_services/contratos-modificaciones-contractuales/contratos-modificaciones-contractuales.service';
 import { DefensaJudicial, DefensaJudicialContratacionProyecto, DefensaJudicialService } from 'src/app/core/_services/defensaJudicial/defensa-judicial.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -305,18 +306,18 @@ export class FormContratosAsociadosDjComponent implements OnInit {
     }
     defensaJudicial.cantContratos = this.formContratista.get('numeroContratos').value;
     defensaJudicial.defensaJudicialContratacionProyecto = defContraProyecto;
-    console.log(defensaJudicial);
     if(this.tipoProceso==null || this.legitimacion==null){
       this.openDialog('', '<b>Falta registrar información.</b>');
     }
     else{
-      this.defensaService.CreateOrEditDefensaJudicial(defensaJudicial).subscribe(
-        response => {
-          this.openDialog('', `<b>${response.message}</b>`, true, response.data ? response.data.defensaJudicialId : 0);
-        }
-      );
+      this.defensaService.CreateOrEditDefensaJudicial(defensaJudicial)
+      .subscribe((response: Respuesta) => {
+        this.openDialog('', `<b>${response.message}</b>`,true,response.data?response.data.defensaJudicialId:0);
+      },
+      err => {
+        this.openDialog('', err.message);
+      });
     }
-
 
   }
 
@@ -327,11 +328,15 @@ export class FormContratosAsociadosDjComponent implements OnInit {
     });
     if (redirect) {
       dialogRef.afterClosed().subscribe(result => {
-        if (id > 0 && this.defensaJudicial.defensaJudicialId == 0) {
+        if (id > 0 && this.defensaJudicial.defensaJudicialId != id) {
           this.router.navigate(["/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial/" + id], {});
         }
         else {
-          location.reload();
+          if(this.defensaJudicial.defensaJudicialId == id){
+            location.reload();
+          }else{
+            this.router.navigate(["/gestionarProcesoDefensaJudicial"], {});
+          }
         }
       });
     }

@@ -247,7 +247,6 @@ export class FormConvocadosPasivaDjComponent implements OnInit {
       this.openDialog('', '<b>Falta registrar información.</b>');
     }
     else{
-      console.log(defensaJudicial);
       this.defensaService.CreateOrEditDefensaJudicial(defensaJudicial).subscribe(
         response=>{
           this.openDialog('', `<b>${response.message}</b>`,true,response.data?response.data.defensaJudicialId:0);
@@ -266,13 +265,16 @@ export class FormConvocadosPasivaDjComponent implements OnInit {
     if(redirect)
     {
       dialogRef.afterClosed().subscribe(result => {
-        if(id>0 && this.defensaJudicial.defensaJudicialId==0)
-        {
-          this.router.navigate(["/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial/"+id], {});
-        }                  
-        else{
-          location.reload();
-        }                 
+        if (id > 0 && this.defensaJudicial.defensaJudicialId != id) {
+          this.router.navigate(["/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial/" + id], {});
+        }
+        else {
+          if(this.defensaJudicial.defensaJudicialId == id){
+            location.reload();
+          }else{
+            this.router.navigate(["/gestionarProcesoDefensaJudicial"], {});
+          }
+        }               
       });
     }
   }

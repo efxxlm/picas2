@@ -199,13 +199,16 @@ export class FormDemandadosDjComponent implements OnInit {
     if(redirect)
     {
       dialogRef.afterClosed().subscribe(result => {
-        if(id>0 && this.defensaJudicial.defensaJudicialId==0)
-        {
-          this.router.navigate(["/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial/"+id], {});
-        }                  
-        else{
-          location.reload();
-        }                   
+        if (id > 0 && this.defensaJudicial.defensaJudicialId != id) {
+          this.router.navigate(["/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial/" + id], {});
+        }
+        else {
+          if(this.defensaJudicial.defensaJudicialId == id){
+            location.reload();
+          }else{
+            this.router.navigate(["/gestionarProcesoDefensaJudicial"], {});
+          }
+        }                 
       });
     }
   }

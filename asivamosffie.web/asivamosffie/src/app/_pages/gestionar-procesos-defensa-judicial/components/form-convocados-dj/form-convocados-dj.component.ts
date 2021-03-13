@@ -5,7 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DefensaJudicial } from 'src/app/core/_services/defensaJudicial/defensa-judicial.service';
-import { CommonService } from '../../../../core/_services/common/common.service';
+import { CommonService, Respuesta } from '../../../../core/_services/common/common.service';
 import { DefensaJudicialService, DemandadoConvocado } from '../../../../core/_services/defensaJudicial/defensa-judicial.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { Router } from '@angular/router';
@@ -196,12 +196,13 @@ export class FormConvocadosDjComponent implements OnInit {
       this.openDialog('', '<b>Falta registrar información.</b>');
     }
     else{
-      console.log(defensaJudicial);
-      this.defensaService.CreateOrEditDefensaJudicial(defensaJudicial).subscribe(
-        response=>{
+        this.defensaService.CreateOrEditDefensaJudicial(defensaJudicial)
+        .subscribe((response: Respuesta) => {
           this.openDialog('', `<b>${response.message}</b>`,true,response.data?response.data.defensaJudicialId:0);
-        }
-      );
+        },
+        err => {
+          this.openDialog('', err.message);
+        });
     }
   }
 
@@ -210,16 +211,18 @@ export class FormConvocadosDjComponent implements OnInit {
       width: '28em',
       data: { modalTitle, modalText }
     });
-    if(redirect)
-    {
+    if (redirect) {
       dialogRef.afterClosed().subscribe(result => {
-        if(id>0 && this.defensaJudicial.defensaJudicialId==0)
-        {
-          this.router.navigate(["/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial/"+id], {});
-        }                  
-        else{
-          location.reload();
-        }                   
+        if (id > 0 && this.defensaJudicial.defensaJudicialId != id) {
+          this.router.navigate(["/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial/" + id], {});
+        }
+        else {
+          if(this.defensaJudicial.defensaJudicialId == id){
+            location.reload();
+          }else{
+            this.router.navigate(["/gestionarProcesoDefensaJudicial"], {});
+          }
+        }
       });
     }
   }
