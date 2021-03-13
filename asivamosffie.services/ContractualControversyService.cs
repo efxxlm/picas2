@@ -266,6 +266,8 @@ namespace asivamosffie.services
             controversiaActuacion.TipoControversia = vTipoControversiaCodigo == null ? "" : vTipoControversiaCodigo.Nombre;
             controversiaActuacion.SeguimientoActuacionDerivada = controversiaActuacion.SeguimientoActuacionDerivada.Where(x => !(bool)x.Eliminado).ToList();
             controversiaActuacion.EstadoActuacionReclamacionString = estado == null ? "" : estado.Nombre;
+            controversiaActuacion.ProximaActuacionCodigoString = !String.IsNullOrEmpty(controversiaActuacion.ProximaActuacionCodigo) ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(controversiaActuacion.ProximaActuacionCodigo, (int)EnumeratorTipoDominio.Proxima_actuacion_requerida) : String.Empty;
+
             foreach (var cont in controversiaActuacion.SeguimientoActuacionDerivada)
             {
                 var estadostring = await _commonService.GetDominioByNombreDominioAndTipoDominio(cont.EstadoActuacionDerivadaCodigo, (int)EnumeratorTipoDominio.Estado_Actuacion_Derivada_r_4_4_1);
@@ -1105,7 +1107,7 @@ namespace asivamosffie.services
 
                 _context.SaveChanges();
 
-                if (pEstadoReclamacionCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada)
+                if (pEstadoReclamacionCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada || pEstadoReclamacionCodigo == ConstantCodigoEstadoControversiaActuacion.Enviado_a_comite_tecnico)
                 {
                     await SendMailParticipation(pActuacionSeguimientoId, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
                 }
@@ -2851,7 +2853,7 @@ namespace asivamosffie.services
 
                             }
                             var dmActuacion = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.ActuacionAdelantadaCodigo, (int)EnumeratorTipoDominio.Actuacion_adelantada);
-                            var dmActuacionEstado = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.EstadoCodigo, (int)EnumeratorTipoDominio.Estados_Actuacion_Derivada);
+                            var dmActuacionEstado = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.EstadoCodigoActuacionDerivada, (int)EnumeratorTipoDominio.Estados_Actuacion_Derivada);
                             var dmReclamacionEstado = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.EstadoActuacionReclamacionCodigo, (int)EnumeratorTipoDominio.Estados_Reclamacion);
 
                             string actuacion = dmActuacion == null ? "" : dmActuacion.Nombre;
@@ -2932,6 +2934,7 @@ namespace asivamosffie.services
                 actuacionSeguimientoOld.UsuarioModificacion = pUsuarioModifica;
                 actuacionSeguimientoOld.FechaModificacion = DateTime.Now;
                 actuacionSeguimientoOld.EstadoCodigo = "2";//cambiar
+                actuacionSeguimientoOld.EstadoCodigoActuacionDerivada = ConstantCodigoEstadoActuacionDerivada.Finalizada;
 
                 _context.SaveChanges();
 
@@ -2972,6 +2975,7 @@ namespace asivamosffie.services
                 {
                     escompleto = false;
                 }
+
                 actuacionSeguimiento.EsCompleto = escompleto;
                 if (actuacionSeguimiento.SeguimientoActuacionDerivadaId > 0)
                 {
@@ -2997,7 +3001,8 @@ namespace asivamosffie.services
                 }
                 //al papa le cambio el estado
                 var controversia = _context.ControversiaActuacion.Find(actuacionSeguimiento.ControversiaActuacionId);
-                controversia.EstadoActuacionReclamacionCodigo = "2";//en proceso
+                //controversia.EstadoActuacionReclamacionCodigo = "2";//en proceso
+                controversia.EstadoCodigoActuacionDerivada = ConstantCodigoEstadoActuacionDerivada.En_proceso_de_registro;
                 controversia.FechaModificacion = DateTime.Now;
                 controversia.UsuarioModificacion = actuacionSeguimiento.UsuarioCreacion == null ? actuacionSeguimiento.UsuarioModificacion : actuacionSeguimiento.UsuarioCreacion;
                 _context.ControversiaActuacion.Update(controversia);

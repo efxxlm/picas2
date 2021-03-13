@@ -230,8 +230,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
-
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -2079,10 +2077,6 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(20)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Pretensiones)
-                    .HasMaxLength(1000)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.TipoAccionCodigo)
                     .HasMaxLength(100)
                     .IsUnicode(false);
@@ -3131,10 +3125,6 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ListaChequeoItem>(entity =>
             {
-                entity.HasIndex(e => e.Nombre)
-                    .HasName("Index_Nombre")
-                    .IsUnique();
-
                 entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
@@ -5072,10 +5062,6 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.NumeroActuacionDerivada).HasMaxLength(100);
-
-                entity.Property(e => e.Observaciones)
-                    .HasMaxLength(1000)
-                    .IsUnicode(false);
 
                 entity.Property(e => e.RutaSoporte)
                     .HasMaxLength(300)

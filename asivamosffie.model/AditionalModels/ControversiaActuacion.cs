@@ -23,5 +23,8 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public List<string> ObservacionesComites { get; set; }
+
+        [NotMapped]
+        public string ProximaActuacionCodigoString { get; set; }
     }
 }
