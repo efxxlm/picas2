@@ -49,7 +49,7 @@
                     [routerLink]="['crearActa', element.id]" mat-raised-button color="accent" class="btn-table">
                     Ver detalle</a>
 
-                <a *ngIf="element.estadoActa == 'Devuelta'" [routerLink]="['crearActa', element.id]" mat-raised-button
+                <a *ngIf="!element.registroCompleto && element.estadoActa == 'Devuelta'" [routerLink]="['crearActa', element.id]" mat-raised-button
                     color="accent" class="btn-table">
                     Ver detalle/Editar</a>
 

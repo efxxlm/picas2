@@ -209,6 +209,7 @@ export class SeccionPrivadaComponent implements OnInit {
       pProceso.procesoSeleccionGrupo.forEach(psg => {
         if (
           psg.nombreGrupo === undefined ||
+          psg.nombreGrupo === '' ||
           psg.tipoPresupuestoCodigo === undefined ||
           (psg.tipoPresupuestoCodigo === "2" && psg.valorMaximoCategoria === undefined) ||
           (psg.tipoPresupuestoCodigo === "2" && psg.valorMinimoCategoria === undefined) ||

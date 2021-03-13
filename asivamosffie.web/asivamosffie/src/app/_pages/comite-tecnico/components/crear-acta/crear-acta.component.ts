@@ -105,20 +105,36 @@ export class CrearActaComponent implements OnInit {
   }
 
   validarCompletos() {
-    this.solicitudesCompletas = null;
+    //this.solicitudesCompletas = null;
     this.temasCompletos = null;
     this.proposicionesCompletos = null;
 
-    if (this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico && this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico.length > 0 ) {
-      this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico.forEach(cs => {
-        if (cs.registroCompletoActa === true)
-          this.solicitudesCompletas = true;
-      })
+    let cantidadCompletos = 0;
+    let cantidadVacios = 0;
 
-      this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico.forEach(cs => {
-        if (cs.registroCompletoActa === false)
-          this.solicitudesCompletas = false;
-      })
+     if (this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnicoFiduciario && this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnicoFiduciario.length > 0) {
+      
+      this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnicoFiduciario.forEach(cs => {
+
+        if (cs.registroCompletoActa === undefined){
+          cantidadVacios++;
+        }
+
+        if (cs.registroCompletoActa === true )
+           cantidadCompletos++;
+      });
+
+      if ( this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnicoFiduciario.length === cantidadCompletos ){
+        this.solicitudesCompletas = true;
+      }else 
+      if ( this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnicoFiduciario.length === cantidadVacios ){
+        this.solicitudesCompletas = null;
+      }else{
+        this.solicitudesCompletas = false;
+      }
+
+      console.log(this.solicitudesCompletas);
+
     }else{
       this.solicitudesCompletas = true;
     }
