@@ -500,6 +500,7 @@ namespace asivamosffie.services
                     //Include(x=>x.DefensaJudicialContratacionProyecto).
                     Include(x => x.DemandadoConvocado).
                     Include(x => x.DemandanteConvocante).
+                    Include(x => x.DefensaJudicialSeguimiento).
                     Include(x => x.FichaEstudio).
                     Distinct().
                     ToListAsync();
