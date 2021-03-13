@@ -51,7 +51,7 @@
                                 <div class="col d-flex">
                                     <mat-form-field class="full-width">
                                         <input matInput #contrato="matAutocompleteTrigger" type="text" maxlength="100" required [matAutocomplete]="auto"  
-                                        [formControl]="myControl.controls[i]"  formControlName="contrato">
+                                        [formControl]="myControl.controls[i]"  formControlName="contrato" (ngModelChange)="getContratos($event, i)">
                                         <mat-autocomplete #auto="matAutocomplete">
                                             <mat-option *ngFor="let contrato of contratosArray[i]" [value]="contrato.numeroContrato" (click)="seleccionAutocomplete(contrato,i)">
                                                 {{ contrato.numeroContrato }}
@@ -59,7 +59,7 @@
                                         </mat-autocomplete>
                                         <input type="hidden" formControlName="contrato">
                                     </mat-form-field>
-                                    <button mat-button type="button" color="primary" class="busqueda--img" (click)="getContratos(myControl.controls[i].value, i); $event.stopPropagation()">
+                                    <button mat-button type="button" color="primary" class="busqueda--img">
                                         <img src="assets/img/icon/lupa.svg" alt="Buscar">
                                     </button>
                                 </div>
