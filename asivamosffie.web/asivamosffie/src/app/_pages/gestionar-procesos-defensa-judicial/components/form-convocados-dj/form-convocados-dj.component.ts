@@ -47,7 +47,7 @@ export class FormConvocadosDjComponent implements OnInit {
         this.perfiles.controls[i].get("nomConvocado").setValue(element.nombre);
         this.perfiles.controls[i].get("tipoIdentificacion").setValue(element.tipoIdentificacionCodigo);
         this.perfiles.controls[i].get("numIdentificacion").setValue(element.numeroIdentificacion);
-        this.perfiles.controls[i].get("direccion").setValue(element.numeroIdentificacion);
+        this.perfiles.controls[i].get("direccion").setValue(element.direccion);
         this.perfiles.controls[i].get("correo").setValue(element.email);
         //this.perfiles.controls[i].get("registroCompleto").setValue(element.registroCompleto);
         if( element.registroCompleto == null 
