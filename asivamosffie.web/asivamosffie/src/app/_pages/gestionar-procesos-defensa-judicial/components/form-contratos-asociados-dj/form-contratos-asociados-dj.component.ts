@@ -76,6 +76,7 @@ export class FormContratosAsociadosDjComponent implements OnInit {
       });
 
       let i = 0;
+      console.log(listaContratos);
       listaContratos.forEach(c => {
         //this.myControl.controls[i].setValue(c.numeroContrato);
         this.perfiles.value.contrato = c.contratoId;

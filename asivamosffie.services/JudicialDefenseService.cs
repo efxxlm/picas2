@@ -508,6 +508,7 @@ namespace asivamosffie.services
                         _context.VDefensaJudicialContratacionProyecto
                         .Where(r => r.DefensaJudicialId == ListDefensaJudicial.FirstOrDefault().DefensaJudicialId)
                         .Distinct()
+                        .OrderBy(r => r.OrderDefensaJudicialContratacionProyectoId)
                         .ToList();
 
                     ListVD.ForEach(djcp =>
