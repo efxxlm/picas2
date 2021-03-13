@@ -7,12 +7,12 @@
         </a>
     </div>
     <h1 class="title-menu--h1">
-        Ver detalle/Editar registro actuación de proceso DJ0012020
+        Ver detalle/Editar registro actuación de proceso {{defensaJudicial?.numeroProceso}}
     </h1>
     <p class="info-sub-title">
-        <span>Número de contrato: <b>C223456789</b></span>
-        <span>Tipo de acción: <b>Reparación directa</b></span>
-        <span>Jurisdicción: <b>Ordinaria</b></span>
+        <span>Número de contrato: <b> {{defensaJudicial?.numeroProceso}}</b></span>
+        <span>Tipo de acción: <b> {{defensaJudicial?.tipoAccionCodigoNombre}}</b></span>
+        <span>Jurisdicción: <b> {{defensaJudicial?.jurisdiccionCodigoNombre}}</b></span>
     </p>
     <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
         <mat-card class="shipping-card">
