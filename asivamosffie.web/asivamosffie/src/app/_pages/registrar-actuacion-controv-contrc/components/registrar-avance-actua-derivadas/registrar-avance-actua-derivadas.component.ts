@@ -63,7 +63,6 @@ export class RegistrarAvanceActuaDerivadasComponent implements OnInit {
      { }
 
   ngOnInit(): void {
-    console.log("entra");
     this.commonServices.getEstadoActuacionDerivada().subscribe(
       response=>{
         console.log(response);

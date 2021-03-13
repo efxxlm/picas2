@@ -2831,7 +2831,7 @@ namespace asivamosffie.services
 
                             if (contrato != null)
                             {
-                                TipoControversiaCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipo_de_controversia);
+                                TipoControversiaCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipos_Controversia);
                                 if (TipoControversiaCodigo != null)
                                 {
                                     strTipoControversiaCodigo = TipoControversiaCodigo.Codigo;
