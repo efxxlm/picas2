@@ -839,6 +839,11 @@ namespace asivamosffie.services
                         x.DisponibilidadPresupuestalProyectoId!=gestion.DisponibilidadPresupuestalProyectoId)
                         .Sum(x => x.ValorSolicitado);
 
+                    var gestionFuente = _context.GestionFuenteFinanciacion.Where(
+                        x => x.FuenteFinanciacionId == gestion.FuenteFinanciacionId &&
+                        x.DisponibilidadPresupuestalProyectoId == gestion.DisponibilidadPresupuestalProyectoId)
+                        .FirstOrDefault();
+
                     string fuenteNombre = _context.Dominio.Where(x => x.Codigo == gestion.FuenteFinanciacion.FuenteRecursosCodigo
                             && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
      
@@ -858,9 +863,9 @@ namespace asivamosffie.services
 
                         .Replace("[VALOR_APORTANTE]", "$ "+String.Format("{0:n0}", contratacion.TipoSolicitudCodigo == "2" ? proyectoAportante.ValorInterventoria : proyectoAportante.ValorObra))
                         .Replace("[FUENTE]", fuenteNombre)
-                        .Replace("[SALDO_FUENTE]", "$ "+String.Format("{0:n0}", saldototal).ToString())
+                        .Replace("[SALDO_FUENTE]", "$ "+String.Format("{0:n0}", gestionFuente.SaldoActual).ToString())
                         .Replace("[VALOR_FUENTE]", "$ "+String.Format("{0:n0}", gestion.ValorSolicitado).ToString())
-                        .Replace("[NUEVO_SALDO_FUENTE]", "$ "+String.Format("{0:n0}", (saldototal - gestion.ValorSolicitado)).ToString());
+                        .Replace("[NUEVO_SALDO_FUENTE]", "$ "+String.Format("{0:n0}", (gestionFuente.NuevoSaldo)).ToString());
                     tablafuentes += tr;                  
                 }
 

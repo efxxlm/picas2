@@ -30,57 +30,65 @@ const ELEMENT_DATA: tablaEjemplo[] = [
   styleUrls: ['./gestionar-drp.component.scss']
 })
 export class GestionarDrpComponent implements OnInit {
-  listacomponentes:tablaEjemplo[]=[];
+  listacomponentes: tablaEjemplo[] = [];
   public numContrato = "";
   public fechaContrato = "";
   public solicitudContrato = "";
   public estadoSolicitud = "";
   displayedColumns: string[] = ['componente', 'uso', 'valorUso', 'valorTotal'];
-  esModificacion=false;
+  esModificacion = false;
   dataSource = [];
   detailavailabilityBudget: any;
-  constructor(public dialog: MatDialog,private disponibilidadServices: DisponibilidadPresupuestalService,
-    private route: ActivatedRoute,private currencyPipe:CurrencyPipe,
-    private router: Router,private sanitized: DomSanitizer,) { }
-  
-    openDialog(modalTitle: string, modalText: string,relocate=false) {
-      let dialogref=this.dialog.open(ModalDialogComponent, {
-        width: '28em',
-        data: { modalTitle, modalText }
+  listaComponentesUsoAportante:any[] = [];
+  constructor(public dialog: MatDialog, private disponibilidadServices: DisponibilidadPresupuestalService,
+    private route: ActivatedRoute, private currencyPipe: CurrencyPipe,
+    private router: Router, private sanitized: DomSanitizer,) { }
+
+  openDialog(modalTitle: string, modalText: string, relocate = false) {
+    let dialogref = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+    if (relocate) {
+      dialogref.afterClosed().subscribe(result => {
+        this.router.navigate(["/generarRegistroPresupuestal"], {});
       });
-      if(relocate)
-      {
-        dialogref.afterClosed().subscribe(result => {
-          this.router.navigate(["/generarRegistroPresupuestal"], {});
-         });
-      }
     }
+  }
   ngOnInit(): void {
+    let listaComponentesUsoAportante=[];
+    let dataSource = [];
     const id = this.route.snapshot.paramMap.get('id');
+
     if (id) {
       this.disponibilidadServices.GetDetailAvailabilityBudgetProyect(id).subscribe(listas => {
-        console.log(listas);
-        console.log(listas);
-        if(listas.length>0)
-        {
-          this.detailavailabilityBudget=listas[0];
+
+        if (listas.length > 0) {
+          this.detailavailabilityBudget = listas[0];
           this.detailavailabilityBudget.proyectos.forEach(element => {
-            this.listacomponentes = [];
-            element.componenteGrilla.forEach(element2 => {                          
-              this.listacomponentes.push({
-                componente: element2.componente, uso: [
-                  { nombre: element2.uso }//, { nombre: "Diagnostico" }, { nombre: "Obra Principal" }
-                ], valorUso: [
-                  { valor: element2.valorUso.map(y=>{let convert=y.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,"); return "$"+convert;})}//, { valor: "$ 12.000.000" }, { valor: "$ 60.000.000" }
-                ], valorTotal: element2.valorTotal
+            listaComponentesUsoAportante = [];
+            element.aportantes.forEach(aportante => {
+
+              this.listacomponentes = [];
+              // filtro por aportante
+              element.componenteGrilla.filter( r => r.cofinanciacionAportanteId == aportante.cofinanciacionAportanteId).forEach(element2 => {
+                this.listacomponentes.push({
+                  componente: element2.componente, uso: [
+                    { nombre: element2.uso }//, { nombre: "Diagnostico" }, { nombre: "Obra Principal" }
+                  ], valorUso: [
+                    { valor: element2.valorUso.map(y => { let convert = y.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,"); return "$" + convert; }) }//, { valor: "$ 12.000.000" }, { valor: "$ 60.000.000" }
+                  ], valorTotal: element2.valorTotal
+                });
               });
+              //dataSource.push(new MatTableDataSource(this.listacomponentes));
+              listaComponentesUsoAportante.push( new MatTableDataSource(this.listacomponentes) )
             });
-            this.dataSource.push(new MatTableDataSource(this.listacomponentes));
+            element['listaComponentesUsoAportante'] = listaComponentesUsoAportante
           });
-          
+
         }
-        else{
-          this.openDialog('','Error al intentar recuperar los datos de la solicitud, por favor intenta nuevamente.');
+        else {
+          this.openDialog('', 'Error al intentar recuperar los datos de la solicitud, por favor intenta nuevamente.');
         }
       });
     }
@@ -88,8 +96,8 @@ export class GestionarDrpComponent implements OnInit {
 
   }
 
-  
-  cancelarDRPBoton(){
+
+  cancelarDRPBoton() {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.height = 'auto';
     dialogConfig.width = '50%';
@@ -98,58 +106,56 @@ export class GestionarDrpComponent implements OnInit {
     dialogRef.componentInstance.tipo = this.detailavailabilityBudget.tipoSolicitudEspecial;
     dialogRef.componentInstance.nSolicitud = this.detailavailabilityBudget.numeroSolicitud;
     dialogRef.componentInstance.fecha = this.detailavailabilityBudget.fechaSolicitud;
-    dialogRef.afterClosed().subscribe(result => {        
-      this.router.navigate(["/generarRegistroPresupuestal"], {});      
+    dialogRef.afterClosed().subscribe(result => {
+      this.router.navigate(["/generarRegistroPresupuestal"], {});
     });
-  }
-  
-  descargarDDPBoton(){    
-    console.log(this.detailavailabilityBudget);
-    this.disponibilidadServices.GenerateDDP(this.detailavailabilityBudget.id).subscribe((listas:any) => {
-      console.log(listas);
-      const documento = `${ this.detailavailabilityBudget.numeroDDP  }.pdf`;
-        const text = documento,
-          blob = new Blob([listas], { type: 'application/pdf' }),
-          anchor = document.createElement('a');
-        anchor.download = documento;
-        anchor.href = window.URL.createObjectURL(blob);
-        anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
-        anchor.click();
-    });
-  
-  }
-  descargarDRPBoton(){    
-    console.log(this.detailavailabilityBudget);
-    this.disponibilidadServices.GenerateDRP(this.detailavailabilityBudget.id).subscribe((listas:any) => {
-      console.log(listas);
-      const documento = `DRP ${ this.detailavailabilityBudget.id }.pdf`;
-        const text = documento,
-          blob = new Blob([listas], { type: 'application/pdf' }),
-          anchor = document.createElement('a');
-        anchor.download = documento;
-        anchor.href = window.URL.createObjectURL(blob);
-        anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
-        anchor.click();
-    });
-  
   }
 
-  generardrp(){
+  descargarDDPBoton() {
+    console.log(this.detailavailabilityBudget);
+    this.disponibilidadServices.GenerateDDP(this.detailavailabilityBudget.id).subscribe((listas: any) => {
+      console.log(listas);
+      const documento = `${this.detailavailabilityBudget.numeroDDP}.pdf`;
+      const text = documento,
+        blob = new Blob([listas], { type: 'application/pdf' }),
+        anchor = document.createElement('a');
+      anchor.download = documento;
+      anchor.href = window.URL.createObjectURL(blob);
+      anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+      anchor.click();
+    });
+
+  }
+  descargarDRPBoton() {
+    console.log(this.detailavailabilityBudget);
+    this.disponibilidadServices.GenerateDRP(this.detailavailabilityBudget.id).subscribe((listas: any) => {
+      console.log(listas);
+      const documento = `DRP ${this.detailavailabilityBudget.id}.pdf`;
+      const text = documento,
+        blob = new Blob([listas], { type: 'application/pdf' }),
+        anchor = document.createElement('a');
+      anchor.download = documento;
+      anchor.href = window.URL.createObjectURL(blob);
+      anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+      anchor.click();
+    });
+
+  }
+
+  generardrp() {
     this.disponibilidadServices.CreateDRP(this.detailavailabilityBudget.id).subscribe(listas => {
       console.log(listas);
       //this.detailavailabilityBudget=listas;
-      this.openDialog("",listas.message,true);
-      if(listas.code=="200")
-      {
+      this.openDialog("", listas.message, true);
+      if (listas.code == "200") {
         this.descargarDRPBoton();
-      } 
+      }
     });
   }
 
-  generardrpPDF()
-  {
+  generardrpPDF() {
     this.descargarDRPBoton();
-  } 
-  
+  }
+
 
 }
