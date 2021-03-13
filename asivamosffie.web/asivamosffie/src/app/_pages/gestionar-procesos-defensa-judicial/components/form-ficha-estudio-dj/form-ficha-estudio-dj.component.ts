@@ -42,6 +42,7 @@ export class FormFichaEstudioDjComponent implements OnInit {
     actuacionRecomendadaAlComite: [null, Validators.required],
     urlSoporte: [null, Validators.required]
   });
+  
   actuacionesArray = [
   ];
   estaEditando = false;
