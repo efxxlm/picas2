@@ -64,6 +64,10 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
 */    this.estaEditando = true;
     this.addressForm.markAllAsTouched();
     this.formContratista.markAllAsTouched();
+    if(this.defensaJudicial.esDemandaFfie==false){
+      this.textoConvocantes = "convocante";
+      this.textoConvocantesCapital = "Convocante";
+    }
     this.addressForm.get("demandaContraFFIE").setValue(this.defensaJudicial.esDemandaFfie);
     this.formContratista.get("numeroContratos").setValue(this.defensaJudicial.numeroDemandantes);
     let i = 0;

@@ -38,7 +38,8 @@
                     'color-secondaryColor':
                       (formContratista.get('numeroContratos').invalid && formContratista.get('numeroContratos').touched) ||
                       (formContratista.get('numeroContratos').invalid && estaEditando)
-                  }"><b>Número de {{textoConvocantes}}s</b></label>
+                  }"><b *ngIf="this.addressForm.value.demandaContraFFIE==true || this.addressForm.value.demandaContraFFIE==null">Número de demandantes</b>
+                  <b *ngIf="this.addressForm.value.demandaContraFFIE==false">Número de convocantes</b></label>
                 <div class="col d-flex">
                     <mat-form-field class="w-70">
                         <input matInput type="text" maxlength="2" formControlName="numeroContratos" required>

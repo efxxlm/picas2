@@ -1,7 +1,7 @@
 <section class="container text-center">
     <div class="text-right">
         <!-- 3 va quemado-->
-        <a routerLink="/gestionarProcesoDefensaJudicial/actualizarProceso/3" mat-button color="primary"
+        <a routerLink="/gestionarProcesoDefensaJudicial/actualizarProceso/{{this.controlJudicialId}}" mat-button color="primary"
             class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
         </a>
@@ -32,9 +32,9 @@
                             <div class="col">
                                 <mat-form-field class="select-width">
                                     <mat-select formControlName="estadoAvanceProceso" required>
-                                        <mat-option *ngFor="let contr of estadoAvanceProcesoArray"
-                                            [value]="contr.value">
-                                            {{ contr.name }}
+                                        <mat-option *ngFor="let estadoAvanceProceso of estadoAvanceProcesoArray"
+                                            [value]="estadoAvanceProceso">
+                                            {{ estadoAvanceProceso.nombre }}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>

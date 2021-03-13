@@ -30,8 +30,8 @@
                             <div class="col">
                                 <mat-form-field class="select-width">
                                     <mat-select formControlName="estadoAvanceProceso" required>
-                                        <mat-option *ngFor="let contr of estadoAvanceProcesoArray" [value]="contr.codigo">
-                                            {{ contr.nombre }}
+                                        <mat-option *ngFor="let estadoAvanceProceso of estadoAvanceProcesoArray" [value]="estadoAvanceProceso">
+                                            {{ estadoAvanceProceso.nombre }}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
@@ -143,7 +143,7 @@
                             'color-secondaryColor':
                               (addressForm.get('fechaVencimientoTerminos').invalid && addressForm.get('fechaVencimientoTerminos').touched) ||
                               (addressForm.get('fechaVencimientoTerminos').invalid && estaEditando)
-                          }">>Fecha de vencimiento de términos para la próxima actuación requerida</label>
+                          }">Fecha de vencimiento de términos para la próxima actuación requerida</label>
                         </div>
                         <div class="col d-flex align-items-center">
                           <mat-form-field class="example-full-width">

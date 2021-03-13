@@ -43,7 +43,13 @@ export class VerDetalleEditarActuacionProcesoComponent implements OnInit {
   constructor(  private fb: FormBuilder, public dialog: MatDialog,
     public commonServices: CommonService,
     public judicialServices:DefensaJudicialService,
-    private activatedRoute: ActivatedRoute, private router: Router) { }
+    private activatedRoute: ActivatedRoute, private router: Router) {
+      this.commonServices.getEstadoAvanceProcesosDefensa().subscribe(
+        response=>{
+          this.estadoAvanceProcesoArray=response;
+        }
+      );
+     }
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe( param => {
@@ -52,13 +58,19 @@ export class VerDetalleEditarActuacionProcesoComponent implements OnInit {
       this.addressForm.markAllAsTouched();
       this.judicialServices.GetDefensaJudicialById(this.controlJudicialId).subscribe(respose=>{
         this.defensaJudicial=respose;
+        for (let i = 0; i < this.estadoAvanceProcesoArray.length; i++) {
+          const estadoProcesoSelected = this.estadoAvanceProcesoArray.find(t => t.codigo === respose.defensaJudicialSeguimiento[0].estadoProcesoCodigo);
+          this.addressForm.get('estadoAvanceProceso').setValue(estadoProcesoSelected);
+        }
+        this.addressForm.get('actuacionAdelantada').setValue(respose.defensaJudicialSeguimiento[0].actuacionAdelantada);
+        this.addressForm.get('proximaActuacionRequerida').setValue(respose.defensaJudicialSeguimiento[0].proximaActuacion);
+        this.addressForm.get('fechaVencimientoTerminos').setValue(respose.defensaJudicialSeguimiento[0].fechaVencimiento);
+        this.addressForm.get('actuacionParticipaSupervisor').setValue(respose.defensaJudicialSeguimiento[0].esRequiereSupervisor);
+        this.addressForm.get('observaciones').setValue(respose.defensaJudicialSeguimiento[0].observaciones);
+        this.addressForm.get('actuacionDefinitiva').setValue(respose.defensaJudicialSeguimiento[0].esprocesoResultadoDefinitivo);
+        this.addressForm.get('urlSoporte').setValue(respose.defensaJudicialSeguimiento[0].rutaSoporte);
       });
     });
-    this.commonServices.getEstadoAvanceProcesosDefensa().subscribe(
-      response=>{
-        this.estadoAvanceProcesoArray=response;
-      }
-    );
   }
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;

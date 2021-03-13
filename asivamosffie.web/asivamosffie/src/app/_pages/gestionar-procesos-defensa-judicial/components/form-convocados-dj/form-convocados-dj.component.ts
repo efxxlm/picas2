@@ -144,7 +144,23 @@ export class FormConvocadosDjComponent implements OnInit {
       perfiles: this.fb.array([])
     });
   };
-
+  openDialogSiNo(modalTitle: string, modalText: string,id) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText,siNoBoton:true }
+    });   
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if(result === true)
+      {
+        this.eliminarPerfil(id); 
+      }           
+    });
+  }
+  eliminar(id)
+  {
+    this.openDialogSiNo("","¿Está seguro de eliminar este registro?",id);
+  }
   eliminarPerfil ( numeroPerfil: number ) {
     this.perfiles.removeAt( numeroPerfil );
     this.formContratista.patchValue({
