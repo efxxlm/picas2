@@ -63,9 +63,16 @@ export class RegistrarAvanceActuaDerivadasComponent implements OnInit {
      { }
 
   ngOnInit(): void {
+    console.log("entra");
     this.commonServices.getEstadoActuacionDerivada().subscribe(
       response=>{
-        this.estadoDerivadaArray=response;
+        console.log(response);
+        response.forEach(element => {
+          if(element.codigo !== "3"){
+            this.estadoDerivadaArray.push(element);
+          }
+        });
+        //this.estadoDerivadaArray=response;
       }
     );
     this.activatedRoute.params.subscribe( param => {

@@ -80,5 +80,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         //4.2.1
         FechaVencimientoProximaActuacionJuridica_4_2_1 = 88,
         Participacion_Insumo_Realizar_Actuación_4_2_1 = 91,
+        //4.4.1
+        Registrar_Actuaciones_Controversias_Contractuales_4_4_1 = 93,
     }
 }

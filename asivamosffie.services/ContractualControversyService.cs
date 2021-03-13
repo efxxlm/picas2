@@ -3039,7 +3039,14 @@ namespace asivamosffie.services
             {
                 SeguimientoActuacionDerivada actuacionSeguimientoOld;
 
+
                 actuacionSeguimientoOld = _context.SeguimientoActuacionDerivada.Find(pControversiaActuacionId);
+
+                if (actuacionSeguimientoOld.EstadoActuacionDerivadaCodigo == ConstantCodigoActuacionSeguimientoDerivada.Cumplida)
+                {
+                    await SendMailActuacionDerivada(actuacionSeguimientoOld.SeguimientoActuacionDerivadaId);
+                }
+
                 actuacionSeguimientoOld.UsuarioModificacion = pUsuarioModifica;
                 actuacionSeguimientoOld.FechaModificacion = DateTime.Now;
                 actuacionSeguimientoOld.EstadoActuacionDerivadaCodigo = "3";//cambiar
@@ -4069,6 +4076,40 @@ namespace asivamosffie.services
             return false;
         }
 
+        private async Task<bool> SendMailActuacionDerivada(int pSeguimientoActuacionDerivada)
+        {
+            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Registrar_Actuaciones_Controversias_Contractuales_4_4_1));
+            SeguimientoActuacionDerivada derivada = _context.SeguimientoActuacionDerivada
+                    .Where(r => r.SeguimientoActuacionDerivadaId == pSeguimientoActuacionDerivada)
+                    .Include(r => r.ControversiaActuacion)
+                        .ThenInclude(r => r.ControversiaContractual)
+                            .ThenInclude(r => r.Contrato)
+                                .ThenInclude(r => r.Contratacion)
+                    .FirstOrDefault();
+
+            List<EnumeratorPerfil> perfilsEnviarCorreo =
+                new List<EnumeratorPerfil>
+                                          {
+                                                EnumeratorPerfil.Juridica
+                                          };
+
+            if (derivada != null)
+            {
+                Dominio TipoControversiaCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(derivada.ControversiaActuacion.ControversiaContractual.TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipo_de_controversia);
+
+                template.Contenido
+                            .Replace("[NUMERO_CONTRATO]", derivada.ControversiaActuacion.ControversiaContractual.Contrato.NumeroContrato)
+                            .Replace("[FECHA_SOLICITUD_CONTROVERSIA]", ((DateTime)derivada.ControversiaActuacion.FechaActuacion).ToString("yyyy-MM-dd"))
+                            .Replace("[NUMERO_SOLICITUD]", derivada.ControversiaActuacion.ControversiaContractual.NumeroSolicitud)
+                            .Replace("[TIPO_CONTROVERSIA]", TipoControversiaCodigo.Nombre)
+                            .Replace("[FECHA_ACTUACION_DERIVADA]", ((DateTime)derivada.FechaActuacionDerivada).ToString("yyyy-MM-dd"))
+                            .Replace("[DESCRIPCION_ACTUACION]", derivada.DescripciondeActuacionAdelantada);
+
+                    return _commonService.EnviarCorreo(perfilsEnviarCorreo, template);
+            }
+
+            return false;
+        }
         #endregion
 
     }

@@ -48,7 +48,12 @@ export class VerdetalleeditAvanceActuaDerivadasComponent implements OnInit {
   ngOnInit(): void {
     this.commonServices.getEstadoActuacionDerivada().subscribe(
       response=>{
-        this.estadoDerivadaArray=response;
+        response.forEach(element => {
+          if(element.codigo !== "3"){
+            this.estadoDerivadaArray.push(element);
+          }
+        });
+        //this.estadoDerivadaArray=response;
       }
     );
     this.activatedRoute.params.subscribe( param => {
