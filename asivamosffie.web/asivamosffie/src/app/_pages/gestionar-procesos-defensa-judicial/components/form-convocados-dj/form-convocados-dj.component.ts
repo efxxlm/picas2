@@ -192,14 +192,17 @@ export class FormConvocadosDjComponent implements OnInit {
     }
     defensaJudicial.demandadoConvocado=defContraProyecto;
     defensaJudicial.numeroDemandados=this.formContratista.get("numeroContratos").value;
-    
+    if(this.tipoProceso==null || this.legitimacion==null){
+      this.openDialog('', '<b>Falta registrar información.</b>');
+    }
+    else{
       console.log(defensaJudicial);
       this.defensaService.CreateOrEditDefensaJudicial(defensaJudicial).subscribe(
         response=>{
           this.openDialog('', `<b>${response.message}</b>`,true,response.data?response.data.defensaJudicialId:0);
         }
       );
-
+    }
   }
 
   openDialog(modalTitle: string, modalText: string,redirect?:boolean,id?:number) {

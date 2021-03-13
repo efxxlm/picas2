@@ -166,12 +166,16 @@ export class FormDetalleProcesoPasivoDjComponent implements OnInit {
     defensaJudicial.numeroRadicadoFfie = this.addressForm.get("numeroRadicado").value;
     defensaJudicial.canalIngresoCodigo = this.addressForm.get("canalIngreso").value; 1
     console.log(defensaJudicial);
-    this.defensaService.CreateOrEditDefensaJudicial(defensaJudicial).subscribe(
-      response => {
-        this.openDialog('', `<b>${response.message}</b>`, true, response.data ? response.data.defensaJudicialId : 0);
-      }
-    );
-
+    if(this.tipoProceso==null || this.legitimacion==null){
+      this.openDialog('', '<b>Falta registrar información.</b>');
+    }
+    else{
+      this.defensaService.CreateOrEditDefensaJudicial(defensaJudicial).subscribe(
+        response => {
+          this.openDialog('', `<b>${response.message}</b>`, true, response.data ? response.data.defensaJudicialId : 0);
+        }
+      );
+    }
   }
 
   onChangeMun() {

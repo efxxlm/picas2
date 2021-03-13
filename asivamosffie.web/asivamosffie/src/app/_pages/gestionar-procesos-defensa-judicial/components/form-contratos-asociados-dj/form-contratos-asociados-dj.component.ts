@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Form, FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatDialog } from '@angular/material/dialog';
@@ -26,7 +26,7 @@ export class FormContratosAsociadosDjComponent implements OnInit {
   @Input() legitimacion: boolean;
   @Input() tipoProceso: string;
   @Input() defensaJudicial: DefensaJudicial;
-
+  @Input() esrojo: boolean;
   dataTable: any[] = [
   ];
   myControl = new FormArray([]);
@@ -306,11 +306,17 @@ export class FormContratosAsociadosDjComponent implements OnInit {
     defensaJudicial.cantContratos = this.formContratista.get('numeroContratos').value;
     defensaJudicial.defensaJudicialContratacionProyecto = defContraProyecto;
     console.log(defensaJudicial);
-    this.defensaService.CreateOrEditDefensaJudicial(defensaJudicial).subscribe(
-      response => {
-        this.openDialog('', `<b>${response.message}</b>`, true, response.data ? response.data.defensaJudicialId : 0);
-      }
-    );
+    if(this.tipoProceso==null || this.legitimacion==null){
+      this.openDialog('', '<b>Falta registrar información.</b>');
+    }
+    else{
+      this.defensaService.CreateOrEditDefensaJudicial(defensaJudicial).subscribe(
+        response => {
+          this.openDialog('', `<b>${response.message}</b>`, true, response.data ? response.data.defensaJudicialId : 0);
+        }
+      );
+    }
+
 
   }
 
