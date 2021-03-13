@@ -44,11 +44,11 @@
             <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20"> Gestión </th>
             <td mat-cell *matCellDef="let element">
                 <button mat-raised-button color="accent" class="btn-table" (click)="enviarAComite(element.defensaJudicialId)"
-                    *ngIf="element.estadoProcesoCodigo === '1' && element.vaAProcesoJudicial">
+                    *ngIf="element.estadoProcesoCodigo === '1' && element.vaAProcesoJudicial && element.registroCompletoNombre=='Completo'">
                     Enviar proceso a comité técnico
                 </button>
                 <button mat-raised-button color="accent" class="btn-table"
-                    *ngIf="element.estadoProcesoCodigo === '1'"
+                    *ngIf="element.estadoProcesoCodigo === '1' || element.estadoProcesoCodigo === '4' || element.estadoProcesoCodigo === '7'"
                     (click)="this.editProceso(element.defensaJudicialId)">
                     Ver detalle/Editar
                 </button>
@@ -71,7 +71,8 @@
                     *ngIf="(element.estadoProcesoCodigo === '1' || element.estadoProcesoCodigo === '2') && element.registroCompletoNombre=='Completo'">
                     Descargar ficha de estudio
                 </button>
-                <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoProcesoCodigo === 10"
+                <button mat-raised-button color="accent" class="btn-table" 
+                *ngIf="element.estadoProcesoCodigo === '5' || element.estadoProcesoCodigo === '8' || element.estadoProcesoCodigo === '10'"
                 (click)="GetPlantillaDefensaJudicial(element.defensaJudicialId)">
                     Descargar proceso de defensa judicial
                 </button>
