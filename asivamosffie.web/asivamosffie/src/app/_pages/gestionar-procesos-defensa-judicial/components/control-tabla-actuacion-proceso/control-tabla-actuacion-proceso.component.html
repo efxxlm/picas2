@@ -1,5 +1,5 @@
 <div class="tabs--actions">
-    <button mat-raised-button color="accent" class="tabs--btn" (click)="this.irNuevo()">
+    <button mat-raised-button color="accent" class="tabs--btn" (click)="this.irNuevo()" [disabled]="this.longitudActuaciones.length==1">
         Registrar actuación del proceso
     </button>
 </div>
