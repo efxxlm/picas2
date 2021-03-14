@@ -21,10 +21,10 @@ export class ManejoAnticipoComponent implements OnInit {
     if ( this.contratoConstruccion ) {
       this.formAnticipo.setValue(
         {
-          requiereAnticipo              : [this.contratoConstruccion.manejoAnticipoRequiere !== undefined ? this.contratoConstruccion.manejoAnticipoRequiere : null, Validators.required],
-          planInversionAnticipo         : [this.contratoConstruccion.manejoAnticipoPlanInversion !== undefined ? this.contratoConstruccion.manejoAnticipoPlanInversion : null, Validators.required],
-          cronogramaAmortizacionAprobado: [this.contratoConstruccion.manejoAnticipoCronogramaAmortizacion !== undefined ? this.contratoConstruccion.manejoAnticipoCronogramaAmortizacion : null, Validators.required],
-          urlSoporte                    : [this.contratoConstruccion.manejoAnticipoRutaSoporte !== undefined ? this.contratoConstruccion.manejoAnticipoRutaSoporte : null, Validators.required],
+          requiereAnticipo              : this.contratoConstruccion.manejoAnticipoRequiere !== undefined ? this.contratoConstruccion.manejoAnticipoRequiere : null,
+          planInversionAnticipo         : this.contratoConstruccion.manejoAnticipoPlanInversion !== undefined ? this.contratoConstruccion.manejoAnticipoPlanInversion : null,
+          cronogramaAmortizacionAprobado: this.contratoConstruccion.manejoAnticipoCronogramaAmortizacion !== undefined ? this.contratoConstruccion.manejoAnticipoCronogramaAmortizacion : null,
+          urlSoporte                    : this.contratoConstruccion.manejoAnticipoRutaSoporte !== undefined ? this.contratoConstruccion.manejoAnticipoRutaSoporte : null,
         }
       )
       this.estaEditando = true;
