@@ -8,7 +8,7 @@ using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
 using asivamosffie.model.APIModels;
 using System.IO;
-using Microsoft.Extensions.Options; 
+using Microsoft.Extensions.Options;
 using System.Reflection;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Authorization;
@@ -17,7 +17,7 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
- 
+
     public class ManageContractualProcessesController : ControllerBase
     {
         public readonly IManageContractualProcessesService _manageContractualProcessesService;
@@ -55,7 +55,7 @@ namespace asivamosffie.api.Controllers
         }
         [HttpGet]
         [Route("GetDDPBySesionComiteSolicitudID")]
-        public async Task<FileResult> GetDDPBySesionComiteSolicitudID([FromQuery] int  pSesionComiteSolicitudID)
+        public async Task<FileResult> GetDDPBySesionComiteSolicitudID([FromQuery] int pSesionComiteSolicitudID)
         {
             string pPatchLogo = Path.Combine(_settings.Value.Dominio, _settings.Value.RutaLogo);
 
@@ -65,54 +65,61 @@ namespace asivamosffie.api.Controllers
 
         [Route("CambiarEstadoSesionComiteSolicitud")]
         [HttpPost]
-        public async Task<IActionResult> CambiarEstadoSesionComiteSolicitud([FromBody] SesionComiteSolicitud pSesionComiteSolicitud)
+        public async Task<IActionResult> CambiarEstadoSesionComiteSolicitud([FromQuery] string pEstadoCodigo, int pSesionComiteSolicitudId)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
-                pSesionComiteSolicitud.UsuarioCreacion =  HttpContext.User.FindFirst("User").Value;
-                respuesta = await _manageContractualProcessesService.CambiarEstadoSesionComiteSolicitud(pSesionComiteSolicitud, _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
-                return Ok(respuesta);
-            }
+                SesionComiteSolicitud pSesionComiteSolicitud = new SesionComiteSolicitud
+                {
+                    SesionComiteSolicitudId = pSesionComiteSolicitudId,
+                    UsuarioCreacion = HttpContext.User.FindFirst("User").Value,
+                    EstadoCodigo = pEstadoCodigo, 
+                }; 
+
+            respuesta = await _manageContractualProcessesService.CambiarEstadoSesionComiteSolicitud(pSesionComiteSolicitud, _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+            return Ok(respuesta);
+        }
             catch (Exception ex)
             {
                 respuesta.Data = ex.ToString();
                 return BadRequest(respuesta);
-            }
-        }
+    }
+}
 
-        public object GetPropValue(object src, string propName)
+public object GetPropValue(object src, string propName)
+{
+    return src.GetType().GetProperties()
+          .Single(pi => pi.Name == propName)
+          .GetValue(src, null);
+}
+
+
+[HttpPost]
+[Route("RegistrarTramiteContratacion")]
+public async Task<IActionResult> RegistrarTramiteContratacion([FromForm] Contratacion pContratacion, string FechaEnvioDocumentacion)
+{
+    Respuesta respuesta = new Respuesta();
+    try
+    {
+        if (!string.IsNullOrEmpty(FechaEnvioDocumentacion))
         {
-            return src.GetType().GetProperties()
-                  .Single(pi => pi.Name == propName)
-                  .GetValue(src, null);
+            pContratacion.FechaEnvioDocumentacion = DateTime.Parse(FechaEnvioDocumentacion);
         }
 
+        pContratacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+        respuesta = await _manageContractualProcessesService.RegistrarTramiteContratacion(pContratacion, pContratacion.pFile
+           , _settings.Value.DirectoryBase, _settings.Value.DirectoryBaseContratacionMinuta);
 
-        [HttpPost]
-        [Route("RegistrarTramiteContratacion")] 
-        public async Task<IActionResult> RegistrarTramiteContratacion([FromForm] Contratacion pContratacion, string FechaEnvioDocumentacion)
-        {
-            Respuesta respuesta = new Respuesta(); 
-            try
-            {
-                if (!string.IsNullOrEmpty(FechaEnvioDocumentacion)) {
-                    pContratacion.FechaEnvioDocumentacion = DateTime.Parse(FechaEnvioDocumentacion);
-                    }
-        
-               pContratacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value; 
-               respuesta = await _manageContractualProcessesService.RegistrarTramiteContratacion(pContratacion, pContratacion.pFile
-                  , _settings.Value.DirectoryBase, _settings.Value.DirectoryBaseContratacionMinuta);
+        return Ok(respuesta);
+    }
+    catch (Exception ex)
+    {
+        respuesta.Data = ex.ToString();
+        return BadRequest(respuesta);
+    }
+}
 
-                return Ok(respuesta);
-            }
-            catch (Exception ex)
-            {
-                respuesta.Data = ex.ToString();
-                return BadRequest(respuesta);
-            }
-        }
 
-         
     }
 }
