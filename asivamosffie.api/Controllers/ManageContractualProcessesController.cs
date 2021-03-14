@@ -65,13 +65,14 @@ namespace asivamosffie.api.Controllers
 
         [Route("CambiarEstadoSesionComiteSolicitud")]
         [HttpPost]
-        public async Task<IActionResult> CambiarEstadoSesionComiteSolicitud([FromQuery] string pEstadoCodigo, int pSesionComiteSolicitudId)
+        public async Task<IActionResult> CambiarEstadoSesionComiteSolicitud([FromQuery]  string pEstadoCodigo, int pSesionComiteSolicitudId , int pSolicitudId)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
                 SesionComiteSolicitud pSesionComiteSolicitud = new SesionComiteSolicitud
                 {
+                    SolicitudId = pSolicitudId,
                     SesionComiteSolicitudId = pSesionComiteSolicitudId,
                     UsuarioCreacion = HttpContext.User.FindFirst("User").Value,
                     EstadoCodigo = pEstadoCodigo, 
