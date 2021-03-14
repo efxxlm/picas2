@@ -23,30 +23,30 @@ namespace asivamosffie.services.Helpers.Enumerator
         DisponibilidadPresupuestal = 30,
         Gestionar_Procesos_Contractuales = 31,
 
-        
-       	GestionarGarantias= 35, 
-        Generar_Registro_Presupuestal=36,
+
+        GestionarGarantias = 35,
+        Generar_Registro_Presupuestal = 36,
         Preconstruccion_Fase_1 = 37,
         Registrar_Requisitos_Tecnicos_Construccion = 41,
         Gestionar_acta_inicio_fase_2 = 42,
-        Cargar_enlace_monitoreo=43,
+        Cargar_enlace_monitoreo = 43,
         Verificar_Requisitos_Tecnicos_Construccion = 45,
         Registrar_contratos_modificaciones_contractuales = 46,
-		Gestionar_controversias_contractuales=47, 
-		Registrar_Programacion_Personal_Obra = 48,
-		Registrar_solicitud_novedad_contractual= 50,
-		Gestionar_procesos_Defensa_Judicial = 52,
+        Gestionar_controversias_contractuales = 47,
+        Registrar_Programacion_Personal_Obra = 48,
+        Registrar_solicitud_novedad_contractual = 50,
+        Gestionar_procesos_Defensa_Judicial = 52,
         Registrar_seguimiento_diario = 53,
         Verificar_seguimiento_diario = 54,
 
-        
-        Registrar_Avance_Semanal = 55,
-        
 
-        
+        Registrar_Avance_Semanal = 55,
+
+
+
         Registrar_actuaciones_controversias_contractuales = 57,
 
-        
+
 
         Registrar_validar_requisitos_de_pago = 63,
 
@@ -56,7 +56,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         Verificar_solicitud_de_pago = 71,
 
         Registrar_Informe_Final = 64,
-        
+
 
         RegistrarPagosRendimientos = 65,
         GestionarRendimientos = 66,
@@ -65,7 +65,10 @@ namespace asivamosffie.services.Helpers.Enumerator
         ValidarInformeFinalProyecto = 72,
         ValidarCumplimientoInformeFinalProyecto = 73,
         RegistrarTransferenciaProyectoETC = 74,
-        Gestionar_Lista_Chequeo = 75
+        Gestionar_Lista_Chequeo = 75,
+
+
+        Crear_Roles = 78
     }
 
     public enum enumeratorAccion

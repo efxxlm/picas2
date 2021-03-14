@@ -310,6 +310,6 @@
         public const string Eliminar_Lista_Chequeo = "221";
 
         public const string Create_Edit_Defensa_Judicial_Seguimiento = "223";
-
+        public const string Create_Edit_Menu_Perfil = "224";
     }
 }

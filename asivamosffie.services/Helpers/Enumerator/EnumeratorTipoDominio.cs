@@ -227,6 +227,8 @@ namespace asivamosffie.services.Helpers.Enumerator
         //Lista de chequeo
         Estados_Lista_Chequeo = 165,
 
-        Lista_Chequeo_Menu = 166
+        Lista_Chequeo_Menu = 166,
+
+        Lista_Fases_Sistema = 169
     }
 }

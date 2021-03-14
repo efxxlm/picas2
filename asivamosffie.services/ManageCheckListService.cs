@@ -155,7 +155,8 @@ namespace asivamosffie.services
                               .Where(l => l.ListaChequeoId == pListaChequeo.ListaChequeoId)
                               .UpdateAsync(l => new ListaChequeo
                               {
-                                  Activo = pListaChequeo.Activo,
+                                  EstadoCodigo = pListaChequeo.EstadoCodigo,
+                                //  Activo = pListaChequeo.Activo,
                                   FechaModificacion = DateTime.Now,
                                   UsuarioModificacion = pListaChequeo.UsuarioCreacion
                               });
