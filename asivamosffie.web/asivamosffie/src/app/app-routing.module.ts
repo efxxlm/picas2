@@ -446,6 +446,11 @@ const routes: Routes = [
         path: 'crearRoles',
         loadChildren: () => import( './_pages/crear-roles/crear-roles.module' )
           .then( module => module.CrearRolesModule )
+      },
+      {
+        path: 'gestionUsuarios',
+        loadChildren: () => import( './_pages/gestionar-usuarios/gestionar-usuarios.module' )
+          .then( module => module.GestionarUsuariosModule )
       }
     ]
 

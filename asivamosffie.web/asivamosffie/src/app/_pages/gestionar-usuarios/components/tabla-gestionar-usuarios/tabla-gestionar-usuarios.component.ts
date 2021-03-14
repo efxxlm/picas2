@@ -2,29 +2,33 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+
 @Component({
-  selector: 'app-tabla-crear-roles',
-  templateUrl: './tabla-crear-roles.component.html',
-  styleUrls: ['./tabla-crear-roles.component.scss']
+  selector: 'app-tabla-gestionar-usuarios',
+  templateUrl: './tabla-gestionar-usuarios.component.html',
+  styleUrls: ['./tabla-gestionar-usuarios.component.scss']
 })
-export class TablaCrearRolesComponent implements OnInit {
+export class TablaGestionarUsuariosComponent implements OnInit {
 
     dataSource = new MatTableDataSource();
     @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
     @ViewChild( MatSort, { static: true } ) sort: MatSort;
-    displayedColumns: string[] = [ 'fechaCreacion', 'nombreRol', 'estadoRol', 'gestion' ];
+    displayedColumns: string[] = [ 'fechaCreacion', 'procedencia', 'nombreApellido', 'numeroDocumento', 'rol', 'estado', 'gestion' ];
 
     constructor( ) { }
 
     ngOnInit(): void {
         const dataTable = [
             {
-                fechaCreacion: '24/02/2021',
-                nombreRol: 'Interventor',
-                estadoRol: 'Activo',
+                fechaCreacion: '26/02/2021',
+                procedencia: 'FFIE/Fiduciaria',
+                nombreApellido: 'Nicolas Fernando Sandoval',
+                numeroDocumento: '103445663',
+                rol: [ 'Supervisor', 'Interventor' ],
+                estado: 'Activo',
                 id: 1
             }
-        ]
+        ];
         this.dataSource = new MatTableDataSource( dataTable );
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;

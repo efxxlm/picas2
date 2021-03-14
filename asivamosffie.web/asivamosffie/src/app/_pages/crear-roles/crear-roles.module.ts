@@ -8,10 +8,13 @@ import { FormCrearRolesComponent } from './components/form-crear-roles/form-crea
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { QuillModule } from 'ngx-quill';
 import { MaterialModule } from 'src/app/material/material.module';
+import { TablaFaseInicioComponent } from './components/tabla-fase-inicio/tabla-fase-inicio.component';
+import { TablaFaseSeguimientoComponent } from './components/tabla-fase-seguimiento/tabla-fase-seguimiento.component';
+import { TablaFaseCierreComponent } from './components/tabla-fase-cierre/tabla-fase-cierre.component';
 
 
 @NgModule({
-  declarations: [CrearRolesComponent, TablaCrearRolesComponent, FormCrearRolesComponent],
+  declarations: [CrearRolesComponent, TablaCrearRolesComponent, FormCrearRolesComponent, TablaFaseInicioComponent, TablaFaseSeguimientoComponent, TablaFaseCierreComponent],
   imports: [
     CommonModule,
     FormsModule,

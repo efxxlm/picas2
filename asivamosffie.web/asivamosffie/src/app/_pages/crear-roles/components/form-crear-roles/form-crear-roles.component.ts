@@ -15,18 +15,12 @@ export class FormCrearRolesComponent implements OnInit {
 
     esRegistroNuevo: boolean;
     formRoles: FormGroup;
-    @ViewChild( MatSort, { static: true } ) sort: MatSort;
-    @ViewChild( 'matTable', { static: false, read: ElementRef } ) table: ElementRef;
-    @ViewChild( 'heightAside', { static: false, read: ElementRef } ) heightAside: ElementRef;
-    displayedColumns: string[] = [ 'funcionalidad', 'crear', 'modificar', 'consultar', 'eliminar' ];
-    dataSource = new MatTableDataSource();
 
     constructor(
         private activatedRoute: ActivatedRoute,
         private fb: FormBuilder,
         private dialog: MatDialog,
-        private routes: Router,
-        private renderer: Renderer2 )
+        private routes: Router )
     {
         this.activatedRoute.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
             if ( urlSegment.path === 'nuevoRol' ) {
@@ -42,40 +36,6 @@ export class FormCrearRolesComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        const dataTable = [
-            {
-                funcionalidad: 'Gestionar usuarios',
-                crear: null,
-                modificar: null,
-                consultar: null,
-                eliminar: null
-            },
-            {
-                funcionalidad: 'Gestionar lista de chequeo',
-                crear: null,
-                modificar: null,
-                consultar: null,
-                eliminar: null
-            },
-            {
-                funcionalidad: 'Crear roles',
-                crear: null,
-                modificar: null,
-                consultar: null,
-                eliminar: null
-            },
-            {
-                funcionalidad: 'Gestionar parametricas',
-                crear: null,
-                modificar: null,
-                consultar: null,
-                eliminar: null
-            }
-        ]
-        this.dataSource = new MatTableDataSource( dataTable );
-        setTimeout(() => {
-            this.renderer.setStyle( this.heightAside.nativeElement, 'height', `${ this.table.nativeElement.querySelector('tbody').offsetHeight }px` );
-        }, 5);
     }
 
     crearFormulario() {

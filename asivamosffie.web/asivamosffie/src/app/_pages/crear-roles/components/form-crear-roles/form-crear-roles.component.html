@@ -55,44 +55,20 @@
             </mat-card-content>
         </mat-card>
 
-        <div class="side-left">
-          <aside class="side-left--aside" #heightAside>
-            <span class="side-left--span">
-              Fase de inicio
-            </span>
-          </aside>
-          <div class="table-responsive">
-              <table mat-table [dataSource]="dataSource" matSort #matTable>
-            
-                <ng-container matColumnDef="funcionalidad">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Funcionalidad </th>
-                    <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.funcionalidad }} </b> </td>
-                </ng-container>
-          
-                <ng-container matColumnDef="crear">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Crear </th>
-                  <td mat-cell *matCellDef="let element" align="center"> {{ element.crear }} </td>
-                </ng-container>
-          
-                <ng-container matColumnDef="modificar">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Modificar </th>
-                  <td mat-cell *matCellDef="let element" align="center"> {{ element.modificar }} </td>
-                </ng-container>
-              
-                <ng-container matColumnDef="consultar">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Consultar </th>
-                  <td mat-cell *matCellDef="let element" align="center"> {{ element.consultar }} </td>
-                </ng-container>
+        <app-tabla-fase-inicio></app-tabla-fase-inicio>
 
-                <ng-container matColumnDef="eliminar">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Eliminar </th>
-                  <td mat-cell *matCellDef="let element" align="center"> {{ element.eliminar }} </td>
-                </ng-container>
-              
-                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-              </table>
-          </div>
+        <app-tabla-fase-seguimiento></app-tabla-fase-seguimiento>
+
+        <app-tabla-fase-cierre></app-tabla-fase-cierre>
+
+        <div class="text-center mt-1em">
+            <button mat-button
+                    color="warn"
+                    class="btn-guardar"
+                    type="submit"
+                    [disabled]="formRoles.dirty === false">
+                    <img  src="assets/img/icon/guardar.svg">
+            </button>
         </div>
     </form>
 </section>
