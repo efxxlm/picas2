@@ -56,59 +56,42 @@
         </mat-card>
 
         <div class="side-left">
-          <aside class="side-left--aside">
+          <aside class="side-left--aside" #heightAside>
             <span class="side-left--span">
               Fase de inicio
             </span>
           </aside>
           <div class="table-responsive">
-              <table mat-table [dataSource]="dataSource" matSort>
+              <table mat-table [dataSource]="dataSource" matSort #matTable>
             
-                <ng-container matColumnDef="fechaCreacion">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de creación </th>
-                    <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.fechaCreacion }} </b> </td>
+                <ng-container matColumnDef="funcionalidad">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Funcionalidad </th>
+                    <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.funcionalidad }} </b> </td>
                 </ng-container>
           
-                <ng-container matColumnDef="nombreRol">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre de la lista </th>
-                  <td mat-cell *matCellDef="let element" align="center"> {{ element.nombreRol }} </td>
+                <ng-container matColumnDef="crear">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Crear </th>
+                  <td mat-cell *matCellDef="let element" align="center"> {{ element.crear }} </td>
                 </ng-container>
           
-                <ng-container matColumnDef="estadoRol">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la lista </th>
-                  <td mat-cell *matCellDef="let element" align="center"> {{ element.estadoRol }} </td>
+                <ng-container matColumnDef="modificar">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Modificar </th>
+                  <td mat-cell *matCellDef="let element" align="center"> {{ element.modificar }} </td>
                 </ng-container>
               
-                <ng-container matColumnDef="gestion">
-                  <th class="w-20" mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
-                  <td mat-cell *matCellDef="let element">
-              
-                    <button mat-raised-button
-                            color="accent" 
-                            class="btn-table"
-                            [routerLink]="[ 'editarRol', element.id ]">
-                            Ver detalle/Editar
-                    </button>
-          
-                    <button mat-raised-button
-                            color="accent" 
-                            class="btn-table">
-                            Desactivar
-                    </button>
-          
-                    <button mat-raised-button
-                            color="accent" 
-                            class="btn-table">
-                            Activar
-                    </button>
-              
-                  </td>
+                <ng-container matColumnDef="consultar">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Consultar </th>
+                  <td mat-cell *matCellDef="let element" align="center"> {{ element.consultar }} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="eliminar">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Eliminar </th>
+                  <td mat-cell *matCellDef="let element" align="center"> {{ element.eliminar }} </td>
                 </ng-container>
               
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
               </table>
-              <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
           </div>
         </div>
     </form>

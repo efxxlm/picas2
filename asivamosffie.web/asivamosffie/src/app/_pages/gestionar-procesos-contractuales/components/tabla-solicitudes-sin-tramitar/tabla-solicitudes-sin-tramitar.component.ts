@@ -112,10 +112,8 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
   };
 
   sendCambioTramite ( elemento: any ) {
-    
-    elemento.estadoCodigo = this.enviarFiduciaria;
 
-    this.procesosContractualesSvc.sendCambioTramite( elemento )
+    this.procesosContractualesSvc.sendCambioTramite( this.enviarFiduciaria, elemento.sesionComiteSolicitudId, elemento.solicitudId )
       .subscribe(
         response => {
           this.openDialog( '', `<b>${response.message}</b>` );

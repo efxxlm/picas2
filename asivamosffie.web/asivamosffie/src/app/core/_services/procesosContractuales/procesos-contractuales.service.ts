@@ -58,8 +58,8 @@ export class ProcesosContractualesService {
     return this.http.post<Respuesta>( `${ this.url }/RegistrarTramiteContratacion?FechaEnvioDocumentacion=${ contratacion.fechaEnvioDocumentacion }`, formData );
   };
 
-  sendCambioTramite ( solicitud: GrillaProcesosContractuales ) {
-    return this.http.post<Respuesta>( `${ this.url }/CambiarEstadoSesionComiteSolicitud`, solicitud );
+  sendCambioTramite ( pEstadoCodigo : string, pSesionComiteSolicitudId: number, pSolicitudId: number ) {
+    return this.http.post<Respuesta>( `${ this.url }/CambiarEstadoSesionComiteSolicitud?pEstadoCodigo=${ pEstadoCodigo }&pSesionComiteSolicitudId=${ pSesionComiteSolicitudId }&pSolicitudId=${ pSolicitudId }`, '' );
   }
 
 };

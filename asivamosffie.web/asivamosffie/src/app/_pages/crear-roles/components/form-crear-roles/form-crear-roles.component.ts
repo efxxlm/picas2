@@ -1,9 +1,9 @@
+import { from } from 'rxjs';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Renderer2 } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 
 @Component({
@@ -15,16 +15,18 @@ export class FormCrearRolesComponent implements OnInit {
 
     esRegistroNuevo: boolean;
     formRoles: FormGroup;
-    @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
     @ViewChild( MatSort, { static: true } ) sort: MatSort;
-    displayedColumns: string[] = [ 'fechaCreacion', 'nombreRol', 'estadoRol', 'gestion' ];
+    @ViewChild( 'matTable', { static: false, read: ElementRef } ) table: ElementRef;
+    @ViewChild( 'heightAside', { static: false, read: ElementRef } ) heightAside: ElementRef;
+    displayedColumns: string[] = [ 'funcionalidad', 'crear', 'modificar', 'consultar', 'eliminar' ];
     dataSource = new MatTableDataSource();
 
     constructor(
         private activatedRoute: ActivatedRoute,
         private fb: FormBuilder,
         private dialog: MatDialog,
-        private routes: Router )
+        private routes: Router,
+        private renderer: Renderer2 )
     {
         this.activatedRoute.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
             if ( urlSegment.path === 'nuevoRol' ) {
@@ -42,16 +44,38 @@ export class FormCrearRolesComponent implements OnInit {
     ngOnInit(): void {
         const dataTable = [
             {
-                fechaCreacion: '24/02/2021',
-                nombreRol: 'Interventor',
-                estadoRol: 'Activo',
-                id: 1
+                funcionalidad: 'Gestionar usuarios',
+                crear: null,
+                modificar: null,
+                consultar: null,
+                eliminar: null
+            },
+            {
+                funcionalidad: 'Gestionar lista de chequeo',
+                crear: null,
+                modificar: null,
+                consultar: null,
+                eliminar: null
+            },
+            {
+                funcionalidad: 'Crear roles',
+                crear: null,
+                modificar: null,
+                consultar: null,
+                eliminar: null
+            },
+            {
+                funcionalidad: 'Gestionar parametricas',
+                crear: null,
+                modificar: null,
+                consultar: null,
+                eliminar: null
             }
         ]
         this.dataSource = new MatTableDataSource( dataTable );
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+        setTimeout(() => {
+            this.renderer.setStyle( this.heightAside.nativeElement, 'height', `${ this.table.nativeElement.querySelector('tbody').offsetHeight }px` );
+        }, 5);
     }
 
     crearFormulario() {
