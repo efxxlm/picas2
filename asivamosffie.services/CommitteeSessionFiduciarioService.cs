@@ -97,7 +97,7 @@ namespace asivamosffie.services
                                             });
                                         break;
                                     }
-                                
+
                                 case ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion:
                                     {
                                         ProcesoSeleccion procesoSeleccion = _context.ProcesoSeleccion.Find(ss.SolicitudId);
@@ -155,7 +155,7 @@ namespace asivamosffie.services
                                     }
                                 case ConstanCodigoTipoSolicitud.ControversiasContractuales:
                                     {
-                                        ControversiaContractual controversiaContractual= _context.ControversiaContractual.Find(ss.SolicitudId);
+                                        ControversiaContractual controversiaContractual = _context.ControversiaContractual.Find(ss.SolicitudId);
 
                                         if (controversiaContractual != null)
                                             comite.data.Add(new
@@ -170,15 +170,15 @@ namespace asivamosffie.services
 
                                         break;
                                     }
-                                
+
                                 case ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales:
                                     {
-                                        ControversiaActuacion controversiaActuacion= _context.ControversiaActuacion
-                                                                                                    .Where( ca => ca.ControversiaActuacionId == ss.SolicitudId)
-                                                                                                    .Include( r => r.ControversiaContractual )
+                                        ControversiaActuacion controversiaActuacion = _context.ControversiaActuacion
+                                                                                                    .Where(ca => ca.ControversiaActuacionId == ss.SolicitudId)
+                                                                                                    .Include(r => r.ControversiaContractual)
                                                                                                     .FirstOrDefault();
 
-                                        if (controversiaActuacion!= null)
+                                        if (controversiaActuacion != null)
                                             comite.data.Add(new
                                             {
                                                 Id = controversiaActuacion.ControversiaActuacionId,
@@ -229,6 +229,27 @@ namespace asivamosffie.services
                                                 NumeroSolicitud = defensaJudicial.NumeroProceso,
                                                 TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Defensa_judicial).FirstOrDefault().Nombre,
                                                 tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.Defensa_judicial
+                                            });
+
+                                        break;
+                                    }
+
+                                case ConstanCodigoTipoSolicitud.Actuaciones_Defensa_judicial:
+                                    {
+                                        DefensaJudicialSeguimiento defensaJudicialSeguimiento = _context.DefensaJudicialSeguimiento
+                                                                                        .Where(r => r.DefensaJudicialSeguimientoId == ss.SolicitudId)
+                                                                                        .Include(r => r.DefensaJudicial)
+                                                                                        .FirstOrDefault();
+
+                                        if (defensaJudicialSeguimiento != null)
+                                            comite.data.Add(new
+                                            {
+                                                Id = defensaJudicialSeguimiento.DefensaJudicialSeguimientoId,
+                                                IdSolicitud = ss.SesionComiteSolicitudId,
+                                                FechaSolicitud = (DateTime?)(defensaJudicialSeguimiento.FechaActuacion),
+                                                NumeroSolicitud = defensaJudicialSeguimiento.DefensaJudicial.NumeroProceso,
+                                                TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Actuaciones_Defensa_judicial).FirstOrDefault().Nombre,
+                                                tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.Actuaciones_Defensa_judicial
                                             });
 
                                         break;
@@ -485,13 +506,13 @@ namespace asivamosffie.services
                 {
                     string nombreEstadoActa = "Sin Acta";
 
-                    if ( !string.IsNullOrEmpty( comite.EstadoActaCodigo ) )
+                    if (!string.IsNullOrEmpty(comite.EstadoActaCodigo))
                     {
-                        if ( ListaEstadoActa.Where(r => r.Codigo == comite.EstadoActaCodigo).FirstOrDefault() != null )
+                        if (ListaEstadoActa.Where(r => r.Codigo == comite.EstadoActaCodigo).FirstOrDefault() != null)
                         {
                             nombreEstadoActa = ListaEstadoActa.Where(r => r.Codigo == comite.EstadoActaCodigo).FirstOrDefault().Nombre;
                         }
-                    } 
+                    }
 
                     ComiteGrilla comiteGrilla = new ComiteGrilla
                     {
@@ -614,7 +635,7 @@ namespace asivamosffie.services
                             {
                                 ControversiaActuacion controversiaActuacion = _context.ControversiaActuacion
                                                                                         .Where(r => r.ControversiaActuacionId == ss.SolicitudId)
-                                                                                        .Include( r => r.ControversiaContractual )
+                                                                                        .Include(r => r.ControversiaContractual)
                                                                                         .FirstOrDefault();
 
                                 if (controversiaActuacion != null)
@@ -836,7 +857,7 @@ namespace asivamosffie.services
 
             comiteTecnico.SesionInvitado = comiteTecnico.SesionInvitado.Where(r => !(bool)r.Eliminado).ToList();
 
-            comiteTecnico.SesionComiteTema = comiteTecnico.SesionComiteTema.Where( r => r.Eliminado != true ).ToList();
+            comiteTecnico.SesionComiteTema = comiteTecnico.SesionComiteTema.Where(r => r.Eliminado != true).ToList();
 
             comiteTecnico.SesionComiteTema.ToList().ForEach(ct =>
             {
@@ -925,7 +946,7 @@ namespace asivamosffie.services
                         sesionComiteSolicitud.NumeroHijo = actualizacionCronograma.NumeroProceso;
 
                         break;
-                    
+
                     case ConstanCodigoTipoSolicitud.ControversiasContractuales:
 
                         ControversiaContractual controversiaContractual = _context.ControversiaContractual
@@ -941,14 +962,14 @@ namespace asivamosffie.services
 
                         ControversiaActuacion controversiaActuacion = _context.ControversiaActuacion
                                                                                 .Where(r => r.ControversiaActuacionId == sesionComiteSolicitud.SolicitudId)
-                                                                                .Include( r => r.ControversiaContractual )
+                                                                                .Include(r => r.ControversiaContractual)
                                                                                 .FirstOrDefault();
 
                         sesionComiteSolicitud.FechaSolicitud = controversiaActuacion.FechaActuacion;
 
                         sesionComiteSolicitud.NumeroSolicitud = controversiaActuacion.ControversiaContractual.NumeroSolicitud;
 
-                        sesionComiteSolicitud.NumeroHijo = "ACT controversia " + controversiaActuacion.ControversiaActuacionId.ToString("000");;
+                        sesionComiteSolicitud.NumeroHijo = "ACT controversia " + controversiaActuacion.ControversiaActuacionId.ToString("000"); ;
 
                         break;
                     case ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Reclamaciones:
@@ -977,6 +998,26 @@ namespace asivamosffie.services
                         sesionComiteSolicitud.NumeroSolicitud = defensaJudicial.NumeroProceso;
 
                         break;
+
+                    #region Defensa Judicial Seguimiento 
+
+                    case ConstanCodigoTipoSolicitud.Actuaciones_Defensa_judicial:
+
+                        DefensaJudicialSeguimiento defensaJudicialSeguimiento = _context.DefensaJudicialSeguimiento
+                                                                                .Where(r => r.DefensaJudicialSeguimientoId == sesionComiteSolicitud.SolicitudId)
+                                                                                .Include(r => r.DefensaJudicial)
+                                                                                .FirstOrDefault();
+
+                        sesionComiteSolicitud.FechaSolicitud = defensaJudicialSeguimiento.FechaActuacion;
+
+                        sesionComiteSolicitud.NumeroSolicitud = defensaJudicialSeguimiento.DefensaJudicial.NumeroProceso;
+
+                        //sesionComiteSolicitud.NumeroHijo = "ACT controversia " + controversiaActuacionReclamacion.NumeroActuacionReclamacion;
+                        sesionComiteSolicitud.NumeroHijo = defensaJudicialSeguimiento.DefensaJudicialSeguimientoId.ToString();
+
+                        break;
+
+                       #endregion Defensa Judicial Seguimiento 
                 }
 
                 sesionComiteSolicitud.TipoSolicitud = TipoComiteSolicitud.Where(r => r.Codigo == sesionComiteSolicitud.TipoSolicitudCodigo).FirstOrDefault().Nombre;
@@ -1504,9 +1545,9 @@ namespace asivamosffie.services
                 else
                 {
                     contratacionProyecto.LicenciaVigente = false;
-                    
-                    pPlantilla = pPlantilla.Replace("[NUMERO_DE_LICENCIA]", "");        
-                    pPlantilla = pPlantilla.Replace("[FECHA_DE_VIGENCIA]", "");        
+
+                    pPlantilla = pPlantilla.Replace("[NUMERO_DE_LICENCIA]", "");
+                    pPlantilla = pPlantilla.Replace("[FECHA_DE_VIGENCIA]", "");
 
                 }
             }
@@ -1580,13 +1621,13 @@ namespace asivamosffie.services
             Plantilla Plantilla = _context.Plantilla.Where(r => r.Codigo == TipoPlantilla).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
             Plantilla.Contenido = ReemplazarDatosPlantillaContratacion(Plantilla.Contenido, contratacion);
             return ConvertirPDF(Plantilla);
-            
+
         }
 
         private string ReemplazarDatosPlantillaProcesosSeleccion(string pPlantilla, ProcesoSeleccion pProcesoSeleccion)
         {
-            pProcesoSeleccion.ProcesoSeleccionProponente = _context.ProcesoSeleccionProponente.Where( r => r.ProcesoSeleccionId == pProcesoSeleccion.ProcesoSeleccionId).ToList();
-            pProcesoSeleccion.ProcesoSeleccionCotizacion = _context.ProcesoSeleccionCotizacion.Where( r => r.ProcesoSeleccionId == pProcesoSeleccion.ProcesoSeleccionId).ToList();
+            pProcesoSeleccion.ProcesoSeleccionProponente = _context.ProcesoSeleccionProponente.Where(r => r.ProcesoSeleccionId == pProcesoSeleccion.ProcesoSeleccionId).ToList();
+            pProcesoSeleccion.ProcesoSeleccionCotizacion = _context.ProcesoSeleccionCotizacion.Where(r => r.ProcesoSeleccionId == pProcesoSeleccion.ProcesoSeleccionId).ToList();
 
             List<Dominio> placeholders = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.PlaceHolder).ToList();
             List<Usuario> listaUsuarios = _context.Usuario.ToList();
@@ -1725,15 +1766,15 @@ namespace asivamosffie.services
                             case ConstanCodigoVariablesPlaceHolders.RESPONSABLES_ABIERTA_PS:
                                 string NombresPreponente = "";
 
-                                Usuario responsable = listaUsuarios.Find( r => r.UsuarioId == pProcesoSeleccion.ResponsableTecnicoUsuarioId );
+                                Usuario responsable = listaUsuarios.Find(r => r.UsuarioId == pProcesoSeleccion.ResponsableTecnicoUsuarioId);
 
-                                if ( responsable != null )
-                                    NombresPreponente = string.Concat(responsable.Nombres, " ", responsable.Apellidos, " - ");  
+                                if (responsable != null)
+                                    NombresPreponente = string.Concat(responsable.Nombres, " ", responsable.Apellidos, " - ");
 
-                                responsable = listaUsuarios.Find( r => r.UsuarioId == pProcesoSeleccion.ResponsableEstructuradorUsuarioid );
+                                responsable = listaUsuarios.Find(r => r.UsuarioId == pProcesoSeleccion.ResponsableEstructuradorUsuarioid);
 
-                                if ( responsable != null )
-                                    NombresPreponente += string.Concat(responsable.Nombres, " ", responsable.Apellidos, " - ");  
+                                if (responsable != null)
+                                    NombresPreponente += string.Concat(responsable.Nombres, " ", responsable.Apellidos, " - ");
 
                                 ProcesosSeleccionAbierta = ProcesosSeleccionAbierta.
                                 Replace(placeholderDominio.Nombre, NombresPreponente);
@@ -1761,15 +1802,15 @@ namespace asivamosffie.services
                             case ConstanCodigoVariablesPlaceHolders.RESPONSABLES_CERRADA_PS:
                                 string NombresPreponente = "";
 
-                                Usuario responsable = listaUsuarios.Find( r => r.UsuarioId == pProcesoSeleccion.ResponsableTecnicoUsuarioId );
+                                Usuario responsable = listaUsuarios.Find(r => r.UsuarioId == pProcesoSeleccion.ResponsableTecnicoUsuarioId);
 
-                                if ( responsable != null )
-                                    NombresPreponente = string.Concat(responsable.Nombres, " ", responsable.Apellidos, " - ");  
+                                if (responsable != null)
+                                    NombresPreponente = string.Concat(responsable.Nombres, " ", responsable.Apellidos, " - ");
 
-                                responsable = listaUsuarios.Find( r => r.UsuarioId == pProcesoSeleccion.ResponsableEstructuradorUsuarioid );
+                                responsable = listaUsuarios.Find(r => r.UsuarioId == pProcesoSeleccion.ResponsableEstructuradorUsuarioid);
 
-                                if ( responsable != null )
-                                    NombresPreponente += string.Concat(responsable.Nombres, " ", responsable.Apellidos, " - ");  
+                                if (responsable != null)
+                                    NombresPreponente += string.Concat(responsable.Nombres, " ", responsable.Apellidos, " - ");
 
                                 ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
                                 Replace(placeholderDominio.Nombre, NombresPreponente);
@@ -1888,22 +1929,24 @@ namespace asivamosffie.services
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.TIPO_DOCUMENTO_PRIVADA_PS:
-                            string tipoProponente = "";
+                                string tipoProponente = "";
 
                                 if (pProcesoSeleccion.ProcesoSeleccionProponente.Count() > 0)
                                 {
-                                    if ( pProcesoSeleccion.ProcesoSeleccionProponente.FirstOrDefault().TipoProponenteCodigo == "2" ||
+                                    if (pProcesoSeleccion.ProcesoSeleccionProponente.FirstOrDefault().TipoProponenteCodigo == "2" ||
                                          pProcesoSeleccion.ProcesoSeleccionProponente.FirstOrDefault().TipoProponenteCodigo == "4"
-                                        )    
-                                        {
-                                            tipoProponente = "NIT";
-                                        }else{
-                                            tipoProponente = "CC";
-                                        }
+                                        )
+                                    {
+                                        tipoProponente = "NIT";
+                                    }
+                                    else
+                                    {
+                                        tipoProponente = "CC";
+                                    }
 
                                 }
 
-                                ProcesosSeleccionPrivada = ProcesosSeleccionPrivada.Replace(placeholderDominio.Nombre, tipoProponente );
+                                ProcesosSeleccionPrivada = ProcesosSeleccionPrivada.Replace(placeholderDominio.Nombre, tipoProponente);
 
                                 break;
 
@@ -2212,7 +2255,7 @@ namespace asivamosffie.services
                                                             .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
                                                             .FirstOrDefault();
 
-                if (comiteTecnicoOld.SesionComiteTema.Where(t => t.Eliminado != true).ToList().Count > 0 )
+                if (comiteTecnicoOld.SesionComiteTema.Where(t => t.Eliminado != true).ToList().Count > 0)
                 {
                     return new Respuesta
                     {
@@ -2610,24 +2653,26 @@ namespace asivamosffie.services
                                                          .Include(r => r.SesionComiteTema)
                                                         .FirstOrDefault();
 
-            comite.SesionComiteSolicitudComiteTecnicoFiduciario.Where( t => t.Eliminado != true ).ToList().ForEach(cs =>
-            {
-                if ((cs.RegistroCompletoFiduciaria.HasValue ? cs.RegistroCompletoFiduciaria.Value : false) == false)
-                    estaCompleto = false;
-            });
+            comite.SesionComiteSolicitudComiteTecnicoFiduciario.Where(t => t.Eliminado != true).ToList().ForEach(cs =>
+          {
+              if ((cs.RegistroCompletoFiduciaria.HasValue ? cs.RegistroCompletoFiduciaria.Value : false) == false)
+                  estaCompleto = false;
+          });
 
-            comite.SesionComiteTema.Where( t => t.Eliminado != true ).ToList().ForEach(ct =>
-            {
-                if ((ct.RegistroCompleto.HasValue ? ct.RegistroCompleto.Value : false) == false)
-                    estaCompleto = false;
-            });
+            comite.SesionComiteTema.Where(t => t.Eliminado != true).ToList().ForEach(ct =>
+          {
+              if ((ct.RegistroCompleto.HasValue ? ct.RegistroCompleto.Value : false) == false)
+                  estaCompleto = false;
+          });
 
             if (estaCompleto)
             {
                 comite.EstadoComiteCodigo = ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Enviada;
                 comite.EsCompleto = true;
                 _context.SaveChanges();
-            }else{
+            }
+            else
+            {
                 comite.EsCompleto = false;
                 _context.SaveChanges();
 
@@ -2675,7 +2720,8 @@ namespace asivamosffie.services
                                 {
                                     sesionComiteSolicitudOld.RegistroCompletoFiduciaria = false;
                                 }
-                            }else if (pSesionComiteSolicitud.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
+                            }
+                            else if (pSesionComiteSolicitud.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
                             {
                                 if (ct.Proyecto.EstadoProyectoInterventoriaCodigo != null)
                                     if (ct.Proyecto.EstadoProyectoInterventoriaCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteFiduciario)
@@ -2687,7 +2733,7 @@ namespace asivamosffie.services
                                     sesionComiteSolicitudOld.RegistroCompletoFiduciaria = false;
                                 }
                             }
-                            
+
                         });
 
                     }
@@ -2716,7 +2762,7 @@ namespace asivamosffie.services
 
                 #region Inicio Proceso Seleccion
 
-                if (pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion || 
+                if (pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion ||
                     pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Evaluacion_De_Proceso)
                 {
                     ProcesoSeleccion procesoSeleccion = _context.ProcesoSeleccion.Find(sesionComiteSolicitudOld.SolicitudId);
@@ -2853,13 +2899,13 @@ namespace asivamosffie.services
 
                 #region Controversia contractual
 
-                
+
 
                 if (pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.ControversiasContractuales)
                 {
-                    ControversiaContractual controversiaContractual= _context.ControversiaContractual.Find(sesionComiteSolicitudOld.SolicitudId);
+                    ControversiaContractual controversiaContractual = _context.ControversiaContractual.Find(sesionComiteSolicitudOld.SolicitudId);
 
-                    if ( controversiaContractual != null)
+                    if (controversiaContractual != null)
                     {
                         if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario)
                         {
@@ -2869,10 +2915,10 @@ namespace asivamosffie.services
                         {
                             controversiaContractual.EstadoCodigo = ConstanCodigoEstadoControversiasContractuales.RechazadaPorComiteFiduciario;
                         }
-                        // if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario)
-                        // {
-                        //     controversiaContractual.EstadoCodigo = ConstanCodigoEstadoControversiasContractuales.DevueltaPorComiteFiduciario;
-                        // }
+                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario)
+                        {
+                            controversiaContractual.EstadoCodigo = ConstanCodigoEstadoControversiasContractuales.DevueltaPorComiteFiduciario;
+                        }
 
                     }
 
@@ -2886,19 +2932,19 @@ namespace asivamosffie.services
                 {
                     ControversiaActuacion controversiaActuacion = _context.ControversiaActuacion.Find(sesionComiteSolicitudOld.SolicitudId);
 
-                    if ( controversiaActuacion != null)
+                    if (controversiaActuacion != null)
                     {
                         if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario)
                         {
-                            //controversiaActuacion.EstadoAvanceTramiteCodigo = ConstanCodigoEstadoControversiasContractuales.AprobadaPorComiteFiduciario;
+                            controversiaActuacion.EstadoCodigo = ConstanCodigoEstadoControversiasContractuales.AprobadaPorComiteFiduciario;
                         }
                         if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario)
                         {
-                            //controversiaActuacion.EstadoAvanceTramiteCodigo = ConstanCodigoEstadoControversiasContractuales.RechazadaPorComiteFiduciario;
+                            controversiaActuacion.EstadoCodigo = ConstanCodigoEstadoControversiasContractuales.RechazadaPorComiteFiduciario;
                         }
                         if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario)
                         {
-                            //controversiaActuacion.EstadoAvanceTramiteCodigo = ConstanCodigoEstadoControversiasContractuales.DevueltaPorComiteFiduciario;
+                            controversiaActuacion.EstadoCodigo = ConstanCodigoEstadoControversiasContractuales.DevueltaPorComiteFiduciario;
                         }
 
                     }
@@ -2960,6 +3006,33 @@ namespace asivamosffie.services
                 }
 
                 #endregion Defensa Judicial
+
+                #region Defensa Judicial Seguimiento
+
+                if (pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Actuaciones_Defensa_judicial)
+                {
+                    DefensaJudicialSeguimiento defensaJudicialSeguimiento = _context.DefensaJudicialSeguimiento.Find(sesionComiteSolicitudOld.SolicitudId);
+
+                    if (defensaJudicialSeguimiento != null)
+                    {
+                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario)
+                        {
+                            defensaJudicialSeguimiento.EstadoProcesoCodigo = ConstanCodigoEstadosDefensaJudicial.Aprobado_en_comite_fiduciario;
+                        }
+                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario)
+                        {
+                            defensaJudicialSeguimiento.EstadoProcesoCodigo = ConstanCodigoEstadosDefensaJudicial.Rechazado_por_comite_fiduciario;
+                        }
+                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario)
+                        {
+                            defensaJudicialSeguimiento.EstadoProcesoCodigo = ConstanCodigoEstadosDefensaJudicial.Devuelto_por_comite_fiduciario;
+                        }
+
+                    }
+
+                }
+
+                #endregion Defensa Judicial Seguimiento
 
                 foreach (var SesionSolicitudCompromiso in pSesionComiteSolicitud.SesionSolicitudCompromiso)
                 {
@@ -3261,7 +3334,7 @@ namespace asivamosffie.services
                    };
             }
         }
-         
+
         private bool ValidarRegistroCompletoSesionComiteSolicitud(SesionComiteSolicitud sesionComiteSolicitud)
         {
             if (
@@ -3358,7 +3431,7 @@ namespace asivamosffie.services
             }
             return true;
         }
-        
+
         public async Task<ProcesoSeleccion> GetProcesosSelecccionByProcesoSeleccionId(int pId)
         {
 
@@ -3385,13 +3458,13 @@ namespace asivamosffie.services
                                .ThenInclude(r => r.ResponsableNavigation)
                                  .ThenInclude(r => r.Usuario)
                     .Include(r => r.SesionComiteTema)
-                        .ThenInclude( r => r.SesionTemaVoto )
+                        .ThenInclude(r => r.SesionTemaVoto)
                     .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
                        .ThenInclude(r => r.SesionSolicitudCompromiso)
                            .ThenInclude(r => r.ResponsableSesionParticipante)
                               .ThenInclude(r => r.Usuario)
                     .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
-                        .ThenInclude( r => r.SesionSolicitudVoto )
+                        .ThenInclude(r => r.SesionSolicitudVoto)
                     .FirstOrDefaultAsync();
 
             if (comiteTecnico == null)
@@ -3902,8 +3975,8 @@ namespace asivamosffie.services
 
                                     case ConstanCodigoVariablesPlaceHolders.FECHA_SOLICITUD:
                                         string FechaSolicitud = string.Empty;
-                                            FechaSolicitud = procesoSeleccion.FechaCreacion.ToString("dd-MM-yyyy");
-                                        
+                                        FechaSolicitud = procesoSeleccion.FechaCreacion.ToString("dd-MM-yyyy");
+
                                         registrosContratacion = registrosContratacion
                                             .Replace(placeholderDominio.Nombre, FechaSolicitud);
                                         break;
@@ -4029,7 +4102,7 @@ namespace asivamosffie.services
                                                 }
                                             }
                                         }
-                                        
+
                                         registrosContratacion = registrosContratacion
                                         .Replace(placeholderDominio.Nombre, registrosCompromisosSolicitud);
                                         break;

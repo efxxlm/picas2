@@ -112,9 +112,9 @@ export class CrearActaComponent implements OnInit {
     let cantidadCompletos = 0;
     let cantidadVacios = 0;
 
-     if (this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnicoFiduciario && this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnicoFiduciario.length > 0) {
+     if (this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico && this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico.length > 0) {
       
-      this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnicoFiduciario.forEach(cs => {
+      this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico.forEach(cs => {
 
         if (cs.registroCompletoActa === undefined){
           cantidadVacios++;
@@ -124,10 +124,10 @@ export class CrearActaComponent implements OnInit {
            cantidadCompletos++;
       });
 
-      if ( this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnicoFiduciario.length === cantidadCompletos ){
+      if ( this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico.length === cantidadCompletos ){
         this.solicitudesCompletas = true;
       }else 
-      if ( this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnicoFiduciario.length === cantidadVacios ){
+      if ( this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico.length === cantidadVacios ){
         this.solicitudesCompletas = null;
       }else{
         this.solicitudesCompletas = false;

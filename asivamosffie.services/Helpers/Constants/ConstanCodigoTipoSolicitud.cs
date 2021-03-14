@@ -11,6 +11,7 @@
         public const string Evaluacion_De_Proceso = "7";
         public const string Actuaciones_Controversias_Contractuales = "8";
         public const string Actuaciones_Controversias_Reclamaciones = "9";
+        public const string Actuaciones_Defensa_judicial = "10";
 
 
     }
