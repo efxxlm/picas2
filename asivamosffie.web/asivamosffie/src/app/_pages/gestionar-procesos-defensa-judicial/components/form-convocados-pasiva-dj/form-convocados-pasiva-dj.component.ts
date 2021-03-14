@@ -44,6 +44,7 @@ export class FormConvocadosPasivaDjComponent implements OnInit {
   }
 
   @Input() legitimacion:boolean;
+  @Input() demandaContraFFIE:boolean;
   @Input() tipoProceso:string;
   @Input() defensaJudicial:DefensaJudicial;
 
@@ -240,7 +241,12 @@ export class FormConvocadosPasivaDjComponent implements OnInit {
         esLegitimacionActiva:this.legitimacion,
         esCompleto:false,      
       };
+    }else{
+      this.tipoProceso != null ? defensaJudicial.tipoProcesoCodigo = this.tipoProceso : this.defensaJudicial.tipoProcesoCodigo;
+      this.legitimacion != null ? defensaJudicial.esLegitimacionActiva = this.legitimacion : this.defensaJudicial.esLegitimacionActiva;
     }
+    console.log(this.defensaJudicial, " - ", this.tipoProceso, " - ", this.legitimacion);
+    this.demandaContraFFIE != null ? defensaJudicial.esDemandaFfie = this.demandaContraFFIE : "";
     defensaJudicial.numeroDemandados=this.formContratista.get("numeroContratos").value;
     defensaJudicial.demandadoConvocado=defContraProyecto;
       this.defensaService.CreateOrEditDefensaJudicial(defensaJudicial).subscribe(

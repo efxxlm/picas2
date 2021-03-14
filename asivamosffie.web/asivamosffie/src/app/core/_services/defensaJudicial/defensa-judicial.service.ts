@@ -74,8 +74,17 @@ export class DefensaJudicialService {
   eliminarActuacionJudicial(id: number) {
     return this.http.post<Respuesta>( `${ this.url }/JudicialDefense/DeleteActuation?id=${ id }`, null );
   }
+
   finalizarActuacion(id: number) {
     return this.http.post<Respuesta>( `${ this.url }/JudicialDefense/FinalizeActuation?id=${ id }`, null );
+  }
+
+  createOrEditDefensaJudicialSeguimiento( defensaJudicialSeguimiento: DefensaJudicialSeguimiento) {
+    return this.http.post<Respuesta>( `${ this.url }/JudicialDefense/CreateOrEditDefensaJudicialSeguimiento`, defensaJudicialSeguimiento );
+  }
+
+  getDefensaJudicialSeguimiento(defensaJudicialSeguimientoId:number) {
+    return this.http.get<any[]>(`${this.url}/JudicialDefense/getDefensaJudicialSeguimiento?defensaJudicialSeguimientoId=${ defensaJudicialSeguimientoId }` );    
   }
 }
 
@@ -127,6 +136,9 @@ export interface DefensaJudicialSeguimiento{
   observaciones?:string,
   esprocesoResultadoDefinitivo?:boolean,
   rutaSoporte?:string,
+  jurisdiccionCodigoNombre?: string,
+  numeroProceso?: string,
+  tipoAccionCodigoNombre?: string
 }
 export interface DefensaJudicialContratacionProyecto{
   contratacionProyecto?: any;//not mapped
@@ -188,4 +200,5 @@ export interface FichaEstudio{
   esActuacionTramiteComite?:boolean,
   abogado?:string,
   rutaSoporte?:string,
+  esCompleto?: boolean,
 }

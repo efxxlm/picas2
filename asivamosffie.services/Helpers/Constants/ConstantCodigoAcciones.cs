@@ -308,5 +308,8 @@
         public const string Activar_Desactivar_Lista_Chequeo = "220";
         public const string Eliminar_Elemento_Lista_Chequeo = "221";
         public const string Eliminar_Lista_Chequeo = "221";
+
+        public const string Create_Edit_Defensa_Judicial_Seguimiento = "223";
+
     }
 }

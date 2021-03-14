@@ -317,23 +317,39 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        [Route("ChangeStateLegitimacion")]
         [HttpPost]
-        public async Task<IActionResult> ChangeStateLegitimacion([FromQuery] int pDefensaJudicialId, [FromQuery] string code)
+        [Route("CreateOrEditDefensaJudicialSeguimiento")]
+        public async Task<IActionResult> CreateOrEditDefensaJudicialSeguimiento(DefensaJudicialSeguimiento defensaJudicialSeguimiento)
         {
+            Respuesta respuesta = new Respuesta();
             try
             {
-                Respuesta respuesta = new Respuesta();
-                string user = HttpContext.User.FindFirst("User").Value.ToUpper();
-                respuesta = await _judicialDefense.ChangeStateLegitimacion(pDefensaJudicialId, code, user);
+                defensaJudicialSeguimiento.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
 
+                respuesta = await _judicialDefense.CreateOrEditDefensaJudicialSeguimiento(defensaJudicialSeguimiento);
                 return Ok(respuesta);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.ToString());
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
             }
         }
+
+        [HttpGet]
+        [Route("GetDefensaJudicialSeguimiento")]
+        public async Task<DefensaJudicialSeguimiento> GetDefensaJudicialSeguimiento(int defensaJudicialSeguimientoId)
+        {
+            try
+            {
+                return await _judicialDefense.GetDefensaJudicialSeguimiento(defensaJudicialSeguimientoId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
 
     }
 }

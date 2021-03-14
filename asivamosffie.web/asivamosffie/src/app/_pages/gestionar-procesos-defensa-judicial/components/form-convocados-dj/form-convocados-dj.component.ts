@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, SimpleChange, SimpleChanges, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -205,6 +205,9 @@ export class FormConvocadosDjComponent implements OnInit {
         esLegitimacionActiva:this.legitimacion,
         esCompleto:false,      
       };
+    }else{
+      this.tipoProceso != null ? defensaJudicial.tipoProcesoCodigo = this.tipoProceso : this.defensaJudicial.tipoProcesoCodigo;
+      this.legitimacion != null ? defensaJudicial.esLegitimacionActiva = this.legitimacion : this.defensaJudicial.esLegitimacionActiva;
     }
     defensaJudicial.demandadoConvocado=defContraProyecto;
     defensaJudicial.numeroDemandados=this.formContratista.get("numeroContratos").value;
@@ -242,4 +245,5 @@ export class FormConvocadosDjComponent implements OnInit {
       });
     }
   }
+  
 }

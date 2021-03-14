@@ -229,6 +229,9 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
         tipoProcesoCodigo: this.tipoProceso,
         esLegitimacionActiva: this.legitimacion,
       };
+    }else{
+      this.tipoProceso != null ? defensaJudicial.tipoProcesoCodigo = this.tipoProceso : this.defensaJudicial.tipoProcesoCodigo;
+      this.legitimacion != null ? defensaJudicial.esLegitimacionActiva = this.legitimacion : this.defensaJudicial.esLegitimacionActiva;
     }
     defensaJudicial.esDemandaFfie = this.addressForm.get("demandaContraFFIE").value;
     defensaJudicial.numeroDemandantes = this.formContratista.get("numeroContratos").value;
@@ -322,7 +325,7 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
       let num_enproceso: number = 0;
       let num_sindiligenciar: number = 0;
 
-      let num_convocados = defensaJudicial.numeroDemandantes;// total de convocados
+      let num_convocados = defensaJudicial.numeroDemandados;// total de convocados
       let num_completo = 0; //almacena los registros que estan completos
       defensaJudicial.demandadoConvocado.forEach(element => {
         if (element.esConvocado) {
@@ -333,6 +336,7 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
               && (element.numeroIdentificacion == null || element.numeroIdentificacion == '')
               && (element.direccion == null || element.direccion == '')
               && (element.email == null || element.email == '')
+              && (element.existeConocimiento == null)
             )) {
             num_sindiligenciar = num_sindiligenciar + 1;
           } else if (!element.registroCompleto) {
@@ -349,7 +353,6 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
       } else if (num_completo >= num_convocados) {
         retorno = 2;
       }
-
     }
 
     return retorno;

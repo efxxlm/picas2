@@ -284,7 +284,7 @@
                 Demandados
             </mat-panel-title>
         </mat-expansion-panel-header>
-        <app-form-demandados-dj [defensaJudicial]="defensaJudicial"></app-form-demandados-dj>
+        <app-form-demandados-dj [defensaJudicial]="defensaJudicial" [legitimacion]="legitimacion" [tipoProceso]="tipoProceso"></app-form-demandados-dj>
     </mat-expansion-panel>
 </mat-accordion>
 <mat-accordion *ngIf="this.addressForm.value.demandaContraFFIE==false" class="animatedDown">
@@ -296,6 +296,6 @@
                 Convocados
             </mat-panel-title>
         </mat-expansion-panel-header>
-        <app-form-convocados-pasiva-dj [defensaJudicial]="defensaJudicial"></app-form-convocados-pasiva-dj>
+        <app-form-convocados-pasiva-dj [defensaJudicial]="defensaJudicial" [demandaContraFFIE]="this.addressForm.value.demandaContraFFIE" [legitimacion]="legitimacion" [tipoProceso]="tipoProceso"></app-form-convocados-pasiva-dj>
     </mat-expansion-panel>
 </mat-accordion>

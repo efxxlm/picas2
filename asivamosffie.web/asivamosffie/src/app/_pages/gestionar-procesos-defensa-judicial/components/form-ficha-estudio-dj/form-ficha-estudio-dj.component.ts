@@ -146,6 +146,9 @@ export class FormFichaEstudioDjComponent implements OnInit {
         tipoProcesoCodigo:this.tipoProceso,
         esLegitimacionActiva:this.legitimacion,  
       };
+    }else{
+      this.tipoProceso != null ? defensaJudicial.tipoProcesoCodigo = this.tipoProceso : this.defensaJudicial.tipoProcesoCodigo;
+      this.legitimacion != null ? defensaJudicial.esLegitimacionActiva = this.legitimacion : this.defensaJudicial.esLegitimacionActiva;
     }
 
     defensaJudicial.fichaEstudio=[{

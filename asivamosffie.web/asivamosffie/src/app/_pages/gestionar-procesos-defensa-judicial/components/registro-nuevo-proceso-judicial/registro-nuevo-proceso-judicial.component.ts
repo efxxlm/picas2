@@ -70,47 +70,33 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
     
   }
   estaIncompletoficha(defensaJudicial: DefensaJudicial): number {
+    //'en-alerta':ficha_class===3,'sin-diligenciar':ficha_class===0,'en-proceso':ficha_class===1,'completo':ficha_class===2
     let retorno:number=0;
-    if((this.estaIncompletocontratos(defensaJudicial)+
-    this.estaIncompletoconvocados(defensaJudicial)+
-    this.estaIncompletodetalle(defensaJudicial))==6)
-    {
-      if(defensaJudicial.fichaEstudio.length>0)
-      {
-        if(defensaJudicial.fichaEstudio[0].antecedentes!=null && 
-          defensaJudicial.fichaEstudio[0].hechosRelevantes!=null &&
-          defensaJudicial.fichaEstudio[0].jurisprudenciaDoctrina!=null &&
-          defensaJudicial.fichaEstudio[0].decisionComiteDirectrices!=null &&
-          defensaJudicial.fichaEstudio[0].analisisJuridico!=null &&
-          defensaJudicial.fichaEstudio[0].recomendaciones!=null &&
-          ((defensaJudicial.fichaEstudio[0].esPresentadoAnteComiteFfie==true && 
-            defensaJudicial.fichaEstudio[0].fechaComiteDefensa!=null && 
-            defensaJudicial.fichaEstudio[0].recomendacionFinalComite!=null)||
-            (defensaJudicial.fichaEstudio[0].esPresentadoAnteComiteFfie==false && 
-              defensaJudicial.fichaEstudio[0].fechaComiteDefensa==null && 
-              defensaJudicial.fichaEstudio[0].recomendacionFinalComite==null))
-          && defensaJudicial.fichaEstudio[0].esAprobadoAperturaProceso!=null
-          && defensaJudicial.fichaEstudio[0].tipoActuacionCodigo!=null
-          &&  defensaJudicial.fichaEstudio[0].esActuacionTramiteComite!=null
-          && defensaJudicial.fichaEstudio[0].rutaSoporte!=null)
-          {
-            retorno= 2;
+    if(defensaJudicial.fichaEstudio.length>0){
+      if(defensaJudicial.fichaEstudio[0].esCompleto == null){
+        retorno=3;
+      }else if(!defensaJudicial.fichaEstudio[0].esCompleto){
+        if((defensaJudicial.fichaEstudio[0].antecedentes==null || defensaJudicial.fichaEstudio[0].antecedentes == '')
+          && (defensaJudicial.fichaEstudio[0].hechosRelevantes==null || defensaJudicial.fichaEstudio[0].hechosRelevantes == '')
+          && (defensaJudicial.fichaEstudio[0].jurisprudenciaDoctrina==null || defensaJudicial.fichaEstudio[0].jurisprudenciaDoctrina == '')
+          && (defensaJudicial.fichaEstudio[0].decisionComiteDirectrices==null || defensaJudicial.fichaEstudio[0].decisionComiteDirectrices == '')
+          && (defensaJudicial.fichaEstudio[0].analisisJuridico==null || defensaJudicial.fichaEstudio[0].analisisJuridico == '')
+          && (defensaJudicial.fichaEstudio[0].recomendaciones==null || defensaJudicial.fichaEstudio[0].recomendaciones == '')
+          && defensaJudicial.fichaEstudio[0].esPresentadoAnteComiteFfie== null
+          && defensaJudicial.fichaEstudio[0].esAprobadoAperturaProceso==null
+          && (defensaJudicial.fichaEstudio[0].tipoActuacionCodigo==null || defensaJudicial.fichaEstudio[0].tipoActuacionCodigo == '')
+          && defensaJudicial.fichaEstudio[0].esActuacionTramiteComite==null
+          && (defensaJudicial.fichaEstudio[0].rutaSoporte==null || defensaJudicial.fichaEstudio[0].rutaSoporte == '')){
+            retorno = 0;
+          }else{
+            retorno = 1;
           }
-          else
-          {
-            retorno=1;
-          }
-        
+      }else{
+        retorno = 2;
       }
-      else{       
-        retorno=0;
-      }    
+    }else{
+      retorno = 3;
     }
-    else
-    {
-      retorno=3;
-    }
-    
     return retorno;
   }
   estaIncompletoconvocados(defensaJudicial: DefensaJudicial): number {

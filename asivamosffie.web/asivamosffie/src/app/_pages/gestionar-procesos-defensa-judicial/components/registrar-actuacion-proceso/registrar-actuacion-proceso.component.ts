@@ -26,6 +26,8 @@ export class RegistrarActuacionProcesoComponent implements OnInit {
   };
  
   addressForm = this.fb.group({
+    defensaJudicialSeguimientoId: [null, Validators.required],
+    defensaJudicialId: [null, Validators.required],
     estadoAvanceProceso: [null, Validators.required],
     actuacionAdelantada: [null, Validators.required],
     proximaActuacionRequerida: [null, Validators.required],
@@ -50,6 +52,7 @@ export class RegistrarActuacionProcesoComponent implements OnInit {
       this.controlJudicialId = param['id'];
       this.judicialServices.GetDefensaJudicialById(this.controlJudicialId).subscribe(respose=>{
         this.defensaJudicial=respose;
+        this.addressForm.patchValue(this.defensaJudicial.defensaJudicialSeguimiento[0]);
       });
     });
     this.commonServices.getEstadoAvanceProcesosDefensa().subscribe(
@@ -86,7 +89,7 @@ export class RegistrarActuacionProcesoComponent implements OnInit {
           if(id>0)
           {
             this.router.navigateByUrl('/', { skipLocationChange: true }).then(
-              () => this.router.navigate(["/gestionarProcesoDefensaJudicial/verDetalleEditarActuacionProceso/"+id], {})
+              () => this.router.navigate(["/gestionarProcesoDefensaJudicial/actualizarProceso/"+id], {})
             );
           }                  
       });
@@ -99,7 +102,9 @@ export class RegistrarActuacionProcesoComponent implements OnInit {
     let defensaJudicial=this.defensaJudicial;
     
     defensaJudicial.defensaJudicialSeguimiento.push({
-      estadoProcesoCodigo:this.addressForm.get("estadoAvanceProceso").value,
+      defensaJudicialSeguimientoId: this.addressForm.get("defensaJudicialSeguimientoId").value,
+      defensaJudicialId: this.controlJudicialId,
+      estadoProcesoCodigo:this.addressForm.get("estadoAvanceProceso").value != null ? this.addressForm.get("estadoAvanceProceso").value.codigo : null,
       actuacionAdelantada:this.addressForm.get("actuacionAdelantada").value,
       proximaActuacion:this.addressForm.get("proximaActuacionRequerida").value,
       fechaVencimiento:this.addressForm.get("fechaVencimientoTerminos").value,
@@ -109,7 +114,7 @@ export class RegistrarActuacionProcesoComponent implements OnInit {
       rutaSoporte:this.addressForm.get("urlSoporte").value
     });
       console.log(defensaJudicial);
-      this.judicialServices.CreateOrEditDefensaJudicial(defensaJudicial).subscribe(
+      this.judicialServices.createOrEditDefensaJudicialSeguimiento(defensaJudicial.defensaJudicialSeguimiento[0]).subscribe(
         response=>{
           this.openDialog('', `<b>${response.message}</b>`,true,response.data?response.data.defensaJudicialId:0);
         }

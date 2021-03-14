@@ -71,6 +71,9 @@ export class FormUrlsoporteDjComponent implements OnInit {
         esLegitimacionActiva:this.legitimacion,
         
       };
+    }else{
+      this.tipoProceso != null ? defensaJudicial.tipoProcesoCodigo = this.tipoProceso : this.defensaJudicial.tipoProcesoCodigo;
+      this.legitimacion != null ? defensaJudicial.esLegitimacionActiva = this.legitimacion : this.defensaJudicial.esLegitimacionActiva;
     }
     defensaJudicial.urlSoporteProceso=this.addressForm.get("urlSoporte").value;
     if(this.tipoProceso==null || this.legitimacion==null){
