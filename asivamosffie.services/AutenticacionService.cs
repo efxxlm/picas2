@@ -84,9 +84,7 @@ namespace asivamosffie.services
                 throw ex;
             }
         }
-
-        
-
+         
         private JwtToken GenerateToken(string prmSecret, string prmIssuer, string prmAudience, Usuario prmUser, List<UsuarioPerfil> prmPerfiles)
         {
             var token = new JwtTokenBuilder()
@@ -103,6 +101,7 @@ namespace asivamosffie.services
             .Build();
             return token;
         }
+  
         public async Task<Usuario> GetUserByMail(string pMail)
         {
             try

@@ -622,7 +622,6 @@ namespace asivamosffie.services
             return ListProyectoGrilla.OrderByDescending(r => r.ProyectoId).ToList();
         }
 
-
         public async Task<Respuesta> CreateEditContratacion(Contratacion Pcontratacion)
         {
             int idAccionCrearContratacionProyecto = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Proyecto, (int)EnumeratorTipoDominio.Acciones);

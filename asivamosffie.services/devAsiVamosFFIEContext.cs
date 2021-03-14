@@ -230,6 +230,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -3475,12 +3476,6 @@ namespace asivamosffie.model.Models
                     .HasDefaultValueSql("((1))")
                     .HasComment("Indica si el registro esta activo (0) Inactivo (1) Activo");
 
-                entity.Property(e => e.Crud)
-                    .IsRequired()
-                    .HasColumnName("CRUD")
-                    .HasDefaultValueSql("((1))")
-                    .HasComment("Indica si el perfil tiene permisos de CRUD en la funcionalidad");
-
                 entity.Property(e => e.FechaCreacion)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())")
@@ -3489,6 +3484,10 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.MenuId).HasComment("Identificador del Menú");
 
                 entity.Property(e => e.PerfilId).HasComment("Identificador del PerfilId");
+
+                entity.Property(e => e.TienePermisoCrear)
+                    .HasDefaultValueSql("((1))")
+                    .HasComment("Indica si el perfil tiene permisos de CRUD en la funcionalidad");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
