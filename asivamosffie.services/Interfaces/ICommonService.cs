@@ -10,6 +10,8 @@ namespace asivamosffie.services.Interfaces
 {
     public interface ICommonService
     {
+        Task<VPermisosMenus> TienePermisos(int idPerfil, string pRuta);
+
         bool EnviarCorreo(List<EnumeratorPerfil> ListPerfilesCorreo, Template template);
 
         Task<dynamic> GetListMenu();

@@ -51,6 +51,13 @@ namespace asivamosffie.api.Controllers
         {
             return common.CalculardiasLaborales(pDias, pFechaCalcular);
         }
+         
+        [HttpGet]
+        [Route("TienePermisos")]
+        public Task<VPermisosMenus> VPermisosMenus([FromQuery] int idPerfil, string pRuta)
+        {
+            return common.TienePermisos(idPerfil, pRuta);
+        }
 
         [HttpGet]
         [Route("GetUsuarioByPerfil")]

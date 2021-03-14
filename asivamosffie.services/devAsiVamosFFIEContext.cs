@@ -214,6 +214,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VGestionarGarantiasPolizas> VGestionarGarantiasPolizas { get; set; }
         public virtual DbSet<VListaContratacionModificacionContractual> VListaContratacionModificacionContractual { get; set; }
         public virtual DbSet<VListaProyectos> VListaProyectos { get; set; }
+        public virtual DbSet<VPermisosMenus> VPermisosMenus { get; set; }
         public virtual DbSet<VProgramacionBySeguimientoSemanal> VProgramacionBySeguimientoSemanal { get; set; }
         public virtual DbSet<VProyectosCierre> VProyectosCierre { get; set; }
         public virtual DbSet<VProyectosXcontrato> VProyectosXcontrato { get; set; }
@@ -229,6 +230,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValidarSeguimientoSemanal> VValidarSeguimientoSemanal { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -7414,6 +7416,17 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.TipoIntervencion)
                     .HasMaxLength(100)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VPermisosMenus>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_PermisosMenus");
+
+                entity.Property(e => e.RutaFormulario)
+                    .HasMaxLength(400)
                     .IsUnicode(false);
             });
 

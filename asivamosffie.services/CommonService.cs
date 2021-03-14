@@ -32,6 +32,18 @@ namespace asivamosffie.services
             _context = context;
         }
 
+        public async Task<VPermisosMenus> TienePermisos(int idPerfil, string pRuta)
+        {
+            VPermisosMenus vPermisosMenus = await _context.VPermisosMenus
+                .Where(vp => vp.RutaFormulario == pRuta
+                          && vp.PerfilId == idPerfil)
+                .FirstOrDefaultAsync();
+
+            if (vPermisosMenus != null)
+                vPermisosMenus.TienePermisoMenu = true;
+            return vPermisosMenus;
+        }
+
         public bool EnviarCorreo(List<EnumeratorPerfil> pListPerfilesCorreo, Template pTemplate)
         {
             try
