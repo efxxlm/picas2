@@ -442,9 +442,9 @@
                         </div>
                         <div class="col d-flex">
                             <mat-form-field appearance="fill" style="width: 91%;">
-                                <mat-select class="padding-left" formControlName="departamento" required>
-                                  <mat-option *ngFor="let value of listaDepartamento" [value]="value.codigo">
-                                      {{ value.nombre }}
+                                <mat-select class="padding-left" formControlName="departamento" required (ngModelChange)="getMunicipiosByDepartamento( $event )">
+                                  <mat-option *ngFor="let value of listaDepartamento" [value]="value.localizacionId">
+                                      {{ value.descripcion }}
                                   </mat-option>
                                 </mat-select>
                             </mat-form-field>
@@ -478,8 +478,8 @@
                         <div class="col d-flex">
                             <mat-form-field appearance="fill" style="width: 91%;">
                                 <mat-select class="padding-left" formControlName="municipio" required>
-                                  <mat-option *ngFor="let value of listaMunicipio" [value]="value.codigo">
-                                      {{ value.nombre }}
+                                  <mat-option *ngFor="let value of listaMunicipio" [value]="value.localizacionId">
+                                      {{ value.descripcion }}
                                   </mat-option>
                                 </mat-select>
                             </mat-form-field>
@@ -666,7 +666,7 @@
             </mat-card-content>
         </mat-card>
     
-        <mat-card class="shipping-card" align="left">
+        <mat-card class="shipping-card" align="left" *ngIf="formUsuario.get( 'procedencia' ).value === procedenciaFfieCodigo">
             <mat-card-header class="header-card">
                 <mat-card-title class="header-card--text">
                     Procedencia
@@ -756,8 +756,8 @@
                         </div>
                         <div class="col d-flex">
                             <mat-form-field appearance="fill" style="width: 96%;">
-                                <mat-select class="padding-left" multiple formControlName="rol" required (ngModelChange)="getRoles( $event )">
-                                  <mat-option *ngFor="let value of listaRoles" [value]="value">
+                                <mat-select class="padding-left" formControlName="rol" required>
+                                  <mat-option *ngFor="let value of listaRoles" [value]="value.perfilId">
                                       {{ value.nombre }}
                                   </mat-option>
                                 </mat-select>
@@ -777,48 +777,41 @@
                       </div>
                     </div>
                 </div>
-                <section *ngIf="roles.length > 0">
-                    <div formArrayName="roles" *ngFor="let rol of roles.controls; index as i">
-                        <h3 class="colorMainColor" style="margin: .5em 0 0 .5em !important;"><b> {{ rol.get( 'nombre' ).value }} </b></h3>
 
-                        <div class="row" style="margin-left: .5em !important;">
-                            <div class="col-md-12">
-                                <div class="row" [formGroup]="rol">
-                                    <div class="pr-1">
-                                        <label  class="label-left"
-                                                style="margin-top: 1.8em;"
-                                                for="contrato"
-                                                [class.color-secondaryColor]="( rol.get('contrato').invalid && rol.get('contrato').touched) || ( rol.get('contrato').invalid && esRegistroNuevo === false )">
-                                                Asignar contratos
-                                        </label>
-                                    </div>
-                                    <div class="col d-flex">
-                                        <mat-form-field appearance="fill" style="width: 96%;">
-                                            <mat-select class="padding-left" multiple formControlName="contrato" required>
-                                                <mat-option *ngFor="let value of rol.get( 'contratos' ).value" [value]="value.codigo">
-                                                    {{ value.nombre }}
-                                                </mat-option>
-                                            </mat-select>
-                                        </mat-form-field>
-                                    </div>
-                                    <span class="icon-incompleto" style="margin-top: .5em;">
-                                        <img
-                                          class="icon-incompleto--img"
-                                          src="assets/img/icon/incompleto.svg"
-                                          alt="este campo es requerido"
-                                          [matTooltipPosition]="'above'"
-                                          matTooltip="Debe ingresar la información en el campo para continuar"
-                                          matTooltipClass="info-tooltip"
-                                          *ngIf="( rol.get('contrato').invalid && rol.get('contrato').touched ) || ( rol.get('contrato').invalid && esRegistroNuevo === false )"
-                                        />
-                                    </span>
+                <section *ngIf="formUsuario.get( 'rol' ).value !== null">
+                    <h3 class="colorMainColor" style="margin: .5em 0 0 .5em !important;"><b> {{ getRolSeleccionado( formUsuario.get( 'rol' ).value ) }} </b></h3>
+
+                    <div class="row" style="margin-left: .5em !important;">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label  class="label-left"
+                                            style="margin-top: 1.8em;"
+                                            for="contratos"
+                                            [class.color-secondaryColor]="( formUsuario.get('contratos').invalid && formUsuario.get('contratos').touched) || ( formUsuario.get('contratos').invalid && esRegistroNuevo === false )">
+                                            Asignar contratos
+                                    </label>
                                 </div>
-                                <div class="text-right" style="margin-right: 4em;">
-                                    <button mat-button color="warn" type="button" class="btn-eliminar" (click)="deleteRol( i )">
-                                        <img src="assets/img/icon/menos.svg">
-                                        Eliminar rol
-                                    </button>
+                                <div class="col d-flex">
+                                    <mat-form-field appearance="fill" style="width: 96%;">
+                                        <mat-select class="padding-left" multiple formControlName="contratos" required>
+                                            <mat-option *ngFor="let value of listaContratos" [value]="value.codigo">
+                                                {{ value.nombre }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
                                 </div>
+                                <span class="icon-incompleto" style="margin-top: .5em;">
+                                    <img
+                                      class="icon-incompleto--img"
+                                      src="assets/img/icon/incompleto.svg"
+                                      alt="este campo es requerido"
+                                      [matTooltipPosition]="'above'"
+                                      matTooltip="Debe ingresar la información en el campo para continuar"
+                                      matTooltipClass="info-tooltip"
+                                      *ngIf="( formUsuario.get('contratos').invalid && formUsuario.get('contratos').touched ) || ( formUsuario.get('contratos').invalid && esRegistroNuevo === false )"
+                                    />
+                                </span>
                             </div>
                         </div>
                     </div>

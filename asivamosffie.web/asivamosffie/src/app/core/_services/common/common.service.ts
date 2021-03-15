@@ -408,6 +408,21 @@ listaEstadosPoliza(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=169`);
   }
 
+  listaProcedencia() {
+    // Lista del campo procedencias CU 6.2
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=170`);
+  }
+
+  listaDependencia() {
+    // Lista del campo Dependencias CU 6.2
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=171`);
+  }
+
+  listaGrupo() {
+    // Lista del campo Grupos CU 6.2
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=172`);
+  }
+
   public listaUsuarios(){
 
     let lista: Usuario[] = [];

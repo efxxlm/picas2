@@ -1,3 +1,6 @@
+import { GestionarUsuariosService } from './../../../../core/_services/gestionarUsuarios/gestionar-usuarios.service';
+import { Localizacion } from './../../../../core/_services/common/common.service';
+import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -13,33 +16,15 @@ export class FormGestionarUsuariosComponent implements OnInit {
 
     esRegistroNuevo: boolean;
     formUsuario: FormGroup;
-    listaProcedencia: { nombre: string, codigo: string }[] = [
-        { nombre: 'FFIE/Fiduciaria', codigo: '1' },
-        { nombre: 'Otro', codigo: '2' }
-    ];
-    listaTipoDocumento: { nombre: string, codigo: string }[] = [
-        { nombre: 'Cedula de ciudadanía', codigo: '1' },
-        { nombre: 'Cedula de extranjería', codigo: '2' }
-    ];
-    listaDepartamento: { nombre: string, codigo: string }[] = [
-        { nombre: 'Boyacá', codigo: '1' }
-    ];
-    listaMunicipio: { nombre: string, codigo: string }[] = [
-        { nombre: 'Susacón', codigo: '1' }
-    ];
-    listaDependencia: { nombre: string, codigo: string }[] = [
-        { nombre: 'Administración', codigo: '1' },
-        { nombre: 'Técnica', codigo: '2' }
-    ];
-    listaGrupo: { nombre: string, codigo: string }[] = [
-        { nombre: 'Grupo 1', codigo: '1' },
-        { nombre: 'Grupo 2', codigo: '2' }
-    ];
-    listaRoles: { nombre: string, codigo: string }[] = [
-        { nombre: 'Supervisor', codigo: '1' },
-        { nombre: 'Interventor', codigo: '2' },
-        { nombre: 'Apoyo a la supervisión', codigo: '3' }
-    ];
+    procedenciaFfieCodigo: string;
+    usuarioId = 0;
+    listaProcedencia: Dominio[] = [];
+    listaTipoDocumento: Dominio[] = [];
+    listaDepartamento: Localizacion[] = [];
+    listaMunicipio: Localizacion[] = [];
+    listaDependencia: Dominio[] = [];
+    listaGrupo: Dominio[] = [];
+    listaRoles: { nombre: string, perfilId: number }[] = [];
     listaContratos: { nombre: string, codigo: string }[] = [
         { nombre: 'N801801', codigo: '1' },
         { nombre: 'J208208', codigo: '2' }
@@ -56,15 +41,13 @@ export class FormGestionarUsuariosComponent implements OnInit {
         ]
     };
 
-    get roles() {
-        return this.formUsuario.get( 'roles' ) as FormArray;
-    }
-
     constructor(
         private activatedRoute: ActivatedRoute,
         private fb: FormBuilder,
         private dialog: MatDialog,
-        private routes: Router )
+        private routes: Router,
+        private commonSvc: CommonService,
+        private gestionarUsuariosSvc: GestionarUsuariosService )
     {
         this.activatedRoute.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
             if ( urlSegment.path === 'crearUsuario' ) {
@@ -77,6 +60,31 @@ export class FormGestionarUsuariosComponent implements OnInit {
             }
         } );
         this.formUsuario = this.crearFormulario();
+        /*
+            listaDepartamentos
+            listaMunicipiosByIdDepartamento
+        */
+        this.commonSvc.listaProcedencia()
+            .subscribe(
+                listaProcedencia => {
+                    const procedencia = listaProcedencia.find( procedencia => procedencia.codigo === '1' );
+                    if ( procedencia !== undefined ) {
+                        this.procedenciaFfieCodigo = procedencia.codigo;
+                    }
+
+                    this.listaProcedencia = listaProcedencia;
+                }
+            );
+        this.commonSvc.listaTipodocumento()
+            .subscribe( listaTipodocumento => this.listaTipoDocumento = listaTipodocumento );
+        this.commonSvc.listaDepartamentos()
+            .subscribe( listaDepartamentos => this.listaDepartamento = listaDepartamentos );
+        this.commonSvc.listaDependencia()
+            .subscribe( listaDependencia => this.listaDependencia = listaDependencia );
+        this.commonSvc.listaGrupo()
+            .subscribe( listaGrupo => this.listaGrupo = listaGrupo );
+        this.gestionarUsuariosSvc.getListPerfil()
+            .subscribe( listaPerfil => this.listaRoles = listaPerfil );
     }
 
     ngOnInit(): void {
@@ -104,69 +112,25 @@ export class FormGestionarUsuariosComponent implements OnInit {
                 dependencia: [ null, Validators.required ],
                 grupo: [ null, Validators.required ],
                 rol: [ null, Validators.required ],
-                roles: this.fb.array( [] )
+                contratos: [ null, Validators.required ]
             }
         );
     }
 
-    async getRoles( listaRoles: any[] ) {
-        const rolesArray = [ ...listaRoles ];
+    getRolSeleccionado( perfilId: number ) {
+        if ( this.listaRoles.length > 0 ) {
+            const rol = this.listaRoles.find( rol => rol.perfilId === perfilId );
 
-        if ( rolesArray.length > 0 ) {
-            if ( this.roles.length > 0 ) {
-                this.roles.controls.forEach( ( control, indexRol ) => {
-                    const index = rolesArray.findIndex( value => value.nombre === control.get( 'nombre' ).value );
-                    const rol = listaRoles.find( value => value.nombre === control.get( 'nombre' ).value );
-
-                    if ( index  !== -1 ) {
-                        rolesArray.splice( index, 1 );
-                    }
-                    
-                    if ( rol === undefined ) {
-                        this.roles.removeAt( indexRol );
-                        rolesArray.splice( index, 1 );
-                    }
-                } );
+            if ( rol !== undefined ) {
+                return rol.nombre;
             }
-
-            for ( const rol of rolesArray ) {
-
-                const listaContratos = () => {
-                    return new Promise( resolve => {
-                        setTimeout(() => {
-                            resolve( this.listaContratos )
-                        }, 500);
-                    } );
-                }
-                const contratos = await listaContratos();
-
-                this.roles.push( this.fb.group(
-                    {
-                        nombre: [ rol.nombre ],
-                        contratos: [ contratos, Validators.required ],
-                        contrato: [ null, Validators.required ]
-                    }
-                ) );
-            }
-        } else {
-            this.roles.clear();
         }
     }
 
-    deleteRol( index: number ) {
-        this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
-            .subscribe(
-                value => {
-                    if ( value === true ) {
-                        const listaRoles: any[] = [ ...this.formUsuario.get( 'rol' ).value ];
-                        const rolIndex = listaRoles.findIndex( value => value.nombre === this.roles.controls[ index ].get( 'nombre' ).value );
-                        listaRoles.splice( rolIndex, 1 );
-
-                        this.formUsuario.get( 'rol' ).setValue( listaRoles );
-                        this.roles.removeAt( index );
-                    }
-                }
-            );
+    getMunicipiosByDepartamento( localizacionId: string ) {
+        this.listaMunicipio = [];
+        this.commonSvc.listaMunicipiosByIdDepartamento( localizacionId )
+            .subscribe( listaMunicipiosByIdDepartamento => this.listaMunicipio = listaMunicipiosByIdDepartamento );
     }
 
     openDialog(modalTitle: string, modalText: string) {
@@ -202,6 +166,37 @@ export class FormGestionarUsuariosComponent implements OnInit {
 
     guardar() {
         console.log( this.formUsuario );
+
+        const pUsuario = {
+            usuarioId: this.usuarioId,
+            procedenciaCodigo: this.formUsuario.get( 'procedencia' ).value,
+            primerNombre: this.formUsuario.get( 'primerNombre' ).value,
+            segundoNombre: this.formUsuario.get( 'segundoNombre' ).value,
+            primerApellido: this.formUsuario.get( 'primerApellido' ).value,
+            segundoApellido: this.formUsuario.get( 'segundoApellido' ).value,
+            tipoDocumentoCodigo: this.formUsuario.get( 'tipoDocumento' ).value,
+            numeroIdentificacion: this.formUsuario.get( 'numeroIdentificacion' ).value,
+            email: this.formUsuario.get( 'correo' ).value,
+            telefonoFijo: this.formUsuario.get( 'telefonoFijo' ).value,
+            telefonoCelular: this.formUsuario.get( 'telefonoCelular' ).value,
+            municipioId: this.formUsuario.get( 'municipio' ).value,
+            fechaCreacion: this.formUsuario.get( 'fechaCreacion' ).value,
+            fechaExpiracion: this.formUsuario.get( 'fechaExpiracion' ).value,
+            urlSoporteDocumentacion: this.formUsuario.get( 'urlSoporte' ).value,
+            observaciones: this.formUsuario.get( 'observaciones' ).value,
+            dependenciaCodigo: this.formUsuario.get( 'dependencia' ).value,
+            grupoCodigo: this.formUsuario.get( 'grupo' ).value,
+            PerfilId: this.formUsuario.get( 'rol' ).value
+        }
+
+        this.gestionarUsuariosSvc.createEditUsuario( pUsuario )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', { skipLocationChange: true } ).then( () => this.routes.navigate( [ '/gestionUsuarios' ] ) );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }
