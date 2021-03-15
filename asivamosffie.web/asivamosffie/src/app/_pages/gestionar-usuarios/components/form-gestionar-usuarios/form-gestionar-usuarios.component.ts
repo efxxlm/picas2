@@ -101,6 +101,7 @@ export class FormGestionarUsuariosComponent implements OnInit {
                                                                     getUsuario => {
                                                                         console.log( getUsuario );
 
+                                                                        this.usuarioId = getUsuario.usuarioId;
                                                                         this.formUsuario.setValue(
                                                                             {
                                                                                 procedencia: getUsuario.procedenciaCodigo !== undefined ? this.listaProcedencia.find( procedencia => procedencia.codigo === getUsuario.procedenciaCodigo ).codigo : null,
@@ -127,8 +128,13 @@ export class FormGestionarUsuariosComponent implements OnInit {
                                                                         );
 
                                                                         if ( getUsuario.municipioId !== undefined ) {
-                                                                            this.commonSvc.forkDepartamentoMunicipio( getUsuario.municipioId )
-                                                                                .subscribe( console.log );
+                                                                            this.commonSvc.listMunicipiosByIdMunicipio( getUsuario.municipioId )
+                                                                                .subscribe(
+                                                                                    listMunicipiosByIdMunicipio => {
+                                                                                        this.formUsuario.get( 'departamento' ).setValue( this.listaDepartamento.find( departamento => departamento.localizacionId === listMunicipiosByIdMunicipio[0].idPadre ) );
+                                                                                        this.formUsuario.get( 'municipio' ).setValue( listMunicipiosByIdMunicipio[0] );
+                                                                                    }
+                                                                                );
                                                                         }
                                                                     }
                                                                 );
@@ -182,10 +188,14 @@ export class FormGestionarUsuariosComponent implements OnInit {
         }
     }
 
-    getMunicipiosByDepartamento( localizacionId: string ) {
+    getMunicipiosByDepartamento( departamento: Localizacion ) {
         this.listaMunicipio = [];
-        this.commonSvc.listaMunicipiosByIdDepartamento( localizacionId )
-            .subscribe( listaMunicipiosByIdDepartamento => this.listaMunicipio = listaMunicipiosByIdDepartamento );
+
+        if ( departamento !== null ) {
+            this.formUsuario.get( 'municipio' ).setValue( null );
+            this.commonSvc.listaMunicipiosByIdDepartamento( departamento.localizacionId )
+                .subscribe( listaMunicipiosByIdDepartamento => this.listaMunicipio = listaMunicipiosByIdDepartamento );
+        }
     }
 
     openDialog(modalTitle: string, modalText: string) {
@@ -234,7 +244,7 @@ export class FormGestionarUsuariosComponent implements OnInit {
             email: this.formUsuario.get( 'correo' ).value,
             telefonoFijo: this.formUsuario.get( 'telefonoFijo' ).value,
             telefonoCelular: this.formUsuario.get( 'telefonoCelular' ).value,
-            municipioId: this.formUsuario.get( 'municipio' ).value,
+            municipioId: this.formUsuario.get( 'municipio' ).value !== null ? this.formUsuario.get( 'municipio' ).value.localizacionId : null,
             fechaCreacion: this.formUsuario.get( 'fechaCreacion' ).value,
             fechaExpiracion: this.formUsuario.get( 'fechaExpiracion' ).value,
             urlSoporteDocumentacion: this.formUsuario.get( 'urlSoporte' ).value,

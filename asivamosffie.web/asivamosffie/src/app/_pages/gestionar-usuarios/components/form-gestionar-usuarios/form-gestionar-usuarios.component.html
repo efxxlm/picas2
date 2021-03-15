@@ -443,7 +443,7 @@
                         <div class="col d-flex">
                             <mat-form-field appearance="fill" style="width: 91%;">
                                 <mat-select class="padding-left" formControlName="departamento" required (ngModelChange)="getMunicipiosByDepartamento( $event )">
-                                  <mat-option *ngFor="let value of listaDepartamento" [value]="value.localizacionId">
+                                  <mat-option *ngFor="let value of listaDepartamento" [value]="value">
                                       {{ value.descripcion }}
                                   </mat-option>
                                 </mat-select>
@@ -477,11 +477,20 @@
                         </div>
                         <div class="col d-flex">
                             <mat-form-field appearance="fill" style="width: 91%;">
-                                <mat-select class="padding-left" formControlName="municipio" required>
-                                  <mat-option *ngFor="let value of listaMunicipio" [value]="value.localizacionId">
-                                      {{ value.descripcion }}
-                                  </mat-option>
-                                </mat-select>
+                                <section *ngIf="formUsuario.get( 'municipio' ).value === null">
+                                    <mat-select class="padding-left" formControlName="municipio" required>
+                                        <mat-option *ngFor="let value of listaMunicipio" [value]="value">
+                                            {{ value.descripcion }}
+                                        </mat-option>
+                                    </mat-select>
+                                </section>
+                                <section *ngIf="formUsuario.get( 'municipio' ).value !== null">
+                                    <mat-select class="padding-left" formControlName="municipio" required>
+                                        <mat-option [value]="formUsuario.get( 'municipio' ).value">
+                                            {{ formUsuario.get( 'municipio' ).value.descripcion }}
+                                        </mat-option>
+                                    </mat-select>
+                                </section>
                             </mat-form-field>
                         </div>
                         <span class="icon-incompleto" style="margin-top: .5em;">
