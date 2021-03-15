@@ -232,6 +232,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -3421,6 +3422,10 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.Eliminado)
                     .HasDefaultValueSql("((0))")
                     .HasComment("Indica que el menú fue eliminado (0)Menú vigente (1)MNenú Eliminado");
+
+                entity.Property(e => e.FaseCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.FechaCreacion)
                     .HasColumnType("datetime")

@@ -27,21 +27,24 @@ namespace asivamosffie.services
         private readonly devAsiVamosFFIEContext _context;
         public readonly IConverter _converter;
 
-        public async Task<dynamic> GetMenu()
-        {
-            return await _context.Menu.Select(m =>
-            new
-            {
-                m.MenuId,
-                m.Nombre
-            }).ToListAsync();
-        }
-
         public CreateRolesService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
             _commonService = commonService;
             _context = context;
         }
+         
+        public async Task<dynamic> GetMenu()
+        {
+            return await _context.Menu.Select(m =>
+                                                new
+                                                {
+                                                    m.FaseCodigo,
+                                                    m.MenuId,
+                                                    m.Nombre
+                                                }
+                                              ).ToListAsync();
+        }
+
 
         public async Task<Perfil> GetPerfilByPerfilId(int pPerfilId)
         {
