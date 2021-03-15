@@ -249,7 +249,7 @@ namespace asivamosffie.services
                     _context.Usuario.Add(pUsuario);
                     _context.SaveChanges();
 
-                    await CrearEditarUsuarioPeril(pUsuario, true);
+                    await CrearEditarUsuarioPerfil(pUsuario, true);
                     await SendEmailWhenCreateUsuario(pUsuario, strPassWordGenerate);
                 }
                 else
@@ -279,7 +279,7 @@ namespace asivamosffie.services
                                 GrupoCodigo = pUsuario.GrupoCodigo
                             });
 
-                    await CrearEditarUsuarioPeril(pUsuario, false);
+                    await CrearEditarUsuarioPerfil(pUsuario, false);
                 }
                 return new Respuesta
                 {
@@ -303,29 +303,40 @@ namespace asivamosffie.services
             }
         }
 
-        private async Task CrearEditarUsuarioPeril(Usuario pUsuario, bool Create)
+        private async Task CrearEditarUsuarioPerfil(Usuario pUsuario, bool Create)
         {
-            if (Create)
-            {
-                UsuarioPerfil usuarioPerfil = new UsuarioPerfil
+            try
+            { 
+                if (Create)
                 {
-                    UsuarioId = pUsuario.UsuarioId,
-                    PerfilId = pUsuario.PerfilId,
-                    Activo = true,
-                    FechaCreacion = DateTime.Now,
-                    UsuarioCreacion = pUsuario.UsuarioCreacion
-                };
-                await _context.UsuarioPerfil.AddAsync(usuarioPerfil);
+                    UsuarioPerfil usuarioPerfil = new UsuarioPerfil
+                    {
+                        UsuarioId = pUsuario.UsuarioId,
+                        PerfilId = pUsuario.PerfilId,
+                        Activo = true,
+                        FechaCreacion = DateTime.Now,
+                        UsuarioCreacion = pUsuario.UsuarioCreacion
+                    };
+                    await _context.UsuarioPerfil.AddAsync(usuarioPerfil);
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    await _context.Set<UsuarioPerfil>()
+                             .Where(up => up.UsuarioId == pUsuario.UsuarioId)
+                             .UpdateAsync(up => new UsuarioPerfil
+                             {
+                                 PerfilId = pUsuario.PerfilId,
+                                 FechaModificacion = DateTime.Now,
+                             });
+                }
+          
             }
-            else
+
+            
+            catch (Exception e)
             {
-                await _context.Set<UsuarioPerfil>()
-                         .Where(up => up.UsuarioId == pUsuario.UsuarioId)
-                         .UpdateAsync(up => new UsuarioPerfil
-                         {
-                             PerfilId = pUsuario.PerfilId,
-                             FechaModificacion = DateTime.Now,
-                         });
+                 
             }
         }
 
