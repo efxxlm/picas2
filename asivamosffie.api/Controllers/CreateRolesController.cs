@@ -63,8 +63,21 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-
+ 
         [HttpGet]
+        [Route("GetPerfilByPerfilId")]
+        public async Task<Perfil> GetPerfilByPerfilId([FromQuery] int pPerfilId)
+        {
+            try
+            {
+                return await _createRolesService.GetPerfilByPerfilId(pPerfilId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+              [HttpGet]
         [Route("ValidateExistNamePerfil")]
         public async Task<bool> ValidateExistNamePerfil([FromQuery] string pNamePerfil)
         {

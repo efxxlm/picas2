@@ -193,7 +193,12 @@ namespace asivamosffie.services
 
         #endregion
 
-        #region Create Edit
+        #region Create Edit List
+        // public async Task<dynamic> GetListUsuario()
+        //{
+
+             
+        //}
 
 
         public async Task<Respuesta> CreateEditUsuario(Usuario pUsuario)
