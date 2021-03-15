@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-form-gestionar-usuarios',
@@ -26,6 +27,23 @@ export class FormGestionarUsuariosComponent implements OnInit {
     listaMunicipio: { nombre: string, codigo: string }[] = [
         { nombre: 'Susacón', codigo: '1' }
     ];
+    listaDependencia: { nombre: string, codigo: string }[] = [
+        { nombre: 'Administración', codigo: '1' },
+        { nombre: 'Técnica', codigo: '2' }
+    ];
+    listaGrupo: { nombre: string, codigo: string }[] = [
+        { nombre: 'Grupo 1', codigo: '1' },
+        { nombre: 'Grupo 2', codigo: '2' }
+    ];
+    listaRoles: { nombre: string, codigo: string }[] = [
+        { nombre: 'Supervisor', codigo: '1' },
+        { nombre: 'Interventor', codigo: '2' },
+        { nombre: 'Apoyo a la supervisión', codigo: '3' }
+    ];
+    listaContratos: { nombre: string, codigo: string }[] = [
+        { nombre: 'N801801', codigo: '1' },
+        { nombre: 'J208208', codigo: '2' }
+    ];
     editorStyle = {
         height: '50%'
     };
@@ -37,6 +55,10 @@ export class FormGestionarUsuariosComponent implements OnInit {
             [{ align: [] }],
         ]
     };
+
+    get roles() {
+        return this.formUsuario.get( 'roles' ) as FormArray;
+    }
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -85,6 +107,83 @@ export class FormGestionarUsuariosComponent implements OnInit {
                 roles: this.fb.array( [] )
             }
         );
+    }
+
+    async getRoles( listaRoles: any[] ) {
+        const rolesArray = [ ...listaRoles ];
+
+        if ( rolesArray.length > 0 ) {
+            if ( this.roles.length > 0 ) {
+                this.roles.controls.forEach( ( control, indexRol ) => {
+                    const index = rolesArray.findIndex( value => value.nombre === control.get( 'nombre' ).value );
+                    const rol = listaRoles.find( value => value.nombre === control.get( 'nombre' ).value );
+
+                    if ( index  !== -1 ) {
+                        rolesArray.splice( index, 1 );
+                    }
+                    
+                    if ( rol === undefined ) {
+                        this.roles.removeAt( indexRol );
+                        rolesArray.splice( index, 1 );
+                    }
+                } );
+            }
+
+            for ( const rol of rolesArray ) {
+
+                const listaContratos = () => {
+                    return new Promise( resolve => {
+                        setTimeout(() => {
+                            resolve( this.listaContratos )
+                        }, 500);
+                    } );
+                }
+                const contratos = await listaContratos();
+
+                this.roles.push( this.fb.group(
+                    {
+                        nombre: [ rol.nombre ],
+                        contratos: [ contratos, Validators.required ],
+                        contrato: [ null, Validators.required ]
+                    }
+                ) );
+            }
+        } else {
+            this.roles.clear();
+        }
+    }
+
+    deleteRol( index: number ) {
+        this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
+            .subscribe(
+                value => {
+                    if ( value === true ) {
+                        const listaRoles: any[] = [ ...this.formUsuario.get( 'rol' ).value ];
+                        const rolIndex = listaRoles.findIndex( value => value.nombre === this.roles.controls[ index ].get( 'nombre' ).value );
+                        listaRoles.splice( rolIndex, 1 );
+
+                        this.formUsuario.get( 'rol' ).setValue( listaRoles );
+                        this.roles.removeAt( index );
+                    }
+                }
+            );
+    }
+
+    openDialog(modalTitle: string, modalText: string) {
+        const dialogRef = this.dialog.open(ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle, modalText }
+        });
+    }
+
+    openDialogTrueFalse(modalTitle: string, modalText: string) {
+
+        const dialogRef = this.dialog.open(ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle, modalText, siNoBoton: true }
+        });
+
+        return dialogRef.afterClosed();
     }
 
     maxLength(e: any, n: number) {

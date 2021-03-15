@@ -673,12 +673,162 @@
                 </mat-card-title>
             </mat-card-header>
             <mat-card-content>
+                <div class="row">
+                    <div class="col-md-7">
+                      <div class="row">
+                        <div class="pr-1">
+                          <label    class="label-left"
+                                    style="margin-top: 1.8em;"
+                                    for="dependencia"
+                                    [class.color-secondaryColor]="( formUsuario.get('dependencia').invalid && formUsuario.get('dependencia').touched) || ( formUsuario.get('dependencia').invalid && esRegistroNuevo === false )">
+                                    Dependencia
+                          </label>
+                        </div>
+                        <div class="col d-flex">
+                            <mat-form-field appearance="fill" style="width: 91%;">
+                                <mat-select class="padding-left" formControlName="dependencia" required>
+                                  <mat-option *ngFor="let value of listaDependencia" [value]="value.codigo">
+                                      {{ value.nombre }}
+                                  </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <span class="icon-incompleto" style="margin-top: .5em;">
+                          <img
+                            class="icon-incompleto--img"
+                            src="assets/img/icon/incompleto.svg"
+                            alt="este campo es requerido"
+                            [matTooltipPosition]="'above'"
+                            matTooltip="Debe ingresar la información en el campo para continuar"
+                            matTooltipClass="info-tooltip"
+                            *ngIf="( formUsuario.get('dependencia').invalid && formUsuario.get('dependencia').touched ) || ( formUsuario.get('dependencia').invalid && esRegistroNuevo === false )"
+                          />
+                        </span>
+                      </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-7">
+                      <div class="row">
+                        <div class="pr-1">
+                          <label    class="label-left"
+                                    style="margin-top: 1.8em;"
+                                    for="grupo"
+                                    [class.color-secondaryColor]="( formUsuario.get('grupo').invalid && formUsuario.get('grupo').touched) || ( formUsuario.get('grupo').invalid && esRegistroNuevo === false )">
+                                    Grupo
+                          </label>
+                        </div>
+                        <div class="col d-flex">
+                            <mat-form-field appearance="fill" style="width: 91%;">
+                                <mat-select class="padding-left" formControlName="grupo" required>
+                                  <mat-option *ngFor="let value of listaGrupo" [value]="value.codigo">
+                                      {{ value.nombre }}
+                                  </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <span class="icon-incompleto" style="margin-top: .5em;">
+                          <img
+                            class="icon-incompleto--img"
+                            src="assets/img/icon/incompleto.svg"
+                            alt="este campo es requerido"
+                            [matTooltipPosition]="'above'"
+                            matTooltip="Debe ingresar la información en el campo para continuar"
+                            matTooltipClass="info-tooltip"
+                            *ngIf="( formUsuario.get('grupo').invalid && formUsuario.get('grupo').touched ) || ( formUsuario.get('grupo').invalid && esRegistroNuevo === false )"
+                          />
+                        </span>
+                      </div>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-left: .5em !important;">
+                    <div class="col-md-12">
+                      <div class="row">
+                        <div class="pr-1">
+                          <label    class="label-left"
+                                    style="margin-top: 1.8em;"
+                                    for="rol"
+                                    [class.color-secondaryColor]="( formUsuario.get('rol').invalid && formUsuario.get('rol').touched) || ( formUsuario.get('rol').invalid && esRegistroNuevo === false )">
+                                    Rol
+                          </label>
+                        </div>
+                        <div class="col d-flex">
+                            <mat-form-field appearance="fill" style="width: 96%;">
+                                <mat-select class="padding-left" multiple formControlName="rol" required (ngModelChange)="getRoles( $event )">
+                                  <mat-option *ngFor="let value of listaRoles" [value]="value">
+                                      {{ value.nombre }}
+                                  </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <span class="icon-incompleto" style="margin-top: .5em;">
+                          <img
+                            class="icon-incompleto--img"
+                            src="assets/img/icon/incompleto.svg"
+                            alt="este campo es requerido"
+                            [matTooltipPosition]="'above'"
+                            matTooltip="Debe ingresar la información en el campo para continuar"
+                            matTooltipClass="info-tooltip"
+                            *ngIf="( formUsuario.get('rol').invalid && formUsuario.get('rol').touched ) || ( formUsuario.get('rol').invalid && esRegistroNuevo === false )"
+                          />
+                        </span>
+                      </div>
+                    </div>
+                </div>
+                <section *ngIf="roles.length > 0">
+                    <div formArrayName="roles" *ngFor="let rol of roles.controls; index as i">
+                        <h3 class="colorMainColor" style="margin: .5em 0 0 .5em !important;"><b> {{ rol.get( 'nombre' ).value }} </b></h3>
+
+                        <div class="row" style="margin-left: .5em !important;">
+                            <div class="col-md-12">
+                                <div class="row" [formGroup]="rol">
+                                    <div class="pr-1">
+                                        <label  class="label-left"
+                                                style="margin-top: 1.8em;"
+                                                for="contrato"
+                                                [class.color-secondaryColor]="( rol.get('contrato').invalid && rol.get('contrato').touched) || ( rol.get('contrato').invalid && esRegistroNuevo === false )">
+                                                Asignar contratos
+                                        </label>
+                                    </div>
+                                    <div class="col d-flex">
+                                        <mat-form-field appearance="fill" style="width: 96%;">
+                                            <mat-select class="padding-left" multiple formControlName="contrato" required>
+                                                <mat-option *ngFor="let value of rol.get( 'contratos' ).value" [value]="value.codigo">
+                                                    {{ value.nombre }}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <span class="icon-incompleto" style="margin-top: .5em;">
+                                        <img
+                                          class="icon-incompleto--img"
+                                          src="assets/img/icon/incompleto.svg"
+                                          alt="este campo es requerido"
+                                          [matTooltipPosition]="'above'"
+                                          matTooltip="Debe ingresar la información en el campo para continuar"
+                                          matTooltipClass="info-tooltip"
+                                          *ngIf="( rol.get('contrato').invalid && rol.get('contrato').touched ) || ( rol.get('contrato').invalid && esRegistroNuevo === false )"
+                                        />
+                                    </span>
+                                </div>
+                                <div class="text-right" style="margin-right: 4em;">
+                                    <button mat-button color="warn" type="button" class="btn-eliminar" (click)="deleteRol( i )">
+                                        <img src="assets/img/icon/menos.svg">
+                                        Eliminar rol
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </mat-card-content>
         </mat-card>
     
         <div class="text-center mt-1em">
             <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="formUsuario.dirty === false">
-                <img src="assets/img/icon/guardar.svg">
+                <img [src]="esRegistroNuevo === true ? 'assets/img/icon/crear-usuario.svg' : 'assets/img/icon/guardar.svg'">
             </button>
         </div>
     </form>

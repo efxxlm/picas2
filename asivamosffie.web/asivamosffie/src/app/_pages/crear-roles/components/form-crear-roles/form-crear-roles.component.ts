@@ -41,7 +41,22 @@ export class FormCrearRolesComponent implements OnInit {
     crearFormulario() {
         return this.fb.group(
             {
-                nombreRol: [ null, Validators.required ]
+                nombreRol: [ null, Validators.required ],
+                registrosFaseInicio: this.fb.group(
+                    {
+                        registros: this.fb.array( [] )
+                    }
+                ),
+                registrosFaseSeguimiento: this.fb.group(
+                    {
+                        registros: this.fb.array( [] )
+                    }
+                ),
+                registrosFaseFinal: this.fb.group(
+                    {
+                        registros: this.fb.array( [] )
+                    }
+                )
             }
         );
     }

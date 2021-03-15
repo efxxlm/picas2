@@ -451,6 +451,11 @@ const routes: Routes = [
         path: 'gestionUsuarios',
         loadChildren: () => import( './_pages/gestionar-usuarios/gestionar-usuarios.module' )
           .then( module => module.GestionarUsuariosModule )
+      },
+      {
+        path: 'gestionParametricas',
+        loadChildren: () => import( './_pages/gestionar-parametricas/gestionar-parametricas.module' )
+          .then( module => module.GestionarParametricasModule )
       }
     ]
 

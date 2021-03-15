@@ -1,0 +1,118 @@
+<section class="container text-center mb-2em" *ngIf="parametricas.length > 0">
+    <div class="text-right">
+        <a routerLink="/gestionParametricas" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+
+    <h1 class="title-menu--h1"> Crear valores paramétrica </h1>
+
+    <form [formGroup]="formParametricas" (ngSubmit)="guardar()">
+        <mat-card class="shipping-card" align="left">
+            <mat-card-header class="header-card">
+                <mat-card-title class="header-card--text">
+                    Tipo de intervensión
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div formArrayName="parametricas" class="row" *ngFor="let parametrica of parametricas.controls; index as i" style="margin-left: 2em;">
+                    <h3 class="colorMainColor"
+                        style="margin: .5em 0 0 .5em !important;"
+                        [class.color-secondaryColor]="( parametrica.get('nombre').invalid && parametrica.get('nombre').touched) || ( parametrica.get('nombre').invalid )">
+                        <b> Valor {{ i + 1 }} </b>
+                    </h3>
+        
+                    <div class="col-md-12">
+                      <div class="row">
+                            <div class="pr-1">
+                                <label    class="label-left"
+                                          style="margin-top: .9em;"
+                                          for="nombre"
+                                          [class.color-secondaryColor]="( parametrica.get('nombre').invalid && parametrica.get('nombre').touched) || ( parametrica.get('nombre').invalid )">
+                                          Primer nombre
+                                </label>
+                            </div>
+                            <div class="col d-flex" [formGroup]="parametrica">
+                                <mat-form-field>
+                                    <input  matInput
+                                            type="text"
+                                            maxlength="60"
+                                            #nombre
+                                            formControlName="nombre"
+                                            style="width: 100%;"
+                                            required>
+                                </mat-form-field>
+                                <span   class="contador"
+                                        [matTooltipPosition]="'above'"
+                                        matTooltip="Campo alfanumérico"
+                                        matTooltipClass="info-tooltip">
+                                        {{ 60 - nombre.value.length }}
+                                </span>
+                            </div>
+                            <span class="icon-incompleto">
+                                <img
+                                  class="icon-incompleto--img"
+                                  src="assets/img/icon/incompleto.svg"
+                                  alt="este campo es requerido"
+                                  [matTooltipPosition]="'above'"
+                                  matTooltip="Debe ingresar la información en el campo para continuar"
+                                  matTooltipClass="info-tooltip"
+                                  *ngIf="( parametrica.get('nombre').invalid && parametrica.get('nombre').touched ) || ( parametrica.get('nombre').invalid )"
+                                />
+                            </span>
+                      </div>
+                      <div class="text-right" *ngIf="parametricas.controls.length === 1">
+                        <button mat-button
+                                color="warn"
+                                type="button"
+                                style="margin-right: 4.5em;"
+                                (click)="addParametrica()"
+                                class="btn-eliminar">
+                          <img src="assets/img/icon/mas.svg">
+                          Agregar otro valor
+                        </button>
+                    </div>
+                    <div class="text-right" *ngIf="parametricas.controls.length > 1">
+                        <button mat-button
+                                color="warn"
+                                type="button"
+                                style="margin-right: 4.5em;"
+                                *ngIf="i === 0"
+                                (click)="deleteParametrica( i )"
+                                class="btn-eliminar">
+                          <img src="assets/img/icon/menos.svg">
+                          Eliminar valor
+                        </button>
+
+                        <button mat-button
+                                color="warn"
+                                type="button"
+                                *ngIf="i > 0"
+                                (click)="deleteParametrica( i )"
+                                class="btn-eliminar">
+                          <img src="assets/img/icon/menos.svg">
+                          Eliminar valor
+                        </button>
+
+                        <button mat-button
+                                color="warn"
+                                type="button"
+                                class="btn-eliminar"
+                                style="margin-right: 4.5em;"
+                                (click)="addParametrica()"
+                                *ngIf="i > 0">
+                          <img src="assets/img/icon/mas.svg">
+                          Agregar otro valor
+                        </button>
+                    </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+        <div class="text-center mt-1em">
+            <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="formParametricas.dirty === false">
+                <img src="assets/img/icon/guardar.svg">
+            </button>
+        </div>
+    </form>
+</section>

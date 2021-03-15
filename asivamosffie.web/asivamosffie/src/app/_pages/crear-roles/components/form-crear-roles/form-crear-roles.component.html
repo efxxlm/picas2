@@ -55,11 +55,11 @@
             </mat-card-content>
         </mat-card>
 
-        <app-tabla-fase-inicio></app-tabla-fase-inicio>
+        <app-tabla-fase-inicio [esRegistroNuevo]="esRegistroNuevo" [formFaseInicio]="formRoles.get( 'registrosFaseInicio' )"></app-tabla-fase-inicio>
 
-        <app-tabla-fase-seguimiento></app-tabla-fase-seguimiento>
+        <app-tabla-fase-seguimiento [esRegistroNuevo]="esRegistroNuevo" [formFaseInicio]="formRoles.get( 'registrosFaseSeguimiento' )"></app-tabla-fase-seguimiento>
 
-        <app-tabla-fase-cierre></app-tabla-fase-cierre>
+        <app-tabla-fase-cierre [esRegistroNuevo]="esRegistroNuevo" [formFaseInicio]="formRoles.get( 'registrosFaseSeguimiento' )"></app-tabla-fase-cierre>
 
         <div class="text-center mt-1em">
             <button mat-button
