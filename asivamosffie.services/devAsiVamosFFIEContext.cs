@@ -227,9 +227,11 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VRequisitosTecnicosPreconstruccion> VRequisitosTecnicosPreconstruccion { get; set; }
         public virtual DbSet<VSesionParticipante> VSesionParticipante { get; set; }
         public virtual DbSet<VSolicitudPago> VSolicitudPago { get; set; }
+        public virtual DbSet<VUsuariosRoles> VUsuariosRoles { get; set; }
         public virtual DbSet<VValidarSeguimientoSemanal> VValidarSeguimientoSemanal { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -7903,6 +7905,52 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.TipoSolicitudCodigo)
                     .IsRequired()
                     .HasMaxLength(2)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VUsuariosRoles>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_Usuarios_Roles");
+
+                entity.Property(e => e.Email)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.NumeroIdentificacion)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PrimerApellido)
+                    .IsRequired()
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PrimerNombre)
+                    .IsRequired()
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ProcedenciaCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Rol)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SegundoApellido)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SegundoNombre)
+                    .IsRequired()
+                    .HasMaxLength(300)
                     .IsUnicode(false);
             });
 

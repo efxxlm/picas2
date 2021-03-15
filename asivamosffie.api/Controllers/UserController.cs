@@ -34,8 +34,8 @@ namespace asivamosffie.api.Controllers
             try
             {
                 userparam.Ip = HttpContext.Connection.RemoteIpAddress.ToString();
-             //   userparam.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
-                Task<Respuesta> result = _user.RecoverPasswordByEmailAsync(userparam, _settings.Value.Dominio ,_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                //   userparam.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+                Task<Respuesta> result = _user.RecoverPasswordByEmailAsync(userparam, _settings.Value.Dominio, _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 Respuesta respuesta = await result;
                 return Ok(respuesta);
 
@@ -45,7 +45,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-         
+
         [Route("ChangePasswordUser")]
         [HttpPost]
         public async Task<IActionResult> ChangePasswordUser([FromQuery] string Oldpwd, [FromQuery] string Newpwd)
@@ -84,7 +84,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                var userId = HttpContext.User.FindFirst("UserId")==null?"SESIÓN CERRADA":HttpContext.User.FindFirst("UserId").Value;
+                var userId = HttpContext.User.FindFirst("UserId") == null ? "SESIÓN CERRADA" : HttpContext.User.FindFirst("UserId").Value;
                 var result = await _user.CloseSesion(Convert.ToInt32(userId));
                 return Ok(result);
             }
@@ -104,7 +104,21 @@ namespace asivamosffie.api.Controllers
             var result = await _user.CreateEditUsuario(pUsuario);
             return result;
         }
- 
+
+        [HttpGet]
+        [Route("GetListUsuario")]
+        public Task<List<VUsuariosRoles>> GetListUsuario()
+        {
+            var result = _user.GetListUsuario();
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetUsuario")]
+        public Task<Usuario> GetUsuario([FromQuery] int pUsuarioId)
+        {
+            return _user.GetUsuario(pUsuarioId);
+        }
+         
     }
 }
-  

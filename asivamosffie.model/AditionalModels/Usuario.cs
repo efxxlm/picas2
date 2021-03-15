@@ -9,7 +9,9 @@ namespace asivamosffie.model.Models
     {
         [NotMapped]
         public int PerfilId { get; set; }
-     
+
+        [NotMapped]
+        public Perfil Perfil { get; set; }
     }
 
 }

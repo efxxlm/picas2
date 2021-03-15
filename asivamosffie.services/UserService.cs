@@ -4,6 +4,7 @@ using asivamosffie.services.Exceptions;
 using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,6 +53,7 @@ namespace asivamosffie.services
                         usuarioSolicito.CambiarContrasena = true;
                         usuarioSolicito.Bloqueado = false;
                         usuarioSolicito.IntentosFallidos = 0;
+                        usuarioSolicito.FechaCambioPassword = DateTime.Now;
                         usuarioSolicito.Ip = pUsuario.Ip;
                         //Guardar Usuario
                         await UpdateUser(usuarioSolicito);
@@ -194,12 +196,17 @@ namespace asivamosffie.services
         #endregion
 
         #region Create Edit List
-        // public async Task<dynamic> GetListUsuario()
-        //{
+        public async Task<List<VUsuariosRoles>> GetListUsuario()
+        {
+            return await _context.VUsuariosRoles.OrderByDescending(ur => ur.UsuarioId).ToListAsync();
+        }
 
-             
-        //}
-
+        public async Task<Usuario> GetUsuario(int pUsuarioId)
+        {
+            Usuario usuario = await _context.Usuario.FindAsync(pUsuarioId);
+            usuario.Perfil = _context.UsuarioPerfil.Where(u => u.UsuarioId == pUsuarioId).Include(p => p.Perfil).Select(p => p.Perfil).FirstOrDefault();
+            return usuario;
+        }
 
         public async Task<Respuesta> CreateEditUsuario(Usuario pUsuario)
         {
