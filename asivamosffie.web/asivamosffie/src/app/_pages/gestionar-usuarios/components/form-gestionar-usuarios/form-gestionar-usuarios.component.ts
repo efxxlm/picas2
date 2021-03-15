@@ -101,7 +101,6 @@ export class FormGestionarUsuariosComponent implements OnInit {
                                                                     getUsuario => {
                                                                         console.log( getUsuario );
 
-                                                                        this.usuarioId = getUsuario.usuarioId;
                                                                         this.formUsuario.setValue(
                                                                             {
                                                                                 procedencia: getUsuario.procedenciaCodigo !== undefined ? this.listaProcedencia.find( procedencia => procedencia.codigo === getUsuario.procedenciaCodigo ).codigo : null,
