@@ -311,6 +311,8 @@
 
         public const string Create_Edit_Defensa_Judicial_Seguimiento = "223";
         public const string Create_Edit_Menu_Perfil = "224";
-        public const string Activar_Desactivar_Rol = "225";
+        public const string Activar_Desactivar_Rol = "225"; 
+
+        public const string Crear_Editar_Parametrica = "227";
     }
 }
