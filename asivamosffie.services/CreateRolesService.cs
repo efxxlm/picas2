@@ -27,10 +27,29 @@ namespace asivamosffie.services
         private readonly devAsiVamosFFIEContext _context;
         public readonly IConverter _converter;
 
+        public async Task<dynamic> GetMenu()
+        {
+            return await _context.Menu.Select(m =>
+            new
+            {
+                m.MenuId,
+                m.Nombre
+            }).ToListAsync();
+        }
+
         public CreateRolesService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
             _commonService = commonService;
             _context = context;
+        }
+
+        public async Task<Perfil> GetPerfilByPerfilId(int pPerfilId)
+        {
+            return await
+                _context.Perfil
+                .Where(p => p.PerfilId == pPerfilId)
+                .Include(mp => mp.MenuPerfil).FirstOrDefaultAsync();
+
         }
 
         public async Task<Respuesta> CreateEditRolesPermisos(Perfil pPerfil)
@@ -116,6 +135,87 @@ namespace asivamosffie.services
                 })
                 .OrderByDescending(p => p.PerfilId)
                 .ToListAsync();
+        }
+
+        public async Task<Respuesta> ActivateDeactivatePerfil(Perfil pPerfil)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Activar_Desactivar_Rol, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                List<Usuario> ListUsuario = _context.UsuarioPerfil
+                                                                .Where(r => r.PerfilId == pPerfil.PerfilId)
+                                                                .Include(u => u.Usuario)
+                                                                .Select(u => u.Usuario)
+                                                                .ToList();
+
+                _context.Set<Perfil>()
+                        .Where(p => p.PerfilId == pPerfil.PerfilId)
+                        .Update(u => new Perfil
+                        {
+                            Eliminado = pPerfil.Eliminado,
+                            UsuarioModificacion = pPerfil.UsuarioCreacion,
+                            FechaModificacion = DateTime.Now
+                        });
+
+                foreach (var User in ListUsuario)
+                {
+                    _context.Set<Usuario>()
+                        .Where(u => u.UsuarioId == User.UsuarioId)
+                        .Update(u => new Usuario
+                        {
+                            Bloqueado = pPerfil.Eliminado,
+                            FechaModificacion = DateTime.Now,
+                            UsuarioModificacion = pPerfil.UsuarioCreacion,
+                        });
+                }
+
+                await SendEmailWhenDesactivateRol(pPerfil);
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Crear_Roles, GeneralCodes.OperacionExitosa, idAccion, pPerfil.UsuarioCreacion, "CREAR EDITAR ROLES Y PERMISOS")
+                };
+            }
+
+            catch (Exception e)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = GeneralCodes.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Crear_Roles, GeneralCodes.Error, idAccion, pPerfil.UsuarioCreacion, e.InnerException.ToString())
+                };
+            }
+
+
+        }
+
+        private async Task<bool> SendEmailWhenDesactivateRol(Perfil pPerfil)
+        {
+            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.MensajeDesactivarRol_6_3));
+            template.Contenido = ReplaceVariablesPerfil(template.Contenido, pPerfil.Nombre);
+
+            List<string> ListEmails = _context.UsuarioPerfil
+                .Include(u => u.Usuario)
+                .Where(r => r.PerfilId == pPerfil.PerfilId)
+                .Select(r => r.Usuario.Email)
+                                            .ToList();
+
+            return _commonService.EnviarCorreo(ListEmails, template);
+        }
+
+        private string ReplaceVariablesPerfil(string template, string pNombreRol)
+        {
+            template = template
+                      .Replace("[NOMBRE_ROL]", pNombreRol);
+            return template;
         }
     }
 }

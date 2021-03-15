@@ -12,6 +12,8 @@ namespace asivamosffie.services.Interfaces
     {
         Task<VPermisosMenus> TienePermisos(int idPerfil, string pRuta);
 
+        bool EnviarCorreo(List<string> pListCorreo, Template pTemplate);
+
         bool EnviarCorreo(List<EnumeratorPerfil> ListPerfilesCorreo, Template template);
 
         Task<dynamic> GetListMenu();

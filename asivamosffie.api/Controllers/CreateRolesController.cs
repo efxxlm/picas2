@@ -15,7 +15,7 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
- 
+
     public class CreateRolesController : ControllerBase
     {
         private readonly IOptions<AppSettings> _settings;
@@ -24,6 +24,26 @@ namespace asivamosffie.api.Controllers
         {
             _createRolesService = createRolesService;
             _settings = settings;
+        }
+
+        [HttpPost]
+        [Route("ActivateDeactivatePerfil")]
+        public async Task<IActionResult> ActivateDeactivatePerfil([FromBody] Perfil pPerfil)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pPerfil.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+
+                respuesta = await _createRolesService.ActivateDeactivatePerfil(pPerfil);
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
         }
 
         [HttpPost]
@@ -43,6 +63,20 @@ namespace asivamosffie.api.Controllers
             {
                 respuesta.Data = ex.InnerException.ToString();
                 return BadRequest(respuesta);
+            }
+        }
+
+        [HttpGet]
+        [Route("GetMenu")]
+        public async Task<dynamic> GetMenu()
+        {
+            try
+            {
+                return await _createRolesService.GetMenu();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
 

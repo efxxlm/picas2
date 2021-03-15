@@ -86,6 +86,40 @@ namespace asivamosffie.services
             return true;
         }
 
+        public bool EnviarCorreo(List<string> pListCorreo, Template pTemplate)
+        {
+            try
+            {
+                pTemplate.Contenido = pTemplate.Contenido
+                                                   .Replace("_LinkF_", _mailSettings.DominioFront)
+                                                   .Replace("[URL]", _mailSettings.DominioFront);
+                 
+                MailMessage mail = new MailMessage();
+                SmtpClient SmtpServer = new SmtpClient(_mailSettings.MailServer);
+
+                mail.From = new MailAddress(_mailSettings.Sender);
+
+                foreach (var email in pListCorreo)
+                {
+                    mail.To.Add(email);
+                }
+
+                mail.Subject = pTemplate.Asunto;
+                mail.IsBodyHtml = true;
+
+                mail.Body = pTemplate.Contenido;
+                SmtpServer.Port = _mailSettings.MailPort;
+                SmtpServer.Credentials = new NetworkCredential(_mailSettings.Sender, _mailSettings.Password);
+                SmtpServer.EnableSsl = false;
+                SmtpServer.Send(mail);
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
+        }
+
         public async Task<dynamic> GetListMenu()
         {
             return await _context.Menu.Select(m => new

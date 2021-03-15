@@ -74,13 +74,21 @@ namespace asivamosffie.services.Helpers.Enumerator
         //4.1.21
         Alerta_4_1_21 = 85,
 
-        //6.4 Lista chequeo
-        ListaChequeoDesactivada = 86,
+
 
         //4.2.1
         FechaVencimientoProximaActuacionJuridica_4_2_1 = 88,
         Participacion_Insumo_Realizar_Actuación_4_2_1 = 91,
         //4.4.1
         Registrar_Actuaciones_Controversias_Contractuales_4_4_1 = 93,
+
+
+        //Transversales
+        //6.4 Lista chequeo
+        ListaChequeoDesactivada = 86,
+        //6.3
+        MensajeDesactivarRol_6_3 = 94
+
+
     }
 }

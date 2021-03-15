@@ -11,6 +11,10 @@ namespace asivamosffie.services.Interfaces
 {
     public interface ICreateRolesService
     {
+        Task<dynamic> GetMenu();
+
+        Task<Respuesta> ActivateDeactivatePerfil(Perfil pPerfil);
+
         Task<dynamic> GetListPerfil();
 
         Task<Respuesta> CreateEditRolesPermisos(Perfil pPerfil);
