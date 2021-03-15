@@ -9,7 +9,8 @@
             <p><strong>Número de contrato:</strong> {{ contrato.numeroContrato }} </p>
             <p><strong>Número de radicado SAC:</strong> {{ addressForm.get( 'numeroRadicadoSAC' ).value }} </p>
             <p><strong>Número de factura:</strong> {{ addressForm.get( 'numeroFactura' ).value }} </p>
-            <p><strong>Valor facturado:</strong> ${{ addressForm.get( 'valorFacturado' ).value | currency:' ':'symbol-narrow':'.0-0' }} </p>
+            <p><strong>Valor facturado:</strong> ${{ addressForm.get( 'valorFacturado' ).value | currency:'
+                ':'symbol-narrow':'.0-0' }} </p>
             <p><strong>Tipo de pago:</strong> {{ addressForm.get( 'tipoPago' ).value.nombre }} </p>
         </mat-card-content>
     </mat-card>
@@ -27,21 +28,37 @@
                     <div class="col-md-8">
                         <div class="row">
                             <div class="pr-1">
-                                <label class="label-left" for="numeroContrato">Número de contrato</label>
+                                <label class="label-left" for="numeroContrato" [ngClass]="{
+                                    'color-secondaryColor':
+                                      (addressForm.get('numeroContrato').invalid && addressForm.get('numeroContrato').touched) ||
+                                      (addressForm.get('numeroContrato').invalid && estaEditando)
+                                  }">Número de contrato</label>
                             </div>
                             <div class="col d-flex">
                                 <mat-form-field class="full-width">
-                                    <input matInput #numeroContrato="matAutocompleteTrigger" type="text" maxlength="100" required [matAutocomplete]="auto" formControlName="numeroContrato">
+                                    <input matInput #numeroContrato="matAutocompleteTrigger" type="text" maxlength="100"
+                                        required [matAutocomplete]="auto" formControlName="numeroContrato">
                                     <mat-autocomplete #auto="matAutocomplete">
-                                        <mat-option *ngFor="let contrato of contratosArray" [value]="contrato.numeroContrato" (click)="seleccionAutocomplete(contrato)">
+                                        <mat-option *ngFor="let contrato of contratosArray"
+                                            [value]="contrato.numeroContrato" (click)="seleccionAutocomplete(contrato)">
                                             {{ contrato.numeroContrato }}
                                         </mat-option>
                                     </mat-autocomplete>
                                 </mat-form-field>
-                                <button mat-button color="primary" class="busqueda--img" type="button" (click)="getContratos( numeroContrato ); $event.stopPropagation()">
+                                <button mat-button color="primary" class="busqueda--img" type="button"
+                                    (click)="getContratos( numeroContrato ); $event.stopPropagation()">
                                     <img src="assets/img/icon/lupa.svg" alt="Buscar" style="width: 20px; height: 20px;">
                                 </button>
                             </div>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                                    (addressForm.get('numeroContrato').invalid && addressForm.get('numeroContrato').touched) ||
+                                    (addressForm.get('numeroContrato').invalid && estaEditando)
+                                  " />
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -49,7 +66,12 @@
                     <div class="col-md-8">
                         <div class="row">
                             <div class="pr-1">
-                                <label for="numeroRadicadoSAC" class="label-left">Número de radicado SAC</label>
+                                <label for="numeroRadicadoSAC" class="label-left"
+                                [ngClass]="{
+                                    'color-secondaryColor':
+                                      (addressForm.get('numeroRadicadoSAC').invalid && addressForm.get('numeroRadicadoSAC').touched) ||
+                                      (addressForm.get('numeroRadicadoSAC').invalid && estaEditando)
+                                  }">Número de radicado SAC</label>
                             </div>
                             <div class="col d-flex">
                                 <mat-form-field class="full-width">
@@ -58,6 +80,15 @@
                                 </mat-form-field>
                                 <span class="contador">{{20 - numeroRadicadoSAC.value.length}}</span>
                             </div>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                                    (addressForm.get('numeroRadicadoSAC').invalid && addressForm.get('numeroRadicadoSAC').touched) ||
+                                    (addressForm.get('numeroRadicadoSAC').invalid && estaEditando)
+                                  " />
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -65,7 +96,12 @@
                     <div class="col-md-8">
                         <div class="row">
                             <div class="pr-1">
-                                <label for="numeroFactura" class="label-left">Número de factura</label>
+                                <label for="numeroFactura" class="label-left"
+                                [ngClass]="{
+                                    'color-secondaryColor':
+                                      (addressForm.get('numeroFactura').invalid && addressForm.get('numeroFactura').touched) ||
+                                      (addressForm.get('numeroFactura').invalid && estaEditando)
+                                  }">Número de factura</label>
                             </div>
                             <div class="col d-flex">
                                 <mat-form-field class="full-width">
@@ -74,6 +110,15 @@
                                 </mat-form-field>
                                 <span class="contador">{{20 - numeroFactura.value.length}}</span>
                             </div>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                                    (addressForm.get('numeroFactura').invalid && addressForm.get('numeroFactura').touched) ||
+                                    (addressForm.get('numeroFactura').invalid && estaEditando)
+                                  " />
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -81,7 +126,12 @@
                     <div class="col-md-8">
                         <div class="row">
                             <div class="pr-1">
-                                <label class="label-left" for="valorFacturado">
+                                <label class="label-left" for="valorFacturado"
+                                [ngClass]="{
+                                    'color-secondaryColor':
+                                      (addressForm.get('valorFacturado').invalid && addressForm.get('valorFacturado').touched) ||
+                                      (addressForm.get('valorFacturado').invalid && estaEditando)
+                                  }">
                                     Valor facturado
                                 </label>
                             </div>
@@ -95,6 +145,15 @@
                                 <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
                                     matTooltipClass="info-tooltip">{{20 - valorFacturado.value.length}}</span>
                             </div>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                                    (addressForm.get('valorFacturado').invalid && addressForm.get('valorFacturado').touched) ||
+                                    (addressForm.get('valorFacturado').invalid && estaEditando)
+                                  " />
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -102,7 +161,12 @@
                     <div class="col-md-12">
                         <div class="row">
                             <div class="pr-1">
-                                <label class="label-left" for="tipoPago">Tipo de pago</label>
+                                <label class="label-left" for="tipoPago"
+                                [ngClass]="{
+                                    'color-secondaryColor':
+                                      (addressForm.get('tipoPago').invalid && addressForm.get('tipoPago').touched) ||
+                                      (addressForm.get('tipoPago').invalid && estaEditando)
+                                  }">Tipo de pago</label>
                             </div>
                             <div class="col">
                                 <mat-form-field class="select-width">
@@ -113,13 +177,23 @@
                                     </mat-select>
                                 </mat-form-field>
                             </div>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                                    (addressForm.get('tipoPago').invalid && addressForm.get('tipoPago').touched) ||
+                                    (addressForm.get('tipoPago').invalid && estaEditando)
+                                  " />
+                            </span>
                         </div>
                     </div>
                 </div>
             </mat-card-content>
         </mat-card>
         <div class="text-center mb-2em">
-            <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="addressForm.get( 'numeroContrato' ).dirty === false">
+            <button mat-button color="warn" class="btn-guardar" type="submit"
+                [disabled]="addressForm.get( 'numeroContrato' ).dirty === false">
                 <img src="assets/img/icon/guardar.svg" alt="Regresar">
             </button>
         </div>

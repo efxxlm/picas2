@@ -51,7 +51,7 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
     solicitudPagoFaseCriterioProyecto: any;
     solicitudPagoCargarFormaPago: any;
     solicitudPagoFase: any;
-
+    estaEditando = false;
     //Get proyectos
     get projects() {
         return this.formProject.get( 'projects' ) as FormArray;
@@ -85,6 +85,8 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
                                         const criteriosSeleccionados = [];
                                         let criteriosDiligenciados = [];
                                         this.listaCriterios = criterios;
+                                        this.estaEditando = true;
+                                        this.projects.markAllAsTouched();
                                         if ( proyectos[1].length > 1 ) {
                                             this.esMultiProyecto = true;
                                             this.solicitudPagoFaseCriterio.forEach( criterioValue => {
@@ -409,6 +411,8 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
     }
 
     guardar() {
+        this.estaEditando = true;
+        this.projects.markAllAsTouched();
         const proyectos = this.projects.controls.filter( control => control.value.check === true );
         const setProyectos = [];
         if ( proyectos.length > 0 ) {

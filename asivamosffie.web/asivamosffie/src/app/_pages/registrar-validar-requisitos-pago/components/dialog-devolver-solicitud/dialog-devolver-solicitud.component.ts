@@ -16,7 +16,7 @@ export class DialogDevolverSolicitudComponent implements OnInit {
       fechaRadicacionSAC: [null, Validators.required],
       numeroRadicacionSAC: [null, Validators.required]
     });
-
+    estaEditando = false;
     constructor(
         private fb: FormBuilder,
         private dialog: MatDialog,
@@ -44,7 +44,7 @@ export class DialogDevolverSolicitudComponent implements OnInit {
     }
 
     onSubmit() {
-
+      this.estaEditando = true;
       const pSolicitudPago = {
         solicitudPagoId: this.data.registro.solicitudPagoId,
         estadoCodigo: this.data.solicitudDevueltaEquipoFacturacion,

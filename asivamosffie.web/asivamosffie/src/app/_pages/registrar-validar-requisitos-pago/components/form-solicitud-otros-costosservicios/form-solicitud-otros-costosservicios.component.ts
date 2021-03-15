@@ -31,7 +31,7 @@ export class FormSolicitudOtrosCostosserviciosComponent implements OnInit {
     contratosArray = [];
     tipoPagoArray: Dominio[] = [];
     solicitudPagosOtrosCostosServiciosId = 0;
-
+    estaEditando = false;
     constructor(
         private fb: FormBuilder,
         private commonSvc: CommonService,
@@ -46,6 +46,8 @@ export class FormSolicitudOtrosCostosserviciosComponent implements OnInit {
             .subscribe( response => {
                 this.tipoPagoArray = response;
                 if ( this.solicitudPago !== undefined ) {
+                    this.estaEditando = true;
+                    this.addressForm.markAllAsTouched();
                     this.solicitudPagoId = this.solicitudPago.solicitudPagoId;
                     this.contratoId = this.contrato.contratoId;
                     const solicitudPagoOtrosCostosServicios = this.solicitudPago.solicitudPagoOtrosCostosServicios[0];
@@ -98,6 +100,8 @@ export class FormSolicitudOtrosCostosserviciosComponent implements OnInit {
     }
 
     onSubmit() {
+        this.estaEditando = true;
+        this.addressForm.markAllAsTouched();
         const pSolicitudPago = {
             solicitudPagoId: this.solicitudPagoId,
             tipoSolicitudCodigo: this.tipoSolicitud,

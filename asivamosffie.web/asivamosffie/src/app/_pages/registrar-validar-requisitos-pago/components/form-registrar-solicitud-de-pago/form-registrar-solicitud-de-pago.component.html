@@ -41,7 +41,12 @@
                     <div class="col-md-8">
                         <div class="row">
                             <div class="pr-1">
-                                <label class="label-left" for="fechaSolicitud">Fecha de solicitud</label>
+                                <label class="label-left" for="fechaSolicitud"               
+                                [ngClass]="{
+                                    'color-secondaryColor':
+                                      (addressForm.get('fechaSolicitud').invalid && addressForm.get('fechaSolicitud').touched) ||
+                                      (addressForm.get('fechaSolicitud').invalid && estaEditando)
+                                  }">Fecha de solicitud</label>
                             </div>
                             <div class="col d-flex align-items-center">
                                 <mat-form-field class="example-full-width">
@@ -54,6 +59,20 @@
                                     <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
                                 </button>
                             </div>
+                            <span class="icon-incompleto">
+                                <img
+                                  class="icon-incompleto--img"
+                                  src="assets/img/icon/incompleto.svg"
+                                  alt="este campo es requerido"
+                                  [matTooltipPosition]="'above'"
+                                  matTooltip="Debe ingresar la información en el campo para continuar"
+                                  matTooltipClass="info-tooltip"
+                                  *ngIf="
+                                    (addressForm.get('fechaSolicitud').invalid && addressForm.get('fechaSolicitud').touched) ||
+                                    (addressForm.get('fechaSolicitud').invalid && estaEditando)
+                                  "
+                                />
+                              </span>
                         </div>
                     </div>
                 </div>
@@ -61,7 +80,12 @@
                     <div class="col-md-8">
                         <div class="row">
                             <div class="pr-1">
-                                <label for="numeroRadicado" class="label-left">Número de radicado SAC</label>
+                                <label for="numeroRadicado" class="label-left" 
+                                [ngClass]="{
+                                    'color-secondaryColor':
+                                      (addressForm.get('numeroRadicado').invalid && addressForm.get('numeroRadicado').touched) ||
+                                      (addressForm.get('numeroRadicado').invalid && estaEditando)
+                                  }">Número de radicado SAC</label>
                             </div>
                             <div class="col d-flex">
                                 <mat-form-field class="full-width">
@@ -70,6 +94,20 @@
                                 </mat-form-field>
                                 <span class="contador">{{10 - numeroRadicado.value.length}}</span>
                             </div>
+                            <span class="icon-incompleto">
+                                <img
+                                  class="icon-incompleto--img"
+                                  src="assets/img/icon/incompleto.svg"
+                                  alt="este campo es requerido"
+                                  [matTooltipPosition]="'above'"
+                                  matTooltip="Debe ingresar la información en el campo para continuar"
+                                  matTooltipClass="info-tooltip"
+                                  *ngIf="
+                                    (addressForm.get('numeroRadicado').invalid && addressForm.get('numeroRadicado').touched) ||
+                                    (addressForm.get('numeroRadicado').invalid && estaEditando)
+                                  "
+                                />
+                              </span>
                         </div>
                     </div>
                 </div>
@@ -77,7 +115,12 @@
                     <div class="col-md-8">
                         <div class="row">
                             <div class="pr-1">
-                                <label class="label-left" for="faseContrato">Fase del contrato</label>
+                                <label class="label-left" for="faseContrato"
+                                [ngClass]="{
+                                    'color-secondaryColor':
+                                      (addressForm.get('faseContrato').invalid && addressForm.get('faseContrato').touched) ||
+                                      (addressForm.get('faseContrato').invalid && estaEditando)
+                                  }">Fase del contrato</label>
                             </div>
                             <div class="col">
                                 <mat-form-field class="select-width">
@@ -88,6 +131,20 @@
                                     </mat-select>
                                 </mat-form-field>
                             </div>
+                            <span class="icon-incompleto">
+                                <img
+                                  class="icon-incompleto--img"
+                                  src="assets/img/icon/incompleto.svg"
+                                  alt="este campo es requerido"
+                                  [matTooltipPosition]="'above'"
+                                  matTooltip="Debe ingresar la información en el campo para continuar"
+                                  matTooltipClass="info-tooltip"
+                                  *ngIf="
+                                    (addressForm.get('faseContrato').invalid && addressForm.get('faseContrato').touched) ||
+                                    (addressForm.get('faseContrato').invalid && estaEditando)
+                                  "
+                                />
+                              </span>
                         </div>
                     </div>
                 </div>

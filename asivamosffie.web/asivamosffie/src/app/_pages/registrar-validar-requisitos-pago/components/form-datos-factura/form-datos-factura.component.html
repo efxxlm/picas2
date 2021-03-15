@@ -11,7 +11,12 @@
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
-              <label for="numeroFactura" class="label-left">Número de factura</label>
+              <label for="numeroFactura" class="label-left"
+              [ngClass]="{
+                'color-secondaryColor':
+                  (addressForm.get('numeroFactura').invalid && addressForm.get('numeroFactura').touched) ||
+                  (addressForm.get('numeroFactura').invalid && estaEditando)
+              }">Número de factura</label>
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
@@ -19,6 +24,20 @@
               </mat-form-field>
               <span class="contador">{{10 - numeroFactura.value.length}}</span>
             </div>
+            <span class="icon-incompleto">
+              <img
+                class="icon-incompleto--img"
+                src="assets/img/icon/incompleto.svg"
+                alt="este campo es requerido"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
+                *ngIf="
+                  (addressForm.get('numeroFactura').invalid && addressForm.get('numeroFactura').touched) ||
+                  (addressForm.get('numeroFactura').invalid && estaEditando)
+                "
+              />
+            </span>
           </div>
         </div>
       </div>
@@ -26,7 +45,12 @@
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
-              <label class="label-left" for="fechaFactura">Fecha de factura</label>
+              <label class="label-left" for="fechaFactura"
+              [ngClass]="{
+                'color-secondaryColor':
+                  (addressForm.get('fechaFactura').invalid && addressForm.get('fechaFactura').touched) ||
+                  (addressForm.get('fechaFactura').invalid && estaEditando)
+              }">Fecha de factura</label>
             </div>
             <div class="col d-flex align-items-center">
               <mat-form-field class="example-full-width">
@@ -38,6 +62,20 @@
                 <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
               </button>
             </div>
+            <span class="icon-incompleto">
+              <img
+                class="icon-incompleto--img"
+                src="assets/img/icon/incompleto.svg"
+                alt="este campo es requerido"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
+                *ngIf="
+                  (addressForm.get('fechaFactura').invalid && addressForm.get('fechaFactura').touched) ||
+                  (addressForm.get('fechaFactura').invalid && estaEditando)
+                "
+              />
+            </span>
           </div>
         </div>
       </div>

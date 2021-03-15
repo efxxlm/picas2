@@ -61,7 +61,7 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
         amortizacionRegistroCompleto: false,
         detalleFacturaRegistroCompleto: false
     }
-    
+    estaEditando = false;
 
     constructor(
         private fb: FormBuilder,
@@ -115,7 +115,8 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                                     faseSeleccionada = fase[0];
                                 }
                             }
-
+                            this.estaEditando = true;
+                            this.addressForm.markAllAsTouched();
                             this.addressForm.setValue(
                                 {
                                     fechaSolicitud: this.solicitudPagoRegistrarSolicitudPago.fechaSolicitud !== undefined ? new Date( this.solicitudPagoRegistrarSolicitudPago.fechaSolicitud ) : null,
@@ -417,6 +418,8 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
     }
 
     guardar() {
+        this.estaEditando = true;
+        this.addressForm.markAllAsTouched();
         let tieneFasePreConstruccion = false;
         let tieneFaseConstruccion = false;
         const faseSeleccionada: Dominio = this.addressForm.get( 'faseContrato' ).value;

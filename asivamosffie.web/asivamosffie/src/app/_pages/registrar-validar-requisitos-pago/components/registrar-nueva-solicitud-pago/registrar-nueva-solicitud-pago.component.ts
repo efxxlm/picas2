@@ -53,7 +53,7 @@ export class RegistrarNuevaSolicitudPagoComponent implements OnInit {
     modalidadContratoArray: Dominio[] = [];
     contratosArray: any[] = [];
     contrato: any;
-
+    estaEditando = false;
     constructor(
         private fb: FormBuilder,
         private dialog: MatDialog,

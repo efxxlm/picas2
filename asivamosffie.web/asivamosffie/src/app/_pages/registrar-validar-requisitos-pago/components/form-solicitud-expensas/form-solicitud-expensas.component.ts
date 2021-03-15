@@ -33,7 +33,7 @@ export class FormSolicitudExpensasComponent implements OnInit {
     conceptoPagoCriterioArray: Dominio[] = [];
     solicitudPagoExpensasId = 0;
     solicitudPagoId = 0;
-
+    estaEditando = false;
     constructor(
         private fb: FormBuilder,
         private dialog: MatDialog,
@@ -51,6 +51,8 @@ export class FormSolicitudExpensasComponent implements OnInit {
                     .subscribe( conceptoPago => {
                         this.conceptoPagoCriterioArray = conceptoPago;
                         if ( this.solicitudPago !== undefined ) {
+                            this.estaEditando = true;
+                            this.addressForm.markAllAsTouched();
                             this.solicitudPagoId = this.solicitudPago.solicitudPagoId;
                             const solicitudPagoExpensas = this.solicitudPago.solicitudPagoExpensas[0];
                             this.solicitudPagoExpensasId = solicitudPagoExpensas.solicitudPagoExpensasId;
@@ -110,6 +112,8 @@ export class FormSolicitudExpensasComponent implements OnInit {
     }
 
     onSubmit() {
+        this.estaEditando = true;
+        this.addressForm.markAllAsTouched();
         console.log( this.addressForm.value );
         const pSolicitudPago =  {
             solicitudPagoId: this.solicitudPagoId,

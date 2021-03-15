@@ -19,6 +19,7 @@ export class FormDatosFacturaComponent implements OnInit {
     { name: '2x1000', value: '1' },
     { name: '4x1000', value: '2' },
   ];
+  estaEditando = false;
   constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
@@ -56,6 +57,6 @@ export class FormDatosFacturaComponent implements OnInit {
     return contadorConcurrencias;
   }
   onSubmit() {
-
+    this.estaEditando = true;
   }
 }

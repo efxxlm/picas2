@@ -15,7 +15,11 @@
             <div class="col-md-7">
                 <div class="row">
                     <div class="pr-1">
-                        <label class="label-left" for="tipoSolicitud">Tipo de solicitud</label>
+                        <label class="label-left" for="tipoSolicitud" [ngClass]="{
+                            'color-secondaryColor':
+                              (addressForm.get('tipoSolicitud').invalid && addressForm.get('tipoSolicitud').touched) ||
+                              (addressForm.get('tipoSolicitud').invalid && estaEditando)
+                          }">Tipo de solicitud</label>
                     </div>
                     <div class="col">
                         <mat-form-field class="select-width">
@@ -26,11 +30,25 @@
                             </mat-select>
                         </mat-form-field>
                     </div>
+                    <span class="icon-incompleto">
+                        <img
+                          class="icon-incompleto--img"
+                          src="assets/img/icon/incompleto.svg"
+                          alt="este campo es requerido"
+                          [matTooltipPosition]="'above'"
+                          matTooltip="Debe ingresar la información en el campo para continuar"
+                          matTooltipClass="info-tooltip"
+                          *ngIf="
+                            (addressForm.get('tipoSolicitud').invalid && addressForm.get('tipoSolicitud').touched) ||
+                            (addressForm.get('tipoSolicitud').invalid && estaEditando)
+                          "
+                        />
+                      </span>
                 </div>
             </div>
         </div>
 
-        <div *ngIf="addressForm.get( 'tipoSolicitud' ).value !== null && addressForm.get( 'tipoSolicitud' ).value.codigo === tipoSolicitudCodigo.contratoObra">
+        <div class="animatedDown" *ngIf="addressForm.get( 'tipoSolicitud' ).value !== null && addressForm.get( 'tipoSolicitud' ).value.codigo === tipoSolicitudCodigo.contratoObra">
             <mat-card class="shipping-card ">
                 <mat-card-header class="header-card header-card--margin">
                     <mat-card-title class="header-card--text">
@@ -42,7 +60,12 @@
                         <div class="col-md-8">
                             <div class="row">
                                 <div class="pr-1">
-                                    <label class="label-left" for="modalidadContrato">Modalidad del contrato</label>
+                                    <label class="label-left" for="modalidadContrato"
+                                    [ngClass]="{
+                                        'color-secondaryColor':
+                                          (addressForm.get('modalidadContrato').invalid && addressForm.get('modalidadContrato').touched) ||
+                                          (addressForm.get('modalidadContrato').invalid && estaEditando)
+                                      }">Modalidad del contrato</label>
                                 </div>
                                 <div class="col">
                                     <mat-form-field class="select-width">
@@ -53,14 +76,32 @@
                                         </mat-select>
                                     </mat-form-field>
                                 </div>
+                                <span class="icon-incompleto">
+                                    <img
+                                      class="icon-incompleto--img"
+                                      src="assets/img/icon/incompleto.svg"
+                                      alt="este campo es requerido"
+                                      [matTooltipPosition]="'above'"
+                                      matTooltip="Debe ingresar la información en el campo para continuar"
+                                      matTooltipClass="info-tooltip"
+                                      *ngIf="
+                                        (addressForm.get('modalidadContrato').invalid && addressForm.get('modalidadContrato').touched) ||
+                                        (addressForm.get('modalidadContrato').invalid && estaEditando)
+                                      "
+                                    />
+                                  </span>
                             </div>
                         </div>
                     </div>
-                    <div class="row" *ngIf="addressForm.get( 'modalidadContrato' ).value !== null">
+                    <div class="row animatedDown" *ngIf="addressForm.get( 'modalidadContrato' ).value !== null">
                         <div class="col-md-8">
                             <div class="row">
                                 <div class="pr-1">
-                                    <label class="label-left" for="numeroContrato">Número de contrato</label>
+                                    <label class="label-left" for="numeroContrato" [ngClass]="{
+                                        'color-secondaryColor':
+                                          (addressForm.get('numeroContrato').invalid && addressForm.get('numeroContrato').touched) ||
+                                          (addressForm.get('numeroContrato').invalid && estaEditando)
+                                      }">Número de contrato</label>
                                 </div>
                                 <div class="col d-flex">
                                     <mat-form-field class="full-width" #desplegable>
@@ -77,13 +118,27 @@
                                         <img src="assets/img/icon/lupa.svg" alt="Buscar">
                                     </button>
                                 </div>
+                                <span class="icon-incompleto">
+                                    <img
+                                      class="icon-incompleto--img"
+                                      src="assets/img/icon/incompleto.svg"
+                                      alt="este campo es requerido"
+                                      [matTooltipPosition]="'above'"
+                                      matTooltip="Debe ingresar la información en el campo para continuar"
+                                      matTooltipClass="info-tooltip"
+                                      *ngIf="
+                                        (addressForm.get('numeroContrato').invalid && addressForm.get('numeroContrato').touched) ||
+                                        (addressForm.get('numeroContrato').invalid && estaEditando)
+                                      "
+                                    />
+                                  </span>
                             </div>
                         </div>
                     </div>
                 </mat-card-content>
             </mat-card>
         </div>
-        <div *ngIf="addressForm.get( 'tipoSolicitud' ).value !== null && addressForm.get( 'tipoSolicitud' ).value.codigo === tipoSolicitudCodigo.contratoInterventoria">
+        <div class="animatedDown" *ngIf="addressForm.get( 'tipoSolicitud' ).value !== null && addressForm.get( 'tipoSolicitud' ).value.codigo === tipoSolicitudCodigo.contratoInterventoria">
             <mat-card class="shipping-card">
                 <mat-card-header class="header-card header-card--margin">
                     <mat-card-title class="header-card--text">
@@ -136,7 +191,7 @@
                 </mat-card-content>
             </mat-card>
         </div>
-        <div *ngIf="contrato !== undefined">
+        <div class="animatedDown" *ngIf="contrato !== undefined">
             <mat-card class="shipping-card var-main-gris">
                 <mat-card-header class="header-card header-card--margin">
                     <mat-card-title class="header-card--text textoGris">
@@ -229,7 +284,7 @@
                 </mat-accordion>
             </div>  
         </div>
-        <div *ngIf="addressForm.get( 'tipoSolicitud' ).value !== null
+        <div class="animatedDown" *ngIf="addressForm.get( 'tipoSolicitud' ).value !== null
                     && (    addressForm.get( 'tipoSolicitud' ).value.codigo === tipoSolicitudCodigo.expensas
                             || addressForm.get( 'tipoSolicitud' ).value.codigo === tipoSolicitudCodigo.otrosCostos )">
             <!-- Formulario de expensas -->

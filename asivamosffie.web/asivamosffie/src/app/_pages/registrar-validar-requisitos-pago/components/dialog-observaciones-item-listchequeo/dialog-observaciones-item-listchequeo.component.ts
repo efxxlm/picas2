@@ -23,7 +23,7 @@ export class DialogObservacionesItemListchequeoComponent implements OnInit {
         [{ align: [] }],
       ]
     };
-
+    estaEditando = false;
     constructor(
         private fb: FormBuilder,
         public matDialogRef: MatDialogRef<DialogObservacionesItemListchequeoComponent>,
@@ -55,6 +55,7 @@ export class DialogObservacionesItemListchequeoComponent implements OnInit {
     }
 
     onSubmit() {
+      this.estaEditando = true;
       this.matDialogRef.close( this.addressForm.get( 'observaciones' ).value );
     }
 

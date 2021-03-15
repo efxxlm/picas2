@@ -22,7 +22,7 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
       porcentajeAmortizacion: [null, Validators.required],
       valorAmortizacion: [ { value: null, disabled: true } , Validators.required]
     });
-
+    estaEditando = false;
     constructor(
         private fb: FormBuilder,
         private routes: Router,
@@ -50,6 +50,8 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
         if ( this.solicitudPagoFase.solicitudPagoFaseAmortizacion.length > 0 ) {
             const solicitudPagoFaseAmortizacion = this.solicitudPagoFase.solicitudPagoFaseAmortizacion[0]
             this.solicitudPagoFaseAmortizacionId = solicitudPagoFaseAmortizacion.solicitudPagoFaseAmortizacionId;
+            this.estaEditando = true;
+            this.addressForm.markAllAsTouched();
             this.addressForm.setValue(
                 {
                     porcentajeAmortizacion: solicitudPagoFaseAmortizacion.porcentajeAmortizacion !== undefined ? solicitudPagoFaseAmortizacion.porcentajeAmortizacion : null,
@@ -82,6 +84,8 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
     }
 
     onSubmit() {
+        this.estaEditando = true;
+        this.addressForm.markAllAsTouched();
         const solicitudPagoFaseAmortizacion = [
             {
                 solicitudPagoFaseAmortizacionId: this.solicitudPagoFaseAmortizacionId,

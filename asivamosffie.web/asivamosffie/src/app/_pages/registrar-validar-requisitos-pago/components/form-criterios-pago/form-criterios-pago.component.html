@@ -7,15 +7,33 @@
     <div class="col-md-12">
       <div class="row">
         <div class="pr-1">
-          <label class="label-left" for="criterioPago">Criterio de pago</label>
+          <label class="label-left" for="criterioPago"               [ngClass]="{
+            'color-secondaryColor':
+              (addressForm.get('criterioPago').invalid && addressForm.get('criterioPago').touched) ||
+              (addressForm.get('criterioPago').invalid && estaEditando)
+          }">Criterio de pago</label>
         </div>
         <div class="col">
-          <mat-form-field class="select-width" style="width: 99%;">
+          <mat-form-field class="select-width" style="width: 91%;">
             <mat-select formControlName="criterioPago" multiple (selectionChange)="getvalues($event.value)">
               <mat-option *ngFor="let criterioPago of criteriosArray" [value]="criterioPago"> {{ criterioPago.nombre }} </mat-option>
             </mat-select>
           </mat-form-field>
         </div>
+        <span class="icon-incompleto">
+          <img
+            class="icon-incompleto--img"
+            src="assets/img/icon/incompleto.svg"
+            alt="este campo es requerido"
+            [matTooltipPosition]="'above'"
+            matTooltip="Debe ingresar la información en el campo para continuar"
+            matTooltipClass="info-tooltip"
+            *ngIf="
+              (addressForm.get('criterioPago').invalid && addressForm.get('criterioPago').touched) ||
+              (addressForm.get('criterioPago').invalid && estaEditando)
+            "
+          />
+        </span>
       </div>
     </div>
   </div>
@@ -31,7 +49,12 @@
             <div class="col-md-12">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left" for="tipoPago">Tipo de pago</label>
+                  <label class="label-left" for="tipoPago"               
+                  [ngClass]="{
+                    'color-secondaryColor':
+                      (criterio.get('tipoPago').invalid && criterio.get('tipoPago').touched) ||
+                      (criterio.get('tipoPago').invalid && estaEditando)
+                  }">Tipo de pago</label>
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
@@ -42,6 +65,20 @@
                     </mat-select>
                   </mat-form-field>
                 </div>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
+                    *ngIf="
+                    (criterio.get('tipoPago').invalid && criterio.get('tipoPago').touched) ||
+                    (criterio.get('tipoPago').invalid && estaEditando)
+                    "
+                  />
+                </span>
               </div>
             </div>
           </div>
@@ -49,7 +86,12 @@
             <div class="col-md-12">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left" for="conceptoPago">Concepto de pago para el criterio</label>
+                  <label class="label-left" for="conceptoPago"
+                  [ngClass]="{
+                    'color-secondaryColor':
+                      (criterio.get('conceptoPago').invalid && criterio.get('conceptoPago').touched) ||
+                      (criterio.get('conceptoPago').invalid && estaEditando)
+                  }">Concepto de pago para el criterio</label>
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
@@ -61,6 +103,20 @@
                     </mat-select>
                   </mat-form-field>
                 </div>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
+                    *ngIf="
+                    (criterio.get('conceptoPago').invalid && criterio.get('conceptoPago').touched) ||
+                    (criterio.get('conceptoPago').invalid && estaEditando)
+                    "
+                  />
+                </span>
               </div>
             </div>
           </div>
@@ -73,7 +129,11 @@
               <div class="col-md-8">
                 <div class="row">
                   <div class="pr-1">
-                    <label class="label-left" for="valorFacturado">
+                    <label class="label-left" for="valorFacturadoConcepto"  [ngClass]="{
+                      'color-secondaryColor':
+                        (concepto.get('valorFacturadoConcepto').invalid && concepto.get('valorFacturadoConcepto').touched) ||
+                        (concepto.get('valorFacturadoConcepto').invalid && estaEditando)
+                    }">
                       Valor facturado al concepto
                     </label>
                   </div>
@@ -95,6 +155,20 @@
                               {{20 - valorFacturadoConcepto.value.length}}
                       </span>
                   </div>
+                  <span class="icon-incompleto">
+                    <img
+                      class="icon-incompleto--img"
+                      src="assets/img/icon/incompleto.svg"
+                      alt="este campo es requerido"
+                      [matTooltipPosition]="'above'"
+                      matTooltip="Debe ingresar la información en el campo para continuar"
+                      matTooltipClass="info-tooltip"
+                      *ngIf="
+                      (concepto.get('valorFacturadoConcepto').invalid && concepto.get('valorFacturadoConcepto').touched) ||
+                      (concepto.get('valorFacturadoConcepto').invalid && estaEditando)
+                      "
+                    />
+                  </span>
                 </div>
               </div>
             </div>
@@ -103,7 +177,12 @@
             <div class="col-md-8">
               <div class="row" style=" margin-top: 10px;">
                 <div class="pr-1">
-                  <label class="header-card--text" for="valorFacturado" style="padding-left: 0em;">
+                  <label class="header-card--text" for="valorFacturado" style="padding-left: 0em;"
+                  [ngClass]="{
+                    'color-secondaryColor':
+                      (concepto.get('valorFacturado').invalid && concepto.get('valorFacturado').touched) ||
+                      (concepto.get('valorFacturado').invalid && estaEditando)
+                  }">
                     <b> Valor total de los conceptos</b>
                   </label>
                 </div>
@@ -124,6 +203,20 @@
                               matTooltipClass="info-tooltip">{{20 - valorFacturado.value.length}}
                       </span>
                 </div>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
+                    *ngIf="
+                    (concepto.get('valorFacturado').invalid && concepto.get('valorFacturado').touched) ||
+                    (concepto.get('valorFacturado').invalid && estaEditando)
+                    "
+                  />
+                </span>
               </div>
             </div>
           </div>

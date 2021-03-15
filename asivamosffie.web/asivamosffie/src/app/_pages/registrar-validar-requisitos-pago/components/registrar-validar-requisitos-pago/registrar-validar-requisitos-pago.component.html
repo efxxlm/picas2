@@ -56,19 +56,29 @@
             <ng-container matColumnDef="estadoRegistro">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del registro </th>
                 <td mat-cell *matCellDef="let element" align="center">
+                    <span class="info-text info-text__table"
+                        [ngClass]="{'sin-diligenciar' : element.registroCompleto === false, 'completo' : element.registroCompleto === true}"
+                        style="margin-right: 0em;"></span>
+                    <br>
+                    {{ element.registroCompleto?"Completo":"Incompleto" }}
+                </td>
+                <!--
+                dbenitez, lo dejo por si algo
+                <td mat-cell *matCellDef="let element" align="center">
                     <div class="flex-span" *ngIf="element.registroCompleto === true">
-                        <span class="info-text completo mr-auto"></span>
+                        <span class="info-text completo mr-auto" style="margin-right: 0em;"></span>
                         <span>
                           {{ 'Completo' }}
                         </span>
                       </div>
                       <div class="flex-span" *ngIf="element.registroCompleto === false">
-                        <span class="info-text sin-diligenciar mr-auto"></span>
+                        <span class="info-text sin-diligenciar mr-auto" style="margin-right: 0em;"></span>
                         <span>
                           {{ 'Incompleto' }}
                         </span>
                       </div>
                 </td>
+                -->
             </ng-container>
             <ng-container matColumnDef="gestion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 16%;"> Gestión </th>

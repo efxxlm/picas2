@@ -19,7 +19,7 @@ export class FormSoporteSolicitudUrlComponent implements OnInit {
     });
     solicitudPagoSoporteSolicitudId = 0;
     solicitudPagoId = 0;
-
+    estaEditando = false;
     constructor(
         private fb: FormBuilder,
         private dialog: MatDialog,
@@ -31,6 +31,8 @@ export class FormSoporteSolicitudUrlComponent implements OnInit {
         if ( this.solicitudPago !== undefined ) {
             this.solicitudPagoId = this.solicitudPago.solicitudPagoId;
             if ( this.solicitudPago.solicitudPagoSoporteSolicitud.length > 0 ) {
+                this.estaEditando = true;
+                this.addressForm.markAllAsTouched();
                 this.solicitudPagoSoporteSolicitudId = this.solicitudPago.solicitudPagoSoporteSolicitud[0].solicitudPagoSoporteSolicitudId;
                 this.addressForm.get( 'urlSoporte' ).setValue( this.solicitudPago.solicitudPagoSoporteSolicitud[0].urlSoporte !== undefined ? this.solicitudPago.solicitudPagoSoporteSolicitud[0].urlSoporte : null );
             }
@@ -46,7 +48,8 @@ export class FormSoporteSolicitudUrlComponent implements OnInit {
 
     onSubmit() {
         console.log(this.addressForm.value);
-
+        this.estaEditando = true;
+        this.addressForm.markAllAsTouched();
         if ( this.solicitudPago.solicitudPagoSoporteSolicitud.length === 0 ) {
             const solicitudPagoSoporteSolicitud = [
                 {

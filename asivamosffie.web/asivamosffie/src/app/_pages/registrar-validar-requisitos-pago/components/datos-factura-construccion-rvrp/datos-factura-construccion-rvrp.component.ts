@@ -25,7 +25,7 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
     solicitudPagoFaseFacturaId = 0;
     solicitudPagoFaseFactura: any;
     solicitudPagoFase: any;
-
+    estaEditando = false;
     constructor(
         private fb: FormBuilder,
         private dialog: MatDialog,
@@ -45,6 +45,8 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
         this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
         this.solicitudPagoFaseFactura = this.solicitudPagoFase.solicitudPagoFaseFactura[0];
         if ( this.solicitudPagoFaseFactura !== undefined ) {
+            this.estaEditando = true;
+            this.addressForm.markAllAsTouched();
             this.solicitudPagoFaseFacturaId = this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaId;
             this.solicitudPagoFaseFacturaDescuento = this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaDescuento;
             this.addressForm.get( 'numeroFactura' ).setValue( this.solicitudPagoFaseFactura.numero !== undefined ? this.solicitudPagoFaseFactura.numero : null );
@@ -92,7 +94,8 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
     }
 
     onSubmit() {
-
+        this.estaEditando = true;
+        this.addressForm.markAllAsTouched();
         /*
         Se comenta metodo para obtener descuentos por novedad diseño
 

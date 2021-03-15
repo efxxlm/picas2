@@ -13,7 +13,12 @@
                 <div class="col-md-6">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="formaPagoPreconstruccion">Forma de pago</label>
+                            <label class="label-left" for="formaPagoPreconstruccion"
+                            [ngClass]="{
+                                'color-secondaryColor':
+                                  (addressForm.get('formaPagoPreconstruccion').invalid && addressForm.get('formaPagoPreconstruccion').touched) ||
+                                  (addressForm.get('formaPagoPreconstruccion').invalid && estaEditando)
+                              }">Forma de pago</label>
                         </div>
                         <div class="col">
                             <mat-form-field class="select-width">
@@ -24,6 +29,20 @@
                                 </mat-select>
                             </mat-form-field>
                         </div>
+                        <span class="icon-incompleto">
+                            <img
+                              class="icon-incompleto--img"
+                              src="assets/img/icon/incompleto.svg"
+                              alt="este campo es requerido"
+                              [matTooltipPosition]="'above'"
+                              matTooltip="Debe ingresar la información en el campo para continuar"
+                              matTooltipClass="info-tooltip"
+                              *ngIf="
+                                (addressForm.get('formaPagoPreconstruccion').invalid && addressForm.get('formaPagoPreconstruccion').touched) ||
+                                (addressForm.get('formaPagoPreconstruccion').invalid && estaEditando)
+                              "
+                            />
+                          </span>
                     </div>
                 </div>
             </div>
@@ -35,7 +54,12 @@
                 <div class="col-md-6">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="formaPagoConstruccion">Forma de pago</label>
+                            <label class="label-left" for="formaPagoConstruccion"
+                            [ngClass]="{
+                                'color-secondaryColor':
+                                  (addressForm.get('formaPagoConstruccion').invalid && addressForm.get('formaPagoConstruccion').touched) ||
+                                  (addressForm.get('formaPagoConstruccion').invalid && estaEditando)
+                              }">Forma de pago</label>
                         </div>
                         <div class="col">
                             <mat-form-field class="select-width">
@@ -46,6 +70,20 @@
                                 </mat-select>
                             </mat-form-field>
                         </div>
+                        <span class="icon-incompleto">
+                            <img
+                              class="icon-incompleto--img"
+                              src="assets/img/icon/incompleto.svg"
+                              alt="este campo es requerido"
+                              [matTooltipPosition]="'above'"
+                              matTooltip="Debe ingresar la información en el campo para continuar"
+                              matTooltipClass="info-tooltip"
+                              *ngIf="
+                                (addressForm.get('formaPagoConstruccion').invalid && addressForm.get('formaPagoConstruccion').touched) ||
+                                (addressForm.get('formaPagoConstruccion').invalid && estaEditando)
+                              "
+                            />
+                          </span>
                     </div>
                 </div>
             </div>

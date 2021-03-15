@@ -23,7 +23,7 @@ export class FormCriteriosPagoComponent implements OnInit {
         criterios: this.fb.array( [] )
     });
     criteriosArray: { codigo: string, nombre: string }[] = [];
-
+    estaEditando = false;
     get criterios() {
         return this.addressForm.get( 'criterios' ) as FormArray;
     }
@@ -55,7 +55,9 @@ export class FormCriteriosPagoComponent implements OnInit {
                         this.solicitudPagoFase = this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase[0];
 
                         if ( this.solicitudPagoFase.solicitudPagoFaseCriterio.length > 0 ) {
-
+                            this.estaEditando = true;
+                            this.addressForm.markAllAsTouched();
+                            this.criterios.markAllAsTouched();
                             for ( const criterio of this.solicitudPagoFase.solicitudPagoFaseCriterio ) {
                                 // GET Criterio seleccionado
                                 const criterioSeleccionado = response.filter( value => value.codigo === criterio.tipoCriterioCodigo );
@@ -118,6 +120,9 @@ export class FormCriteriosPagoComponent implements OnInit {
                         this.solicitudPagoRegistrarSolicitudPago = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0];
                         this.solicitudPagoFase = this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase[0];
                         if ( this.solicitudPagoFase.solicitudPagoFaseCriterio.length > 0 ) {
+                            this.estaEditando = true;
+                            this.addressForm.markAllAsTouched();
+                            this.criterios.markAllAsTouched();
                             for ( const criterio of this.solicitudPagoFase.solicitudPagoFaseCriterio ) {
                                 // GET Criterio seleccionado
                                 const criterioSeleccionado = response.filter( value => value.codigo === criterio.tipoCriterioCodigo );
@@ -397,6 +402,9 @@ export class FormCriteriosPagoComponent implements OnInit {
     }
 
     guardar() {
+        this.estaEditando = true;
+        this.addressForm.markAllAsTouched();
+        this.criterios.markAllAsTouched();
         if ( this.contratacionProyectoId === 0 ) {
             this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseCriterio = [];
             this.criterios.controls.forEach( control => {
