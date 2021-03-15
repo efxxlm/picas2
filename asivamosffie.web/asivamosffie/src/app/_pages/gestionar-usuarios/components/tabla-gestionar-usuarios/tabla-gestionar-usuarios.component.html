@@ -34,11 +34,7 @@
 
           <ng-container matColumnDef="rol">
             <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"> Rol </th>
-            <td mat-cell *matCellDef="let element" align="center" class="padding-0em">
-                <div class="sub-item-table flex-table justify-content-center align-items-center h-3em" *ngFor="let rol of element.rol">
-                    {{ rol }}
-                  </div>
-            </td>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.rol }} </td>
           </ng-container>
 
           <ng-container matColumnDef="estado">

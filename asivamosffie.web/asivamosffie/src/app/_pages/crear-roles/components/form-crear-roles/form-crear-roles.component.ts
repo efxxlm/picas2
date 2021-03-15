@@ -79,7 +79,64 @@ export class FormCrearRolesComponent implements OnInit {
                                     }
                                 } );
 
-                                console.log( this.listaFuncionalidad );
+                                if ( this.esRegistroNuevo === false ) {
+                                    this.crearRolesSvc.getPerfilByPerfilId( this.activatedRoute.snapshot.params.id )
+                                        .subscribe(
+                                            getPerfilByPerfilId => {
+                                                this.formRoles.get( 'nombreRol' ).setValue( getPerfilByPerfilId.nombre !== undefined ? getPerfilByPerfilId.nombre : null );
+                                                this.perfilId = getPerfilByPerfilId.perfilId;
+
+                                                if ( getPerfilByPerfilId.menuPerfil.length > 0 ) {
+                                                    getPerfilByPerfilId.menuPerfil.forEach( menuPerfil => {
+                                                        // Get data fase Inicio
+                                                        const faseInicioIndex = this.listaFuncionalidad.faseInicio.findIndex( value => value.menuId === menuPerfil.menuId );
+
+                                                        if ( faseInicioIndex !== -1 ) {
+                                                            const faseInicio = this.listaFuncionalidad.faseInicio[ faseInicioIndex ];
+                                                            this.listaFuncionalidad.faseInicio[ faseInicioIndex ] = {
+                                                                ...faseInicio,
+                                                                menuPerfilId: menuPerfil.menuPerfilId,
+                                                                tienePermisoCrear: menuPerfil.tienePermisoCrear,
+                                                                tienePermisoLeer: menuPerfil.tienePermisoLeer,
+                                                                tienePermisoEditar: menuPerfil.tienePermisoEditar,
+                                                                tienePermisoEliminar: menuPerfil.tienePermisoEliminar
+                                                            }
+                                                        }
+                                                        // Get data fase Seguimiento
+                                                        const faseSeguimientoIndex = this.listaFuncionalidad.faseSeguimiento.findIndex( value => value.menuId === menuPerfil.menuId );
+
+                                                        if ( faseSeguimientoIndex !== -1 ) {
+                                                            const faseSeguimiento = this.listaFuncionalidad.faseSeguimiento[ faseSeguimientoIndex ];
+
+                                                            this.listaFuncionalidad.faseSeguimiento[ faseSeguimientoIndex ] = {
+                                                                ...faseSeguimiento,
+                                                                menuPerfilId: menuPerfil.menuPerfilId,
+                                                                tienePermisoCrear: menuPerfil.tienePermisoCrear,
+                                                                tienePermisoLeer: menuPerfil.tienePermisoLeer,
+                                                                tienePermisoEditar: menuPerfil.tienePermisoEditar,
+                                                                tienePermisoEliminar: menuPerfil.tienePermisoEliminar
+                                                            }
+                                                        }
+                                                        // Get data fase Cierre
+                                                        const faseCierreIndex = this.listaFuncionalidad.faseCierre.findIndex( value => value.menuId === menuPerfil.menuId );
+
+                                                        if ( faseCierreIndex !== -1 ) {
+                                                            const faseCierre = this.listaFuncionalidad.faseCierre[ faseCierreIndex ];
+
+                                                            this.listaFuncionalidad.faseCierre[ faseCierreIndex ] = {
+                                                                ...faseCierre,
+                                                                menuPerfilId: menuPerfil.menuPerfilId,
+                                                                tienePermisoCrear: menuPerfil.tienePermisoCrear,
+                                                                tienePermisoLeer: menuPerfil.tienePermisoLeer,
+                                                                tienePermisoEditar: menuPerfil.tienePermisoEditar,
+                                                                tienePermisoEliminar: menuPerfil.tienePermisoEliminar
+                                                            }
+                                                        }
+                                                    } );
+                                                }
+                                            }
+                                        );
+                                }
                             }
                         );
                 }
@@ -141,7 +198,7 @@ export class FormCrearRolesComponent implements OnInit {
 
     openDialogTrueFalse(modalTitle: string, modalText: string) {
 
-        const dialogRef = this.dialog.open(ModalDialogComponent, {
+        const dialogRef = this.dialog.open( ModalDialogComponent, {
           width: '28em',
           data: { modalTitle, modalText, siNoBoton: true }
         });
@@ -150,7 +207,6 @@ export class FormCrearRolesComponent implements OnInit {
     }
 
     guardar() {
-        console.log( this.formRoles );
         const getMenuPerfil = () => {
             const listaMenuPerfil = [];
 
@@ -158,7 +214,7 @@ export class FormCrearRolesComponent implements OnInit {
                 if ( !( registro.crear === null && registro.consultar === null && registro.modificar === null && registro.eliminar === null ) ) {
                     listaMenuPerfil.push(
                         {
-                            menuPerfilId: 0,
+                            menuPerfilId: registro.menuPerfilId,
                             menuId: registro.menuId,
                             perfilId: this.perfilId,
                             tienePermisoCrear: registro.crear === null ? false : registro.crear,
@@ -173,7 +229,7 @@ export class FormCrearRolesComponent implements OnInit {
                 if ( !( registro.crear === null && registro.consultar === null && registro.modificar === null && registro.eliminar === null ) ) {
                     listaMenuPerfil.push(
                         {
-                            menuPerfilId: 0,
+                            menuPerfilId: registro.menuPerfilId,
                             menuId: registro.menuId,
                             perfilId: this.perfilId,
                             tienePermisoCrear: registro.crear === null ? false : registro.crear,
@@ -188,7 +244,7 @@ export class FormCrearRolesComponent implements OnInit {
                 if ( !( registro.crear === null && registro.consultar === null && registro.modificar === null && registro.eliminar === null ) ) {
                     listaMenuPerfil.push(
                         {
-                            menuPerfilId: 0,
+                            menuPerfilId: registro.menuPerfilId,
                             menuId: registro.menuId,
                             perfilId: this.perfilId,
                             tienePermisoCrear: registro.crear === null ? false : registro.crear,

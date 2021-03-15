@@ -24,7 +24,7 @@ export class TablaGestionarUsuariosComponent implements OnInit {
                 procedencia: 'FFIE/Fiduciaria',
                 nombreApellido: 'Nicolas Fernando Sandoval',
                 numeroDocumento: '103445663',
-                rol: [ 'Supervisor', 'Interventor' ],
+                rol: 'Supervisor',
                 estado: 'Activo',
                 id: 1
             }

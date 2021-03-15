@@ -16,6 +16,10 @@ export class CrearRolesService {
     return this.http.get<any[]>( `${ this.urlApi }/GetListPerfil` );
   }
 
+  getPerfilByPerfilId( pPerfilId: number ) {
+    return this.http.get<any>( `${ this.urlApi }/GetPerfilByPerfilId?pPerfilId=${ pPerfilId }` );
+  }
+
   getMenu() {
     return this.http.get<any[]>( `${ this.urlApi }/GetMenu` );
   }
@@ -26,6 +30,10 @@ export class CrearRolesService {
 
   validateExistNamePerfil( pNamePerfil: string ) {
     return this.http.get( `${ this.urlApi }/ValidateExistNamePerfil?pNamePerfil=${ pNamePerfil }` );
+  }
+
+  activateDeactivatePerfil( pPerfil: any ) {
+    return this.http.post<Respuesta>( `${ this.urlApi }/ActivateDeactivatePerfil`, pPerfil );
   }
 
 }
