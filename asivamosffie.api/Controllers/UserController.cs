@@ -24,8 +24,9 @@ namespace asivamosffie.api.Controllers
         {
             _user = user;
             _settings = settings;
-        } 
+        }
 
+        #region Loggin
         [Route("emailRecover")]
         [HttpPost]
         public async Task<IActionResult> RecoverPasswordByEmailAsync([FromBody] Usuario userparam)
@@ -44,8 +45,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-
-
+         
         [Route("ChangePasswordUser")]
         [HttpPost]
         public async Task<IActionResult> ChangePasswordUser([FromQuery] string Oldpwd, [FromQuery] string Newpwd)
@@ -94,6 +94,17 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        #endregion
+
+        [HttpGet]
+        [Route("CreateEditUsuario")]
+        public async Task<Respuesta> CreateEditUsuario([FromBody] Usuario pUsuario)
+        {
+            pUsuario.UsuarioCreacion = User.Identity.Name;
+            var result = await _user.CreateEditUsuario(pUsuario);
+            return result;
+        }
+ 
     }
 }
   

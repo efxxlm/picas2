@@ -193,6 +193,9 @@ namespace asivamosffie.services
 
         #endregion
 
+        #region Create Edit
+
+
         public async Task<Respuesta> CreateEditUsuario(Usuario pUsuario)
         {
             if (pUsuario.UsuarioId == 0)
@@ -208,10 +211,7 @@ namespace asivamosffie.services
                 _context.SaveChanges();
 
                 await CrearEditarUsuarioPeril(pUsuario, true);
-
                 await SendEmailWhenCreateUsuario(pUsuario, strPassWordGenerate);
-
-
             }
             else
             {
@@ -240,6 +240,7 @@ namespace asivamosffie.services
                             GrupoCodigo = pUsuario.GrupoCodigo
                         });
 
+                await CrearEditarUsuarioPeril(pUsuario, false);
             }
             return new Respuesta();
         }
@@ -256,21 +257,18 @@ namespace asivamosffie.services
                     FechaCreacion = DateTime.Now,
                     UsuarioCreacion = pUsuario.UsuarioCreacion
                 };
-                _context.UsuarioPerfil.Add(usuarioPerfil);
+                await _context.UsuarioPerfil.AddAsync(usuarioPerfil);
             }
             else
             {
-                _context.Set<UsuarioPerfil>()
+                await _context.Set<UsuarioPerfil>()
                          .Where(up => up.UsuarioId == pUsuario.UsuarioId)
-                         .Update(up => new UsuarioPerfil
+                         .UpdateAsync(up => new UsuarioPerfil
                          {
                              PerfilId = pUsuario.PerfilId,
                              FechaModificacion = DateTime.Now,
-
-
-                         }); 
+                         });
             }
-
         }
 
         public async Task<bool> SendEmailWhenCreateUsuario(Usuario pUsuario, string pPassWord)
@@ -295,5 +293,6 @@ namespace asivamosffie.services
             return template;
         }
 
+        #endregion
     }
 }
