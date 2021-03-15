@@ -9,6 +9,6 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IParametricService
     {
-
+        Task<List<VParametricas>> GetParametricas();
     }
 }

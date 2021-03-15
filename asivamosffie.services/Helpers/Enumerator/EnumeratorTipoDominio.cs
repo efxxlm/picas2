@@ -231,6 +231,10 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Lista_Fases_Sistema = 169,
 
-        Procedencia_Usuario = 170
+        Procedencia_Usuario = 170,
+         
+        Dependencia_Usuario = 171,
+
+        Grupo_Usuario = 172
     }
 }

@@ -17,7 +17,7 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+ 
     public class ParametricController : Controller
     { 
         private readonly IParametricService _parametricService;
@@ -28,6 +28,16 @@ namespace asivamosffie.api.Controllers
             _parametricService = parametricService;
             _settings = settings;
         }
- 
+
+       
+        [HttpGet]
+        [Route("GetParametricas")]
+        public async Task<List<VParametricas>> GetParametricas()
+        {
+            return await _parametricService.GetParametricas();
+        }
+
+
+
     }
 }

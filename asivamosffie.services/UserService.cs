@@ -348,7 +348,7 @@ namespace asivamosffie.services
         public async Task<dynamic> GetListPerfil()
         { 
             return await _context.Perfil
-                .Where(p => p.Eliminado != false)
+                .Where(p => p.Eliminado != true)
                 .OrderByDescending(p => p.PerfilId)
                 .Select(p => new
             {
