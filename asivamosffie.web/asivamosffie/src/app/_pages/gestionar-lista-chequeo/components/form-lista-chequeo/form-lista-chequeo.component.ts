@@ -127,7 +127,6 @@ export class FormListaChequeoComponent implements OnInit {
                     this.listaChequeoSvc.getValidateExistNameCheckList( pListaChequeo )
                         .subscribe(
                             response => {
-                                console.log( response );
                                 if ( response === true && this.formLista.get( 'nombreLista' ).value === nombre ) {
                                     this.openDialog( '', '<b>El nombre de la lista de chequeo ya fue utilizado, por favor verifique la información.</b>' );
                                     this.formLista.get( 'nombreLista' ).setValue( null );

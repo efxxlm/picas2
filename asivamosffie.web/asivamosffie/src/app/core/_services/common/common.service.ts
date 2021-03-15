@@ -403,6 +403,11 @@ listaEstadosPoliza(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=166`);
   }
 
+  listaFaseMenu() {
+    // Lista de las fases CU 6.3
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=169`);
+  }
+
   public listaUsuarios(){
 
     let lista: Usuario[] = [];

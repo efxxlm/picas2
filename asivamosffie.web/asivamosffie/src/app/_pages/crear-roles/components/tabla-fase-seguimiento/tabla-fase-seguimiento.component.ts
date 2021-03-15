@@ -12,6 +12,7 @@ export class TablaFaseSeguimientoComponent implements OnInit {
 
     @Input() esRegistroNuevo = true;
     @Input() formFaseInicio: FormGroup;
+    @Input() listaFaseSeguimiento: any[];
     @ViewChild( MatSort, { static: true } ) sort: MatSort;
     @ViewChild( 'matTable', { static: false, read: ElementRef } ) table: ElementRef;
     @ViewChild( 'heightAside', { static: false, read: ElementRef } ) heightAside: ElementRef;
@@ -28,62 +29,12 @@ export class TablaFaseSeguimientoComponent implements OnInit {
     { }
 
     ngOnInit(): void {
-        const dataTable = [
-            {
-                funcionalidad: 'Cargar enlace del sistema de monitoreo en línea',
-                crear: null,
-                modificar: null,
-                consultar: null,
-                eliminar: null
-            },
-            {
-                funcionalidad: 'Visualizar avance de obra en tiempo real',
-                crear: null,
-                modificar: null,
-                consultar: null,
-                eliminar: null
-            },
-            {
-                funcionalidad: 'Registrar programación de personal de obra',
-                crear: null,
-                modificar: null,
-                consultar: null,
-                eliminar: null
-            },
-            {
-                funcionalidad: 'Registrar seguimiento diario',
-                crear: null,
-                modificar: null,
-                consultar: null,
-                eliminar: null
-            },
-            {
-                funcionalidad: 'Verificar seguimiento diario',
-                crear: null,
-                modificar: null,
-                consultar: null,
-                eliminar: null
-            },
-            {
-                funcionalidad: 'Registrar avance semanal',
-                crear: null,
-                modificar: null,
-                consultar: null,
-                eliminar: null
-            },
-            {
-                funcionalidad: 'Verificar avance semanal',
-                crear: null,
-                modificar: null,
-                consultar: null,
-                eliminar: null
-            }
-        ]
 
-        dataTable.forEach( registro => {
+        this.listaFaseSeguimiento.forEach( registro => {
             this.registros.push( this.fb.group(
                 {
-                    funcionalidad: [ registro.funcionalidad, Validators.required ],
+                    menuId: [ registro.menuId, Validators.required ],
+                    funcionalidad: [ registro.nombre, Validators.required ],
                     crear: [ null, Validators.required ],
                     modificar: [ null, Validators.required ],
                     consultar: [ null, Validators.required ],

@@ -12,6 +12,7 @@ export class TablaFaseCierreComponent implements OnInit {
 
     @Input() esRegistroNuevo = true;
     @Input() formFaseInicio: FormGroup;
+    @Input() listaFaseCierre: any[];
     @ViewChild( MatSort, { static: true } ) sort: MatSort;
     @ViewChild( 'matTable', { static: false, read: ElementRef } ) table: ElementRef;
     @ViewChild( 'heightAside', { static: false, read: ElementRef } ) heightAside: ElementRef;
@@ -29,41 +30,12 @@ export class TablaFaseCierreComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        const dataTable = [
-            {
-                funcionalidad: 'Registrar informe final del proyecto',
-                crear: null,
-                modificar: null,
-                consultar: null,
-                eliminar: null
-            },
-            {
-                funcionalidad: 'Verificar informe final del proyecto',
-                crear: null,
-                modificar: null,
-                consultar: null,
-                eliminar: null
-            },
-            {
-                funcionalidad: 'Validar informe final del proyecto',
-                crear: null,
-                modificar: null,
-                consultar: null,
-                eliminar: null
-            },
-            {
-                funcionalidad: 'Validar cumplimiento informe final del proyecto',
-                crear: null,
-                modificar: null,
-                consultar: null,
-                eliminar: null
-            }
-        ]
 
-        dataTable.forEach( registro => {
+        this.listaFaseCierre.forEach( registro => {
             this.registros.push( this.fb.group(
                 {
-                    funcionalidad: [ registro.funcionalidad, Validators.required ],
+                    menuId: [ registro.menuId, Validators.required ],
+                    funcionalidad: [ registro.nombre, Validators.required ],
                     crear: [ null, Validators.required ],
                     modificar: [ null, Validators.required ],
                     consultar: [ null, Validators.required ],

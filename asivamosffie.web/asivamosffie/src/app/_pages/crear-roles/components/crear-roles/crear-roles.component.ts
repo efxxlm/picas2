@@ -8,6 +8,7 @@ import { Component, OnInit } from '@angular/core';
 export class CrearRolesComponent implements OnInit {
 
     verAyuda = false;
+    sinRegistros = false;
 
     constructor() { }
 
