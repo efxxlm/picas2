@@ -315,7 +315,7 @@
                                 <mat-form-field>
                                     <input  matInput
                                             type="text"
-                                            maxlength="20"
+                                            maxlength="50"
                                             #correo
                                             formControlName="correo"
                                             style="width: 100%;"
@@ -325,7 +325,7 @@
                                         [matTooltipPosition]="'above'"
                                         matTooltip="Campo alfanumérico"
                                         matTooltipClass="info-tooltip">
-                                        {{ 20 - correo.value.length }}
+                                        {{ 50 - correo.value.length }}
                                 </span>
                             </div>
                             <span class="icon-incompleto">

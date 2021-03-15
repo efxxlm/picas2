@@ -12,6 +12,14 @@ export class GestionarUsuariosService {
 
   constructor( private http: HttpClient ) { }
 
+  getListUsuario() {
+    return this.http.get<any[]>( `${ this.urlApi }/GetListUsuario` );
+  }
+
+  getUsuario( pUsuarioId: number ) {
+    return this.http.get<any>( `${ this.urlApi }/GetUsuario?pUsuarioId=${ pUsuarioId }` );
+  }
+
   getListPerfil() {
     // Get lista roles del campor roles CU 6.2
     return this.http.get<any[]>( `${ this.urlApi }/GetListPerfil` );
