@@ -14,7 +14,8 @@ using Microsoft.Extensions.Options;
 using System.Net.Mail;
 using System.Net;
 using Microsoft.Extensions.Options;
-
+using System.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 
 namespace asivamosffie.services
 {
@@ -22,14 +23,55 @@ namespace asivamosffie.services
     {
         private readonly devAsiVamosFFIEContext _context;
         public MailSettings _mailSettings { get; }
-
+        private readonly string _connectionString;
         public CommonService(
+            IConfiguration configuration,
                                 devAsiVamosFFIEContext context,
                                IOptions<MailSettings> mailSettings
                             )
         {
+            _connectionString = configuration.GetConnectionString("asivamosffieDatabase");
             _mailSettings = mailSettings.Value;
             _context = context;
+        }
+
+
+        //Solicitudes de comite tecnico
+        public async Task<dynamic> GetRequestSP(string pNameSP)
+        {
+            using (SqlConnection sql = new SqlConnection(_connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(pNameSP, sql))
+                {
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    var response = new List<dynamic>();
+                    await sql.OpenAsync();
+
+                    using (var reader = await cmd.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            response.Add(MapToValue(reader));
+                        }
+                    }
+                    return response;
+                }
+            }
+        } 
+        public dynamic MapToValue(SqlDataReader reader)
+        {
+            return new 
+            {
+                ContratacionId = (int)reader["ContratacionId"],
+                DisponibilidadPresupuestalId = (int)reader["DisponibilidadPresupuestalId"],
+                SesionComiteSolicitudId = (int)reader["SesionComiteSolicitudId"],
+                FechaSolicitud = (DateTime)reader["FechaSolicitud"],
+                TipoSolicitudText = reader["TipoSolicitudText"].ToString(),
+                NumeroSolicitud = reader["NumeroSolicitud"].ToString(),
+                OpcionContratar = reader["OpcionContratar"].ToString(),
+                ValorSolicitud = (decimal)reader["ValorSolicitud"],
+                FechaComite = (DateTime)reader["FechaComite"], 
+            };
         }
 
         public async Task<VPermisosMenus> TienePermisos(int idPerfil, string pRuta)
@@ -93,7 +135,7 @@ namespace asivamosffie.services
                 pTemplate.Contenido = pTemplate.Contenido
                                                    .Replace("_LinkF_", _mailSettings.DominioFront)
                                                    .Replace("[URL]", _mailSettings.DominioFront);
-                 
+
                 MailMessage mail = new MailMessage();
                 SmtpClient SmtpServer = new SmtpClient(_mailSettings.MailServer);
 
