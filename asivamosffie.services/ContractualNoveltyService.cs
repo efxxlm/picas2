@@ -38,19 +38,6 @@ namespace asivamosffie.services
 
             int idAccionCrearEditarNovedadContractual = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Novedad_Contractual, (int)EnumeratorTipoDominio.Acciones);
 
-            //try
-            //{
-            //    Respuesta respuesta = new Respuesta();
-            //    string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
-            //    respuesta = await _Cofinancing.EliminarCofinanciacionByCofinanciacionId(pCofinancicacionId, pUsuarioModifico);
-
-            //    return Ok(respuesta);
-            //}
-            //catch (Exception ex)
-            //{
-            //    return BadRequest(ex.ToString());
-            //}
-
             string strCrearEditar = string.Empty;
 
             try
@@ -60,25 +47,12 @@ namespace asivamosffie.services
 
                     if (string.IsNullOrEmpty(novedadContractual.NovedadContractualId.ToString()) || novedadContractual.NovedadContractualId == 0)
                     {
-                        strCrearEditar = "REGISTRAR NOVEDAD CONTRACTUAL";
 
                         //Auditoria
-                        //strCrearEditar = "REGISTRAR AVANCE COMPROMISOS";
-                        //novedadContractual.FechaCreacion = DateTime.Now;
-                        //controversiaActuacion.UsuarioCreacion = compromisoSeguimiento.UsuarioCreacion;
-                        //novedadContractual.FechaSolictud ;
-                        //novedadContractual.InstanciaCodigo = 
-                        //novedadContractual.TipoNovedadCodigo
-                        //    novedadContractual.MotivoNovedadCodigo
-                        //    novedadContractual.ResumenJustificacion
-                        //    novedadContractual.EsDocumentacionSoporte
-                        //    novedadContractual.ConceptoTecnico
-                        //    novedadContractual.FechaConcepto
-                        //    //novedadContractual.radi
-
-                        //NumeroRadicadoFfie RequisitoTecnicoRadicado
-                        //novedadContractual.RegistroCompleto = ValidarRegistroCompletoControversiaActuacion(novedadContractual);
-
+                        strCrearEditar = "REGISTRAR NOVEDAD CONTRACTUAL";
+                        novedadContractual.FechaCreacion = DateTime.Now;
+                        novedadContractual.UsuarioCreacion = novedadContractual.UsuarioCreacion;
+                        
                         novedadContractual.Eliminado = false;
                         _context.NovedadContractual.Add(novedadContractual);
 
@@ -88,22 +62,14 @@ namespace asivamosffie.services
                     {
                         strCrearEditar = "EDIT NOVEDAD CONTRACTUAL";
 
-                        //novedadContractual.Observaciones = Helpers.Helpers.CleanStringInput(novedadContractual.Observaciones);
-                        //novedadContractual.ResumenPropuestaFiduciaria = Helpers.Helpers.CleanStringInput(novedadContractual.ResumenPropuestaFiduciaria);
+                        NovedadContractual novedadContractualOld = _context.NovedadContractual.Find(novedadContractual.NovedadContractualId);
 
-                        novedadContractual.FechaCreacion = DateTime.Now;
-                        //contratoPoliza.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
-                        //controversiaActuacion.UsuarioCreacion = novedadContractual.UsuarioModificacion;
 
-                        //_context.Add(contratoPoliza);
+                        novedadContractualOld.FechaModificacion = DateTime.Now;
+                        novedadContractualOld.UsuarioModificacion = novedadContractual.UsuarioCreacion;
 
-                        //novedadContractual.EsCompleto = ValidarRegistroCompletoControversiaActuacion(novedadContractual);
-                        //contratoPoliza.ObservacionesRevisionGeneral = ValidarRegistroCompleto(cofinanciacion);
-
-                        //LimpiarEntradasContratoPoliza(ref contratoPoliza);
-
-                        //_context.ContratoPoliza.Add(contratoPoliza);
-                        _context.NovedadContractual.Update(novedadContractual);
+                        novedadContractualOld.FechaSolictud = novedadContractual.FechaSolictud;
+                        novedadContractualOld.InstanciaCodigo = novedadContractual.InstanciaCodigo;
 
                     }
 

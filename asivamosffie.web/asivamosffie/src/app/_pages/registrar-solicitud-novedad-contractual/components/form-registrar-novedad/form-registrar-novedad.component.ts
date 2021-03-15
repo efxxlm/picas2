@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { CommonService, InstanciasSeguimientoTecnico, TiposNovedadModificacionContractual } from 'src/app/core/_services/common/common.service';
+import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
+import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNovelty/contractual-novelty.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { NovedadContractual, NovedadContractualDescripcion } from 'src/app/_interfaces/novedadContractual';
 
@@ -12,6 +15,7 @@ import { NovedadContractual, NovedadContractualDescripcion } from 'src/app/_inte
 })
 export class FormRegistrarNovedadComponent implements OnInit {
   addressForm = this.fb.group({
+    novedadContractualId: [],
     fechaSolicitudNovedad: [null, Validators.required],
     instanciaPresentoSolicitud: [null, Validators.required],
     fechaSesionInstancia: [null, Validators.required],
@@ -105,7 +109,10 @@ export class FormRegistrarNovedadComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     public dialog: MatDialog,
-    public commonServices: CommonService
+    public commonServices: CommonService,
+    public contractualNoveltyService: ContractualNoveltyService,
+    private router: Router,
+
   ) { }
 
   ngOnInit(): void {
@@ -203,6 +210,20 @@ export class FormRegistrarNovedadComponent implements OnInit {
     // console.log(this.addressForm.value);
     this.estaEditando = true;
     this.addressForm.markAllAsTouched();
-    this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+
+    let novedad: NovedadContractual = {
+      novedadContractualId: this.addressForm.value ? this.addressForm.value.novedadContractualId : 0,
+      fechaSolictud: this.addressForm.value ? this.addressForm.value.fechaSolicitudNovedad : null,
+      instanciaCodigo: this.addressForm.value ? this.addressForm.value.instanciaPresentoSolicitud: null,
+
+    };
+
+    this.contractualNoveltyService.createEditNovedadContractual( novedad )
+      .subscribe( respuesta => {
+        this.openDialog( '', respuesta.message );
+        if ( respuesta.code === '200' )
+          this.router.navigate(['/registrarSolicitudNovedadContractual']);
+      });
+
   }
 }
