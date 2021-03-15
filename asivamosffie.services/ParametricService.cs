@@ -14,8 +14,9 @@ using System.Text.RegularExpressions;
 
 namespace asivamosffie.services
 {
-    public class ParametricService 
+    public class ParametricService  : IParametricService
     {
+     
          
     }
 }

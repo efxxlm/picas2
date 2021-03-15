@@ -155,10 +155,12 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                    respuesta = new Respuesta() {
-                        IsSuccessful = false, 
-                        IsValidation = false, 
-                        Code = ConstantMessagesContrasena.ErrorSesion };
+                    respuesta = new Respuesta()
+                    {
+                        IsSuccessful = false,
+                        IsValidation = false,
+                        Code = ConstantMessagesContrasena.ErrorSesion
+                    };
                 }
                 respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CambioContrasena, respuesta.Code, (int)enumeratorAccion.CambiarContraseña, user.Email, "Cambiar contraseña");
             }
@@ -342,6 +344,18 @@ namespace asivamosffie.services
             return template;
         }
 
+
+        public async Task<dynamic> GetListPerfil()
+        { 
+            return await _context.Perfil
+                .Where(p => p.Eliminado != false)
+                .OrderByDescending(p => p.PerfilId)
+                .Select(p => new
+            {
+                p.PerfilId,
+                p.Nombre
+            }).ToListAsync();
+        }
         #endregion
     }
 }

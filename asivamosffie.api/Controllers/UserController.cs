@@ -112,13 +112,19 @@ namespace asivamosffie.api.Controllers
             var result = _user.GetListUsuario();
             return result;
         }
+ 
+        [HttpGet]
+        [Route("GetListPerfil")]
+        public Task<dynamic> GetListPerfil()
+        {
+            return _user.GetListPerfil(); 
+        }
 
         [HttpGet]
         [Route("GetUsuario")]
         public Task<Usuario> GetUsuario([FromQuery] int pUsuarioId)
         {
             return _user.GetUsuario(pUsuarioId);
-        }
-         
+        } 
     }
 }

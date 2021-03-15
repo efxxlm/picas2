@@ -119,9 +119,9 @@ namespace asivamosffie.api
         private void ConfigureDependencyInjection(IServiceCollection services)
         {
             services.AddDbContext<model.Models.devAsiVamosFFIEContext>(options
-              => options.UseSqlServer(Configuration.GetConnectionString("asivamosffieDatabase")));
-
+              => options.UseSqlServer(Configuration.GetConnectionString("asivamosffieDatabase"))); 
             //Agregar Interfaces y clases
+            services.AddTransient<IParametricService, ParametricService>();
             services.AddTransient<ICreateRolesService, CreateRolesService>();
             services.AddTransient<IRegisterValidateSpinOrderService, RegisterValidateSpinOrderService>();
             services.AddTransient<IRegisterProjectETCService, RegisterProjectETCService>();

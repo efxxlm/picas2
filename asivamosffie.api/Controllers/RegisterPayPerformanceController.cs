@@ -23,9 +23,7 @@ namespace asivamosffie.api.Controllers
         private readonly IRegisterPayPerformanceService _paymentAndPerformancesService;
         private readonly IOptions<AppSettings> _settings;
         private readonly IConverter _converter;
-
-
-
+         
         public RegisterPayPerformanceController(IOptions<AppSettings> settings, IConverter converter, IRegisterPayPerformanceService registerPayPerformanceService)
         {
             _paymentAndPerformancesService = registerPayPerformanceService;

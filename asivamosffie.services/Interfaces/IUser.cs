@@ -9,6 +9,7 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IUser
     {
+        Task<dynamic> GetListPerfil();
         Task<Usuario> GetUsuario(int pUsuarioId);
         Task<List<VUsuariosRoles>> GetListUsuario();
         Task<Respuesta> CreateEditUsuario(Usuario pUsuario);
