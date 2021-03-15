@@ -7,6 +7,7 @@ import { SeguimientoDiario } from 'src/app/_interfaces/DailyFollowUp';
 import { FollowUpDailyService } from 'src/app/core/_services/dailyFollowUp/daily-follow-up.service';
 import { forkJoin } from 'rxjs';
 import { CommonService } from 'src/app/core/_services/common/common.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-form-registrar-seguimiento',
@@ -102,6 +103,7 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
     private dialog: MatDialog,
     private dailyFollowUpService: FollowUpDailyService,
     private commonServcie: CommonService,
+
 
   ) {
 
@@ -201,19 +203,17 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
     const day = (d || new Date()).getDay();
     const today = new Date();
 
-    // Bloquea sabado y domingos
-    //console.log( //this.diasPermitidos, 
-                  //new Intl.DateTimeFormat(['ban', 'id']).format(d), 
-                  //d.toLocaleDateString(),
-                  //today.toLocaleDateString()
-                  //d,
-                  //today)
-    return ( 
+    if ( environment.production === true ){
+      return ( 
               this.diasPermitidos.includes( new Intl.DateTimeFormat(['ban', 'id']).format(d)) && 
-              //day !== 0 && 
-              //day !== 6 //&& 
               ( d <= today ) 
-            ); // day !== 0 && day !== 6;
+      );
+    }else{
+      return ( 
+              this.diasPermitidos.includes( new Intl.DateTimeFormat(['ban', 'id']).format(d))
+        );
+    }
+    
   }
 
   validateNumberKeypress(event: KeyboardEvent) {

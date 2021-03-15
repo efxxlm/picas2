@@ -35,6 +35,9 @@ export class FormObservacionesComponent {
   seguimientoId?: number;
   @Input() observacionObjeto: SeguimientoDiarioObservaciones;
   @Input() tieneObservaciones?: boolean;
+  @Input() tieneObservacionesApoyo?: boolean;
+
+  totalGuardados = 0;
   estaEditando = false;
   constructor(
     private fb: FormBuilder,
@@ -88,6 +91,12 @@ export class FormObservacionesComponent {
   onSubmit() {
     this.estaEditando = true;
     this.addressForm.markAllAsTouched();
+
+    if ( this.addressForm.value.tieneObservaciones === false && this.totalGuardados === 0 && this.tieneObservacionesApoyo === true ) {
+      this.openDialog( '', '<b>Le recomendamos verificar su respuesta; tenga en cuenta que el apoyo a la supervisión si tuvo observaciones.</b>' );
+      this.totalGuardados++;
+      return;
+    }
 
     let seguimiento: SeguimientoDiario = {
       seguimientoDiarioId: this.seguimientoId,

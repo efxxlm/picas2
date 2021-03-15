@@ -9,6 +9,7 @@ using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.model.APIModels;
 using System.Globalization;
+using Microsoft.Extensions.Hosting;
 
 namespace asivamosffie.services
 {
@@ -17,12 +18,17 @@ namespace asivamosffie.services
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
         private readonly ITechnicalRequirementsConstructionPhaseService _technicalRequirementsConstructionPhaseService;
+        private IHostingEnvironment _environment;
 
-        public DailyFollowUpService(devAsiVamosFFIEContext context, ICommonService commonService, ITechnicalRequirementsConstructionPhaseService technicalRequirementsConstructionPhaseService)
+        public DailyFollowUpService(devAsiVamosFFIEContext context, 
+                                    ICommonService commonService, 
+                                    ITechnicalRequirementsConstructionPhaseService technicalRequirementsConstructionPhaseService,
+                                    IHostingEnvironment hostingEnvironment)
         {
             _context = context;
             _commonService = commonService;
             _technicalRequirementsConstructionPhaseService = technicalRequirementsConstructionPhaseService;
+            _environment = hostingEnvironment;
         }
 
         public async Task<List<VProyectosXcontrato>> gridRegisterDailyFollowUp()
@@ -216,7 +222,7 @@ namespace asivamosffie.services
                             ProyectoId = p.ProyectoId,
                             RegistroCompletoTieneObservaciones = p.RegistroCompletoTieneObservaciones,
                             Sede = p.Sede,
-                            TieneObservaciones = p.TieneObservaciones,
+                            //TieneObservaciones = p.TieneObservaciones,
                             TipoIntervencion = p.TipoIntervencion,
                             TipoSolicitudCodigo = p.TipoSolicitudCodigo,
                             ValorTotal = p.ValorTotal,
@@ -230,7 +236,8 @@ namespace asivamosffie.services
                                                           .FirstOrDefault()?.Descripcion,
 
                             TieneAlertas = VerificarAlertas(seguimientoDiario),
-                        };
+                            TieneObservaciones = seguimientoDiario.TieneObservacionSupervisor,
+                    };
 
 
 
@@ -498,14 +505,14 @@ namespace asivamosffie.services
                                                                 .FirstOrDefaultAsync();
 
 
-            //sd.ObservacionSupervisor = getObservacion(sd, pEsSupervicion);
+            sd.ObservacionSupervisor = getObservacion(sd, pEsSupervicion);
 
-            /*if (sd.ObservacionSupervisor == null ||
+            if (sd.ObservacionSupervisor == null ||
                  (sd.TieneObservacionSupervisor == true && string.IsNullOrEmpty(sd.ObservacionSupervisor != null ? sd.ObservacionSupervisor.Observaciones : null))
                )
             {
                 esCompleto = false;
-            }*/
+            }
 
             return esCompleto;
         }
@@ -650,7 +657,7 @@ namespace asivamosffie.services
                                                                 .FirstOrDefault()?.Nombre;
 
             seguimiento.ObservacionApoyo = getObservacion(seguimiento, false);
-            //seguimiento.ObservacionSupervisor = getObservacion(seguimiento, true);
+            seguimiento.ObservacionSupervisor = getObservacion(seguimiento, true);
 
             seguimiento.ObservacionDevolucion = _context.SeguimientoDiarioObservaciones.Find(seguimiento.ObservacionSupervisorId);
 
@@ -710,25 +717,52 @@ namespace asivamosffie.services
 
             }
 
-            if (listaFechasTotal.Count() > 0)
+            if ( _environment.IsProduction())
             {
-                bool fechaSeleccionada = false;
-                string ultimaFecha = string.Empty;
-                listaFechasTotal.OrderBy(r => r.Date).ToList().ForEach(f =>
-              {
-                  if (contratacion.SeguimientoDiario
-                                            .Where(s => s.FechaSeguimiento.ToShortDateString() == f.ToShortDateString() && s.Eliminado != true)
-                                            .Count() == 0
-                         && fechaSeleccionada == false
-                       )
-                  {
-                      ultimaFecha = f.ToString("d/M/yyyy", CultureInfo.InvariantCulture);
-                      fechaSeleccionada = true;
-                  }
-              });
+                if (listaFechasTotal.Count() > 0)
+                {
+                    bool fechaSeleccionada = false;
+                    string ultimaFecha = string.Empty;
+                    listaFechasTotal.OrderBy(r => r.Date).ToList().ForEach(f =>
+                    {
+                        if (contratacion.SeguimientoDiario
+                                                  .Where(s => s.FechaSeguimiento.ToShortDateString() == f.ToShortDateString() && s.Eliminado != true)
+                                                  .Count() == 0
+                               && fechaSeleccionada == false
+                             )
+                        {
+                            ultimaFecha = f.ToString("d/M/yyyy", CultureInfo.InvariantCulture);
+                            fechaSeleccionada = true;
+                        }
+                    });
 
-                listaFechas.Add(ultimaFecha);
+                    listaFechas.Add(ultimaFecha);
+                }
             }
+            else
+            {
+                if (listaFechasTotal.Count() > 0)
+                {
+                    bool fechaSeleccionada = false;
+                    string ultimaFecha = string.Empty;
+                    listaFechasTotal.OrderBy(r => r.Date).ToList().ForEach(f =>
+                    {
+                        if (contratacion.SeguimientoDiario
+                                                  .Where(s => s.FechaSeguimiento.ToShortDateString() == f.ToShortDateString() && s.Eliminado != true)
+                                                  .Count() == 0
+                               && fechaSeleccionada == false
+                             )
+                        {
+                            ultimaFecha = f.ToString("d/M/yyyy", CultureInfo.InvariantCulture);
+                            fechaSeleccionada = true;
+                        }
+                    });
+
+                    listaFechas.Add(ultimaFecha);
+                }
+            }
+
+            
 
 
 
