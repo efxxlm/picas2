@@ -15,7 +15,7 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+ 
     public class CreateRolesController : ControllerBase
     {
         private readonly IOptions<AppSettings> _settings;
@@ -43,6 +43,20 @@ namespace asivamosffie.api.Controllers
             {
                 respuesta.Data = ex.InnerException.ToString();
                 return BadRequest(respuesta);
+            }
+        }
+
+        [HttpGet]
+        [Route("GetListPerfil")]
+        public async Task<dynamic> GetListPerfil()
+        {
+            try
+            {
+                return await _createRolesService.GetListPerfil();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
 

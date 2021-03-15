@@ -104,5 +104,18 @@ namespace asivamosffie.services
 
         }
 
+        public async Task<dynamic> GetListPerfil()
+        {
+            return await _context.Perfil
+                .Select(p => new
+                {
+                    p.PerfilId,
+                    p.FechaCreacion,
+                    p.Nombre,
+                    estado = p.Eliminado
+                })
+                .OrderByDescending(p => p.PerfilId)
+                .ToListAsync();
+        }
     }
 }
