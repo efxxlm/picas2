@@ -32,7 +32,16 @@ namespace asivamosffie.services
             _commonService = commonService;
             _context = context;
         }
-         
+
+        public async Task<bool> ValidateExistNamePerfil(string pNamePerfil)
+        {
+            bool blExisteNombre = false;
+            if (await _context.Perfil.AnyAsync(p => p.Nombre.Trim().ToLower() == pNamePerfil.Trim().ToLower()))
+                blExisteNombre = true;
+
+            return blExisteNombre;
+        }
+
         public async Task<dynamic> GetMenu()
         {
             return await _context.Menu.Select(m =>
@@ -44,7 +53,6 @@ namespace asivamosffie.services
                                                 }
                                               ).ToListAsync();
         }
-
 
         public async Task<Perfil> GetPerfilByPerfilId(int pPerfilId)
         {
@@ -180,8 +188,8 @@ namespace asivamosffie.services
                     IsSuccessful = true,
                     IsException = false,
                     IsValidation = false,
-                    Code = GeneralCodes.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Crear_Roles, GeneralCodes.OperacionExitosa, idAccion, pPerfil.UsuarioCreacion, "CREAR EDITAR ROLES Y PERMISOS")
+                    Code = GeneralCodes.EliminacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Crear_Roles, GeneralCodes.EliminacionExitosa, idAccion, pPerfil.UsuarioCreacion, "ACTIVAR DESACTIVAR ROL")
                 };
             }
 

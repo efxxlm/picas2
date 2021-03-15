@@ -34,9 +34,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 pPerfil.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-
                 respuesta = await _createRolesService.ActivateDeactivatePerfil(pPerfil);
-
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -63,6 +61,20 @@ namespace asivamosffie.api.Controllers
             {
                 respuesta.Data = ex.InnerException.ToString();
                 return BadRequest(respuesta);
+            }
+        }
+
+        [HttpGet]
+        [Route("ValidateExistNamePerfil")]
+        public async Task<bool> ValidateExistNamePerfil([FromQuery] string pNamePerfil)
+        {
+            try
+            {
+                return await _createRolesService.ValidateExistNamePerfil(pNamePerfil);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
 
