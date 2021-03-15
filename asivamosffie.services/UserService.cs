@@ -210,51 +210,73 @@ namespace asivamosffie.services
 
         public async Task<Respuesta> CreateEditUsuario(Usuario pUsuario)
         {
-            if (pUsuario.UsuarioId == 0)
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Activar_Desactivar_Rol, (int)EnumeratorTipoDominio.Acciones);
+             
+            try
             {
-                string strPassWordGenerate = Helpers.Helpers.GeneratePassword(true, true, true, true, false, 20);
+                if (pUsuario.UsuarioId == 0)
+                {
+                    string strPassWordGenerate = Helpers.Helpers.GeneratePassword(true, true, true, true, false, 20); 
+                    pUsuario.FechaCreacion = DateTime.Now;
+                    pUsuario.Activo = true;
+                    pUsuario.Contrasena = Helpers.Helpers.encryptSha1(strPassWordGenerate);
+                    pUsuario.Eliminado = false;
 
-                pUsuario.FechaCreacion = DateTime.Now;
-                pUsuario.Activo = true;
-                pUsuario.Contrasena = Helpers.Helpers.encryptSha1(strPassWordGenerate);
-                pUsuario.Eliminado = false;
+                    _context.Usuario.Add(pUsuario);
+                    _context.SaveChanges();
 
-                _context.Usuario.Add(pUsuario);
-                _context.SaveChanges();
+                    await CrearEditarUsuarioPeril(pUsuario, true);
+                    await SendEmailWhenCreateUsuario(pUsuario, strPassWordGenerate);
+                }
+                else
+                {
+                    _context.Set<Usuario>()
+                            .Where(u => u.UsuarioId == pUsuario.UsuarioId)
+                            .Update(u => new Usuario
+                            {
+                                FechaModificacion = DateTime.Now,
+                                UsuarioModificacion = pUsuario.UsuarioCreacion,
 
-                await CrearEditarUsuarioPeril(pUsuario, true);
-                await SendEmailWhenCreateUsuario(pUsuario, strPassWordGenerate);
+                                ProcedenciaCodigo = pUsuario.ProcedenciaCodigo,
+                                PrimerNombre = pUsuario.PrimerNombre,
+                                SegundoNombre = pUsuario.SegundoNombre,
+                                PrimerApellido = pUsuario.PrimerApellido,
+                                SegundoApellido = pUsuario.SegundoApellido,
+                                TipoDocumentoCodigo = pUsuario.TipoDocumentoCodigo,
+                                NumeroIdentificacion = pUsuario.NumeroIdentificacion,
+                                Email = pUsuario.Email,
+                                TelefonoFijo = pUsuario.TelefonoFijo,
+                                TelefonoCelular = pUsuario.TelefonoCelular,
+                                MunicipioId = pUsuario.MunicipioId,
+                                FechaExpiracion = pUsuario.FechaExpiracion,
+                                UrlSoporteDocumentacion = pUsuario.UrlSoporteDocumentacion,
+                                Observaciones = pUsuario.Observaciones,
+                                DependenciaCodigo = pUsuario.DependenciaCodigo,
+                                GrupoCodigo = pUsuario.GrupoCodigo
+                            });
+
+                    await CrearEditarUsuarioPeril(pUsuario, false);
+                }
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_usuarios, GeneralCodes.OperacionExitosa, idAccion, pUsuario.UsuarioCreacion, "CREAR EDITAR USUARIO")
+                };
             }
-            else
+            catch (Exception e)
             {
-                _context.Set<Usuario>()
-                        .Where(u => u.UsuarioId == pUsuario.UsuarioId)
-                        .Update(u => new Usuario
-                        {
-                            FechaModificacion = DateTime.Now,
-                            UsuarioModificacion = pUsuario.UsuarioCreacion,
-
-                            ProcedenciaCodigo = pUsuario.ProcedenciaCodigo,
-                            PrimerNombre = pUsuario.PrimerNombre,
-                            SegundoNombre = pUsuario.SegundoNombre,
-                            PrimerApellido = pUsuario.PrimerApellido,
-                            SegundoApellido = pUsuario.SegundoApellido,
-                            TipoDocumentoCodigo = pUsuario.TipoDocumentoCodigo,
-                            NumeroIdentificacion = pUsuario.NumeroIdentificacion,
-                            Email = pUsuario.Email,
-                            TelefonoFijo = pUsuario.TelefonoFijo,
-                            TelefonoCelular = pUsuario.TelefonoCelular,
-                            MunicipioId = pUsuario.MunicipioId,
-                            FechaExpiracion = pUsuario.FechaExpiracion,
-                            UrlSoporteDocumentacion = pUsuario.UrlSoporteDocumentacion,
-                            Observaciones = pUsuario.Observaciones,
-                            DependenciaCodigo = pUsuario.DependenciaCodigo,
-                            GrupoCodigo = pUsuario.GrupoCodigo
-                        });
-
-                await CrearEditarUsuarioPeril(pUsuario, false);
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = GeneralCodes.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_usuarios, GeneralCodes.Error, idAccion, pUsuario.UsuarioCreacion, e.InnerException.ToString())
+                };
             }
-            return new Respuesta();
         }
 
         private async Task CrearEditarUsuarioPeril(Usuario pUsuario, bool Create)
