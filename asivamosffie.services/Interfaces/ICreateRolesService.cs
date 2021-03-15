@@ -11,8 +11,7 @@ namespace asivamosffie.services.Interfaces
 {
     public interface ICreateRolesService
     {
-        Task<bool> ValidateExistNamePerfil(string pNamePerfil)
-            ;
+        Task<bool> ValidateExistNamePerfil(string pNamePerfil);
 
         Task<dynamic> GetMenu();
 

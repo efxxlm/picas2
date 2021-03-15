@@ -229,6 +229,8 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Lista_Chequeo_Menu = 166,
 
-        Lista_Fases_Sistema = 169
+        Lista_Fases_Sistema = 169,
+
+        Procedencia_Usuario = 170
     }
 }

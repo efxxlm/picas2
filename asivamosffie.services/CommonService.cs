@@ -134,7 +134,7 @@ namespace asivamosffie.services
 
             List<dynamic> ListaUsuario = new List<dynamic>();
 
-            var ListUsuarios = await _context.UsuarioPerfil.Where(r => r.PerfilId == idPerfil && (bool)r.Activo).Select(r => r.Usuario).Where(r => !(bool)r.Eliminado).Distinct().OrderBy(r => r.Nombres).ToListAsync();
+            var ListUsuarios = await _context.UsuarioPerfil.Where(r => r.PerfilId == idPerfil && (bool)r.Activo).Select(r => r.Usuario).Where(r => !(bool)r.Eliminado).Distinct().OrderBy(r => r.PrimerNombre).ToListAsync();
 
             foreach (var item in ListUsuarios)
             {
@@ -142,8 +142,8 @@ namespace asivamosffie.services
                                     new
                                     {
                                         item.UsuarioId,
-                                        item.Nombres,
-                                        item.Apellidos
+                                        item.PrimerNombre,
+                                        item.PrimerApellido
                                     }
                                 );
             }

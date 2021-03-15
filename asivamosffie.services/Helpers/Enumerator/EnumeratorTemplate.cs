@@ -87,8 +87,9 @@ namespace asivamosffie.services.Helpers.Enumerator
         //6.4 Lista chequeo
         ListaChequeoDesactivada = 86,
         //6.3
-        MensajeDesactivarRol_6_3 = 94
-
+        MensajeDesactivarRol_6_3 = 94,
+        //6.2
+        CreateUserEmail_6_2 = 95
 
     }
 }

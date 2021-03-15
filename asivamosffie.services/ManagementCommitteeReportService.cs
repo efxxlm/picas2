@@ -297,8 +297,8 @@ namespace asivamosffie.services
                                participante.Eliminado = vSesionParticipante.Eliminado;
 
                                participante.Usuario.UsuarioId = vSesionParticipante.UsuarioId;
-                               participante.Usuario.Nombres = vSesionParticipante.Nombres;
-                               participante.Usuario.Apellidos = vSesionParticipante.Apellidos;
+                               participante.Usuario.PrimerNombre = vSesionParticipante.Nombres;
+                               participante.Usuario.PrimerApellido = vSesionParticipante.Apellidos;
                                participante.Usuario.NumeroIdentificacion = vSesionParticipante.NumeroIdentificacion;
                                participante.esAprobado = ListParticipanteVotos
                                                                           .Where(s => s.ComiteTecnicoId == item.ComiteTecnicoId
@@ -761,7 +761,7 @@ namespace asivamosffie.services
                     TotalRegistros += Registros;
 
                     TotalRegistros = TotalRegistros.Replace("[FECHA_APROBACION]", (SesionParticipante.Usuario.SesionComentario.Where(r => r.EstadoActaVoto == ConstantCodigoActas.Aprobada).Select(r => r.Fecha).FirstOrDefault()).ToString("dd-MM-yyyy"))
-                                  .Replace("[RESPONSABLE]", myTI.ToTitleCase(SesionParticipante.Usuario.Nombres.ToLower() + " " + SesionParticipante.Usuario.Apellidos.ToLower()));
+                                  .Replace("[RESPONSABLE]", myTI.ToTitleCase(SesionParticipante.Usuario.PrimerNombre.ToLower() + " " + SesionParticipante.Usuario.PrimerApellido.ToLower()));
 
                 }
                 Tabla = Tabla.Replace("[REGISTROS]", TotalRegistros);

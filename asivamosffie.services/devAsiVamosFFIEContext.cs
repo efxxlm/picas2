@@ -232,7 +232,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -7093,11 +7092,6 @@ namespace asivamosffie.model.Models
                     .HasDefaultValueSql("((1))")
                     .HasComment("Indica si el usuario se encuentra activo en el sistema");
 
-                entity.Property(e => e.Apellidos)
-                    .IsRequired()
-                    .HasMaxLength(300)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.Bloqueado).HasComment("Indica si el usuario se encuentra bloqueado por seguridad y numero de intentos fallidos en el sistema");
 
                 entity.Property(e => e.CambiarContrasena).HasDefaultValueSql("('0')");
@@ -7163,20 +7157,33 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false)
                     .HasComment("Nombre del equipo o dispositivo desde donde se esta conectando el usuario por ultima vez.");
 
-                entity.Property(e => e.Nombres)
-                    .IsRequired()
-                    .HasMaxLength(300)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.NumeroIdentificacion)
-                    .IsRequired()
-                    .HasMaxLength(15)
+                    .HasMaxLength(255)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Observaciones).HasMaxLength(1000);
 
+                entity.Property(e => e.PrimerApellido)
+                    .IsRequired()
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PrimerNombre)
+                    .IsRequired()
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.ProcedenciaCodigo)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SegundoApellido)
                     .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SegundoNombre)
+                    .IsRequired()
+                    .HasMaxLength(300)
                     .IsUnicode(false);
 
                 entity.Property(e => e.TelefonoCelular)
@@ -7837,8 +7844,7 @@ namespace asivamosffie.model.Models
                 entity.ToView("V_SesionParticipante");
 
                 entity.Property(e => e.Apellidos)
-                    .IsRequired()
-                    .HasMaxLength(300)
+                    .HasMaxLength(18)
                     .IsUnicode(false);
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
@@ -7847,12 +7853,11 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.Nombres)
                     .IsRequired()
-                    .HasMaxLength(300)
+                    .HasMaxLength(601)
                     .IsUnicode(false);
 
                 entity.Property(e => e.NumeroIdentificacion)
-                    .IsRequired()
-                    .HasMaxLength(15)
+                    .HasMaxLength(255)
                     .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)

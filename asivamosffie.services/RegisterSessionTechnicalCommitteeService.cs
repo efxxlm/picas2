@@ -1658,8 +1658,8 @@ namespace asivamosffie.services
                        participante.Eliminado = vSesionParticipante.Eliminado;
 
                        participante.Usuario.UsuarioId = vSesionParticipante.UsuarioId;
-                       participante.Usuario.Nombres = vSesionParticipante.Nombres;
-                       participante.Usuario.Apellidos = vSesionParticipante.Apellidos;
+                       participante.Usuario.PrimerNombre = vSesionParticipante.Nombres;
+                       participante.Usuario.PrimerApellido = vSesionParticipante.Apellidos;
                        participante.Usuario.NumeroIdentificacion = vSesionParticipante.NumeroIdentificacion;
 
                        ssc.ResponsableSesionParticipante = participante;
@@ -3056,12 +3056,12 @@ namespace asivamosffie.services
                                 Usuario responsable = listaUsuarios.Find(r => r.UsuarioId == pProcesoSeleccion.ResponsableTecnicoUsuarioId);
 
                                 if (responsable != null)
-                                    NombresPreponente = string.Concat(responsable.Nombres, " ", responsable.Apellidos, " - ");
+                                    NombresPreponente = string.Concat(responsable.PrimerNombre, " ", responsable.PrimerApellido, " - ");
 
                                 responsable = listaUsuarios.Find(r => r.UsuarioId == pProcesoSeleccion.ResponsableEstructuradorUsuarioid);
 
                                 if (responsable != null)
-                                    NombresPreponente += string.Concat(responsable.Nombres, " ", responsable.Apellidos, " - ");
+                                    NombresPreponente += string.Concat(responsable.PrimerNombre, " ", responsable.PrimerApellido, " - ");
 
                                 ProcesosSeleccionAbierta = ProcesosSeleccionAbierta.
                                 Replace(placeholderDominio.Nombre, NombresPreponente);
@@ -3095,12 +3095,12 @@ namespace asivamosffie.services
                                 Usuario responsable = listaUsuarios.Find(r => r.UsuarioId == pProcesoSeleccion.ResponsableTecnicoUsuarioId);
 
                                 if (responsable != null)
-                                    NombresPreponente = string.Concat(responsable.Nombres, " ", responsable.Apellidos, " - ");
+                                    NombresPreponente = string.Concat(responsable.PrimerNombre, " ", responsable.PrimerApellido, " - ");
 
                                 responsable = listaUsuarios.Find(r => r.UsuarioId == pProcesoSeleccion.ResponsableEstructuradorUsuarioid);
 
                                 if (responsable != null)
-                                    NombresPreponente += string.Concat(responsable.Nombres, " ", responsable.Apellidos, " - ");
+                                    NombresPreponente += string.Concat(responsable.PrimerNombre, " ", responsable.PrimerApellido, " - ");
 
                                 ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
                                 Replace(placeholderDominio.Nombre, NombresPreponente);
@@ -4854,8 +4854,8 @@ namespace asivamosffie.services
 
                                                     case ConstanCodigoVariablesPlaceHolders.RESPONSABLE_COMPROMISO:
                                                         registrosCompromisosSolicitud = registrosCompromisosSolicitud
-                                                            .Replace(placeholderDominio3.Nombre, compromiso.ResponsableSesionParticipante.Usuario.Nombres
-                                                            + " " + compromiso.ResponsableSesionParticipante.Usuario.Apellidos);
+                                                            .Replace(placeholderDominio3.Nombre, compromiso.ResponsableSesionParticipante.Usuario.PrimerNombre
+                                                            + " " + compromiso.ResponsableSesionParticipante.Usuario.PrimerApellido);
                                                         break;
 
                                                     case ConstanCodigoVariablesPlaceHolders.FECHA_CUMPLIMIENTO_COMPROMISO:
@@ -5051,8 +5051,8 @@ namespace asivamosffie.services
 
                                                     case ConstanCodigoVariablesPlaceHolders.RESPONSABLE_COMPROMISO:
                                                         registrosCompromisosSolicitud = registrosCompromisosSolicitud
-                                                            .Replace(placeholderDominio3.Nombre, compromiso.ResponsableSesionParticipante.Usuario.Nombres
-                                                            + " " + compromiso.ResponsableSesionParticipante.Usuario.Apellidos);
+                                                            .Replace(placeholderDominio3.Nombre, compromiso.ResponsableSesionParticipante.Usuario.PrimerNombre
+                                                            + " " + compromiso.ResponsableSesionParticipante.Usuario.PrimerApellido);
                                                         break;
 
                                                     case ConstanCodigoVariablesPlaceHolders.FECHA_CUMPLIMIENTO_COMPROMISO:
@@ -5160,8 +5160,8 @@ namespace asivamosffie.services
 
                                             case ConstanCodigoVariablesPlaceHolders.RESPONSABLE_COMPROMISO:
                                                 registrosCompromisosSolicitud = registrosCompromisosSolicitud
-                                                    .Replace(placeholderDominio4.Nombre, compromiso.ResponsableNavigation.Usuario.Nombres
-                                                    + " " + compromiso.ResponsableNavigation.Usuario.Apellidos);
+                                                    .Replace(placeholderDominio4.Nombre, compromiso.ResponsableNavigation.Usuario.PrimerNombre
+                                                    + " " + compromiso.ResponsableNavigation.Usuario.PrimerApellido);
                                                 break;
 
                                             case ConstanCodigoVariablesPlaceHolders.FECHA_CUMPLIMIENTO_COMPROMISO:
@@ -5353,8 +5353,8 @@ namespace asivamosffie.services
 
                                             case ConstanCodigoVariablesPlaceHolders.RESPONSABLE_COMPROMISO:
                                                 registrosCompromisosSolicitud = registrosCompromisosSolicitud
-                                                    .Replace(placeholderDominio5.Nombre, compromiso.ResponsableNavigation.Usuario.Nombres
-                                                    + " " + compromiso.ResponsableNavigation.Usuario.Apellidos);
+                                                    .Replace(placeholderDominio5.Nombre, compromiso.ResponsableNavigation.Usuario.PrimerNombre
+                                                    + " " + compromiso.ResponsableNavigation.Usuario.PrimerApellido);
                                                 break;
 
                                             case ConstanCodigoVariablesPlaceHolders.FECHA_CUMPLIMIENTO_COMPROMISO:
@@ -5388,7 +5388,7 @@ namespace asivamosffie.services
 
                             case ConstanCodigoVariablesPlaceHolders.NOMBRE_PARTICIPANTE:
                                 RegistrosFirmas = RegistrosFirmas
-                                    .Replace(placeholderDominio.Nombre, SesionParticipante.Usuario.Nombres + " " + SesionParticipante.Usuario.Apellidos);
+                                    .Replace(placeholderDominio.Nombre, SesionParticipante.Usuario.PrimerNombre + " " + SesionParticipante.Usuario.PrimerApellido);
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.CARGO_PARTICIPANTE:
@@ -5550,7 +5550,7 @@ namespace asivamosffie.services
                             string strUsuariosParticipantes = string.Empty;
                             ListSesionParticipante.ForEach(user =>
                             {
-                                strUsuariosParticipantes += user.Usuario.Nombres + " " + user.Usuario.Apellidos + " ";
+                                strUsuariosParticipantes += user.Usuario.PrimerNombre + " " + user.Usuario.PrimerApellido + " ";
                             });
                             strContenido = strContenido.Replace(placeholderDominio.Nombre, strUsuariosParticipantes);
                             break;

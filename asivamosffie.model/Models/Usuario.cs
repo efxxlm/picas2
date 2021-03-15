@@ -29,10 +29,10 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
         public bool? CambiarContrasena { get; set; }
-        public string Nombres { get; set; }
-        public string Apellidos { get; set; }
-        public string NumeroIdentificacion { get; set; }
-        public string ProcedenciaCodigo { get; set; }
+        public string PrimerNombre { get; set; }
+        public string SegundoNombre { get; set; }
+        public string PrimerApellido { get; set; }
+        public string SegundoApellido { get; set; }
         public string TipoDocumentoCodigo { get; set; }
         public string TelefonoFijo { get; set; }
         public string TelefonoCelular { get; set; }
@@ -43,6 +43,8 @@ namespace asivamosffie.model.Models
         public string DependenciaCodigo { get; set; }
         public string GrupoCodigo { get; set; }
         public DateTime? FechaCambioPassword { get; set; }
+        public string ProcedenciaCodigo { get; set; }
+        public string NumeroIdentificacion { get; set; }
 
         public virtual Localizacion Municipio { get; set; }
         public virtual ICollection<CompromisoSeguimiento> CompromisoSeguimiento { get; set; }

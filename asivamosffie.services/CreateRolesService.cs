@@ -35,6 +35,7 @@ namespace asivamosffie.services
 
         public async Task<bool> ValidateExistNamePerfil(string pNamePerfil)
         {
+            pNamePerfil = pNamePerfil.Replace("%", "");
             bool blExisteNombre = false;
             if (await _context.Perfil.AnyAsync(p => p.Nombre.Trim().ToLower() == pNamePerfil.Trim().ToLower()))
                 blExisteNombre = true;
@@ -142,7 +143,7 @@ namespace asivamosffie.services
                     p.PerfilId,
                     p.FechaCreacion,
                     p.Nombre,
-                    estado = p.Eliminado
+                    p.Eliminado
                 })
                 .OrderByDescending(p => p.PerfilId)
                 .ToListAsync();
