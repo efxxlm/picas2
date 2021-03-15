@@ -64,6 +64,7 @@ export class FormGestionarUsuariosComponent implements OnInit {
             listaDepartamentos
             listaMunicipiosByIdDepartamento
         */
+       // Get data campo Procedencia
         this.commonSvc.listaProcedencia()
             .subscribe(
                 listaProcedencia => {
@@ -73,18 +74,72 @@ export class FormGestionarUsuariosComponent implements OnInit {
                     }
 
                     this.listaProcedencia = listaProcedencia;
+                    // Get data campo tipo de documento de identificacion
+                    this.commonSvc.listaTipodocumento()
+                        .subscribe( listaTipodocumento => {
+                            this.listaTipoDocumento = listaTipodocumento;
+                            // Get data campo departamento
+                            this.commonSvc.listaDepartamentos()
+                                .subscribe( listaDepartamentos => {
+                                    this.listaDepartamento = listaDepartamentos;
+                                    // Get data campo dependencia
+                                    this.commonSvc.listaDependencia()
+                                        .subscribe( listaDependencia => {
+                                            this.listaDependencia = listaDependencia;
+                                            // Get data campo grupo
+                                            this.commonSvc.listaGrupo()
+                                                .subscribe( listaGrupo => {
+                                                    this.listaGrupo = listaGrupo;
+                                                    // Get data roles
+                                                    this.gestionarUsuariosSvc.getListPerfil()
+                                                    .subscribe( listaPerfil => {
+                                                        this.listaRoles = listaPerfil;
+                                                        // Get data usuario
+                                                        if ( this.esRegistroNuevo === false ) {
+                                                            this.gestionarUsuariosSvc.getUsuario( this.activatedRoute.snapshot.params.id )
+                                                                .subscribe(
+                                                                    getUsuario => {
+                                                                        console.log( getUsuario );
+
+                                                                        this.formUsuario.setValue(
+                                                                            {
+                                                                                procedencia: getUsuario.procedenciaCodigo !== undefined ? this.listaProcedencia.find( procedencia => procedencia.codigo === getUsuario.procedenciaCodigo ).codigo : null,
+                                                                                primerNombre: getUsuario.primerNombre !== undefined ? getUsuario.primerNombre : null,
+                                                                                segundoNombre: getUsuario.segundoNombre !== undefined ? getUsuario.segundoNombre : null,
+                                                                                primerApellido: getUsuario.primerApellido !== undefined ? getUsuario.primerApellido : null,
+                                                                                segundoApellido: getUsuario.segundoApellido !== undefined ? getUsuario.segundoApellido : null,
+                                                                                tipoDocumento: getUsuario.tipoDocumentoCodigo !== undefined ? this.listaTipoDocumento.find( documento => documento.codigo === getUsuario.tipoDocumentoCodigo ).codigo : null,
+                                                                                numeroIdentificacion: getUsuario.numeroIdentificacion !== undefined ? getUsuario.numeroIdentificacion : null,
+                                                                                correo: getUsuario.email !== undefined ? getUsuario.email : null,
+                                                                                telefonoFijo: getUsuario.telefonoFijo !== undefined ? getUsuario.telefonoFijo : null,
+                                                                                telefonoCelular: getUsuario.telefonoCelular !== undefined ? getUsuario.telefonoCelular : null,
+                                                                                departamento: null,
+                                                                                municipio: null,
+                                                                                fechaCreacion: getUsuario.fechaCreacion !== undefined ? getUsuario.fechaCreacion : null,
+                                                                                fechaExpiracion: getUsuario.fechaExpiracion !== undefined ? getUsuario.fechaExpiracion : null,
+                                                                                urlSoporte: getUsuario.urlSoporteDocumentacion !== undefined ? getUsuario.urlSoporteDocumentacion : null,
+                                                                                observaciones: getUsuario.observaciones !== undefined ? getUsuario.observaciones : null,
+                                                                                dependencia: getUsuario.dependenciaCodigo !== undefined ? this.listaDependencia.find( dependencia => dependencia.codigo === getUsuario.dependenciaCodigo ).codigo : null,
+                                                                                grupo: getUsuario.grupoCodigo !== undefined ? this.listaGrupo.find( grupo => grupo.codigo === getUsuario.grupoCodigo ).codigo : null,
+                                                                                rol: getUsuario.PerfilId !== undefined ? this.listaRoles.find( rol => rol.perfilId === getUsuario.PerfilId ).perfilId : null,
+                                                                                contratos: null
+                                                                            }
+                                                                        );
+
+                                                                        if ( getUsuario.municipioId !== undefined ) {
+                                                                            this.commonSvc.forkDepartamentoMunicipio( getUsuario.municipioId )
+                                                                                .subscribe( console.log );
+                                                                        }
+                                                                    }
+                                                                );
+                                                        }
+                                                    } );
+                                                } );
+                                        } );
+                                } );
+                        } );
                 }
             );
-        this.commonSvc.listaTipodocumento()
-            .subscribe( listaTipodocumento => this.listaTipoDocumento = listaTipodocumento );
-        this.commonSvc.listaDepartamentos()
-            .subscribe( listaDepartamentos => this.listaDepartamento = listaDepartamentos );
-        this.commonSvc.listaDependencia()
-            .subscribe( listaDependencia => this.listaDependencia = listaDependencia );
-        this.commonSvc.listaGrupo()
-            .subscribe( listaGrupo => this.listaGrupo = listaGrupo );
-        this.gestionarUsuariosSvc.getListPerfil()
-            .subscribe( listaPerfil => this.listaRoles = listaPerfil );
     }
 
     ngOnInit(): void {

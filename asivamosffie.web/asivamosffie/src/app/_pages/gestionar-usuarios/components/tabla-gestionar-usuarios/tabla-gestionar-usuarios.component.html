@@ -19,12 +19,12 @@
     
           <ng-container matColumnDef="procedencia">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Procedencia </th>
-            <td mat-cell *matCellDef="let element" align="center"> {{ element.procedencia }} </td>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.procedenciaCodigo }} </td>
           </ng-container>
     
           <ng-container matColumnDef="nombreApellido">
             <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 40%;"> Nombres y apellidos </th>
-            <td mat-cell *matCellDef="let element" align="center"> {{ element.nombreApellido }} </td>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.primerNombre }} {{ element.segundoNombre }} {{ element.primerApellido }} </td>
           </ng-container>
 
           <ng-container matColumnDef="numeroDocumento">
@@ -39,7 +39,7 @@
 
           <ng-container matColumnDef="estado">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del usuario </th>
-            <td mat-cell *matCellDef="let element" align="center"> {{ element.estado }} </td>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.eliminado === false ? 'Activo' : 'Inactivo' }} </td>
           </ng-container>
         
           <ng-container matColumnDef="gestion">
@@ -49,7 +49,7 @@
               <button mat-raised-button
                       color="accent" 
                       class="btn-table"
-                      [routerLink]="[ 'editarUsuario', element.id ]">
+                      [routerLink]="[ 'editarUsuario', element.usuarioId ]">
                       Ver detalle/Editar
               </button>
     

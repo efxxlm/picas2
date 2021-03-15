@@ -465,8 +465,8 @@ listaEstadosPoliza(){
     return forkJoin([
       this.listMunicipiosByIdMunicipio(idMunicipio),
       this.listDepartamentoByIdMunicipio(idMunicipio)
-      ]);  
-    }
+    ]);  
+  }
     
   listaFuenteRecursos(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=18`);
