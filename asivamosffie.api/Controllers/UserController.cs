@@ -97,6 +97,14 @@ namespace asivamosffie.api.Controllers
         #endregion
 
         [HttpPost]
+        [Route("ValidateExistEmail")]
+        public async Task<bool> ValidateExistEmail([FromBody] Usuario pUsuario)
+        {
+            return await _user.ValidateExistEmail(pUsuario);
+        }
+    
+        
+        [HttpPost]
         [Route("CreateEditUsuario")]
         public async Task<Respuesta> CreateEditUsuario([FromBody] Usuario pUsuario)
         {

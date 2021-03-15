@@ -213,6 +213,14 @@ namespace asivamosffie.services
         #endregion
 
         #region Create Edit List
+        public async Task<bool> ValidateExistEmail(Usuario pUsuario)
+        { 
+            if (await _context.Usuario.AnyAsync(u => u.Email.ToLower() == pUsuario.Email.ToLower())) 
+                return false;
+          
+            return true; 
+        }
+
         public async Task<List<VUsuariosRoles>> GetListUsuario()
         {
             return await _context.VUsuariosRoles.OrderByDescending(ur => ur.UsuarioId).ToListAsync();
@@ -233,8 +241,7 @@ namespace asivamosffie.services
             {
                 if (pUsuario.UsuarioId == 0)
                 {
-                    string strPassWordGenerate = Helpers.Helpers.GeneratePassword(true, true, true, true, false, 20);
-                    pUsuario.FechaCreacion = DateTime.Now;
+                    string strPassWordGenerate = Helpers.Helpers.GeneratePassword(true, true, true, true, false, 20); 
                     pUsuario.Activo = true;
                     pUsuario.Contrasena = Helpers.Helpers.encryptSha1(strPassWordGenerate);
                     pUsuario.Eliminado = false;
@@ -344,17 +351,16 @@ namespace asivamosffie.services
             return template;
         }
 
-
         public async Task<dynamic> GetListPerfil()
-        { 
+        {
             return await _context.Perfil
                 .Where(p => p.Eliminado != true)
                 .OrderByDescending(p => p.PerfilId)
                 .Select(p => new
-            {
-                p.PerfilId,
-                p.Nombre
-            }).ToListAsync();
+                {
+                    p.PerfilId,
+                    p.Nombre
+                }).ToListAsync();
         }
         #endregion
     }
