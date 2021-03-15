@@ -817,11 +817,11 @@
       </mat-card-header>
       <mat-card-content>
 
-        <!-- ¿Tiene observaciones al registro del seguimiento diario?: <span>{{ 'Si' }}</span>
-        <br> -->
-        <p> 
-          {{ seguimiento.observacionDevolucion.observaciones }}
-        </p>
+        <section
+        
+        [innerHTML]="seguimiento.observacionDevolucion.observaciones"
+        style="margin-left: 2em"
+      ></section>
 
       </mat-card-content>
     </mat-card>
