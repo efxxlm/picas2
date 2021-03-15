@@ -24,7 +24,7 @@ namespace asivamosffie.services
     public class CreateRolesService : ICreateRolesService
     {
         private readonly ICommonService _commonService;
-        private readonly devAsiVamosFFIEContext _context;
+        private  devAsiVamosFFIEContext _context;
         public readonly IConverter _converter;
 
         public CreateRolesService(devAsiVamosFFIEContext context, ICommonService commonService)
@@ -45,14 +45,16 @@ namespace asivamosffie.services
 
         public async Task<dynamic> GetMenu()
         {
-            return await _context.Menu.Select(m =>
-                                                new
-                                                {
-                                                    m.FaseCodigo,
-                                                    m.MenuId,
-                                                    m.Nombre
-                                                }
-                                              ).ToListAsync();
+            return await _context.Menu
+                         .Where(m => m.MenuId != (int)enumeratorMenu.CambioContrasena) 
+                         .Select(m =>
+                                new
+                                {
+                                    m.FaseCodigo,
+                                    m.MenuId,
+                                    m.Nombre
+                                })
+                         .ToListAsync();
         }
 
         public async Task<Perfil> GetPerfilByPerfilId(int pPerfilId)
@@ -155,10 +157,10 @@ namespace asivamosffie.services
 
             try
             {
-                List<Usuario> ListUsuario = _context.UsuarioPerfil
+                List<UsuarioPerfil> ListUsuarioPerfil = _context.UsuarioPerfil
                                                                 .Where(r => r.PerfilId == pPerfil.PerfilId)
                                                                 .Include(u => u.Usuario)
-                                                                .Select(u => u.Usuario)
+                                                                .Include(u => u.Perfil)
                                                                 .ToList();
 
                 _context.Set<Perfil>()
@@ -170,7 +172,7 @@ namespace asivamosffie.services
                             FechaModificacion = DateTime.Now
                         });
 
-                foreach (var User in ListUsuario)
+                foreach (var User in ListUsuarioPerfil)
                 {
                     _context.Set<Usuario>()
                         .Where(u => u.UsuarioId == User.UsuarioId)
@@ -182,7 +184,11 @@ namespace asivamosffie.services
                         });
                 }
 
-                await SendEmailWhenDesactivateRol(pPerfil);
+                if (pPerfil.Eliminado == true)
+                {
+                    await SendEmailWhenDesactivateRol(ListUsuarioPerfil.FirstOrDefault().Perfil);
+                }
+               
 
                 return new Respuesta
                 {
@@ -211,7 +217,7 @@ namespace asivamosffie.services
 
         private async Task<bool> SendEmailWhenDesactivateRol(Perfil pPerfil)
         {
-            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.MensajeDesactivarRol_6_3));
+            Template template =  _context.Template.Find((int)(enumeratorTemplate.MensajeDesactivarRol_6_3));
             template.Contenido = ReplaceVariablesPerfil(template.Contenido, pPerfil.Nombre);
 
             List<string> ListEmails = _context.UsuarioPerfil
@@ -226,7 +232,7 @@ namespace asivamosffie.services
         private string ReplaceVariablesPerfil(string template, string pNombreRol)
         {
             template = template
-                      .Replace("[NOMBRE_ROL]", pNombreRol);
+                      .Replace("_NOMBRE_ROL_", pNombreRol);
             return template;
         }
     }

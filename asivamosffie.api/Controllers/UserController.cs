@@ -96,7 +96,7 @@ namespace asivamosffie.api.Controllers
 
         #endregion
 
-        [HttpGet]
+        [HttpPost]
         [Route("CreateEditUsuario")]
         public async Task<Respuesta> CreateEditUsuario([FromBody] Usuario pUsuario)
         {

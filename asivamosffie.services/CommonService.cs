@@ -33,9 +33,7 @@ namespace asivamosffie.services
             _connectionString = configuration.GetConnectionString("asivamosffieDatabase");
             _mailSettings = mailSettings.Value;
             _context = context;
-        }
-
-
+        } 
         //Solicitudes de comite tecnico
         public async Task<dynamic> GetRequestSP(string pNameSP)
         {
@@ -58,6 +56,7 @@ namespace asivamosffie.services
                 }
             }
         } 
+
         public dynamic MapToValue(SqlDataReader reader)
         {
             return new 

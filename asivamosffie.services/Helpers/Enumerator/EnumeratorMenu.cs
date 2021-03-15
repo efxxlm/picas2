@@ -5,7 +5,7 @@ namespace asivamosffie.services.Helpers.Enumerator
     {
         Usuario = 1,
         Cofinanciacion = 2,
-        CambioContraseña = 6,
+        CambioContrasena = 6,
         CargueMasivoProyecto = 9,
         Proyecto = 10,
         Fuentes = 14,

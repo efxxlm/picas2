@@ -65,8 +65,7 @@ namespace asivamosffie.api.Controllers
         {
             return common.GetUsuarioByPerfil(idPerfil);
         }
-
-
+         
         [HttpGet]
         [Route("GetMenuByRol")]
         public async Task<ActionResult<List<MenuPerfil>>> GetMenuByRol()
@@ -121,8 +120,7 @@ namespace asivamosffie.api.Controllers
             var result = await common.GetListMunicipioByIdDepartamento(idDepartamento);
             return result;
         }
-
-
+         
         [HttpGet]
         [Route("ListMunicipiosByIdMunicipio")]
         public async Task<ActionResult<List<Localicacion>>> GetListMunicipioByMunicipio(string idMunicipio)

@@ -111,6 +111,7 @@ namespace asivamosffie.services
          *  @param Newpwd string nueva contraseña encriptada en mayusculas
          *  @return Respuesta objeto de respuesta
          * **/
+
         public async Task<Respuesta> ChangePasswordUser(int pidusuario, string Oldpwd, string Newpwd)
         {
             var user = _context.Usuario.Find(pidusuario);
@@ -124,7 +125,12 @@ namespace asivamosffie.services
                 {
                     if (user.Contrasena.ToUpper() != OldpwdEncrypt.ToString())
                     {
-                        respuesta = new Respuesta() { IsSuccessful = false, IsValidation = false, Code = ConstantMessagesContrasena.ErrorContrasenaAntigua };
+                        respuesta = new Respuesta()
+                        {
+                            IsSuccessful = false,
+                            IsValidation = false,
+                            Code = ConstantMessagesContrasena.ErrorContrasenaAntigua
+                        };
                     }
                     else
                     {
@@ -138,18 +144,27 @@ namespace asivamosffie.services
                         user.UsuarioModificacion = user.Email;
                         user.CambiarContrasena = false;
                         await _context.SaveChangesAsync();
-                        respuesta = new Respuesta() { IsSuccessful = true, IsValidation = true, Data = user, Code = ConstantMessagesContrasena.OperacionExitosa };
+                        respuesta = new Respuesta()
+                        {
+                            IsSuccessful = true,
+                            IsValidation = true,
+                            Data = user,
+                            Code = ConstantMessagesContrasena.OperacionExitosa
+                        };
                     }
                 }
                 else
                 {
-                    respuesta = new Respuesta() { IsSuccessful = false, IsValidation = false, Code = ConstantMessagesContrasena.ErrorSesion };
+                    respuesta = new Respuesta() {
+                        IsSuccessful = false, 
+                        IsValidation = false, 
+                        Code = ConstantMessagesContrasena.ErrorSesion };
                 }
-                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CambioContraseña, respuesta.Code, (int)enumeratorAccion.CambiarContraseña, user.Email, "Cambiar contraseña");
+                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CambioContrasena, respuesta.Code, (int)enumeratorAccion.CambiarContraseña, user.Email, "Cambiar contraseña");
             }
             catch (Exception ex)
             {
-                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CambioContraseña, respuesta.Code, (int)enumeratorAccion.CambiarContraseña, user.Email, "Cambiar contraseña") + ": " + ex.ToString() + ex.InnerException;
+                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CambioContrasena, respuesta.Code, (int)enumeratorAccion.CambiarContraseña, user.Email, "Cambiar contraseña") + ": " + ex.ToString() + ex.InnerException;
             }
             return respuesta;
         }
@@ -176,11 +191,11 @@ namespace asivamosffie.services
                 {
                     respuesta = new Respuesta() { IsSuccessful = false, IsValidation = false, Code = ConstantMessagesContrasena.ErrorSesion };
                 }
-                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CambioContraseña, respuesta.Code, (int)enumeratorAccion.CambiarContraseña, user.Email, "Validación de contraseña");
+                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Usuario, respuesta.Code, (int)enumeratorAccion.CambiarContraseña, user.Email, "Validación de contraseña");
             }
             catch (Exception ex)
             {
-                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CambioContraseña, respuesta.Code, (int)enumeratorAccion.CambiarContraseña, user.Email, "Validación de contraseña") + ": " + ex.ToString() + ex.InnerException;
+                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CambioContrasena, respuesta.Code, (int)enumeratorAccion.CambiarContraseña, user.Email, "Validación de contraseña") + ": " + ex.ToString() + ex.InnerException;
             }
             return respuesta;
         }
@@ -211,12 +226,12 @@ namespace asivamosffie.services
         public async Task<Respuesta> CreateEditUsuario(Usuario pUsuario)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Activar_Desactivar_Rol, (int)EnumeratorTipoDominio.Acciones);
-             
+
             try
             {
                 if (pUsuario.UsuarioId == 0)
                 {
-                    string strPassWordGenerate = Helpers.Helpers.GeneratePassword(true, true, true, true, false, 20); 
+                    string strPassWordGenerate = Helpers.Helpers.GeneratePassword(true, true, true, true, false, 20);
                     pUsuario.FechaCreacion = DateTime.Now;
                     pUsuario.Activo = true;
                     pUsuario.Contrasena = Helpers.Helpers.encryptSha1(strPassWordGenerate);
