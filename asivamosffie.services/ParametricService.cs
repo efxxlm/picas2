@@ -34,31 +34,54 @@ namespace asivamosffie.services
          
         public async Task<Respuesta> CreateDominio(TipoDominio pTipoDominio)
         {
-            foreach (var Dominio in pTipoDominio.Dominio)
-            {
-                if (Dominio.DominioId == 0)
-                {
-                    Dominio.FechaCreacion = DateTime.Now;
-                    Dominio.Activo = true;
-                    await _context.Dominio.AddAsync(Dominio);
-                }
-                else
-                {
-                    await _context.Set<Dominio>()
-                                  .Where(d => d.DominioId == Dominio.DominioId)
-                                  .UpdateAsync(d => new Dominio
-                                  {
-                                      Nombre = Dominio.Nombre,
-                                      Descripcion = Dominio.Descripcion,
-                                      Codigo = Dominio.Codigo,
-                                      FechaModificacion = DateTime.Now,
-                                      UsuarioModificacion = pTipoDominio.UsuarioCreacion,
-                                  });
-                }
-            }
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Parametrica, (int)EnumeratorTipoDominio.Acciones);
 
+            try
+            {
              
-            return new Respuesta();
+                foreach (var Dominio in pTipoDominio.Dominio)
+                {
+                    if (Dominio.DominioId == 0)
+                    {
+                        Dominio.FechaCreacion = DateTime.Now;
+                        Dominio.Activo = true;
+                        await _context.Dominio.AddAsync(Dominio);
+                    }
+                    else
+                    {
+                        await _context.Set<Dominio>()
+                                      .Where(d => d.DominioId == Dominio.DominioId)
+                                      .UpdateAsync(d => new Dominio
+                                      {
+                                          Nombre = Dominio.Nombre,
+                                          Descripcion = Dominio.Descripcion,
+                                          Codigo = Dominio.Codigo,
+                                          FechaModificacion = DateTime.Now,
+                                          UsuarioModificacion = pTipoDominio.UsuarioCreacion,
+                                      });
+                    }
+                }
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_usuarios, GeneralCodes.OperacionExitosa, idAccion, pTipoDominio.UsuarioCreacion, "CREAR EDITAR PARAMETICAS")
+                };
+            }
+            catch (Exception e)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = GeneralCodes.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_usuarios, GeneralCodes.Error, idAccion, pTipoDominio.UsuarioCreacion, e.InnerException.ToString())
+                };
+            }
         }
     }
 }

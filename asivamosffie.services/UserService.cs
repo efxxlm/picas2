@@ -260,7 +260,7 @@ namespace asivamosffie.services
                             {
                                 FechaModificacion = DateTime.Now,
                                 UsuarioModificacion = pUsuario.UsuarioCreacion,
-
+                                FechaCreacion = pUsuario.FechaCambioPassword,
                                 ProcedenciaCodigo = pUsuario.ProcedenciaCodigo,
                                 PrimerNombre = pUsuario.PrimerNombre,
                                 SegundoNombre = pUsuario.SegundoNombre,
