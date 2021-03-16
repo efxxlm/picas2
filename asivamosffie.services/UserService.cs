@@ -341,7 +341,7 @@ namespace asivamosffie.services
                             {
                                 FechaModificacion = DateTime.Now,
                                 UsuarioModificacion = pUsuario.UsuarioCreacion,
-                                FechaCreacion = pUsuario.FechaCambioPassword,
+                                FechaCreacion = pUsuario.FechaCreacion,
                                 PrimerNombre = pUsuario.PrimerNombre,
                                 SegundoNombre = pUsuario.SegundoNombre,
                                 PrimerApellido = pUsuario.PrimerApellido,
@@ -452,18 +452,16 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                    UsuarioPerfil usuarioPerfilOld =
-                        _context.UsuarioPerfil
-                        .Where(r => r.UsuarioId == pUsuario.UsuarioId)
-                        .FirstOrDefault();
-
-                    usuarioPerfilOld.PerfilId = pUsuario.PerfilId;
-                    usuarioPerfilOld.FechaModificacion = DateTime.Now;
-                     
+                    _context.Set<UsuarioPerfil>()
+                         .Where(up => up.UsuarioId == pUsuario.UsuarioId)
+                         .Update(up => new UsuarioPerfil
+                         {
+                             PerfilId = pUsuario.PerfilId,
+                             FechaModificacion = DateTime.Now,
+                             UsuarioModificacion = pUsuario.UsuarioCreacion 
+                         });
                 }
-
             }
-
 
             catch (Exception e)
             {
