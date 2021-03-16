@@ -358,6 +358,7 @@ namespace asivamosffie.services
                                 DependenciaCodigo = pUsuario.DependenciaCodigo,
                                 GrupoCodigo = pUsuario.GrupoCodigo,
                                 ProcedenciaCodigo = pUsuario.ProcedenciaCodigo,
+                                TipoAsignacionCodigo = pUsuario.TipoAsignacionCodigo,
                                 TieneContratoAsignado = pUsuario.TieneContratoAsignado
                             });
 
