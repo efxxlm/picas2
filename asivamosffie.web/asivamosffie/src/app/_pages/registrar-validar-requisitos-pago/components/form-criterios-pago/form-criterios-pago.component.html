@@ -163,8 +163,7 @@
                       [matTooltipPosition]="'above'"
                       matTooltip="Debe ingresar la información en el campo para continuar"
                       matTooltipClass="info-tooltip"
-                      *ngIf="
-                      (concepto.get('valorFacturadoConcepto').invalid && concepto.get('valorFacturadoConcepto').touched) ||
+                      *ngIf="(concepto.get('valorFacturadoConcepto').invalid && concepto.get('valorFacturadoConcepto').touched) ||
                       (concepto.get('valorFacturadoConcepto').invalid && estaEditando)
                       "
                     />
@@ -180,8 +179,8 @@
                   <label class="header-card--text" for="valorFacturado" style="padding-left: 0em;"
                   [ngClass]="{
                     'color-secondaryColor':
-                      (concepto.get('valorFacturado').invalid && concepto.get('valorFacturado').touched) ||
-                      (concepto.get('valorFacturado').invalid && estaEditando)
+                      (criterio.get('valorFacturado').invalid && criterio.get('valorFacturado').touched) ||
+                      (criterio.get('valorFacturado').invalid && estaEditando)
                   }">
                     <b> Valor total de los conceptos</b>
                   </label>
@@ -212,8 +211,8 @@
                     matTooltip="Debe ingresar la información en el campo para continuar"
                     matTooltipClass="info-tooltip"
                     *ngIf="
-                    (concepto.get('valorFacturado').invalid && concepto.get('valorFacturado').touched) ||
-                    (concepto.get('valorFacturado').invalid && estaEditando)
+                    (criterio.get('valorFacturado').invalid && criterio.get('valorFacturado').touched) ||
+                    (criterio.get('valorFacturado').invalid && estaEditando)
                     "
                   />
                 </span>

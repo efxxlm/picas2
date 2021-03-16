@@ -116,6 +116,7 @@ export class FormCriteriosPagoComponent implements OnInit {
             this.registrarPagosSvc.getCriterioByFormaPagoCodigo( faseConstruccionFormaPagoCodigo )
                 .subscribe(
                     async response => {
+                        console.log( response );
                         const criteriosArray = [];
                         this.solicitudPagoRegistrarSolicitudPago = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0];
                         this.solicitudPagoFase = this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase[0];
@@ -170,9 +171,9 @@ export class FormCriteriosPagoComponent implements OnInit {
                                     )
                                 );
                             }
-                            this.criteriosArray = response;
-                            this.addressForm.get( 'criterioPago' ).setValue( criteriosArray );
                         }
+                        this.criteriosArray = response;
+                        this.addressForm.get( 'criterioPago' ).setValue( criteriosArray.length > 0 ? this.criteriosArray : null );
                     }
                 );
         }
