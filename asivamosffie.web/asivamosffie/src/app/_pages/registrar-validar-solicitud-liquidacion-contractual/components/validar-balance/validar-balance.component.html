@@ -1,0 +1,76 @@
+<section class="container">
+  <div class="text-center">
+    <div class="text-right">
+      <a routerLink="./.." mat-button color="primary" class="btn-regresar">
+        <img src="assets/img/icon/regresar.svg" alt="Regresar" />
+      </a>
+    </div>
+    <h1 class="title-menu--h1">
+      Validar balance
+      LL457326
+    </h1>
+    <p class="colorMainColor mt-1em">
+      <span class="mx-1em">
+        Número de contrato de obra: <b> N801801 </b>
+      </span>
+      <span class="mx-1em">
+        Número de contrato de interventoria: <b> A513513 </b>
+      </span>
+    </p>
+  </div>
+
+  <mat-card class="shipping-card var-main-gris">
+    <mat-card-content>
+      <p>
+        <strong>
+          Llave MEN: 
+        </strong>
+        LL457326
+      </p>
+      <p>
+        <strong>
+          Tipo de intervención:
+        </strong>
+        Remodelación
+      </p>
+      <p>
+        <strong>
+          Institución Educativa:
+        </strong>
+        I.E Nuestra Señora Del Carmen
+      </p>
+      <p>
+        <strong>
+          Sede:
+        </strong>
+        Única Sede
+      </p>
+      <p>
+        <strong>
+          Departamento:
+        </strong>
+        Boyacá
+      </p>
+      <p>
+        <strong>
+          Municipio:
+        </strong>
+        Susacón
+      </p>
+    </mat-card-content>
+  </mat-card>
+</section>
+
+<div class="tabs--actions mb-2em">
+  <a routerLink="verRecursos" mat-raised-button color="accent" class="tabs--btn mx-1em">
+    Ver recursos comprometidos y pagados
+  </a>
+  <a routerLink="" mat-raised-button color="accent" class="tabs--btn mx-1em">
+    Ver ejecución financiera por componente
+  </a>
+  <a routerLink="" mat-raised-button color="accent" class="tabs--btn mx-1em">
+    Ver traslados de recursos
+  </a>
+</div>
+
+<app-observaciones-balance></app-observaciones-balance>

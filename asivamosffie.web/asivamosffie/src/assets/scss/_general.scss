@@ -164,6 +164,10 @@ strong {
   margin-bottom: 1em !important;
 }
 
+.mt-1em {
+  margin-top: 1em !important;
+}
+
 .mb-4em {
   margin-bottom: 4em !important;
 }
@@ -186,8 +190,8 @@ strong {
 }
 
 .mx-1em {
-  margin-left: 1em;
-  margin-right: 1em;
+  margin-left: 1em !important;
+  margin-right: 1em !important;
 }
 
 .mr-05em {

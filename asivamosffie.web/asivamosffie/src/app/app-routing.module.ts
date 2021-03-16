@@ -307,6 +307,11 @@ const routes: Routes = [
           .then( module => module.RegistrarTransferenciaEtcModule )
       },
       {
+        path: 'registrarValidarDolicitudLiquidacionContractual',
+        loadChildren: () => import( './_pages/registrar-validar-solicitud-liquidacion-contractual/registrar-validar-solicitud-liquidacion-contractual.module' )
+          .then( module => module.RegistrarValidarSolicitudLiquidacionContractualModule )
+      },
+      {
         path: 'registrarSolicitudLiquidacionContractual',
         loadChildren: () => import( './_pages/registrar-solicitud-liquidacion-contractual/registrar-solicitud-liquidacion-contractual.module' )
           .then( module => module.RegistrarSolicitudLiquidacionContractualModule )
