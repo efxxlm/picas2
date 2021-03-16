@@ -9,10 +9,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { QuillModule } from 'ngx-quill';
 import { MaterialModule } from 'src/app/material/material.module';
 import { ConsultarEditarParametricasComponent } from './components/consultar-editar-parametricas/consultar-editar-parametricas.component';
+import { TablaEditarParametricasComponent } from './components/tabla-editar-parametricas/tabla-editar-parametricas.component';
 
 
 @NgModule({
-  declarations: [GestionarParametricasComponent, TablaGestionarParametricasComponent, FormGestionarParametricasComponent, ConsultarEditarParametricasComponent],
+  declarations: [GestionarParametricasComponent, TablaGestionarParametricasComponent, FormGestionarParametricasComponent, ConsultarEditarParametricasComponent, TablaEditarParametricasComponent],
   imports: [
     CommonModule,
     FormsModule,

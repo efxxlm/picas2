@@ -1,3 +1,5 @@
+import { ActivatedRoute } from '@angular/router';
+import { GestionarParametricasService } from './../../../../core/_services/gestionarParametricas/gestionar-parametricas.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -7,9 +9,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ConsultarEditarParametricasComponent implements OnInit {
 
-  constructor() { }
+    constructor(
+        private gestionarParametricasSvc: GestionarParametricasService,
+        private activatedRoute: ActivatedRoute )
+    {
+      this.gestionarParametricasSvc.dominioByIdDominio( this.activatedRoute.snapshot.params.id )
+        .subscribe( console.log );
+    }
 
-  ngOnInit(): void {
-  }
+    ngOnInit(): void {
+    }
 
 }

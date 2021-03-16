@@ -102,9 +102,20 @@ export class FormGestionarUsuariosComponent implements OnInit {
                                                                     if ( this.esRegistroNuevo === false ) {
                                                                         this.gestionarUsuariosSvc.getUsuario( this.activatedRoute.snapshot.params.id )
                                                                             .subscribe(
-                                                                                getUsuario => {
-                                                                                    console.log( getUsuario );
+                                                                                async getUsuario => {
                                                                                     this.perfil = getUsuario;
+                                                                                    const contratosAsignados = [];
+
+                                                                                    if ( getUsuario.contratosAsignados !== undefined ) {
+                                                                                        if ( getUsuario.contratosAsignados.length > 0 ) {
+                                                                                            getUsuario.contratosAsignados.forEach( contrato => contratosAsignados.push( contrato.contratoId ) );
+                                                                                            
+                                                                                        }
+                                                                                    }
+
+                                                                                    if ( getUsuario.tipoAsignacionCodigo !== undefined ) {
+                                                                                        this.getlistaContratos( getUsuario.tipoAsignacionCodigo );
+                                                                                    }
 
                                                                                     this.usuarioId = getUsuario.usuarioId;
                                                                                     this.formUsuario.setValue(
@@ -127,10 +138,10 @@ export class FormGestionarUsuariosComponent implements OnInit {
                                                                                             observaciones: getUsuario.observaciones !== undefined ? getUsuario.observaciones : null,
                                                                                             dependencia: getUsuario.dependenciaCodigo !== undefined ? this.listaDependencia.find( dependencia => dependencia.codigo === getUsuario.dependenciaCodigo ).codigo : null,
                                                                                             grupo: getUsuario.grupoCodigo !== undefined ? this.listaGrupo.find( grupo => grupo.codigo === getUsuario.grupoCodigo ).codigo : null,
-                                                                                            tieneContratos: null,
-                                                                                            rol: getUsuario.PerfilId !== undefined ? this.listaRoles.find( rol => rol.perfilId === getUsuario.PerfilId ).perfilId : null,
-                                                                                            tipoAsignacionCodigo: null,
-                                                                                            contratos: null
+                                                                                            tieneContratos: getUsuario.tieneContratoAsignado !== undefined ? getUsuario.tieneContratoAsignado : null,
+                                                                                            rol: getUsuario.perfil !== undefined ? this.listaRoles.find( rol => rol.perfilId === getUsuario.perfil.perfilId ).perfilId : null,
+                                                                                            tipoAsignacionCodigo: getUsuario.tipoAsignacionCodigo !== undefined ? this.listaAsignaciones.find( asignacion => asignacion.codigo === getUsuario.tipoAsignacionCodigo ).codigo : null,
+                                                                                            contratos: contratosAsignados.length > 0 ? contratosAsignados : null
                                                                                         }
                                                                                     );
 
@@ -205,10 +216,15 @@ export class FormGestionarUsuariosComponent implements OnInit {
         if ( asignacion !== undefined ) {
             if ( asignacion.nombre === 'Interventor' )  {
                 this.gestionarUsuariosSvc.getContratoByTipo( 'True' )
-                    .subscribe( getContratoByTipo => this.listaContratos = getContratoByTipo );
+                    .subscribe( getContratoByTipo => {
+                        this.listaContratos = getContratoByTipo;
+                    } );
             } else {
                 this.gestionarUsuariosSvc.getContratoByTipo( 'False' )
-                    .subscribe( getContratoByTipo => this.listaContratos = getContratoByTipo );
+                    .subscribe( getContratoByTipo => {
+                        this.listaContratos = getContratoByTipo;
+                        
+                    } );
             }
         }
     }
@@ -256,6 +272,20 @@ export class FormGestionarUsuariosComponent implements OnInit {
 
     guardar() {
         console.log( this.formUsuario );
+        const contratosAsignados = [];
+
+        if ( this.formUsuario.get( 'contratos' ).value !== null ) {
+            if ( this.formUsuario.get( 'contratos' ).value.length > 0 ) {
+                const contratosSeleccionados: number[] = this.formUsuario.get( 'contratos' ).value;
+                contratosSeleccionados.forEach( contrato => {
+                    const contratoLista = this.listaContratos.find( registro => registro.contratoId === contrato );
+
+                    if ( contratoLista !== undefined ) {
+                        contratosAsignados.push( contratoLista );
+                    }
+                } );
+            }
+        }
 
         const pUsuario = {
             usuarioId: this.usuarioId,
@@ -279,7 +309,7 @@ export class FormGestionarUsuariosComponent implements OnInit {
             PerfilId: this.formUsuario.get( 'rol' ).value,
             tipoAsignacionCodigo: this.formUsuario.get( 'tipoAsignacionCodigo' ).value,
             tieneContratoAsignado: this.formUsuario.get( 'tieneContratos' ).value,
-            contratosAsignados: this.formUsuario.get( 'contratos' ).value
+            contratosAsignados: contratosAsignados.length > 0 ? contratosAsignados : null
         }
 
         this.gestionarUsuariosSvc.createEditUsuario( pUsuario )

@@ -55,8 +55,18 @@
     
               <button mat-raised-button
                       color="accent" 
-                      class="btn-table">
+                      class="btn-table"
+                      *ngIf="element.eliminado === false"
+                      (click)="activarDesactivarUsuario( element )">
                       Desactivar
+              </button>
+
+              <button mat-raised-button
+                      color="accent" 
+                      class="btn-table"
+                      *ngIf="element.eliminado === true"
+                      (click)="activarDesactivarUsuario( element )">
+                      Activar
               </button>
         
             </td>

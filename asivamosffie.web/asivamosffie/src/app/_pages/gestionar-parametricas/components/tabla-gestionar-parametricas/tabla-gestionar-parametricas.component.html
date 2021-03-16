@@ -19,7 +19,7 @@
     
           <ng-container matColumnDef="nombreParametrica">
             <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 40%;"> Nombre de la paramétrica </th>
-            <td mat-cell *matCellDef="let element" align="center"> {{ element.nombreParametrica }} </td>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.nombre }} </td>
           </ng-container>
     
           <ng-container matColumnDef="descripcion">
@@ -34,14 +34,14 @@
                 <button mat-raised-button
                         color="accent" 
                         class="btn-table"
-                        [routerLink]="[ 'crearValores', element.idParametrica ]">
+                        [routerLink]="[ 'crearValores', element.tipoDominioId ]">
                         Crear valores
                 </button>
 
                 <button mat-raised-button
                         color="accent" 
                         class="btn-table"
-                        [routerLink]="[ 'editarParametricas', element.idParametrica ]">
+                        [routerLink]="[ 'editarParametricas', element.tipoDominioId ]">
                         Consultar/Editar
                 </button>
         

@@ -33,4 +33,8 @@ export class GestionarUsuariosService {
     return this.http.get<any[]>( `${ this.urlApi }/GetContratoByTipo?EsObra=${ esObra }` );
   }
 
+  activateDeActivateUsuario( pUsuario: any ) {
+    return this.http.post<Respuesta>( `${ this.urlApi }/ActivateDeActivateUsuario`, pUsuario );
+  }
+
 }

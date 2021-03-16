@@ -70,4 +70,39 @@ export class TablaGestionarUsuariosComponent implements OnInit {
         return dialogRef.afterClosed();
     }
 
+    activarDesactivarUsuario( registro: any ) {
+        console.log( registro );
+        const pUsuario = {
+            usuarioId: registro.usuarioId,
+            eliminado: !registro.eliminado
+        }
+
+        if ( pUsuario.eliminado === true ) {
+            this.openDialogTrueFalse( '', `¿Esta seguro que desea desactivar el usuario <b>${ registro.primerNombre } ${ registro.segundoNombre } ${ registro.primerApellido }</b>?` )
+                .subscribe(
+                    value => {
+                        if ( value === true ) {
+                            this.gestionarUsuarioSvc.activateDeActivateUsuario( pUsuario )
+                                .subscribe(
+                                    response => {
+                                        this.openDialog( '', `<b>${ response.message }</b>` );
+                                        this.routes.navigateByUrl( '/', { skipLocationChange: true } ).then( () => this.routes.navigate( [ '/gestionUsuarios' ] ) );
+                                    },
+                                    err => this.openDialog( '', `<b>${ err.message }</b>` )
+                                );
+                        }
+                    }
+                );
+        } else {
+            this.gestionarUsuarioSvc.activateDeActivateUsuario( pUsuario )
+                .subscribe(
+                    response => {
+                        this.openDialog( '', `<b>${ response.message }</b>` );
+                        this.routes.navigateByUrl( '/', { skipLocationChange: true } ).then( () => this.routes.navigate( [ '/gestionUsuarios' ] ) );
+                    },
+                    err => this.openDialog( '', `<b>${ err.message }</b>` )
+                );
+        }
+    }
+
 }
