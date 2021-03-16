@@ -234,7 +234,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -7244,6 +7243,8 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<UsuarioPerfil>(entity =>
             {
+                entity.HasNoKey();
+
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
@@ -7257,14 +7258,16 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
+                entity.Property(e => e.UsuarioPerfilId).ValueGeneratedOnAdd();
+
                 entity.HasOne(d => d.Perfil)
-                    .WithMany(p => p.UsuarioPerfil)
+                    .WithMany()
                     .HasForeignKey(d => d.PerfilId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FKPerfil");
 
                 entity.HasOne(d => d.Usuario)
-                    .WithMany(p => p.UsuarioPerfil)
+                    .WithMany()
                     .HasForeignKey(d => d.UsuarioId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_usuario");

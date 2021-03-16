@@ -8,7 +8,6 @@ namespace asivamosffie.model.Models
         public Perfil()
         {
             MenuPerfil = new HashSet<MenuPerfil>();
-            UsuarioPerfil = new HashSet<UsuarioPerfil>();
         }
 
         public int PerfilId { get; set; }
@@ -20,6 +19,5 @@ namespace asivamosffie.model.Models
         public bool? Eliminado { get; set; }
 
         public virtual ICollection<MenuPerfil> MenuPerfil { get; set; }
-        public virtual ICollection<UsuarioPerfil> UsuarioPerfil { get; set; }
     }
 }

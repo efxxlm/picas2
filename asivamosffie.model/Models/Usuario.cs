@@ -14,7 +14,6 @@ namespace asivamosffie.model.Models
             NovedadContractual = new HashSet<NovedadContractual>();
             SesionComentario = new HashSet<SesionComentario>();
             SesionParticipante = new HashSet<SesionParticipante>();
-            UsuarioPerfil = new HashSet<UsuarioPerfil>();
         }
 
         public int UsuarioId { get; set; }
@@ -60,6 +59,5 @@ namespace asivamosffie.model.Models
         public virtual ICollection<NovedadContractual> NovedadContractual { get; set; }
         public virtual ICollection<SesionComentario> SesionComentario { get; set; }
         public virtual ICollection<SesionParticipante> SesionParticipante { get; set; }
-        public virtual ICollection<UsuarioPerfil> UsuarioPerfil { get; set; }
     }
 }
