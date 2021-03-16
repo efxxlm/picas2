@@ -423,6 +423,11 @@ listaEstadosPoliza(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=172`);
   }
 
+  listaTipoAsignaciones() {
+    // Lista del campo tipo de asignaciones al contrato CU 6.2
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=173`);
+  }
+
   public listaUsuarios(){
 
     let lista: Usuario[] = [];

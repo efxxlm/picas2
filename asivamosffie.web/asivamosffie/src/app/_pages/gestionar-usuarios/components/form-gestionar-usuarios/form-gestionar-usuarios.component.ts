@@ -14,6 +14,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class FormGestionarUsuariosComponent implements OnInit {
 
+    perfil: any;
     esRegistroNuevo: boolean;
     formUsuario: FormGroup;
     procedenciaFfieCodigo: string;
@@ -24,11 +25,9 @@ export class FormGestionarUsuariosComponent implements OnInit {
     listaMunicipio: Localizacion[] = [];
     listaDependencia: Dominio[] = [];
     listaGrupo: Dominio[] = [];
+    listaAsignaciones: Dominio[] = [];
     listaRoles: { nombre: string, perfilId: number }[] = [];
-    listaContratos: { nombre: string, codigo: string }[] = [
-        { nombre: 'N801801', codigo: '1' },
-        { nombre: 'J208208', codigo: '2' }
-    ];
+    listaContratos: { contratoId: number, numeroContrato: string }[] = [];
     editorStyle = {
         height: '50%'
     };
@@ -94,51 +93,61 @@ export class FormGestionarUsuariosComponent implements OnInit {
                                                     this.gestionarUsuariosSvc.getListPerfil()
                                                     .subscribe( listaPerfil => {
                                                         this.listaRoles = listaPerfil;
-                                                        // Get data usuario
-                                                        if ( this.esRegistroNuevo === false ) {
-                                                            this.gestionarUsuariosSvc.getUsuario( this.activatedRoute.snapshot.params.id )
-                                                                .subscribe(
-                                                                    getUsuario => {
-                                                                        console.log( getUsuario );
+                                                        // Get data campo rol asignado al contrato
+                                                        this.commonSvc.listaTipoAsignaciones()
+                                                            .subscribe(
+                                                                listaTipoAsignaciones => {
+                                                                    this.listaAsignaciones = listaTipoAsignaciones;
+                                                                    // Get data usuario
+                                                                    if ( this.esRegistroNuevo === false ) {
+                                                                        this.gestionarUsuariosSvc.getUsuario( this.activatedRoute.snapshot.params.id )
+                                                                            .subscribe(
+                                                                                getUsuario => {
+                                                                                    console.log( getUsuario );
+                                                                                    this.perfil = getUsuario;
 
-                                                                        this.usuarioId = getUsuario.usuarioId;
-                                                                        this.formUsuario.setValue(
-                                                                            {
-                                                                                procedencia: getUsuario.procedenciaCodigo !== undefined ? this.listaProcedencia.find( procedencia => procedencia.codigo === getUsuario.procedenciaCodigo ).codigo : null,
-                                                                                primerNombre: getUsuario.primerNombre !== undefined ? getUsuario.primerNombre : null,
-                                                                                segundoNombre: getUsuario.segundoNombre !== undefined ? getUsuario.segundoNombre : null,
-                                                                                primerApellido: getUsuario.primerApellido !== undefined ? getUsuario.primerApellido : null,
-                                                                                segundoApellido: getUsuario.segundoApellido !== undefined ? getUsuario.segundoApellido : null,
-                                                                                tipoDocumento: getUsuario.tipoDocumentoCodigo !== undefined ? this.listaTipoDocumento.find( documento => documento.codigo === getUsuario.tipoDocumentoCodigo ).codigo : null,
-                                                                                numeroIdentificacion: getUsuario.numeroIdentificacion !== undefined ? getUsuario.numeroIdentificacion : null,
-                                                                                correo: getUsuario.email !== undefined ? getUsuario.email : null,
-                                                                                telefonoFijo: getUsuario.telefonoFijo !== undefined ? getUsuario.telefonoFijo : null,
-                                                                                telefonoCelular: getUsuario.telefonoCelular !== undefined ? getUsuario.telefonoCelular : null,
-                                                                                departamento: null,
-                                                                                municipio: null,
-                                                                                fechaCreacion: getUsuario.fechaCreacion !== undefined ? getUsuario.fechaCreacion : null,
-                                                                                fechaExpiracion: getUsuario.fechaExpiracion !== undefined ? getUsuario.fechaExpiracion : null,
-                                                                                urlSoporte: getUsuario.urlSoporteDocumentacion !== undefined ? getUsuario.urlSoporteDocumentacion : null,
-                                                                                observaciones: getUsuario.observaciones !== undefined ? getUsuario.observaciones : null,
-                                                                                dependencia: getUsuario.dependenciaCodigo !== undefined ? this.listaDependencia.find( dependencia => dependencia.codigo === getUsuario.dependenciaCodigo ).codigo : null,
-                                                                                grupo: getUsuario.grupoCodigo !== undefined ? this.listaGrupo.find( grupo => grupo.codigo === getUsuario.grupoCodigo ).codigo : null,
-                                                                                rol: getUsuario.PerfilId !== undefined ? this.listaRoles.find( rol => rol.perfilId === getUsuario.PerfilId ).perfilId : null,
-                                                                                contratos: null
-                                                                            }
-                                                                        );
+                                                                                    this.usuarioId = getUsuario.usuarioId;
+                                                                                    this.formUsuario.setValue(
+                                                                                        {
+                                                                                            procedencia: getUsuario.procedenciaCodigo !== undefined ? this.listaProcedencia.find( procedencia => procedencia.codigo === getUsuario.procedenciaCodigo ).codigo : null,
+                                                                                            primerNombre: getUsuario.primerNombre !== undefined ? getUsuario.primerNombre : null,
+                                                                                            segundoNombre: getUsuario.segundoNombre !== undefined ? getUsuario.segundoNombre : null,
+                                                                                            primerApellido: getUsuario.primerApellido !== undefined ? getUsuario.primerApellido : null,
+                                                                                            segundoApellido: getUsuario.segundoApellido !== undefined ? getUsuario.segundoApellido : null,
+                                                                                            tipoDocumento: getUsuario.tipoDocumentoCodigo !== undefined ? this.listaTipoDocumento.find( documento => documento.codigo === getUsuario.tipoDocumentoCodigo ).codigo : null,
+                                                                                            numeroIdentificacion: getUsuario.numeroIdentificacion !== undefined ? getUsuario.numeroIdentificacion : null,
+                                                                                            correo: getUsuario.email !== undefined ? getUsuario.email : null,
+                                                                                            telefonoFijo: getUsuario.telefonoFijo !== undefined ? getUsuario.telefonoFijo : null,
+                                                                                            telefonoCelular: getUsuario.telefonoCelular !== undefined ? getUsuario.telefonoCelular : null,
+                                                                                            departamento: null,
+                                                                                            municipio: null,
+                                                                                            fechaCreacion: getUsuario.fechaCreacion !== undefined ? getUsuario.fechaCreacion : null,
+                                                                                            fechaExpiracion: getUsuario.fechaExpiracion !== undefined ? getUsuario.fechaExpiracion : null,
+                                                                                            urlSoporte: getUsuario.urlSoporteDocumentacion !== undefined ? getUsuario.urlSoporteDocumentacion : null,
+                                                                                            observaciones: getUsuario.observaciones !== undefined ? getUsuario.observaciones : null,
+                                                                                            dependencia: getUsuario.dependenciaCodigo !== undefined ? this.listaDependencia.find( dependencia => dependencia.codigo === getUsuario.dependenciaCodigo ).codigo : null,
+                                                                                            grupo: getUsuario.grupoCodigo !== undefined ? this.listaGrupo.find( grupo => grupo.codigo === getUsuario.grupoCodigo ).codigo : null,
+                                                                                            tieneContratos: null,
+                                                                                            rol: getUsuario.PerfilId !== undefined ? this.listaRoles.find( rol => rol.perfilId === getUsuario.PerfilId ).perfilId : null,
+                                                                                            tipoAsignacionCodigo: null,
+                                                                                            contratos: null
+                                                                                        }
+                                                                                    );
 
-                                                                        if ( getUsuario.municipioId !== undefined ) {
-                                                                            this.commonSvc.listMunicipiosByIdMunicipio( getUsuario.municipioId )
-                                                                                .subscribe(
-                                                                                    listMunicipiosByIdMunicipio => {
-                                                                                        this.formUsuario.get( 'departamento' ).setValue( this.listaDepartamento.find( departamento => departamento.localizacionId === listMunicipiosByIdMunicipio[0].idPadre ) );
-                                                                                        this.formUsuario.get( 'municipio' ).setValue( listMunicipiosByIdMunicipio[0] );
+                                                                                    if ( getUsuario.municipioId !== undefined ) {
+                                                                                        this.commonSvc.listMunicipiosByIdMunicipio( getUsuario.municipioId )
+                                                                                            .subscribe(
+                                                                                                listMunicipiosByIdMunicipio => {
+                                                                                                    this.formUsuario.get( 'departamento' ).setValue( this.listaDepartamento.find( departamento => departamento.localizacionId === listMunicipiosByIdMunicipio[0].idPadre ) );
+                                                                                                    this.formUsuario.get( 'municipio' ).setValue( listMunicipiosByIdMunicipio[0] );
+                                                                                                }
+                                                                                            );
                                                                                     }
-                                                                                );
-                                                                        }
+                                                                                }
+                                                                            );
                                                                     }
-                                                                );
-                                                        }
+                                                                }
+                                                            );
                                                     } );
                                                 } );
                                         } );
@@ -172,7 +181,9 @@ export class FormGestionarUsuariosComponent implements OnInit {
                 observaciones: [ null, Validators.required ],
                 dependencia: [ null, Validators.required ],
                 grupo: [ null, Validators.required ],
+                tieneContratos: [ null, Validators.required ],
                 rol: [ null, Validators.required ],
+                tipoAsignacionCodigo: [ null, Validators.required ],
                 contratos: [ null, Validators.required ]
             }
         );
@@ -184,6 +195,20 @@ export class FormGestionarUsuariosComponent implements OnInit {
 
             if ( rol !== undefined ) {
                 return rol.nombre;
+            }
+        }
+    }
+
+    getlistaContratos( tipoAsignacion: string ) {
+        const asignacion = this.listaAsignaciones.find( asignacion => asignacion.codigo === tipoAsignacion );
+
+        if ( asignacion !== undefined ) {
+            if ( asignacion.nombre === 'Interventor' )  {
+                this.gestionarUsuariosSvc.getContratoByTipo( 'True' )
+                    .subscribe( getContratoByTipo => this.listaContratos = getContratoByTipo );
+            } else {
+                this.gestionarUsuariosSvc.getContratoByTipo( 'False' )
+                    .subscribe( getContratoByTipo => this.listaContratos = getContratoByTipo );
             }
         }
     }
@@ -251,7 +276,10 @@ export class FormGestionarUsuariosComponent implements OnInit {
             observaciones: this.formUsuario.get( 'observaciones' ).value,
             dependenciaCodigo: this.formUsuario.get( 'dependencia' ).value,
             grupoCodigo: this.formUsuario.get( 'grupo' ).value,
-            PerfilId: this.formUsuario.get( 'rol' ).value
+            PerfilId: this.formUsuario.get( 'rol' ).value,
+            tipoAsignacionCodigo: this.formUsuario.get( 'tipoAsignacionCodigo' ).value,
+            tieneContratoAsignado: this.formUsuario.get( 'tieneContratos' ).value,
+            contratosAsignados: this.formUsuario.get( 'contratos' ).value
         }
 
         this.gestionarUsuariosSvc.createEditUsuario( pUsuario )

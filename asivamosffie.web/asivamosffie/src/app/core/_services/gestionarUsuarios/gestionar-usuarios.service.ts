@@ -29,4 +29,8 @@ export class GestionarUsuariosService {
     return this.http.post<Respuesta>( `${ this.urlApi }/CreateEditUsuario`, pUsuario );
   }
 
+  getContratoByTipo( esObra: string ) {
+    return this.http.get<any[]>( `${ this.urlApi }/GetContratoByTipo?EsObra=${ esObra }` );
+  }
+
 }
