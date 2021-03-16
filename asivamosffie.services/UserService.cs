@@ -292,9 +292,14 @@ namespace asivamosffie.services
                                      TipoAsignacionCodigo = ConstantCodigoTipoAsignacionContrato.Supervisor
                                  }).ToList();
 
-            usuario.ContratosAsignados.AddRange(contratoAsignadosInterventor);
-            usuario.ContratosAsignados.AddRange(contratoAsignadosApoyo);
-            usuario.ContratosAsignados.AddRange(contratoAsignadosSupervisor);
+            if (contratoAsignadosInterventor.Count() > 0)
+                usuario.ContratosAsignados.AddRange(contratoAsignadosInterventor);
+
+            if (contratoAsignadosApoyo.Count() > 0)
+                usuario.ContratosAsignados.AddRange(contratoAsignadosApoyo);
+
+            if (contratoAsignadosSupervisor.Count() > 0)
+                usuario.ContratosAsignados.AddRange(contratoAsignadosSupervisor);
 
             return usuario;
         }
@@ -407,7 +412,7 @@ namespace asivamosffie.services
                                   FechaModificacion = DateTime.Now,
                                   UsuarioModificacion = pUsuario.UsuarioCreacion
                               });
-                        break; 
+                        break;
                     default:
                         break;
                 }
