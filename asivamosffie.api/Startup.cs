@@ -177,7 +177,7 @@ namespace asivamosffie.api
             services.AddTransient<IActBeginService, ActBeginService>();
             services.AddTransient<IRegisterPayPerformanceService, RegisterPayPerformanceService>();
             services.AddTransient<IResourceControlService, ResourceControlService>();
-            services.AddTransient<IContractualModification, ContractualModificationService>();
+            services.AddTransient<IContractualNoveltyService, ContractualNoveltyService>();
             services.AddTransient<IDerivativeActionService, DerivativeActionService>();
             services.AddTransient<IMonitoringURL, MonitoringURLService>();
 

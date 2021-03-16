@@ -171,7 +171,7 @@ export class VerDetallePolizaComponent implements OnInit {
     //Para el nombre aprobado de la granatia de la poliza
     for(let i=0; i<this.listaUsuarios.length;i++){
       if(this.listaUsuarios[i].usuarioId==parseInt(data.responsableAprobacion)){
-        this.nomAprobado = this.listaUsuarios[i].nombres+" "+this.listaUsuarios[i].apellidos;
+        this.nomAprobado = this.listaUsuarios[i].primerNombre+" "+this.listaUsuarios[i].primerApellido;
       }
     }
   }

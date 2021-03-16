@@ -34,7 +34,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         Registrar_contratos_modificaciones_contractuales = 46,
         Gestionar_controversias_contractuales = 47,
         Registrar_Programacion_Personal_Obra = 48,
-        Registrar_solicitud_novedad_contractual = 50,
+        Registrar_solicitud_novedad_contractual = 58,
         Gestionar_procesos_Defensa_Judicial = 52,
         Registrar_seguimiento_diario = 53,
         Verificar_seguimiento_diario = 54,

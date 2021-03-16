@@ -125,7 +125,7 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
         };
 
         for (let participante of this.acta.sesionParticipanteView) {
-          this.miembrosParticipantes.push(`${participante.nombres} ${participante.apellidos}`);
+          this.miembrosParticipantes.push(`${participante.primerNombre} ${participante.primerApellido}`);
         };
 
         this.technicalCommitteeSessionSvc.getComiteTecnicoByComiteTecnicoId(this.activatedRoute.snapshot.params.id)

@@ -86,7 +86,7 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
       let usuario: Usuario = this.listaMiembros.find(m => m.usuarioId == p.usuarioId)
 
       if ( temaVoto ){
-        temaVoto.nombreParticipante = `${usuario.nombres} ${usuario.apellidos}`;
+        temaVoto.nombreParticipante = `${usuario.primerNombre} ${usuario.primerApellido}`;
       }else{
         temaVoto = {
 
@@ -95,7 +95,7 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
           sesionParticipanteId: p.sesionParticipanteId,
           esAprobado: null,
           observacion: null,
-          nombreParticipante: `${usuario.nombres} ${usuario.apellidos}`,
+          nombreParticipante: `${usuario.primerNombre} ${usuario.primerApellido}`,
   
         }  
       }

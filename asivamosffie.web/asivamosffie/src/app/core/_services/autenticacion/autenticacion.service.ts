@@ -137,8 +137,8 @@ export interface Usuario{
   fechaUltimoIngreso?:Date;
   cambiarContrasena?:boolean;
   rol?:any[];
-  nombres?: string;
-  apellidos?: string;
+  primerNombre?: string;
+  primerApellido?: string;
 }
 
 export interface Respuesta{

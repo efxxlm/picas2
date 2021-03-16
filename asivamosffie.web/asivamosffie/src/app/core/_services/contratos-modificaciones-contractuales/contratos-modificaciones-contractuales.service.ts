@@ -41,27 +41,6 @@ export class ContratosModificacionesContractualesService {
   };
 
 
-  getContratosAutocomplete()
-  {
-    return this.http.get<Contrato[]>( `${ this.url }/ContractualModification/GetListContract` ); 
-  }
   
-  postRegistroNovedadContractual( pNContrato: FormData) {
-    return this.http.post<Respuesta>( `${ this.url }/ContractualModification/CreateEditarModification`, pNContrato );
-  }
-
   
-  getListGrillaNovedadContractual()
-  {
-    return this.http.get<any[]>( `${ this.url }/ContractualModification/GetListGrillaNovedadContractual` ); 
-  }
-
-  getProyectosContrato(ncontrato) {
-    return this.http.get<any[]>( `${ this.url }/ContractualModification/GetProyectsByContract?pContratoId=${ncontrato}` ); 
-  }
-
-  eliminarNovedadContractual(id) {
-    return this.http.delete<Respuesta>( `${ this.url }/ContractualModification/eliminarNovedadContractual?pNovedaContractual=${ id }` ); 
-  }
-
 }

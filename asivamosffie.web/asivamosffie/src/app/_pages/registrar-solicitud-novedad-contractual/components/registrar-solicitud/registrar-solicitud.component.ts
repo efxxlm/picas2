@@ -3,6 +3,7 @@ import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { CommonService } from 'src/app/core/_services/common/common.service';
+import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNovelty/contractual-novelty.service';
 import { ContratosModificacionesContractualesService } from 'src/app/core/_services/contratos-modificaciones-contractuales/contratos-modificaciones-contractuales.service';
 
 @Component({
@@ -23,7 +24,7 @@ export class RegistrarSolicitudComponent implements OnInit {
     { name: 'Proyecto', value: false }
   ];
 
-  constructor(public contratoServices: ContratosModificacionesContractualesService) { 
+  constructor(private contractualNoveltyService: ContractualNoveltyService) { 
     
   }
   numeroContratoSeleccionado: any;
@@ -34,7 +35,7 @@ export class RegistrarSolicitudComponent implements OnInit {
 
   ngOnInit() {
     //traigo contratos
-    this.contratoServices.getContratosAutocomplete().subscribe(respuesta=>{
+    this.contractualNoveltyService.getContratosAutocomplete().subscribe(respuesta=>{
       this.contratos=respuesta;
       //this.options=respuesta.map(function(task,index,array){return task.numeroContrato})
       this.options=respuesta;
@@ -63,7 +64,7 @@ export class RegistrarSolicitudComponent implements OnInit {
     console.log(this.novedadAplicada.value);
     if(this.novedadAplicada.value == false)
     {
-      this.contratoServices.getProyectosContrato(this.numeroContratoSeleccionado.contratoId).subscribe(
+      this.contractualNoveltyService.getProyectosContrato(this.numeroContratoSeleccionado.contratoId).subscribe(
         response=>
         {
           this.proyectos=response;

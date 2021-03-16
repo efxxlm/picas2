@@ -14,11 +14,11 @@ namespace asivamosffie.api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class ContractualModificationController : ControllerBase
+    public class ContractualNoveltyController : ControllerBase
     {
-        public readonly IContractualModification _contractualModification;
+        public readonly IContractualNoveltyService _contractualModification;
 
-        public ContractualModificationController(IContractualModification contractualModification)
+        public ContractualNoveltyController(IContractualNoveltyService contractualModification)
         {
             _contractualModification = contractualModification;
         }
@@ -45,20 +45,15 @@ namespace asivamosffie.api.Controllers
            descripción: guarda
            impacto: CU 4.1.3*/
         [HttpPost]
-        [Route("CreateEditarModification")]
-        public async Task<IActionResult> CreateEditarModification(NovedadContractual novedadContractual)
+        [Route("CreateEditNovedadContractual")]
+        public async Task<IActionResult> CreateEditNovedadContractual(NovedadContractual novedadContractual)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
-                if (novedadContractual.NovedadContractualId == 0)
-                {
-                    novedadContractual.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                }
-                else
-                {
-                    respuesta = await _contractualModification.CreateEditarModification(novedadContractual);
-                }
+                novedadContractual.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _contractualModification.CreateEditNovedadContractual(novedadContractual);
+
                 return Ok(respuesta);
             }
             catch (Exception ex)

@@ -83,7 +83,7 @@ export class CrearActaComponent implements OnInit {
             this.objetoComiteTecnico.sesionParticipante.forEach(p => {
               let usuario: Usuario = this.listaMiembros.find(m => m.usuarioId == p.usuarioId)
 
-              this.nombresParticipantes = `${this.nombresParticipantes} ${usuario.nombres} ${usuario.apellidos} , `
+              this.nombresParticipantes = `${this.nombresParticipantes} ${usuario.primerNombre} ${usuario.primerApellido} , `
 
             });
 

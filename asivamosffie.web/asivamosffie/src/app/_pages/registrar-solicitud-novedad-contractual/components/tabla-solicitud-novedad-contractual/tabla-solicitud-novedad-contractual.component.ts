@@ -5,6 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { ContratosModificacionesContractualesService } from 'src/app/core/_services/contratos-modificaciones-contractuales/contratos-modificaciones-contractuales.service';
+import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNovelty/contractual-novelty.service';
 
 export interface VerificacionDiaria {
   id: string;
@@ -37,13 +38,13 @@ export class TablaSolicitudNovedadContractualComponent implements AfterViewInit 
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
-    private contratoServices: ContratosModificacionesContractualesService,
+    private contractualNoveltyService: ContractualNoveltyService,
     public dialog: MatDialog,
   ) { }
 
   ngAfterViewInit() {
 
-    this.contratoServices.getListGrillaNovedadContractual()
+    this.contractualNoveltyService.getListGrillaNovedadContractual()
       .subscribe(resp => {
         this.dataSource = new MatTableDataSource(resp);
 
@@ -95,7 +96,7 @@ export class TablaSolicitudNovedadContractualComponent implements AfterViewInit 
   }
 
   eliminarSolicitud(id: number) {
-    this.contratoServices.eliminarNovedadContractual( id )
+    this.contractualNoveltyService.eliminarNovedadContractual( id )
       .subscribe(respuesta => {
         this.openDialog('', `<b>${respuesta.message}</b>`);
         this.ngAfterViewInit();

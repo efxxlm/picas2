@@ -220,7 +220,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
     this.diasPlazoIni = data.contratacion.disponibilidadPresupuestal[0].plazoDias;
     this.tipoProponente = data.contratacion.contratista.tipoProponenteCodigo;
     this.numIdentifiacionSupervisor = data.usuarioInterventoria.numeroIdentificacion;
-    this.nomSupervisor = data.usuarioInterventoria.nombres + " " + data.usuarioInterventoria.apellidos;
+    this.nomSupervisor = data.usuarioInterventoria.primerNombre + " " + data.usuarioInterventoria.primerApellido;
     this.tipoCodigo = data.contratacion.tipoSolicitudCodigo;
 
     this.numIdentificacionRepLegalInterventoria = data.contratacion.contratista.representanteLegalNumeroIdentificacion;
@@ -229,7 +229,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
     if (this.ocpion == 2) {
       this.dataSupervisor = true;
       this.numIdentifiacionSupervisor = data.usuarioInterventoria.numeroIdentificacion;
-      this.nomSupervisor = data.usuarioInterventoria.nombres + " " + data.usuarioInterventoria.apellidos;
+      this.nomSupervisor = data.usuarioInterventoria.primerNombre + " " + data.usuarioInterventoria.primerApellido;
     }
   }
   generarFechaRestante() {

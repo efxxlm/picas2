@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace asivamosffie.services.Interfaces
 {
-    public interface IContractualModification
+    public interface IContractualNoveltyService
     {
-        Task<Respuesta> CreateEditarModification(NovedadContractual novedadContractual);
+        Task<Respuesta> CreateEditNovedadContractual(NovedadContractual novedadContractual);
         Task<List<NovedadContractual>> GetListGrillaNovedadContractual();
         Task<Respuesta> EliminarNovedadContractual(int pNovedadContractualId, string pUsuario);
-        Task<ActionResult<List<Contrato>>> GetListContract(int userID);
+        Task<List<Contrato>> GetListContract(int userID);
         Task<List<VProyectosXcontrato>> GetProyectsByContract(int pContratoId);
     }
 }

@@ -250,12 +250,12 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
     this.diasPlazoIni = data.contratacion.disponibilidadPresupuestal[0].plazoDias;
     this.tipoProponente = data.contratacion.contratista.tipoProponenteCodigo;
     this.numIdentifiacionSupervisor = data.usuarioInterventoria.numeroIdentificacion;
-    this.nomSupervisor = data.usuarioInterventoria.nombres + " " + data.usuarioInterventoria.apellidos;
+    this.nomSupervisor = data.usuarioInterventoria.primerNombre + " " + data.usuarioInterventoria.primerApellido;
     this.tipoCodigo = data.contratacion.tipoSolicitudCodigo;
     if (this.opcion == 1) {//jflorez, el perfil 11 es interventor, no supervisor, revisar esta condición
       this.dataSupervisor = true;
       this.numIdentifiacionSupervisor = data.usuarioInterventoria.numeroIdentificacion;
-      this.nomSupervisor = data.usuarioInterventoria.nombres + " " + data.usuarioInterventoria.apellidos;
+      this.nomSupervisor = data.usuarioInterventoria.primerNombre + " " + data.usuarioInterventoria.primerApellido;
     }
     //jflorez, no puededeterminarel id de esta forma si no esta seteando el formulario, podria enviar a edición a unoque no corresponde
     /*for (let i = 0; i < data.contratoObservacion.length; i++) {

@@ -143,11 +143,11 @@ export class ValidarActaDeInicioFIPreconstruccionComponent implements OnInit {
     this.tipoProponente = data.contratacion.contratista.tipoProponenteCodigo;
     this.tipoCodigo = data.contratacion.tipoSolicitudCodigo;
     this.numIdentifiacionSupervisor = data.usuarioInterventoria.numeroIdentificacion;
-    this.nomSupervisor = data.usuarioInterventoria.nombres+" "+data.usuarioInterventoria.apellidos;
+    this.nomSupervisor = data.usuarioInterventoria.primerNombre+" "+data.usuarioInterventoria.primerApellido;
     if(this.opcion == 1){
       this.dataSupervisor = true;
       this.numIdentifiacionSupervisor = data.usuarioInterventoria.numeroIdentificacion;
-      this.nomSupervisor = data.usuarioInterventoria.nombres+" "+data.usuarioInterventoria.apellidos;
+      this.nomSupervisor = data.usuarioInterventoria.primerNombre+" "+data.usuarioInterventoria.primerApellido;
     }
   }
 }

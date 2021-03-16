@@ -297,7 +297,7 @@ export class FormOtrosTemasComponent implements OnInit {
           this.commonService.listaUsuarios().then(respuesta => {
             this.listaMiembros.forEach(m => {
               let usuario: Usuario = respuesta.find(u => u.usuarioId == m.usuarioId)
-              m.nombre = `${usuario.nombres} ${usuario.apellidos}`
+              m.nombre = `${usuario.primerNombre} ${usuario.primerApellido}`
             })
 
             this.sesionComiteTema.temaCompromiso.forEach(c => {

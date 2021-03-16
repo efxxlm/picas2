@@ -68,7 +68,7 @@ export class TablaVerificarCumplimientosComponent implements OnInit {
         this.comite = respuesta[0];
         respuesta[0].sesionComiteTema.forEach(tem => {
           tem.temaCompromiso.forEach(tc => {
-            tc.nombreResponsable = `${tc.responsableNavigation.usuario.nombres} ${tc.responsableNavigation.usuario.apellidos}`;
+            tc.nombreResponsable = `${tc.responsableNavigation.usuario.primerNombre} ${tc.responsableNavigation.usuario.primerApellido}`;
             tc.nombreEstado = tc.estadoCodigo;
             tc.estadoCodigo = null;
             tc[ 'temaCompromisoSeguimiento' ] = tc[ 'temaCompromisoSeguimiento' ];
@@ -82,7 +82,7 @@ export class TablaVerificarCumplimientosComponent implements OnInit {
         if (respuesta[0].sesionComiteSolicitudComiteTecnicoFiduciario) {
           respuesta[0].sesionComiteSolicitudComiteTecnicoFiduciario.forEach(sol => {
             sol.sesionSolicitudCompromiso.forEach(sc => {
-              sc.nombreResponsable = `${sc.responsableSesionParticipante.usuario.nombres} ${sc.responsableSesionParticipante.usuario.apellidos}`
+              sc.nombreResponsable = `${sc.responsableSesionParticipante.usuario.primerNombre} ${sc.responsableSesionParticipante.usuario.primerApellido}`
               sc.nombreEstado = sc.estadoCodigo;
               sc.estadoCodigo = null;
               sc[ 'tieneCompromisos' ] = sc[ 'compromisoSeguimiento' ].length > 0 ? true : false;

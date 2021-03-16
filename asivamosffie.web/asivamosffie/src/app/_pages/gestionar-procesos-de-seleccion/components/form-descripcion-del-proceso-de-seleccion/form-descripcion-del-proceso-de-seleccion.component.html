@@ -872,7 +872,7 @@
                   <mat-form-field class="select-width">
                     <mat-select formControlName="responsableEquipoTecnico" required>
                       <mat-option *ngFor="let responsable of listaResponsables" [value]="responsable">
-                        {{ responsable.nombres }} {{ responsable.apellidos }}
+                        {{ responsable.primerNombre }} {{ responsable.primerApellido }}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
@@ -900,7 +900,7 @@
                   <mat-form-field class="select-width">
                     <mat-select formControlName="responsableEquipoestructurado" required>
                       <mat-option *ngFor="let responsable of listaResponsables" [value]="responsable">
-                        {{ responsable.nombres }} {{ responsable.apellidos }}
+                        {{ responsable.primerNombre }} {{ responsable.primerApellido }}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>

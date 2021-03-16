@@ -97,14 +97,14 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
 
 
       if (solicitudVoto) {
-        solicitudVoto.nombreParticipante = `${usuario.nombres} ${usuario.apellidos}`;
+        solicitudVoto.nombreParticipante = `${usuario.primerNombre} ${usuario.primerApellido}`;
       } else {
 
         solicitudVoto = {
           sesionComiteSolicitudId: elemento.sesionComiteSolicitudId,
           sesionParticipanteId: p.sesionParticipanteId,
           sesionSolicitudVotoId: 0,
-          nombreParticipante: `${usuario.nombres} ${usuario.apellidos}`,
+          nombreParticipante: `${usuario.primerNombre} ${usuario.primerApellido}`,
           esAprobado: null,
           observacion: null,
 
@@ -112,7 +112,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
 
         }
         solicitudVoto.sesionComiteSolicitud = elemento;
-        //solicitudVoto.nombreParticipante = `${usuario.nombres} ${usuario.apellidos}`;
+        //solicitudVoto.nombreParticipante = `${usuario.primerNombre} ${usuario.primerApellido}`;
       }
 
       if (elemento.tipoSolicitudCodigo == this.tiposSolicitud.Contratacion) {
@@ -131,7 +131,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
               sesionParticipanteId: p.sesionParticipanteId,
               contratacionProyectoId: c.contratacionProyectoId,
               observacion: observacion ? observacion.observacion : null,
-              nombreParticipante: `${usuario.nombres} ${usuario.apellidos}`,
+              nombreParticipante: `${usuario.primerNombre} ${usuario.primerApellido}`,
 
               proyecto: c.proyecto,
             }
@@ -157,7 +157,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
               sesionParticipanteId: p.sesionParticipanteId,
               procesoSeleccionCronogramaMonitoreoId: c.procesoSeleccionCronogramaMonitoreoId,
               observacion: observacion ? observacion.observacion : null,
-              nombreParticipante: `${usuario.nombres} ${usuario.apellidos}`,
+              nombreParticipante: `${usuario.primerNombre} ${usuario.primerApellido}`,
 
               procesoSeleccionCronograma: c.procesoSeleccionCronograma,
 
