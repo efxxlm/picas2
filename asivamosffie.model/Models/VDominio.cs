@@ -11,6 +11,7 @@ namespace asivamosffie.model.Models
         public string Nombre { get; set; }
         public bool Activo { get; set; }
         public int DominioId { get; set; }
-        public int TipoDominioId { get; set; }
+        public int Td { get; set; }
+        public string NombreDominio { get; set; }
     }
 }

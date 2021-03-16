@@ -524,16 +524,17 @@ namespace asivamosffie.services
                               UsuarioModificacion = pUsuario.UsuarioCreacion
                           });;
 
+                Usuario usuario1 = _context.Usuario.Find(pUsuario.UsuarioId);
                 if (pUsuario.Eliminado == true)
-                    await SendEmailWhenDesactivateUsuario(pUsuario, string.Empty);
+                    await SendEmailWhenDesactivateUsuario(usuario1, string.Empty);
                  
                 return new Respuesta
                 {
                     IsSuccessful = true,
                     IsException = false,
                     IsValidation = false,
-                    Code = GeneralCodes.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_usuarios, GeneralCodes.OperacionExitosa, idAccion, pUsuario.UsuarioCreacion, "CREAR EDITAR USUARIO")
+                    Code = GeneralCodes.EliminacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_usuarios, GeneralCodes.EliminacionExitosa, idAccion, pUsuario.UsuarioCreacion, "CREAR EDITAR USUARIO")
                 };
             }
             catch (Exception e)
