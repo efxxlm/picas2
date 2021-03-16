@@ -211,6 +211,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VCompromisoSeguimiento> VCompromisoSeguimiento { get; set; }
         public virtual DbSet<VCuentaBancariaPago> VCuentaBancariaPago { get; set; }
         public virtual DbSet<VDefensaJudicialContratacionProyecto> VDefensaJudicialContratacionProyecto { get; set; }
+        public virtual DbSet<VDominio> VDominio { get; set; }
         public virtual DbSet<VGestionarGarantiasPolizas> VGestionarGarantiasPolizas { get; set; }
         public virtual DbSet<VListaContratacionModificacionContractual> VListaContratacionModificacionContractual { get; set; }
         public virtual DbSet<VListaProyectos> VListaProyectos { get; set; }
@@ -233,6 +234,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValidarSeguimientoSemanal> VValidarSeguimientoSemanal { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -7309,6 +7311,30 @@ namespace asivamosffie.model.Models
                 entity.HasNoKey();
 
                 entity.ToView("V_DefensaJudicialContratacionProyecto");
+            });
+
+            modelBuilder.Entity<VDominio>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_Dominio");
+
+                entity.Property(e => e.Codigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DominioId).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.IdValor)
+                    .HasMaxLength(101)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Nombre)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<VGestionarGarantiasPolizas>(entity =>

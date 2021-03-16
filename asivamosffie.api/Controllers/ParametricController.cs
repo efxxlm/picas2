@@ -17,9 +17,9 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
- 
+
     public class ParametricController : Controller
-    { 
+    {
         private readonly IParametricService _parametricService;
         private readonly IOptions<AppSettings> _settings;
 
@@ -53,8 +53,13 @@ namespace asivamosffie.api.Controllers
         {
             return await _parametricService.GetParametricas();
         }
-
-
-
+         
+        [HttpGet]
+        [Route("GetDominioByTipoDominioId")]
+        public async Task<List<VDominio>> GetDominioByTipoDominioId([FromQuery] int TipoDominioId)
+        {
+            return await _parametricService.GetDominioByTipoDominioId(TipoDominioId);
+        }
+         
     }
 }

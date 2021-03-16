@@ -11,5 +11,6 @@ namespace asivamosffie.services.Interfaces
     {
         Task<Respuesta> CreateDominio(TipoDominio pTipoDominio);
         Task<List<VParametricas>> GetParametricas();
+        Task<List<VDominio>> GetDominioByTipoDominioId(int pTipoDominioId);
     }
 }

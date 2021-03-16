@@ -31,14 +31,14 @@ namespace asivamosffie.services
                 .OrderByDescending(p => p.TipoDominioId)
                 .ToListAsync();
         }
-         
+
         public async Task<Respuesta> CreateDominio(TipoDominio pTipoDominio)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Parametrica, (int)EnumeratorTipoDominio.Acciones);
 
             try
             {
-             
+
                 foreach (var Dominio in pTipoDominio.Dominio)
                 {
                     if (Dominio.DominioId == 0)
@@ -82,6 +82,11 @@ namespace asivamosffie.services
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_parametricas, GeneralCodes.Error, idAccion, pTipoDominio.UsuarioCreacion, e.InnerException.ToString())
                 };
             }
+        }
+         
+        public async Task<List<VDominio>> GetDominioByTipoDominioId(int pTipoDominioId)
+        {
+            return await _context.VDominio.Where(d => d.TipoDominioId == pTipoDominioId).ToListAsync();
         }
     }
 }
