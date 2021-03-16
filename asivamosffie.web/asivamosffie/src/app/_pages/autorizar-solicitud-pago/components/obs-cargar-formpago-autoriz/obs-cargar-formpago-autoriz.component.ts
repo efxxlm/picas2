@@ -35,6 +35,7 @@ export class ObsCargarFormpagoAutorizComponent implements OnInit {
         [{ align: [] }],
       ]
     };
+    estaEditando = true;
 
     constructor(
         private fb: FormBuilder,
@@ -66,6 +67,8 @@ export class ObsCargarFormpagoAutorizComponent implements OnInit {
                                 this.estadoSemaforo.emit( 'completo' );
                             }
                             console.log( obsSupervisor );
+                            this.estaEditando = true;
+                            this.addressForm.markAllAsTouched();
                             this.solicitudPagoObservacionId = obsSupervisor.solicitudPagoObservacionId;
                             this.addressForm.setValue(
                                 {
@@ -126,6 +129,8 @@ export class ObsCargarFormpagoAutorizComponent implements OnInit {
     }
 
     onSubmit() {
+        this.estaEditando = true;
+        this.addressForm.markAllAsTouched();
         if ( this.addressForm.get( 'tieneObservaciones' ).value !== null && this.addressForm.get( 'tieneObservaciones' ).value === false ) {
             this.addressForm.get( 'observaciones' ).setValue( '' );
         }

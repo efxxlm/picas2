@@ -6,9 +6,9 @@ import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observac
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
-  selector: 'app-form-amortizacion',
-  templateUrl: './form-amortizacion.component.html',
-  styleUrls: ['./form-amortizacion.component.scss']
+    selector: 'app-form-amortizacion',
+    templateUrl: './form-amortizacion.component.html',
+    styleUrls: ['./form-amortizacion.component.scss']
 })
 export class FormAmortizacionComponent implements OnInit {
 
@@ -25,58 +25,59 @@ export class FormAmortizacionComponent implements OnInit {
     addressForm: FormGroup;
     detalleForm = this.fb.group({
         porcentajeAmortizacion: [null, Validators.required],
-        valorAmortizacion: [ { value: null, disabled: true } , Validators.required]
+        valorAmortizacion: [{ value: null, disabled: true }, Validators.required]
     });
     editorStyle = {
-      height: '45px',
-      overflow: 'auto'
+        height: '45px',
+        overflow: 'auto'
     };
     config = {
-      toolbar: [
-        ['bold', 'italic', 'underline'],
-        [{ list: 'ordered' }, { list: 'bullet' }],
-        [{ indent: '-1' }, { indent: '+1' }],
-        [{ align: [] }],
-      ]
+        toolbar: [
+            ['bold', 'italic', 'underline'],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            [{ indent: '-1' }, { indent: '+1' }],
+            [{ align: [] }],
+        ]
     };
-
+    estaEditando = false;
     constructor(
         private fb: FormBuilder,
         private routes: Router,
         private activatedRoute: ActivatedRoute,
         private dialog: MatDialog,
-        private obsMultipleSvc: ObservacionesMultiplesCuService )
-    {
+        private obsMultipleSvc: ObservacionesMultiplesCuService) {
         this.addressForm = this.crearFormulario();
     }
 
     ngOnInit(): void {
-        if ( this.contrato.contratacion.disponibilidadPresupuestal.length > 0 ) {
-            this.contrato.contratacion.disponibilidadPresupuestal.forEach( ddp => this.valorTotalDelContrato += ddp.valorSolicitud );
+        if (this.contrato.contratacion.disponibilidadPresupuestal.length > 0) {
+            this.contrato.contratacion.disponibilidadPresupuestal.forEach(ddp => this.valorTotalDelContrato += ddp.valorSolicitud);
         }
         this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
-        if ( this.solicitudPagoFase.solicitudPagoFaseAmortizacion.length > 0 ) {
+        if (this.solicitudPagoFase.solicitudPagoFaseAmortizacion.length > 0) {
             const solicitudPagoFaseAmortizacion = this.solicitudPagoFase.solicitudPagoFaseAmortizacion[0]
             this.solicitudPagoFaseAmortizacionId = solicitudPagoFaseAmortizacion.solicitudPagoFaseAmortizacionId;
             // Get observaciones
-            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.autorizarSolicitudPagoId, this.solicitudPago.solicitudPagoId, this.solicitudPagoFaseAmortizacionId )
+            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(this.autorizarSolicitudPagoId, this.solicitudPago.solicitudPagoId, this.solicitudPagoFaseAmortizacionId)
                 .subscribe(
                     response => {
-                        const obsSupervisor = response.filter( obs => obs.archivada === false )[0];
+                        const obsSupervisor = response.filter(obs => obs.archivada === false)[0];
 
-                        if ( obsSupervisor !== undefined ) {
-                            if ( obsSupervisor.registroCompleto === false ) {
-                                this.estadoSemaforo.emit( 'en-proceso' );
+                        if (obsSupervisor !== undefined) {
+                            if (obsSupervisor.registroCompleto === false) {
+                                this.estadoSemaforo.emit('en-proceso');
                             }
-                            if ( obsSupervisor.registroCompleto === true ) {
-                                this.estadoSemaforo.emit( 'completo' );
+                            if (obsSupervisor.registroCompleto === true) {
+                                this.estadoSemaforo.emit('completo');
                             }
+                            this.estaEditando = true;
+                            this.addressForm.markAllAsTouched();
                             this.solicitudPagoObservacionId = obsSupervisor.solicitudPagoObservacionId;
                             this.addressForm.setValue(
                                 {
                                     fechaCreacion: obsSupervisor.fechaCreacion,
                                     tieneObservaciones: obsSupervisor.tieneObservacion !== undefined ? obsSupervisor.tieneObservacion : null,
-                                    observaciones: obsSupervisor.observacion !== undefined ? ( obsSupervisor.observacion.length > 0 ? obsSupervisor.observacion : null ) : null
+                                    observaciones: obsSupervisor.observacion !== undefined ? (obsSupervisor.observacion.length > 0 ? obsSupervisor.observacion : null) : null
                                 }
                             );
                         }
@@ -94,9 +95,9 @@ export class FormAmortizacionComponent implements OnInit {
 
     crearFormulario() {
         return this.fb.group({
-            fechaCreacion: [ null ],
+            fechaCreacion: [null],
             tieneObservaciones: [null, Validators.required],
-            observaciones:[null, Validators.required],
+            observaciones: [null, Validators.required],
         })
     }
 
@@ -106,8 +107,8 @@ export class FormAmortizacionComponent implements OnInit {
         }
     }
 
-    textoLimpio( evento: any, n: number ) {
-        if ( evento !== undefined ) {
+    textoLimpio(evento: any, n: number) {
+        if (evento !== undefined) {
             return evento.getLength() > n ? n : evento.getLength();
         } else {
             return 0;
@@ -116,40 +117,42 @@ export class FormAmortizacionComponent implements OnInit {
 
     openDialog(modalTitle: string, modalText: string) {
         const dialogRef = this.dialog.open(ModalDialogComponent, {
-          width: '28em',
-          data: { modalTitle, modalText }
+            width: '28em',
+            data: { modalTitle, modalText }
         });
     }
 
     onSubmit() {
-        if ( this.addressForm.get( 'tieneObservaciones' ).value !== null && this.addressForm.get( 'tieneObservaciones' ).value === false ) {
-            this.addressForm.get( 'observaciones' ).setValue( '' );
+        this.estaEditando = true;
+        this.addressForm.markAllAsTouched();
+        if (this.addressForm.get('tieneObservaciones').value !== null && this.addressForm.get('tieneObservaciones').value === false) {
+            this.addressForm.get('observaciones').setValue('');
         }
 
         const pSolicitudPagoObservacion = {
             solicitudPagoObservacionId: this.solicitudPagoObservacionId,
             solicitudPagoId: this.solicitudPago.solicitudPagoId,
-            observacion: this.addressForm.get( 'observaciones' ).value !== null ? this.addressForm.get( 'observaciones' ).value : this.addressForm.get( 'observaciones' ).value,
+            observacion: this.addressForm.get('observaciones').value !== null ? this.addressForm.get('observaciones').value : this.addressForm.get('observaciones').value,
             tipoObservacionCodigo: this.amortizacionAnticipoCodigo,
             menuId: this.autorizarSolicitudPagoId,
             idPadre: this.solicitudPagoFaseAmortizacionId,
-            tieneObservacion: this.addressForm.get( 'tieneObservaciones' ).value !== null ? this.addressForm.get( 'tieneObservaciones' ).value : this.addressForm.get( 'tieneObservaciones' ).value
+            tieneObservacion: this.addressForm.get('tieneObservaciones').value !== null ? this.addressForm.get('tieneObservaciones').value : this.addressForm.get('tieneObservaciones').value
         };
 
-        console.log( pSolicitudPagoObservacion );
-        this.obsMultipleSvc.createUpdateSolicitudPagoObservacion( pSolicitudPagoObservacion )
+        console.log(pSolicitudPagoObservacion);
+        this.obsMultipleSvc.createUpdateSolicitudPagoObservacion(pSolicitudPagoObservacion)
             .subscribe(
                 response => {
-                    this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                    this.openDialog('', `<b>${response.message}</b>`);
+                    this.routes.navigateByUrl('/', { skipLocationChange: true }).then(
                         () => this.routes.navigate(
                             [
-                                '/autorizarSolicitudPago/autorizacionSolicitud',  this.activatedRoute.snapshot.params.idContrato, this.activatedRoute.snapshot.params.idSolicitudPago
+                                '/autorizarSolicitudPago/autorizacionSolicitud', this.activatedRoute.snapshot.params.idContrato, this.activatedRoute.snapshot.params.idSolicitudPago
                             ]
                         )
                     );
                 },
-                err => this.openDialog( '', `<b>${ err.message }</b>` )
+                err => this.openDialog('', `<b>${err.message}</b>`)
             )
     }
 

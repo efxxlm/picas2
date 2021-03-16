@@ -48,15 +48,22 @@
                             <div class="d-flex">
                                 <strong>Criterios:</strong>
                                 <section>
-                                    <p *ngFor="let criterio of criteriosArraySeleccionados; index as i" style="margin-left: .4em;"> {{ filterCriterios( criterio.codigo ) }}<span *ngIf="criteriosArraySeleccionados.length - 1 !== i">,</span><span *ngIf="criteriosArraySeleccionados.length - 1 === i">.</span> </p>
+                                    <p *ngFor="let criterio of criteriosArraySeleccionados; index as i"
+                                        style="margin-left: .4em;"> {{ filterCriterios( criterio.codigo ) }}<span
+                                            *ngIf="criteriosArraySeleccionados.length - 1 !== i">,</span><span
+                                            *ngIf="criteriosArraySeleccionados.length - 1 === i">.</span> </p>
                                 </section>
                             </div>
-                            <section formArrayName="criteriosProyecto" class="mt-1em" *ngIf="criteriosProyecto( i ).length > 0">
-                                <div *ngFor="let criterioProyecto of criteriosProyecto( i ).controls; index as j" [formGroup]="criterioProyecto">
+                            <section formArrayName="criteriosProyecto" class="mt-1em"
+                                *ngIf="criteriosProyecto( i ).length > 0">
+                                <div *ngFor="let criterioProyecto of criteriosProyecto( i ).controls; index as j"
+                                    [formGroup]="criterioProyecto">
                                     <h2>
                                         <b> {{ criterioProyecto.get( 'nombre' ).value }} </b>
                                     </h2>
-                                    <p><strong>Valor facturado para el proyecto en el criterio:</strong> ${{ criterioProyecto.get( 'valorFacturado' ).value | currency:' ':'symbol-narrow':'.0-0' }} </p>
+                                    <p><strong>Valor facturado para el proyecto en el criterio:</strong> ${{
+                                        criterioProyecto.get( 'valorFacturado' ).value | currency:'
+                                        ':'symbol-narrow':'.0-0' }} </p>
                                 </div>
                             </section>
                         </mat-card-content>
@@ -80,13 +87,17 @@
                     <div class="d-flex">
                         <strong>Criterio:</strong>
                         <section>
-                            <p *ngFor="let criterio of criteriosArraySeleccionados; index as i" style="margin-left: .4em;"> {{ filterCriterios( criterio.codigo ) }}<span *ngIf="criteriosArraySeleccionados.length - 1 !== i">,</span><span *ngIf="criteriosArraySeleccionados.length - 1 === i">.</span> </p>
+                            <p *ngFor="let criterio of criteriosArraySeleccionados; index as i"
+                                style="margin-left: .4em;"> {{ filterCriterios( criterio.codigo ) }}<span
+                                    *ngIf="criteriosArraySeleccionados.length - 1 !== i">,</span><span
+                                    *ngIf="criteriosArraySeleccionados.length - 1 === i">.</span> </p>
                         </section>
                     </div>
                     <br>
                     <div *ngFor="let criterio of solicitudPagoFaseCriterio">
                         <h1><b> {{ filterCriterios( criterio.tipoCriterioCodigo ) }} </b></h1>
-                        <p><strong>Valor facturado para el proyecto en el criterio:</strong> ${{ criterio.valorFacturado | currency:' ':'symbol-narrow':'.0-0' }} </p>
+                        <p><strong>Valor facturado para el proyecto en el criterio:</strong> ${{ criterio.valorFacturado
+                            | currency:' ':'symbol-narrow':'.0-0' }} </p>
                         <br>
                     </div>
                 </mat-card-content>
@@ -102,9 +113,12 @@
             </mat-card-header>
             <mat-card-content style="text-align: left;">
                 <p><b> {{ addressForm.get( 'fechaCreacion' ).value | date: 'dd/MM/yyyy' }} </b></p>
-                <p *ngIf="addressForm.get( 'tieneObservaciones' ).value === true"><b>¿Desde la coordinación tiene observaciones a los detalles de la factura para proyectos asociados?:</b> Si</p>
-                <p *ngIf="addressForm.get( 'tieneObservaciones' ).value === false"><b>¿Desde la coordinación tiene observaciones a los detalles de la factura para proyectos asociados?:</b> No</p>
-                <section [innerHTML]="addressForm.get( 'observaciones' ).value" *ngIf="addressForm.get( 'tieneObservaciones' ).value === true"></section>
+                <p *ngIf="addressForm.get( 'tieneObservaciones' ).value === true"><b>¿Desde la coordinación tiene
+                        observaciones a los detalles de la factura para proyectos asociados?:</b> Si</p>
+                <p *ngIf="addressForm.get( 'tieneObservaciones' ).value === false"><b>¿Desde la coordinación tiene
+                        observaciones a los detalles de la factura para proyectos asociados?:</b> No</p>
+                <section [innerHTML]="addressForm.get( 'observaciones' ).value"
+                    *ngIf="addressForm.get( 'tieneObservaciones' ).value === true"></section>
             </mat-card-content>
         </mat-card>
     </ng-container>
@@ -112,7 +126,12 @@
         <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
             <div class="row mtop justCenter">
                 <div class="col-md-7">
-                    <label class="label-left">¿Desde la coordinación tiene observaciones a los detalles de la factura para proyectos asociados?</label>
+                    <label class="label-left" [ngClass]="{
+                        'color-secondaryColor':
+                          (addressForm.get('tieneObservaciones').invalid && addressForm.get('tieneObservaciones').touched) ||
+                          (addressForm.get('tieneObservaciones').invalid && estaEditando)
+                      }">¿Desde la coordinación tiene observaciones a los detalles de la factura para proyectos
+                        asociados?</label>
                 </div>
                 <div class="col-md-2">
                     <mat-radio-group aria-labelledby="example-radio-group-label" class="radioInput"
@@ -122,12 +141,30 @@
                     </mat-radio-group>
                     <span class="required-form-group" style="margin-left: 1px;">*</span>
                 </div>
+                <span class="icon-incompleto">
+                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Debe ingresar la información en el campo para continuar"
+                        matTooltipClass="info-tooltip" *ngIf="
+                        (addressForm.get('tieneObservaciones').invalid && addressForm.get('tieneObservaciones').touched) ||
+                        (addressForm.get('tieneObservaciones').invalid && estaEditando)
+                      " />
+                </span>
             </div>
             <div class="d-flex align-items-center mtop" *ngIf="addressForm.get('tieneObservaciones').value === true">
-                <div class="text-area-quill izqTitle">
-                    <label for="observaciones" class="text-area-quill--label"  style="color: #174193;">Observaciones a los detalles de la factura para proyectos asociados</label>
+                <div class="text-area-quill izqTitle" [ngClass]="{
+                    'color-secondaryColor':
+                    (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                    (addressForm.get('observaciones').invalid && estaEditando)
+                  }">
+                    <label for="observaciones" class="text-area-quill--label" [ngClass]="{
+                                'colorMainColor':
+                                  !((addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                                  (addressForm.get('observaciones').invalid && estaEditando))
+                              }">Observaciones a los detalles de la factura para proyectos asociados</label>
                     <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
-                        (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observaciones></quill-editor>
+                        (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observaciones>
+                    </quill-editor>
                 </div>
                 <span class="contador" *ngIf="addressForm.get('observaciones').value">
                     {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
@@ -135,9 +172,17 @@
                 <span class="contador" *ngIf="addressForm.get('observaciones').value === null">
                     1000
                 </span>
+                <span class="icon-incompleto">
+                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Debe ingresar la información en el campo para continuar"
+                        matTooltipClass="info-tooltip" *ngIf="
+                      (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                      (addressForm.get('observaciones').invalid && estaEditando)
+                      " />
+                </span>
             </div>
-            <button mat-button color="warn" class="btn-guardar"
-                type="submit" [disabled]="addressForm.dirty === false">
+            <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="addressForm.dirty === false">
                 <img src="assets/img/icon/guardar.svg" alt="Guardar">
             </button>
         </form>

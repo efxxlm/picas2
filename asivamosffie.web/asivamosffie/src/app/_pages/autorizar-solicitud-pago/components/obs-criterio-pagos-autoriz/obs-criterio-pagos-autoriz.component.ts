@@ -36,6 +36,7 @@ export class ObsCriterioPagosAutorizComponent implements OnInit {
         [{ align: [] }],
       ]
     };
+    estaEditando = false;
 
     get criterios() {
         return this.addressForm.get( 'criterios' ) as FormArray;
@@ -68,6 +69,8 @@ export class ObsCriterioPagosAutorizComponent implements OnInit {
                             if ( obsSupervisor.registroCompleto === true ) {
                                 this.estadoSemaforo.emit( 'completo' );
                             }
+                            this.estaEditando = true;
+                            this.addressForm.markAllAsTouched();
                             this.solicitudPagoObservacionId = obsSupervisor.solicitudPagoObservacionId;
                             this.addressForm.get( 'fechaCreacion' ).setValue( obsSupervisor.fechaCreacion );
                             this.addressForm.get( 'tieneObservaciones' ).setValue( obsSupervisor.tieneObservacion !== undefined ? obsSupervisor.tieneObservacion : null );
@@ -206,6 +209,8 @@ export class ObsCriterioPagosAutorizComponent implements OnInit {
     }
 
     onSubmit() {
+        this.estaEditando = true;
+        this.addressForm.markAllAsTouched();
         if ( this.addressForm.get( 'tieneObservaciones' ).value !== null && this.addressForm.get( 'tieneObservaciones' ).value === false ) {
             this.addressForm.get( 'observaciones' ).setValue( '' );
         }
