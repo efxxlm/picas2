@@ -342,14 +342,14 @@ namespace asivamosffie.services
             //List<string> strCriterios = _context.CriterioCodigoTipoPagoCodigo.Where(r => r.CriterioCodigo == pCriterioCodigo).Select(r => r.TipoPagoCodigo).ToList();
             List<Dominio> ListCriterio = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Tipo_Pago_Obra_Interventoria);
 
-            //strCriterios.ForEach(l =>
-            //{
-            //    ListDynamics.Add(new
-            //    {
-            //        Codigo = l,
-            //        Nombre = ListCriterio.Where(lc => lc.Codigo == l).FirstOrDefault().Nombre
-            //    });
-            //});
+            ListCriterio.ForEach(l =>
+            {
+                ListDynamics.Add(new
+                {
+                    Codigo = l,
+                    Nombre = ListCriterio.Where(lc => lc.Codigo == l.Codigo).FirstOrDefault().Nombre
+                });
+            });
             return ListDynamics;
         }
 
