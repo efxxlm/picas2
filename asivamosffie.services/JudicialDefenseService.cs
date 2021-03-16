@@ -443,24 +443,36 @@ namespace asivamosffie.services
             }
 
             //valido detalle
-            if (defensaJudicial.LocalizacionIdMunicipio == null || defensaJudicial.TipoAccionCodigo == null || defensaJudicial.JurisdiccionCodigo == null ||
-                defensaJudicial.Pretensiones == null || defensaJudicial.Pretensiones == "" || defensaJudicial.CuantiaPerjuicios == null ||
-                defensaJudicial.EsRequiereSupervisor == null
-                /*|| defensaJudicial.FechaRadicadoFfie == null || defensaJudicial.NumeroRadicadoFfie == null ||
-                defensaJudicial.CanalIngresoCodigo == null*/)
+            if (defensaJudicial.LocalizacionIdMunicipio == null
+                || String.IsNullOrEmpty(defensaJudicial.TipoAccionCodigo)
+                || String.IsNullOrEmpty(defensaJudicial.JurisdiccionCodigo)
+                || String.IsNullOrEmpty(defensaJudicial.Pretensiones)
+                || defensaJudicial.CuantiaPerjuicios == null
+                || defensaJudicial.EsRequiereSupervisor == null
+                )
             {
                 retorno = false;
             }
 
-            //demandantes/convocantes
-            if (defensaJudicial.DemandadoConvocado.Count() == 0)
+            if ((bool)defensaJudicial.EsLegitimacionActiva)
             {
-                retorno = false;
+                if (defensaJudicial.DemandadoConvocado.Count() == 0)
+                {
+                    retorno = false;
+                }
             }
-            if (defensaJudicial.DemandanteConvocante.Count() == 0)
-            {
-                retorno = false;
-            }
+
+            else{
+                //demandantes/convocantes
+                if (defensaJudicial.DemandadoConvocado.Count() == 0)
+                {
+                    retorno = false;
+                }
+                if (defensaJudicial.DemandanteConvocante.Count() == 0)
+                {
+                    retorno = false;
+                }
+             }
 
             //soporte
             if (defensaJudicial.UrlSoporteProceso == null)
@@ -1799,5 +1811,64 @@ namespace asivamosffie.services
 
 
         }
+
+        public async Task<Respuesta> DeleteDefensaJudicialContratacionProyecto(int contratacionId, int defensaJudicialId, string pUsuarioModificacion)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Defensa_Judicial_Contratacion_Proyecto, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                List<ContratacionProyecto> contratacionProyectos = _context.ContratacionProyecto.Where(r => r.ContratacionId == contratacionId).ToList();
+                contratacionProyectos.ForEach(cp =>
+                {
+                    List<DefensaJudicialContratacionProyecto> defensaJudicialContratacionProyectos = _context.DefensaJudicialContratacionProyecto.Where(r => r.ContratacionProyectoId == cp.ContratacionProyectoId && r.DefensaJudicialId == defensaJudicialId).ToList();
+
+                    defensaJudicialContratacionProyectos.ForEach(item =>
+                    {
+                        _context.Set<DefensaJudicialContratacionProyecto>().Where(r => r.DefensaJudicialContratacionProyectoId == item.DefensaJudicialContratacionProyectoId)
+                                           .Update(r => new DefensaJudicialContratacionProyecto()
+                                           {
+                                               FechaModificacion = DateTime.Now,
+                                               UsuarioModificacion = pUsuarioModificacion,
+                                               Eliminado = true
+                                           });
+                    });
+                });
+
+                _context.Set<DefensaJudicial>().Where(r => r.DefensaJudicialId == defensaJudicialId)
+                                   .Update(r => new DefensaJudicial()
+                                   {
+                                       FechaModificacion = DateTime.Now,
+                                       UsuarioModificacion = pUsuarioModificacion,
+                                       CantContratos = r.CantContratos > 0 ? r.CantContratos - 1 : r.CantContratos
+                                   });
+
+                await _context.SaveChangesAsync();
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_procesos_Defensa_Judicial, ConstanMessagesRegisterWeeklyProgress.OperacionExitosa, idAccion, pUsuarioModificacion, "ELIMINAR DEFENSA JUDICIAL CONTRATACIÓN PROYECTO".ToUpper())
+                };
+
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantSesionComiteTecnico.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_procesos_Defensa_Judicial, ConstantSesionComiteTecnico.Error, idAccion, pUsuarioModificacion, ex.InnerException.ToString())
+                };
+            }
+
+        }
+
+
     }
 }

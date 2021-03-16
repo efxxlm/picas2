@@ -300,7 +300,6 @@
         public const string Crear_Editar_Acta_Bienes_Servicios = "214";
 
         public const string Cambiar_Estado_Legitimacion_Defensa_Judicial = "216";
-        public const string Eliminar_Demandado_Convocado = "226";
 
         //Lista de chequeo
         public const string Create_Edit_Item_Lista_Chequeo = "217";
@@ -313,10 +312,13 @@
         public const string Create_Edit_Defensa_Judicial_Seguimiento = "223";
         public const string Create_Edit_Menu_Perfil = "224";
         public const string Activar_Desactivar_Rol = "225";
-        public const string Crear_Editar_Parametrica = "226";
+        public const string Crear_Editar_Parametrica = "227";
+
+        public const string Eliminar_Demandado_Convocado = "226";
+        public const string Eliminar_Defensa_Judicial_Contratacion_Proyecto = "228";
 
 
-        public const string Desactivar_Usuario = "228";
-        public const string Crear_Usuario = "229";
+        public const string Desactivar_Usuario = "229";
+        public const string Crear_Usuario = "230";
     }
 }

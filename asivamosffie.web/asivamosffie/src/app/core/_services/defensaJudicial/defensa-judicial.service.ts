@@ -90,7 +90,9 @@ export class DefensaJudicialService {
   deleteDemandadoConvocado( demandadoConvocadoId: number ) {
     return this.http.post<Respuesta>( `${ this.url }/JudicialDefense/DeleteDemandadoConvocado?demandadoConvocadoId=${ demandadoConvocadoId }`, '' );
   }
-
+  deleteDefensaJudicialContratacionProyecto( contratacionId: number , defensaJudicialId: number) {
+    return this.http.post<Respuesta>( `${ this.url }/JudicialDefense/DeleteDefensaJudicialContratacionProyecto?contratacionId=${ contratacionId }&defensaJudicialId=${defensaJudicialId}`, null );
+  }
 }
 
 export interface DefensaJudicial{
