@@ -28,8 +28,25 @@ namespace asivamosffie.api.Controllers
             _parametricService = parametricService;
             _settings = settings;
         }
+        [HttpPost]
+        [Route("CreateDominio")]
+        public async Task<IActionResult> CreateDominio(TipoDominio pTipoDominio)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pTipoDominio.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _parametricService.CreateDominio(pTipoDominio);
 
-       
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
         [HttpGet]
         [Route("GetParametricas")]
         public async Task<List<VParametricas>> GetParametricas()

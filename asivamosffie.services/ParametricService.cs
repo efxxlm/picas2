@@ -68,7 +68,7 @@ namespace asivamosffie.services
                     IsException = false,
                     IsValidation = false,
                     Code = GeneralCodes.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_usuarios, GeneralCodes.OperacionExitosa, idAccion, pTipoDominio.UsuarioCreacion, "CREAR EDITAR PARAMETICAS")
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_parametricas, GeneralCodes.OperacionExitosa, idAccion, pTipoDominio.UsuarioCreacion, "CREAR EDITAR PARAMETICAS")
                 };
             }
             catch (Exception e)
@@ -79,7 +79,7 @@ namespace asivamosffie.services
                     IsException = true,
                     IsValidation = false,
                     Code = GeneralCodes.Error,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_usuarios, GeneralCodes.Error, idAccion, pTipoDominio.UsuarioCreacion, e.InnerException.ToString())
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_parametricas, GeneralCodes.Error, idAccion, pTipoDominio.UsuarioCreacion, e.InnerException.ToString())
                 };
             }
         }

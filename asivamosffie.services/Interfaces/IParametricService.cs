@@ -9,6 +9,7 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IParametricService
     {
+        Task<Respuesta> CreateDominio(TipoDominio pTipoDominio);
         Task<List<VParametricas>> GetParametricas();
     }
 }
