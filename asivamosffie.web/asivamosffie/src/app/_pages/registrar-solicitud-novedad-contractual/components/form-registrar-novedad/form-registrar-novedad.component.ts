@@ -128,15 +128,15 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
       this.addressForm.get('novedadContractualId').setValue( this.novedad.novedadContractualId );
       this.addressForm.get('fechaSolicitudNovedad').setValue( this.novedad.fechaSolictud );
       this.addressForm.get('instanciaPresentoSolicitud').setValue( this.novedad.instanciaCodigo );
+      this.addressForm.get('fechaSesionInstancia').setValue( this.novedad.fechaSesionInstancia );
+
+      this.novedadContractual = this.novedad;
 
     }
   }
 
   ngOnInit(): void {
     
-    
-
-
     this.addressForm.valueChanges
       .subscribe(value => {
         console.log(value);
@@ -151,7 +151,6 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
           let novedadContractualDescripcion: NovedadContractualDescripcion = {
             tipoNovedadCodigo: n.codigo,
             nombreTipoNovedad: n.nombre,
-
 
           }
 
@@ -236,10 +235,10 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
     let novedad: NovedadContractual = {
       novedadContractualId: this.addressForm.value ? this.addressForm.value.novedadContractualId : 0,
       fechaSolictud: this.addressForm.value ? this.addressForm.value.fechaSolicitudNovedad : null,
-      instanciaCodigo: this.addressForm.value ? this.addressForm.value.instanciaPresentoSolicitud: null,
+      instanciaCodigo: this.addressForm.value ? this.addressForm.value.instanciaPresentoSolicitud: null, 
       proyectoId: this.proyecto ? this.proyecto.proyectoId : null,
       contratoId: this.contrato.contratoId,
-
+      fechaSesionInstancia: this.addressForm.value ? this.addressForm.value.fechaSesionInstancia : null,
 
     };
 

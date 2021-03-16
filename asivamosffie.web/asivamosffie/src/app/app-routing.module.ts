@@ -17,6 +17,7 @@ import { AuthGuard } from './_guards/auth.guard';
 import { RegistrarAcuerdoComponent } from './_pages/gestionar-acuerdo-cofinanciacion/components/registrar-acuerdo/registrar-acuerdo.component';
 import { RegistrarComponent } from './_pages/gestionar-fuentes-de-financiacion/components/registrar/registrar.component';
 import { CanDeactivateGuard } from './_guards/can-deactivate.guard';
+import { AuthenticateGuard } from './_guards/authenticate.guard';
 
 const routes: Routes = [
   {
@@ -34,7 +35,7 @@ const routes: Routes = [
       },
       {
         path: 'home',
-        // canActivate: [AuthGuard],
+        canLoad: [AuthenticateGuard],
         loadChildren: () => import('./_pages/home/home.module').then(m => m.HomeModule),
 
       },
@@ -252,6 +253,7 @@ const routes: Routes = [
       },
       {
         path: 'registrarAvanceSemanal',
+        canLoad: [AuthenticateGuard],
         loadChildren: () => import( './_pages/registrar-avance-semanal/registrar-avance-semanal.module' )
           .then( module => module.RegistrarAvanceSemanalModule )
       },

@@ -5,6 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { CommonService } from '../common/common.service';
+import { MenuPerfil } from 'src/app/_interfaces/menu-perfil';
 
 @Injectable({
   providedIn: 'root'
@@ -122,7 +123,17 @@ export class AutenticacionService {
     return retorno;
   }
 
+  tienePermisos( ruta: string){
+
+     const usuario:any = JSON.parse(localStorage.getItem( 'actualUser' ));
+
+    return this.http.get<MenuPerfil>(`${environment.apiUrl}/common/tienePermisos?idPerfil=${ usuario.rol[0].perfilId }&pRuta=${ ruta }`);
+
+  }
+
 }
+
+
 
 export interface Usuario{
   menus?: any[];

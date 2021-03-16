@@ -160,6 +160,21 @@ namespace asivamosffie.services
                         novedadContractual.UsuarioCreacion = novedadContractual.UsuarioCreacion;
 
                         novedadContractual.Eliminado = false;
+
+                        if (novedadContractual.NovedadContractualDescripcion != null)
+                        {
+                            foreach( NovedadContractualDescripcion descripcion in novedadContractual.NovedadContractualDescripcion)
+                            {
+                                if (string.IsNullOrEmpty(descripcion.NovedadContractualDescripcionId.ToString()) || descripcion.NovedadContractualDescripcionId == 0)
+                                {
+                                    descripcion.FechaCreacion = DateTime.Now;
+                                    descripcion.UsuarioCreacion = novedadContractual.UsuarioCreacion;
+
+
+                                }
+                            }
+                        }
+
                         _context.NovedadContractual.Add(novedadContractual);
 
                     }
@@ -175,6 +190,8 @@ namespace asivamosffie.services
 
                         novedadContractualOld.FechaSolictud = novedadContractual.FechaSolictud;
                         novedadContractualOld.InstanciaCodigo = novedadContractual.InstanciaCodigo;
+                        novedadContractualOld.FechaSesionInstancia = novedadContractual.FechaSesionInstancia;
+
 
                     }
 
@@ -219,6 +236,65 @@ namespace asivamosffie.services
                     Data = novedadContractual,
                     Code = ConstantMessagesContractualControversy.Error,
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_solicitud_novedad_contractual, GeneralCodes.Error, idAccionCrearEditarNovedadContractual, novedadContractual.UsuarioCreacion, strCrearEditar)
+                };
+            }
+        }
+
+        public async Task<Respuesta> CreateEditNovedadContractualDescripcion(NovedadContractualDescripcion novedadContractualDescripcion)
+        {
+            Respuesta respuesta = new Respuesta();
+
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Novedad_Contractual, (int)EnumeratorTipoDominio.Acciones);//ERROR VALIDAR ACCIONES
+
+            string strCrearEditar = "";
+            //ProcesoSeleccionGrupo ProcesoSeleccionGrupoAntiguo = null;
+            try
+            {
+
+                if (string.IsNullOrEmpty(novedadContractualDescripcion.NovedadContractualDescripcionId.ToString()) || novedadContractualDescripcion.NovedadContractualDescripcionId == 0)
+                {
+                    //Auditoria
+                    strCrearEditar = "CREAR NOVEDAD CONTRACTUAL DESCRIPCION";
+                    novedadContractualDescripcion.FechaCreacion = DateTime.Now;
+                    novedadContractualDescripcion.Eliminado = false;
+                    
+                    _context.NovedadContractualDescripcion.Add( novedadContractualDescripcion );
+                }
+                else
+                {
+                    strCrearEditar = "EDIT NOVEDAD CONTRACTUAL DESCRIPCION";
+                    NovedadContractualDescripcion novedadDescripcionOLD = _context.NovedadContractualDescripcion.Find(novedadContractualDescripcion.NovedadContractualDescripcionId);
+                    //Auditoria
+                    //ProcesoSeleccionGrupoAntiguo.UsuarioModificacion = procesoSeleccionGrupo.UsuarioCreacion.ToUpper();
+                    //ProcesoSeleccionGrupoAntiguo.NombreGrupo = procesoSeleccionGrupo.NombreGrupo == null ? "" : procesoSeleccionGrupo.NombreGrupo.ToUpper();
+                    //ProcesoSeleccionGrupoAntiguo.FechaModificacion = DateTime.Now;
+
+
+                    ////Registros
+
+                    //ProcesoSeleccionGrupoAntiguo.ProcesoSeleccionId = procesoSeleccionGrupo.ProcesoSeleccionId;
+                    //ProcesoSeleccionGrupoAntiguo.TipoPresupuestoCodigo = procesoSeleccionGrupo.TipoPresupuestoCodigo;
+                    //ProcesoSeleccionGrupoAntiguo.Valor = procesoSeleccionGrupo.Valor;
+                    //ProcesoSeleccionGrupoAntiguo.ValorMinimoCategoria = procesoSeleccionGrupo.ValorMinimoCategoria;
+                    //ProcesoSeleccionGrupoAntiguo.ValorMaximoCategoria = procesoSeleccionGrupo.ValorMaximoCategoria;
+                    //ProcesoSeleccionGrupoAntiguo.PlazoMeses = procesoSeleccionGrupo.PlazoMeses;
+                    //ProcesoSeleccionGrupoAntiguo.Eliminado = false;
+
+                    //_context.ProcesoSeleccionGrupo.Update(ProcesoSeleccionGrupoAntiguo);
+                }
+
+                return respuesta;
+            }
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesProcesoSeleccion.ErrorInterno,
+                    //Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion_Grupo, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccion, ProcesoSeleccionGrupoAntiguo.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
                 };
             }
         }
