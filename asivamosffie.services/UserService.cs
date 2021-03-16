@@ -341,7 +341,7 @@ namespace asivamosffie.services
                             {
                                 FechaModificacion = DateTime.Now,
                                 UsuarioModificacion = pUsuario.UsuarioCreacion,
-                                FechaCreacion = pUsuario.FechaCambioPassword, 
+                                FechaCreacion = pUsuario.FechaCambioPassword,
                                 PrimerNombre = pUsuario.PrimerNombre,
                                 SegundoNombre = pUsuario.SegundoNombre,
                                 PrimerApellido = pUsuario.PrimerApellido,
@@ -358,7 +358,7 @@ namespace asivamosffie.services
                                 DependenciaCodigo = pUsuario.DependenciaCodigo,
                                 GrupoCodigo = pUsuario.GrupoCodigo,
                                 ProcedenciaCodigo = pUsuario.ProcedenciaCodigo,
-                                TieneContratoAsignado = pUsuario.TieneContratoAsignado 
+                                TieneContratoAsignado = pUsuario.TieneContratoAsignado
                             });
 
                     CreateEditAsignacionContrato(pUsuario);
@@ -451,13 +451,14 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                    await _context.Set<UsuarioPerfil>()
-                             .Where(up => up.UsuarioId == pUsuario.UsuarioId)
-                             .UpdateAsync(up => new UsuarioPerfil
-                             {
-                                 PerfilId = pUsuario.PerfilId,
-                                 FechaModificacion = DateTime.Now,
-                             });
+                    UsuarioPerfil usuarioPerfilOld =
+                        _context.UsuarioPerfil
+                        .Where(r => r.UsuarioId == pUsuario.UsuarioId)
+                        .FirstOrDefault();
+
+                    usuarioPerfilOld.PerfilId = pUsuario.PerfilId;
+                    usuarioPerfilOld.FechaModificacion = DateTime.Now;
+                     
                 }
 
             }
