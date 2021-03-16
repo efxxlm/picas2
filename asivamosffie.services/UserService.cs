@@ -341,8 +341,7 @@ namespace asivamosffie.services
                             {
                                 FechaModificacion = DateTime.Now,
                                 UsuarioModificacion = pUsuario.UsuarioCreacion,
-                                FechaCreacion = pUsuario.FechaCambioPassword,
-                                ProcedenciaCodigo = pUsuario.ProcedenciaCodigo,
+                                FechaCreacion = pUsuario.FechaCambioPassword, 
                                 PrimerNombre = pUsuario.PrimerNombre,
                                 SegundoNombre = pUsuario.SegundoNombre,
                                 PrimerApellido = pUsuario.PrimerApellido,
@@ -357,7 +356,9 @@ namespace asivamosffie.services
                                 UrlSoporteDocumentacion = pUsuario.UrlSoporteDocumentacion,
                                 Observaciones = pUsuario.Observaciones,
                                 DependenciaCodigo = pUsuario.DependenciaCodigo,
-                                GrupoCodigo = pUsuario.GrupoCodigo
+                                GrupoCodigo = pUsuario.GrupoCodigo,
+                                ProcedenciaCodigo = pUsuario.ProcedenciaCodigo,
+                                TieneContratoAsignado = pUsuario.TieneContratoAsignado 
                             });
 
                     CreateEditAsignacionContrato(pUsuario);
