@@ -16,7 +16,7 @@ export class GestionarParametricasService {
   }
 
   dominioByIdDominio( pIdDominio: number ) {
-    return this.http.get( `${ environment.apiUrl }/Common/dominioByIdDominio?pIdDominio=${ pIdDominio }` );
+    return this.http.get<any[]>( `${ this.urlApi }/GetDominioByTipoDominioId?TipoDominioId=${ pIdDominio }` );
   }
 
 }

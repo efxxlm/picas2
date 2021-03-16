@@ -1,4 +1,4 @@
-<div class="container text-center">
+<div class="container text-center" *ngIf="parametricas.length > 0">
     <div class="text-right">
         <a routerLink="/gestionParametricas" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
@@ -15,9 +15,9 @@
           </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <p style="margin-left: 2em;"> <i>Tipo de intervensión</i> </p>
+            <p style="margin-left: 2em;"> <i> {{ parametricas[ parametricas.length - 1 ].nombreDominio }} </i> </p>
         </mat-card-content>
     </mat-card>
     
-    <app-tabla-editar-parametricas></app-tabla-editar-parametricas>
+    <app-tabla-editar-parametricas [parametricas]="parametricas"></app-tabla-editar-parametricas>
 </div>

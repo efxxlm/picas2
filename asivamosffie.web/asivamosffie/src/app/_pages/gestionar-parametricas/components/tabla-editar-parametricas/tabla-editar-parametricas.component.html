@@ -14,22 +14,22 @@
 
             <ng-container matColumnDef="fechaCreacion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de creación </th>
-                <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.id }} </b> </td>
+                <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.dateCreation }} </b> </td>
             </ng-container>
       
             <ng-container matColumnDef="idValor">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> ID del Valor </th>
-                <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.id }} </b> </td>
+                <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.idValor }} </b> </td>
             </ng-container>
     
             <ng-container matColumnDef="nombreValor">
               <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 40%;"> Nombre del valor </th>
-              <td mat-cell *matCellDef="let element" align="center"> {{ element.nombreValor }} </td>
+              <td mat-cell *matCellDef="let element" align="center"> {{ element.nombre }} </td>
             </ng-container>
     
             <ng-container matColumnDef="estadoValor">
               <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del valor </th>
-              <td mat-cell *matCellDef="let element" align="center"> {{ element.estadoValor }} </td>
+              <td mat-cell *matCellDef="let element" align="center"> {{ element.activo === true ? 'Activo' : 'Inactivo' }} </td>
             </ng-container>
         
             <ng-container matColumnDef="gestion">

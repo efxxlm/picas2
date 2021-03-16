@@ -281,15 +281,18 @@ export class TablaAvanceFisicoComponent implements OnInit {
         const getSeguimientoSemanalAvanceFisicoProgramacion = () => {
             const seguimientoSemanalAvanceFisicoProgramacion = [];
             for (const flujoInversion of this.seguimientoSemanal.flujoInversion ) {
-                const programacion = this.tablaAvanceFisico.data[ 0 ][ 'avancePorCapitulo' ].filter( programacion => programacion.programacionId === flujoInversion.programacionId );
-                seguimientoSemanalAvanceFisicoProgramacion.push(
-                    {
-                        seguimientoSemanalAvanceFisicoProgramacionId: flujoInversion.seguimientoSemanalAvanceFisicoProgramacionId,
-                        seguimientoSemanalAvanceFisicoId: this.seguimientoSemanalAvanceFisicoId,
-                        programacionId: flujoInversion.programacionId,
-                        avanceFisicoCapitulo: programacion[0].avanceFisicoCapitulo
-                    }
-                );
+                const programacion: any[] = this.tablaAvanceFisico.data[ 0 ][ 'avancePorCapitulo' ].filter( programacion => programacion.programacionId === flujoInversion.programacionId );
+
+                if ( programacion.length > 0 ) {
+                    seguimientoSemanalAvanceFisicoProgramacion.push(
+                        {
+                            seguimientoSemanalAvanceFisicoProgramacionId: flujoInversion.seguimientoSemanalAvanceFisicoProgramacionId,
+                            seguimientoSemanalAvanceFisicoId: this.seguimientoSemanalAvanceFisicoId,
+                            programacionId: flujoInversion.programacionId,
+                            avanceFisicoCapitulo: programacion[0].avanceFisicoCapitulo
+                        }
+                    );
+                }
             }
             
             return seguimientoSemanalAvanceFisicoProgramacion;

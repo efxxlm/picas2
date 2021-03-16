@@ -9,12 +9,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ConsultarEditarParametricasComponent implements OnInit {
 
+    parametricas: any[] = [];
+
     constructor(
         private gestionarParametricasSvc: GestionarParametricasService,
         private activatedRoute: ActivatedRoute )
     {
       this.gestionarParametricasSvc.dominioByIdDominio( this.activatedRoute.snapshot.params.id )
-        .subscribe( console.log );
+        .subscribe(
+            dominioByIdDominio => {
+                this.parametricas = dominioByIdDominio;
+            }
+        );
     }
 
     ngOnInit(): void {
