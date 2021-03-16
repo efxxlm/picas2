@@ -1,3 +1,6 @@
+import { MenuPerfil } from 'src/app/_interfaces/menu-perfil';
+import { Router, ActivatedRoute } from '@angular/router';
+import { AutenticacionService } from './../../../../core/_services/autenticacion/autenticacion.service';
 import { DialogCargarActaComponent } from './../dialog-cargar-acta/dialog-cargar-acta.component';
 import { RegistrarAvanceSemanalService } from './../../../../core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -18,6 +21,7 @@ export class TablaRegistrarAvanceSemanalComponent implements OnInit {
     dataTable: any = [];
     estadoAvanceSemanal: any;
     primeraSemana = 1;
+    permisos: MenuPerfil;
     @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
     @ViewChild( MatSort, { static: true } ) sort: MatSort;
     displayedColumns: string[]  = [
@@ -33,13 +37,22 @@ export class TablaRegistrarAvanceSemanalComponent implements OnInit {
 
     constructor(
         private avanceSemanalSvc: RegistrarAvanceSemanalService,
-        private dialog: MatDialog )
+        private autenticacionSvc: AutenticacionService,
+        private dialog: MatDialog,
+        private routes: Router,
+        private activatedRoute: ActivatedRoute )
     {
         this.avanceSemanalSvc.estadosAvanceSemanal()
             .subscribe( estados => {
                 this.estadoAvanceSemanal = estados;
             } );
         this.getDataTable();
+        this.permisos = {
+            tienePermisoCrear: this.activatedRoute.snapshot.data.tienePermisoCrear !== undefined ? this.activatedRoute.snapshot.data.tienePermisoCrear : false,
+            tienePermisoLeer: this.activatedRoute.snapshot.data.tienePermisoLeer !== undefined ? this.activatedRoute.snapshot.data.tienePermisoLeer : false,
+            tienePermisoEditar: this.activatedRoute.snapshot.data.tienePermisoEditar !== undefined ? this.activatedRoute.snapshot.data.tienePermisoEditar : false,
+            tienePermisoEliminar: this.activatedRoute.snapshot.data.tienePermisoEliminar !== undefined ? this.activatedRoute.snapshot.data.tienePermisoEliminar : false
+        }
     }
 
     ngOnInit(): void {
@@ -49,12 +62,23 @@ export class TablaRegistrarAvanceSemanalComponent implements OnInit {
         this.avanceSemanalSvc.getVRegistrarAvanceSemanal()
             .subscribe(
                 listas => {
-                    console.log( listas );
+                    console.log( this.permisos, listas );
                     this.dataTable = listas;
                     this.tablaRegistro = new MatTableDataSource( this.dataTable );
                     this.tablaRegistro.sort = this.sort;
                     this.tablaRegistro.paginator = this.paginator;
                     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+                    /*
+                    if ( this.permisos.tienePermisoCrear === false ) {
+                        document.getElementsByName( 'crearBtn' ).forEach( ( value: HTMLElement ) => value.classList.add( 'd-none' ) );
+                    }
+                    if ( this.permisos.tienePermisoEditar === false ) {
+                        document.getElementsByName( 'editarBtn' ).forEach( ( value: HTMLElement ) => value.classList.add( 'd-none' ) );
+                    }
+                    if ( this.permisos.tienePermisoLeer === false ) {
+                        document.getElementsByName( 'leerBtn' ).forEach( ( value: HTMLElement ) => value.classList.add( 'd-none' ) );
+                    }
+                    */
                 }
             );
     }

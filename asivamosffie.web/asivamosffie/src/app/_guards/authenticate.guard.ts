@@ -1,7 +1,9 @@
+import { MatDialog } from '@angular/material/dialog';
 import { Injectable } from '@angular/core';
-import { CanLoad, Route, UrlSegment, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, ActivatedRoute } from '@angular/router';
+import { CanLoad, Route, UrlSegment, ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AutenticacionService } from '../core/_services/autenticacion/autenticacion.service';
+import { ModalDialogComponent } from '../shared/components/modal-dialog/modal-dialog.component';
 
 @Injectable({
   providedIn: 'root'
@@ -11,20 +13,38 @@ export class AuthenticateGuard implements CanLoad {
   constructor(
     private autenticacionService: AutenticacionService,
     private activatedRoute: ActivatedRoute,
+    private dialog: MatDialog,
+    private routes: Router
   ){}
 
-  canLoad(
-    route: Route,
-    segments: UrlSegment[]): Observable<boolean> | Promise<boolean> | boolean {
+  openDialog( modalTitle: string, modalText: string ) {
+    this.dialog.open( ModalDialogComponent, {
+      width: '30em',
+      data: { modalTitle, modalText }
+    });
+}
 
-      let url = this.activatedRoute.snapshot.url;
-      console.log( url, route.path );
+    canLoad(
+        route: Route,
+        segments: UrlSegment[] ): Observable<boolean> | Promise<boolean> | boolean
+    {
 
-      this.autenticacionService.tienePermisos(`/${ route.path }`)
-        .subscribe( permisos => {
-          console.log( permisos )
-        });
+        return new Promise( ( resolve, reject ) => {
+            this.autenticacionService.tienePermisos(`/${ route.path }`)
+            .subscribe(
+                permisos => {
+                    if ( permisos === null ) {
+                        this.openDialog( '', '<b>Acceso denegado.<br>Debe loguearse para acceder a las funcionalidades del sistema</b>' );
+                        this.routes.navigate( [ 'home' ] );
+                        reject( false );
+                    } else {
+                        route.data = permisos;
+                        resolve( true );
+                    } 
+                }
+            );
+        } )
 
-    return true;
-  }
+    }
+
 }

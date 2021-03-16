@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpClientModule } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { CommonService } from '../common/common.service';
@@ -125,7 +125,7 @@ export class AutenticacionService {
 
   tienePermisos( ruta: string){
 
-     const usuario:any = JSON.parse(localStorage.getItem( 'actualUser' ));
+    const usuario:any = JSON.parse(localStorage.getItem( 'actualUser' ));
 
     return this.http.get<MenuPerfil>(`${environment.apiUrl}/common/tienePermisos?idPerfil=${ usuario.rol[0].perfilId }&pRuta=${ ruta }`);
 

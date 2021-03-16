@@ -1,3 +1,5 @@
+import { ActivatedRoute } from '@angular/router';
+import { AutenticacionService } from './../../../../core/_services/autenticacion/autenticacion.service';
 import { Component, AfterViewInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -6,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { ContratosModificacionesContractualesService } from 'src/app/core/_services/contratos-modificaciones-contractuales/contratos-modificaciones-contractuales.service';
 import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNovelty/contractual-novelty.service';
+import { map } from 'rxjs/operators';
 
 export interface VerificacionDiaria {
   id: string;
@@ -40,7 +43,10 @@ export class TablaSolicitudNovedadContractualComponent implements AfterViewInit 
   constructor(
     private contractualNoveltyService: ContractualNoveltyService,
     public dialog: MatDialog,
-  ) { }
+    private activatedRoute: ActivatedRoute
+  ) {
+    console.log( this.activatedRoute.snapshot.data );
+  }
 
   ngAfterViewInit() {
 

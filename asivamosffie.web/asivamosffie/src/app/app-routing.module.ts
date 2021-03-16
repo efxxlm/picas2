@@ -35,7 +35,6 @@ const routes: Routes = [
       },
       {
         path: 'home',
-        canLoad: [AuthenticateGuard],
         loadChildren: () => import('./_pages/home/home.module').then(m => m.HomeModule),
 
       },
@@ -237,6 +236,7 @@ const routes: Routes = [
       },
       {
         path: 'registrarSolicitudNovedadContractual',
+        canLoad: [ AuthenticateGuard ],
         loadChildren: () => import('./_pages/registrar-solicitud-novedad-contractual/registrar-solicitud-novedad-contractual.module')
         .then(m => m.RegistrarSolicitudNovedadContractualModule),
       },
