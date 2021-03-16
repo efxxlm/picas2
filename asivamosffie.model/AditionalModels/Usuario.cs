@@ -12,6 +12,10 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public Perfil Perfil { get; set; }
+
+        [NotMapped]
+        public List<ContratoAsignado> ContratosAsignados { get; set; }
     }
 
+  
 }

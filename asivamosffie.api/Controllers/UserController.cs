@@ -102,8 +102,7 @@ namespace asivamosffie.api.Controllers
         {
             return await _user.ValidateExistEmail(pUsuario);
         }
-    
-        
+
         [HttpPost]
         [Route("CreateEditUsuario")]
         public async Task<Respuesta> CreateEditUsuario([FromBody] Usuario pUsuario)
@@ -114,18 +113,25 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
+        [Route("GetContratoByTipo")]
+        public Task<dynamic> GetContratoByTipo([FromQuery] bool EsObra)
+        {
+            return _user.GetContratoByTipo(EsObra);
+        }
+
+        [HttpGet]
         [Route("GetListUsuario")]
         public Task<List<VUsuariosRoles>> GetListUsuario()
         {
             var result = _user.GetListUsuario();
             return result;
         }
- 
+
         [HttpGet]
         [Route("GetListPerfil")]
         public Task<dynamic> GetListPerfil()
         {
-            return _user.GetListPerfil(); 
+            return _user.GetListPerfil();
         }
 
         [HttpGet]
@@ -133,6 +139,6 @@ namespace asivamosffie.api.Controllers
         public Task<Usuario> GetUsuario([FromQuery] int pUsuarioId)
         {
             return _user.GetUsuario(pUsuarioId);
-        } 
+        }
     }
 }

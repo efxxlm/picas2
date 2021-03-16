@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Z.EntityFramework.Plus;
-
+using asivamosffie.model.Models;
 namespace asivamosffie.services
 {
     public class UserService : IUser
@@ -213,12 +213,42 @@ namespace asivamosffie.services
         #endregion
 
         #region Create Edit List
+
+        public async Task<dynamic> GetContratoByTipo(bool EsObra)
+        {
+            //Envia Interventor
+            if (EsObra)
+            {
+
+                return await _context.Contrato
+                    .Include(c => c.Contratacion)
+                    .Where(r => r.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra)
+                    .Select(c => new
+                    {
+                        c.ContratoId,
+                        c.NumeroContrato
+                    })
+                    .ToListAsync();
+            }
+            else
+            {
+                return await _context.Contrato
+                                  .Include(c => c.Contratacion)
+                                  .Select(c => new
+                                  {
+                                      c.ContratoId,
+                                      c.NumeroContrato
+                                  })
+                                  .ToListAsync();
+            }
+        }
+
         public async Task<bool> ValidateExistEmail(Usuario pUsuario)
-        { 
-            if (await _context.Usuario.AnyAsync(u => u.Email.ToLower() == pUsuario.Email.ToLower())) 
+        {
+            if (await _context.Usuario.AnyAsync(u => u.Email.ToLower() == pUsuario.Email.ToLower()))
                 return false;
-          
-            return true; 
+
+            return true;
         }
 
         public async Task<List<VUsuariosRoles>> GetListUsuario()
@@ -229,7 +259,22 @@ namespace asivamosffie.services
         public async Task<Usuario> GetUsuario(int pUsuarioId)
         {
             Usuario usuario = await _context.Usuario.FindAsync(pUsuarioId);
-            usuario.Perfil = _context.UsuarioPerfil.Where(u => u.UsuarioId == pUsuarioId).Include(p => p.Perfil).Select(p => p.Perfil).FirstOrDefault();
+            usuario.Perfil = _context.UsuarioPerfil
+                .Where(u => u.UsuarioId == pUsuarioId)
+                .Include(p => p.Perfil).Select(p => p.Perfil)
+                .FirstOrDefault();
+
+            //usuario.ContratosAsignados =
+            //    _context.Contrato.Where(r => r.ApoyoId == pUsuarioId)
+            //                     .Select(c => new ContratoAsignado
+            //    {
+            //                         c.ContratoId,
+            //                         c.NumeroContrato,
+            //                         TipoAsignacionCodigo  = " "
+
+            //    });
+
+
             return usuario;
         }
 
@@ -241,7 +286,7 @@ namespace asivamosffie.services
             {
                 if (pUsuario.UsuarioId == 0)
                 {
-                    string strPassWordGenerate = Helpers.Helpers.GeneratePassword(true, true, true, true, false, 20); 
+                    string strPassWordGenerate = Helpers.Helpers.GeneratePassword(true, true, true, true, false, 20);
                     pUsuario.Activo = true;
                     pUsuario.Contrasena = Helpers.Helpers.encryptSha1(strPassWordGenerate);
                     pUsuario.Eliminado = false;
@@ -249,6 +294,7 @@ namespace asivamosffie.services
                     _context.Usuario.Add(pUsuario);
                     _context.SaveChanges();
 
+                    CreateEditAsignacionContrato(pUsuario);
                     await CrearEditarUsuarioPerfil(pUsuario, true);
                     await SendEmailWhenCreateUsuario(pUsuario, strPassWordGenerate);
                 }
@@ -279,6 +325,7 @@ namespace asivamosffie.services
                                 GrupoCodigo = pUsuario.GrupoCodigo
                             });
 
+                    CreateEditAsignacionContrato(pUsuario);
                     await CrearEditarUsuarioPerfil(pUsuario, false);
                 }
                 return new Respuesta
@@ -303,10 +350,26 @@ namespace asivamosffie.services
             }
         }
 
+        private void CreateEditAsignacionContrato(Usuario pUsuario)
+        {
+            foreach (var item in pUsuario.ContratosAsignados)
+            {
+                switch (item.TipoAsignacionCodigo)
+                {
+                    case ConstantCodigoTipoAsignacionContrato.Apoyo:
+
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        }
+
         private async Task CrearEditarUsuarioPerfil(Usuario pUsuario, bool Create)
         {
             try
-            { 
+            {
                 if (Create)
                 {
                     UsuarioPerfil usuarioPerfil = new UsuarioPerfil
@@ -330,13 +393,13 @@ namespace asivamosffie.services
                                  FechaModificacion = DateTime.Now,
                              });
                 }
-          
+
             }
 
-            
+
             catch (Exception e)
             {
-                 
+
             }
         }
 

@@ -284,8 +284,10 @@ namespace asivamosffie.services
 
                         SesionComiteTema.TemaCompromiso.ToList().ForEach(tc =>
                        {
-                           SesionParticipante participante = new SesionParticipante();
-                           participante.Usuario = new Usuario();
+                           SesionParticipante participante = new SesionParticipante
+                           {
+                               Usuario = new Usuario()
+                           };
 
                            VSesionParticipante vSesionParticipante = listaParticipantes.Where(r => r.SesionParticipanteId == tc.Responsable).FirstOrDefault();
 

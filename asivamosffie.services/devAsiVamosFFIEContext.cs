@@ -1321,11 +1321,26 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.Valor).HasColumnType("numeric(18, 2)");
 
+                entity.HasOne(d => d.Apoyo)
+                    .WithMany(p => p.ContratoApoyo)
+                    .HasForeignKey(d => d.ApoyoId)
+                    .HasConstraintName("FK_Contrato_Apoyo");
+
                 entity.HasOne(d => d.Contratacion)
                     .WithMany(p => p.Contrato)
                     .HasForeignKey(d => d.ContratacionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Contrato_Contratacion");
+
+                entity.HasOne(d => d.Interventor)
+                    .WithMany(p => p.ContratoInterventor)
+                    .HasForeignKey(d => d.InterventorId)
+                    .HasConstraintName("FK_Contrato_Interventor");
+
+                entity.HasOne(d => d.Supervisor)
+                    .WithMany(p => p.ContratoSupervisor)
+                    .HasForeignKey(d => d.SupervisorId)
+                    .HasConstraintName("FK_Contrato_Supervisor");
             });
 
             modelBuilder.Entity<ContratoConstruccion>(entity =>
@@ -7088,6 +7103,10 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<Usuario>(entity =>
             {
+                entity.HasIndex(e => e.Email)
+                    .HasName("Uniques_Email")
+                    .IsUnique();
+
                 entity.Property(e => e.UsuarioId).HasComment("Identificador de la tabla");
 
                 entity.Property(e => e.Activo)
@@ -7167,7 +7186,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.PrimerApellido)
                     .IsRequired()
-                    .HasMaxLength(15)
+                    .HasMaxLength(300)
                     .IsUnicode(false);
 
                 entity.Property(e => e.PrimerNombre)
@@ -7180,7 +7199,7 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.SegundoApellido)
-                    .HasMaxLength(2)
+                    .HasMaxLength(300)
                     .IsUnicode(false);
 
                 entity.Property(e => e.SegundoNombre)
