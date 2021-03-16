@@ -14,8 +14,12 @@
         Registrar novedad
       </mat-panel-title>
     </mat-expansion-panel-header>
-
-    <app-form-registrar-novedad></app-form-registrar-novedad>
+    
+    <app-form-registrar-novedad
+                                [proyecto]=proyecto
+                                [contrato]=contrato
+                                [novedad]=novedad>
+    </app-form-registrar-novedad>
 
   </mat-expansion-panel>
   <mat-expansion-panel class="expansion-style">

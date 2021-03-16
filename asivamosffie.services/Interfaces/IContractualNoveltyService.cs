@@ -15,5 +15,6 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> EliminarNovedadContractual(int pNovedadContractualId, string pUsuario);
         Task<List<Contrato>> GetListContract(int userID);
         Task<List<VProyectosXcontrato>> GetProyectsByContract(int pContratoId);
+        Task<NovedadContractual> GetNovedadContractualById(int pId);
     }
 }

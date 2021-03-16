@@ -134,7 +134,12 @@
 
   <div class="animatedDown" 
         *ngIf="(novedadAplicada.value == true && contrato) || ( novedadAplicada.value == false && proyecto)">
-    <app-expansion-panel></app-expansion-panel>
+    
+        <app-expansion-panel
+                            [proyecto]=proyecto
+                            [contrato]=contrato
+                            [novedad]=novedad>
+        </app-expansion-panel>
   </div>
 
 </section>

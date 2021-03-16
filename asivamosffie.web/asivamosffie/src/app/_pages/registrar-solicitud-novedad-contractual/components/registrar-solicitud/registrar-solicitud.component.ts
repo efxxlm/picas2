@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { CommonService } from 'src/app/core/_services/common/common.service';
 import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNovelty/contractual-novelty.service';
 import { ContratosModificacionesContractualesService } from 'src/app/core/_services/contratos-modificaciones-contractuales/contratos-modificaciones-contractuales.service';
+import { NovedadContractual } from 'src/app/_interfaces/novedadContractual';
 
 @Component({
   selector: 'app-registrar-solicitud',
@@ -24,16 +26,40 @@ export class RegistrarSolicitudComponent implements OnInit {
     { name: 'Proyecto', value: false }
   ];
 
-  constructor(private contractualNoveltyService: ContractualNoveltyService) { 
+  constructor(
+    private contractualNoveltyService: ContractualNoveltyService,
+    private activatedRoute: ActivatedRoute,
+
+    ) 
+    
+  { 
     
   }
   numeroContratoSeleccionado: any;
   proyectos=[];
-  proyecto:null;
+  proyecto:any;
   contratos=[];
-  contrato:null;
+  contrato:any;
+  novedad:NovedadContractual;
 
   ngOnInit() {
+
+    this.activatedRoute.params.subscribe( parametros => {
+      this.contractualNoveltyService.getNovedadContractualById( parametros.id )
+        .subscribe( novedad => {
+          console.log( novedad );
+          
+          this.novedad = novedad;
+          this.numeroContrato.setValue( novedad.contrato.numeroContrato );
+          this.numeroContratoSeleccionado=novedad.contrato.numeroContrato;
+          this.novedadAplicada.setValue( novedad.esAplicadaAcontrato );
+          this.proyecto = novedad['proyectosSeleccionado'];
+          this.contrato = novedad.contrato;
+          
+        });
+
+    });
+
     //traigo contratos
     this.contractualNoveltyService.getContratosAutocomplete().subscribe(respuesta=>{
       this.contratos=respuesta;

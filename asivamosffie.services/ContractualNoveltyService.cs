@@ -104,6 +104,35 @@ namespace asivamosffie.services
             return listProyectos;
         }
 
+        public async Task<NovedadContractual> GetNovedadContractualById( int pId)
+        {
+            List<Dominio> listDominioTipoDocumento = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento).ToList();
+
+            NovedadContractual novedadContractual = _context.NovedadContractual
+                                                                .Where( r => r.NovedadContractualId == pId)
+                                                                .Include( r => r.Contrato )
+                                                                    .ThenInclude( r => r.Contratacion )
+                                                                        .ThenInclude( r => r.Contratista )
+                                                                .FirstOrDefault();
+
+            novedadContractual.ProyectosContrato = _context.VProyectosXcontrato
+                                                                .Where(r => r.ContratoId == novedadContractual.ContratoId)
+                                                                .ToList();
+            
+            novedadContractual.ProyectosSeleccionado = _context.VProyectosXcontrato
+                                                                    .Where(r => r.ProyectoId == novedadContractual.ProyectoId && r.ContratoId == novedadContractual.ContratoId )
+                                                                    .FirstOrDefault();
+
+                if (novedadContractual?.Contrato?.Contratacion?.Contratista != null)
+                {
+                    novedadContractual.Contrato.Contratacion.Contratista.Contratacion = null;//para bajar el peso del consumo
+                    novedadContractual.Contrato.Contratacion.Contratista.TipoIdentificacionNotMapped = novedadContractual.Contrato.Contratacion.Contratista.TipoIdentificacionCodigo == null ? "" : listDominioTipoDocumento.Where(x => x.Codigo == novedadContractual.Contrato.Contratacion.Contratista.TipoIdentificacionCodigo)?.FirstOrDefault()?.Nombre;
+                    //contrato.TipoIntervencion no se de donde sale, preguntar, porque si es del proyecto, cuando sea multiproyecto cual traigo?
+                }
+
+            return novedadContractual;
+        }
+
 
         #endregion Gets
 

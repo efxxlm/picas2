@@ -58,8 +58,7 @@ namespace asivamosffie.api.Controllers
             }
             catch (Exception ex)
             {
-                respuesta.Data = ex.InnerException.ToString();
-                return BadRequest(respuesta);
+                throw ex;
             }
         }
 
@@ -95,8 +94,7 @@ namespace asivamosffie.api.Controllers
             }
             catch (Exception ex)
             {
-                respuesta.Data = ex.ToString();
-                return BadRequest(respuesta);
+                throw ex;
             }
         }
 
@@ -107,6 +105,20 @@ namespace asivamosffie.api.Controllers
             try
             {
                 return await _contractualModification.GetProyectsByContract(pContratoId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpGet]
+        [Route("GetNovedadContractualById")]
+        public async Task<NovedadContractual> GetNovedadContractualById([FromQuery] int pId)
+        {
+            try
+            {
+                return await _contractualModification.GetNovedadContractualById(pId);
             }
             catch (Exception ex)
             {

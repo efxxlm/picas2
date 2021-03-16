@@ -24,6 +24,12 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public string EstadoNovedadNombre { get; set; }
 
+        [NotMapped]
+        public List<VProyectosXcontrato> ProyectosContrato { get; set; }
+
+        [NotMapped]
+        public VProyectosXcontrato ProyectosSeleccionado { get; set; }
+
     }
 
 }

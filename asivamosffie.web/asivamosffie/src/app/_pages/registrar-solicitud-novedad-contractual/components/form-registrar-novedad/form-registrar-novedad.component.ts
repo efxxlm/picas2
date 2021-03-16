@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonService, InstanciasSeguimientoTecnico, TiposNovedadModificacionContractual } from 'src/app/core/_services/common/common.service';
 import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
 import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNovelty/contractual-novelty.service';
+import { Proyecto } from 'src/app/core/_services/project/project.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { NovedadContractual, NovedadContractualDescripcion } from 'src/app/_interfaces/novedadContractual';
 
@@ -13,7 +14,8 @@ import { NovedadContractual, NovedadContractualDescripcion } from 'src/app/_inte
   templateUrl: './form-registrar-novedad.component.html',
   styleUrls: ['./form-registrar-novedad.component.scss']
 })
-export class FormRegistrarNovedadComponent implements OnInit {
+export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
+  
   addressForm = this.fb.group({
     novedadContractualId: [],
     fechaSolicitudNovedad: [null, Validators.required],
@@ -30,12 +32,14 @@ export class FormRegistrarNovedadComponent implements OnInit {
         
       })
     ]),
+    
     clausula: this.fb.array([
       this.fb.group({
         clausulaModificar: [null, Validators.required],
         ajusteSolicitadoClausula: [null, Validators.required]
       })
     ]),
+    
     documentacionSuficiente: [null, Validators.required],
     conceptoTecnico: [null, Validators.required],
     fechaConceptoTecnico: [null, Validators.required],
@@ -106,20 +110,38 @@ export class FormRegistrarNovedadComponent implements OnInit {
     return alphanumeric.test(inputChar) ? true : false;
   }
 
+  @Input() proyecto:any;
+  @Input() contrato:any;
+  @Input() novedad:NovedadContractual;
+
   constructor(
     private fb: FormBuilder,
     public dialog: MatDialog,
     public commonServices: CommonService,
     public contractualNoveltyService: ContractualNoveltyService,
     private router: Router,
+    private activatedRoute: ActivatedRoute,
 
   ) { }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.novedad){
+      this.addressForm.get('novedadContractualId').setValue( this.novedad.novedadContractualId );
+      this.addressForm.get('fechaSolicitudNovedad').setValue( this.novedad.fechaSolictud );
+      this.addressForm.get('instanciaPresentoSolicitud').setValue( this.novedad.instanciaCodigo );
+
+    }
+  }
 
   ngOnInit(): void {
+    
+    
+
+
     this.addressForm.valueChanges
       .subscribe(value => {
         console.log(value);
       });
+
       this.commonServices.listaInstanciasdeSeguimientoTecnico().subscribe(response=>{
         this.instanciaPresentoSolicitudArray=response;
       });
@@ -215,6 +237,9 @@ export class FormRegistrarNovedadComponent implements OnInit {
       novedadContractualId: this.addressForm.value ? this.addressForm.value.novedadContractualId : 0,
       fechaSolictud: this.addressForm.value ? this.addressForm.value.fechaSolicitudNovedad : null,
       instanciaCodigo: this.addressForm.value ? this.addressForm.value.instanciaPresentoSolicitud: null,
+      proyectoId: this.proyecto ? this.proyecto.proyectoId : null,
+      contratoId: this.contrato.contratoId,
+
 
     };
 

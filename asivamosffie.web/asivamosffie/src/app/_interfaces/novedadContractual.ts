@@ -1,3 +1,5 @@
+import { Contrato } from "./faseUnoPreconstruccion.interface";
+
 export interface NovedadContractual{
         novedadContractualId?: number,
         fechaSolictud?: Date,
@@ -40,6 +42,7 @@ export interface NovedadContractual{
         razonesNoContinuaProceso?: string,
 
         novedadContractualDescripcion?: NovedadContractualDescripcion[],
+        contrato?: Contrato,
 
 }
 
