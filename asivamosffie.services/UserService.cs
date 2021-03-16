@@ -258,50 +258,59 @@ namespace asivamosffie.services
 
         public async Task<Usuario> GetUsuario(int pUsuarioId)
         {
-            Usuario usuario = await _context.Usuario.FindAsync(pUsuarioId);
-            usuario.Perfil = _context.UsuarioPerfil
-                .Where(u => u.UsuarioId == pUsuarioId)
-                .Include(p => p.Perfil).Select(p => p.Perfil)
-                .FirstOrDefault();
+            try
+            {
+                Usuario usuario = await _context.Usuario.FindAsync(pUsuarioId);
+                usuario.Perfil = _context.UsuarioPerfil
+                    .Where(u => u.UsuarioId == pUsuarioId)
+                    .Include(p => p.Perfil).Select(p => p.Perfil)
+                    .FirstOrDefault();
 
-            List<ContratoAsignado> contratoAsignadosInterventor =
-              _context.Contrato.Where(r => r.InterventorId == pUsuarioId)
-                               .Select(c => new ContratoAsignado
-                               {
-                                   ContratoId = c.ContratoId,
-                                   NumeroContrato = c.NumeroContrato,
-                                   TipoAsignacionCodigo = ConstantCodigoTipoAsignacionContrato.Interventor
-                               }).ToList();
+                List<ContratoAsignado> contratoAsignadosInterventor =
+                  _context.Contrato.Where(r => r.InterventorId == pUsuarioId)
+                                   .Select(c => new ContratoAsignado
+                                   {
+                                       ContratoId = c.ContratoId,
+                                       NumeroContrato = c.NumeroContrato,
+                                       TipoAsignacionCodigo = ConstantCodigoTipoAsignacionContrato.Interventor
+                                   }).ToList();
 
-            List<ContratoAsignado> contratoAsignadosApoyo =
-                _context.Contrato.Where(r => r.ApoyoId == pUsuarioId)
-                                 .Select(c => new ContratoAsignado
-                                 {
-                                     ContratoId = c.ContratoId,
-                                     NumeroContrato = c.NumeroContrato,
-                                     TipoAsignacionCodigo = ConstantCodigoTipoAsignacionContrato.Apoyo
-                                 }).ToList();
+                List<ContratoAsignado> contratoAsignadosApoyo =
+                    _context.Contrato.Where(r => r.ApoyoId == pUsuarioId)
+                                     .Select(c => new ContratoAsignado
+                                     {
+                                         ContratoId = c.ContratoId,
+                                         NumeroContrato = c.NumeroContrato,
+                                         TipoAsignacionCodigo = ConstantCodigoTipoAsignacionContrato.Apoyo
+                                     }).ToList();
 
 
-            List<ContratoAsignado> contratoAsignadosSupervisor =
-                _context.Contrato.Where(r => r.SupervisorId == pUsuarioId)
-                                 .Select(c => new ContratoAsignado
-                                 {
-                                     ContratoId = c.ContratoId,
-                                     NumeroContrato = c.NumeroContrato,
-                                     TipoAsignacionCodigo = ConstantCodigoTipoAsignacionContrato.Supervisor
-                                 }).ToList();
+                List<ContratoAsignado> contratoAsignadosSupervisor =
+                    _context.Contrato.Where(r => r.SupervisorId == pUsuarioId)
+                                     .Select(c => new ContratoAsignado
+                                     {
+                                         ContratoId = c.ContratoId,
+                                         NumeroContrato = c.NumeroContrato,
+                                         TipoAsignacionCodigo = ConstantCodigoTipoAsignacionContrato.Supervisor
+                                     }).ToList();
 
-            if (contratoAsignadosInterventor.Count() > 0)
-                usuario.ContratosAsignados.AddRange(contratoAsignadosInterventor);
+                usuario.ContratosAsignados = new List<ContratoAsignado>();
 
-            if (contratoAsignadosApoyo.Count() > 0)
-                usuario.ContratosAsignados.AddRange(contratoAsignadosApoyo);
+                if (contratoAsignadosInterventor.Count() > 0)
+                    usuario.ContratosAsignados.AddRange(contratoAsignadosInterventor);
 
-            if (contratoAsignadosSupervisor.Count() > 0)
-                usuario.ContratosAsignados.AddRange(contratoAsignadosSupervisor);
+                if (contratoAsignadosApoyo.Count() > 0)
+                    usuario.ContratosAsignados.AddRange(contratoAsignadosApoyo);
 
-            return usuario;
+                if (contratoAsignadosSupervisor.Count() > 0)
+                    usuario.ContratosAsignados.AddRange(contratoAsignadosSupervisor);
+
+                return usuario;
+            }
+            catch (Exception e)
+            {
+                return new Usuario();
+            }
         }
 
         public async Task<Respuesta> CreateEditUsuario(Usuario pUsuario)
@@ -378,43 +387,46 @@ namespace asivamosffie.services
 
         private void CreateEditAsignacionContrato(Usuario pUsuario)
         {
-            foreach (var ContratosAsignados in pUsuario.ContratosAsignados)
+            if (pUsuario.ContratosAsignados != null)
             {
-                switch (pUsuario.TipoAsignacionCodigo)
+                foreach (var ContratosAsignados in pUsuario.ContratosAsignados)
                 {
-                    case ConstantCodigoTipoAsignacionContrato.Interventor:
-                        _context.Set<Contrato>()
-                                .Where(c => c.ContratacionId == ContratosAsignados.ContratoId)
-                                .Update(c => new Contrato
-                                {
-                                    InterventorId = pUsuario.UsuarioId,
-                                    FechaModificacion = DateTime.Now,
-                                    UsuarioModificacion = pUsuario.UsuarioCreacion
-                                });
-                        break;
+                    switch (pUsuario.TipoAsignacionCodigo)
+                    {
+                        case ConstantCodigoTipoAsignacionContrato.Interventor:
+                            _context.Set<Contrato>()
+                                    .Where(c => c.ContratoId == ContratosAsignados.ContratoId)
+                                    .Update(c => new Contrato
+                                    {
+                                        InterventorId = pUsuario.UsuarioId,
+                                        FechaModificacion = DateTime.Now,
+                                        UsuarioModificacion = pUsuario.UsuarioCreacion
+                                    });
+                            break;
 
-                    case ConstantCodigoTipoAsignacionContrato.Apoyo:
-                        _context.Set<Contrato>()
-                              .Where(c => c.ContratacionId == ContratosAsignados.ContratoId)
-                              .Update(c => new Contrato
-                              {
-                                  ApoyoId = pUsuario.UsuarioId,
-                                  FechaModificacion = DateTime.Now,
-                                  UsuarioModificacion = pUsuario.UsuarioCreacion
-                              });
-                        break;
-                    case ConstantCodigoTipoAsignacionContrato.Supervisor:
-                        _context.Set<Contrato>()
-                              .Where(c => c.ContratacionId == ContratosAsignados.ContratoId)
-                              .Update(c => new Contrato
-                              {
-                                  SupervisorId = pUsuario.UsuarioId,
-                                  FechaModificacion = DateTime.Now,
-                                  UsuarioModificacion = pUsuario.UsuarioCreacion
-                              });
-                        break;
-                    default:
-                        break;
+                        case ConstantCodigoTipoAsignacionContrato.Apoyo:
+                            _context.Set<Contrato>()
+                                  .Where(c => c.ContratoId == ContratosAsignados.ContratoId)
+                                  .Update(c => new Contrato
+                                  {
+                                      ApoyoId = pUsuario.UsuarioId,
+                                      FechaModificacion = DateTime.Now,
+                                      UsuarioModificacion = pUsuario.UsuarioCreacion
+                                  });
+                            break;
+                        case ConstantCodigoTipoAsignacionContrato.Supervisor:
+                            _context.Set<Contrato>()
+                                  .Where(c => c.ContratoId == ContratosAsignados.ContratoId)
+                                  .Update(c => new Contrato
+                                  {
+                                      SupervisorId = pUsuario.UsuarioId,
+                                      FechaModificacion = DateTime.Now,
+                                      UsuarioModificacion = pUsuario.UsuarioCreacion
+                                  });
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         }
