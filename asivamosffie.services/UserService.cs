@@ -517,6 +517,7 @@ namespace asivamosffie.services
                           .Where(u => u.UsuarioId == pUsuario.UsuarioId)
                           .Update(u => new Usuario
                           {
+                              Activo = !pUsuario.Eliminado,
                               Eliminado = pUsuario.Eliminado,
                               Bloqueado = pUsuario.Eliminado,
                               FechaModificacion = DateTime.Now,
