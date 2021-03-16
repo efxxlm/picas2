@@ -91,7 +91,7 @@ export class ObsValidListachequeoComponent implements OnInit {
         [{ align: [] }],
       ]
     };
-
+    estaEditando = false;
     constructor(
         private fb: FormBuilder,
         private routes: Router,
@@ -141,6 +141,8 @@ export class ObsValidListachequeoComponent implements OnInit {
     }
 
     onSubmit() {
+      this.estaEditando = true;
+      this.addressForm.markAllAsTouched();
         if ( this.addressForm.get( 'tieneObservaciones' ).value !== null && this.addressForm.get( 'tieneObservaciones' ).value === false ) {
             this.addressForm.get( 'observaciones' ).setValue( '' );
         }

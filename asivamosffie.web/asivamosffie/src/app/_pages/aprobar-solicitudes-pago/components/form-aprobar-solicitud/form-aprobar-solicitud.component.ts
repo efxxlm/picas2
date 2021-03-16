@@ -63,7 +63,7 @@ export class FormAprobarSolicitudComponent implements OnInit {
         'valor',
         'saldo'
     ];
-
+    estaEditando = false;
     constructor(
         private activatedRoute: ActivatedRoute,
         private dialog: MatDialog,
@@ -124,6 +124,8 @@ export class FormAprobarSolicitudComponent implements OnInit {
                                                     this.estadoAcordeones.soporteSolicitud = 'completo';
                                                 }
                                                 this.solicitudPagoObservacionId = obsSupervisor.solicitudPagoObservacionId;
+                                                this.estaEditando = true;
+                                                this.addressForm.markAllAsTouched();
                                                 this.addressForm.setValue(
                                                     {
                                                         fechaCreacion: obsSupervisor.fechaCreacion,
@@ -145,6 +147,8 @@ export class FormAprobarSolicitudComponent implements OnInit {
                                                 if ( obsSupervisor !== undefined ) {
                                                     console.log( obsSupervisor );
                                                     this.solicitudPagoObsOtrosCostosId = obsSupervisor.solicitudPagoObservacionId;
+                                                    this.estaEditando = true;
+                                                    this.otrosCostosObsForm.markAllAsTouched();
                                                     this.otrosCostosObsForm.setValue(
                                                         {
                                                             fechaCreacion: obsSupervisor.fechaCreacion,
@@ -160,6 +164,8 @@ export class FormAprobarSolicitudComponent implements OnInit {
                                             this.tipoPagoArray = response;
                                             if ( this.contrato !== undefined ) {
                                                 const solicitudPagoOtrosCostosServicios = this.contrato.solicitudPagoOnly.solicitudPagoOtrosCostosServicios[0];
+                                                this.estaEditando = true;
+                                                this.otrosCostosForm.markAllAsTouched();
                                                 this.otrosCostosForm.setValue(
                                                     {
                                                         numeroContrato: this.contrato.numeroContrato,
@@ -247,6 +253,8 @@ export class FormAprobarSolicitudComponent implements OnInit {
     }
 
     onSubmit() {
+        this.estaEditando = true;
+        this.addressForm.markAllAsTouched();
         if ( this.addressForm.get( 'tieneObservaciones' ).value !== null && this.addressForm.get( 'tieneObservaciones' ).value === false ) {
             this.addressForm.get( 'observaciones' ).setValue( '' );
         }
@@ -279,6 +287,8 @@ export class FormAprobarSolicitudComponent implements OnInit {
     }
 
     guardar() {
+        this.estaEditando = true;
+        this.otrosCostosObsForm.markAllAsTouched();
         if ( this.otrosCostosObsForm.get( 'tieneObservaciones' ).value !== null && this.otrosCostosObsForm.get( 'tieneObservaciones' ).value === false ) {
             this.otrosCostosObsForm.get( 'observaciones' ).setValue( '' );
         }

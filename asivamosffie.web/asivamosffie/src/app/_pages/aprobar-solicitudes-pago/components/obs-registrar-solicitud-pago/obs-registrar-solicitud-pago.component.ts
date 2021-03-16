@@ -76,7 +76,7 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
         semaforoAcordeonDetalleFacturaProyecto: 'sin-diligenciar',
         semaforoAcordeonDatosFactura: 'sin-diligenciar'
     }
-
+    estaEditando = false;
     constructor(
         private fb: FormBuilder,
         private routes: Router,
@@ -109,7 +109,8 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
                                 this.estadoSemaforosAcordeonesPrincipales.estadoSemaforoObsPrincipal = 'completo';
                             }
                             this.getSemaforoStatus();
-
+                            this.estaEditando = true;
+                            this.addressForm.markAllAsTouched();
                             this.addressForm.setValue(
                                 {
                                     fechaCreacion: obsSupervisor.fechaCreacion,
@@ -225,6 +226,8 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
     }
 
     onSubmit() {
+        this.estaEditando = true;
+        this.addressForm.markAllAsTouched();
         if ( this.addressForm.get( 'tieneObservaciones' ).value !== null && this.addressForm.get( 'tieneObservaciones' ).value === false ) {
             this.addressForm.get( 'observaciones' ).setValue( '' );
         }

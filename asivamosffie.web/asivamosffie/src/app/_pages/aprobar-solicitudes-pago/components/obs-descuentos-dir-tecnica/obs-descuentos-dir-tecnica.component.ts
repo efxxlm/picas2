@@ -40,7 +40,7 @@ export class ObsDescuentosDirTecnicaComponent implements OnInit {
         [{ align: [] }],
       ]
     };
-
+    estaEditando = false;
     get descuentos() {
         return this.formDescuentos.get( 'descuentos' ) as FormArray;
     }
@@ -83,6 +83,8 @@ export class ObsDescuentosDirTecnicaComponent implements OnInit {
                                 this.estadoSemaforo.emit( 'completo' );
                             }
                             this.solicitudPagoObservacionId = obsSupervisor.solicitudPagoObservacionId;
+                            this.estaEditando = false;
+                            this.addressForm.markAllAsTouched();
                             this.addressForm.setValue(
                                 {
                                     fechaCreacion: obsSupervisor.fechaCreacion,
@@ -160,6 +162,8 @@ export class ObsDescuentosDirTecnicaComponent implements OnInit {
     }
 
     onSubmit() {
+        this.estaEditando = false;
+        this.addressForm.markAllAsTouched();
         if ( this.addressForm.get( 'tieneObservaciones' ).value !== null && this.addressForm.get( 'tieneObservaciones' ).value === false ) {
             this.addressForm.get( 'observaciones' ).setValue( '' );
         }

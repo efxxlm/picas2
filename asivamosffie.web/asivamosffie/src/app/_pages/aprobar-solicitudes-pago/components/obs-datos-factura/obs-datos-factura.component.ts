@@ -47,7 +47,7 @@ export class ObsDatosFacturaComponent implements OnInit {
         [{ align: [] }],
       ]
     };
-
+    estaEditando = false;
     get descuentos() {
         return this.detalleForm.get( 'descuentos' ) as FormArray;
     }
@@ -80,6 +80,8 @@ export class ObsDatosFacturaComponent implements OnInit {
                         this.estadoSemaforo.emit( 'completo' );
                     }
                     this.solicitudPagoObservacionId = obsSupervisor.solicitudPagoObservacionId;
+                    this.estaEditando = true;
+                    this.addressForm.markAllAsTouched();
                     this.addressForm.setValue(
                         {
                             fechaCreacion: obsSupervisor.fechaCreacion,
@@ -158,6 +160,8 @@ export class ObsDatosFacturaComponent implements OnInit {
     }
 
     onSubmit() {
+        this.estaEditando = true;
+        this.addressForm.markAllAsTouched();
         if ( this.addressForm.get( 'tieneObservaciones' ).value !== null && this.addressForm.get( 'tieneObservaciones' ).value === false ) {
             this.addressForm.get( 'observaciones' ).setValue( '' );
         }

@@ -49,7 +49,7 @@ export class FormObservacionExpensasComponent implements OnInit {
         listaChequeo: 'en-alerta',
         soporteSolicitud: 'sin-diligenciar'
     }
-
+    estaEditando = false;
     constructor(
         private routes: Router,
         private activatedRoute: ActivatedRoute,
@@ -92,6 +92,8 @@ export class FormObservacionExpensasComponent implements OnInit {
 
                                                     if ( obsSupervisor !== undefined ) {
                                                         this.solicitudPagoObservacionExpensasId = obsSupervisor.solicitudPagoObservacionId;
+                                                        this.estaEditando = true;
+                                                        this.expensasForm.markAllAsTouched();
                                                         this.expensasForm.setValue(
                                                             {
                                                                 fechaCreacion: obsSupervisor.fechaCreacion,
@@ -116,6 +118,8 @@ export class FormObservacionExpensasComponent implements OnInit {
                                                             this.estadoAcordeones.soporteSolicitud = 'completo';
                                                         }
                                                         this.solicitudPagoObservacionId = obsSupervisor.solicitudPagoObservacionId;
+                                                        this.estaEditando = true;
+                                                        this.addressForm.markAllAsTouched();
                                                         this.addressForm.setValue(
                                                             {
                                                                 fechaCreacion: obsSupervisor.fechaCreacion,
@@ -179,6 +183,8 @@ export class FormObservacionExpensasComponent implements OnInit {
     }
 
     guardar() {
+        this.estaEditando = true;
+        this.expensasForm.markAllAsTouched();
         if ( this.expensasForm.get( 'tieneObservaciones' ).value !== null && this.expensasForm.get( 'tieneObservaciones' ).value === false ) {
             this.expensasForm.get( 'observaciones' ).setValue( '' );
         }
@@ -211,6 +217,8 @@ export class FormObservacionExpensasComponent implements OnInit {
     }
 
     onSubmit() {
+        this.estaEditando = true;
+        this.addressForm.markAllAsTouched();
         if ( this.addressForm.get( 'tieneObservaciones' ).value !== null && this.addressForm.get( 'tieneObservaciones' ).value === false ) {
             this.addressForm.get( 'observaciones' ).setValue( '' );
         }

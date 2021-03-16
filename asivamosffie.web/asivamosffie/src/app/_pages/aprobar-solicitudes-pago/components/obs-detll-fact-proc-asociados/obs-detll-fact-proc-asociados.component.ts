@@ -55,7 +55,7 @@ export class ObsDetllFactProcAsociadosComponent implements OnInit {
         [{ align: [] }],
       ]
     };
-
+    estaEditando = false;
     get projects() {
         return this.addressForm.get( 'projects' ) as FormArray;
     }
@@ -93,6 +93,8 @@ export class ObsDetllFactProcAsociadosComponent implements OnInit {
                             if ( obsSupervisor.registroCompleto === true ) {
                                 this.estadoSemaforo.emit( 'completo' );
                             }
+                            this.estaEditando = false;
+                            this.addressForm.markAllAsTouched();
                             this.solicitudPagoObservacionId = obsSupervisor.solicitudPagoObservacionId;
                             this.addressForm.get( 'fechaCreacion' ).setValue( obsSupervisor.fechaCreacion );
                             this.addressForm.get( 'tieneObservaciones' ).setValue( obsSupervisor.tieneObservacion !== undefined ? obsSupervisor.tieneObservacion : null );
@@ -342,6 +344,8 @@ export class ObsDetllFactProcAsociadosComponent implements OnInit {
     }
 
     onSubmit() {
+        this.estaEditando = false;
+        this.addressForm.markAllAsTouched();
         if ( this.addressForm.get( 'tieneObservaciones' ).value !== null && this.addressForm.get( 'tieneObservaciones' ).value === false ) {
             this.addressForm.get( 'observaciones' ).setValue( '' );
         }
