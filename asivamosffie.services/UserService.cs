@@ -264,16 +264,37 @@ namespace asivamosffie.services
                 .Include(p => p.Perfil).Select(p => p.Perfil)
                 .FirstOrDefault();
 
-            //usuario.ContratosAsignados =
-            //    _context.Contrato.Where(r => r.ApoyoId == pUsuarioId)
-            //                     .Select(c => new ContratoAsignado
-            //    {
-            //                         c.ContratoId,
-            //                         c.NumeroContrato,
-            //                         TipoAsignacionCodigo  = " "
+            List<ContratoAsignado> contratoAsignadosInterventor =
+              _context.Contrato.Where(r => r.InterventorId == pUsuarioId)
+                               .Select(c => new ContratoAsignado
+                               {
+                                   ContratoId = c.ContratoId,
+                                   NumeroContrato = c.NumeroContrato,
+                                   TipoAsignacionCodigo = ConstantCodigoTipoAsignacionContrato.Interventor
+                               }).ToList();
 
-            //    });
+            List<ContratoAsignado> contratoAsignadosApoyo =
+                _context.Contrato.Where(r => r.ApoyoId == pUsuarioId)
+                                 .Select(c => new ContratoAsignado
+                                 {
+                                     ContratoId = c.ContratoId,
+                                     NumeroContrato = c.NumeroContrato,
+                                     TipoAsignacionCodigo = ConstantCodigoTipoAsignacionContrato.Apoyo
+                                 }).ToList();
 
+
+            List<ContratoAsignado> contratoAsignadosSupervisor =
+                _context.Contrato.Where(r => r.SupervisorId == pUsuarioId)
+                                 .Select(c => new ContratoAsignado
+                                 {
+                                     ContratoId = c.ContratoId,
+                                     NumeroContrato = c.NumeroContrato,
+                                     TipoAsignacionCodigo = ConstantCodigoTipoAsignacionContrato.Supervisor
+                                 }).ToList();
+             
+            usuario.ContratosAsignados.AddRange(contratoAsignadosInterventor);
+            usuario.ContratosAsignados.AddRange(contratoAsignadosApoyo);
+            usuario.ContratosAsignados.AddRange(contratoAsignadosSupervisor); 
 
             return usuario;
         }
