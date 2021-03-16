@@ -261,19 +261,32 @@ export class FormConvocadosPasivaDjComponent implements OnInit {
       width: '28em',
       data: { modalTitle, modalText }
     });
-    if(redirect)
-    {
+    if (redirect) {
       dialogRef.afterClosed().subscribe(result => {
         if (id > 0 && this.defensaJudicial.defensaJudicialId != id) {
-          this.router.navigate(["/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial/" + id], {});
+          this.router.navigateByUrl( '/', {skipLocationChange: true} ).then(
+            () =>   this.router.navigate(
+                        [
+                            '/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial',
+                            id
+                        ]
+                    )
+          );
         }
         else {
           if(this.defensaJudicial.defensaJudicialId == id){
-            location.reload();
+            this.router.navigateByUrl( '/', {skipLocationChange: true} ).then(
+              () =>   this.router.navigate(
+                          [
+                              '/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial',
+                              id
+                          ]
+                      )
+            );
           }else{
             this.router.navigate(["/gestionarProcesoDefensaJudicial"], {});
           }
-        }               
+        }
       });
     }
   }

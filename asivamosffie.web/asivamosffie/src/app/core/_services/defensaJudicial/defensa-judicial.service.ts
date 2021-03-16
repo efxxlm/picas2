@@ -86,6 +86,11 @@ export class DefensaJudicialService {
   getDefensaJudicialSeguimiento(defensaJudicialSeguimientoId:number) {
     return this.http.get<any[]>(`${this.url}/JudicialDefense/getDefensaJudicialSeguimiento?defensaJudicialSeguimientoId=${ defensaJudicialSeguimientoId }` );    
   }
+
+  deleteDemandadoConvocado( demandadoConvocadoId: number ) {
+    return this.http.post<Respuesta>( `${ this.url }/JudicialDefense/DeleteDemandadoConvocado?demandadoConvocadoId=${ demandadoConvocadoId }`, '' );
+  }
+
 }
 
 export interface DefensaJudicial{

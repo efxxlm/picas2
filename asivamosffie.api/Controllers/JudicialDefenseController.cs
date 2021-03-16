@@ -350,6 +350,24 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("DeleteDemandadoConvocado")]
+        public async Task<IActionResult> DeleteDemandadoConvocado([FromQuery] int demandadoConvocadoId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _judicialDefense.DeleteDemandadoConvocado(demandadoConvocadoId, HttpContext.User.FindFirst("User").Value);
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
 
     }
 }

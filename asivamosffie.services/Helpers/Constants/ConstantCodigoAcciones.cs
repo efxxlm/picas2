@@ -300,6 +300,7 @@
         public const string Crear_Editar_Acta_Bienes_Servicios = "214";
 
         public const string Cambiar_Estado_Legitimacion_Defensa_Judicial = "216";
+        public const string Eliminar_Demandado_Convocado = "226";
 
         //Lista de chequeo
         public const string Create_Edit_Item_Lista_Chequeo = "217";

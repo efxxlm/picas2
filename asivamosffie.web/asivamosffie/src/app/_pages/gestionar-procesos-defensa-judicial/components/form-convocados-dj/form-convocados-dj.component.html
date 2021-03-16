@@ -23,6 +23,7 @@
               " />
         </span>
     </div>
+    
     <mat-accordion formArrayName="perfiles" *ngIf="formContratista.get( 'numeroContratos' ).value!==null">
         <mat-expansion-panel class="expansion-style sub-expansion" *ngFor="let perfil of perfiles.controls; index as i"
             [formGroup]="perfil">
@@ -188,7 +189,7 @@
                 </mat-card-content>
             </mat-card>
             <div class="text-right">
-                <button mat-button color="warn" type="button" class="btn-eliminar" (click)="eliminar( i )"
+                <button mat-button color="warn" type="button" class="btn-eliminar" (click)="eliminarPerfil( perfil.get( 'demandadoConvocadoId' ).value, i )"
                     [disabled]="perfiles.controls.length == 1">
                     <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
                     Eliminar convocado

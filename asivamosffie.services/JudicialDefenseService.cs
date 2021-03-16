@@ -505,19 +505,25 @@ namespace asivamosffie.services
                     ListDefensaJudicial = await _context.DefensaJudicial.Where(r => (bool)r.Eliminado == false
                     && r.DefensaJudicialId == pDefensaJudicialId).
                     //Include(x=>x.DefensaJudicialContratacionProyecto).
-                    Include(x => x.DemandadoConvocado).
+                    //Include(x => x.DemandadoConvocado).
                     Include(x => x.DemandanteConvocante).
                     Include(x => x.DefensaJudicialSeguimiento).
                     Include(x => x.FichaEstudio).
                     Distinct().
                     ToListAsync();
 
+                    ListDefensaJudicial.ForEach(defensaJudicialItem =>
+                    {
+                        List<DemandadoConvocado> demandadoConvocado = _context.DemandadoConvocado.Where(r => (bool)r.Eliminado == false && r.DefensaJudicialId == defensaJudicialItem.DefensaJudicialId).ToList();  
+                        defensaJudicialItem.DemandadoConvocado = demandadoConvocado;
+                    });
+
                     List<VDefensaJudicialContratacionProyecto> ListVD =
-                        _context.VDefensaJudicialContratacionProyecto
-                        .Where(r => r.DefensaJudicialId == ListDefensaJudicial.FirstOrDefault().DefensaJudicialId)
-                        .Distinct()
-                        .OrderBy(r => r.OrderDefensaJudicialContratacionProyectoId)
-                        .ToList();
+                    _context.VDefensaJudicialContratacionProyecto
+                    .Where(r => r.DefensaJudicialId == ListDefensaJudicial.FirstOrDefault().DefensaJudicialId)
+                    .Distinct()
+                    .OrderBy(r => r.OrderDefensaJudicialContratacionProyectoId)
+                    .ToList();
 
                     ListVD.ForEach(djcp =>
                     {
@@ -1733,6 +1739,65 @@ namespace asivamosffie.services
             }
 
             return defensaJudicialSeguimiento;
+        }
+
+        public async Task<Respuesta> DeleteDemandadoConvocado(int demandadoConvocadoId, string pUsuarioModificacion)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Demandado_Convocado, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                DemandadoConvocado demandadoConvocadoOld = await _context.DemandadoConvocado.FindAsync(demandadoConvocadoId);
+
+                if (demandadoConvocadoOld == null)
+                {
+                    return new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = ConstanMessagesRegisterWeeklyProgress.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_procesos_Defensa_Judicial, ConstanMessagesRegisterWeeklyProgress.Error, idAccion, pUsuarioModificacion, "Demandado convocado no encontrado".ToUpper())
+                    };
+                }
+                
+                demandadoConvocadoOld.UsuarioModificacion = pUsuarioModificacion;
+                demandadoConvocadoOld.FechaModificacion = DateTime.Now;
+                demandadoConvocadoOld.Eliminado = true;
+
+                _context.Set<DefensaJudicial>().Where(r => r.DefensaJudicialId == demandadoConvocadoOld.DefensaJudicialId)
+                                   .Update(r => new DefensaJudicial()
+                                   {
+                                       FechaModificacion = DateTime.Now,
+                                       UsuarioModificacion = demandadoConvocadoOld.UsuarioCreacion,
+                                       NumeroDemandados = r.NumeroDemandados > 0 ? r.NumeroDemandados - 1 : r.NumeroDemandados
+                                   });
+
+                await _context.SaveChangesAsync();
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_procesos_Defensa_Judicial, ConstanMessagesRegisterWeeklyProgress.OperacionExitosa, idAccion, pUsuarioModificacion, "ELIMINAR DEMANDADO CONVOCADO".ToUpper())
+                };
+
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantSesionComiteTecnico.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_procesos_Defensa_Judicial, ConstantSesionComiteTecnico.Error, idAccion, pUsuarioModificacion, ex.InnerException.ToString())
+                };
+            }
+
+
         }
     }
 }
