@@ -48,6 +48,8 @@ namespace asivamosffie.model.Models
         public DateTime? FechaCambioPassword { get; set; }
         public string ProcedenciaCodigo { get; set; }
         public string NumeroIdentificacion { get; set; }
+        public string TipoAsignacionCodigo { get; set; }
+        public bool? TieneContratoAsignado { get; set; }
 
         public virtual Localizacion Municipio { get; set; }
         public virtual ICollection<CompromisoSeguimiento> CompromisoSeguimiento { get; set; }

@@ -291,10 +291,10 @@ namespace asivamosffie.services
                                      NumeroContrato = c.NumeroContrato,
                                      TipoAsignacionCodigo = ConstantCodigoTipoAsignacionContrato.Supervisor
                                  }).ToList();
-             
+
             usuario.ContratosAsignados.AddRange(contratoAsignadosInterventor);
             usuario.ContratosAsignados.AddRange(contratoAsignadosApoyo);
-            usuario.ContratosAsignados.AddRange(contratoAsignadosSupervisor); 
+            usuario.ContratosAsignados.AddRange(contratoAsignadosSupervisor);
 
             return usuario;
         }
@@ -373,14 +373,41 @@ namespace asivamosffie.services
 
         private void CreateEditAsignacionContrato(Usuario pUsuario)
         {
-            foreach (var item in pUsuario.ContratosAsignados)
+            foreach (var ContratosAsignados in pUsuario.ContratosAsignados)
             {
-                switch (item.TipoAsignacionCodigo)
+                switch (pUsuario.TipoAsignacionCodigo)
                 {
-                    case ConstantCodigoTipoAsignacionContrato.Apoyo:
-
+                    case ConstantCodigoTipoAsignacionContrato.Interventor:
+                        _context.Set<Contrato>()
+                                .Where(c => c.ContratacionId == ContratosAsignados.ContratoId)
+                                .Update(c => new Contrato
+                                {
+                                    InterventorId = pUsuario.UsuarioId,
+                                    FechaModificacion = DateTime.Now,
+                                    UsuarioModificacion = pUsuario.UsuarioCreacion
+                                });
                         break;
 
+                    case ConstantCodigoTipoAsignacionContrato.Apoyo:
+                        _context.Set<Contrato>()
+                              .Where(c => c.ContratacionId == ContratosAsignados.ContratoId)
+                              .Update(c => new Contrato
+                              {
+                                  ApoyoId = pUsuario.UsuarioId,
+                                  FechaModificacion = DateTime.Now,
+                                  UsuarioModificacion = pUsuario.UsuarioCreacion
+                              });
+                        break;
+                    case ConstantCodigoTipoAsignacionContrato.Supervisor:
+                        _context.Set<Contrato>()
+                              .Where(c => c.ContratacionId == ContratosAsignados.ContratoId)
+                              .Update(c => new Contrato
+                              {
+                                  SupervisorId = pUsuario.UsuarioId,
+                                  FechaModificacion = DateTime.Now,
+                                  UsuarioModificacion = pUsuario.UsuarioCreacion
+                              });
+                        break; 
                     default:
                         break;
                 }

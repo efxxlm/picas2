@@ -234,6 +234,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -7213,6 +7214,10 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.TelefonoFijo)
                     .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoAsignacionCodigo)
+                    .HasMaxLength(2)
                     .IsUnicode(false);
 
                 entity.Property(e => e.TipoDocumentoCodigo)
