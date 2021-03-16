@@ -22,6 +22,7 @@ export class DialogRechazarSolicitudValidfspComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
   constructor(public matDialogRef: MatDialogRef<DialogRechazarSolicitudValidfspComponent>, @Inject(MAT_DIALOG_DATA) public data: any, private fb: FormBuilder) { }
 
   ngOnInit(): void {
@@ -45,6 +46,8 @@ export class DialogRechazarSolicitudValidfspComponent implements OnInit {
     }
   }
   onSubmit() {
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     console.log(this.addressForm.value);
   }
 

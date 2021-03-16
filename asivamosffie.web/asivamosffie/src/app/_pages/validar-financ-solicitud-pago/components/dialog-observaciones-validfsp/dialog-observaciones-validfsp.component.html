@@ -17,12 +17,23 @@
             <div class="col-md-12" style="padding-left: 0;">
                 <div>
                     <div class="d-flex align-items-center">
-                        <div class="text-area-quill" style="text-align: left; margin-top: 1em; max-width: calc(100% - 2.3em); margin-left: -2em;">
-                            <label for="observaciones" class="text-area-quill--label size-label colorMainColor">
+                        <div class="text-area-quill"
+                            style="text-align: left; margin-top: 1em; max-width: calc(100% - 2.3em); margin-left: -2em;"
+                            [ngClass]="{
+                            'color-secondaryColor':
+                              (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                              (addressForm.get('observaciones').invalid && estaEditando)
+                          }">
+                            <label for="observaciones" class="text-area-quill--label size-label" [ngClass]="{
+                                'colorMainColor':
+                                  !((addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                                  (addressForm.get('observaciones').invalid && estaEditando))
+                              }">
                                 Observaciones
                             </label>
                             <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
-                                (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observaciones>
+                                (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones"
+                                #observaciones>
                             </quill-editor>
                         </div>
                         <span class="contador miles" *ngIf="addressForm.controls.observaciones.value">
@@ -31,13 +42,27 @@
                         <span class="contador miles" *ngIf="!addressForm.controls.observaciones.value">
                             1000
                         </span>
+                        <span class="icon-incompleto">
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip" *ngIf="
+                                (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                                (addressForm.get('observaciones').invalid && estaEditando)
+                              " />
+                        </span>
                     </div>
                 </div>
             </div>
         </div>
         <div class="row mtop justCenter">
             <div class="col-md-5">
-                <label class="label-left supportBlack">¿Esta observacion se puede subsanar?</label>
+                <label class="label-left supportBlack"
+                [ngClass]="{
+                    'color-secondaryColor':
+                    (addressForm.get('puedeSubsanar').invalid && addressForm.get('puedeSubsanar').touched) ||
+                    (addressForm.get('puedeSubsanar').invalid && estaEditando)
+                  }">¿Esta observacion se puede subsanar?</label>
             </div>
             <div class="col-md-3">
                 <mat-radio-group aria-labelledby="example-radio-group-label" class="radioInput"
@@ -47,6 +72,15 @@
                 </mat-radio-group>
                 <span class="required-form-group" style="margin-left: 1px;">*</span>
             </div>
+            <span class="icon-incompleto">
+                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip" *ngIf="
+                    (addressForm.get('puedeSubsanar').invalid && addressForm.get('puedeSubsanar').touched) ||
+                    (addressForm.get('puedeSubsanar').invalid && estaEditando)
+                  " />
+            </span>
         </div>
         <div class="text-center" style="margin-top: 15px;">
             <button mat-raised-button color="accent" class="btn-dialog" type="submit" [disabled]="addressForm.invalid">
@@ -55,4 +89,3 @@
         </div>
     </form>
 </div>
-
