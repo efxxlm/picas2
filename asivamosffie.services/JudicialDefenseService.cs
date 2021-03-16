@@ -447,7 +447,6 @@ namespace asivamosffie.services
                 || String.IsNullOrEmpty(defensaJudicial.TipoAccionCodigo)
                 || String.IsNullOrEmpty(defensaJudicial.JurisdiccionCodigo)
                 || String.IsNullOrEmpty(defensaJudicial.Pretensiones)
-                || defensaJudicial.CuantiaPerjuicios == null
                 || defensaJudicial.EsRequiereSupervisor == null
                 )
             {
