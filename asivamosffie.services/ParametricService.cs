@@ -86,7 +86,7 @@ namespace asivamosffie.services
          
         public async Task<List<VDominio>> GetDominioByTipoDominioId(int pTipoDominioId)
         {
-            return await _context.VDominio.Where(d => d.Td == pTipoDominioId).ToListAsync();
+            return await _context.VDominio.Where(d => d.TipoDominioId == pTipoDominioId).ToListAsync();
         }
     }
 }

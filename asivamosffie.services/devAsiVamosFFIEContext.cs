@@ -7324,7 +7324,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+                entity.Property(e => e.CreadoFecha).HasColumnType("datetime");
 
                 entity.Property(e => e.IdValor)
                     .HasMaxLength(101)
@@ -7339,8 +7339,6 @@ namespace asivamosffie.model.Models
                     .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
-
-                entity.Property(e => e.Td).HasColumnName("td");
             });
 
             modelBuilder.Entity<VGestionarGarantiasPolizas>(entity =>
