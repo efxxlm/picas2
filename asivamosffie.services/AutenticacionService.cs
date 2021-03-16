@@ -63,13 +63,13 @@ namespace asivamosffie.services
                 }
                 else if (usuario.FechaUltimoIngreso == null || usuario.CambiarContrasena.Value) // first time to log in
                 {
-                    List<UsuarioPerfil> perfiles = await _context.UsuarioPerfil.Where(y => y.UsuarioId == usuario.UsuarioId).Include(y=>y.Perfil).ToListAsync();
+                    List<VUsuarioPerfil> perfiles = await _context.VUsuarioPerfil.Where(y => y.UsuarioId == usuario.UsuarioId).ToListAsync();
                     respuesta = new Respuesta { IsSuccessful = true, IsValidation = true, Code = ConstantMessagesUsuarios.DirecCambioContrasena, Data = new { datausuario=usuario, dataperfiles=perfiles }, Token = this.GenerateToken(prmSecret, prmIssuer, prmAudience, usuario, perfiles) };                    
                 }
                 else // successful
                 {
                     this.ResetFailedAttempts(usuario.UsuarioId);
-                    List<UsuarioPerfil> perfiles = await _context.UsuarioPerfil.Where(y => y.UsuarioId == usuario.UsuarioId).Include(y=>y.Perfil).ToListAsync();
+                    List<VUsuarioPerfil> perfiles =await  _context.VUsuarioPerfil.Where(y => y.UsuarioId == usuario.UsuarioId).ToListAsync();
                     List<Menu> menus = await _context.MenuPerfil.Where(y => perfiles.Select(x=>x.PerfilId).Contains(y.PerfilId)).Select(x=>x.Menu).Distinct().ToListAsync();
                     respuesta = new Respuesta { IsSuccessful = true, IsValidation = false, Code = ConstantMessagesUsuarios.OperacionExitosa, Data = new { datausuario = usuario, dataperfiles = perfiles,datamenu= menus }, Token = this.GenerateToken(prmSecret, prmIssuer, prmAudience, usuario, perfiles) };
                   
@@ -85,7 +85,7 @@ namespace asivamosffie.services
             }
         }
          
-        private JwtToken GenerateToken(string prmSecret, string prmIssuer, string prmAudience, Usuario prmUser, List<UsuarioPerfil> prmPerfiles)
+        private JwtToken GenerateToken(string prmSecret, string prmIssuer, string prmAudience, Usuario prmUser, List<VUsuarioPerfil> prmPerfiles)
         {
             var token = new JwtTokenBuilder()
             .AddSecurityKey(JwtSecurityKey.Create(prmSecret))

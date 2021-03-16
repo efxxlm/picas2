@@ -89,7 +89,8 @@ namespace asivamosffie.services.Helpers.Enumerator
         //6.3
         MensajeDesactivarRol_6_3 = 94,
         //6.2
-        CreateUserEmail_6_2 = 95
+        CreateUserEmail_6_2 = 95,
 
+        DesactivarUsuario_6_2 = 96
     }
 }

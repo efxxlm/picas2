@@ -45,7 +45,23 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
+ 
 
+        [Route("ActivateDeActivateUsuario")]
+        [HttpPost]
+        public async Task<IActionResult> ActivateDeActivateUsuario([FromBody] Usuario pUsuario)
+        {
+            try
+            {
+                pUsuario.UsuarioCreacion = HttpContext.User.FindFirst("UserId").Value;
+                var result = await _user.ActivateDeActivateUsuario(pUsuario);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         [Route("ChangePasswordUser")]
         [HttpPost]
         public async Task<IActionResult> ChangePasswordUser([FromQuery] string Oldpwd, [FromQuery] string Newpwd)

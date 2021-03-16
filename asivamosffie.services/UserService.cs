@@ -315,7 +315,7 @@ namespace asivamosffie.services
 
         public async Task<Respuesta> CreateEditUsuario(Usuario pUsuario)
         {
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Activar_Desactivar_Rol, (int)EnumeratorTipoDominio.Acciones);
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Usuario, (int)EnumeratorTipoDominio.Acciones);
 
             try
             {
@@ -458,7 +458,7 @@ namespace asivamosffie.services
                          {
                              PerfilId = pUsuario.PerfilId,
                              FechaModificacion = DateTime.Now,
-                             UsuarioModificacion = pUsuario.UsuarioCreacion 
+                             UsuarioModificacion = pUsuario.UsuarioCreacion
                          });
                 }
             }
@@ -482,13 +482,17 @@ namespace asivamosffie.services
             return _commonService.EnviarCorreo(ListString, template);
         }
 
-        private string ReplaceVariablesUsuarios(string template, Usuario pUsuario, string pPassWord)
+        public async Task<bool> SendEmailWhenDesactivateUsuario(Usuario pUsuario, string pPassWord)
         {
-            template = template
-                      .Replace("[EMAIL]", pUsuario.Email)
-                      .Replace("[PASSWORD]", pPassWord);
+            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.DesactivarUsuario_6_2));
+            template.Contenido = ReplaceVariablesUsuarios(template.Contenido, pUsuario, pPassWord);
 
-            return template;
+            List<string> ListString = new List<string>
+                 {
+                     pUsuario.Email
+                 };
+
+            return _commonService.EnviarCorreo(ListString, template);
         }
 
         public async Task<dynamic> GetListPerfil()
@@ -502,6 +506,60 @@ namespace asivamosffie.services
                     p.Nombre
                 }).ToListAsync();
         }
+
+        public async Task<Respuesta> ActivateDeActivateUsuario(Usuario pUsuario)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Desactivar_Usuario, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                _context.Set<Usuario>()
+                          .Where(u => u.UsuarioId == pUsuario.UsuarioId)
+                          .Update(u => new Usuario
+                          {
+                              Eliminado = pUsuario.Eliminado,
+                              Bloqueado = pUsuario.Eliminado,
+                              FechaModificacion = DateTime.Now,
+                              UsuarioModificacion = pUsuario.UsuarioCreacion
+                          });;
+
+                if (pUsuario.Eliminado == true)
+                    await SendEmailWhenDesactivateUsuario(pUsuario, string.Empty);
+                 
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_usuarios, GeneralCodes.OperacionExitosa, idAccion, pUsuario.UsuarioCreacion, "CREAR EDITAR USUARIO")
+                };
+            }
+            catch (Exception e)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = GeneralCodes.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_usuarios, GeneralCodes.Error, idAccion, pUsuario.UsuarioCreacion, e.InnerException.ToString())
+                };
+            }
+
+
+        }
+
+        private string ReplaceVariablesUsuarios(string template, Usuario pUsuario, string pPassWord)
+        {
+            template = template
+                      .Replace("[EMAIL]", pUsuario.Email)
+                      .Replace("[PASSWORD]", pPassWord);
+
+            return template;
+        }
+
+
         #endregion
     }
 }

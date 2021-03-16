@@ -314,5 +314,9 @@
         public const string Create_Edit_Menu_Perfil = "224";
         public const string Activar_Desactivar_Rol = "225";
         public const string Crear_Editar_Parametrica = "226";
+
+
+        public const string Desactivar_Usuario = "228";
+        public const string Crear_Usuario = "229";
     }
 }

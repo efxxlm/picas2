@@ -228,11 +228,11 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VRequisitosTecnicosPreconstruccion> VRequisitosTecnicosPreconstruccion { get; set; }
         public virtual DbSet<VSesionParticipante> VSesionParticipante { get; set; }
         public virtual DbSet<VSolicitudPago> VSolicitudPago { get; set; }
+        public virtual DbSet<VUsuarioPerfil> VUsuarioPerfil { get; set; }
         public virtual DbSet<VUsuariosRoles> VUsuariosRoles { get; set; }
         public virtual DbSet<VValidarSeguimientoSemanal> VValidarSeguimientoSemanal { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -7243,8 +7243,6 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<UsuarioPerfil>(entity =>
             {
-                entity.HasNoKey();
-
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
@@ -7258,16 +7256,14 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.Property(e => e.UsuarioPerfilId).ValueGeneratedOnAdd();
-
                 entity.HasOne(d => d.Perfil)
-                    .WithMany()
+                    .WithMany(p => p.UsuarioPerfil)
                     .HasForeignKey(d => d.PerfilId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FKPerfil");
 
                 entity.HasOne(d => d.Usuario)
-                    .WithMany()
+                    .WithMany(p => p.UsuarioPerfil)
                     .HasForeignKey(d => d.UsuarioId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_usuario");
@@ -7952,6 +7948,28 @@ namespace asivamosffie.model.Models
                     .IsRequired()
                     .HasMaxLength(2)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VUsuarioPerfil>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_UsuarioPerfil");
+
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioPerfilId).ValueGeneratedOnAdd();
             });
 
             modelBuilder.Entity<VUsuariosRoles>(entity =>
