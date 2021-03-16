@@ -22,6 +22,7 @@ export class DialogObservacionesVfspComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  estaEditando =false;
   constructor(public matDialogRef: MatDialogRef<DialogObservacionesVfspComponent>, @Inject(MAT_DIALOG_DATA) public data: any, private fb: FormBuilder) { }
 
   ngOnInit(): void {
@@ -44,6 +45,8 @@ export class DialogObservacionesVfspComponent implements OnInit {
     }
   }
   onSubmit() {
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     console.log(this.addressForm.value);
   }
 
