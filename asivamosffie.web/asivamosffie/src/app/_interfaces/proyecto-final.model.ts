@@ -15,6 +15,7 @@ export interface Report {
                 informeFinalObservaciones: InformeFinalObservaciones[],
                 informeFinalObservacionesSupervisor: InformeFinalObservaciones[],
                 informeFinalObservacionesInterventoria: InformeFinalObservaciones[],
+                informeFinalObservacionesCumplimiento: InformeFinalObservaciones[],
                 tieneObservacionesValidacion: boolean,
                 tieneObservacionesSupervisor: boolean,
                 tieneObservacionesCumplimiento: boolean,

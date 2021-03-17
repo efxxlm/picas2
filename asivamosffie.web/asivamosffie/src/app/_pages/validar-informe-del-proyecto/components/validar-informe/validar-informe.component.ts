@@ -21,6 +21,10 @@ export class ValidarInformeComponent implements OnInit {
   @ViewChild(FormObservacionesReciboSatisfaccionComponent ) childFormObsReciboASatisfaccion: FormObservacionesReciboSatisfaccionComponent ; 
 
   existeObservacionApoyo = false;
+  existeObservacionSupervision = false;
+  existeObservacionCumplimiento = false;
+  mostrarDetalleAnexos = false; //Mostrar cuando esta en estado de aprobación 5 y no tiene observaciones de interventoria
+  mostrarDetalleObservacionesRecibo = false; //Mostrar cuando esta en estado de aprobación 5 y no tiene observaciones de interventoria
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -87,6 +91,18 @@ export class ValidarInformeComponent implements OnInit {
       this.report = report[0];
       if(report[0].proyecto.informeFinal[0].informeFinalObservaciones.length > 0){
         this.existeObservacionApoyo = true;
+      }
+      if(report[0].proyecto.informeFinal[0].informeFinalObservacionesSupervisor.length > 0){
+        this.existeObservacionSupervision = true;
+      }
+      if(report[0].proyecto.informeFinal[0].informeFinalObservacionesCumplimiento.length > 0){
+        this.existeObservacionCumplimiento = true;
+      }
+      if(report[0].proyecto.informeFinal[0].estadoCumplimiento === '2' && report[0].proyecto.informeFinal[0].tieneObservacionesInterventoria == false){
+        this.mostrarDetalleAnexos = true;
+      }
+      if(report[0].proyecto.informeFinal[0].estadoCumplimiento === '2' && report[0].proyecto.informeFinal[0].tieneObservacionesCumplimiento == false){
+        this.mostrarDetalleObservacionesRecibo = true;
       }
     });
   }

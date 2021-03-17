@@ -207,6 +207,20 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
+        [HttpGet]
+        [Route("GetListInformeFinalObservacionesInterventoria")]
+        public async Task<InformeFinal> GetListInformeFinalObservacionesInterventoria([FromQuery] int informeFinalId)
+        {
+            try
+            {
+                return await _validateFinalReportService.GetListInformeFinalObservacionesInterventoria(informeFinalId);
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
     }
 }

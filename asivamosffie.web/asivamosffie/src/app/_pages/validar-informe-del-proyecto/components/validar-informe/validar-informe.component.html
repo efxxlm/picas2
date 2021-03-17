@@ -17,8 +17,10 @@
     </p>
   </div>
   
-  <app-datos-del-proyecto *ngIf="report" [report]="report" [existeObservacionApoyo]="existeObservacionApoyo"></app-datos-del-proyecto>
-  <app-form-observaciones-recibo-satisfaccion *ngIf="report" [report]="report"></app-form-observaciones-recibo-satisfaccion>
-  <app-tabla-informe-final-anexos *ngIf="report" [id]="report.proyecto.informeFinal[0].informeFinalId" [llaveMen]="report.proyecto.llaveMen"></app-tabla-informe-final-anexos>
+  <app-datos-del-proyecto *ngIf="report" [report]="report" [existeObservacionApoyo]="existeObservacionApoyo" [existeObservacionCumplimiento]="existeObservacionCumplimiento"></app-datos-del-proyecto>
+  <app-form-observaciones-recibo-satisfaccion *ngIf="report && !mostrarDetalleObservacionesRecibo" [report]="report"></app-form-observaciones-recibo-satisfaccion>
+  <app-detalle-observaciones-recibo-satisfaccion *ngIf="report && mostrarDetalleObservacionesRecibo" [report]="report" [existeObservacionSupervision]="existeObservacionSupervision"></app-detalle-observaciones-recibo-satisfaccion>
+  <app-tabla-informe-final-anexos *ngIf="report && !mostrarDetalleAnexos" [id]="report.proyecto.informeFinal[0].informeFinalId" [llaveMen]="report.proyecto.llaveMen"></app-tabla-informe-final-anexos>
+  <app-tabla-detalle-informe-anexos *ngIf="report && mostrarDetalleAnexos" [id]="report.proyecto.informeFinal[0].informeFinalId" [llaveMen]="report.proyecto.llaveMen"></app-tabla-detalle-informe-anexos>
 
 </section>

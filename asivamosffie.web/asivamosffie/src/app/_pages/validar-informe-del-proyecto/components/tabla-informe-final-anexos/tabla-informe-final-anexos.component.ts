@@ -35,6 +35,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
     'id'
   ];
   estadoAprobacion = '0';
+  estadoCumplimiento = '0';
   //registroCompletoValidacion = false;
   addressForm: FormGroup;
   informeFinalObservacion : InformeFinalInterventoriaObservaciones[] = [];
@@ -70,7 +71,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
       if(listChequeo != null){
         this.semaforo = listChequeo[0].semaforo;
         this.estadoAprobacion = listChequeo[0].informeFinal.estadoAprobacion;
-        //this.registroCompletoValidacion = listChequeo[0].registroCompletoValidacion;
+        this.estadoCumplimiento = listChequeo[0].informeFinal.estadoCumplimiento;
         this.semaforo = listChequeo[0].semaforo;
       }
       this.dataSource.data = listChequeo as ListaChequeo[];

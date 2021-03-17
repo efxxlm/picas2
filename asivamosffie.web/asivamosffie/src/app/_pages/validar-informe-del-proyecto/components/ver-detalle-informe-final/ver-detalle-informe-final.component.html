@@ -17,7 +17,7 @@
     </p>
   </div>
 
-  <app-datos-del-proyecto *ngIf="report" [report]="report" [existeObservacionApoyo]="existeObservacionApoyo"></app-datos-del-proyecto>
+  <app-datos-del-proyecto *ngIf="report" [report]="report" [existeObservacionApoyo]="existeObservacionApoyo" [existeObservacionCumplimiento]="existeObservacionCumplimiento"></app-datos-del-proyecto>
   <app-detalle-observaciones-recibo-satisfaccion *ngIf="report" [report]="report" [existeObservacionSupervision]="existeObservacionSupervision"></app-detalle-observaciones-recibo-satisfaccion>
   <app-tabla-detalle-informe-anexos *ngIf="report" [id]="report.proyecto.informeFinal[0].informeFinalId" [llaveMen]="report.proyecto.llaveMen"></app-tabla-detalle-informe-anexos>
 </section>

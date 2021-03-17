@@ -13,8 +13,18 @@ export interface InformeFinal {
         estadoValidacion?: string,
         observacionesValidacion?: string,
         tieneObservacionesValidacion?: boolean,
+        tieneObservacionesInterventoria?: boolean,
         registroCompletoValidacion?: boolean,
-        informeFinalInterventoria?: InformeFinalInterventoria[]
+        informeFinalInterventoria?: InformeFinalInterventoria[],
+        observacionVigenteInformeFinalObservacionesInterventoria?: {
+                esGrupoNovedadesInterventoria: boolean,
+                fechaCreacion: Date,
+                informeFinalId: number,
+                informeFinalObservacionesId: number,
+                observaciones: string,
+                usuarioCreacion: string
+            },
+        historialInformeFinalInterventoriaObservaciones?: InformeFinalObservaciones[],
 }
 
 export interface InformeFinalInterventoria{
@@ -67,4 +77,20 @@ export interface InformeFinalInterventoriaObservaciones{
         esCalificacion?: boolean,
         esApoyo?: boolean,
         archivado?: boolean,
+}
+
+export interface InformeFinalObservaciones{
+        informeFinalObservacionesId?: number,
+        informeFinalId?: number,
+        observaciones?: string,
+        esSupervision?: boolean,
+        fechaCreacion?:boolean,
+        usuarioCreacion?: string,
+        fechaModificacion?:boolean,
+        usuarioModificacion?: string,
+        eliminado?:boolean,
+        archivado?:boolean,
+        esApoyo?:boolean,
+        esGrupoNovedades?:boolean,
+        esGrupoNovedadesInterventoria?:boolean,
 }

@@ -53,4 +53,8 @@ export class ValidarInformeFinalService {
     createEditObservacionInformeFinal( informeFinalObservacion: any , tieneObservacion: boolean){
       return this.http.post(`${environment.apiUrl}/${this.final_report}/CreateEditObservacionInformeFinal?tieneObservacion=${ tieneObservacion }`, informeFinalObservacion );
     }
+
+    getListInformeFinalObservacionesInterventoria(informeFinalId: number){
+      return this.http.get(`${environment.apiUrl}/${this.final_report}/GetListInformeFinalObservacionesInterventoria?informeFinalId=${ informeFinalId }`);
+    }
 }

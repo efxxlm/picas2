@@ -23,6 +23,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> SendFinalReportToFinalVerification(int pInformeFinalId, string pUsuario, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
         //alertas
         Task GetInformeFinalNoEnviadoAGrupoNovedades(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
+        Task<InformeFinal> GetListInformeFinalObservacionesInterventoria(int informeFinalId);
 
     }
 }

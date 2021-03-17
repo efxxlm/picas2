@@ -75,6 +75,7 @@ namespace asivamosffie.services
                                                          .FirstOrDefaultAsync();
             List<InformeFinalObservaciones> informeFinalObservacionesApoyo = _context.InformeFinalObservaciones.Where(r => r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && r.EsApoyo == true).ToList();
             List<InformeFinalObservaciones> informeFinalObservacionesSupervisor = _context.InformeFinalObservaciones.Where(r => r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && r.EsSupervision == true).OrderByDescending(r=> r.FechaCreacion).ToList();
+            List<InformeFinalObservaciones> informeFinalObservacionesCumplimiento = _context.InformeFinalObservaciones.Where(r => r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && r.EsGrupoNovedades == true).OrderByDescending(r => r.FechaCreacion).ToList();
 
             InstitucionEducativaSede Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == proyecto.SedeId).FirstOrDefault();
             Localizacion Municipio = ListLocalizacion.Where(r => r.LocalizacionId == proyecto.LocalizacionIdMunicipio).FirstOrDefault();
@@ -84,6 +85,7 @@ namespace asivamosffie.services
             proyecto.Sede = Sede;
             proyecto.InformeFinal.FirstOrDefault().InformeFinalObservaciones = informeFinalObservacionesApoyo;
             proyecto.InformeFinal.FirstOrDefault().InformeFinalObservacionesSupervisor = informeFinalObservacionesSupervisor;
+            proyecto.InformeFinal.FirstOrDefault().InformeFinalObservacionesCumplimiento = informeFinalObservacionesCumplimiento;
             List<ContratacionProyecto> ListContratacion = await _context.ContratacionProyecto
                                                         .Where(r => r.ProyectoId == pProyectoId)
                                                         .Include(r => r.Contratacion)
@@ -221,7 +223,7 @@ namespace asivamosffie.services
             return ListInformeFinalChequeo;
         }
 
-        private bool VerificarInformeFinalAprobacion(int pInformeFinalId)
+        private bool VerificarInformeFinalAprobacion(int pInformeFinalId, bool tieneOBservaciones)
         {
             bool esCompleto = false;
 
@@ -231,7 +233,7 @@ namespace asivamosffie.services
             {
                 InformeFinalInterventoria existe_no_cumple = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == pInformeFinalId && r.AprobacionCodigo == ConstantCodigoCalificacionInformeFinal.No_Cumple).FirstOrDefault();
                 InformeFinalInterventoria existe_no_diligenciado = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == pInformeFinalId && (r.AprobacionCodigo == "0" || String.IsNullOrEmpty(r.AprobacionCodigo))).FirstOrDefault();
-                
+
                 if (existe_no_cumple != null)
                 {
                     informeFinal.EstadoAprobacion = ConstantCodigoEstadoAprobacionInformeFinal.Con_observaciones_supervisor;
@@ -239,6 +241,13 @@ namespace asivamosffie.services
                 }
                 if (existe_no_diligenciado != null)
                 {
+                    return false;
+                }
+
+                //validar si tiene observaciones al recibo de satisfaccion
+                if (tieneOBservaciones && existe_no_diligenciado == null && existe_no_cumple == null)
+                {
+                    informeFinal.EstadoAprobacion = ConstantCodigoEstadoAprobacionInformeFinal.Con_observaciones_supervisor;
                     return false;
                 }
             }
@@ -286,7 +295,7 @@ namespace asivamosffie.services
 
                 }
 
-                VerificarInformeFinalAprobacion(informeFinal.InformeFinalId);
+                VerificarInformeFinalAprobacion(informeFinal.InformeFinalId, (bool)informeFinal.TieneObservacionesSupervisor);
 
                 await _context.SaveChangesAsync();
 
@@ -366,9 +375,11 @@ namespace asivamosffie.services
             string strCrearEditar = string.Empty;
             try
             {
-                InformeFinal informefinal = _context.InformeFinal.Find(pObservacion.InformeFinalId);
+                InformeFinal informefinal = await _context.InformeFinal.FindAsync(pObservacion.InformeFinalId);
 
-                if (informefinal.EstadoAprobacion == ConstantCodigoEstadoAprobacionInformeFinal.Modificado_Apoyo_Supervision_Interventor && pObservacion.Archivado == true)
+                //creo un nuevo registro de observación
+                if ((informefinal.EstadoAprobacion == ConstantCodigoEstadoAprobacionInformeFinal.Modificado_Apoyo_Supervision_Interventor && pObservacion.Archivado == true)
+                    || informefinal.EstadoAprobacion == ConstantCodigoEstadoAprobacionInformeFinal.Con_observaciones_liquidaciones_novedades)
                 {
                     pObservacion.InformeFinalObservacionesId = 0;
                     pObservacion.Archivado = false;
@@ -377,12 +388,27 @@ namespace asivamosffie.services
                 if (pObservacion.InformeFinalObservacionesId == 0)
                 {
                     await _context.Set<InformeFinal>().Where(r => r.InformeFinalId == pObservacion.InformeFinalId && (r.EstadoAprobacion == "0" || string.IsNullOrEmpty(r.EstadoAprobacion)))
-                                               .UpdateAsync(r => new InformeFinal()
-                                               {
-                                                   FechaModificacion = DateTime.Now,
-                                                   UsuarioModificacion = pObservacion.UsuarioCreacion,
-                                                   EstadoAprobacion = ConstantCodigoEstadoAprobacionInformeFinal.En_proceso_aprobacion,
-                                               });
+                           .UpdateAsync(r => new InformeFinal()
+                           {
+                               FechaModificacion = DateTime.Now,
+                               UsuarioModificacion = pObservacion.UsuarioCreacion,
+                               EstadoAprobacion = ConstantCodigoEstadoAprobacionInformeFinal.En_proceso_aprobacion,
+                           });
+
+                    if (informefinal.EstadoAprobacion == ConstantCodigoEstadoAprobacionInformeFinal.Con_observaciones_liquidaciones_novedades)
+                    {
+                        //Enviar las observaciones del supervisor a historial
+
+                        //Observaciones a recibo de satisfacción
+                        List<InformeFinalObservaciones> informeFinalObservaciones = _context.InformeFinalObservaciones.Where(r => r.InformeFinalId == pObservacion.InformeFinalId && r.EsSupervision == true && (r.Archivado == null || r.Archivado == false)).ToList();
+                        foreach (var itemobs in informeFinalObservaciones)
+                        {
+                            itemobs.Archivado = true;
+                            itemobs.FechaModificacion = DateTime.Now;
+                            itemobs.UsuarioModificacion = pObservacion.UsuarioCreacion;
+                        }
+                    }
+
                     strCrearEditar = "CREAR INFORME FINAL OBSERVACIONES";
                     pObservacion.FechaCreacion = DateTime.Now;
                     _context.InformeFinalObservaciones.Add(pObservacion);
@@ -399,13 +425,19 @@ namespace asivamosffie.services
                                                                        Observaciones = pObservacion.Observaciones,
                                                                    });
                 }
+
+
                 await _context.Set<InformeFinal>().Where(r => r.InformeFinalId == pObservacion.InformeFinalId)
-                                               .UpdateAsync(r => new InformeFinal()
-                                               {
-                                                   FechaModificacion = DateTime.Now,
-                                                   UsuarioModificacion = pObservacion.UsuarioCreacion,
-                                                   TieneObservacionesSupervisor = tieneOBservaciones,
-                                               });
+                                                              .UpdateAsync(r => new InformeFinal()
+                                                              {
+                                                                  FechaModificacion = DateTime.Now,
+                                                                  UsuarioModificacion = pObservacion.UsuarioCreacion,
+                                                                  TieneObservacionesSupervisor = tieneOBservaciones,
+                                                              });
+
+                VerificarInformeFinalAprobacion(pObservacion.InformeFinalId , tieneOBservaciones);
+
+
                 _context.SaveChanges();
 
                 return
@@ -640,6 +672,10 @@ namespace asivamosffie.services
                     informeFinal.UsuarioModificacion = pUsuario;
                     informeFinal.FechaAprobacion = DateTime.Now;
                     informeFinal.FechaModificacion = DateTime.Now;
+                    if (informeFinal.EstadoCumplimiento == ConstantCodigoEstadoCumplimientoInformeFinal.Con_observaciones_liquidaciones_novedades)
+                    {
+                        informeFinal.EstadoCumplimiento = ConstantCodigoEstadoCumplimientoInformeFinal.Con_Ajustes_Supervisor;
+                    }
                 }
 
                 //Enviar Correo a grupo novedades liquidaciones 5.1.3
@@ -805,5 +841,21 @@ namespace asivamosffie.services
                   };
             }
         }
+
+        public async Task<InformeFinal> GetListInformeFinalObservacionesInterventoria(int informeFinalId)
+        {
+
+            InformeFinal informeFinal = await _context.InformeFinal.FindAsync(informeFinalId);
+
+            if (informeFinal != null)
+            {
+                informeFinal.HistorialInformeFinalObservacionesInterventoria = _context.InformeFinalObservaciones.Where(r => r.EsGrupoNovedadesInterventoria == true && r.Archivado == true && (r.EsApoyo == false || r.EsApoyo == null) && r.InformeFinalId == informeFinalId).ToList();
+                informeFinal.ObservacionVigenteInformeFinalObservacionesInterventoria = _context.InformeFinalObservaciones.Where(r => r.EsGrupoNovedadesInterventoria == true && r.InformeFinalId == informeFinalId && (r.Archivado == false || r.Archivado == null)).FirstOrDefault();
+
+            }
+
+            return informeFinal;
+        }
+
     }
 }

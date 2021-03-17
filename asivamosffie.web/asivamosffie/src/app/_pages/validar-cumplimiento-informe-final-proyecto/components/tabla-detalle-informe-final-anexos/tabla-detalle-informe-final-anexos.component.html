@@ -37,7 +37,7 @@
                 </th>
                 <td mat-cell *matCellDef="let element">
                   <div *ngIf="element.calificacionCodigo === '1'">
-                    <span [class.color-secondaryColor]="element.validacionCodigo === '' && estaEditando">
+                    <span [class.color-secondaryColor]="element.validacionCodigo === ''">
                       {{ element.informeFinalAnexo.tipoAnexoString }}
                     </span>
                   </div>
@@ -52,7 +52,7 @@
                 <td mat-cell *matCellDef="let element">
                   <div
                     *ngIf="element.calificacionCodigo === '1'"
-                    [class.color-secondaryColor]="element.validacionCodigo === '' && estaEditando"
+                    [class.color-secondaryColor]="element.validacionCodigo === ''"
                   >
                     <!--Físico-->
                     <span *ngIf="element.informeFinalAnexo.tipoAnexo === '1'">
@@ -70,7 +70,7 @@
               </ng-container>
 
               <!-- validacion Column -->
-              <ng-container matColumnDef="aprobacionCodigo">
+              <ng-container matColumnDef="aprobacionCodigoString">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
                   Validación
                 </th>

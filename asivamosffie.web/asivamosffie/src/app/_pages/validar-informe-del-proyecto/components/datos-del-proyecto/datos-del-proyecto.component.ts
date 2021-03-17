@@ -10,6 +10,7 @@ export class DatosDelProyectoComponent implements OnInit {
 
   @Input() report: Report
   @Input() existeObservacionApoyo: boolean
+  @Input() existeObservacionCumplimiento: boolean
 
   constructor() { }
 

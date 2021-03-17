@@ -1,0 +1,25 @@
+<div class="text-left">
+  <mat-card class="shipping-card var-main-gris" *ngIf="anexos">
+    <mat-card-header class="header-card header-card--margin">
+      <mat-card-title class="mat-card-title header-card--text">
+        Verificación de responsables de grupo de novedades y liquidaciones
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p>
+        <strong>
+          {{anexos.observacionVigenteInformeFinalObservacionesInterventoria.fechaCreacion | date:'dd/MM/yyyy' }}
+        </strong>
+      </p>
+      <p>
+        <strong>
+          ¿Desde el grupo de novedades y liquidaciones tiene observaciones adicionales al informe final y anexos?:
+        </strong>
+        <span *ngIf="anexos.tieneObservacionesInterventoria"> Si</span>
+        <span *ngIf="!anexos.tieneObservacionesInterventoria"> No</span>
+      </p>
+      <p *ngIf="anexos.tieneObservacionesInterventoria" [innerHTML]="anexos.observacionVigenteInformeFinalObservacionesInterventoria.observaciones">
+      </p>
+    </mat-card-content>
+  </mat-card>
+</div>

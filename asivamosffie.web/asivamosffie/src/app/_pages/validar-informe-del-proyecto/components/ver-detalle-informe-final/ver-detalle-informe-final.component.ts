@@ -14,6 +14,8 @@ export class VerDetalleInformeFinalComponent implements OnInit {
   report: Report;
   existeObservacionApoyo = false;
   existeObservacionSupervision = false;
+  existeObservacionCumplimiento = false;
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -36,6 +38,9 @@ export class VerDetalleInformeFinalComponent implements OnInit {
       }
       if(report[0].proyecto.informeFinal[0].informeFinalObservacionesSupervisor.length > 0){
         this.existeObservacionSupervision = true;
+      }
+      if(report[0].proyecto.informeFinal[0].informeFinalObservacionesCumplimiento.length > 0){
+        this.existeObservacionCumplimiento = true;
       }
     });
   }
