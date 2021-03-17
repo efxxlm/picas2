@@ -184,12 +184,9 @@ namespace asivamosffie.services
                         });
                 }
 
-                if (pPerfil.Eliminado == true)
-                {
+                if (pPerfil.Eliminado == true) 
                     await SendEmailWhenDesactivateRol(ListUsuarioPerfil.FirstOrDefault().Perfil);
-                }
-               
-
+                 
                 return new Respuesta
                 {
                     IsSuccessful = true,
