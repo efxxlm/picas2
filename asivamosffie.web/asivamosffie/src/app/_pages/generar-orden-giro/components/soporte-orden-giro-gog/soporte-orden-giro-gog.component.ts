@@ -19,7 +19,7 @@ export class SoporteOrdenGiroGogComponent implements OnInit {
     ordenGiroSoporteId = 0;
     ordenGiroDetalle: any;
     addressForm: FormGroup;
-
+    estaEditando = false;
     constructor(
         private fb: FormBuilder,
         private commonSvc: CommonService,
@@ -59,6 +59,8 @@ export class SoporteOrdenGiroGogComponent implements OnInit {
     }
 
     onSubmit() {
+        this.estaEditando = true;
+        this.addressForm.markAllAsTouched();
         const pOrdenGiro = {
             solicitudPagoId: this.solicitudPago.solicitudPagoId,
             ordenGiroId: this.ordenGiroId,

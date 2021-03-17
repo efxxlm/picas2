@@ -20,7 +20,7 @@ export class FormTerceroGiroGogComponent implements OnInit {
     listaMediosPagoCodigo: any = {};
     ordenGiroId = 0;
     ordenGiroTerceroId = 0;
-
+    estaEditando = false;
     constructor(
         private fb: FormBuilder,
         private commonSvc: CommonService,
@@ -93,7 +93,8 @@ export class FormTerceroGiroGogComponent implements OnInit {
     }
 
     onSubmit() {
-
+        this.estaEditando = true;
+        this.addressForm.markAllAsTouched();
         const ordenGiroTerceroDiligenciado = () => {
             if (this.listaMediosPagoCodigo.transferenciaElectronica === this.addressForm.get( 'medioPagoGiroContrato' ).value ) {
                 return this.addressForm.get( 'transferenciaElectronica' ).value;

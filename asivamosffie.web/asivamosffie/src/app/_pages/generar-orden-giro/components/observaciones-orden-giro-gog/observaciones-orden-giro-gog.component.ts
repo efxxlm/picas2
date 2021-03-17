@@ -31,6 +31,7 @@ export class ObservacionesOrdenGiroGogComponent implements OnInit {
         [{ align: [] }],
       ]
     };
+    estaEditando = false;
     constructor(
         private fb: FormBuilder,
         private commonSvc: CommonService,
@@ -84,6 +85,8 @@ export class ObservacionesOrdenGiroGogComponent implements OnInit {
     }
 
     onSubmit() {
+        this.estaEditando = true;
+        this.addressForm.markAllAsTouched();
         const pOrdenGiro = {
             solicitudPagoId: this.solicitudPago.solicitudPagoId,
             ordenGiroId: this.ordenGiroId,

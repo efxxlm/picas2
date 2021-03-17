@@ -20,7 +20,11 @@
                 <div class="col-md-8">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="valorDescuento">
+                            <label class="label-left" for="valorDescuento" [ngClass]="{
+                                'color-secondaryColor':
+                                  (addressForm.get('valorDescuento').invalid && addressForm.get('valorDescuento').touched) ||
+                                  (addressForm.get('valorDescuento').invalid && estaEditando)
+                              }">
                                 Valor del descuento
                             </label>
                         </div>
@@ -29,13 +33,22 @@
                                 <input matInput #valorDescuento currencyMask maxlength="20" required
                                     formControlName="valorDescuento" (keypress)="validateNumberKeypress($event)"
                                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                    oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                     [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                             </mat-form-field>
                             <span class="contador" [matTooltipPosition]="'above'"
                                 matTooltip="Valor en ($) Pesos colombianos" matTooltipClass="info-tooltip">{{20 -
                                 valorDescuento.value.length}}</span>
                         </div>
+                        <span class="icon-incompleto">
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip" *ngIf="
+                              (addressForm.get('valorDescuento').invalid && addressForm.get('valorDescuento').touched) ||
+                              (addressForm.get('valorDescuento').invalid && estaEditando)
+                              " />
+                        </span>
                     </div>
                 </div>
             </div>

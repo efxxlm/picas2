@@ -10,6 +10,7 @@ export class FormTipopago3GogComponent implements OnInit {
   addressForm = this.fb.group({
     valorDescuento: [null, Validators.required]
   });
+  estaEditando = false;
   constructor( private fb: FormBuilder) { }
 
   ngOnInit(): void {
@@ -20,6 +21,8 @@ export class FormTipopago3GogComponent implements OnInit {
     return alphanumeric.test(inputChar) ? true : false;
   }
   onSubmit() {
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     console.log(this.addressForm.value);
   }
 }

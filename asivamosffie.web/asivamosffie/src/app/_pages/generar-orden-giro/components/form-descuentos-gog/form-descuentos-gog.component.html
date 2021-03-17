@@ -5,7 +5,11 @@
             <div class="col-md-12" style="padding-left: 0;">
                 <div class="row">
                     <div class="pr-1">
-                        <label class="label-left" for="criterios">Criterios a los cuales aplica el descuento</label>
+                        <label class="label-left" for="criterios" [ngClass]="{
+                            'color-secondaryColor':
+                              (addressForm.get('criterios').invalid && addressForm.get('criterios').touched) ||
+                              (addressForm.get('criterios').invalid && estaEditando)
+                          }">Criterios a los cuales aplica el descuento</label>
                     </div>
                     <div class="col">
                         <mat-form-field class="select-width">
@@ -17,6 +21,15 @@
                             </mat-select>
                         </mat-form-field>
                     </div>
+                    <span class="icon-incompleto">
+                        <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                            alt="este campo es requerido" [matTooltipPosition]="'above'"
+                            matTooltip="Debe ingresar la información en el campo para continuar"
+                            matTooltipClass="info-tooltip" *ngIf="
+                          (addressForm.get('criterios').invalid && addressForm.get('criterios').touched) ||
+                          (addressForm.get('criterios').invalid && estaEditando)
+                          " />
+                    </span>
                 </div>
             </div>
         </div>
@@ -34,7 +47,11 @@
                         <div class="col-md-12" style="padding-left: 0;">
                             <div class="row">
                                 <div class="pr-1">
-                                    <label class="label-left" for="conceptosdePago">Conceptos de pago que aplican para
+                                    <label class="label-left" for="conceptosdePago" [ngClass]="{
+                                        'color-secondaryColor':
+                                          (addressForm.get('conceptosdePago').invalid && addressForm.get('conceptosdePago').touched) ||
+                                          (addressForm.get('conceptosdePago').invalid && estaEditando)
+                                      }">Conceptos de pago que aplican para
                                         el descuento: </label>
                                 </div>
                                 <div class="col">
@@ -48,6 +65,15 @@
                                         </mat-select>
                                     </mat-form-field>
                                 </div>
+                                <span class="icon-incompleto">
+                                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip" *ngIf="
+                                      (addressForm.get('conceptosdePago').invalid && addressForm.get('conceptosdePago').touched) ||
+                                          (addressForm.get('conceptosdePago').invalid && estaEditando)
+                                      " />
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -62,7 +88,11 @@
                                 <div class="col-md-8">
                                     <div class="row">
                                         <div class="pr-1">
-                                            <label class="label-left" for="tipoAportante">Tipo de aportante:</label>
+                                            <label class="label-left" for="tipoAportante" [ngClass]="{
+                                                'color-secondaryColor':
+                                                  (addressForm.get('tipoAportante').invalid && addressForm.get('tipoAportante').touched) ||
+                                                  (addressForm.get('tipoAportante').invalid && estaEditando)
+                                              }">Tipo de aportante:</label>
                                         </div>
                                         <div class="col">
                                             <mat-form-field class="select-width">
@@ -74,6 +104,15 @@
                                                 </mat-select>
                                             </mat-form-field>
                                         </div>
+                                        <span class="icon-incompleto">
+                                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                                matTooltipClass="info-tooltip" *ngIf="
+                                              (addressForm.get('tipoAportante').invalid && addressForm.get('tipoAportante').touched) ||
+                                                  (addressForm.get('tipoAportante').invalid && estaEditando)
+                                              " />
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -81,8 +120,11 @@
                                 <div class="col-md-8">
                                     <div class="row">
                                         <div class="pr-1">
-                                            <label class="label-left" for="nombreAportante">Nombre del
-                                                aportante:</label>
+                                            <label class="label-left" for="nombreAportante" [ngClass]="{
+                                                'color-secondaryColor':
+                                                  (addressForm.get('nombreAportante').invalid && addressForm.get('nombreAportante').touched) ||
+                                                  (addressForm.get('nombreAportante').invalid && estaEditando)
+                                              }">Nombre del aportante:</label>
                                         </div>
                                         <div class="col">
                                             <mat-form-field class="select-width">
@@ -94,6 +136,15 @@
                                                 </mat-select>
                                             </mat-form-field>
                                         </div>
+                                        <span class="icon-incompleto">
+                                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                                matTooltipClass="info-tooltip" *ngIf="
+                                              (addressForm.get('nombreAportante').invalid && addressForm.get('nombreAportante').touched) ||
+                                                  (addressForm.get('nombreAportante').invalid && estaEditando)
+                                              " />
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -101,8 +152,11 @@
                                 <div class="col-md-8">
                                     <div class="row">
                                         <div class="pr-1">
-                                            <label class="label-left" for="fuenteRecursos">Fuente de los
-                                                recursos:</label>
+                                            <label class="label-left" for="fuenteRecursos" [ngClass]="{
+                                                'color-secondaryColor':
+                                                  (addressForm.get('fuenteRecursos').invalid && addressForm.get('fuenteRecursos').touched) ||
+                                                  (addressForm.get('fuenteRecursos').invalid && estaEditando)
+                                              }">Fuente de los recursos:</label>
                                         </div>
                                         <div class="col">
                                             <mat-form-field class="select-width">
@@ -114,6 +168,15 @@
                                                 </mat-select>
                                             </mat-form-field>
                                         </div>
+                                        <span class="icon-incompleto">
+                                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                                matTooltipClass="info-tooltip" *ngIf="
+                                              (addressForm.get('fuenteRecursos').invalid && addressForm.get('fuenteRecursos').touched) ||
+                                                  (addressForm.get('fuenteRecursos').invalid && estaEditando)
+                                              " />
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -121,7 +184,11 @@
                                 <div class="col-md-8">
                                     <div class="row">
                                         <div class="pr-1">
-                                            <label class="label-left" for="valorDescuento">
+                                            <label class="label-left" for="valorDescuento" [ngClass]="{
+                                                'color-secondaryColor':
+                                                  (addressForm.get('valorDescuento').invalid && addressForm.get('valorDescuento').touched) ||
+                                                  (addressForm.get('valorDescuento').invalid && estaEditando)
+                                              }">
                                                 Valor del descuento
                                             </label>
                                         </div>
@@ -137,6 +204,15 @@
                                                 matTooltipClass="info-tooltip">{{20 -
                                                 valorDescuento.value.length}}</span>
                                         </div>
+                                        <span class="icon-incompleto">
+                                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                                matTooltipClass="info-tooltip" *ngIf="
+                                              (addressForm.get('valorDescuento').invalid && addressForm.get('valorDescuento').touched) ||
+                                                  (addressForm.get('valorDescuento').invalid && estaEditando)
+                                              " />
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -155,7 +231,12 @@
                                 <div class="col-md-8">
                                     <div class="row">
                                         <div class="pr-1">
-                                            <label class="label-left" for="tipoAportante">Tipo de aportante:</label>
+                                            <label class="label-left" for="tipoAportante"
+                                            [ngClass]="{
+                                                'color-secondaryColor':
+                                                  (addressForm.get('tipoAportante').invalid && addressForm.get('tipoAportante').touched) ||
+                                                  (addressForm.get('tipoAportante').invalid && estaEditando)
+                                              }">Tipo de aportante:</label>
                                         </div>
                                         <div class="col">
                                             <mat-form-field class="select-width">
@@ -167,6 +248,15 @@
                                                 </mat-select>
                                             </mat-form-field>
                                         </div>
+                                        <span class="icon-incompleto">
+                                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                                matTooltipClass="info-tooltip" *ngIf="
+                                              (addressForm.get('tipoAportante').invalid && addressForm.get('tipoAportante').touched) ||
+                                                  (addressForm.get('tipoAportante').invalid && estaEditando)
+                                              " />
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -174,8 +264,12 @@
                                 <div class="col-md-8">
                                     <div class="row">
                                         <div class="pr-1">
-                                            <label class="label-left" for="nombreAportante">Nombre del
-                                                aportante:</label>
+                                            <label class="label-left" for="nombreAportante"
+                                            [ngClass]="{
+                                                'color-secondaryColor':
+                                                  (addressForm.get('nombreAportante').invalid && addressForm.get('nombreAportante').touched) ||
+                                                  (addressForm.get('nombreAportante').invalid && estaEditando)
+                                              }">Nombre del aportante:</label>
                                         </div>
                                         <div class="col">
                                             <mat-form-field class="select-width">
@@ -187,6 +281,15 @@
                                                 </mat-select>
                                             </mat-form-field>
                                         </div>
+                                        <span class="icon-incompleto">
+                                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                                matTooltipClass="info-tooltip" *ngIf="
+                                                (addressForm.get('nombreAportante').invalid && addressForm.get('nombreAportante').touched) ||
+                                                (addressForm.get('nombreAportante').invalid && estaEditando)
+                                              " />
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -194,8 +297,12 @@
                                 <div class="col-md-8">
                                     <div class="row">
                                         <div class="pr-1">
-                                            <label class="label-left" for="fuenteRecursos">Fuente de los
-                                                recursos:</label>
+                                            <label class="label-left" for="fuenteRecursos"
+                                            [ngClass]="{
+                                                'color-secondaryColor':
+                                                  (addressForm.get('fuenteRecursos').invalid && addressForm.get('fuenteRecursos').touched) ||
+                                                  (addressForm.get('fuenteRecursos').invalid && estaEditando)
+                                              }">Fuente de los recursos:</label>
                                         </div>
                                         <div class="col">
                                             <mat-form-field class="select-width">
@@ -207,6 +314,15 @@
                                                 </mat-select>
                                             </mat-form-field>
                                         </div>
+                                        <span class="icon-incompleto">
+                                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                                matTooltipClass="info-tooltip" *ngIf="
+                                                (addressForm.get('fuenteRecursos').invalid && addressForm.get('fuenteRecursos').touched) ||
+                                                (addressForm.get('fuenteRecursos').invalid && estaEditando)
+                                              " />
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -214,7 +330,12 @@
                                 <div class="col-md-8">
                                     <div class="row">
                                         <div class="pr-1">
-                                            <label class="label-left" for="valorDescuento">
+                                            <label class="label-left" for="valorDescuento"
+                                            [ngClass]="{
+                                                'color-secondaryColor':
+                                                  (addressForm.get('valorDescuento').invalid && addressForm.get('valorDescuento').touched) ||
+                                                  (addressForm.get('valorDescuento').invalid && estaEditando)
+                                              }">
                                                 Valor del descuento
                                             </label>
                                         </div>
@@ -230,6 +351,15 @@
                                                 matTooltipClass="info-tooltip">{{20 -
                                                 valorDescuento.value.length}}</span>
                                         </div>
+                                        <span class="icon-incompleto">
+                                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                                matTooltipClass="info-tooltip" *ngIf="
+                                                (addressForm.get('valorDescuento').invalid && addressForm.get('valorDescuento').touched) ||
+                                                  (addressForm.get('valorDescuento').invalid && estaEditando)
+                                              " />
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -261,7 +391,12 @@
                                 <div class="col-md-8">
                                     <div class="row">
                                         <div class="pr-1">
-                                            <label class="label-left" for="tipoAportante">Tipo de aportante:</label>
+                                            <label class="label-left" for="tipoAportante"
+                                            [ngClass]="{
+                                                'color-secondaryColor':
+                                                  (addressForm.get('tipoAportante').invalid && addressForm.get('tipoAportante').touched) ||
+                                                  (addressForm.get('tipoAportante').invalid && estaEditando)
+                                              }">Tipo de aportante:</label>
                                         </div>
                                         <div class="col">
                                             <mat-form-field class="select-width">
@@ -273,6 +408,15 @@
                                                 </mat-select>
                                             </mat-form-field>
                                         </div>
+                                        <span class="icon-incompleto">
+                                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                                matTooltipClass="info-tooltip" *ngIf="
+                                                (addressForm.get('tipoAportante').invalid && addressForm.get('tipoAportante').touched) ||
+                                                  (addressForm.get('tipoAportante').invalid && estaEditando)
+                                              " />
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -280,8 +424,12 @@
                                 <div class="col-md-8">
                                     <div class="row">
                                         <div class="pr-1">
-                                            <label class="label-left" for="nombreAportante">Nombre del
-                                                aportante:</label>
+                                            <label class="label-left" for="nombreAportante"
+                                            [ngClass]="{
+                                                'color-secondaryColor':
+                                                  (addressForm.get('nombreAportante').invalid && addressForm.get('nombreAportante').touched) ||
+                                                  (addressForm.get('nombreAportante').invalid && estaEditando)
+                                              }">Nombre del aportante:</label>
                                         </div>
                                         <div class="col">
                                             <mat-form-field class="select-width">
@@ -293,6 +441,15 @@
                                                 </mat-select>
                                             </mat-form-field>
                                         </div>
+                                        <span class="icon-incompleto">
+                                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                                matTooltipClass="info-tooltip" *ngIf="
+                                                (addressForm.get('nombreAportante').invalid && addressForm.get('nombreAportante').touched) ||
+                                                (addressForm.get('nombreAportante').invalid && estaEditando)
+                                              " />
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -300,8 +457,12 @@
                                 <div class="col-md-8">
                                     <div class="row">
                                         <div class="pr-1">
-                                            <label class="label-left" for="fuenteRecursos">Fuente de los
-                                                recursos:</label>
+                                            <label class="label-left" for="fuenteRecursos"
+                                            [ngClass]="{
+                                                'color-secondaryColor':
+                                                  (addressForm.get('fuenteRecursos').invalid && addressForm.get('fuenteRecursos').touched) ||
+                                                  (addressForm.get('fuenteRecursos').invalid && estaEditando)
+                                              }">Fuente de los recursos:</label>
                                         </div>
                                         <div class="col">
                                             <mat-form-field class="select-width">
@@ -313,6 +474,15 @@
                                                 </mat-select>
                                             </mat-form-field>
                                         </div>
+                                        <span class="icon-incompleto">
+                                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                                matTooltipClass="info-tooltip" *ngIf="
+                                                (addressForm.get('fuenteRecursos').invalid && addressForm.get('fuenteRecursos').touched) ||
+                                                  (addressForm.get('fuenteRecursos').invalid && estaEditando)
+                                              " />
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -320,7 +490,12 @@
                                 <div class="col-md-8">
                                     <div class="row">
                                         <div class="pr-1">
-                                            <label class="label-left" for="valorDescuento">
+                                            <label class="label-left" for="valorDescuento"
+                                            [ngClass]="{
+                                                'color-secondaryColor':
+                                                  (addressForm.get('valorDescuento').invalid && addressForm.get('valorDescuento').touched) ||
+                                                  (addressForm.get('valorDescuento').invalid && estaEditando)
+                                              }">
                                                 Valor del descuento
                                             </label>
                                         </div>
@@ -336,6 +511,15 @@
                                                 matTooltipClass="info-tooltip">{{20 -
                                                 valorDescuento.value.length}}</span>
                                         </div>
+                                        <span class="icon-incompleto">
+                                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                                matTooltipClass="info-tooltip" *ngIf="
+                                                (addressForm.get('valorDescuento').invalid && addressForm.get('valorDescuento').touched) ||
+                                                  (addressForm.get('valorDescuento').invalid && estaEditando)
+                                              " />
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -354,7 +538,7 @@
                 </mat-card-content>
             </mat-card>
             <div class="col-md-12 text-right">
-                <button mat-button color="warn" type="button" class="btn-eliminar"  (click)="eliminarCriterio()">
+                <button mat-button color="warn" type="button" class="btn-eliminar" (click)="eliminarCriterio()">
                     <img src="assets/img/icon/menos.svg" alt="Eliminar radicado">
                     Eliminar criterio para descuento
                 </button>
@@ -373,8 +557,12 @@
                         <div class="col-md-12" style="padding-left: 0;">
                             <div class="row">
                                 <div class="pr-1">
-                                    <label class="label-left" for="conceptosdePago">Conceptos de pago que aplican para
-                                        el descuento: </label>
+                                    <label class="label-left" for="conceptosdePago"
+                                    [ngClass]="{
+                                        'color-secondaryColor':
+                                          (addressForm.get('conceptosdePago').invalid && addressForm.get('conceptosdePago').touched) ||
+                                          (addressForm.get('conceptosdePago').invalid && estaEditando)
+                                      }">Conceptos de pago que aplican para el descuento: </label>
                                 </div>
                                 <div class="col">
                                     <mat-form-field class="select-width">
@@ -387,13 +575,22 @@
                                         </mat-select>
                                     </mat-form-field>
                                 </div>
+                                <span class="icon-incompleto">
+                                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip" *ngIf="
+                                        (addressForm.get('conceptosdePago').invalid && addressForm.get('conceptosdePago').touched) ||
+                                          (addressForm.get('conceptosdePago').invalid && estaEditando)
+                                      " />
+                                </span>
                             </div>
                         </div>
                     </div>
                 </mat-card-content>
             </mat-card>
             <div class="col-md-12 text-right">
-                <button mat-button color="warn" type="button" class="btn-eliminar"  (click)="eliminarCriterio()">
+                <button mat-button color="warn" type="button" class="btn-eliminar" (click)="eliminarCriterio()">
                     <img src="assets/img/icon/menos.svg" alt="Eliminar radicado">
                     Eliminar criterio para descuento
                 </button>

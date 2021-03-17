@@ -40,8 +40,11 @@
             </ng-container>
             <ng-container matColumnDef="estadoRegistro">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del registro </th>
-                <td mat-cell *matCellDef="let element" align="center"> 
-                    <span class="info-text info-text__table" [ngClass]="element.registroCompleto === false ? 'sin-diligenciar':'completo'"></span>
+                <td mat-cell *matCellDef="let element" align="center">
+                    <span class="info-text info-text__table"
+                    [ngClass]="element.registroCompleto === false ? 'sin-diligenciar':'completo'"
+                        style="margin-right: 0em;"></span>
+                    <br>
                     {{ element.registroCompleto === false ? 'Incompleto' : 'Completo' }}
                 </td>
             </ng-container>

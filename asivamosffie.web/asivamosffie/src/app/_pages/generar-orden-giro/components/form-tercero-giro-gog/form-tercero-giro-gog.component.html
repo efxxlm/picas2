@@ -1,6 +1,8 @@
 <div align="center">
     <p class="info-sub-title" style="font-size: 14px;">
-        <span><b>Nombre del contratista: {{ solicitudPago.contrato.contratacion.contratista.nombre }} </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Número de identificación: {{ solicitudPago.contrato.contratacion.contratista.numeroIdentificacion }} </b></span>
+        <span><b>Nombre del contratista: {{ solicitudPago.contrato.contratacion.contratista.nombre }}
+            </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Número de identificación: {{
+                solicitudPago.contrato.contratacion.contratista.numeroIdentificacion }} </b></span>
     </p>
 </div>
 <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
@@ -10,7 +12,11 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="medioPagoGiroContrato">¿Cuál es el medio de pago para los giros del contrato?</label>
+                            <label class="label-left" for="medioPagoGiroContrato" [ngClass]="{
+                                'color-secondaryColor':
+                                  (addressForm.get('medioPagoGiroContrato').invalid && addressForm.get('medioPagoGiroContrato').touched) ||
+                                  (addressForm.get('medioPagoGiroContrato').invalid && estaEditando)
+                              }">¿Cuál es el medio de pago para los giros del contrato?</label>
                         </div>
                         <div class="col">
                             <mat-form-field class="select-width">
@@ -21,15 +27,29 @@
                                 </mat-select>
                             </mat-form-field>
                         </div>
+                        <span class="icon-incompleto">
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip" *ngIf="
+                                (addressForm.get('medioPagoGiroContrato').invalid && addressForm.get('medioPagoGiroContrato').touched) ||
+                                (addressForm.get('medioPagoGiroContrato').invalid && estaEditando)
+                              " />
+                        </span>
                     </div>
                 </div>
             </div>
-            <div *ngIf="addressForm.get( 'medioPagoGiroContrato' ).value !== null && listaMediosPagoCodigo.transferenciaElectronica === addressForm.get( 'medioPagoGiroContrato' ).value" formGroupName="transferenciaElectronica">
-                <div class="row">
+            <div  *ngIf="addressForm.get( 'medioPagoGiroContrato' ).value !== null && listaMediosPagoCodigo.transferenciaElectronica === addressForm.get( 'medioPagoGiroContrato' ).value"
+                formGroupName="transferenciaElectronica">
+                <div class="row animatedDown">
                     <div class="col-md-12">
                         <div class="row">
                             <div class="pr-1">
-                                <label for="titularCuenta" class="label-left">Titular de la cuenta</label>
+                                <label for="titularCuenta" class="label-left" [ngClass]="{
+                                    'color-secondaryColor':
+                                      (addressForm.get( 'transferenciaElectronica').get( 'titularCuenta' ).invalid && addressForm.get( 'transferenciaElectronica').get( 'titularCuenta' ).touched) ||
+                                      (addressForm.get( 'transferenciaElectronica').get( 'titularCuenta' ).invalid && estaEditando)
+                                  }">Titular de la cuenta</label>
                             </div>
                             <div class="col d-flex">
                                 <mat-form-field class="full-width">
@@ -37,16 +57,30 @@
                                         formControlName="titularCuenta" required>
                                 </mat-form-field>
                                 <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico"
-                                    matTooltipClass="info-tooltip">{{100 - addressForm.get( 'transferenciaElectronica' ).get( 'titularCuenta' ).value.length }}</span>
+                                    matTooltipClass="info-tooltip">{{100 - addressForm.get( 'transferenciaElectronica'
+                                    ).get( 'titularCuenta' ).value.length }}</span>
                             </div>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                                    (addressForm.get( 'transferenciaElectronica').get( 'titularCuenta' ).invalid && addressForm.get( 'transferenciaElectronica').get( 'titularCuenta' ).touched) ||
+                                    (addressForm.get( 'transferenciaElectronica').get( 'titularCuenta' ).invalid && estaEditando)
+                                  " />
+                            </span>
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row animatedDown">
                     <div class="col-md-12">
                         <div class="row">
                             <div class="pr-1">
-                                <label for="numIdentificacionTitular" class="label-left">Número de identificación del titular</label>
+                                <label for="titularNumeroIdentificacion" class="label-left" [ngClass]="{
+                                    'color-secondaryColor':
+                                      (addressForm.get( 'transferenciaElectronica').get( 'titularNumeroIdentificacion' ).invalid && addressForm.get( 'transferenciaElectronica').get( 'titularNumeroIdentificacion' ).touched) ||
+                                      (addressForm.get( 'transferenciaElectronica').get( 'titularNumeroIdentificacion' ).invalid && estaEditando)
+                                  }">Número de identificación del titular</label>
                             </div>
                             <div class="col d-flex">
                                 <mat-form-field class="full-width">
@@ -54,16 +88,30 @@
                                         formControlName="titularNumeroIdentificacion" required>
                                 </mat-form-field>
                                 <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico"
-                                    matTooltipClass="info-tooltip">{{10 - addressForm.get( 'transferenciaElectronica' ).get( 'titularNumeroIdentificacion' ).value.length }}</span>
+                                    matTooltipClass="info-tooltip">{{10 - addressForm.get( 'transferenciaElectronica'
+                                    ).get( 'titularNumeroIdentificacion' ).value.length }}</span>
                             </div>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                                    (addressForm.get( 'transferenciaElectronica').get( 'titularNumeroIdentificacion' ).invalid && addressForm.get( 'transferenciaElectronica').get( 'titularNumeroIdentificacion' ).touched) ||
+                                    (addressForm.get( 'transferenciaElectronica').get( 'titularNumeroIdentificacion' ).invalid && estaEditando)
+                                  " />
+                            </span>
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row animatedDown">
                     <div class="col-md-12">
                         <div class="row">
                             <div class="pr-1">
-                                <label for="numeroCuenta" class="label-left">Número de cuenta</label>
+                                <label for="numeroCuenta" class="label-left" [ngClass]="{
+                                    'color-secondaryColor':
+                                      (addressForm.get( 'transferenciaElectronica').get( 'numeroCuenta' ).invalid && addressForm.get( 'transferenciaElectronica').get( 'numeroCuenta' ).touched) ||
+                                      (addressForm.get( 'transferenciaElectronica').get( 'numeroCuenta' ).invalid && estaEditando)
+                                  }">Número de cuenta</label>
                             </div>
                             <div class="col d-flex">
                                 <mat-form-field class="full-width">
@@ -71,16 +119,30 @@
                                         formControlName="numeroCuenta" required>
                                 </mat-form-field>
                                 <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico"
-                                    matTooltipClass="info-tooltip">{{50 - addressForm.get( 'transferenciaElectronica' ).get( 'numeroCuenta' ).value.length }}</span>
+                                    matTooltipClass="info-tooltip">{{50 - addressForm.get( 'transferenciaElectronica'
+                                    ).get( 'numeroCuenta' ).value.length }}</span>
                             </div>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                                    (addressForm.get( 'transferenciaElectronica').get( 'numeroCuenta' ).invalid && addressForm.get( 'transferenciaElectronica').get( 'numeroCuenta' ).touched) ||
+                                      (addressForm.get( 'transferenciaElectronica').get( 'numeroCuenta' ).invalid && estaEditando)
+                                  " />
+                            </span>
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row animatedDown">
                     <div class="col-md-12">
                         <div class="row">
                             <div class="pr-1">
-                                <label class="label-left" for="banco">Banco</label>
+                                <label class="label-left" for="bancoCodigo" [ngClass]="{
+                                    'color-secondaryColor':
+                                      (addressForm.get( 'transferenciaElectronica').get( 'bancoCodigo' ).invalid && addressForm.get( 'transferenciaElectronica').get( 'bancoCodigo' ).touched) ||
+                                      (addressForm.get( 'transferenciaElectronica').get( 'bancoCodigo' ).invalid && estaEditando)
+                                  }">Banco</label>
                             </div>
                             <div class="col">
                                 <mat-form-field class="select-width">
@@ -91,49 +153,90 @@
                                     </mat-select>
                                 </mat-form-field>
                             </div>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                                    (addressForm.get( 'transferenciaElectronica').get( 'bancoCodigo' ).invalid && addressForm.get( 'transferenciaElectronica').get( 'bancoCodigo' ).touched) ||
+                                      (addressForm.get( 'transferenciaElectronica').get( 'bancoCodigo' ).invalid && estaEditando)
+                                  " />
+                            </span>
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-12">
-                      <div class="row">
-                        <div class="pr-1">
-                          <label class="label-left" for="tipoCuenta">Tipo de cuenta</label>
-                        </div>
-                        <div class="col">
-                          <mat-radio-group class="radioInput" formControlName="esCuentaAhorros" required>
-                            <mat-radio-button [value]="true">Ahorros</mat-radio-button>
-                            <mat-radio-button [value]="false">Corriente</mat-radio-button>
-                          </mat-radio-group>
-                          <span class="required-form-group" style="margin-left: 1px;">*</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-            </div>
-            <div *ngIf="addressForm.get( 'medioPagoGiroContrato' ).value !== null && listaMediosPagoCodigo.chequeGerencia === addressForm.get( 'medioPagoGiroContrato' ).value" formGroupName="chequeGerencia">
-                <div class="row">
+                <div class="row animatedDown">
                     <div class="col-md-12">
                         <div class="row">
                             <div class="pr-1">
-                                <label class="label-left">Nombre del beneficiario</label>
+                                <label class="label-left" for="esCuentaAhorros" [ngClass]="{
+                                    'color-secondaryColor':
+                                      (addressForm.get( 'transferenciaElectronica').get( 'esCuentaAhorros' ).invalid && addressForm.get( 'transferenciaElectronica').get( 'esCuentaAhorros' ).touched) ||
+                                      (addressForm.get( 'transferenciaElectronica').get( 'esCuentaAhorros' ).invalid && estaEditando)
+                                  }">Tipo de cuenta</label>
+                            </div>
+                            <div class="col">
+                                <mat-radio-group class="radioInput" formControlName="esCuentaAhorros" required>
+                                    <mat-radio-button [value]="true">Ahorros</mat-radio-button>
+                                    <mat-radio-button [value]="false">Corriente</mat-radio-button>
+                                </mat-radio-group>
+                                <span class="required-form-group" style="margin-left: 1px;">*</span>
+                            </div>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                                    (addressForm.get( 'transferenciaElectronica').get( 'esCuentaAhorros' ).invalid && addressForm.get( 'transferenciaElectronica').get( 'esCuentaAhorros' ).touched) ||
+                                    (addressForm.get( 'transferenciaElectronica').get( 'esCuentaAhorros' ).invalid && estaEditando)
+                                  " />
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="addressForm.get( 'medioPagoGiroContrato' ).value !== null && listaMediosPagoCodigo.chequeGerencia === addressForm.get( 'medioPagoGiroContrato' ).value"
+                formGroupName="chequeGerencia">
+                <div class="row animatedDown">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left" for="nombreBeneficiario" [ngClass]="{
+                                    'color-secondaryColor':
+                                      (addressForm.get( 'chequeGerencia').get( 'nombreBeneficiario' ).invalid && addressForm.get( 'chequeGerencia').get( 'nombreBeneficiario' ).touched) ||
+                                      (addressForm.get( 'chequeGerencia').get( 'nombreBeneficiario' ).invalid && estaEditando)
+                                  }">Nombre del beneficiario</label>
                             </div>
                             <div class="col d-flex">
                                 <mat-form-field class="full-width">
-                                    <input matInput type="text" maxlength="100"
-                                        formControlName="nombreBeneficiario" required>
+                                    <input matInput type="text" maxlength="100" formControlName="nombreBeneficiario"
+                                        required>
                                 </mat-form-field>
                                 <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico"
-                                    matTooltipClass="info-tooltip">{{100 - addressForm.get( 'chequeGerencia' ).get( 'nombreBeneficiario' ).value.length }}</span>
+                                    matTooltipClass="info-tooltip">{{100 - addressForm.get( 'chequeGerencia' ).get(
+                                    'nombreBeneficiario' ).value.length }}</span>
                             </div>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                                    (addressForm.get( 'chequeGerencia').get( 'nombreBeneficiario' ).invalid && addressForm.get( 'chequeGerencia').get( 'nombreBeneficiario' ).touched) ||
+                                      (addressForm.get( 'chequeGerencia').get( 'nombreBeneficiario' ).invalid && estaEditando)
+                                  " />
+                            </span>
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row animatedDown">
                     <div class="col-md-12">
                         <div class="row">
                             <div class="pr-1">
-                                <label class="label-left">Número de identificación del beneficiario</label>
+                                <label class="label-left" for="numeroIdentificacionBeneficiario" [ngClass]="{
+                                    'color-secondaryColor':
+                                      (addressForm.get( 'chequeGerencia').get( 'numeroIdentificacionBeneficiario' ).invalid && addressForm.get( 'chequeGerencia').get( 'numeroIdentificacionBeneficiario' ).touched) ||
+                                      (addressForm.get( 'chequeGerencia').get( 'numeroIdentificacionBeneficiario' ).invalid && estaEditando)
+                                  }">Número de identificación del beneficiario</label>
                             </div>
                             <div class="col d-flex">
                                 <mat-form-field class="full-width">
@@ -141,8 +244,18 @@
                                         formControlName="numeroIdentificacionBeneficiario" required>
                                 </mat-form-field>
                                 <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico"
-                                    matTooltipClass="info-tooltip">{{50 - addressForm.get( 'chequeGerencia' ).get( 'numeroIdentificacionBeneficiario' ).value.length }}</span>
+                                    matTooltipClass="info-tooltip">{{50 - addressForm.get( 'chequeGerencia' ).get(
+                                    'numeroIdentificacionBeneficiario' ).value.length }}</span>
                             </div>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                                    (addressForm.get( 'chequeGerencia').get( 'numeroIdentificacionBeneficiario' ).invalid && addressForm.get( 'chequeGerencia').get( 'numeroIdentificacionBeneficiario' ).touched) ||
+                                      (addressForm.get( 'chequeGerencia').get( 'numeroIdentificacionBeneficiario' ).invalid && estaEditando)
+                                  " />
+                            </span>
                         </div>
                     </div>
                 </div>

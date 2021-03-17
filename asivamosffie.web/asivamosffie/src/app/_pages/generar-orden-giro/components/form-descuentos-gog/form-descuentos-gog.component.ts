@@ -53,6 +53,7 @@ export class FormDescuentosGogComponent implements OnInit {
   obj2: boolean;
   objD1: boolean;
   objD2: boolean;
+  estaEditando = false;
   constructor(public dialog: MatDialog, public common: CommonService, private fb: FormBuilder) {
     this.common.criteriosDePago().subscribe((data0: any) => {
       this.listaCriterios = data0;
@@ -109,6 +110,8 @@ export class FormDescuentosGogComponent implements OnInit {
     });
   }
   onSubmit() {
-
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
+    this.aportantes.markAllAsTouched();
   }
 }

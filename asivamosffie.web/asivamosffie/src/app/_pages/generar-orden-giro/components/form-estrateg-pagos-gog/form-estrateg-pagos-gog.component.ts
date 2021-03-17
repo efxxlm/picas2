@@ -18,6 +18,7 @@ export class FormEstrategPagosGogComponent implements OnInit {
     ordenGiroDetalleId = 0;
     estrategiaPagoArray: Dominio[] = [];
     addressForm: FormGroup;
+    estaEditando = true;
 
     constructor(
         private fb: FormBuilder,
@@ -56,7 +57,8 @@ export class FormEstrategPagosGogComponent implements OnInit {
     }
 
     onSubmit() {
-
+        this.estaEditando = true;
+        this.addressForm.markAllAsTouched();
         const pOrdenGiro = {
             solicitudPagoId: this.solicitudPago.solicitudPagoId,
             ordenGiroId: this.ordenGiroId,

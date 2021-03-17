@@ -34,6 +34,8 @@ export class FormCostoVariableGogComponent implements OnInit {
     return alphanumeric.test(inputChar) ? true : false;
   }
   onSubmit() {
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     console.log(this.addressForm.value);
 
     const pOrdenGiro = {

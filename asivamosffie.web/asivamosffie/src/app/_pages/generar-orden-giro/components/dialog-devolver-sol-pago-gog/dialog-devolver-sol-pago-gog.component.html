@@ -15,7 +15,12 @@
         <div class="col-md-8">
             <div class="row">
                 <div class="pr-1">
-                    <label class="label-left textoGris" for="usuarioADevolver">Usuario a devolver</label>
+                    <label class="label-left textoGris" for="usuarioADevolver"
+                    [ngClass]="{
+                        'color-secondaryColor':
+                          (addressForm.get('usuarioADevolver').invalid && addressForm.get('usuarioADevolver').touched) ||
+                          (addressForm.get('usuarioADevolver').invalid && estaEditando)
+                      }">Usuario a devolver</label>
                 </div>
                 <div class="col">
                     <mat-form-field class="select-width">
@@ -26,14 +31,38 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
+                <span class="icon-incompleto">
+                    <img
+                      class="icon-incompleto--img"
+                      src="assets/img/icon/incompleto.svg"
+                      alt="este campo es requerido"
+                      [matTooltipPosition]="'above'"
+                      matTooltip="Debe ingresar la información en el campo para continuar"
+                      matTooltipClass="info-tooltip"
+                      *ngIf="
+                        (addressForm.get('usuarioADevolver').invalid && addressForm.get('usuarioADevolver').touched) ||
+                        (addressForm.get('usuarioADevolver').invalid && estaEditando)
+                      "
+                    />
+                  </span>
             </div>
         </div>
     </div>
     <div class="d-flex align-items-center mt-2em">
-        <div class="text-area-quill izqTitle">
-            <label for="observaciones" class="text-area-quill--label" style="color: #174193;">Observaciones</label>
-            <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required 
-                (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observaciones></quill-editor>
+        <div class="text-area-quill izqTitle"
+        [ngClass]="{
+                'color-secondaryColor':
+                (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                (addressForm.get('observaciones').invalid && estaEditando)
+              }">
+            <label for="observaciones" class="text-area-quill--label" [ngClass]="{
+                                'colorMainColor':
+                                  !((addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                                  (addressForm.get('observaciones').invalid && estaEditando))
+                              }">Observaciones</label>
+            <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
+                (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observaciones>
+            </quill-editor>
         </div>
         <span class="contador miles" *ngIf="addressForm.get('observaciones').value">
             {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
@@ -41,6 +70,20 @@
         <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null">
             1000
         </span>
+        <span class="icon-incompleto">
+            <img
+              class="icon-incompleto--img"
+              src="assets/img/icon/incompleto.svg"
+              alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
+              *ngIf="
+                (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                (addressForm.get('observaciones').invalid && estaEditando)
+              "
+            />
+          </span>
     </div>
     <div class="text-center mb-2em">
         <button mat-button color="warn" class="btn-guardar" type="submit">
@@ -48,5 +91,3 @@
         </button>
     </div>
 </form>
-
-
