@@ -5,10 +5,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace asivamosffie.model.Models
 {
-    public partial class SolicitudPagoCargarFormaPago
-    {
-        [NotMapped]
-        public bool TieneFase1 { get; set; } 
-    }
+    //public partial class SolicitudPagoCargarFormaPago
+    //{
+    //    [NotMapped]
+    //    public bool TieneFase1 { get; set; } 
+    //}
 
 }

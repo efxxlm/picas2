@@ -105,6 +105,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<NovedadContractual> NovedadContractual { get; set; }
         public virtual DbSet<NovedadContractualClausula> NovedadContractualClausula { get; set; }
         public virtual DbSet<NovedadContractualDescripcion> NovedadContractualDescripcion { get; set; }
+        public virtual DbSet<NovedadContractualDescripcionMotivo> NovedadContractualDescripcionMotivo { get; set; }
         public virtual DbSet<NovedadContractualObservaciones> NovedadContractualObservaciones { get; set; }
         public virtual DbSet<OrdenGiro> OrdenGiro { get; set; }
         public virtual DbSet<OrdenGiroDetalle> OrdenGiroDetalle { get; set; }
@@ -3695,6 +3696,28 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.NovedadContractualId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_NovedadContractualDescripcion_NovedadContractual");
+            });
+
+            modelBuilder.Entity<NovedadContractualDescripcionMotivo>(entity =>
+            {
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.MotivoNovedadCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioCreacion).HasMaxLength(400);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(400)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.NovedadContractualDescripcion)
+                    .WithMany(p => p.NovedadContractualDescripcionMotivo)
+                    .HasForeignKey(d => d.NovedadContractualDescripcionId)
+                    .HasConstraintName("FK_NovedadContractualDescripcionMotivo_NovedadContractualDescripcion");
             });
 
             modelBuilder.Entity<NovedadContractualObservaciones>(entity =>

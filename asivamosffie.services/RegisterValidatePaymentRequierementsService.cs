@@ -1281,7 +1281,7 @@ namespace asivamosffie.services
 
         private bool ValidateCompleteRecordSolicitudPagoCargarFormaPago(SolicitudPagoCargarFormaPago pSolicitudPagoCargarFormaPago)
         {
-            if (pSolicitudPagoCargarFormaPago.TieneFase1)
+            if (pSolicitudPagoCargarFormaPago.TieneFase1 == true)
                 if (string.IsNullOrEmpty(pSolicitudPagoCargarFormaPago.FasePreConstruccionFormaPagoCodigo))
                     return false;
 

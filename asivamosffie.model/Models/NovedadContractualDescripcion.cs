@@ -8,6 +8,7 @@ namespace asivamosffie.model.Models
         public NovedadContractualDescripcion()
         {
             NovedadContractualClausula = new HashSet<NovedadContractualClausula>();
+            NovedadContractualDescripcionMotivo = new HashSet<NovedadContractualDescripcionMotivo>();
         }
 
         public int NovedadContractualDescripcionId { get; set; }
@@ -35,5 +36,6 @@ namespace asivamosffie.model.Models
 
         public virtual NovedadContractual NovedadContractual { get; set; }
         public virtual ICollection<NovedadContractualClausula> NovedadContractualClausula { get; set; }
+        public virtual ICollection<NovedadContractualDescripcionMotivo> NovedadContractualDescripcionMotivo { get; set; }
     }
 }
