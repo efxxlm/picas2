@@ -4,6 +4,6 @@
     <img src="assets/img/logo/minEdu.png" alt="Min educación" class="header--logo">
     <aside class="header--aside" *ngIf="actualUser">
         <p class="header--aside--usuario">{{ actualUser.primerNombre }} {{ actualUser.segundoNombre !== undefined ? actualUser.segundoNombre : '' }} {{ actualUser.primerApellido }} {{ actualUser.segundoApellido }} </p>
-        <p class="header--aside--rol">{{ actualUser?.rol[0]?.perfil?.nombre }}</p>
+        <p class="header--aside--rol">{{ actualUser.rol !== undefined ? actualUser.rol[0].perfil.nombre : '' }}</p>
     </aside>
 </header>
