@@ -30,6 +30,62 @@ namespace asivamosffie.services
         }
         #endregion
 
+
+        #region Tablas Relacionadas Para PAgos
+        //1# Traer criterio de pago por Forma de pago
+        public async Task<dynamic> GetCriterioByFormaPagoCodigo(string pFormaPagoCodigo)
+        {
+            List<dynamic> ListDynamics = new List<dynamic>();
+
+            List<string> strCriterios = _context.FormaPagoCriterioPago.Where(r => r.FormaPagoCodigo == pFormaPagoCodigo).Select(r => r.CriterioPagoCodigo).ToList();
+            List<Dominio> ListCriterio = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Criterios_Pago);
+
+            strCriterios.ForEach(l =>
+            {
+                ListDynamics.Add(new
+                {
+                    Codigo = l,
+                    Nombre = ListCriterio.Where(lc => lc.Codigo == l).FirstOrDefault().Nombre
+                });
+            });
+            return ListDynamics;
+        }
+        //2# Traer Tipo de pago por Criterio de pago
+        public async Task<dynamic> GetTipoPagoByCriterioCodigo(string pCriterioCodigo)
+        {
+            List<dynamic> ListDynamics = new List<dynamic>();
+            //List<string> strCriterios = _context.CriterioCodigoTipoPagoCodigo.Where(r => r.CriterioCodigo == pCriterioCodigo).Select(r => r.TipoPagoCodigo).ToList();
+            List<Dominio> ListCriterio = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Tipo_Pago_Obra_Interventoria);
+
+            ListCriterio.ForEach(l =>
+            {
+                ListDynamics.Add(new
+                {
+                    Codigo = l.Codigo,
+                    Nombre = ListCriterio.Where(lc => lc.Codigo == l.Codigo).FirstOrDefault().Nombre
+                });
+            });
+            return ListDynamics;
+        }
+        //3# Traer Conecpto de pago por tipo de pago
+        public async Task<dynamic> GetConceptoPagoCriterioCodigoByTipoPagoCodigo(string TipoPagoCodigo)
+        {
+            List<dynamic> ListDynamics = new List<dynamic>();
+            List<string> strCriterios = _context.TipoPagoConceptoPagoCriterio.Where(r => r.TipoPagoCodigo == TipoPagoCodigo).Select(r => r.ConceptoPagoCriterioCodigo).ToList();
+            List<Dominio> ListCriterio = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Concepto_Pago_Criterio_Obra_Interventoria);
+
+            strCriterios.ForEach(l =>
+            {
+                ListDynamics.Add(new
+                {
+                    Codigo = l,
+                    Nombre = ListCriterio.Where(lc => lc.Codigo == l).FirstOrDefault().Nombre
+                });
+            });
+            return ListDynamics;
+        }
+        #endregion
+
         #region Get
         public async Task<SolicitudPago> GetSolicitudPago(int pSolicitudPagoId)
         {
@@ -283,6 +339,14 @@ namespace asivamosffie.services
             }
         }
 
+
+        #endregion
+
+        #region Validate 
+
+        #endregion
+
+        #region Create Edit Delete
         public async Task<dynamic> GetProyectosByIdContrato(int pContratoId)
         {
             List<dynamic> dynamics = new List<dynamic>();
@@ -318,65 +382,6 @@ namespace asivamosffie.services
 
         }
 
-        public async Task<dynamic> GetCriterioByFormaPagoCodigo(string pFormaPagoCodigo)
-        {
-            List<dynamic> ListDynamics = new List<dynamic>();
-
-            List<string> strCriterios = _context.FormaPagoCriterioPago.Where(r => r.FormaPagoCodigo == pFormaPagoCodigo).Select(r => r.CriterioPagoCodigo).ToList();
-            List<Dominio> ListCriterio = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Criterios_Pago);
-
-            strCriterios.ForEach(l =>
-            {
-                ListDynamics.Add(new
-                {
-                    Codigo = l,
-                    Nombre = ListCriterio.Where(lc => lc.Codigo == l).FirstOrDefault().Nombre
-                });
-            });
-            return ListDynamics;
-        }
-
-        public async Task<dynamic> GetTipoPagoByCriterioCodigo(string pCriterioCodigo)
-        {
-            List<dynamic> ListDynamics = new List<dynamic>();
-            //List<string> strCriterios = _context.CriterioCodigoTipoPagoCodigo.Where(r => r.CriterioCodigo == pCriterioCodigo).Select(r => r.TipoPagoCodigo).ToList();
-            List<Dominio> ListCriterio = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Tipo_Pago_Obra_Interventoria);
-
-            ListCriterio.ForEach(l =>
-            {
-                ListDynamics.Add(new
-                {
-                    Codigo = l,
-                    Nombre = ListCriterio.Where(lc => lc.Codigo == l.Codigo).FirstOrDefault().Nombre
-                });
-            });
-            return ListDynamics;
-        }
-
-        public async Task<dynamic> GetConceptoPagoCriterioCodigoByTipoPagoCodigo(string TipoPagoCodigo)
-        {
-            List<dynamic> ListDynamics = new List<dynamic>();
-            List<string> strCriterios = _context.TipoPagoConceptoPagoCriterio.Where(r => r.TipoPagoCodigo == TipoPagoCodigo).Select(r => r.ConceptoPagoCriterioCodigo).ToList();
-            List<Dominio> ListCriterio = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Concepto_Pago_Criterio_Obra_Interventoria);
-
-            strCriterios.ForEach(l =>
-            {
-                ListDynamics.Add(new
-                {
-                    Codigo = l,
-                    Nombre = ListCriterio.Where(lc => lc.Codigo == l).FirstOrDefault().Nombre
-                });
-            });
-            return ListDynamics;
-        }
-
-        #endregion
-
-        #region Validate 
-
-        #endregion
-
-        #region Create Edit Delete
         public async Task<Respuesta> DeleteSolicitudPago(int pSolicitudPagoId, string pUsuarioModificacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Solicitud_Pago, (int)EnumeratorTipoDominio.Acciones);
