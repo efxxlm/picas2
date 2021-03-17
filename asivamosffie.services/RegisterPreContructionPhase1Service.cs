@@ -29,9 +29,15 @@ namespace asivamosffie.services
         #endregion
 
         #region Get
-        public async Task<List<VRegistrarFase1>> GetListContratacion2()
+        public async Task<List<VRegistrarFase1>> GetListContratacion2(int pAuthor)
         {
-            return await _context.VRegistrarFase1.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString() && r.TieneFasePreconstruccion.Value > 0).OrderByDescending(r => r.FechaAprobacion).ToListAsync();
+            return await _context.VRegistrarFase1
+                .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString() 
+                    && r.TieneFasePreconstruccion.Value > 0
+                    && r.InterventorId == pAuthor
+                    )
+                .OrderByDescending(r => r.FechaAprobacion)
+                .ToListAsync();
         }
 
         public async Task<dynamic> GetListContratacion()

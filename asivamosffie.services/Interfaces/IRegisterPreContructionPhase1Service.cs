@@ -25,7 +25,7 @@ namespace asivamosffie.services.Interfaces
         //3.1.8
         Task GetContratosInterventoriaSinGestionar(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
 
-        Task<List<VRegistrarFase1>> GetListContratacion2();
+        Task<List<VRegistrarFase1>> GetListContratacion2(int pAuthor);
 
         Task<dynamic> GetListContratacion();
 
