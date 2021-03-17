@@ -214,33 +214,41 @@ namespace asivamosffie.services
 
         #region Create Edit List
 
-        public async Task<dynamic> GetContratoByTipo(bool EsObra)
+        public async Task<dynamic> GetContratoByTipo(string strTipoRolAsignadoContratoCodigo)
         {
             //Envia Interventor
-            if (EsObra)
+            return strTipoRolAsignadoContratoCodigo switch
             {
+                ConstantCodigoTipoAsignacionContrato.Interventor => await _context.Contrato
+                                                                 .Include(c => c.Contratacion)
+                                                                 .Where(r => r.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra && r.InterventorId == null)
+                                                                 .Select(c => new
+                                                                 {
+                                                                     c.ContratoId,
+                                                                     c.NumeroContrato
+                                                                 })
+                                                                 .ToListAsync(),
+                ConstantCodigoTipoAsignacionContrato.Apoyo => await _context.Contrato
+                                                            .Include(c => c.Contratacion)
+                                                            .Where(r => r.ApoyoId == null)
+                                                            .Select(c => new
+                                                            {
+                                                                c.ContratoId,
+                                                                c.NumeroContrato
+                                                            })
+                                                            .ToListAsync(),
+                ConstantCodigoTipoAsignacionContrato.Supervisor => await _context.Contrato
+                                                            .Include(c => c.Contratacion)
+                                                            .Where(r => r.SupervisorId == null)
+                                                            .Select(c => new
+                                                            {
+                                                                c.ContratoId,
+                                                                c.NumeroContrato
+                                                            })
+                                                            .ToListAsync(),
 
-                return await _context.Contrato
-                    .Include(c => c.Contratacion)
-                    .Where(r => r.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra)
-                    .Select(c => new
-                    {
-                        c.ContratoId,
-                        c.NumeroContrato
-                    })
-                    .ToListAsync();
-            }
-            else
-            {
-                return await _context.Contrato
-                                  .Include(c => c.Contratacion)
-                                  .Select(c => new
-                                  {
-                                      c.ContratoId,
-                                      c.NumeroContrato
-                                  })
-                                  .ToListAsync();
-            }
+                _ => new { },
+            };
         }
 
         public async Task<bool> ValidateExistEmail(Usuario pUsuario)
@@ -360,6 +368,7 @@ namespace asivamosffie.services
                                 DependenciaCodigo = pUsuario.DependenciaCodigo,
                                 GrupoCodigo = pUsuario.GrupoCodigo,
                                 ProcedenciaCodigo = pUsuario.ProcedenciaCodigo,
+                                TieneGrupo = pUsuario.TieneGrupo,
                                 TipoAsignacionCodigo = pUsuario.TipoAsignacionCodigo,
                                 TieneContratoAsignado = pUsuario.TieneContratoAsignado
                             });
@@ -490,7 +499,7 @@ namespace asivamosffie.services
                      pUsuario.Email
                  };
 
-            return _commonService.EnviarCorreo(ListString, Contenido , template.Asunto);
+            return _commonService.EnviarCorreo(ListString, Contenido, template.Asunto);
         }
 
         private string ReplaceVariablesUsuarios(string template, Usuario pUsuario, string pPassWord)
@@ -558,8 +567,7 @@ namespace asivamosffie.services
 
 
         }
-
-
+         
         #endregion
     }
 }
