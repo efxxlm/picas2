@@ -230,10 +230,11 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VSesionParticipante> VSesionParticipante { get; set; }
         public virtual DbSet<VSolicitudPago> VSolicitudPago { get; set; }
         public virtual DbSet<VUsuarioPerfil> VUsuarioPerfil { get; set; }
-        public virtual DbSet<VUsuariosRoles> VUsuariosRoles { get; set; }
+        public virtual DbSet<VUsuarioRol> VUsuarioRol { get; set; }
         public virtual DbSet<VValidarSeguimientoSemanal> VValidarSeguimientoSemanal { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -7184,12 +7185,10 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.Observaciones).HasMaxLength(1000);
 
                 entity.Property(e => e.PrimerApellido)
-                    .IsRequired()
                     .HasMaxLength(300)
                     .IsUnicode(false);
 
                 entity.Property(e => e.PrimerNombre)
-                    .IsRequired()
                     .HasMaxLength(300)
                     .IsUnicode(false);
 
@@ -7202,7 +7201,6 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.SegundoNombre)
-                    .IsRequired()
                     .HasMaxLength(300)
                     .IsUnicode(false);
 
@@ -7998,11 +7996,11 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioPerfilId).ValueGeneratedOnAdd();
             });
 
-            modelBuilder.Entity<VUsuariosRoles>(entity =>
+            modelBuilder.Entity<VUsuarioRol>(entity =>
             {
                 entity.HasNoKey();
 
-                entity.ToView("V_Usuarios_Roles");
+                entity.ToView("V_Usuario_Rol");
 
                 entity.Property(e => e.Email)
                     .IsRequired()
@@ -8016,12 +8014,10 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.PrimerApellido)
-                    .IsRequired()
-                    .HasMaxLength(15)
+                    .HasMaxLength(300)
                     .IsUnicode(false);
 
                 entity.Property(e => e.PrimerNombre)
-                    .IsRequired()
                     .HasMaxLength(300)
                     .IsUnicode(false);
 
@@ -8030,16 +8026,14 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.Rol)
-                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.SegundoApellido)
-                    .HasMaxLength(2)
+                    .HasMaxLength(300)
                     .IsUnicode(false);
 
                 entity.Property(e => e.SegundoNombre)
-                    .IsRequired()
                     .HasMaxLength(300)
                     .IsUnicode(false);
             });

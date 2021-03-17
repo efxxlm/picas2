@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace asivamosffie.model.Models
 {
-    public partial class VUsuariosRoles
+    public partial class VUsuarioRol
     {
         public DateTime? FechaCreacion { get; set; }
         public string ProcedenciaCodigo { get; set; }

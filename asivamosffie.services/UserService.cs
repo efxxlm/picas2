@@ -251,9 +251,9 @@ namespace asivamosffie.services
             return false;
         }
 
-        public async Task<List<VUsuariosRoles>> GetListUsuario()
+        public async Task<List<VUsuarioRol>> GetListUsuario()
         {
-            return await _context.VUsuariosRoles.OrderByDescending(ur => ur.UsuarioId).ToListAsync();
+            return await _context.VUsuarioRol.OrderByDescending(ur => ur.UsuarioId).ToListAsync();
         }
 
         public async Task<Usuario> GetUsuario(int pUsuarioId)

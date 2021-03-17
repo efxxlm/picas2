@@ -14,7 +14,7 @@ namespace asivamosffie.services.Interfaces
         Task<bool> ValidateExistEmail(Usuario pUsuario);
         Task<dynamic> GetListPerfil();
         Task<Usuario> GetUsuario(int pUsuarioId);
-        Task<List<VUsuariosRoles>> GetListUsuario();
+        Task<List<VUsuarioRol>> GetListUsuario();
         Task<Respuesta> CreateEditUsuario(Usuario pUsuario);
         Task<Respuesta> RecoverPasswordByEmailAsync(Usuario pUsuario ,string pDominio, string pDominioFront, string pMailServer ,int pMailPort , bool pEnableSSL, string pPassword, string pSentender );
         

@@ -137,7 +137,7 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetListUsuario")]
-        public Task<List<VUsuariosRoles>> GetListUsuario()
+        public Task<List<VUsuarioRol>> GetListUsuario()
         {
             var result = _user.GetListUsuario();
             return result;
