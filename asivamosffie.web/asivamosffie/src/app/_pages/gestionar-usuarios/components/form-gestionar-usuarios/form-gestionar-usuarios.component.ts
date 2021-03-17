@@ -134,7 +134,7 @@ export class FormGestionarUsuariosComponent implements OnInit {
 
                                                                                     if ( getUsuario.contratosAsignados !== undefined ) {
                                                                                         if ( getUsuario.contratosAsignados.length > 0 ) {
-                                                                                            getUsuario.contratosAsignados.forEach( contrato => contratosAsignados.push( contrato.contratoId ) );
+                                                                                            getUsuario.contratosAsignados.forEach( contrato => contratosAsignados.push( { contratoId: contrato.contratoId, numeroContrato: contrato.numeroContrato } ) );
                                                                                             
                                                                                         }
                                                                                     }
