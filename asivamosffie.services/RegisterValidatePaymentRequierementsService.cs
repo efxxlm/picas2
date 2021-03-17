@@ -30,8 +30,7 @@ namespace asivamosffie.services
         }
         #endregion
 
-
-        #region Tablas Relacionadas Para PAgos
+        #region Tablas Relacionadas Para Pagos
         //1# Traer criterio de pago por Forma de pago
         public async Task<dynamic> GetCriterioByFormaPagoCodigo(string pFormaPagoCodigo)
         {
@@ -53,7 +52,7 @@ namespace asivamosffie.services
         public async Task<dynamic> GetTipoPagoByCriterioCodigo(string pCriterioCodigo)
         {
             List<dynamic> ListDynamics = new List<dynamic>();
-             List<string> strCriterios = _context.CriterioCodigoTipoPagoCodigo.Where(r => r.CriterioCodigo == pCriterioCodigo).Select(r => r.TipoPagoCodigo).ToList();
+            List<string> strCriterios = _context.CriterioCodigoTipoPagoCodigo.Where(r => r.CriterioCodigo == pCriterioCodigo).Select(r => r.TipoPagoCodigo).ToList();
             List<Dominio> ListCriterio = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Tipo_Pago_Obra_Interventoria);
 
             strCriterios.ForEach(l =>
@@ -810,6 +809,7 @@ namespace asivamosffie.services
                 {
                     SolicitudPagoCargarFormaPago solicitudPagoCargarFormaPagoOld = _context.SolicitudPagoCargarFormaPago.Find(pSolicitudPagoCargarFormaPago.SolicitudPagoCargarFormaPagoId);
                     solicitudPagoCargarFormaPagoOld.FechaModificacion = DateTime.Now;
+                    solicitudPagoCargarFormaPagoOld.TieneFase1 = pSolicitudPagoCargarFormaPago.TieneFase1;
                     solicitudPagoCargarFormaPagoOld.RegistroCompleto = ValidateCompleteRecordSolicitudPagoCargarFormaPago(pSolicitudPagoCargarFormaPago);
                     solicitudPagoCargarFormaPagoOld.FaseConstruccionFormaPagoCodigo = pSolicitudPagoCargarFormaPago.FaseConstruccionFormaPagoCodigo;
                     solicitudPagoCargarFormaPagoOld.FasePreConstruccionFormaPagoCodigo = pSolicitudPagoCargarFormaPago.FasePreConstruccionFormaPagoCodigo;
