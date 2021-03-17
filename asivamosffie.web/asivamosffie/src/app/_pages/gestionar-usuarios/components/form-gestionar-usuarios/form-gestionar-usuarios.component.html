@@ -715,7 +715,7 @@
                     </div>
                 </div>
 
-                <div class="row" *ngIf="formUsuario.get( 'rol' ).value !== null">
+                <div class="row">
                     <div class="col-md-7">
                       <div class="row">
                         <div class="pr-1">
@@ -896,7 +896,7 @@
                                 </div>
                                 <div class="col d-flex">
                                     <mat-form-field appearance="fill" style="width: 96%;">
-                                        <mat-select class="padding-left" multiple formControlName="contratos" required>
+                                        <mat-select class="padding-left" multiple formControlName="contratos" required (ngModelChange)="getlistaAsignaciones( $event )">
                                             <mat-option *ngFor="let value of listaContratos" [value]="value.contratoId">
                                                 {{ value.numeroContrato }}
                                             </mat-option>

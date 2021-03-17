@@ -130,20 +130,21 @@ export class FormGestionarUsuariosComponent implements OnInit {
                                                                                 async getUsuario => {
                                                                                     this.perfil = getUsuario;
                                                                                     this.usuarioId = getUsuario.usuarioId;
+                                                                                    console.log( getUsuario );
                                                                                     const contratosAsignados = [];
 
                                                                                     if ( getUsuario.contratosAsignados !== undefined ) {
                                                                                         if ( getUsuario.contratosAsignados.length > 0 ) {
-                                                                                            getUsuario.contratosAsignados.forEach( contrato => contratosAsignados.push( { contratoId: contrato.contratoId, numeroContrato: contrato.numeroContrato } ) );
+                                                                                            getUsuario.contratosAsignados.forEach( contrato => contratosAsignados.push( contrato.contratoId ) );
                                                                                             
                                                                                         }
                                                                                     }
 
                                                                                     if ( getUsuario.tipoAsignacionCodigo !== undefined ) {
                                                                                         this.getlistaContratos( getUsuario.tipoAsignacionCodigo );
+                                                                                        this.listaAsignaciones = this.listaAsignaciones.filter( asignacion => asignacion.codigo === getUsuario.tipoAsignacionCodigo );
                                                                                     }
 
-                                                                                    console.log( getUsuario.contratosAsignados );
                                                                                     this.formUsuario.setValue(
                                                                                         {
                                                                                             procedencia: getUsuario.procedenciaCodigo !== undefined ? this.listaProcedencia.find( procedencia => procedencia.codigo === getUsuario.procedenciaCodigo ).codigo : null,
@@ -235,11 +236,23 @@ export class FormGestionarUsuariosComponent implements OnInit {
         }
     }
 
+    getlistaAsignaciones( listaContratos: any[] ) {
+        if ( listaContratos !== null ) {
+            if ( listaContratos.length === 0 ) {
+                this.commonSvc.listaTipoAsignaciones()
+                    .subscribe( listaTipoAsignaciones => {
+                        this.listaAsignaciones = listaTipoAsignaciones;
+                        this.formUsuario.controls[ 'tipoAsignacionCodigo' ].enable();
+                    } );
+            } else {
+                this.formUsuario.controls[ 'tipoAsignacionCodigo' ].disable();
+            }
+        }
+    }
+
     getlistaContratos( tipoAsignacion: string ) {
         this.gestionarUsuariosSvc.getContratoByTipo( tipoAsignacion, this.usuarioId )
-            .subscribe( getContratoByTipo => {
-                this.listaContratos = getContratoByTipo;
-            } );
+            .subscribe( getContratoByTipo => this.listaContratos = getContratoByTipo );
     }
 
     getMunicipiosByDepartamento( departamento: Localizacion ) {
