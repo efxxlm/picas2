@@ -130,9 +130,9 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetContratoByTipo")]
-        public Task<dynamic> GetContratoByTipo([FromQuery]string strTipoRolAsignadoContratoCodigo)
+        public Task<dynamic> GetContratoByTipo([FromQuery]string strTipoRolAsignadoContratoCodigo , int pUsuarioId)
         {
-            return _user.GetContratoByTipo(strTipoRolAsignadoContratoCodigo);
+            return _user.GetContratoByTipo(strTipoRolAsignadoContratoCodigo , pUsuarioId);
         }
 
         [HttpGet]

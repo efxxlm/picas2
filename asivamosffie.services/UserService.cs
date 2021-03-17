@@ -214,13 +214,12 @@ namespace asivamosffie.services
 
         #region Create Edit List
 
-        public async Task<dynamic> GetContratoByTipo(string strTipoRolAsignadoContratoCodigo)
+        public async Task<dynamic> GetContratoByTipo(string strTipoRolAsignadoContratoCodigo, int pUsuarioId)
         {
             //Envia Interventor
             return strTipoRolAsignadoContratoCodigo switch
             {
-                ConstantCodigoTipoAsignacionContrato.Interventor => await _context.Contrato
-                                                                 .Include(c => c.Contratacion)
+                ConstantCodigoTipoAsignacionContrato.Interventor => await _context.Contrato 
                                                                  .Where(r => r.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra && r.InterventorId == null)
                                                                  .Select(c => new
                                                                  {
@@ -228,8 +227,7 @@ namespace asivamosffie.services
                                                                      c.NumeroContrato
                                                                  })
                                                                  .ToListAsync(),
-                ConstantCodigoTipoAsignacionContrato.Apoyo => await _context.Contrato
-                                                            .Include(c => c.Contratacion)
+                ConstantCodigoTipoAsignacionContrato.Apoyo => await _context.Contrato 
                                                             .Where(r => r.ApoyoId == null)
                                                             .Select(c => new
                                                             {
@@ -237,16 +235,14 @@ namespace asivamosffie.services
                                                                 c.NumeroContrato
                                                             })
                                                             .ToListAsync(),
-                ConstantCodigoTipoAsignacionContrato.Supervisor => await _context.Contrato
-                                                            .Include(c => c.Contratacion)
+                ConstantCodigoTipoAsignacionContrato.Supervisor => await _context.Contrato 
                                                             .Where(r => r.SupervisorId == null)
                                                             .Select(c => new
                                                             {
                                                                 c.ContratoId,
                                                                 c.NumeroContrato
                                                             })
-                                                            .ToListAsync(),
-
+                                                            .ToListAsync(), 
                 _ => new { },
             };
         }
@@ -372,7 +368,8 @@ namespace asivamosffie.services
                                 TipoAsignacionCodigo = pUsuario.TipoAsignacionCodigo,
                                 TieneContratoAsignado = pUsuario.TieneContratoAsignado
                             });
-
+                    if (!string.IsNullOrEmpty(pUsuario.TipoAsignacionCodigo))
+                        ResetContratoUser(pUsuario.UsuarioId, pUsuario.TipoAsignacionCodigo);
                     CreateEditAsignacionContrato(pUsuario);
                     CrearEditarUsuarioPerfil(pUsuario, false);
                 }
@@ -567,7 +564,49 @@ namespace asivamosffie.services
 
 
         }
-         
+
+
+
+        public object ResetContratoUser(int pAuthor, string strTipoRolAsignadoContratoCodigo)
+        {
+            return strTipoRolAsignadoContratoCodigo switch
+            {
+                ConstantCodigoTipoAsignacionContrato.Interventor => _context.Set<Contrato>()
+                                                                 .Where(r => r.InterventorId == pAuthor)
+                                                                  .Update(r =>
+                                                                  new Contrato
+                                                                  {
+                                                                      InterventorId = null,
+                                                                      FechaModificacion = DateTime.Now,
+                                                                  }),
+
+                ConstantCodigoTipoAsignacionContrato.Apoyo => _context.Set<Contrato>()
+                                                                 .Where(r => r.ApoyoId == pAuthor)
+                                                                  .Update(r =>
+                                                                  new Contrato
+                                                                  {
+                                                                      InterventorId = null,
+                                                                      FechaModificacion = DateTime.Now,
+                                                                  }),
+
+
+                ConstantCodigoTipoAsignacionContrato.Supervisor => _context.Set<Contrato>()
+                                                                 .Where(r => r.SupervisorId == pAuthor)
+                                                                  .Update(r =>
+                                                                  new Contrato
+                                                                  {
+                                                                      InterventorId = null,
+                                                                      FechaModificacion = DateTime.Now,
+                                                                  }),
+                _ => new { },
+            };
+
+
+
+
+        }
+
+
         #endregion
     }
 }

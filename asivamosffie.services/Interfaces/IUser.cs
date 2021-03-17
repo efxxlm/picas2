@@ -10,7 +10,7 @@ namespace asivamosffie.services.Interfaces
     public interface IUser
     {
         Task<Respuesta> ActivateDeActivateUsuario(Usuario pUsuario);
-        Task<dynamic> GetContratoByTipo(string strTipoRolAsignadoContratoCodigo);
+        Task<dynamic> GetContratoByTipo(string strTipoRolAsignadoContratoCodigo , int pUsuarioId);
         Task<bool> ValidateExistEmail(Usuario pUsuario);
         Task<dynamic> GetListPerfil();
         Task<Usuario> GetUsuario(int pUsuarioId);
