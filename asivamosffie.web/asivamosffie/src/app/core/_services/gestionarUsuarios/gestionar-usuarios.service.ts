@@ -29,8 +29,8 @@ export class GestionarUsuariosService {
     return this.http.post<Respuesta>( `${ this.urlApi }/CreateEditUsuario`, pUsuario );
   }
 
-  getContratoByTipo( esObra: string ) {
-    return this.http.get<any[]>( `${ this.urlApi }/GetContratoByTipo?strTipoRolAsignadoContratoCodigo=${ esObra }` );
+  getContratoByTipo( esObra: string, pUsuarioId: number ) {
+    return this.http.get<any[]>( `${ this.urlApi }/GetContratoByTipo?strTipoRolAsignadoContratoCodigo=${ esObra }&pUsuarioId=${ pUsuarioId }` );
   }
 
   activateDeActivateUsuario( pUsuario: any ) {

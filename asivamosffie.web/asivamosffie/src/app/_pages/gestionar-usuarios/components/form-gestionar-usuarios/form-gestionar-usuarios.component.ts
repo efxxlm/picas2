@@ -129,6 +129,7 @@ export class FormGestionarUsuariosComponent implements OnInit {
                                                                             .subscribe(
                                                                                 async getUsuario => {
                                                                                     this.perfil = getUsuario;
+                                                                                    this.usuarioId = getUsuario.usuarioId;
                                                                                     const contratosAsignados = [];
 
                                                                                     if ( getUsuario.contratosAsignados !== undefined ) {
@@ -142,7 +143,7 @@ export class FormGestionarUsuariosComponent implements OnInit {
                                                                                         this.getlistaContratos( getUsuario.tipoAsignacionCodigo );
                                                                                     }
 
-                                                                                    this.usuarioId = getUsuario.usuarioId;
+                                                                                    console.log( getUsuario.contratosAsignados );
                                                                                     this.formUsuario.setValue(
                                                                                         {
                                                                                             procedencia: getUsuario.procedenciaCodigo !== undefined ? this.listaProcedencia.find( procedencia => procedencia.codigo === getUsuario.procedenciaCodigo ).codigo : null,
@@ -235,7 +236,7 @@ export class FormGestionarUsuariosComponent implements OnInit {
     }
 
     getlistaContratos( tipoAsignacion: string ) {
-        this.gestionarUsuariosSvc.getContratoByTipo( tipoAsignacion )
+        this.gestionarUsuariosSvc.getContratoByTipo( tipoAsignacion, this.usuarioId )
             .subscribe( getContratoByTipo => {
                 this.listaContratos = getContratoByTipo;
             } );
