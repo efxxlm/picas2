@@ -215,7 +215,7 @@ namespace asivamosffie.services
         private async Task<bool> SendEmailWhenDesactivateRol(Perfil pPerfil)
         {
             Template template =  _context.Template.Find((int)(enumeratorTemplate.MensajeDesactivarRol_6_3));
-            template.Contenido = ReplaceVariablesPerfil(template.Contenido, pPerfil.Nombre);
+            string strContenido = ReplaceVariablesPerfil(template.Contenido, pPerfil.Nombre);
 
             List<string> ListEmails = _context.UsuarioPerfil
                 .Include(u => u.Usuario)
@@ -223,7 +223,7 @@ namespace asivamosffie.services
                 .Select(r => r.Usuario.Email)
                                             .ToList();
 
-            return _commonService.EnviarCorreo(ListEmails, template);
+            return _commonService.EnviarCorreo(ListEmails, strContenido, template.Asunto);
         }
 
         private string ReplaceVariablesPerfil(string template, string pNombreRol)

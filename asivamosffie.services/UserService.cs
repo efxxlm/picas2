@@ -316,11 +316,11 @@ namespace asivamosffie.services
         public async Task<Respuesta> CreateEditUsuario(Usuario pUsuario)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Usuario, (int)EnumeratorTipoDominio.Acciones);
-      
+
             try
             {
                 if (pUsuario.UsuarioId == 0)
-                { 
+                {
                     string strPassWordGenerate = Helpers.Helpers.GeneratePassword(true, true, true, true, false, 25);
                     pUsuario.Activo = true;
                     pUsuario.Contrasena = Helpers.Helpers.encryptSha1(strPassWordGenerate);
@@ -329,9 +329,11 @@ namespace asivamosffie.services
                     pUsuario.IntentosFallidos = 0;
                     _context.Usuario.Add(pUsuario);
                     _context.SaveChanges();
-                    await SendEmailWhenCreateUsuario(pUsuario, strPassWordGenerate);
+
                     CreateEditAsignacionContrato(pUsuario);
-                    CrearEditarUsuarioPerfil(pUsuario, true); 
+                    CrearEditarUsuarioPerfil(pUsuario, true);
+
+                    await SendEmailWhenCreateUsuario(pUsuario, strPassWordGenerate);
                 }
                 else
                 {
@@ -372,7 +374,7 @@ namespace asivamosffie.services
                     IsValidation = false,
                     Code = GeneralCodes.OperacionExitosa,
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_usuarios, GeneralCodes.OperacionExitosa, idAccion, pUsuario.UsuarioCreacion, "CREAR EDITAR USUARIO")
-                }; 
+                };
                 return respuesta;
             }
             catch (Exception e)
@@ -468,27 +470,27 @@ namespace asivamosffie.services
         public async Task<bool> SendEmailWhenCreateUsuario(Usuario pUsuario, string pPassWord)
         {
             Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.CreateUserEmail_6_2));
-            template.Contenido = ReplaceVariablesUsuarios(template.Contenido, pUsuario, pPassWord);
+            string Contenido = ReplaceVariablesUsuarios(template.Contenido, pUsuario, pPassWord);
 
             List<string> ListString = new List<string>
                  {
                      pUsuario.Email
                  };
 
-            return _commonService.EnviarCorreo(ListString, template);
+            return _commonService.EnviarCorreo(ListString, Contenido, template.Asunto);
         }
 
         public async Task<bool> SendEmailWhenDesactivateUsuario(Usuario pUsuario, string pPassWord)
         {
             Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.DesactivarUsuario_6_2));
-            template.Contenido = ReplaceVariablesUsuarios(template.Contenido, pUsuario, pPassWord);
+            string Contenido = ReplaceVariablesUsuarios(template.Contenido, pUsuario, pPassWord);
 
             List<string> ListString = new List<string>
                  {
                      pUsuario.Email
                  };
 
-            return _commonService.EnviarCorreo(ListString, template);
+            return _commonService.EnviarCorreo(ListString, Contenido , template.Asunto);
         }
 
         private string ReplaceVariablesUsuarios(string template, Usuario pUsuario, string pPassWord)
@@ -499,7 +501,7 @@ namespace asivamosffie.services
 
             return template;
         }
-   
+
         public async Task<dynamic> GetListPerfil()
         {
             return await _context.Perfil

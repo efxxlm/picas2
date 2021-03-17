@@ -85,11 +85,11 @@ namespace asivamosffie.services
             return vPermisosMenus;
         }
 
-        public bool EnviarCorreo(List<EnumeratorPerfil> pListPerfilesCorreo, Template pTemplate)
+        public bool EnviarCorreo(List<EnumeratorPerfil> pListPerfilesCorreo, string pContenido, string pAsunto)
         {
             try
             {
-                pTemplate.Contenido = pTemplate.Contenido
+                pContenido = pContenido
                                                    .Replace("_LinkF_", _mailSettings.DominioFront)
                                                    .Replace("[URL]", _mailSettings.DominioFront);
 
@@ -111,16 +111,15 @@ namespace asivamosffie.services
                     mail.To.Add(Destinatario);
                 }
 
-                mail.Subject = pTemplate.Asunto;
+                mail.Subject = pAsunto;
                 mail.IsBodyHtml = true;
 
-                mail.Body = pTemplate.Contenido;
+                mail.Body = pContenido;
                 SmtpServer.Port = _mailSettings.MailPort;
                 SmtpServer.Credentials = new NetworkCredential(_mailSettings.Sender, _mailSettings.Password);
                 SmtpServer.EnableSsl = false;
                 SmtpServer.Send(mail);
-
-                pTemplate = _context.Template.Find(pTemplate.TemplateId);
+                 
             }
             catch (Exception e)
             {
@@ -129,13 +128,13 @@ namespace asivamosffie.services
             return true;
         }
 
-        public bool EnviarCorreo(List<string> pListCorreo, Template pTemplate)
+        public bool EnviarCorreo(List<string> pListCorreo, string pContenido , string pAsunto)
         {
             try
             {
-                pTemplate.Contenido = pTemplate.Contenido
-                                                   .Replace("_LinkF_", _mailSettings.DominioFront)
-                                                   .Replace("[URL]", _mailSettings.DominioFront);
+                pContenido = pContenido 
+                    .Replace("_LinkF_", _mailSettings.DominioFront)
+                    .Replace("[URL]", _mailSettings.DominioFront);
 
                 MailMessage mail = new MailMessage();
                 SmtpClient SmtpServer = new SmtpClient(_mailSettings.MailServer);
@@ -147,16 +146,15 @@ namespace asivamosffie.services
                     mail.To.Add(email);
                 }
 
-                mail.Subject = pTemplate.Asunto;
+                mail.Subject = pAsunto;
                 mail.IsBodyHtml = true;
 
-                mail.Body = pTemplate.Contenido;
+                mail.Body = pContenido;
                 SmtpServer.Port = _mailSettings.MailPort;
                 SmtpServer.Credentials = new NetworkCredential(_mailSettings.Sender, _mailSettings.Password);
                 SmtpServer.EnableSsl = false;
                 SmtpServer.Send(mail);
-                 
-                pTemplate = _context.Template.Find(pTemplate.TemplateId);
+                  
             }
             catch (Exception e)
             {

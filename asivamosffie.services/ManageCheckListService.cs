@@ -381,7 +381,7 @@ namespace asivamosffie.services
         public async Task<bool> SendEmailWhenDesactiveListaChequeo(int pListaChequeoId)
         {
             Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.ListaChequeoDesactivada));
-            template.Contenido = ReplaceVariablesListaChequeo(template.Contenido, pListaChequeoId);
+            string strContenido = ReplaceVariablesListaChequeo(template.Contenido, pListaChequeoId);
 
             List<EnumeratorPerfil> perfilsEnviarCorreo =
                 new List<EnumeratorPerfil>
@@ -389,7 +389,7 @@ namespace asivamosffie.services
                                                 EnumeratorPerfil.Tecnica
                                           };
 
-            return _commonService.EnviarCorreo(perfilsEnviarCorreo, template);
+            return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
         }
 
         private string ReplaceVariablesListaChequeo(string template, int pListaChequeoId)

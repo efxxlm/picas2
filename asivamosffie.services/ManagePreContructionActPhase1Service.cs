@@ -316,10 +316,10 @@ namespace asivamosffie.services
              
             Template TemplateMail = _context.Template.Find((int)enumeratorTemplate.NotificarInterventor);
 
-            TemplateMail.Contenido = TemplateMail.Contenido
+            string strContenido = TemplateMail.Contenido
                             .Replace("[NUMERO_CONTRATO]", prmContrato.NumeroContrato);
 
-            _commonService.EnviarCorreo(enumeratorPerfils, TemplateMail);
+            _commonService.EnviarCorreo(enumeratorPerfils, strContenido , TemplateMail.Asunto);
         }
 
         public async Task<byte[]> GetActaByIdPerfil(int pContratoId, int pUserId, AppSettingsService pAppSettingsService, bool pEsContruccion)
@@ -714,7 +714,7 @@ namespace asivamosffie.services
             Dias = contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().PlazoDias ?? 0;
             Meses = contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().PlazoMeses ?? 0;
 
-            TemplateRecoveryPassword.Contenido =
+            string strContenido =
                 TemplateRecoveryPassword.Contenido
                         .Replace("[TIPO_CONTRATO]", contrato.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString() ? ConstanCodigoTipoContratacionSTRING.Obra : ConstanCodigoTipoContratacionSTRING.Interventoria)
                         .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
@@ -730,7 +730,7 @@ namespace asivamosffie.services
                                                   EnumeratorPerfil.Apoyo
                                             };
 
-            _commonService.EnviarCorreo(enumeratorPerfilsEmails, TemplateRecoveryPassword);
+            _commonService.EnviarCorreo(enumeratorPerfilsEmails, strContenido, TemplateRecoveryPassword.Asunto);
         }
 
     }

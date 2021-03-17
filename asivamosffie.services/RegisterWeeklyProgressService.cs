@@ -2315,7 +2315,7 @@ namespace asivamosffie.services
         private async Task<bool> SendEmailWhenCompleteWeeklyProgress(int pSeguimientoSemanalId)
         {
             Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Seguimiento_Semanal_Completo));
-            template.Contenido = ReplaceVariablesSeguimientoSemanal(template.Contenido, pSeguimientoSemanalId);
+            string StrContenido = ReplaceVariablesSeguimientoSemanal(template.Contenido, pSeguimientoSemanalId);
 
             List<EnumeratorPerfil> perfilsEnviarCorreo =
                 new List<EnumeratorPerfil>
@@ -2323,7 +2323,7 @@ namespace asivamosffie.services
                                                 EnumeratorPerfil.Apoyo
                                           };
 
-            return _commonService.EnviarCorreo(perfilsEnviarCorreo, template);
+            return _commonService.EnviarCorreo(perfilsEnviarCorreo, StrContenido, template.Asunto);
         }
 
         /// <summary> 4.1.12
@@ -2350,10 +2350,12 @@ namespace asivamosffie.services
 
             ListSeguimientoSemanal.ForEach(ss =>
               {
-                  Template templateReplace = new Template();
-                  templateReplace.Asunto = templatePlaceHolder.Asunto + " # " + ss.NumeroSemana;
-                  templateReplace.Contenido = ReplaceVariablesSeguimientoSemanal(templatePlaceHolder.Contenido, ss.SeguimientoSemanalId);
-                  _commonService.EnviarCorreo(perfilsEnviarCorreo, templateReplace);
+                  Template templateReplace = new Template
+                  {
+                      Asunto = templatePlaceHolder.Asunto + " # " + ss.NumeroSemana,
+                      Contenido = ReplaceVariablesSeguimientoSemanal(templatePlaceHolder.Contenido, ss.SeguimientoSemanalId)
+                  };
+                  _commonService.EnviarCorreo(perfilsEnviarCorreo, templateReplace.Contenido, templateReplace.Asunto);
               });
         }
 
@@ -2364,14 +2366,14 @@ namespace asivamosffie.services
         {
 
             Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Enviar_Supervisor_4_1_20));
-            template.Contenido = ReplaceVariablesSeguimientoSemanal(template.Contenido, pSeguimientoSemanalId);
+           string strContenido = ReplaceVariablesSeguimientoSemanal(template.Contenido, pSeguimientoSemanalId);
 
             List<EnumeratorPerfil> perfilsEnviarCorreo =
                 new List<EnumeratorPerfil>
                                           {
                                                 EnumeratorPerfil.Supervisor
                                           };
-            return _commonService.EnviarCorreo(perfilsEnviarCorreo, template);
+            return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
 
         }
 
@@ -2409,7 +2411,7 @@ namespace asivamosffie.services
                     Asunto = templatePlaceHolder.Asunto + " # " + ss.NumeroSemana,
                     Contenido = ReplaceVariablesSeguimientoSemanal(templatePlaceHolder.Contenido, ss.SeguimientoSemanalId)
                 };
-                _commonService.EnviarCorreo(perfilsEnviarCorreo, templateReplace);
+                _commonService.EnviarCorreo(perfilsEnviarCorreo, templateReplace.Contenido, templateReplace.Asunto);
             });
         }
 
@@ -2447,7 +2449,7 @@ namespace asivamosffie.services
                     Asunto = templatePlaceHolder.Asunto + " # " + ss.NumeroSemana,
                     Contenido = ReplaceVariablesSeguimientoSemanal(templatePlaceHolder.Contenido, ss.SeguimientoSemanalId)
                 };
-                _commonService.EnviarCorreo(perfilsEnviarCorreo, templateReplace);
+                _commonService.EnviarCorreo(perfilsEnviarCorreo, templateReplace.Contenido, templateReplace.Asunto);
             });
         }
         #endregion
