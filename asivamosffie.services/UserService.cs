@@ -217,34 +217,69 @@ namespace asivamosffie.services
         public async Task<dynamic> GetContratoByTipo(string strTipoRolAsignadoContratoCodigo, int pUsuarioId)
         {
             //Envia Interventor
-            return strTipoRolAsignadoContratoCodigo switch
+            if (pUsuarioId > 0)
             {
-                ConstantCodigoTipoAsignacionContrato.Interventor => await _context.Contrato 
-                                                                 .Where(r => r.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra && r.InterventorId == null)
-                                                                 .Select(c => new
-                                                                 {
-                                                                     c.ContratoId,
-                                                                     c.NumeroContrato
-                                                                 })
-                                                                 .ToListAsync(),
-                ConstantCodigoTipoAsignacionContrato.Apoyo => await _context.Contrato 
-                                                            .Where(r => r.ApoyoId == null)
-                                                            .Select(c => new
-                                                            {
-                                                                c.ContratoId,
-                                                                c.NumeroContrato
-                                                            })
-                                                            .ToListAsync(),
-                ConstantCodigoTipoAsignacionContrato.Supervisor => await _context.Contrato 
-                                                            .Where(r => r.SupervisorId == null)
-                                                            .Select(c => new
-                                                            {
-                                                                c.ContratoId,
-                                                                c.NumeroContrato
-                                                            })
-                                                            .ToListAsync(), 
-                _ => new { },
-            };
+                return strTipoRolAsignadoContratoCodigo switch
+                {
+                    ConstantCodigoTipoAsignacionContrato.Interventor => await _context.Contrato
+                                                                     .Where(r => (r.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra) || (r.InterventorId == null && r.InterventorId == pUsuarioId))
+                                                                     .Select(c => new
+                                                                     {
+                                                                         c.ContratoId,
+                                                                         c.NumeroContrato
+                                                                     })
+                                                                     .ToListAsync(),
+                    ConstantCodigoTipoAsignacionContrato.Apoyo => await _context.Contrato
+                                                                .Where(r => r.ApoyoId == null || r.ApoyoId == pUsuarioId)
+                                                                .Select(c => new
+                                                                {
+                                                                    c.ContratoId,
+                                                                    c.NumeroContrato
+                                                                })
+                                                                .ToListAsync(),
+                    ConstantCodigoTipoAsignacionContrato.Supervisor => await _context.Contrato
+                                                                .Where(r => r.SupervisorId == null || r.SupervisorId == pUsuarioId)
+                                                                .Select(c => new
+                                                                {
+                                                                    c.ContratoId,
+                                                                    c.NumeroContrato
+                                                                })
+                                                                .ToListAsync(),
+                    _ => new { },
+                };
+            }
+            else
+            {
+
+                return strTipoRolAsignadoContratoCodigo switch
+                {
+                    ConstantCodigoTipoAsignacionContrato.Interventor => await _context.Contrato
+                                                                     .Where(r => r.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra && r.InterventorId == null)
+                                                                     .Select(c => new
+                                                                     {
+                                                                         c.ContratoId,
+                                                                         c.NumeroContrato
+                                                                     })
+                                                                     .ToListAsync(),
+                    ConstantCodigoTipoAsignacionContrato.Apoyo => await _context.Contrato
+                                                                .Where(r => r.ApoyoId == null)
+                                                                .Select(c => new
+                                                                {
+                                                                    c.ContratoId,
+                                                                    c.NumeroContrato
+                                                                })
+                                                                .ToListAsync(),
+                    ConstantCodigoTipoAsignacionContrato.Supervisor => await _context.Contrato
+                                                                .Where(r => r.SupervisorId == null)
+                                                                .Select(c => new
+                                                                {
+                                                                    c.ContratoId,
+                                                                    c.NumeroContrato
+                                                                })
+                                                                .ToListAsync(),
+                    _ => new { },
+                };
+            }
         }
 
         public async Task<bool> ValidateExistEmail(Usuario pUsuario)
