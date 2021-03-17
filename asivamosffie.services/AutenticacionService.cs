@@ -61,6 +61,10 @@ namespace asivamosffie.services
                 else if (usuario.FechaUltimoIngreso == null || usuario.CambiarContrasena.Value) // first time to log in
                 {
                     List<VUsuarioPerfil> perfiles = await _context.VUsuarioPerfil.Where(y => y.UsuarioId == usuario.UsuarioId).ToListAsync();
+                    perfiles.ForEach(p =>
+                    {
+                        p.Perfil = _context.Perfil.Find(p.PerfilId);
+                    });
                     respuesta = new Respuesta { IsSuccessful = true, IsValidation = true, Code = ConstantMessagesUsuarios.DirecCambioContrasena, Data = new { datausuario=usuario, dataperfiles=perfiles }, Token = this.GenerateToken(prmSecret, prmIssuer, prmAudience, usuario, perfiles) };                    
                 }
                 else // successful
