@@ -10,7 +10,7 @@ namespace asivamosffie.services.Interfaces
 {
     public interface ICommonService
     {
-        Task<VPermisosMenus> TienePermisos(int idPerfil, string pRuta);
+        Task<VPermisosMenus> TienePermisos(int idPerfil, string pRuta); 
 
         bool EnviarCorreo(List<string> pListCorreo, Template pTemplate);
 

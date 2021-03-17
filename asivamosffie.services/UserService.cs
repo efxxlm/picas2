@@ -316,22 +316,22 @@ namespace asivamosffie.services
         public async Task<Respuesta> CreateEditUsuario(Usuario pUsuario)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Usuario, (int)EnumeratorTipoDominio.Acciones);
-
+      
             try
             {
                 if (pUsuario.UsuarioId == 0)
-                {
-                    string strPassWordGenerate = Helpers.Helpers.GeneratePassword(true, true, true, true, false, 20);
+                { 
+                    string strPassWordGenerate = Helpers.Helpers.GeneratePassword(true, true, true, true, false, 25);
                     pUsuario.Activo = true;
                     pUsuario.Contrasena = Helpers.Helpers.encryptSha1(strPassWordGenerate);
                     pUsuario.Eliminado = false;
-
+                    pUsuario.Bloqueado = false;
+                    pUsuario.IntentosFallidos = 0;
                     _context.Usuario.Add(pUsuario);
                     _context.SaveChanges();
-
-                    CreateEditAsignacionContrato(pUsuario);
-                    await CrearEditarUsuarioPerfil(pUsuario, true);
                     await SendEmailWhenCreateUsuario(pUsuario, strPassWordGenerate);
+                    CreateEditAsignacionContrato(pUsuario);
+                    CrearEditarUsuarioPerfil(pUsuario, true); 
                 }
                 else
                 {
@@ -363,16 +363,17 @@ namespace asivamosffie.services
                             });
 
                     CreateEditAsignacionContrato(pUsuario);
-                    await CrearEditarUsuarioPerfil(pUsuario, false);
+                    CrearEditarUsuarioPerfil(pUsuario, false);
                 }
-                return new Respuesta
+                Respuesta respuesta = new Respuesta
                 {
                     IsSuccessful = true,
                     IsException = false,
                     IsValidation = false,
                     Code = GeneralCodes.OperacionExitosa,
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_usuarios, GeneralCodes.OperacionExitosa, idAccion, pUsuario.UsuarioCreacion, "CREAR EDITAR USUARIO")
-                };
+                }; 
+                return respuesta;
             }
             catch (Exception e)
             {
@@ -433,9 +434,9 @@ namespace asivamosffie.services
             }
         }
 
-        private async Task CrearEditarUsuarioPerfil(Usuario pUsuario, bool Create)
+        private void CrearEditarUsuarioPerfil(Usuario pUsuario, bool Create)
         {
-            try
+            if (pUsuario.PerfilId > 0)
             {
                 if (Create)
                 {
@@ -447,7 +448,7 @@ namespace asivamosffie.services
                         FechaCreacion = DateTime.Now,
                         UsuarioCreacion = pUsuario.UsuarioCreacion
                     };
-                    await _context.UsuarioPerfil.AddAsync(usuarioPerfil);
+                    _context.UsuarioPerfil.Add(usuarioPerfil);
                     _context.SaveChanges();
                 }
                 else
@@ -461,11 +462,6 @@ namespace asivamosffie.services
                              UsuarioModificacion = pUsuario.UsuarioCreacion
                          });
                 }
-            }
-
-            catch (Exception e)
-            {
-
             }
         }
 
@@ -495,6 +491,16 @@ namespace asivamosffie.services
             return _commonService.EnviarCorreo(ListString, template);
         }
 
+        private string ReplaceVariablesUsuarios(string template, Usuario pUsuario, string pPassWord)
+        {
+            template = template
+                      .Replace("[EMAIL]", pUsuario.Email)
+                      .Replace("[PASSWORD]", pPassWord);
+
+            return template;
+        }
+  
+
         public async Task<dynamic> GetListPerfil()
         {
             return await _context.Perfil
@@ -522,12 +528,12 @@ namespace asivamosffie.services
                               Bloqueado = pUsuario.Eliminado,
                               FechaModificacion = DateTime.Now,
                               UsuarioModificacion = pUsuario.UsuarioCreacion
-                          });;
+                          }); ;
 
                 Usuario usuario1 = _context.Usuario.Find(pUsuario.UsuarioId);
                 if (pUsuario.Eliminado == true)
                     await SendEmailWhenDesactivateUsuario(usuario1, string.Empty);
-                 
+
                 return new Respuesta
                 {
                     IsSuccessful = true,
@@ -552,15 +558,7 @@ namespace asivamosffie.services
 
         }
 
-        private string ReplaceVariablesUsuarios(string template, Usuario pUsuario, string pPassWord)
-        {
-            template = template
-                      .Replace("[EMAIL]", pUsuario.Email)
-                      .Replace("[PASSWORD]", pPassWord);
 
-            return template;
-        }
-         
         #endregion
     }
 }

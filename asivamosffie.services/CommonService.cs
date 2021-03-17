@@ -119,6 +119,8 @@ namespace asivamosffie.services
                 SmtpServer.Credentials = new NetworkCredential(_mailSettings.Sender, _mailSettings.Password);
                 SmtpServer.EnableSsl = false;
                 SmtpServer.Send(mail);
+
+                pTemplate = _context.Template.Find(pTemplate.TemplateId);
             }
             catch (Exception e)
             {
@@ -153,6 +155,8 @@ namespace asivamosffie.services
                 SmtpServer.Credentials = new NetworkCredential(_mailSettings.Sender, _mailSettings.Password);
                 SmtpServer.EnableSsl = false;
                 SmtpServer.Send(mail);
+                 
+                pTemplate = _context.Template.Find(pTemplate.TemplateId);
             }
             catch (Exception e)
             {
@@ -160,7 +164,7 @@ namespace asivamosffie.services
             }
             return true;
         }
-
+         
         public async Task<dynamic> GetListMenu()
         {
             return await _context.Menu.Select(m => new

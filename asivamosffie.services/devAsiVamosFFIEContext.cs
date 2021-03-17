@@ -235,7 +235,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -7121,8 +7120,6 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.Contrasena)
                     .IsRequired()
-                    .HasMaxLength(2000)
-                    .IsUnicode(false)
                     .HasComment("Contraseña del Usuario, campo cifrado");
 
                 entity.Property(e => e.DependenciaCodigo)
