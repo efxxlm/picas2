@@ -246,9 +246,9 @@ namespace asivamosffie.services
         public async Task<bool> ValidateExistEmail(Usuario pUsuario)
         {
             if (await _context.Usuario.AnyAsync(u => u.Email.ToLower() == pUsuario.Email.ToLower()))
-                return false;
+                return true;
 
-            return true;
+            return false;
         }
 
         public async Task<List<VUsuariosRoles>> GetListUsuario()
