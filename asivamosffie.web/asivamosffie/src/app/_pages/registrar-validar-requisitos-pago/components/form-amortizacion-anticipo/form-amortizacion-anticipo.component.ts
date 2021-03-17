@@ -51,6 +51,9 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
             const solicitudPagoFaseAmortizacion = this.solicitudPagoFase.solicitudPagoFaseAmortizacion[0]
             this.solicitudPagoFaseAmortizacionId = solicitudPagoFaseAmortizacion.solicitudPagoFaseAmortizacionId;
             this.estaEditando = true;
+            if ( solicitudPagoFaseAmortizacion.registroCompleto === true ) {
+                this.addressForm.disable();
+            }
             this.addressForm.markAllAsTouched();
             this.addressForm.setValue(
                 {
