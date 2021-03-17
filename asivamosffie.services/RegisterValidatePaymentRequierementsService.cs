@@ -810,7 +810,7 @@ namespace asivamosffie.services
                     SolicitudPagoCargarFormaPago solicitudPagoCargarFormaPagoOld = _context.SolicitudPagoCargarFormaPago.Find(pSolicitudPagoCargarFormaPago.SolicitudPagoCargarFormaPagoId);
                     solicitudPagoCargarFormaPagoOld.FechaModificacion = DateTime.Now;
                     solicitudPagoCargarFormaPagoOld.TieneFase1 = pSolicitudPagoCargarFormaPago.TieneFase1;
- 
+
                     solicitudPagoCargarFormaPagoOld.RegistroCompleto = ValidateCompleteRecordSolicitudPagoCargarFormaPago(pSolicitudPagoCargarFormaPago);
                     solicitudPagoCargarFormaPagoOld.FaseConstruccionFormaPagoCodigo = pSolicitudPagoCargarFormaPago.FaseConstruccionFormaPagoCodigo;
                     solicitudPagoCargarFormaPagoOld.FasePreConstruccionFormaPagoCodigo = pSolicitudPagoCargarFormaPago.FasePreConstruccionFormaPagoCodigo;
@@ -1174,6 +1174,9 @@ namespace asivamosffie.services
 
         private bool ValidateCompleteRecordSolicitudPagoFaseFactura(SolicitudPagoFaseFactura solicitudPagoFaseFactura)
         {
+
+            if (solicitudPagoFaseFactura.TieneDescuento == false)
+                return true;
             if (
                    string.IsNullOrEmpty(solicitudPagoFaseFactura.Fecha.ToString())
                 || !solicitudPagoFaseFactura.TieneDescuento.HasValue
