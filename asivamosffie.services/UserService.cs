@@ -1,6 +1,5 @@
 ﻿using asivamosffie.model.APIModels;
-using asivamosffie.model.Models;
-using asivamosffie.services.Exceptions;
+using asivamosffie.model.Models; 
 using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.services.Interfaces;
@@ -9,12 +8,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Z.EntityFramework.Plus;
-using asivamosffie.model.Models;
+using Z.EntityFramework.Plus; 
 namespace asivamosffie.services
 {
     public class UserService : IUser
     {
+        #region Constructor
         private readonly ICommonService _commonService;
         private readonly devAsiVamosFFIEContext _context;
 
@@ -24,6 +23,8 @@ namespace asivamosffie.services
 
             _context = context;
         }
+
+        #endregion
 
         #region Loggin
         public async Task<Respuesta> RecoverPasswordByEmailAsync(Usuario pUsuario, string pDominio, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
@@ -211,8 +212,81 @@ namespace asivamosffie.services
         }
 
         #endregion
+         
+        #region Get
+        public async Task<List<VUsuarioRol>> GetListUsuario()
+        {
+            return await _context.VUsuarioRol.OrderByDescending(ur => ur.UsuarioId).ToListAsync();
+        }
 
-        #region Create Edit List
+        public async Task<Usuario> GetUsuario(int pUsuarioId)
+        {
+            try
+            {
+                Usuario usuario = await _context.Usuario.FindAsync(pUsuarioId);
+                usuario.Perfil = _context.UsuarioPerfil
+                    .Where(u => u.UsuarioId == pUsuarioId)
+                    .Include(p => p.Perfil).Select(p => p.Perfil)
+                    .FirstOrDefault();
+
+                List<ContratoAsignado> contratoAsignadosInterventor =
+                  _context.Contrato.Where(r => r.InterventorId == pUsuarioId)
+                                   .Select(c => new ContratoAsignado
+                                   {
+                                       ContratoId = c.ContratoId,
+                                       NumeroContrato = c.NumeroContrato,
+                                       TipoAsignacionCodigo = ConstantCodigoTipoAsignacionContrato.Interventor
+                                   }).ToList();
+
+                List<ContratoAsignado> contratoAsignadosApoyo =
+                    _context.Contrato.Where(r => r.ApoyoId == pUsuarioId)
+                                     .Select(c => new ContratoAsignado
+                                     {
+                                         ContratoId = c.ContratoId,
+                                         NumeroContrato = c.NumeroContrato,
+                                         TipoAsignacionCodigo = ConstantCodigoTipoAsignacionContrato.Apoyo
+                                     }).ToList();
+
+
+                List<ContratoAsignado> contratoAsignadosSupervisor =
+                    _context.Contrato.Where(r => r.SupervisorId == pUsuarioId)
+                                     .Select(c => new ContratoAsignado
+                                     {
+                                         ContratoId = c.ContratoId,
+                                         NumeroContrato = c.NumeroContrato,
+                                         TipoAsignacionCodigo = ConstantCodigoTipoAsignacionContrato.Supervisor
+                                     }).ToList();
+
+                usuario.ContratosAsignados = new List<ContratoAsignado>();
+
+                if (contratoAsignadosInterventor.Count() > 0)
+                    usuario.ContratosAsignados.AddRange(contratoAsignadosInterventor);
+
+                if (contratoAsignadosApoyo.Count() > 0)
+                    usuario.ContratosAsignados.AddRange(contratoAsignadosApoyo);
+
+                if (contratoAsignadosSupervisor.Count() > 0)
+                    usuario.ContratosAsignados.AddRange(contratoAsignadosSupervisor);
+
+                return usuario;
+            }
+            catch (Exception e)
+            {
+                return new Usuario();
+            }
+        }
+
+        public async Task<dynamic> GetListPerfil()
+        {
+            return await _context.Perfil
+                .Where(p => p.Eliminado != true)
+                .OrderByDescending(p => p.PerfilId)
+                .Select(p => new
+                {
+                    p.PerfilId,
+                    p.Nombre
+                }).ToListAsync();
+        }
 
         public async Task<dynamic> GetContratoByTipo(string strTipoRolAsignadoContratoCodigo, int pUsuarioId)
         {
@@ -279,7 +353,7 @@ namespace asivamosffie.services
                                                                 .Select(c => new
                                                                 {
                                                                     c.ContratoId,
-                                                                    c.NumeroContrato, 
+                                                                    c.NumeroContrato,
                                                                     TipoAsignacionCodigo = ConstantCodigoTipoAsignacionContrato.Supervisor
                                                                 })
                                                                 .ToListAsync(),
@@ -287,77 +361,10 @@ namespace asivamosffie.services
                 };
             }
         }
+         
+        #endregion
 
-        public async Task<bool> ValidateExistEmail(Usuario pUsuario)
-        {
-            if (await _context.Usuario.AnyAsync(u => u.Email.ToLower() == pUsuario.Email.ToLower()))
-                return true;
-
-            return false;
-        }
-
-        public async Task<List<VUsuarioRol>> GetListUsuario()
-        {
-            return await _context.VUsuarioRol.OrderByDescending(ur => ur.UsuarioId).ToListAsync();
-        }
-
-        public async Task<Usuario> GetUsuario(int pUsuarioId)
-        {
-            try
-            {
-                Usuario usuario = await _context.Usuario.FindAsync(pUsuarioId);
-                usuario.Perfil = _context.UsuarioPerfil
-                    .Where(u => u.UsuarioId == pUsuarioId)
-                    .Include(p => p.Perfil).Select(p => p.Perfil)
-                    .FirstOrDefault();
-
-                List<ContratoAsignado> contratoAsignadosInterventor =
-                  _context.Contrato.Where(r => r.InterventorId == pUsuarioId)
-                                   .Select(c => new ContratoAsignado
-                                   {
-                                       ContratoId = c.ContratoId,
-                                       NumeroContrato = c.NumeroContrato,
-                                       TipoAsignacionCodigo = ConstantCodigoTipoAsignacionContrato.Interventor
-                                   }).ToList();
-
-                List<ContratoAsignado> contratoAsignadosApoyo =
-                    _context.Contrato.Where(r => r.ApoyoId == pUsuarioId)
-                                     .Select(c => new ContratoAsignado
-                                     {
-                                         ContratoId = c.ContratoId,
-                                         NumeroContrato = c.NumeroContrato,
-                                         TipoAsignacionCodigo = ConstantCodigoTipoAsignacionContrato.Apoyo
-                                     }).ToList();
-
-
-                List<ContratoAsignado> contratoAsignadosSupervisor =
-                    _context.Contrato.Where(r => r.SupervisorId == pUsuarioId)
-                                     .Select(c => new ContratoAsignado
-                                     {
-                                         ContratoId = c.ContratoId,
-                                         NumeroContrato = c.NumeroContrato,
-                                         TipoAsignacionCodigo = ConstantCodigoTipoAsignacionContrato.Supervisor
-                                     }).ToList();
-
-                usuario.ContratosAsignados = new List<ContratoAsignado>();
-
-                if (contratoAsignadosInterventor.Count() > 0)
-                    usuario.ContratosAsignados.AddRange(contratoAsignadosInterventor);
-
-                if (contratoAsignadosApoyo.Count() > 0)
-                    usuario.ContratosAsignados.AddRange(contratoAsignadosApoyo);
-
-                if (contratoAsignadosSupervisor.Count() > 0)
-                    usuario.ContratosAsignados.AddRange(contratoAsignadosSupervisor);
-
-                return usuario;
-            }
-            catch (Exception e)
-            {
-                return new Usuario();
-            }
-        }
-
+        #region Create Edit List
         public async Task<Respuesta> CreateEditUsuario(Usuario pUsuario)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Usuario, (int)EnumeratorTipoDominio.Acciones);
@@ -513,52 +520,34 @@ namespace asivamosffie.services
                 }
             }
         }
-
-        public async Task<bool> SendEmailWhenCreateUsuario(Usuario pUsuario, string pPassWord)
+         
+        #endregion
+         
+        #region Business
+        public async Task<bool> ValidateExistEmail(Usuario pUsuario)
         {
-            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.CreateUserEmail_6_2));
-            string Contenido = ReplaceVariablesUsuarios(template.Contenido, pUsuario, pPassWord);
+            if (await _context.Usuario.AnyAsync(u => u.Email.ToLower() == pUsuario.Email.ToLower()))
+                return true;
 
-            List<string> ListString = new List<string>
-                 {
-                     pUsuario.Email
-                 };
-
-            return _commonService.EnviarCorreo(ListString, Contenido, template.Asunto);
+            return false;
         }
 
-        public async Task<bool> SendEmailWhenDesactivateUsuario(Usuario pUsuario, string pPassWord)
+        public void ResetContratoUser(int pAuthor, string strTipoRolAsignadoContratoCodigo)
         {
-            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.DesactivarUsuario_6_2));
-            string Contenido = ReplaceVariablesUsuarios(template.Contenido, pUsuario, pPassWord);
-
-            List<string> ListString = new List<string>
-                 {
-                     pUsuario.Email
-                 };
-
-            return _commonService.EnviarCorreo(ListString, Contenido, template.Asunto);
-        }
-
-        private string ReplaceVariablesUsuarios(string template, Usuario pUsuario, string pPassWord)
-        {
-            template = template
-                      .Replace("[EMAIL]", pUsuario.Email)
-                      .Replace("[PASSWORD]", pPassWord);
-
-            return template;
-        }
-
-        public async Task<dynamic> GetListPerfil()
-        {
-            return await _context.Perfil
-                .Where(p => p.Eliminado != true)
-                .OrderByDescending(p => p.PerfilId)
-                .Select(p => new
-                {
-                    p.PerfilId,
-                    p.Nombre
-                }).ToListAsync();
+            _context.Set<Contrato>()
+                                                                    .Where(r =>
+                                                                               r.InterventorId == pAuthor
+                                                                            || r.ApoyoId == pAuthor
+                                                                            || r.SupervisorId == pAuthor
+                                                                           )
+                                                                     .Update(r =>
+                                                                     new Contrato
+                                                                     {
+                                                                         InterventorId = null,
+                                                                         ApoyoId = null,
+                                                                         SupervisorId = null,
+                                                                         FechaModificacion = DateTime.Now,
+                                                                     });
         }
 
         public async Task<Respuesta> ActivateDeActivateUsuario(Usuario pUsuario)
@@ -606,25 +595,43 @@ namespace asivamosffie.services
 
         }
          
-        public void ResetContratoUser(int pAuthor, string strTipoRolAsignadoContratoCodigo)
+        #endregion
+
+        #region emails
+        public async Task<bool> SendEmailWhenCreateUsuario(Usuario pUsuario, string pPassWord)
         {
-            _context.Set<Contrato>()
-                                                                    .Where(r => 
-                                                                               r.InterventorId == pAuthor
-                                                                            || r.ApoyoId == pAuthor
-                                                                            || r.SupervisorId == pAuthor
-                                                                           )
-                                                                     .Update(r =>
-                                                                     new Contrato
-                                                                     {
-                                                                         InterventorId = null,
-                                                                         ApoyoId = null,
-                                                                         SupervisorId = null,
-                                                                         FechaModificacion = DateTime.Now,
-                                                                     });  
+            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.CreateUserEmail_6_2));
+            string Contenido = ReplaceVariablesUsuarios(template.Contenido, pUsuario, pPassWord);
+
+            List<string> ListString = new List<string>
+                 {
+                     pUsuario.Email
+                 };
+
+            return _commonService.EnviarCorreo(ListString, Contenido, template.Asunto);
         }
 
+        public async Task<bool> SendEmailWhenDesactivateUsuario(Usuario pUsuario, string pPassWord)
+        {
+            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.DesactivarUsuario_6_2));
+            string Contenido = ReplaceVariablesUsuarios(template.Contenido, pUsuario, pPassWord);
 
-        #endregion
+            List<string> ListString = new List<string>
+                 {
+                     pUsuario.Email
+                 };
+
+            return _commonService.EnviarCorreo(ListString, Contenido, template.Asunto);
+        }
+         
+        private string ReplaceVariablesUsuarios(string template, Usuario pUsuario, string pPassWord)
+        {
+            template = template
+                      .Replace("[EMAIL]", pUsuario.Email)
+                      .Replace("[PASSWORD]", pPassWord);
+
+            return template;
+        }
+        #endregion 
     }
 }
