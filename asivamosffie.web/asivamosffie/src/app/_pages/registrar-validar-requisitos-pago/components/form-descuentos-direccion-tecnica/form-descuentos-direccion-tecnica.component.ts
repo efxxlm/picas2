@@ -68,6 +68,9 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit {
                         )
                     );
                 }
+                if ( this.solicitudPagoFaseFactura.registroCompleto === true ) {
+                    this.formDescuentos.disable();
+                }
             }
         }
         for (const criterio of this.solicitudPagoFase.solicitudPagoFaseCriterio) {

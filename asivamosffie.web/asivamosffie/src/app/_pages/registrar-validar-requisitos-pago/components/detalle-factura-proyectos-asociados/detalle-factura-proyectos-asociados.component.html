@@ -104,7 +104,7 @@
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Seleccionar </th>
                     <td mat-cell *matCellDef="let element" align="center">
                         <section class="example-section">
-                            <mat-checkbox [(ngModel)]="element.check" (ngModelChange)="projectSelect()"></mat-checkbox>
+                            <mat-checkbox [(ngModel)]="element.check" (ngModelChange)="projectSelect()" [disabled]="projects.disabled === true"></mat-checkbox>
                         </section>
                     </td>
                 </ng-container>
@@ -114,14 +114,14 @@
             </table>
         </div>
         <form [formGroup]="formProject" (ngSubmit)="guardar()">
-            <div style="margin-top: 3em;" *ngFor="let project of projects.controls; index as i" [formGroup]="project">
+            <div style="margin-top: 3em;" formArrayName="projects" *ngFor="let project of projects.controls; index as i">
                 <mat-card class="shipping-card" *ngIf="project.get( 'check' ).value === true">
                     <mat-card-header class="header-card header-card--margin">
                         <mat-card-title class="header-card--text">
                             {{ project.get( 'llaveMen' ).value }}
                         </mat-card-title>
                     </mat-card-header>
-                    <mat-card-content style="text-align: left;">
+                    <mat-card-content style="text-align: left;" [formGroup]="project">
                         <p><strong>Monto máximo a pagar en el proyecto:</strong> $30.000.000</p>
                         <p><strong>Monto pendiente a pagar en el proyecto:</strong> $30.000.000</p>
                         <br>
@@ -132,8 +132,8 @@
                                         <label class="label-left" for="criterioPago" 
                                         [ngClass]="{
                                             'color-secondaryColor':
-                                              (project.get('criterioPago').invalid && project.get('criterioPago').touched) ||
-                                              (project.get('criterioPago').invalid && estaEditando)
+                                              (project.get('criterioPago')?.invalid && project.get('criterioPago').touched) ||
+                                              (project.get('criterioPago')?.invalid && estaEditando)
                                           }">Criterio</label>
                                     </div>
                                     <div class="col">
@@ -154,8 +154,8 @@
                                           matTooltip="Debe ingresar la información en el campo para continuar"
                                           matTooltipClass="info-tooltip"
                                           *ngIf="
-                                          (project.get('criterioPago').invalid && project.get('criterioPago').touched) ||
-                                          (project.get('criterioPago').invalid && estaEditando)
+                                          (project.get('criterioPago')?.invalid && project.get('criterioPago').touched) ||
+                                          (project.get('criterioPago')?.invalid && estaEditando)
                                           "
                                         />
                                       </span>
@@ -174,8 +174,8 @@
                                             <label class="label-left" for="valorFacturado"
                                             [ngClass]="{
                                                 'color-secondaryColor':
-                                                  (criterioProyecto.get('criterioPago').invalid && criterioProyecto.get('criterioPago').touched) ||
-                                                  (criterioProyecto.get('criterioPago').invalid && estaEditando)
+                                                  (criterioProyecto.get('criterioPago')?.invalid && criterioProyecto.get('criterioPago').touched) ||
+                                                  (criterioProyecto.get('criterioPago')?.invalid && estaEditando)
                                               }">
                                                 Valor facturado para el proyecto en el criterio
                                             </label>
@@ -197,14 +197,14 @@
                                               matTooltip="Debe ingresar la información en el campo para continuar"
                                               matTooltipClass="info-tooltip"
                                               *ngIf="
-                                              (criterioProyecto.get('criterioPago').invalid && criterioProyecto.get('criterioPago').touched) ||
-                                              (criterioProyecto.get('criterioPago').invalid && estaEditando)
+                                              (criterioProyecto.get('criterioPago')?.invalid && criterioProyecto.get('criterioPago').touched) ||
+                                              (criterioProyecto.get('criterioPago')?.invalid && estaEditando)
                                               "
                                             />
                                           </span>
                                       </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-4" *ngIf="projects.disabled === false">
                                         <div class="text-right">
                                             <button mat-button color="warn" type="button" class="btn-eliminar" (click)="deleteCriterio( criterioProyecto, i, j )">
                                               <img src="assets/img/icon/menos.svg">
@@ -217,7 +217,7 @@
                         </section>
                     </mat-card-content>
                 </mat-card>
-                <div class="text-right" *ngIf="project.get( 'check' ).value === true">
+                <div class="text-right" *ngIf="project.get( 'check' ).value === true && projects.disabled === false">
                     <button mat-button color="warn" type="button" class="btn-eliminar" (click)="deleteLLave( project, i )">
                       <img src="assets/img/icon/menos.svg">
                       Eliminar llave

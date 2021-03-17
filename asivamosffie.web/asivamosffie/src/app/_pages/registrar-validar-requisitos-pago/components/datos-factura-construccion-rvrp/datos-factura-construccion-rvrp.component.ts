@@ -51,6 +51,10 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
             this.solicitudPagoFaseFacturaDescuento = this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaDescuento;
             this.addressForm.get( 'numeroFactura' ).setValue( this.solicitudPagoFaseFactura.numero !== undefined ? this.solicitudPagoFaseFactura.numero : null );
             this.addressForm.get( 'fechaFactura' ).setValue( this.solicitudPagoFaseFactura.fecha !== undefined ? new Date( this.solicitudPagoFaseFactura.fecha ) : null );
+
+            if ( this.solicitudPagoFaseFactura.registroCompleto === true ) {
+                this.addressForm.disable();
+            }
         }
         for ( const criterio of this.solicitudPagoFase.solicitudPagoFaseCriterio ) {
             this.valorFacturado += criterio.valorFacturado;

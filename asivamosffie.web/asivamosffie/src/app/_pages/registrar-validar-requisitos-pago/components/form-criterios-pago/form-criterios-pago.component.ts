@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { async } from '@angular/core/testing';
-import { FormBuilder, Validators, FormArray } from '@angular/forms';
+import { FormBuilder, Validators, FormArray, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
@@ -17,6 +17,7 @@ export class FormCriteriosPagoComponent implements OnInit {
     @Input() esPreconstruccion = true;
     @Input() contratacionProyectoId: number;
     solicitudPagoRegistrarSolicitudPago: any;
+    registroCompletoCriterio = false;
     solicitudPagoFase: any;
     addressForm = this.fb.group({
         criterioPago: [ null, Validators.required ],
@@ -24,6 +25,7 @@ export class FormCriteriosPagoComponent implements OnInit {
     });
     criteriosArray: { codigo: string, nombre: string }[] = [];
     estaEditando = false;
+
     get criterios() {
         return this.addressForm.get( 'criterios' ) as FormArray;
     }
@@ -33,7 +35,13 @@ export class FormCriteriosPagoComponent implements OnInit {
         private dialog: MatDialog,
         private routes: Router,
         private registrarPagosSvc: RegistrarRequisitosPagoService )
-    { }
+    {
+        setTimeout(() => {
+            if ( this.registroCompletoCriterio === true ) {
+                this.addressForm.controls[ 'criterioPago' ].disable();
+            }
+        }, 1500);
+    }
 
     ngOnInit(): void {
         this.getCriterios();
@@ -46,6 +54,7 @@ export class FormCriteriosPagoComponent implements OnInit {
     getCriterios() {
         const solicitudPagoCargarFormaPago = this.solicitudPago.solicitudPagoCargarFormaPago[0];
         if ( this.esPreconstruccion === true ) {
+            this.addressForm.controls[ 'criterioPago' ].disable();
             const fasePreConstruccionFormaPagoCodigo = solicitudPagoCargarFormaPago.fasePreConstruccionFormaPagoCodigo;
             this.registrarPagosSvc.getCriterioByFormaPagoCodigo( fasePreConstruccionFormaPagoCodigo )
                 .subscribe(
@@ -53,6 +62,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                         const criteriosSeleccionadosArray = [];
                         this.solicitudPagoRegistrarSolicitudPago = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0];
                         this.solicitudPagoFase = this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase[0];
+                        this.registroCompletoCriterio = this.solicitudPagoFase.registroCompletoCriterio;
 
                         if ( this.solicitudPagoFase.solicitudPagoFaseCriterio.length > 0 ) {
                             this.estaEditando = true;
@@ -108,6 +118,9 @@ export class FormCriteriosPagoComponent implements OnInit {
                         }
                         this.criteriosArray = response;
                         this.addressForm.get( 'criterioPago' ).setValue( criteriosSeleccionadosArray.length > 0 ? criteriosSeleccionadosArray : null );
+                        if ( this.registroCompletoCriterio === true ) {
+                            this.addressForm.disable();
+                        }
                     }
                 );
         }
@@ -120,6 +133,8 @@ export class FormCriteriosPagoComponent implements OnInit {
                         const criteriosSeleccionadosArray = [];
                         this.solicitudPagoRegistrarSolicitudPago = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0];
                         this.solicitudPagoFase = this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase[0];
+                        this.registroCompletoCriterio = this.solicitudPagoFase.registroCompletoCriterio;
+
                         if ( this.solicitudPagoFase.solicitudPagoFaseCriterio.length > 0 ) {
                             this.estaEditando = true;
                             this.addressForm.markAllAsTouched();
@@ -174,6 +189,9 @@ export class FormCriteriosPagoComponent implements OnInit {
                         }
                         this.criteriosArray = response;
                         this.addressForm.get( 'criterioPago' ).setValue( criteriosSeleccionadosArray.length > 0 ? criteriosSeleccionadosArray : null );
+                        if ( this.registroCompletoCriterio === true ) {
+                            this.criterios.disable();
+                        }
                     }
                 );
         }
@@ -408,7 +426,41 @@ export class FormCriteriosPagoComponent implements OnInit {
         this.addressForm.markAllAsTouched();
         this.criterios.markAllAsTouched();
         if ( this.contratacionProyectoId === 0 ) {
-            console.log( this.criterios );
+            this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseCriterio = [];
+            this.criterios.controls.forEach( control => {
+                const criterio = control.value;
+                this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseCriterio.push(
+                    {
+                        tipoCriterioCodigo: criterio.tipoCriterioCodigo,
+                        solicitudPagoFaseCriterioId: criterio.solicitudPagoFaseCriterioId,
+                        tipoPagoCodigo: criterio.tipoPago.codigo,
+                        valorFacturado: control.get( 'valorFacturado' ).value,
+                        solicitudPagoFaseCriterioConceptoPago: criterio.conceptos,
+                        solicitudPagoFaseId: criterio.solicitudPagoFaseId,
+                        solicitudPagoFaseCriterioProyecto: []
+                    }
+                );
+            } );
+            this.registrarPagosSvc.createEditNewPayment( this.solicitudPago )
+                .subscribe(
+                    response => {
+                        this.openDialog( '', `<b>${ response.message }</b>` );
+                        this.registrarPagosSvc.getValidateSolicitudPagoId( this.solicitudPago.solicitudPagoId )
+                            .subscribe(
+                                () => {
+                                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                                        () => this.routes.navigate(
+                                            [
+                                                '/registrarValidarRequisitosPago/verDetalleEditar',  this.solicitudPago.contratoId, this.solicitudPago.solicitudPagoId
+                                            ]
+                                        )
+                                    );
+                                }
+                            );
+                    },
+                    err => this.openDialog( '', `<b>${ err.message }</b>` )
+                );
+        } else {
             this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseCriterio = [];
             this.criterios.controls.forEach( control => {
                 const criterio = control.value;
@@ -432,72 +484,25 @@ export class FormCriteriosPagoComponent implements OnInit {
                     }
                 );
             } );
-
-            console.log( this.solicitudPago );
-            // this.registrarPagosSvc.createEditNewPayment( this.solicitudPago )
-            //     .subscribe(
-            //         response => {
-            //             this.openDialog( '', `<b>${ response.message }</b>` );
-            //             this.registrarPagosSvc.getValidateSolicitudPagoId( this.solicitudPago.solicitudPagoId )
-            //                 .subscribe(
-            //                     () => {
-            //                         this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-            //                             () => this.routes.navigate(
-            //                                 [
-            //                                     '/registrarValidarRequisitosPago/verDetalleEditar',  this.solicitudPago.contratoId, this.solicitudPago.solicitudPagoId
-            //                                 ]
-            //                             )
-            //                         );
-            //                     }
-            //                 );
-            //         },
-            //         err => this.openDialog( '', `<b>${ err.message }</b>` )
-            //     );
-        } else {
-            this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseCriterio = [];
-            this.criterios.controls.forEach( control => {
-                const criterio = control.value;
-                console.log( criterio );
-                const solicitudPagoFaseCriterioProyecto = [];
-                solicitudPagoFaseCriterioProyecto.push(
-                    {
-                        contratacionProyectoId: this.contratacionProyectoId,
-                        solicitudPagoFaseCriterioId: criterio.solicitudPagoFaseCriterioId,
-                        valorFacturado: criterio.valorFacturado
-                    }
+            this.registrarPagosSvc.createEditNewPayment( this.solicitudPago )
+                .subscribe(
+                    response => {
+                        this.openDialog( '', `<b>${ response.message }</b>` );
+                        this.registrarPagosSvc.getValidateSolicitudPagoId( this.solicitudPago.solicitudPagoId )
+                            .subscribe(
+                                () => {
+                                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                                        () => this.routes.navigate(
+                                            [
+                                                '/registrarValidarRequisitosPago/verDetalleEditar',  this.solicitudPago.contratoId, this.solicitudPago.solicitudPagoId
+                                            ]
+                                        )
+                                    );
+                                }
+                            );
+                    },
+                    err => this.openDialog( '', `<b>${ err.message }</b>` )
                 );
-                this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseCriterio.push(
-                    {
-                        tipoCriterioCodigo: criterio.tipoCriterioCodigo,
-                        solicitudPagoFaseCriterioId: criterio.solicitudPagoFaseCriterioId,
-                        tipoPagoCodigo: criterio.tipoPago.codigo,
-                        valorFacturado: criterio.valorFacturado,
-                        solicitudPagoFaseCriterioConceptoPago: criterio.conceptos,
-                        solicitudPagoFaseId: criterio.solicitudPagoFaseId,
-                        solicitudPagoFaseCriterioProyecto
-                    }
-                );
-            } );
-            console.log( this.solicitudPago );
-            // this.registrarPagosSvc.createEditNewPayment( this.solicitudPago )
-            //     .subscribe(
-            //         response => {
-            //             this.openDialog( '', `<b>${ response.message }</b>` );
-            //             this.registrarPagosSvc.getValidateSolicitudPagoId( this.solicitudPago.solicitudPagoId )
-            //                 .subscribe(
-            //                     () => {
-            //                         this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-            //                             () => this.routes.navigate(
-            //                                 [
-            //                                     '/registrarValidarRequisitosPago/verDetalleEditar',  this.solicitudPago.contratoId, this.solicitudPago.solicitudPagoId
-            //                                 ]
-            //                             )
-            //                         );
-            //                     }
-            //                 );
-            //         },
-            //         err => this.openDialog( '', `<b>${ err.message }</b>` )
-            //     );
         }
     }
 

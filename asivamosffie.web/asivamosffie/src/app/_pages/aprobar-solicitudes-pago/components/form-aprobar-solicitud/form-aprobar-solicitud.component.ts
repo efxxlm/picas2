@@ -76,7 +76,10 @@ export class FormAprobarSolicitudComponent implements OnInit {
         this.obsMultipleSvc.listaMenu()
             .subscribe( response => this.menusIdPath = response );
         this.obsMultipleSvc.listaTipoObservacionSolicitudes()
-            .subscribe( response => this.listaTipoObservacionSolicitudes = response );
+            .subscribe( response => {
+                this.listaTipoObservacionSolicitudes = response;
+                console.log( response );
+            } );
         this.addressForm = this.crearFormulario();
         this.otrosCostosObsForm = this.crearFormulario();
         this.getContrato();

@@ -62,7 +62,8 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
         private dialog: MatDialog,
         private routes: Router,
         private registrarPagosSvc: RegistrarRequisitosPagoService )
-    { }
+    {
+    }
 
     ngOnInit(): void {
         this.getProyectos();
@@ -257,6 +258,20 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
                         }
                     );
             }
+                if ( this.solicitudPagoFaseCriterio.length > 0 ) {
+                    let registroCompleto = 0;
+                    for ( const criterio of this.solicitudPagoFaseCriterio ) {
+                        if ( criterio.registroCompleto === true ) {
+                            registroCompleto++;
+                        }
+                    }
+
+                    if ( this.solicitudPagoFaseCriterio.length === registroCompleto ) {
+                        setTimeout(() => {
+                            this.projects.disable();
+                        }, 2000);
+                    }
+                }
         }
     }
 
