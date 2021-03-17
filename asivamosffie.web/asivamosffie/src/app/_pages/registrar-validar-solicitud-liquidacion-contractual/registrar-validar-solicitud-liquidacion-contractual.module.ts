@@ -17,6 +17,13 @@ import { ValidarBalanceComponent } from './components/validar-balance/validar-ba
 import { ObservacionesBalanceComponent } from './components/observaciones-balance/observaciones-balance.component';
 import { RecursosComprometidosPagadosComponent } from './components/recursos-comprometidos-pagados/recursos-comprometidos-pagados.component';
 import { VerDetalleComponent } from './components/ver-detalle/ver-detalle.component';
+import { VerEjecucionFinancieraComponent } from './components/ver-ejecucion-financiera/ver-ejecucion-financiera.component';
+import { VerTrasladosRecursosComponent } from './components/ver-traslados-recursos/ver-traslados-recursos.component';
+import { DetalleTrasladosComponent } from './components/detalle-traslados/detalle-traslados.component';
+import { TablaInformeFinalComponent } from './components/tabla-informe-final/tabla-informe-final.component';
+import { ValidarInformeFinalComponent } from './components/validar-informe-final/validar-informe-final.component';
+import { ObservacionesInformeFinalComponent } from './components/observaciones-informe-final/observaciones-informe-final.component';
+import { TablaInformeAnexosComponent } from './components/tabla-informe-anexos/tabla-informe-anexos.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +37,14 @@ import { VerDetalleComponent } from './components/ver-detalle/ver-detalle.compon
     ValidarBalanceComponent,
     ObservacionesBalanceComponent,
     RecursosComprometidosPagadosComponent,
-    VerDetalleComponent
+    VerDetalleComponent,
+    VerEjecucionFinancieraComponent,
+    VerTrasladosRecursosComponent,
+    DetalleTrasladosComponent,
+    TablaInformeFinalComponent,
+    ValidarInformeFinalComponent,
+    ObservacionesInformeFinalComponent,
+    TablaInformeAnexosComponent
   ],
   imports: [
     CommonModule,
