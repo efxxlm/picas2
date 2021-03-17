@@ -37,4 +37,8 @@ export class GestionarUsuariosService {
     return this.http.post<Respuesta>( `${ this.urlApi }/ActivateDeActivateUsuario`, pUsuario );
   }
 
+  validateExistEmail( pUsuario: any ) {
+    return this.http.post<any>( `${ this.urlApi }/ValidateExistEmail`, pUsuario );
+  }
+
 }

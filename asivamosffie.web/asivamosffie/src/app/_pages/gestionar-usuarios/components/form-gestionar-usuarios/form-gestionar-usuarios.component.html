@@ -674,7 +674,7 @@
             </mat-card-content>
         </mat-card>
     
-        <mat-card class="shipping-card" align="left" *ngIf="formUsuario.get( 'procedencia' ).value === procedenciaFfieCodigo">
+        <mat-card class="shipping-card" align="left" *ngIf="formUsuario.get( 'procedencia' ).value !== null">
             <mat-card-header class="header-card">
                 <mat-card-title class="header-card--text">
                     Procedencia

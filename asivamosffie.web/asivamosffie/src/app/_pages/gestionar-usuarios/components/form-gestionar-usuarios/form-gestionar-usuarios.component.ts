@@ -1,3 +1,4 @@
+import { delay } from 'rxjs/operators';
 import { GestionarUsuariosService } from './../../../../core/_services/gestionarUsuarios/gestionar-usuarios.service';
 import { Localizacion } from './../../../../core/_services/common/common.service';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
@@ -48,6 +49,34 @@ export class FormGestionarUsuariosComponent implements OnInit {
         private commonSvc: CommonService,
         private gestionarUsuariosSvc: GestionarUsuariosService )
     {
+        this.getDataUsuario();
+        this.formUsuario.get( 'correo' ).valueChanges
+            .pipe(
+                delay( 5000 )
+            )
+            .subscribe(
+                email => {
+                    if ( this.formUsuario.get( 'correo' ).dirty === true && this.formUsuario.get( 'correo' ).value !== null ) {
+                        const pUsuario = { email };
+
+                        this.gestionarUsuariosSvc.validateExistEmail( pUsuario )
+                            .subscribe(
+                                response => {
+                                    if ( response === true && this.formUsuario.get( 'correo' ).value === email ) {
+                                        this.openDialog( '', '<b>El correo ya fue utilizado, por favor verifique la información.</b>' );
+                                        this.formUsuario.get( 'correo' ).setValue( null );
+                                    }
+                                }
+                            );
+                    }
+                }
+            );
+    }
+
+    ngOnInit(): void {
+    }
+
+    getDataUsuario() {
         this.activatedRoute.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
             if ( urlSegment.path === 'crearUsuario' ) {
                 this.esRegistroNuevo = true;
@@ -59,10 +88,6 @@ export class FormGestionarUsuariosComponent implements OnInit {
             }
         } );
         this.formUsuario = this.crearFormulario();
-        /*
-            listaDepartamentos
-            listaMunicipiosByIdDepartamento
-        */
        // Get data campo Procedencia
         this.commonSvc.listaProcedencia()
             .subscribe(
@@ -166,9 +191,6 @@ export class FormGestionarUsuariosComponent implements OnInit {
                         } );
                 }
             );
-    }
-
-    ngOnInit(): void {
     }
 
     crearFormulario() {
