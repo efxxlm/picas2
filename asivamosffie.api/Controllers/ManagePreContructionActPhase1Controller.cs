@@ -68,7 +68,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                return await _managePreContruction.GetListGrillaActaInicio(pPerfilId);
+                return await _managePreContruction.GetListGrillaActaInicio(pPerfilId , Int32.Parse(HttpContext.User.FindFirst("UserId").Value));
             }
             catch (Exception ex)
             {

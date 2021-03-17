@@ -28,7 +28,9 @@ namespace asivamosffie.services
         {
             return await _context.VRegistrarFase1
                                  .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString()
-                                          && r.TieneFasePreconstruccion.Value > 0)
+                                          && r.TieneFasePreconstruccion.Value > 0
+                                          && r.ApoyoId == pAuthorId
+                                          )
                                  .OrderByDescending(r => r.FechaAprobacion)
                                  .ToListAsync();
         }
@@ -47,7 +49,7 @@ namespace asivamosffie.services
                              .ThenInclude(r => r.Proyecto)
                                   .ThenInclude(r => r.ContratoPerfil)
                                      .ThenInclude(r => r.ContratoPerfilObservacion)
-                     .Where(c => c.InterventorId == pAuthorId)
+                     .Where(c => c.ApoyoId == pAuthorId)
                      .ToListAsync();
                 listContratos.OrderBy(r => r.EstadoVerificacionCodigo).ToList().ForEach(c =>
                 {

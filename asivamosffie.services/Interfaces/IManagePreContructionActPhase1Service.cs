@@ -20,7 +20,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<Contrato> GetContratoByContratoId(int pContratoId, int? pUserId);
 
-        Task<List<GrillaActaInicio>> GetListGrillaActaInicio(int pPerfilId);
+        Task<List<GrillaActaInicio>> GetListGrillaActaInicio(int pPerfilId , int pAuthor);
 
         Task<Respuesta> EditContrato(Contrato pContrato);
 

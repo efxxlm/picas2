@@ -26,11 +26,10 @@ namespace asivamosffie.services
             _verifyPre = verifyPreConstructionRequirementsPhase1Service;
         }
 
-        public async Task<dynamic> GetListContratacion()
+        public async Task<dynamic> GetListContratacion(int pAuthor)
         {
             List<Dominio> Parametricas = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Verificacion_Contrato).ToList();
-            List<dynamic> listaContrats = new List<dynamic>();
-
+            List<dynamic> listaContrats = new List<dynamic>(); 
             List<Contrato> listContratos = await _context.Contrato
                 .FromSqlRaw(QuerySql.GetListContratacionValidar)  
                 .Include(r => r.ContratoPoliza)
@@ -39,6 +38,7 @@ namespace asivamosffie.services
                        .ThenInclude(r => r.Proyecto)
                            .ThenInclude(r => r.ContratoPerfil)
                                .ThenInclude(r => r.ContratoPerfilObservacion)
+                .Where(c=> c.SupervisorId == pAuthor)
                 .ToListAsync();
 
             foreach (var c in listContratos)
