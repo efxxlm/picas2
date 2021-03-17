@@ -152,10 +152,12 @@
         <mat-card class="shipping-card mainGris">
             <mat-card-content style="text-align: left;">
                 <p> <strong>¿Cumple con los datos del Asegurado/ Beneficiario?: </strong><em>Sí</em> </p>
-                <p> <strong>¿Cumple con los datos del Beneficiario cuando se trate de garantía bancaria?: </strong><em>Sí</em> </p>
+                <p> <strong>¿Cumple con los datos del Beneficiario cuando se trate de garantía bancaria?:
+                    </strong><em>Sí</em> </p>
                 <p> <strong>¿Cumple con los datos del Tomador / Afianzado?: </strong><em>Sí</em> </p>
                 <p> <strong>¿Se incluye el recibo de pago con los datos requeridos?: </strong><em>Sí</em> </p>
-                <p> <strong>¿Se incluyen las condiciones generales de la póliza/ o su clausulado?: </strong><em>Sí</em> </p>
+                <p> <strong>¿Se incluyen las condiciones generales de la póliza/ o su clausulado?: </strong><em>Sí</em>
+                </p>
             </mat-card-content>
         </mat-card>
     </mat-expansion-panel>
@@ -192,8 +194,9 @@
         <mat-card-content align="left">
             <p><strong>16/11/2020</strong></p>
             <div>
-                <p><strong>¿Desde la supervisión tiene observaciones frente a la actualización de la póliza que deban ser tenidas en cuenta en la
-                    liquidación?: </strong><em>No</em></p>
+                <p><strong>¿Desde la supervisión tiene observaciones frente a la actualización de la póliza que deban
+                        ser tenidas en cuenta en la
+                        liquidación?: </strong><em>No</em></p>
             </div>
         </mat-card-content>
     </mat-card>
@@ -202,10 +205,15 @@
     <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
         <div class="row mtop justCenter">
             <div class="col-md-12">
-                <label class="label-left">¿Desde control y seguimiento tiene observaciones frente a la actualización de la póliza que deban ser tenidas en cuenta en la
+                <label class="label-left" for="tieneObservaciones" [ngClass]="{
+                    'color-secondaryColor':
+                      (addressForm.get('tieneObservaciones').invalid && addressForm.get('tieneObservaciones').touched) ||
+                      (addressForm.get('tieneObservaciones').invalid && estaEditando)
+                  }">¿Desde control y seguimiento tiene observaciones frente a la actualización de la póliza que deban
+                    ser tenidas en cuenta en la
                     liquidación?</label>
             </div>
-            <div class="col-md-12">
+            <div class="col-md-2">
                 <mat-radio-group aria-labelledby="example-radio-group-label" class="radioInput"
                     formControlName="tieneObservaciones">
                     <mat-radio-button class="radio-button" [value]="true">Sí</mat-radio-button>
@@ -213,12 +221,30 @@
                 </mat-radio-group>
                 <span class="required-form-group" style="margin-left: 1px;">*</span>
             </div>
+            <span class="icon-incompleto">
+                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                    [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip" *ngIf="
+                  (addressForm.get('tieneObservaciones').invalid && addressForm.get('tieneObservaciones').touched) ||
+                  (addressForm.get('tieneObservaciones').invalid && estaEditando)
+                  " />
+            </span>
         </div>
-        <div class="d-flex align-items-center mt-2em animatedDown" *ngIf="addressForm.get('tieneObservaciones').value === true">
-            <div class="text-area-quill izqTitle">
-                <label for="observaciones" class="text-area-quill--label" style="color: #174193;">Observaciones frente a la actualización de la póliza</label>
+        <div class="d-flex align-items-center mt-2em animatedDown"
+            *ngIf="addressForm.get('tieneObservaciones').value === true">
+            <div class="text-area-quill izqTitle" [ngClass]="{
+                'color-secondaryColor':
+                  (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                  (addressForm.get('observaciones').invalid && estaEditando)
+              }">
+                <label for="observaciones" class="text-area-quill--label" [ngClass]="{
+                    'colorMainColor':
+                      !((addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                      (addressForm.get('observaciones').invalid && estaEditando))
+                  }">Observaciones frente a la actualización de la póliza</label>
                 <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
-                    (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observaciones></quill-editor>
+                    (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observaciones>
+                </quill-editor>
             </div>
             <span class="contador miles" *ngIf="addressForm.get('observaciones').value">
                 {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
@@ -226,11 +252,17 @@
             <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null">
                 1000
             </span>
+            <span class="icon-incompleto">
+                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                    [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip" *ngIf="
+                    (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                    (addressForm.get('observaciones').invalid && estaEditando)
+                  " />
+            </span>
         </div>
-        <button mat-button color="warn" class="btn-guardar mt1"
-            type="submit">
+        <button mat-button color="warn" class="btn-guardar mt1" type="submit">
             <img src="assets/img/icon/guardar.svg" alt="Guardar">
         </button>
     </form>
 </div>
-

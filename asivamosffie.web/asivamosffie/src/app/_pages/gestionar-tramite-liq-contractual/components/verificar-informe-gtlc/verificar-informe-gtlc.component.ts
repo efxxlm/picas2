@@ -98,6 +98,7 @@ export class VerificarInformeGtlcComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  estaEditando = true;
   constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
@@ -137,6 +138,8 @@ export class VerificarInformeGtlcComponent implements OnInit {
     }
   }
   onSubmit() {
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     console.log(this.addressForm.value);
   }
 }

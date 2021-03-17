@@ -39,6 +39,7 @@ export class ActualizacionPolizaGtlcComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
   constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
@@ -68,6 +69,8 @@ export class ActualizacionPolizaGtlcComponent implements OnInit {
     }
   }
   onSubmit() {
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     console.log(this.addressForm.value);
   }
 }
