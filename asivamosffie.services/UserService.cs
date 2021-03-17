@@ -605,46 +605,23 @@ namespace asivamosffie.services
 
 
         }
-
-
-
-        public object ResetContratoUser(int pAuthor, string strTipoRolAsignadoContratoCodigo)
+         
+        public void ResetContratoUser(int pAuthor, string strTipoRolAsignadoContratoCodigo)
         {
-            return strTipoRolAsignadoContratoCodigo switch
-            {
-                ConstantCodigoTipoAsignacionContrato.Interventor => _context.Set<Contrato>()
-                                                                 .Where(r => r.InterventorId == pAuthor)
-                                                                  .Update(r =>
-                                                                  new Contrato
-                                                                  {
-                                                                      InterventorId = null,
-                                                                      FechaModificacion = DateTime.Now,
-                                                                  }),
-
-                ConstantCodigoTipoAsignacionContrato.Apoyo => _context.Set<Contrato>()
-                                                                 .Where(r => r.ApoyoId == pAuthor)
-                                                                  .Update(r =>
-                                                                  new Contrato
-                                                                  {
-                                                                      InterventorId = null,
-                                                                      FechaModificacion = DateTime.Now,
-                                                                  }),
-
-
-                ConstantCodigoTipoAsignacionContrato.Supervisor => _context.Set<Contrato>()
-                                                                 .Where(r => r.SupervisorId == pAuthor)
-                                                                  .Update(r =>
-                                                                  new Contrato
-                                                                  {
-                                                                      InterventorId = null,
-                                                                      FechaModificacion = DateTime.Now,
-                                                                  }),
-                _ => new { },
-            };
-
-
-
-
+            _context.Set<Contrato>()
+                                                                    .Where(r => 
+                                                                               r.InterventorId == pAuthor
+                                                                            || r.ApoyoId == pAuthor
+                                                                            || r.SupervisorId == pAuthor
+                                                                           )
+                                                                     .Update(r =>
+                                                                     new Contrato
+                                                                     {
+                                                                         InterventorId = null,
+                                                                         ApoyoId = null,
+                                                                         SupervisorId = null,
+                                                                         FechaModificacion = DateTime.Now,
+                                                                     });  
         }
 
 
