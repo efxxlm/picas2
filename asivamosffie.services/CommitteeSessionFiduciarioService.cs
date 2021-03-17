@@ -216,7 +216,7 @@ namespace asivamosffie.services
                                 case ConstanCodigoTipoSolicitud.Defensa_judicial:
                                     {
                                         DefensaJudicial defensaJudicial = _context.DefensaJudicial
-                                                                                        .Where(r => r.DefensaJudicialId == ss.SolicitudId)
+                                                                                        .Where(r => r.DefensaJudicialId == ss.SolicitudId && r.CuantiaPerjuicios != null && r.CuantiaPerjuicios.Value > 0)
                                                                                         //.Include(r => r.ControversiaContractual)
                                                                                         .FirstOrDefault();
 

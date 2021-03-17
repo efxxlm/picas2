@@ -106,13 +106,20 @@ namespace asivamosffie.services
 
         public async Task<NovedadContractual> GetNovedadContractualById( int pId)
         {
-            List<Dominio> listDominioTipoDocumento = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento).ToList();
+            List<Dominio> listDominioTipoDocumento = _context.Dominio
+                                                                .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento)
+                                                                .ToList();
+
+            List<Dominio> listDominioTipoNovedad = _context.Dominio
+                                                                .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Novedad_Modificacion_Contractual)
+                                                                .ToList();
 
             NovedadContractual novedadContractual = _context.NovedadContractual
                                                                 .Where( r => r.NovedadContractualId == pId)
                                                                 .Include( r => r.Contrato )
                                                                     .ThenInclude( r => r.Contratacion )
                                                                         .ThenInclude( r => r.Contratista )
+                                                                .Include( r => r.NovedadContractualDescripcion )
                                                                 .FirstOrDefault();
 
             novedadContractual.ProyectosContrato = _context.VProyectosXcontrato
@@ -122,6 +129,14 @@ namespace asivamosffie.services
             novedadContractual.ProyectosSeleccionado = _context.VProyectosXcontrato
                                                                     .Where(r => r.ProyectoId == novedadContractual.ProyectoId && r.ContratoId == novedadContractual.ContratoId )
                                                                     .FirstOrDefault();
+
+            foreach( NovedadContractualDescripcion novedadContractualDescripcion in novedadContractual.NovedadContractualDescripcion)
+            {
+                novedadContractualDescripcion.NombreTipoNovedad = listDominioTipoNovedad
+                                                                        .Where(r => r.Codigo == novedadContractualDescripcion.TipoNovedadCodigo)
+                                                                        .FirstOrDefault()
+                                                                        .Nombre;
+            }
 
                 if (novedadContractual?.Contrato?.Contratacion?.Contratista != null)
                 {
@@ -165,13 +180,10 @@ namespace asivamosffie.services
                         {
                             foreach( NovedadContractualDescripcion descripcion in novedadContractual.NovedadContractualDescripcion)
                             {
-                                if (string.IsNullOrEmpty(descripcion.NovedadContractualDescripcionId.ToString()) || descripcion.NovedadContractualDescripcionId == 0)
-                                {
-                                    descripcion.FechaCreacion = DateTime.Now;
-                                    descripcion.UsuarioCreacion = novedadContractual.UsuarioCreacion;
+                                descripcion.UsuarioCreacion = novedadContractual.UsuarioCreacion;
+                                descripcion.NovedadContractualId = novedadContractual.NovedadContractualId;
 
-
-                                }
+                                await CreateEditNovedadContractualDescripcion(descripcion);
                             }
                         }
 
@@ -192,7 +204,16 @@ namespace asivamosffie.services
                         novedadContractualOld.InstanciaCodigo = novedadContractual.InstanciaCodigo;
                         novedadContractualOld.FechaSesionInstancia = novedadContractual.FechaSesionInstancia;
 
+                        if (novedadContractual.NovedadContractualDescripcion != null)
+                        {
+                            foreach (NovedadContractualDescripcion descripcion in novedadContractual.NovedadContractualDescripcion)
+                            {
+                                descripcion.UsuarioCreacion = novedadContractual.UsuarioCreacion;
+                                descripcion.NovedadContractualId = novedadContractual.NovedadContractualId;
 
+                                await CreateEditNovedadContractualDescripcion(descripcion);
+                            }
+                        }
                     }
 
                     _context.SaveChanges();
@@ -247,7 +268,6 @@ namespace asivamosffie.services
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Novedad_Contractual, (int)EnumeratorTipoDominio.Acciones);//ERROR VALIDAR ACCIONES
 
             string strCrearEditar = "";
-            //ProcesoSeleccionGrupo ProcesoSeleccionGrupoAntiguo = null;
             try
             {
 
@@ -263,24 +283,30 @@ namespace asivamosffie.services
                 else
                 {
                     strCrearEditar = "EDIT NOVEDAD CONTRACTUAL DESCRIPCION";
-                    NovedadContractualDescripcion novedadDescripcionOLD = _context.NovedadContractualDescripcion.Find(novedadContractualDescripcion.NovedadContractualDescripcionId);
+                    NovedadContractualDescripcion novedadDescripcionOld = _context.NovedadContractualDescripcion.Find(novedadContractualDescripcion.NovedadContractualDescripcionId);
+
                     //Auditoria
-                    //ProcesoSeleccionGrupoAntiguo.UsuarioModificacion = procesoSeleccionGrupo.UsuarioCreacion.ToUpper();
-                    //ProcesoSeleccionGrupoAntiguo.NombreGrupo = procesoSeleccionGrupo.NombreGrupo == null ? "" : procesoSeleccionGrupo.NombreGrupo.ToUpper();
-                    //ProcesoSeleccionGrupoAntiguo.FechaModificacion = DateTime.Now;
+                    novedadDescripcionOld.FechaModificacion = DateTime.Now;
+                    novedadDescripcionOld.UsuarioCreacion = novedadContractualDescripcion.UsuarioCreacion;
 
+                    //Registros
 
-                    ////Registros
+                    novedadDescripcionOld.MotivoNovedadCodigo = novedadContractualDescripcion.MotivoNovedadCodigo;
+                    novedadDescripcionOld.ResumenJustificacion = novedadContractualDescripcion.ResumenJustificacion;
+                    novedadDescripcionOld.EsDocumentacionSoporte = novedadContractualDescripcion.EsDocumentacionSoporte;
+                    novedadDescripcionOld.ConceptoTecnico = novedadContractualDescripcion.ConceptoTecnico;
+                    novedadDescripcionOld.FechaConcepto = novedadContractualDescripcion.FechaConcepto;
+                    novedadDescripcionOld.FechaInicioSuspension = novedadContractualDescripcion.FechaInicioSuspension;
+                    novedadDescripcionOld.FechaFinSuspension = novedadContractualDescripcion.FechaFinSuspension;
+                    novedadDescripcionOld.PresupuestoAdicionalSolicitado = novedadContractualDescripcion.PresupuestoAdicionalSolicitado;
+                    novedadDescripcionOld.PlazoAdicionalDias = novedadContractualDescripcion.PlazoAdicionalDias;
+                    novedadDescripcionOld.PlazoAdicionalMeses = novedadContractualDescripcion.PlazoAdicionalMeses;
+                    novedadDescripcionOld.ClausulaModificar = novedadContractualDescripcion.ClausulaModificar;
+                    novedadDescripcionOld.AjusteClausula = novedadContractualDescripcion.AjusteClausula;
+                    novedadDescripcionOld.RegistroCompleto = novedadContractualDescripcion.RegistroCompleto;
+                    novedadDescripcionOld.NumeroRadicado = novedadContractualDescripcion.NumeroRadicado;
 
-                    //ProcesoSeleccionGrupoAntiguo.ProcesoSeleccionId = procesoSeleccionGrupo.ProcesoSeleccionId;
-                    //ProcesoSeleccionGrupoAntiguo.TipoPresupuestoCodigo = procesoSeleccionGrupo.TipoPresupuestoCodigo;
-                    //ProcesoSeleccionGrupoAntiguo.Valor = procesoSeleccionGrupo.Valor;
-                    //ProcesoSeleccionGrupoAntiguo.ValorMinimoCategoria = procesoSeleccionGrupo.ValorMinimoCategoria;
-                    //ProcesoSeleccionGrupoAntiguo.ValorMaximoCategoria = procesoSeleccionGrupo.ValorMaximoCategoria;
-                    //ProcesoSeleccionGrupoAntiguo.PlazoMeses = procesoSeleccionGrupo.PlazoMeses;
-                    //ProcesoSeleccionGrupoAntiguo.Eliminado = false;
-
-                    //_context.ProcesoSeleccionGrupo.Update(ProcesoSeleccionGrupoAntiguo);
+                    _context.NovedadContractualDescripcion.Update( novedadDescripcionOld );
                 }
 
                 return respuesta;
@@ -294,7 +320,7 @@ namespace asivamosffie.services
                     IsValidation = false,
                     Data = null,
                     Code = ConstantMessagesProcesoSeleccion.ErrorInterno,
-                    //Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion_Grupo, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccion, ProcesoSeleccionGrupoAntiguo.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion_Grupo, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccion, novedadContractualDescripcion.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
                 };
             }
         }
