@@ -142,6 +142,19 @@ export class CambiarContrasenaComponent implements OnInit {
       this.formChangePassword.get('newPassword').dirty &&
       this.formChangePassword.get('confirmPassword').dirty;
   }
+
+  disabledBtn() {
+    if ( this.formChangePassword.get('newPassword').value.length > 0 && this.formChangePassword.get('confirmPassword').value.length > 0 ) {
+      if ( this.formChangePassword.get('newPassword').value === this.formChangePassword.get('confirmPassword').value ) {
+        return false;
+      } else {
+        return true;
+      }
+    } else {
+      return true;
+    }
+  }
+
   validatePass()
   {
     event.preventDefault();    

@@ -162,6 +162,7 @@ export class FormGestionarUsuariosComponent implements OnInit {
                                                                                             urlSoporte: getUsuario.urlSoporteDocumentacion !== undefined ? getUsuario.urlSoporteDocumentacion : null,
                                                                                             observaciones: getUsuario.observaciones !== undefined ? getUsuario.observaciones : null,
                                                                                             dependencia: getUsuario.dependenciaCodigo !== undefined ? this.listaDependencia.find( dependencia => dependencia.codigo === getUsuario.dependenciaCodigo ).codigo : null,
+                                                                                            tieneGrupo: getUsuario.tieneGrupo !== undefined ? getUsuario.tieneGrupo : null,
                                                                                             grupo: getUsuario.grupoCodigo !== undefined ? this.listaGrupo.find( grupo => grupo.codigo === getUsuario.grupoCodigo ).codigo : null,
                                                                                             tieneContratos: getUsuario.tieneContratoAsignado !== undefined ? getUsuario.tieneContratoAsignado : null,
                                                                                             rol: getUsuario.perfil !== undefined ? this.listaRoles.find( rol => rol.perfilId === getUsuario.perfil.perfilId ).perfilId : null,
@@ -213,6 +214,7 @@ export class FormGestionarUsuariosComponent implements OnInit {
                 urlSoporte: [ null, Validators.required ],
                 observaciones: [ null, Validators.required ],
                 dependencia: [ null, Validators.required ],
+                tieneGrupo: [ null, Validators.required ],
                 grupo: [ null, Validators.required ],
                 tieneContratos: [ null, Validators.required ],
                 rol: [ null, Validators.required ],
@@ -233,22 +235,10 @@ export class FormGestionarUsuariosComponent implements OnInit {
     }
 
     getlistaContratos( tipoAsignacion: string ) {
-        const asignacion = this.listaAsignaciones.find( asignacion => asignacion.codigo === tipoAsignacion );
-
-        if ( asignacion !== undefined ) {
-            if ( asignacion.nombre === 'Interventor' )  {
-                this.gestionarUsuariosSvc.getContratoByTipo( 'True' )
-                    .subscribe( getContratoByTipo => {
-                        this.listaContratos = getContratoByTipo;
-                    } );
-            } else {
-                this.gestionarUsuariosSvc.getContratoByTipo( 'False' )
-                    .subscribe( getContratoByTipo => {
-                        this.listaContratos = getContratoByTipo;
-                        
-                    } );
-            }
-        }
+        this.gestionarUsuariosSvc.getContratoByTipo( tipoAsignacion )
+            .subscribe( getContratoByTipo => {
+                this.listaContratos = getContratoByTipo;
+            } );
     }
 
     getMunicipiosByDepartamento( departamento: Localizacion ) {
@@ -327,6 +317,7 @@ export class FormGestionarUsuariosComponent implements OnInit {
             urlSoporteDocumentacion: this.formUsuario.get( 'urlSoporte' ).value,
             observaciones: this.formUsuario.get( 'observaciones' ).value,
             dependenciaCodigo: this.formUsuario.get( 'dependencia' ).value,
+            tieneGrupo: this.formUsuario.get( 'tieneGrupo' ).value,
             grupoCodigo: this.formUsuario.get( 'grupo' ).value,
             PerfilId: this.formUsuario.get( 'rol' ).value,
             tipoAsignacionCodigo: this.formUsuario.get( 'tipoAsignacionCodigo' ).value,

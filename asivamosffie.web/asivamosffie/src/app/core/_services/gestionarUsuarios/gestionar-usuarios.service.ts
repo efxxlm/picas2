@@ -30,7 +30,7 @@ export class GestionarUsuariosService {
   }
 
   getContratoByTipo( esObra: string ) {
-    return this.http.get<any[]>( `${ this.urlApi }/GetContratoByTipo?EsObra=${ esObra }` );
+    return this.http.get<any[]>( `${ this.urlApi }/GetContratoByTipo?strTipoRolAsignadoContratoCodigo=${ esObra }` );
   }
 
   activateDeActivateUsuario( pUsuario: any ) {
