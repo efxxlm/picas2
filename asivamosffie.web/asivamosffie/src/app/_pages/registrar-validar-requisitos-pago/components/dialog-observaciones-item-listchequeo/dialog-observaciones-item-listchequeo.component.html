@@ -17,17 +17,22 @@
             <div class="col-md-12" style="padding-left: 0;">
                 <div>
                     <div class="d-flex align-items-center">
-                        <div class="text-area-quill" style="text-align: left; margin-top: 1em; max-width: calc(100% - 2.3em); margin-left: -2em;">
-                            <label for="observaciones" class="text-area-quill--label size-label colorMainColor" 
-                            [ngClass]="{
-                                'color-secondaryColor':
-                                  (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
-                                  (addressForm.get('observaciones').invalid && estaEditando)
+                        <div class="text-area-quill" [ngClass]="{
+                            'color-secondaryColor':
+                              (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                              (addressForm.get('observaciones').invalid && estaEditando)
+                          }"
+                            style="text-align: left; margin-top: 1em; max-width: calc(100% - 2.3em); margin-left: -2em;">
+                            <label for="observaciones" class="text-area-quill--label size-label" [ngClass]="{
+                                'colorMainColor':
+                                  !((addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                                  (addressForm.get('observaciones').invalid && estaEditando))
                               }">
                                 Observaciones
                             </label>
                             <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
-                                (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observaciones>
+                                (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones"
+                                #observaciones>
                             </quill-editor>
                         </div>
                         <span class="contador miles" *ngIf="addressForm.controls.observaciones.value">
@@ -37,19 +42,14 @@
                             1000
                         </span>
                         <span class="icon-incompleto">
-                            <img
-                              class="icon-incompleto--img"
-                              src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
-                              [matTooltipPosition]="'above'"
-                              matTooltip="Debe ingresar la información en el campo para continuar"
-                              matTooltipClass="info-tooltip"
-                              *ngIf="
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip" *ngIf="
                                 (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
                                 (addressForm.get('observaciones').invalid && estaEditando)
-                              "
-                            />
-                          </span>
+                              " />
+                        </span>
                     </div>
                 </div>
             </div>

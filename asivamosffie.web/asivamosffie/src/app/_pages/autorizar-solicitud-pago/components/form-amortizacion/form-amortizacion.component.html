@@ -59,7 +59,7 @@
                       " />
                 </span>
             </div>
-            <div class="d-flex align-items-center mtop" *ngIf="addressForm.get('tieneObservaciones').value === true">
+            <div class="d-flex align-items-center mtop animatedDown" *ngIf="addressForm.get('tieneObservaciones').value === true">
                 <div class="text-area-quill izqTitle"
                 [ngClass]="{
                     'color-secondaryColor':
@@ -70,8 +70,7 @@
                                 'colorMainColor':
                                   !((addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
                                   (addressForm.get('observaciones').invalid && estaEditando))
-                              }">Observaciones a la
-                        amortización del anticipo</label>
+                              }">Observaciones a la amortización del anticipo</label>
                     <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
                         (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observaciones>
                     </quill-editor>

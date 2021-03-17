@@ -38,7 +38,7 @@
     </div>
   </div>
 
-  <div *ngIf="criterios.length > 0">
+  <div *ngIf="criterios.length > 0" class="animatedDown">
     <div formArrayName="criterios" style="margin-top: 3em;" *ngFor="let criterio of criterios.controls; index as i">
       <mat-card class="shipping-card" [formGroup]="criterio">
         <mat-card-header class="header-card header-card--margin">
@@ -123,7 +123,7 @@
           <!--
             Get conceptos seleccionados
           -->
-          <div formArrayName="conceptos" *ngFor="let concepto of getConceptos( i ).controls; index as j">
+          <div class="animatedDown" formArrayName="conceptos" *ngFor="let concepto of getConceptos( i ).controls; index as j">
             <mat-card-title class="header-card--text alineacion-titulos2" style="padding-left: 0em; margin-top: 0.5em;"> {{ concepto.get( 'conceptoPagoCriterioNombre' ).value }} </mat-card-title>
             <div class="row" [formGroup]="concepto">
               <div class="col-md-8">

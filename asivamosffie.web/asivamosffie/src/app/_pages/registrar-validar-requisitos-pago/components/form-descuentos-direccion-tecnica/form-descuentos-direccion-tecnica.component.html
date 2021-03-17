@@ -61,7 +61,7 @@
                 </div>
             </div>
             <div class="animatedDown" *ngIf="formDescuentos.get( 'aplicaDescuento' ).value == true">
-                <div class="d-flex mt-1em col-md-6" style="margin: 10px auto;">
+                <div class="d-flex mt-1em col-md-7" style="margin: 10px auto;">
                     <label class="mr-label" class="label-left" for="numeroDescuentos" [ngClass]="{
                         'color-secondaryColor':
                           (formDescuentos.get('numeroDescuentos')?.invalid && formDescuentos.get('numeroDescuentos').touched) ||
@@ -114,8 +114,8 @@
                     </div>
                 </div>
 
-                <section class="animatedDown" formArrayName="descuentos" *ngIf="descuentos.length > 0">
-                    <div *ngFor="let descuento of descuentos.controls; index as i" [formGroup]="descuento">
+                <section formArrayName="descuentos" *ngIf="descuentos.length > 0">
+                    <div class="animatedDown" *ngFor="let descuento of descuentos.controls; index as i" [formGroup]="descuento">
                         <mat-card class="shipping-card">
                             <mat-card-header class="header-card header-card--margin">
                                 <mat-card-title class="header-card--text">
