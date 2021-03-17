@@ -226,7 +226,8 @@ namespace asivamosffie.services
                                                                      .Select(c => new
                                                                      {
                                                                          c.ContratoId,
-                                                                         c.NumeroContrato
+                                                                         c.NumeroContrato,
+                                                                         TipoAsignacionCodigo = ConstantCodigoTipoAsignacionContrato.Interventor
                                                                      })
                                                                      .ToListAsync(),
                     ConstantCodigoTipoAsignacionContrato.Apoyo => await _context.Contrato
@@ -234,7 +235,8 @@ namespace asivamosffie.services
                                                                 .Select(c => new
                                                                 {
                                                                     c.ContratoId,
-                                                                    c.NumeroContrato
+                                                                    c.NumeroContrato,
+                                                                    TipoAsignacionCodigo = ConstantCodigoTipoAsignacionContrato.Apoyo
                                                                 })
                                                                 .ToListAsync(),
                     ConstantCodigoTipoAsignacionContrato.Supervisor => await _context.Contrato
@@ -242,7 +244,8 @@ namespace asivamosffie.services
                                                                 .Select(c => new
                                                                 {
                                                                     c.ContratoId,
-                                                                    c.NumeroContrato
+                                                                    c.NumeroContrato,
+                                                                    TipoAsignacionCodigo = ConstantCodigoTipoAsignacionContrato.Supervisor
                                                                 })
                                                                 .ToListAsync(),
                     _ => new { },
@@ -258,7 +261,8 @@ namespace asivamosffie.services
                                                                      .Select(c => new
                                                                      {
                                                                          c.ContratoId,
-                                                                         c.NumeroContrato
+                                                                         c.NumeroContrato,
+                                                                         TipoAsignacionCodigo = ConstantCodigoTipoAsignacionContrato.Interventor
                                                                      })
                                                                      .ToListAsync(),
                     ConstantCodigoTipoAsignacionContrato.Apoyo => await _context.Contrato
@@ -266,7 +270,8 @@ namespace asivamosffie.services
                                                                 .Select(c => new
                                                                 {
                                                                     c.ContratoId,
-                                                                    c.NumeroContrato
+                                                                    c.NumeroContrato,
+                                                                    TipoAsignacionCodigo = ConstantCodigoTipoAsignacionContrato.Apoyo
                                                                 })
                                                                 .ToListAsync(),
                     ConstantCodigoTipoAsignacionContrato.Supervisor => await _context.Contrato
@@ -274,7 +279,8 @@ namespace asivamosffie.services
                                                                 .Select(c => new
                                                                 {
                                                                     c.ContratoId,
-                                                                    c.NumeroContrato
+                                                                    c.NumeroContrato, 
+                                                                    TipoAsignacionCodigo = ConstantCodigoTipoAsignacionContrato.Supervisor
                                                                 })
                                                                 .ToListAsync(),
                     _ => new { },
