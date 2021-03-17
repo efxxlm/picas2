@@ -665,11 +665,11 @@ namespace asivamosffie.services
         {
             //Valida si el contrato de la solicitud es interventoria o Obra
             string strInterventoriaCodigo = _context.Contrato
-                 .Include(ctr => ctr.Contratacion)
-                    .Where(s => s.ContratoId == pSolicitudPago.ContratoId)
-                             .Select(crt =>
-                                     crt.Contratacion.TipoSolicitudCodigo
-                             ).FirstOrDefault();
+                                             .Include(ctr => ctr.Contratacion)
+                                             .Where(s => s.ContratoId == pSolicitudPago.ContratoId)
+                                            .Select(crt =>
+                                                    crt.Contratacion.TipoSolicitudCodigo
+                                                    ).FirstOrDefault();
 
             if (pSolicitudPago.SolicitudPagoSoporteSolicitud.Count() > 0)
                 CreateEditNewSolicitudPagoSoporteSolicitud(pSolicitudPago.SolicitudPagoSoporteSolicitud, pSolicitudPago.UsuarioCreacion);
@@ -810,6 +810,7 @@ namespace asivamosffie.services
                     SolicitudPagoCargarFormaPago solicitudPagoCargarFormaPagoOld = _context.SolicitudPagoCargarFormaPago.Find(pSolicitudPagoCargarFormaPago.SolicitudPagoCargarFormaPagoId);
                     solicitudPagoCargarFormaPagoOld.FechaModificacion = DateTime.Now;
                     solicitudPagoCargarFormaPagoOld.TieneFase1 = pSolicitudPagoCargarFormaPago.TieneFase1;
+ 
                     solicitudPagoCargarFormaPagoOld.RegistroCompleto = ValidateCompleteRecordSolicitudPagoCargarFormaPago(pSolicitudPagoCargarFormaPago);
                     solicitudPagoCargarFormaPagoOld.FaseConstruccionFormaPagoCodigo = pSolicitudPagoCargarFormaPago.FaseConstruccionFormaPagoCodigo;
                     solicitudPagoCargarFormaPagoOld.FasePreConstruccionFormaPagoCodigo = pSolicitudPagoCargarFormaPago.FasePreConstruccionFormaPagoCodigo;
@@ -840,7 +841,9 @@ namespace asivamosffie.services
                 SolicitudPagoRegistrarSolicitudPago solicitudPagoRegistrarSolicitudPagoOld = _context.SolicitudPagoRegistrarSolicitudPago.Find(solicitudPagoRegistrarSolicitudPago.SolicitudPagoRegistrarSolicitudPagoId);
                 solicitudPagoRegistrarSolicitudPagoOld.FechaModificacion = DateTime.Now;
                 solicitudPagoRegistrarSolicitudPagoOld.RegistroCompleto = ValidateCompleteRecordSolicitudPagoRegistrarSolicitudPago(solicitudPagoRegistrarSolicitudPago);
-
+                solicitudPagoRegistrarSolicitudPagoOld.TieneFasePreconstruccion = solicitudPagoRegistrarSolicitudPago.TieneFasePreconstruccion;
+                solicitudPagoRegistrarSolicitudPagoOld.FechaSolicitud = solicitudPagoRegistrarSolicitudPago.FechaSolicitud;
+                solicitudPagoRegistrarSolicitudPagoOld.TieneFaseConstruccion = solicitudPagoRegistrarSolicitudPago.TieneFaseConstruccion;
                 solicitudPagoRegistrarSolicitudPagoOld.FechaSolicitud = solicitudPagoRegistrarSolicitudPago.FechaSolicitud;
                 solicitudPagoRegistrarSolicitudPagoOld.NumeroRadicadoSac = solicitudPagoRegistrarSolicitudPago.NumeroRadicadoSac;
             }
