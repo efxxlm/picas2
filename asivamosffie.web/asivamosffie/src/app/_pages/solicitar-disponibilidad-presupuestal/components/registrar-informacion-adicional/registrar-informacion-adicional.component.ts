@@ -194,16 +194,24 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
     }
   }
 
-  textoLimpio(texto: string) {
-    let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
+  // textoLimpio(texto: string) {
+  //   let saltosDeLinea = 0;
+  //   saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
+  //   saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
 
-    if (texto) {
-      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
-      return textolimpio.length + saltosDeLinea;
+  //   if (texto) {
+  //     const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
+  //     return textolimpio.length + saltosDeLinea;
+  //   }
+  // }
+
+  textoLimpio( evento: any, n: number ) {
+    if ( evento !== undefined ) {
+        return evento.getLength() > n ? n : evento.getLength();
+    } else {
+        return 0;
     }
-  }
+}
 
   private contarSaltosDeLinea(cadena: string, subcadena: string) {
     let contadorConcurrencias = 0;
