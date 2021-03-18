@@ -83,14 +83,23 @@ namespace asivamosffie.services
             return ListDynamics;
         }
         //4# Traer  Uso Por Concepto de pago
-        public async Task<dynamic> GetUsoByConceptoPagoCriterioCodigo(string pConceptoPagoCodigo , int pContratoId)
+        public async Task<dynamic> GetUsoByConceptoPagoCriterioCodigo(string pConceptoPagoCodigo, int pContratoId)
         {
-            List<dynamic> ListDynamics = new List<dynamic>();
-            List<string> strCriterios = _context.ConceptoPagoUso.Where(r => r.ConceptoPagoCodigo == pConceptoPagoCodigo).Select(r => r.Uso).ToList();
-            List<Dominio> ListUsos = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Usos);
+            try
+            {
 
-            return _context.VValorUsoXcontratoId.Where(r => r.ContratoId == pContratoId && ListUsos.Any(l => l.Codigo == r.TipoUsoCodigo)).ToList();
+                List<dynamic> ListDynamics = new List<dynamic>();
+                List<string> strCriterios = _context.ConceptoPagoUso.Where(r => r.ConceptoPagoCodigo == pConceptoPagoCodigo).Select(r => r.Uso).ToList();
+                List<Dominio> ListUsos = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Usos);
 
+                return _context.VValorUsoXcontratoId.Where(r => r.ContratoId == pContratoId && strCriterios.Contains(r.TipoUsoCodigo)).ToList();
+
+            }
+            catch (Exception ex)
+            {
+
+                return new { };
+            }
         }
         #endregion
 
@@ -227,7 +236,7 @@ namespace asivamosffie.services
             if (pSolicitudPago > 0)
             {
                 SolicitudPago solicitudPago = _context.SolicitudPago.Find(pSolicitudPago);
-                contrato.SolicitudPagoOnly = GetSolicitudPago(solicitudPago); 
+                contrato.SolicitudPagoOnly = GetSolicitudPago(solicitudPago);
             }
             contrato.ValorFacturadoContrato = _context.VValorFacturadoContrato.Where(v => v.ContratoId == pContratoId).ToList();
             return contrato;
@@ -346,7 +355,7 @@ namespace asivamosffie.services
             }
         }
 
-         
+
         #endregion
 
         #region Validate 
