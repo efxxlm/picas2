@@ -770,6 +770,10 @@ namespace asivamosffie.services
             {
                 bool blRegistroCompletoListaChequeo = true;
 
+
+                if (SolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Count() != SolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Where(r => r.RespuestaCodigo != null).ToList().Count())
+                    blRegistroCompletoListaChequeo = false;
+
                 SolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta = SolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Where(r => r.RespuestaCodigo != null).ToList();
 
                 foreach (var SolicitudPagoListaChequeoRespuesta in SolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta)
