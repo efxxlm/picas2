@@ -19,6 +19,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 @NgModule({
   declarations: [],
@@ -42,7 +43,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatSortModule,
     MatCheckboxModule,
     MatTooltipModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatSidenavModule
   ],
   exports: [
     MatButtonModule,
@@ -63,7 +65,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatSortModule,
     MatCheckboxModule,
     MatTooltipModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatSidenavModule
   ]
 })
-export class MaterialModule { }
+export class MaterialModule {}

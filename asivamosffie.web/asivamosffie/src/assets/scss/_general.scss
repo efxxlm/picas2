@@ -47,6 +47,10 @@ strong {
 
   @media only screen and (min-width: 75em) {
     width: 71rem;
+    
+    mat-drawer-content & {
+      width: 52rem;
+    }
   }
 }
 
@@ -189,6 +193,15 @@ strong {
   margin-right: 1em !important;
 }
 
+.mr-1-5em {
+  margin-right: 1.5em !important;
+}
+
+.mx-auto {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
 .mx-1em {
   margin-left: 1em !important;
   margin-right: 1em !important;
@@ -262,6 +275,10 @@ strong {
 .mt-2em,
 .card-subTitle.var-main-gris.mt-2em {
   margin-top: 2em;
+}
+
+.mb-1-5em {
+  margin-bottom: 1.5em !important;
 }
 
 .mb-2em {

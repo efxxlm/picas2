@@ -12,6 +12,7 @@ import {
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 
 import { LayoutComponent } from './layout/layout.component';
+import { LayoutReportesComponent } from './layout-reportes/layout-reportes.component';
 
 import { AuthGuard } from './_guards/auth.guard';
 import { RegistrarAcuerdoComponent } from './_pages/gestionar-acuerdo-cofinanciacion/components/registrar-acuerdo/registrar-acuerdo.component';
@@ -463,9 +464,23 @@ const routes: Routes = [
         path: 'gestionParametricas',
         loadChildren: () => import( './_pages/gestionar-parametricas/gestionar-parametricas.module' )
           .then( module => module.GestionarParametricasModule )
+      },
+      {
+        path: 'menu',
+        loadChildren: () => import('./_pages/menu/menu.module').then(m => m.MenuModule)
+      },
+    ]
+    
+  },
+  {
+    path: 'reportes',
+    component: LayoutReportesComponent,
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('./_pages/reportes/reportes.module').then(m => m.ReportesModule)
       }
     ]
-
   },
   {
     path: '**',

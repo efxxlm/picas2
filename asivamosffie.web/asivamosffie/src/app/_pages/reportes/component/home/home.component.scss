@@ -1,0 +1,21 @@
+.card-sm {
+  border: solid 1px #174193;
+  border: solid 1px var(--mainColor);
+  border-radius: 1em;
+  padding: 1em 2em;
+  margin: 3em;
+
+  &--h2 {
+    background-color: #fff;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    color: #174193;
+    color: var(--mainColor);
+    font-size: 1.2em;
+    margin-bottom: 0;
+    margin-top: -1.8em;
+    margin-left: -.5em;
+    display: block;
+    width: fit-content;
+  }
+}

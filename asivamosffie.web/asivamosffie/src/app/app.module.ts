@@ -29,6 +29,7 @@ import { DomSafePipe } from './_pipes/dom-safe.pipe';
 import { AuthGuard } from './_guards/auth.guard';
 import { CanDeactivateGuard } from './_guards/can-deactivate.guard';
 import { LoaderInterceptor } from './_helpers/loader.interceptor';
+import { LayoutReportesComponent } from './layout-reportes/layout-reportes.component';
 
 export const customCurrencyMaskConfig = {
   align: 'right',
@@ -50,7 +51,8 @@ export const customCurrencyMaskConfig = {
     AppComponent,
     TestComponent,
     LayoutComponent,
-    SafePipe
+    SafePipe,
+    LayoutReportesComponent
   ],
   imports: [
     BrowserModule,

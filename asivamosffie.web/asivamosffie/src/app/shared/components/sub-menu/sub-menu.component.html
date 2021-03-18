@@ -1,0 +1,28 @@
+<mat-drawer-container class="menu-lateral" [hasBackdrop]="false">
+  <mat-drawer class="menu-lateral--left" #drawer mode="side" opened>
+    <div class="menu">
+      <a class="menu--button" routerLink="fichaContratosProyectos">
+        <img src="assets/img/icon/Menu-principal/ficha.svg" alt="Ficha de contratos o proyectos">
+        <span class="menu--span">
+          Ficha de contratos o proyectos
+        </span>
+      </a>
+      <a class="menu--button">
+        <img src="assets/img/icon/Menu-principal/mapa.svg" alt="Mapa interactivo y estadísticas generales">
+        <span class="menu--span">
+          Mapa interactivo y estadísticas generales
+        </span>
+      </a>
+      <a class="menu--button">
+        <img src="assets/img/icon/Menu-principal/reportes.svg" alt="Reportes estándar">
+        <span class="menu--span">
+          Reportes estándar
+        </span>
+      </a>
+    </div>
+  </mat-drawer>
+  <mat-drawer-content>
+    <!-- <button mat-raised-button (click)="drawer.toggle()">Toggle drawer</button> -->
+    <router-outlet></router-outlet>
+  </mat-drawer-content>
+</mat-drawer-container>

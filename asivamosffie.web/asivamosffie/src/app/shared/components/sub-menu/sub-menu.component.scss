@@ -1,0 +1,22 @@
+.menu-lateral {
+  min-height: calc(100vh - 12.5em);
+
+  &--left {
+    background-color: #ececec;
+    border-right: solid 5px #0d2853;
+    width: 23.5em;
+    padding: 1em;
+  }
+}
+
+.menu {
+  height: 100%;
+  max-height: calc(100vh - 11em);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  &--button:not(:last-child) {
+    margin-bottom: 1em;
+  }
+}
