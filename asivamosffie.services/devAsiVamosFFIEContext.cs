@@ -210,6 +210,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<Usuario> Usuario { get; set; }
         public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
         public virtual DbSet<VCompromisoSeguimiento> VCompromisoSeguimiento { get; set; }
+        public virtual DbSet<VContratoPagosRealizados> VContratoPagosRealizados { get; set; }
         public virtual DbSet<VCuentaBancariaPago> VCuentaBancariaPago { get; set; }
         public virtual DbSet<VDefensaJudicialContratacionProyecto> VDefensaJudicialContratacionProyecto { get; set; }
         public virtual DbSet<VDominio> VDominio { get; set; }
@@ -7309,6 +7310,30 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.EstadoCompromisoCodigo)
                     .HasMaxLength(200)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VContratoPagosRealizados>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_Contrato_Pagos_Realizados");
+
+                entity.Property(e => e.FaseContrato)
+                    .IsRequired()
+                    .HasMaxLength(16)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PorcentajeFacturado)
+                    .HasMaxLength(31)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PorcentajePorPagar)
+                    .HasMaxLength(31)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SaldoPorPagar).HasColumnType("numeric(38, 2)");
+
+                entity.Property(e => e.ValorFacturado).HasColumnType("decimal(25, 3)");
             });
 
             modelBuilder.Entity<VCuentaBancariaPago>(entity =>

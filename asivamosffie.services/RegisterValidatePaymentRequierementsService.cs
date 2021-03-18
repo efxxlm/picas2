@@ -239,6 +239,8 @@ namespace asivamosffie.services
                 contrato.SolicitudPagoOnly = GetSolicitudPago(solicitudPago);
             }
             contrato.ValorFacturadoContrato = _context.VValorFacturadoContrato.Where(v => v.ContratoId == pContratoId).ToList();
+            contrato.VContratoPagosRealizados = _context.VContratoPagosRealizados.Where(v => v.ContratoId == pContratoId).ToList();
+
             return contrato;
         }
 
