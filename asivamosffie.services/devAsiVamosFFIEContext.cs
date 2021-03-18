@@ -228,6 +228,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VRequisitosTecnicosConstruccionAprobar> VRequisitosTecnicosConstruccionAprobar { get; set; }
         public virtual DbSet<VRequisitosTecnicosInicioConstruccion> VRequisitosTecnicosInicioConstruccion { get; set; }
         public virtual DbSet<VRequisitosTecnicosPreconstruccion> VRequisitosTecnicosPreconstruccion { get; set; }
+        public virtual DbSet<VSaldosContrato> VSaldosContrato { get; set; }
         public virtual DbSet<VSesionParticipante> VSesionParticipante { get; set; }
         public virtual DbSet<VSolicitudPago> VSolicitudPago { get; set; }
         public virtual DbSet<VUsuarioPerfil> VUsuarioPerfil { get; set; }
@@ -236,6 +237,8 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorFacturadoContrato> VValorFacturadoContrato { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -7928,6 +7931,21 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<VSaldosContrato>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_SaldosContrato");
+
+                entity.Property(e => e.NumeroContrato)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SaldoPresupuestal).HasColumnType("numeric(38, 3)");
+
+                entity.Property(e => e.SaldoTesoral).HasColumnType("numeric(38, 0)");
+            });
+
             modelBuilder.Entity<VSesionParticipante>(entity =>
             {
                 entity.HasNoKey();
@@ -8117,11 +8135,20 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_ValorFacturadoContrato");
 
-                entity.Property(e => e.ValorFacturado).HasColumnType("decimal(38, 3)");
+                entity.Property(e => e.NumeroContrato)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroDrp)
+                    .HasColumnName("NumeroDRP")
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SaldoPresupuestal).HasColumnType("numeric(38, 3)");
 
                 entity.Property(e => e.ValorSolicitudDdp)
                     .HasColumnName("ValorSolicitudDDP")
-                    .HasColumnType("numeric(38, 2)");
+                    .HasColumnType("numeric(18, 2)");
             });
 
             modelBuilder.Entity<VVerificarSeguimientoSemanal>(entity =>
