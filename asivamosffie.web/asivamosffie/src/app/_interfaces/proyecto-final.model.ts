@@ -50,6 +50,7 @@ export interface Report {
                 historialObsInformeFinalInterventoriaNovedades : InformeFinalObservaciones[],
                 historialObsInformeFinalNovedades:InformeFinalObservaciones[],
                 historialInformeFinalObservacionesInterventoria: InformeFinalObservaciones[],
+                estadoCumplimiento: string
             }
         ],
         departamentoObj: {

@@ -19,11 +19,18 @@ export class VerificacionNovedadesComponent implements OnInit {
 
   ngOnInit(): void {
     if(this.report != null){
-      if(this.report.proyecto.informeFinal[0].observacionVigenteInformeFinalNovedades){
-        this.anexos = this.report.proyecto.informeFinal[0].observacionVigenteInformeFinalNovedades;
-      }else if(this.report.proyecto.informeFinal[0].historialObsInformeFinalNovedades.length > 0){
-        this.anexos = this.report.proyecto.informeFinal[0].historialObsInformeFinalNovedades[0];
+      if(this.report.proyecto.informeFinal[0].estadoCumplimiento !== '3'){
+        if(this.report.proyecto.informeFinal[0].observacionVigenteInformeFinalNovedades){
+          this.anexos = this.report.proyecto.informeFinal[0].observacionVigenteInformeFinalNovedades;
+        }else if(this.report.proyecto.informeFinal[0].historialObsInformeFinalNovedades.length > 0){
+          this.anexos = this.report.proyecto.informeFinal[0].historialObsInformeFinalNovedades[0];
+        }
+      }else{
+        if(this.report.proyecto.informeFinal[0].informeFinalObservaciones.length > 0){
+          this.anexos = this.report.proyecto.informeFinal[0].informeFinalObservaciones[0];
+        }
       }
+      console.log(this.anexos);
     }
   }
 

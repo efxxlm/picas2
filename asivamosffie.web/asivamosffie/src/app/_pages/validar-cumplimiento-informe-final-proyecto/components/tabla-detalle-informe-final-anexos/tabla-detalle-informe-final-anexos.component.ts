@@ -20,6 +20,7 @@ export class TablaDetalleInformeFinalAnexosComponent implements OnInit {
   @Input() llaveMen: string;
   @Input() report: Report;
   @Input() existeObservacionInterventoria: boolean;
+  existe_historial = false;
 
   listChequeo: any;
   displayedColumns: string[] = [
@@ -53,6 +54,11 @@ export class TablaDetalleInformeFinalAnexosComponent implements OnInit {
       this.dataSource.data = listChequeo as ListaChequeo[];
       this.listChequeo = listChequeo;
     });
+    if(this.report != null){
+      if(this.report.proyecto.informeFinal[0].historialObsInformeFinalInterventoriaNovedades.length > 0){
+        this.existe_historial = true;
+      }
+    }
   }
 
   ngAfterViewInit() {

@@ -14,7 +14,7 @@ export class DetalleInformeComponent implements OnInit {
   report: Report;
   existeObservacionCumplimiento = false;
   existeObservacionInterventoria = false;
-  
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,

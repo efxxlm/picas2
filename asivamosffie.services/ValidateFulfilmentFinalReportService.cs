@@ -87,7 +87,7 @@ namespace asivamosffie.services
                 proyecto.InformeFinal.FirstOrDefault().InformeFinalObservacionesCumplimiento = informeFinalObservacionesCumplimiento;
                 proyecto.InformeFinal.FirstOrDefault().InformeFinalObservacionesInterventoria = informeFinalObservacionesInterventoria;
                 //historial recibo de satisfacción (EsGrupoNovedades )
-                proyecto.InformeFinal.FirstOrDefault().HistorialObsInformeFinalNovedades = _context.InformeFinalObservaciones.Where(r => r.EsGrupoNovedades == true && r.Archivado == true && (r.EsApoyo == false || r.EsApoyo == null) && r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && (r.Eliminado == false || r.Eliminado == null)).ToList();
+                proyecto.InformeFinal.FirstOrDefault().HistorialObsInformeFinalNovedades = _context.InformeFinalObservaciones.Where(r => r.EsGrupoNovedades == true && r.Archivado == true && (r.EsApoyo == false || r.EsApoyo == null) && r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && (r.Eliminado == false || r.Eliminado == null)).OrderByDescending(r => r.FechaCreacion).ToList();
                 proyecto.InformeFinal.FirstOrDefault().ObservacionVigenteInformeFinalNovedades = _context.InformeFinalObservaciones.Where(r => r.EsGrupoNovedades == true && r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && (r.Archivado == false || r.Archivado == null) && (r.Eliminado == false || r.Eliminado == null)).FirstOrDefault();
                 //historial de anexos (EsGrupoNovedadesInterventoria)
                 proyecto.InformeFinal.FirstOrDefault().HistorialObsInformeFinalInterventoriaNovedades = _context.InformeFinalObservaciones.Where(r => r.EsGrupoNovedadesInterventoria == true && r.Archivado == true && (r.EsApoyo == false || r.EsApoyo == null) && r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && (r.Eliminado == false || r.Eliminado == null)).ToList();
@@ -312,30 +312,6 @@ namespace asivamosffie.services
                     informeFinal.UsuarioModificacion = pUsuario;
                     informeFinal.FechaModificacion = DateTime.Now;
 
-                    //recibo satisfacción
-                    if (!(bool)informeFinal.TieneObservacionesCumplimiento)
-                    {
-                        //DeleteInformeFinalObservacionesCumplimiento
-                        await _context.Set<InformeFinalObservaciones>().Where(r => r.InformeFinalId == informeFinal.InformeFinalId && r.EsGrupoNovedades == true && (r.Archivado == null || r.Archivado == false) && (r.Eliminado == null || r.Eliminado == false))
-                               .UpdateAsync(r => new InformeFinalObservaciones()
-                               {
-                                   FechaModificacion = DateTime.Now,
-                                   UsuarioModificacion = pUsuario,
-                                   Eliminado = true
-                               });
-                    }
-                    //anexos
-                    if (!(bool)informeFinal.TieneObservacionesInterventoria)
-                    {
-                        //DeleteInformeFinalObservacionesCumplimiento
-                        await _context.Set<InformeFinalObservaciones>().Where(r => r.InformeFinalId == informeFinal.InformeFinalId && r.EsGrupoNovedadesInterventoria == true && (r.Archivado == null || r.Archivado == false) && (r.Eliminado == null || r.Eliminado == false))
-                               .UpdateAsync(r => new InformeFinalObservaciones()
-                               {
-                                   FechaModificacion = DateTime.Now,
-                                   UsuarioModificacion = pUsuario,
-                                   Eliminado = true
-                               });
-                    }
                     //Enviar Correo a supervisor 5.1.4
                     await EnviarCorreoSupervisor(informeFinal, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
 

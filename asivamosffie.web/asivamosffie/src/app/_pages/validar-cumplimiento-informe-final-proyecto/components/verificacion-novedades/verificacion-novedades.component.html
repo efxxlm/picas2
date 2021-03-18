@@ -14,10 +14,10 @@
       <strong>
         ¿Desde el grupo de novedades y liquidaciones tiene observaciones al recibo de satisfacción:
       </strong>
-      <span *ngIf="anexos.observaciones != null || anexos.observaciones != ''"> Si</span>
+      <span *ngIf="anexos.observaciones != null && anexos.observaciones != ''"> Si</span>
       <span *ngIf="anexos.observaciones == null || anexos.observaciones == ''"> No</span>
     </p>
-    <p *ngIf="anexos.observaciones != null || anexos.observaciones != ''" [innerHTML]="anexos.observaciones">
+    <p *ngIf="anexos.observaciones != null && anexos.observaciones != ''" [innerHTML]="anexos.observaciones">
     </p>
   </mat-card-content>
 </mat-card>
