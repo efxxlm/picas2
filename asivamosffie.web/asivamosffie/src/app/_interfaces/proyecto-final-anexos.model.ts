@@ -24,6 +24,7 @@ export interface ListaChequeo {
   archivado: boolean,
   tieneModificacionInterventor:boolean,
   tieneObservacionSupervisor: boolean,
+  tieneModificacionApoyo:boolean,
   informeFinalAnexo:{
     fechaRadicado?: Date,
     informeFinalAnexoId?: number,
@@ -66,6 +67,7 @@ export interface InformeFinalInterventoria {
     observaciones: string,
     usuarioCreacion: string
   },
+  tieneModificacionApoyo?: boolean
 }
 
 export interface InformeFinalAnexo{

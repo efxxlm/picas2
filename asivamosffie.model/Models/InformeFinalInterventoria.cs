@@ -23,6 +23,7 @@ namespace asivamosffie.model.Models
         public string ValidacionCodigo { get; set; }
         public string AprobacionCodigo { get; set; }
         public bool? TieneModificacionInterventor { get; set; }
+        public bool? TieneModificacionApoyo { get; set; }
 
         public virtual InformeFinal InformeFinal { get; set; }
         public virtual InformeFinalAnexo InformeFinalAnexo { get; set; }

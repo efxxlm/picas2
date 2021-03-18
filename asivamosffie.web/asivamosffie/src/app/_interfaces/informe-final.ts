@@ -54,7 +54,8 @@ export interface InformeFinalInterventoria{
                 urlSoporte?: string
               },
         informeFinalInterventoriaObservaciones?: InformeFinalInterventoriaObservaciones[],
-        tieneModificacionInterventor?: boolean
+        tieneModificacionInterventor?: boolean,
+        tieneModificacionApoyo?: boolean
 }
 
 export interface InformeFinalAnexo{

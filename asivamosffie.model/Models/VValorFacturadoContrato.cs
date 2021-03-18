@@ -5,11 +5,11 @@ namespace asivamosffie.model.Models
 {
     public partial class VValorFacturadoContrato
     {
-        public int? ContratacionId { get; set; }
+        public int ContratacionId { get; set; }
         public int ContratoId { get; set; }
         public string NumeroContrato { get; set; }
         public string NumeroDrp { get; set; }
-        public decimal? ValorSolicitudDdp { get; set; }
+        public decimal ValorSolicitudDdp { get; set; }
         public decimal? SaldoPresupuestal { get; set; }
     }
 }

@@ -116,14 +116,14 @@ namespace asivamosffie.api.Controllers
 
         [HttpPost]
         [Route("UpdateStateValidateInformeFinalInterventoria")]
-        public async Task<IActionResult> UpdateStateValidateInformeFinalInterventoria([FromQuery] int pInformeFinalInterventoriaId,[FromQuery] string code)
+        public async Task<IActionResult> UpdateStateValidateInformeFinalInterventoria([FromQuery] int pInformeFinalInterventoriaId,[FromQuery] string code, [FromQuery] bool tieneModificacionApoyo)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
                 string user = HttpContext.User.FindFirst("User").Value;
                 //pInformeFinal.UsuarioCreacion = "LCT";
-                respuesta = await _verifyFinalReportService.UpdateStateValidateInformeFinalInterventoria(pInformeFinalInterventoriaId, code, user);
+                respuesta = await _verifyFinalReportService.UpdateStateValidateInformeFinalInterventoria(pInformeFinalInterventoriaId, code, user, tieneModificacionApoyo);
                 return Ok(respuesta);
             }
             catch (Exception ex)

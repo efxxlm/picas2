@@ -295,7 +295,7 @@ namespace asivamosffie.services
 
                 }
 
-                VerificarInformeFinalAprobacion(informeFinal.InformeFinalId, (bool)informeFinal.TieneObservacionesSupervisor);
+                VerificarInformeFinalAprobacion(informeFinal.InformeFinalId, informeFinal.TieneObservacionesSupervisor == null ? false : (bool)informeFinal.TieneObservacionesSupervisor);
 
                 await _context.SaveChangesAsync();
 

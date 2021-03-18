@@ -242,10 +242,25 @@ namespace asivamosffie.services
             }
             else
             {
-                //Vuelve a empezar el flujo
-                informeFinal.EstadoValidacion = ConstantCodigoEstadoValidacionInformeFinal.Modificado_Apoyo;
-                informeFinal.RegistroCompletoValidacion = true;
-                return true;
+                int count_modificado = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == pInformeFinalId && r.TieneModificacionApoyo == true && r.TieneObservacionSupervisor == true && r.AprobacionCodigo == ConstantCodigoCalificacionInformeFinal.No_Cumple).Count();
+                int count_con_supervision = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == pInformeFinalId && r.TieneObservacionSupervisor == true && r.AprobacionCodigo == ConstantCodigoCalificacionInformeFinal.No_Cumple).Count();
+
+                if (count_modificado != count_con_supervision)
+                {
+                    if (informeFinal.EstadoValidacion == ConstantCodigoEstadoValidacionInformeFinal.Modificado_Apoyo)
+                    {
+                        informeFinal.EstadoValidacion = ConstantCodigoEstadoValidacionInformeFinal.Enviado_correcciones_apoyo_supervisor;
+                        informeFinal.RegistroCompletoValidacion = false;
+                    }
+                    return false;
+                }
+                else
+                {
+                    //Vuelve a empezar el flujo
+                    informeFinal.EstadoValidacion = ConstantCodigoEstadoValidacionInformeFinal.Modificado_Apoyo;
+                    informeFinal.RegistroCompletoValidacion = true;
+                    return true;
+                }
             }
             /*InformeFinalInterventoria existeObservacion = _context.InformeFinalInterventoria.Where(r=> r.InformeFinalId == informeFinal.InformeFinalId && r.TieneObservacionSupervisor == true).FirstOrDefault();
             
@@ -272,7 +287,7 @@ namespace asivamosffie.services
                     if (informeFinalInterventoria.ValidacionCodigo != "0" && informeFinalInterventoria.ValidacionCodigo != null)
                     {
                         informeFinalInterventoria.UsuarioCreacion = user.ToUpper();
-                        await this.UpdateStateValidateInformeFinalInterventoria(informeFinalInterventoria.InformeFinalInterventoriaId, informeFinalInterventoria.ValidacionCodigo, user);
+                        await this.UpdateStateValidateInformeFinalInterventoria(informeFinalInterventoria.InformeFinalInterventoriaId, informeFinalInterventoria.ValidacionCodigo, user, informeFinalInterventoria.TieneModificacionApoyo == null ? false : (bool)informeFinalInterventoria.TieneModificacionApoyo);
 
                         if (informeFinalInterventoria.ValidacionCodigo == ConstantCodigoCalificacionInformeFinal.No_Cumple)
                         {
@@ -313,7 +328,7 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<Respuesta> UpdateStateValidateInformeFinalInterventoria(int pInformeFinalInterventoriaId,string code,string user)
+        public async Task<Respuesta> UpdateStateValidateInformeFinalInterventoria(int pInformeFinalInterventoriaId,string code,string user, bool tieneModificacionApoyo)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Actualizar_Estado_validacion_informe_final, (int)EnumeratorTipoDominio.Acciones);
             string CreateEdit = string.Empty;
@@ -331,9 +346,13 @@ namespace asivamosffie.services
                                                                       {
                                                                         FechaModificacion = DateTime.Now,
                                                                         UsuarioModificacion = user,
-                                                                        ValidacionCodigo = code,//cumple,no aplica, no cumple
+                                                                        ValidacionCodigo = code,//cumple,no aplica, no cumple,
+                                                                        TieneModificacionApoyo = tieneModificacionApoyo
                                                                       });
-                informeFinal.EstadoValidacion = ConstantCodigoEstadoValidacionInformeFinal.En_proceso_de_validacion;
+                if (informeFinal.EstadoValidacion != ConstantCodigoEstadoValidacionInformeFinal.Enviado_correcciones_apoyo_supervisor)
+                {
+                    informeFinal.EstadoValidacion = ConstantCodigoEstadoValidacionInformeFinal.En_proceso_de_validacion;
+                }
 
                 return
                 new Respuesta

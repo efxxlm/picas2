@@ -169,7 +169,8 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
           informeFinalListaChequeoId: control.informeFinalListaChequeoId,
           informeFinalAnexo: null,
           informeFinalInterventoriaObservaciones: control.informeFinalInterventoriaObservaciones,
-          validacionCodigo: control.validacionCodigo
+          validacionCodigo: control.validacionCodigo,
+          tieneModificacionApoyo: control.tieneModificacionApoyo
         };
         listaInformeFinalInterventoria.informeFinalInterventoria.push(informeFinalInterventoria);
     });
@@ -199,8 +200,19 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
       });
   }
 
-  changeState(){
+  changeState(informe:any){
     this.noGuardado = true;
+    if(informe){
+      //Solo cuando es devuelto con observaciones
+      if(informe.estadoValidacion === '6' && informe.aprobacionCodigo === '2'){
+        this.dataSource.data.forEach(control => {
+          if ( informe.informeFinalInterventoriaId === control.informeFinalInterventoriaId ) {
+            control.tieneModificacionApoyo =  true; 
+            return;
+          }
+        });
+      }
+    }
   }
 
 }
