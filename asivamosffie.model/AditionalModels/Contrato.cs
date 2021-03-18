@@ -45,8 +45,26 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public bool TieneFase1 { get; set; }
-         
+
         [NotMapped]
         public bool TieneFase2 { get; set; }
+
+        [NotMapped]
+        public SolicitudPago SolicitudPagoOnly { get; set; }
+
+        [NotMapped]
+        public dynamic ListProyectos { get; set; }
+
+        [NotMapped]
+        public dynamic MontoMaximo { get; set; }
+
+        [NotMapped]
+        public dynamic MontoPendiente { get; set; }
+         
+        [NotMapped]
+        public List<VValorFacturadoContrato> ValorFacturadoContrato { get; set; }
+         
+        [NotMapped]
+        public List<VContratoPagosRealizados> VContratoPagosRealizados { get; set; }
     }
 }

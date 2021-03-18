@@ -92,7 +92,8 @@ export class FormListachequeoExpensasComponent implements OnInit {
   booleanosRevisionTecnica: any[] = [
     { value: true, viewValue: 'Si cumple' },
     { value: false, viewValue: 'No cumple' }
-  ]
+  ];
+  estaEditando = false;
   constructor(private fb: FormBuilder) { }
 
 
@@ -107,6 +108,7 @@ export class FormListachequeoExpensasComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
   onSubmit() {
+    this.estaEditando = true;
     console.log(this.addressForm.value);
     //this.openDialog('', 'La información ha sido guardada exitosamente.');
   }

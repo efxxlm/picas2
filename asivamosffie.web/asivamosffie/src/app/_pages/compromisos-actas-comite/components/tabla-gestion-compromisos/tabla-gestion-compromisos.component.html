@@ -13,7 +13,7 @@
 
     <ng-container matColumnDef="fechaComite">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de comité </th>
-      <td mat-cell *matCellDef="let element" align="center"> {{ element.fechaComite | date: 'dd/MM/yyyy' }} </td>
+      <td mat-cell *matCellDef="let element" align="center"> {{ element.fechaComite }} </td>
     </ng-container>
 
     <ng-container *ngFor="let columna of ELEMENT_DATA" [matColumnDef]="columna.name">
@@ -30,9 +30,9 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del compromiso </th>
       <td mat-cell *matCellDef="let element" align="center">
         <span *ngIf="element.estadoCodigo === undefined">Sin avance</span>
-        <span *ngIf="element.estadoCodigo === '1'">Sin iniciar</span>
-        <span *ngIf="element.estadoCodigo === '2'">En proceso</span>
-        <span *ngIf="element.estadoCodigo === '3'">Finalizada</span>
+        <span *ngIf="element.estadoCodigo === listaEstadosCompromisos.sinIniciar">Sin iniciar</span>
+        <span *ngIf="element.estadoCodigo === listaEstadosCompromisos.enProceso">En proceso</span>
+        <span *ngIf="element.estadoCodigo === listaEstadosCompromisos.finalizado">Finalizada</span>
       </td>
     </ng-container>
   
@@ -51,7 +51,7 @@
         <button mat-raised-button 
               color="accent" 
               class="btn-table"
-              *ngIf="element.estadoCodigo === '1' || element.estadoCodigo === '2'"
+              *ngIf="element.estadoCodigo === listaEstadosCompromisos.sinIniciar || element.estadoCodigo === listaEstadosCompromisos.enProceso"
               (click)="reportProgress( element.compromisoId, element )">
               Ver detalle/Editar
         </button>
@@ -59,7 +59,7 @@
         <button mat-raised-button 
                 color="accent"
                 class="btn-table"
-                *ngIf="element.estadoCodigo === '3'"
+                *ngIf="element.estadoCodigo === listaEstadosCompromisos.finalizado"
                 (click)="reportProgress( element.compromisoId, element )">
           Ver detalle
         </button>

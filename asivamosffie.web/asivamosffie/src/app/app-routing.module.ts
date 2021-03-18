@@ -17,6 +17,7 @@ import { AuthGuard } from './_guards/auth.guard';
 import { RegistrarAcuerdoComponent } from './_pages/gestionar-acuerdo-cofinanciacion/components/registrar-acuerdo/registrar-acuerdo.component';
 import { RegistrarComponent } from './_pages/gestionar-fuentes-de-financiacion/components/registrar/registrar.component';
 import { CanDeactivateGuard } from './_guards/can-deactivate.guard';
+import { AuthenticateGuard } from './_guards/authenticate.guard';
 
 const routes: Routes = [
   {
@@ -34,7 +35,6 @@ const routes: Routes = [
       },
       {
         path: 'home',
-        // canActivate: [AuthGuard],
         loadChildren: () => import('./_pages/home/home.module').then(m => m.HomeModule),
 
       },
@@ -236,6 +236,7 @@ const routes: Routes = [
       },
       {
         path: 'registrarSolicitudNovedadContractual',
+        canLoad: [ AuthenticateGuard ],
         loadChildren: () => import('./_pages/registrar-solicitud-novedad-contractual/registrar-solicitud-novedad-contractual.module')
         .then(m => m.RegistrarSolicitudNovedadContractualModule),
       },
@@ -252,6 +253,7 @@ const routes: Routes = [
       },
       {
         path: 'registrarAvanceSemanal',
+        canLoad: [AuthenticateGuard],
         loadChildren: () => import( './_pages/registrar-avance-semanal/registrar-avance-semanal.module' )
           .then( module => module.RegistrarAvanceSemanalModule )
       },
@@ -291,8 +293,37 @@ const routes: Routes = [
         loadChildren: () => import( './_pages/registrar-informe-final-proyecto/registrar-informe-final-proyecto.module' )
           .then( module => module.RegistrarInformeFinalProyectoModule )
       },
+      {
+        path: 'verificarInformeFinalProyecto',
+        loadChildren: () => import( './_pages/verificar-informe-final-proyecto/verificar-informe-final-proyecto.module' )
+          .then( module => module.VerificarInformeFinalProyectoModule )
+      },
+      {
+        path: 'validarInformeFinalProyecto',
+        loadChildren: () => import( './_pages/validar-informe-del-proyecto/validar-informe-del-proyecto.module' )
+          .then( module => module.ValidarInformeDelProyectoModule )
+      },
+      {
+        path: 'registrarTransferenciaProyectosETC',
+        loadChildren: () => import( './_pages/registrar-transferencia-etc/registrar-transferencia-etc.module' )
+          .then( module => module.RegistrarTransferenciaEtcModule )
+      },
+      {
+        path: 'registrarValidarDolicitudLiquidacionContractual',
+        loadChildren: () => import( './_pages/registrar-validar-solicitud-liquidacion-contractual/registrar-validar-solicitud-liquidacion-contractual.module' )
+          .then( module => module.RegistrarValidarSolicitudLiquidacionContractualModule )
+      },
+      {
+        path: 'registrarSolicitudLiquidacionContractual',
+        loadChildren: () => import( './_pages/registrar-solicitud-liquidacion-contractual/registrar-solicitud-liquidacion-contractual.module' )
+          .then( module => module.RegistrarSolicitudLiquidacionContractualModule )
+      },
+      {
+        path: 'validarCumplimientoInformeFinalProyecto',
+        loadChildren: () => import( './_pages/validar-cumplimiento-informe-final-proyecto/validar-cumplimiento-informe-final-proyecto.module' )
+          .then( module => module.ValidarCumplimientoInformeFinalProyectoModule )
+      },
     { 
-      
         path: 'verificarSolicitudDeNovedades',
         loadChildren: () => import('./_pages/verificar-solicitud-de-novedades/verificar-solicitud-de-novedades.module')
         .then(m => m.VerificarSolicitudDeNovedadesModule)
@@ -354,12 +385,12 @@ const routes: Routes = [
         .then(m => m.RegistrarValidarRequisitosPagoModule)
       },
       {
-        path: 'aprobarSolicitudesPago',
+        path: 'verificarSolicitudPago',
         loadChildren: () => import('./_pages/aprobar-solicitudes-pago/aprobar-solicitudes-pago.module')
         .then(m => m.AprobarSolicitudesPagoModule)
       },
       {
-        path: 'autorizarSolicitudDePago',
+        path: 'autorizarSolicitudPago',
         loadChildren: () => import('./_pages/autorizar-solicitud-pago/autorizar-solicitud-pago.module')
         .then(m => m.AutorizarSolicitudPagoModule)
       },      
@@ -377,6 +408,21 @@ const routes: Routes = [
         path: 'generarOrdenDeGiro',
         loadChildren: () => import('./_pages/generar-orden-giro/generar-orden-giro.module')
         .then(m => m.GenerarOrdenGiroModule)
+      },
+      {
+        path: 'verificarOrdenGiro',
+        loadChildren: () => import( './_pages/verificar-orden-giro/verificar-orden-giro.module' )
+          .then( module => module.VerificarOrdenGiroModule )
+      },
+      {
+        path: 'aprobarOrdenGiro',
+        loadChildren: () => import( './_pages/aprobar-orden-giro/aprobar-orden-giro.module' )
+          .then( module => module.AprobarOrdenGiroModule )
+      },
+      {
+        path: 'tramitarOrdenGiro',
+        loadChildren: () => import( './_pages/tramitar-orden-giro/tramitar-orden-giro.module' )
+          .then( module => module.TramitarOrdenGiroModule )
       },
       {
         path: 'gestionarProcesoDefensaJudicial',
@@ -418,6 +464,25 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/gestionar-tramite-liq-contractual/gestionar-tramite-liq-contractual.module')
         .then(m => m.GestionarTramiteLiqContractualModule)
       },
+        path: 'gestionListaChequeo',
+        loadChildren: () => import( './_pages/gestionar-lista-chequeo/gestionar-lista-chequeo.module' )
+          .then( module => module.GestionarListaChequeoModule )
+      },
+      {
+        path: 'crearRoles',
+        loadChildren: () => import( './_pages/crear-roles/crear-roles.module' )
+          .then( module => module.CrearRolesModule )
+      },
+      {
+        path: 'gestionUsuarios',
+        loadChildren: () => import( './_pages/gestionar-usuarios/gestionar-usuarios.module' )
+          .then( module => module.GestionarUsuariosModule )
+      },
+      {
+        path: 'gestionParametricas',
+        loadChildren: () => import( './_pages/gestionar-parametricas/gestionar-parametricas.module' )
+          .then( module => module.GestionarParametricasModule )
+      }
     ]
 
   },

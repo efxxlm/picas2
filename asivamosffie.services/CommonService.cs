@@ -9,16 +9,167 @@ using Microsoft.EntityFrameworkCore;
 using asivamosffie.services.Helpers.Enumerator;
 using Z.EntityFramework.Plus;
 using System.Globalization;
+using asivamosffie.model.AditionalModels;
+using Microsoft.Extensions.Options;
+using System.Net.Mail;
+using System.Net;
+using Microsoft.Extensions.Options;
+using System.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 
 namespace asivamosffie.services
 {
     public class CommonService : ICommonService
     {
         private readonly devAsiVamosFFIEContext _context;
-
-        public CommonService(devAsiVamosFFIEContext context)
+        public MailSettings _mailSettings { get; }
+        private readonly string _connectionString;
+        public CommonService(
+            IConfiguration configuration,
+                                devAsiVamosFFIEContext context,
+                               IOptions<MailSettings> mailSettings
+                            )
         {
+            _connectionString = configuration.GetConnectionString("asivamosffieDatabase");
+            _mailSettings = mailSettings.Value;
             _context = context;
+        } 
+        //Solicitudes de comite tecnico
+        public async Task<dynamic> GetRequestSP(string pNameSP)
+        {
+            using (SqlConnection sql = new SqlConnection(_connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(pNameSP, sql))
+                {
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    var response = new List<dynamic>();
+                    await sql.OpenAsync();
+
+                    using (var reader = await cmd.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            response.Add(MapToValue(reader));
+                        }
+                    }
+                    return response;
+                }
+            }
+        } 
+
+        public dynamic MapToValue(SqlDataReader reader)
+        {
+            return new 
+            {
+                ContratacionId = (int)reader["ContratacionId"],
+                DisponibilidadPresupuestalId = (int)reader["DisponibilidadPresupuestalId"],
+                SesionComiteSolicitudId = (int)reader["SesionComiteSolicitudId"],
+                FechaSolicitud = (DateTime)reader["FechaSolicitud"],
+                TipoSolicitudText = reader["TipoSolicitudText"].ToString(),
+                NumeroSolicitud = reader["NumeroSolicitud"].ToString(),
+                OpcionContratar = reader["OpcionContratar"].ToString(),
+                ValorSolicitud = (decimal)reader["ValorSolicitud"],
+                FechaComite = (DateTime)reader["FechaComite"], 
+            };
+        }
+
+        public async Task<VPermisosMenus> TienePermisos(int idPerfil, string pRuta)
+        {
+            VPermisosMenus vPermisosMenus = await _context.VPermisosMenus
+                .Where(vp => vp.RutaFormulario == pRuta
+                          && vp.PerfilId == idPerfil)
+                .FirstOrDefaultAsync();
+
+            if (vPermisosMenus != null)
+                vPermisosMenus.TienePermisoMenu = true;
+            return vPermisosMenus;
+        }
+
+        public bool EnviarCorreo(List<EnumeratorPerfil> pListPerfilesCorreo, string pContenido, string pAsunto)
+        {
+            try
+            {
+                pContenido = pContenido
+                                                   .Replace("_LinkF_", _mailSettings.DominioFront)
+                                                   .Replace("[URL]", _mailSettings.DominioFront);
+
+                var ListEmails =
+                               _context.UsuarioPerfil
+                                                   .Where(p => pListPerfilesCorreo
+                                                   .Contains((EnumeratorPerfil)(int)p.PerfilId))
+                                                   .Include(u => u.Usuario)
+                                                   .Select(e => e.Usuario.Email)
+                                                   .ToList();
+
+                MailMessage mail = new MailMessage();
+                SmtpClient SmtpServer = new SmtpClient(_mailSettings.MailServer);
+
+                mail.From = new MailAddress(_mailSettings.Sender);
+
+                foreach (var Destinatario in ListEmails)
+                {
+                    mail.To.Add(Destinatario);
+                }
+
+                mail.Subject = pAsunto;
+                mail.IsBodyHtml = true;
+
+                mail.Body = pContenido;
+                SmtpServer.Port = _mailSettings.MailPort;
+                SmtpServer.Credentials = new NetworkCredential(_mailSettings.Sender, _mailSettings.Password);
+                SmtpServer.EnableSsl = false;
+                SmtpServer.Send(mail);
+                 
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public bool EnviarCorreo(List<string> pListCorreo, string pContenido , string pAsunto)
+        {
+            try
+            {
+                pContenido = pContenido 
+                    .Replace("_LinkF_", _mailSettings.DominioFront)
+                    .Replace("[URL]", _mailSettings.DominioFront);
+
+                MailMessage mail = new MailMessage();
+                SmtpClient SmtpServer = new SmtpClient(_mailSettings.MailServer);
+
+                mail.From = new MailAddress(_mailSettings.Sender);
+
+                foreach (var email in pListCorreo)
+                {
+                    mail.To.Add(email);
+                }
+
+                mail.Subject = pAsunto;
+                mail.IsBodyHtml = true;
+
+                mail.Body = pContenido;
+                SmtpServer.Port = _mailSettings.MailPort;
+                SmtpServer.Credentials = new NetworkCredential(_mailSettings.Sender, _mailSettings.Password);
+                SmtpServer.EnableSsl = false;
+                SmtpServer.Send(mail);
+                  
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
+        }
+         
+        public async Task<dynamic> GetListMenu()
+        {
+            return await _context.Menu.Select(m => new
+            {
+                m.MenuId,
+                m.Nombre
+            }).ToListAsync();
         }
 
         public async Task<List<dynamic>> GetUsuarioByPerfil(int idPerfil)
@@ -26,7 +177,7 @@ namespace asivamosffie.services
 
             List<dynamic> ListaUsuario = new List<dynamic>();
 
-            var ListUsuarios = await _context.UsuarioPerfil.Where(r => r.PerfilId == idPerfil && (bool)r.Activo).Select(r => r.Usuario).Where(r => !(bool)r.Eliminado).Distinct().OrderBy(r => r.Nombres).ToListAsync();
+            var ListUsuarios = await _context.UsuarioPerfil.Where(r => r.PerfilId == idPerfil && (bool)r.Activo).Select(r => r.Usuario).Where(r => !(bool)r.Eliminado).Distinct().OrderBy(r => r.PrimerNombre).ToListAsync();
 
             foreach (var item in ListUsuarios)
             {
@@ -34,20 +185,38 @@ namespace asivamosffie.services
                                     new
                                     {
                                         item.UsuarioId,
-                                        item.Nombres,
-                                        item.Apellidos
+                                        item.PrimerNombre,
+                                        item.PrimerApellido
                                     }
                                 );
             }
             return ListaUsuario;
         }
 
+        public async Task<string> EnumeradorSolicitudPagoExpensasAndOtros()
+        {
+            int cantidadDeResgistros = _context.SolicitudPago.Count();
+            string Nomeclatura = "SolPagoEspecial";
+            string consecutivo = (cantidadDeResgistros + 1).ToString("000");
+            return string.Concat(Nomeclatura, consecutivo);
+        }
+
+        public async Task<string> EnumeradorSolicitudPago(bool esObra)
+        {
+            int cantidadDeResgistros = _context.SolicitudPago.Count();
+            string Nomeclatura = "SolPagoI";
+            if (esObra)
+                Nomeclatura = "SolPagoO";
+            string consecutivo = (cantidadDeResgistros + 1).ToString("000");
+            return string.Concat(Nomeclatura, consecutivo);
+        }
+
         public async Task<string> EnumeradorComiteTecnico()
         {
-            int cantidadDeResgistros = _context.ComiteTecnico.Where( ct => ct.EsComiteFiduciario == false || ct.EsComiteFiduciario == false ).Count();
-            string Nomeclatura = "CT_"; 
+            int cantidadDeResgistros = _context.ComiteTecnico.Where(ct => ct.EsComiteFiduciario == false || ct.EsComiteFiduciario == false).Count();
+            string Nomeclatura = "CT_";
             string consecutivo = (cantidadDeResgistros + 1).ToString("000");
-            return string.Concat(Nomeclatura, consecutivo );
+            return string.Concat(Nomeclatura, consecutivo);
         }
 
         public async Task<string> EnumeradorComiteObra()
@@ -60,24 +229,24 @@ namespace asivamosffie.services
 
         public async Task<string> EnumeradorComiteFiduciario()
         {
-            int cantidadDeResgistros = _context.ComiteTecnico.Where( ct => ct.EsComiteFiduciario == true ).Count();
-            string Nomeclatura = "CF_"; 
+            int cantidadDeResgistros = _context.ComiteTecnico.Where(ct => ct.EsComiteFiduciario == true).Count();
+            string Nomeclatura = "CF_";
             string consecutivo = (cantidadDeResgistros + 1).ToString("000");
-            return string.Concat(Nomeclatura, consecutivo );
+            return string.Concat(Nomeclatura, consecutivo);
         }
-        
+
         public async Task<string> EnumeradorContratacion()
-        { 
-            int cantidadDeResgistros =  _context.Contratacion.Count();
+        {
+            int cantidadDeResgistros = _context.Contratacion.Count();
             string Nomeclatura = "PI_";
             string consecutivo = (cantidadDeResgistros + 1).ToString("000");
             return string.Concat(Nomeclatura, consecutivo);
         }
-         
+
         public async Task<List<MenuPerfil>> GetMenuByRol(int pUserId)
         {
             int IdPerfil = await _context.UsuarioPerfil.Where(r => r.UsuarioId == pUserId).Select(r => r.PerfilId).FirstOrDefaultAsync();
-            return _context.MenuPerfil.Where(r => r.PerfilId == IdPerfil && (bool)r.Activo).IncludeFilter(r => r.Menu).OrderBy(z=>z.Menu.Posicion).ToList();
+            return _context.MenuPerfil.Where(r => r.PerfilId == IdPerfil && (bool)r.Activo).IncludeFilter(r => r.Menu).OrderBy(z => z.Menu.Posicion).ToList();
         }
 
         public string GetNombreDepartamentoByIdMunicipio(string pIdMunicipio)
@@ -130,7 +299,7 @@ namespace asivamosffie.services
         {
             var retorno = await _context.MensajesValidaciones.Where(r => (bool)r.Activo && r.MenuId == pMenu && r.Codigo.Equals(pCodigo)).FirstOrDefaultAsync();
             /*almaceno auditoria*/
-            _context.Auditoria.Add(new Auditoria { AccionId = pAccionId, MensajesValidacionesId = retorno.MensajesValidacionesId, Usuario = pUsuario==null?"":pUsuario.ToUpper(), Observacion = pObservaciones.ToUpper(), Fecha = DateTime.Now });
+            _context.Auditoria.Add(new Auditoria { AccionId = pAccionId, MensajesValidacionesId = retorno.MensajesValidacionesId, Usuario = pUsuario == null ? "" : pUsuario.ToUpper(), Observacion = pObservaciones.ToUpper(), Fecha = DateTime.Now });
             _context.SaveChanges();
             return retorno.Mensaje;
         }
@@ -139,10 +308,10 @@ namespace asivamosffie.services
         {
             return await _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(pCodigo) && r.TipoDominioId == pTipoDominioId).Select(r => r.DominioId).FirstOrDefaultAsync();
         }
-         
+
         public async Task<List<Localicacion>> GetListDepartamento()
         {
-            
+
             return await _context.Localizacion.Where(r => r.Nivel == 1)
             .Select(x => new Localicacion
             {
@@ -152,7 +321,7 @@ namespace asivamosffie.services
         }
 
         public async Task<List<Localicacion>> GetListMunicipioByIdDepartamento(string pIdDepartamento)
-        {            
+        {
             if (!string.IsNullOrEmpty(pIdDepartamento))
             {
                 return await _context.Localizacion.Where(r => r.IdPadre.Equals(pIdDepartamento)).Select(x => new Localicacion
@@ -243,14 +412,14 @@ namespace asivamosffie.services
 
         public async Task<ContratoPoliza> GetLastContratoPolizaByContratoId(int pContratoId)
         {
-            return await _context.ContratoPoliza.Where(r => r.ContratoId.Equals(pContratoId)).OrderByDescending(x=>x.ContratoPolizaId).FirstOrDefaultAsync();
+            return await _context.ContratoPoliza.Where(r => r.ContratoId.Equals(pContratoId)).OrderByDescending(x => x.ContratoPolizaId).FirstOrDefaultAsync();
         }
 
         public async Task<Contratacion> GetContratacionByContratacionId(int pContratacionId)
         {
             return await _context.Contratacion.Where(r => r.ContratacionId.Equals(pContratacionId)).FirstOrDefaultAsync();
         }
-      
+
         public async Task<Contratista> GetContratistaByContratistaId(int pContratistaId)
         {
             return await _context.Contratista.Where(r => r.ContratistaId.Equals(pContratistaId)).FirstOrDefaultAsync();
@@ -301,7 +470,7 @@ namespace asivamosffie.services
         {
             return await _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(pCodigo) && r.TipoDominioId == pTipoDominioId).FirstOrDefaultAsync();
         }
-         
+
         public async Task<List<InstitucionEducativaSede>> ListIntitucionEducativaByMunicipioId(string pIdMunicipio)
         {
             return await _context.InstitucionEducativaSede.Where(r => (bool)r.Activo && r.PadreId == null && r.LocalizacionIdMunicipio.Trim().Equals(pIdMunicipio.Trim())).ToListAsync();
@@ -326,7 +495,7 @@ namespace asivamosffie.services
         {
             return await _context.Dominio.Where(r => r.DominioId == pDominioID).Select(r => r.Nombre).FirstOrDefaultAsync();
         }
-         
+
         public async Task<List<Localicacion>> GetListMunicipioByIdMunicipio(string idMunicipio)
         {
             var munactual = _context.Localizacion.Find(idMunicipio);
@@ -338,7 +507,7 @@ namespace asivamosffie.services
                  IdPadre = x.IdPadre
              }).ToListAsync();
         }
-         
+
         public async Task<List<Localicacion>> GetListDepartamentoByIdMunicipio(string idMunicipio)
         {
             var munactual = _context.Localizacion.Find(idMunicipio);
@@ -352,7 +521,7 @@ namespace asivamosffie.services
                  IdPadre = x.IdPadre
              }).ToListAsync();
         }
-         
+
         public async Task<InstitucionEducativaSede> GetInstitucionEducativaById(int InstitucionEducativaById)
         {
             return await _context.InstitucionEducativaSede.FindAsync(InstitucionEducativaById);
@@ -367,7 +536,7 @@ namespace asivamosffie.services
             }
             return fechaRetorno;
         }
-        
+
         public static DateTime[] DiasFestivosAnio(int anio)
         {
             List<DateTime> fechas = new List<DateTime>
@@ -467,8 +636,8 @@ namespace asivamosffie.services
 
             return new DateTime(anyo, mes, dia);
         }
-        
-        
+
+
 
         /// <summary>
         /// Julian Martinez
@@ -476,7 +645,7 @@ namespace asivamosffie.services
         /// <param name="dias">Cuantos dias habiles se agregan</param>
         /// <param name="pFechaCalcular">La fecha a calcular los dias habiles</param>
         /// <returns></returns>
-        public async Task <DateTime> CalculardiasLaborales(int pDias, DateTime pFechaCalcular)
+        public async Task<DateTime> CalculardiasLaborales(int pDias, DateTime pFechaCalcular)
         {
             DateTime fechaInicial = pFechaCalcular;
             DateTime fechadiasHabiles = pFechaCalcular;
@@ -605,7 +774,7 @@ namespace asivamosffie.services
             }
             return fechadiasHabiles;
         }
- 
+
     }
 
 }

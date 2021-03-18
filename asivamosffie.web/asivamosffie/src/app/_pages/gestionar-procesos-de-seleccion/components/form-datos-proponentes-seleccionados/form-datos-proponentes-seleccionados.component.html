@@ -1,6 +1,13 @@
 <div class="row justify-content-center">
   <div class="pr-1">
-    <label class="label-left">Tipos de proponente</label>
+    <label
+      class="label-left"
+      [class.color-secondaryColor]="
+        (tipoProponente.invalid && tipoProponente.touched) || (tipoProponente.invalid && estaEditando)
+      "
+    >
+      Tipos de proponente
+    </label>
   </div>
   <div class="col-md-5">
     <mat-form-field class="select-width">
@@ -11,6 +18,17 @@
       </mat-select>
     </mat-form-field>
   </div>
+  <span class="icon-incompleto">
+    <img
+      class="icon-incompleto--img"
+      src="assets/img/icon/incompleto.svg"
+      alt="este campo es requerido"
+      [matTooltipPosition]="'above'"
+      matTooltip="Debe ingresar la información en el campo para continuar"
+      matTooltipClass="info-tooltip"
+      *ngIf="(tipoProponente.invalid && tipoProponente.touched) || (tipoProponente.invalid && estaEditando)"
+    />
+  </span>
 </div>
 
 <form
@@ -70,7 +88,7 @@
             <img
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
-                            alt="este campo es requerido"
+              alt="este campo es requerido"
               [matTooltipPosition]="'above'"
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
@@ -105,6 +123,7 @@
                   formControlName="numeroIdentificacion"
                   (keypress)="validateNumberKeypress($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   required
                 />
               </mat-form-field>
@@ -120,10 +139,10 @@
                 <img
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
                   *ngIf="
                     (personaNaturalForm.get('numeroIdentificacion').invalid &&
                       personaNaturalForm.get('numeroIdentificacion').touched) ||
@@ -163,10 +182,10 @@
               <img
                 class="icon-incompleto--img"
                 src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                alt="este campo es requerido"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
                 *ngIf="
                   (personaNaturalForm.get('depaetamento').invalid && personaNaturalForm.get('depaetamento').touched) ||
                   (personaNaturalForm.get('depaetamento').invalid && estaEditando)
@@ -204,10 +223,10 @@
               <img
                 class="icon-incompleto--img"
                 src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                alt="este campo es requerido"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
                 *ngIf="
                   (personaNaturalForm.get('municipio').invalid && personaNaturalForm.get('municipio').touched) ||
                   (personaNaturalForm.get('municipio').invalid && estaEditando)
@@ -246,7 +265,7 @@
             <img
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
-                            alt="este campo es requerido"
+              alt="este campo es requerido"
               [matTooltipPosition]="'above'"
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
@@ -284,6 +303,7 @@
                   required
                   (keypress)="validateNumberKeypress($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 />
               </mat-form-field>
               <span
@@ -298,10 +318,10 @@
                 <img
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
                   *ngIf="
                     (personaNaturalForm.get('telefono').invalid && personaNaturalForm.get('telefono').touched) ||
                     (personaNaturalForm.get('telefono').invalid && estaEditando)
@@ -349,7 +369,7 @@
             <img
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
-                            alt="este campo es requerido"
+              alt="este campo es requerido"
               [matTooltipPosition]="'above'"
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
@@ -428,7 +448,7 @@
             <img
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
-                            alt="este campo es requerido"
+              alt="este campo es requerido"
               [matTooltipPosition]="'above'"
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
@@ -463,6 +483,7 @@
                   formControlName="numeroIdentificacion"
                   (keypress)="validateNumberKeypress($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   required
                 />
               </mat-form-field>
@@ -478,10 +499,10 @@
                 <img
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
                   *ngIf="
                     (personaJuridicaIndividualForm.get('numeroIdentificacion').invalid &&
                       personaJuridicaIndividualForm.get('numeroIdentificacion').touched) ||
@@ -541,10 +562,10 @@
                 <img
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
                   *ngIf="
                     (representanteLegal.invalid && representanteLegal.touched) ||
                     (representanteLegal.invalid && estaEditando)
@@ -581,6 +602,7 @@
                   formControlName="cedulaRepresentanteLegal"
                   (keypress)="validateNumberKeypress($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   required
                 />
               </mat-form-field>
@@ -596,10 +618,10 @@
                 <img
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
                   *ngIf="
                     (personaJuridicaIndividualForm.get('cedulaRepresentanteLegal').invalid &&
                       personaJuridicaIndividualForm.get('cedulaRepresentanteLegal').touched) ||
@@ -640,10 +662,10 @@
               <img
                 class="icon-incompleto--img"
                 src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                alt="este campo es requerido"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
                 *ngIf="
                   (personaJuridicaIndividualForm.get('depaetamento').invalid &&
                     personaJuridicaIndividualForm.get('depaetamento').touched) ||
@@ -683,10 +705,10 @@
               <img
                 class="icon-incompleto--img"
                 src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                alt="este campo es requerido"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
                 *ngIf="
                   (personaJuridicaIndividualForm.get('municipio').invalid &&
                     personaJuridicaIndividualForm.get('municipio').touched) ||
@@ -729,10 +751,10 @@
                 <img
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
                   *ngIf="
                     (personaJuridicaIndividualForm.get('direccion').invalid &&
                       personaJuridicaIndividualForm.get('direccion').touched) ||
@@ -771,6 +793,7 @@
                   required
                   (keypress)="validateNumberKeypress($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 />
               </mat-form-field>
               <span
@@ -785,10 +808,10 @@
                 <img
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
                   *ngIf="
                     (personaJuridicaIndividualForm.get('telefono').invalid &&
                       personaJuridicaIndividualForm.get('telefono').touched) ||
@@ -839,10 +862,10 @@
                 <img
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
                   *ngIf="
                     (personaJuridicaIndividualForm.get('correoElectronico').invalid &&
                       personaJuridicaIndividualForm.get('correoElectronico').touched) ||
@@ -900,6 +923,7 @@
                   maxlength="2"
                   (keypress)="validateNumberKeypress($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   required
                 />
                 <input type="hidden" formControlName="procesoSeleccionProponenteId" />
@@ -916,10 +940,10 @@
                 <img
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
                   *ngIf="
                     (unionTemporalForm.get('cuantasEntidades').invalid &&
                       unionTemporalForm.get('cuantasEntidades').touched) ||
@@ -969,10 +993,10 @@
                   <img
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
-                                  alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
                     *ngIf="
                       (unionTemporalForm.get('nombreConsorcio').invalid &&
                         unionTemporalForm.get('nombreConsorcio').touched) ||
@@ -1020,10 +1044,10 @@
                         <img
                           class="icon-incompleto--img"
                           src="assets/img/icon/incompleto.svg"
-                                        alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                          alt="este campo es requerido"
+                          [matTooltipPosition]="'above'"
+                          matTooltip="Debe ingresar la información en el campo para continuar"
+                          matTooltipClass="info-tooltip"
                           *ngIf="
                             (entidad.get('nombre').invalid && entidad.get('nombre').touched) ||
                             (entidad.get('nombre').invalid && estaEditando)
@@ -1061,6 +1085,7 @@
                           maxlength="3"
                           (keypress)="validateNumberKeypress($event)"
                           onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                          oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                           onkeyup="if(this.value>100) this.value = 100;"
                           required
                         />
@@ -1078,10 +1103,10 @@
                         <img
                           class="icon-incompleto--img"
                           src="assets/img/icon/incompleto.svg"
-                                        alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                          alt="este campo es requerido"
+                          [matTooltipPosition]="'above'"
+                          matTooltip="Debe ingresar la información en el campo para continuar"
+                          matTooltipClass="info-tooltip"
                           *ngIf="
                             (entidad.get('porcentaje').invalid && entidad.get('porcentaje').touched) ||
                             (entidad.get('porcentaje').invalid && estaEditando)
@@ -1172,10 +1197,10 @@
                   <img
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
-                                  alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
                     *ngIf="(myJuridica2.invalid && myJuridica2.touched) || (myJuridica2.invalid && estaEditando)"
                   />
                 </span>
@@ -1209,6 +1234,7 @@
                     formControlName="cedulaRepresentanteLegal"
                     (keypress)="validateNumberKeypress($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     required
                   />
                 </mat-form-field>
@@ -1224,10 +1250,10 @@
                   <img
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
-                                  alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
                     *ngIf="
                       (unionTemporalForm.get('cedulaRepresentanteLegal').invalid &&
                         unionTemporalForm.get('cedulaRepresentanteLegal').touched) ||
@@ -1271,10 +1297,10 @@
                 <img
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
                   *ngIf="
                     (unionTemporalForm.get('depaetamento').invalid && unionTemporalForm.get('depaetamento').touched) ||
                     (unionTemporalForm.get('depaetamento').invalid && estaEditando)
@@ -1312,10 +1338,10 @@
                 <img
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
                   *ngIf="
                     (unionTemporalForm.get('municipio').invalid && unionTemporalForm.get('municipio').touched) ||
                     (unionTemporalForm.get('municipio').invalid && estaEditando)
@@ -1330,6 +1356,7 @@
             <div class="row">
               <div class="pr-1">
                 <label
+                  class="label-left"
                   [class.color-secondaryColor]="
                     (unionTemporalForm.get('direccion').invalid && unionTemporalForm.get('direccion').touched) ||
                     (unionTemporalForm.get('direccion').invalid && estaEditando)
@@ -1354,10 +1381,10 @@
                   <img
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
-                                  alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
                     *ngIf="
                       (unionTemporalForm.get('direccion').invalid && unionTemporalForm.get('direccion').touched) ||
                       (unionTemporalForm.get('direccion').invalid && estaEditando)
@@ -1394,6 +1421,7 @@
                     required
                     (keypress)="validateNumberKeypress($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   />
                 </mat-form-field>
                 <span
@@ -1408,10 +1436,10 @@
                   <img
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
-                                  alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
                     *ngIf="
                       (unionTemporalForm.get('telefono').invalid && unionTemporalForm.get('telefono').touched) ||
                       (unionTemporalForm.get('telefono').invalid && estaEditando)
@@ -1461,10 +1489,10 @@
                   <img
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
-                                  alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
                     *ngIf="
                       (unionTemporalForm.get('correoElectronico').invalid &&
                         unionTemporalForm.get('correoElectronico').touched) ||

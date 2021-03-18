@@ -12,18 +12,25 @@ namespace asivamosffie.services.Interfaces
     {
         //Consultas
         Task<List<VProyectosCierre>> gridRegisterFinalReport();
-        Task<List<dynamic>> GetInformeFinalListaChequeoByContratacionProyectoId(int pContratacionProyectoId);
-        Task<List<ContratacionProyecto>> GetInformeFinalByContratacionProyectoId(int pContratacionProyectoId);
+        Task<List<dynamic>> GetInformeFinalListaChequeoByProyectoId(int pProyectoId);
+        Task<List<dynamic>> GetInformeFinalByProyectoId(int pProyectoId);
         Task<InformeFinalInterventoria> GetInformeFinalAnexoByInformeFinalInterventoriaId(int pInformeFinalInterventoriaId);
-        Task<bool> VerificarInformeFinalEstadoCompleto(int pInformeFinalId);
+        Task<InformeFinalAnexo> GetInformeFinalAnexoByInformeFinalAnexoId(int pInformeFinalAnexoId);
+        Task<InformeFinalInterventoria> GetObservacionesByInformeFinalInterventoriaId(int pInformeFinalInterventoriaId);
+
+        Task<InformeFinal> GetInformeFinalByInformeFinalId(int pInformeFinalId);
+        Task<InformeFinalInterventoriaObservaciones> GetInformeFinalInterventoriaObservacionByInformeFinalObservacion(int pObservacionId);
 
         //Creación y edición
         Task<Respuesta> CreateEditInformeFinal(InformeFinal pInformeFinal);
         Task<Respuesta> CreateEditInformeFinalInterventoria(InformeFinalInterventoria pInformeFinalInterventoriaId);
+        Task<Respuesta> CreateEditInformeFinalInterventoriabyInformeFinal(InformeFinal pInformeFinal,string user);
         Task<Respuesta> CreateEditInformeFinalAnexo(InformeFinalAnexo pInformeFinalAnexoId, int pInformeFinalInterventoriaId);
         Task<Respuesta> CreateEditInformeFinalInterventoriaObservacion(InformeFinalInterventoriaObservaciones pObservacion);
+        Task<Respuesta> SendFinalReportToSupervision(int pProyectoId, string pUsuario, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
 
-        //Eliminaciones
+        //Alertas
+        Task GetInformeFinalSinGestionar(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
 
     }
 }

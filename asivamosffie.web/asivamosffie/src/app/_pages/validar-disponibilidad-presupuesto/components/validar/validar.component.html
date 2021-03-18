@@ -31,8 +31,9 @@
     <mat-expansion-panel class="expansion-style" *ngFor="let disponibilidad of listaDisponibilidades">
       <mat-expansion-panel-header class="expansion-style--header"
       *ngIf="listaestado.includes(disponibilidad.nombreEstado)">
-        <mat-panel-title class="expansion-style--title " [ngClass]="{'sin-diligenciar': disponibilidad.completo=='Incompleto', 'completo': disponibilidad.completo=='Completo'}"><!----->
-          {{disponibilidad.nombreEstado}}
+        <mat-panel-title class="expansion-style--title " 
+          [ngClass]="{'sin-diligenciar':disponibilidad['class']===0,'en-proceso':disponibilidad['class']===1,'completo':disponibilidad['class']===2}"><!----->
+          {{disponibilidad.nombreEstado}} 
         </mat-panel-title>
       </mat-expansion-panel-header>
       <app-tabla-en-validacion [disponibilidadPresupuestal]="disponibilidad" *ngIf="disponibilidad.nombreEstado=='En validación presupuestal'"></app-tabla-en-validacion>
@@ -44,7 +45,8 @@
     </mat-expansion-panel>
   </mat-accordion>
 
-  <mat-accordion *ngIf="false">
+
+  <!-- <mat-accordion *ngIf="false">
     <mat-expansion-panel class="expansion-style">
       <mat-expansion-panel-header class="expansion-style--header">
         <mat-panel-title class="expansion-style--title sin-diligenciar">
@@ -58,12 +60,14 @@
         <mat-panel-title class="expansion-style--title sin-diligenciar">
           Devuelta por coordinación financiera
         </mat-panel-title>
-      </mat-expansion-panel-header>
+      </mat-expansion-panel-header> 
       <app-tabla-devuelta-por-coordinacion></app-tabla-devuelta-por-coordinacion>
     </mat-expansion-panel>
     <mat-expansion-panel class="expansion-style">
       <mat-expansion-panel-header class="expansion-style--header">
-        <mat-panel-title class="expansion-style--title">
+        <mat-panel-title class="expansion-style--title"
+        [ngClass]="{'sin-diligenciar':devueltaPresupuestal_class===0,'en-proceso':devueltaPresupuestal_class===1,'completo':devueltaPresupuestal_class===2}"
+        >
           Devuelta por validación presupuestal
         </mat-panel-title>
       </mat-expansion-panel-header>
@@ -101,5 +105,5 @@
       </mat-expansion-panel-header>
       <app-tabla-con-disponibilidad-cancelada></app-tabla-con-disponibilidad-cancelada>
     </mat-expansion-panel>
-  </mat-accordion>
+  </mat-accordion> -->
 </section>

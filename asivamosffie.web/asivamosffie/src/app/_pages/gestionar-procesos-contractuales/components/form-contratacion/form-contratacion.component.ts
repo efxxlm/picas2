@@ -53,6 +53,10 @@ export class FormContratacionComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  listaTipoSolicitud = {
+    obra: '1',
+    interventoria: '2'
+  };
 
   constructor ( private fb: FormBuilder,
                 private activatedRoute: ActivatedRoute,
@@ -111,10 +115,16 @@ export class FormContratacionComponent implements OnInit {
           rutaDocumento: contratacion.rutaMinuta !== null ? contratacion.rutaMinuta : null
         });
 
-        for ( let contratacionProyecto of contratacion.contratacionProyecto ) {
-          this.valorTotalDdp += contratacionProyecto.proyecto.valorObra;
-          this.valorTotalDdp += contratacionProyecto.proyecto.valorInterventoria;
-        };
+        if ( contratacion.tipoSolicitudCodigo === this.listaTipoSolicitud.obra ) {
+          for ( let contratacionProyecto of contratacion.contratacionProyecto ) {
+            this.valorTotalDdp += contratacionProyecto.proyecto.valorObra;
+          };
+        }
+        if ( contratacion.tipoSolicitudCodigo === this.listaTipoSolicitud.interventoria ) {
+          for ( let contratacionProyecto of contratacion.contratacionProyecto ) {
+            this.valorTotalDdp += contratacionProyecto.proyecto.valorInterventoria;
+          };
+        }
 
       } );
 
@@ -139,10 +149,10 @@ export class FormContratacionComponent implements OnInit {
       } );
   };
 */
-  getDdp(sesionComiteSolicitudId: number, numeroDdp: string )
+  getDdp(disponibilidadPresupuestalId: number, numeroDdp: string )
   {
     
-    this.disponibilidadServices.GenerateDDP(sesionComiteSolicitudId).subscribe((listas:any) => {
+    this.disponibilidadServices.GenerateDDP(disponibilidadPresupuestalId).subscribe((listas:any) => {
       console.log(listas);
       let documento = '';
         if ( numeroDdp !== undefined ) {

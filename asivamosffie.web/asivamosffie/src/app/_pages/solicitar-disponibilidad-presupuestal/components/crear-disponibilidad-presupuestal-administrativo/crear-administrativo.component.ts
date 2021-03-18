@@ -40,6 +40,7 @@ export class CrearDisponibilidadPresupuestalAdministrativoComponent implements O
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
 
   constructor(
     private fb: FormBuilder,
@@ -77,6 +78,8 @@ export class CrearDisponibilidadPresupuestalAdministrativoComponent implements O
                 this.formulario.get('disponibilidadPresupuestalId').setValue( this.objetoDispinibilidad.disponibilidadPresupuestalId )
       
                 this.changeProyecto();              
+                this.estaEditando = true;
+                this.formulario.markAllAsTouched();
               }
             )            
           }          
@@ -135,7 +138,7 @@ export class CrearDisponibilidadPresupuestalAdministrativoComponent implements O
     if ( this.noGuardado===true && this.formulario.dirty) {
       let dialogRef =this.dialog.open(ModalDialogComponent, {
         width: '28em',
-        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
+        data: { modalTitle:"", modalText:"Â¿Desea guardar la informaciÃ³n registrada?",siNoBoton:true }
       });   
       dialogRef.afterClosed().subscribe(result => {
         console.log(`Dialog result: ${result}`);
@@ -148,7 +151,8 @@ export class CrearDisponibilidadPresupuestalAdministrativoComponent implements O
   };
 
   enviarObjeto() {
-
+    this.estaEditando = true;
+    this.formulario.markAllAsTouched();
     let aportante = this.listaAportantes[0];
 
     let valor=0;

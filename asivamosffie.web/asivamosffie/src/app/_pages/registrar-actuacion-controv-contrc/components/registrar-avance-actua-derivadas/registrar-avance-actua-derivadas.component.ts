@@ -39,7 +39,7 @@ export class RegistrarAvanceActuaDerivadasComponent implements OnInit {
   controversia: any;
   actuacion: any;
   seRealizoPeticion=false;
-
+  estaEditando = false;
   ngOnDestroy(): void {
     if (this.addressForm.dirty === true  && this.seRealizoPeticion === false ) {
       let dialogRef =this.dialog.open(ModalDialogComponent, {
@@ -65,7 +65,13 @@ export class RegistrarAvanceActuaDerivadasComponent implements OnInit {
   ngOnInit(): void {
     this.commonServices.getEstadoActuacionDerivada().subscribe(
       response=>{
-        this.estadoDerivadaArray=response;
+        console.log(response);
+        response.forEach(element => {
+          if(element.codigo !== "3"){
+            this.estadoDerivadaArray.push(element);
+          }
+        });
+        //this.estadoDerivadaArray=response;
       }
     );
     this.activatedRoute.params.subscribe( param => {
@@ -112,6 +118,8 @@ export class RegistrarAvanceActuaDerivadasComponent implements OnInit {
     }
   }
   onSubmit() {
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let obj={
       seguimientoActuacionDerivadaId:this.actuacionDerivadaID,
       controversiaActuacionId:this.controversia.controversiaActuacionId,

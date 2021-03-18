@@ -16,8 +16,8 @@
     <b> No Cumple </b>
   </p>
   <p>
-    <b> 3. </b>
-    Informe final de Obra del contratista de obra
+    <b> {{ data.informe.posicion }}. </b>
+    {{ data.informe.nombre }}
   </p>
 </div>
 
@@ -36,9 +36,31 @@
     </span>
   </div>
 
-  <div class="row justify-content-center mt-1em mb-1em">
-    <button mat-raised-button color="accent" type="submit" [disabled]="observaciones.get('observaciones').invalid">
-      Guardar
+  <div class="text-center">
+    <button
+      mat-button
+      color="warn"
+      class="btn-guardar"
+      type="submit"
+      [disabled]="observaciones.get('observaciones').invalid"
+    >
+      <img src="assets/img/icon/guardar.svg" alt="Guardar" />
     </button>
   </div>
 </form>
+
+<!--Observaciones del supervisor-->
+<mat-card class="shipping-card var-main-gris" *ngIf="data.informe.tieneObservacionSupervisor && (data.informe.estadoInforme === '4' || data.informe.estadoInforme === '8')" [formGroup]="observacionesForm">
+  <mat-card-header class="header-card header-card--margin">
+    <mat-card-title class="mat-card-title header-card--text">
+      Observación del supervisor
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <strong> {{ observacionesForm.get('fechaCreacion').value | date: 'dd/MM/yyyy' }}</strong>
+    <p [innerHTML]="observacionesForm.get('observaciones').value">
+    </p>
+  </mat-card-content>
+</mat-card>
+
+<app-tabla-observaciones *ngIf="existe_historial && (data.informe.estadoInforme === '4' || data.informe.estadoInforme === '8')" [data]="anexos"></app-tabla-observaciones>

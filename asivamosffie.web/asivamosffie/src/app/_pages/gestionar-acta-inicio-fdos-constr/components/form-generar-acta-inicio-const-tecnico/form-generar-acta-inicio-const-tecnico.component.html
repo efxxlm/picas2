@@ -35,7 +35,7 @@
         </p>
         <p>
           <strong>Nombre de la entidad contratista de interventoría: </strong
-          >{{ this.contrato.usuarioInterventoria.nombres }} {{ this.contrato.usuarioInterventoria.apellidos }}
+          >{{ this.contrato.usuarioInterventoria.primerNombre }} {{ this.contrato.usuarioInterventoria.primerApellido }}
         </p>
         <p>
           <strong>Número de identificación del representante legal del contratista de obra: </strong
@@ -66,8 +66,8 @@
           {{ this.contrato.usuarioInterventoria.numeroIdentificacion }}
         </p>
         <p>
-          <strong>Nombre Supervisor: </strong>{{ this.contrato.usuarioInterventoria.nombres }}
-          {{ this.contrato.usuarioInterventoria.apellidos }}
+          <strong>Nombre Supervisor: </strong>{{ this.contrato.usuarioInterventoria.primerNombre }}
+          {{ this.contrato.usuarioInterventoria.primerApellido }}
         </p>
       </div>
       <p>
@@ -118,10 +118,10 @@
                   <img
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
-                                  alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
                     *ngIf="
                       (addressForm.get('fechaActaInicioFDosConstruccion')?.invalid &&
                         addressForm.get('fechaActaInicioFDosConstruccion').touched) ||
@@ -166,10 +166,10 @@
                 <img
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
                   *ngIf="
                     (addressForm.get('fechaPrevistaTerminacion')?.invalid &&
                       addressForm.get('fechaPrevistaTerminacion').touched) ||
@@ -236,9 +236,11 @@
                     required
                     (keypress)="number($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     type="number"
                     formControlName="mesPlazoEjFase2"
                     #mesPlazoEjFase2
+                    readonly
                   />
                 </mat-form-field>
                 <span
@@ -253,10 +255,10 @@
                   <img
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
-                                  alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
                     *ngIf="
                       (addressForm.get('mesPlazoEjFase2')?.invalid && addressForm.get('mesPlazoEjFase2').touched) ||
                       (addressForm.get('mesPlazoEjFase2')?.invalid && estaEditando)
@@ -282,9 +284,11 @@
                     required
                     (keypress)="number($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     type="number"
                     formControlName="diasPlazoEjFase2"
                     #diasPlazoEjFase2
+                    readonly
                   />
                 </mat-form-field>
                 <span
@@ -299,10 +303,10 @@
                   <img
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
-                                  alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
                     *ngIf="
                       (addressForm.get('diasPlazoEjFase2')?.invalid && addressForm.get('diasPlazoEjFase2').touched) ||
                       (addressForm.get('diasPlazoEjFase2')?.invalid && estaEditando)
@@ -351,10 +355,10 @@
                 <img
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
                   *ngIf="
                     (addressForm.get('observacionesEspeciales')?.invalid &&
                       addressForm.get('observacionesEspeciales').touched) ||

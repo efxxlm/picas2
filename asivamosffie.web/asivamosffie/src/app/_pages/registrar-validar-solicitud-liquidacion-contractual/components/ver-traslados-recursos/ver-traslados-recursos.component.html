@@ -1,0 +1,134 @@
+<section class="container">
+  <div class="text-center">
+    <div class="text-right">
+      <a routerLink="./.." mat-button color="primary" class="btn-regresar">
+        <img src="assets/img/icon/regresar.svg" alt="Regresar" />
+      </a>
+    </div>
+    <h1 class="title-menu--h1">
+      Traslados de recursos
+      LL457326
+    </h1>
+    <p class="colorMainColor mt-1em">
+      <span class="mx-1em"> Número de contrato de obra: <b> N801801 </b> </span>
+      <span class="mx-1em"> Número de contrato de interventoria: <b> A513513 </b> </span>
+    </p>
+  </div>
+
+  <mat-card class="shipping-card var-main-gris">
+    <mat-card-content>
+      <p>
+        <strong>
+          Tipo de intervención:
+        </strong>
+        Remodelación
+      </p>
+      <p>
+        <strong>
+          Institución Educativa:
+        </strong>
+        I.E Nuestra Señora Del Carmen
+      </p>
+      <p>
+        <strong>
+          Sede:
+        </strong>
+        Única Sede
+      </p>
+      <p>
+        <strong>
+          Departamento:
+        </strong>
+        Boyacá
+      </p>
+      <p>
+        <strong>
+          Municipio:
+        </strong>
+        Susacón
+      </p>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="shipping-card var-main-gris">
+    <mat-card-content>
+      <p>
+        <strong>
+          11/08/2021
+        </strong>
+      </p>
+      <p>
+        <strong>
+          ¿Se requiere registrar un traslado de recursos entre los aportantes y fuentes que financian este proyecto,
+          antes de aprobar el balance financiero?:
+        </strong>
+        No
+      </p>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="table-responsive mb-2em w-table">
+    <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
+      <thead>
+        <tr class="mat-header-row cdk-header-row ng-star-inserted">
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+            Fecha de traslado
+          </th>
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+            Número de traslado
+          </th>
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+            Número de contrato
+          </th>
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+            Número de orden de giro
+          </th>
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+            Valor del traslado
+          </th>
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+            Estado del traslado
+          </th>
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+            Gestión
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let element of listaTraslados">
+          <td class="mat-cell cdk-cell ng-star-inserted">
+            <b> {{ element.fechaTraslado }} </b>
+          </td>
+          <td class="mat-cell cdk-cell ng-star-inserted">
+            {{ element.numeroTraslado }}
+          </td>
+          <td class="mat-cell cdk-cell ng-star-inserted">
+            {{ element.numeroContrato }}
+          </td>
+          <td class="mat-cell cdk-cell ng-star-inserted">
+            {{ element.numeroOrdenGiro }}
+          </td>
+          <td class="mat-cell cdk-cell ng-star-inserted">
+            {{ element.valorTraslado }}
+          </td>
+          <td class="mat-cell cdk-cell ng-star-inserted">
+            {{ element.estadoTraslado }}
+          </td>
+          <td class="mat-cell cdk-cell ng-star-inserted">
+            <a
+              mat-button
+              mat-raised-button
+              color="accent"
+              class="btn-table"
+              [routerLink]="['verDetalle', element.id]"
+            >
+              Ver detalle
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</section>
+

@@ -94,7 +94,8 @@
                             <input matInput #plazoMeses type="number" min="1" max="999" maxlength="3" required
                                 formControlName="plazoMeses" name="plazoMeses"
                                 (keypress)="validateNumberKeypress($event)"
-                                onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                                onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                         </mat-form-field>
                         <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
                         matTooltipClass="info-tooltip">{{3 - plazoMeses.value.length}}</span>
@@ -112,7 +113,8 @@
                                 formControlName="plazoDias" name="plazoDias"
                                 (change)="validatenomore30()"
                                 (keypress)="validateNumberKeypress($event)"
-                                onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                                onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                         </mat-form-field>
                         <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
                         matTooltipClass="info-tooltip">{{2 - plazoDias.value.length}}</span>

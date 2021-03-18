@@ -47,6 +47,7 @@ export class FormRegistrarMesaDeTrabajoComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
   constructor(private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private common: CommonService, private router: Router) {
     this.common.listaEstadoAvanceMesaTrabajo().subscribe(a => {
       this.estadoAvanceTramiteArray = a;
@@ -55,17 +56,19 @@ export class FormRegistrarMesaDeTrabajoComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.isEditable == true) {
+      this.estaEditando = true;
+      this.addressForm.markAllAsTouched();
       this.services.GetMesaByMesaId(this.idMesadeTrabajo).subscribe((data: any) => {
         for (let i = 0; i < this.estadoAvanceTramiteArray.length; i++) {
           const estadoAvanceTramiteSelected = this.estadoAvanceTramiteArray.find(p => p.codigo === data.estadoAvanceMesaCodigo);
           this.addressForm.get('estadoAvanceTramite').setValue(estadoAvanceTramiteSelected);
         }
         this.addressForm.get('fechaActuacionAdelantada').setValue(data.fechaActuacionAdelantada);
-        this.addressForm.get('actuacionAdelantada').setValue(data.actuacionAdelantada);
-        this.addressForm.get('proximaActuacionRequerida').setValue(data.proximaActuacionRequerida);
+        this.addressForm.get('actuacionAdelantada').setValue(data.actuacionAdelantada !== undefined ? data.actuacionAdelantada : null);
+        this.addressForm.get('proximaActuacionRequerida').setValue(data.proximaActuacionRequerida !== undefined ? data.proximaActuacionRequerida : null);
         this.addressForm.get('diasVencimientoTerminos').setValue(data.cantDiasVencimiento);
         this.addressForm.get('fechaVencimientoTerminos').setValue(data.fechaVencimiento);
-        this.addressForm.get('observaciones').setValue(data.observaciones);
+        this.addressForm.get('observaciones').setValue(data.observaciones !== undefined ? data.observaciones : null);
         this.addressForm.get('resultadoDefinitivo').setValue(data.resultadoDefinitivo);
         this.addressForm.get('urlSoporte').setValue(data.rutaSoporte);
       });
@@ -96,7 +99,9 @@ export class FormRegistrarMesaDeTrabajoComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.addressForm.value);
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
+    // console.log(this.addressForm.value);
     let mesaTrabajoArray;
     if (this.isEditable == true) {
       mesaTrabajoArray =

@@ -1,0 +1,104 @@
+import { Respuesta } from './../common/common.service';
+import { HttpClient } from '@angular/common/http';
+import { environment } from './../../../../environments/environment';
+import { Injectable } from '@angular/core';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class RegistrarRequisitosPagoService {
+
+  private apiUrl = `${ environment.apiUrl }/RegisterValidatePaymentRequierements`;
+
+  constructor( private http: HttpClient ) { }
+
+  getContratos( pTipoSolicitud: string, pModalidadContrato: string, pNumeroContrato: string ) {
+    return this.http.get<any[]>( `${ this.apiUrl }/GetContratoByTipoSolicitudCodigoModalidadContratoCodigoOrNumeroContrato?pTipoSolicitud=${ pTipoSolicitud }&pModalidadContrato=${ pModalidadContrato }&pNumeroContrato=${ pNumeroContrato }` );
+  }
+
+  getContratoByContratoId( pContratoId: number, pSolicitudPago: number ) {
+    return this.http.get( `${ this.apiUrl }/GetContratoByContratoId?pContratoId=${ pContratoId }&pSolicitudPago=${ pSolicitudPago }` );
+  }
+
+  returnSolicitudPago( pSolicitudPago: any ) {
+    return this.http.post<Respuesta>( `${ this.apiUrl }/ReturnSolicitudPago`, pSolicitudPago );
+  }
+
+  getSolicitudPago( pSolicitudPagoId: number ) {
+    return this.http.get( `${ this.apiUrl }/GetSolicitudPago?pSolicitudPagoId=${ pSolicitudPagoId }` );
+  }
+
+  getProyectosByIdContrato( pContratoId: number ) {
+    return this.http.get( `${ this.apiUrl }/GetProyectosByIdContrato?pContratoId=${ pContratoId }` );
+  }
+
+  getCriterioByFormaPagoCodigo( pFormaPagoCodigo: string ) {
+    return this.http.get<{ codigo: string, nombre: string }[]>( `${ this.apiUrl }/GetCriterioByFormaPagoCodigo?pFormaPagoCodigo=${ pFormaPagoCodigo }` );
+  }
+
+  getValidateSolicitudPagoId( pSolicitudPagoId: number ) {
+    return this.http.get( `${ this.apiUrl }/GetValidateSolicitudPagoId?pSolicitudPagoId=${ pSolicitudPagoId }` );
+  }
+
+  createEditNewPayment( pSolicitudPago: any ) {
+    return this.http.post<Respuesta>( `${ this.apiUrl }/CreateEditNewPayment`, pSolicitudPago );
+  }
+
+  createEditExpensas( pSolicitudPago: any ) {
+    return this.http.post<Respuesta>( `${ this.apiUrl }/CreateEditExpensas`, pSolicitudPago );
+  }
+
+  createEditOtrosCostosServicios( pSolicitudPago: any ) {
+    return this.http.post<Respuesta>( `${ this.apiUrl }/CreateEditOtrosCostosServicios`, pSolicitudPago );
+  }
+
+  getListSolicitudPago() {
+    return this.http.get<any[]>( `${ this.apiUrl }/GetListSolicitudPago` );
+  }
+
+  getTipoPagoByCriterioCodigo( pCriterioCodigo: string ) {
+    return new Promise<any[]>( resolve => {
+      this.http.get<any[]>( `${ this.apiUrl }/GetTipoPagoByCriterioCodigo?pCriterioCodigo=${ pCriterioCodigo }` )
+        .subscribe( response => resolve( response ) );
+    } );
+  }
+
+  getConceptoPagoCriterioCodigoByTipoPagoCodigo( tipoPagoCodigo: string ) {
+    return new Promise<any[]>( resolve => {
+      this.http.get<any[]>( `${ this.apiUrl }/GetConceptoPagoCriterioCodigoByTipoPagoCodigo?TipoPagoCodigo=${ tipoPagoCodigo }` )
+        .subscribe( response => resolve( response ) );
+    } );
+  }
+
+  getUsoByConceptoPagoCriterioCodigo( pConceptoPagoCodigo: string, pContratoId: number ) {
+    return new Promise<any[]>( resolve => {
+      this.http.get( `${ this.apiUrl }/GetUsoByConceptoPagoCriterioCodigo?pConceptoPagoCodigo=${ pConceptoPagoCodigo }&pContratoId=${ pContratoId }` )
+        .subscribe( ( response: any[] ) => resolve( response ) );
+    } );
+  }
+
+  getListProyectosByLlaveMen( pLlaveMen: string ) {
+    return this.http.get<any[]>( `${ this.apiUrl }/GetListProyectosByLlaveMen?pLlaveMen=${ pLlaveMen }` );
+  }
+  // Eliminar criterio del contrato
+  deleteSolicitudPagoFaseCriterio( pSolicitudPagoFaseCriterioId: number ) {
+    return this.http.post<Respuesta>( `${ this.apiUrl }/DeleteSolicitudPagoFaseCriterio?pSolicitudPagoFaseCriterioId=${ pSolicitudPagoFaseCriterioId }`, '' );
+  }
+  // Eliminar criterio del proyecto
+  deleteSolicitudPagoFaseCriterioProyecto( SolicitudPagoFaseCriterioProyectoId: number ) {
+    return this.http.post<Respuesta>( `${ this.apiUrl }/DeleteSolicitudPagoFaseCriterioProyecto?SolicitudPagoFaseCriterioProyectoId=${ SolicitudPagoFaseCriterioProyectoId }`, '' );
+  }
+  // Eliminar llave del proyecto
+  deleteSolicitudLlaveCriterioProyecto( pContratacionProyectoId: number ) {
+    return this.http.post<Respuesta>( `${ this.apiUrl }/DeleteSolicitudLlaveCriterioProyecto?pContratacionProyectoId=${ pContratacionProyectoId }`, '' );
+  }
+  // Eliminar solicitud de pago
+  deleteSolicitudPago( pSolicitudPagoId: number ) {
+    return this.http.post<Respuesta>( `${ this.apiUrl }/DeleteSolicitudPago?pSolicitudPagoId=${ pSolicitudPagoId }`, '' );
+  }
+  // Eliminar descuentos
+  deleteSolicitudPagoFaseFacturaDescuento( pSolicitudPagoFaseFacturaDescuentoId: number ) {
+    return this.http.post( `${ this.apiUrl }/DeleteSolicitudPagoFaseFacturaDescuento?pSolicitudPagoFaseFacturaDescuentoId=${ pSolicitudPagoFaseFacturaDescuentoId }`, '' );
+  }
+
+}

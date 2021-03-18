@@ -1,4 +1,4 @@
-<section class="container mb-2em" *ngIf="seguimientoSemanal !== undefined">
+<section class="container mb-2em" *ngIf="seguimientoSemanal !== undefined && esRegistroNuevo !== undefined">
     <div class="text-right">
         <a routerLink="/registrarAvanceSemanal" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
@@ -7,24 +7,25 @@
 
     <div class="text-center">
         <h1 class="title-menu--h1">
-            Registrar seguimiento semanal {{ seguimientoSemanal.contratacionProyecto.proyecto.llaveMen }}
+            {{ esRegistroNuevo === true ? 'Registrar' : 'Ver detalle/Editar' }} avance semanal {{ seguimientoSemanal.infoProyecto.llaveMen }}
         </h1>
     </div>
 
     <div class="text-center colorMainColor mt-1em">
         <p>Número de contrato de obra:
-          <b> {{ seguimientoSemanal.contratacionProyecto.contratacion.contrato[0].numeroContrato }} </b>
+          <b> {{ seguimientoSemanal.infoProyecto.numeroContrato }} </b>
         </p>
     </div>
 
     <div class="mt-1em" align="left">
         <mat-card class="border">
             <mat-card-content class="mt-1em">
-              <p><b>Tipo de intervención</b>: {{ seguimientoSemanal.contratacionProyecto.proyecto.tipoIntervencionString }} </p>
-              <p><b>Departamento</b>: {{ seguimientoSemanal.contratacionProyecto.proyecto.departamentoObj.descripcion }} </p>
-              <p><b>Municipio</b>: {{ seguimientoSemanal.contratacionProyecto.proyecto.municipioObj.descripcion }} </p>
-              <p><b>Institución Educativa</b>: {{ seguimientoSemanal.contratacionProyecto.proyecto.institucionEducativa.nombre }} </p>
-              <p><b>Sede</b>: {{ seguimientoSemanal.contratacionProyecto.proyecto.sede.nombre }} </p>
+              <p><b>Tipo de intervención</b>: {{ seguimientoSemanal.infoProyecto.tipoIntervencion }} </p>
+              <p><b>Departamento</b>: {{ seguimientoSemanal.infoProyecto.departamento }} </p>
+              <p><b>Municipio</b>: {{ seguimientoSemanal.infoProyecto.municipio }} </p>
+              <p><b>Institución Educativa</b>: {{ seguimientoSemanal.infoProyecto.institucionEducativa }} </p>
+              <p><b>Sede</b>: {{ seguimientoSemanal.infoProyecto.sede }} </p>
+              <p *ngIf="seguimientoSemanal.infoProyecto.fechaUltimoReporte !== undefined"><b>Fecha del último reporte</b>: {{ seguimientoSemanal.infoProyecto.fechaUltimoReporte.fechaModificacion | date: 'dd/MM/yyyy' }} </p>
             </mat-card-content>
         </mat-card>
     </div>
@@ -56,7 +57,7 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-avance-fisico-financiero [seguimientoDiario]="seguimientoSemanal"></app-avance-fisico-financiero>
+                <app-avance-fisico-financiero [seguimientoSemanal]="seguimientoSemanal" [avanceFisicoObs]="tipoObservaciones.avanceFisico" (estadoSemaforoAvanceFisico)="semaforoAvanceFisico = $event"></app-avance-fisico-financiero>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
@@ -65,7 +66,7 @@
                         Avance financiero
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-avance-financiero [seguimientoSemanal]="seguimientoSemanal" *ngIf="seguimientoSemanal.numeroSemana % 5 === 0"></app-avance-financiero>
+                <app-avance-financiero [seguimientoSemanal]="seguimientoSemanal" *ngIf="seguimientoSemanal.numeroSemana % 5 === 0" [avanceFinancieroObs]="tipoObservaciones.avanceFinanciero"></app-avance-financiero>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
@@ -75,7 +76,7 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-gestion-de-obra [seguimientoSemanal]="seguimientoSemanal" (estadoSemaforoGestionObra)="valuePendingSemaforo( $event, 'gestionObra' )"></app-gestion-de-obra>
+                <app-gestion-de-obra [seguimientoSemanal]="seguimientoSemanal" [tipoObservaciones]="tipoObservaciones" (estadoSemaforoGestionObra)="valuePendingSemaforo( $event, 'gestionObra' )"></app-gestion-de-obra>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
@@ -85,7 +86,7 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-reporte-actividades [seguimientoSemanal]="seguimientoSemanal" (estadoSemaforoReporte)="valuePendingSemaforo( $event, 'reporteActividad' )"></app-reporte-actividades>
+                <app-reporte-actividades [seguimientoSemanal]="seguimientoSemanal" [tipoReporteActividad]="tipoObservaciones.reporteActividades" (estadoSemaforoReporte)="valuePendingSemaforo( $event, 'reporteActividad' )"></app-reporte-actividades>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
@@ -95,7 +96,7 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-registro-fotografico [seguimientoSemanal]="seguimientoSemanal"></app-registro-fotografico>
+                <app-registro-fotografico [seguimientoSemanal]="seguimientoSemanal" [tipoRegistroFotografico]="tipoObservaciones.registroFotografico"></app-registro-fotografico>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
@@ -105,7 +106,7 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-comite-obra [seguimientoSemanal]="seguimientoSemanal"></app-comite-obra>
+                <app-comite-obra [seguimientoSemanal]="seguimientoSemanal" [tipoComiteObra]="tipoObservaciones.comiteObra"></app-comite-obra>
             </mat-expansion-panel>
         </mat-accordion>
     </div>

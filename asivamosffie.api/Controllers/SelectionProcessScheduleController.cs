@@ -1,6 +1,7 @@
 ﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System;
@@ -11,6 +12,7 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class SelectionProcessScheduleController : ControllerBase
     {
         private readonly ISelectionProcessScheduleService _selectionProcessScheduleService;
@@ -151,15 +153,7 @@ namespace asivamosffie.api.Controllers
             try
             {
 
-                string usermodified = HttpContext.User.FindFirst("User").Value.ToUpper();
-                if(procesoSeleccionCronograma.ProcesoSeleccionMonitoreoId>0)
-                {
-                    procesoSeleccionCronograma.UsuarioModificacion = usermodified;
-                }
-                else
-                {
-                    procesoSeleccionCronograma.UsuarioCreacion = usermodified;
-                }
+                procesoSeleccionCronograma.UsuarioCreacion  = HttpContext.User.FindFirst("User").Value.ToUpper();
                 
                 _response = await _selectionProcessScheduleService.setProcesoSeleccionMonitoreoCronograma(procesoSeleccionCronograma,
                      _settings.Value.DominioFront,

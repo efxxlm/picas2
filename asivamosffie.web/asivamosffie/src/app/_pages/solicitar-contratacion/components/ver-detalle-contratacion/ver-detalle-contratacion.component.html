@@ -60,56 +60,66 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <mat-card class="border" align="left">
+        <mat-card class="border mt-3em" align="left">
           <mat-card-title class="text-area-quill--label">Características técnicas o jurídicas especiales
           </mat-card-title>
           <mat-card-content class="mt-1em">
 
-            <p *ngIf="!proyecto.tieneMonitoreoWeb">
-              <b>
-                ¿El proyecto tiene contemplada la obligación de disponer de servicio de monitoreo en tiempo real a
-                través de cámaras con acceso web?
-              </b>: No
-            </p>
-            <p *ngIf="proyecto.tieneMonitoreoWeb">
-              <b>
-                ¿El proyecto tiene contemplada la obligación de disponer de servicio de monitoreo en tiempo real a
-                través de cámaras con acceso web?
-              </b>: Sí
-            </p>
-            <p *ngIf="proyecto.esReasignacion">
-              <b>¿El proyecto es una reasignación?</b>: Sí
-            </p>
-            <p *ngIf="!proyecto.esReasignacion">
-              <b>¿El proyecto es una reasignación?</b>: No
-            </p>
-            <p *ngIf="proyecto.esAvanceobra">
-              <b>¿El proyecto tiene avance de obra?</b>: Sí
-            </p>
-            <p *ngIf="!proyecto.esAvanceobra">
-              <b>¿El proyecto tiene avance de obra?</b>: No
-            </p>
+            <section *ngIf="proyecto.tieneMonitoreoWeb !== undefined">
+              <p *ngIf="proyecto.tieneMonitoreoWeb === false">
+                <b>
+                  ¿El proyecto tiene contemplada la obligación de disponer de servicio de monitoreo en tiempo real a
+                  través de cámaras con acceso web?
+                </b>: No
+              </p>
+              <p *ngIf="proyecto.tieneMonitoreoWeb === true">
+                <b>
+                  ¿El proyecto tiene contemplada la obligación de disponer de servicio de monitoreo en tiempo real a
+                  través de cámaras con acceso web?
+                </b>: Sí
+              </p>
+            </section>
+            <section *ngIf="proyecto.esReasignacion !== undefined">
+              <p *ngIf="proyecto.esReasignacion === true">
+                <b>¿El proyecto es una reasignación?</b>: Sí
+              </p>
+              <p *ngIf="proyecto.esReasignacion === false">
+                <b>¿El proyecto es una reasignación?</b>: No
+              </p>
+            </section>
+            <section *ngIf="proyecto.esAvanceobra !== undefined">
+              <p *ngIf="proyecto.esAvanceobra === true">
+                <b>¿El proyecto tiene avance de obra?</b>: Sí
+              </p>
+              <p *ngIf="proyecto.esAvanceobra === false">
+                <b>¿El proyecto tiene avance de obra?</b>: No
+              </p>
+            </section>
             <p *ngIf="proyecto['porcentajeAvanceObra'] > 0">
               <b>¿Cuál es el porcentaje de avance de obra?</b>: {{
               contratacion.contratacionProyecto[0].porcentajeAvanceObra }}%
             </p>
-            <p *ngIf="proyecto.requiereLicencia">
-              <b>¿El proyecto requiere licencias?</b>: Sí
-            </p>
-            <p *ngIf="!proyecto.requiereLicencia">
-              <b>¿El proyecto requiere licencias?</b>: No
-            </p>
-            <p *ngIf="proyecto.licenciaVigente">
-              <b>¿El proyecto tiene licencia vigente?</b>: Sí
-            </p>
-            <p *ngIf="!proyecto.licenciaVigente">
-              <b>¿El proyecto tiene licencia vigente?</b>: No
-            </p>
+            <section *ngIf="proyecto.requiereLicencia !== undefined">
+              <p *ngIf="proyecto.requiereLicencia === true">
+                <b>¿El proyecto requiere licencias?</b>: Sí
+              </p>
+              <p *ngIf="proyecto.requiereLicencia === false">
+                <b>¿El proyecto requiere licencias?</b>: No
+              </p>
+            </section>
+            <section *ngIf="proyecto.licenciaVigente !== undefined">
+              <p *ngIf="proyecto.licenciaVigente === true">
+                <b>¿El proyecto tiene licencia vigente?</b>: Sí
+              </p>
+              <p *ngIf="proyecto.licenciaVigente === false">
+                <b>¿El proyecto tiene licencia vigente?</b>: No
+              </p>
+            </section>
             <p *ngIf="proyecto.numeroLicencia">
-              <b>Número de licencia</b>: {{ contratacion.contratacionProyecto[0].numeroLicencia }}
+              <b>Número de licencia</b>: {{ proyecto.numeroLicencia }}
             </p>
             <p *ngIf="proyecto.fechaVigencia">
-              <b>Fecha de vigencia</b>: {{ contratacion.contratacionProyecto[0].fechaVigencia | date: 'dd/MM/yyyy' }}
+              <b>Fecha de vigencia</b>: {{ proyecto.fechaVigencia | date: 'dd/MM/yyyy' }}
             </p>
 
           </mat-card-content>

@@ -37,6 +37,7 @@ export class ExpansionInterValidarRequisitosComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
 
   constructor(
     private fb: FormBuilder,
@@ -68,25 +69,17 @@ export class ExpansionInterValidarRequisitosComponent implements OnInit {
               let completo = 0;
 
               for ( const perfil of contratacionProyecto.proyecto.contratoPerfil ) {
-                // tslint:disable-next-line: no-string-literal
                 perfil[ 'tieneObservaciones' ] = null;
-                // tslint:disable-next-line: no-string-literal
-                perfil[ 'verificarObservacion' ] = '';
+                perfil[ 'verificarObservacion' ] = null;
 
                 const tipoPerfil = this.perfilesCv.filter( value => value.codigo === perfil.perfilCodigo );
-                // tslint:disable-next-line: no-string-literal
-                perfil[ 'nombre' ] = tipoPerfil[0].nombre;
-                // tslint:disable-next-line: no-string-literal
+                perfil[ 'nombre' ] = tipoPerfil[0] !== undefined ? tipoPerfil[0].nombre : '';
                 if ( perfil[ 'tieneObservacionSupervisor' ] === undefined ) {
-                  // tslint:disable-next-line: no-string-literal
                   perfil[ 'estadoSemaforo' ] = 'sin-diligenciar';
                   sinDiligenciar++;
                 }
-                // tslint:disable-next-line: no-string-literal
                 if ( perfil[ 'tieneObservacionSupervisor' ] === false ) {
-                  // tslint:disable-next-line: no-string-literal
                   perfil[ 'estadoSemaforo' ] = 'completo';
-                  // tslint:disable-next-line: no-string-literal
                   perfil[ 'tieneObservaciones' ] = false;
                   completo++;
                 }
@@ -98,42 +91,32 @@ export class ExpansionInterValidarRequisitosComponent implements OnInit {
                 }
 
                 if ( observacionTipo3.length > 0 ) {
-                  // tslint:disable-next-line: no-string-literal
                   if (  perfil[ 'tieneObservacionSupervisor' ] === true
                         && observacionTipo3[ observacionTipo3.length - 1 ].observacion === undefined ) {
-                          // tslint:disable-next-line: no-string-literal
                     perfil[ 'estadoSemaforo' ] = 'en-proceso';
-                    // tslint:disable-next-line: no-string-literal
                     perfil[ 'tieneObservaciones' ] = true;
-                    // tslint:disable-next-line: no-string-literal
                     perfil[ 'contratoPerfilObservacionId' ] = observacionTipo3[ observacionTipo3.length - 1 ].contratoPerfilObservacionId;
                   }
-                  // tslint:disable-next-line: no-string-literal
                   if (  perfil[ 'tieneObservacionSupervisor' ] === true
                         && observacionTipo3[ observacionTipo3.length - 1 ].observacion !== undefined ) {
-                    // tslint:disable-next-line: no-string-literal
                     perfil[ 'estadoSemaforo' ] = 'completo';
-                    // tslint:disable-next-line: no-string-literal
                     perfil[ 'tieneObservaciones' ] = true;
-                    // tslint:disable-next-line: no-string-literal
                     perfil[ 'contratoPerfilObservacionId' ] = observacionTipo3[ observacionTipo3.length - 1 ].contratoPerfilObservacionId;
-                    // tslint:disable-next-line: no-string-literal
                     perfil[ 'verificarObservacion' ] = observacionTipo3[ observacionTipo3.length - 1 ].observacion;
+                    this.estaEditando = true;
+                    this.addressForm.markAllAsTouched();
                     completo++;
                   }
                 }
               }
               if ( sinDiligenciar === contratacionProyecto.proyecto.contratoPerfil.length ) {
-                // tslint:disable-next-line: no-string-literal
                 contratacionProyecto[ 'estadoSemaforo' ] = 'sin-diligenciar';
               }
               if ( completo === contratacionProyecto.proyecto.contratoPerfil.length ) {
-                // tslint:disable-next-line: no-string-literal
                 contratacionProyecto[ 'estadoSemaforo' ] = 'completo';
               }
               if (  ( completo > 0 && completo < contratacionProyecto.proyecto.contratoPerfil.length )
                     || ( sinDiligenciar > 0 && sinDiligenciar < contratacionProyecto.proyecto.contratoPerfil.length ) ) {
-                // tslint:disable-next-line: no-string-literal
                 contratacionProyecto[ 'estadoSemaforo' ] = 'en-proceso';
               }
             }
@@ -154,29 +137,16 @@ export class ExpansionInterValidarRequisitosComponent implements OnInit {
 
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
-      e.editor.deleteText(n, e.editor.getLength());
+      e.editor.deleteText(n - 1, e.editor.getLength());
     }
   }
 
-  textoLimpio(texto: string) {
-    let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
-
-    if ( texto ){
-      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
-      return textolimpio.length + saltosDeLinea;
+  textoLimpio( evento: any, n: number ) {
+    if ( evento !== undefined ) {
+      return evento.getLength() > n ? n : evento.getLength();
+    } else {
+      return 0;
     }
-  }
-
-  private contarSaltosDeLinea(cadena: string, subcadena: string) {
-    let contadorConcurrencias = 0;
-    let posicion = 0;
-    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
-      ++contadorConcurrencias;
-      posicion += subcadena.length;
-    }
-    return contadorConcurrencias;
   }
 
   textoLimpioObservacion(texto: string) {
@@ -201,6 +171,8 @@ export class ExpansionInterValidarRequisitosComponent implements OnInit {
   }
 
   onSubmit( perfil: ContratoPerfil ) {
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     const observacionPerfil: ObservacionPerfil = {
       contratoPerfilId: perfil.contratoPerfilId,
       observacion: perfil[ 'verificarObservacion' ] === null || perfil[ 'verificarObservacion' ].length === 0 ? null : perfil[ 'verificarObservacion' ],

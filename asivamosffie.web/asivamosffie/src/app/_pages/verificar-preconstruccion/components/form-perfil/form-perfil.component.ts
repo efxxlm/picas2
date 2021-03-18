@@ -12,7 +12,6 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   styleUrls: ['./form-perfil.component.scss']
 })
 export class FormPerfilComponent implements OnInit {
-
   formContratista: FormGroup;
   minDate: Date;
   @Input() contratoId: number;
@@ -25,37 +24,41 @@ export class FormPerfilComponent implements OnInit {
   @Output() perfilesCompletados = new EventEmitter();
   perfilesCompletos = 0;
   perfilesEnProceso = 0;
-  @ViewChild( 'cantidadPerfiles', { static: true } ) cantidadPerfiles: ElementRef;
+  @ViewChild('cantidadPerfiles', { static: true }) cantidadPerfiles: ElementRef;
   editorStyle = {
     height: '45px'
   };
-  estadoProyectoArray = [ 'Estudios y Diseños', 'Diagnóstico' ];
+  estadoProyectoArray = ['Estudios y Diseños', 'Diagnóstico'];
   config = {
     toolbar: [
       ['bold', 'italic', 'underline'],
       [{ list: 'ordered' }, { list: 'bullet' }],
       [{ indent: '-1' }, { indent: '+1' }],
-      [{ align: [] }],
+      [{ align: [] }]
     ]
+  };
+  listaTipoObservaciones = {
+    obsInterventor: '1',
+    obsSupervisor: '3'
   };
   perfilesCv: Dominio[] = [];
   estaEditando = false;
 
   get perfiles() {
-    return this.formContratista.get( 'perfiles' ) as FormArray;
+    return this.formContratista.get('perfiles') as FormArray;
   }
 
   constructor(
     private fb: FormBuilder,
     private commonSvc: CommonService,
     private dialog: MatDialog,
-    private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService ) {
+    private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService
+  ) {
     this.minDate = new Date();
     this.crearFormulario();
-    this.commonSvc.listaPerfil()
-      .subscribe( perfiles => {
-        this.perfilesCv = perfiles;
-      } );
+    this.commonSvc.listaPerfil().subscribe(perfiles => {
+      this.perfilesCv = perfiles;
+    });
   }
 
   ngOnInit(): void {
@@ -66,229 +69,276 @@ export class FormPerfilComponent implements OnInit {
 
   crearFormulario() {
     this.formContratista = this.fb.group({
-      numeroPerfiles       : [ '' ],
-      estadoFases          : [ null ],
-      fechaObservacion     : [ null ],
-      observacionSupervisor: [ null ],
-      perfiles             : this.fb.array([])
+      numeroPerfiles: ['', Validators.required],
+      estadoFases: [null, Validators.required],
+      fechaObservacion: [null, Validators.required],
+      observacionSupervisor: [null, Validators.required],
+      perfiles: this.fb.array([])
     });
   }
 
   perfilesProyecto() {
-    if ( this.perfilProyecto.length === 0 ) {
-      this.formContratista.get( 'numeroPerfiles' ).valueChanges
-        .subscribe(
-          value => {
-            if ( this.formContratista.get( 'perfiles' ).dirty === true && Number( value ) > 0 ) {
-              this.formContratista.get( 'numeroPerfiles' ).setValidators( Validators.min( this.perfiles.length ) );
-              const nuevosPerfiles = Number( value ) - this.perfiles.length;
-              if ( value < this.perfiles.length ) {
-                this.openDialog(
-                  '', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>'
-                );
-                this.formContratista.get( 'numeroPerfiles' ).setValue( String( this.perfiles.length ) );
-                return;
-              }
-              for ( let i = 0; i < nuevosPerfiles; i++ ) {
-                this.perfiles.push(
-                  this.fb.group(
-                    {
-                      estadoSemaforo              : [ 'sin-diligenciar' ],
-                      contratoPerfilId            : [ 0 ],
-                      perfilCodigo                : [ null ],
-                      cantidadHvRequeridas        : [ '' ],
-                      cantidadHvRecibidas         : [ '' ],
-                      cantidadHvAprobadas         : [ '' ],
-                      fechaAprobacion             : [ null ],
-                      observacion                 : [ null ],
-                      observacionSupervisor       : [ null ],
-                      fechaObservacion            : [ null ],
-                      contratoPerfilNumeroRadicado: this.fb.array([ this.fb.group({ numeroRadicado: '' }) ]),
-                      rutaSoporte                 : [ '' ]
-                    }
-                  )
-                );
-              }
-            }
-            if ( this.formContratista.get( 'perfiles' ).dirty === false && Number( value ) > 0 ) {
-              this.perfiles.clear();
-              for ( let i = 0; i < Number(value); i++ ) {
-                this.perfiles.push(
-                  this.fb.group(
-                    {
-                      estadoSemaforo              : [ 'sin-diligenciar' ],
-                      contratoPerfilId            : [ 0 ],
-                      perfilCodigo                : [ null ],
-                      cantidadHvRequeridas        : [ '' ],
-                      cantidadHvRecibidas         : [ '' ],
-                      cantidadHvAprobadas         : [ '' ],
-                      fechaAprobacion             : [ null ],
-                      observacion                 : [ null ],
-                      observacionSupervisor       : [ null ],
-                      fechaObservacion            : [ null ],
-                      contratoPerfilNumeroRadicado: this.fb.array([ this.fb.group({ numeroRadicado: '' }) ]),
-                      rutaSoporte                 : [ '' ]
-                    }
-                  )
-                );
-              }
-            }
+    if (this.perfilProyecto.length === 0) {
+      this.formContratista.get('numeroPerfiles').valueChanges.subscribe(value => {
+        if (this.formContratista.get('perfiles').dirty === true && Number(value) > 0) {
+          this.formContratista.get('numeroPerfiles').setValidators(Validators.min(this.perfiles.length));
+          const nuevosPerfiles = Number(value) - this.perfiles.length;
+          if (value < this.perfiles.length) {
+            this.openDialog(
+              '',
+              '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>'
+            );
+            this.formContratista.get('numeroPerfiles').setValue(String(this.perfiles.length));
+            return;
           }
-        );
-      this.perfilesCompletados.emit( 'sin-diligenciar' );
+          for (let i = 0; i < nuevosPerfiles; i++) {
+            this.perfiles.push(
+              this.fb.group({
+                estadoSemaforo: ['sin-diligenciar', Validators.required],
+                contratoPerfilId: [0, Validators.required],
+                perfilCodigo: [null, Validators.required],
+                cantidadHvRequeridas: ['', Validators.required],
+                cantidadHvRecibidas: ['', Validators.required],
+                cantidadHvAprobadas: ['', Validators.required],
+                fechaAprobacion: [null, Validators.required],
+                observacion: [null, Validators.required],
+                observacionSupervisor: [null, Validators.required],
+                fechaObservacion: [null, Validators.required],
+                contratoPerfilObservacionArray: [[]],
+                contratoPerfilNumeroRadicado: this.fb.array([this.fb.group({ numeroRadicado: '' })]),
+                rutaSoporte: ['', Validators.required]
+              })
+            );
+          }
+        }
+        if (this.formContratista.get('perfiles').dirty === false && Number(value) > 0) {
+          this.perfiles.clear();
+          for (let i = 0; i < Number(value); i++) {
+            this.perfiles.push(
+              this.fb.group({
+                estadoSemaforo: ['sin-diligenciar', Validators.required],
+                contratoPerfilId: [0, Validators.required],
+                perfilCodigo: [null, Validators.required],
+                cantidadHvRequeridas: ['', Validators.required],
+                cantidadHvRecibidas: ['', Validators.required],
+                cantidadHvAprobadas: ['', Validators.required],
+                fechaAprobacion: [null, Validators.required],
+                observacion: [null, Validators.required],
+                observacionSupervisor: [null, Validators.required],
+                fechaObservacion: [null, Validators.required],
+                contratoPerfilObservacionArray: [[]],
+                contratoPerfilNumeroRadicado: this.fb.array([this.fb.group({ numeroRadicado: '' })]),
+                rutaSoporte: ['', Validators.required]
+              })
+            );
+          }
+        }
+      });
+      this.perfilesCompletados.emit('sin-diligenciar');
     } else {
+      this.estaEditando = true;
+      this.formContratista.markAllAsTouched();
+      this.perfiles.markAllAsTouched();
       const estadosArray = [];
-      this.formContratista.get( 'numeroPerfiles' ).setValue( String( this.perfilProyecto.length ) );
-      this.formContratista.get( 'numeroPerfiles' ).setValidators( Validators.min( this.perfiles.length ) );
-      this.formContratista.get( 'numeroPerfiles' ).valueChanges
-        .subscribe(
-          value => {
-            if ( value < this.perfiles.length && value > 0 ) {
-              this.openDialog(
-                '', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>'
-              );
-              this.formContratista.get( 'numeroPerfiles' ).setValue( String( this.perfilProyecto.length ) );
-              return;
-            }
-            const nuevosPerfiles = Number( value ) - this.perfiles.length;
-            for ( let i = 0; i < nuevosPerfiles; i++ ) {
-              this.perfiles.push(
-                this.fb.group(
-                  {
-                    estadoSemaforo              : [ 'sin-diligenciar' ],
-                    contratoPerfilId            : [ 0 ],
-                    perfilCodigo                : [ null ],
-                    cantidadHvRequeridas        : [ '' ],
-                    cantidadHvRecibidas         : [ '' ],
-                    cantidadHvAprobadas         : [ '' ],
-                    fechaAprobacion             : [ null ],
-                    observacion                 : [ null ],
-                    observacionSupervisor       : [ null ],
-                    fechaObservacion            : [ null ],
-                    contratoPerfilNumeroRadicado: this.fb.array([ this.fb.group({ numeroRadicado: '' }) ]),
-                    rutaSoporte                 : [ '' ]
-                  }
-                )
-              );
-            }
-          }
-        );
-      if ( this.tieneEstadoFase1EyD === true ) { estadosArray.push( 'Estudios y Diseños' ); }
-      if ( this.tieneEstadoFase1Diagnostico === true ) { estadosArray.push( 'Diagnóstico' ); }
-      this.formContratista.get( 'estadoFases' ).setValue( estadosArray );
-      for ( const perfil of this.perfilProyecto ) {
-        const numeroRadicados     = [];
-        let observaciones         = null;
-        let fechaObservacion      = null;
-        let observacionSupervisor = null;
+      this.formContratista.get('numeroPerfiles').setValue(String(this.perfilProyecto.length));
+      this.formContratista.get('numeroPerfiles').setValidators(Validators.min(this.perfiles.length));
+      this.formContratista.get('numeroPerfiles').valueChanges.subscribe(value => {
+        if (value < this.perfiles.length && value > 0) {
+          this.openDialog(
+            '',
+            '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>'
+          );
+          this.formContratista.get('numeroPerfiles').setValue(String(this.perfilProyecto.length));
+          return;
+        }
+        const nuevosPerfiles = Number(value) - this.perfiles.length;
+        for (let i = 0; i < nuevosPerfiles; i++) {
+          this.perfiles.push(
+            this.fb.group({
+              estadoSemaforo: ['sin-diligenciar', Validators.required],
+              contratoPerfilId: [0, Validators.required],
+              perfilCodigo: [null, Validators.required],
+              cantidadHvRequeridas: ['', Validators.required],
+              cantidadHvRecibidas: ['', Validators.required],
+              cantidadHvAprobadas: ['', Validators.required],
+              fechaAprobacion: [null, Validators.required],
+              observacion: [null, Validators.required],
+              observacionSupervisor: [null, Validators.required],
+              fechaObservacion: [null, Validators.required],
+              contratoPerfilObservacionArray: [[]],
+              contratoPerfilNumeroRadicado: this.fb.array([this.fb.group({ numeroRadicado: '' })]),
+              rutaSoporte: ['', Validators.required]
+            })
+          );
+        }
+      });
+      if (this.tieneEstadoFase1EyD === true) {
+        estadosArray.push('Estudios y Diseños');
+      }
+      if (this.tieneEstadoFase1Diagnostico === true) {
+        estadosArray.push('Diagnóstico');
+      }
+      this.formContratista.get('estadoFases').setValue(estadosArray);
+      console.log(this.perfilProyecto);
+      for (const perfil of this.perfilProyecto) {
+        const numeroRadicados = [];
+        const observacionInterventor = [];
+        const observacionSupervisor = [];
+        let observacionSupervisorSemaforo = null;
         let semaforo;
-        if ( perfil.contratoPerfilNumeroRadicado.length === 0 ) {
+        if (perfil.contratoPerfilNumeroRadicado.length === 0) {
           numeroRadicados.push(
-            this.fb.group(
-              {
-                contratoPerfilNumeroRadicadoId: 0,
-                contratoPerfilId              : perfil.contratoPerfilId,
-                numeroRadicado                : ''
-              }
-            )
+            this.fb.group({
+              contratoPerfilNumeroRadicadoId: 0,
+              contratoPerfilId: perfil.contratoPerfilId,
+              numeroRadicado: ''
+            })
           );
         } else {
-          for ( const radicado of perfil.contratoPerfilNumeroRadicado ) {
+          for (const radicado of perfil.contratoPerfilNumeroRadicado) {
             numeroRadicados.push(
-              this.fb.group(
-                { contratoPerfilNumeroRadicadoId: radicado.contratoPerfilNumeroRadicadoId || 0,
-                  contratoPerfilId              : perfil.contratoPerfilId,
-                  numeroRadicado                : radicado.numeroRadicado
-                }
-              )
+              this.fb.group({
+                contratoPerfilNumeroRadicadoId: radicado.contratoPerfilNumeroRadicadoId || 0,
+                contratoPerfilId: perfil.contratoPerfilId,
+                numeroRadicado: radicado.numeroRadicado
+              })
             );
           }
         }
 
-        if ( perfil.contratoPerfilObservacion.length > 0 ) {
-          for ( const obs of perfil.contratoPerfilObservacion ) {
-            if ( obs.tipoObservacionCodigo === '1' ) {
-              observaciones = obs.observacion;
-            } else if ( obs.tipoObservacionCodigo === '3' ) {
-              fechaObservacion = obs.fechaCreacion;
-              observacionSupervisor = obs.observacion;
+        if (perfil.contratoPerfilObservacion.length > 0) {
+          for (const obs of perfil.contratoPerfilObservacion) {
+            if (obs.tipoObservacionCodigo === this.listaTipoObservaciones.obsInterventor) {
+              observacionInterventor.push(obs);
+            }
+            if (
+              obs.tipoObservacionCodigo === this.listaTipoObservaciones.obsSupervisor &&
+              perfil.tieneObservacionSupervisor === true
+            ) {
+              observacionSupervisor.push(obs);
             }
           }
         }
 
-        if ( perfil.registroCompleto ) {
-          this.perfilesCompletos++;
-          semaforo = 'completo';
+        if (perfil.registroCompleto === true) {
+          if (perfil.tieneObservacionSupervisor === true) {
+            semaforo = 'en-proceso';
+            this.perfilesEnProceso++;
+          } else {
+            this.perfilesCompletos++;
+            semaforo = 'completo';
+          }
         }
-        if (  perfil.registroCompleto === false
-              && perfil.perfilCodigo !== undefined
-              && (  perfil.contratoPerfilId !== undefined
-                    || perfil.cantidadHvRequeridas > 0
-                    || perfil.cantidadHvRecibidas > 0
-                    || perfil.cantidadHvAprobadas > 0) ) {
+        if (
+          perfil.registroCompleto === false &&
+          perfil.perfilCodigo !== undefined &&
+          (perfil.contratoPerfilId !== undefined ||
+            perfil.cantidadHvRequeridas > 0 ||
+            perfil.cantidadHvRecibidas > 0 ||
+            perfil.cantidadHvAprobadas > 0)
+        ) {
           semaforo = 'en-proceso';
           this.perfilesEnProceso++;
         }
-
         this.perfiles.push(
-          this.fb.group(
-            {
-              estadoSemaforo              : [ semaforo || 'sin-diligenciar' ],
-              contratoPerfilId            : [ perfil.contratoPerfilId ? perfil.contratoPerfilId : 0 ],
-              perfilObservacion           : [ ( perfil.contratoPerfilObservacion.length === 0 ) ?
-                                              0 : perfil.contratoPerfilObservacion[0].contratoPerfilObservacionId ],
-              perfilCodigo                : [ perfil.perfilCodigo ? perfil.perfilCodigo : null ],
-              cantidadHvRequeridas        : [ perfil.cantidadHvRequeridas ? String( perfil.cantidadHvRequeridas ) : '' ],
-              cantidadHvRecibidas         : [ perfil.cantidadHvRecibidas ? String( perfil.cantidadHvRecibidas ) : '' ],
-              cantidadHvAprobadas         : [ perfil.cantidadHvAprobadas ? String( perfil.cantidadHvAprobadas ) : '' ],
-              fechaAprobacion             : [ perfil.fechaAprobacion ? new Date( perfil.fechaAprobacion ) : null ],
-              observacion                 : [ observaciones ],
-              observacionSupervisor       : [ observacionSupervisor ],
-              fechaObservacion            : [ fechaObservacion ],
-              contratoPerfilNumeroRadicado: this.fb.array( numeroRadicados ),
-              rutaSoporte                 : [ perfil.rutaSoporte ? perfil.rutaSoporte : '' ]
-            }
-          )
+          this.fb.group({
+            estadoSemaforo: [
+              perfil.tieneObservacionSupervisor === true ? 'en-proceso' : semaforo ? semaforo : 'sin-diligenciar',
+              Validators.required
+            ],
+            contratoPerfilId: [perfil.contratoPerfilId ? perfil.contratoPerfilId : 0, Validators.required],
+            perfilObservacion: [
+              perfil.contratoPerfilObservacion.length === 0
+                ? 0
+                : perfil.contratoPerfilObservacion[0].contratoPerfilObservacionId,
+              Validators.required
+            ],
+            perfilCodigo: [perfil.perfilCodigo ? perfil.perfilCodigo : null, Validators.required],
+            cantidadHvRequeridas: [
+              perfil.cantidadHvRequeridas ? String(perfil.cantidadHvRequeridas) : '',
+              Validators.required
+            ],
+            cantidadHvRecibidas: [
+              perfil.cantidadHvRecibidas ? String(perfil.cantidadHvRecibidas) : '',
+              Validators.required
+            ],
+            cantidadHvAprobadas: [
+              perfil.cantidadHvAprobadas ? String(perfil.cantidadHvAprobadas) : '',
+              Validators.required
+            ],
+            fechaAprobacion: [perfil.fechaAprobacion ? new Date(perfil.fechaAprobacion) : null, Validators.required],
+            tieneObservacionSupervisor: [
+              perfil.tieneObservacionSupervisor !== undefined ? perfil.tieneObservacionSupervisor : null,
+              Validators.required
+            ],
+            contratoPerfilObservacionArray: [
+              perfil.contratoPerfilObservacion.length > 0 ? perfil.contratoPerfilObservacion : []
+            ],
+            observacion: [
+              observacionInterventor.length > 0
+                ? observacionInterventor[observacionInterventor.length - 1].observacion
+                : null,
+              Validators.required
+            ],
+            observacionSupervisor: [
+              observacionSupervisor.length > 0
+                ? observacionSupervisor[observacionSupervisor.length - 1].observacion
+                : null,
+              Validators.required
+            ],
+            fechaObservacion: [
+              observacionSupervisor.length > 0
+                ? observacionSupervisor[observacionSupervisor.length - 1].fechaCreacion
+                : null,
+              Validators.required
+            ],
+            contratoPerfilNumeroRadicado: this.fb.array(numeroRadicados),
+            rutaSoporte: [perfil.rutaSoporte ? perfil.rutaSoporte : '', Validators.required]
+          })
         );
       }
-      if ( this.perfilesCompletos === this.perfilProyecto.length ) {
-        this.perfilesCompletados.emit( 'completo' );
+      if (this.perfilesCompletos > 0 && this.perfilesCompletos === this.perfilProyecto.length) {
+        this.perfilesCompletados.emit('completo');
       }
-      if (  this.perfilesEnProceso > 0
-            || ( this.perfilesEnProceso === 0 && this.perfilesCompletos > 0 && this.perfilesCompletos < this.perfilProyecto.length ) ) {
-        this.perfilesCompletados.emit( 'en-proceso' );
+      if (
+        this.perfilesEnProceso > 0 ||
+        (this.perfilesEnProceso === 0 &&
+          this.perfilesCompletos > 0 &&
+          this.perfilesCompletos < this.perfilProyecto.length)
+      ) {
+        this.perfilesCompletados.emit('en-proceso');
       }
-      if ( this.perfilesCompletos === 0 && this.perfilesEnProceso === 0 && this.perfilProyecto.length > 0 ) {
-        this.perfilesCompletados.emit( 'sin-diligenciar' );
+      if (this.perfilesCompletos === 0 && this.perfilesEnProceso === 0 && this.perfilProyecto.length > 0) {
+        this.perfilesCompletados.emit('sin-diligenciar');
       }
     }
   }
 
-  validateNumber( value: string, index: number, campoPerfil: string ) {
-    if ( isNaN( Number( value ) ) === true ) {
-      this.perfiles.at( index ).get( campoPerfil ).setValue( '' );
+  validateNumber(value: string, index: number, campoPerfil: string) {
+    if (isNaN(Number(value)) === true) {
+      this.perfiles.at(index).get(campoPerfil).setValue('');
     }
   }
 
-  getvalues( values: any[] ) {
-    this.tieneEstadoFase1EyD = values.includes( 'Estudios y Diseños' );
-    this.tieneEstadoFase1Diagnostico = values.includes( 'Diagnóstico' );
+  getvalues(values: any[]) {
+    this.tieneEstadoFase1EyD = values.includes('Estudios y Diseños');
+    this.tieneEstadoFase1Diagnostico = values.includes('Diagnóstico');
   }
 
-  disabledDate( cantidadHvAprobadas: string, cantidadHvRequeridas: string, cantidadHvRecibidas: string, index: number ) {
-    if ( Number( cantidadHvAprobadas ) >= Number( cantidadHvRequeridas ) ) {
-      this.perfiles.controls[index].get( 'fechaAprobacion' ).enable();
+  disabledDate(cantidadHvAprobadas: string, cantidadHvRequeridas: string, cantidadHvRecibidas: string, index: number) {
+    if (Number(cantidadHvAprobadas) >= Number(cantidadHvRequeridas)) {
+      this.perfiles.controls[index].get('fechaAprobacion').enable();
     } else {
-      this.perfiles.controls[index].get( 'fechaAprobacion' ).disable();
-      this.perfiles.controls[index].get( 'fechaAprobacion' ).setValue( null );
+      this.perfiles.controls[index].get('fechaAprobacion').disable();
+      this.perfiles.controls[index].get('fechaAprobacion').setValue(null);
     }
-    if (Number( cantidadHvAprobadas ) > Number( cantidadHvRecibidas )){
-      this.perfiles.controls[index].get( 'fechaAprobacion' ).disable();
-      this.perfiles.controls[index].get( 'fechaAprobacion' ).setValue( null );
+    if (Number(cantidadHvAprobadas) > Number(cantidadHvRecibidas)) {
+      this.perfiles.controls[index].get('fechaAprobacion').disable();
+      this.perfiles.controls[index].get('fechaAprobacion').setValue(null);
     }
-    if ( cantidadHvRequeridas.length === 0 ) {
-      this.perfiles.controls[index].get( 'fechaAprobacion' ).disable();
-      this.perfiles.controls[index].get( 'fechaAprobacion' ).setValue( null );
+    if (cantidadHvRequeridas.length === 0) {
+      this.perfiles.controls[index].get('fechaAprobacion').disable();
+      this.perfiles.controls[index].get('fechaAprobacion').setValue(null);
     }
   }
 
@@ -308,174 +358,181 @@ export class FormPerfilComponent implements OnInit {
     return dialogRef.afterClosed();
   }
 
-  numeroRadicado( i: number ) {
-    return this.perfiles.controls[i].get( 'contratoPerfilNumeroRadicado' ) as FormArray;
-  }
-
-  textoLimpio(texto: string) {
-    let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
-
-    if ( texto ){
-      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
-      return textolimpio.length + saltosDeLinea;
-    }
-  }
-
-  private contarSaltosDeLinea(cadena: string, subcadena: string) {
-    let contadorConcurrencias = 0;
-    let posicion = 0;
-    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
-      ++contadorConcurrencias;
-      posicion += subcadena.length;
-    }
-    return contadorConcurrencias;
-  }
-
-  textoLimpioMessage(texto: string) {
-    if ( texto ){
-      const textolimpio = texto.replace(/<[^>]*>/g, '');
-      return textolimpio;
-    }
+  numeroRadicado(i: number) {
+    return this.perfiles.controls[i].get('contratoPerfilNumeroRadicado') as FormArray;
   }
 
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
-      e.editor.deleteText(n, e.editor.getLength());
+      e.editor.deleteText(n - 1, e.editor.getLength());
     }
   }
 
-  eliminarPerfil( numeroPerfil: number ) {
-    this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
-      .subscribe( value => {
-        if ( value ) {
-          this.perfiles.removeAt( numeroPerfil );
+  textoLimpio(evento: any, n: number) {
+    if (evento !== undefined) {
+      return evento.getLength() > n ? n : evento.getLength();
+    } else {
+      return 0;
+    }
+  }
+
+  eliminarPerfil(numeroPerfil: number) {
+    this.openDialogTrueFalse('', '<b>¿Está seguro de eliminar esta información?</b>').subscribe(value => {
+      if (value) {
+        this.perfiles.removeAt(numeroPerfil);
+        this.formContratista.patchValue({
+          numeroPerfiles: `${this.perfiles.length}`
+        });
+        this.openDialog('', '<b>La información se ha eliminado correctamente.</b');
+      }
+    });
+  }
+
+  deletePerfil(contratoPerfilId: number, numeroPerfil: number) {
+    this.openDialogTrueFalse('', '<b>¿Está seguro de eliminar esta información?</b>').subscribe(value => {
+      if (value === true) {
+        if (contratoPerfilId !== 0) {
+          this.faseUnoPreconstruccionSvc.deleteContratoPerfil(contratoPerfilId).subscribe(
+            () => {
+              this.openDialog('', '<b>La información se ha eliminado correctamente.</b>');
+              this.perfiles.removeAt(numeroPerfil);
+              this.perfilEliminado.emit(true);
+              this.formContratista.patchValue({
+                numeroPerfiles: `${this.perfiles.length}`
+              });
+            },
+            err => this.openDialog('', err.message)
+          );
+        } else {
+          this.openDialog('', '<b>La información se ha eliminado correctamente.</b>');
+          this.perfiles.removeAt(numeroPerfil);
           this.formContratista.patchValue({
-            numeroPerfiles: `${ this.perfiles.length }`
+            numeroPerfiles: `${this.perfiles.length}`
           });
-          this.openDialog( '', '<b>La información se ha eliminado correctamente.</b' );
         }
-      } );
+      }
+    });
   }
 
-  deletePerfil( contratoPerfilId: number, numeroPerfil: number ) {
-    this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
-      .subscribe( value => {
-        if ( value === true ) {
-          if ( contratoPerfilId !== 0 ) {
-            this.faseUnoPreconstruccionSvc.deleteContratoPerfil( contratoPerfilId )
-            .subscribe(
-              () => {
-                this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
-                this.perfiles.removeAt( numeroPerfil );
-                this.perfilEliminado.emit( true );
-                this.formContratista.patchValue({
-                  numeroPerfiles: `${ this.perfiles.length }`
-                });
-              },
-              err => this.openDialog( '', err.message )
-            );
-          } else {
-            this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
-            this.perfiles.removeAt( numeroPerfil );
-            this.formContratista.patchValue({
-              numeroPerfiles: `${ this.perfiles.length }`
-            });
-          }
-        }
-      } );
-  }
-
-  agregarNumeroRadicado( numeroRadicado: number, contratoPerfilId: number ) {
-    this.numeroRadicado( numeroRadicado ).push(
+  agregarNumeroRadicado(numeroRadicado: number, contratoPerfilId: number) {
+    this.numeroRadicado(numeroRadicado).push(
       this.fb.group({ contratoPerfilNumeroRadicadoId: 0, contratoPerfilId, numeroRadicado: '' })
-      );
+    );
   }
 
-  eliminarNumeroRadicado( numeroPerfil: number, numeroRadicado ) {
-    this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
-      .subscribe(
-        value => {
-          if ( value === true ) {
-            this.numeroRadicado( numeroPerfil ).removeAt( numeroRadicado );
-            this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
-            return;
-          }
+  eliminarNumeroRadicado(numeroPerfil: number, numeroRadicado) {
+    this.openDialogTrueFalse('', '<b>¿Está seguro de eliminar esta información?</b>').subscribe(value => {
+      if (value === true) {
+        this.numeroRadicado(numeroPerfil).removeAt(numeroRadicado);
+        this.openDialog('', '<b>La información se ha eliminado correctamente.</b>');
+        return;
+      }
+    });
+  }
+
+  deleteRadicado(contratoPerfilNumeroRadicadoId: number, numeroPerfil: number, numeroRadicado) {
+    if (contratoPerfilNumeroRadicadoId === 0) {
+      this.openDialogTrueFalse('', '<b>¿Está seguro de eliminar esta información?</b>').subscribe(value => {
+        if (value === true) {
+          this.numeroRadicado(numeroPerfil).removeAt(numeroRadicado);
+          this.openDialog('', '<b>La información se ha eliminado correctamente.</b>');
+          return;
         }
-      );
-  }
-
-  deleteRadicado( contratoPerfilNumeroRadicadoId: number, numeroPerfil: number, numeroRadicado ) {
-    if ( contratoPerfilNumeroRadicadoId === 0 ) {
-      this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
-        .subscribe(
-          value => {
-            if ( value === true ) {
-              this.numeroRadicado( numeroPerfil ).removeAt( numeroRadicado );
-              this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
-              return;
-            }
-          }
-        );
+      });
       return;
     }
-    this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
-      .subscribe(
-        value => {
-          if ( value === true ) {
-            this.faseUnoPreconstruccionSvc.deleteContratoPerfilNumeroRadicado( contratoPerfilNumeroRadicadoId )
-              .subscribe( () => {
-                this.numeroRadicado( numeroPerfil ).removeAt( numeroRadicado );
-                this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
-                return;
-              } );
-          }
-        }
-      );
+    this.openDialogTrueFalse('', '<b>¿Está seguro de eliminar esta información?</b>').subscribe(value => {
+      if (value === true) {
+        this.faseUnoPreconstruccionSvc
+          .deleteContratoPerfilNumeroRadicado(contratoPerfilNumeroRadicadoId)
+          .subscribe(() => {
+            this.numeroRadicado(numeroPerfil).removeAt(numeroRadicado);
+            this.openDialog('', '<b>La información se ha eliminado correctamente.</b>');
+            return;
+          });
+      }
+    });
   }
 
   guardar() {
     this.estaEditando = true;
-    const perfiles: ContratoPerfil[] = this.formContratista.get( 'perfiles' ).value;
+    this.formContratista.markAllAsTouched();
+    this.perfiles.markAllAsTouched();
+    const perfiles: ContratoPerfil[] = this.formContratista.get('perfiles').value;
+    const perfilesArray = [];
 
-    if ( this.perfilProyecto.length === 0 ) {
-      perfiles.forEach( value => {
-        value.cantidadHvAprobadas          = Number( value.cantidadHvAprobadas );
-        value.cantidadHvRecibidas          = Number( value.cantidadHvRecibidas );
-        value.cantidadHvRequeridas         = Number( value.cantidadHvRequeridas );
-        value.contratoPerfilNumeroRadicado = (  value.contratoPerfilNumeroRadicado[0][ 'numeroRadicado' ].length === 0 ) ?
-                                                null : value.contratoPerfilNumeroRadicado;
-        value.contratoPerfilObservacion    = value.observacion ? [{ observacion: value.observacion }] : null;
-        value.fechaAprobacion              = value.fechaAprobacion ? new Date( value.fechaAprobacion ).toISOString() : null;
-        value.contratoId                   = this.contratoId;
-        value.proyectoId                   = this.proyectoId;
-      } );
+    if (this.perfilProyecto.length === 0) {
+      perfiles.forEach(value => {
+        value.cantidadHvAprobadas = Number(value.cantidadHvAprobadas);
+        value.cantidadHvRecibidas = Number(value.cantidadHvRecibidas);
+        value.cantidadHvRequeridas = Number(value.cantidadHvRequeridas);
+        value.contratoPerfilNumeroRadicado =
+          value.contratoPerfilNumeroRadicado[0]['numeroRadicado'].length === 0
+            ? null
+            : value.contratoPerfilNumeroRadicado;
+        value.contratoPerfilObservacion = value.observacion ? [{ observacion: value.observacion }] : null;
+        value.fechaAprobacion = value.fechaAprobacion ? new Date(value.fechaAprobacion).toISOString() : null;
+        value.contratoId = this.contratoId;
+        value.proyectoId = this.proyectoId;
+      });
     } else {
-      perfiles.forEach( value => {
-        value.cantidadHvAprobadas          = Number( value.cantidadHvAprobadas );
-        value.cantidadHvRecibidas          = Number( value.cantidadHvRecibidas );
-        value.cantidadHvRequeridas         = Number( value.cantidadHvRequeridas );
-        value.contratoPerfilNumeroRadicado = (  value.contratoPerfilNumeroRadicado[0][ 'numeroRadicado' ].length === 0 ) ?
-                                                null : value.contratoPerfilNumeroRadicado;
-        value.contratoPerfilObservacion    = value.observacion ?  [
-                                                {
-                                                  ContratoPerfilObservacionId: value[ 'perfilObservacion' ],
-                                                  contratoPerfilId: value.contratoPerfilId,
-                                                  observacion: value.observacion
-                                                }
-                                              ] : null;
-        value.fechaAprobacion              = value.fechaAprobacion ? new Date( value.fechaAprobacion ).toISOString() : null;
-        value.contratoId                   = this.contratoId;
-        value.proyectoId                   = this.proyectoId;
-      } );
+      this.perfiles.controls.forEach(perfil => {
+        if (perfil.get('contratoPerfilObservacionArray').value.length > 0) {
+          perfil.get('contratoPerfilObservacionArray').value.forEach((obs, index) => {
+            if (obs.contratoPerfilObservacionId === perfil.get('perfilObservacion').value) {
+              perfil.get('contratoPerfilObservacionArray').value.splice(index, 1);
+            }
+          });
+        }
+
+        perfilesArray.push({
+          tieneObservacionSupervisor:
+            perfil.dirty === true && perfil.get('observacionSupervisor').value !== null
+              ? false
+              : perfil.get('tieneObservacionSupervisor').value,
+          cantidadHvAprobadas: Number(perfil.get('cantidadHvAprobadas').value),
+          cantidadHvRecibidas: Number(perfil.get('cantidadHvRecibidas').value),
+          cantidadHvRequeridas: Number(perfil.get('cantidadHvRequeridas').value),
+          contratoPerfilNumeroRadicado:
+            perfil.get('contratoPerfilNumeroRadicado').value[0].length === 0
+              ? null
+              : perfil.get('contratoPerfilNumeroRadicado').value,
+          contratoPerfilObservacion:
+            perfil.get('observacion').value !== null
+              ? perfil.get('contratoPerfilObservacionArray').value.length > 0
+                ? [
+                    ...perfil.get('contratoPerfilObservacionArray').value,
+                    {
+                      contratoPerfilObservacionId: perfil.get('perfilObservacion').value,
+                      contratoPerfilId: perfil.get('contratoPerfilId').value,
+                      observacion: perfil.get('observacion').value
+                    }
+                  ]
+                : [
+                    {
+                      contratoPerfilObservacionId: perfil.get('perfilObservacion').value,
+                      contratoPerfilId: perfil.get('contratoPerfilId').value,
+                      observacion: perfil.get('observacion').value
+                    }
+                  ]
+              : null,
+          fechaAprobacion:
+            perfil.get('fechaAprobacion').value !== null
+              ? new Date(perfil.get('fechaAprobacion').value).toISOString()
+              : perfil.get('fechaAprobacion').value,
+          contratoPerfilId: perfil.get('contratoPerfilId').value,
+          perfilCodigo: perfil.get('perfilCodigo').value,
+          rutaSoporte: perfil.get('rutaSoporte').value,
+          contratoId: this.contratoId,
+          proyectoId: this.proyectoId
+        });
+      });
     }
 
-    this.enviarPerfilesContrato.emit( {
-      perfiles,
+    this.enviarPerfilesContrato.emit({
+      perfiles: this.perfilProyecto.length === 0 ? perfiles : perfilesArray,
       tieneEstadoFase1EyD: this.tieneEstadoFase1EyD,
       tieneEstadoFase1Diagnostico: this.tieneEstadoFase1Diagnostico
-    } );
+    });
   }
-
 }

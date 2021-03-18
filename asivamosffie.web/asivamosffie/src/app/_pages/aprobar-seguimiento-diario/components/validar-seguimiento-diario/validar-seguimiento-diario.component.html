@@ -182,7 +182,11 @@
 
       ¿Tiene observaciones al registro del seguimiento diario?: <span>{{ seguimiento.tieneObservacionApoyo === true ? 'Si' : 'No' }}</span>
       <br>
-      <p *ngIf="seguimiento.tieneObservacionApoyo === true">{{ seguimiento.observacionApoyo.observaciones }}</p>
+      <section
+        *ngIf="seguimiento.tieneObservacionApoyo === true"
+        [innerHTML]="seguimiento.observacionApoyo.observaciones"
+        style="margin-left: 2em"
+      ></section>
 
     </mat-card-content>
   </mat-card>
@@ -193,6 +197,7 @@
                           *ngIf="seguimiento.estadoCodigo === '4' || seguimiento.estadoCodigo === '5'"
                           [observacionObjeto]="seguimiento.observacionSupervisor"
                           [tieneObservaciones]="seguimiento.tieneObservacionSupervisor"
+                          [tieneObservacionesApoyo]="seguimiento.tieneObservacionApoyo"
   >
   </app-form-observaciones>
 

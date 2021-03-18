@@ -36,6 +36,7 @@ export class FormConvocadosPasivaDjComponent implements OnInit {
   ];
   intanciasArray = [
   ];
+  estaEditando = false;
   constructor ( private fb: FormBuilder,public commonService:CommonService,
     public defensaService:DefensaJudicialService,
     public dialog: MatDialog, private router: Router  ) {
@@ -43,6 +44,7 @@ export class FormConvocadosPasivaDjComponent implements OnInit {
   }
 
   @Input() legitimacion:boolean;
+  @Input() demandaContraFFIE:boolean;
   @Input() tipoProceso:string;
   @Input() defensaJudicial:DefensaJudicial;
 
@@ -51,27 +53,53 @@ export class FormConvocadosPasivaDjComponent implements OnInit {
   }
   cargarRegistro() {
     console.log(this.defensaJudicial.numeroDemandados);
+    this.estaEditando = true;
+    this.formContratista.markAllAsTouched();
     this.formContratista.get("numeroContratos").setValue(this.defensaJudicial.numeroDemandados);
-      let i=0;      
+      let i=0; 
+
+      let listaConvocados:DemandadoConvocado[]= [];
+
       this.defensaJudicial.demandadoConvocado.forEach(element => {
-        console.log(this.perfiles.controls[i].get("nomConvocado"));
-        this.perfiles.controls[i].get("nomConvocado").setValue(element.nombre);
-        this.perfiles.controls[i].get("tipoIdentificacion").setValue(element.tipoIdentificacionCodigo);
-        this.perfiles.controls[i].get("numIdentificacion").setValue(element.numeroIdentificacion);
-        this.perfiles.controls[i].get("conocimientoParteAutoridad").setValue(element.existeConocimiento);
-        this.perfiles.controls[i].get("despacho").setValue(element.convocadoAutoridadDespacho);
-        this.commonService.listMunicipiosByIdMunicipio(element.localizacionIdMunicipio.toString()).subscribe(res=>{
-          this.perfiles.controls[i].get("departamento").setValue(res[0].idPadre);
-          this.municipioArray=res;
-          this.perfiles.controls[i].get("municipio").setValue(element.localizacionIdMunicipio);
-        });
-        
-        this.perfiles.controls[i].get("radicadoDespacho").setValue(element.radicadoDespacho);
-        this.perfiles.controls[i].get("fechaRadicadoDespacho").setValue(element.fechaRadicado);
-        this.perfiles.controls[i].get("accionAEvitar").setValue(element.medioControlAccion);
-        this.perfiles.controls[i].get("etapaProcesoFFIE").setValue(element.etapaProcesoFfiecodigo);
-        this.perfiles.controls[i].get("caducidad").setValue(element.caducidadPrescripcion);
-        
+        if (element.esConvocado == true)
+        listaConvocados.push(element);
+      });
+
+      listaConvocados.forEach(element => {
+          console.log(this.perfiles.controls[i].get("nomConvocado"));
+          this.perfiles.controls[i].markAllAsTouched();
+          this.perfiles.controls[i].get("demandadoConvocadoId").setValue(element.demandadoConvocadoId);
+          this.perfiles.controls[i].get("nomConvocado").setValue(element.nombre);
+          this.perfiles.controls[i].get("tipoIdentificacion").setValue(element.tipoIdentificacionCodigo);
+          this.perfiles.controls[i].get("numIdentificacion").setValue(element.numeroIdentificacion);
+          this.perfiles.controls[i].get("conocimientoParteAutoridad").setValue(element.existeConocimiento);
+          this.perfiles.controls[i].get("despacho").setValue(element.convocadoAutoridadDespacho);
+          if(element.localizacionIdMunicipio != null){
+            this.commonService.listMunicipiosByIdMunicipio(element.localizacionIdMunicipio.toString()).subscribe(res=>{
+              this.perfiles.controls[i].get("departamento").setValue(res[0].idPadre);
+              this.municipioArray=res;
+              this.perfiles.controls[i].get("municipio").setValue(element.localizacionIdMunicipio);
+            });
+          }
+          this.perfiles.controls[i].get("radicadoDespacho").setValue(element.radicadoDespacho);
+          this.perfiles.controls[i].get("fechaRadicadoDespacho").setValue(element.fechaRadicado);
+          this.perfiles.controls[i].get("accionAEvitar").setValue(element.medioControlAccion);
+          this.perfiles.controls[i].get("etapaProcesoFFIE").setValue(element.etapaProcesoFfiecodigo);
+          this.perfiles.controls[i].get("caducidad").setValue(element.caducidadPrescripcion);
+          //this.perfiles.controls[i].get("registroCompleto").setValue(element.registroCompleto);
+          if( element.registroCompleto == null 
+            || (!element.registroCompleto 
+            && (element.nombre == null || element.nombre == '')
+            && (element.tipoIdentificacionCodigo == null || element.tipoIdentificacionCodigo == '')
+            && (element.numeroIdentificacion == null || element.numeroIdentificacion == '')
+            && (element.existeConocimiento == null) 
+            )){
+              this.perfiles.controls[i].get("registroCompleto").setValue(null);
+            }else if(!element.registroCompleto){
+              this.perfiles.controls[i].get("registroCompleto").setValue(false);
+            }else if(element.registroCompleto){
+              this.perfiles.controls[i].get("registroCompleto").setValue(true);
+            }
         i++;
       });     
   }
@@ -96,6 +124,7 @@ export class FormConvocadosPasivaDjComponent implements OnInit {
           this.perfiles.push( 
             this.fb.group(
               {
+                demandadoConvocadoId: [ null ],
                 nomConvocado: [ null ],
                 tipoIdentificacion: [ null ],
                 numIdentificacion: [ null ],
@@ -107,7 +136,8 @@ export class FormConvocadosPasivaDjComponent implements OnInit {
                 fechaRadicadoDespacho: [ null ],
                 accionAEvitar: [ null ],
                 etapaProcesoFFIE: [ null ],
-                caducidad: [ null ]
+                caducidad: [ null ],
+                registroCompleto: [ null ],
               }
             ) 
           )
@@ -149,7 +179,11 @@ export class FormConvocadosPasivaDjComponent implements OnInit {
       e.editor.deleteText(n, e.editor.getLength());
     };
   };
-
+  textoLimpioNew(texto,n) {
+    if (texto!=undefined) {
+      return texto.getLength() > n ? n : texto.getLength();
+    }
+  }
   crearFormulario () {
     this.formContratista = this.fb.group({
       numeroContratos: [ '' ],
@@ -173,10 +207,14 @@ export class FormConvocadosPasivaDjComponent implements OnInit {
   };
 
   guardar () {
+    this.estaEditando = true;
+    this.formContratista.markAllAsTouched();
+    this.perfiles.markAllAsTouched();
     console.log( this.formContratista );
     let defContraProyecto:DemandadoConvocado[]=[];
     for(let perfil of this.perfiles.controls){
       defContraProyecto.push({
+        demandadoConvocadoId:perfil.get("demandadoConvocadoId").value,
         nombre:perfil.get("nomConvocado").value,
         tipoIdentificacionCodigo:perfil.get("tipoIdentificacion").value,
         numeroIdentificacion:perfil.get("numIdentificacion").value,
@@ -203,17 +241,19 @@ export class FormConvocadosPasivaDjComponent implements OnInit {
         esLegitimacionActiva:this.legitimacion,
         esCompleto:false,      
       };
+    }else{
+      this.tipoProceso != null ? defensaJudicial.tipoProcesoCodigo = this.tipoProceso : this.defensaJudicial.tipoProcesoCodigo;
+      this.legitimacion != null ? defensaJudicial.esLegitimacionActiva = this.legitimacion : this.defensaJudicial.esLegitimacionActiva;
     }
+    console.log(this.defensaJudicial, " - ", this.tipoProceso, " - ", this.legitimacion);
+    this.demandaContraFFIE != null ? defensaJudicial.esDemandaFfie = this.demandaContraFFIE : "";
     defensaJudicial.numeroDemandados=this.formContratista.get("numeroContratos").value;
     defensaJudicial.demandadoConvocado=defContraProyecto;
-    
-      console.log(defensaJudicial);
       this.defensaService.CreateOrEditDefensaJudicial(defensaJudicial).subscribe(
         response=>{
           this.openDialog('', `<b>${response.message}</b>`,true,response.data?response.data.defensaJudicialId:0);
         }
       );
-
   }
 
   openDialog(modalTitle: string, modalText: string,redirect?:boolean,id?:number) {
@@ -221,16 +261,32 @@ export class FormConvocadosPasivaDjComponent implements OnInit {
       width: '28em',
       data: { modalTitle, modalText }
     });
-    if(redirect)
-    {
+    if (redirect) {
       dialogRef.afterClosed().subscribe(result => {
-        if(id>0 && this.defensaJudicial.defensaJudicialId==0)
-        {
-          this.router.navigate(["/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial/"+id], {});
-        }                  
-        else{
-          location.reload();
-        }                 
+        if (id > 0 && this.defensaJudicial.defensaJudicialId != id) {
+          this.router.navigateByUrl( '/', {skipLocationChange: true} ).then(
+            () =>   this.router.navigate(
+                        [
+                            '/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial',
+                            id
+                        ]
+                    )
+          );
+        }
+        else {
+          if(this.defensaJudicial.defensaJudicialId == id){
+            this.router.navigateByUrl( '/', {skipLocationChange: true} ).then(
+              () =>   this.router.navigate(
+                          [
+                              '/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial',
+                              id
+                          ]
+                      )
+            );
+          }else{
+            this.router.navigate(["/gestionarProcesoDefensaJudicial"], {});
+          }
+        }
       });
     }
   }

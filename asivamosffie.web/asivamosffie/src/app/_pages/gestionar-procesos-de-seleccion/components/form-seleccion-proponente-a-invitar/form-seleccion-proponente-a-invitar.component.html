@@ -2,8 +2,7 @@
   [formGroup]="addressForm"
   novalidate
   (ngSubmit)="onSubmit()"
-  *ngIf="procesoSeleccion.estadoProcesoSeleccionCodigo == estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario"
->
+  *ngIf="sePuedeVer">
   <mat-card class="shipping-card">
     <mat-card-content>
       <div class="row">
@@ -32,6 +31,7 @@
                   maxlength="2"
                   (keypress)="validateNumberKeypress($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   formControlName="cuantosProponentes"
                   required
                 />

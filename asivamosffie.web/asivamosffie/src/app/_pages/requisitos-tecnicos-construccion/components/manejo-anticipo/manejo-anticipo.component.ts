@@ -27,6 +27,8 @@ export class ManejoAnticipoComponent implements OnInit {
           urlSoporte                    : this.contratoConstruccion.manejoAnticipoRutaSoporte !== undefined ? this.contratoConstruccion.manejoAnticipoRutaSoporte : null,
         }
       )
+      this.estaEditando = true;
+      this.formAnticipo.markAllAsTouched();
     }
   }
 
@@ -41,6 +43,7 @@ export class ManejoAnticipoComponent implements OnInit {
 
   guardar () {
     this.estaEditando = true;
+    this.formAnticipo.markAllAsTouched();
     this.manejoAnticipo.emit( this.formAnticipo.value );
   }
 

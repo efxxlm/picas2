@@ -29,7 +29,7 @@ namespace asivamosffie.api.Controllers
         [HttpGet]
         public async Task<List<dynamic>> GetListContratacion()
         {
-            var result = await _approvePreConstruction.GetListContratacion();
+            var result = await _approvePreConstruction.GetListContratacion(Int32.Parse(HttpContext.User.FindFirst("UserId").Value));
             return result;
         }
 

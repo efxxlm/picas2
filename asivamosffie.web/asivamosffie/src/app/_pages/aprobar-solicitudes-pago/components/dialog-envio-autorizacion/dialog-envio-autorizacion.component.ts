@@ -9,6 +9,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class DialogEnvioAutorizacionComponent implements OnInit {
   addressForm = this.fb.group({});
+  estaEditando = false;
   constructor(public matDialogRef: MatDialogRef<DialogEnvioAutorizacionComponent>, @Inject(MAT_DIALOG_DATA) public data: any, private fb: FormBuilder) { }
 
   ngOnInit(): void {
@@ -25,6 +26,8 @@ export class DialogEnvioAutorizacionComponent implements OnInit {
     }
   }
   onSubmit() {
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     console.log(this.addressForm.value);
   }
 }

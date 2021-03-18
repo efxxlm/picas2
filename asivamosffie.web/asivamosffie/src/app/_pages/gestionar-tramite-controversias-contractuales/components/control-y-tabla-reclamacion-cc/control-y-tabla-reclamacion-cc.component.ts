@@ -28,7 +28,11 @@ export class ControlYTablaReclamacionCcComponent implements OnInit {
 
   ngOnInit(): void {
     this.services.GetListGrillaControversiaReclamacion(this.controversiaID).subscribe((data:any)=>{
-      this.dataTable = data;
+      for (let reclm of data){
+        if(reclm.estadoActuacionCodigoGeneral!='1' && reclm.estadoActuacionCodigo == '14'){
+          this.dataTable.push(reclm);
+        }
+      }
       this.dataSource = new MatTableDataSource(this.dataTable);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -56,7 +60,9 @@ export class ControlYTablaReclamacionCcComponent implements OnInit {
   }
   enviarReclamacionComiteTecnico(id){
     this.services.CambiarEstadoActuacionReclamacion(id,'3').subscribe((data:any)=>{
-      this.ngOnInit();
+      this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+        () => this.router.navigate(['gestionarTramiteControversiasContractuales/actualizarTramiteControversia'])
+      );
     });
   }
   verDetalleReclamacion(id,actuacion,numReclamacion){

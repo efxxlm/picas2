@@ -1,0 +1,23 @@
+<div class="container text-center" *ngIf="parametricas.length > 0">
+    <div class="text-right">
+        <a routerLink="/gestionParametricas" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">
+        Consultar / Editar paramétrica
+    </h1>
+  
+    <mat-card class="shipping-card border mt-3em" align="left">
+        <mat-card-header class="header-card">
+          <mat-card-title class="header-card--text card-title-detalle">
+            Parametrica
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <p style="margin-left: 2em;"> <i> {{ parametricas[ parametricas.length - 1 ].nombreDominio }} </i> </p>
+        </mat-card-content>
+    </mat-card>
+    
+    <app-tabla-editar-parametricas [parametricas]="parametricas"></app-tabla-editar-parametricas>
+</div>

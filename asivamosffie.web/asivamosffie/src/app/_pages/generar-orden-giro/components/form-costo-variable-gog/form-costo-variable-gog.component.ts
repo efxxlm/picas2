@@ -35,6 +35,27 @@ export class FormCostoVariableGogComponent implements OnInit {
   }
   onSubmit() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     console.log(this.addressForm.value);
+
+    const pOrdenGiro = {
+      solicitudPagoId: 29,
+      ordenGiroId: 1,
+      ordenGiroDetalle: {
+        ordenGiroDetalleId: 1,
+        ordenGiroDetalleDescuentoTecnica: {
+          ordenGiroDetalleDescuentoTecnicaId: 0,
+          ordenGiroDetalleDescuentoTecnicaAportante: [
+            {
+              ordenGiroDetalleDescuentoTecnicaAportanteId: 0,
+              solicitudPagoFaseFacturaDescuentoId: 10,
+              aportanteId: 1,
+              valorDescuento: 100000,
+              conceptoPagoCodigo: '1'
+            }
+          ]
+        }
+      }
+    }
   }
 }

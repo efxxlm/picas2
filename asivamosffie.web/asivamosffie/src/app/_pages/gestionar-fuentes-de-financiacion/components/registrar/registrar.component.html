@@ -368,6 +368,7 @@
                     (change)="CambioNumeroRP()"
                     (keypress)="validateNumberKeypress($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   />
                 </mat-form-field>
                 <span
@@ -426,6 +427,7 @@
                           maxlength="50"
                           (keypress)="validateNumberKeypress($event)"
                           onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                          oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         />
                         <input type="hidden" formControlName="registroPresupuestalId" />
                       </mat-form-field>
@@ -531,7 +533,7 @@
                         </mat-select>
                       </mat-form-field>
                     </div>
-                    <span class="icon-incompleto">
+                    <span class="icon-incompleto ml-1-5em">
                       <img
                         class="icon-incompleto--img"
                         src="assets/img/icon/incompleto.svg"
@@ -699,6 +701,7 @@
                           required
                           (keypress)="validateNumberKeypress($event)"
                           onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                          oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         />
                       </mat-form-field>
                       <span
@@ -1180,6 +1183,17 @@
       <button mat-button color="warn" class="btn-guardar" type="submit">
         <img src="assets/img/icon/guardar.svg" alt="Guardar" />
       </button>
+        <button
+          mat-button
+          color="warn"
+          *ngIf="addressForm.value.fuenteRecursosArray.length === 1"
+          type="button"
+          class="btn-eliminar"
+          (click)="borrarArray(fuenteRecursosArray, 0, 2, 0)"          
+        >
+          <img src="assets/img/icon/Basu-secondary.svg" alt="Eliminar vigencia" class="height-basu" />
+          Eliminar Registro
+        </button>
     </div>
   </form>
 </div>

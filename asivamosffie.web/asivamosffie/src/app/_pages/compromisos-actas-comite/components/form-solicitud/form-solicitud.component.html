@@ -25,6 +25,31 @@
             {{ solicitudes.contratacion.numeroSolicitud }}
           </b>
         </div>
+        <div class="col" *ngIf="solicitudes.tipoSolicitudCodigo === tipoSolicitudCodigo.modificacionContractual">
+          <b class="label-left color-blue">
+            {{ solicitudes.novedadContractual.numeroSolicitud }}
+          </b>
+        </div>
+        <div class="col" *ngIf="solicitudes.tipoSolicitudCodigo === tipoSolicitudCodigo.controversiaContractual">
+          <b class="label-left color-blue">
+            {{ solicitudes.controversiaContractual !== undefined ? solicitudes.controversiaContractual.numeroSolicitud : solicitudes.numeroSolicitud }}
+          </b>
+        </div>
+        <div class="col" *ngIf="solicitudes.tipoSolicitudCodigo === tipoSolicitudCodigo.actualizacionProcesoSeleccion">
+          <b class="label-left color-blue">
+            {{ solicitudes.numeroSolicitud }}
+          </b>
+        </div>
+        <div class="col" *ngIf="solicitudes.tipoSolicitudCodigo === tipoSolicitudCodigo.evaluacionProceso">
+          <b class="label-left color-blue">
+            {{ solicitudes.procesoSeleccion.numeroProceso }}
+          </b>
+        </div>
+        <div class="col" *ngIf="solicitudes.tipoSolicitudCodigo === tipoSolicitudCodigo.ActuacionesControversias">
+          <b class="label-left color-blue">
+            {{ solicitudes.controversiaActuacion !== undefined ? solicitudes.controversiaActuacion.controversiaContractual.numeroSolicitud : solicitudes.numeroSolicitud }}
+          </b>
+        </div>
       </div>
       <div class="row">
         <div class="pr-1">
@@ -32,7 +57,7 @@
         </div>
         <div class="col">
           <b class="label-left color-blue">
-            {{ solicitudes.tipoSolicitud }}
+            {{ getSolicitudCodigo( solicitudes.tipoSolicitudCodigo ) }}
           </b>
         </div>
       </div>
@@ -41,17 +66,31 @@
         <div class="pr-1">
           <label><b>Justificación</b></label>
         </div>
-        <div class="col color-blue" [innerHTML]="innerObservacion( solicitudes.procesoSeleccion.justificacion )"></div>
+        <div class="col color-blue" [innerHTML]="solicitudes.procesoSeleccion?.justificacion"></div>
+      </div>
+
+      <div class="row" *ngIf="solicitudes.tipoSolicitudCodigo === tipoSolicitudCodigo.actualizacionProcesoSeleccion" style="margin-top: .6em;">
+        <div class="pr-1">
+          <label><b>Justificación</b></label>
+        </div>
+        <div class="col color-blue" [innerHTML]="solicitudes.procesoSeleccionMonitoreo?.procesoSeleccion?.justificacion"></div>
+      </div>
+
+      <div class="row" *ngIf="solicitudes.tipoSolicitudCodigo === tipoSolicitudCodigo.evaluacionProceso" style="margin-top: .6em;">
+        <div class="pr-1">
+          <label><b>Justificación</b></label>
+        </div>
+        <div class="col color-blue" [innerHTML]="solicitudes.procesoSeleccion?.justificacion"></div>
       </div>
       
       <div style="margin-top: .6em;">
-        <div class="row" *ngIf="solicitudes.desarrolloSolicitud">
+        <div class="row" *ngIf="solicitudes.desarrolloSolicitud !== undefined && esComiteFiduciario === false">
           <div class="pr-1">
             <label><b>Desarrollo</b></label>
           </div>
           <div class="col color-blue" [innerHTML]="innerObservacion( solicitudes.desarrolloSolicitud )"></div>
         </div>
-        <div class="row" *ngIf="solicitudes.desarrolloSolicitudFiduciario">
+        <div class="row" *ngIf="solicitudes.desarrolloSolicitudFiduciario !== undefined && esComiteFiduciario === true">
           <div class="pr-1">
             <label><b>Desarrollo</b></label>
           </div>
@@ -84,7 +123,7 @@
               <label><b>Estado de la solicitud</b></label>
             </div>
             <div class="col w-50">
-              <span class="color-blue"> <b>{{ estadoSolicitud[0]?.nombre }}</b> </span>
+              <span class="color-blue"> <b>{{ getEstadoSolicitud( solicitudes.estadoCodigo ) }}</b> </span>
             </div>
           </div>
         </div>
@@ -95,7 +134,7 @@
           <div class="pr-1">
             <label><b>Observaciones de la solicitud</b></label>
           </div>
-          <div class="col color-blue" [innerHTML]="innerObservacion( solicitudes.observaciones )"></div>
+          <b><div class="col color-blue" [innerHTML]="esComiteFiduciario === true ? solicitudes.observacionesFiduciario : solicitudes.observaciones"></div></b>
         </div>
       </ng-container>
       <ng-template #elseTemplate>
@@ -149,7 +188,7 @@
                 <section>
                   <h3><b>Compromiso {{ j+1 }} </b></h3>
                   <p><b>Tarea</b>: <span class="color-blue">{{ sesionCompromiso.tarea }}</span> </p>
-                  <p><b>Responsable</b>: <span class="color-blue"> {{ sesionCompromiso.responsableSesionParticipante !== undefined ? sesionCompromiso.responsableSesionParticipante.usuario.nombres : '' }} {{ sesionCompromiso.responsableSesionParticipante !== undefined ? sesionCompromiso.responsableSesionParticipante.usuario.apellidos : '' }} </span> </p>
+                  <p><b>Responsable</b>: <span class="color-blue"> {{ sesionCompromiso.responsableSesionParticipante !== undefined ? sesionCompromiso.responsableSesionParticipante.usuario.primerNombre : '' }} {{ sesionCompromiso.responsableSesionParticipante !== undefined ? sesionCompromiso.responsableSesionParticipante.usuario.primerApellido : '' }} </span> </p>
                   <p><b>Fecha de cumplimiento</b>: <span class="color-blue"> {{ sesionCompromiso.fechaCumplimiento | date: 'dd/MM/yyyy' }} </span> </p>
                 </section>
               </div>
@@ -159,7 +198,7 @@
                 <section *ngIf="sesionCompromiso.esFiduciario === true">
                   <h3><b>Compromiso {{ j+1 }} </b></h3>
                   <p><b>Tarea</b>: <span class="color-blue"> {{ sesionCompromiso.tarea }} </span> </p>
-                  <p><b>Responsable</b>: <span class="color-blue"> {{ sesionCompromiso.responsableSesionParticipante ? sesionCompromiso.responsableSesionParticipante.usuario.nombres : '' }} {{ sesionCompromiso.responsableSesionParticipante ? sesionCompromiso.responsableSesionParticipante.usuario.apellidos : '' }} </span> </p>
+                  <p><b>Responsable</b>: <span class="color-blue"> {{ sesionCompromiso.responsableSesionParticipante ? sesionCompromiso.responsableSesionParticipante.usuario.primerNombre : '' }} {{ sesionCompromiso.responsableSesionParticipante ? sesionCompromiso.responsableSesionParticipante.usuario.primerApellido : '' }} </span> </p>
                   <p><b>Fecha de cumplimiento</b>: <span class="color-blue"> {{ sesionCompromiso.fechaCumplimiento | date: 'dd/MM/yyyy' }} </span> </p>
                 </section>
               </div>

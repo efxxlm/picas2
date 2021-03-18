@@ -6,13 +6,11 @@ using System.Text;
 
 namespace asivamosffie.model.APIModels
 {
-
-    /// <summary>
-    /// TODO SAVE JSON AS UPPERCASE
-    /// </summary>
-    public class PerformanceOrder
+    public class SerializablePerformanceOrder
     {
-        
+        [JsonProperty(PropertyName = "Estado")]
+        public string Status { get; set; }
+
         [JsonProperty(PropertyName = "Fecha de rendimientos")]
         public string PerformancesDate { get; set; }
 
@@ -68,14 +66,18 @@ namespace asivamosffie.model.APIModels
         [JsonProperty(PropertyName = "Acumulado de gravamen financiero descontado no exentos")]
         public decimal LiableDiscountedCharge { get; set; }
 
-
-
-
+    }
+    /// <summary>
+    /// TODO SAVE JSON AS UPPERCASE
+    /// </summary>
+    public class PerformanceOrder: SerializablePerformanceOrder
+    {
         /// <summary>
         /// Total de rendimientos generados
         /// #2  SUM x => “acumulado de rendimientos de recursos exentos”  
         ///   + SUM X =>  “acumulado de  rendimientos de recursos no exentos”
         /// </summary>
+        [JsonProperty(PropertyName = "Total de rendimientos generados")]
         public decimal GeneratedPerformances
         {
             get { return ExemptPerformances + LiablePerformances; }
@@ -98,6 +100,7 @@ namespace asivamosffie.model.APIModels
         /// y “Acumulado de rendimientos no exentos”, el valor resultante se multiplica por 4/1000 
         /// y el resultado se le resta el valor del campo “Acumulado de gravamen financiero descontado no exentos”
         /// </summary>
+        [JsonProperty(PropertyName = "Provisión gravamen financiero")]
         public decimal FinancialLienProvision
         {
             get {
@@ -113,6 +116,7 @@ namespace asivamosffie.model.APIModels
         /// Muestra la sumatoria de la información de los campos “Acumulado de gastos Bancarios exentos”
         /// y “Acumulado de gastos Bancarios no exentos”
         /// </summary>
+        [JsonProperty(PropertyName = "Total gastos bancarios")]
         public decimal BankCharges
         {
             get { return ExemptBankCharges + LiableBankCharges; }
@@ -124,6 +128,7 @@ namespace asivamosffie.model.APIModels
         /// “Acumulado de gravamen financiero descontado exentos” 
         /// y “Acumulado de gravamen financiero descontado no exentos”
         /// </summary>
+        [JsonProperty(PropertyName = "Total gravamen financiero descontado")]
         public decimal DiscountedCharge
         {
             get { return ExemptDiscountedCharge + LiableDiscountedCharge; }
@@ -137,8 +142,8 @@ namespace asivamosffie.model.APIModels
             set { performancesToAdd = value; }
         }
 
-
-        public string Status { get; set; }
+        [JsonProperty(PropertyName = "Consistente")]
+        public bool IsConsistent { get; set; }
 
 
         // TODO calculate rows here or in other inherited class
@@ -158,7 +163,7 @@ namespace asivamosffie.model.APIModels
         [JsonProperty(PropertyName = "Impuestos")]
         public string Taxes { get; set; }
 
-        [JsonProperty(PropertyName = "valor neto girado")]
+        [JsonProperty(PropertyName = "Valor neto girado")]
         public string NetValue { get; set; }
 
 
@@ -173,6 +178,7 @@ namespace asivamosffie.model.APIModels
 
 
     public class ManagedPerformancesOrder: PerformanceOrder{
+        [JsonProperty(PropertyName = "Estado")]
         public  new string Status { get; set; }
 
         //[JsonProperty(PropertyName = "Fecha de rendimientos")]
@@ -228,7 +234,9 @@ namespace asivamosffie.model.APIModels
         ///// Acumulado de gravamen financiero descontado no exentos
         ///// </summary>
         //[JsonProperty(PropertyName = "Acumulado de gravamen financiero descontado no exentos")]
+        [JsonProperty(PropertyName = "Acumulado de gravamen financiero descontado no exentos")]
         public new decimal LiableDiscountedCharge { get; set; }
+        [JsonProperty(PropertyName = "Total de rendimientos generados")]
         public new decimal GeneratedPerformances { get; }
         public new decimal FinancialLienProvision { get; }
         public new decimal BankCharges { get; }

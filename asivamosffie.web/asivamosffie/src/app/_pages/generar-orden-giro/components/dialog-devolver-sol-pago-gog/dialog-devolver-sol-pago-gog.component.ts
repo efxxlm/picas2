@@ -25,6 +25,7 @@ export class DialogDevolverSolPagoGogComponent implements OnInit {
   usuarioDevolverArray = [
     { name: 'Equipo de facturación', value: '1' }
   ];
+  estaEditando = false;
   constructor(private fb: FormBuilder, public matDialogRef: MatDialogRef<DialogDevolverSolPagoGogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit(): void {
@@ -48,6 +49,8 @@ export class DialogDevolverSolPagoGogComponent implements OnInit {
     }
   }
   onSubmit() {
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     console.log(this.addressForm.value);
   }
 

@@ -678,26 +678,47 @@ export class RegistrarComponent implements OnInit {
     this.openDialogSiNo("","<b>¿Está seguro de eliminar este registro?</b>",borrarForm,i,posicion,tipo);
       
   }
-  borrarVigencia(borrarForm: any, i: number)
-  {    
-    if(borrarForm.value[i].fuenteFinanciacionId!=null)
-    {
-      this.fuenteFinanciacionService.eliminarFuentesFinanciacion(borrarForm.value[i].fuenteFinanciacionId).subscribe(response=>
-        {
-          borrarForm.removeAt(i);
-          this.openDialog("","<b>La información a sido eliminada correctamente.</b>",false);  
+
+  borrarVigencia(borrarForm: any, i: number) {
+    // console.log( borrarForm.value[i] );
+
+    // if (borrarForm.value[i].valorFuenteRecursos && borrarForm.value[i].valorFuenteRecursos > 0)
+    // {
+    //   this.openDialog("","<b>debe distribuir.</b>",false);
+    //   return false;
+    // }
+
+    if (borrarForm.value[i].fuenteFinanciacionId != null) {
+      // cuando solo hay una fuente
+      if (this.addressForm.value.fuenteRecursosArray.length == 1) {
+
+        this.fuenteFinanciacionService.EliminarFuentesFinanciacionCompleto(borrarForm.value[i].fuenteFinanciacionId).subscribe(response => {
+          this.openDialog("", response.message, false);
+          if (response.code === "200") {
+            borrarForm.removeAt(i);
+            this.router.navigate(["/gestionarFuentes"]);
+          }
         });
-      
+      } else {
+
+        this.fuenteFinanciacionService.eliminarFuentesFinanciacion(borrarForm.value[i].fuenteFinanciacionId).subscribe(response => {
+          this.openDialog("", response.message, false);
+          if (response.code === "200") {
+            borrarForm.removeAt(i);
+          }
+        });
+      }
+
+
     }
-    else
-    {
-      borrarForm.removeAt(i);  
-      this.openDialog("","<b>La información a sido eliminada correctamente.</b>",false);
+    else {
+      borrarForm.removeAt(i);
+      this.openDialog("", "<b>La información a sido eliminada correctamente.</b>", false);
     }
-    
+
   }
-  borrarArrayVigencias(borrarForm: any, i: number,j:number) {    
-    this.openDialogSiNo("","<b>¿Está seguro de eliminar este registro?</b>",borrarForm,i,j,1);
+  borrarArrayVigencias(borrarForm: any, i: number, j: number) {
+    this.openDialogSiNo("", "<b>¿Está seguro de eliminar este registro?</b>", borrarForm, i, j, 1);
   }
   removeItemVigencia(borrarForm: any, i: number,j:number,mensaje=true)
   {    
@@ -830,7 +851,11 @@ export class RegistrarComponent implements OnInit {
           fuente.cuentaBancaria.push(cuentaBancaria);
         });
 
-        const registrosPresupuestales = this.addressForm.get('registrosPresupuestales') as FormArray;
+        lista.push(fuente);
+      });
+
+      // cargo los RP en la lista para guardar
+      const registrosPresupuestales = this.addressForm.get('registrosPresupuestales') as FormArray;
         if (registrosPresupuestales) {
           registrosPresupuestales.controls.forEach(controlRP => {
             const registroPresupuestal: RegistroPresupuestal = {
@@ -844,8 +869,6 @@ export class RegistrarComponent implements OnInit {
           });
         }
 
-        lista.push(fuente);
-      });
       //si tengo vigencias
       
       if(valorBase2>0)
@@ -879,14 +902,8 @@ export class RegistrarComponent implements OnInit {
       
       if(bitValorok)
       {
+        // guardo primero los RP
         forkJoin([
-          from(lista)
-            .pipe(mergeMap(ff => this.fuenteFinanciacionService.createEditFuentesFinanciacion(ff)
-              .pipe(
-                tap()
-              )
-            ),
-              toArray()),
           from(listaRP)
             .pipe(mergeMap(cb => this.fuenteFinanciacionService.createEditBudgetRecords(cb)
               .pipe(
@@ -895,12 +912,25 @@ export class RegistrarComponent implements OnInit {
             ),
               toArray()),
         ])
-          .subscribe(respuesta => {
-            const res = respuesta[0][0] as Respuesta;
-            if (res.code === '200') {
-              this.openDialog('', `<b>${res.message}</b>`,true);
-              this.noGuardado=false;
-            }
+          .subscribe(() => {
+            // despues guardo las fuentes
+            forkJoin([
+              from(lista)
+                .pipe(mergeMap(ff => this.fuenteFinanciacionService.createEditFuentesFinanciacion(ff)
+                  .pipe(
+                    tap()
+                  )
+                ),
+                  toArray()),
+            ])
+            .subscribe( respuesta => {  
+
+              const res = respuesta[0][0] as Respuesta;
+              if (res.code === '200') {
+                this.openDialog('', `<b>${res.message}</b>`,true);
+                this.noGuardado=false;
+              }
+            });
           });      
         this.data = lista;    
       }

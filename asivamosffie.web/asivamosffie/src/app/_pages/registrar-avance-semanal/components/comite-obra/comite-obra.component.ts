@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-comite-obra',
@@ -14,11 +15,19 @@ export class ComiteObraComponent implements OnInit {
 
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
+    @Input() tipoComiteObra: any;
     numeroComiteObra: string;
     seguimientoSemanalId: number;
     seguimientoSemanalRegistrarComiteObraId: number;
     gestionComiteObra: any;
     formComiteObra: FormGroup;
+    tablaHistorial = new MatTableDataSource();
+    dataHistorial: any[] = [];
+    displayedColumnsHistorial: string[]  = [
+        'fechaRevision',
+        'responsable',
+        'historial'
+    ];
 
     constructor(
         private fb: FormBuilder,
@@ -41,6 +50,15 @@ export class ComiteObraComponent implements OnInit {
             if ( this.seguimientoSemanal.seguimientoSemanalRegistrarComiteObra.length > 0 ) {
                 this.gestionComiteObra = this.seguimientoSemanal.seguimientoSemanalRegistrarComiteObra[0];
                 this.numeroComiteObra = this.gestionComiteObra.numeroComite;
+                if ( this.esVerDetalle === false ) {
+                    this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalRegistrarComiteObraId, this.tipoComiteObra )
+                        .subscribe(
+                            response => {
+                                this.dataHistorial = response.filter( obs => obs.archivada === true );
+                                this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
+                            }
+                        );
+                }
                 this.formComiteObra.setValue(
                     {
                         fechaComite:    this.gestionComiteObra.fechaComite !== undefined ?

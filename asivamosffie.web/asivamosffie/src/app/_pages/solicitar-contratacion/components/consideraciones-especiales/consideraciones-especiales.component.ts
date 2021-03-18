@@ -24,10 +24,21 @@ export class ConsideracionesEspecialesComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
 
   constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
+    this.cargarEdicion()
+  }
+  
+  private cargarEdicion() {
+    setTimeout(() => {
+      if ( this.contratacion[ 'contratista' ] !== undefined ) {
+        this.estaEditando = true;
+        this.addressForm.markAllAsTouched();
+      }
+    }, 2000);
   }
 
   maxLength(e: any, n: number) {
@@ -57,7 +68,7 @@ export class ConsideracionesEspecialesComponent implements OnInit {
   cargarRegistros(){
 
     this.addressForm.get('reasignacion').setValue( this.contratacion.esObligacionEspecial !== undefined ? this.contratacion.esObligacionEspecial : '' );
-    this.addressForm.get('descripcion').setValue( this.contratacion.consideracionDescripcion ? this.contratacion.consideracionDescripcion : null );
+    this.addressForm.get('descripcion').setValue( this.contratacion.consideracionDescripcion !== undefined ? this.contratacion.consideracionDescripcion : null );
 
   }
 

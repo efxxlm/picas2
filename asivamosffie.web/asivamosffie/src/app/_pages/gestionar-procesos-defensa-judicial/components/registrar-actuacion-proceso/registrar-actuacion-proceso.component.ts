@@ -26,6 +26,8 @@ export class RegistrarActuacionProcesoComponent implements OnInit {
   };
  
   addressForm = this.fb.group({
+    defensaJudicialSeguimientoId: [null, Validators.required],
+    defensaJudicialId: [null, Validators.required],
     estadoAvanceProceso: [null, Validators.required],
     actuacionAdelantada: [null, Validators.required],
     proximaActuacionRequerida: [null, Validators.required],
@@ -39,6 +41,7 @@ export class RegistrarActuacionProcesoComponent implements OnInit {
   ];
   controlJudicialId: any;
   defensaJudicial: DefensaJudicial={};
+  estaEditando = false;
   constructor(  private fb: FormBuilder, public dialog: MatDialog,
     public commonServices: CommonService,
     public judicialServices:DefensaJudicialService,
@@ -49,6 +52,7 @@ export class RegistrarActuacionProcesoComponent implements OnInit {
       this.controlJudicialId = param['id'];
       this.judicialServices.GetDefensaJudicialById(this.controlJudicialId).subscribe(respose=>{
         this.defensaJudicial=respose;
+        this.addressForm.patchValue(this.defensaJudicial.defensaJudicialSeguimiento[0]);
       });
     });
     this.commonServices.getEstadoAvanceProcesosDefensa().subscribe(
@@ -84,17 +88,23 @@ export class RegistrarActuacionProcesoComponent implements OnInit {
       dialogRef.afterClosed().subscribe(result => {
           if(id>0)
           {
-            this.router.navigate(["/gestionarProcesoDefensaJudicial/registrarActuacionProceso/"+id], {});
+            this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+              () => this.router.navigate(["/gestionarProcesoDefensaJudicial/actualizarProceso/"+id], {})
+            );
           }                  
       });
     }
   }
 
   onSubmit() {
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let defensaJudicial=this.defensaJudicial;
     
     defensaJudicial.defensaJudicialSeguimiento.push({
-      estadoProcesoCodigo:this.addressForm.get("estadoAvanceProceso").value,
+      defensaJudicialSeguimientoId: this.addressForm.get("defensaJudicialSeguimientoId").value,
+      defensaJudicialId: this.controlJudicialId,
+      estadoProcesoCodigo:this.addressForm.get("estadoAvanceProceso").value != null ? this.addressForm.get("estadoAvanceProceso").value.codigo : null,
       actuacionAdelantada:this.addressForm.get("actuacionAdelantada").value,
       proximaActuacion:this.addressForm.get("proximaActuacionRequerida").value,
       fechaVencimiento:this.addressForm.get("fechaVencimientoTerminos").value,
@@ -104,7 +114,7 @@ export class RegistrarActuacionProcesoComponent implements OnInit {
       rutaSoporte:this.addressForm.get("urlSoporte").value
     });
       console.log(defensaJudicial);
-      this.judicialServices.CreateOrEditDefensaJudicial(defensaJudicial).subscribe(
+      this.judicialServices.createOrEditDefensaJudicialSeguimiento(defensaJudicial.defensaJudicialSeguimiento[0]).subscribe(
         response=>{
           this.openDialog('', `<b>${response.message}</b>`,true,response.data?response.data.defensaJudicialId:0);
         }

@@ -101,7 +101,7 @@ mat-form-field {
 .mat-select-arrow-wrapper {
   position: relative;
   right: 0;
-  top: 0.3em;
+  top: 0.2em;
 
   &:hover::before {
     @extend %tooltip;
@@ -128,8 +128,8 @@ mat-form-field {
 
 div.mat-select-arrow {
   color: $mainColor;
-  border-left: 0.5em solid transparent;
-  border-right: 0.5em solid transparent;
+  border-left: 0.55em solid transparent;
+  border-right: 0.55em solid transparent;
   border-top: 1em solid;
   margin: 0 4px;
 }

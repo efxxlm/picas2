@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
+import { delay } from 'rxjs/operators';
 import { EditContrato, GestionarActPreConstrFUnoService } from 'src/app/core/_services/GestionarActPreConstrFUno/gestionar-act-pre-constr-funo.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
@@ -58,9 +59,69 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
   tipoCodigo: any;
   numIdentificacionRepLegalInterventoria: any;
   nomRepresentanteLegalContrInterventoria: any;
+  plazoMesesFase1 = 0;
+  plazoMesesFase2 = 0;
+  contrato: any;
   estaEditando = false;
+
   constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, private service: GestionarActPreConstrFUnoService) {
     this.addressForm = this.crearFormulario();
+    this.addressForm.get( 'mesPlazoEjFase1' ).valueChanges
+    .pipe(
+      delay( 1000 )
+    )
+    .subscribe(
+      value => {
+        this.addressForm.get( 'fechaPrevistaTerminacion' ).setValue( null );
+        this.addressForm.get( 'diasPlazoEjFase1' ).setValue( null );
+        if ( this.addressForm.get( 'fechaActaInicioFUnoPreconstruccion' ).value !== null ) {
+          let newdate = new Date( this.addressForm.get( 'fechaActaInicioFUnoPreconstruccion' ).value );
+          newdate.setDate( newdate.getDate() + ( Number( value ) * 30 ) );
+          this.addressForm.get( 'fechaPrevistaTerminacion' ).setValue( newdate );
+        }
+        if ( this.contrato !== undefined && value !== null ) {
+          const mesesPlazoInicial = this.contrato.contratacion.disponibilidadPresupuestal[0].plazoMeses;
+          const diasPlazoInicial = this.contrato.contratacion.disponibilidadPresupuestal[0].plazoDias;
+          this.plazoMesesFase1 = value;
+          this.plazoMesesFase2 = this.addressForm.get( 'diasPlazoEjFase1' ).value;
+          this.service.getFiferenciaMesesDias( mesesPlazoInicial, diasPlazoInicial, this.plazoMesesFase1, this.plazoMesesFase2 )
+            .subscribe(
+              response => {
+                this.addressForm.get( 'mesPlazoEjFase2' ).setValue( response[0] );
+                this.addressForm.get('diasPlazoEjFase2').setValue( response[1] );
+              }
+            );
+        }
+      }
+    );
+    this.addressForm.get( 'diasPlazoEjFase1' ).valueChanges
+    .pipe(
+      delay( 1000 )
+    )
+    .subscribe(
+      value => {
+        if ( this.addressForm.get( 'fechaActaInicioFUnoPreconstruccion' ).value !== null && this.addressForm.get( 'mesPlazoEjFase1' ).value !== null ) {
+          let newdate = new Date( this.addressForm.get( 'fechaActaInicioFUnoPreconstruccion' ).value );
+          newdate.setDate(newdate.getDate() + ( ( this.addressForm.get( 'mesPlazoEjFase1' ).value * 30 ) + Number( value ) ));
+          this.addressForm.get( 'fechaPrevistaTerminacion' ).setValue( newdate );
+        }
+        if ( this.contrato !== undefined && value !== null ) {
+          const mesesPlazoInicial = this.contrato.contratacion.disponibilidadPresupuestal[0].plazoMeses;
+          const diasPlazoInicial = this.contrato.contratacion.disponibilidadPresupuestal[0].plazoDias;
+          this.plazoMesesFase1 = this.addressForm.get( 'mesPlazoEjFase1' ).value;
+          this.plazoMesesFase2 = value;
+          if ( this.plazoMesesFase1 > 0 ) {
+            this.service.getFiferenciaMesesDias( mesesPlazoInicial, diasPlazoInicial, this.plazoMesesFase1, this.plazoMesesFase2 )
+              .subscribe(
+                response => {
+                  this.addressForm.get( 'mesPlazoEjFase2' ).setValue( response[0] );
+                  this.addressForm.get('diasPlazoEjFase2').setValue( response[1] );
+                }
+              );
+          }
+        }
+      }
+    );
     this.maxDate = new Date();
     this.maxDate2 = new Date();
   }
@@ -75,6 +136,31 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
       this.loadData(param.id);
     });
   }
+
+  getValueMeses( value: number ) {
+    if ( value !== null && this.mesPlazoIni !== undefined ) {
+      if ( value > this.mesPlazoIni ) {
+        this.addressForm.get( 'mesPlazoEjFase1' ).setValue( this.mesPlazoIni );
+      }
+    }
+  }
+
+  getValueDias( value: number ) {
+    if ( value !== null && this.diasPlazoIni !== undefined ) {
+      if ( value > this.diasPlazoIni ) {
+        this.addressForm.get( 'diasPlazoEjFase1' ).setValue( this.diasPlazoIni );
+      }
+    }
+  }
+
+  getSizeInput( value: any ) {
+    if ( value !== null ) {
+      return value.toString().length;
+    } else {
+      return 0;
+    }
+  }
+
   cargarRol() {
     this.rolAsignado = JSON.parse(localStorage.getItem("actualUser")).rol[0].perfilId;
     if (this.rolAsignado == 11) {
@@ -84,6 +170,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
       this.ocpion = 2;
     }
   }
+
   openDialogConfirmar(modalTitle: string, modalText: string) {
     const confirmarDialog = this.dialog.open(ModalDialogComponent, {
       width: '30em',
@@ -99,11 +186,13 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
   };
   loadData(id) {
     this.service.GetContratoByContratoId(id).subscribe(data => {
+      this.contrato = data;
       this.cargarDataParaInsercion(data);
     });
     this.idContrato = id;
   }
   cargarDataParaInsercion(data) {
+    console.log( data );
     this.numContrato = data.numeroContrato;
     this.fechaAprobacionRequisitos = data.fechaAprobacionRequisitosSupervisor;
     this.fechaFirmaContrato = data.fechaFirmaContrato;
@@ -131,7 +220,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
     this.diasPlazoIni = data.contratacion.disponibilidadPresupuestal[0].plazoDias;
     this.tipoProponente = data.contratacion.contratista.tipoProponenteCodigo;
     this.numIdentifiacionSupervisor = data.usuarioInterventoria.numeroIdentificacion;
-    this.nomSupervisor = data.usuarioInterventoria.nombres + " " + data.usuarioInterventoria.apellidos;
+    this.nomSupervisor = data.usuarioInterventoria.primerNombre + " " + data.usuarioInterventoria.primerApellido;
     this.tipoCodigo = data.contratacion.tipoSolicitudCodigo;
 
     this.numIdentificacionRepLegalInterventoria = data.contratacion.contratista.representanteLegalNumeroIdentificacion;
@@ -140,7 +229,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
     if (this.ocpion == 2) {
       this.dataSupervisor = true;
       this.numIdentifiacionSupervisor = data.usuarioInterventoria.numeroIdentificacion;
-      this.nomSupervisor = data.usuarioInterventoria.nombres + " " + data.usuarioInterventoria.apellidos;
+      this.nomSupervisor = data.usuarioInterventoria.primerNombre + " " + data.usuarioInterventoria.primerApellido;
     }
   }
   generarFechaRestante() {
@@ -183,36 +272,26 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
       fechaPrevistaTerminacion: [null, Validators.required],
       mesPlazoEjFase1: [null, Validators.required],
       diasPlazoEjFase1: [null, Validators.required],
-      mesPlazoEjFase2: [null, Validators.required],
-      diasPlazoEjFase2: [null, Validators.required],
-      observacionesEspeciales: ['']
+      mesPlazoEjFase2: [ { value: null, disabled: true } , Validators.required],
+      diasPlazoEjFase2: [ { value: null, disabled: true } , Validators.required],
+      observacionesEspeciales: [ null ]
     })
   }
+
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
-      e.editor.deleteText(n, e.editor.getLength());
-    }
-  }
-  textoLimpio(texto: string) {
-    let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
-
-    if ( texto ){
-      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
-      return textolimpio.length + saltosDeLinea;
+        e.editor.deleteText(n - 1, e.editor.getLength());
     }
   }
 
-  private contarSaltosDeLinea(cadena: string, subcadena: string) {
-    let contadorConcurrencias = 0;
-    let posicion = 0;
-    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
-      ++contadorConcurrencias;
-      posicion += subcadena.length;
-    }
-    return contadorConcurrencias;
+  textoLimpio( evento: any, n: number ) {
+      if ( evento !== undefined ) {
+          return evento.getLength() > n ? n : evento.getLength();
+      } else {
+          return 0;
+      }
   }
+
   number(e: { keyCode: any; }) {
     const tecla = e.keyCode;
     if (tecla === 8) { return true; } // Tecla de retroceso (para poder borrar)
@@ -232,6 +311,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
   }
   onSubmit() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let mesPlazoFase2;
     let diasPlazoFase2;
     let esSupervisionBool;
@@ -244,10 +324,10 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
     if (this.valorFDos == 0) {
       mesPlazoFase2 = 0;
       diasPlazoFase2 = 0;
-      if (this.addressForm.value.fechaActaInicioFUnoPreconstruccion == null || this.addressForm.value.fechaPrevistaTerminacion == null || this.addressForm.value.mesPlazoEjFase1 == null
-        || this.addressForm.value.diasPlazoEjFase1 == null) {
-        this.openDialog2('', '<b>Falta registrar información</b>');
-        this.esRojo = true;
+      if ( this.addressForm.get( 'fechaActaInicioFUnoPreconstruccion' ).value === null || this.addressForm.get( 'fechaPrevistaTerminacion' ).value === null || this.addressForm.get( 'mesPlazoEjFase1' ).value === null
+        || this.addressForm.get( 'diasPlazoEjFase1' ).value === null || this.addressForm.get( 'observacionesEspeciales' ).value === null ) {
+          this.openDialog2('', '<b>Falta registrar información</b>');
+          this.esRojo = true;
       }
       else {
         if ((this.addressForm.value.mesPlazoEjFase1 > this.mesPlazoIni) || (this.addressForm.value.mesPlazoEjFase1 < this.mesPlazoIni)) {
@@ -259,10 +339,10 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
         else {
           const arrayObservacion=[{
             'ContratoId':this.idContrato,
-            "observaciones":this.addressForm.value.observacionesEspeciales,
+            "observaciones":this.addressForm.get( 'observacionesEspeciales' ).value,
             'esActa':false,
             'esActaFase1':true,
-            'esSupervision':esSupervisionBool
+            'esSupervision': this.rolAsignado !== 11 ? true : false//perfil 8 es supervisor
           }];
           const arrayContrato: EditContrato = {
             contratoId: this.idContrato,
@@ -282,11 +362,10 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
             plazoFase1PreDias: this.addressForm.value.diasPlazoEjFase1,
             plazoFase2ConstruccionMeses: mesPlazoFase2,
             plazoFase2ConstruccionDias: diasPlazoFase2,
-            observaciones: this.addressForm.value.observacionesEspeciales,
+            observacionConsideracionesEspeciales: this.addressForm.get( 'observacionesEspeciales' ).value,
             conObervacionesActa: true,
             registroCompleto: true,
             contratoConstruccion: [],
-            contratoObservacion: arrayObservacion,
             contratoPerfil: [],
             contratoPoliza: []
           };
@@ -318,8 +397,8 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
       var sumaDias;
       sumaMeses = parseInt(this.addressForm.value.mesPlazoEjFase1) + mesPlazoFase2;
       sumaDias = parseInt(this.addressForm.value.diasPlazoEjFase1) + diasPlazoFase2;
-      if (this.addressForm.value.fechaActaInicioFUnoPreconstruccion == null || this.addressForm.value.fechaPrevistaTerminacion == null || this.addressForm.value.mesPlazoEjFase1 == null
-        || this.addressForm.value.diasPlazoEjFase1 == null || this.addressForm.value.mesPlazoEjFase2 == null || this.addressForm.value.diasPlazoEjFase2 == null) {
+      if (  this.addressForm.get( 'fechaActaInicioFUnoPreconstruccion' ).value === null || this.addressForm.get( 'fechaPrevistaTerminacion' ).value === null || this.addressForm.get( 'mesPlazoEjFase1' ).value === null
+            || this.addressForm.get( 'diasPlazoEjFase1' ).value === null || this.addressForm.get( 'observacionesEspeciales' ).value === null ) {
         this.openDialog2('', '<b>Falta registrar información</b>');
         this.esRojo = true;
       }
@@ -339,7 +418,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
             "observaciones":this.addressForm.value.observacionesEspeciales,
             'esActa':false,
             'esActaFase1':true,
-            'esSupervision':esSupervisionBool
+            'esSupervision': this.rolAsignado !== 11 ? true : false
           }];
           const arrayContrato2: EditContrato = {
             contratoId: this.idContrato,
@@ -357,13 +436,12 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
             fechaTerminacion: this.addressForm.value.fechaPrevistaTerminacion,
             plazoFase1PreMeses: this.addressForm.value.mesPlazoEjFase1,
             plazoFase1PreDias: this.addressForm.value.diasPlazoEjFase1,
-            plazoFase2ConstruccionMeses: this.addressForm.value.mesPlazoEjFase2,
-            plazoFase2ConstruccionDias: this.addressForm.value.diasPlazoEjFase2,
-            observaciones: this.addressForm.value.observacionesEspeciales,
+            plazoFase2ConstruccionMeses: this.addressForm.get( 'mesPlazoEjFase2' ).value,
+            plazoFase2ConstruccionDias: this.addressForm.get( 'diasPlazoEjFase2' ).value,
+            observacionConsideracionesEspeciales: this.addressForm.get( 'observacionesEspeciales' ).value,
             conObervacionesActa: true,
             registroCompleto: true,
             contratoConstruccion: [],
-            contratoObservacion: arrayObservacion2,
             contratoPerfil: [],
             contratoPoliza: []
           };

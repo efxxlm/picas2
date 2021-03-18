@@ -6,8 +6,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { ActBeginService } from 'src/app/core/_services/actBegin/act-begin.service';
 import { DialogCargarActaSuscritaConstComponent } from '../dialog-cargar-acta-suscrita-const/dialog-cargar-acta-suscrita-const.component';
+import { ActaInicioConstruccionService } from 'src/app/core/_services/actaInicioConstruccion/acta-inicio-construccion.service';
 export interface Contrato {
   idContrato: number;
   fechaAprobacionRequisitos: string;
@@ -72,7 +72,7 @@ export class TablaContrIntrvnFdosConstrComponent implements OnInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   dataTable:any = [];
   loadDataItems: Subscription;
-  constructor(private router: Router, public dialog: MatDialog, private services: ActBeginService, private gestionarActaSvc: GestionarActPreConstrFUnoService) { }
+  constructor(private router: Router, public dialog: MatDialog, private services: ActaInicioConstruccionService, private gestionarActaSvc: GestionarActPreConstrFUnoService) { }
 
   ngOnInit(): void {
     /*
@@ -134,7 +134,7 @@ export class TablaContrIntrvnFdosConstrComponent implements OnInit {
         });
     }
   }
-  enviarActaParaFirma(id) {
+  enviarActaParaFirma(id, numeroContrato) {
     //console.log(localStorage.getItem("origin"))
     //if (localStorage.getItem("origin") == "interventoria") {
       this.services.CambiarEstadoActa(id, "6", "usr2").subscribe(data => {
@@ -142,7 +142,7 @@ export class TablaContrIntrvnFdosConstrComponent implements OnInit {
           () => this.router.navigate(['/generarActaInicioConstruccion'])
         );
       });
-      this.descargarActaDesdeTabla(id);
+      this.descargarActaDesdeTabla(id, numeroContrato);
     //}
   }
   enviarInterventorBtn(id){
@@ -168,7 +168,7 @@ export class TablaContrIntrvnFdosConstrComponent implements OnInit {
     }
     const dialogConfig = new MatDialogConfig();
     dialogConfig.height = 'auto';
-    dialogConfig.width = '865px';
+    dialogConfig.width = '1000px';
     dialogConfig.data = {id:id, idRol:idRol, numContrato:numContrato, fecha1Titulo:fecha1Titulo, fecha2Titulo:fecha2Titulo};
     const dialogRef = this.dialog.open(DialogCargarActaSuscritaConstComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(value => {

@@ -36,8 +36,7 @@ export class TablaAcuerdosComponent implements OnInit {
       {
          this.listaCofinanciacion = cof; 
          this.listaCofinanciacion.forEach(element => {
-          let fechaSesion = new Date(element.fechaCreacion);
-            element.fechaCreacion = `${fechaSesion.getDate()}/${fechaSesion.getMonth() + 1}/${fechaSesion.getFullYear()}`
+            element.fechaCreacion = element.fechaCreacion.split('T')[0].split('-').reverse().join('/');
          });
          this.dataSource.data = this.listaCofinanciacion;
       } );

@@ -22,6 +22,7 @@ namespace asivamosffie.model.Models
         public string UsuarioCreacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
+        public string NumeroActuacion { get; set; }
 
         public virtual DefensaJudicial DefensaJudicial { get; set; }
     }

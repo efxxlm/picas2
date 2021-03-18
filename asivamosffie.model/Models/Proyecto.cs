@@ -11,6 +11,7 @@ namespace asivamosffie.model.Models
             ContratoConstruccion = new HashSet<ContratoConstruccion>();
             ContratoPerfil = new HashSet<ContratoPerfil>();
             DisponibilidadPresupuestalProyecto = new HashSet<DisponibilidadPresupuestalProyecto>();
+            InformeFinal = new HashSet<InformeFinal>();
             InfraestructuraIntervenirProyecto = new HashSet<InfraestructuraIntervenirProyecto>();
             NovedadContractual = new HashSet<NovedadContractual>();
             ProgramacionPersonalContrato = new HashSet<ProgramacionPersonalContrato>();
@@ -37,7 +38,7 @@ namespace asivamosffie.model.Models
         public decimal? ValorObra { get; set; }
         public decimal? ValorInterventoria { get; set; }
         public decimal? ValorTotal { get; set; }
-        public string EstadoProyectoCodigo { get; set; }
+        public string EstadoProyectoCodigoOld { get; set; }
         public bool? Eliminado { get; set; }
         public DateTime? FechaCreacion { get; set; }
         public string UsuarioCreacion { get; set; }
@@ -54,6 +55,8 @@ namespace asivamosffie.model.Models
         public int? PlazoMesesInterventoria { get; set; }
         public int? PlazoDiasInterventoria { get; set; }
         public string CoordinacionResponsableCodigo { get; set; }
+        public string EstadoProyectoObraCodigo { get; set; }
+        public string EstadoProyectoInterventoriaCodigo { get; set; }
 
         public virtual InstitucionEducativaSede InstitucionEducativa { get; set; }
         public virtual Localizacion LocalizacionIdMunicipioNavigation { get; set; }
@@ -63,6 +66,7 @@ namespace asivamosffie.model.Models
         public virtual ICollection<ContratoConstruccion> ContratoConstruccion { get; set; }
         public virtual ICollection<ContratoPerfil> ContratoPerfil { get; set; }
         public virtual ICollection<DisponibilidadPresupuestalProyecto> DisponibilidadPresupuestalProyecto { get; set; }
+        public virtual ICollection<InformeFinal> InformeFinal { get; set; }
         public virtual ICollection<InfraestructuraIntervenirProyecto> InfraestructuraIntervenirProyecto { get; set; }
         public virtual ICollection<NovedadContractual> NovedadContractual { get; set; }
         public virtual ICollection<ProgramacionPersonalContrato> ProgramacionPersonalContrato { get; set; }

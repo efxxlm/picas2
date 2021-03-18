@@ -51,7 +51,6 @@ namespace asivamosffie.model.Models
         public bool? RegistroCompletoValidacion { get; set; }
 
         public virtual ContratacionProyecto ContratacionProyecto { get; set; }
-        public virtual SeguimientoDiarioObservaciones ObservacionSupervisor { get; set; }
         public virtual SeguimientoSemanal SeguimientoSemanal { get; set; }
         public virtual ICollection<SeguimientoDiarioObservaciones> SeguimientoDiarioObservaciones { get; set; }
     }

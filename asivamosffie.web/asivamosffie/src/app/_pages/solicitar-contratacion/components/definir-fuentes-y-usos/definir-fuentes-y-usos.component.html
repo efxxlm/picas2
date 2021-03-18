@@ -94,7 +94,11 @@
                     <label
                       class="label-left"
                       for="valorAportanteProyecto"
-                      [class.color-secondaryColor]="(addressForm.get('valorAportanteProyecto')?.invalid && addressForm.get('valorAportanteProyecto').touched) || (addressForm.get('valorAportanteProyecto')?.invalid && estaEditando)"
+                      [class.color-secondaryColor]="
+                        (addressForm.get('valorAportanteProyecto')?.invalid &&
+                          addressForm.get('valorAportanteProyecto').touched) ||
+                        (addressForm.get('valorAportanteProyecto')?.invalid && estaEditando)
+                      "
                     >
                       Valor del aportante al proyecto
                     </label>
@@ -110,6 +114,7 @@
                         required
                         maxLength="20"
                         onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }"
                         formControlName="valorAportanteProyecto"
                         (ngModelChange)="
@@ -135,10 +140,10 @@
                       <img
                         class="icon-incompleto--img"
                         src="assets/img/icon/incompleto.svg"
-                                      alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                        alt="este campo es requerido"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Debe ingresar la información en el campo para continuar"
+                        matTooltipClass="info-tooltip"
                         *ngIf="
                           (addressForm.get('valorAportanteProyecto')?.invalid &&
                             addressForm.get('valorAportanteProyecto').touched) ||
@@ -167,8 +172,8 @@
                               class="label-left"
                               for="fase"
                               [class.color-secondaryColor]="
-                                (addressForm.get('fase').invalid && addressForm.get('fase').touched) ||
-                                (addressForm.get('fase').invalid && estaEditando)
+                                (addressForm.get('fase')?.invalid && addressForm.get('fase').touched) ||
+                                (addressForm.get('fase')?.invalid && estaEditando)
                               "
                             >
                               Fase
@@ -192,13 +197,13 @@
                             <img
                               class="icon-incompleto--img"
                               src="assets/img/icon/incompleto.svg"
-                                            alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                              alt="este campo es requerido"
+                              [matTooltipPosition]="'above'"
+                              matTooltip="Debe ingresar la información en el campo para continuar"
+                              matTooltipClass="info-tooltip"
                               *ngIf="
-                                (addressForm.get('fase').invalid && addressForm.get('fase').touched) ||
-                                (addressForm.get('fase').invalid && estaEditando)
+                                (addressForm.get('fase')?.invalid && addressForm.get('fase').touched) ||
+                                (addressForm.get('fase')?.invalid && estaEditando)
                               "
                             />
                           </span>
@@ -213,8 +218,8 @@
                               class="label-left"
                               for="componente"
                               [class.color-secondaryColor]="
-                                (addressForm.get('componente').invalid && addressForm.get('componente').touched) ||
-                                (addressForm.get('componente').invalid && estaEditando)
+                                (addressForm.get('componente')?.invalid && addressForm.get('componente').touched) ||
+                                (addressForm.get('componente')?.invalid && estaEditando)
                               "
                             >
                               Componente
@@ -239,13 +244,13 @@
                             <img
                               class="icon-incompleto--img"
                               src="assets/img/icon/incompleto.svg"
-                                            alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                              alt="este campo es requerido"
+                              [matTooltipPosition]="'above'"
+                              matTooltip="Debe ingresar la información en el campo para continuar"
+                              matTooltipClass="info-tooltip"
                               *ngIf="
-                                (addressForm.get('componente').invalid && addressForm.get('componente').touched) ||
-                                (addressForm.get('componente').invalid && estaEditando)
+                                (addressForm.get('componente')?.invalid && addressForm.get('componente').touched) ||
+                                (addressForm.get('componente')?.invalid && estaEditando)
                               "
                             />
                           </span>
@@ -262,8 +267,8 @@
                                   <label
                                     class="label-left"
                                     [class.color-secondaryColor]="
-                                      (uso.get('usoDescripcion').invalid && uso.get('usoDescripcion').touched) ||
-                                      (uso.get('usoDescripcion').invalid && estaEditando)
+                                      (uso.get('usoDescripcion')?.invalid && uso.get('usoDescripcion').touched) ||
+                                      (uso.get('usoDescripcion')?.invalid && estaEditando)
                                     "
                                   >
                                     Uso {{ k + 1 }}
@@ -284,13 +289,13 @@
                                   <img
                                     class="icon-incompleto--img"
                                     src="assets/img/icon/incompleto.svg"
-                                                  alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                                    alt="este campo es requerido"
+                                    [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip"
                                     *ngIf="
-                                      (uso.get('usoDescripcion').invalid && uso.get('usoDescripcion').touched) ||
-                                      (uso.get('usoDescripcion').invalid && estaEditando)
+                                      (uso.get('usoDescripcion')?.invalid && uso.get('usoDescripcion').touched) ||
+                                      (uso.get('usoDescripcion')?.invalid && estaEditando)
                                     "
                                   />
                                 </span>
@@ -317,8 +322,8 @@
                                   <label
                                     class="label-left"
                                     [class.color-secondaryColor]="
-                                      (uso.get('valorUso').invalid && uso.get('valorUso').touched) ||
-                                      (uso.get('valorUso').invalid && estaEditando)
+                                      (uso.get('valorUso')?.invalid && uso.get('valorUso').touched) ||
+                                      (uso.get('valorUso')?.invalid && estaEditando)
                                     "
                                   >
                                     Valor del uso
@@ -333,6 +338,7 @@
                                       required
                                       maxLength="20"
                                       onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                       [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }"
                                       formControlName="valorUso"
                                     />
@@ -351,13 +357,13 @@
                                     <img
                                       class="icon-incompleto--img"
                                       src="assets/img/icon/incompleto.svg"
-                                                    alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                                      alt="este campo es requerido"
+                                      [matTooltipPosition]="'above'"
+                                      matTooltip="Debe ingresar la información en el campo para continuar"
+                                      matTooltipClass="info-tooltip"
                                       *ngIf="
-                                        (uso.get('valorUso').invalid && uso.get('valorUso').touched) ||
-                                        (uso.get('valorUso').invalid && estaEditando)
+                                        (uso.get('valorUso')?.invalid && uso.get('valorUso').touched) ||
+                                        (uso.get('valorUso')?.invalid && estaEditando)
                                       "
                                     />
                                   </span>

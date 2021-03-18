@@ -5,7 +5,10 @@
         <div class="col-md-12" style="padding-left: 0">
           <div class="row">
             <div class="pr-1">
-              <label class="label-left" for="resumenReclamacionFiduciaria">Resumen de la propuesta de reclamación ante
+              <label class="label-left" for="resumenReclamacionFiduciaria" [class.color-secondaryColor]="
+              (addressForm.get('resumenReclamacionFiduciaria').invalid && addressForm.get('resumenReclamacionFiduciaria').touched) ||
+              (addressForm.get('resumenReclamacionFiduciaria').invalid && estaEditando)
+            ">Resumen de la propuesta de reclamación ante
                 la fiduciaria</label>
             </div>
           </div>
@@ -15,18 +18,31 @@
         <div class="text-area-quill izqTitle auxBox">
           <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
             #resumenReclamacionFiduciaria (onContentChanged)="maxLength($event, 1000)"
-            formControlName="resumenReclamacionFiduciaria"></quill-editor>
+            formControlName="resumenReclamacionFiduciaria"
+            [class.invalid]="(addressForm.get('resumenReclamacionFiduciaria').invalid && addressForm.get('resumenReclamacionFiduciaria').touched) ||
+              (addressForm.get('resumenReclamacionFiduciaria').invalid && estaEditando)"></quill-editor>
         </div>
         <span class="contador miles" *ngIf="addressForm.controls.resumenReclamacionFiduciaria.value">
-          {{1000 - (textoLimpio(addressForm.get('resumenReclamacionFiduciaria').value))}}
+          {{1000 - (textoLimpio(resumenReclamacionFiduciaria.quillEditor,1000))}}
         </span>
         <span class="contador miles" *ngIf="!addressForm.controls.resumenReclamacionFiduciaria.value"> 1000 </span>
+        <span class="icon-incompleto">
+          <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+            [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+            matTooltipClass="info-tooltip" *ngIf="
+          (addressForm.get('resumenReclamacionFiduciaria').invalid && addressForm.get('resumenReclamacionFiduciaria').touched) ||
+          (addressForm.get('resumenReclamacionFiduciaria').invalid && estaEditando)
+        " />
+        </span>
       </div>
       <div class="row">
         <div class="col-md-12" style="padding-left: 0">
           <div class="row">
             <div class="pr-1">
-              <label class="label-left" for="requereReclamacionComiteTecnico">¿Se requiere presentar la propuesta de
+              <label class="label-left" for="requereReclamacionComiteTecnico" [class.color-secondaryColor]="
+              (addressForm.get('requereReclamacionComiteTecnico').invalid && addressForm.get('requereReclamacionComiteTecnico').touched) ||
+              (addressForm.get('requereReclamacionComiteTecnico').invalid && estaEditando)
+            ">¿Se requiere presentar la propuesta de
                 reclamación a comité técnico?</label>
             </div>
             <div class="col">
@@ -36,6 +52,14 @@
               </mat-radio-group>
               <span class="required-form-group" style="margin-left: 1px">*</span>
             </div>
+            <span class="icon-incompleto">
+              <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip" *ngIf="
+              (addressForm.get('requereReclamacionComiteTecnico').invalid && addressForm.get('requereReclamacionComiteTecnico').touched) ||
+              (addressForm.get('requereReclamacionComiteTecnico').invalid && estaEditando)
+            " />
+            </span>
           </div>
         </div>
       </div>
@@ -50,7 +74,10 @@
         <div class="col-md-12">
           <div class="row">
             <div class="pr-1">
-              <label class="label-left" for="urlSoporte">URL con soporte</label>
+              <label class="label-left" for="urlSoporte"  [class.color-secondaryColor]="
+              (addressForm.get('urlSoporte').invalid && addressForm.get('urlSoporte').touched) ||
+              (addressForm.get('urlSoporte').invalid && estaEditando)
+            ">URL con soporte</label>
             </div>
             <div class="col">
               <mat-form-field class="full-width">
@@ -60,25 +87,17 @@
                 la actuación de
                 trámite</span>
             </div>
+            <span class="icon-incompleto">
+              <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip" *ngIf="
+              (addressForm.get('urlSoporte').invalid && addressForm.get('urlSoporte').touched) ||
+              (addressForm.get('urlSoporte').invalid && estaEditando)
+            " />
+            </span>
           </div>
         </div>
       </div>
-      <!--
-      <span class="icon-incompleto">
-        <img
-          class="icon-incompleto--img"
-          src="assets/img/icon/incompleto.svg"
-                        alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
-          *ngIf="
-            (addressForm.get('definitivoyCerrado').invalid && addressForm.get('definitivoyCerrado').touched) ||
-            (addressForm.get('definitivoyCerrado').invalid && estaEditando)
-          "
-        />
-      </span>
-      -->
     </mat-card-content>
   </mat-card>
   <div class="text-center mb-2em">

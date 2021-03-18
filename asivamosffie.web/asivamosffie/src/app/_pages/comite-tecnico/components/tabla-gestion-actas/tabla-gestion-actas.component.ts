@@ -38,6 +38,9 @@ export class TablaGestionActasComponent implements OnInit {
 
     this.technicalCommitteeSessionService.getListComiteGrilla()
       .subscribe(response => {
+        response.forEach(element => {
+          element.fechaComite = element.fechaComite.split('T')[0].split('-').reverse().join('/');
+        });
         const lista: ComiteGrilla[] = response.filter(c => [EstadosComite.desarrolladaSinActa,
         EstadosComite.conActaDeSesionEnviada,
         EstadosComite.conActaDeSesionAprobada].includes(c.estadoComiteCodigo));

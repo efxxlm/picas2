@@ -168,7 +168,8 @@ export class CrearOrdenDelDiaComponent implements OnInit {
   };
 
   editMode() {
-
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     this.detalle = 'Ver detalle/Editar orden del día';
 
     this.fiduciaryCommitteeSessionService.getRequestCommitteeSessionById(this.idSesion)
@@ -375,7 +376,8 @@ export class CrearOrdenDelDiaComponent implements OnInit {
 
   onSubmit() {
     this.estaEditando = true;
-    console.log(this.solicitudesSeleccionadas);
+    this.addressForm.markAllAsTouched();
+    // console.log(this.solicitudesSeleccionadas);
     if (this.addressForm.invalid) {
       this.openDialog('', '<b>Falta registrar información</b>');
 

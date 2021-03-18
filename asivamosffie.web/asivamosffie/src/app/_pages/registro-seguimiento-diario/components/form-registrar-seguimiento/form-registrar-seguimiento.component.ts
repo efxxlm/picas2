@@ -7,6 +7,7 @@ import { SeguimientoDiario } from 'src/app/_interfaces/DailyFollowUp';
 import { FollowUpDailyService } from 'src/app/core/_services/dailyFollowUp/daily-follow-up.service';
 import { forkJoin } from 'rxjs';
 import { CommonService } from 'src/app/core/_services/common/common.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-form-registrar-seguimiento',
@@ -57,8 +58,9 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
 
   minDate: Date;
   editorStyle = {
-    // height: '45px'
+    height: '45px'
   };
+
   config = {
     toolbar: [
       ['bold', 'italic', 'underline'],
@@ -80,21 +82,20 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
   causaBajaDisponibilidadProductividad = [];
 
 
-  textoLimpio(texto: string) {
-    if (texto) {
-      const textolimpio = texto.replace(/<[^>]*>/g, '');
-      return textolimpio.length;
+  maxLength(e: any, n: number) {
+    console.log(e.editor.getLength()+" "+n);
+    if (e.editor.getLength() > n) {
+      e.editor.deleteText(n-1, e.editor.getLength());
     }
   }
-
-  maxLength(e: any, n: number) {
-    if (e.editor.getLength() > n) {
-      e.editor.deleteText(n, e.editor.getLength());
+  textoLimpio(texto,n) {
+    if (texto!=undefined) {
+      return texto.getLength() > n ? n : texto.getLength();
     }
   }
 
   proyecto: any;
-
+  estaEditando = false;
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -102,6 +103,7 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
     private dialog: MatDialog,
     private dailyFollowUpService: FollowUpDailyService,
     private commonServcie: CommonService,
+
 
   ) {
 
@@ -152,6 +154,8 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
   }
 
   editMode(){
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     this.dailyFollowUpService.getDailyFollowUpById( this.seguimientoId )
       .subscribe( seguimiento => {
 
@@ -197,9 +201,19 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
 
   filtroCalendario = (d: Date | null): boolean => {
     const day = (d || new Date()).getDay();
-    // Bloquea sabado y domingos
-    console.log( new Intl.DateTimeFormat(['ban', 'id']).format(d), d.toLocaleDateString())
-    return ( this.diasPermitidos.includes( d.toLocaleDateString()) && day !== 0 && day !== 6 ); // day !== 0 && day !== 6;
+    const today = new Date();
+
+    if ( environment.production === true ){
+      return ( 
+              this.diasPermitidos.includes( new Intl.DateTimeFormat(['ban', 'id']).format(d)) && 
+              ( d <= today ) 
+      );
+    }else{
+      return ( 
+              this.diasPermitidos.includes( new Intl.DateTimeFormat(['ban', 'id']).format(d))
+        );
+    }
+    
   }
 
   validateNumberKeypress(event: KeyboardEvent) {
@@ -217,6 +231,8 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
 
   onSubmit() {
     //console.log(this.addressForm.value);
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let values = this.addressForm.value;
 
     let seguimiento: SeguimientoDiario = {
@@ -262,3 +278,4 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
 
   }
 }
+

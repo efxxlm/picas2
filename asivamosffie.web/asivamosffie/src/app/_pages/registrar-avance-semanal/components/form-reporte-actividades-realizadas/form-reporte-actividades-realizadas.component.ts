@@ -1,5 +1,7 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
+import { MatTableDataSource } from '@angular/material/table';
+import { RegistrarAvanceSemanalService } from 'src/app/core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 
 @Component({
   selector: 'app-form-reporte-actividades-realizadas',
@@ -11,9 +13,21 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
     @Input() esSiguienteSemana: boolean;
     @Input() esVerDetalle = false;
     @Input() reporteActividad: any;
+    @Input() tipoReporteActividad: any;
+    @Input() seguimientoSemanal: any;
+    @Input() seguimientoSemanalReporteActividadId = 0;
     @Output() reporteDeActividades = new EventEmitter();
     formActividadesRealizadas: FormGroup;
     formActividadesRealizadasSiguienteSemana: FormGroup;
+    tablaHistorial = new MatTableDataSource();
+    tablaHistorialSiguiente = new MatTableDataSource();
+    dataHistorial: any[] = [];
+    dataHistorialSiguiente: any[] = [];
+    displayedColumnsHistorial: string[]  = [
+        'fechaRevision',
+        'responsable',
+        'historial'
+    ];
     editorStyle = {
         height: '45px'
     };
@@ -27,7 +41,8 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
     };
 
     constructor(
-        private fb: FormBuilder )
+        private fb: FormBuilder,
+        private registrarAvanceSemanalSvc: RegistrarAvanceSemanalService )
     {
         this.crearFormulario();
         this.crearFormularioSiguienteSemana();
@@ -56,6 +71,26 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
                         this.reporteActividad.actividadAdministrativaFinancieraSiguiente : null
                 }
             );
+            if ( this.esVerDetalle === false ) {
+                this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanal.seguimientoSemanalId, this.seguimientoSemanalReporteActividadId, this.tipoReporteActividad.actividadRealizada )
+                    .subscribe(
+                        response => {
+                            if ( response.length > 0 ) {
+                                this.dataHistorial = response.filter( obs => obs.archivada === true );
+                                this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
+                            }
+                        }
+                    );
+                this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanal.seguimientoSemanalId, this.seguimientoSemanalReporteActividadId, this.tipoReporteActividad.actividadRealizadaSiguiente )
+                    .subscribe(
+                        response => {
+                            if ( response.length > 0 ) {
+                                this.dataHistorialSiguiente = response.filter( obs => obs.archivada === true );
+                                this.tablaHistorialSiguiente = new MatTableDataSource( this.dataHistorialSiguiente );
+                            }
+                        }
+                    );
+            }
         }
     }
 

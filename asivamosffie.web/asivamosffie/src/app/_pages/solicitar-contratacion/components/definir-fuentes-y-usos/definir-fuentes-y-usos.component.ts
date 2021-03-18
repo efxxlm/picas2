@@ -120,7 +120,6 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
           this.contratacionProyecto = response[3];
           this.listaFaseUsosComponentes = response[4];
 
-          console.log(this.contratacionProyecto);
           setTimeout(() => {
 
             if (this.componentesSelect.length > 0) {
@@ -234,7 +233,6 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
   }
 
   changeFase(posicionAportante, posicionComponente) {
-    console.log(this.componentes(posicionAportante).controls[posicionComponente].get('fase').value);
 
     this.componentes(posicionAportante).controls[posicionComponente].get('componente').setValue(null);
     this.usos(posicionAportante, posicionComponente).controls.forEach(control => {
@@ -255,10 +253,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
         listaUsos.push(u)
     });
 
-    console.log(usoSeleccionado);
-
     this.usos(posicionAportante, posicionComponente).controls.forEach(u => {
-      console.log(u.value.usoDescripcion?.codigo, usoSeleccionado?.value?.usoDescripcion?.codigo, usoSeleccionado)
 
       if (listaUsos !== undefined && u.value.usoDescripcion)
         listaUsos = listaUsos.filter(uso => uso.codigo != u.value.usoDescripcion.codigo);
@@ -277,8 +272,6 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
 
       let fase = this.componentes(posicionAportante).controls[posicionComponente].get('fase').value;
       let componente = this.componentes(posicionAportante).controls[posicionComponente].get('componente').value;
-
-      console.log(fase, componente)
 
       let usos = this.listaFaseUsosComponentes.filter(p => p.faseId === fase.codigo && p.componenteId === componente.codigo);
       if (this.usosSelect.length > 0) {
@@ -302,7 +295,6 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
   };
 
   deleteUsoSeleccionado(usoCodigo: any) {
-    console.log(usoCodigo);
     this.listaUsos = this.listaUsos.filter(uso => uso.codigo !== usoCodigo);
   };
 
@@ -399,6 +391,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let valoresCorrectos = true;
     let valorTotalSumado = 0;
     let totalAportantes = 0;
@@ -479,7 +472,6 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
     };
 
     if (this.contratacionProyecto['contratacion'].tipoSolicitudCodigo === '1' && totalAportantes === this.aportantes.controls.length) {
-      console.log(valorTotalSumado);
       if (valorTotalSumado !== this.contratacionProyecto.proyecto.valorObra) {
         this.openDialog('', '<b>El valor del aporte no corresponde con el valor requerido en la solicitud de obra.</b>');
         return;

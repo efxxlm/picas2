@@ -18,8 +18,9 @@ export class FormDescripcionActuacionComponent implements OnInit {
     estadoAvanceTramite: [null, Validators.required],
     fechaActuacionAdelantada: [null, Validators.required],
     actuacionAdelantada: [null, Validators.required],
+    cualOtroActuacionAdelantada: [null],
     proximaActuacionRequerida: [null, Validators.required],
-    cualOtro: [null],
+    cualOtroActuacionRequerida: [null],
     diasVencimientoTerminos: [null, Validators.required],
     fechaVencimientoTerminos: [null, Validators.required],
     participacionContratista: [null, Validators.required],
@@ -30,16 +31,16 @@ export class FormDescripcionActuacionComponent implements OnInit {
     observaciones: [null, Validators.required],
     urlSoporte: [null, Validators.required]
   });
-  estadoAvanceTramiteArrayDom= [
+  estadoAvanceTramiteArrayDom = [
 
   ];
-  proximaActuacionRequeridaArrayDom  = [
+  proximaActuacionRequeridaArrayDom = [
 
   ];
-  proximaActuacionRequeridaArray  = [
+  proximaActuacionRequeridaArray = [
 
   ];
-  estadoAvanceTramiteArray  = [
+  estadoAvanceTramiteArray = [
 
   ];
   actuacionAdelantadaArrayDom = [
@@ -60,29 +61,38 @@ export class FormDescripcionActuacionComponent implements OnInit {
   };
   numReclamacion: any;
 
-  constructor(private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private common: CommonService,private router: Router) { }
+  constructor(private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private common: CommonService, private router: Router) { }
   estaEditando = false;
-  
+
   ngOnInit(): void {
     this.common.listaEstadosAvanceTramite().subscribe(rep => {
       this.estadoAvanceTramiteArrayDom = rep;
     });
-    this.common.listaActuacionAdelantada().subscribe(rep1=>{
+    this.common.listaActuacionAdelantada().subscribe(rep1 => {
       this.actuacionAdelantadaArrayDom = rep1;
     });
     this.common.listaProximaActuacionRequerida().subscribe(rep2 => {
       this.proximaActuacionRequeridaArrayDom = rep2;
     });
     if (this.isEditable == true) {
-      this.services.GetControversiaActuacionById(this.idActuacionFromEdit).subscribe((data:any)=>{
-        const avanceTramSelected = this.estadoAvanceTramiteArrayDom.find(t => t.codigo === data.estadoAvanceTramiteCodigo);
-        this.addressForm.get('estadoAvanceTramite').setValue(avanceTramSelected);
+      this.estaEditando = true;
+      this.addressForm.markAllAsTouched();
+      this.services.GetControversiaActuacionById(this.idActuacionFromEdit).subscribe((data: any) => {
+        for (let i = 0; i < this.estadoAvanceTramiteArrayDom.length; i++) {
+          const avanceTramSelected = this.estadoAvanceTramiteArrayDom.find(t => t.codigo === data.estadoAvanceTramiteCodigo);
+          this.addressForm.get('estadoAvanceTramite').setValue(avanceTramSelected);
+        }
         this.addressForm.get('fechaActuacionAdelantada').setValue(data.fechaActuacion);
-        const actuacionAdelantadaSelected = this.actuacionAdelantadaArrayDom.find(t => t.codigo === data.actuacionAdelantadaCodigo);
-        this.addressForm.get('actuacionAdelantada').setValue(actuacionAdelantadaSelected);
-        const actuacionRequeridaSelected = this.proximaActuacionRequeridaArrayDom.find(t => t.codigo === data.proximaActuacionCodigo);
-        this.addressForm.get('proximaActuacionRequerida').setValue(actuacionRequeridaSelected);
-        this.addressForm.get('cualOtro').setValue(data.actuacionAdelantadaOtro);
+        for (let i = 0; i < this.actuacionAdelantadaArrayDom.length; i++) {
+          const actuacionAdelantadaSelected = this.actuacionAdelantadaArrayDom.find(t => t.codigo === data.actuacionAdelantadaCodigo);
+          this.addressForm.get('actuacionAdelantada').setValue(actuacionAdelantadaSelected);
+        }
+        for (let i = 0; i < this.proximaActuacionRequeridaArrayDom.length; i++) {
+          const actuacionRequeridaSelected = this.proximaActuacionRequeridaArrayDom.find(t => t.codigo === data.proximaActuacionCodigo);
+          this.addressForm.get('proximaActuacionRequerida').setValue(actuacionRequeridaSelected);
+        }
+        this.addressForm.get('cualOtroActuacionAdelantada').setValue(data.actuacionAdelantadaOtro!== undefined ? data.actuacionAdelantadaOtro : null);
+        this.addressForm.get('cualOtroActuacionRequerida').setValue(data.proximaActuacionOtro!== undefined ? data.proximaActuacionOtro : null);
         this.addressForm.get('diasVencimientoTerminos').setValue(data.cantDiasVencimiento.toString());
         this.addressForm.get('fechaVencimientoTerminos').setValue(data.fechaVencimiento);
         this.addressForm.get('participacionContratista').setValue(data.esRequiereContratista);
@@ -90,7 +100,7 @@ export class FormDescripcionActuacionComponent implements OnInit {
         this.addressForm.get('participacionSupervisorContrato').setValue(data.esRequiereSupervisor);
         this.addressForm.get('participacionFiduciaria').setValue(data.esRequiereFiduciaria);
         this.addressForm.get('requiereComiteTecnico').setValue(data.esRequiereComite);
-        this.addressForm.get('observaciones').setValue(data.observaciones);
+        this.addressForm.get('observaciones').setValue(data.observaciones!== undefined ? data.observaciones : null);
         this.addressForm.get('urlSoporte').setValue(data.rutaSoporte);
         this.numReclamacion = data.numeroReclamacion;
       });
@@ -104,31 +114,14 @@ export class FormDescripcionActuacionComponent implements OnInit {
   }
 
   maxLength(e: any, n: number) {
-    
     if (e.editor.getLength() > n) {
-      e.editor.deleteText(n-1, e.editor.getLength());
+      e.editor.deleteText(n - 1, e.editor.getLength());
     }
   }
-
-  textoLimpio(texto: string) {
-    let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
-
-    if ( texto ){
-      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
-      return textolimpio.length + saltosDeLinea;
+  textoLimpio(texto, n) {
+    if (texto != undefined) {
+      return texto.getLength() > n ? n : texto.getLength();
     }
-  }
-
-  private contarSaltosDeLinea(cadena: string, subcadena: string) {
-    let contadorConcurrencias = 0;
-    let posicion = 0;
-    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
-      ++contadorConcurrencias;
-      posicion += subcadena.length;
-    }
-    return contadorConcurrencias;
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -141,20 +134,48 @@ export class FormDescripcionActuacionComponent implements OnInit {
   onSubmit() {
     let actuacionTaiArray;
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
+    let estadoAvanTramite;
+    if (this.addressForm.value.estadoAvanceTramite != undefined || this.addressForm.value.estadoAvanceTramite != null) {
+      if (!this.addressForm.value.estadoAvanceTramite.codigo) {
+        estadoAvanTramite = "pendiente";
+      }
+      else {
+        estadoAvanTramite = this.addressForm.value.estadoAvanceTramite.codigo;
+      }
+    }
+    let actuacionAdelantada;
+    if (this.addressForm.value.actuacionAdelantada != undefined || this.addressForm.value.actuacionAdelantada != null) {
+      if (!this.addressForm.value.actuacionAdelantada.codigo) {
+        actuacionAdelantada = "pendiente";
+      }
+      else {
+        actuacionAdelantada = this.addressForm.value.actuacionAdelantada.codigo;
+      }
+    }
+    let proxActuacion;
+    if (this.addressForm.value.proximaActuacionRequerida != undefined || this.addressForm.value.proximaActuacionRequerida != null) {
+      if (!this.addressForm.value.proximaActuacionRequerida.codigo) {
+        proxActuacion = "pendiente";
+      }
+      else {
+        proxActuacion = this.addressForm.value.proximaActuacionRequerida.codigo;
+      }
+    }
     if (this.isEditable == true) {
       actuacionTaiArray = {
         "ControversiaContractualId": this.controversiaID,
-        "ActuacionAdelantadaCodigo": this.addressForm.value.actuacionAdelantada.codigo,
-        "ActuacionAdelantadaOtro": "",
-        "ProximaActuacionCodigo": this.addressForm.value.proximaActuacionRequerida.codigo,
-        "ProximaActuacionOtro": this.addressForm.value.cualOtro,
+        "ActuacionAdelantadaCodigo": actuacionAdelantada,
+        "ActuacionAdelantadaOtro": this.addressForm.value.cualOtroActuacionAdelantada,
+        "ProximaActuacionCodigo": proxActuacion,
+        "ProximaActuacionOtro": this.addressForm.value.cualOtroActuacionRequerida,
         "Observaciones": this.addressForm.value.observaciones,
         "RutaSoporte": this.addressForm.value.urlSoporte,
-        "EstadoAvanceTramiteCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
+        "EstadoAvanceTramiteCodigo": estadoAvanTramite,
         "CantDiasVencimiento": this.addressForm.value.diasVencimientoTerminos,
         "FechaVencimiento": this.addressForm.value.fechaVencimientoTerminos,
-        "FechaActuacion":this.addressForm.value.fechaActuacionAdelantada,
-        "EsRequiereContratista":this.addressForm.value.participacionContratista,
+        "FechaActuacion": this.addressForm.value.fechaActuacionAdelantada,
+        "EsRequiereContratista": this.addressForm.value.participacionContratista,
         "EsRequiereInterventor": this.addressForm.value.participacionInterventorContrato,
         "EsRequiereSupervisor": this.addressForm.value.participacionSupervisorContrato,
         "EsRequiereJuridico": "",
@@ -170,17 +191,17 @@ export class FormDescripcionActuacionComponent implements OnInit {
     else {
       actuacionTaiArray = {
         "ControversiaContractualId": this.controversiaID,
-        "ActuacionAdelantadaCodigo": this.addressForm.value.actuacionAdelantada.codigo,
-        "ActuacionAdelantadaOtro": "",
-        "ProximaActuacionCodigo": this.addressForm.value.proximaActuacionRequerida.codigo,
-        "ProximaActuacionOtro": this.addressForm.value.cualOtro,
+        "ActuacionAdelantadaCodigo": actuacionAdelantada,
+        "ActuacionAdelantadaOtro": this.addressForm.value.cualOtroActuacionAdelantada,
+        "ProximaActuacionCodigo": proxActuacion,
+        "ProximaActuacionOtro": this.addressForm.value.cualOtroActuacionRequerida,
         "Observaciones": this.addressForm.value.observaciones,
         "RutaSoporte": this.addressForm.value.urlSoporte,
-        "EstadoAvanceTramiteCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
+        "EstadoAvanceTramiteCodigo": estadoAvanTramite,
         "CantDiasVencimiento": this.addressForm.value.diasVencimientoTerminos,
         "FechaVencimiento": this.addressForm.value.fechaVencimientoTerminos,
-        "FechaActuacion":this.addressForm.value.fechaActuacionAdelantada,
-        "EsRequiereContratista":this.addressForm.value.participacionContratista,
+        "FechaActuacion": this.addressForm.value.fechaActuacionAdelantada,
+        "EsRequiereContratista": this.addressForm.value.participacionContratista,
         "EsRequiereInterventor": this.addressForm.value.participacionInterventorContrato,
         "EsRequiereSupervisor": this.addressForm.value.participacionSupervisorContrato,
         "EsRequiereJuridico": "",
@@ -193,19 +214,19 @@ export class FormDescripcionActuacionComponent implements OnInit {
       }
     }
     this.services.CreateEditControversiaOtros(actuacionTaiArray).subscribe((data: any) => {
-      if(data.isSuccessful==true){
-        this.services.CambiarEstadoActuacionSeguimiento(data.data.controversiaActuacionId,"1").subscribe((data:any)=>{
+      if (data.isSuccessful == true) {
+        this.services.CambiarEstadoActuacionSeguimiento(data.data.controversiaActuacionId, "1").subscribe((data0: any) => {
         });
         /*
         this.services.CambiarEstadoControversiaActuacion(data.data.controversiaActuacionId,"1").subscribe((a:any)=>{
 
         });
         */
-        this.openDialog("",`<b>${ data.message }</b>`);
+        this.openDialog("", `<b>${data.message}</b>`);
         this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
       }
-      else{
-        this.openDialog("",`<b>${ data.message }</b>`);
+      else {
+        this.openDialog("", `<b>${data.message}</b>`);
       }
     });
   }

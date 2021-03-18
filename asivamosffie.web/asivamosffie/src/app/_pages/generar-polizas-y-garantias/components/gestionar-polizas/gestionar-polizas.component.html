@@ -451,7 +451,7 @@
             />
           </span>
         </div>
-        <div *ngIf="this.obj1 == true">
+        <div class="animatedDown" *ngIf="this.obj1 == true">
           <mat-card-title class="header-card--text alineacion-titulos2 mt-1em" style="padding-left: 0px">
             Buen manejo y correcta inversión del anticipo
           </mat-card-title>
@@ -499,7 +499,7 @@
             </div>
           </div>
         </div>
-        <div *ngIf="this.obj2 == true">
+        <div class="animatedDown" *ngIf="this.obj2 == true">
           <mat-card-title class="header-card--text alineacion-titulos2 mt-1em" style="padding-left: 0px">
             Garantía de estabilidad y calidad de la obra
           </mat-card-title>
@@ -547,7 +547,7 @@
             </div>
           </div>
         </div>
-        <div *ngIf="this.obj3 == true">
+        <div class="animatedDown" *ngIf="this.obj3 == true">
           <mat-card-title class="header-card--text alineacion-titulos2 mt-1em" style="padding-left: 0px">
             Póliza de cumplimiento
           </mat-card-title>
@@ -595,7 +595,7 @@
             </div>
           </div>
         </div>
-        <div *ngIf="this.obj4 == true">
+        <div class="animatedDown" *ngIf="this.obj4 == true">
           <mat-card-title class="header-card--text alineacion-titulos2 mt-1em" style="padding-left: 0px">
             Pólizas y seguros
           </mat-card-title>
@@ -644,6 +644,7 @@
           </div>
         </div>
         <div
+        class="animatedDown"
           *ngIf="
             addressForm.get('polizasYSegurosCompleto').value != null ||
             addressForm.get('polizaYCoumplimiento').value != null ||
@@ -865,6 +866,7 @@
       </mat-card-content>
     </mat-card>
     <div
+    class="animatedDown"
       *ngIf="
         addressForm.get('condicionesGenerales').value != null &&
         addressForm.get('reciboDePago').value != null &&
@@ -979,7 +981,7 @@
               </div>
             </div>
           </div>
-          <div
+          <div class="animatedDown"
             *ngIf="addressForm.controls.estadoRevision.value && addressForm.controls.estadoRevision.value.codigo == '2'"
           >
             <h2 class="card-subTitle">Aprobación</h2>
@@ -1062,7 +1064,7 @@
                     <mat-form-field class="select-width">
                       <mat-select formControlName="responsableAprob" required>
                         <mat-option *ngFor="let responsableAprob of listaUsuarios" [value]="responsableAprob">
-                          {{ responsableAprob.nombres }} {{ responsableAprob.apellidos }}
+                          {{ responsableAprob.primerNombre }} {{ responsableAprob.primerApellido }}
                         </mat-option>
                       </mat-select>
                     </mat-form-field>
@@ -1089,46 +1091,29 @@
       </mat-card>
       <div class="d-flex align-items-center">
         <div class="text-area-quill">
-          <label for="alcanceParticular" class="text-area-quill--label">Observaciones generales</label>
+          <label for="alcanceParticular" class="text-area-quill--label colorMainColor">Observaciones generales</label>
           <quill-editor
             class="quill-editor-style"
             [styles]="editorStyle"
             [modules]="config"
             (onContentChanged)="maxLength($event, 2000)"
             formControlName="observacionesGenerales"
+            #observaciones
           >
           </quill-editor>
         </div>
-        <span class="contador miles" *ngIf="addressForm.controls.observacionesGenerales.value">
-          {{
-            2000 -
-              (textoLimpio(addressForm.controls.observacionesGenerales.value) > 2000
-                ? 2000
-                : textoLimpio(addressForm.controls.observacionesGenerales.value))
-          }}
+        <span class="contador miles" *ngIf="addressForm.get('observacionesGenerales').value !== null">
+          {{2000 - ( textoLimpio( observaciones.quillEditor,2000 ) ) }}
         </span>
-        <span class="contador miles" *ngIf="!addressForm.controls.observacionesGenerales.value"> 2000 </span>
-        <span class="icon-incompleto">
-          <img
-            class="icon-incompleto--img"
-            src="assets/img/icon/incompleto.svg"
-                          alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
-            *ngIf="
-              (addressForm.get('observacionesGenerales').invalid &&
-                addressForm.get('observacionesGenerales').touched) ||
-              (addressForm.get('observacionesGenerales').invalid && estaEditando)
-            "
-          />
+        <span class="contador miles" *ngIf="addressForm.get('observacionesGenerales').value === null">
+            2000
         </span>
       </div>
     </div>
 
     <div class="text-center mb-2em">
-      <button mat-button color="warn" class="btn-guardar" type="submit">
-        <img src="assets/img/icon/guardar.svg" alt="Regresar" />
+      <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="addressForm.dirty === false">
+        <img src="assets/img/icon/guardar.svg">
       </button>
     </div>
   </form>

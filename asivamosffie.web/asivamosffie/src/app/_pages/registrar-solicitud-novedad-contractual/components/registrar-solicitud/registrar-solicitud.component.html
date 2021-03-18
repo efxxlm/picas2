@@ -23,8 +23,8 @@
             <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
               <mat-option class="autocomplete"
               (click)="seleccionAutocomplete(option)"
-               *ngFor="let option of filteredOptions | async" [value]="option">
-                {{option}}
+               *ngFor="let option of filteredOptions | async" [value]="option.numeroContrato">
+                {{option.numeroContrato}}
               </mat-option>
             </mat-autocomplete>
           </mat-form-field>
@@ -52,11 +52,14 @@
     </div>
   </div>
 
-  <div class="pt-3em animatedDown" *ngIf="novedadAplicada.value === '0' && proyectos.length>0">
-    <app-tabla-proyectos-registrar-novedad></app-tabla-proyectos-registrar-novedad>
+  <div class="pt-3em animatedDown" *ngIf="novedadAplicada.value === false && proyectos" >
+    <app-tabla-proyectos-registrar-novedad
+                                            [listaProyectos]="proyectos"
+                                            (Proyecto)="seleccionarProyecto($event)"  >
+  </app-tabla-proyectos-registrar-novedad>
   </div>
 
-  <mat-card class="shipping-card var-main-gris animatedDown" *ngIf="novedadAplicada.value && contrato ">
+  <mat-card class="shipping-card var-main-gris animatedDown" *ngIf="novedadAplicada.value !== undefined && contrato ">
     <mat-card-header class="header-card header-card--margin">
       <mat-card-title class="header-card--text">
         Datos del contrato
@@ -81,10 +84,10 @@
         </strong>
         {{contrato?.contratacion.contratista.numeroIdentificacion}}
       </p>
-      <p>
+      <!-- <p>
         <strong>Tipo de intervención:</strong>
         NPI Preguntar
-      </p>
+      </p> -->
       <p>
         <strong>Valor del contrato:</strong>
         {{contrato?.valor|currency:'':'symbol':'3.0'}}
@@ -102,35 +105,41 @@
         {{contrato?.fechaTerminacion| date:'dd/MM/yyyy'}}
       </p>
 
-      <div class="animatedDown" *ngIf="novedadAplicada.value === 'Proyecto'">
+      <div class="animatedDown" *ngIf="novedadAplicada.value === false && proyecto">
         <h2 class="card-subTitle">Proyecto asociado</h2>
         <p>
           <strong>Llave MEN:</strong>
-          LJ776554
+          {{ proyecto.llaveMen }}
         </p>
         <p>
           <strong>Departamento:</strong>
-          Atlántico
+          {{ proyecto.departamento }}
         </p>
         <p>
           <strong>Municipio:</strong>
-          Galapa
+          {{ proyecto.municipio }}
         </p>
         <p>
           <strong>Institución educativa:</strong>
-          I.E. María Villa Campo
+          {{ proyecto.institucionEducativa }}
         </p>
         <p>
           <strong>Sede:</strong>
-          Única sede
+          {{ proyecto.sede }}
         </p>
       </div>
 
     </mat-card-content>
   </mat-card>
 
-  <div class="animatedDown" *ngIf="novedadAplicada.value && contrato">
-    <app-expansion-panel></app-expansion-panel>
+  <div class="animatedDown" 
+        *ngIf="(novedadAplicada.value == true && contrato) || ( novedadAplicada.value == false && proyecto)">
+    
+        <app-expansion-panel
+                            [proyecto]=proyecto
+                            [contrato]=contrato
+                            [novedad]=novedad>
+        </app-expansion-panel>
   </div>
 
 </section>

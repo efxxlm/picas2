@@ -13,7 +13,7 @@
 
     <ng-container matColumnDef="fechaOrdenDia">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de comité </th>
-      <td mat-cell *matCellDef="let element" align="center"> {{ element.fechaOrdenDia | date: 'dd/MM/yyyy' }} </td>
+      <td mat-cell *matCellDef="let element" align="center"> {{ element.fechaOrdenDia }} </td>
     </ng-container>
 
     <ng-container matColumnDef="numeroComite">
@@ -38,6 +38,7 @@
                 color="accent" 
                 class="btn-table"
                 *ngIf="element.estadoActaCodigo === estadoActa.revisarActa"
+                [disabled]="element.esVotoAprobado === true"
                 (click)="revisarActa( element )">
                 Revisar acta
         </button>

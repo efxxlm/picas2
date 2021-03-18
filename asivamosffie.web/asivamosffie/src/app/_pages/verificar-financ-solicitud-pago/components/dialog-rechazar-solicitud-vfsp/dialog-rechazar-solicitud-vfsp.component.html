@@ -3,7 +3,7 @@
 </button>
 <div style="padding: 30px 20px; text-align: center;">
     <h1 class="title-menu--h1 centerTrick">
-       Rechazar solicitud SolPagoO0001
+        Rechazar solicitud SolPagoO0001
     </h1>
     <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
         <mat-card class="shipping-card mainGris auxBoxCard">
@@ -12,7 +12,11 @@
                     <div class="col-md-12" style="padding-left: 0;">
                         <div class="row">
                             <div class="pr-1">
-                                <label class="label-left supportBlack" for="fechaRadicacionSAC">Fecha de radicación SAC al contratista</label>
+                                <label class="label-left supportBlack" for="fechaRadicacionSAC" [ngClass]="{
+                                    'color-secondaryColor':
+                                      (addressForm.get('fechaRadicacionSAC').invalid && addressForm.get('fechaRadicacionSAC').touched) ||
+                                      (addressForm.get('fechaRadicacionSAC').invalid && estaEditando)
+                                  }">Fecha de radicación SAC a Técnica</label>
                             </div>
                             <div class="col d-flex align-items-center">
                                 <mat-form-field class="example-full-width">
@@ -21,11 +25,20 @@
                                         (click)="pickerfechaRadicadoSAC.open()" required>
                                     <mat-datepicker #pickerfechaRadicadoSAC></mat-datepicker>
                                 </mat-form-field>
-                                <button mat-button color="primary" type="button"
-                                    (click)="pickerfechaRadicadoSAC.open()" class="btn-calendario">
+                                <button mat-button color="primary" type="button" (click)="pickerfechaRadicadoSAC.open()"
+                                    class="btn-calendario">
                                     <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
                                 </button>
                             </div>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                                    (addressForm.get('fechaRadicacionSAC').invalid && addressForm.get('fechaRadicacionSAC').touched) ||
+                                    (addressForm.get('fechaRadicacionSAC').invalid && estaEditando)
+                                  " />
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -33,20 +46,38 @@
                     <div class="col-md-12" style="padding-left: 0;">
                         <div class="row">
                             <div class="pr-1">
-                                <label class="label-left supportBlack" for="numeroRadicacionSAC">Número de radicación SAC al contratista</label>
+                                <label class="label-left supportBlack" for="numeroRadicacionSAC"
+                                [ngClass]="{
+                                    'color-secondaryColor':
+                                      (addressForm.get('numeroRadicacionSAC').invalid && addressForm.get('numeroRadicacionSAC').touched) ||
+                                      (addressForm.get('numeroRadicacionSAC').invalid && estaEditando)
+                                  }">Número de radicación SAC a Técnica</label>
                             </div>
                             <div class="col d-flex align-items-center">
                                 <mat-form-field class="full-width">
-                                    <input matInput #numeroRadicacionSAC type="text" maxlength="10" formControlName="numeroRadicacionSAC"
-                                      required>
-                                  </mat-form-field>
-                                <span class="contador miles" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip" *ngIf="addressForm.controls.numeroRadicacionSAC.value">
+                                    <input matInput #numeroRadicacionSAC type="text" maxlength="10"
+                                        formControlName="numeroRadicacionSAC" required>
+                                </mat-form-field>
+                                <span class="contador miles" [matTooltipPosition]="'above'"
+                                    matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip"
+                                    *ngIf="addressForm.controls.numeroRadicacionSAC.value">
                                     {{10 - numeroRadicacionSAC.value.length}}
                                 </span>
-                                <span class="contador miles" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip" *ngIf="!addressForm.controls.numeroRadicacionSAC.value">
+                                <span class="contador miles" [matTooltipPosition]="'above'"
+                                    matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip"
+                                    *ngIf="!addressForm.controls.numeroRadicacionSAC.value">
                                     10
                                 </span>
                             </div>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                                    (addressForm.get('numeroRadicacionSAC').invalid && addressForm.get('numeroRadicacionSAC').touched) ||
+                                    (addressForm.get('numeroRadicacionSAC').invalid && estaEditando)
+                                  " />
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -54,7 +85,12 @@
                     <div class="col-md-12" style="padding-left: 0;">
                         <div class="row">
                             <div class="pr-1">
-                                <label class="label-left supportBlack" for="observaciones">Observaciones</label>
+                                <label class="label-left supportBlack" for="observaciones"
+                                [ngClass]="{
+                                    'color-secondaryColor':
+                                      (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                                      (addressForm.get('observaciones').invalid && estaEditando)
+                                  }">Observaciones financiera</label>
                             </div>
                         </div>
                     </div>
@@ -64,8 +100,8 @@
                         <div>
                             <div class="d-flex align-items-center">
                                 <div class="text-area-quill auxBox">
-                                    <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
-                                        required (onContentChanged)="maxLength($event, 1000)"
+                                    <quill-editor class="quill-editor-style card" [styles]="editorStyle"
+                                        [modules]="config" required (onContentChanged)="maxLength($event, 1000)"
                                         formControlName="observaciones" #observaciones>
                                     </quill-editor>
                                 </div>
@@ -74,6 +110,15 @@
                                 </span>
                                 <span class="contador miles" *ngIf="!addressForm.controls.observaciones.value">
                                     1000
+                                </span>
+                                <span class="icon-incompleto">
+                                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip" *ngIf="
+                                        (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                                        (addressForm.get('observaciones').invalid && estaEditando)
+                                      " />
                                 </span>
                             </div>
                         </div>
@@ -88,4 +133,3 @@
         </div>
     </form>
 </div>
-

@@ -4,8 +4,9 @@
 
 export const environment = {
   production: false,
-  //apiUrl: 'https://localhost:44372/api'
-  apiUrl: 'https://pruebasasivamosffiebackend.ivolucion.com/api'
+  apiUrl: 'https://localhost:44372/api'
+  // apiUrl: 'https://pruebasasivamosffiebackend.ivolucion.com/api',
+  
 };
 
 /*

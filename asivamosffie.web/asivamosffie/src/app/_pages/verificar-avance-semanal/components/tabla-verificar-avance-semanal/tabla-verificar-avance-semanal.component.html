@@ -11,9 +11,14 @@
 <section class="table-responsive">
   <table mat-table [dataSource]="tablaRegistro" matSort>
 
+    <ng-container matColumnDef="semanaReporte">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Semana número </th>
+      <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.numeroSemana }} - {{ element.cantidadSemanas }} </b> </td>
+    </ng-container>
+
     <ng-container matColumnDef="fechaReporte">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha del reporte </th>
-        <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.fechaReporte | date: 'dd/MM/yyyy' }} </b> </td>
+        <td mat-cell *matCellDef="let element" align="center"> {{ element.fechaReporte | date: 'dd/MM/yyyy' }} </td>
     </ng-container>
 
     <ng-container matColumnDef="llaveMen">
@@ -58,7 +63,7 @@
                     color="accent" 
                     class="btn-table"
                     *ngIf="element.verAvanceApoyo !== undefined"
-                    [routerLink]="[ 'verificarSeguimientoSemanal', element.seguimientoSemanalId ]">
+                    [routerLink]="[ 'verificarSeguimientoSemanal', element.verAvanceApoyo ]">
                     {{ element.fechaModificacionVerificar === undefined ? 'Verificar avance' : 'Ver detalle/Editar' }}
             </button>
             <button mat-raised-button
@@ -72,7 +77,7 @@
                     color="accent" 
                     class="btn-table"
                     *ngIf="element.registroCompletoVerificar === true"
-                    (click)="enviarVerificacion( element.seguimientoSemanalId )">
+                    (click)="enviarVerificacion( element.verAvanceApoyo )">
                     Enviar al supervisor
             </button>
         </td>

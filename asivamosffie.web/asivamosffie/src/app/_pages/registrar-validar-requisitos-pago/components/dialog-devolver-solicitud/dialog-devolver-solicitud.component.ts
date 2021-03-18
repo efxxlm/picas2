@@ -1,6 +1,9 @@
+import { Router } from '@angular/router';
 import { Component, Inject, OnInit } from '@angular/core';
 import { Validators, FormBuilder } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-dialog-devolver-solicitud',
@@ -8,48 +11,58 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
   styleUrls: ['./dialog-devolver-solicitud.component.scss']
 })
 export class DialogDevolverSolicitudComponent implements OnInit {
-  addressForm = this.fb.group({
-    fechaRadicacionSAC: [null, Validators.required],
-    numeroRadicacionSAC: [null, Validators.required]
-  });
-  constructor(private fb: FormBuilder, public matDialogRef: MatDialogRef<DialogDevolverSolicitudComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
-  ngOnInit(): void {
-  }
-  validateNumberKeypress(event: KeyboardEvent) {
-    const alphanumeric = /[0-9]/;
-    const inputChar = String.fromCharCode(event.charCode);
-    return alphanumeric.test(inputChar) ? true : false;
-  }
+    addressForm = this.fb.group({
+      fechaRadicacionSAC: [null, Validators.required],
+      numeroRadicacionSAC: [null, Validators.required]
+    });
+    estaEditando = false;
+    constructor(
+        private fb: FormBuilder,
+        private dialog: MatDialog,
+        private routes: Router,
+        private registrarPagosSvc: RegistrarRequisitosPagoService,
+        private matDialogRef: MatDialogRef<DialogDevolverSolicitudComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: any )
+    { }
 
-  maxLength(e: any, n: number) {
-    if (e.editor.getLength() > n) {
-      e.editor.deleteText(n, e.editor.getLength());
+    ngOnInit(): void {
+        console.log( this.data );
     }
-  }
 
-  textoLimpio(texto: string) {
-    let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
-
-    if ( texto ){
-      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
-      return textolimpio.length + saltosDeLinea;
+    validateNumberKeypress(event: KeyboardEvent) {
+      const alphanumeric = /[0-9]/;
+      const inputChar = String.fromCharCode(event.charCode);
+      return alphanumeric.test(inputChar) ? true : false;
     }
-  }
 
-  private contarSaltosDeLinea(cadena: string, subcadena: string) {
-    let contadorConcurrencias = 0;
-    let posicion = 0;
-    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
-      ++contadorConcurrencias;
-      posicion += subcadena.length;
+    openDialog(modalTitle: string, modalText: string) {
+        const dialogRef = this.dialog.open(ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle, modalText }
+        });
     }
-    return contadorConcurrencias;
-  }
-  onSubmit() {
-    console.log(this.addressForm.value);
-    //this.openDialog('', 'La información ha sido guardada exitosamente.');
-  }
+
+    onSubmit() {
+      this.estaEditando = true;
+      const pSolicitudPago = {
+        solicitudPagoId: this.data.registro.solicitudPagoId,
+        estadoCodigo: this.data.solicitudDevueltaEquipoFacturacion,
+        fechaRadicacionSacContratista: this.addressForm.get( 'fechaRadicacionSAC' ).value !== null ? new Date( this.addressForm.get( 'fechaRadicacionSAC' ).value ).toISOString() : null,
+        numeroRadicacionSacContratista: this.addressForm.get( 'numeroRadicacionSAC' ).value
+      }
+
+      this.registrarPagosSvc.returnSolicitudPago( pSolicitudPago )
+        .subscribe(
+          response => {
+            this.openDialog( '', `<b>${ response.message }</b>` );
+            this.matDialogRef.close();
+            this.routes.navigateByUrl( '/', {skipLocationChange: true} )
+              .then( () => this.routes.navigate( ['/registrarValidarRequisitosPago'] )
+          );
+          },
+          err => this.openDialog( '', `<b>${ err.message }</b>` )
+        );
+    }
+
 }

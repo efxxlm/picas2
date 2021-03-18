@@ -48,21 +48,23 @@
                 <strong>Fecha comité técnico:</strong>
                 {{detailavailabilityBudget?.fechaComiteTecnico | date: 'dd/MM/yyyy' }}
             </p>
-            <p *ngIf="esModificacion">
+            <p *ngIf="detailavailabilityBudget?.novedadContractual">
                 <strong>Tipo de modificación:</strong>
-                Adición y plazo
+                Adición
             </p>
-            <p *ngIf="esModificacion">
+            <p *ngIf="detailavailabilityBudget?.novedadContractual">
                 <strong>Valor después de la modificación:</strong>
-                $ 72.000.000
+                {{detailavailabilityBudget?.novedadContractual.novedadContractualDescripcion[0].presupuestoAdicionalSolicitado | currency:'':'symbol':'3.0'}}
             </p>
-            <p *ngIf="esModificacion">
-                <strong>Plazo después de la modificación:</strong>
-                12 meses / 5 días
+            <p *ngIf="detailavailabilityBudget?.novedadContractual">
+                <strong>Plazo  de la modificación:</strong>
+                
+                {{detailavailabilityBudget?.novedadContractual.novedadContractualDescripcion[0].plazoAdicionalMeses}} meses /
+                {{detailavailabilityBudget?.novedadContractual.novedadContractualDescripcion[0].plazoAdicionalDias}} dias
             </p>
-            <p *ngIf="esModificacion">
+            <p *ngIf="detailavailabilityBudget?.novedadContractual">
                 <strong>Detalle de la modificación:</strong>
-                Se realiza adición de recursos para contrataciones complementarias
+                {{detailavailabilityBudget?.novedadContractual.novedadContractualDescripcion[0].resumenJustificacion}}
             </p>
 
             <div *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_especial

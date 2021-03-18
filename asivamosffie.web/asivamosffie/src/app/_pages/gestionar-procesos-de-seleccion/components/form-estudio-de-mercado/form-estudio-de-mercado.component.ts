@@ -42,7 +42,7 @@ export class FormEstudioDeMercadoComponent implements OnInit {
     if (this.noGuardado===true &&  this.addressForm.dirty) {
       let dialogRef =this.dialog.open(ModalDialogComponent, {
         width: '28em',
-        data: { modalTitle:"", modalText:"�Desea guardar la informaci�n registrada?",siNoBoton:true }
+        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
       });   
       dialogRef.afterClosed().subscribe(result => {
         // console.log(`Dialog result: ${result}`);
@@ -82,6 +82,7 @@ export class FormEstudioDeMercadoComponent implements OnInit {
       if (Formcotizaciones.cuantasCotizaciones > this.cotizaciones.length && Formcotizaciones.cuantasCotizaciones < 100) {
         while (this.cotizaciones.length < Formcotizaciones.cuantasCotizaciones) {
           this.cotizaciones.push(this.createCotizacion());
+          if( this.estaEditando) this.addressForm.markAllAsTouched();
         }
       } else if (Formcotizaciones.cuantasCotizaciones <= this.cotizaciones.length && Formcotizaciones.cuantasCotizaciones >= 0) {
         //valido si tiene algo
@@ -110,6 +111,7 @@ export class FormEstudioDeMercadoComponent implements OnInit {
 
           this.openDialog("","<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>");
           this.addressForm.get("cuantasCotizaciones").setValue(this.cotizaciones.length);
+          
         }
         else{
           while (this.cotizaciones.length > Formcotizaciones.cuantasCotizaciones) {
@@ -150,15 +152,32 @@ export class FormEstudioDeMercadoComponent implements OnInit {
     });
   }
 
+  openDialogSiNo(modalTitle: string, modalText: string) {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+
+    return dialogRef;
+  }
+
   borrarArray(borrarForm: any, i: number) {    
-    borrarForm.removeAt(i);
-    //consumo servicio
-    if(borrarForm.value[0].procesoSeleccionCotizacionId>0)
-    {
-      this.procesoSeleccionService.deleteProcesoSeleccionCotizacionByID(borrarForm.value[0].procesoSeleccionCotizacionId).subscribe();
-    }
-    //ajusto el contador  
-    this.addressForm.get('cuantasCotizaciones').setValue(borrarForm.length);    
+
+    let dialogRef = this.openDialogSiNo('', '<b>¿Está seguro de eliminar este registro?</b>')
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === true) {
+        this.procesoSeleccionService.deleteProcesoSeleccionCotizacionByID(borrarForm.value[i].procesoSeleccionCotizacionId)
+              .subscribe( respuesta => {
+                if ( respuesta.code == "200"){
+                  borrarForm.removeAt(i);
+                  //ajusto el contador  
+                  this.addressForm.get('cuantasCotizaciones').setValue(borrarForm.length);    
+                  this.openDialog('','<b>La información se ha eliminado correctamente.</b>')
+                }
+              }); 
+      }
+    });
   }
 
   textoLimpio(texto: string) {
@@ -185,6 +204,7 @@ export class FormEstudioDeMercadoComponent implements OnInit {
   onSubmit() {
     //console.log(this.procesoSeleccion);return;
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     const listaCotizaciones = this.addressForm.get('cotizaciones') as FormArray;
 
     this.procesoSeleccion.procesoSeleccionCotizacion = [];
@@ -225,6 +245,8 @@ export class FormEstudioDeMercadoComponent implements OnInit {
         control.get('eliminado').setValue(cotizacion.eliminado),
         listaCotizaciones.push(control);
     });
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
   }
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;

@@ -12,6 +12,7 @@ export class FormCostoVariableTercGogComponent implements OnInit {
     { name: 'Retefuente', value: '1' },
     { name: 'Rete ICA', value: '2' }
   ];
+  estaEditando = false;
   constructor ( private fb: FormBuilder ) {
     this.crearFormulario();
   }
@@ -55,6 +56,9 @@ export class FormCostoVariableTercGogComponent implements OnInit {
     });
   };
   onSubmit() {
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
+    this.descuentos.markAllAsTouched();
     console.log(this.addressForm.value);
   }
 }

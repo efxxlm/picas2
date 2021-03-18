@@ -70,11 +70,15 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CambiarEstadoActuacionReclamacion(int pActuacionSeguimientoId, string pEstadoReclamacionCodigo, string value);
         Task<Respuesta> CambiarEstadoActuacionReclamacionSeguimiento(int pActuacionId, string pEstadoReclamacionCodigo, string value);
         Task<Respuesta> EliminarActuacionSeguimientoActuacion(int pActuacionSeguimientoId, string value);
-        Task<Respuesta> CambiarEstadoActuacionSeguimiento(int pActuacionSeguimientoId, string pEstadoReclamacionCodigo, string value);
+        Task<Respuesta> CambiarEstadoActuacionSeguimiento(int pActuacionSeguimientoId, string pEstadoReclamacionCodigo, string value, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
         Task<List<GrillaControversiaActuacionEstado>> GetListGrillMesasByControversiaActuacionId(int id);
         Task<List<ControversiaActuacionMesaSeguimiento>> GetActuacionesMesasByActuacionId(int pActuacionId);
         Task<Respuesta> EliminacionActuacionMesa(int pControversiaActuacionMesaId, string value);
         Task<Respuesta> EliminacionMesa(int pMesaId, string value);
         Task<ControversiaActuacionMesa> GetMesaByMesaId(int pControversiaMesaID);
+        Task<SeguimientoActuacionDerivada> GetSeguimientoActuacionDerivadabyId(int pSeguimientoActuacionDerivadaId);
+        Task<Respuesta> ChangeStateActuacion(int pControversiaActuacionId, string value);
+        Task VencimientoTerminosContrato();
+
     }
 }

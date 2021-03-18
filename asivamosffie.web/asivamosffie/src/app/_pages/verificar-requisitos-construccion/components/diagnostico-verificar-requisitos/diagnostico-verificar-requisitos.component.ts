@@ -86,8 +86,8 @@ export class DiagnosticoVerificarRequisitosComponent implements OnInit, OnChange
 
   textoLimpio(texto: string) {
     let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
 
     if ( texto ){
       const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
@@ -114,6 +114,7 @@ export class DiagnosticoVerificarRequisitosComponent implements OnInit, OnChange
 
   guardarDiagnostico() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let construccion = {
       contratoConstruccionId: this.contratoConstruccionId,
       tieneObservacionesDiagnosticoApoyo: this.addressForm.value.tieneObservaciones,

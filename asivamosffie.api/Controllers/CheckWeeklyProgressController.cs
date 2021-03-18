@@ -11,14 +11,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using asivamosffie.model.APIModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CheckWeeklyProgressController : Controller
-    {
-
+    { 
         private readonly ICheckWeeklyProgressService _checkWeeklyProgressService;
         private readonly IOptions<AppSettings> _settings;
 

@@ -13,7 +13,7 @@
 
     <!-- Numero contrato Column -->
     <ng-container matColumnDef="numeroContrato">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Número Contrato</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Número de contrato de obra</th>
       <td mat-cell *matCellDef="let element">{{element.numeroContrato}}</td>
     </ng-container>
 
@@ -25,7 +25,7 @@
 
     <!-- tipoInterventor Column -->
     <ng-container matColumnDef="tipoIntervencion">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>tipo Intervención</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo de intervención</th>
       <td mat-cell *matCellDef="let element">{{element.tipoIntervencion}}</td>
     </ng-container>
 
@@ -83,6 +83,7 @@
                                     'info-text completo' :
                                   '' }}" 
                       type="button"
+                      (click)="VerBitacora( element )"
                       [routerLink]="[ 'verBitacora', element.contratacionProyectoId ]"
                       *ngIf="element.seguimientoDiarioId > 0">
         Ver bitácora

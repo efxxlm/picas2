@@ -37,7 +37,11 @@ export class TablaGenerarFIPreconstruccionComponent implements OnInit {
           this.dataTable.push(actas);
         }
       }
-      console.log(this.dataTable);
+      
+      if ( this.dataTable.length > 0 ) {
+        this.dataTable.forEach( registro => registro.fechaAprobacionRequisitosDate = registro.fechaAprobacionRequisitosDate.split('T')[0].split('-').reverse().join('/') );
+      }
+
       this.dataSource = new MatTableDataSource(this.dataTable);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
@@ -118,7 +122,7 @@ export class TablaGenerarFIPreconstruccionComponent implements OnInit {
     }
     const dialogConfig = new MatDialogConfig();
     dialogConfig.height = 'auto';
-    dialogConfig.width = '865px';
+    dialogConfig.width = '1000px';
     dialogConfig.data = { id: id, idRol: idRol, numContrato: numContrato, fecha1Titulo: fecha1Titulo, fecha2Titulo: fecha2Titulo };
     const dialogRef = this.dialog.open(CargarActaSuscritaActaIniFIPreconstruccionComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(value => {

@@ -59,8 +59,8 @@ export class HojasVidaVerificarRequisitosComponent implements OnInit {
 
   textoLimpio(texto: string) {
     let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
 
     if ( texto ){
       const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
@@ -94,6 +94,7 @@ export class HojasVidaVerificarRequisitosComponent implements OnInit {
 
   onSubmit(){
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     const ConstraccionPerfil = {
       construccionPerfilId: this.perfil.construccionPerfilId,
       tieneObservacionesApoyo: this.addressForm.value.tieneObservaciones,

@@ -35,7 +35,10 @@ export class FormObservacionesComponent {
   seguimientoId?: number;
   @Input() observacionObjeto: SeguimientoDiarioObservaciones;
   @Input() tieneObservaciones?: boolean;
+  @Input() tieneObservacionesApoyo?: boolean;
 
+  totalGuardados = 0;
+  estaEditando = false;
   constructor(
     private fb: FormBuilder,
     private dialog: MatDialog,
@@ -45,13 +48,13 @@ export class FormObservacionesComponent {
   ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if ( changes.observacionObjeto ){
-      this.addressForm.get('observacion').setValue( this.observacionObjeto ? this.observacionObjeto.observaciones : null );
+    if (changes.observacionObjeto) {
+      this.addressForm.get('observacion').setValue(this.observacionObjeto ? this.observacionObjeto.observaciones : null);
     }
-    if ( changes.tieneObservaciones ){
-      this.addressForm.get('tieneObservaciones').setValue( this.tieneObservaciones );
+    if (changes.tieneObservaciones) {
+      this.addressForm.get('tieneObservaciones').setValue(this.tieneObservaciones);
     }
-    console.log('t',changes)
+    console.log('t', changes)
 
   }
 
@@ -59,24 +62,22 @@ export class FormObservacionesComponent {
     this.route.params.subscribe((params: Params) => {
       this.seguimientoId = params.id;
       console.log(this.seguimientoId, this.observacionObjeto, this.tieneObservaciones);
-
-      this.addressForm.get('observacion').setValue( this.observacionObjeto ? this.observacionObjeto.observaciones : null );
-      this.addressForm.get('tieneObservaciones').setValue( this.tieneObservaciones );
-
-      
+      this.estaEditando = true;
+      this.addressForm.markAllAsTouched();
+      this.addressForm.get('observacion').setValue(this.observacionObjeto ? this.observacionObjeto.observaciones : null);
+      this.addressForm.get('tieneObservaciones').setValue(this.tieneObservaciones);
     });
   }
 
-  textoLimpio(texto: string) {
-    if (texto) {
-      const textolimpio = texto.replace(/<[^>]*>/g, '');
-      return textolimpio.length;
+  maxLength(e: any, n: number) {
+    // console.log(e.editor.getLength()+" "+n);
+    if (e.editor.getLength() > n) {
+      e.editor.deleteText(n - 1, e.editor.getLength());
     }
   }
-
-  maxLength(e: any, n: number) {
-    if (e.editor.getLength() > n) {
-      e.editor.deleteText(n, e.editor.getLength());
+  textoLimpio(texto, n) {
+    if (texto != undefined) {
+      return texto.getLength() > n ? n : texto.getLength();
     }
   }
 
@@ -88,7 +89,14 @@ export class FormObservacionesComponent {
   }
 
   onSubmit() {
+    this.estaEditando = true;
     this.addressForm.markAllAsTouched();
+
+    if ( this.addressForm.value.tieneObservaciones === false && this.totalGuardados === 0 && this.tieneObservacionesApoyo === true ) {
+      this.openDialog( '', '<b>Le recomendamos verificar su respuesta; tenga en cuenta que el apoyo a la supervisión si tuvo observaciones.</b>' );
+      this.totalGuardados++;
+      return;
+    }
 
     let seguimiento: SeguimientoDiario = {
       seguimientoDiarioId: this.seguimientoId,
@@ -104,10 +112,10 @@ export class FormObservacionesComponent {
       ]
     }
 
-    this.followUpDailyService.createEditObservacion( seguimiento, true )
-      .subscribe( respuesta => {
+    this.followUpDailyService.createEditObservacion(seguimiento, true)
+      .subscribe(respuesta => {
         this.openDialog('', respuesta.message);
-        if ( respuesta.code == "200" ){
+        if (respuesta.code == "200") {
           this.router.navigate(['/aprobarSeguimientoDiario']);
         }
 

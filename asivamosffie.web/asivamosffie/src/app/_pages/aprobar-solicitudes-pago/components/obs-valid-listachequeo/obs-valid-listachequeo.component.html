@@ -21,7 +21,7 @@
                 </ng-container>
                 <ng-container matColumnDef="revTecnica">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Revisión técnica </th>
-                    <td mat-cell *matCellDef="let element" align="center"> 
+                    <td mat-cell *matCellDef="let element" align="center">
                         {{ element.revTecnica }}
                     </td>
                 </ng-container>
@@ -33,7 +33,11 @@
         <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
             <div class="row mtop justCenter">
                 <div class="col-md-5">
-                    <label class="label-left">¿Desde la supervisión tiene observaciones a la lista de chequeo 1?</label>
+                    <label class="label-left" for="tieneObservaciones" [ngClass]="{
+                        'color-secondaryColor':
+                          (addressForm.get('tieneObservaciones').invalid && addressForm.get('tieneObservaciones').touched) ||
+                          (addressForm.get('tieneObservaciones').invalid && estaEditando)
+                      }">¿Desde la supervisión tiene observaciones a la lista de chequeo 1?</label>
                 </div>
                 <div class="col-md-2">
                     <mat-radio-group aria-labelledby="example-radio-group-label" class="radioInput"
@@ -43,12 +47,31 @@
                     </mat-radio-group>
                     <span class="required-form-group" style="margin-left: 1px;">*</span>
                 </div>
+                <span class="icon-incompleto">
+                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Debe ingresar la información en el campo para continuar"
+                        matTooltipClass="info-tooltip" *ngIf="
+                      (addressForm.get('tieneObservaciones').invalid && addressForm.get('tieneObservaciones').touched) ||
+                      (addressForm.get('tieneObservaciones').invalid && estaEditando)
+                      " />
+                </span>
             </div>
-            <div class="d-flex align-items-center mtop" *ngIf="addressForm.get('tieneObservaciones').value === true">
-                <div class="text-area-quill izqTitle">
-                    <label for="observaciones" class="text-area-quill--label" style="color: #174193;">Observaciones a la lista de chequeo 1</label>
+            <div class="d-flex align-items-center mtop animatedDown" *ngIf="addressForm.get('tieneObservaciones').value === true">
+                <div class="text-area-quill izqTitle" [ngClass]="{
+                    'color-secondaryColor':
+                      (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                      (addressForm.get('observaciones').invalid && estaEditando)
+                  }">
+                    <label for="observaciones" class="text-area-quill--label"
+                    [ngClass]="{
+                        'colorMainColor':
+                          !((addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                          (addressForm.get('observaciones').invalid && estaEditando))
+                      }" >Observaciones a la lista de chequeo 1</label>
                     <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
-                        (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observaciones></quill-editor>
+                        (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observaciones>
+                    </quill-editor>
                 </div>
                 <span class="contador miles" *ngIf="addressForm.get('observaciones').value">
                     {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
@@ -56,9 +79,17 @@
                 <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null">
                     1000
                 </span>
+                <span class="icon-incompleto">
+                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Debe ingresar la información en el campo para continuar"
+                        matTooltipClass="info-tooltip" *ngIf="
+                      (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                      (addressForm.get('observaciones').invalid && estaEditando)
+                      " />
+                </span>
             </div>
-            <button mat-button color="warn" class="btn-guardar"
-                type="submit">
+            <button mat-button color="warn" class="btn-guardar" type="submit">
                 <img src="assets/img/icon/guardar.svg" alt="Guardar">
             </button>
         </form>

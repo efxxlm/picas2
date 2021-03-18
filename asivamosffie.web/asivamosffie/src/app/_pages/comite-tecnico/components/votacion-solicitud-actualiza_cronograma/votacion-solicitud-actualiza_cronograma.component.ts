@@ -193,6 +193,7 @@ export class VotacionSolicitudActualizaCronogramaComponent implements OnInit {
 
   onSubmit() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let sesionComiteSolicitud: SesionComiteSolicitud = {
       sesionComiteSolicitudId: this.data.sesionComiteSolicitud.sesionComiteSolicitudId,
       comiteTecnicoId: this.data.sesionComiteSolicitud.comiteTecnicoId,

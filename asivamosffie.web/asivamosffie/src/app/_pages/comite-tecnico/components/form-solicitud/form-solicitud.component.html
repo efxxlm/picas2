@@ -85,8 +85,8 @@
         </div>
         <div class="col d-flex">
           <quill-editor
-            class="quill-editor-style card position-relative"
-            [styles]="editorStyle"
+            class="quill-editor-style card position-relative quill-editor-style--max-height"
+            
             [modules]="config"
             (onContentChanged)="maxLength($event, 5000)"
             formControlName="desarrolloSolicitud"
@@ -151,6 +151,7 @@
         [sesionComiteSolicitud]="sesionComiteSolicitud"
         [style.display]="getMostrarProyectos()"
         [Estadosolicitud]="getObservableEstadoSolicitud()"
+        [EstadosolicitudActa]="EstadosolicitudActa"
         (ActualizarProyectos)="ActualizarProyectos($event)"
       >
       </app-tabla-form-solicitud-multiple>
@@ -211,8 +212,8 @@
         </div>
         <div class="col d-flex">
           <quill-editor
-            class="quill-editor-style card position-relative"
-            [styles]="editorStyle"
+            class="quill-editor-style card position-relative quill-editor-style--max-height"
+            
             [modules]="config"
             required
             (onContentChanged)="maxLength($event, 5000)"
@@ -301,7 +302,7 @@
                 ¿Este tema del orden del día generó compromisos?
               </label>
             </div>
-            <div class="col">
+            <div>
               <mat-radio-group
                 class="radioInput"
                 formControlName="tieneCompromisos"
@@ -351,10 +352,12 @@
                   type="number"
                   min="1"
                   max="10"
+                  maxLength="2"
                   formControlName="cuantosCompromisos"
                   required
                   (keyup)="CambioCantidadCompromisos()"
                   onkeyup="if(this.value>10) this.value = 10;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 />
               </mat-form-field>
               <span

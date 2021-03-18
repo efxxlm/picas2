@@ -21,6 +21,7 @@ export class FormRegistroTramiteComponent implements OnInit, OnDestroy {
   @Input() contratoId: number;
   @Input() contratacionId: number;
   @Input() fechaTramite: Date;
+  @Input() estaEditando: boolean;
   estadoCodigo: string;
   estadoCodigos = {
     enRevision: '2',
@@ -39,7 +40,6 @@ export class FormRegistroTramiteComponent implements OnInit, OnDestroy {
       [{ align: [] }],
     ]
   };
-  estaEditando = false;
 
   constructor(
     private dialog: MatDialog,

@@ -64,7 +64,11 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
 
     if ( acordeon === 'consideracionEspecial' ) {
       if (this.contratacion.esObligacionEspecial !== undefined) {
-        return this.estadoSemaforos.completo;
+
+        if ( this.contratacion.consideracionDescripcion !== undefined ) {
+          return this.estadoSemaforos.completo;
+        }
+        return this.estadoSemaforos.enProceso;
       } else {
         return this.estadoSemaforos.sinDiligenciar;
       }

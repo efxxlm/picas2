@@ -20,6 +20,15 @@
                                 </mat-select>
                             </mat-form-field>
                         </div>
+                        <span class="icon-incompleto">
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip" *ngIf="
+                                (addressForm.get('estadoAvanceTramite').invalid && addressForm.get('estadoAvanceTramite').touched) ||
+                                (addressForm.get('estadoAvanceTramite').invalid && estaEditando)
+                              " />
+                        </span>
                     </div>
                 </div>
             </div>
@@ -27,7 +36,10 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="fechaActuacionAdelantada">Fecha de la actuación
+                            <label class="label-left" for="fechaActuacionAdelantada" [class.color-secondaryColor]="
+                            (addressForm.get('fechaActuacionAdelantada').invalid && addressForm.get('fechaActuacionAdelantada').touched) ||
+                            (addressForm.get('fechaActuacionAdelantada').invalid && estaEditando)
+                          ">Fecha de la actuación
                                 adelantada</label>
                         </div>
                         <div class="col d-flex align-items-center">
@@ -42,6 +54,15 @@
                                 <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
                             </button>
                         </div>
+                        <span class="icon-incompleto">
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip" *ngIf="
+                                (addressForm.get('fechaActuacionAdelantada').invalid && addressForm.get('fechaActuacionAdelantada').touched) ||
+                                (addressForm.get('fechaActuacionAdelantada').invalid && estaEditando)
+                              " />
+                        </span>
                     </div>
                 </div>
             </div>
@@ -49,7 +70,10 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="actuacionAdelantada">Actuación adelantada</label>
+                            <label class="label-left" for="actuacionAdelantada" [class.color-secondaryColor]="
+                            (addressForm.get('actuacionAdelantada').invalid && addressForm.get('actuacionAdelantada').touched) ||
+                            (addressForm.get('actuacionAdelantada').invalid && estaEditando)
+                          ">Actuación adelantada</label>
                         </div>
                         <div class="col">
                             <mat-form-field class="select-width">
@@ -61,6 +85,63 @@
                                 </mat-select>
                             </mat-form-field>
                         </div>
+                        <span class="icon-incompleto">
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip" *ngIf="
+                                (addressForm.get('actuacionAdelantada').invalid && addressForm.get('actuacionAdelantada').touched) ||
+                                (addressForm.get('actuacionAdelantada').invalid && estaEditando)
+                              " />
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="row animatedDown"
+                *ngIf="addressForm.controls.actuacionAdelantada.value && addressForm.controls.actuacionAdelantada.value.codigo == '4'">
+                <div class="col-md-12" style="padding-left: 0;">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="cualOtroActuacionAdelantada" [class.color-secondaryColor]="
+                            (addressForm.get('cualOtroActuacionAdelantada').invalid && addressForm.get('cualOtroActuacionAdelantada').touched) ||
+                            (addressForm.get('cualOtroActuacionAdelantada').invalid && estaEditando)
+                          ">¿Cuál?</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row animatedDown"
+                *ngIf="addressForm.controls.actuacionAdelantada.value && addressForm.controls.actuacionAdelantada.value.codigo == '4'">
+                <div class="col-md-12" style="padding-left: 0;">
+                    <div>
+                        <div class="d-flex align-items-center">
+                            <div class="text-area-quill auxBox">
+                                <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
+                                    required (onContentChanged)="maxLength($event, 500)"
+                                    formControlName="cualOtroActuacionAdelantada" #cualOtroActuacionAdelantada
+                                    [class.invalid]="
+              (addressForm.get('cualOtroActuacionAdelantada').invalid && addressForm.get('cualOtroActuacionAdelantada').touched) ||
+              (addressForm.get('cualOtroActuacionAdelantada').invalid && estaEditando)
+            ">
+                                </quill-editor>
+                            </div>
+                            <span class="contador miles" *ngIf="addressForm.controls.cualOtroActuacionAdelantada.value">
+                                {{500 - (textoLimpio(cualOtroActuacionAdelantada.quillEditor,500))}}
+                            </span>
+                            <span class="contador miles"
+                                *ngIf="!addressForm.controls.cualOtroActuacionAdelantada.value">
+                                500
+                            </span>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                                (addressForm.get('cualOtroActuacionAdelantada').invalid && addressForm.get('cualOtroActuacionAdelantada').touched) ||
+                                (addressForm.get('cualOtroActuacionAdelantada').invalid && estaEditando)
+                              " />
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -68,7 +149,10 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="proximaActuacionRequerida">Próxima actuación
+                            <label class="label-left" for="proximaActuacionRequerida" [class.color-secondaryColor]="
+                            (addressForm.get('proximaActuacionRequerida').invalid && addressForm.get('proximaActuacionRequerida').touched) ||
+                            (addressForm.get('proximaActuacionRequerida').invalid && estaEditando)
+                          ">Próxima actuación
                                 requerida</label>
                         </div>
                         <div class="col">
@@ -82,35 +166,60 @@
                                 </mat-select>
                             </mat-form-field>
                         </div>
+                        <span class="icon-incompleto">
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip" *ngIf="
+                            (addressForm.get('proximaActuacionRequerida').invalid && addressForm.get('proximaActuacionRequerida').touched) ||
+                            (addressForm.get('proximaActuacionRequerida').invalid && estaEditando)
+                          " />
+                        </span>
                     </div>
                 </div>
             </div>
-            <div class="row"
+            <div class="row animatedDown"
                 *ngIf="addressForm.controls.proximaActuacionRequerida.value && addressForm.controls.proximaActuacionRequerida.value.codigo == '4'">
                 <div class="col-md-12" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="cualOtro">¿Cuál?</label>
+                            <label class="label-left" for="cualOtroActuacionRequerida" [class.color-secondaryColor]="
+                            (addressForm.get('cualOtroActuacionRequerida').invalid && addressForm.get('cualOtroActuacionRequerida').touched) ||
+                            (addressForm.get('cualOtroActuacionRequerida').invalid && estaEditando)
+                          ">¿Cuál?</label>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row"
+            <div class="row animatedDown"
                 *ngIf="addressForm.controls.proximaActuacionRequerida.value && addressForm.controls.proximaActuacionRequerida.value.codigo == '4'">
                 <div class="col-md-12" style="padding-left: 0;">
                     <div>
                         <div class="d-flex align-items-center">
                             <div class="text-area-quill auxBox">
                                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
-                                    required (onContentChanged)="maxLength($event, 500)" formControlName="cualOtro"
-                                    #cualOtro>
+                                    required (onContentChanged)="maxLength($event, 500)"
+                                    formControlName="cualOtroActuacionRequerida" #cualOtroActuacionRequerida
+                                    [class.invalid]="
+              (addressForm.get('cualOtroActuacionRequerida').invalid && addressForm.get('cualOtroActuacionRequerida').touched) ||
+              (addressForm.get('cualOtroActuacionRequerida').invalid && estaEditando)
+            ">
                                 </quill-editor>
                             </div>
-                            <span class="contador miles" *ngIf="addressForm.controls.cualOtro.value">
-                                {{500 - (textoLimpio(addressForm.get('cualOtro').value))}}
+                            <span class="contador miles" *ngIf="addressForm.controls.cualOtroActuacionRequerida.value">
+                                {{500 - (textoLimpio(cualOtroActuacionRequerida.quillEditor,500))}}
                             </span>
-                            <span class="contador miles" *ngIf="!addressForm.controls.cualOtro.value">
+                            <span class="contador miles" *ngIf="!addressForm.controls.cualOtroActuacionRequerida.value">
                                 500
+                            </span>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                                (addressForm.get('cualOtroActuacionRequerida').invalid && addressForm.get('cualOtroActuacionRequerida').touched) ||
+                                (addressForm.get('cualOtroActuacionRequerida').invalid && estaEditando)
+                              " />
                             </span>
                         </div>
                     </div>
@@ -120,13 +229,17 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="diasVencimientoTerminos">Días de vencimiento de términos para
+                            <label class="label-left" for="diasVencimientoTerminos" [class.color-secondaryColor]="
+                            (addressForm.get('diasVencimientoTerminos').invalid && addressForm.get('diasVencimientoTerminos').touched) ||
+                            (addressForm.get('diasVencimientoTerminos').invalid && estaEditando)
+                          ">Días de vencimiento de términos para
                                 la próxima actuación requerida</label>
                         </div>
                         <div class="col d-flex align-items-center">
                             <mat-form-field class="full-width">
                                 <input matInput (keypress)="validateNumberKeypress($event)"
                                     onKeyPress="if(this.value.length>=this.maxLength) return false;" type="number"
+                                    oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                     maxlength="7" formControlName="diasVencimientoTerminos" required
                                     #diasVencimientoTerminos>
                             </mat-form-field>
@@ -137,6 +250,15 @@
                             <span class="contador miles" *ngIf="!addressForm.controls.diasVencimientoTerminos.value">
                                 7
                             </span>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                                (addressForm.get('diasVencimientoTerminos').invalid && addressForm.get('diasVencimientoTerminos').touched) ||
+                                (addressForm.get('diasVencimientoTerminos').invalid && estaEditando)
+                              " />
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -145,7 +267,10 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="fechaVencimientoTerminos">Fecha de vencimiento de términos
+                            <label class="label-left" for="fechaVencimientoTerminos" [class.color-secondaryColor]="
+                            (addressForm.get('fechaVencimientoTerminos').invalid && addressForm.get('fechaVencimientoTerminos').touched) ||
+                            (addressForm.get('fechaVencimientoTerminos').invalid && estaEditando)
+                          ">Fecha de vencimiento de términos
                                 para la próxima actuación requerida</label>
                         </div>
                         <div class="col d-flex align-items-center">
@@ -160,6 +285,15 @@
                                 <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
                             </button>
                         </div>
+                        <span class="icon-incompleto">
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip" *ngIf="
+                            (addressForm.get('fechaVencimientoTerminos').invalid && addressForm.get('fechaVencimientoTerminos').touched) ||
+                            (addressForm.get('fechaVencimientoTerminos').invalid && estaEditando)
+                          " />
+                        </span>
                     </div>
                 </div>
             </div>
@@ -167,8 +301,10 @@
                 <div class="col-md-12" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="participacionContratista">¿Está actuación requiere la
-                                participación o insumo del contratista?</label>
+                            <label class="label-left" for="participacionContratista" [class.color-secondaryColor]="
+                            (addressForm.get('participacionContratista').invalid && addressForm.get('participacionContratista').touched) ||
+                            (addressForm.get('participacionContratista').invalid && estaEditando)
+                          ">¿Está actuación requiere la participación o insumo del contratista?</label>
                         </div>
                         <div class="col">
                             <mat-radio-group class="radioInput" formControlName="participacionContratista" required>
@@ -177,6 +313,15 @@
                             </mat-radio-group>
                             <span class="required-form-group" style="margin-left: 1px;">*</span>
                         </div>
+                        <span class="icon-incompleto">
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip" *ngIf="
+                            (addressForm.get('participacionContratista').invalid && addressForm.get('participacionContratista').touched) ||
+                            (addressForm.get('participacionContratista').invalid && estaEditando)
+                          " />
+                        </span>
                     </div>
                 </div>
             </div>
@@ -184,8 +329,11 @@
                 <div class="col-md-12" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="participacionInterventorContrato">¿Está actuación requiere la
-                                participación o insumo del interventor del contrato?</label>
+                            <label class="label-left" for="participacionInterventorContrato"
+                                [class.color-secondaryColor]="
+                            (addressForm.get('participacionInterventorContrato').invalid && addressForm.get('participacionInterventorContrato').touched) ||
+                            (addressForm.get('participacionInterventorContrato').invalid && estaEditando)
+                          ">¿Está actuación requiere la participación o insumo del interventor del contrato?</label>
                         </div>
                         <div class="col">
                             <mat-radio-group class="radioInput" formControlName="participacionInterventorContrato"
@@ -195,6 +343,15 @@
                             </mat-radio-group>
                             <span class="required-form-group" style="margin-left: 1px;">*</span>
                         </div>
+                        <span class="icon-incompleto">
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip" *ngIf="
+                            (addressForm.get('participacionInterventorContrato').invalid && addressForm.get('participacionInterventorContrato').touched) ||
+                            (addressForm.get('participacionInterventorContrato').invalid && estaEditando)
+                          " />
+                        </span>
                     </div>
                 </div>
             </div>
@@ -202,8 +359,11 @@
                 <div class="col-md-12" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="participacionSupervisorContrato">¿Está actuación requiere la
-                                participación o insumo del supervisor del contrato?</label>
+                            <label class="label-left" for="participacionSupervisorContrato"
+                                [class.color-secondaryColor]="
+                            (addressForm.get('participacionSupervisorContrato').invalid && addressForm.get('participacionSupervisorContrato').touched) ||
+                            (addressForm.get('participacionSupervisorContrato').invalid && estaEditando)
+                          ">¿Está actuación requiere la participación o insumo del supervisor del contrato?</label>
                         </div>
                         <div class="col">
                             <mat-radio-group class="radioInput" formControlName="participacionSupervisorContrato"
@@ -213,6 +373,15 @@
                             </mat-radio-group>
                             <span class="required-form-group" style="margin-left: 1px;">*</span>
                         </div>
+                        <span class="icon-incompleto">
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip" *ngIf="
+                            (addressForm.get('participacionSupervisorContrato').invalid && addressForm.get('participacionSupervisorContrato').touched) ||
+                            (addressForm.get('participacionSupervisorContrato').invalid && estaEditando)
+                          " />
+                        </span>
                     </div>
                 </div>
             </div>
@@ -220,7 +389,10 @@
                 <div class="col-md-12" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="participacionFiduciaria">¿Está actuación requiere la
+                            <label class="label-left" for="participacionFiduciaria" [class.color-secondaryColor]="
+                            (addressForm.get('participacionFiduciaria').invalid && addressForm.get('participacionFiduciaria').touched) ||
+                            (addressForm.get('participacionFiduciaria').invalid && estaEditando)
+                          ">¿Está actuación requiere la
                                 participación o insumo de la fiduciaria?</label>
                         </div>
                         <div class="col">
@@ -230,6 +402,15 @@
                             </mat-radio-group>
                             <span class="required-form-group" style="margin-left: 1px;">*</span>
                         </div>
+                        <span class="icon-incompleto">
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip" *ngIf="
+                            (addressForm.get('participacionFiduciaria').invalid && addressForm.get('participacionFiduciaria').touched) ||
+                            (addressForm.get('participacionFiduciaria').invalid && estaEditando)
+                          " />
+                        </span>
                     </div>
                 </div>
             </div>
@@ -237,7 +418,10 @@
                 <div class="col-md-12" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="requiereComiteTecnico">¿Está actuación requiere comité
+                            <label class="label-left" for="requiereComiteTecnico" [class.color-secondaryColor]="
+                            (addressForm.get('requiereComiteTecnico').invalid && addressForm.get('requiereComiteTecnico').touched) ||
+                            (addressForm.get('requiereComiteTecnico').invalid && estaEditando)
+                          ">¿Está actuación requiere comité
                                 técnico?</label>
                         </div>
                         <div class="col">
@@ -247,22 +431,45 @@
                             </mat-radio-group>
                             <span class="required-form-group" style="margin-left: 1px;">*</span>
                         </div>
+                        <span class="icon-incompleto">
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip" *ngIf="
+                            (addressForm.get('requiereComiteTecnico').invalid && addressForm.get('requiereComiteTecnico').touched) ||
+                            (addressForm.get('requiereComiteTecnico').invalid && estaEditando)
+                          " />
+                        </span>
                     </div>
                 </div>
             </div>
             <div class="d-flex align-items-center mtop">
                 <div class="text-area-quill izqTitle auxBox">
                     <label for="observaciones" class="text-area-quill--label"
-                        style="padding: 0; margin-left: 0; margin-top: .5em;">Observaciones</label>
+                        style="padding: 0; margin-left: 0; margin-top: .5em;" [class.color-secondaryColor]="
+                        (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                        (addressForm.get('observaciones').invalid && estaEditando)
+                      ">Observaciones</label>
                     <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                         #observaciones (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones"
-                        style="padding: 1.5em 0em 1.2em;"></quill-editor>
+                        style="padding: 1.5em 0em 1.2em;"
+                        [class.invalid]="(addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+              (addressForm.get('observaciones').invalid && estaEditando)"></quill-editor>
                 </div>
                 <span class="contador miles" *ngIf="addressForm.controls.observaciones.value">
-                    {{1000 - (textoLimpio(addressForm.get('observaciones').value))}}
+                    {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
                 </span>
                 <span class="contador miles" *ngIf="!addressForm.controls.observaciones.value">
                     1000
+                </span>
+                <span class="icon-incompleto">
+                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Debe ingresar la información en el campo para continuar"
+                        matTooltipClass="info-tooltip" *ngIf="
+                    (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                    (addressForm.get('observaciones').invalid && estaEditando)
+                  " />
                 </span>
             </div>
         </mat-card-content>
@@ -278,7 +485,10 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="urlSoporte">URL con soporte</label>
+                            <label class="label-left" for="urlSoporte" [class.color-secondaryColor]="
+                            (addressForm.get('urlSoporte').invalid && addressForm.get('urlSoporte').touched) ||
+                            (addressForm.get('urlSoporte').invalid && estaEditando)
+                          ">URL con soporte</label>
                         </div>
                         <div class="col">
                             <mat-form-field class="full-width">
@@ -287,6 +497,15 @@
                             <span class="info-url">Indique la ruta en la que se encuentran los documentos de soporte del
                                 registro de la actuación de trámite</span>
                         </div>
+                        <span class="icon-incompleto">
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip" *ngIf="
+                            (addressForm.get('urlSoporte').invalid && addressForm.get('urlSoporte').touched) ||
+                            (addressForm.get('urlSoporte').invalid && estaEditando)
+                          " />
+                        </span>
                     </div>
                 </div>
             </div>

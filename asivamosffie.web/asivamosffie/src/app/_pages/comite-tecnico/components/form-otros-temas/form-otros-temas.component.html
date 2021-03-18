@@ -51,7 +51,7 @@
           >
           </quill-editor>
           <div class="d-flex align-items-center mt-3em">
-            <span class="contador miles" *ngIf="addressForm.get('observaciones').value !== null">
+            <span class="contador miles" *ngIf="addressForm.get('observaciones').value">
               {{
                 5000 -
                   (textoLimpio(addressForm.get('observaciones').value) > 5000
@@ -59,7 +59,7 @@
                     : textoLimpio(addressForm.get('observaciones').value))
               }}
             </span>
-            <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null"> 5000 </span>
+            <span class="contador miles" *ngIf="!addressForm.get('observaciones').value"> 5000 </span>
             <span class="icon-incompleto">
               <img
                 class="icon-incompleto--img"
@@ -204,7 +204,7 @@
                 ¿Este tema del orden del día generó compromisos?
               </label>
             </div>
-            <div class="col">
+            <div>
               <mat-radio-group
                 class="radioInput"
                 formControlName="tieneCompromisos"
@@ -254,10 +254,12 @@
                   type="number"
                   min="1"
                   max="10"
+                  maxLength="2"
                   formControlName="cuantosCompromisos"
                   required
                   (keyup)="CambioCantidadCompromisos()"
                   onkeyup="if(this.value>10) this.value = 10;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 />
               </mat-form-field>
               <span

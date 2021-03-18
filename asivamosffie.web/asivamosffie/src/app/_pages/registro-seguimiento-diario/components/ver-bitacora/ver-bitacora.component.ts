@@ -36,19 +36,25 @@ export class VerBitacoraComponent implements AfterViewInit {
     private router: Router,
     public dialog: MatDialog,
   ) 
-  { }
+  {
+    if (this.router.getCurrentNavigation().extras.replaceUrl) {
+      this.router.navigateByUrl('/registroSeguimientoDiario');
+      return;
+    };
+
+    if (this.router.getCurrentNavigation().extras.state)
+      this.proyecto = this.router.getCurrentNavigation().extras.state.proyecto;
+
+    console.log( this.proyecto )
+   }
 
   ngAfterViewInit() {
     this.route.params.subscribe((params: Params) => {
-      //this.seguimientoId = params.id;
       this.followUpDailyService.getDailyFollowUpByContratacionProyectoId( params.id )
-      //this.followUpDailyService.getDailyFollowUpById(  )
       .subscribe(listaSeguimientos => {
 
-        // this.followUpDailyService.gridRegisterDailyFollowUp()
-        //   .subscribe( listaProyectos => {
-        //     this.proyecto = listaSeguimientos.find( s => s.contratacionProyectoId == params.id );
-        //   });
+        // no debe mostrar los seguimeintos que no se hayna enviado para verificacion
+        listaSeguimientos = listaSeguimientos.filter( r => r.estadoCodigo != "1" )
 
         this.dataSource = new MatTableDataSource( listaSeguimientos );
 

@@ -11,8 +11,11 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="fechaRadicacionSAC">Fecha de radicación SAC a
-                                financiera</label>
+                            <label class="label-left" for="fechaRadicacionSAC" [ngClass]="{
+                                'color-secondaryColor':
+                                  (addressForm.get('fechaRadicacionSAC').invalid && addressForm.get('fechaRadicacionSAC').touched) ||
+                                  (addressForm.get('fechaRadicacionSAC').invalid && estaEditando)
+                              }">Fecha de radicación SAC a financiera</label>
                         </div>
                         <div class="col d-flex align-items-center">
                             <mat-form-field class="example-full-width">
@@ -25,6 +28,15 @@
                                 <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
                             </button>
                         </div>
+                        <span class="icon-incompleto">
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip" *ngIf="
+                                (addressForm.get('fechaRadicacionSAC').invalid && addressForm.get('fechaRadicacionSAC').touched) ||
+                                  (addressForm.get('fechaRadicacionSAC').invalid && estaEditando)
+                              " />
+                        </span>
                     </div>
                 </div>
             </div>
@@ -32,8 +44,11 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="pr-1">
-                            <label for="numeroRadicacionSAC" class="label-left">Número de radicación SAC a
-                                financiera</label>
+                            <label for="numeroRadicacionSAC" class="label-left" [ngClass]="{
+                                'color-secondaryColor':
+                                  (addressForm.get('numeroRadicacionSAC').invalid && addressForm.get('numeroRadicacionSAC').touched) ||
+                                  (addressForm.get('numeroRadicacionSAC').invalid && estaEditando)
+                              }">Número de radicación SAC a financiera</label>
                         </div>
                         <div class="col d-flex">
                             <mat-form-field class="full-width">
@@ -42,6 +57,15 @@
                             </mat-form-field>
                             <span class="contador">{{10 - numeroRadicacionSAC.value.length}}</span>
                         </div>
+                        <span class="icon-incompleto">
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip" *ngIf="
+                                (addressForm.get('numeroRadicacionSAC').invalid && addressForm.get('numeroRadicacionSAC').touched) ||
+                                  (addressForm.get('numeroRadicacionSAC').invalid && estaEditando)
+                              " />
+                        </span>
                     </div>
                 </div>
             </div>
@@ -49,13 +73,26 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="pr-1">
-                            <label for="urlSoporte" class="label-left">Url con soporte</label>
+                            <label for="urlSoporte" class="label-left" [ngClass]="{
+                                'color-secondaryColor':
+                                  (addressForm.get('urlSoporte').invalid && addressForm.get('urlSoporte').touched) ||
+                                  (addressForm.get('urlSoporte').invalid && estaEditando)
+                              }">Url con soporte</label>
                         </div>
                         <div class="col d-flex">
                             <mat-form-field class="full-width">
                                 <input matInput #urlSoporte type="text" formControlName="urlSoporte" required>
                             </mat-form-field>
                         </div>
+                        <span class="icon-incompleto">
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip" *ngIf="
+                                (addressForm.get('urlSoporte').invalid && addressForm.get('urlSoporte').touched) ||
+                                  (addressForm.get('urlSoporte').invalid && estaEditando)
+                              " />
+                        </span>
                     </div>
                 </div>
             </div>

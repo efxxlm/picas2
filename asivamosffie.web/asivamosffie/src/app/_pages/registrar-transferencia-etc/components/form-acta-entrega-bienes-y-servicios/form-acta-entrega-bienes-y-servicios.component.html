@@ -1,0 +1,102 @@
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+  <mat-card class="shipping-card">
+    <mat-card-content>
+      <div class="row">
+        <div class="col-md-10">
+          <div class="row">
+            <div class="pr-1">
+              <label
+                class="label-left"
+                for="fechaFirma"
+                [class.color-secondaryColor]="
+                  (addressForm.get('fechaFirma').invalid &&
+                    addressForm.get('fechaFirma').touched) ||
+                  (addressForm.get('fechaFirma').invalid && estaEditando)
+                "
+              >
+              Fecha de firma acta de entrega de bienes y servicios
+              </label>
+            </div>
+            <div class="col d-flex">
+              <mat-form-field class="example-full-width">
+                <input
+                  matInput
+                  [matDatepicker]="pickerFirma"
+                  formControlName="fechaFirma"
+                  readonly
+                  (click)="pickerFirma.open()"
+                  placeholder="DD/MM/AAAA"
+                  required
+                />
+                <mat-datepicker #pickerFirma></mat-datepicker>
+              </mat-form-field>
+              <button
+                mat-button
+                color="primary"
+                type="button"
+                (click)="pickerFirma.open()"
+                class="btn-calendario"
+              >
+                <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
+              </button>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
+                  *ngIf="
+                    (addressForm.get('fechaFirma').invalid &&
+                      addressForm.get('fechaFirma').touched) ||
+                    (addressForm.get('fechaFirma').invalid && estaEditando)
+                  "
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="pr-1">
+          <label
+            class="label-left"
+            for="urlActa"
+            [class.color-secondaryColor]="
+              (addressForm.get('urlActa').invalid && addressForm.get('urlActa').touched) ||
+              (addressForm.get('urlActa').invalid && estaEditando)
+            "
+          >
+          Url con soporte de acta
+          </label>
+        </div>
+        <div class="col">
+          <mat-form-field class="full-width">
+            <input matInput type="url" required formControlName="urlActa" />
+          </mat-form-field>
+          <span class="info-url">Adjunte el acta con todas las firmas requeridas.</span>
+        </div>
+        <span class="icon-incompleto">
+          <img
+            class="icon-incompleto--img"
+            src="assets/img/icon/incompleto.svg"
+            alt="este campo es requerido"
+            [matTooltipPosition]="'above'"
+            matTooltip="Debe ingresar la información en el campo para continuar"
+            matTooltipClass="info-tooltip"
+            *ngIf="
+              (addressForm.get('urlActa').invalid && addressForm.get('urlActa').touched) ||
+              (addressForm.get('urlActa').invalid && estaEditando)
+            "
+          />
+        </span>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <div class="text-center">
+    <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="addressForm.invalid">
+      <img src="assets/img/icon/guardar.svg" alt="Guardar" />
+    </button>
+  </div>
+</form>

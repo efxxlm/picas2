@@ -22,6 +22,7 @@ export class RegistrarSolicitudInterventoriaComponent implements OnInit {
     { name: 'contrato 2', value: '2' },
     { name: 'Proyecto', value: 'Proyecto' }
   ];
+  numeroContratoSeleccionado: any;
 
   constructor() { }
 
@@ -37,5 +38,8 @@ export class RegistrarSolicitudInterventoriaComponent implements OnInit {
 
     return this.options.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
   }
-
+  public seleccionAutocomplete(numeroContrato)
+  {
+    this.numeroContratoSeleccionado=numeroContrato;
+  }
 }

@@ -8,10 +8,7 @@ namespace asivamosffie.model.Models
 {
     public partial class SeguimientoSemanalObservacion
     {
-        [NotMapped]
-        public bool TieneObservacion { get; set; }
-
-        //[NotMapped]
-        //public string NumeroSolicitudFormat { get; set; }
+        
+      
     }
 }

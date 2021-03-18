@@ -18,8 +18,10 @@ export class DefensaJudicialService {
   GetListContract( ) {
     return this.http.get<Contrato[]>( `${ this.url }/JudicialDefense/GetListContract` );
   }
-
-  GetListProyectsByContract( pContratoId: string ) {
+  GetListContractAutoComplete(pNumeroContrato : any) {
+    return this.http.get<any[]>( `${ this.url }/RegisterValidatePaymentRequierements/GetContratoByTipoSolicitudCodigoModalidadContratoCodigoOrNumeroContrato?pNumeroContrato=${pNumeroContrato}` );
+  }
+  GetListProyectsByContract( pContratoId: any ) {
     return this.http.get<any[]>( `${ this.url }/JudicialDefense/GetListProyectsByContract?pContratoId=${pContratoId}` );
   }
   
@@ -72,8 +74,24 @@ export class DefensaJudicialService {
   eliminarActuacionJudicial(id: number) {
     return this.http.post<Respuesta>( `${ this.url }/JudicialDefense/DeleteActuation?id=${ id }`, null );
   }
+
   finalizarActuacion(id: number) {
     return this.http.post<Respuesta>( `${ this.url }/JudicialDefense/FinalizeActuation?id=${ id }`, null );
+  }
+
+  createOrEditDefensaJudicialSeguimiento( defensaJudicialSeguimiento: DefensaJudicialSeguimiento) {
+    return this.http.post<Respuesta>( `${ this.url }/JudicialDefense/CreateOrEditDefensaJudicialSeguimiento`, defensaJudicialSeguimiento );
+  }
+
+  getDefensaJudicialSeguimiento(defensaJudicialSeguimientoId:number) {
+    return this.http.get<any[]>(`${this.url}/JudicialDefense/getDefensaJudicialSeguimiento?defensaJudicialSeguimientoId=${ defensaJudicialSeguimientoId }` );    
+  }
+
+  deleteDemandadoConvocado( demandadoConvocadoId: number ) {
+    return this.http.post<Respuesta>( `${ this.url }/JudicialDefense/DeleteDemandadoConvocado?demandadoConvocadoId=${ demandadoConvocadoId }`, '' );
+  }
+  deleteDefensaJudicialContratacionProyecto( contratacionId: number , defensaJudicialId: number) {
+    return this.http.post<Respuesta>( `${ this.url }/JudicialDefense/DeleteDefensaJudicialContratacionProyecto?contratacionId=${ contratacionId }&defensaJudicialId=${defensaJudicialId}`, null );
   }
 }
 
@@ -125,6 +143,9 @@ export interface DefensaJudicialSeguimiento{
   observaciones?:string,
   esprocesoResultadoDefinitivo?:boolean,
   rutaSoporte?:string,
+  jurisdiccionCodigoNombre?: string,
+  numeroProceso?: string,
+  tipoAccionCodigoNombre?: string
 }
 export interface DefensaJudicialContratacionProyecto{
   contratacionProyecto?: any;//not mapped
@@ -151,7 +172,9 @@ export interface DemandadoConvocado{
   etapaProcesoFfiecodigo?:string,
   caducidadPrescripcion?:Date,
   defensaJudicialId?:number,
-  existeConocimiento?:boolean
+  existeConocimiento?:boolean,
+  registroCompleto?: boolean,
+  esDemandado?: boolean,
 }
 
 export interface DemandanteConvocante{
@@ -162,7 +185,9 @@ export interface DemandanteConvocante{
   numeroIdentificacion?:string,
   direccion?:string,
   email?:string,  
-  defensaJudicialId?:number
+  defensaJudicialId?:number,
+  demandanteConvocadoId?:number,
+  registroCompleto?: boolean,
 }
 
 export interface FichaEstudio{  
@@ -182,4 +207,5 @@ export interface FichaEstudio{
   esActuacionTramiteComite?:boolean,
   abogado?:string,
   rutaSoporte?:string,
+  esCompleto?: boolean,
 }

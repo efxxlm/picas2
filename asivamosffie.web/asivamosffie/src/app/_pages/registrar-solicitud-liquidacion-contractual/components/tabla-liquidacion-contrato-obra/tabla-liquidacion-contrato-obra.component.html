@@ -1,0 +1,95 @@
+<div class="busqueda">
+  <mat-form-field appearance="outline" class="busqueda--input">
+    <mat-label>Buscador / Filtro</mat-label>
+    <input matInput #filtro (keyup)="applyFilter($event)" />
+  </mat-form-field>
+  <button mat-button color="primary" class="busqueda--img" (click)="filtro.focus()">
+    <img src="assets/img/icon/lupa.svg" alt="Buscar" />
+  </button>
+</div>
+
+<div class="table-responsive mb-2em">
+  <table mat-table [dataSource]="dataSource" matSort>
+    <!-- fechaActualizacion Column -->
+    <ng-container matColumnDef="fechaActualizacion">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Fecha de terminación del proyecto
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <b>{{ element.fechaActualizacion }}</b>
+      </td>
+    </ng-container>
+
+    <!-- numeroSolicitud Column -->
+    <ng-container matColumnDef="numeroSolicitud">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Llave MEN
+      </th>
+      <td mat-cell *matCellDef="let element">{{ element.numeroSolicitud }}</td>
+    </ng-container>
+
+    <!-- numeroContrato Column -->
+    <ng-container matColumnDef="numeroContrato">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Tipo de intervención
+      </th>
+      <td mat-cell *matCellDef="let element">{{ element.numeroContrato }}</td>
+    </ng-container>
+
+    <!-- valor Column -->
+    <ng-container matColumnDef="valor">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Institución Educativa
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.valor }}
+      </td>
+    </ng-container>
+
+    <!-- proyectosAsociados Column -->
+    <ng-container matColumnDef="proyectosAsociados">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Sede
+      </th>
+      <td mat-cell *matCellDef="let element">{{ element.proyectosAsociados }}</td>
+    </ng-container>
+
+    <!-- estadoValidacion Column -->
+    <ng-container matColumnDef="estadoValidacion">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Estado de la entrega
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.estadoValidacion }}
+      </td>
+    </ng-container>
+
+    <!-- id Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Gestión
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <a
+          mat-button
+          mat-raised-button
+          color="accent"
+          class="btn-table"
+          [routerLink]="['validarRequisitos', element.id]"
+        >
+          Validar requisitos para liquidación
+        </a>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</div>
+<mat-paginator
+  #paginator
+  [length]="dataSource?.data.length"
+  [pageIndex]="0"
+  [pageSize]="5"
+  [pageSizeOptions]="[5, 10, 25, 100]"
+></mat-paginator>

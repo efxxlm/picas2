@@ -106,8 +106,7 @@ table {
   .mat-form-field-appearance-outline .mat-form-field-label {
     top: 2.2em;
   }
-  .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float
-    .mat-form-field-label {
+  .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
     transform: translateY(-1.2em) scale(0.75);
   }
 }
@@ -181,7 +180,7 @@ div.mat-paginator {
 }
 
 %botones-paginador {
-  content: "";
+  content: '';
   color: $mainColor;
   border-top: 1em solid transparent;
   border-bottom: 1em solid transparent;
@@ -227,11 +226,11 @@ div.mat-paginator {
   font-style: italic;
 }
 .mat-paginator-navigation-next::after {
-  content: " Siguiente";
+  content: ' Siguiente';
   margin-left: 2.5em;
 }
 .mat-paginator-navigation-previous::after {
-  content: " Anterior";
+  content: ' Anterior';
   margin-left: -5.5em;
 }
 
@@ -277,6 +276,14 @@ div.mat-paginator {
       width: 300px;
       margin-left: auto;
       margin-right: auto;
+    }
+  }
+
+  &--info {
+    border-spacing: 0;
+    text-align: center;
+    td.mat-cell {
+      padding: 0.6em !important;
     }
   }
 }
@@ -338,4 +345,35 @@ div.mat-paginator {
 
 th .mat-sort-header-button {
   line-height: 1.25;
+}
+
+.side-left {
+  display: flex;
+  align-items: stretch;
+
+  &--aside {
+    margin: 4.5em 0;
+    background-color: #fdc101;
+    background-color: var(--tertiaryColor);
+    color: #604500;
+    color: var(--tertiaryColorFont);
+    font-weight: 500;
+    width: 2em;
+    position: relative;
+    min-height: 7.5em;
+  }
+
+  &--span {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform-origin: left;
+    transform: rotate(-90deg) translate(-40%, 10%);
+    display: block;
+    width: max-content;
+  }
+
+  > .table-responsive {
+    width: calc(100% - 2em);
+  }
 }

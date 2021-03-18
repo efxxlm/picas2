@@ -56,43 +56,49 @@
         <button mat-raised-button
                 color="accent" 
                 class="btn-table"
-                *ngIf="element.verReportarSeguimientoSemanal === true && element.fechaUltimoReporte !== 'Sin registro'"
-                [routerLink]="[ 'registroSeguimientoSemanal', element.contratacionProyectoId ]">
-                Registrar seguimiento semanal
+                *ngIf="element.verReportarSeguimientoSemanal === true && element.fechaUltimoReporte === 'Sin registro' && element.fechaModificacion === undefined"
+                [routerLink]="[ 'registroSeguimientoSemanal', element.contratacionProyectoId ]"
+                [disabled]="permisos.tienePermisoCrear === false">
+                Registrar avance semanal
         </button>
         <button mat-raised-button
                 color="accent" 
                 class="btn-table"
                 *ngIf="element.numeroSemana !== primeraSemana && element.verEditarBitacora === true"
-                [routerLink]="[ 'consultarEditarBitacora', element.contratacionProyectoId ]">
+                [routerLink]="[ 'consultarEditarBitacora', element.contratacionProyectoId ]"
+                [disabled]="permisos.tienePermisoEditar === false">
                 Consultar/Editar bitacora
         </button>
         <button mat-raised-button
                 color="accent" 
                 class="btn-table"
                 (click)="enviarVerificacion( element.seguimientoSemanalId )"
-                *ngIf="element.enviarVerificacion === true">
+                *ngIf="element.enviarVerificacion === true"
+                [disabled]="permisos.tienePermisoEditar === false">
                 {{ element.numeroSemana !== element.cantidadSemanas && element.actaCargada === false ? 'Enviar a verificación' : 'Enviar para registrar informe final' }}
         </button>
         <button mat-raised-button
-                color="accent" 
+                color="accent"
                 class="btn-table"
                 *ngIf="element.verCargarActa === true"
-                (click)="openDialogCargarActa( element )">
+                (click)="openDialogCargarActa( element )"
+                [disabled]="permisos.tienePermisoCrear === false">
                 Cargar acta de terminación de contrato
         </button>
         <button mat-raised-button
                 color="accent" 
                 class="btn-table"
-                *ngIf="element.verReportarSeguimientoSemanal === true && element.fechaUltimoReporte === 'Sin registro'"
-                [routerLink]="[ 'registroSeguimientoSemanal', element.contratacionProyectoId ]">
+                *ngIf="element.verReportarSeguimientoSemanal === true && element.fechaUltimoReporte !== 'Sin registro' && element.fechaModificacion !== undefined"
+                [routerLink]="[ 'verDetalleEditar', element.contratacionProyectoId ]"
+                [disabled]="permisos.tienePermisoEditar === false">
                 Ver detalle/Editar
         </button>
         <button mat-raised-button
                 color="accent" 
                 class="btn-table"
                 *ngIf="element.numeroSemana !== primeraSemana && element.verEditarBitacora === false"
-                [routerLink]="[ 'consultarEditarBitacora', element.contratacionProyectoId ]">
+                [routerLink]="[ 'consultarEditarBitacora', element.contratacionProyectoId ]"
+                [disabled]="permisos.tienePermisoLeer === false">
                 Consultar bitácora
         </button>
 

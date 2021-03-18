@@ -18,7 +18,6 @@ using Z.EntityFramework.Plus;
 using Microsoft.Extensions.Options;
 using asivamosffie.model.AditionalModels;
 using asivamosffie.services.Helpers.Extensions;
-using Microsoft.VisualBasic;
 using DinkToPdf;
 
 namespace asivamosffie.services
@@ -55,7 +54,75 @@ namespace asivamosffie.services
         }
         #endregion
 
+        static DirectoryInfo _outputDir = null;
+        public static DirectoryInfo OutputDir
+        {
+            get
+            {
+                return _outputDir;
+            }
+            set
+            {
+                _outputDir = value;
+                if (!_outputDir.Exists)
+                {
+                    _outputDir.Create();
+                }
+            }
+        }
+        public static FileInfo GetFileInfo(string file, bool deleteIfExists = true)
+        {
+            var fi = new FileInfo(OutputDir.FullName + Path.DirectorySeparatorChar + file);
+            if (deleteIfExists && fi.Exists)
+            {
+                fi.Delete();  // ensures we create a new workbook
+            }
+            return fi;
+        }
+
         private static string WriteCollectionToPath<T>(string fileName, string directory, List<T> list)
+        {
+            string filePath;
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            var streams = new MemoryStream();
+            using (var packages = new ExcelPackage())
+            {
+                // Add a new worksheet to the empty workbook
+                var worksheet = packages.Workbook.Worksheets.Add("Hoja 1");
+
+                worksheet.Cells.LoadFromCollection(list, true);
+                //var cellsRange = "A2:A" + (list.Count);
+                //worksheet.Cells[cellsRange].Style.Numberformat.Format = "dd/mm/yyyy";
+                //packages.Save();
+                //////convert the excel package to a byte array
+                //byte[] bin = packages.GetAsByteArray();
+                //Stream stream = new MemoryStream(bin);
+                //////the path of the file
+                //filePath = directory + "/" + fileName + "_rev.xlsx";
+
+                //////write the file to the disk
+                //File.WriteAllBytes(filePath, bin);
+
+                // Add the headers
+                Type listType = typeof(T);
+                var properties = listType.GetProperties();
+                int index = 0;
+                foreach (var property in properties)
+                {
+                    var customAtt = (JsonPropertyAttribute)Attribute.GetCustomAttribute(property, typeof(JsonPropertyAttribute));
+                    worksheet.Cells[1, ++index].Value = customAtt.PropertyName;
+                }
+
+                var xlFile = new FileInfo(directory + Path.DirectorySeparatorChar + listType.Name + ".xlsx");
+
+                // Save the workbook in the output directory
+                packages.SaveAs(xlFile);
+                return xlFile.FullName;
+            }
+
+        }
+
+        private static string WritePaymentToPath(string fileName, string directory, List<PaymentOrder> list)
         {
             string filePath;
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -64,16 +131,20 @@ namespace asivamosffie.services
             {
                 var workSheet = packages.Workbook.Worksheets.Add("Hoja 1");
                 workSheet.Cells.LoadFromCollection(list, true);
-                packages.Save();
-                ////convert the excel package to a byte array
-                byte[] bin = packages.GetAsByteArray();
-                Stream stream = new MemoryStream(bin);
-                ////the path of the file
-                filePath = directory + "/" + fileName + "_rev.xlsx";
+                var xlFile = new FileInfo(directory + Path.DirectorySeparatorChar + "01-GettingStarted.xlsx");
 
-                ////write the file to the disk
-                File.WriteAllBytes(filePath, bin);
-                return filePath;
+                // Save our new workbook in the output directory and we are done!
+                packages.SaveAs(xlFile);
+                // packages.Save();
+                ////convert the excel package to a byte array
+                //byte[] bin = packages.GetAsByteArray();
+                //Stream stream = new MemoryStream(bin);
+                //////the path of the file
+                //filePath = directory + "/" + fileName + "_rev.xlsx";
+
+                //////write the file to the disk
+                //File.WriteAllBytes(filePath, bin);
+                return xlFile.FullName;
             }
 
         }
@@ -151,7 +222,7 @@ namespace asivamosffie.services
         public readonly IRegisterPreContructionPhase1Service _registerPreContructionPhase1Service;
         public readonly IBudgetAvailabilityService _budgetAvailabilityService;
         public ISourceFundingService _fundingSourceService { get; }
-        public AppSettings _mailSettings { get; }
+        public MailSettings _mailSettings { get; }
         public readonly string CONSTPAGOS = "Pagos";
         public readonly int _500 = 500;
 
@@ -160,9 +231,9 @@ namespace asivamosffie.services
                                             ISourceFundingService fundingSourceService,
                                             ICommonService commonService,
                                             IDocumentService documentService,
-                                            IOptions<AppSettings> mailSettings
+                                            IOptions<MailSettings> mailSettings
             )
-{
+        {
             _converter = converter;
             _context = context;
             _fundingSourceService = fundingSourceService;
@@ -221,7 +292,7 @@ namespace asivamosffie.services
         {
             int CantidadRegistrosInvalidos = 0;
             int idAction = await GetActionIdAudit(ConstantCodigoAcciones.Validar_Excel_Registro_Pagos);
-            string actionMesage = fileType == CONSTPAGOS ? 
+            string actionMesage = fileType == CONSTPAGOS ?
                 ConstantCommonMessages.Performances.REGISTRAR_ORDENES_PAGOS : ConstantCommonMessages.Performances.REGISTRAR_RENDIMIENTOS;
             if (pFile == null)
             {
@@ -249,12 +320,18 @@ namespace asivamosffie.services
                 ExcelWorksheet worksheet = package.Workbook.Worksheets.FirstOrDefault();
 
                 // TODO add validation to prevent query a column in a  not existing position
+
                 var columnAccounst = worksheet.Cells[2, 2, worksheet.Dimension.Rows, 2].Select(v => v.Text).ToList<string>();
 
                 var bankAccounts = _context.CuentaBancaria.Where(
                     x => x.NumeroCuentaBanco != null && columnAccounst.Contains(x.NumeroCuentaBanco)).AsNoTracking();
 
                 bool accountsDifferents = columnAccounst.Count != worksheet.Dimension.Rows - 1;
+
+                // Query payment 
+                var paymentNumColum = worksheet.Cells[2, 1, worksheet.Dimension.Rows, 1].Select(v => v.Text).ToList();
+
+
                 //Controlar Registros
 
                 //TODO ADD PARALLEL FOREACH
@@ -267,7 +344,10 @@ namespace asivamosffie.services
                     {
                         if (fileType == CONSTPAGOS)
                         {
-                            tieneError = ValidatePaymentFile(worksheet, indexWorkSheetRow, carguePagosRendimiento);
+
+                            var validatedValues = await ValidatePaymentFile(worksheet, indexWorkSheetRow);
+                            carguePagosRendimiento = validatedValues.list;
+                            tieneError = validatedValues.hasError;
                         }
                         else if (fileType == "Rendimientos")
                         {
@@ -315,12 +395,22 @@ namespace asivamosffie.services
                     };
 
                     _context.CarguePagosRendimientos.Add(CarguePagosRendimientos);
-                    _context.SaveChanges();
                 }
-
-                if (CantidadRegistrosInvalidos == 0)
+                bool isValidPayment = true;
+                if (CantidadRegistrosInvalidos == 0 && saveSuccessProcess && fileType == CONSTPAGOS)
                 {
-                    ProcessPayment(fileType, listaCarguePagosRendimientos);
+                    try
+                    {
+                        isValidPayment = await ProcessPayment(fileType, listaCarguePagosRendimientos, author);
+                    }
+                    catch (Exception)
+                    {
+                        throw;
+                    }
+                }
+                if (isValidPayment)
+                {
+                    _context.SaveChanges();
                 }
 
                 ArchivoCargueRespuesta archivoCargueRespuesta = new ArchivoCargueRespuesta
@@ -354,46 +444,74 @@ namespace asivamosffie.services
         /// <param name="i"></param>
         /// <param name="carguePagosRendimiento"></param>
         /// <returns></returns>
-        private static bool ValidatePaymentFile(ExcelWorksheet worksheet, int i, Dictionary<string, string> carguePagosRendimiento)
+        private async Task<(Dictionary<string, string> list, bool hasError)> ValidatePaymentFile(ExcelWorksheet worksheet, int i)
         {
-            bool tieneError = false;
+            Dictionary<string, string> carguePagosRendimiento = new Dictionary<string, string>();
+            bool hasError = false;
+
+
             // #1
             //Número de orden de giro
-            carguePagosRendimiento.Add("Número de orden de giro", worksheet.Cells[i, 1].Text);
-            if (string.IsNullOrEmpty(worksheet.Cells[i, 1].Text) || worksheet.Cells[i, 1].Text.Length > 50)
+            string cellValue = worksheet.Cells[i, 1].Text;
+            carguePagosRendimiento.Add("Número de orden de giro", cellValue);
+            SolicitudPago solicitud = new SolicitudPago();
+
+
+            if (string.IsNullOrEmpty(cellValue) || cellValue.Length > 50)
             {
-                tieneError = true;
+                hasError = true;
+            }
+            else
+            {
+                solicitud = await _context.SolicitudPago.Where(
+                     x => x.NumeroSolicitud == cellValue)
+                     .Include(solicitud => solicitud.OrdenGiro)
+                     .ThenInclude(detalle => detalle.OrdenGiroDetalle)
+                     .ThenInclude(causacion => causacion.OrdenGiroDetalleTerceroCausacion).AsNoTracking().FirstOrDefaultAsync();
+                var valorNeto = solicitud?.OrdenGiro?.OrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion?.ValorNetoGiro;
+
+                if (solicitud == null || valorNeto == null)
+                {
+                    hasError = true;
+                }
             }
 
             // #2
             //Fecha de pago
             carguePagosRendimiento.Add("Fecha de pago", worksheet.Cells[i, 2].Text);
             DateTime fecha;
-            decimal respValNumber;
             if (string.IsNullOrEmpty(worksheet.Cells[i, 2].Text) || !DateTime.TryParseExact(worksheet.Cells[i, 2].Text, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out fecha))
             {
-                tieneError = true;
+                hasError = true;
             }
 
             // #3
             //Impuestos
             carguePagosRendimiento.Add("Impuestos", worksheet.Cells[i, 3].Text);
             string impuetoClean = worksheet.Cells[i, 3].Text.Replace(".", "").Replace("$", "");
-            if (string.IsNullOrEmpty(worksheet.Cells[i, 3].Text) || impuetoClean.Length > 20 || !decimal.TryParse(impuetoClean, out respValNumber))
+            if (string.IsNullOrEmpty(worksheet.Cells[i, 3].Text) || impuetoClean.Length > 20 || !decimal.TryParse(impuetoClean, out decimal respValNumber))
             {
-                tieneError = true;
+                hasError = true;
             }
 
             // #4
             //Valor neto girado
-            carguePagosRendimiento.Add("valor neto girado", worksheet.Cells[i, 4].Text);
+            carguePagosRendimiento.Add("Valor neto girado", worksheet.Cells[i, 4].Text);
             string valorNetoClean = worksheet.Cells[i, 4].Text.Replace(".", "").Replace("$", "");
-            if (string.IsNullOrEmpty(worksheet.Cells[i, 4].Text) || valorNetoClean.Length > 20 || !decimal.TryParse(valorNetoClean, out respValNumber))
+            if (string.IsNullOrEmpty(worksheet.Cells[i, 4].Text) || valorNetoClean.Length > 20 || !decimal.TryParse(valorNetoClean, out decimal respValNetoNumber))
             {
-                tieneError = true;
+                hasError = true;
+            }
+            else if (solicitud != null)
+            {
+                var valorNeto = solicitud.OrdenGiro?.OrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion?.ValorNetoGiro;
+                if (!valorNeto.HasValue || valorNeto.Value != respValNetoNumber)
+                {
+                    hasError = true;
+                }
             }
 
-            return tieneError;
+            return (carguePagosRendimiento, hasError);
         }
 
         private (Dictionary<string, string> list, bool hasError) ValidateFinancialPerformanceFile(ExcelWorksheet worksheet, int indexRow, IEnumerable<CuentaBancaria> bankAccounts)
@@ -504,7 +622,7 @@ namespace asivamosffie.services
                                         actionMesage)
             };
         }
-        
+
         public async Task<Respuesta> DownloadPaymentPerformanceAsync(FileRequest fileRequest, string fileType)
         {
             Respuesta response = new Respuesta();
@@ -532,7 +650,7 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                    List<PerformanceOrder> list2 = SerializePerformances(fileRequest.ResourceId, collection.ArchivoJson);
+                    List<SerializablePerformanceOrder> list2 = SerializePerformances(fileRequest.ResourceId, collection.ArchivoJson);
                     filePath = WriteCollectionToPath(fileRequest.FileName, directory, list2);
                 }
             }
@@ -559,14 +677,14 @@ namespace asivamosffie.services
             return response;
         }
 
-        private List<PerformanceOrder> SerializePerformances(int uploadedOrderId, string stringJson)
-        {   
-            var list = JsonConvert.DeserializeObject<List<PerformanceOrder>>(stringJson);
+        private List<SerializablePerformanceOrder> SerializePerformances(int uploadedOrderId, string stringJson)
+        {
+            var list = JsonConvert.DeserializeObject<List<SerializablePerformanceOrder>>(stringJson);
             return list;
         }
 
-        private List<PaymentOrder> SerializePaymentOrders(int uploadedOrderId,string  stringJson)
-        {            
+        private List<PaymentOrder> SerializePaymentOrders(int uploadedOrderId, string stringJson)
+        {
             var list = JsonConvert.DeserializeObject<List<PaymentOrder>>(stringJson);
             return list;
         }
@@ -596,15 +714,6 @@ namespace asivamosffie.services
             int actionId = await GetActionIdAudit(action);
             string actionMesage = ConstantCommonMessages.Performances.TRAMITAR_RENDIMIENTOS;
 
-            // Query Previous Month
-            // Query Fuente by Valor Disponible > #8 Consistente
-            // Query Fuente < Inconsistente
-
-            // SELECT FROM Performance WHERE uploadedOrderId  =  uploadedOrderId
-            // GROUP BY account numer, get month 
-
-            // Check if is valid to prevent error 
-
             var collection = await _context.CarguePagosRendimientos.FindAsync(uploadedOrderId);
 
             List<PerformanceOrder> performanceOrders = new List<PerformanceOrder>();
@@ -618,23 +727,41 @@ namespace asivamosffie.services
             decimal valorAporteEnCuenta = 0;
             int registrosConsistentes = 0;
 
-            // performancesOrders 
+            DateTime currentMonthPerformances = DateTime.ParseExact(performanceOrders.First().PerformancesDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            DateTime beforeMonth = new DateTime(currentMonthPerformances.Year, currentMonthPerformances.Month, 1);
+            DateTime lastDayMonth = beforeMonth.AddDays(-1);
 
-            // decimal rendimientosIncorporados = 
+
+            var performancesIncorporated = await _context.RendimientosIncorporados
+                .Where(x => x.FechaRendimientos >= beforeMonth && x.FechaRendimientos <= lastDayMonth)
+                .AsNoTracking().ToListAsync();
+
+            decimal? performances = 0;
+            if(performancesIncorporated.Count > 0)
+            {
+                performances = performancesIncorporated.Sum(x => x.Incorporados);
+            }
+
             // CarguePagos rendimientos where Deserilize Performances, < = Month before incorporados = true, 
             // Consistente , or save month or orders process ?
+            
 
             foreach (var accountOrder in performanceOrders)
             {
                 valorAporteEnCuenta = 0;
-                var accounts = await _context.CuentaBancaria.SingleOrDefaultAsync(x => x.NumeroCuentaBanco == accountOrder.AccountNumber);
 
-                if (accounts == null)
+                var accountPayments = _context.VCuentaBancariaPago.Where(acc => acc.NumeroCuentaBanco == accountOrder.AccountNumber);
+
+                var visitas  = accountPayments.Sum(v => v.ValorNetoGiro);
+                var account = _context.CuentaBancaria.Where(x => x.NumeroCuentaBanco == accountOrder.AccountNumber).FirstOrDefault();
+        
+
+                if (account == null)
                 {
                     new Exception("La cuenta asignada no existe");
                 }
                 var fundingSources = await _context.FuenteFinanciacion.
-                    Where(r => !(bool)r.Eliminado && accounts.FuenteFinanciacionId == r.FuenteFinanciacionId).
+                    Where(r => !(bool)r.Eliminado && account.FuenteFinanciacionId == r.FuenteFinanciacionId).
                     Include(r => r.Aportante).ToListAsync();
 
                 foreach (var fundingSource in fundingSources)
@@ -651,28 +778,37 @@ namespace asivamosffie.services
                     }
                 }
 
-                //_fundingSourceService.GetListFuentesFinanciacionshort();
-                //_commonService.listaFuenteRecursos()
                 // Rendimientos a incorporar
 
                 accountOrder.PerformancesToAdd = accountOrder.GeneratedPerformances
-                    - 0 // Rendimientos incorporados
+                    - (performances.HasValue ? performances.Value : 0)
                     - accountOrder.FinancialLienProvision
                     - accountOrder.BankCharges
                     - accountOrder.DiscountedCharge
-                    - 0 // Visitas
-                    ;
-                accountOrder.Status = "Inconsistente";
-                if (valorAporteEnCuenta >= accountOrder.PerformancesToAdd)
+                    - (visitas.HasValue ? visitas.Value : 0);
+                accountOrder.IsConsistent = false;
+                if (accountOrder.PerformancesToAdd < valorAporteEnCuenta)
                 {
-                    accountOrder.Status = "Consistente";
+                    accountOrder.IsConsistent = true;
                     registrosConsistentes += 1;
                 }
-            }
 
-            response.Data = performanceOrders;
-            response.IsSuccessful = true;
-            response.Code = GeneralCodes.OperacionExitosa;
+                var performanceEntity = new RendimientosIncorporados
+                {
+                    CarguePagosRendimientosId = uploadedOrderId,
+                    FechaRendimientos = DateTime.ParseExact(accountOrder.PerformancesDate, "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                    CuentaBancaria = accountOrder.AccountNumber,
+                    TotalRendimientosGenerados = accountOrder.GeneratedPerformances,
+                    Incorporados = (performances.HasValue ? performances.Value : 0),
+                    ProvisionGravamenFinanciero = accountOrder.FinancialLienProvision,
+                    TotalGastosBancarios = accountOrder.BankCharges,
+                    TotalGravamenFinancieroDescontado = accountOrder.LiableDiscountedCharge,
+                    Visitas = (visitas.HasValue ? visitas.Value : 0),
+                    RendimientoIncorporar = accountOrder.PerformancesToAdd,
+                    Consistente = accountOrder.IsConsistent,
+                };
+                _context.RendimientosIncorporados.Add(performanceEntity);
+            }
             
             var tramite = JsonConvert.SerializeObject(performanceOrders);
             try
@@ -686,7 +822,10 @@ namespace asivamosffie.services
                       RegistrosConsistentes = registrosConsistentes,
                       RegistrosInconsistentes = performanceOrders.Count - registrosConsistentes,
                   }); ;
-
+                await _context.SaveChangesAsync();
+                response.Data = performanceOrders;
+                response.IsSuccessful = true;
+                response.Code = GeneralCodes.OperacionExitosa;
             }
             catch (Exception ex)
             {
@@ -753,14 +892,14 @@ namespace asivamosffie.services
                                             response.Code, actionMesage);
                     return response;
                 }
-                
+
                 modifiedRows = await _context.Set<CarguePagosRendimientos>()
                     .Where(order => order.CargaPagosRendimientosId == uploadedOrderId)
                     .UpdateAsync(o => new CarguePagosRendimientos()
                     {
-                            PendienteAprobacion = true,
-                            FechaModificacion = DateTime.Now,
-                            UsuarioModificacion = author
+                        PendienteAprobacion = true,
+                        FechaModificacion = DateTime.Now,
+                        UsuarioModificacion = author
                     });
 
 
@@ -788,18 +927,55 @@ namespace asivamosffie.services
         /// el sistema deberá afectar los saldos de las cuentas asociadas 
         /// a las órdenes de giro especificadas en el archivo, de acuerdo 
         /// con los valores referenciados en cada una de ellas.
+        /// La fuente de financiación tiene una cuenta bancaria y cada fuente está asociada a un aportan
         /// </summary>
         /// <param name="typeFile"></param>
         /// <param name="listaCarguePagosRendimientos"></param>
-        public void ProcessPayment(string typeFile, List<Dictionary<string, string>> listaCarguePagosRendimientos)
+        public async Task<bool> ProcessPayment(string typeFile, List<Dictionary<string, string>> listaCarguePagosRendimientos, string author)
         {
             foreach (var pagoRendimiento in listaCarguePagosRendimientos)
             {
                 if (typeFile == "Pagos")
                 {
+                    string cellValue = pagoRendimiento["Número de orden de giro"];
+                    var solicitud = await _context.SolicitudPago.Where(
+                    x => x.NumeroSolicitud == cellValue)
+                    .Include(solicitud => solicitud.OrdenGiro)
+                    .ThenInclude(detalle => detalle.OrdenGiroDetalle)
+                    .ThenInclude(causacion => causacion.OrdenGiroDetalleTerceroCausacion)
+                    .ThenInclude(detalle => detalle.OrdenGiroDetalleTerceroCausacionDescuento)
+                    .AsNoTracking().FirstOrDefaultAsync();
+
+                    var terceroCausacionDescuento = solicitud?.OrdenGiro?.OrdenGiroDetalle?.
+                        OrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento.FirstOrDefault();
+                    var gestionFuenteFinanciacionId = terceroCausacionDescuento.GestionFuenteFinanciacionId;
+
+
+                    var gestionFuentesFinanciacion = _context.GestionFuenteFinanciacion
+                            .Where(x => x.GestionFuenteFinanciacionId == gestionFuenteFinanciacionId).FirstOrDefault();
+
+                    if (gestionFuentesFinanciacion == null)
+                    {
+                        return false;
+                    }
+                    var valorSolicitado = pagoRendimiento["Valor neto girado"];
+                    var pDisponibilidadPresObservacion = new GestionFuenteFinanciacion();
+                    pDisponibilidadPresObservacion.FuenteFinanciacionId = gestionFuentesFinanciacion.FuenteFinanciacionId;
+                    pDisponibilidadPresObservacion.ValorSolicitado = decimal.Parse(valorSolicitado);
+                    pDisponibilidadPresObservacion.UsuarioCreacion = author;
+                    var valoresSolicitados = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == pDisponibilidadPresObservacion.FuenteFinanciacionId).Sum(x => x.ValorSolicitado);
+                    var fuente = _context.FuenteFinanciacion.Find(pDisponibilidadPresObservacion.FuenteFinanciacionId);
+                    pDisponibilidadPresObservacion.SaldoActual = (decimal)fuente.ValorFuente - valoresSolicitados;
+                    pDisponibilidadPresObservacion.NuevoSaldo = pDisponibilidadPresObservacion.SaldoActual - pDisponibilidadPresObservacion.ValorSolicitado;
+                    int estado = (int)EnumeratorEstadoGestionFuenteFinanciacion.Solicitado;
+                    pDisponibilidadPresObservacion.FechaCreacion = DateTime.Now;
+                    pDisponibilidadPresObservacion.EstadoCodigo = estado.ToString();
+                    pDisponibilidadPresObservacion.Eliminado = false;
+                    _context.GestionFuenteFinanciacion.Add(pDisponibilidadPresObservacion);
                     // cruce de pagos
                 }
             }
+            return true;
         }
 
         public async Task<Respuesta> SetObservationPayments(string author, string observaciones, int uploadedOrderId)
@@ -880,7 +1056,7 @@ namespace asivamosffie.services
             try
             {
                 Template temNotifyInconsistencies = await _commonService.GetTemplateById(
-                                                            (int)enumeratorTemplate.NotificacionInconsistencias);                   
+                                                            (int)enumeratorTemplate.NotificacionInconsistencias);
                 string inconsistencies = "";
                 string fechaCargue = "";
                 if (uploadedPerformances != null)
@@ -888,14 +1064,14 @@ namespace asivamosffie.services
                     inconsistencies = uploadedPerformances.RegistrosInconsistentes.ToString();
                     fechaCargue = Convert.ToDateTime(uploadedPerformances.FechaCargue).ToString("dd/MM/yyy");
                 }
-                 // TODO Replace string
+                // TODO Replace string
                 string template = temNotifyInconsistencies.Contenido
                     .Replace("_LinkF_", _mailSettings.DominioFront).
                     Replace("[FECHA_CARGUE]", fechaCargue).
                     Replace("[INCONSISTENCIAS]", inconsistencies).
                     Replace("[URL]", _mailSettings.DominioFront);
 
-                    string subject = "";
+                string subject = "";
 #if !DEBUG
                 isMailSent = this.SendMail(template, subject, EnumeratorPerfil.Fiduciaria);
 #endif
@@ -921,9 +1097,9 @@ namespace asivamosffie.services
                 response.Code = ConstMessagesPerformances.CorreoEnviado;
                 string message = await SaveAuditAction(author, actionId, enumeratorMenu.GestionarRendimientos,
                                             response.Code, actionMesage);
-                                
+
                 response.Message = message;
-            } 
+            }
             catch (Exception ex)
             {
                 response.IsSuccessful = false;
@@ -934,7 +1110,7 @@ namespace asivamosffie.services
             }
             return response;
         }
-    
+
 
         public async Task<Respuesta> GetManagedPerformancesByStatus(string author, int uploadedOrderId, bool? withConsistentOrders = null)
         {
@@ -944,7 +1120,7 @@ namespace asivamosffie.services
             {
                 actionMesage = withConsistentOrders.Value ? ConstantCommonMessages.Performances.VER_CONSISTENCIAS : ConstantCommonMessages.Performances.VER_INCONSISTENCIAS;
             }
-             
+
             int actionId = await GetActionIdAudit(ConstantCodigoAcciones.Ver_Inconsistencias);
             string directory = CheckFileDownloadDirectory();
             enumeratorMenu menu = !withConsistentOrders.HasValue ? enumeratorMenu.GestionarRendimientos : enumeratorMenu.GestionarRendimientos;
@@ -960,7 +1136,7 @@ namespace asivamosffie.services
             }
 
             var collection = _context.CarguePagosRendimientos.Where(x => x.CargaPagosRendimientosId == uploadedOrderId)
-                            .Select( order => new
+                            .Select(order => new
                             {
                                 Estado = order.CargueValido,
                                 ArchivoJson = order.TramiteJson
@@ -983,7 +1159,7 @@ namespace asivamosffie.services
                 string statusFilter = withConsistentOrders.Value ? "Consistente" : "Inconsistente";
                 list = list.Where(x => x.Status == statusFilter).ToList();
             }
-            
+
 
             WriteCollectionToPath("RendimientosTramitados", directory, list);
             ////the path of the file
@@ -1096,7 +1272,7 @@ namespace asivamosffie.services
                    .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Contrato_Acta_Obra_Construccion)
                    .ToString()).FirstOrDefaultAsync();
             }
-        
+
             Usuario Supervisor = contrato.UsuarioInterventoria;
 
             //Registros Proyectos 
@@ -1151,7 +1327,7 @@ namespace asivamosffie.services
             plantilla.Contenido = plantilla.Contenido.Replace("[REGISTROS_PROYECTOS]", RegistrosProyectos);
             plantilla.Contenido = plantilla.Contenido.Replace("[FECHA_ACTA_INICIO_OBRA]", contrato.FechaActaInicioFase1.HasValue ? ((DateTime)contrato.FechaActaInicioFase1).ToString("dd-MM-yyyy") : " ");
 
-            plantilla.Contenido = plantilla.Contenido.Replace("[REPRESENTANTE_LEGAL_CONTRATISTA_INTERVENTORIA]", Supervisor?.Nombres + " " + Supervisor.Apellidos);
+            plantilla.Contenido = plantilla.Contenido.Replace("[REPRESENTANTE_LEGAL_CONTRATISTA_INTERVENTORIA]", Supervisor?.PrimerNombre + " " + Supervisor.PrimerApellido);
             plantilla.Contenido = plantilla.Contenido.Replace("[ENTIDAD_CONTRATISTA_INTERVENTORIA]", " - ");
             plantilla.Contenido = plantilla.Contenido.Replace("[NIT_CONTRATISTA_INTERVENTORIA]", Supervisor?.NumeroIdentificacion);
             plantilla.Contenido = plantilla.Contenido.Replace("[CEDULA_REPRESENTANTE_LEGAL_CONTRATISTA_INTERVENTORIA]", contrato?.Contratacion?.Contratista?.RepresentanteLegalNumeroIdentificacion);

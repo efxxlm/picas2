@@ -14,11 +14,9 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public DateTime? FechaSolicitud { get; set; }
         [NotMapped]
-        public string TipoSolicitud { get; set; }
+        public string TipoSolicitud { get; set; } 
         [NotMapped]
-        public ProcesoSeleccion ProcesoSeleccion { get; set; }
-        [NotMapped]
-        public Contratacion Contratacion { get; set; }
+        public bool? RegistroCompletoActa { get; set; }
         [NotMapped]
         public string EstadoDelRegistro { get; set; } 
         [NotMapped]
@@ -26,9 +24,19 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public bool EstaTramitado { get; set; }
         [NotMapped]
+        public ProcesoSeleccion ProcesoSeleccion { get; set; }
+        [NotMapped]
+        public Contratacion Contratacion { get; set; }
+        [NotMapped]
         public ProcesoSeleccionMonitoreo ProcesoSeleccionMonitoreo { get; set; }
         [NotMapped]
-        public bool? RegistroCompletoActa { get; set; }
+        public ControversiaContractual ControversiaContractual { get; set; }
+        [NotMapped]
+        public NovedadContractual ModificacionContractual { get; set; }
+        [NotMapped]
+        public ControversiaActuacion ControversiaActuacion { get; set; }
+        [NotMapped]
+        public DefensaJudicial DefensaJudicial { get; set; }
     }
 
 }

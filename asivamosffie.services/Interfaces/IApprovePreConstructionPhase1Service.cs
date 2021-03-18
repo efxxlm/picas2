@@ -8,7 +8,7 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IApprovePreConstructionPhase1Service
     {
-        Task<dynamic> GetListContratacion();
+        Task<dynamic> GetListContratacion(int pAuthor);
 
         Task<Respuesta> CrearContratoPerfilObservacion(ContratoPerfilObservacion pContratoPerfilObservacion);
     }

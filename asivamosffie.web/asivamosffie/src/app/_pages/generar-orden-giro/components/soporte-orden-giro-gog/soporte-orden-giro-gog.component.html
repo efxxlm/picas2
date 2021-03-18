@@ -5,15 +5,28 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="urlSoporte">URL con soporte</label>
+                            <label class="label-left" for="urlSoporte" [ngClass]="{
+                                'color-secondaryColor':
+                                  (addressForm.get('urlSoporte').invalid && addressForm.get('urlSoporte').touched) ||
+                                  (addressForm.get('urlSoporte').invalid && estaEditando)
+                              }">URL con soporte</label>
                         </div>
                         <div class="col">
                             <mat-form-field class="full-width">
-                                <input matInput #urlSoporte type="text" formControlName="urlSoporte"
-                                  required>
+                                <input matInput #urlSoporte type="text" formControlName="urlSoporte" required>
                             </mat-form-field>
-                            <span class="info-url">Indique la ruta en la que se encuentran los documentos de soporte de la orden de giro</span>
+                            <span class="info-url">Indique la ruta en la que se encuentran los documentos de soporte de
+                                la orden de giro</span>
                         </div>
+                        <span class="icon-incompleto">
+                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip" *ngIf="
+                              (addressForm.get('urlSoporte').invalid && addressForm.get('urlSoporte').touched) ||
+                              (addressForm.get('urlSoporte').invalid && estaEditando)
+                              " />
+                        </span>
                     </div>
                 </div>
             </div>

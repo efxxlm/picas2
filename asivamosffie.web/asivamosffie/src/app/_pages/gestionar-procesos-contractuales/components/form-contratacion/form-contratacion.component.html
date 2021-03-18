@@ -185,7 +185,7 @@
         <div align="center" *ngIf="dataContratacion['esObligacionEspecial'] === true" style="margin-top: 2em;">
           <mat-card class="border">
             <mat-card-content class="mt-1em">
-              <section [innerHTML]="innerObservacion( dataContratacion.consideracionDescripcion )"></section>
+              <section [innerHTML]="dataContratacion.consideracionDescripcion"></section>
             </mat-card-content>
           </mat-card>
         </div>
@@ -211,7 +211,7 @@
         <mat-expansion-panel class="expansion-style sub-expansion">
           <mat-expansion-panel-header class="expansion-style--header w-45">
             <mat-panel-title class="expansion-style--title">
-              {{ dataContratacion.disponibilidadPresupuestal[0].numeroDdp || 'Sin DDP' }}
+              {{ dataContratacion.numeroSolicitud }}
             </mat-panel-title>
           </mat-expansion-panel-header>
 
@@ -219,13 +219,13 @@
             <p><b>Valor del DDP</b> {{ valorTotalDdp | currency:'COP':'symbol-narrow':'.0-0' }}</p>
           </div>
 
-          <app-form-aportantes [data]="dataContratacion.contratacionProyecto"></app-form-aportantes>
+          <app-form-aportantes [data]="dataContratacion.contratacionProyecto" [tipoSolicitud]="dataContratacion.tipoSolicitudCodigo"></app-form-aportantes>
 
         </mat-expansion-panel>
 
         <div class="text-center w-15">
           <button mat-raised-button color="accent" class="btn-table"
-            (click)="getDdp( sesionComiteId, dataContratacion.disponibilidadPresupuestal[0].numeroDdp )">
+            (click)="getDdp( dataContratacion.disponibilidadPresupuestal[0].disponibilidadPresupuestalId, dataContratacion.disponibilidadPresupuestal[0].numeroDdp )">
             Descargar DDP
           </button>
         </div>

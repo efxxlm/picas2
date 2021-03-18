@@ -17,6 +17,7 @@ export class VerDetallePolizaComponent implements OnInit {
     { name: 'Aprobada', value: '2' }
   ];
 
+  contrato: any;
   fechaFirmaContrato: any;
   tipoSolicitud: any;
   tipoContrato: any;
@@ -102,6 +103,7 @@ export class VerDetallePolizaComponent implements OnInit {
       this.loadGarantia(data0.contratoPolizaId);
       this.loadLastObservation(data0.contratoPolizaId);
       this.loadChequeo(data0);
+      this.contrato = data0;
     });
     this.common.listaGarantiasPolizas().subscribe(data00 => {
       this.polizasYSegurosArray = data00;
@@ -169,7 +171,7 @@ export class VerDetallePolizaComponent implements OnInit {
     //Para el nombre aprobado de la granatia de la poliza
     for(let i=0; i<this.listaUsuarios.length;i++){
       if(this.listaUsuarios[i].usuarioId==parseInt(data.responsableAprobacion)){
-        this.nomAprobado = this.listaUsuarios[i].nombres+" "+this.listaUsuarios[i].apellidos;
+        this.nomAprobado = this.listaUsuarios[i].primerNombre+" "+this.listaUsuarios[i].primerApellido;
       }
     }
   }

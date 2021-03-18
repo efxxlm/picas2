@@ -66,6 +66,7 @@ export class TablaProcesoFirmasComponent implements OnInit {
           this.estadoAcordeon.emit( 'completo' );
           return;
         }
+        
         if ( firmaContratista === this.dataTable.length ) {
           this.estadoAcordeon.emit( 'sin-diligenciar' );
         } else if ( firmado === this.dataTable.length ) {
@@ -73,6 +74,9 @@ export class TablaProcesoFirmasComponent implements OnInit {
         } else if ( firmaContratista < this.dataTable.length || firmado < this.dataTable.length ) {
           this.estadoAcordeon.emit( 'en-proceso' );
         }
+
+        this.dataTable.forEach( registro => registro.contratacion.fechaCreacion = registro.contratacion.fechaCreacion.split('T')[0].split('-').reverse().join('/') );
+
         this.dataSource                        = new MatTableDataSource( this.dataTable );
         this.dataSource.paginator              = this.paginator;
         this.dataSource.sort                   = this.sort;

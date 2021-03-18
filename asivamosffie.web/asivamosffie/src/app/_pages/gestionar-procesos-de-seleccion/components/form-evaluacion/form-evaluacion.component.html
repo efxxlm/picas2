@@ -2,7 +2,7 @@
   [formGroup]="addressForm"
   novalidate
   (ngSubmit)="onSubmit()"
-  *ngIf="procesoSeleccion.estadoProcesoSeleccionCodigo == estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario"
+  *ngIf="mostrarInfo();"
 >
   <div class="d-flex align-items-center">
     <div

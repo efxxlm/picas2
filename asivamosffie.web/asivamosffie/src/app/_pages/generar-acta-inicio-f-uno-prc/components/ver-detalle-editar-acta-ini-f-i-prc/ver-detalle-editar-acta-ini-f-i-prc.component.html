@@ -123,7 +123,6 @@
                       readonly
                       (click)="picker.open()"
                       formControlName="fechaActaInicioFUnoPreconstruccion"
-                      (dateInput)="generarFechaRestante()"
                     />
                     <mat-datepicker #picker></mat-datepicker>
                   </mat-form-field>
@@ -139,9 +138,9 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
                       *ngIf="
-                        (addressForm.get('fechaActaInicioFUnoPreconstruccion').invalid &&
+                        (addressForm.get('fechaActaInicioFUnoPreconstruccion')?.invalid &&
                           addressForm.get('fechaActaInicioFUnoPreconstruccion').touched) ||
-                        (addressForm.get('fechaActaInicioFUnoPreconstruccion').invalid && estaEditando)
+                        (addressForm.get('fechaActaInicioFUnoPreconstruccion')?.invalid && estaEditando)
                       "
                     />
                   </span>
@@ -184,9 +183,9 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
                     *ngIf="
-                      (addressForm.get('fechaPrevistaTerminacion').invalid &&
+                      (addressForm.get('fechaPrevistaTerminacion')?.invalid &&
                         addressForm.get('fechaPrevistaTerminacion').touched) ||
-                      (addressForm.get('fechaPrevistaTerminacion').invalid && estaEditando)
+                      (addressForm.get('fechaPrevistaTerminacion')?.invalid && estaEditando)
                     "
                   />
                 </span>
@@ -194,7 +193,7 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-9" style="padding-left: 0px">
+            <div class="col-md-12" style="padding-left: 0px">
               <div class="row">
                 <div class="pr-1">
                   <label
@@ -219,7 +218,9 @@
                       max="99"
                       required
                       (keypress)="number($event)"
+                      (ngModelChange)="getValueMeses( $event )"
                       onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                      oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                       type="number"
                       formControlName="mesPlazoEjFase1"
                     />
@@ -231,7 +232,7 @@
                     matTooltipClass="info-tooltip"
                   >
                     {{
-                      2 -
+                      3 -
                         (addressForm.get('mesPlazoEjFase1').value
                           ? addressForm.get('mesPlazoEjFase1').value.toString().length
                           : 0)
@@ -246,8 +247,8 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
                       *ngIf="
-                        (addressForm.get('mesPlazoEjFase1').invalid && addressForm.get('mesPlazoEjFase1').touched) ||
-                        (addressForm.get('mesPlazoEjFase1').invalid && estaEditando)
+                        (addressForm.get('mesPlazoEjFase1')?.invalid && addressForm.get('mesPlazoEjFase1').touched) ||
+                        (addressForm.get('mesPlazoEjFase1')?.invalid && estaEditando)
                       "
                     />
                   </span>
@@ -267,7 +268,9 @@
                       max="31"
                       required
                       (keypress)="number($event)"
+                      (ngModelChange)="getValueDias( $event )"
                       onKeyPress="if(this.value.length>=this.maxLength) return false;if(this.value>=this.max) return false;"
+                      oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                       type="number"
                       formControlName="diasPlazoEjFase1"
                     />
@@ -294,8 +297,8 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
                       *ngIf="
-                        (addressForm.get('diasPlazoEjFase1').invalid && addressForm.get('diasPlazoEjFase1').touched) ||
-                        (addressForm.get('diasPlazoEjFase1').invalid && estaEditando)
+                        (addressForm.get('diasPlazoEjFase1')?.invalid && addressForm.get('diasPlazoEjFase1').touched) ||
+                        (addressForm.get('diasPlazoEjFase1')?.invalid && estaEditando)
                       "
                     />
                   </span>
@@ -331,6 +334,7 @@
                       required
                       (keypress)="number($event)"
                       onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                      oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                       type="number"
                       formControlName="mesPlazoEjFase2"
                     />
@@ -342,7 +346,7 @@
                     matTooltipClass="info-tooltip"
                   >
                     {{
-                      2 -
+                      3 -
                         (addressForm.get('mesPlazoEjFase2').value !== null
                           ? addressForm.get('mesPlazoEjFase2').value.toString().length
                           : 0)
@@ -357,8 +361,8 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
                       *ngIf="
-                        (addressForm.get('mesPlazoEjFase2').invalid && addressForm.get('mesPlazoEjFase2').touched) ||
-                        (addressForm.get('mesPlazoEjFase2').invalid && estaEditando)
+                        (addressForm.get('mesPlazoEjFase2')?.invalid && addressForm.get('mesPlazoEjFase2').touched) ||
+                        (addressForm.get('mesPlazoEjFase2')?.invalid && estaEditando)
                       "
                     />
                   </span>
@@ -379,6 +383,7 @@
                       required
                       (keypress)="number($event)"
                       onKeyPress="if(this.value.length>=this.maxLength) return false;if(this.value>=this.max) return false;"
+                      oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                       type="number"
                       formControlName="diasPlazoEjFase2"
                     />
@@ -405,8 +410,8 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
                       *ngIf="
-                        (addressForm.get('diasPlazoEjFase2').invalid && addressForm.get('diasPlazoEjFase2').touched) ||
-                        (addressForm.get('diasPlazoEjFase2').invalid && estaEditando)
+                        (addressForm.get('diasPlazoEjFase2')?.invalid && addressForm.get('diasPlazoEjFase2').touched) ||
+                        (addressForm.get('diasPlazoEjFase2')?.invalid && estaEditando)
                       "
                     />
                   </span>
@@ -414,44 +419,40 @@
               </div>
             </div>
           </div>
-          <div class="row">
+          <div class="d-flex align-items-start">
             <div
               class="text-area-quill noDecorated"
               [class.color-secondaryColor]="
-                (addressForm.get('objeto').invalid && addressForm.get('objeto').touched) ||
-                (addressForm.get('objeto').invalid && estaEditando)
+                (addressForm.get('observacionesEspeciales')?.invalid && addressForm.get('observacionesEspeciales').touched) ||
+                (addressForm.get('observacionesEspeciales')?.invalid && estaEditando)
               "
             >
-              <label class="label-left" for="observacionesEspeciales">Observaciones o consideraciones especiales</label>
+              <label class="label-left" for="observacionesEspeciales" >Observaciones o consideraciones especiales</label>
               <quill-editor
                 class="quill-editor-style card"
                 [styles]="editorStyle"
                 [modules]="config"
                 (onContentChanged)="maxLength($event, 500)"
                 formControlName="observacionesEspeciales"
+                #observaciones
+                required
               >
               </quill-editor>
             </div>
-            <span class="contador auxMarg" *ngIf="addressForm.get('observacionesEspeciales').value">
-              {{ 500 - textoLimpio(addressForm.get('observacionesEspeciales').value) }}
+            <span class="contador auxMarg" *ngIf="addressForm.get('observacionesEspeciales').value !== null">
+              {{500 - (textoLimpio(observaciones.quillEditor,500))}}
             </span>
-            <span
-              class="contador auxMarg"
-              *ngIf="
-                addressForm.get('observacionesEspeciales').value === null ||
-                addressForm.get('observacionesEspeciales').value === ''
-              "
-            >
-              500
+            <span class="contador auxMarg" *ngIf="addressForm.get('observacionesEspeciales').value === null">
+                500
             </span>
-            <span class="icon-incompleto">
+            <span class="icon-incompleto auxMarg">
               <img
                 class="icon-incompleto--img"
                 src="assets/img/icon/incompleto.svg"
                               alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
                 *ngIf="
                   (addressForm.get('observacionesEspeciales').invalid &&
                     addressForm.get('observacionesEspeciales').touched) ||
@@ -462,6 +463,27 @@
           </div>
         </mat-card-content>
       </mat-card>
+
+      <div *ngIf="obsSupervisor !== undefined">
+        <mat-card class="shipping-card mainGris">
+            <mat-card-header class="header-card">
+                <mat-card-title class="header-card--text textoGris">
+                    Revisión de la supervisión
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <p style="margin-left: 2em;"><strong>{{ obsSupervisor.fechaCreacion | date:'dd/MM/yyyy' }}</strong></p>
+                <div *ngIf="obsSupervisor.esActaFase1 === false" style="margin-left: 2em;">
+                    <p><strong>¿Tiene observaciones al acta de inicio? : No</strong></p>
+                </div>
+                <div *ngIf="obsSupervisor.esActaFase1 === true" style="margin-left: 2em;">
+                    <p><strong>¿Tiene observaciones al acta de inicio? : Sí</strong></p>
+                    <div [innerHtml]="obsSupervisor.observaciones"></div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+      </div>
+
       <div class="text-center">
         <button mat-button color="warn" class="btn-guardar" type="submit">
           <img src="assets/img/icon/guardar.svg" alt="Guardar" />
@@ -469,19 +491,4 @@
       </div>
     </form>
   </div>
-  <!--
-    <div *ngIf="this.anotacionesSupervisor==true">
-        <mat-card class="shipping-card mainGris">
-            <mat-card-header class="header-card">
-                <mat-card-title class="header-card--text textoGris">
-                    Observaciones al acta de inicio
-                </mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-                <p><strong>{{this.fechaCreacion | date: 'dd/MM/yyyy'}}</strong></p>
-                <div [innerHtml]="this.observacionSupervisor"></div>
-            </mat-card-content>
-        </mat-card>
-    </div>
-    -->
 </section>

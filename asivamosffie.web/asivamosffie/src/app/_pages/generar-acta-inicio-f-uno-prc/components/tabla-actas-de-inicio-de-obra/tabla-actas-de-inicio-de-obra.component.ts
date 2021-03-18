@@ -50,6 +50,11 @@ export class TablaActasDeInicioDeObraComponent implements OnInit {
         };
       };
       console.log(this.dataTable);
+
+      if ( this.dataTable.length > 0 ) {
+        this.dataTable.forEach( registro => registro.fechaAprobacionRequisitosDate = registro.fechaAprobacionRequisitosDate.split('T')[0].split('-').reverse().join('/') );
+      }
+
       this.dataSource = new MatTableDataSource(this.dataTable);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
@@ -125,7 +130,7 @@ export class TablaActasDeInicioDeObraComponent implements OnInit {
   cargarActaSuscrita(){
     const dialogConfig = new MatDialogConfig();
     dialogConfig.height = 'auto';
-    dialogConfig.width = '865px';
+    dialogConfig.width = '1000px';
     const dialogRef = this.dialog.open(CargarActaSuscritaActaIniFIPreconstruccionComponent, dialogConfig);
   }
   descargarActaDesdeTabla(id, numContrato){

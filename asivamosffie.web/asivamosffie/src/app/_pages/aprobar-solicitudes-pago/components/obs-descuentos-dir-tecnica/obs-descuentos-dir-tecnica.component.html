@@ -1,46 +1,111 @@
-<p style="text-align: center;"><strong>¿Aplican descuentos?:</strong> Sí</p>
-<p style="text-align: center;"><strong>¿Cuántos descuentos se aplican sobre la factura?:</strong> 1</p>
-<p style="text-align: center;"><strong>Valor a pagar después de descuentos:</strong> $14.940.000</p>
-<mat-card class="shipping-card var-main-gris">
-    <mat-card-header class="header-card header-card--margin">
-        <mat-card-title class="header-card--text textoGris">
-            Descuento 1
-        </mat-card-title>
-    </mat-card-header>
-    <mat-card-content style="text-align: left;">
-        <p><strong>Tipo de descuento:</strong> 4 x 1.000</p>
-        <p><strong>Valor del descuento:</strong> $60.000</p>
-    </mat-card-content>
-</mat-card>
-<form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
-    <div class="row mtop justCenter">
-        <div class="col-md-6">
-            <label class="label-left">¿Desde la supervisión tiene observaciones a los descuentos de la Dirección Técnica?</label>
-        </div>
-        <div class="col-md-2">
-            <mat-radio-group aria-labelledby="example-radio-group-label" class="radioInput"
-                formControlName="tieneObservaciones">
-                <mat-radio-button class="radio-button" [value]="true">Sí</mat-radio-button>
-                <mat-radio-button class="radio-button" [value]="false">No</mat-radio-button>
-            </mat-radio-group>
-            <span class="required-form-group" style="margin-left: 1px;">*</span>
+<section *ngIf="solicitudPago !== undefined">
+    <p>
+        <b>¿Aplican descuentos?</b>
+        <span *ngIf="formDescuentos.get( 'aplicaDescuento' ).value === true"> Si </span>
+        <span *ngIf="formDescuentos.get( 'aplicaDescuento' ).value === false"> No </span>
+    </p>
+
+    <div *ngIf="formDescuentos.get( 'aplicaDescuento' ).value == true">
+        <p><b>¿Cuántos descuentos se aplican sobre la factura?</b> {{ descuentos.length }} </p>
+        <p><b>Valor a pagar después de descuentos</b> $ {{ formDescuentos.get( 'valorAPagarDespues' ).value | currency:'
+            ':'symbol-narrow':'.0-0' }} </p>
+
+        <div class="mt-1em" *ngFor="let descuento of descuentos.controls; index as i">
+            <mat-card class="shipping-card">
+                <mat-card-header class="header-card header-card--margin">
+                    <mat-card-title class="header-card--text">
+                        Descuento {{i+1}}
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content style="text-align: left;">
+                    <p><b>Tipo de descuento</b> {{ getTipoDescuento( descuento.get( 'tipoDescuentoCodigo' ).value ) }}
+                    </p>
+                    <p><b>Valor del descuento</b> $ {{ descuento.get( 'valorDescuento' ).value | currency:'
+                        ':'symbol-narrow':'.0-0' }} </p>
+                </mat-card-content>
+            </mat-card>
         </div>
     </div>
-    <div class="d-flex align-items-center mtop" *ngIf="addressForm.get('tieneObservaciones').value === true">
-        <div class="text-area-quill izqTitle">
-            <label for="observaciones" class="text-area-quill--label"  style="color: #174193;">Observaciones a los descuentos de la Dirección Técnica</label>
-            <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
-                (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observaciones></quill-editor>
-        </div>
-        <span class="contador miles" *ngIf="addressForm.get('observaciones').value">
-            {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
-        </span>
-        <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null">
-            1000
-        </span>
-    </div>
-    <button mat-button color="warn" class="btn-guardar"
-        type="submit">
-        <img src="assets/img/icon/guardar.svg" alt="Guardar">
-    </button>
-</form>
+    <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+        <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;">
+            <mat-card-header class="header-card header-card--margin">
+                <mat-card-title class="header-card--text textoGris">
+                    Observación de la supervisión
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content style="text-align: left;">
+                <p><b> {{ addressForm.get( 'fechaCreacion' ).value | date: 'dd/MM/yyyy' }} </b></p>
+                <p *ngIf="addressForm.get( 'tieneObservaciones' ).value === true"><b>¿Desde la supervisión tiene
+                        observaciones a los descuentos de la Dirección Técnica?:</b> Si</p>
+                <p *ngIf="addressForm.get( 'tieneObservaciones' ).value === false"><b>¿Desde la supervisión tiene
+                        observaciones a los descuentos de la Dirección Técnica?:</b> No</p>
+                <section [innerHTML]="addressForm.get( 'observaciones' ).value"
+                    *ngIf="addressForm.get( 'tieneObservaciones' ).value === true"></section>
+            </mat-card-content>
+        </mat-card>
+    </ng-container>
+    <ng-template #noEsVerDetalle>
+        <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+            <div class="row mtop justCenter">
+                <div class="col-md-6">
+                    <label class="label-left" for="tieneObservaciones" [ngClass]="{
+                        'color-secondaryColor':
+                          (addressForm.get('tieneObservaciones').invalid && addressForm.get('tieneObservaciones').touched) ||
+                          (addressForm.get('tieneObservaciones').invalid && estaEditando)
+                      }">¿Desde la supervisión tiene observaciones a los descuentos de la Dirección Técnica?</label>
+                </div>
+                <div class="col-md-2">
+                    <mat-radio-group aria-labelledby="example-radio-group-label" class="radioInput"
+                        formControlName="tieneObservaciones">
+                        <mat-radio-button class="radio-button" [value]="true">Sí</mat-radio-button>
+                        <mat-radio-button class="radio-button" [value]="false">No</mat-radio-button>
+                    </mat-radio-group>
+                    <span class="required-form-group" style="margin-left: 1px;">*</span>
+                </div>
+                <span class="icon-incompleto">
+                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Debe ingresar la información en el campo para continuar"
+                        matTooltipClass="info-tooltip" *ngIf="
+                      (addressForm.get('tieneObservaciones').invalid && addressForm.get('tieneObservaciones').touched) ||
+                      (addressForm.get('tieneObservaciones').invalid && estaEditando)
+                      " />
+                </span>
+            </div>
+            <div class="d-flex align-items-center mtop animatedDown" *ngIf="addressForm.get('tieneObservaciones').value === true">
+                <div class="text-area-quill izqTitle" [ngClass]="{
+                    'color-secondaryColor':
+                      (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                      (addressForm.get('observaciones').invalid && estaEditando)
+                  }">
+                    <label for="observaciones" class="text-area-quill--label" [ngClass]="{
+                        'colorMainColor':
+                          !((addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                          (addressForm.get('observaciones').invalid && estaEditando))
+                      }">Observaciones a los descuentos de la Dirección Técnica</label>
+                    <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
+                        (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observaciones>
+                    </quill-editor>
+                </div>
+                <span class="contador miles" *ngIf="addressForm.get('observaciones').value">
+                    {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
+                </span>
+                <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null">
+                    1000
+                </span>
+                <span class="icon-incompleto">
+                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Debe ingresar la información en el campo para continuar"
+                        matTooltipClass="info-tooltip" *ngIf="
+                      (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                      (addressForm.get('observaciones').invalid && estaEditando)
+                      " />
+                </span>
+            </div>
+            <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="addressForm.dirty === false">
+                <img src="assets/img/icon/guardar.svg" alt="Guardar">
+            </button>
+        </form>
+    </ng-template>
+</section>

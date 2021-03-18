@@ -40,7 +40,9 @@ export class TablaConAprobacionDePolizasComponent implements OnInit {
       };
       if(this.dataTable.length == 0){
         this.estadoSemaforo3.emit('completo');
-      };
+      } else {
+        this.dataTable.forEach( registro => registro.fechaFirma = registro.fechaFirma.split('T')[0].split('-').reverse().join('/') );
+      }
       this.dataSource = new MatTableDataSource(this.dataTable);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;

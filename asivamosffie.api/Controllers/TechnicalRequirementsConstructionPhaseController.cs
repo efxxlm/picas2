@@ -8,6 +8,7 @@ using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
 using DinkToPdf;
 using DinkToPdf.Contracts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -16,6 +17,7 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class TechnicalRequirementsConstructionPhaseController : ControllerBase
     {
         private readonly ITechnicalRequirementsConstructionPhaseService _technicalRequirementsConstructionPhaseService;
@@ -54,7 +56,8 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                respuesta =await _technicalRequirementsConstructionPhaseService.CambiarEstadoContratoEstadoVerificacionConstruccionCodigo(ContratoId, pEstado, HttpContext.User.FindFirst("User").Value);
+                respuesta =await _technicalRequirementsConstructionPhaseService.CambiarEstadoContratoEstadoVerificacionConstruccionCodigo(ContratoId, pEstado, HttpContext.User.FindFirst("User").Value
+                    , _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -407,7 +410,8 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                respuesta = await _technicalRequirementsConstructionPhaseService.AprobarInicio(pContratoId, HttpContext.User.FindFirst("User").Value);
+                respuesta = await _technicalRequirementsConstructionPhaseService.AprobarInicio(pContratoId, HttpContext.User.FindFirst("User").Value
+                    , _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -534,6 +538,21 @@ namespace asivamosffie.api.Controllers
             catch (Exception ex)
             {
                 return BadRequest(ex.ToString());
+            }
+        }
+
+        [Route("CalcularYGuardarFechaInicioContrato")]
+        [HttpPost]
+        public Proyecto CalcularYGuardarFechaInicioContrato([FromBody] ContratoConstruccion contratoConstruccion)
+        {
+            try
+            {
+                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+                return _technicalRequirementsConstructionPhaseService.CalcularYGuardarFechaInicioContrato(contratoConstruccion.ContratoConstruccionId, (DateTime)contratoConstruccion.FechaInicioObra, contratoConstruccion.ContratoId, contratoConstruccion.ProyectoId, UsuarioModificacion);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
 

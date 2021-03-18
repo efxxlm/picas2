@@ -28,10 +28,12 @@ export class TablaGestionActasComponent implements OnInit {
     private routes: Router,
     private compromisoSvc: CompromisosActasComiteService,
     private fiduciaryCommitteeSessionService: FiduciaryCommitteeSessionService,
-    private comiteTecnicoSvc: TechnicalCommitteSessionService ) { }
+    private comiteTecnicoSvc: TechnicalCommitteSessionService )
+  {
+    this.getData();
+  }
 
   ngOnInit(): void {
-    this.getData();
   }
 
   applyFilter(event: Event) {
@@ -54,6 +56,10 @@ export class TablaGestionActasComponent implements OnInit {
             dataTable.push( value );
           }
         } );
+
+        if ( dataTable.length > 0 ) {
+          dataTable.forEach( registro => registro.fechaOrdenDia = registro.fechaOrdenDia.split('T')[0].split('-').reverse().join('/') );
+        }
 
         this.dataSource = new MatTableDataSource( dataTable );
         this.dataSource.paginator = this.paginator;

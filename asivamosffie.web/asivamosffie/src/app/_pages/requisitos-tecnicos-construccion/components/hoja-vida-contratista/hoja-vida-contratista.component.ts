@@ -129,6 +129,7 @@ export class HojaVidaContratistaComponent implements OnInit {
           }
         }
         this.estaEditando = true;
+        this.formContratista.markAllAsTouched();
 
       } );
       this.perfilesCompletados.emit( 'sin-diligenciar' );
@@ -214,9 +215,25 @@ export class HojaVidaContratistaComponent implements OnInit {
           this.perfilesCompletos++;
           semaforo = 'completo';
         }
-        if ( !perfil.registroCompleto && (perfil.cantidadHvRequeridas > 0 || perfil.cantidadHvRecibidas > 0 || perfil.cantidadHvAprobadas > 0) ) {
+        console.log(perfil, numeroRadicados)
+        if ( 
+          
+            !perfil.registroCompleto && 
+            (
+                perfil.cantidadHvRequeridas > 0 || 
+                perfil.cantidadHvRecibidas > 0 || 
+                perfil.cantidadHvAprobadas > 0  ||
+                perfil.perfilCodigo !== undefined ||
+                perfil.observaciones !== undefined ||
+                perfil.fechaAprobacion !== undefined || 
+                (perfil.rutaSoporte !== undefined && perfil.rutaSoporte !== '')
+                // numeroRadicados.length > 0
+            )
+
+          ) 
+          {
           semaforo = 'en-proceso';
-        }
+          }
 
         this.perfiles.push(
           this.fb.group(
@@ -229,7 +246,7 @@ export class HojaVidaContratistaComponent implements OnInit {
               cantidadHvRecibidas         : [ perfil.cantidadHvRecibidas ? String( perfil.cantidadHvRecibidas ) : '' ],
               cantidadHvAprobadas         : [ perfil.cantidadHvAprobadas ? String( perfil.cantidadHvAprobadas ) : '' ],
               fechaAprobacion             : [ perfil.fechaAprobacion ? new Date( perfil.fechaAprobacion ) : null ],
-              observacion                 : [ observaciones ],
+              observacion                 : [ perfil.observaciones ],
               observacionDevolucion       : [ perfil.observacionDevolucion],
               observacionSupervisor       : [ observacionSupervisor ],
               fechaObservacion            : [ fechaObservacion ],
@@ -397,7 +414,8 @@ export class HojaVidaContratistaComponent implements OnInit {
         value.cantidadHvRecibidas                 = Number( value.cantidadHvRecibidas );
         value.cantidadHvRequeridas                = Number( value.cantidadHvRequeridas );
         value['construccionPerfilNumeroRadicado'] = ( value.contratoPerfilNumeroRadicado[0][ 'numeroRadicado' ].length === 0 ) ? null : value.contratoPerfilNumeroRadicado;
-        value['construccionPerfilObservacion']    = value.observacion ? [{ observacion: value.observacion }] : null;
+        //value['construccionPerfilObservacion']    = value.observacion ? [{ observacion: value.observacion }] : null;
+        value['observaciones']                    = value.observacion;
         value.fechaAprobacion                     = value.fechaAprobacion ? new Date( value.fechaAprobacion ).toISOString() : null;
         value.contratoId                          = this.contratoId;
         value.proyectoId                          = this.proyectoId;

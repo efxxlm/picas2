@@ -1,21 +1,17 @@
 ﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
-using Microsoft.Extensions.Options;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-//using asivamosffie.api.Controllers.
 
 namespace asivamosffie.services.Interfaces
 {
     public interface IGuaranteePolicyService
-    {
-        //IBankAccountService from        
+    { 
+        Task<Respuesta> CreateEditPolizaObservacion(PolizaObservacion pPolizaObservacion, AppSettingsService appSettingsService);
 
         Task<Respuesta> InsertContratoPoliza(ContratoPoliza contratoPoliza, AppSettingsService appSettingsService);
 
-        Task<Respuesta> EditarContratoPoliza(ContratoPoliza contratoPoliza);                
+        Task<Respuesta> EditarContratoPoliza(ContratoPoliza contratoPoliza);
 
         Task<List<VistaContratoGarantiaPoliza>> ListVistaContratoGarantiaPoliza(int pContratoId);
 
@@ -26,6 +22,7 @@ namespace asivamosffie.services.Interfaces
         Task<bool> ConsultarRegistroCompletoCumple(int ContratoPolizaId);
 
         Task<List<VGestionarGarantiasPolizas>> ListGrillaContratoGarantiaPolizaOptz();
+
         Task<List<GrillaContratoGarantiaPoliza>> ListGrillaContratoGarantiaPoliza();
 
         Task<List<PolizaGarantia>> GetListPolizaGarantiaByContratoPolizaId(int pContratoPolizaId);
@@ -38,31 +35,15 @@ namespace asivamosffie.services.Interfaces
 
         Task<NotificacionMensajeGestionPoliza> GetNotificacionContratoPolizaByIdContratoId(int pContratoId);
 
-
         Task<Respuesta> AprobarContratoByIdContrato(int pIdContrato, AppSettingsService settings, string pUsuario);
 
         Task EnviarCorreoSupervisor4dPolizaNoAprobada2(string dominioFront, string mailServer, int mailPort, bool enableSSL, string password, string sender);
 
         Task EnviarCorreoSupervisor4dPolizaNoAprobada(string dominioFront, string mailServer, int mailPort, bool enableSSL, string password, string sender);
 
-        //getListPolizaGarantiaByContratoPolizaId    yaaaa y observ yaaaa
-
-        //getListChequeo
-        ////ContratoPoliza
-
-        //guardarRevisionPolizaObservacion(polizaObservacionId, contratoPolizaId)
-        //            PolizaObservacionId int
-        //ContratoPolizaId    int
-        //Observacion varchar
-        //FechaRevision   datetime
-        //EstadoRevisionCodigo    varchar
-
         Task<Respuesta> InsertEditPolizaObservacion(PolizaObservacion polizaObservacion, AppSettingsService appSettingsService);
-        Task<Respuesta> InsertEditPolizaGarantia(PolizaGarantia polizaGarantia);
-        
 
-        //    cambiarEstadoContrato()
-        //    cambiarEstadoContratoPoliza()
+        Task<Respuesta> InsertEditPolizaGarantia(PolizaGarantia polizaGarantia);
 
     }
 }

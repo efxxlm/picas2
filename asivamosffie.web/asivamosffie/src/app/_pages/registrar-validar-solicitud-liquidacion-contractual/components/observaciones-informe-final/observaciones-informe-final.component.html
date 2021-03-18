@@ -1,0 +1,99 @@
+<form [formGroup]="observaciones" novalidate (ngSubmit)="onSubmit()">
+  <div class="row justify-content-center align-items-center mt-2em">
+    <div class="col-md-12">
+      <div class="row justify-content-center align-items-center" style="width: 100%">
+        <div class="pr-1">
+          <label class="label-left" for="tieneObservaciones">
+            ¿Tiene observaciones frente a el informe final que deban ser tenidas en cuenta en la liquidación?
+          </label>
+        </div>
+        <div>
+          <mat-radio-group class="radioInput" formControlName="tieneObservaciones">
+            <mat-radio-button [value]="true"> Sí </mat-radio-button>
+            <mat-radio-button [value]="false"> No </mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <span class="required-form-group m-0 margin-required">*</span>
+        <span class="icon-incompleto">
+          <img
+            class="icon-incompleto--img"
+            src="assets/img/icon/incompleto.svg"
+            alt="este campo es requerido"
+            [matTooltipPosition]="'above'"
+            matTooltip="Debe ingresar la información en el campo para continuar"
+            matTooltipClass="info-tooltip"
+            *ngIf="
+              (observaciones.get('tieneObservaciones').invalid && observaciones.get('tieneObservaciones').touched) ||
+              (observaciones.get('tieneObservaciones').invalid && estaEditando)
+            "
+          />
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="observaciones.value.tieneObservaciones === true">
+    <div
+      class="text-area-quill"
+      [class.color-secondaryColor]="
+        (observaciones.get('observaciones').invalid && observaciones.get('observaciones').touched) ||
+        (observaciones.get('observaciones').invalid && estaEditando)
+      "
+    >
+      <label
+        class="text-area-quill--label align-left-label"
+        [class.colorMainColor]="
+          !(
+            (observaciones.get('observaciones').invalid && observaciones.get('observaciones').touched) ||
+            (observaciones.get('observaciones').invalid && estaEditando)
+          )
+        "
+      >
+        Observaciones
+      </label>
+      <quill-editor
+        class="quill-editor-style ml-1em"
+        [styles]="editorStyle"
+        [modules]="config"
+        (onContentChanged)="maxLength($event, 1000)"
+        formControlName="observaciones"
+        #obsGestionSst
+        required
+      >
+      </quill-editor>
+    </div>
+    <span class="contador miles" *ngIf="observaciones.get('observaciones').value">
+      {{ 1000 - textoLimpio(obsGestionSst.quillEditor, 1000) }}
+    </span>
+    <span class="contador miles" *ngIf="!observaciones.get('observaciones').value"> 1000 </span>
+    <span class="icon-incompleto">
+      <img
+        class="icon-incompleto--img"
+        src="assets/img/icon/incompleto.svg"
+        alt="este campo es requerido"
+        [matTooltipPosition]="'above'"
+        matTooltip="Debe ingresar la información en el campo para continuar"
+        matTooltipClass="info-tooltip"
+        *ngIf="
+          (observaciones.get('observaciones').invalid && observaciones.get('observaciones').touched) ||
+          (observaciones.get('observaciones').invalid && estaEditando)
+        "
+      />
+    </span>
+  </div>
+
+  <div class="text-center mb-2em">
+    <button
+      mat-button
+      color="warn"
+      class="btn-guardar"
+      type="submit"
+      [disabled]="
+        observaciones.get('tieneObservaciones').value === null ||
+        observaciones.get('tieneObservaciones').value === undefined ||
+        (observaciones.get('tieneObservaciones').value === true && observaciones.get('observaciones').invalid)
+      "
+    >
+      <img src="assets/img/icon/guardar.svg" alt="Guardar" />
+    </button>
+  </div>
+</form>

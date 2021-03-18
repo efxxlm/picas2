@@ -10,14 +10,10 @@
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
-              <label
-                class="label-left"
-                for="tipoAportante"
-                [class.color-secondaryColor]="
+              <label class="label-left" for="tipoAportante" [class.color-secondaryColor]="
                   (addressForm.get('tipoAportante').invalid && addressForm.get('tipoAportante').touched) ||
                   (addressForm.get('tipoAportante').invalid && estaEditando)
-                "
-              >
+                ">
                 Tipo de aportante
               </label>
             </div>
@@ -31,18 +27,12 @@
               </mat-form-field>
             </div>
             <span class="icon-incompleto">
-              <img
-                class="icon-incompleto--img"
-                src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
-                *ngIf="
+              <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip" *ngIf="
                   (addressForm.get('tipoAportante').invalid && addressForm.get('tipoAportante').touched) ||
                   (addressForm.get('tipoAportante').invalid && estaEditando)
-                "
-              />
+                " />
             </span>
           </div>
         </div>
@@ -51,14 +41,10 @@
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
-              <label
-                class="label-left"
-                for="nombreAportante"
-                [class.color-secondaryColor]="
+              <label class="label-left" for="nombreAportante" [class.color-secondaryColor]="
                   (addressForm.get('nombreAportante').invalid && addressForm.get('nombreAportante').touched) ||
                   (addressForm.get('nombreAportante').invalid && estaEditando)
-                "
-              >
+                ">
                 Nombre del aportante
               </label>
             </div>
@@ -72,18 +58,12 @@
               </mat-form-field>
             </div>
             <span class="icon-incompleto">
-              <img
-                class="icon-incompleto--img"
-                src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
-                *ngIf="
+              <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip" *ngIf="
                   (addressForm.get('nombreAportante').invalid && addressForm.get('nombreAportante').touched) ||
                   (addressForm.get('nombreAportante').invalid && estaEditando)
-                "
-              />
+                " />
             </span>
           </div>
         </div>
@@ -92,14 +72,10 @@
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
-              <label
-                class="label-left"
-                for="fuenteRecursos"
-                [class.color-secondaryColor]="
+              <label class="label-left" for="fuenteRecursos" [class.color-secondaryColor]="
                   (addressForm.get('fuenteRecursos').invalid && addressForm.get('fuenteRecursos').touched) ||
                   (addressForm.get('fuenteRecursos').invalid && estaEditando)
-                "
-              >
+                ">
                 Fuente de los recursos
               </label>
             </div>
@@ -113,18 +89,12 @@
               </mat-form-field>
             </div>
             <span class="icon-incompleto">
-              <img
-                class="icon-incompleto--img"
-                src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
-                *ngIf="
+              <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip" *ngIf="
                   (addressForm.get('fuenteRecursos').invalid && addressForm.get('fuenteRecursos').touched) ||
                   (addressForm.get('fuenteRecursos').invalid && estaEditando)
-                "
-              />
+                " />
             </span>
           </div>
         </div>
@@ -133,52 +103,31 @@
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
-              <label
-                class="label-left"
-                for="valorDescuento"
-                [class.color-secondaryColor]="
+              <label class="label-left" for="valorDescuento" [class.color-secondaryColor]="
                   (addressForm.get('valorDescuento').invalid && addressForm.get('valorDescuento').touched) ||
                   (addressForm.get('valorDescuento').invalid && estaEditando)
-                "
-              >
+                ">
                 Valor del descuento
               </label>
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input
-                  matInput
-                  #valorDescuento
-                  currencyMask
-                  maxlength="20"
-                  required
-                  formControlName="valorDescuento"
+                <input matInput #valorDescuento currencyMask maxlength="20" required formControlName="valorDescuento"
                   (keypress)="validateNumberKeypress($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                  [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
-                />
+                  [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" />
               </mat-form-field>
-              <span
-                class="contador"
-                [matTooltipPosition]="'above'"
-                matTooltip="Valor en ($) Pesos colombianos"
-                matTooltipClass="info-tooltip"
-              >
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
+                matTooltipClass="info-tooltip">
                 {{ 20 - valorDescuento.value.length }}
               </span>
               <span class="icon-incompleto">
-                <img
-                  class="icon-incompleto--img"
-                  src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
-                  *ngIf="
+                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                  [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip" *ngIf="
                     (addressForm.get('valorDescuento').invalid && addressForm.get('valorDescuento').touched) ||
                     (addressForm.get('valorDescuento').invalid && estaEditando)
-                  "
-                />
+                  " />
               </span>
             </div>
           </div>

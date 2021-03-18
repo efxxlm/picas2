@@ -22,6 +22,7 @@ export class ObsCertAutorizacionAutorizComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
   constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
@@ -30,21 +31,23 @@ export class ObsCertAutorizacionAutorizComponent implements OnInit {
   crearFormulario() {
     return this.fb.group({
       tieneObservaciones: [null, Validators.required],
-      observaciones:[null, Validators.required],
+      observaciones: [null, Validators.required],
     })
   }
   maxLength(e: any, n: number) {
-    console.log(e.editor.getLength()+" "+n);
+    console.log(e.editor.getLength() + " " + n);
     if (e.editor.getLength() > n) {
-      e.editor.deleteText(n-1, e.editor.getLength());
+      e.editor.deleteText(n - 1, e.editor.getLength());
     }
   }
-  textoLimpio(texto,n) {
-    if (texto!=undefined) {
+  textoLimpio(texto, n) {
+    if (texto != undefined) {
       return texto.getLength() > n ? n : texto.getLength();
     }
   }
   onSubmit() {
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     console.log(this.addressForm.value);
   }
 }

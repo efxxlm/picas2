@@ -1,0 +1,228 @@
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+  <mat-card class="shipping-card">
+    <mat-card-content>
+      <div class="row">
+        <div class="col-md-10">
+          <div class="row">
+            <div class="pr-1">
+              <label
+                class="label-left"
+                for="fechaRecorrido"
+                [class.color-secondaryColor]="
+                  (addressForm.get('fechaRecorrido').invalid && addressForm.get('fechaRecorrido').touched) ||
+                  (addressForm.get('fechaRecorrido').invalid && estaEditando)
+                "
+              >
+                Fecha del recorrido de obra
+              </label>
+            </div>
+            <div class="col d-flex">
+              <mat-form-field class="example-full-width">
+                <input
+                  matInput
+                  [matDatepicker]="pickerRecorridoObra"
+                  formControlName="fechaRecorrido"
+                  readonly
+                  (click)="pickerRecorridoObra.open()"
+                  placeholder="DD/MM/AAAA"
+                  required
+                />
+                <mat-datepicker #pickerRecorridoObra></mat-datepicker>
+              </mat-form-field>
+              <button
+                mat-button
+                color="primary"
+                type="button"
+                (click)="pickerRecorridoObra.open()"
+                class="btn-calendario"
+              >
+                <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
+              </button>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
+                  *ngIf="
+                    (addressForm.get('fechaRecorrido').invalid && addressForm.get('fechaRecorrido').touched) ||
+                    (addressForm.get('fechaRecorrido').invalid && estaEditando)
+                  "
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-10">
+          <div class="row">
+            <div class="pr-1">
+              <label
+                class="label-left"
+                for="cuantosRepresentantes"
+                [class.color-secondaryColor]="
+                  (addressForm.get('cuantosRepresentantes').invalid &&
+                    addressForm.get('cuantosRepresentantes').touched) ||
+                  (addressForm.get('cuantosRepresentantes').invalid && estaEditando)
+                "
+              >
+                ¿Cuántos representantes de la ETC estuvieron presentes en el recorrido?
+              </label>
+            </div>
+            <div class="col d-flex">
+              <mat-form-field class="full-width">
+                <input
+                  matInput
+                  type="number"
+                  #cuantosRepresentantes
+                  formControlName="cuantosRepresentantes"
+                  maxlength="2"
+                  min="1"
+                  max="99"
+                  required
+                  (keypress)="validateNumberKeypress($event)"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                />
+              </mat-form-field>
+              <span
+                class="contador"
+                [matTooltipPosition]="'above'"
+                matTooltip="Campo numérico"
+                matTooltipClass="info-tooltip"
+              >
+                {{ 2 - cuantosRepresentantes.value.length }}
+              </span>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
+                  *ngIf="
+                    (addressForm.get('cuantosRepresentantes').invalid &&
+                      addressForm.get('cuantosRepresentantes').touched) ||
+                    (addressForm.get('cuantosRepresentantes').invalid && estaEditando)
+                  "
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-10">
+          <div class="row">
+            <div class="pr-1">
+              <label
+                class="label-left"
+                for="fechaFirma"
+                [class.color-secondaryColor]="
+                  (addressForm.get('fechaFirma').invalid && addressForm.get('fechaFirma').touched) ||
+                  (addressForm.get('fechaFirma').invalid && estaEditando)
+                "
+              >
+                Fecha de firma del acta de entrega física
+              </label>
+            </div>
+            <div class="col d-flex">
+              <mat-form-field class="example-full-width">
+                <input
+                  matInput
+                  [matDatepicker]="pickerFirmaActa"
+                  formControlName="fechaFirma"
+                  readonly
+                  (click)="pickerFirmaActa.open()"
+                  placeholder="DD/MM/AAAA"
+                  required
+                />
+                <mat-datepicker #pickerFirmaActa></mat-datepicker>
+              </mat-form-field>
+              <button mat-button color="primary" type="button" (click)="pickerFirmaActa.open()" class="btn-calendario">
+                <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
+              </button>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
+                  *ngIf="
+                    (addressForm.get('fechaFirma').invalid && addressForm.get('fechaFirma').touched) ||
+                    (addressForm.get('fechaFirma').invalid && estaEditando)
+                  "
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="pr-1">
+          <label
+            class="label-left"
+            for="urlActa"
+            [class.color-secondaryColor]="
+              (addressForm.get('urlActa').invalid && addressForm.get('urlActa').touched) ||
+              (addressForm.get('urlActa').invalid && estaEditando)
+            "
+          >
+            URL con soporte de votación
+          </label>
+        </div>
+        <div class="col">
+          <mat-form-field class="full-width">
+            <input matInput type="url" required formControlName="urlActa" />
+          </mat-form-field>
+          <span class="info-url">Indique la ruta del soporte de esta información</span>
+        </div>
+        <span class="icon-incompleto">
+          <img
+            class="icon-incompleto--img"
+            src="assets/img/icon/incompleto.svg"
+            alt="este campo es requerido"
+            [matTooltipPosition]="'above'"
+            matTooltip="Debe ingresar la información en el campo para continuar"
+            matTooltipClass="info-tooltip"
+            *ngIf="
+              (addressForm.get('urlActa').invalid && addressForm.get('urlActa').touched) ||
+              (addressForm.get('urlActa').invalid && estaEditando)
+            "
+          />
+        </span>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <div class="text-center">
+    <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="addressForm.invalid">
+      <img src="assets/img/icon/guardar.svg" alt="Guardar" />
+    </button>
+  </div>
+</form>
+
+<mat-accordion class="animatedDown" *ngIf="addressForm.get('cuantosRepresentantes').value">
+  <mat-expansion-panel
+    class="expansion-style sub-expansion"
+    *ngFor="let representante of arrayOne(addressForm.get('cuantosRepresentantes').value); let i = index"
+  >
+    <mat-expansion-panel-header class="expansion-style--header">
+      <mat-panel-title
+        class="expansion-style--title"
+        [class.sin-diligenciar]="true"
+        [class.en-proceso]="false"
+        [class.completo]="false"
+      >
+        Representante {{ i + 1 }}
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <app-form-representante></app-form-representante>
+  </mat-expansion-panel>
+</mat-accordion>

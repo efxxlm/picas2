@@ -15,7 +15,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         MsjCoordinadorFuentes = 14,
         MsjEnviarSolicitudContratacion = 15,
         ActividadesNoMonitoreadasProcesoSeleccion = 16,
-        Dias2ObraOInterventoriaDocNoCargado=17,
+        Dias2ObraOInterventoriaDocNoCargado = 17,
         ConvocarSesionComite = 19,
         OrdenDia = 20,
         NotificacionActaAprobacion = 21,
@@ -24,32 +24,73 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         TablaAprobacionParticipanteActa = 27,
         RegistrosTablaAprobacionParticipanteActa = 28,
-      	NotificarFiduciaria322 = 29,
-        DDPDevolucion=30,
-        DDPRechazado=31, 
+        NotificarFiduciaria322 = 29,
+        DDPDevolucion = 30,
+        DDPRechazado = 31,
         NotificacionContratacion341 = 32,
         DRPNotificacion = 33,
         DDPCancelado = 34,
         DRPCancelado = 35,
-        AlertaParticipacionJuridica4_2_1=52,
+        AlertaParticipacionJuridica4_2_1 = 52,
         AprobarInicio316 = 36,
         AprobarPoliza4diasNoGestion = 37,
-        EnviarSupervisor317 = 38, 
-        AlertaSupervisor317_2dias = 39, 
+        EnviarSupervisor317 = 38,
+        AlertaSupervisor317_2dias = 39,
         AlertaPolizas317_4dias = 40,
         Alertas2DiasObraInterventoria318 = 41,
-        ConActaSinDocumento319 = 43, 
-        VerificacionRequisitosTecnicosConstruccionFase2=44,
+        ConActaSinDocumento319 = 43,
+        VerificacionRequisitosTecnicosConstruccionFase2 = 44,
         EnviarActaParaFirmar319 = 45,
 
-        AlertaJuridicaDerivadaCumplida4_4_1= 51	,
+        AlertaJuridicaDerivadaCumplida4_4_1 = 51,
         EnviarActaCargada319 = 46,
-        Notificarinterventor=48,
-        ObservacionesActaInicioFase2=50,
-        NotificacionCompromisos=53,
+        NotificarInterventor = 48,
+        ObservacionesActaInicioFase2 = 50,
+        NotificacionCompromisos = 53,
         msjAprobacion4_1_10 = 54,
         Alerta5Dias4_1_10 = 55,
         NotificacionInconsistencias = 56,
         NotificacionAprobacion = 59,
+        AprobadoInterventoriaObra3_1_8_ = 60,
+        NotificacionApoyoInformeFinal5_1_1 = 78,
+        Alerta8_2_Dias_Fecha_limite_informe_final = 66,
+        NotificacionSupervisionInformeFinal5_1_2 = 67,
+        Alerta5DiasEnvioSupervisor5_1_2 = 68,
+        NotificacionInterventorDevolucion5_1_3 = 69,
+        NotificacionGrupoNovedadesInformeFinal5_1_3 = 70,
+        Alerta5DiasEnvioGrupoNovedades5_1_3 = 71,
+        NotificacionSupervisorDevolucion5_1_4 = 72,
+        Alerta5DiasGrupoNovedades5_1_4 = 73,
+        Aprobado_Programacion_4_1_10 = 61,
+        Alerta_Automatica_5_Dias = 62,
+        AprobarRequisitosTecnicosFase2 = 76,
+        DevolverConObservacionesFase2 = 77,
+        //4.1.12
+        Seguimiento_Semanal_Completo = 79,
+        Sin_Seguimiento_Semanal_X_Una_Semana = 80,
+        //4.1.20
+        Enviar_Supervisor_4_1_20 = 83,
+        Alerta_4_1_20 = 84,
+        //4.1.21
+        Alerta_4_1_21 = 85,
+
+
+
+        //4.2.1
+        FechaVencimientoProximaActuacionJuridica_4_2_1 = 88,
+        Participacion_Insumo_Realizar_Actuación_4_2_1 = 91,
+        //4.4.1
+        Registrar_Actuaciones_Controversias_Contractuales_4_4_1 = 93,
+
+
+        //Transversales
+        //6.4 Lista chequeo
+        ListaChequeoDesactivada = 86,
+        //6.3
+        MensajeDesactivarRol_6_3 = 94,
+        //6.2
+        CreateUserEmail_6_2 = 95,
+
+        DesactivarUsuario_6_2 = 96
     }
 }

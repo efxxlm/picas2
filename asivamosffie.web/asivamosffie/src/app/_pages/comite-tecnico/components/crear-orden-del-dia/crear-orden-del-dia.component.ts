@@ -230,6 +230,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
 
   onSubmit() {
     this.estaEditando=true;
+    this.addressForm.markAllAsTouched();
     // console.log(this.addressForm);
     if (this.addressForm.invalid) {
       this.openDialog('', '<b>Falta registrar información</b>');

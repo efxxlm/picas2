@@ -105,6 +105,7 @@ interface ContratoPoliza {
 }
 
 export interface ContratoPerfil {
+  contratoPerfilObservacionArray: any[];
   contratoPerfilId?: number;
   contratoId?: number;
   perfilCodigo?: string;
@@ -184,7 +185,8 @@ interface Proyecto2 {
   valorObra: number;
   valorInterventoria: number;
   valorTotal: number;
-  estadoProyectoCodigo: string;
+  estadoProyectoObraCodigo: string;
+  estadoProyectoInterventoriaCodigo: string;
   eliminado: boolean;
   fechaCreacion: string;
   usuarioCreacion: string;
@@ -200,6 +202,13 @@ interface Proyecto2 {
   proyectoPredio: any[];
   proyectoRequisitoTecnico: any[];
   semaforoGeneral?: string;//just for class colors
+
+  fechaInicioEtapaObra?: Date,
+  fechaFinEtapaObra?: Date,
+  fechaInicioEtapaObraTemporal?: Date,
+  fechaFinEtapaObraTemporal?: Date,
+
+
 }
 
 interface LocalizacionIdMunicipioNavigation {
@@ -231,7 +240,8 @@ interface Proyecto {
   valorObra: number;
   valorInterventoria: number;
   valorTotal: number;
-  estadoProyectoCodigo: string;
+  estadoProyectoObraCodigo: string;
+  estadoProyectoInterventoriaCodigo: string;
   eliminado: boolean;
   fechaCreacion: string;
   usuarioCreacion: string;

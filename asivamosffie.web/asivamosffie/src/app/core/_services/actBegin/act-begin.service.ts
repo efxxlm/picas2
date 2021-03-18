@@ -60,6 +60,12 @@ export class ActBeginService {
     return this.http.post<Respuesta>(`${environment.apiUrl}/actBegin/EnviarCorreoSupervisorContratista?pContratoId=${pContratoId}&pPerfilId=${pPerfilId}`,null);
 
   }
+  CreateTieneObservacionesActaInicioConstruccion(){
+
+  }
+  GetConstruccionObservacionByIdContratoConstruccionId(){
+    
+  }
 }
 export interface GetVistaGenerarActaInicio {
   cantidadProyectosAsociados: number;

@@ -19,6 +19,9 @@ import { DialogObservacionesComponent } from './components/dialog-observaciones/
 import { VerDetalleInformeFinalComponent } from './components/ver-detalle-informe-final/ver-detalle-informe-final.component';
 import { DetalleReciboSatisfaccionComponent } from './components/detalle-recibo-satisfaccion/detalle-recibo-satisfaccion.component';
 import { TablaDetalleInformeAnexosComponent } from './components/tabla-detalle-informe-anexos/tabla-detalle-informe-anexos.component';
+import { DialogDetalleObservacionesComponent } from './components/dialog-detalle-observaciones/dialog-detalle-observaciones.component';
+import { TablaObservacionesComponent } from './components/tabla-observaciones/tabla-observaciones.component';
+import { TablaObservacionesReciboSatisfaccionComponent } from './components/tabla-observaciones-recibo-satisfaccion/tabla-observaciones-recibo-satisfaccion.component';
 
 
 @NgModule({
@@ -34,9 +37,15 @@ import { TablaDetalleInformeAnexosComponent } from './components/tabla-detalle-i
     DialogObservacionesComponent,
     VerDetalleInformeFinalComponent,
     DetalleReciboSatisfaccionComponent,
-    TablaDetalleInformeAnexosComponent
+    TablaDetalleInformeAnexosComponent,
+    DialogDetalleObservacionesComponent,
+    TablaObservacionesComponent,
+    TablaObservacionesReciboSatisfaccionComponent
   ],
-  entryComponents: [DialogTipoDocumentoComponent],
+  entryComponents: [
+    DialogTipoDocumentoComponent,
+    DialogObservacionesComponent
+  ],
   imports: [
     CommonModule,
     RegistrarInformeFinalProyectoRoutingModule,

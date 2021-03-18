@@ -1,0 +1,317 @@
+<mat-card class="shipping-card var-main-gris">
+  <mat-card-content>
+    <p>
+      <strong>
+        Tipo de contrato:
+      </strong>
+      Obra
+    </p>
+    <p>
+      <strong>
+        Nombre del contratista:
+      </strong>
+      Intervenrores S.A
+    </p>
+    <p>
+      <strong>
+        Tipo de identificación:
+      </strong>
+      NIT
+    </p>
+    <p>
+      <strong>
+        Número de identificación:
+      </strong>
+      900.675.987-4
+    </p>
+    <p>
+      <strong>
+        Número de la póliza:
+      </strong>
+      0000-9868
+    </p>
+    <p>
+      <strong>
+        Nombre de la aseguradora:
+      </strong>
+      Mapfre
+    </p>
+    <p>
+      <strong>
+        Número de certificado:
+      </strong>
+      CER404040
+    </p>
+    <p>
+      <strong>
+        Fecha de expedición de la póliza:
+      </strong>
+      25/06/2020
+    </p>
+    <p>
+      <strong>
+        Fecha de aprobación:
+      </strong>
+      18/07/2020
+    </p>
+  </mat-card-content>
+</mat-card>
+
+<div class="table-responsive mb-2em">
+  <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
+    <thead>
+      <tr class="mat-header-row cdk-header-row ng-star-inserted">
+        <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+          Polizas y seguros
+        </th>
+        <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+          Reponsable de la aprobación
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let element of listapolizas">
+        <td class="mat-cell cdk-cell ng-star-inserted">
+          {{ element.poliza }}
+        </td>
+        <td class="mat-cell cdk-cell ng-star-inserted">
+          {{ element.responsable }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<mat-accordion>
+  <mat-expansion-panel class="expansion-style sub-expansion">
+      <mat-expansion-panel-header class="expansion-style--header">
+          <mat-panel-title class="expansion-style--title">
+            Razón y tipo de actualización
+          </mat-panel-title>
+      </mat-expansion-panel-header>
+      
+      <mat-card class="shipping-card var-main-gris">
+        <mat-card-content>
+          <p>
+            <strong>
+              Razón de la actualización:
+            </strong>
+            Terminación de contrato
+          </p>
+          <p>
+            <strong>
+              Fecha de expedición de la actualización de la póliza:
+            </strong>
+            20/07/2021
+          </p>
+          <p>
+            <strong>
+              Seguros que necesitan actualización:
+            </strong>
+            Buen manejo y correcta inversión del anticipo, Garantía de estabilidad y calidad de la obra
+          </p>
+          <mat-card-title class="header-card--text sub-text"> 
+            Buen manejo y correcta inversión del anticipo
+          </mat-card-title>
+          <p>
+            <strong>
+              Tipo de actualización:
+            </strong>
+            Fecha, Valor
+          </p>
+          <mat-card-title class="header-card--text sub-text"> 
+            Garantía de estabilidad y calidad de la obra
+          </mat-card-title>
+          <p>
+            <strong>
+              Tipo de actualización:
+            </strong>
+            Fecha, Valor
+          </p>
+        </mat-card-content>
+      </mat-card>
+
+  </mat-expansion-panel>
+
+  <mat-expansion-panel class="expansion-style sub-expansion">
+      <mat-expansion-panel-header class="expansion-style--header">
+          <mat-panel-title class="expansion-style--title">
+            Vigencias y valor
+          </mat-panel-title>
+      </mat-expansion-panel-header>
+      
+      <mat-accordion>
+        <mat-expansion-panel class="expansion-style sub-expansion-black">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                  Seguro 1
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <mat-card class="shipping-card var-main-gris">
+              <mat-card-header class="header-card header-card--margin">
+                <mat-card-title class="header-card--text">
+                  Garantía de estabilidad y calidad de la obra
+                </mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="mb-2em">
+                  <p>
+                    <strong>
+                      Vigencia del amparo:
+                    </strong>
+                    30/03/2021
+                  </p>
+                  <p>
+                    <strong>
+                      Vigencia actualizada del amparo:
+                    </strong>
+                    30/01/2021
+                  </p>
+                </div>
+                <div class="mb-2em">
+                  <p>
+                    <strong>
+                      Valor del amparo:
+                    </strong>
+                    30/03/2021
+                  </p>
+                  <p>
+                    <strong>
+                      Valor actualizado del amparo:
+                    </strong>
+                    30/01/2021
+                  </p>
+                </div>
+                <div class="mb-2em">
+                  <p>
+                    <strong>
+                      Vigencia de la póliza:
+                    </strong>
+                    30/03/2021
+                  </p>
+                  <p>
+                    <strong>
+                      Vigencia actualizada de la póliza:
+                    </strong>
+                    30/01/2021
+                  </p>
+                </div>
+              </mat-card-content>
+            </mat-card>
+
+        </mat-expansion-panel>
+      </mat-accordion>
+
+  </mat-expansion-panel>
+
+  <mat-expansion-panel class="expansion-style sub-expansion">
+      <mat-expansion-panel-header class="expansion-style--header">
+          <mat-panel-title class="expansion-style--title">
+              Observaciones especificas
+          </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <mat-card class="shipping-card var-main-gris">
+        <mat-card-header class="header-card header-card--margin">
+          <mat-card-title class="header-card--text">
+            Observaciones especificas de la actualización
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <p>
+              Es necesaria la actualización para dar finalizada la póliza, ya que no se necesita más tiempo.
+            </p>
+        </mat-card-content>
+      </mat-card>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel class="expansion-style sub-expansion">
+      <mat-expansion-panel-header class="expansion-style--header">
+          <mat-panel-title class="expansion-style--title">
+            Lista de chequeo
+          </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <mat-card class="shipping-card var-main-gris">
+        <mat-card-content>
+            <p>
+              <strong>
+                ¿Cumple con los datos del Asegurado/ Beneficiario?:
+              </strong>
+              Si
+            </p>
+            <p>
+              <strong>
+                ¿Cumple con los datos del Beneficiario cuando se trate de garantía bancaria?:
+              </strong>
+              Si
+            </p>
+            <p>
+              <strong>
+                ¿Cumple con los datos del Tomador / Afianzado?:
+              </strong>
+              Si
+            </p>
+            <p>
+              <strong>
+                ¿Se incluye el recibo de pago con los datos requeridos?:
+              </strong>
+              Si
+            </p>
+            <p>
+              <strong>
+                ¿Se incluyen las condiciones generales de la póliza/ o su clausulado?:
+              </strong>
+              Si
+            </p>
+        </mat-card-content>
+      </mat-card>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel class="expansion-style sub-expansion">
+      <mat-expansion-panel-header class="expansion-style--header">
+          <mat-panel-title class="expansion-style--title">
+            Revisión y aprobación
+          </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <mat-card class="shipping-card var-main-gris">
+        <mat-card-header class="header-card header-card--margin">
+          <mat-card-title class="header-card--text">
+            Revisión
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>
+            <strong>
+              Fecha de la revisión 2:
+            </strong>
+            21/01/2021
+          </p>
+          <p>
+            <strong>
+              Estado de la revisión 2:
+            </strong>
+            Aprobación
+          </p>
+          <h2 class="card-subTitle">Aprobación</h2>
+          <p>
+            <strong>
+              Fecha de aprobación:
+            </strong>
+            21/01/2021
+          </p>
+          <p>
+            <strong>
+              Responsable de aprobación:
+            </strong>
+            Nathalia Aranda
+          </p>
+        </mat-card-content>
+      </mat-card>
+
+  </mat-expansion-panel>
+</mat-accordion>
+
+<app-observaciones-actualizacion-poliza></app-observaciones-actualizacion-poliza>

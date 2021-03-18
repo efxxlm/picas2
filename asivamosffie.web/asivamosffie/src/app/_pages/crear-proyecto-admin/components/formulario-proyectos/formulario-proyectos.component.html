@@ -109,6 +109,7 @@
                           [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
                           (keypress)="blockNumber($event)"
                           onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         />
                       </mat-form-field>
                       <span
@@ -186,7 +187,7 @@
         </div>
       </div>
     </div>
-    <div class="text-center animatedOpacity">
+    <div class="text-center animatedOpacity mb-2em">
       <button mat-button color="warn" class="btn-guardar" *ngIf="bitPuedoEditar" type="button" (click)="onSubmit()">
         <img src="assets/img/icon/guardar.svg" alt="Guardar" />
       </button>

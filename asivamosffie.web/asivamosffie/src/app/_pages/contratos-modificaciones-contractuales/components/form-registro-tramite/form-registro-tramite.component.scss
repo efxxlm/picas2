@@ -1,5 +1,6 @@
-.mat-button.mat-warn[disabled], .mat-button[disabled][disabled] {
-  opacity: .5;
+.mat-button.mat-warn[disabled],
+.mat-button[disabled][disabled] {
+  opacity: 0.5;
 }
 
 .input {
@@ -11,16 +12,20 @@
 }
 
 .input-file-text {
-  border-bottom: solid .5px;
-    padding: .5em;
-    height: 20px;
-    width: 45em;
-    max-width: calc(100% - 9em);
-    margin-right: 0.5em;
-    display: inline-block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  border-bottom: solid 0.5px;
+  padding: 0.5em;
+  height: 20px;
+  width: 45em;
+  max-width: calc(100% - 9em);
+  margin-right: 0.5em;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &.invalid {
+    border-color: var(--secondaryColor);
+  }
 }
 
 .w-90 {
@@ -33,7 +38,7 @@
 
 .w-60 {
   width: 60%;
-};
+}
 
 .w-38 {
   width: 38%;
@@ -56,7 +61,7 @@
 }
 .mr-3em {
   margin-top: 3em;
-};
+}
 
 .mr-bottom-1 {
   margin-bottom: 1em;
@@ -68,7 +73,7 @@
 }
 
 .ml-1em {
-  margin-left: .3em;
+  margin-left: 0.3em;
 }
 
 .align-text {

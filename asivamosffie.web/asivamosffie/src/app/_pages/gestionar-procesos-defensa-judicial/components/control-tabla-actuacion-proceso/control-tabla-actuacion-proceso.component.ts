@@ -22,7 +22,7 @@ export class ControlTablaActuacionProcesoComponent implements OnInit {
   ]
 
   @Input() defensaJudicialID:number;
-
+  longitudActuaciones: any[] = [];
   constructor(private router: Router, private defensaService:DefensaJudicialService,
     public dialog: MatDialog,) { }
 
@@ -33,6 +33,7 @@ export class ControlTablaActuacionProcesoComponent implements OnInit {
         element.id=i;
         i++;
       });
+      this.longitudActuaciones = response;
       this.dataSource = new MatTableDataSource(response);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;

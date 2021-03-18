@@ -22,6 +22,7 @@ export class ObsSoporteurlAutorizComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
   constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
@@ -45,6 +46,8 @@ export class ObsSoporteurlAutorizComponent implements OnInit {
     }
   }
   onSubmit() {
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     console.log(this.addressForm.value);
   }
 }

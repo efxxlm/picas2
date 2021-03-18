@@ -8,11 +8,13 @@ using Microsoft.AspNetCore.Mvc;
 using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class JudicialDefenseController : ControllerBase
     {
 
@@ -314,6 +316,76 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(ex.ToString());
             }
         }
+
+        [HttpPost]
+        [Route("CreateOrEditDefensaJudicialSeguimiento")]
+        public async Task<IActionResult> CreateOrEditDefensaJudicialSeguimiento(DefensaJudicialSeguimiento defensaJudicialSeguimiento)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                defensaJudicialSeguimiento.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+
+                respuesta = await _judicialDefense.CreateOrEditDefensaJudicialSeguimiento(defensaJudicialSeguimiento);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [HttpGet]
+        [Route("GetDefensaJudicialSeguimiento")]
+        public async Task<DefensaJudicialSeguimiento> GetDefensaJudicialSeguimiento(int defensaJudicialSeguimientoId)
+        {
+            try
+            {
+                return await _judicialDefense.GetDefensaJudicialSeguimiento(defensaJudicialSeguimientoId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        [Route("DeleteDemandadoConvocado")]
+        public async Task<IActionResult> DeleteDemandadoConvocado([FromQuery] int demandadoConvocadoId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _judicialDefense.DeleteDemandadoConvocado(demandadoConvocadoId, HttpContext.User.FindFirst("User").Value);
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [HttpPost]
+        [Route("DeleteDefensaJudicialContratacionProyecto")]
+        public async Task<IActionResult> DeleteDefensaJudicialContratacionProyecto([FromQuery] int contratacionId, [FromQuery] int defensaJudicialId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _judicialDefense.DeleteDefensaJudicialContratacionProyecto(contratacionId, defensaJudicialId, HttpContext.User.FindFirst("User").Value);
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
 
     }
 }

@@ -13,7 +13,7 @@
 
       <ng-container matColumnDef="nombres">
         <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Miembro Comité </th>
-        <td mat-cell *matCellDef="let element" align="center" class="color-text"> {{ element.miembroSesionParticipante.nombres }} {{ element.miembroSesionParticipante.apellidos }} </td>
+        <td mat-cell *matCellDef="let element" align="center" class="color-text"> {{ element.miembroSesionParticipante.nombres }} {{ element.miembroSesionParticipante.primerApellido }} </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -35,6 +35,6 @@
   </p>
   <p>
     <b>Miembro comité:</b>
-    {{ data[0].miembroSesionParticipante.nombres }} {{ data[0].miembroSesionParticipante.apellidos }}
+    {{ data[0].miembroSesionParticipante.primerNombre }} {{ data[0].miembroSesionParticipante.primerApellido }}
   </p>
 </div>

@@ -1,0 +1,272 @@
+<section class="container">
+  <div class="text-center">
+    <div class="text-right">
+      <a routerLink="./.." mat-button color="primary" class="btn-regresar">
+        <img src="assets/img/icon/regresar.svg" alt="Regresar" />
+      </a>
+    </div>
+    <h1 class="title-menu--h1">Recursos comprometidos y pagados LL457326</h1>
+    <p class="colorMainColor mt-1em">
+      <span class="mx-1em"> Número de contrato de obra: <b> N801801 </b> </span>
+      <span class="mx-1em"> Número de contrato de interventoria: <b> A513513 </b> </span>
+    </p>
+  </div>
+
+  <mat-card class="shipping-card var-main-gris">
+    <mat-card-content>
+      <p>
+        <strong> Tipo de intervención: </strong>
+        Remodelación
+      </p>
+      <p>
+        <strong> Institución Educativa: </strong>
+        I.E Nuestra Señora Del Carmen
+      </p>
+      <p>
+        <strong> Sede: </strong>
+        Única Sede
+      </p>
+      <p>
+        <strong> Departamento: </strong>
+        Boyacá
+      </p>
+      <p>
+        <strong> Municipio: </strong>
+        Susacón
+      </p>
+    </mat-card-content>
+  </mat-card>
+  <mat-accordion>
+    <mat-expansion-panel class="expansion-style">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title">
+          Contrato de obra N801801
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+  
+      <mat-accordion>
+        <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                  Recursos comprometidos
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            
+            <div class="table-responsive mb-2em">
+              <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
+                <thead>
+                  <tr class="mat-header-row cdk-header-row ng-star-inserted">
+                    <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                      Aportante
+                    </th>
+                    <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                      Valor aportante
+                    </th>
+                    <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                      Valor total aportantes
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let element of listaAportantes">
+                    <td class="mat-cell cdk-cell ng-star-inserted">
+                      <b>
+                        {{ element.nombre }}
+                      </b>
+                    </td>
+                    <td class="mat-cell cdk-cell ng-star-inserted">
+                      {{ element.valor }}
+                    </td>
+                    <td class="mat-cell cdk-cell ng-star-inserted">
+                      {{ element.total }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+  
+            <mat-card class="shipping-card var-main-gris">
+              <mat-card-header class="header-card header-card--margin">
+                <mat-card-title class="header-card--text">
+                  Datos del contrato
+                </mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="table-responsive mb-2em">
+                  <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
+                    <thead>
+                      <tr class="mat-header-row cdk-header-row ng-star-inserted">
+                        <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                          Aportante
+                        </th>
+                        <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                          Valor aportante
+                        </th>
+                        <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                          Fuente
+                        </th>
+                        <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                          Uso
+                        </th>
+                        <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                          Valor uso
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let element of listaFuentesUsos">
+                        <td class="mat-cell cdk-cell ng-star-inserted">
+                          <b> {{ element.aportante }} </b>
+                        </td>
+                        <td class="mat-cell cdk-cell ng-star-inserted">
+                          {{ element.valor }}
+                        </td>
+                        <td class="mat-cell cdk-cell ng-star-inserted">
+                          {{ element.fuente }}
+                        </td>
+                        <td class="mat-cell cdk-cell ng-star-inserted">
+                          {{ element.uso }}
+                        </td>
+                        <td class="mat-cell cdk-cell ng-star-inserted">
+                          {{ element.valorUso }}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </mat-card-content>
+            </mat-card>
+      
+        </mat-expansion-panel>
+      
+        <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                  Contratistas
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            
+          <mat-card>
+            <mat-card-header class="header-card header-card--margin">
+              <mat-card-title class="header-card--text">
+                Construir Futuro
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p>
+                <strong>
+                  Nit:
+                </strong>
+                900.879-765-2
+              </p>
+              <p>
+                <strong>
+                  Representante lega:
+                </strong>
+                Juan Pablo Tello Posada
+              </p>
+              <p>
+                <strong>
+                  Número de identificación del representante:
+                </strong>
+                103456783
+              </p>
+              <p>
+                <strong>
+                  Valor pagado:
+                </strong>
+                $67.000.000
+              </p>
+            </mat-card-content>
+          </mat-card>
+      
+        </mat-expansion-panel>
+      
+        <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                  Valor total ordenes de giro
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+      
+            <div class="table-responsive">
+              <table class="mat-table cdk-table mat-sort mat-table-style table-form">
+                <thead>
+                  <tr class="mat-header-row cdk-header-row ng-star-inserted">
+                    <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                      Número de orden de giro
+                    </th>
+                    <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                      Contratistas
+                    </th>
+                    <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                      Facturado
+                    </th>
+                    <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                      ANS aplicado
+                    </th>
+                    <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                      Rete garantía a pagar
+                    </th>
+                    <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                      Otros descuentos
+                    </th>
+                    <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                      A pagar antes de impuestos
+                    </th>
+                    <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                      Gestión
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let element of listaValorTotalOrdenesGiro">
+                    <td class="mat-cell cdk-cell ng-star-inserted">
+                      <b>
+                        {{ element.numeroOrdenGiro }}
+                      </b>
+                    </td>
+                    <td class="mat-cell cdk-cell ng-star-inserted">
+                      {{ element.contratista }}
+                    </td>
+                    <td class="mat-cell cdk-cell ng-star-inserted">
+                      <b>
+                        {{ element.facturado }}
+                      </b>
+                    </td>
+                    <td class="mat-cell cdk-cell ng-star-inserted">
+                      {{ element.adn }}
+                    </td>
+                    <td class="mat-cell cdk-cell ng-star-inserted">
+                      {{ element.reteGarantia }}
+                    </td>
+                    <td class="mat-cell cdk-cell ng-star-inserted">
+                      {{ element.otrosDescuentos }}
+                    </td>
+                    <td class="mat-cell cdk-cell ng-star-inserted">
+                      {{ element.pagarAntesImpuestos }}
+                    </td>
+                    <td class="mat-cell cdk-cell ng-star-inserted">
+                      <a
+                        mat-button
+                        mat-raised-button
+                        color="accent"
+                        class="btn-table"
+                        [routerLink]="['verDetalle', element.id]"
+                      >
+                        Ver detalle
+                      </a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+        </mat-expansion-panel>
+  
+      </mat-accordion>
+  
+    </mat-expansion-panel>
+  </mat-accordion>
+</section>
+

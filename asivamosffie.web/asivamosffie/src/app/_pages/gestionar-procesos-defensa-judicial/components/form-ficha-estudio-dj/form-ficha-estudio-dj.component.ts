@@ -2,7 +2,7 @@ import { Component, Input, OnInit, AfterViewInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CommonService } from 'src/app/core/_services/common/common.service';
+import { CommonService, Respuesta } from 'src/app/core/_services/common/common.service';
 import { DefensaJudicial, DefensaJudicialService } from 'src/app/core/_services/defensaJudicial/defensa-judicial.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
@@ -26,6 +26,8 @@ export class FormFichaEstudioDjComponent implements OnInit {
   };
  
   addressForm = this.fb.group({
+    fichaEstudioId: [null, Validators.required],
+    defensaJudicialId: [null, Validators.required],
     antecedentes: [null, Validators.required],
     hechosRelevantes: [null, Validators.required],
     jurisprudenciaDoctrina: [null, Validators.required],
@@ -40,8 +42,10 @@ export class FormFichaEstudioDjComponent implements OnInit {
     actuacionRecomendadaAlComite: [null, Validators.required],
     urlSoporte: [null, Validators.required]
   });
+  
   actuacionesArray = [
   ];
+  estaEditando = false;
   constructor(  private fb: FormBuilder, public dialog: MatDialog, 
     public commonServices: CommonService,
     public defensaService: DefensaJudicialService,
@@ -65,6 +69,11 @@ export class FormFichaEstudioDjComponent implements OnInit {
       console.log(this.tipoProceso);      
       if(this.defensaJudicial.fichaEstudio.length>0)
       {
+        this.estaEditando = true;
+        this.addressForm.markAllAsTouched();
+        console.log("Nuevos campos: ",this.defensaJudicial.fichaEstudio[0]);
+        this.addressForm.get("fichaEstudioId").setValue(this.defensaJudicial.fichaEstudio[0].fichaEstudioId);
+        this.addressForm.get("defensaJudicialId").setValue(this.defensaJudicial.fichaEstudio[0].defensaJudicialId);
         this.addressForm.get("antecedentes").setValue(this.defensaJudicial.fichaEstudio[0].antecedentes);
         this.addressForm.get("hechosRelevantes").setValue(this.defensaJudicial.fichaEstudio[0].hechosRelevantes);
         this.addressForm.get("jurisprudenciaDoctrina").setValue(this.defensaJudicial.fichaEstudio[0].jurisprudenciaDoctrina);
@@ -110,21 +119,39 @@ export class FormFichaEstudioDjComponent implements OnInit {
       width: '28em',
       data: { modalTitle, modalText }
     });
-    if(redirect)
-    {
+    if (redirect) {
       dialogRef.afterClosed().subscribe(result => {
-        if(id>0 && this.defensaJudicial.defensaJudicialId==0)
-        {
-          this.router.navigate(["/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial/"+id], {});
-        }                  
-        else{
-          location.reload();
-        }                    
+        if (id > 0 && this.defensaJudicial.defensaJudicialId != id) {
+          this.router.navigateByUrl( '/', {skipLocationChange: true} ).then(
+            () =>   this.router.navigate(
+                        [
+                            '/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial',
+                            id
+                        ]
+                    )
+          );
+        }
+        else {
+          if(this.defensaJudicial.defensaJudicialId == id){
+            this.router.navigateByUrl( '/', {skipLocationChange: true} ).then(
+              () =>   this.router.navigate(
+                          [
+                              '/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial',
+                              id
+                          ]
+                      )
+            );
+          }else{
+            this.router.navigate(["/gestionarProcesoDefensaJudicial"], {});
+          }
+        }
       });
     }
   }
 
   onSubmit() {
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let defensaJudicial=this.defensaJudicial;
     if(!this.defensaJudicial.defensaJudicialId||this.defensaJudicial.defensaJudicialId==0)
     {
@@ -133,9 +160,14 @@ export class FormFichaEstudioDjComponent implements OnInit {
         tipoProcesoCodigo:this.tipoProceso,
         esLegitimacionActiva:this.legitimacion,  
       };
+    }else{
+      this.tipoProceso != null ? defensaJudicial.tipoProcesoCodigo = this.tipoProceso : this.defensaJudicial.tipoProcesoCodigo;
+      this.legitimacion != null ? defensaJudicial.esLegitimacionActiva = this.legitimacion : this.defensaJudicial.esLegitimacionActiva;
     }
 
     defensaJudicial.fichaEstudio=[{
+      fichaEstudioId:this.addressForm.get("fichaEstudioId").value,
+      defensaJudicialId:this.addressForm.get("defensaJudicialId").value,
       antecedentes:this.addressForm.get("antecedentes").value,
       hechosRelevantes:this.addressForm.get("hechosRelevantes").value,
       jurisprudenciaDoctrina:this.addressForm.get("jurisprudenciaDoctrina").value,
@@ -152,10 +184,12 @@ export class FormFichaEstudioDjComponent implements OnInit {
     }];
     
       console.log(defensaJudicial);
-      this.defensaService.CreateOrEditDefensaJudicial(defensaJudicial).subscribe(
-        response=>{
-          this.openDialog('', `<b>${response.message}</b>`,true,response.data?response.data.defensaJudicialId:0);
-        }
-      );
+      this.defensaService.CreateOrEditDefensaJudicial(defensaJudicial)
+      .subscribe((response: Respuesta) => {
+        this.openDialog('', `<b>${response.message}</b>`,true,response.data?response.data.defensaJudicialId:0);
+      },
+      err => {
+        this.openDialog('', err.message);
+      });
   }
 }

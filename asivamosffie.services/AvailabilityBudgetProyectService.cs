@@ -46,8 +46,7 @@ namespace asivamosffie.services
                         {
                             response.Add(MapToValue(reader));
                         }
-                    }
-
+                    } 
                     return response;
                 }
             }

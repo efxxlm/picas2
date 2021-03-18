@@ -11,12 +11,13 @@ using System.IO;
 using Microsoft.Extensions.Options;
 using System.Reflection;
 using Newtonsoft.Json;
-
+using Microsoft.AspNetCore.Authorization;
 
 namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class RegisterPreContructionPhase1Controller : ControllerBase
     {
         public readonly IRegisterPreContructionPhase1Service _registerPreContructionPhase1Service;
@@ -32,7 +33,7 @@ namespace asivamosffie.api.Controllers
         [Route("GetListContratacion")]
         public async Task<List<VRegistrarFase1>> GetListContratacion2()
         {
-            return await _registerPreContructionPhase1Service.GetListContratacion2();
+            return await _registerPreContructionPhase1Service.GetListContratacion2(Int32.Parse(HttpContext.User.FindFirst("UserId").Value));
         }
 
         [HttpGet]

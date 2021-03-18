@@ -38,6 +38,11 @@ export class TablaSinRadicacionDePolizasComponent implements OnInit {
       if (this.dataTable.length == 0) {
         this.estadoSemaforo.emit('completo');
       }
+
+      if ( this.dataTable.length > 0 ) {
+        this.dataTable.forEach( registro => registro.fechaFirma = registro.fechaFirma !== undefined ? registro.fechaFirma.split('T')[0].split('-').reverse().join('/') : '');
+      }
+
       this.dataSource = new MatTableDataSource(this.dataTable);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;

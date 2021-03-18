@@ -91,6 +91,7 @@ export class PlanesProgramasComponent implements OnInit {
   }
 
   guardar () {
+    this.estaEditando = true;
     const planesProgramas = {
       dataPlanesProgramas: this.dataPlanesProgramas,
       urlSoporte: this.urlSoporte
@@ -99,8 +100,14 @@ export class PlanesProgramasComponent implements OnInit {
   }
 
   getDataPlanesProgramas () {
-    this.minDate = this.proyecto.fechaInicioEtapaObra;
-    this.maxDate = this.proyecto.fechaFinEtapaObra;
+    if (this.proyecto.fechaInicioEtapaObra){
+      this.minDate = this.proyecto.fechaInicioEtapaObra;
+      this.maxDate = this.proyecto.fechaFinEtapaObra;
+    }else{
+      this.minDate = this.proyecto.fechaInicioEtapaObraTemporal;
+      this.maxDate = this.proyecto.fechaFinEtapaObraTemporal;
+    }
+    
     console.log( this.proyecto.fechaInicioEtapaObra )
     this.urlSoporte = this.planesProgramas.planRutaSoporte ? this.planesProgramas.planRutaSoporte : null;
     this.dataPlanesProgramas.push(
@@ -216,6 +223,14 @@ export class PlanesProgramasComponent implements OnInit {
   };
 
   getDataPlanes () {
+
+    /*
+      Se agregaron los campos 'fechaInicioEtapaObraTemporal' y 'fechaFinEtapaObraTemporal' a la interfaz 'Proyecto'
+      por el seiguiente error de compilacion 'La propiedad 'fechaInicioEtapaObraTemporal' no existe en el tipo 'Proyecto'.' - Carlos Molero
+    */
+    this.minDate = this.proyecto.fechaInicioEtapaObraTemporal;
+    this.maxDate = this.proyecto.fechaFinEtapaObraTemporal;
+
     this.urlSoporte = null;
     this.dataPlanesProgramas.push(
       {

@@ -80,8 +80,15 @@ namespace asivamosffie.model.Models
         public bool? ConObervacionesActaFase2 { get; set; }
         public DateTime? FechaCambioEstadoFase2 { get; set; }
         public string ModalidadCodigo { get; set; }
+        public int? SupervisorId { get; set; }
+        public int? ApoyoId { get; set; }
+        public int? InterventorId { get; set; }
+        public string ObservacionConsideracionesEspeciales { get; set; }
 
+        public virtual Usuario Apoyo { get; set; }
         public virtual Contratacion Contratacion { get; set; }
+        public virtual Usuario Interventor { get; set; }
+        public virtual Usuario Supervisor { get; set; }
         public virtual ICollection<ContratoConstruccion> ContratoConstruccion { get; set; }
         public virtual ICollection<ContratoObservacion> ContratoObservacion { get; set; }
         public virtual ICollection<ContratoPerfil> ContratoPerfil { get; set; }

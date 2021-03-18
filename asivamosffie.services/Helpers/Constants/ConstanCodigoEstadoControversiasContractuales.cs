@@ -14,6 +14,8 @@
         public const string AprobadaPorComiteFiduciario = "9";
         public const string EnTramite = "10";
         public const string Cerrada = "11";
+        public const string DevueltaPorComiteTecnico = "14";
+        public const string DevueltaPorComiteFiduciario = "15";
 
     }
 }

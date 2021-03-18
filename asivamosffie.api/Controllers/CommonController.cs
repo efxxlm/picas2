@@ -34,8 +34,15 @@ namespace asivamosffie.api.Controllers
             pMesesContrato = (30 * pMesesContrato) + pDiasContrato;
             pMesesFase1 = (30 * pMesesFase1) + pDiasFase1;
             Lista.Add((int)Math.Truncate((pMesesContrato - pMesesFase1) / 30));
-            Lista.Add(((pMesesContrato - pMesesFase1) - (Lista[0] * 30))); 
+            Lista.Add(((pMesesContrato - pMesesFase1) - (Lista[0] * 30)));
             return Lista;
+        }
+        [Route("StringReplace")]
+        [HttpPost]
+        public async Task<string> StringReplace([FromQuery] string pstring)
+        {
+            pstring = pstring.Replace(@"\", "");
+            return pstring.Replace("/", "");
         }
 
         [HttpGet]
@@ -44,6 +51,13 @@ namespace asivamosffie.api.Controllers
         {
             return common.CalculardiasLaborales(pDias, pFechaCalcular);
         }
+         
+        [HttpGet]
+        [Route("TienePermisos")]
+        public Task<VPermisosMenus> VPermisosMenus([FromQuery] int idPerfil, string pRuta)
+        {
+            return common.TienePermisos(idPerfil, pRuta);
+        }
 
         [HttpGet]
         [Route("GetUsuarioByPerfil")]
@@ -51,8 +65,7 @@ namespace asivamosffie.api.Controllers
         {
             return common.GetUsuarioByPerfil(idPerfil);
         }
-
-
+         
         [HttpGet]
         [Route("GetMenuByRol")]
         public async Task<ActionResult<List<MenuPerfil>>> GetMenuByRol()
@@ -107,8 +120,7 @@ namespace asivamosffie.api.Controllers
             var result = await common.GetListMunicipioByIdDepartamento(idDepartamento);
             return result;
         }
-
-
+         
         [HttpGet]
         [Route("ListMunicipiosByIdMunicipio")]
         public async Task<ActionResult<List<Localicacion>>> GetListMunicipioByMunicipio(string idMunicipio)
@@ -172,6 +184,14 @@ namespace asivamosffie.api.Controllers
         public async Task<InstitucionEducativaSede> GetInstitucionEducativaById(int idInstitucionEducativaId)
         {
             var result = await common.GetInstitucionEducativaById(idInstitucionEducativaId);
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetListMenu")]
+        public async Task<dynamic> GetListMenu()
+        {
+            var result = await common.GetListMenu();
             return result;
         }
 

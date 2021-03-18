@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { CommonService } from 'src/app/core/_services/common/common.service';
+import { CommonService, Respuesta } from 'src/app/core/_services/common/common.service';
 import { DefensaJudicial, DefensaJudicialService } from 'src/app/core/_services/defensaJudicial/defensa-judicial.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
@@ -17,6 +17,7 @@ export class FormUrlsoporteDjComponent implements OnInit {
   addressForm = this.fb.group({
     urlSoporte: [null, Validators.required]
   });
+  estaEditando = false;
   constructor(  private fb: FormBuilder,public commonService:CommonService,
     public defensaService:DefensaJudicialService,
     public dialog: MatDialog, private router: Router  ) { }
@@ -29,6 +30,8 @@ export class FormUrlsoporteDjComponent implements OnInit {
   @Input() defensaJudicial:DefensaJudicial;
   cargarRegistro() {
     //this.ngOnInit().then(() => {
+      this.estaEditando = true;
+      this.addressForm.markAllAsTouched();
       console.log(this.defensaJudicial.urlSoporteProceso);
       this.addressForm.get("urlSoporte").setValue(this.defensaJudicial.urlSoporteProceso);  
   }
@@ -38,21 +41,39 @@ export class FormUrlsoporteDjComponent implements OnInit {
       width: '28em',
       data: { modalTitle, modalText }
     });
-    if(redirect)
-    {
+    if (redirect) {
       dialogRef.afterClosed().subscribe(result => {
-          if(id>0 && this.defensaJudicial.defensaJudicialId==0)
-          {
-            this.router.navigate(["/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial/"+id], {});
-          }                  
-          else{
-            location.reload();
+        if (id > 0 && this.defensaJudicial.defensaJudicialId != id) {
+          this.router.navigateByUrl( '/', {skipLocationChange: true} ).then(
+            () =>   this.router.navigate(
+                        [
+                            '/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial',
+                            id
+                        ]
+                    )
+          );
+        }
+        else {
+          if(this.defensaJudicial.defensaJudicialId == id){
+            this.router.navigateByUrl( '/', {skipLocationChange: true} ).then(
+              () =>   this.router.navigate(
+                          [
+                              '/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial',
+                              id
+                          ]
+                      )
+            );
+          }else{
+            this.router.navigate(["/gestionarProcesoDefensaJudicial"], {});
           }
+        }
       });
     }
   }
 
   onSubmit() {
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let defensaJudicial=this.defensaJudicial;
     if(!this.defensaJudicial.defensaJudicialId||this.defensaJudicial.defensaJudicialId==0)
     {
@@ -64,14 +85,22 @@ export class FormUrlsoporteDjComponent implements OnInit {
         esLegitimacionActiva:this.legitimacion,
         
       };
+    }else{
+      this.tipoProceso != null ? defensaJudicial.tipoProcesoCodigo = this.tipoProceso : this.defensaJudicial.tipoProcesoCodigo;
+      this.legitimacion != null ? defensaJudicial.esLegitimacionActiva = this.legitimacion : this.defensaJudicial.esLegitimacionActiva;
     }
     defensaJudicial.urlSoporteProceso=this.addressForm.get("urlSoporte").value;
-      console.log(defensaJudicial);
-      this.defensaService.CreateOrEditDefensaJudicial(defensaJudicial).subscribe(
-        response=>{
-          this.openDialog('', `<b>${response.message}</b>`,true,response.data?response.data.defensaJudicialId:0);
-        }
-      );
-
+    if(this.tipoProceso==null || this.legitimacion==null){
+      this.openDialog('', '<b>Falta registrar información.</b>');
+    }
+    else{
+      this.defensaService.CreateOrEditDefensaJudicial(defensaJudicial)
+      .subscribe((response: Respuesta) => {
+        this.openDialog('', `<b>${response.message}</b>`,true,response.data?response.data.defensaJudicialId:0);
+      },
+      err => {
+        this.openDialog('', err.message);
+      });
+    }
   }
 }

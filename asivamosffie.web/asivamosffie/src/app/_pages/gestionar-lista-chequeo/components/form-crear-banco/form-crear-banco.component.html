@@ -1,0 +1,102 @@
+<section class="container text-center mb-2em">
+    <div class="text-right">
+        <a routerLink="/gestionListaChequeo" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+
+    <h1 class="title-menu--h1"> {{ esRegistroNuevo === true ? 'Crear banco' : 'Ver detalle/Editar requisito' }} </h1>
+
+    <form class="mt-3em" [formGroup]="formBanco" (ngSubmit)="guardar()">
+        <mat-card align="left">
+            <mat-card-content>
+                <div class="row">
+                    <div class="col-md-12">
+                      <div class="row">
+                        <div class="pr-1">
+                          <label    class="label-left"
+                                    style="margin-top: .9em;"
+                                    for="nombreRequisito"
+                                    [class.color-secondaryColor]="( formBanco.get('nombreRequisito').invalid && formBanco.get('nombreRequisito').touched) || ( formBanco.get('nombreRequisito').invalid && esRegistroNuevo === false )">
+                                    Nombre del requisito
+                          </label>
+                        </div>
+                        <div class="col d-flex">
+                            <mat-form-field>
+                                <input  matInput
+                                        type="text"
+                                        maxlength="1000"
+                                        #nombreRequisito
+                                        formControlName="nombreRequisito"
+                                        style="width: 98%;"
+                                        required>
+                            </mat-form-field>
+                            <span   class="contador"
+                                    [matTooltipPosition]="'above'"
+                                    matTooltip="Campo alfanumérico"
+                                    matTooltipClass="info-tooltip">
+                                    {{ 1000 - nombreRequisito.value.length }}
+                            </span>
+                        </div>
+                        <span class="icon-incompleto">
+                          <img
+                            class="icon-incompleto--img"
+                            src="assets/img/icon/incompleto.svg"
+                            alt="este campo es requerido"
+                            [matTooltipPosition]="'above'"
+                            matTooltip="Debe ingresar la información en el campo para continuar"
+                            matTooltipClass="info-tooltip"
+                            *ngIf="( formBanco.get('nombreRequisito').invalid && formBanco.get('nombreRequisito').touched ) || ( formBanco.get('nombreRequisito').invalid && esRegistroNuevo === false )"
+                          />
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-8">
+                      <div class="row">
+                        <div class="pr-1">
+                          <label    class="label-left"
+                                    style="margin-top: 1.8em;"
+                                    for="estadoRequisito"
+                                    [class.color-secondaryColor]="( formBanco.get('estadoRequisito').invalid && formBanco.get('estadoRequisito').touched) || ( formBanco.get('estadoRequisito').invalid && esRegistroNuevo === false )">
+                                    Estado del requisito
+                          </label>
+                        </div>
+                        <div class="col d-flex">
+                            <mat-form-field appearance="fill" style="width: 95%;">
+                                <mat-select class="padding-left" formControlName="estadoRequisito" required>
+                                  <mat-option *ngFor="let requisito of booleanosEstadoReq" [value]="requisito.value">
+                                      {{requisito.viewValue}}
+                                  </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <span class="icon-incompleto" style="margin-top: .5em;">
+                          <img
+                            class="icon-incompleto--img"
+                            src="assets/img/icon/incompleto.svg"
+                            alt="este campo es requerido"
+                            [matTooltipPosition]="'above'"
+                            matTooltip="Debe ingresar la información en el campo para continuar"
+                            matTooltipClass="info-tooltip"
+                            *ngIf="( formBanco.get('estadoRequisito').invalid && formBanco.get('estadoRequisito').touched ) || ( formBanco.get('estadoRequisito').invalid && esRegistroNuevo === false )"
+                          />
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+            </mat-card-content>
+        </mat-card>
+        <div class="text-center" style="margin-top: 2em;">
+          <button mat-button
+                  color="warn"
+                  class="btn-guardar"
+                  type="submit"
+                  [disabled]="formBanco.dirty === false">
+                  <img  src="assets/img/icon/guardar.svg">
+          </button>
+      </div>
+    </form>
+</section>

@@ -28,6 +28,7 @@ namespace asivamosffie.services
             _context = context;
         }
 
+        #region Get
         public async Task<List<SesionComiteSolicitud>> GetListSesionComiteSolicitud()
         {
             List<SesionComiteSolicitud> ListSesionComiteSolicitud = await _context.SesionComiteSolicitud
@@ -119,12 +120,74 @@ namespace asivamosffie.services
 
         }
 
+        public async Task<Contratacion> GetContratacionByContratacionId(int pContratacionId)
+        {
+            try
+            {
+                List<Dominio> LisParametricas = _context.Dominio
+                    .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_Por_Contratar
+                         || r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento
+                ).ToList();
+
+                Contratacion contratacion = await _context.Contratacion
+                    .Where(r => r.ContratacionId == pContratacionId)
+                          .Include(r => r.DisponibilidadPresupuestal)
+                          .Include(r => r.Contratista)
+                           .Include(r => r.Contrato).FirstOrDefaultAsync();
+
+                contratacion.FechaTramite = DateTime.Now;
+
+                contratacion.sesionComiteSolicitud = _context.SesionComiteSolicitud
+                    .Where(r => r.SolicitudId == contratacion.ContratacionId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
+                    .Include(r => r.ComiteTecnico)
+                    .Include(r => r.ComiteTecnicoFiduciario)
+                    .ToList();
+
+                if (contratacion.Contratista != null)
+                {
+                    if (!string.IsNullOrEmpty(contratacion.Contratista.TipoIdentificacionCodigo))
+                    {
+                        bool allDigits = contratacion.Contratista.TipoIdentificacionCodigo.All(char.IsDigit);
+                        if (allDigits)
+                        {
+                            contratacion.Contratista.TipoIdentificacionCodigo = LisParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento && r.Codigo == contratacion.Contratista.TipoIdentificacionCodigo).FirstOrDefault().Codigo;
+                        }
+                    }
+                }
+                foreach (var Contrato in contratacion.Contrato)
+                {
+
+                    if (!string.IsNullOrEmpty(Contrato.TipoContratoCodigo))
+                    {
+                        Contrato.FechaTramite = DateTime.Now;
+                        Contrato.TipoContratoCodigo = LisParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_Por_Contratar).FirstOrDefault().Nombre;
+                    }
+                }
+
+                _context.SaveChanges();
+
+
+                if (contratacion.Contratista != null)
+                {
+                    if (!string.IsNullOrEmpty(contratacion.Contratista.TipoIdentificacionCodigo))
+                    {
+                        contratacion.Contratista.TipoIdentificacionCodigo = LisParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento && r.Codigo == contratacion.Contratista.TipoIdentificacionCodigo).FirstOrDefault().Nombre;
+                    }
+                }
+                return contratacion;
+            }
+            catch (Exception ex)
+            {
+                return new Contratacion();
+            }
+        }
+
         public async Task<List<VListaContratacionModificacionContractual>> GetListSesionComiteSolicitudV2()
         {
             return await _context.VListaContratacionModificacionContractual.OrderByDescending(v => v.SesionComiteSolicitudId).ToListAsync();
         }
 
-
+        #endregion
 
         public async Task<Respuesta> RegistrarTramiteContrato(Contrato pContrato, string pPatchfile, string pEstadoCodigo, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
@@ -270,33 +333,7 @@ namespace asivamosffie.services
                     };
             }
         }
-
-        public async Task<bool> EnviarNotificaciones(Contrato pContrato, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
-        {
-            Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificacionContratacion341);
-            DateTime? FechaFirmaFiduciaria = _context.SesionComiteSolicitud.Where(r => r.SolicitudId == pContrato.Contratacion.ContratacionId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion).Select(r => r.ComiteTecnicoFiduciario.FechaOrdenDia).FirstOrDefault();
-
-            var emails = _context.UsuarioPerfil
-                .Where(x => (x.PerfilId == (int)EnumeratorPerfil.Juridica
-                    || x.PerfilId == (int)EnumeratorPerfil.Tecnica) && x.Activo)
-                .Select(x => x.Usuario.Email)
-                .ToList();
-            bool blEnvioCorreo = false;
-
-            foreach (var email in emails)
-            {
-                string template = TemplateRecoveryPassword.Contenido
-                            .Replace("_LinkF_", pDominioFront)
-                            .Replace("[TIPO_CONTRATO]", pContrato.Contratacion.NumeroSolicitud)
-                            .Replace("[NUMERO_CONTRATO]", pContrato.NumeroContrato)
-                            .Replace("[FECHA_FIRMA_CONTRATO]", FechaFirmaFiduciaria.HasValue ? ((DateTime)FechaFirmaFiduciaria).ToString("dd-MMMM-yy") : " ")
-                            .Replace("[Observaciones]", pContrato.Observaciones);
-                blEnvioCorreo = Helpers.Helpers.EnviarCorreo(email, "Solicitud de contratación en trámite en la Fiduciaria", template, pSender, pPassword, pMailServer, pMailPort);
-
-            }
-            return blEnvioCorreo;
-        }
-
+         
         private bool ValidarRegistroCompletoContrato(Contrato contratoOld)
         {
             if (
@@ -323,67 +360,31 @@ namespace asivamosffie.services
 
             return true;
         }
-
-        public async Task<Contratacion> GetContratacionByContratacionId(int pContratacionId)
+         
+        public async Task<bool> EnviarNotificaciones(Contrato pContrato, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
-            try
+            Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificacionContratacion341);
+            DateTime? FechaFirmaFiduciaria = _context.SesionComiteSolicitud.Where(r => r.SolicitudId == pContrato.Contratacion.ContratacionId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion).Select(r => r.ComiteTecnicoFiduciario.FechaOrdenDia).FirstOrDefault();
+
+            var emails = _context.UsuarioPerfil
+                .Where(x => (x.PerfilId == (int)EnumeratorPerfil.Juridica
+                    || x.PerfilId == (int)EnumeratorPerfil.Tecnica) && x.Activo)
+                .Select(x => x.Usuario.Email)
+                .ToList();
+            bool blEnvioCorreo = false;
+
+            foreach (var email in emails)
             {
-                List<Dominio> LisParametricas = _context.Dominio
-                    .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_Por_Contratar
-                         || r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento
-                ).ToList();
+                string template = TemplateRecoveryPassword.Contenido
+                            .Replace("_LinkF_", pDominioFront)
+                            .Replace("[TIPO_CONTRATO]", pContrato.Contratacion.NumeroSolicitud)
+                            .Replace("[NUMERO_CONTRATO]", pContrato.NumeroContrato)
+                            .Replace("[FECHA_FIRMA_CONTRATO]", FechaFirmaFiduciaria.HasValue ? ((DateTime)FechaFirmaFiduciaria).ToString("dd-MM-yy") : " ")
+                            .Replace("[Observaciones]", pContrato.Observaciones);
+                blEnvioCorreo = Helpers.Helpers.EnviarCorreo(email, "Solicitud de contratación en trámite en la Fiduciaria", template, pSender, pPassword, pMailServer, pMailPort);
 
-                Contratacion contratacion = await _context.Contratacion
-                    .Where(r => r.ContratacionId == pContratacionId)
-                          .Include(r => r.DisponibilidadPresupuestal)
-                          .Include(r => r.Contratista)
-                           .Include(r => r.Contrato).FirstOrDefaultAsync();
-
-                contratacion.FechaTramite = DateTime.Now;
-
-                contratacion.sesionComiteSolicitud = _context.SesionComiteSolicitud
-                    .Where(r => r.SolicitudId == contratacion.ContratacionId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
-                    .Include(r => r.ComiteTecnico)
-                    .Include(r => r.ComiteTecnicoFiduciario)
-                    .ToList();
-
-                if (contratacion.Contratista != null)
-                {
-                    if (!string.IsNullOrEmpty(contratacion.Contratista.TipoIdentificacionCodigo))
-                    {
-                        bool allDigits = contratacion.Contratista.TipoIdentificacionCodigo.All(char.IsDigit);
-                        if (allDigits)
-                        {
-                            contratacion.Contratista.TipoIdentificacionCodigo = LisParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento && r.Codigo == contratacion.Contratista.TipoIdentificacionCodigo).FirstOrDefault().Codigo;
-                        }
-                    }
-                }
-                foreach (var Contrato in contratacion.Contrato)
-                {
-
-                    if (!string.IsNullOrEmpty(Contrato.TipoContratoCodigo))
-                    {
-                        Contrato.FechaTramite = DateTime.Now;
-                        Contrato.TipoContratoCodigo = LisParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_Por_Contratar).FirstOrDefault().Nombre;
-                    }
-                }
-
-                _context.SaveChanges();
-
-
-                if (contratacion.Contratista != null)
-                {
-                    if (!string.IsNullOrEmpty(contratacion.Contratista.TipoIdentificacionCodigo))
-                    {
-                        contratacion.Contratista.TipoIdentificacionCodigo = LisParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento && r.Codigo == contratacion.Contratista.TipoIdentificacionCodigo).FirstOrDefault().Nombre;
-                    }
-                }
-                return contratacion;
             }
-            catch (Exception ex)
-            {
-                return new Contratacion();
-            }
+            return blEnvioCorreo;
         }
 
     }

@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpClientModule } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { CommonService } from '../common/common.service';
+import { MenuPerfil } from 'src/app/_interfaces/menu-perfil';
 
 @Injectable({
   providedIn: 'root'
@@ -122,7 +123,17 @@ export class AutenticacionService {
     return retorno;
   }
 
+  tienePermisos( ruta: string){
+
+    const usuario:any = JSON.parse(localStorage.getItem( 'actualUser' ));
+
+    return this.http.get<MenuPerfil>(`${environment.apiUrl}/common/tienePermisos?idPerfil=${ usuario.rol[0].perfilId }&pRuta=${ ruta }`);
+
+  }
+
 }
+
+
 
 export interface Usuario{
   menus?: any[];
@@ -137,8 +148,8 @@ export interface Usuario{
   fechaUltimoIngreso?:Date;
   cambiarContrasena?:boolean;
   rol?:any[];
-  nombres?: string;
-  apellidos?: string;
+  primerNombre?: string;
+  primerApellido?: string;
 }
 
 export interface Respuesta{

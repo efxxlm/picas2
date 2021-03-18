@@ -3,11 +3,11 @@
 </button>
 <div style="padding: 10px; text-align: center;">
     <h1 class="title-menu--h1 centerTrick">
-        Devolver solicitud SolPagoO0001
+        Devolver solicitud {{ data.registro.numeroSolicitud }}
     </h1>
     <p class="info-sub-title">
-        <span>Número de contrato: <b>N801801</b></span>
-        <span>Modalidad del contrato: <b>Tipo B</b></span>
+        <span>Número de contrato: <b> {{ data.registro.numeroContrato }} </b></span>
+        <span>Modalidad del contrato: <b> {{ data.registro.modalidad }} </b></span>
     </p>
     <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
         <mat-card class="shipping-card">
@@ -20,8 +20,12 @@
                     <div class="col-md-12">
                         <div class="row">
                             <div class="pr-1">
-                                <label class="label-left" for="fechaRadicacionSAC">Fecha de radicación SAC al
-                                    contratista</label>
+                                <label class="label-left" for="fechaRadicacionSAC"
+                                [ngClass]="{
+                                    'color-secondaryColor':
+                                      (addressForm.get('fechaRadicacionSAC').invalid && addressForm.get('fechaRadicacionSAC').touched) ||
+                                      (addressForm.get('fechaRadicacionSAC').invalid && estaEditando)
+                                  }">Fecha de radicación SAC al  contratista</label>
                             </div>
                             <div class="col d-flex align-items-center">
                                 <mat-form-field class="example-full-width">
@@ -34,6 +38,20 @@
                                     <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
                                 </button>
                             </div>
+                            <span class="icon-incompleto">
+                                <img
+                                  class="icon-incompleto--img"
+                                  src="assets/img/icon/incompleto.svg"
+                                  alt="este campo es requerido"
+                                  [matTooltipPosition]="'above'"
+                                  matTooltip="Debe ingresar la información en el campo para continuar"
+                                  matTooltipClass="info-tooltip"
+                                  *ngIf="
+                                    (addressForm.get('fechaRadicacionSAC').invalid && addressForm.get('fechaRadicacionSAC').touched) ||
+                                    (addressForm.get('fechaRadicacionSAC').invalid && estaEditando)
+                                  "
+                                />
+                              </span>
                         </div>
                     </div>
                 </div>
@@ -41,8 +59,12 @@
                     <div class="col-md-12">
                         <div class="row">
                             <div class="pr-1">
-                                <label for="numeroRadicacionSAC" class="label-left">Número de radicación SAC al
-                                    contratista</label>
+                                <label for="numeroRadicacionSAC" class="label-left"
+                                [ngClass]="{
+                                    'color-secondaryColor':
+                                      (addressForm.get('numeroRadicacionSAC').invalid && addressForm.get('numeroRadicacionSAC').touched) ||
+                                      (addressForm.get('numeroRadicacionSAC').invalid && estaEditando)
+                                  }">Número de radicación SAC al contratista</label>
                             </div>
                             <div class="col d-flex">
                                 <mat-form-field class="full-width">
@@ -51,6 +73,20 @@
                                 </mat-form-field>
                                 <span class="contador">{{10 - numeroRadicacionSAC.value.length}}</span>
                             </div>
+                            <span class="icon-incompleto">
+                                <img
+                                  class="icon-incompleto--img"
+                                  src="assets/img/icon/incompleto.svg"
+                                  alt="este campo es requerido"
+                                  [matTooltipPosition]="'above'"
+                                  matTooltip="Debe ingresar la información en el campo para continuar"
+                                  matTooltipClass="info-tooltip"
+                                  *ngIf="
+                                    (addressForm.get('numeroRadicacionSAC').invalid && addressForm.get('numeroRadicacionSAC').touched) ||
+                                    (addressForm.get('numeroRadicacionSAC').invalid && estaEditando)
+                                  "
+                                />
+                              </span>
                         </div>
                     </div>
                 </div>

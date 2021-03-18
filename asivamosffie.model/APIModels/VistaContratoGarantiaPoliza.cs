@@ -37,5 +37,8 @@ namespace asivamosffie.model.APIModels
 
         public string? TipoModificacion { get; set; }
         public string? FechaFirmaContrato { get; set; }
+
+        public int? PlazoMeses { get; set; }
+        public int? PlazoDias { get; set; }
     }
 }

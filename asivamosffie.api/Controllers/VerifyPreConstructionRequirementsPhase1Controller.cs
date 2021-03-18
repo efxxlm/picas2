@@ -10,12 +10,13 @@ using Microsoft.Extensions.Options;
 using asivamosffie.api.Responses;
 using System.Security.Claims;
 using asivamosffie.model.APIModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-
+    [Authorize]
     public class VerifyPreConstructionRequirementsPhase1Controller : ControllerBase
     {
         public readonly IVerifyPreConstructionRequirementsPhase1Service _verifyPreConstruction;
@@ -29,7 +30,7 @@ namespace asivamosffie.api.Controllers
         [Route("GetListContratacionInterventoria")]
         public async Task<List<VRegistrarFase1>> GetListContratacionInterventoria2()
         {
-            return await _verifyPreConstruction.GetListContratacionInterventoria2();
+            return await _verifyPreConstruction.GetListContratacionInterventoria2(Int32.Parse(HttpContext.User.FindFirst("UserId").Value));
         }
         [HttpGet]
         [Route("GetListContratacionInterventoriaOld")]
@@ -41,7 +42,7 @@ namespace asivamosffie.api.Controllers
         [Route("GetListContratacion")]
         public async Task<List<dynamic>> GetListContratacion()
         {
-            return await _verifyPreConstruction.GetListContratacion();
+            return await _verifyPreConstruction.GetListContratacion(Int32.Parse(HttpContext.User.FindFirst("UserId").Value));
         }
         [HttpGet]
         [Route("GetContratoByContratoId")]

@@ -19,9 +19,11 @@ namespace asivamosffie.model.Models
         public string CalificacionCodigo { get; set; }
         public int? InformeFinalAnexoId { get; set; }
         public int InformeFinalListaChequeoId { get; set; }
-        public DateTime? FechaEnvioSupervisor { get; set; }
-        public DateTime? FechaAprobacion { get; set; }
         public bool? TieneObservacionSupervisor { get; set; }
+        public string ValidacionCodigo { get; set; }
+        public string AprobacionCodigo { get; set; }
+        public bool? TieneModificacionInterventor { get; set; }
+        public bool? TieneModificacionApoyo { get; set; }
 
         public virtual InformeFinal InformeFinal { get; set; }
         public virtual InformeFinalAnexo InformeFinalAnexo { get; set; }

@@ -62,6 +62,9 @@
 
         DDP_limitacion = 50,
         DDP_Aportante_principal = 51,
+        DDP_contrato = 66,
+        DDP_novedad = 67,
+        DDP_objeto = 68,
         Ficha_DRP = 52,
         DRP_TABLA_FUENTES = 53,
         DRP_TABLA_USOS = 54,
@@ -72,6 +75,10 @@
         Ficha_estudio_tr_contratos=62,
         Contrato_Acta_Interventoria_Construccion = 63,
         Contrato_Acta_Obra_Construccion = 64,
-        Proponentes_Proceso_Seleccion = 65
+        Proponentes_Proceso_Seleccion = 65,
+        Persona_Natural_Proceso_Seleccion = 69,
+        Persona_Juridica_Proceso_Seleccion = 70,
+        Union_Temporal_Proceso_Seleccion = 71,
+        Participantes_Union_Temporal_Proceso_Seleccion = 72,
     }
 }

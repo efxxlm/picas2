@@ -41,6 +41,7 @@ export class FormActuacionReclamacionComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
   constructor(private services: ContractualControversyService, private common: CommonService, private fb: FormBuilder, public dialog: MatDialog, private router: Router) { }
 
   ngOnInit(): void {
@@ -48,17 +49,21 @@ export class FormActuacionReclamacionComponent implements OnInit {
       this.estadoAvanceTramiteArrayDom = rep;
     });
     if (this.isEditable == true) {
+      this.estaEditando = true;
+      this.addressForm.markAllAsTouched();
       this.services.GetActuacionSeguimientoById(this.idReclamacionActuacion).subscribe((data: any) => {
-        const avanceTramSelected = this.estadoAvanceTramiteArrayDom.find(t => t.codigo === data.estadoReclamacionCodigo);
-        console.log( this.estadoAvanceTramiteArrayDom.filter(t => t.codigo === data.estadoReclamacionCodigo));
-        this.addressForm.get('estadoAvanceTramite').setValue(avanceTramSelected);
+        for (let i = 0; i < this.estadoAvanceTramiteArrayDom.length; i++) {
+          const avanceTramSelected = this.estadoAvanceTramiteArrayDom.find(t => t.codigo === data.estadoReclamacionCodigo);
+          console.log(this.estadoAvanceTramiteArrayDom.filter(t => t.codigo === data.estadoReclamacionCodigo));
+          this.addressForm.get('estadoAvanceTramite').setValue(avanceTramSelected);
+        }
         this.addressForm.get('fechaActuacionAdelantada').setValue(data.fechaActuacionAdelantada);
-        this.addressForm.get('actuacionAdelantada').setValue(data.actuacionAdelantada);
-        this.addressForm.get('proximaActuacionRequerida').setValue(data.proximaActuacion);
+        this.addressForm.get('actuacionAdelantada').setValue(data.actuacionAdelantada !== undefined ? data.actuacionAdelantada : null);
+        this.addressForm.get('proximaActuacionRequerida').setValue(data.proximaActuacion !== undefined ? data.proximaActuacion : null);
         this.addressForm.get('diasVencimientoTerminos').setValue(data.cantDiasVencimiento);
         this.addressForm.get('fechaVencimientoTerminos').setValue(data.fechaVencimiento);
         this.addressForm.get('definitvoAseguradora').setValue(data.esResultadoDefinitivo);
-        this.addressForm.get('observaciones').setValue(data.observaciones);
+        this.addressForm.get('observaciones').setValue(data.observaciones !== undefined ? data.observaciones : null);
         this.addressForm.get('urlSoporte').setValue(data.rutaSoporte);
         this.codRecalamacion.emit(data.numeroReclamacion);
       });
@@ -71,13 +76,13 @@ export class FormActuacionReclamacionComponent implements OnInit {
   }
 
   maxLength(e: any, n: number) {
-    
+
     if (e.editor.getLength() > n) {
-      e.editor.deleteText(n-1, e.editor.getLength());
+      e.editor.deleteText(n - 1, e.editor.getLength());
     }
   }
-  textoLimpio(texto,n) {
-    if (texto!=undefined) {
+  textoLimpio(texto, n) {
+    if (texto != undefined) {
       return texto.getLength() > n ? n : texto.getLength();
     }
   }
@@ -90,11 +95,13 @@ export class FormActuacionReclamacionComponent implements OnInit {
   }
 
   onSubmit() {
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let actuacionTaiArray;
     if (this.isEditable == true) {
       actuacionTaiArray = {
         "ControversiaActuacionId": this.reclamacionID,
-        "EstadoDerivadaCodigo":'1',
+        "EstadoDerivadaCodigo": '1',
         "SeguimientoCodigo": true,
         "EstadoReclamacionCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
         "ActuacionAdelantada": this.addressForm.value.actuacionAdelantada,
@@ -111,7 +118,7 @@ export class FormActuacionReclamacionComponent implements OnInit {
     else {
       actuacionTaiArray = {
         "ControversiaActuacionId": this.reclamacionID,
-        "EstadoDerivadaCodigo":'1',
+        "EstadoDerivadaCodigo": '1',
         "SeguimientoCodigo": true,
         "EstadoReclamacionCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
         "ActuacionAdelantada": this.addressForm.value.actuacionAdelantada,

@@ -28,6 +28,7 @@
               #cantidadPerfiles
               required
               onKeyPress="if(this.value.length>=this.maxLength) return false;"
+              oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
             />
           </mat-form-field>
           <span
@@ -42,7 +43,7 @@
             <img
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
-                            alt="este campo es requerido"
+              alt="este campo es requerido"
               [matTooltipPosition]="'above'"
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
@@ -74,12 +75,11 @@
           <div class="row">
             <div class="col-md-12">
               <div class="row">
-                <div class="pr-1 mt-1em">
-                  {{ perfil.get('perfilCodigo').invalid | json }}
+                <div class="pr-1">
                   <label
                     class="label-left"
                     for="perfilCodigo"
-                    [class.color-secondaryColor]=" 
+                    [class.color-secondaryColor]="
                       (perfil.get('perfilCodigo').invalid && perfil.get('perfilCodigo').touched) ||
                       (perfil.get('perfilCodigo').invalid && estaEditando)
                     "
@@ -100,10 +100,10 @@
                   <img
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
-                                  alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
                     *ngIf="
                       (perfil.get('perfilCodigo').invalid && perfil.get('perfilCodigo').touched) ||
                       (perfil.get('perfilCodigo').invalid && estaEditando)
@@ -137,16 +137,13 @@
                       maxlength="3"
                       min="1"
                       max="999"
+                      #cantidadHvRequeridas
                       (keypress)="validateNumberKeypress($event)"
                       onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                      oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                       formControlName="cantidadHvRequeridas"
                       required
                       (ngModelChange)="validateNumber($event, i, 'cantidadHvRequeridas')"
-                      [class.invalid]="
-                        perfil.get('cantidadHvRequeridas').value.length > 0
-                          ? perfil.get('cantidadHvRequeridas').markAsUntouched()
-                          : perfil.get('cantidadHvRequeridas').markAsTouched()
-                      "
                     />
                   </mat-form-field>
                   <span
@@ -155,19 +152,18 @@
                     matTooltip="Campo numérico"
                     matTooltipClass="info-tooltip"
                   >
-                    {{ 3 - perfil.get('cantidadHvRequeridas').value.toString().length }}
+                    {{ 3 - cantidadHvRequeridas.value.length }}
                   </span>
                   <span class="icon-incompleto">
                     <img
                       class="icon-incompleto--img"
                       src="assets/img/icon/incompleto.svg"
-                                    alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                      alt="este campo es requerido"
+                      [matTooltipPosition]="'above'"
+                      matTooltip="Debe ingresar la información en el campo para continuar"
+                      matTooltipClass="info-tooltip"
                       *ngIf="
-                        (perfil.get('cantidadHvRequeridas').invalid &&
-                          perfil.get('cantidadHvRequeridas').touched) ||
+                        (perfil.get('cantidadHvRequeridas').invalid && perfil.get('cantidadHvRequeridas').touched) ||
                         (perfil.get('cantidadHvRequeridas').invalid && estaEditando)
                       "
                     />
@@ -200,16 +196,13 @@
                       maxlength="3"
                       min="1"
                       max="999"
+                      #cantidadHvRecibidas
                       (keypress)="validateNumberKeypress($event)"
                       onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                      oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                       formControlName="cantidadHvRecibidas"
                       required
                       (ngModelChange)="validateNumber($event, i, 'cantidadHvRecibidas')"
-                      [class.invalid]="
-                        perfil.get('cantidadHvRecibidas').value.length > 0
-                          ? perfil.get('cantidadHvRecibidas').markAsUntouched()
-                          : perfil.get('cantidadHvRecibidas').markAsTouched()
-                      "
                     />
                   </mat-form-field>
                   <span
@@ -218,16 +211,16 @@
                     matTooltip="Campo numérico"
                     matTooltipClass="info-tooltip"
                   >
-                    {{ 3 - perfil.get('cantidadHvRecibidas').value.toString().length }}
+                    {{ 3 - cantidadHvRecibidas.value.length }}
                   </span>
                   <span class="icon-incompleto">
                     <img
                       class="icon-incompleto--img"
                       src="assets/img/icon/incompleto.svg"
-                                    alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                      alt="este campo es requerido"
+                      [matTooltipPosition]="'above'"
+                      matTooltip="Debe ingresar la información en el campo para continuar"
+                      matTooltipClass="info-tooltip"
                       *ngIf="
                         (perfil.get('cantidadHvRecibidas').invalid && perfil.get('cantidadHvRecibidas').touched) ||
                         (perfil.get('cantidadHvRecibidas').invalid && estaEditando)
@@ -262,16 +255,13 @@
                       maxlength="3"
                       min="1"
                       max="999"
+                      #cantidadHvAprobadas
                       (keypress)="validateNumberKeypress($event)"
                       onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                      oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                       formControlName="cantidadHvAprobadas"
                       required
                       (ngModelChange)="validateNumber($event, i, 'cantidadHvAprobadas')"
-                      [class.invalid]="
-                        perfil.get('cantidadHvAprobadas').value.length > 0
-                          ? perfil.get('cantidadHvAprobadas').markAsUntouched()
-                          : perfil.get('cantidadHvAprobadas').markAsTouched()
-                      "
                     />
                   </mat-form-field>
                   <span
@@ -280,16 +270,16 @@
                     matTooltip="Campo numérico"
                     matTooltipClass="info-tooltip"
                   >
-                    {{ 3 - perfil.get('cantidadHvAprobadas').value.toString().length }}
+                    {{ 3 - cantidadHvAprobadas.value.length }}
                   </span>
                   <span class="icon-incompleto">
                     <img
                       class="icon-incompleto--img"
                       src="assets/img/icon/incompleto.svg"
-                                    alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                      alt="este campo es requerido"
+                      [matTooltipPosition]="'above'"
+                      matTooltip="Debe ingresar la información en el campo para continuar"
+                      matTooltipClass="info-tooltip"
                       *ngIf="
                         (perfil.get('cantidadHvAprobadas').invalid && perfil.get('cantidadHvAprobadas').touched) ||
                         (perfil.get('cantidadHvAprobadas').invalid && estaEditando)
@@ -304,7 +294,7 @@
           <div class="row">
             <div class="col-md-8">
               <div class="row">
-                <div class="pr-1 mt-1em">
+                <div class="pr-1">
                   <label
                     class="label-left"
                     for="fechaAprobacion"
@@ -334,11 +324,6 @@
                           i
                         )
                       "
-                      [class.invalid]="
-                        perfil.get('fechaAprobacion').value !== null
-                          ? perfil.get('fechaAprobacion').markAsUntouched()
-                          : perfil.get('fechaAprobacion').markAsTouched()
-                      "
                     />
                     <mat-datepicker #fechaAprobacion></mat-datepicker>
                   </mat-form-field>
@@ -355,10 +340,10 @@
                     <img
                       class="icon-incompleto--img"
                       src="assets/img/icon/incompleto.svg"
-                                    alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                      alt="este campo es requerido"
+                      [matTooltipPosition]="'above'"
+                      matTooltip="Debe ingresar la información en el campo para continuar"
+                      matTooltipClass="info-tooltip"
                       *ngIf="
                         (perfil.get('fechaAprobacion').invalid && perfil.get('fechaAprobacion').touched) ||
                         (perfil.get('fechaAprobacion').invalid && estaEditando)
@@ -388,6 +373,8 @@
                 <div class="col d-flex">
                   <quill-editor
                     class="quill-editor-style w-65 card position-relative"
+                    style="max-width: 60em;"
+                    #observaciones
                     [styles]="editorStyle"
                     [modules]="config"
                     (onContentChanged)="maxLength($event, 1000)"
@@ -400,17 +387,17 @@
                   ></quill-editor>
                   <div class="d-flex" style="align-items: flex-end; margin-bottom: 0.6em">
                     <span class="contador miles" *ngIf="perfil.get('observacion').value !== null">
-                      {{ 1000 - textoLimpio(perfil.get('observacion').value) }}
+                      {{ 1000 - textoLimpio( observaciones.quillEditor, 1000 ) }}
                     </span>
                     <span class="contador miles" *ngIf="perfil.get('observacion').value === null"> 1000 </span>
                     <span class="icon-incompleto">
                       <img
                         class="icon-incompleto--img"
                         src="assets/img/icon/incompleto.svg"
-                                      alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                        alt="este campo es requerido"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Debe ingresar la información en el campo para continuar"
+                        matTooltipClass="info-tooltip"
                         *ngIf="
                           (perfil.get('observacion').invalid && perfil.get('observacion').touched) ||
                           (perfil.get('observacion').invalid && estaEditando)
@@ -448,11 +435,6 @@
                           maxlength="20"
                           formControlName="numeroRadicado"
                           required
-                          [class.invalid]="
-                            numero.get('numeroRadicado').value.length > 0
-                              ? numero.get('numeroRadicado').markAsUntouched()
-                              : numero.get('numeroRadicado').markAsTouched()
-                          "
                         />
                       </mat-form-field>
                       <span
@@ -467,10 +449,10 @@
                         <img
                           class="icon-incompleto--img"
                           src="assets/img/icon/incompleto.svg"
-                                        alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                          alt="este campo es requerido"
+                          [matTooltipPosition]="'above'"
+                          matTooltip="Debe ingresar la información en el campo para continuar"
+                          matTooltipClass="info-tooltip"
                           *ngIf="
                             (numero.get('numeroRadicado').invalid && numero.get('numeroRadicado').touched) ||
                             (numero.get('numeroRadicado').invalid && estaEditando)
@@ -552,37 +534,33 @@
                     <input
                       matInput
                       type="text"
+                      maxlength="400"
                       formControlName="rutaSoporte"
                       required
-                      [class.invalid]="
-                        perfil.get('rutaSoporte').value.length > 0
-                          ? perfil.get('rutaSoporte').markAsUntouched()
-                          : perfil.get('rutaSoporte').markAsTouched()
-                      "
                     />
                   </mat-form-field>
                 </div>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
+                    *ngIf="
+                      (perfil.get('rutaSoporte').invalid && perfil.get('rutaSoporte').touched) ||
+                      (perfil.get('rutaSoporte').invalid && estaEditando)
+                    "
+                  />
+                </span>
                 <div class="d-flex justify-content-center size-text-descriptivo">
-                  <span class="info-url"
-                    >Indique la ruta en la que se encuentra el soporte de las hojas de vida y el Acta de aprobación del
-                    personal.</span
-                  >
+                  <span class="info-url">
+                    Indique la ruta en la que se encuentra el soporte de las hojas de vida y el Acta de aprobación del
+                    personal.
+                  </span>
                 </div>
               </div>
-              <span class="icon-incompleto">
-                <img
-                  class="icon-incompleto--img"
-                  src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
-                  *ngIf="
-                    (perfil.get('rutaSoporte').invalid && perfil.get('rutaSoporte').touched) ||
-                    (perfil.get('rutaSoporte').invalid && estaEditando)
-                  "
-                />
-              </span>
             </div>
           </div>
         </mat-card-content>
@@ -637,7 +615,7 @@
           class="btn-guardar"
           type="button"
           (click)="guardar()"
-          [disabled]="formContratista.dirty === false"
+          [disabled]="perfil.dirty === false"
         >
           <img src="assets/img/icon/guardar.svg" />
         </button>

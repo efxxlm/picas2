@@ -28,7 +28,11 @@ export class ControlYTablaMesasTrabajoCcComponent implements OnInit {
 
   ngOnInit(): void {
     this.services.GetListGrillMesasByControversiaId(this.controversiaID).subscribe((data:any)=>{
-      this.dataTable = data;
+      for (let mesas of data){
+        if(mesas.requiereMesaTrabajo==true && mesas.estadoActuacionCodigoGeneral!='1'){
+          this.dataTable.push(mesas);
+        }
+      }
       this.dataSource = new MatTableDataSource(this.dataTable);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -49,7 +53,9 @@ export class ControlYTablaMesasTrabajoCcComponent implements OnInit {
   }
   finalizarMesaTrabajo(id){
     this.services.FinalizarMesa(id).subscribe((data:any)=>{
-      this.ngOnInit();
+      this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+        () => this.router.navigate(['gestionarTramiteControversiasContractuales/actualizarTramiteControversia'])
+      );
     });
   }
   verDetalleMesaTrabajo(id,codeMT,idMesa){

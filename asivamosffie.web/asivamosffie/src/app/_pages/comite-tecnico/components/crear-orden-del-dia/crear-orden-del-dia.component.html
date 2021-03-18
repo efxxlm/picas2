@@ -39,8 +39,8 @@
                     for="tema"
                     class="label-left"
                     [class.color-secondaryColor]="
-                      (registroPresupuestal.get('tema').invalid && registroPresupuestal.get('tema').touched) ||
-                      (registroPresupuestal.get('tema').invalid && estaEditando)
+                      (registroPresupuestal.get('tema')?.invalid && registroPresupuestal.get('tema').touched) ||
+                      (registroPresupuestal.get('tema')?.invalid && estaEditando)
                     "
                   >
                     Tema
@@ -63,13 +63,13 @@
                     <img
                       class="icon-incompleto--img"
                       src="assets/img/icon/incompleto.svg"
-                                    alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                      alt="este campo es requerido"
+                      [matTooltipPosition]="'above'"
+                      matTooltip="Debe ingresar la información en el campo para continuar"
+                      matTooltipClass="info-tooltip"
                       *ngIf="
-                        (registroPresupuestal.get('tema').invalid && registroPresupuestal.get('tema').touched) ||
-                        (registroPresupuestal.get('tema').invalid && estaEditando)
+                        (registroPresupuestal.get('tema')?.invalid && registroPresupuestal.get('tema').touched) ||
+                        (registroPresupuestal.get('tema')?.invalid && estaEditando)
                       "
                     />
                   </span>
@@ -83,9 +83,9 @@
                         for="responsable"
                         class="label-left"
                         [class.color-secondaryColor]="
-                          (registroPresupuestal.get('responsable').invalid &&
+                          (registroPresupuestal.get('responsable')?.invalid &&
                             registroPresupuestal.get('responsable').touched) ||
-                          (registroPresupuestal.get('responsable').invalid && estaEditando)
+                          (registroPresupuestal.get('responsable')?.invalid && estaEditando)
                         "
                       >
                         Responsable
@@ -104,14 +104,14 @@
                       <img
                         class="icon-incompleto--img"
                         src="assets/img/icon/incompleto.svg"
-                                      alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                        alt="este campo es requerido"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Debe ingresar la información en el campo para continuar"
+                        matTooltipClass="info-tooltip"
                         *ngIf="
-                          (registroPresupuestal.get('responsable').invalid &&
+                          (registroPresupuestal.get('responsable')?.invalid &&
                             registroPresupuestal.get('responsable').touched) ||
-                          (registroPresupuestal.get('responsable').invalid && estaEditando)
+                          (registroPresupuestal.get('responsable')?.invalid && estaEditando)
                         "
                       />
                     </span>
@@ -126,9 +126,9 @@
                         for="tiempoIntervencion"
                         class="label-left"
                         [class.color-secondaryColor]="
-                          (registroPresupuestal.get('tiempoIntervencion').invalid &&
+                          (registroPresupuestal.get('tiempoIntervencion')?.invalid &&
                             registroPresupuestal.get('tiempoIntervencion').touched) ||
-                          (registroPresupuestal.get('tiempoIntervencion').invalid && estaEditando)
+                          (registroPresupuestal.get('tiempoIntervencion')?.invalid && estaEditando)
                         "
                       >
                         Tiempo de intervención
@@ -148,6 +148,7 @@
                           required
                           (keypress)="validateNumberKeypress($event)"
                           onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                          oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         />
                       </mat-form-field>
                       <span
@@ -162,14 +163,14 @@
                         <img
                           class="icon-incompleto--img"
                           src="assets/img/icon/incompleto.svg"
-                                        alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                          alt="este campo es requerido"
+                          [matTooltipPosition]="'above'"
+                          matTooltip="Debe ingresar la información en el campo para continuar"
+                          matTooltipClass="info-tooltip"
                           *ngIf="
-                            (registroPresupuestal.get('tiempoIntervencion').invalid &&
+                            (registroPresupuestal.get('tiempoIntervencion')?.invalid &&
                               registroPresupuestal.get('tiempoIntervencion').touched) ||
-                            (registroPresupuestal.get('tiempoIntervencion').invalid && estaEditando)
+                            (registroPresupuestal.get('tiempoIntervencion')?.invalid && estaEditando)
                           "
                         />
                       </span>
@@ -183,8 +184,8 @@
                     for="url"
                     class="label-left"
                     [class.color-secondaryColor]="
-                      (registroPresupuestal.get('url').invalid && registroPresupuestal.get('url').touched) ||
-                      (registroPresupuestal.get('url').invalid && estaEditando)
+                      (registroPresupuestal.get('url')?.invalid && registroPresupuestal.get('url').touched) ||
+                      (registroPresupuestal.get('url')?.invalid && estaEditando)
                     "
                   >
                     URL con soporte
@@ -200,13 +201,13 @@
                   <img
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
-                                  alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
                     *ngIf="
-                      (registroPresupuestal.get('url').invalid && registroPresupuestal.get('url').touched) ||
-                      (registroPresupuestal.get('url').invalid && estaEditando)
+                      (registroPresupuestal.get('url')?.invalid && registroPresupuestal.get('url').touched) ||
+                      (registroPresupuestal.get('url')?.invalid && estaEditando)
                     "
                   />
                 </span>

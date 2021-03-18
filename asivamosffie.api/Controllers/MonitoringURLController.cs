@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using asivamosffie.model.APIModels;
 using asivamosffie.services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,9 +12,9 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class MonitoringURLController : ControllerBase
-    {
-
+    { 
         private readonly IDocumentService _documentService;
         private readonly IMonitoringURL _monitoringURLService;
         

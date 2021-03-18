@@ -41,7 +41,7 @@
             <mat-expansion-panel class="expansion-style sub-expansion">
               <mat-expansion-panel-header
                 class="expansion-style--header"
-                *ngIf="sesionComite.tipoSolicitudCodigo === '1'"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.procesoSeleccion"
               >
                 <mat-panel-title class="expansion-style--title sub-expansion">
                   <b>Solicitud {{ sesionComite.procesoSeleccion.numeroProceso }}</b>
@@ -49,10 +49,67 @@
               </mat-expansion-panel-header>
               <mat-expansion-panel-header
                 class="expansion-style--header"
-                *ngIf="sesionComite.tipoSolicitudCodigo === '2'"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.contratacion"
               >
                 <mat-panel-title class="expansion-style--title sub-expansion">
                   <b>Solicitud {{ sesionComite.numeroSolicitud }}</b>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <mat-expansion-panel-header
+                class="expansion-style--header"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.modificacionContractual"
+              >
+                <mat-panel-title class="expansion-style--title sub-expansion">
+                  <b
+                    >Solicitud
+                    {{
+                      sesionComite.novedadContractual !== undefined
+                        ? sesionComite.novedadContractual.numeroSolicitud
+                        : sesionComite.numeroSolicitud
+                    }}
+                  </b>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <mat-expansion-panel-header
+                class="expansion-style--header"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.controversiaContractual"
+              >
+                <mat-panel-title class="expansion-style--title sub-expansion">
+                  <b
+                    >Solicitud
+                    {{
+                      sesionComite.controversiaContractual !== undefined
+                        ? sesionComite.controversiaContractual.numeroSolicitud
+                        : sesionComite.numeroSolicitud
+                    }}
+                  </b>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+
+              <mat-expansion-panel-header
+                class="expansion-style--header"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.actualizacionProcesoSeleccion"
+              >
+                <mat-panel-title class="expansion-style--title sub-expansion">
+                  <b>Solicitud {{ sesionComite.numeroSolicitud }} </b>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+
+              <mat-expansion-panel-header
+                class="expansion-style--header"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.evaluacionProceso"
+              >
+                <mat-panel-title class="expansion-style--title sub-expansion">
+                  <b>Solicitud {{ sesionComite.numeroSolicitud }} </b>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+
+              <mat-expansion-panel-header
+                class="expansion-style--header"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.ActuacionesControversias"
+              >
+                <mat-panel-title class="expansion-style--title sub-expansion">
+                  <b>Solicitud {{ sesionComite.controversiaActuacion !== undefined ? sesionComite.controversiaActuacion.controversiaContractual.numeroSolicitud : sesionComite.numeroSolicitud }} </b>
                 </mat-panel-title>
               </mat-expansion-panel-header>
 
@@ -60,13 +117,12 @@
             </mat-expansion-panel>
           </mat-accordion>
         </section>
-
-        <section *ngIf="acta.sesionComiteSolicitudComiteTecnicoFiduciario !== null">
+        <section *ngIf="acta.sesionComiteSolicitudComiteTecnicoFiduciario !== undefined">
           <mat-accordion *ngFor="let sesionComite of acta.sesionComiteSolicitudComiteTecnicoFiduciario">
             <mat-expansion-panel class="expansion-style sub-expansion">
               <mat-expansion-panel-header
                 class="expansion-style--header"
-                *ngIf="sesionComite.tipoSolicitudCodigo === '1'"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.procesoSeleccion"
               >
                 <mat-panel-title class="expansion-style--title sub-expansion">
                   <b>Solicitud {{ sesionComite.procesoSeleccion.numeroProceso }}</b>
@@ -74,10 +130,53 @@
               </mat-expansion-panel-header>
               <mat-expansion-panel-header
                 class="expansion-style--header"
-                *ngIf="sesionComite.tipoSolicitudCodigo === '2'"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.contratacion"
               >
                 <mat-panel-title class="expansion-style--title sub-expansion">
                   <b>Solicitud {{ sesionComite.contratacion.numeroSolicitud }}</b>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <mat-expansion-panel-header
+                class="expansion-style--header"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.modificacionContractual"
+              >
+                <mat-panel-title class="expansion-style--title sub-expansion">
+                  <b>Solicitud {{ sesionComite.novedadContractual.numeroSolicitud }} </b>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <mat-expansion-panel-header
+                class="expansion-style--header"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.controversiaContractual"
+              >
+                <mat-panel-title class="expansion-style--title sub-expansion">
+                  <b>Solicitud {{ sesionComite.controversiaContractual.numeroSolicitud }} </b>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+
+              <mat-expansion-panel-header
+                class="expansion-style--header"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.actualizacionProcesoSeleccion"
+              >
+                <mat-panel-title class="expansion-style--title sub-expansion">
+                  <b>Solicitud {{ sesionComite.numeroSolicitud }} </b>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+
+              <mat-expansion-panel-header
+                class="expansion-style--header"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.evaluacionProceso"
+              >
+                <mat-panel-title class="expansion-style--title sub-expansion">
+                  <b>Solicitud {{ sesionComite.procesoSeleccion.numeroProceso }} </b>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+
+              <mat-expansion-panel-header
+                class="expansion-style--header"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.ActuacionesControversias"
+              >
+                <mat-panel-title class="expansion-style--title sub-expansion">
+                  <b>Solicitud {{ sesionComite.controversiaActuacion !== undefined ? sesionComite.controversiaActuacion.controversiaContractual.numeroSolicitud : sesionComite.numeroSolicitud }} </b>
                 </mat-panel-title>
               </mat-expansion-panel-header>
 
@@ -115,6 +214,17 @@
                     <div class="text-color" [innerHTML]="innerObservacion(tema.observaciones)"></div>
                   </section>
                   <h2 class="card-subTitle">Decisiones</h2>
+                  <div class="reparacion-card row">
+                    <div class="col-md-4">
+                      Resultado de la votación <b class="color-blue"> {{ tema.resultadoVotacion }} </b>
+                    </div>
+                    <div class="col-md-4 info-text completo">
+                      Aprobó <b class="color-blue"> {{ tema.totalAprobado }} </b>
+                    </div>
+                    <div class="col-md-4 info-text sin-diligenciar">
+                      No aprobó <b class="color-blue"> {{ tema.totalNoAprobado }} </b>
+                    </div>
+                  </div>
                   <p>
                     <b>Estado de la solicitud</b>: <span class="text-color"> {{ tema.estadoTemaCodigo }} </span>
                   </p>
@@ -157,8 +267,8 @@
                       <p>
                         <b>Responsable</b>:
                         <span class="text-color">
-                          {{ compromiso.responsableNavigation.usuario.nombres }}
-                          {{ compromiso.responsableNavigation.usuario.apellidos }}
+                          {{ compromiso.responsableNavigation.usuario.primerNombre }}
+                          {{ compromiso.responsableNavigation.usuario.primerApellido }}
                         </span>
                       </p>
                       <p>
@@ -200,6 +310,17 @@
                     <div class="text-color" [innerHTML]="innerObservacion(tema.observaciones)"></div>
                   </section>
                   <h2 class="card-subTitle">Decisiones</h2>
+                  <div class="reparacion-card row">
+                    <div class="col-md-4">
+                      Resultado de la votación <b class="color-blue"> {{ tema.resultadoVotacion }} </b>
+                    </div>
+                    <div class="col-md-4 info-text completo">
+                      Aprobó <b class="color-blue"> {{ tema.totalAprobado }} </b>
+                    </div>
+                    <div class="col-md-4 info-text sin-diligenciar">
+                      No aprobó <b class="color-blue"> {{ tema.totalNoAprobado }} </b>
+                    </div>
+                  </div>
                   <p>
                     <b>Estado de la solicitud</b>: <span class="text-color"> {{ tema.estadoTemaCodigo }} </span>
                   </p>
@@ -242,8 +363,8 @@
                       <p>
                         <b>Responsable</b>:
                         <span class="text-color">
-                          {{ compromiso.responsableNavigation.usuario.nombres }}
-                          {{ compromiso.responsableNavigation.usuario.apellidos }}
+                          {{ compromiso.responsableNavigation.usuario.primerNombre }}
+                          {{ compromiso.responsableNavigation.usuario.primerApellido }}
                         </span>
                       </p>
                       <p>
@@ -301,17 +422,25 @@
 
   <div *ngIf="comentarActa">
     <form autocomplete="off" [formGroup]="form" (ngSubmit)="onSubmit()">
-      <mat-card style="margin-bottom: 1em">
-        <mat-card-title
-          class="text-area-quill--label text-color"
+      <div class="d-flex mt-2em align-items-center animatedDown">
+        <div
+          class="text-area-quill"
           [class.color-secondaryColor]="
             (form.get('comentarioActa').invalid && form.get('comentarioActa').touched) ||
             (form.get('comentarioActa').invalid && estaEditando)
           "
         >
-          Comentarios al acta
-        </mat-card-title>
-        <mat-card-content>
+          <label
+            class="text-area-quill--label align-left-label"
+            [class.colorMainColor]="
+              !(
+                (form.get('comentarioActa').invalid && form.get('comentarioActa').touched) ||
+                (form.get('comentarioActa').invalid && estaEditando)
+              )
+            "
+          >
+            Comentarios al acta
+          </label>
           <p class="padding-p">
             Fecha:
             <b class="text-color">
@@ -322,37 +451,35 @@
               }}
             </b>
           </p>
-          <div class="d-flex align-items-center">
-            <quill-editor
-              class="quill-editor-style card position-relative"
-              [styles]="editorStyle"
-              [modules]="config"
-              (onContentChanged)="maxLength($event, 1000)"
-              formControlName="comentarioActa"
-              required
-            >
-            </quill-editor>
-            <span class="contador" *ngIf="form.get('comentarioActa').value !== null" style="margin-top: 2em;">
-              {{ 1000 - textoLimpio(form.get('comentarioActa').value, 1000) }}
-            </span>
-            <span class="contador" *ngIf="form.get('comentarioActa').value === null" style="margin-top: 2em;"> 1000 </span>
-            <span class="icon-incompleto">
-              <img
-                class="icon-incompleto--img"
-                src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
-                *ngIf="
-                  (form.get('comentarioActa').invalid && form.get('comentarioActa').touched) ||
-                  (form.get('comentarioActa').invalid && estaEditando)
-                "
-              />
-            </span>
-          </div>
-        </mat-card-content>
-      </mat-card>
+          <quill-editor
+            class="quill-editor-style ml-1em"
+            [styles]="editorStyle"
+            [modules]="config"
+            (onContentChanged)="maxLength($event, 1000)"
+            formControlName="comentarioActa"
+            required
+          >
+          </quill-editor>
+        </div>
+        <span class="contador miles" *ngIf="form.get('comentarioActa').value !== null">
+          {{ 1000 - textoLimpio(form.get('comentarioActa').value, 1000) }}
+        </span>
+        <span class="contador miles" *ngIf="form.get('comentarioActa').value === null"> 1000 </span>
+        <span class="icon-incompleto">
+          <img
+            class="icon-incompleto--img"
+            src="assets/img/icon/incompleto.svg"
+            alt="este campo es requerido"
+            [matTooltipPosition]="'above'"
+            matTooltip="Debe ingresar la información en el campo para continuar"
+            matTooltipClass="info-tooltip"
+            *ngIf="
+              (form.get('comentarioActa').invalid && form.get('comentarioActa').touched) ||
+              (form.get('comentarioActa').invalid && estaEditando)
+            "
+          />
+        </span>
+      </div>
 
       <div class="text-center" class="flex-text-center">
         <img src="assets/img/icon/sim.svg" style="width: 2.5%" />

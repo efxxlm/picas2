@@ -1,10 +1,15 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Dominio, CommonService } from 'src/app/core/_services/common/common.service';
 import { DialogObservacionesItemListchequeoComponent } from '../dialog-observaciones-item-listchequeo/dialog-observaciones-item-listchequeo.component';
 import { DialogSubsanacionComponent } from '../dialog-subsanacion/dialog-subsanacion.component';
+import humanize from 'humanize-plus';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { Router } from '@angular/router';
+import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
 
 @Component({
   selector: 'app-validar-lista-chequeo',
@@ -12,107 +17,135 @@ import { DialogSubsanacionComponent } from '../dialog-subsanacion/dialog-subsana
   styleUrls: ['./validar-lista-chequeo.component.scss']
 })
 export class ValidarListaChequeoComponent implements OnInit {
-  dataSource = new MatTableDataSource();
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-  displayedColumns: string[] = [
-    'item',
-    'documento',
-    'revTecnica',
-    'observaciones'
-  ];
-  dataTable: any[] = [
+
+    @Input() contrato: any;
+    solicitudPagoModificado: any;
+    dataSource = new MatTableDataSource();
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild(MatSort, { static: true }) sort: MatSort;
+    displayedColumns: string[] = [
+      'item',
+      'documento',
+      'revTecnica',
+      'observaciones'
+    ];
+    listaRevisionTecnica: Dominio[] = [];
+    noCumpleCodigo = '2';
+    seDiligencioCampo = false;
+
+    constructor(
+        private routes: Router,
+        private registrarPagosSvc: RegistrarRequisitosPagoService,
+        private dialog: MatDialog,
+        private commonSvc: CommonService )
     {
-      item: '1',
-      documento: 'Certificación de supervisión de aprobación de pago de interventoría suscrita por el contratista y el Supervisor en original, en el cual se evidencie el avance porcentual de obra.',
-      revTecnica: '',
-      observaciones: ''
-    },
-    {
-      item: '2',
-      documento: 'Factura (Prefactura si tiene facturación electrónica) por costo variable del Contrato de Interventoría, cuyo deudor es el Patrimonio Autónomo del Fondo de Infraestructura Educativa FFIE, NIT 830.053.812-2. Indicar el lugar en el que se presta el servicio. Para la instrucción de pago se sugiere la siguiente nota: “Favor realizar transferencia electrónica (consignación) a la cuenta (mencionar el tipo: ahorro o corriente) No. XXXXX en el (nombre de banco), a nombre de (XXXXXXXXX) con NIT (XXXXXXXX).',
-      revTecnica: '',
-      observaciones: ''
-    },
-    {
-      item: '3',
-      documento: 'Copia de la resolución de facturación vigente.',
-      revTecnica: '',
-      observaciones: ''
-    },
-    {
-      item: '4',
-      documento: 'Copia del Acta de Inicio de la Fase del Contrato de Interventoría (Requerido para el primer pago).',
-      revTecnica: '',
-      observaciones: ''
-    },
-    {
-      item: '5',
-      documento: 'Acta parcial de Interventoría suscrita por el contratista y el Supervisor, de forma impresa y con una copia magnética en formato Excel editable.',
-      revTecnica: '',
-      observaciones: ''
-    },
-    {
-      item: '6',
-      documento: 'Certificación revisor fiscal con copia de la tarjeta profesional y/o representante legal (únicamente cuando la sociedad no esté obligada a tener revisor fiscal) en la cual certifique que están al día en el pago de nómina, seguridad social y parafiscales del consorcio y los consorciados (debe corresponder al periodo en el que se emite la factura. Si la factura tiene fecha de los cinco (5) primeros días hábiles del mes, se podrá anexar la certificación del mes anterior).',
-      revTecnica: '',
-      observaciones: ''
-    },
-    {
-      item: '7',
-      documento: 'Certificación bancaria original no mayor a treinta (30) días, la cual debe contener los siguientes datos: Número de cuenta, clase de cuenta, NIT, nombre del titular y banco al cual se le debe realizar el pago (para el primer pago y/o cada vez que se cambie).',
-      revTecnica: '',
-      observaciones: ''
-    },
-    {
-      item: '8',
-      documento: 'RUT del Contratista. En el caso de un Consorcio o Unión Temporal, se deberá aportar el RUT de la forma plural de asociación y de cada uno de los integrantes (para el primer pago y/o cada vez que se actualice).',
-      revTecnica: '',
-      observaciones: ''
-    },
-    {
-      item: '9',
-      documento: 'Copia documento de constitución del consorcio o unión temporal.',
-      revTecnica: '',
-      observaciones: ''
-    },
-    {
-      item: '10',
-      documento: 'Formato de retención en la fuente (si es persona natural) (Requerido para el primer pago).',
-      revTecnica: '',
-      observaciones: ''
+        this.commonSvc.listaRevisionTecnica()
+            .subscribe( listaRevisionTecnica => this.listaRevisionTecnica = listaRevisionTecnica );
     }
-  ];
-  booleanosRevisionTecnica: any[] = [
-    { value: true, viewValue: 'Si cumple' },
-    { value: false, viewValue: 'No cumple' }
-  ]
-  constructor(public dialog: MatDialog) { }
 
-  ngOnInit(): void {
-    this.dataSource = new MatTableDataSource(this.dataTable);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-  };
+    ngOnInit(): void {
+        
+        for ( const solicitudPagoListaChequeo of this.contrato.solicitudPagoOnly.solicitudPagoListaChequeo ) {
+            for ( const solicitudPagoListaChequeoRespuesta of solicitudPagoListaChequeo.solicitudPagoListaChequeoRespuesta ) {
+                solicitudPagoListaChequeoRespuesta.respuestaCodigo = solicitudPagoListaChequeoRespuesta.respuestaCodigo !== undefined ? solicitudPagoListaChequeoRespuesta.respuestaCodigo : null;
+                solicitudPagoListaChequeoRespuesta.observacion = solicitudPagoListaChequeoRespuesta.observacion !== undefined ? solicitudPagoListaChequeoRespuesta.observacion : null;
+            }
+        }
+        this.solicitudPagoModificado = this.contrato.solicitudPagoOnly;
+        console.log( this.solicitudPagoModificado );
+        this.dataSource = new MatTableDataSource();
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+    }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  };
-  callObservaciones(){
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.height = 'auto';
-    dialogConfig.width = '865px';
-    //dialogConfig.data = { id: id, idRol: idRol, numContrato: numContrato, fecha1Titulo: fecha1Titulo, fecha2Titulo: fecha2Titulo };
-    const dialogRef = this.dialog.open(DialogObservacionesItemListchequeoComponent, dialogConfig);
-    //dialogRef.afterClosed().subscribe(value => {});
-  }
-  callSubsanacion(){
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.height = 'auto';
-    dialogConfig.width = '865px';
-    //dialogConfig.data = { id: id, idRol: idRol, numContrato: numContrato, fecha1Titulo: fecha1Titulo, fecha2Titulo: fecha2Titulo };
-    const dialogRef = this.dialog.open(DialogSubsanacionComponent, dialogConfig);
-    //dialogRef.afterClosed().subscribe(value => {});
-  }
+    applyFilter(event: Event) {
+      const filterValue = (event.target as HTMLInputElement).value;
+      this.dataSource.filter = filterValue.trim().toLowerCase();
+    }
+
+    firstLetterUpperCase( texto:string ) {
+        if ( texto !== undefined ) {
+            return humanize.capitalize( String( texto ).toLowerCase() );
+        }
+    }
+
+    getMatTable( solicitudPagoListaChequeoRespuesta: any[] ) {
+        return new MatTableDataSource( solicitudPagoListaChequeoRespuesta );
+    }
+
+    getObservacion( registro: any, index: number, jIndex: number ) {
+        const dialogRef = this.dialog.open(DialogObservacionesItemListchequeoComponent, {
+            width: '70em',
+            data: { contrato: this.contrato, registro, jIndex }
+        });
+
+        dialogRef.afterClosed()
+            .subscribe(
+                obs => {
+                    this.solicitudPagoModificado.solicitudPagoListaChequeo[ index ].solicitudPagoListaChequeoRespuesta[ jIndex ].observacion = obs;
+                }
+            );
+    }
+
+    callObservaciones(){
+      const dialogConfig = new MatDialogConfig();
+      dialogConfig.height = 'auto';
+      dialogConfig.width = '865px';
+      //dialogConfig.data = { id: id, idRol: idRol, numContrato: numContrato, fecha1Titulo: fecha1Titulo, fecha2Titulo: fecha2Titulo };
+      const dialogRef = this.dialog.open(DialogObservacionesItemListchequeoComponent, dialogConfig);
+      //dialogRef.afterClosed().subscribe(value => {});
+    }
+
+    getEstadoSemaforo( solicitudPagoListaChequeoRespuesta: any[] ) {
+        if ( solicitudPagoListaChequeoRespuesta.length > 0 ) {
+            let enProceso = 0;
+            let completo = 0;
+            solicitudPagoListaChequeoRespuesta.forEach( listaChequeo => {
+                // console.log( Object.keys( listaChequeo ) );
+            } );
+        }
+    }
+
+    callSubsanacion(){
+      const dialogConfig = new MatDialogConfig();
+      dialogConfig.height = 'auto';
+      dialogConfig.width = '865px';
+      //dialogConfig.data = { id: id, idRol: idRol, numContrato: numContrato, fecha1Titulo: fecha1Titulo, fecha2Titulo: fecha2Titulo };
+      const dialogRef = this.dialog.open(DialogSubsanacionComponent, dialogConfig);
+      //dialogRef.afterClosed().subscribe(value => {});
+    }
+
+    openDialog(modalTitle: string, modalText: string) {
+        const dialogRef = this.dialog.open(ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle, modalText }
+        });
+    }
+
+    disabledBtn() {
+        this.seDiligencioCampo = true;
+    }
+
+    guardar() {
+        this.registrarPagosSvc.createEditNewPayment( this.solicitudPagoModificado )
+        .subscribe(
+            response => {
+                this.openDialog( '', `<b>${ response.message }</b>` );
+                this.registrarPagosSvc.getValidateSolicitudPagoId( this.solicitudPagoModificado.solicitudPagoId )
+                    .subscribe(
+                        () => {
+                            this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                                () => this.routes.navigate(
+                                    [
+                                        '/registrarValidarRequisitosPago/verDetalleEditar',  this.solicitudPagoModificado.contratoId, this.solicitudPagoModificado.solicitudPagoId
+                                    ]
+                                )
+                            );
+                        }
+                    );
+            },
+            err => this.openDialog( '', `<b>${ err.message }</b>` )
+        );
+    }
+
 }

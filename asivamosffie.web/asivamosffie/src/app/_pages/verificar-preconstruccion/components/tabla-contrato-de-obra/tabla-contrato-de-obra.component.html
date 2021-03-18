@@ -12,7 +12,7 @@
 
     <ng-container matColumnDef="fechaAprobacion">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de aprobación de requisitos </th>
-        <td mat-cell *matCellDef="let element"> <b>{{element.fechaAprobacion | date: 'dd/MM/yyyy' }}</b> </td>
+        <td mat-cell *matCellDef="let element"> <b>{{element.fechaAprobacion }}</b> </td>
     </ng-container>
 
     <ng-container matColumnDef="numeroContrato">
@@ -38,8 +38,9 @@
     <ng-container matColumnDef="estadoNombre">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la verificación </th>
         <td mat-cell *matCellDef="let element">
-            <section *ngIf="element.estadoCodigo !== estadosPreconstruccionObra.conReqTecnicosAprobados.codigo"> {{ element.estadoNombre }} </section>
+            <section *ngIf="element.estadoCodigo !== estadosPreconstruccionObra.conReqTecnicosAprobados.codigo && element.estadoCodigo !== estadosPreconstruccionObra.enviadoAlSupervisor.codigo"> {{ element.estadoNombre }} </section>
             <section *ngIf="element.estadoCodigo === estadosPreconstruccionObra.conReqTecnicosAprobados.codigo"> {{ estadosPreconstruccionObra.conReqTecnicosAprobados.nombre }} </section>
+            <section *ngIf="element.estadoCodigo === estadosPreconstruccionObra.enviadoAlSupervisor.codigo"> {{ estadosPreconstruccionObra.enviadoAlSupervisor.nombre }} </section>
         </td>
     </ng-container>
 

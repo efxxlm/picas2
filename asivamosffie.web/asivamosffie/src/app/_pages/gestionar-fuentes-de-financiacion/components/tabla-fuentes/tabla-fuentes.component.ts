@@ -69,7 +69,11 @@ export class TablaFuentesComponent implements OnInit {
         ff.fuenteDeRecursos = fuenteRecursos ? fuenteRecursos.nombre : ''; 
         
       })
-  console.log(this.listaFF);
+      
+      this.listaFF.forEach(element => {
+        element.fechaCreacion = element.fechaCreacion.split('T')[0].split('-').reverse().join('/');
+      });
+
       this.dataSource = new MatTableDataSource(this.listaFF);
   
       this.dataSource.sort = this.sort;

@@ -1,0 +1,268 @@
+<section class="container text-center mb-2em" *ngIf="listaItems.length > 0">
+    <div class="text-right">
+        <a routerLink="/gestionListaChequeo" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+
+    <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+        <h1 class="title-menu--h1"> Ver detalle lista de chequeo </h1>
+
+        <mat-card class="border mt-3em" align="left">
+            <mat-card-content>
+                <p><b>Estado de la lista: </b> <i> {{ getEstado( formLista.get( 'estadoLista' ).value ) }} </i></p>
+                <p><b>Nombre de la lista: </b> <i> {{ formLista.get( 'nombreLista' ).value }} </i></p>
+                <p><b>La lista de chequeo está asociada a: </b> <i> {{ getTipoLista( formLista.get( 'tipoLista' ).value ) }} </i></p>
+                <p *ngIf="formLista.get( 'criterioPago' ).value !== null"><b>Criterio de pago: </b> <i> {{ getTipoCriterio( formLista.get( 'criterioPago' ).value ) }} </i></p>
+                <div *ngFor="let requisito of requisitos.controls; index as i" class="mt-1em">
+                  <b>Nombre del requisito {{ i + 1 }} </b>
+                  <i> <section [innerHTML]="requisito.get( 'nombreRequisito' ).value?.nombre"></section> </i>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </ng-container>
+    <ng-template #noEsVerDetalle>
+        <h1 class="title-menu--h1"> {{ esRegistroNuevo === true ? 'Crear lista' : 'Ver detalle/Editar lista de chequeo' }} </h1>
+
+        <form class="mt-3em" [formGroup]="formLista" (ngSubmit)="guardar()">
+            <mat-card align="left">
+                <mat-card-content>
+                    <div class="row">
+                        <div class="col-md-6" style="padding-left: 0 !important">
+                          <div class="row">
+                            <div class="pr-1">
+                              <label    class="label-left"
+                                        style="margin-top: 1.8em;"
+                                        for="estadoLista"
+                                        [class.color-secondaryColor]="( formLista.get('estadoLista').invalid && formLista.get('estadoLista').touched) || ( formLista.get('estadoLista').invalid && esRegistroNuevo === false )">
+                                        Estado de la lista
+                              </label>
+                            </div>
+                            <div class="col d-flex">
+                                <mat-form-field appearance="fill" style="width: 90%;">
+                                    <mat-select class="padding-left" formControlName="estadoLista" required>
+                                      <mat-option *ngFor="let estado of listaEstadoListaChequeo" [value]="estado.codigo">
+                                          {{ estado.nombre }}
+                                      </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <span class="icon-incompleto" style="margin-top: .5em;">
+                              <img
+                                class="icon-incompleto--img"
+                                src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido"
+                                [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip"
+                                *ngIf="( formLista.get('estadoLista').invalid && formLista.get('estadoLista').touched ) || ( formLista.get('estadoLista').invalid && esRegistroNuevo === false )"
+                              />
+                            </span>
+                          </div>
+                        </div>
+                    </div>
+    
+                    <div class="row">
+                        <div class="col-md-12">
+                          <div class="row">
+                            <div class="pr-1">
+                              <label    class="label-left"
+                                        style="margin-top: .9em;"
+                                        for="nombreLista"
+                                        [class.color-secondaryColor]="( formLista.get('nombreLista').invalid && formLista.get('nombreLista').touched) || ( formLista.get('nombreLista').invalid && esRegistroNuevo === false )">
+                                        Nombre de la lista
+                              </label>
+                            </div>
+                            <div class="col d-flex">
+                                <mat-form-field>
+                                    <input  matInput
+                                            type="text"
+                                            maxlength="100"
+                                            #nombreLista
+                                            formControlName="nombreLista"
+                                            style="width: 98%;"
+                                            required>
+                                </mat-form-field>
+                                <span   class="contador"
+                                        [matTooltipPosition]="'above'"
+                                        matTooltip="Campo alfanumérico"
+                                        matTooltipClass="info-tooltip">
+                                        {{ 100 - nombreLista.value.length }}
+                                </span>
+                            </div>
+                            <span class="icon-incompleto">
+                              <img
+                                class="icon-incompleto--img"
+                                src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido"
+                                [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip"
+                                *ngIf="( formLista.get('nombreLista').invalid && formLista.get('nombreLista').touched ) || ( formLista.get('nombreLista').invalid && esRegistroNuevo === false )"
+                              />
+                            </span>
+                          </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                          <div class="row">
+                            <div class="pr-1">
+                              <label    class="label-left"
+                                        style="margin-top: 1.8em;"
+                                        for="tipoLista"
+                                        [class.color-secondaryColor]="( formLista.get('tipoLista').invalid && formLista.get('tipoLista').touched) || ( formLista.get('tipoLista').invalid && esRegistroNuevo === false )">
+                                        La lista de chequeo está asociada a
+                              </label>
+                            </div>
+                            <div class="col d-flex">
+                                <mat-form-field appearance="fill" style="width: 97%;">
+                                    <mat-select class="padding-left" formControlName="tipoLista" required>
+                                      <mat-option *ngFor="let menu of listaChequeoMenu" [value]="menu.codigo">
+                                          {{menu.nombre}}
+                                      </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <span class="icon-incompleto" style="margin-top: .5em;">
+                              <img
+                                class="icon-incompleto--img"
+                                src="assets/img/icon/incompleto.svg"
+                                alt="este campo es requerido"
+                                [matTooltipPosition]="'above'"
+                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                matTooltipClass="info-tooltip"
+                                *ngIf="( formLista.get('tipoLista').invalid && formLista.get('tipoLista').touched ) || ( formLista.get('tipoLista').invalid && esRegistroNuevo === false )"
+                              />
+                            </span>
+                          </div>
+                        </div>
+                    </div>
+    
+                    <div *ngIf="formLista.get( 'tipoLista' ).value !== null && formLista.get( 'tipoLista' ).value === criteriosDePagoCodigo">
+                        <div class="row">
+                            <div class="col-md-12">
+                              <div class="row">
+                                <div class="pr-1">
+                                  <label    class="label-left"
+                                            style="margin-top: 1.8em;"
+                                            for="criterioPago"
+                                            [class.color-secondaryColor]="( formLista.get('criterioPago').invalid && formLista.get('criterioPago').touched) || ( formLista.get('criterioPago').invalid && esRegistroNuevo === false )">
+                                            Criterio de pago
+                                  </label>
+                                </div>
+                                <div class="col d-flex">
+                                    <mat-form-field appearance="fill" style="width: 97%;">
+                                        <mat-select class="padding-left" formControlName="criterioPago" required>
+                                          <mat-option *ngFor="let criterio of listaCriteriosDePago" [value]="criterio.codigo">
+                                              {{criterio.nombre}}
+                                          </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <span class="icon-incompleto" style="margin-top: .5em;">
+                                  <img
+                                    class="icon-incompleto--img"
+                                    src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido"
+                                    [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip"
+                                    *ngIf="( formLista.get('criterioPago').invalid && formLista.get('criterioPago').touched ) || ( formLista.get('criterioPago').invalid && esRegistroNuevo === false )"
+                                  />
+                                </span>
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div *ngIf="formLista.get( 'tipoLista' ).value !== null">
+                        <section formArrayName="requisitos" *ngFor="let requisito of requisitos.controls; index as i">
+                            <div class="row" [formGroup]="requisito">
+                                <div class="col-md-12">
+                                  <div class="row">
+                                    <div class="pr-1">
+                                      <label    class="label-left"
+                                                style="margin-top: 1.8em;"
+                                                for="nombreRequisito"
+                                                [class.color-secondaryColor]="( requisito.get('nombreRequisito').invalid && requisito.get('nombreRequisito').touched) || ( requisito.get('nombreRequisito').invalid && esRegistroNuevo === false )">
+                                                Nombre del requisito {{ i + 1 }}
+                                      </label>
+                                    </div>
+                                    <div class="col d-flex">
+                                        <mat-form-field appearance="fill" style="width: 97%;">
+                                            <mat-select class="padding-left" formControlName="nombreRequisito" required (ngModelChange)="getRequisitoValue( $event )">
+                                                <div *ngIf="requisito.get('nombreRequisito').value === null">
+                                                    <mat-option *ngFor="let item of listaItems" [value]="item">
+                                                        {{ item.nombre }}
+                                                    </mat-option>
+                                                </div>
+                                                <div *ngIf="requisito.get('nombreRequisito').value !== null">
+                                                    <mat-option [value]="requisito.get('nombreRequisito').value">
+                                                        {{ requisito.get('nombreRequisito').value.nombre }}
+                                                    </mat-option>
+                                                </div>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <span class="icon-incompleto" style="margin-top: .5em;">
+                                      <img
+                                        class="icon-incompleto--img"
+                                        src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido"
+                                        [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip"
+                                        *ngIf="( requisito.get('nombreRequisito').invalid && requisito.get('nombreRequisito').touched ) || ( requisito.get('nombreRequisito').invalid && esRegistroNuevo === false )"
+                                      />
+                                    </span>
+                                  </div>
+                                </div>
+                            </div>
+                            <div class="text-right" *ngIf="requisitos.controls.length === 1">
+                                <button mat-button
+                                        color="warn"
+                                        type="button"
+                                        class="btn-eliminar"
+                                        (click)="addRequisito()">
+                                  <img src="assets/img/icon/mas.svg">
+                                  Agregar requisito
+                                </button>
+                            </div>
+                            <div class="text-right" *ngIf="requisitos.controls.length > 1">
+                                <button mat-button
+                                        color="warn"
+                                        type="button"
+                                        class="btn-eliminar"
+                                        (click)="deleteRequisito( i )">
+                                  <img src="assets/img/icon/menos.svg">
+                                  Eliminar requisito
+                                </button>
+        
+                                <button mat-button
+                                        color="warn"
+                                        type="button"
+                                        class="btn-eliminar"
+                                        (click)="addRequisito()"
+                                        *ngIf="i > 0">
+                                  <img src="assets/img/icon/mas.svg">
+                                  Agregar requisito
+                                </button>
+                            </div>
+                        </section>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            <div class="text-center" style="margin-top: 2em;">
+                <button mat-button
+                        color="warn"
+                        class="btn-guardar"
+                        type="submit"
+                        [disabled]="formLista.dirty === false">
+                        <img  src="assets/img/icon/guardar.svg">
+                </button>
+            </div>
+        </form>
+    </ng-template>
+</section>

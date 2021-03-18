@@ -10,11 +10,13 @@ using Microsoft.Extensions.Options;
 using lalupa.Authorization.JwtHelpers;
 using asivamosffie.services.Exceptions;
 using asivamosffie.model.APIModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class RegisterFinalReportController : ControllerBase
     {
         public readonly IRegisterFinalReportService _registerFinalReport;
@@ -41,12 +43,12 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
-        [Route("GetInformeFinalByContratacionProyectoId")]
-        public async Task<List<ContratacionProyecto>> GetInformeFinalByContratacionProyectoId([FromQuery] int pContratacionProyectoId)
+        [Route("GetInformeFinalByProyectoId")]
+        public async Task<List<dynamic>> GetInformeFinalByProyectoId([FromQuery] int pProyectoId)
         {
             try
             {
-                return await _registerFinalReport.GetInformeFinalByContratacionProyectoId(pContratacionProyectoId);
+                return await _registerFinalReport.GetInformeFinalByProyectoId(pProyectoId);
             }
 
             catch (Exception ex)
@@ -56,29 +58,12 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
-        [Route("VerificarInformeFinalEstadoCompleto")]
-        public async Task<bool> VerificarInformeFinalEstadoCompleto(int pInformeFinalId)
+        [Route("GetInformeFinalListaChequeoByProyectoId")]
+        public async Task<List<dynamic>> GetInformeFinalListaChequeoByContratacionProyectoId([FromQuery] int pProyectoId)
         {
             try
             {
-                return await _registerFinalReport.VerificarInformeFinalEstadoCompleto(pInformeFinalId);
-            }
-
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-
-
-        [HttpGet]
-        [Route("GetInformeFinalListaChequeoByContratacionProyectoId")]
-        public async Task<List<dynamic>> GetInformeFinalListaChequeoByContratacionProyectoId([FromQuery] int pContratacionProyectoId)
-        {
-            try
-            {
-                return await _registerFinalReport.GetInformeFinalListaChequeoByContratacionProyectoId(pContratacionProyectoId);
+                return await _registerFinalReport.GetInformeFinalListaChequeoByProyectoId(pProyectoId);
             }
 
             catch (Exception ex)
@@ -102,6 +87,66 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetObservacionesByInformeFinalInterventoriaId")]
+        public async Task<InformeFinalInterventoria> GetObservacionesByInformeFinalInterventoriaId([FromQuery] int pInformeFinalInterventoriaId)
+        {
+            try
+            {
+                return await _registerFinalReport.GetObservacionesByInformeFinalInterventoriaId(pInformeFinalInterventoriaId);
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpGet]
+        [Route("GetInformeFinalAnexoByInformeFinalAnexoId")]
+        public async Task<InformeFinalAnexo> GetInformeFinalAnexoByInformeFinalAnexoId([FromQuery] int pInformeFinalAnexoId)
+        {
+            try
+            {
+                return await _registerFinalReport.GetInformeFinalAnexoByInformeFinalAnexoId(pInformeFinalAnexoId);
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpGet]
+        [Route("GetInformeFinalByInformeFinalId")]
+        public async Task<InformeFinal> GetInformeFinalByInformeFinalId([FromQuery] int pInformeFinalId)
+        {
+            try
+            {
+                return await _registerFinalReport.GetInformeFinalByInformeFinalId(pInformeFinalId);
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpGet]
+        [Route("GetInformeFinalInterventoriaObservacionByInformeFinalObservacion")]
+        public async Task<InformeFinalInterventoriaObservaciones> GetInformeFinalInterventoriaObservacionByInformeFinalObservacion([FromQuery] int pObservacionId)
+        {
+            try
+            {
+                return await _registerFinalReport.GetInformeFinalInterventoriaObservacionByInformeFinalObservacion(pObservacionId);
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         //Creaciones y modificaciones
 
         [HttpPost]
@@ -114,6 +159,23 @@ namespace asivamosffie.api.Controllers
                 pInformeFinal.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 //pInformeFinal.UsuarioCreacion = "LCT";
                 respuesta = await _registerFinalReport.CreateEditInformeFinal(pInformeFinal);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [HttpPost]
+        [Route("CreateEditInformeFinalInterventoriabyInformeFinal")]
+        public async Task<IActionResult> CreateEditInformeFinalInterventoriabyInformeFinal([FromBody] InformeFinal pInformeFinal)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _registerFinalReport.CreateEditInformeFinalInterventoriabyInformeFinal(pInformeFinal, HttpContext.User.FindFirst("User").Value);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -172,6 +234,25 @@ namespace asivamosffie.api.Controllers
                 pObservacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 //pObservacion.UsuarioCreacion = "LCT";
                 respuesta = await _registerFinalReport.CreateEditInformeFinalInterventoriaObservacion(pObservacion);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [HttpPost]
+        [Route("SendFinalReportToSupervision")]
+        public async Task<IActionResult> SendFinalReportToSupervision([FromQuery] int pProyectoId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                //respuesta = await _registerFinalReport.SendFinalReportToSupervision(pProyectoId, HttpContext.User.FindFirst("User").Value);
+                respuesta = await _registerFinalReport.SendFinalReportToSupervision(pProyectoId, HttpContext.User.FindFirst("User").Value, _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+
                 return Ok(respuesta);
             }
             catch (Exception ex)

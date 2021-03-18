@@ -1,0 +1,74 @@
+<section class="container text-center mb-2em" *ngIf="esRegistroNuevo !== undefined && listaFuncionalidad.faseCierre.length > 0">
+    <div class="text-right">
+        <a routerLink="/crearRoles" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+
+    <h1 class="title-menu--h1"> {{ esRegistroNuevo === true ? 'Crear rol' : 'Ver Detalle/Editar rol' }} </h1>
+
+    <form [formGroup]="formRoles" (ngSubmit)="guardar()" class="mt-3em">
+        <mat-card align="left">
+            <mat-card-content>
+                <div class="row">
+                    <div class="col-md-12">
+                      <div class="row">
+                            <div class="pr-1">
+                                <label    class="label-left"
+                                          style="margin-top: .9em;"
+                                          for="nombreRol"
+                                          [class.color-secondaryColor]="( formRoles.get('nombreRol').invalid && formRoles.get('nombreRol').touched) || ( formRoles.get('nombreRol').invalid && esRegistroNuevo === false )">
+                                          Nombre del rol
+                                </label>
+                            </div>
+                            <div class="col d-flex">
+                                <mat-form-field>
+                                    <input  matInput
+                                            type="text"
+                                            maxlength="80"
+                                            #nombreRol
+                                            formControlName="nombreRol"
+                                            style="width: 98%;"
+                                            required>
+                                </mat-form-field>
+                                <span   class="contador"
+                                        [matTooltipPosition]="'above'"
+                                        matTooltip="Campo alfanumérico"
+                                        matTooltipClass="info-tooltip">
+                                        {{ 80 - nombreRol.value.length }}
+                                </span>
+                            </div>
+                            <span class="icon-incompleto">
+                                <img
+                                  class="icon-incompleto--img"
+                                  src="assets/img/icon/incompleto.svg"
+                                  alt="este campo es requerido"
+                                  [matTooltipPosition]="'above'"
+                                  matTooltip="Debe ingresar la información en el campo para continuar"
+                                  matTooltipClass="info-tooltip"
+                                  *ngIf="( formRoles.get('nombreRol').invalid && formRoles.get('nombreRol').touched ) || ( formRoles.get('nombreRol').invalid && esRegistroNuevo === false )"
+                                />
+                            </span>
+                      </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <app-tabla-fase-inicio [esRegistroNuevo]="esRegistroNuevo" [formFaseInicio]="formRoles.get( 'registrosFaseInicio' )" [listaFaseInicio]="listaFuncionalidad.faseInicio"></app-tabla-fase-inicio>
+
+        <app-tabla-fase-seguimiento [esRegistroNuevo]="esRegistroNuevo" [formFaseInicio]="formRoles.get( 'registrosFaseSeguimiento' )" [listaFaseSeguimiento]="listaFuncionalidad.faseSeguimiento"></app-tabla-fase-seguimiento>
+
+        <app-tabla-fase-cierre [esRegistroNuevo]="esRegistroNuevo" [formFaseInicio]="formRoles.get( 'registrosFaseFinal' )" [listaFaseCierre]="listaFuncionalidad.faseCierre"></app-tabla-fase-cierre>
+
+        <div class="text-center mt-1em">
+            <button mat-button
+                    color="warn"
+                    class="btn-guardar"
+                    type="submit"
+                    [disabled]="formRoles.dirty === false">
+                    <img  src="assets/img/icon/guardar.svg">
+            </button>
+        </div>
+    </form>
+</section>

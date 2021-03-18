@@ -42,6 +42,10 @@
             required
             (onContentChanged)="maxLength($event, 5000)"
             formControlName="observaciones"
+            [class.invalid]="
+              (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+              (addressForm.get('observaciones').invalid && estaEditando)
+            "
             required
           >
           </quill-editor>
@@ -55,14 +59,14 @@
               }}
             </span>
             <span class="contador miles mt-3em" *ngIf="!addressForm.get('observaciones').value"> 5000 </span>
-            <span class="icon-incompleto">
+            <span class="icon-incompleto mt-3em">
               <img
                 class="icon-incompleto--img"
                 src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                alt="este campo es requerido"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
                 *ngIf="
                   (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
                   (addressForm.get('observaciones').invalid && estaEditando)
@@ -114,10 +118,10 @@
               <img
                 class="icon-incompleto--img"
                 src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                alt="este campo es requerido"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
                 *ngIf="
                   (addressForm.get('estadoSolicitud').invalid && addressForm.get('estadoSolicitud').touched) ||
                   (addressForm.get('estadoSolicitud').invalid && estaEditando)
@@ -148,6 +152,10 @@
             required
             (onContentChanged)="maxLength($event, 5000)"
             formControlName="observacionesDecision"
+            [class.invalid]="
+              (addressForm.get('observacionesDecision').invalid && addressForm.get('observacionesDecision').touched) ||
+              (addressForm.get('observacionesDecision').invalid && estaEditando)
+            "
             required
           >
           </quill-editor>
@@ -161,14 +169,14 @@
               }}
             </span>
             <span class="contador miles mt-3em" *ngIf="!addressForm.get('observacionesDecision').value"> 5000 </span>
-            <span class="icon-incompleto">
+            <span class="icon-incompleto mt-3em">
               <img
                 class="icon-incompleto--img"
                 src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                alt="este campo es requerido"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
                 *ngIf="
                   (addressForm.get('observacionesDecision').invalid &&
                     addressForm.get('observacionesDecision').touched) ||
@@ -210,7 +218,7 @@
             <img
               class="icon-incompleto--img"
               src="assets/img/icon/incompleto.svg"
-                            alt="este campo es requerido"
+              alt="este campo es requerido"
               [matTooltipPosition]="'above'"
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
@@ -245,9 +253,11 @@
                   type="number"
                   min="1"
                   max="10"
+                  maxLength="2"
                   formControlName="cuantosCompromisos"
                   (keyup)="CambioCantidadCompromisos()"
                   onkeyup="if(this.value>10) this.value = 10;"
+                  oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 />
               </mat-form-field>
               <span
@@ -262,10 +272,10 @@
                 <img
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
                   *ngIf="
                     (addressForm.get('cuantosCompromisos').invalid && addressForm.get('cuantosCompromisos').touched) ||
                     (addressForm.get('cuantosCompromisos').invalid && estaEditando)
@@ -313,10 +323,10 @@
                   <img
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
-                                  alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
                     *ngIf="
                       (compromiso.get('tarea').invalid && compromiso.get('tarea').touched) ||
                       (compromiso.get('tarea').invalid && estaEditando)
@@ -352,10 +362,10 @@
               <img
                 class="icon-incompleto--img"
                 src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                alt="este campo es requerido"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
                 *ngIf="
                   (compromiso.get('responsable').invalid && compromiso.get('responsable').touched) ||
                   (compromiso.get('responsable').invalid && estaEditando)
@@ -398,10 +408,10 @@
                     <img
                       class="icon-incompleto--img"
                       src="assets/img/icon/incompleto.svg"
-                                    alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                      alt="este campo es requerido"
+                      [matTooltipPosition]="'above'"
+                      matTooltip="Debe ingresar la información en el campo para continuar"
+                      matTooltipClass="info-tooltip"
                       *ngIf="
                         (compromiso.get('fecha').invalid && compromiso.get('fecha').touched) ||
                         (compromiso.get('fecha').invalid && estaEditando)

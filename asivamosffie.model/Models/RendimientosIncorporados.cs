@@ -7,9 +7,10 @@ namespace asivamosffie.model.Models
     {
         public int RendimientosIncorporadosId { get; set; }
         public int CarguePagosRendimientosId { get; set; }
+        public DateTime FechaRendimientos { get; set; }
         public string CuentaBancaria { get; set; }
         public decimal TotalRendimientosGenerados { get; set; }
-        public decimal RendimientosIncorporados1 { get; set; }
+        public decimal Incorporados { get; set; }
         public decimal ProvisionGravamenFinanciero { get; set; }
         public decimal TotalGastosBancarios { get; set; }
         public decimal TotalGravamenFinancieroDescontado { get; set; }

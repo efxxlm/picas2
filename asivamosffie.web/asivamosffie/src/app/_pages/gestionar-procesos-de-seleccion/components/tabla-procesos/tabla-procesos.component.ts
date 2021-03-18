@@ -85,14 +85,14 @@ export class TablaProcesosComponent implements OnInit {
             }
             else
             {
-              if( proceso.tipoProcesoCodigo==TiposProcesoSeleccion.Abierta)            
-              {
-                proceso.esCompleto=false;  
-              }
-              else
-              {
-                proceso.esCompleto=true;  
-              }
+              // if( proceso.tipoProcesoCodigo==TiposProcesoSeleccion.Abierta)            
+              // {
+              //   proceso.esCompleto=false;  
+              // }
+              // else
+              // {
+              //   proceso.esCompleto=true;  
+              // }
               
             }            
           }
@@ -127,6 +127,26 @@ export class TablaProcesosComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
     });
+  }
+
+  esCompleto( procesoSeleccion ){
+    let respuesta = false;
+
+    if ( procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario ){
+      switch (procesoSeleccion.tipoProcesoCodigo){
+        case TiposProcesoSeleccion.Abierta:
+          respuesta = procesoSeleccion.procesoSeleccionProponente.length>0
+        break;
+        case TiposProcesoSeleccion.Cerrada:
+          respuesta = procesoSeleccion.procesoSeleccionProponente.length>0
+        break;
+  
+      }
+    }else{
+     respuesta =  procesoSeleccion.esCompleto;
+    }
+    
+    return respuesta;
   }
 
   // verDetalle(e: number): void {

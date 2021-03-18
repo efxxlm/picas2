@@ -14,8 +14,8 @@
                   class="label-left"
                   for="tema"
                   [class.color-secondaryColor]="
-                    (addressForm.get('tema').invalid && addressForm.get('tema').touched) ||
-                    (addressForm.get('tema').invalid && estaEditando)
+                    (temas.get('tema')?.invalid && temas.get('tema').touched) ||
+                    (temas.get('tema')?.invalid && estaEditando)
                   "
                 >
                   Tema
@@ -34,6 +34,20 @@
                 >
                   {{ 1000 - temaInput.value.length }}
                 </span>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
+                    *ngIf="
+                    (temas.get('tema')?.invalid && temas.get('tema').touched) ||
+                    (temas.get('tema')?.invalid && estaEditando)
+                    "
+                  />
+                </span>
               </div>
             </div>
             <div class="row">
@@ -44,8 +58,8 @@
                       class="label-left"
                       for="responsable"
                       [class.color-secondaryColor]="
-                        (addressForm.get('responsable').invalid && addressForm.get('responsable').touched) ||
-                        (addressForm.get('responsable').invalid && estaEditando)
+                        (temas.get('responsable')?.invalid && temas.get('responsable').touched) ||
+                        (temas.get('responsable')?.invalid && estaEditando)
                       "
                     >
                       Responsable
@@ -64,13 +78,13 @@
                     <img
                       class="icon-incompleto--img"
                       src="assets/img/icon/incompleto.svg"
-                                    alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                      alt="este campo es requerido"
+                      [matTooltipPosition]="'above'"
+                      matTooltip="Debe ingresar la información en el campo para continuar"
+                      matTooltipClass="info-tooltip"
                       *ngIf="
-                        (addressForm.get('responsable').invalid && addressForm.get('responsable').touched) ||
-                        (addressForm.get('responsable').invalid && estaEditando)
+                        (temas.get('responsable')?.invalid && temas.get('responsable').touched) ||
+                        (temas.get('responsable')?.invalid && estaEditando)
                       "
                     />
                   </span>
@@ -85,9 +99,9 @@
                       class="label-left"
                       for="tiempoIntervencion"
                       [class.color-secondaryColor]="
-                        (addressForm.get('tiempoIntervencion').invalid &&
-                          addressForm.get('tiempoIntervencion').touched) ||
-                        (addressForm.get('tiempoIntervencion').invalid && estaEditando)
+                        (temas.get('tiempoIntervencion')?.invalid &&
+                          temas.get('tiempoIntervencion').touched) ||
+                        (temas.get('tiempoIntervencion')?.invalid && estaEditando)
                       "
                     >
                       Tiempo de intervención <b class="minutos">Minutos</b>
@@ -106,6 +120,7 @@
                         required
                         (keypress)="validateNumberKeypress($event)"
                         onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                        oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                       />
                     </mat-form-field>
                     <span
@@ -120,14 +135,14 @@
                       <img
                         class="icon-incompleto--img"
                         src="assets/img/icon/incompleto.svg"
-                                      alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                        alt="este campo es requerido"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Debe ingresar la información en el campo para continuar"
+                        matTooltipClass="info-tooltip"
                         *ngIf="
-                          (addressForm.get('tiempoIntervencion').invalid &&
-                            addressForm.get('tiempoIntervencion').touched) ||
-                          (addressForm.get('tiempoIntervencion').invalid && estaEditando)
+                          (temas.get('tiempoIntervencion')?.invalid &&
+                            temas.get('tiempoIntervencion').touched) ||
+                          (temas.get('tiempoIntervencion')?.invalid && estaEditando)
                         "
                       />
                     </span>
@@ -141,8 +156,8 @@
                   class="label-left"
                   for="url"
                   [class.color-secondaryColor]="
-                    (addressForm.get('url').invalid && addressForm.get('url').touched) ||
-                    (addressForm.get('url').invalid && estaEditando)
+                    (temas.get('url')?.invalid && temas.get('url').touched) ||
+                    (temas.get('url')?.invalid && estaEditando)
                   "
                 >
                   URL con soporte
@@ -158,13 +173,13 @@
                 <img
                   class="icon-incompleto--img"
                   src="assets/img/icon/incompleto.svg"
-                                alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
+                  alt="este campo es requerido"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Debe ingresar la información en el campo para continuar"
+                  matTooltipClass="info-tooltip"
                   *ngIf="
-                    (addressForm.get('url').invalid && addressForm.get('url').touched) ||
-                    (addressForm.get('url').invalid && estaEditando)
+                    (temas.get('url')?.invalid && temas.get('url').touched) ||
+                    (temas.get('url')?.invalid && estaEditando)
                   "
                 />
               </span>

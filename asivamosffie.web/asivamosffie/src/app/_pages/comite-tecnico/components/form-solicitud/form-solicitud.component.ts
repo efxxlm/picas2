@@ -21,6 +21,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
   @Input() sesionComiteSolicitud: SesionComiteSolicitud;
   @Input() listaMiembros: SesionParticipante[];
   @Input() fechaComite: Date;
+  @Input() EstadosolicitudActa: any;
 
   @Output() validar: EventEmitter<boolean> = new EventEmitter();
 
@@ -56,7 +57,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
   };
 
   config = {
-    toolbar: [
+    toolbar: [  
       ['bold', 'italic', 'underline'],
       [{ list: 'ordered' }, { list: 'bullet' }],
       [{ indent: '-1' }, { indent: '+1' }],
@@ -84,6 +85,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
   }
 
   ActualizarProyectos(lista) {
+    console.log(lista)
     this.proyectos = lista;
   }
 
@@ -211,7 +213,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
       }
       else {
 
-        this.openDialog('', 'Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos');
+        this.openDialog('', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos</b>');
         this.addressForm.get('cuantosCompromisos').setValue(this.compromisos.length);
 
       }
@@ -259,16 +261,22 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
 
   onSubmit() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
+    let tipoSolicitudCodigo: string;    
+
     if (this.proyectos)
       this.proyectos.forEach(p => {
         let proyecto = p.proyecto
+        tipoSolicitudCodigo = p.contratacion.tipoSolicitudCodigo;
         p.proyecto = {
-          EstadoProyectoCodigo: proyecto.estadoProyectoCodigo,
           proyectoId: proyecto.proyectoId,
+          estadoProyectoObraCodigo: proyecto.estadoProyectoObraCodigo,
+          estadoProyectoInterventoriaCodigo: proyecto.estadoProyectoInterventoriaCodigo,
 
 
         }
-        p.proyecto.estadoProyecto = p.proyecto.estadoProyecto ? p.proyecto.estadoProyecto.codigo : null
+        //p.proyecto.estadoProyectoObraCodigo = p.proyecto.estadoProyectoObraCodigo ? p.proyecto.estadoProyectoObraCodigo.codigo : null
+        //p.proyecto.estadoProyectoInterventoriaCodigo = p.proyecto.estadoProyectoInterventoriaCodigo ? p.proyecto.estadoProyectoInterventoriaCodigo.codigo : null
       })
 
     let Solicitud: SesionComiteSolicitud = {
@@ -283,7 +291,9 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
       tipoSolicitud: this.sesionComiteSolicitud.tipoSolicitudCodigo,
       sesionSolicitudCompromiso: [],
       contratacion: {
-        contratacionProyecto: this.proyectos ? this.proyectos : null
+        contratacionProyecto: this.proyectos ? this.proyectos : null,
+        tipoSolicitudCodigo: tipoSolicitudCodigo,
+
       }
 
     }
@@ -315,8 +325,6 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
   }
 
   cargarRegistro() {
-
-    // console.log(this.sesionComiteSolicitud)
 
     let estados: string[] = ['1', '3', '5']
 
@@ -375,7 +383,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
 
       this.listaMiembros.forEach(m => {
         let usuario: Usuario = respuesta.find(u => u.usuarioId == m.usuarioId);
-        m.nombre = `${usuario.nombres} ${usuario.apellidos}`
+        m.nombre = `${usuario.primerNombre} ${usuario.primerApellido}`
 
       })
 
@@ -408,7 +416,8 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
       this.justificacion = this.sesionComiteSolicitud.procesoSeleccion.justificacion
     }
 
-
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
   }
 
 

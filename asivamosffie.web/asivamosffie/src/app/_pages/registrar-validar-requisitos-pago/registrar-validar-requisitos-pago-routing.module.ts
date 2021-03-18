@@ -1,3 +1,5 @@
+import { VerDetalleExpensasComponent } from './components/ver-detalle-expensas/ver-detalle-expensas.component';
+import { VerDetalleEditarExpensasComponent } from './components/ver-detalle-editar-expensas/ver-detalle-editar-expensas.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CurrencyMaskInputMode, NgxCurrencyModule } from 'ngx-currency';
@@ -29,13 +31,21 @@ const routes: Routes = [
     component: RegistrarNuevaSolicitudPagoComponent
   },
   {
-    path: 'verDetalleEditar/:id',
+    path: 'verDetalleEditar/:idContrato/:idSolicitud',
     component: VerdetalleEditarSolicitudPagoComponent
   },
   {
-    path: 'verDetalle/:id',
+    path: 'verDetalleEditarExpensas/:id',
+    component: VerDetalleEditarExpensasComponent
+  },
+  {
+    path: 'verDetalle/:idContrato/:idSolicitud',
     component: VerdetalleSolicitudPagoComponent
   },
+  {
+    path: 'verDetalleExpensas/:id',
+    component: VerDetalleExpensasComponent
+  }
 ];
 @NgModule({
   imports: [RouterModule.forChild(routes),NgxCurrencyModule.forRoot(customCurrencyMaskConfig)],

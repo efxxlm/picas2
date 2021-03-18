@@ -156,7 +156,7 @@
                                 <p><b>Tipo de ensayo</b>: {{ getTipoEnsayo( ensayo.get( 'tipoEnsayoCodigo' ).value ) }} </p>
                                 <p><b>Número de muestras</b>: {{ ensayo.get( 'numeroMuestras' ).value }} </p>
                                 <p><b>Fecha de toma</b>: {{ ensayo.get( 'fechaTomaMuestras' ).value | date: 'dd/MM/yyyy' }} </p>
-                                <p><b>Fecha proyectada de entrega deresultados</b>: {{ ensayo.get( 'fechaEntregaResultados' ).value | date: 'dd/MM/yyyy' }} </p>
+                                <p><b>Fecha proyectada de entrega de resultados</b>: {{ ensayo.get( 'fechaEntregaResultados' ).value | date: 'dd/MM/yyyy' }} </p>
                                 <p *ngIf="ensayo.get( 'realizoControlMedicion' ).value === true"><b>¿Se realizó control a los equipos de medición durante la semana?</b>: Si</p>
                                 <p *ngIf="ensayo.get( 'realizoControlMedicion' ).value === false"><b>¿Se realizó control a los equipos de medición durante la semana?</b>: No</p>
                                 <section *ngIf="ensayo.get( 'realizoControlMedicion' ).value === true">

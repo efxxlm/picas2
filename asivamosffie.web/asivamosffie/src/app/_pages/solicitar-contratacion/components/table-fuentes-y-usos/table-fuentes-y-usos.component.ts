@@ -45,30 +45,48 @@ export class TableFuentesYUsosComponent implements OnInit {
     let registroEnProceso = 0;
     let registroSinDiligenciar = 0;
     elemento.forEach( value => {
-
+      let sinDiligenciar = 0;
+      let enProceso = 0;
+      let completo = 0;
       if ( value.componenteAportante.length === 0 ) {
         registroSinDiligenciar++;
       } else {
         value.componenteAportante.forEach( componente => {
           if ( componente.registroCompleto === undefined ) {
-            registroSinDiligenciar++;
+            sinDiligenciar++;
           };
           if ( componente.registroCompleto === false ) {
-            registroEnProceso++;
+            enProceso++;
           };
           if ( componente.registroCompleto === true ) {
-            registroCompletos++;
+            completo++;
           };
         } );
+
+        if ( sinDiligenciar > 0 && sinDiligenciar === value.componenteAportante.length ) {
+          registroSinDiligenciar++;
+        }
+        if ( completo > 0 && completo === value.componenteAportante.length ) {
+          registroCompletos++;
+        }
+        if ( enProceso > 0 && enProceso < value.componenteAportante.length || enProceso === value.componenteAportante.length ) {
+          registroEnProceso++;
+        }
+        if ( enProceso === 0 && completo > 0 && sinDiligenciar > 0 && completo + sinDiligenciar === value.componenteAportante.length ) {
+          registroEnProceso++;
+        }
       };
     } );
-    if ( registroSinDiligenciar === elemento.length ) {
+    if ( registroSinDiligenciar > 0 && registroSinDiligenciar === elemento.length ) {
+      // console.log( 'condicion 1' );
       return 'sin-diligenciar';
     };
     if ( registroEnProceso > registroSinDiligenciar && registroEnProceso < elemento.length || registroEnProceso === elemento.length ) {
+      // console.log( 'condicion 2' );
       return 'en-proceso';
     };
-    if ( registroCompletos === elemento.length ) {
+    if ( registroCompletos > 0 && registroCompletos === elemento.length ) {
+      // console.log( 'condicion 3' );
       return 'completo';
     };
   };

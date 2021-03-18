@@ -23,9 +23,7 @@ namespace asivamosffie.api.Controllers
         private readonly IRegisterPayPerformanceService _paymentAndPerformancesService;
         private readonly IOptions<AppSettings> _settings;
         private readonly IConverter _converter;
-
-
-
+         
         public RegisterPayPerformanceController(IOptions<AppSettings> settings, IConverter converter, IRegisterPayPerformanceService registerPayPerformanceService)
         {
             _paymentAndPerformancesService = registerPayPerformanceService;
@@ -44,7 +42,7 @@ namespace asivamosffie.api.Controllers
 
                 if (file.Length > 0 && file.FileName.Contains(".xls"))
                 {
-                    string strUsuario = User.Identity.Name;
+                    string strUsuario = User.Identity.Name.ToUpper();
                     respuesta = await _paymentAndPerformancesService.UploadFileToValidate(file, strUsuario, typeFile, saveSuccessProcess);
                 }
                 return Ok(respuesta);

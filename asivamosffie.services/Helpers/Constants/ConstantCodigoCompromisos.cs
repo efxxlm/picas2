@@ -16,6 +16,7 @@
 
     public class ConstantStringCompromisos
     {
-        public const string Sin_Iniciar = "Sin iniciar"; 
+        public const string Sin_Iniciar = "Sin iniciar";
+        public const string Sin_Avance = "Sin avance";
     }
 }

@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-reporte-actividades',
@@ -14,6 +15,7 @@ export class ReporteActividadesComponent implements OnInit {
 
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
+    @Input() tipoReporteActividad: any;
     @Output() estadoSemaforoReporte = new EventEmitter();
     formResumenGeneral: FormGroup;
     seguimientoSemanalId: number;
@@ -22,6 +24,13 @@ export class ReporteActividadesComponent implements OnInit {
     semaforoReporte = 'sin-diligenciar';
     semaforoActividad = 'sin-diligenciar';
     semaforoActividadSiguiente = 'sin-diligenciar';
+    tablaHistorial = new MatTableDataSource();
+    dataHistorial: any[] = [];
+    displayedColumnsHistorial: string[]  = [
+        'fechaRevision',
+        'responsable',
+        'historial'
+    ];
     editorStyle = {
         height: '45px'
     };
@@ -54,6 +63,17 @@ export class ReporteActividadesComponent implements OnInit {
 
             if ( this.seguimientoSemanal.seguimientoSemanalReporteActividad.length > 0 ) {
                 this.reporteActividad = this.seguimientoSemanal.seguimientoSemanalReporteActividad[0];
+                if ( this.esVerDetalle === false ) {
+                    this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalReporteActividadId, this.tipoReporteActividad.actividadEstadoObra )
+                        .subscribe(
+                            response => {
+                                if ( response.length > 0 ) {
+                                    this.dataHistorial = response.filter( obs => obs.archivada === true );
+                                    this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
+                                }
+                            }
+                        );
+                }
                 this.formResumenGeneral.setValue(
                     {
                         resumenEstadoContrato:  this.reporteActividad.resumenEstadoContrato !== undefined ?

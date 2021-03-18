@@ -59,16 +59,17 @@
           required
           (onContentChanged)="maxLength($event, 2000)"
           formControlName="observaciones"
+          #observaciones
         >
         </quill-editor>
       </div>
       <span class="contador miles" *ngIf="dataFormulario.get('observaciones').value !== null" style="margin-top: 2.2em">
-        {{ 2000 - textoLimpio(dataFormulario.get('observaciones').value) }}
+        {{ 2000 - textoLimpio( observaciones.quillEditor,1000 ) }}
       </span>
       <span class="contador miles" *ngIf="dataFormulario.get('observaciones').value === null" style="margin-top: 2.2em">
         2000
       </span>
-      <span class="icon-incompleto">
+      <span class="icon-incompleto" style="margin-top: 2.3em">
         <img
           class="icon-incompleto--img"
           src="assets/img/icon/incompleto.svg"
@@ -88,14 +89,14 @@
         <label
           class="label-left"
           [class.color-secondaryColor]="
-            (dataFormulario.get('minuta').invalid && dataFormulario.get('minuta').touched) ||
-            (dataFormulario.get('minuta').invalid && camposFaltantes)
+            (dataFormulario.get('rutaDocumento').invalid && dataFormulario.get('rutaDocumento').touched) ||
+            (dataFormulario.get('rutaDocumento').invalid && camposFaltantes)
           "
           >
           URL con soporte</label
         >
       </div>
-      <div class="input" style="width: 90%">
+      <div class="input" style="width: 88%">
         <div class="col">
           <mat-form-field class="full-width">
             <input matInput type="url" required formControlName="rutaDocumento" maxlength="300" />
@@ -111,8 +112,8 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
             *ngIf="
-              (dataFormulario.get('minuta').invalid && dataFormulario.get('minuta').touched) ||
-              (dataFormulario.get('minuta').invalid && camposFaltantes)
+              (dataFormulario.get('rutaDocumento').invalid && dataFormulario.get('rutaDocumento').touched) ||
+              (dataFormulario.get('rutaDocumento').invalid && camposFaltantes)
             "
           />
         </span>

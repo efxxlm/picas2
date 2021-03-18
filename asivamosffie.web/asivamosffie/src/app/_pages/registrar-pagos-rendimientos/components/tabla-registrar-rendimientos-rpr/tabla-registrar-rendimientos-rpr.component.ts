@@ -3,7 +3,6 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import exportFromJSON from 'export-from-json';
 import { FaseDosPagosRendimientosService } from 'src/app/core/_services/faseDosPagosRendimientos/fase-dos-pagosRendimientos.service';
 import { FileDownloader } from 'src/app/_helpers/file-downloader';
 import { DialogCargarReportRendRprComponent } from '../dialog-cargar-report-rend-rpr/dialog-cargar-report-rend-rpr.component';

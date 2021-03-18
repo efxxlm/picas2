@@ -4,6 +4,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-registro-fotografico',
@@ -14,11 +15,19 @@ export class RegistroFotograficoComponent implements OnInit {
 
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
+    @Input() tipoRegistroFotografico: any;
     verAyuda = false;
     formRegistroFotografico: FormGroup;
     seguimientoSemanalId: number;
     seguimientoSemanalRegistroFotograficoId: number;
     reporteFotografico: any;
+    tablaHistorial = new MatTableDataSource();
+    dataHistorial: any[] = [];
+    displayedColumnsHistorial: string[]  = [
+        'fechaRevision',
+        'responsable',
+        'historial'
+    ];
     editorStyle = {
         height: '45px'
     };
@@ -48,6 +57,15 @@ export class RegistroFotograficoComponent implements OnInit {
 
             if ( this.seguimientoSemanal.seguimientoSemanalRegistroFotografico.length > 0 ) {
                 this.reporteFotografico = this.seguimientoSemanal.seguimientoSemanalRegistroFotografico[0];
+                if ( this.esVerDetalle === false ) {
+                    this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.reporteFotografico.seguimientoSemanalRegistroFotograficoId, this.tipoRegistroFotografico )
+                        .subscribe(
+                            response => {
+                                this.dataHistorial = response.filter( obs => obs.archivada === true );
+                                this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
+                            }
+                        );
+                }
                 this.formRegistroFotografico.setValue(
                     {
                         urlSoporteFotografico:  this.reporteFotografico.urlSoporteFotografico !== undefined ?
@@ -109,10 +127,10 @@ export class RegistroFotograficoComponent implements OnInit {
                     this.openDialog( '', `<b>${ response.message }</b>` );
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                         () =>   this.routes.navigate(
-                                    [
-                                        '/registrarAvanceSemanal/registroSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
-                                    ]
-                                )
+                            [
+                                '/registrarAvanceSemanal/registroSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
+                            ]
+                        )
                     );
                 },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )

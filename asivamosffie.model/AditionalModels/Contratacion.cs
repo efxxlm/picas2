@@ -6,8 +6,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks; 
-using asivamosffie.model.Models; 
+using System.Threading.Tasks;
+using asivamosffie.model.Models;
 using asivamosffie.model.APIModels;
 using System.IO;
 using Microsoft.Extensions.Options;
@@ -25,5 +25,8 @@ namespace asivamosffie.model.Models
         /*jflorez, dejo el notmapped en el nombre par no generar confusión*/
         [NotMapped]
         public DateTime? FechaComiteTecnicoNotMapped { get; set; }
+         
+        [NotMapped]
+        public string ObservacionNotMapped { get; set; }
     }
 }

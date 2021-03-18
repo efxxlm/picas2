@@ -36,6 +36,8 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
 
   estadosArray: Dominio[] = []
 
+  estaEditando = false;
+
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
@@ -67,7 +69,7 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
         this.comite = respuesta[0];
         respuesta[0].sesionComiteTema.forEach(tem => {
           tem.temaCompromiso.forEach(tc => {
-            tc.nombreResponsable = `${tc.responsableNavigation.usuario.nombres} ${tc.responsableNavigation.usuario.apellidos}`;
+            tc.nombreResponsable = `${tc.responsableNavigation.usuario.primerNombre} ${tc.responsableNavigation.usuario.primerApellido}`;
             tc.nombreEstado = tc.estadoCodigo;
             tc.estadoCodigo = null;
             tc['temaCompromisoSeguimiento'] = tc['temaCompromisoSeguimiento'];
@@ -81,7 +83,7 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
         if (respuesta[0].sesionComiteSolicitudComiteTecnico) {
           respuesta[0].sesionComiteSolicitudComiteTecnico.forEach(sol => {
             sol.sesionSolicitudCompromiso.forEach(sc => {
-              sc.nombreResponsable = `${sc.responsableSesionParticipante.usuario.nombres} ${sc.responsableSesionParticipante.usuario.apellidos}`
+              sc.nombreResponsable = `${sc.responsableSesionParticipante.usuario.primerNombre} ${sc.responsableSesionParticipante.usuario.primerApellido}`
               sc.nombreEstado = sc.estadoCodigo;
               sc.estadoCodigo = null;
               sc[ 'tieneCompromisos' ] = sc[ 'compromisoSeguimiento' ].length > 0 ? true : false;
@@ -151,7 +153,7 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
   };
 
   onSave() {
-
+    this.estaEditando = true;
     const compromisosIncompletos = this.listaCompromisos.filter( value => value[ 'esCumplido' ] === null );
     console.log( compromisosIncompletos, this.listaCompromisos );
     if ( compromisosIncompletos.length > 0 ) {
@@ -173,10 +175,14 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
 
     this.listaCompromisos.forEach( compromiso => {
       if ( compromiso.sesionSolicitudCompromisoId !== undefined ) {
+        compromiso.esCumplido = compromiso.compromisoSeleccionado == 'Cumplido' ? true : false; 
         comite.sesionComiteSolicitudComiteTecnico[0].sesionSolicitudCompromiso.push( compromiso );
+        
       };
       if ( compromiso.temaCompromisoId !== undefined ) {
+        compromiso.esCumplido = compromiso.compromisoSeleccionado == 'Cumplido' ? true : false;
         comite.sesionComiteTema[0].temaCompromiso.push( compromiso );
+        console.log( compromiso )
       };
     } );
 

@@ -118,7 +118,7 @@ export class CompromisosActasComiteService {
   }
 
   aprobarActa ( comiteTecnicoId: number ) {
-    return this.http.post( `${ this.url }/AcceptReport?comiteTecnicoId=${ comiteTecnicoId }`, '' );
+    return this.http.post<Respuesta>( `${ this.url }/AcceptReport?comiteTecnicoId=${ comiteTecnicoId }`, '' );
   }
 
   postCompromisos ( comite: any, estadoId: string ) {
@@ -141,6 +141,7 @@ export class CompromisosActasComiteService {
   postComentariosActa ( acta: any ) {
     this.devolverActa.comiteTecnicoId = acta.comiteTecnicoId;
     this.devolverActa.observacion = acta.observaciones;
+    this.devolverActa.sesionComentarioId = acta.sesionComentarioId;
 
     return this.http.post( `${ this.url }/CreateOrEditCommentReport`, this.devolverActa )
   };

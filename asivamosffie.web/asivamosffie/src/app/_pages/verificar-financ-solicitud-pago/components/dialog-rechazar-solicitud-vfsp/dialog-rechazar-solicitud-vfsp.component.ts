@@ -22,6 +22,7 @@ export class DialogRechazarSolicitudVfspComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
   constructor(public matDialogRef: MatDialogRef<DialogRechazarSolicitudVfspComponent>, @Inject(MAT_DIALOG_DATA) public data: any, private fb: FormBuilder) { }
 
   ngOnInit(): void {
@@ -29,22 +30,25 @@ export class DialogRechazarSolicitudVfspComponent implements OnInit {
   }
   crearFormulario() {
     return this.fb.group({
-      fechaRadicacionSAC:[null, Validators.required],
-      numeroRadicacionSAC:[null, Validators.required],
-      observaciones:[null, Validators.required]
+      fechaRadicacionSAC: [null, Validators.required],
+      numeroRadicacionSAC: [null, Validators.required],
+      observaciones: [null, Validators.required]
     })
   }
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
-      e.editor.deleteText(n-1, e.editor.getLength());
+      e.editor.deleteText(n - 1, e.editor.getLength());
     }
   }
-  textoLimpio(texto,n) {
-    if (texto!=undefined) {
+  textoLimpio(texto, n) {
+    if (texto != undefined) {
       return texto.getLength() > n ? n : texto.getLength();
     }
   }
   onSubmit() {
+    //De forma maquetada
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     console.log(this.addressForm.value);
   }
 

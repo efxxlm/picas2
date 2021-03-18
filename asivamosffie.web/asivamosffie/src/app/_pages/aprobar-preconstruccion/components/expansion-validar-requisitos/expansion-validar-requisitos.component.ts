@@ -36,6 +36,7 @@ export class ExpansionValidarRequisitosComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  estaEditando = true;
 
   constructor(
     private fb: FormBuilder,
@@ -72,7 +73,7 @@ export class ExpansionValidarRequisitosComponent implements OnInit {
                 // tslint:disable-next-line: no-string-literal
                 perfil[ 'tieneObservaciones' ] = null;
                 // tslint:disable-next-line: no-string-literal
-                perfil[ 'verificarObservacion' ] = '';
+                perfil[ 'verificarObservacion' ] = null;
 
                 const tipoPerfil = this.perfilesCv.filter( value => value.codigo === perfil.perfilCodigo );
                 // tslint:disable-next-line: no-string-literal
@@ -124,6 +125,8 @@ export class ExpansionValidarRequisitosComponent implements OnInit {
                     perfil[ 'contratoPerfilObservacionId' ] = observacionTipo3[ observacionTipo3.length - 1 ].contratoPerfilObservacionId;
                     // tslint:disable-next-line: no-string-literal
                     perfil[ 'verificarObservacion' ] = observacionTipo3[ observacionTipo3.length - 1 ].observacion;
+                    this.estaEditando = true;
+                    this.addressForm.markAllAsTouched();
                     completo++;
                   }
                 }
@@ -162,29 +165,16 @@ export class ExpansionValidarRequisitosComponent implements OnInit {
 
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
-      e.editor.deleteText(n, e.editor.getLength());
+      e.editor.deleteText(n - 1, e.editor.getLength());
     }
   }
 
-  textoLimpio(texto: string) {
-    let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
-
-    if ( texto ){
-      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
-      return textolimpio.length + saltosDeLinea;
+  textoLimpio( evento: any, n: number ) {
+    if ( evento !== undefined ) {
+      return evento.getLength() > n ? n : evento.getLength();
+    } else {
+      return 0;
     }
-  }
-
-  private contarSaltosDeLinea(cadena: string, subcadena: string) {
-    let contadorConcurrencias = 0;
-    let posicion = 0;
-    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
-      ++contadorConcurrencias;
-      posicion += subcadena.length;
-    }
-    return contadorConcurrencias;
   }
 
   textoLimpioObservacion(texto: string) {
@@ -202,6 +192,8 @@ export class ExpansionValidarRequisitosComponent implements OnInit {
   }
 
   onSubmit( perfil: ContratoPerfil ) {
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     const observacionPerfil: ObservacionPerfil = {
       contratoPerfilId: perfil.contratoPerfilId,
       // tslint:disable-next-line: no-string-literal

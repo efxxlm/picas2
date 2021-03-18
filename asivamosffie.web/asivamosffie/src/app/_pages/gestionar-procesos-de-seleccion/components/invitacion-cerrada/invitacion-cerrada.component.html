@@ -60,7 +60,8 @@
                 #proponenteCerrada
                 [procesoSeleccion]="procesoSeleccion"
                 [editar]="bitPuedoEditar"
-                (guardar)="onSubmit()">
+                (guardar)="onSubmit()"
+                [style.pointer-events]="getStyleEvaluacion()">
             </app-form-datos-proponentes-seleccionados-invitacion-cerrada>
         </mat-expansion-panel>
 
@@ -90,13 +91,14 @@
             <app-form-seleccion-proponente-a-invitar #proponenteInvitar
                 [editar]="bitPuedoEditar"    
                 [procesoSeleccion]="procesoSeleccion"               
-                (guardar)="onSubmit()">
+                (guardar)="onSubmit()" [style.pointer-events]="getStyleEvaluacion()">
             </app-form-seleccion-proponente-a-invitar>
 
         </mat-expansion-panel>
 
     </mat-accordion>
-     <div class="d-flex align-items-center solbloq ml8 info-text en-alertaLibre mb-2em" *ngIf="procesoSeleccion.estadoProcesoSeleccionCodigo!=estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario">
+     <div class="d-flex align-items-center solbloq ml8 info-text en-alertaLibre mb-2em" 
+     *ngIf="mostrarAyudaProcesoAprobado();" >
     Cuando la solicitud se encuentra en estado <b>“Aprobada apertura de comité fiduciario”</b> el sistema habilitará las opciones para continuar el proceso.
     </div>
 </div>

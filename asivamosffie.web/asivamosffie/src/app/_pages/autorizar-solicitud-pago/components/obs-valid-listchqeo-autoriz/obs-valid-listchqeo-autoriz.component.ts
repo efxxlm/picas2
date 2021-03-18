@@ -86,6 +86,7 @@ export class ObsValidListchqeoAutorizComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
   constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
@@ -117,6 +118,8 @@ export class ObsValidListchqeoAutorizComponent implements OnInit {
     }
   }
   onSubmit() {
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     console.log(this.addressForm.value);
   }
 }

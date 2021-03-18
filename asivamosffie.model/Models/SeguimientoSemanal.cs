@@ -32,7 +32,7 @@ namespace asivamosffie.model.Models
         public bool? RegistroCompleto { get; set; }
         public string EstadoSeguimientoSemanalCodigo { get; set; }
         public bool? RegistroCompletoMuestras { get; set; }
-        public DateTime? FechaEnvioSupervisor { get; set; }
+        public DateTime? FechaRegistroCompletoInterventor { get; set; }
         public bool? TieneObservacionApoyo { get; set; }
         public bool? RegistroCompletoVerificar { get; set; }
         public bool? TieneObservacionSupervisor { get; set; }
@@ -40,6 +40,8 @@ namespace asivamosffie.model.Models
         public string EstadoMuestrasCodigo { get; set; }
         public DateTime? FechaModificacionVerificar { get; set; }
         public DateTime? FechaModificacionAvalar { get; set; }
+        public DateTime? FechaRegistroCompletoApoyo { get; set; }
+        public DateTime? FechaRegistroCompletoSupervisor { get; set; }
 
         public virtual ContratacionProyecto ContratacionProyecto { get; set; }
         public virtual ICollection<FlujoInversion> FlujoInversion { get; set; }

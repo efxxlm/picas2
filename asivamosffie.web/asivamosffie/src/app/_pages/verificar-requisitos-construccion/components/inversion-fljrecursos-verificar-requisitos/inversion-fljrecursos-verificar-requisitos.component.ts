@@ -86,8 +86,8 @@ export class InversionFljrecursosVerificarRequisitosComponent implements OnInit,
 
   textoLimpio(texto: string) {
     let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
 
     if ( texto ){
       const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
@@ -114,6 +114,7 @@ export class InversionFljrecursosVerificarRequisitosComponent implements OnInit,
 
   descargar() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     this.commonService.getFileById(this.contratoConstruccion.archivoCargueIdFlujoInversion)
       .subscribe(respuesta => {
         let documento = "FlujoInversion.xlsx";

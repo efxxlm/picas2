@@ -164,6 +164,10 @@ strong {
   margin-bottom: 1em !important;
 }
 
+.mt-1em {
+  margin-top: 1em !important;
+}
+
 .mb-4em {
   margin-bottom: 4em !important;
 }
@@ -186,8 +190,8 @@ strong {
 }
 
 .mx-1em {
-  margin-left: 1em;
-  margin-right: 1em;
+  margin-left: 1em !important;
+  margin-right: 1em !important;
 }
 
 .mr-05em {
@@ -196,6 +200,14 @@ strong {
 
 .ml-05 {
   margin-left: 0.5em !important;
+}
+
+.ml-1em {
+  margin-left: 1em !important;
+}
+
+.ml-1-5em {
+  margin-left: 1.5em !important;
 }
 
 .pl-0 {
@@ -341,6 +353,10 @@ input[type='number']::-webkit-outer-spin-button {
   padding: 0 1.2em;
   font-size: 1em !important;
   text-align: center;
+
+  &.max-40em {
+    max-width: 40em;
+  }
 }
 
 %tooltip {
@@ -373,4 +389,8 @@ input[type='number']::-webkit-outer-spin-button {
     flex-basis: 100%;
     max-width: 100%;
   }
+}
+
+.d-none {
+  display: none !important;
 }

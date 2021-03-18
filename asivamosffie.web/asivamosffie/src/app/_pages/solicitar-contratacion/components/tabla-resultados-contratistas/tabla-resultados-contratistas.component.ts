@@ -34,6 +34,8 @@ export class TablaResultadosContratistasComponent implements OnInit, OnChanges {
   ];
   dataSource = new MatTableDataSource();
 
+  edicion = false;
+
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort, {static: false}) sort: MatSort;
 
@@ -55,8 +57,8 @@ export class TablaResultadosContratistasComponent implements OnInit, OnChanges {
       if (this.contratacion[ 'contratista' ] !== undefined)
          this.unionTemporal.setValue( this.contratacion[ 'contratista'].tipoProponenteCodigo === '4' ? true : false );
       
-      //  if (this.contratacion[ 'contratista' ] !== undefined)
-      //     this.numeroDocumento.setValue( this.contratacion[ 'contratista'].numeroIdentificacion );
+      if (this.contratacion[ 'contratista' ] !== undefined)
+         this.numeroDocumento.setValue( this.contratacion[ 'contratista'].numeroIdentificacion );
       
     }
 
@@ -74,8 +76,8 @@ export class TablaResultadosContratistasComponent implements OnInit, OnChanges {
       if ( this.contratacion[ 'contratista' ] !== undefined ) {
         this.contratista = {
           idContratista: this.contratacion.contratistaId,
-
         }
+        this.edicion = true;
       }
     }, 2000);
   }

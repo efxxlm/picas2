@@ -37,8 +37,7 @@ export class TablaRegistradosComponent implements OnInit {
 
   getGrilla () {
     this.$data.subscribe( ( resp: any ) => {
-        
-        
+
         for ( let contrataciones of resp ) {
           if ( contrataciones.estadoCodigo === this.estadoCodigos.registrado ) {
             this.dataTable.push( contrataciones );
@@ -47,13 +46,14 @@ export class TablaRegistradosComponent implements OnInit {
 
         if ( this.dataTable.length > 0 ) {
           this.sinData.emit( 'completo' );
+          this.dataTable.forEach( registro => registro.fechaSolicitud !== undefined ? registro.fechaSolicitud = registro.fechaSolicitud.split('T')[0].split('-').reverse().join('/') : '---' );
         }
 
         this.dataSource                        = new MatTableDataSource( this.dataTable );
         this.dataSource.paginator              = this.paginator;
         this.dataSource.sort                   = this.sort;
         this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-      } );
+    } );
   }
 
   applyFilter ( event: Event ) {

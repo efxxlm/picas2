@@ -61,6 +61,8 @@ export class ValidarActaDeInicioFIPreconstruccionComponent implements OnInit {
   tieneObservacionesBool: any;
   observacionesUltimas: any;
   fechaCreacionObs: any;
+  contrato: any;
+
   constructor(private activatedRoute: ActivatedRoute, private service: GestionarActPreConstrFUnoService, private router: Router,public dialog: MatDialog, private fb: FormBuilder) { }
 
   ngOnInit(): void {
@@ -83,6 +85,7 @@ export class ValidarActaDeInicioFIPreconstruccionComponent implements OnInit {
   loadData(id){
     this.service.GetContratoByContratoId(id).subscribe((data:any)=>{
       this.cargarDataParaInsercion(data);
+      this.contrato = data;
       this.fechaActaFase1Prc = data.fechaActaInicioFase1;
       this.numContrato = data.numeroContrato;
       this.fechaFirmaContrato = data.fechaFirmaContrato;
@@ -105,7 +108,7 @@ export class ValidarActaDeInicioFIPreconstruccionComponent implements OnInit {
       for(let i=0; i<data.length;i++){ 
         if(data[i].esSupervision==false){
           this.tieneObservacionesBool = this.dataElements[i].esActaFase1;
-          this.observacionesUltimas = this.dataElements[i].observaciones;
+          this.observacionesUltimas = this.dataElements[i].observaciones !== undefined && this.dataElements[i].observaciones.length > 0 ? this.dataElements[i].observaciones : undefined;
           this.fechaCreacionObs = this.dataElements[i].fechaCreacion;
         }
       }
@@ -140,11 +143,11 @@ export class ValidarActaDeInicioFIPreconstruccionComponent implements OnInit {
     this.tipoProponente = data.contratacion.contratista.tipoProponenteCodigo;
     this.tipoCodigo = data.contratacion.tipoSolicitudCodigo;
     this.numIdentifiacionSupervisor = data.usuarioInterventoria.numeroIdentificacion;
-    this.nomSupervisor = data.usuarioInterventoria.nombres+" "+data.usuarioInterventoria.apellidos;
+    this.nomSupervisor = data.usuarioInterventoria.primerNombre+" "+data.usuarioInterventoria.primerApellido;
     if(this.opcion == 1){
       this.dataSupervisor = true;
       this.numIdentifiacionSupervisor = data.usuarioInterventoria.numeroIdentificacion;
-      this.nomSupervisor = data.usuarioInterventoria.nombres+" "+data.usuarioInterventoria.apellidos;
+      this.nomSupervisor = data.usuarioInterventoria.primerNombre+" "+data.usuarioInterventoria.primerApellido;
     }
   }
 }

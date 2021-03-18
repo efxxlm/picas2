@@ -6,6 +6,7 @@ import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-gestion-ambiental',
@@ -16,6 +17,7 @@ export class GestionAmbientalComponent implements OnInit {
 
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
+    @Input() tipoObservacionAmbiental: any;
     @Output() seRealizoPeticion = new EventEmitter<boolean>();
     formGestionAmbiental: FormGroup;
     tipoActividades: Dominio[] = [];
@@ -25,6 +27,24 @@ export class GestionAmbientalComponent implements OnInit {
     gestionObraAmbiental: any;
     cantidadActividades = 0;
     gestionAmbientalDetalle: any[] = [];
+    // Ids gestion ambiental y manejos.
+    gestionAmbientalId = 0; // ID gestion ambiental.
+    manejoMaterialInsumoId = 0; // ID manejo de materiales  e insumos.
+    residuosConstruccionId = 0; // ID residuos de construccion.
+    residuosPeligrososId = 0; // ID residuos peligrosos.
+    manejoOtrosId = 0; // ID manejo de otros.
+    // MatTable historial de observaciones
+    tablaHistorialgestionAmbiental = new MatTableDataSource();
+    tablaHistorialManejoMateriales = new MatTableDataSource();
+    tablaHistorialResiduosConstruccion = new MatTableDataSource();
+    tablaHistorialResiduosPeligrosos = new MatTableDataSource();
+    tablaHistorialManejoOtros = new MatTableDataSource();
+    // Arreglos historial de observaciones
+    historialGestionAmbiental: any[] = [];
+    historialManejoMateriales: any[] = [];
+    historialResiduosConstruccion: any[] = [];
+    historialResiduosPeligrosos: any[] = [];
+    historialManejoOtros: any[] = [];
     booleanosActividadRelacionada: any[] = [
         { value: true, viewValue: 'Si' },
         { value: false, viewValue: 'No' }
@@ -35,6 +55,11 @@ export class GestionAmbientalComponent implements OnInit {
         manejoResiduosPeligrosos: '3',
         otra: '4'
     };
+    displayedColumnsHistorial: string[]  = [
+        'fechaRevision',
+        'responsable',
+        'historial'
+    ];
 
     get actividades() {
         return this.formGestionAmbiental.get( 'actividades' ) as FormArray;
@@ -57,30 +82,94 @@ export class GestionAmbientalComponent implements OnInit {
             this.seguimientoSemanalId = this.seguimientoSemanal.seguimientoSemanalId;
             this.seguimientoSemanalGestionObraId =  this.seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ?
                 this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraId : 0;
-            if (    this.seguimientoSemanal.seguimientoSemanalGestionObra.length > 0
-                    && this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental.length > 0 )
-            {
+            if ( this.seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 && this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental.length > 0 ) {
                 this.cantidadActividades = 0;
-                this.gestionObraAmbiental =     this.seguimientoSemanal.seguimientoSemanalGestionObra[0]
-                                                .seguimientoSemanalGestionObraAmbiental[0];
+                this.gestionObraAmbiental = this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental[0];
+
                 if ( this.gestionObraAmbiental.seEjecutoGestionAmbiental !== undefined ) {
-                    this.formGestionAmbiental.get( 'seEjecutoGestionAmbiental' )
-                        .setValue( this.gestionObraAmbiental.seEjecutoGestionAmbiental );
+                    this.formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).setValue( this.gestionObraAmbiental.seEjecutoGestionAmbiental );
                     this.formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).markAsDirty();
                     this.gestionAmbiental = true;
                 } else {
                     this.gestionAmbiental = false;
                 }
+
+                if ( this.formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === false ) {
+                    // ID gestionAmbiental
+                    this.gestionAmbientalId = this.gestionObraAmbiental.seguimientoSemanalGestionObraAmbientalId;
+
+                    if ( this.esVerDetalle === false ) {
+                        this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.gestionAmbientalId, this.tipoObservacionAmbiental.gestionAmbientalCodigo )
+                            .subscribe(
+                                response => {
+                                    this.historialGestionAmbiental = response.filter( obs => obs.archivada === true );
+                                    this.tablaHistorialgestionAmbiental = new MatTableDataSource( this.historialGestionAmbiental );
+                                }
+                            );
+                    }
+                }
                 if ( this.gestionObraAmbiental.tieneManejoMaterialesInsumo === true ) {
+                    // ID manejo de materiales e insumos
+                    if ( this.gestionObraAmbiental.manejoMaterialesInsumo !== undefined ) {
+                        this.manejoMaterialInsumoId = this.gestionObraAmbiental.manejoMaterialesInsumo.manejoMaterialesInsumosId;
+                    }
+                    if ( this.esVerDetalle === false ) {
+                        this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.manejoMaterialInsumoId, this.tipoObservacionAmbiental.manejoMateriales )
+                            .subscribe(
+                                response => {
+                                    this.historialManejoMateriales = response.filter( obs => obs.archivada === true );
+                                    this.tablaHistorialManejoMateriales = new MatTableDataSource( this.historialManejoMateriales );
+                                }
+                            );                        
+                    }
                     this.cantidadActividades++;
                 }
                 if ( this.gestionObraAmbiental.tieneManejoResiduosConstruccionDemolicion === true ) {
+                    // ID residuos construccion
+                    if ( this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion !== undefined ) {
+                        this.residuosConstruccionId = this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion.manejoResiduosConstruccionDemolicionId;
+                    }
+                    if ( this.esVerDetalle === false ) {
+                        this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.residuosConstruccionId, this.tipoObservacionAmbiental.residuosConstruccion )
+                            .subscribe(
+                                response => {
+                                    this.historialResiduosConstruccion = response.filter( obs => obs.archivada === true );
+                                    this.tablaHistorialResiduosConstruccion = new MatTableDataSource( this.historialResiduosConstruccion );
+                                }
+                            );
+                    }
                     this.cantidadActividades++;
                 }
                 if ( this.gestionObraAmbiental.tieneManejoResiduosPeligrososEspeciales === true ) {
+                    // ID residuos peligrosos
+                    if ( this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales !== undefined ) {
+                        this.residuosPeligrososId = this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales.manejoResiduosPeligrososEspecialesId;
+                    }
+                    if ( this.esVerDetalle === false ) {
+                        this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.residuosPeligrososId, this.tipoObservacionAmbiental.residuosPeligrosos )
+                            .subscribe(
+                                response => {
+                                    this.historialResiduosPeligrosos = response.filter( obs => obs.archivada === true );
+                                    this.tablaHistorialResiduosPeligrosos = new MatTableDataSource( this.historialResiduosPeligrosos );
+                                }
+                            )
+                    }
                     this.cantidadActividades++;
                 }
                 if ( this.gestionObraAmbiental.tieneManejoOtro === true ) {
+                    // ID manejo de otros
+                    if ( this.gestionObraAmbiental.manejoOtro !== undefined ) {
+                        this.manejoOtrosId = this.gestionObraAmbiental.manejoOtro.manejoOtroId;
+                    }
+                    if ( this.esVerDetalle === false ) {
+                        this.avanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.manejoOtrosId, this.tipoObservacionAmbiental.manejoOtra )
+                            .subscribe(
+                                response => {
+                                    this.historialManejoOtros = response.filter( obs => obs.archivada === true );
+                                    this.tablaHistorialManejoOtros = new MatTableDataSource( this.historialManejoOtros );
+                                }
+                            )
+                    }
                     this.cantidadActividades++;
                 }
                 if ( this.gestionObraAmbiental.seEjecutoGestionAmbiental === true ) {

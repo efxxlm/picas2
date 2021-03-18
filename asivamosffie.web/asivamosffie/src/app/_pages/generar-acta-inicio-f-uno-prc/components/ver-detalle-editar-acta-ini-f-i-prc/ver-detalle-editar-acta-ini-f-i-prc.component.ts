@@ -81,6 +81,8 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
   plazoMesesFase1 = 0;
   plazoMesesFase2 = 0;
   estaEditando = false;
+  obsSupervisor: any;
+  observacionesUltimas: any;
 
   constructor(private router: Router, public dialog: MatDialog, private fb: FormBuilder, private activatedRoute: ActivatedRoute, private service: GestionarActPreConstrFUnoService) {
     this.maxDate = new Date();
@@ -96,16 +98,49 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
     });
 
     this.addressForm.get( 'mesPlazoEjFase1' ).valueChanges
-      .pipe(
-        delay( 1000 )
-      )
-      .subscribe(
-        value => {
-          if ( this.contrato !== undefined && value !== null ) {
-            const mesesPlazoInicial = this.contrato.contratacion.disponibilidadPresupuestal[0].plazoMeses;
-            const diasPlazoInicial = this.contrato.contratacion.disponibilidadPresupuestal[0].plazoDias;
-            this.plazoMesesFase1 = value;
-            this.plazoMesesFase2 = this.addressForm.get( 'diasPlazoEjFase1' ).value;
+    .pipe(
+      delay( 1000 )
+    )
+    .subscribe(
+      value => {
+        this.addressForm.get( 'fechaPrevistaTerminacion' ).setValue( null );
+        if ( this.addressForm.get( 'fechaActaInicioFUnoPreconstruccion' ).value !== null ) {
+          let newdate = new Date( this.addressForm.get( 'fechaActaInicioFUnoPreconstruccion' ).value );
+          newdate.setDate( newdate.getDate() + ( Number( value ) * 30 ) );
+          this.addressForm.get( 'fechaPrevistaTerminacion' ).setValue( newdate );
+        }
+        if ( this.contrato !== undefined && value !== null ) {
+          const mesesPlazoInicial = this.contrato.contratacion.disponibilidadPresupuestal[0].plazoMeses;
+          const diasPlazoInicial = this.contrato.contratacion.disponibilidadPresupuestal[0].plazoDias;
+          this.plazoMesesFase1 = value;
+          this.plazoMesesFase2 = this.addressForm.get( 'diasPlazoEjFase1' ).value;
+          this.service.getFiferenciaMesesDias( mesesPlazoInicial, diasPlazoInicial, this.plazoMesesFase1, this.plazoMesesFase2 )
+            .subscribe(
+              response => {
+                this.addressForm.get( 'mesPlazoEjFase2' ).setValue( response[0] );
+                this.addressForm.get('diasPlazoEjFase2').setValue( response[1] );
+              }
+            );
+        }
+      }
+    );
+    this.addressForm.get( 'diasPlazoEjFase1' ).valueChanges
+    .pipe(
+      delay( 1000 )
+    )
+    .subscribe(
+      value => {
+        if ( this.addressForm.get( 'fechaActaInicioFUnoPreconstruccion' ).value !== null && this.addressForm.get( 'mesPlazoEjFase1' ).value !== null ) {
+          let newdate = new Date( this.addressForm.get( 'fechaActaInicioFUnoPreconstruccion' ).value );
+          newdate.setDate(newdate.getDate() + ( ( this.addressForm.get( 'mesPlazoEjFase1' ).value * 30 ) + Number( value ) ));
+          this.addressForm.get( 'fechaPrevistaTerminacion' ).setValue( newdate );
+        }
+        if ( this.contrato !== undefined && value !== null ) {
+          const mesesPlazoInicial = this.contrato.contratacion.disponibilidadPresupuestal[0].plazoMeses;
+          const diasPlazoInicial = this.contrato.contratacion.disponibilidadPresupuestal[0].plazoDias;
+          this.plazoMesesFase1 = this.addressForm.get( 'mesPlazoEjFase1' ).value;
+          this.plazoMesesFase2 = value;
+          if ( this.plazoMesesFase1 > 0 ) {
             this.service.getFiferenciaMesesDias( mesesPlazoInicial, diasPlazoInicial, this.plazoMesesFase1, this.plazoMesesFase2 )
               .subscribe(
                 response => {
@@ -115,30 +150,8 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
               );
           }
         }
-      );
-    this.addressForm.get( 'diasPlazoEjFase1' ).valueChanges
-      .pipe(
-        delay( 1000 )
-      )
-      .subscribe(
-        value => {
-          if ( this.contrato !== undefined && value !== null ) {
-            const mesesPlazoInicial = this.contrato.contratacion.disponibilidadPresupuestal[0].plazoMeses;
-            const diasPlazoInicial = this.contrato.contratacion.disponibilidadPresupuestal[0].plazoDias;
-            this.plazoMesesFase1 = this.addressForm.get( 'mesPlazoEjFase1' ).value;
-            this.plazoMesesFase2 = value;
-            if ( this.plazoMesesFase1 > 0 ) {
-              this.service.getFiferenciaMesesDias( mesesPlazoInicial, diasPlazoInicial, this.plazoMesesFase1, this.plazoMesesFase2 )
-                .subscribe(
-                  response => {
-                    this.addressForm.get( 'mesPlazoEjFase2' ).setValue( response[0] );
-                    this.addressForm.get('diasPlazoEjFase2').setValue( response[1] );
-                  }
-                );
-            }
-          }
-        }
-      );
+      }
+    );
   }
   ngOnInit(): void {
   }
@@ -171,31 +184,29 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
       this.addressForm.get('fechaPrevistaTerminacion').setValue(data.fechaTerminacion);
       this.addressForm.get('mesPlazoEjFase1').setValue(data.plazoFase1PreMeses);
       this.addressForm.get('diasPlazoEjFase1').setValue(data.plazoFase1PreDias);
+      this.addressForm.get( 'observacionesEspeciales' ).setValue( data.observacionConsideracionesEspeciales !== undefined ? data.observacionConsideracionesEspeciales : null );
     });
     this.idContrato = id;
   }
   loadObservaciones(id) {
     this.service.GetListContratoObservacionByContratoId(id).subscribe((data: any) => {
-      this.elementsObservacion = data;
-      for (let i = 0; i < data.length; i++) {
-        if (data[i].esSupervision == false) {
+      const obsArraySupervisor = [];
+      const obsArrayConsideraciones = [];
+      data.forEach( obs => {
+        if ( obs.esSupervision === true ) {
+          obsArraySupervisor.push( obs );
+        }
+        if ( obs.esSupervision === false ) {
+          obsArrayConsideraciones.push( obs );
+        }
+      } );
 
-          this.esActa = data[i].esActa;
-          this.conObervacionesActa = data[i].esActaFase1;
-          this.observacionesActaFase1 = data[i].observaciones;
-          this.fechaCreacion = data[i].fechaCreacion;
-          this.indexObservacionFinal = data[i].contratoObservacionId;
-          //seteo el queseenvia jflorez
-          this.indexContratacionID = data[i].contratoObservacionId;
-          this.addressForm.get('observacionesEspeciales').setValue(this.observacionesActaFase1);
-        }
+      if ( obsArraySupervisor.length > 0 ) {
+        this.obsSupervisor = obsArraySupervisor[ obsArraySupervisor.length - 1 ];
       }
-      // Anotaciones Supervisor
-      for (let i = 0; i < data.length; i++) {
-        if (data[i].esSupervision == true) {
-          this.anotacionesSupervisor = true;
-          this.observacionSupervisor = data[i].observaciones;
-        }
+
+      if ( obsArrayConsideraciones.length > 0 ) {
+        this.observacionesUltimas = obsArrayConsideraciones[ obsArrayConsideraciones.length - 1 ];
       }
     });
   }
@@ -203,7 +214,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
   cargarRol() {
     this.rolAsignado = JSON.parse(localStorage.getItem("actualUser")).rol[0].perfilId;
     //jflorez, el perfil 11 es interventor.....
-    if (this.rolAsignado == 11) {
+    if (this.rolAsignado == 11 ) {
       this.opcion = 1;
     }
     else {
@@ -211,6 +222,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
     }
   }
   cargarDataParaInsercion(data) {
+    console.log( data );
     this.numContrato = data.numeroContrato;
     this.fechaAprobacionRequisitos = data.fechaAprobacionRequisitosSupervisor;
     this.fechaFirmaContrato = data.fechaFirmaContrato;
@@ -238,17 +250,33 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
     this.diasPlazoIni = data.contratacion.disponibilidadPresupuestal[0].plazoDias;
     this.tipoProponente = data.contratacion.contratista.tipoProponenteCodigo;
     this.numIdentifiacionSupervisor = data.usuarioInterventoria.numeroIdentificacion;
-    this.nomSupervisor = data.usuarioInterventoria.nombres + " " + data.usuarioInterventoria.apellidos;
+    this.nomSupervisor = data.usuarioInterventoria.primerNombre + " " + data.usuarioInterventoria.primerApellido;
     this.tipoCodigo = data.contratacion.tipoSolicitudCodigo;
     if (this.opcion == 1) {//jflorez, el perfil 11 es interventor, no supervisor, revisar esta condición
       this.dataSupervisor = true;
       this.numIdentifiacionSupervisor = data.usuarioInterventoria.numeroIdentificacion;
-      this.nomSupervisor = data.usuarioInterventoria.nombres + " " + data.usuarioInterventoria.apellidos;
+      this.nomSupervisor = data.usuarioInterventoria.primerNombre + " " + data.usuarioInterventoria.primerApellido;
     }
     //jflorez, no puededeterminarel id de esta forma si no esta seteando el formulario, podria enviar a edición a unoque no corresponde
     /*for (let i = 0; i < data.contratoObservacion.length; i++) {
       this.indexContratacionID = data.contratoObservacion[i].contratoObservacionId;
     }*/
+  }
+
+  getValueMeses( value: number ) {
+    if ( value !== null && this.mesPlazoIni !== undefined ) {
+      if ( value > this.mesPlazoIni ) {
+        this.addressForm.get( 'mesPlazoEjFase1' ).setValue( this.mesPlazoIni );
+      }
+    }
+  }
+
+  getValueDias( value: number ) {
+    if ( value !== null && this.diasPlazoIni !== undefined ) {
+      if ( value > this.diasPlazoIni ) {
+        this.addressForm.get( 'diasPlazoEjFase1' ).setValue( this.diasPlazoIni );
+      }
+    }
   }
 
   generarActaSuscrita() {
@@ -266,6 +294,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
       data: { modalTitle, modalText }
     });
   }
+
   editorStyle = {
     height: '50%'
   };
@@ -302,7 +331,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
       diasPlazoEjFase1: ["", Validators.required],
       mesPlazoEjFase2: [{ value: "", disabled: true }, Validators.required],
       diasPlazoEjFase2: [{ value: "", disabled: true }, Validators.required],
-      observacionesEspeciales: [""]
+      observacionesEspeciales: [ null ]
     })
   }
   crearFormulario2() {
@@ -313,28 +342,16 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
   }
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
-      e.editor.deleteText(n, e.editor.getLength());
-    }
-  }
-  textoLimpio(texto: string) {
-    let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
-
-    if ( texto ){
-      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
-      return textolimpio.length + saltosDeLinea;
+        e.editor.deleteText(n - 1, e.editor.getLength());
     }
   }
 
-  private contarSaltosDeLinea(cadena: string, subcadena: string) {
-    let contadorConcurrencias = 0;
-    let posicion = 0;
-    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
-      ++contadorConcurrencias;
-      posicion += subcadena.length;
-    }
-    return contadorConcurrencias;
+  textoLimpio( evento: any, n: number ) {
+      if ( evento !== undefined ) {
+          return evento.getLength() > n ? n : evento.getLength();
+      } else {
+          return 0;
+      }
   }
   number(e: { keyCode: any; }) {
     const tecla = e.keyCode;
@@ -355,6 +372,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
   }
   onSubmit() {
     this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     let esSupervisionBool;
     let fecha = Date.parse(this.addressForm.get('fechaActaInicioFUnoPreconstruccion').value);
     this.fechaSesion = new Date(fecha);
@@ -391,7 +409,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
         "observaciones": this.addressForm.value.observacionesEspeciales,
         'esActa': true,
         'esActaFase1': true,
-        'esSupervision': this.rolAsignado==8?true:false//perfil 8 es supervisor
+        'esSupervision': this.rolAsignado !== 11 ? true : false//perfil 8 es supervisor
         //'esSupervision': esSupervisionBool
       }];
       const arrayContrato: EditContrato = {
@@ -408,18 +426,18 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
         fechaFirmaContrato: this.fechaFirmaContrato,
         fechaActaInicioFase1: this.fechaSesionString,
         fechaTerminacion: this.fechaSesionString2,
-        plazoFase1PreMeses: this.addressForm.value.mesPlazoEjFase1,
-        plazoFase1PreDias: this.addressForm.value.diasPlazoEjFase1,
-        plazoFase2ConstruccionMeses: this.addressForm.value.mesPlazoEjFase2,
-        plazoFase2ConstruccionDias: this.addressForm.value.diasPlazoEjFase2,
-        observaciones: this.addressForm.value.observacionesEspeciales,
+        plazoFase1PreMeses: this.addressForm.get( 'mesPlazoEjFase1' ).value,
+        plazoFase1PreDias: this.addressForm.get( 'diasPlazoEjFase1' ).value,
+        plazoFase2ConstruccionMeses: this.addressForm.get( 'mesPlazoEjFase2' ).value,
+        plazoFase2ConstruccionDias: this.addressForm.get( 'diasPlazoEjFase2' ).value,
+        observacionConsideracionesEspeciales: this.addressForm.get( 'observacionesEspeciales' ).value,
         conObervacionesActa: true,
         registroCompleto: false,
         contratoConstruccion: [],
-        contratoObservacion: arrayObservacion,
         contratoPerfil: [],
         contratoPoliza: []
       };
+      console.log( arrayContrato );
       this.service.EditContrato(arrayContrato).subscribe(data => {
         if (data.code == "200") {
           if (localStorage.getItem("origin") == "obra") {

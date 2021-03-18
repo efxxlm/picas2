@@ -21,11 +21,4 @@ export class ObservacionDialogComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
-  textoLimpioMessage (texto: string) {
-    if ( texto ){
-      const textolimpio = texto.replace(/<[^>]*>/g, '');
-      return textolimpio;
-    };
-  };
-
 }

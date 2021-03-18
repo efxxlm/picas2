@@ -10,14 +10,23 @@
       <b *ngIf="report"> {{ report.proyecto.llaveMen }} </b>
     </h1>
     <p class="colorMainColor mt-05em"> 
-      Fecha de terminación del proyecto
+      Fecha de terminación del proyecto obra
       <b *ngIf="report">
-        {{ report.contratacion.contrato[0].fechaTerminacion  | date:'dd/MM/yyyy' }}
+        {{ report.fechaTerminacionObra  | date:'dd/MM/yyyy' }}
+      </b>
+    </p>
+    <p class="colorMainColor mt-05em"> 
+      Fecha de terminación del proyecto interventoría
+      <b *ngIf="report">
+        {{ report.fechaTerminacionInterventoria  | date:'dd/MM/yyyy' }}
       </b>
     </p>
   </div>
 
   <app-datos-del-proyecto *ngIf="report" [report]="report"></app-datos-del-proyecto>
-  <app-form-recibo-a-satisfaccion *ngIf="report" [report]="report"></app-form-recibo-a-satisfaccion>
-  <app-informe-final-anexos *ngIf="report" [id]="id" [llaveMen]="report.proyecto.llaveMen"></app-informe-final-anexos>
+  <app-form-recibo-a-satisfaccion *ngIf="report && !mostrarDetalleRecibo" [report]="report" (formCompleto)="updateForm($event);"></app-form-recibo-a-satisfaccion>
+  <app-detalle-recibo-satisfaccion *ngIf="report && mostrarDetalleRecibo" [report]="report"></app-detalle-recibo-satisfaccion>
+  <app-tabla-informe-final-anexos *ngIf="mostrarInforme && report && !mostrarDetalleAnexos" [id]="id" [llaveMen]="report.proyecto.llaveMen" [report]="report"></app-tabla-informe-final-anexos>
+  <app-tabla-detalle-informe-anexos *ngIf="mostrarInforme && report && mostrarDetalleAnexos" [id]="id"></app-tabla-detalle-informe-anexos>
+
 </section>

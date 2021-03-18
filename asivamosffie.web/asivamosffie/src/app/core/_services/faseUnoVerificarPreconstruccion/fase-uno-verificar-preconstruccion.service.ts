@@ -73,7 +73,7 @@ export class FaseUnoVerificarPreconstruccionService {
                if ( value.codigo === '6' ) {
                  estadoPreconstruccion.enviadoAlSupervisor = {
                    codigo: value.codigo,
-                   nombre: value.nombre
+                   nombre: value[ 'descripcion' ]
                  };
                }
              } );
@@ -102,7 +102,7 @@ export class FaseUnoVerificarPreconstruccionService {
                 if ( value.codigo === '6' ) {
                   estadoPreconstruccion.enviadoAlSupervisor = {
                     codigo: value.codigo,
-                    nombre: value.nombre
+                    nombre: value[ 'descripcion' ]
                   };
                 }
                 if ( value.codigo === '11' ) {

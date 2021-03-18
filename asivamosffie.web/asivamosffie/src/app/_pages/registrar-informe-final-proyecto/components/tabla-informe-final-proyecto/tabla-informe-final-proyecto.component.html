@@ -15,13 +15,22 @@
 
 <div class="table-responsive mb-2em">
   <table mat-table [dataSource]="dataSource" matSort>
-    <!-- fechaTerminacionProyecto Column -->
-    <ng-container matColumnDef="fechaTerminacionProyecto">
+    <!-- fechaTerminacionObra Column -->
+    <ng-container matColumnDef="fechaTerminacionObra">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
-        Fecha de terminación del proyecto
+        Fecha de terminación Obra del proyecto
       </th>
       <td mat-cell *matCellDef="let element">
-        <b>{{ element.fechaTerminacionProyecto | date:'dd/MM/yyyy' }}</b>
+        <b>{{ element.fechaTerminacionObra | date: "dd/MM/yyyy" }}</b>
+      </td>
+    </ng-container>
+    <!-- fechaTerminacionInterventoria Column -->
+    <ng-container matColumnDef="fechaTerminacionInterventoria">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Fecha de terminación Interventoría del proyecto
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <b>{{ element.fechaTerminacionInterventoria | date: "dd/MM/yyyy" }}</b>
       </td>
     </ng-container>
 
@@ -76,61 +85,74 @@
           [class.sin-diligenciar]="element.registroCompleto === false"
           [class.completo]="element.registroCompleto === true"
         ></span>
-        {{ element.registroCompleto? 'Completo': 'Sin diligenciar' }}
+        {{ element.registroCompleto ? "Completo" : "Incompleto" }}
       </td>
     </ng-container>
 
-    <!-- contratacionProyectoId Column -->
-    <ng-container matColumnDef="contratacionProyectoId">
+    <!-- proyectoId Column -->
+    <ng-container matColumnDef="proyectoId">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Gestión</th>
       <td mat-cell *matCellDef="let element">
         <a
+        *ngIf="element.estadoInformeCod === '1' || element.estadoInformeCod === '2' || element.estadoInformeCod === '0'"
           mat-button
           mat-raised-button
           color="accent"
           class="btn-table"
-          [routerLink]="['registrar', element.contratacionProyectoId]"
+          [routerLink]="['registrar', element.proyectoId]"
         >
-          Registrar informe final
+          <span *ngIf="!element.registroCompleto && element.estadoInformeCod === '0'">Registrar informe final {{element.EstadoInformeCod}}</span>
+          <span *ngIf="element.estadoInformeCod === '1' || element.estadoInformeCod === '2'">Ver detalle / Editar</span>
         </a>
         <!-- <a
+          *ngIf="
+            element.EstadoInformeCod === 'Sin registro' &&
+            element.EstadoInformeCod === 'En proceso de registro'
+          "
           mat-button
           mat-raised-button
           color="accent"
           class="btn-table"
           type="button"
-          [routerLink]="['registrar', element.contratacionProyectoId]"
+          [routerLink]="['registrar', element.proyectoId]"
         >
         Ver detalle / Editar
         </a> -->
         <a
+          *ngIf="
+            element.estadoInformeCod === '3' || element.estadoInformeCod === '7' ||  element.estadoInformeCod === '5' ||  element.estadoInformeCod === '6'
+          "
           mat-button
           mat-raised-button
           color="accent"
           class="btn-table"
           type="button"
-          [routerLink]="['verDetalle', element.contratacionProyectoId]"
+          [routerLink]="['verDetalle', element.proyectoId]"
         >
-        Ver detalle
+          Ver detalle
         </a>
-        <!-- <button
+        <button
+        *ngIf="element.estadoInformeCod === '2' || element.estadoInformeCod === '8'"
           mat-button
           mat-raised-button
           color="accent"
           class="btn-table"
           type="button"
+          (click)="enviarRegistroFinal(element.proyectoId)"
         >
         Enviar informe a validación
-      </button> -->
-        <!-- <button
-          mat-button
-          mat-raised-button
-          color="accent"
-          class="btn-table"
-          type="button"
-        >
-        Ver observaciones de supervisor
-      </button> -->
+      </button>
+      <a
+      *ngIf="element.estadoInformeCod === '4' || element.estadoInformeCod === '8'"
+        mat-button
+        mat-raised-button
+        color="accent"
+        class="btn-table"
+        [routerLink]="['registrar', element.proyectoId]"
+      >
+        <span>Ver detalle / Editar
+        </span>
+      </a>
       </td>
     </ng-container>
 

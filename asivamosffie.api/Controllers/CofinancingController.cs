@@ -13,7 +13,7 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-
+    [Authorize]
     public class CofinancingController : ControllerBase
     {
         private readonly ICofinancingService _Cofinancing;

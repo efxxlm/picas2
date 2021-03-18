@@ -9,6 +9,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class DialogEnvSolicitudAutorizComponent implements OnInit {
   addressForm = this.fb.group({});
+  estaEditando = false;
   constructor(private fb: FormBuilder, public matDialogRef: MatDialogRef<DialogEnvSolicitudAutorizComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit(): void {
@@ -33,6 +34,8 @@ export class DialogEnvSolicitudAutorizComponent implements OnInit {
     }
   }
   onSubmit() {
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     console.log(this.addressForm.value);
   }
 }
