@@ -130,9 +130,6 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
 
           }
 
-          console.log( 'se' )
-
-
           this.tipoNovedadArray.push(novedadContractualDescripcion);
         });
 
@@ -152,12 +149,8 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
 
             let tipoNovedadseleccionada = this.tipoNovedadArray.filter(r => r.tipoNovedadCodigo === n.tipoNovedadCodigo).shift();
             this.tipoNovedadArray = this.tipoNovedadArray.filter(r => r.tipoNovedadCodigo !== n.tipoNovedadCodigo)
-            //if ( tipoNovedadseleccionada?.novedadContractualId !== undefined )
-            {
-              console.log( tipoNovedadseleccionada )
-              this.tipoNovedadArray.push( n );
-              listaDescripcion.push( n );
-            }
+            this.tipoNovedadArray.push( n );
+            listaDescripcion.push( n );
             
           });
 
@@ -230,7 +223,7 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
       data: { modalTitle, modalText, siNoBoton: true }
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+
       if (result === true) {
         this.deleteTema(e);
       }
@@ -240,8 +233,6 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
   deleteTema(i: number) {
     const tema = this.clausulaField.controls[i];
 
-    console.log(tema);
-
     this.borrarArray(this.clausulaField, i);
     this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>');
   }
@@ -249,11 +240,11 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
   changeTipoNovedad() {
     if (this.addressForm.get('tipoNovedad').value)
       this.novedadContractual.novedadContractualDescripcion = this.addressForm.get('tipoNovedad').value;
-    console.log(this.addressForm.get('tipoNovedad').value);
-  }
+
+    }
 
   onSubmit() {
-    // console.log(this.addressForm.value);
+
     this.estaEditando = true;
     this.addressForm.markAllAsTouched();
 
@@ -264,6 +255,7 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
       proyectoId: this.proyecto ? this.proyecto.proyectoId : null,
       contratoId: this.contrato.contratoId,
       fechaSesionInstancia: this.addressForm.value ? this.addressForm.value.fechaSesionInstancia : null,
+      esAplicadaAcontrato: this.novedad.esAplicadaAcontrato,
 
       novedadContractualDescripcion: this.novedadContractual.novedadContractualDescripcion,
 

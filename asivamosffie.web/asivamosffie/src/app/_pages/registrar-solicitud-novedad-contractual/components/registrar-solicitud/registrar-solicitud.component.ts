@@ -40,7 +40,7 @@ export class RegistrarSolicitudComponent implements OnInit {
   proyecto:any;
   contratos=[];
   contrato:any;
-  novedad:NovedadContractual;
+  novedad:NovedadContractual = {};
 
   ngOnInit() {
 
@@ -87,6 +87,7 @@ export class RegistrarSolicitudComponent implements OnInit {
 
   public changeNovedadAplicada()
   {
+    this.novedad.esAplicadaAcontrato = this.novedadAplicada.value;
     console.log(this.novedadAplicada.value);
     if(this.novedadAplicada.value == false)
     {

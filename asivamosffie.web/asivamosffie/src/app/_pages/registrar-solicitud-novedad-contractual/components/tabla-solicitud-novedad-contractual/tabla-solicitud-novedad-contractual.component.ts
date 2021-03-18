@@ -75,6 +75,12 @@ export class TablaSolicitudNovedadContractualComponent implements AfterViewInit 
   }
 
   aprobarSolicitud(id: string) {
+    this.contractualNoveltyService.aprobarSolicitud( id )
+      .subscribe( respuesta => {
+        this.openDialog('', `<b>${respuesta.message}</b>`);
+        if ( respuesta.code === '200' )
+          this.ngAfterViewInit();
+      });
     console.log(`Aprobar solicitud ${id}`);
   }
 

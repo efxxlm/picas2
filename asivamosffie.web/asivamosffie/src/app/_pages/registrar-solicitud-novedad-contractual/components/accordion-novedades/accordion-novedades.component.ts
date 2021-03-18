@@ -1,4 +1,4 @@
-import { Input } from '@angular/core';
+import { EventEmitter, Input, Output } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { NovedadContractual, NovedadContractualDescripcion } from 'src/app/_interfaces/novedadContractual';
 
@@ -10,10 +10,15 @@ import { NovedadContractual, NovedadContractualDescripcion } from 'src/app/_inte
 export class AccordionNovedadesComponent implements OnInit {
   @Input () tiposNovedadModificacionContractual;
   @Input () novedadeContractual: any;//NovedadContractual[];
+  @Output() guardar = new EventEmitter();
   
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  guardarRegistro(){
+    this.guardar.emit(true);
   }
 
 }

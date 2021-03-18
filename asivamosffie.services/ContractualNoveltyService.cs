@@ -41,25 +41,47 @@ namespace asivamosffie.services
         /// <returns></returns>
         public async Task<List<NovedadContractual>> GetListGrillaNovedadContractual()
         {
-            List<NovedadContractual> ListContratos = new List<NovedadContractual>();
-            List<Dominio> ListDominioTipoDominio = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Novedad_Modificacion_Contractual).ToList();
-            List<Dominio> ListDominioEstado = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Novedad_Contractual).ToList();
+            List<NovedadContractual> ListNovedades = new List<NovedadContractual>();
+
+            List<Dominio> ListDominioTipoNovedad = _context.Dominio
+                                                                .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Novedad_Modificacion_Contractual)
+                                                                .ToList();
+
+            List<Dominio> ListDominioEstado = _context.Dominio
+                                                            .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Novedad_Contractual)
+                                                            .ToList();
 
             try
             {
-                ListContratos = await _context.NovedadContractual.Where(r => r.Eliminado != true).ToListAsync();
+                ListNovedades = await _context.NovedadContractual
+                                                    .Where(r => r.Eliminado != true)
+                                                    .Include( r => r.NovedadContractualDescripcion )
+                                                    .ToListAsync();
 
-                //ListContratos.ForEach(c =>
-                //{
-                //    c.TipoNovedadNombre = ListDominioTipoDominio.Where(r => r.Codigo == c.TipoNovedadCodigo)?.FirstOrDefault()?.Nombre;
-                //    c.EstadoNovedadNombre = ListDominioEstado.Where(r => r.Codigo == c.EstadoCodigo)?.FirstOrDefault()?.Nombre;
-                //});
 
-                return ListContratos.OrderByDescending(r => r.FechaSolictud).ToList();
+                foreach( NovedadContractual novedad in ListNovedades)
+                {
+                    novedad.EstadoNovedadNombre = ListDominioEstado
+                                                        .Where(r => r.Codigo == novedad.EstadoCodigo)
+                                                        ?.FirstOrDefault()
+                                                        ?.Nombre;
+
+                    foreach (NovedadContractualDescripcion descripcion in novedad.NovedadContractualDescripcion)
+                    {
+                        descripcion.NombreTipoNovedad = ListDominioTipoNovedad
+                                                               .Where(r => r.Codigo == descripcion.TipoNovedadCodigo)
+                                                               ?.FirstOrDefault()
+                                                               ?.Nombre;
+
+                        novedad.NovedadesSeleccionadas = string.Concat(novedad.NovedadesSeleccionadas, descripcion.NombreTipoNovedad, ",");
+                    }
+                }
+
+                return ListNovedades.OrderByDescending(r => r.FechaSolictud).ToList();
             }
             catch (Exception ex)
             {
-                return ListContratos;
+                return ListNovedades;
             }
         }
 
@@ -114,6 +136,10 @@ namespace asivamosffie.services
                                                                 .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Novedad_Modificacion_Contractual)
                                                                 .ToList();
 
+            List<Dominio> listDominioMotivos = _context.Dominio
+                                                                .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Motivos_Novedad_contractual)
+                                                                .ToList();
+
             NovedadContractual novedadContractual = _context.NovedadContractual
                                                                 .Where( r => r.NovedadContractualId == pId)
                                                                 .Include( r => r.Contrato )
@@ -137,8 +163,14 @@ namespace asivamosffie.services
             {
                 novedadContractualDescripcion.NombreTipoNovedad = listDominioTipoNovedad
                                                                         .Where(r => r.Codigo == novedadContractualDescripcion.TipoNovedadCodigo)
-                                                                        .FirstOrDefault()
-                                                                        .Nombre;
+                                                                        ?.FirstOrDefault()
+                                                                        ?.Nombre;
+                foreach( NovedadContractualDescripcionMotivo motivo in novedadContractualDescripcion.NovedadContractualDescripcionMotivo)
+                {
+                    motivo.NombreMotivo = listDominioMotivos.Where(r => r.Codigo == motivo.MotivoNovedadCodigo)?.FirstOrDefault()?.Nombre;
+                }
+
+                
             }
 
                 if (novedadContractual?.Contrato?.Contratacion?.Contratista != null)
@@ -172,10 +204,14 @@ namespace asivamosffie.services
                     if (string.IsNullOrEmpty(novedadContractual.NovedadContractualId.ToString()) || novedadContractual.NovedadContractualId == 0)
                     {
 
+                        int cantidadNovedades = _context.NovedadContractual.ToList().Count();
+
                         //Auditoria
                         strCrearEditar = "REGISTRAR NOVEDAD CONTRACTUAL";
                         novedadContractual.FechaCreacion = DateTime.Now;
                         novedadContractual.UsuarioCreacion = novedadContractual.UsuarioCreacion;
+                        novedadContractual.NumeroSolicitud = "NOV-" + cantidadNovedades.ToString("000");
+                        novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.En_proceso_de_registro;
 
                         novedadContractual.Eliminado = false;
 
@@ -190,6 +226,7 @@ namespace asivamosffie.services
                             }
                         }
 
+                        novedadContractual.RegistroCompleto = Registrocompleto(novedadContractual);
                         _context.NovedadContractual.Add(novedadContractual);
 
                     }
@@ -217,6 +254,8 @@ namespace asivamosffie.services
                                 await CreateEditNovedadContractualDescripcion(descripcion);
                             }
                         }
+
+                        novedadContractualOld.RegistroCompleto = Registrocompleto(novedadContractualOld);
                     }
 
                     _context.SaveChanges();
@@ -319,6 +358,22 @@ namespace asivamosffie.services
                     //clausula.NovedadContractualDescripcionId = novedadContractualDescripcion.NovedadContractualDescripcionId;
 
                     await CreateEditNovedadContractualDescripcionClausula(clausula);
+                }
+
+                //las borro los motivos para crearlos de nuevo
+                List<NovedadContractualDescripcionMotivo> listaMotivos = _context.NovedadContractualDescripcionMotivo
+                                                                                       .Where(r => r.NovedadContractualDescripcionId == novedadContractualDescripcion.NovedadContractualDescripcionId)
+                                                                                       .ToList();
+
+                _context.NovedadContractualDescripcionMotivo.RemoveRange(listaMotivos);
+
+                // creo los motivos de nuevo
+                foreach (NovedadContractualDescripcionMotivo motivo in novedadContractualDescripcion.NovedadContractualDescripcionMotivo)
+                {
+                    motivo.UsuarioCreacion = novedadContractualDescripcion.UsuarioCreacion;
+                    motivo.FechaCreacion = DateTime.Now;
+
+                    _context.NovedadContractualDescripcionMotivo.Add(motivo);
                 }
 
                 return respuesta;
@@ -456,9 +511,125 @@ namespace asivamosffie.services
             }
         }
 
+        public async Task<Respuesta> AprobarSolicitud( int pNovedadContractualId, string pUsuario)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.AprobarNovedadContractual, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = string.Empty;
+            NovedadContractual novedadContractual = _context.NovedadContractual.Find(pNovedadContractualId);
+
+            try
+            {
+
+                if (novedadContractual != null)
+                {
+                    strCrearEditar = "APROBAR NOVEDAD CONTRACTUAL";
+                    novedadContractual.FechaModificacion = DateTime.Now;
+                    novedadContractual.UsuarioModificacion = pUsuario;
+                    novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_por_interventor;
+                    _context.NovedadContractual.Update(novedadContractual);
+
+                    _context.SaveChanges();
+
+                }
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = novedadContractual,
+                    Code = ConstantMessagesContractualControversy.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
+                    ConstantMessagesContractualControversy.OperacionExitosa,
+                    idAccion,
+                    "",//controversiaActuacion.UsuarioCreacion,
+                    strCrearEditar)
+
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = novedadContractual,
+                    Code = ConstantMessagesContractualControversy.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
+                    ConstantMessagesContractualControversy.Error,
+                    idAccion,
+                    "",//controversiaActuacion.UsuarioCreacion, 
+                    ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
+
         #endregion business
 
         #region private 
+
+        private bool Registrocompleto( NovedadContractual pNovedadContractual)
+        {
+            bool esCompleto = true;
+
+            if (
+                    pNovedadContractual.FechaSolictud == null ||
+                    string.IsNullOrEmpty(pNovedadContractual.InstanciaCodigo) ||
+                    pNovedadContractual.FechaSesionInstancia == null ||
+                    pNovedadContractual.NovedadContractualDescripcion == null ||
+                    pNovedadContractual.NovedadContractualDescripcion.Count() == 0 
+                )
+            {
+                esCompleto = false;
+            }
+
+            foreach( NovedadContractualDescripcion descripcion in pNovedadContractual.NovedadContractualDescripcion)
+            {
+                // Suspension - Prórroga a la Suspensión
+                if ( descripcion.TipoNovedadCodigo == "1" || descripcion.TipoNovedadCodigo == "2")
+                {
+                    if (
+                            descripcion.FechaInicioSuspension == null ||
+                            descripcion.FechaFinSuspension == null 
+                        )
+                    {
+                        esCompleto = false;
+                    }
+
+                }
+
+                // adicion
+                if (descripcion.TipoNovedadCodigo == "3")
+                {
+                    if (
+                            descripcion.PresupuestoAdicionalSolicitado == null 
+                        )
+                    {
+                        esCompleto = false;
+                    }
+
+                }
+
+                if ( 
+                        descripcion.NovedadContractualDescripcionMotivo == null ||
+                        descripcion.NovedadContractualDescripcionMotivo.Count() == 0 ||
+                        string.IsNullOrEmpty( descripcion.ResumenJustificacion ) ||
+                        descripcion.EsDocumentacionSoporte == null ||
+                        string.IsNullOrEmpty(descripcion.ConceptoTecnico ) ||
+                        descripcion.FechaConcepto == null ||
+                        string.IsNullOrEmpty( descripcion.NumeroRadicado )
+
+                    )
+                {
+                    esCompleto = false;
+                }
+            }
+
+            return esCompleto;
+        }
 
         #endregion private 
 

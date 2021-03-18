@@ -30,6 +30,9 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public VProyectosXcontrato ProyectosSeleccionado { get; set; }
 
+        [NotMapped]
+        public string NovedadesSeleccionadas { get; set; }
+
     }
 
 }

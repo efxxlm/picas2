@@ -16,5 +16,6 @@ namespace asivamosffie.services.Interfaces
         Task<List<Contrato>> GetListContract(int userID);
         Task<List<VProyectosXcontrato>> GetProyectsByContract(int pContratoId);
         Task<NovedadContractual> GetNovedadContractualById(int pId);
+        Task<Respuesta> AprobarSolicitud(int pNovedadContractualId, string pUsuario);
     }
 }

@@ -21,6 +21,9 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public string NombreTipoNovedad { get; set; }
 
+        [NotMapped]
+        public List<Dominio> MotivosNovedad { get; set; }
+
     }
 
 }

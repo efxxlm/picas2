@@ -44,4 +44,8 @@ export class ContractualNoveltyService {
     return this.http.get<NovedadContractual>( `${ this.urlApi }/getNovedadContractualById?pId=${ id }` ); 
   }
 
+  aprobarSolicitud( id ){
+    return this.http.put<Respuesta>( `${ this.urlApi }/aprobarSolicitud?pNovedaContractual=${ id }`, null ); 
+  }
+
 }

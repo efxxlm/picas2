@@ -83,10 +83,10 @@
         </div>
       </div>
 
-      <mat-card-title class="header-card--text sub-text" *ngIf="novedadDescripcion.tipoNovedadCodigo == '4'">
+      <mat-card-title class="header-card--text sub-text" *ngIf="novedadDescripcion.tipoNovedadCodigo == '1' || novedadDescripcion.tipoNovedadCodigo == '2'">
         Plazo solicitado
       </mat-card-title>
-      <div class="row">
+      <div class="row" *ngIf="novedadDescripcion.tipoNovedadCodigo == '1' || novedadDescripcion.tipoNovedadCodigo == '2'">
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
@@ -110,7 +110,7 @@
           </div>
         </div>
       </div>
-      <div class="row">
+      <div class="row" *ngIf="novedadDescripcion.tipoNovedadCodigo == '1' || novedadDescripcion.tipoNovedadCodigo == '2'">
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">

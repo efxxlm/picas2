@@ -1,8 +1,8 @@
-import { Input, OnChanges, SimpleChanges } from '@angular/core';
+import { EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { CommonService } from 'src/app/core/_services/common/common.service';
+import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { NovedadContractualClausula, NovedadContractualDescripcion, NovedadContractualDescripcionMotivo } from 'src/app/_interfaces/novedadContractual';
 
@@ -14,6 +14,8 @@ import { NovedadContractualClausula, NovedadContractualDescripcion, NovedadContr
 export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges {
   @Input() tiposNovedadModificacionContractual;
   @Input() novedadDescripcion:NovedadContractualDescripcion;
+
+  @Output() guardar= new EventEmitter();
 
   nombreTiposolicitud: string;
 
@@ -55,7 +57,7 @@ export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges 
   estaEditando = false;
   instanciaPresentoSolicitudArray = [];
   tipoNovedadArray = [];
-  motivosNovedadArray = [];
+  motivosNovedadArray:Dominio[] = [];
 
   // minDate: Date;
   editorStyle = {
@@ -95,17 +97,30 @@ export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges 
     public dialog: MatDialog,
     public commonServices: CommonService
   ) { }
+
   ngOnChanges(changes: SimpleChanges): void {
 
     this.commonServices.listaMotivosNovedadContractual()
             .subscribe( respuesta => {
               this.motivosNovedadArray = respuesta; 
+
+              let motivosSeleccionados = [];
+              if ( this.novedadDescripcion.novedadContractualDescripcionMotivo ){
+                this.novedadDescripcion.novedadContractualDescripcionMotivo.forEach( m => {
+                  let motivo = this.motivosNovedadArray.find( r => r.codigo === m.motivoNovedadCodigo )?.codigo;
+                  
+                  if ( motivo ){
+                    motivosSeleccionados.push( motivo );
+                  }
+                });
+                this.addressForm.get('motivosNovedad').setValue( motivosSeleccionados );
+              }
+
             });
 
     if ( changes.novedadDescripcion ){
       
     this.addressForm.get('novedadContractualDescripcionId').setValue(this.novedadDescripcion.novedadContractualDescripcionId);
-    this.addressForm.get('motivosNovedad').setValue(this.novedadDescripcion.motivoNovedadCodigo);
     this.addressForm.get('resumenJustificacionNovedad').setValue(this.novedadDescripcion.resumenJustificacion);
     this.addressForm.get('documentacionSuficiente').setValue(this.novedadDescripcion.esDocumentacionSoporte);
     this.addressForm.get('conceptoTecnico').setValue(this.novedadDescripcion.conceptoTecnico);
@@ -135,7 +150,7 @@ export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges 
   ngOnInit(): void {
     this.addressForm.valueChanges
       .subscribe(value => {
-        //console.log(value);
+
       });
       this.commonServices.listaInstanciasdeSeguimientoTecnico().subscribe(response=>{
         this.instanciaPresentoSolicitudArray=response;
@@ -192,7 +207,7 @@ export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges 
       data: { modalTitle, modalText, siNoBoton: true }
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+
       if (result === true) {
         this.deleteTema(e);
       }
@@ -201,8 +216,6 @@ export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges 
 
   deleteTema(i: number) {
     const tema = this.clausulaField.controls[i];
-
-    console.log(tema);
 
     this.borrarArray(this.clausulaField, i);
     this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>');
@@ -229,16 +242,13 @@ export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges 
         let motivo:NovedadContractualDescripcionMotivo = {
           novedadContractualDescripcionMotivoId: m.novedadContractualDescripcionMotivoId,
           novedadContractualDescripcionId: this.addressForm.get('novedadContractualDescripcionId').value,
-          motivoNovedadCodigo: m.codigo,
+          motivoNovedadCodigo: m,
           
         }
         listaMotivos.push( motivo );
       });
     }
     
-
-    
-    this.novedadDescripcion.motivoNovedadCodigo = this.addressForm.get('motivosNovedad').value;
     this.novedadDescripcion.resumenJustificacion = this.addressForm.get('resumenJustificacionNovedad').value;
     this.novedadDescripcion.esDocumentacionSoporte = this.addressForm.get('documentacionSuficiente').value;
     this.novedadDescripcion.conceptoTecnico = this.addressForm.get('conceptoTecnico').value;
@@ -249,38 +259,14 @@ export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges 
     this.novedadDescripcion.fechaFinSuspension = this.addressForm.get('fechaFinal').value;
 
     this.novedadDescripcion.novedadContractualClausula = listaClausulas;
+    this.novedadDescripcion.novedadContractualDescripcionMotivo = listaMotivos;
     this.novedadDescripcion.novedadContractualDescripcionId = this.addressForm.get('novedadContractualDescripcionId').value ;
-/*
-    fechaSolicitudNovedad: [null, Validators.required],
-    instanciaPresentoSolicitud: [null, Validators.required],
-    fechaSesionInstancia: [null, Validators.required],
-    tipoNovedad: [null, Validators.required],
-    motivosNovedad: [null, Validators.required],
-    resumenJustificacionNovedad: [null, Validators.required],
-    documentacion: [null, Validators.required],
-    plazoSolicitado: this.fb.array([
-      this.fb.group({
-        fechaInicio: [null, Validators.required],
-        fechaFinal: [null, Validators.required],
-        
-      })
-    ]),
-    clausula: this.fb.array([
-      this.fb.group({
-        clausulaModificar: [null, Validators.required],
-        ajusteSolicitadoClausula: [null, Validators.required]
-      })
-    ]),
-    documentacionSuficiente: [null, Validators.required],
-    conceptoTecnico: [null, Validators.required],
-    fechaConceptoTecnico: [null, Validators.required],
-    numeroRadicadoSolicitud: [null, Validators.compose([
-      Validators.required, Validators.minLength(5), Validators.maxLength(20)])
-    ]
-*/
-    console.log(this.addressForm.value);
+
     this.estaEditando = true;
-    this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+
+    this.guardar.emit( true );
+
   }
+
 
 }

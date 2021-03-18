@@ -98,6 +98,22 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [HttpPut]
+        [Route("AprobarSolicitud")]
+        public async Task<IActionResult> AprobarSolicitud([FromQuery] int pNovedaContractual)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _contractualModification.AprobarSolicitud(pNovedaContractual, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         [HttpGet]
         [Route("GetProyectsByContract")]
         public async Task<ActionResult<List<VProyectosXcontrato>>> GetProyectsByContract(int pContratoId)

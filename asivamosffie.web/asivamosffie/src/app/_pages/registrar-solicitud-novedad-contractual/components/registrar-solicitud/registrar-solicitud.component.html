@@ -55,7 +55,8 @@
   <div class="pt-3em animatedDown" *ngIf="novedadAplicada.value === false && proyectos" >
     <app-tabla-proyectos-registrar-novedad
                                             [listaProyectos]="proyectos"
-                                            (Proyecto)="seleccionarProyecto($event)"  >
+                                            (Proyecto)="seleccionarProyecto($event)"
+                                            >
   </app-tabla-proyectos-registrar-novedad>
   </div>
 
