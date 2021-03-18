@@ -1,4 +1,4 @@
-<mat-card class="shipping-card var-main-gris" *ngIf="existeObservacionCumplimiento">
+<mat-card class="shipping-card var-main-gris" *ngIf="existeObservacionCumplimiento && anexos">
   <mat-card-header class="header-card header-card--margin">
     <mat-card-title class="mat-card-title header-card--text">
       Verificación del grupo de novedades y liquidaciones
@@ -7,17 +7,17 @@
   <mat-card-content>
     <p>
       <strong>
-        {{ report.proyecto.informeFinal[0].informeFinalObservaciones[0].fechaCreacion | date:'dd/MM/yyyy' }} 
+        <span>{{ anexos.fechaCreacion | date:'dd/MM/yyyy' }} </span>
       </strong>
     </p>
     <p>
       <strong>
         ¿Desde el grupo de novedades y liquidaciones tiene observaciones al recibo de satisfacción:
       </strong>
-      <span *ngIf="report.proyecto.informeFinal[0].tieneObservacionesCumplimiento"> Si</span>
-      <span *ngIf="!report.proyecto.informeFinal[0].tieneObservacionesCumplimiento"> No</span>
+      <span *ngIf="anexos.observaciones != null || anexos.observaciones != ''"> Si</span>
+      <span *ngIf="anexos.observaciones == null || anexos.observaciones == ''"> No</span>
     </p>
-    <p *ngIf="report.proyecto.informeFinal[0].tieneObservacionesCumplimiento" [innerHTML]="report.proyecto.informeFinal[0].informeFinalObservaciones[0].observaciones">
+    <p *ngIf="anexos.observaciones != null || anexos.observaciones != ''" [innerHTML]="anexos.observaciones">
     </p>
   </mat-card-content>
 </mat-card>

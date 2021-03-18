@@ -33,7 +33,7 @@ namespace asivamosffie.services
         public async Task<List<InformeFinal>> GetListInformeFinal()
         {
             List<InformeFinal> list = await _context.InformeFinal
-                            .Where(r=> r.EstadoAprobacion == ConstantCodigoEstadoAprobacionInformeFinal.Enviado_verificacion_liquidacion_novedades || r.EstadoAprobacion == ConstantCodigoEstadoAprobacionInformeFinal.Con_observaciones_liquidaciones_novedades || r.EstadoCumplimiento == ConstantCodigoEstadoCumplimientoInformeFinal.Con_observaciones_liquidaciones_novedades)
+                            .Where(r=> r.EstadoAprobacion == ConstantCodigoEstadoAprobacionInformeFinal.Enviado_verificacion_liquidacion_novedades || r.EstadoAprobacion == ConstantCodigoEstadoAprobacionInformeFinal.Con_observaciones_liquidaciones_novedades || !String.IsNullOrEmpty(r.EstadoCumplimiento) )
                             .Include(r=> r.Proyecto)
                                 .ThenInclude(r => r.InstitucionEducativa)
                             .ToListAsync();
@@ -73,8 +73,8 @@ namespace asivamosffie.services
                                                         .Include(r => r.InformeFinal)
                                                          .Include(r => r.InstitucionEducativa)
                                                          .FirstOrDefaultAsync();
-            List<InformeFinalObservaciones> informeFinalObservacionesCumplimiento = _context.InformeFinalObservaciones.Where(r => r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && r.EsGrupoNovedades == true).ToList();
-            List<InformeFinalObservaciones> informeFinalObservacionesInterventoria = _context.InformeFinalObservaciones.Where(r => r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && r.EsGrupoNovedadesInterventoria == true).ToList();
+            List<InformeFinalObservaciones> informeFinalObservacionesCumplimiento = _context.InformeFinalObservaciones.Where(r => r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && r.EsGrupoNovedades == true && (r.Archivado == null || r.Archivado == false) && (r.Eliminado == false || r.Eliminado == null)).ToList();
+            List<InformeFinalObservaciones> informeFinalObservacionesInterventoria = _context.InformeFinalObservaciones.Where(r => r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && r.EsGrupoNovedadesInterventoria == true && (r.Archivado == null || r.Archivado == false) && (r.Eliminado == false || r.Eliminado == null)).ToList();
 
             InstitucionEducativaSede Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == proyecto.SedeId).FirstOrDefault();
             Localizacion Municipio = ListLocalizacion.Where(r => r.LocalizacionId == proyecto.LocalizacionIdMunicipio).FirstOrDefault();
@@ -82,8 +82,18 @@ namespace asivamosffie.services
             proyecto.DepartamentoObj = ListLocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
             proyecto.tipoIntervencionString = TipoIntervencion.Where(r => r.Codigo == proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
             proyecto.Sede = Sede;
-            proyecto.InformeFinal.FirstOrDefault().InformeFinalObservaciones = informeFinalObservacionesCumplimiento;
-            proyecto.InformeFinal.FirstOrDefault().InformeFinalObservacionesInterventoria = informeFinalObservacionesInterventoria;
+            if (proyecto.InformeFinal.Count > 0)
+            {
+                proyecto.InformeFinal.FirstOrDefault().InformeFinalObservacionesCumplimiento = informeFinalObservacionesCumplimiento;
+                proyecto.InformeFinal.FirstOrDefault().InformeFinalObservacionesInterventoria = informeFinalObservacionesInterventoria;
+                //historial recibo de satisfacción (EsGrupoNovedades )
+                proyecto.InformeFinal.FirstOrDefault().HistorialObsInformeFinalNovedades = _context.InformeFinalObservaciones.Where(r => r.EsGrupoNovedades == true && r.Archivado == true && (r.EsApoyo == false || r.EsApoyo == null) && r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && (r.Eliminado == false || r.Eliminado == null)).ToList();
+                proyecto.InformeFinal.FirstOrDefault().ObservacionVigenteInformeFinalNovedades = _context.InformeFinalObservaciones.Where(r => r.EsGrupoNovedades == true && r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && (r.Archivado == false || r.Archivado == null) && (r.Eliminado == false || r.Eliminado == null)).FirstOrDefault();
+                //historial de anexos (EsGrupoNovedadesInterventoria)
+                proyecto.InformeFinal.FirstOrDefault().HistorialObsInformeFinalInterventoriaNovedades = _context.InformeFinalObservaciones.Where(r => r.EsGrupoNovedadesInterventoria == true && r.Archivado == true && (r.EsApoyo == false || r.EsApoyo == null) && r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && (r.Eliminado == false || r.Eliminado == null)).ToList();
+                proyecto.InformeFinal.FirstOrDefault().ObservacionVigenteInformeFinalInterventoriaNovedades = _context.InformeFinalObservaciones.Where(r => r.EsGrupoNovedadesInterventoria == true && r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && (r.Archivado == false || r.Archivado == null) && (r.Eliminado == false || r.Eliminado == null)).FirstOrDefault();
+
+            }
             List<ContratacionProyecto> ListContratacion = await _context.ContratacionProyecto
                                                         .Where(r => r.ProyectoId == pProyectoId)
                                                         .Include(r => r.Contratacion)
@@ -161,13 +171,6 @@ namespace asivamosffie.services
             {
                 if (pObservacion.InformeFinalObservacionesId == 0)
                 {
-                    await _context.Set<InformeFinal>().Where(r => r.InformeFinalId == pObservacion.InformeFinalId && (r.EstadoCumplimiento == "0" || string.IsNullOrEmpty(r.EstadoCumplimiento)))
-                                               .UpdateAsync(r => new InformeFinal()
-                                               {
-                                                   FechaModificacion = DateTime.Now,
-                                                   UsuarioModificacion = pObservacion.UsuarioCreacion,
-                                                   EstadoCumplimiento = ConstantCodigoEstadoCumplimientoInformeFinal.En_proceso_validacion_cumplimiento,
-                                               });
                     strCrearEditar = "CREAR INFORME FINAL OBSERVACIONES";
                     pObservacion.FechaCreacion = DateTime.Now;
                     _context.InformeFinalObservaciones.Add(pObservacion);
@@ -190,9 +193,10 @@ namespace asivamosffie.services
                                                    FechaModificacion = DateTime.Now,
                                                    UsuarioModificacion = pObservacion.UsuarioCreacion,
                                                    TieneObservacionesCumplimiento = tieneOBservaciones,
+                                                   EstadoCumplimiento = ConstantCodigoEstadoCumplimientoInformeFinal.En_proceso_validacion_cumplimiento,
                                                    RegistroCompletoCumplimiento = validateRegistroCompleto(pObservacion.InformeFinalId)
                                                });
-                _context.SaveChanges();
+                _context.SaveChangesAsync();
 
                 return
                 new Respuesta
@@ -295,6 +299,30 @@ namespace asivamosffie.services
                     informeFinal.UsuarioModificacion = pUsuario;
                     informeFinal.FechaModificacion = DateTime.Now;
 
+                    //recibo satisfacción
+                    if (!(bool)informeFinal.TieneObservacionesCumplimiento)
+                    {
+                        //DeleteInformeFinalObservacionesCumplimiento
+                        await _context.Set<InformeFinalObservaciones>().Where(r => r.InformeFinalId == informeFinal.InformeFinalId && r.EsGrupoNovedades == true && (r.Archivado == null || r.Archivado == false) && (r.Eliminado == null || r.Eliminado == false))
+                               .UpdateAsync(r => new InformeFinalObservaciones()
+                               {
+                                   FechaModificacion = DateTime.Now,
+                                   UsuarioModificacion = pUsuario,
+                                   Eliminado = true
+                               });
+                    }
+                    //anexos
+                    if (!(bool)informeFinal.TieneObservacionesInterventoria)
+                    {
+                        //DeleteInformeFinalObservacionesCumplimiento
+                        await _context.Set<InformeFinalObservaciones>().Where(r => r.InformeFinalId == informeFinal.InformeFinalId && r.EsGrupoNovedadesInterventoria == true && (r.Archivado == null || r.Archivado == false) && (r.Eliminado == null || r.Eliminado == false))
+                               .UpdateAsync(r => new InformeFinalObservaciones()
+                               {
+                                   FechaModificacion = DateTime.Now,
+                                   UsuarioModificacion = pUsuario,
+                                   Eliminado = true
+                               });
+                    }
                     //Enviar Correo a supervisor 5.1.4
                     await EnviarCorreoSupervisor(informeFinal, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
 
@@ -337,6 +365,31 @@ namespace asivamosffie.services
                     informeFinal.EstadoCumplimiento = ConstantCodigoEstadoCumplimientoInformeFinal.Con_Aprobacion_final;
                     informeFinal.UsuarioModificacion = pUsuario;
                     informeFinal.FechaModificacion = DateTime.Now;
+                }
+
+                //recibo satisfacción
+                if (!(bool)informeFinal.TieneObservacionesCumplimiento)
+                {
+                    //DeleteInformeFinalObservacionesCumplimiento
+                    await _context.Set<InformeFinalObservaciones>().Where(r => r.InformeFinalId == informeFinal.InformeFinalId && r.EsGrupoNovedades == true && (r.Archivado == null || r.Archivado == false) && (r.Eliminado == null || r.Eliminado == false))
+                           .UpdateAsync(r => new InformeFinalObservaciones()
+                           {
+                               FechaModificacion = DateTime.Now,
+                               UsuarioModificacion = pUsuario,
+                               Eliminado = true
+                           });
+                }
+                //anexos
+                if (!(bool)informeFinal.TieneObservacionesInterventoria)
+                {
+                    //DeleteInformeFinalObservacionesCumplimiento
+                    await _context.Set<InformeFinalObservaciones>().Where(r => r.InformeFinalId == informeFinal.InformeFinalId && r.EsGrupoNovedadesInterventoria == true && (r.Archivado == null || r.Archivado == false) && (r.Eliminado == null || r.Eliminado == false))
+                           .UpdateAsync(r => new InformeFinalObservaciones()
+                           {
+                               FechaModificacion = DateTime.Now,
+                               UsuarioModificacion = pUsuario,
+                               Eliminado = true
+                           });
                 }
 
                 _context.SaveChanges();

@@ -48,5 +48,20 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public virtual ICollection<InformeFinalObservaciones> HistorialInformeFinalInterventoriaObservaciones { get; set; }
+
+        [NotMapped]
+        public virtual InformeFinalObservaciones ObservacionVigenteInformeFinalNovedades { get; set; }
+
+        [NotMapped]
+        public virtual InformeFinalObservaciones ObservacionVigenteInformeFinalInterventoriaNovedades { get; set; }
+
+        [NotMapped]
+        public virtual ICollection<InformeFinalObservaciones> HistorialObsInformeFinalNovedades { get; set; }
+
+        [NotMapped]
+        public virtual ICollection<InformeFinalObservaciones> HistorialObsInformeFinalInterventoriaNovedades { get; set; }
+
+        [NotMapped]
+        public virtual bool tieneObservacionesAnyAnexo { get; set; }
     }
 }

@@ -675,6 +675,19 @@ namespace asivamosffie.services
                     if (informeFinal.EstadoCumplimiento == ConstantCodigoEstadoCumplimientoInformeFinal.Con_observaciones_liquidaciones_novedades)
                     {
                         informeFinal.EstadoCumplimiento = ConstantCodigoEstadoCumplimientoInformeFinal.Con_Ajustes_Supervisor;
+
+                        //Enviar las observaciones del supervisor a historial
+
+                        //Observaciones a recibo de satisfacción
+                        List<InformeFinalObservaciones> informeFinalObservaciones = _context.InformeFinalObservaciones.Where(r => r.InformeFinalId == informeFinal.InformeFinalId && (r.EsGrupoNovedades == true || r.EsGrupoNovedadesInterventoria == true) && (r.Archivado == null || r.Archivado == false)).ToList();
+                        foreach (var itemobs in informeFinalObservaciones)
+                        {
+                            itemobs.Archivado = true;
+                            itemobs.FechaModificacion = DateTime.Now;
+                            itemobs.UsuarioModificacion = pUsuario;
+                        }
+                        informeFinal.TieneObservacionesCumplimiento = null;
+                        informeFinal.TieneObservacionesInterventoria = null;
                     }
                 }
 

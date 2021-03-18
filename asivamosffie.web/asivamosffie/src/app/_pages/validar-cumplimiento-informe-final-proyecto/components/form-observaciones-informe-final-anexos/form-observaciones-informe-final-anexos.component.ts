@@ -76,6 +76,9 @@ export class FormObservacionesInformeFinalAnexosComponent implements OnInit {
         if(this.report.proyecto.informeFinal[0].informeFinalObservacionesInterventoria.length>0){
           this.observaciones.patchValue(this.report.proyecto.informeFinal[0].informeFinalObservacionesInterventoria[0]);
         }
+        if(this.report.proyecto.informeFinal[0].historialObsInformeFinalInterventoriaNovedades.length>0){
+          this.existe_historial = true;
+        }
         this.estaEditando = true;
       }
     }

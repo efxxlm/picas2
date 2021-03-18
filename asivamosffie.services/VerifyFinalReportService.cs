@@ -95,6 +95,28 @@ namespace asivamosffie.services
                                                         .ToListAsync();
             ListContratacion.FirstOrDefault().Contratacion.TipoContratacionCodigo = TipoObraIntervencion.Where(r => r.Codigo == ListContratacion.FirstOrDefault().Contratacion.TipoSolicitudCodigo).Select(r => r.Nombre).FirstOrDefault();
 
+            //Flujo observaciones recibo de satisfacción
+            if (proyecto.InformeFinal.Count > 0)
+            {
+                if (proyecto.InformeFinal.FirstOrDefault().EstadoValidacion == ConstantCodigoEstadoValidacionInformeFinal.Con_observaciones_del_supervisor || proyecto.InformeFinal.FirstOrDefault().EstadoValidacion == ConstantCodigoEstadoValidacionInformeFinal.Enviado_correcciones_apoyo_supervisor)
+                {
+                    proyecto.InformeFinal.FirstOrDefault().HistorialInformeFinalInterventoriaObservaciones = _context.InformeFinalObservaciones.Where(r => r.EsSupervision == true && r.Archivado == true && (r.EsApoyo == false || r.EsApoyo == null) && r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId).ToList();
+                    proyecto.InformeFinal.FirstOrDefault().ObservacionVigenteSupervisor = _context.InformeFinalObservaciones.Where(r => r.EsSupervision == true && r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && (r.Archivado == false || r.Archivado == null)).FirstOrDefault();
+                }
+                if (proyecto.InformeFinal.FirstOrDefault().EstadoAprobacion == ConstantCodigoEstadoAprobacionInformeFinal.Devuelta_por_supervisor)
+                {
+                    int existe_no_cumple = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && r.ValidacionCodigo == ConstantCodigoCalificacionInformeFinal.No_Cumple).Count();
+                    if (existe_no_cumple > 0)
+                    {
+                        proyecto.InformeFinal.FirstOrDefault().tieneObservacionesAnyAnexo = true;
+                    }
+                    else
+                    {
+                        proyecto.InformeFinal.FirstOrDefault().tieneObservacionesAnyAnexo = false;
+                    }
+                }
+            }
+
             foreach (var item in ListContratacion)
             {
                 Contrato contrato = await _context.Contrato.Where(r => r.ContratacionId == item.ContratacionId).FirstOrDefaultAsync();
@@ -367,6 +389,7 @@ namespace asivamosffie.services
                                                                        UsuarioModificacion = pObservacion.UsuarioCreacion,
                                                                        Observaciones = pObservacion.Observaciones,
                                                                    });
+                    await VerificarInformeFinalValidacion(pObservacion.InformeFinalId);
                 }
                 await _context.Set<InformeFinal>().Where(r => r.InformeFinalId == pObservacion.InformeFinalId)
                                                .UpdateAsync(r => new InformeFinal()

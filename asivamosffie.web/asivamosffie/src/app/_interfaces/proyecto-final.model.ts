@@ -30,7 +30,16 @@ export interface Report {
                     observaciones: string,
                     usuarioCreacion: string
                 },
-                historialInformeFinalInterventoriaObservaciones : InformeFinalObservaciones[],
+                observacionVigenteInformeFinalNovedades: {
+                    esSupervision: boolean,
+                    fechaCreacion: Date,
+                    informeFinalInterventoriaId: number,
+                    informeFinalInterventoriaObservacionesId: number,
+                    observaciones: string,
+                    usuarioCreacion: string
+                },
+                historialObsInformeFinalInterventoriaNovedades : InformeFinalObservaciones[],
+                historialObsInformeFinalNovedades:InformeFinalObservaciones[],
             }
         ],
         departamentoObj: {

@@ -3,15 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-
-const ELEMENT_DATA = [
-  {
-    fechaRevision: '29/11/2020',
-    responsable: 'Responsables de grupo de novedades y liquidaciones',
-    observaciones: 'Verifique el ITEM 11 ya que deberia contar con anexo digital'
-  }
-];
+import { InformeFinalObservaciones, Report } from 'src/app/_interfaces/proyecto-final.model';
 
 @Component({
   selector: 'app-tabla-historial-observaciones',
@@ -19,16 +11,25 @@ const ELEMENT_DATA = [
   styleUrls: ['./tabla-historial-observaciones.component.scss']
 })
 export class TablaHistorialObservacionesComponent implements OnInit {
-  ELEMENT_DATA: any[];
-  displayedColumns: string[] = ['fechaRevision', 'responsable', 'observaciones'];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  @Input() data: Report;
+  ELEMENT_DATA : InformeFinalObservaciones[] = [];
+  anexos: any[];
+  dataSource = new MatTableDataSource<InformeFinalObservaciones>(this.ELEMENT_DATA);
+
+  displayedColumns: string[] = ['fechaCreacion', 'responsable', 'observaciones'];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(public dialog: MatDialog) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if(this.data != null){
+      if(this.data.proyecto.informeFinal[0].historialObsInformeFinalInterventoriaNovedades.length > 0){
+        this.dataSource.data = this.data.proyecto.informeFinal[0].historialObsInformeFinalInterventoriaNovedades as InformeFinalObservaciones[];
+      }      
+    }
+  }
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;

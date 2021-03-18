@@ -27,6 +27,7 @@
 
   <app-datos-del-proyecto *ngIf="report" [report]="report"></app-datos-del-proyecto>
   <app-recibo-satisfaccion *ngIf="report" [report]="report"></app-recibo-satisfaccion>
+  <app-verificacion-novedades *ngIf="report && existeObservacionCumplimiento" [report]="report" [existeObservacionCumplimiento]="existeObservacionCumplimiento"></app-verificacion-novedades>
   <app-form-observaciones-recibo-satisfaccion *ngIf="report" [report]="report"></app-form-observaciones-recibo-satisfaccion>
   <app-tabla-informe-final-anexos *ngIf="report" [id]="report.proyecto.informeFinal[0].informeFinalId" [llaveMen]="report.proyecto.llaveMen" [report]="report"></app-tabla-informe-final-anexos>
 </section>

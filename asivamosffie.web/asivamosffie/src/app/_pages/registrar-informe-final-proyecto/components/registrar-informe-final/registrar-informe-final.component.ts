@@ -17,6 +17,8 @@ export class RegistrarInformeFinalComponent implements OnInit {
   id: string;
   report: Report;
   mostrarInforme: boolean;
+  mostrarDetalleAnexos = false;
+  mostrarDetalleRecibo = false;
   @ViewChild(TablaInformeFinalAnexosComponent ) childTablaInformeFinalAnexos: TablaInformeFinalAnexosComponent ; 
   @ViewChild(FormReciboASatisfaccionComponent ) childFormReciboASatisfaccion: FormReciboASatisfaccionComponent ; 
 
@@ -83,6 +85,12 @@ export class RegistrarInformeFinalComponent implements OnInit {
   getInformeFinalByProyecto(id: string) {
     this.registrarInformeFinalProyectoService.getInformeFinalByProyecto(id).subscribe(report => {
       this.report = report[0];
+      if(report[0].proyecto.informeFinal[0].estadoAprobacion === '6' && report[0].proyecto.informeFinal[0].tieneObservacionesAnyAnexo == false){
+        this.mostrarDetalleAnexos = true;
+      }
+      if(report[0].proyecto.informeFinal[0].estadoAprobacion === '6' && report[0].proyecto.informeFinal[0].tieneObservacionesSupervisor == false){
+        this.mostrarDetalleRecibo = true;
+      }
     });
   }
 

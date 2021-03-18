@@ -13,6 +13,8 @@ export class RevisarInformeComponent implements OnInit {
 
   id: string;
   report: Report;
+  existeObservacionCumplimiento= false;
+
   constructor(
     private route: ActivatedRoute,
     private validarCumplimientoInformeFinalProyectoService: ValidarCumplimientoInformeFinalService,
@@ -30,6 +32,9 @@ export class RevisarInformeComponent implements OnInit {
     this.validarCumplimientoInformeFinalProyectoService.getInformeFinalByProyecto(id)
     .subscribe(report => {
       this.report = report[0];
+      if(report[0].proyecto.informeFinal[0].historialObsInformeFinalNovedades.length >0){
+        this.existeObservacionCumplimiento = true;
+      }
     });
   }
 

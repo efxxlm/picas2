@@ -57,8 +57,8 @@ export class FormObservacionesReciboSatisfaccionComponent implements OnInit {
       this.observaciones.get("esGrupoNovedades").setValue(true);
       if(this.report.proyecto.informeFinal[0].tieneObservacionesCumplimiento != null){
         this.observaciones.get("tieneObservacionesCumplimiento").setValue(this.report.proyecto.informeFinal[0].tieneObservacionesCumplimiento);
-      }if(this.report.proyecto.informeFinal[0].informeFinalObservaciones.length>0){
-        this.observaciones.patchValue(this.report.proyecto.informeFinal[0].informeFinalObservaciones[0]);
+      }if(this.report.proyecto.informeFinal[0].informeFinalObservacionesCumplimiento.length>0){
+        this.observaciones.patchValue(this.report.proyecto.informeFinal[0].informeFinalObservacionesCumplimiento[0]);
       }
       this.estaEditando = true;
     }

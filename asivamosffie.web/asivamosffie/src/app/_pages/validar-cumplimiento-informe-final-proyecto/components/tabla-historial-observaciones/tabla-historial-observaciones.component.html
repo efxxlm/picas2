@@ -1,14 +1,14 @@
-<section class="text-center mt-2em">
+<section class="text-center mt-2em" *ngIf="data">
   <div class="tabla-gris">
     <div class="table-responsive">
       <table mat-table [dataSource]="dataSource" matSort>
         <!-- fechaRevision Column -->
-        <ng-container matColumnDef="fechaRevision">
+        <ng-container matColumnDef="fechaCreacion">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
             Fecha de revisión
           </th>
           <td mat-cell *matCellDef="let element">
-            <b>{{ element.fechaRevision }}</b>
+            <b>{{ element.fechaCreacion | date:'dd/MM/yyyy' }}</b>
           </td>
         </ng-container>
 
@@ -28,7 +28,7 @@
             Historial de observaciones
           </th>
           <td mat-cell *matCellDef="let element">
-            {{ element.observaciones }}
+            <p [innerHTML]="element.observaciones">
           </td>
         </ng-container>
 
