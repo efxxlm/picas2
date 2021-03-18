@@ -24,9 +24,9 @@
             </div>
             <div class="col">
               <mat-form-field class="select-width">
-                <mat-select required formControlName="motivosNovedad">
-                  <mat-option *ngFor="let mnovedad of motivosNovedadArray" [value]="mnovedad.value">
-                    {{ mnovedad.name }}
+                <mat-select required formControlName="motivosNovedad" multiple >
+                  <mat-option *ngFor="let mnovedad of motivosNovedadArray" [value]="mnovedad.codigo">
+                    {{ mnovedad.nombre }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>

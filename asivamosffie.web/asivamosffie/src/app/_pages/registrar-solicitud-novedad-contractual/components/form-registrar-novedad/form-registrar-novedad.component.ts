@@ -65,17 +65,7 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
   estaEditando = false;
   instanciaPresentoSolicitudArray = [];
   tipoNovedadArray = [];
-  motivosNovedadArray = [
-    { name: 'Alabama', value: 'AL' },
-    { name: 'Alaska', value: 'AK' },
-    { name: 'Vermont', value: 'VT' },
-    { name: 'Virgin Islands', value: 'VI' },
-    { name: 'Virginia', value: 'VA' },
-    { name: 'Washington', value: 'WA' },
-    { name: 'West Virginia', value: 'WV' },
-    { name: 'Wisconsin', value: 'WI' },
-    { name: 'Wyoming', value: 'WY' }
-  ];
+  motivosNovedadArray = [];
 
   // minDate: Date;
   editorStyle = {
@@ -128,6 +118,8 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.novedad) {
+
+      
 
       this.commonServices.listaTipoNovedadModificacionContractual().subscribe(response => {
 

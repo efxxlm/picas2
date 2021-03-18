@@ -4,7 +4,7 @@ import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { CommonService } from 'src/app/core/_services/common/common.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-import { NovedadContractualDescripcion } from 'src/app/_interfaces/novedadContractual';
+import { NovedadContractualClausula, NovedadContractualDescripcion, NovedadContractualDescripcionMotivo } from 'src/app/_interfaces/novedadContractual';
 
 @Component({
   selector: 'app-form-registrar-novedad-contrato',
@@ -18,6 +18,7 @@ export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges 
   nombreTiposolicitud: string;
 
   addressForm = this.fb.group({
+    novedadContractualDescripcionId: [],
     fechaSolicitudNovedad: [null, Validators.required],
     instanciaPresentoSolicitud: [null, Validators.required],
     fechaSesionInstancia: [null, Validators.required],
@@ -42,6 +43,7 @@ export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges 
       Validators.required, Validators.minLength(5), Validators.maxLength(20)])
     ]
   });
+
   get plazoSolicitadoField() {
     return this.addressForm.get('plazoSolicitado') as FormArray;
   }
@@ -53,17 +55,7 @@ export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges 
   estaEditando = false;
   instanciaPresentoSolicitudArray = [];
   tipoNovedadArray = [];
-  motivosNovedadArray = [
-    { name: 'Alabama', value: 'AL' },
-    { name: 'Alaska', value: 'AK' },
-    { name: 'Vermont', value: 'VT' },
-    { name: 'Virgin Islands', value: 'VI' },
-    { name: 'Virginia', value: 'VA' },
-    { name: 'Washington', value: 'WA' },
-    { name: 'West Virginia', value: 'WV' },
-    { name: 'Wisconsin', value: 'WI' },
-    { name: 'Wyoming', value: 'WY' }
-  ];
+  motivosNovedadArray = [];
 
   // minDate: Date;
   editorStyle = {
@@ -104,8 +96,15 @@ export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges 
     public commonServices: CommonService
   ) { }
   ngOnChanges(changes: SimpleChanges): void {
+
+    this.commonServices.listaMotivosNovedadContractual()
+            .subscribe( respuesta => {
+              this.motivosNovedadArray = respuesta; 
+            });
+
     if ( changes.novedadDescripcion ){
-    
+      
+    this.addressForm.get('novedadContractualDescripcionId').setValue(this.novedadDescripcion.novedadContractualDescripcionId);
     this.addressForm.get('motivosNovedad').setValue(this.novedadDescripcion.motivoNovedadCodigo);
     this.addressForm.get('resumenJustificacionNovedad').setValue(this.novedadDescripcion.resumenJustificacion);
     this.addressForm.get('documentacionSuficiente').setValue(this.novedadDescripcion.esDocumentacionSoporte);
@@ -113,9 +112,22 @@ export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges 
     this.addressForm.get('fechaConceptoTecnico').setValue(this.novedadDescripcion.fechaConcepto);
     this.addressForm.get('numeroRadicadoSolicitud').setValue(this.novedadDescripcion.numeroRadicado);
 
-    //this.novedadDescripcion.plazoAdicionalDias = this.addressForm.get('plazoSolicitado').value;
-    //this.novedadDescripcion.plazoAdicionalDias = this.addressForm.get('plazoSolicitado').value;
-    //this.novedadDescripcion.ajusteClausula = this.addressForm.get('clausula').value;
+    this.addressForm.get('presupuestoAdicional').setValue(this.novedadDescripcion.presupuestoAdicionalSolicitado);
+    this.addressForm.get('fechaInicio').setValue(this.novedadDescripcion.fechaInicioSuspension);
+    this.addressForm.get('fechaFinal').setValue(this.novedadDescripcion.fechaFinSuspension);
+
+    this.clausulaField.clear();
+
+    this.novedadDescripcion.novedadContractualClausula.forEach( c => {
+      let grupo = this.crearClausula();
+      grupo.get('novedadContractualDescripcionId').setValue( c.novedadContractualDescripcionId );
+      grupo.get('novedadContractualClausulaId').setValue( c.novedadContractualClausulaId );
+      grupo.get('clausulaModificar').setValue( c.clausulaAmodificar );
+      grupo.get('ajusteSolicitadoClausula').setValue( c.ajusteSolicitadoAclausula );
+
+      this.clausulaField.push( grupo );
+
+    });
 
     }
   }
@@ -155,6 +167,8 @@ export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges 
 
   private crearClausula() {
     return this.fb.group({
+      novedadContractualDescripcionId:[],
+      novedadContractualClausulaId:[],
       clausulaModificar: [null, Validators.required],
       ajusteSolicitadoClausula: [null, Validators.required]
     });
@@ -196,11 +210,37 @@ export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges 
 
   onSubmit() {
 
+    let listaClausulas: NovedadContractualClausula[] = [];
+    let listaMotivos: NovedadContractualDescripcionMotivo[] = [];
+
+    this.clausulaField.controls.forEach( control => {
+      let clausula:NovedadContractualClausula = {
+        novedadContractualDescripcionId: this.addressForm.get('novedadContractualDescripcionId').value,
+        novedadContractualClausulaId: control.value.novedadContractualClausulaId,
+        ajusteSolicitadoAclausula: control.value.ajusteSolicitadoClausula,
+        clausulaAmodificar: control.value.clausulaModificar,
+        
+      }
+      listaClausulas.push( clausula );
+    });
+
+    if ( this.addressForm.get('motivosNovedad').value ){
+      this.addressForm.get('motivosNovedad').value.forEach( m => {
+        let motivo:NovedadContractualDescripcionMotivo = {
+          novedadContractualDescripcionMotivoId: m.novedadContractualDescripcionMotivoId,
+          novedadContractualDescripcionId: this.addressForm.get('novedadContractualDescripcionId').value,
+          motivoNovedadCodigo: m.codigo,
+          
+        }
+        listaMotivos.push( motivo );
+      });
+    }
+    
+
     
     this.novedadDescripcion.motivoNovedadCodigo = this.addressForm.get('motivosNovedad').value;
     this.novedadDescripcion.resumenJustificacion = this.addressForm.get('resumenJustificacionNovedad').value;
     this.novedadDescripcion.esDocumentacionSoporte = this.addressForm.get('documentacionSuficiente').value;
-    //this.novedadDescripcion.ajusteClausula = this.addressForm.get('clausula').value;
     this.novedadDescripcion.conceptoTecnico = this.addressForm.get('conceptoTecnico').value;
     this.novedadDescripcion.fechaConcepto = this.addressForm.get('fechaConceptoTecnico').value;
     this.novedadDescripcion.numeroRadicado = this.addressForm.get('numeroRadicadoSolicitud').value;
@@ -208,6 +248,8 @@ export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges 
     this.novedadDescripcion.fechaInicioSuspension = this.addressForm.get('fechaInicio').value;
     this.novedadDescripcion.fechaFinSuspension = this.addressForm.get('fechaFinal').value;
 
+    this.novedadDescripcion.novedadContractualClausula = listaClausulas;
+    this.novedadDescripcion.novedadContractualDescripcionId = this.addressForm.get('novedadContractualDescripcionId').value ;
 /*
     fechaSolicitudNovedad: [null, Validators.required],
     instanciaPresentoSolicitud: [null, Validators.required],

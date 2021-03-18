@@ -235,6 +235,8 @@ namespace asivamosffie.services.Helpers.Enumerator
          
         Dependencia_Usuario = 171,
 
-        Grupo_Usuario = 172
+        Grupo_Usuario = 172,
+
+        Motivos_Novedad_contractual = 174
     }
 }

@@ -71,4 +71,23 @@ export interface NovedadContractualDescripcion{
         numeroRadicado?: string,
 
         nombreTipoNovedad?: string,
+        novedadContractualDescripcionMotivo?: NovedadContractualDescripcionMotivo[],
+        novedadContractualClausula?: NovedadContractualClausula[],
+
+
+}
+
+export interface NovedadContractualClausula{
+        novedadContractualClausulaId?: number,
+        novedadContractualDescripcionId?: number,
+        clausulaAmodificar?: string,
+        ajusteSolicitadoAclausula?: string,
+        eliminado?: boolean,
+}
+
+export interface NovedadContractualDescripcionMotivo{
+        novedadContractualDescripcionMotivoId?: number,
+        novedadContractualDescripcionId?: number,
+        motivoNovedadCodigo?: string,
+        eliminado?: boolean,
 }

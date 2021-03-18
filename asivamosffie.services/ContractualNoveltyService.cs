@@ -120,6 +120,9 @@ namespace asivamosffie.services
                                                                     .ThenInclude( r => r.Contratacion )
                                                                         .ThenInclude( r => r.Contratista )
                                                                 .Include( r => r.NovedadContractualDescripcion )
+                                                                    .ThenInclude( r => r.NovedadContractualClausula )
+                                                                .Include(r => r.NovedadContractualDescripcion)
+                                                                    .ThenInclude(r => r.NovedadContractualDescripcionMotivo)
                                                                 .FirstOrDefault();
 
             novedadContractual.ProyectosContrato = _context.VProyectosXcontrato
@@ -279,6 +282,7 @@ namespace asivamosffie.services
                     novedadContractualDescripcion.Eliminado = false;
                     
                     _context.NovedadContractualDescripcion.Add( novedadContractualDescripcion );
+
                 }
                 else
                 {
@@ -309,6 +313,14 @@ namespace asivamosffie.services
                     _context.NovedadContractualDescripcion.Update( novedadDescripcionOld );
                 }
 
+                foreach (NovedadContractualClausula clausula in novedadContractualDescripcion.NovedadContractualClausula)
+                {
+                    clausula.UsuarioCreacion = novedadContractualDescripcion.UsuarioCreacion;
+                    //clausula.NovedadContractualDescripcionId = novedadContractualDescripcion.NovedadContractualDescripcionId;
+
+                    await CreateEditNovedadContractualDescripcionClausula(clausula);
+                }
+
                 return respuesta;
             }
             catch (Exception ex)
@@ -321,6 +333,58 @@ namespace asivamosffie.services
                     Data = null,
                     Code = ConstantMessagesProcesoSeleccion.ErrorInterno,
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion_Grupo, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccion, novedadContractualDescripcion.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
+
+        public async Task<Respuesta> CreateEditNovedadContractualDescripcionClausula(NovedadContractualClausula novedadContractualClausula)
+        {
+            Respuesta respuesta = new Respuesta();
+
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Novedad_Contractual, (int)EnumeratorTipoDominio.Acciones);//ERROR VALIDAR ACCIONES
+
+            string strCrearEditar = "";
+            try
+            {
+
+                if (string.IsNullOrEmpty(novedadContractualClausula.NovedadContractualClausulaId.ToString()) || novedadContractualClausula.NovedadContractualClausulaId == 0)
+                {
+                    //Auditoria
+                    strCrearEditar = "CREAR NOVEDAD CONTRACTUAL CLAUSULA";
+                    novedadContractualClausula.FechaCreacion = DateTime.Now;
+                    novedadContractualClausula.Eliminado = false;
+
+                    _context.NovedadContractualClausula.Add(novedadContractualClausula);
+                }
+                else
+                {
+                    strCrearEditar = "EDIT NOVEDAD CONTRACTUAL CLAUSULA";
+                    NovedadContractualClausula clausulaOld = _context.NovedadContractualClausula.Find(novedadContractualClausula.NovedadContractualClausulaId);
+
+                    //Auditoria
+                    clausulaOld.FechaModificacion = DateTime.Now;
+                    clausulaOld.UsuarioCreacion = novedadContractualClausula.UsuarioCreacion;
+
+                    //Registros
+
+                    clausulaOld.AjusteSolicitadoAclausula = novedadContractualClausula.AjusteSolicitadoAclausula;
+                    clausulaOld.ClausulaAmodificar = novedadContractualClausula.ClausulaAmodificar;
+
+                    _context.NovedadContractualClausula.Update(clausulaOld);
+                }
+
+                return respuesta;
+            }
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesProcesoSeleccion.ErrorInterno,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion_Grupo, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccion, novedadContractualClausula.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
                 };
             }
         }

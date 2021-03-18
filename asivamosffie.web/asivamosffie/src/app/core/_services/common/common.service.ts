@@ -428,6 +428,10 @@ listaEstadosPoliza(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=173`);
   }
 
+  listaMotivosNovedadContractual(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=174`);
+  }
+
   public listaUsuarios(){
 
     let lista: Usuario[] = [];
