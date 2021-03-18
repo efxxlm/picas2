@@ -464,6 +464,7 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/gestionar-tramite-liq-contractual/gestionar-tramite-liq-contractual.module')
         .then(m => m.GestionarTramiteLiqContractualModule)
       },
+      {
         path: 'gestionListaChequeo',
         loadChildren: () => import( './_pages/gestionar-lista-chequeo/gestionar-lista-chequeo.module' )
           .then( module => module.GestionarListaChequeoModule )
