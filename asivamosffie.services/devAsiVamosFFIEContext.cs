@@ -233,10 +233,9 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VUsuarioPerfil> VUsuarioPerfil { get; set; }
         public virtual DbSet<VUsuarioRol> VUsuarioRol { get; set; }
         public virtual DbSet<VValidarSeguimientoSemanal> VValidarSeguimientoSemanal { get; set; }
+        public virtual DbSet<VValorFacturadoContrato> VValorFacturadoContrato { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
-
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -8110,6 +8109,19 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.TipoIntervencion)
                     .HasMaxLength(100)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VValorFacturadoContrato>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_ValorFacturadoContrato");
+
+                entity.Property(e => e.ValorFacturado).HasColumnType("decimal(38, 3)");
+
+                entity.Property(e => e.ValorSolicitudDdp)
+                    .HasColumnName("ValorSolicitudDDP")
+                    .HasColumnType("numeric(38, 2)");
             });
 
             modelBuilder.Entity<VVerificarSeguimientoSemanal>(entity =>

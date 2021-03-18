@@ -22,5 +22,8 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public string[] observacionesRechazo{ get; set; }
+         
+        [NotMapped]
+        public decimal SaldoContrato { get; set; }
     }
 }

@@ -65,7 +65,7 @@ namespace asivamosffie.services
             });
             return ListDynamics;
         }
-        //3# Traer Conecpto de pago por tipo de pago
+        //3# Traer Concepto de pago por tipo de pago
         public async Task<dynamic> GetConceptoPagoCriterioCodigoByTipoPagoCodigo(string TipoPagoCodigo)
         {
             List<dynamic> ListDynamics = new List<dynamic>();
@@ -78,6 +78,23 @@ namespace asivamosffie.services
                 {
                     Codigo = l,
                     Nombre = ListCriterio.Where(lc => lc.Codigo == l).FirstOrDefault().Nombre
+                });
+            });
+            return ListDynamics;
+        }
+        //4# Traer  Uso Por Concepto de pago
+        public async Task<dynamic> GetUsoByConceptoPagoCriterioCodigo(string pConceptoPagoCodigo)
+        {
+            List<dynamic> ListDynamics = new List<dynamic>();
+            List<string> strCriterios = _context.ConceptoPagoUso.Where(r => r.ConceptoPagoCodigo == pConceptoPagoCodigo).Select(r => r.Uso).ToList();
+            List<Dominio> ListUsos = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Usos);
+
+            strCriterios.ForEach(l =>
+            {
+                ListDynamics.Add(new
+                {
+                    Codigo = l,
+                    Nombre = ListUsos.Where(lc => lc.Codigo == l).FirstOrDefault().Nombre
                 });
             });
             return ListDynamics;
@@ -217,7 +234,7 @@ namespace asivamosffie.services
             if (pSolicitudPago > 0)
             {
                 SolicitudPago solicitudPago = _context.SolicitudPago.Find(pSolicitudPago);
-                contrato.SolicitudPagoOnly = GetSolicitudPago(solicitudPago);
+                contrato.SolicitudPagoOnly = GetSolicitudPago(solicitudPago); 
             }
             return contrato;
         }
@@ -299,9 +316,7 @@ namespace asivamosffie.services
                        .Include(r => r.SolicitudPagoListaChequeo)
 
                        .FirstOrDefault();
-
                     GetRemoveObjectsDelete(solicitudPago);
-
                     return solicitudPago;
 
                 case ConstanCodigoTipoSolicitudContratoSolicitudPago.Expensas:
@@ -337,7 +352,7 @@ namespace asivamosffie.services
             }
         }
 
-
+         
         #endregion
 
         #region Validate 

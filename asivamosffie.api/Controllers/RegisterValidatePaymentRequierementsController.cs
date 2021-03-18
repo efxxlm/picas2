@@ -137,6 +137,13 @@ namespace asivamosffie.api.Controllers
         {
             return Ok(await _registerValidatePaymentRequierementsService.GetConceptoPagoCriterioCodigoByTipoPagoCodigo(TipoPagoCodigo));
         }
+ 
+        [HttpGet]
+        [Route("GetUsoByConceptoPagoCriterioCodigo")]
+        public async Task<IActionResult> GetUsoByConceptoPagoCriterioCodigo([FromQuery] string pConceptoPagoCodigo)
+        {
+            return Ok(await _registerValidatePaymentRequierementsService.GetUsoByConceptoPagoCriterioCodigo(pConceptoPagoCodigo));
+        }
 
         [HttpGet]
         [Route("GetListSolicitudPago")]

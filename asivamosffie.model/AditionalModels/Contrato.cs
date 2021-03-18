@@ -54,5 +54,11 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public dynamic ListProyectos { get; set; }
+
+        [NotMapped]
+        public dynamic  MontoMaximo { get; set; }
+
+        [NotMapped]
+        public dynamic MontoPendiente { get; set; }
     }
 }

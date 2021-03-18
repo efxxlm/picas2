@@ -44,7 +44,9 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CreateEditNewPayment(SolicitudPago pSolicitudPago);
 
         Task<dynamic> GetContratoByTipoSolicitudCodigoModalidadContratoCodigoOrNumeroContrato(string pTipoSolicitud, string pModalidadContrato, string pNumeroContrato);
-  
+
+        Task<dynamic> GetUsoByConceptoPagoCriterioCodigo(string pConceptoPagoCodigo);
+
         Task<dynamic> GetProyectosByIdContrato(int pContratoId);
     }
 }
