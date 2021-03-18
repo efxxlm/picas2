@@ -19,10 +19,10 @@ export class VerificacionNovedadesComponent implements OnInit {
 
   ngOnInit(): void {
     if(this.report != null){
-      if(this.report.proyecto.informeFinal[0].historialObsInformeFinalNovedades.length > 0){
-        this.anexos = this.report.proyecto.informeFinal[0].historialObsInformeFinalNovedades[0];
-      }else if(this.report.proyecto.informeFinal[0].observacionVigenteInformeFinalNovedades){
+      if(this.report.proyecto.informeFinal[0].observacionVigenteInformeFinalNovedades){
         this.anexos = this.report.proyecto.informeFinal[0].observacionVigenteInformeFinalNovedades;
+      }else if(this.report.proyecto.informeFinal[0].historialObsInformeFinalNovedades.length > 0){
+        this.anexos = this.report.proyecto.informeFinal[0].historialObsInformeFinalNovedades[0];
       }
     }
   }

@@ -68,7 +68,7 @@ namespace asivamosffie.services
             {
                 if (proyecto.InformeFinal.FirstOrDefault().EstadoInforme == ConstantCodigoEstadoInformeFinal.Con_Observaciones_del_supervisor || proyecto.InformeFinal.FirstOrDefault().EstadoInforme == ConstantCodigoEstadoInformeFinal.Modificado_interventor_completo)
                 {
-                    proyecto.InformeFinal.FirstOrDefault().HistorialInformeFinalInterventoriaObservaciones = _context.InformeFinalObservaciones.Where(r => r.EsSupervision == true && r.Archivado == true && (r.EsApoyo == false || r.EsApoyo == null) && r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId).ToList();
+                    proyecto.InformeFinal.FirstOrDefault().HistorialInformeFinalInterventoriaObservaciones = _context.InformeFinalObservaciones.Where(r => r.EsSupervision == true && r.Archivado == true && (r.EsApoyo == false || r.EsApoyo == null) && r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && !String.IsNullOrEmpty(r.Observaciones)).ToList();
                     proyecto.InformeFinal.FirstOrDefault().ObservacionVigenteSupervisor = _context.InformeFinalObservaciones.Where(r => r.EsSupervision == true && r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && (r.Archivado == false || r.Archivado == null)).FirstOrDefault();
                 }
                 if (proyecto.InformeFinal.FirstOrDefault().EstadoAprobacion == ConstantCodigoEstadoAprobacionInformeFinal.Devuelta_por_supervisor)
@@ -704,6 +704,7 @@ namespace asivamosffie.services
                         List<InformeFinalInterventoria> listanexo = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == informeFinal.InformeFinalId).ToList();
                         foreach (var item in listanexo)
                         {
+                            item.TieneModificacionApoyo = false;
                             List<InformeFinalInterventoriaObservaciones> listobs = _context.InformeFinalInterventoriaObservaciones.Where(r => r.InformeFinalInterventoriaId == item.InformeFinalInterventoriaId && r.EsApoyo == true && (r.Archivado == null || r.Archivado == false)).ToList();
                             foreach (var itemobs in listobs)
                             {

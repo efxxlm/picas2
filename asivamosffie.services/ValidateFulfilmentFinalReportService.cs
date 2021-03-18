@@ -194,9 +194,16 @@ namespace asivamosffie.services
                                                    UsuarioModificacion = pObservacion.UsuarioCreacion,
                                                    TieneObservacionesCumplimiento = tieneOBservaciones,
                                                    EstadoCumplimiento = ConstantCodigoEstadoCumplimientoInformeFinal.En_proceso_validacion_cumplimiento,
-                                                   RegistroCompletoCumplimiento = validateRegistroCompleto(pObservacion.InformeFinalId)
                                                });
-                _context.SaveChangesAsync();
+                _context.SaveChanges();
+
+                await _context.Set<InformeFinal>().Where(r => r.InformeFinalId == pObservacion.InformeFinalId)
+                               .UpdateAsync(r => new InformeFinal()
+                               {
+                                   RegistroCompletoCumplimiento = validateRegistroCompleto(pObservacion.InformeFinalId)
+                               });
+
+                _context.SaveChanges();
 
                 return
                 new Respuesta
@@ -253,8 +260,14 @@ namespace asivamosffie.services
                                                    UsuarioModificacion = pObservacion.UsuarioCreacion,
                                                    TieneObservacionesInterventoria = tieneOBservaciones,
                                                    EstadoCumplimiento = ConstantCodigoEstadoCumplimientoInformeFinal.En_proceso_validacion_cumplimiento,
-                                                   RegistroCompletoCumplimiento = validateRegistroCompleto(pObservacion.InformeFinalId),
                                                });
+                _context.SaveChanges();
+
+                await _context.Set<InformeFinal>().Where(r => r.InformeFinalId == pObservacion.InformeFinalId)
+                               .UpdateAsync(r => new InformeFinal()
+                               {
+                                   RegistroCompletoCumplimiento = validateRegistroCompleto(pObservacion.InformeFinalId),
+                               });
                 _context.SaveChanges();
 
                 return

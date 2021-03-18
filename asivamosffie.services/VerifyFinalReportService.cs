@@ -105,7 +105,7 @@ namespace asivamosffie.services
                 }
                 if (proyecto.InformeFinal.FirstOrDefault().EstadoAprobacion == ConstantCodigoEstadoAprobacionInformeFinal.Devuelta_por_supervisor)
                 {
-                    int existe_no_cumple = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && r.ValidacionCodigo == ConstantCodigoCalificacionInformeFinal.No_Cumple).Count();
+                    int existe_no_cumple = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && r.AprobacionCodigo == ConstantCodigoCalificacionInformeFinal.No_Cumple).Count();
                     if (existe_no_cumple > 0)
                     {
                         proyecto.InformeFinal.FirstOrDefault().tieneObservacionesAnyAnexo = true;
@@ -587,7 +587,8 @@ namespace asivamosffie.services
                     if (informeFinal.EstadoAprobacion == ConstantCodigoEstadoAprobacionInformeFinal.Devuelta_por_supervisor)
                     {
                         informeFinal.EstadoAprobacion = ConstantCodigoEstadoAprobacionInformeFinal.Modificado_Apoyo_Supervision_Interventor;
-                        
+
+                        informeFinal.TieneObservacionesSupervisor = null;
                         //Actualizar las calificaciones de supervisor (dejarlas igual a las de apoyo)
                         await updateStateAprobacion(informeFinal.InformeFinalId, pUsuario);
 
@@ -615,6 +616,7 @@ namespace asivamosffie.services
                                 itemobs.UsuarioModificacion = pUsuario;
                             }
                         }
+
                     }
                     //Enviar Correo supervisor 5.1.2
                     await EnviarCorreoSupervisor(informeFinal, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);

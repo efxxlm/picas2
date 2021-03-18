@@ -35,7 +35,7 @@ export class DetalleInformeComponent implements OnInit {
       if(report[0].proyecto.informeFinal[0].informeFinalObservaciones.length > 0){
         this.existeObservacionCumplimiento = true;
       }
-      if(report[0].proyecto.informeFinal[0].informeFinalObservacionesInterventoria.length > 0){
+      if(report[0].proyecto.informeFinal[0].observacionVigenteInformeFinalInterventoriaNovedades != null){
         this.existeObservacionInterventoria = true;
       }
     });

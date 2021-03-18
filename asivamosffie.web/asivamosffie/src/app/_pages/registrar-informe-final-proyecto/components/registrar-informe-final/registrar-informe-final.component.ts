@@ -16,7 +16,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class RegistrarInformeFinalComponent implements OnInit {
   id: string;
   report: Report;
-  mostrarInforme: boolean;
+  mostrarInforme = true;
   mostrarDetalleAnexos = false;
   mostrarDetalleRecibo = false;
   @ViewChild(TablaInformeFinalAnexosComponent ) childTablaInformeFinalAnexos: TablaInformeFinalAnexosComponent ; 

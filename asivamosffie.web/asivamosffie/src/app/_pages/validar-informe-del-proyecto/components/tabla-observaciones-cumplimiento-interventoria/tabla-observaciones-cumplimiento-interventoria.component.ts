@@ -15,7 +15,8 @@ export class TablaObservacionesCumplimientoInterventoriaComponent implements OnI
   anexos: any;
   dataSource = new MatTableDataSource<InformeFinal>(this.ELEMENT_DATA);
   existe_historial = false;
-
+  existe_data = false;
+  
   constructor(
     private validarInformeFinalProyectoService: ValidarInformeFinalService,
 
@@ -32,11 +33,13 @@ export class TablaObservacionesCumplimientoInterventoriaComponent implements OnI
         this.dataSource.data = informeFinal as InformeFinal[];
         this.anexos = informeFinal;
 
+        if(this.anexos.observacionVigenteInformeFinalObservacionesInterventoria != null){
+          this.existe_data = true;
+        }
+
         if(this.anexos.historialInformeFinalObservacionesInterventoria != null){
           if(this.anexos.historialInformeFinalObservacionesInterventoria.length > 0){
-            if(this.anexos.observacionVigenteInformeFinalObservacionesInterventoria != null){
               this.existe_historial = true;
-            }
           }      
         }
       }

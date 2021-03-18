@@ -1,5 +1,5 @@
 <div class="text-left">
-  <mat-card class="shipping-card var-main-gris" *ngIf="anexos && existe_historial">
+  <mat-card class="shipping-card var-main-gris" *ngIf="anexos && existe_data">
     <mat-card-header class="header-card header-card--margin">
       <mat-card-title class="mat-card-title header-card--text">
         Verificación de responsables de grupo de novedades y liquidaciones
@@ -23,3 +23,4 @@
     </mat-card-content>
   </mat-card>
 </div>
+<app-tabla-historial-observaciones *ngIf="existe_historial && anexos" [data]="anexos"></app-tabla-historial-observaciones>

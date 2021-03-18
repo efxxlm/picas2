@@ -18,6 +18,7 @@ import { VerDetalleInformeFinalComponent } from './components/ver-detalle-inform
 import { DetalleObservacionesReciboSatisfaccionComponent } from './components/detalle-observaciones-recibo-satisfaccion/detalle-observaciones-recibo-satisfaccion.component';
 import { TablaDetalleInformeAnexosComponent } from './components/tabla-detalle-informe-anexos/tabla-detalle-informe-anexos.component';
 import { TablaObservacionesCumplimientoInterventoriaComponent } from './components/tabla-observaciones-cumplimiento-interventoria/tabla-observaciones-cumplimiento-interventoria.component';
+import { TablaHistorialObservacionesComponent } from './components/tabla-historial-observaciones/tabla-historial-observaciones.component';
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import { TablaObservacionesCumplimientoInterventoriaComponent } from './componen
     VerDetalleInformeFinalComponent,
     DetalleObservacionesReciboSatisfaccionComponent,
     TablaDetalleInformeAnexosComponent,
-    TablaObservacionesCumplimientoInterventoriaComponent
+    TablaObservacionesCumplimientoInterventoriaComponent,
+    TablaHistorialObservacionesComponent
   ],
   imports: [
     CommonModule,

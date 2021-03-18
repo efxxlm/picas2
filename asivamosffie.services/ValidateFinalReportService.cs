@@ -74,7 +74,7 @@ namespace asivamosffie.services
                                                          .Include(r => r.InstitucionEducativa)
                                                          .FirstOrDefaultAsync();
             List<InformeFinalObservaciones> informeFinalObservacionesApoyo = _context.InformeFinalObservaciones.Where(r => r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && r.EsApoyo == true).ToList();
-            List<InformeFinalObservaciones> informeFinalObservacionesSupervisor = _context.InformeFinalObservaciones.Where(r => r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && r.EsSupervision == true).OrderByDescending(r=> r.FechaCreacion).ToList();
+            List<InformeFinalObservaciones> informeFinalObservacionesSupervisor = _context.InformeFinalObservaciones.Where(r => r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && r.EsSupervision == true && (r.Archivado == null || r.Archivado == false)).OrderByDescending(r=> r.FechaCreacion).ToList();
             List<InformeFinalObservaciones> informeFinalObservacionesCumplimiento = _context.InformeFinalObservaciones.Where(r => r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && r.EsGrupoNovedades == true).OrderByDescending(r => r.FechaCreacion).ToList();
 
             InstitucionEducativaSede Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == proyecto.SedeId).FirstOrDefault();
@@ -83,9 +83,16 @@ namespace asivamosffie.services
             proyecto.DepartamentoObj = ListLocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
             proyecto.tipoIntervencionString = TipoIntervencion.Where(r => r.Codigo == proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
             proyecto.Sede = Sede;
-            proyecto.InformeFinal.FirstOrDefault().InformeFinalObservaciones = informeFinalObservacionesApoyo;
-            proyecto.InformeFinal.FirstOrDefault().InformeFinalObservacionesSupervisor = informeFinalObservacionesSupervisor;
-            proyecto.InformeFinal.FirstOrDefault().InformeFinalObservacionesCumplimiento = informeFinalObservacionesCumplimiento;
+
+            if (proyecto.InformeFinal.Count > 0)
+            {
+                proyecto.InformeFinal.FirstOrDefault().InformeFinalObservaciones = informeFinalObservacionesApoyo;
+                proyecto.InformeFinal.FirstOrDefault().InformeFinalObservacionesSupervisor = informeFinalObservacionesSupervisor;
+                proyecto.InformeFinal.FirstOrDefault().InformeFinalObservacionesCumplimiento = informeFinalObservacionesCumplimiento;
+                //historial recibo de satisfacción
+                proyecto.InformeFinal.FirstOrDefault().HistorialObsInformeFinalSupervisor = _context.InformeFinalObservaciones.Where(r => r.EsSupervision == true && r.Archivado == true && r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && (r.Eliminado == false || r.Eliminado == null)).ToList();
+
+            }
             List<ContratacionProyecto> ListContratacion = await _context.ContratacionProyecto
                                                         .Where(r => r.ProyectoId == pProyectoId)
                                                         .Include(r => r.Contratacion)

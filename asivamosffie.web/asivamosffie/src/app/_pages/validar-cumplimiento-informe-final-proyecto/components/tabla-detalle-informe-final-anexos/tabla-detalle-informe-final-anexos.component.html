@@ -102,7 +102,7 @@
         <mat-card-content>
           <p>
             <strong>
-              {{ report.proyecto.informeFinal[0].informeFinalObservacionesInterventoria[0].fechaCreacion | date:'dd/MM/yyyy' }} 
+              {{ report.proyecto.informeFinal[0].observacionVigenteInformeFinalInterventoriaNovedades.fechaCreacion | date:'dd/MM/yyyy' }} 
             </strong>
           </p>
           <p>
@@ -112,7 +112,7 @@
             <span *ngIf="report.proyecto.informeFinal[0].tieneObservacionesInterventoria"> Si</span>
             <span *ngIf="!report.proyecto.informeFinal[0].tieneObservacionesInterventoria"> No</span>
           </p>
-          <p *ngIf="report.proyecto.informeFinal[0].tieneObservacionesInterventoria" [innerHTML]="report.proyecto.informeFinal[0].informeFinalObservacionesInterventoria[0].observaciones">
+          <p *ngIf="report.proyecto.informeFinal[0].tieneObservacionesInterventoria" [innerHTML]="report.proyecto.informeFinal[0].observacionVigenteInformeFinalInterventoriaNovedades.observaciones">
           </p>
         </mat-card-content>
       </mat-card>
