@@ -236,6 +236,7 @@ namespace asivamosffie.services
                 SolicitudPago solicitudPago = _context.SolicitudPago.Find(pSolicitudPago);
                 contrato.SolicitudPagoOnly = GetSolicitudPago(solicitudPago); 
             }
+            contrato.ValorFacturadoContrato = _context.VValorFacturadoContrato.Where(v => v.ContratoId == pContratoId).ToList();
             return contrato;
         }
 

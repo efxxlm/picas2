@@ -45,7 +45,7 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public bool TieneFase1 { get; set; }
-         
+
         [NotMapped]
         public bool TieneFase2 { get; set; }
 
@@ -56,9 +56,12 @@ namespace asivamosffie.model.Models
         public dynamic ListProyectos { get; set; }
 
         [NotMapped]
-        public dynamic  MontoMaximo { get; set; }
+        public dynamic MontoMaximo { get; set; }
 
         [NotMapped]
         public dynamic MontoPendiente { get; set; }
+         
+        [NotMapped]
+        public List<VValorFacturadoContrato> ValorFacturadoContrato { get; set; }
     }
 }
