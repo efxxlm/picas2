@@ -38,6 +38,7 @@ export interface Report {
                     observaciones: string,
                     usuarioCreacion: string
                 },
+                historialInformeFinalInterventoriaObservaciones : InformeFinalObservaciones[],
                 historialObsInformeFinalInterventoriaNovedades : InformeFinalObservaciones[],
                 historialObsInformeFinalNovedades:InformeFinalObservaciones[],
             }
