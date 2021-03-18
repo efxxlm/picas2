@@ -122,7 +122,7 @@ export class RegistrarNuevaSolicitudPagoComponent implements OnInit {
             contrato => {
                 this.contrato = contrato;
                 console.log( this.contrato );
-                this.dataSource = new MatTableDataSource( this.contrato.contratacion.disponibilidadPresupuestal );
+                this.dataSource = new MatTableDataSource( this.contrato.valorFacturadoContrato );
                 this.dataSource.paginator = this.paginator;
                 this.dataSource.sort = this.sort;
             }

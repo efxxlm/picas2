@@ -71,9 +71,9 @@ export class RegistrarRequisitosPagoService {
   }
 
   getUsoByConceptoPagoCriterioCodigo( pConceptoPagoCodigo: string, pContratoId: number ) {
-    return new Promise<any>( resolve => {
+    return new Promise<any[]>( resolve => {
       this.http.get( `${ this.apiUrl }/GetUsoByConceptoPagoCriterioCodigo?pConceptoPagoCodigo=${ pConceptoPagoCodigo }&pContratoId=${ pContratoId }` )
-        .subscribe( response => resolve( response ) );
+        .subscribe( ( response: any[] ) => resolve( response ) );
     } );
   }
 

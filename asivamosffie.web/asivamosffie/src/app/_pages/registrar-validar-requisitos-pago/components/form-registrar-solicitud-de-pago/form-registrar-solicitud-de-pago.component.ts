@@ -34,16 +34,6 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
       'saldoPorPagar',
       'porcentajePorPagar'
     ];
-    dataTable: any[] = [
-      {
-        faseContrato: 'Fase 1 - Preconstrucción',
-        pagosRealizados: '0',
-        valorFacturado: '0',
-        porcentajeFacturado: '0',
-        saldoPorPagar: '$30.000.000',
-        porcentajePorPagar: '100%',
-      }
-    ];
     addressForm = this.fb.group({
       fechaSolicitud: [null, Validators.required],
       numeroRadicado: [null, Validators.required],
@@ -145,7 +135,7 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                         }
                     }
                     // Tabla pendiente por integrar
-                    this.dataSource = new MatTableDataSource(this.dataTable);
+                    this.dataSource = new MatTableDataSource( this.contrato.vContratoPagosRealizados );
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.sort = this.sort;
                 }

@@ -75,7 +75,7 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
                             this.contrato = response;
                             console.log( this.contrato );
                             if ( this.contrato.solicitudPagoOnly.tipoSolicitudCodigo !== this.tipoSolicitudCodigo.otrosCostos ) {
-                                this.dataSource = new MatTableDataSource( this.contrato.contratacion.disponibilidadPresupuestal );
+                                this.dataSource = new MatTableDataSource( this.contrato.valorFacturadoContrato );
                                 this.dataSource.paginator = this.paginator;
                                 this.dataSource.sort = this.sort;
 
