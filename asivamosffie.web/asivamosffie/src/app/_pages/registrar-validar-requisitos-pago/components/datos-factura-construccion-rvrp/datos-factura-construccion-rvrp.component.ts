@@ -52,7 +52,7 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
             this.addressForm.get( 'numeroFactura' ).setValue( this.solicitudPagoFaseFactura.numero !== undefined ? this.solicitudPagoFaseFactura.numero : null );
             this.addressForm.get( 'fechaFactura' ).setValue( this.solicitudPagoFaseFactura.fecha !== undefined ? new Date( this.solicitudPagoFaseFactura.fecha ) : null );
 
-            if ( this.solicitudPagoFaseFactura.registroCompleto === true ) {
+            if ( this.addressForm.get( 'numeroFactura' ).value !== undefined && this.addressForm.get( 'fechaFactura' ).value !== undefined ) {
                 this.addressForm.disable();
             }
         }

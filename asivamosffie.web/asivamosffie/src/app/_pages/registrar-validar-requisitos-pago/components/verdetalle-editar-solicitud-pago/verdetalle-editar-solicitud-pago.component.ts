@@ -80,18 +80,24 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
                                 this.dataSource.sort = this.sort;
 
                                 // Get semaforo forma de pago y registro completo
-                                const solicitudPagoCargarFormaPago = this.contrato.solicitudPagoOnly.solicitudPagoCargarFormaPago[0];
+                                if ( this.contrato.solicitudPago.length > 1 ) {
+                                    this.semaforoFormaDePago = 'completo';
+                                    //Get registro completo
+                                    this.registroCompletoAcordeones.registroCompletoFormaDePago = true;
+                                } else {
+                                    const solicitudPagoCargarFormaPago = this.contrato.solicitudPagoOnly.solicitudPagoCargarFormaPago[0];
 
-                                if ( solicitudPagoCargarFormaPago !== undefined ) {
-
-                                    // Get semaforo
-                                    if ( solicitudPagoCargarFormaPago.registroCompleto === false ) {
-                                        this.semaforoFormaDePago = 'en-proceso';
-                                    }
-                                    if ( solicitudPagoCargarFormaPago.registroCompleto === true ) {
-                                        this.semaforoFormaDePago = 'completo';
-                                        //Get registro completo
-                                        this.registroCompletoAcordeones.registroCompletoFormaDePago = true;
+                                    if ( solicitudPagoCargarFormaPago !== undefined ) {
+    
+                                        // Get semaforo
+                                        if ( solicitudPagoCargarFormaPago.registroCompleto === false ) {
+                                            this.semaforoFormaDePago = 'en-proceso';
+                                        }
+                                        if ( solicitudPagoCargarFormaPago.registroCompleto === true ) {
+                                            this.semaforoFormaDePago = 'completo';
+                                            //Get registro completo
+                                            this.registroCompletoAcordeones.registroCompletoFormaDePago = true;
+                                        }
                                     }
                                 }
                             } else {

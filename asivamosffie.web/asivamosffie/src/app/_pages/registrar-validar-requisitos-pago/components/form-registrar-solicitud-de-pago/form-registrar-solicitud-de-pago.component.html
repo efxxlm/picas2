@@ -172,7 +172,7 @@
                                 Criterios de pago incluidos en la factura
                             </mat-panel-title>
                         </mat-expansion-panel-header>
-                        <app-form-criterios-pago [solicitudPago]="contrato.solicitudPagoOnly" [contratacionProyectoId]="contratacionProyectoId"></app-form-criterios-pago>
+                        <app-form-criterios-pago [solicitudPago]="contrato.solicitudPagoOnly" [contratacionProyectoId]="contratacionProyectoId" [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"></app-form-criterios-pago>
                     </mat-expansion-panel>
 
                     <mat-expansion-panel class="expansion-style sub-expansion-black">
@@ -181,7 +181,7 @@
                                 Detalle factura para proyectos asociados
                             </mat-panel-title>
                         </mat-expansion-panel-header>
-                        <app-detalle-factura-proyectos-asociados [solicitudPago]="contrato.solicitudPagoOnly" *ngIf="estadoRegistroCompletoSubAcordeon.amortizacionRegistroCompleto === true"></app-detalle-factura-proyectos-asociados>
+                        <app-detalle-factura-proyectos-asociados [solicitudPago]="contrato.solicitudPagoOnly" *ngIf="estadoRegistroCompletoSubAcordeon.amortizacionRegistroCompleto === true" [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"></app-detalle-factura-proyectos-asociados>
                     </mat-expansion-panel>
 
                     <mat-expansion-panel class="expansion-style sub-expansion-black">
@@ -211,7 +211,7 @@
                                 Criterios de pago incluidos en la factura
                             </mat-panel-title>
                         </mat-expansion-panel-header>
-                        <app-form-criterios-pago [solicitudPago]="contrato.solicitudPagoOnly" [esPreconstruccion]="false" [contratacionProyectoId]="contratacionProyectoId"></app-form-criterios-pago>
+                        <app-form-criterios-pago [solicitudPago]="contrato.solicitudPagoOnly" [esPreconstruccion]="false" [contratacionProyectoId]="contratacionProyectoId" [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"></app-form-criterios-pago>
                     </mat-expansion-panel>
 
                     <mat-expansion-panel class="expansion-style sub-expansion-black">
@@ -229,7 +229,7 @@
                                 Detalle factura para proyectos asociados
                             </mat-panel-title>
                         </mat-expansion-panel-header>
-                        <app-detalle-factura-proyectos-asociados [solicitudPago]="contrato.solicitudPagoOnly" *ngIf="estadoRegistroCompletoSubAcordeon.amortizacionRegistroCompleto === true"></app-detalle-factura-proyectos-asociados>
+                        <app-detalle-factura-proyectos-asociados [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago" [solicitudPago]="contrato.solicitudPagoOnly" *ngIf="estadoRegistroCompletoSubAcordeon.amortizacionRegistroCompleto === true"></app-detalle-factura-proyectos-asociados>
                     </mat-expansion-panel>
 
                     <mat-expansion-panel class="expansion-style sub-expansion-black">

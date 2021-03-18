@@ -59,22 +59,21 @@ export class RegistrarRequisitosPagoService {
   getTipoPagoByCriterioCodigo( pCriterioCodigo: string ) {
     return new Promise<any[]>( resolve => {
       this.http.get<any[]>( `${ this.apiUrl }/GetTipoPagoByCriterioCodigo?pCriterioCodigo=${ pCriterioCodigo }` )
-        .subscribe(
-          response => {
-            resolve( response );
-          }
-        );
+        .subscribe( response => resolve( response ) );
     } );
   }
 
   getConceptoPagoCriterioCodigoByTipoPagoCodigo( tipoPagoCodigo: string ) {
     return new Promise<any[]>( resolve => {
       this.http.get<any[]>( `${ this.apiUrl }/GetConceptoPagoCriterioCodigoByTipoPagoCodigo?TipoPagoCodigo=${ tipoPagoCodigo }` )
-        .subscribe(
-          response => {
-            resolve( response );
-          }
-        );
+        .subscribe( response => resolve( response ) );
+    } );
+  }
+
+  getUsoByConceptoPagoCriterioCodigo( pConceptoPagoCodigo: string, pContratoId: number ) {
+    return new Promise<any>( resolve => {
+      this.http.get( `${ this.apiUrl }/GetUsoByConceptoPagoCriterioCodigo?pConceptoPagoCodigo=${ pConceptoPagoCodigo }&pContratoId=${ pContratoId }` )
+        .subscribe( response => resolve( response ) );
     } );
   }
 

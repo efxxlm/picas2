@@ -18,6 +18,7 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
 
     @Input() solicitudPago: any;
     @Input() esVerDetalle = false;
+    @Input() solicitudPagoCargarFormaPago: any;
     dataSource = new MatTableDataSource();
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -49,7 +50,6 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
     criteriosArraySeleccionados: Dominio[] = [];
     solicitudPagoFaseCriterio: any;
     solicitudPagoFaseCriterioProyecto: any;
-    solicitudPagoCargarFormaPago: any;
     solicitudPagoFase: any;
     estaEditando = false;
     //Get proyectos
@@ -71,7 +71,6 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
 
     getProyectos() {
         if ( this.solicitudPago !== undefined ) {
-            this.solicitudPagoCargarFormaPago = this.solicitudPago.solicitudPagoCargarFormaPago[0];
             this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
             this.solicitudPagoFaseCriterio = this.solicitudPagoFase.solicitudPagoFaseCriterio;
 
@@ -328,6 +327,21 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
             } );
         } else {
             this.criteriosProyecto( index ).clear();
+        }
+    }
+
+    validateValorCriterio( index: number, jIndex: number, valor: number ) {
+        const criterioProyecto: any = this.criteriosProyecto( index ).controls[ jIndex ];
+        if ( this.solicitudPagoFaseCriterio !== undefined ) {
+            const criterio = this.solicitudPagoFaseCriterio.find( criterio => criterio.tipoCriterioCodigo === criterioProyecto.get( 'tipoCriterioCodigo' ).value );
+
+            if ( criterio !== undefined ) {
+                if ( valor > criterio.valorFacturado ) {
+                    console.log( criterioProyecto );
+                    this.openDialog( '', `El valor facturado para el proyecto en el criterio no puede ser mayor al valor total de los conceptos para el criterio <b>${ criterioProyecto.get( 'nombre' ).value }.</b>` );
+                    this.criteriosProyecto( index ).controls[ jIndex ].get( 'valorFacturado' ).setValue( null );
+                }
+            }
         }
     }
 

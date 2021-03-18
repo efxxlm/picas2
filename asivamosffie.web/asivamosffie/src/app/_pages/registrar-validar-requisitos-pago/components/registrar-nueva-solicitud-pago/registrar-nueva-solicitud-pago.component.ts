@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { RegistrarRequisitosPagoService } from './../../../../core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
 import { Dominio } from 'src/app/core/_services/common/common.service';
 import { CommonService } from './../../../../core/_services/common/common.service';
@@ -54,11 +55,14 @@ export class RegistrarNuevaSolicitudPagoComponent implements OnInit {
     contratosArray: any[] = [];
     contrato: any;
     estaEditando = false;
+    solicitudPagoId = 0;
+
     constructor(
         private fb: FormBuilder,
         private dialog: MatDialog,
         private registrarPagosSvc: RegistrarRequisitosPagoService,
-        private commonSvc: CommonService )
+        private commonSvc: CommonService,
+        private routes: Router )
     {
         this.commonSvc.tiposDeSolicitudes()
             .subscribe(
@@ -137,6 +141,24 @@ export class RegistrarNuevaSolicitudPagoComponent implements OnInit {
           width: '28em',
           data: { modalTitle, modalText }
         });
+    }
+
+    guardar() {
+        this.estaEditando = true;
+        this.addressForm.markAllAsTouched();
+        const pSolicitudPago = {
+            solicitudPagoId: this.solicitudPagoId,
+            tipoSolicitudCodigo: this.addressForm.get( 'tipoSolicitud' ).value.codigo,
+            contratoId: this.contrato.contratoId
+        }
+        this.registrarPagosSvc.createEditNewPayment(pSolicitudPago)
+            .subscribe(
+                response => {
+                    this.openDialog('', `<b>${response.message}</b>`);
+                    this.routes.navigateByUrl('/', { skipLocationChange: true }).then( () => this.routes.navigate(['/registrarValidarRequisitosPago']) );
+                },
+                err => this.openDialog('', `<b>${err.message}</b>`)
+            );
     }
 
 }

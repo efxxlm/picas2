@@ -146,7 +146,7 @@
                                   formControlName="valorFacturadoConcepto" (keypress)="validateNumberKeypress($event)"
                                   onKeyPress="if(this.value.length>=this.maxLength) return false;"
                                   [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
-                                  (ngModelChange)="getValorTotalConceptos( i )">
+                                  (ngModelChange)="getValorTotalConceptos( i, j, $event )">
                       </mat-form-field>
                       <span   class="contador"
                               [matTooltipPosition]="'above'"
@@ -194,6 +194,7 @@
                                     formControlName="valorFacturado"
                                     (keypress)="validateNumberKeypress($event)"
                                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                    (ngModelChange)="verifyValorTotalConceptos( i )"
                                     [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                       </mat-form-field>
                       <span   class="contador"

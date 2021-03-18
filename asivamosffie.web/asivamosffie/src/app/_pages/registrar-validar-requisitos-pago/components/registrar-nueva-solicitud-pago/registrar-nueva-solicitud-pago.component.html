@@ -10,7 +10,7 @@
         </h1>
     </section>
 
-    <form [formGroup]="addressForm" novalidate>
+    <form [formGroup]="addressForm" novalidate (ngSubmit)="guardar()">
         <div class="row" style="margin-top: 2em; justify-content: center;">
             <div class="col-md-7">
                 <div class="row">
@@ -114,7 +114,7 @@
                                         </mat-autocomplete>
                                         <input type="hidden" formControlName="numeroContrato">
                                     </mat-form-field>
-                                    <button mat-button color="primary" class="busqueda--img" (click)="getContratos( numeroContrato ); $event.stopPropagation()">
+                                    <button mat-button color="primary" class="busqueda--img" type="button" (click)="getContratos( numeroContrato ); $event.stopPropagation()">
                                         <img src="assets/img/icon/lupa.svg" alt="Buscar">
                                     </button>
                                 </div>
@@ -181,7 +181,7 @@
                                         </mat-autocomplete>
                                         <input type="hidden" formControlName="numeroContrato">
                                     </mat-form-field>
-                                    <button mat-button color="primary" class="busqueda--img" (click)="getContratos( numeroContrato ); $event.stopPropagation()">
+                                    <button mat-button color="primary" class="busqueda--img" type="button" (click)="getContratos( numeroContrato ); $event.stopPropagation()">
                                         <img src="assets/img/icon/lupa.svg" alt="Buscar">
                                     </button>
                                 </div>
@@ -192,6 +192,12 @@
             </mat-card>
         </div>
         <div class="animatedDown" *ngIf="contrato !== undefined">
+            <div class="text-center mb-2em" *ngIf="contrato.solicitudPago.length > 0">
+                <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="addressForm.dirty === false">
+                    <img src="assets/img/icon/guardar.svg">
+                </button>
+            </div>
+
             <mat-card class="shipping-card var-main-gris">
                 <mat-card-header class="header-card header-card--margin">
                     <mat-card-title class="header-card--text textoGris">
@@ -207,10 +213,10 @@
                             <p *ngIf="contrato.plazoFase1PreDias === undefined"><strong>Plazo fase 2 - Construccion: Meses:</strong> {{ contrato.plazoFase2ConstruccionMeses }} <strong>Días:</strong> {{ contrato.plazoFase2ConstruccionDias }} </p>
                         </div>
                         <div class="chart2">
-                            <p *ngIf="contrato.plazoFase1PreDias !== undefined"><strong>Plazo: Meses:</strong> {{ contrato.plazoFase2ConstruccionMeses + contrato.plazoFase1PreMeses }} <strong>Días:</strong> {{ contrato.plazoFase1PreDias + contrato.plazoFase2ConstruccionDias }} </p>
+                            <p *ngIf="contrato.plazoFase1PreDias !== undefined"><strong>Plazo: Meses:</strong> {{ ( contrato.plazoFase2ConstruccionMeses !== undefined ? contrato.plazoFase2ConstruccionMeses : 0 ) + contrato.plazoFase1PreMeses }} <strong>Días:</strong> {{ contrato.plazoFase1PreDias + ( contrato.plazoFase2ConstruccionDias !== undefined ? contrato.plazoFase2ConstruccionDias : 0 ) }} </p>
                             <p *ngIf="contrato.plazoFase1PreDias === undefined"><strong>Plazo: Meses:</strong> {{ contrato.plazoFase2ConstruccionMeses }} <strong>Días:</strong> {{ contrato.plazoFase2ConstruccionDias }} </p>
-                            <p><strong>Fecha fin del contrato:</strong> Por integrar</p>
-                            <p *ngIf="contrato.plazoFase1PreDias !== undefined"><strong>Plazo fase 2 - Construccion: Meses:</strong> {{ contrato.plazoFase2ConstruccionMeses }} <strong>Días:</strong> {{ contrato.plazoFase2ConstruccionDias }} </p>
+                            <p><strong>Fecha fin del contrato:</strong> {{ contrato.fechaTerminacionFase2 | date: 'dd/MM/yyyy' }} </p>
+                            <p *ngIf="contrato.plazoFase1PreDias !== undefined && contrato.plazoFase2ConstruccionMeses !== undefined"><strong>Plazo fase 2 - Construccion: Meses:</strong> {{ contrato.plazoFase2ConstruccionMeses }} <strong>Días:</strong> {{ contrato.plazoFase2ConstruccionDias }} </p>
                         </div>
                     </div>
                     <h2 class="card-subTitle">DRP</h2>
@@ -226,7 +232,7 @@
                             </ng-container>
                             <ng-container matColumnDef="valor">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor </th>
-                                <td mat-cell *matCellDef="let element" align="center"> {{ element.valorSolicitud }} </td>
+                                <td mat-cell *matCellDef="let element" align="center"> {{ element.valorSolicitud | currency:'':'symbol-narrow':'.0-0' }} </td>
                             </ng-container>
                             <ng-container matColumnDef="saldo">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Saldo </th>
@@ -256,12 +262,12 @@
                 <mat-accordion>
                     <mat-expansion-panel class="expansion-style">
                         <mat-expansion-panel-header class="expansion-style--header">
-                            <mat-panel-title class="expansion-style--title sin-diligenciar">
+                            <mat-panel-title class="expansion-style--title" [ngClass]="contrato.solicitudPago.length > 0 ? 'en-alerta' : 'sin-diligenciar'">
                                 Cargar forma de pago
                             </mat-panel-title>
                         </mat-expansion-panel-header>
 
-                        <app-form-cargar-forma-de-pago [contrato]="contrato" [tipoSolicitud]="addressForm.get( 'tipoSolicitud' ).value.codigo"></app-form-cargar-forma-de-pago>
+                        <app-form-cargar-forma-de-pago [contrato]="contrato" [tipoSolicitud]="addressForm.get( 'tipoSolicitud' ).value.codigo" *ngIf="contrato.solicitudPago.length === 0"></app-form-cargar-forma-de-pago>
                     </mat-expansion-panel>
                 </mat-accordion>
                 <mat-accordion>

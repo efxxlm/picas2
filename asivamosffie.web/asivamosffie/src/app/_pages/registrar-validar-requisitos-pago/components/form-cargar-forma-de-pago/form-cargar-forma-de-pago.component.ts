@@ -43,10 +43,12 @@ export class FormCargarFormaDePagoComponent implements OnInit {
                 if (this.contrato.plazoFase1PreDias !== undefined) {
                     this.tieneFase1 = true;
                 }
-                if (this.contrato.solicitudPagoOnly !== undefined) {
-                    this.solicitudPagoId = this.contrato.solicitudPagoOnly.solicitudPagoId;
-                    this.solicitudPagoCargarFormaPago = this.contrato.solicitudPagoOnly.solicitudPagoCargarFormaPago[0];
+
+                if ( this.contrato.solicitudPago.length > 1 ) {
+                    const solicitudPago = this.contrato.solicitudPago[0];
+                    this.solicitudPagoCargarFormaPago = solicitudPago.solicitudPagoCargarFormaPago[0];
                     this.solicitudPagoCargarFormaPagoId = this.solicitudPagoCargarFormaPago.solicitudPagoCargarFormaPagoId;
+
                     // Get values seleccionados
                     if (this.solicitudPagoCargarFormaPago.fasePreConstruccionFormaPagoCodigo !== undefined) {
                         this.estaEditando = true;
@@ -63,6 +65,30 @@ export class FormCargarFormaDePagoComponent implements OnInit {
                         this.addressForm.get('formaPagoConstruccion').setValue(formaConstruccionSeleccionada.length > 0 ? formaConstruccionSeleccionada[0] : null);
                         if (this.solicitudPagoCargarFormaPago.registroCompleto === true) {
                             this.addressForm.get('formaPagoConstruccion').disable();
+                        }
+                    }
+                } else {
+                    if (this.contrato.solicitudPagoOnly !== undefined) {
+                        this.solicitudPagoId = this.contrato.solicitudPagoOnly.solicitudPagoId;
+                        this.solicitudPagoCargarFormaPago = this.contrato.solicitudPagoOnly.solicitudPagoCargarFormaPago[0];
+                        this.solicitudPagoCargarFormaPagoId = this.solicitudPagoCargarFormaPago.solicitudPagoCargarFormaPagoId;
+                        // Get values seleccionados
+                        if (this.solicitudPagoCargarFormaPago.fasePreConstruccionFormaPagoCodigo !== undefined) {
+                            this.estaEditando = true;
+                            this.addressForm.markAllAsTouched();
+                            const formaPreConstruccionSeleccionada = this.formaPagoArray.filter(forma => forma.codigo === this.solicitudPagoCargarFormaPago.fasePreConstruccionFormaPagoCodigo);
+                            this.addressForm.get('formaPagoPreconstruccion').setValue(formaPreConstruccionSeleccionada.length > 0 ? formaPreConstruccionSeleccionada[0] : null);
+                            if (this.solicitudPagoCargarFormaPago.registroCompleto === true) {
+                                this.addressForm.get('formaPagoPreconstruccion').disable();
+                            }
+                        }
+    
+                        if (this.solicitudPagoCargarFormaPago.faseConstruccionFormaPagoCodigo !== undefined) {
+                            const formaConstruccionSeleccionada = this.formaPagoArray.filter(forma => forma.codigo === this.solicitudPagoCargarFormaPago.faseConstruccionFormaPagoCodigo);
+                            this.addressForm.get('formaPagoConstruccion').setValue(formaConstruccionSeleccionada.length > 0 ? formaConstruccionSeleccionada[0] : null);
+                            if (this.solicitudPagoCargarFormaPago.registroCompleto === true) {
+                                this.addressForm.get('formaPagoConstruccion').disable();
+                            }
                         }
                     }
                 }
@@ -93,7 +119,6 @@ export class FormCargarFormaDePagoComponent implements OnInit {
                 }
             ]
         }
-        console.log(pSolicitudPago);
         this.registrarPagosSvc.createEditNewPayment(pSolicitudPago)
             .subscribe(
                 response => {
@@ -104,20 +129,19 @@ export class FormCargarFormaDePagoComponent implements OnInit {
                         );
                     }
                     if (this.esUnEditar === true) {
-
+                        this.registrarPagosSvc.getValidateSolicitudPagoId(this.solicitudPagoId)
+                            .subscribe(
+                                () => {
+                                    this.routes.navigateByUrl('/', { skipLocationChange: true }).then(
+                                        () => this.routes.navigate(
+                                            [
+                                                '/registrarValidarRequisitosPago/verDetalleEditar', this.contrato.contratoId, this.solicitudPagoId
+                                            ]
+                                        )
+                                    );
+                                }
+                            );
                     }
-                    this.registrarPagosSvc.getValidateSolicitudPagoId(this.solicitudPagoId)
-                        .subscribe(
-                            () => {
-                                this.routes.navigateByUrl('/', { skipLocationChange: true }).then(
-                                    () => this.routes.navigate(
-                                        [
-                                            '/registrarValidarRequisitosPago/verDetalleEditar', this.contrato.contratoId, this.solicitudPagoId
-                                        ]
-                                    )
-                                );
-                            }
-                        );
                 },
                 err => this.openDialog('', `<b>${err.message}</b>`)
             );

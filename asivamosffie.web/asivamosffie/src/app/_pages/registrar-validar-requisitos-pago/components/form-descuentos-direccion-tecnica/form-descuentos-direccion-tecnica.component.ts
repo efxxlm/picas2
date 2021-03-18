@@ -201,6 +201,10 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit {
             return true;
         }
 
+        if ( this.formDescuentos.get( 'aplicaDescuento' ).value === false && this.formDescuentos.dirty === false ) {
+            return true;
+        }
+
         return false;
     }
 

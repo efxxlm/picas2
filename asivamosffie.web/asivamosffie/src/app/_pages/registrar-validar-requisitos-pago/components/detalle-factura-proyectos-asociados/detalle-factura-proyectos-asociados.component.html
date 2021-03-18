@@ -183,7 +183,7 @@
                                         <div class="col d-flex">
                                           <mat-form-field class="full-width">
                                             <input  matInput #valorFacturado currencyMask maxlength="28" required formControlName="valorFacturado"
-                                                    [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
+                                                    [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" (ngModelChange)="validateValorCriterio( i, j, $event )">
                                           </mat-form-field>
                                           <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico" matTooltipClass="info-tooltip" *ngIf="criterioProyecto.get( 'valorFacturado' ).value !== null">{{20 - criterioProyecto.get( 'valorFacturado' ).value.toString().length}}</span>
                                           <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico" matTooltipClass="info-tooltip" *ngIf="criterioProyecto.get( 'valorFacturado' ).value === null">20</span>
