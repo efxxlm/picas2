@@ -140,9 +140,9 @@ namespace asivamosffie.api.Controllers
  
         [HttpGet]
         [Route("GetUsoByConceptoPagoCriterioCodigo")]
-        public async Task<IActionResult> GetUsoByConceptoPagoCriterioCodigo([FromQuery] string pConceptoPagoCodigo)
+        public async Task<IActionResult> GetUsoByConceptoPagoCriterioCodigo([FromQuery] string pConceptoPagoCodigo, int pContratoId)
         {
-            return Ok(await _registerValidatePaymentRequierementsService.GetUsoByConceptoPagoCriterioCodigo(pConceptoPagoCodigo));
+            return Ok(await _registerValidatePaymentRequierementsService.GetUsoByConceptoPagoCriterioCodigo(pConceptoPagoCodigo, pContratoId));
         }
 
         [HttpGet]
