@@ -12,5 +12,6 @@ namespace asivamosffie.model.Models
         public decimal ValorSolicitudDdp { get; set; }
         public decimal? SaldoPresupuestal { get; set; }
         public bool EsPreconstruccion { get; set; }
+        public bool? SolicitudValidada { get; set; }
     }
 }

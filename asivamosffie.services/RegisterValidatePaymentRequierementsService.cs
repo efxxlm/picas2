@@ -238,7 +238,7 @@ namespace asivamosffie.services
                 SolicitudPago solicitudPago = _context.SolicitudPago.Find(pSolicitudPago);
                 contrato.SolicitudPagoOnly = GetSolicitudPago(solicitudPago);
             }
-            contrato.ValorFacturadoContrato = _context.VValorFacturadoContrato.Where(v => v.ContratoId == pContratoId).ToList();
+            contrato.ValorFacturadoContrato = _context.VValorFacturadoContrato.Where(v => v.ContratoId == pContratoId && (bool)v.SolicitudValidada).ToList();
             contrato.VContratoPagosRealizados = _context.VContratoPagosRealizados.Where(v => v.ContratoId == pContratoId).ToList();
 
             return contrato;
@@ -363,7 +363,7 @@ namespace asivamosffie.services
         public async Task<dynamic> GetMontoMaximoMontoPendiente(int SolicitudPagoId, string strFormaPago, bool EsPreConstruccion)
         {
             SolicitudPago solicitudPago = await _context.SolicitudPago.FindAsync(SolicitudPagoId);
- 
+
             ulong ValorTotalPorFase = (ulong)_context.VValorUsoXcontratoId.Where(r => r.ContratoId == solicitudPago.ContratoId && r.EsPreConstruccion == EsPreConstruccion).Sum(v => v.ValorUso);
 
             ulong ValorPendientePorPagar = (ulong)_context.VValorFacturadoContrato
@@ -373,21 +373,21 @@ namespace asivamosffie.services
             ulong ValorFacturado = ValorTotalPorFase - ValorPendientePorPagar;
 
             string strNombreFormaPago = (_context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Formas_Pago && r.Codigo == strFormaPago).FirstOrDefault().Nombre).Replace("%", ""); ;
-  
+
             List<string> FormasPago = strNombreFormaPago.Split("/").ToList();
             ulong MontoMaximo = 0;
- 
+
             foreach (var PorcentajePago in FormasPago)
             {
-                MontoMaximo = ((ValorTotalPorFase * Convert.ToUInt32(PorcentajePago)) / 100)- ValorFacturado; 
+                MontoMaximo = ((ValorTotalPorFase * Convert.ToUInt32(PorcentajePago)) / 100) - ValorFacturado;
                 if (MontoMaximo < ValorPendientePorPagar)
                     break;
             }
-        
+
             return new
             {
                 MontoMaximo,
-                ValorPendientePorPagar 
+                ValorPendientePorPagar
             };
         }
 
@@ -1192,11 +1192,18 @@ namespace asivamosffie.services
                 || pSolicitudPago.SolicitudPagoListaChequeo.Count() == 0)
                 return false;
 
-            foreach (var SolicitudPagoCargarFormaPago in pSolicitudPago.SolicitudPagoCargarFormaPago)
-            {
-                if (!ValidateCompleteRecordSolicitudPagoCargarFormaPago(SolicitudPagoCargarFormaPago))
-                    return false;
+            if (_context.SolicitudPago.Where(r => r.ContratoId == pSolicitudPago.ContratoId && r.Eliminado != true).Count() > 1) 
+            { 
             }
+            else
+            {
+                foreach (var SolicitudPagoCargarFormaPago in pSolicitudPago.SolicitudPagoCargarFormaPago)
+                {
+                    if (!ValidateCompleteRecordSolicitudPagoCargarFormaPago(SolicitudPagoCargarFormaPago))
+                        return false;
+                } 
+            }
+
             foreach (var SolicitudPagoSoporteSolicitud in pSolicitudPago.SolicitudPagoSoporteSolicitud)
             {
                 if (!ValidateCompleteRecordSolicitudPagoSoporteSolicitud(SolicitudPagoSoporteSolicitud))
