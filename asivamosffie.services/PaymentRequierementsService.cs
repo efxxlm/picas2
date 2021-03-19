@@ -45,20 +45,33 @@ namespace asivamosffie.services
         {
             List<VSolicitudPago> result = new List<VSolicitudPago>();
 
-            if (pMenuId == (int)enumeratorMenu.Verificar_solicitud_de_pago)
+
+            switch (pMenuId)
             {
-                result = await _context.VSolicitudPago.
-                    Where(s => 
-                              s.EstadoCodigo > (int)EnumEstadoSolicitudPago.En_proceso_de_registro)
-                                                      .OrderByDescending(r => r.FechaModificacion)
-                                                      .ToListAsync();
+                case (int)enumeratorMenu.Verificar_solicitud_de_pago:
+                    result = await _context.VSolicitudPago.Where(s =>
+                            s.EstadoCodigo > (int)EnumEstadoSolicitudPago.En_proceso_de_registro)
+                                                    .OrderByDescending(r => r.FechaModificacion)
+                                                    .ToListAsync();
+                    break;
+
+                case  (int)enumeratorMenu.Autorizar_solicitud_de_pago:
+                    result = await _context.VSolicitudPago.Where(s =>
+                       s.EstadoCodigo > (int)EnumEstadoSolicitudPago.Con_solicitud_revisada_por_equipo_facturacion)
+                                               .OrderByDescending(r => r.FechaModificacion)
+                                               .ToListAsync();
+                    break;
+
+                default:
+                    break;
             }
 
+          
 
 
 
             List<dynamic> grind = new List<dynamic>();
-             
+
             return result.Select(r => new
             {
                 r.RegistroCompletoAutorizar,
@@ -71,9 +84,9 @@ namespace asivamosffie.services
                 r.NumeroContrato,
                 r.EstadoNombre,
                 r.EstadoCodigo,
-                r.ModalidadNombre 
+                r.ModalidadNombre
             });
-            
+
         }
 
         public async Task<Respuesta> ChangueStatusSolicitudPago(SolicitudPago pSolicitudPago)
@@ -82,10 +95,20 @@ namespace asivamosffie.services
 
             try
             {
+                int intEstadoCodigo = Int32.Parse(pSolicitudPago.EstadoCodigo);
+
+                bool EstaAprobadoCoordinacion = false;
+
+                if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Aprobado_por_coordinacion)
+                    EstaAprobadoCoordinacion = true;
+
+
+
                 await _context.Set<SolicitudPago>()
                                        .Where(o => o.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
                                                                                                        .UpdateAsync(r => new SolicitudPago()
                                                                                                        {
+                                                                                                           RegistroCompletoCoordinador = EstaAprobadoCoordinacion,
                                                                                                            FechaModificacion = DateTime.Now,
                                                                                                            UsuarioModificacion = pSolicitudPago.UsuarioCreacion,
                                                                                                            EstadoCodigo = pSolicitudPago.EstadoCodigo
@@ -137,7 +160,6 @@ namespace asivamosffie.services
             }
 
         }
-
 
         public async Task<Respuesta> CreateUpdateSolicitudPagoObservacion(SolicitudPagoObservacion pSolicitudPagoObservacion)
         {

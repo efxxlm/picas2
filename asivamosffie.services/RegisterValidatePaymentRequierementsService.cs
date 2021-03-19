@@ -242,7 +242,23 @@ namespace asivamosffie.services
                     contrato.SolicitudPagoOnly = GetSolicitudPago(solicitudPago);
                 }
                 contrato.ValorFacturadoContrato = _context.VValorFacturadoContrato.Where(v => v.ContratoId == pContratoId).ToList();
-                //  contrato.VContratoPagosRealizados = _context.VContratoPagosRealizados.Where(v => v.ContratoId == pContratoId).ToList();
+
+                List<VContratoPagosRealizados> vContratoPagosRealizados = new List<VContratoPagosRealizados>();
+                vContratoPagosRealizados = _context.VContratoPagosRealizados
+                        .Where(v => v.ContratoId == pContratoId).ToList();
+
+                contrato.VContratoPagosRealizados = vContratoPagosRealizados
+                    .GroupBy(r => r.EsPreconstruccion)
+                    .Select(r => new
+                    {
+                        EsPreconstruccion = r.Key,
+                        FaseContrato = r.Select(r => r.FaseContrato).FirstOrDefault(),
+                        ValorFacturado = r.Sum(r => r.ValorFacturado),
+                        PagosRealizados = r.Sum(r => r.PagosRealizados) / r.Count(),
+                        PorcentajeFacturado = Math.Truncate((decimal)r.Sum(r => r.PorcentajeFacturado) / r.Count()) + "%",
+                        SaldoPorPagar = r.Sum(r => r.SaldoPorPagar),
+                        PorcentajePorPagar = Math.Truncate((decimal)r.Sum(r => r.PorcentajePorPagar) / r.Count()) + "%"
+                    });
 
                 return contrato;
             }
@@ -419,8 +435,6 @@ namespace asivamosffie.services
         #region Create Edit Delete
         public async Task<dynamic> GetProyectosByIdContrato(int pContratoId)
         {
-            List<dynamic> dynamics = new List<dynamic>();
-
             var resultContrato = _context.Contrato
                 .Where(r => r.ContratoId == pContratoId)
                 .Include(cp => cp.ContratoPoliza)
@@ -445,8 +459,11 @@ namespace asivamosffie.services
                                                                                                                 p.ContratacionProyectoId,
                                                                                                                 p.ValorTotal
                                                                                                             }).ToListAsync();
-            dynamics.Add(resultContrato);
-            dynamics.Add(resultProyectos);
+            List<dynamic> dynamics = new List<dynamic>
+            {
+                resultContrato,
+                resultProyectos
+            };
 
             return dynamics;
 
@@ -1635,7 +1652,8 @@ namespace asivamosffie.services
 
         }
 
-        #endregion;
+        #endregion
+
 
         #region Tipo Otros Costos Servicios
         public async Task<Respuesta> CreateEditOtrosCostosServicios(SolicitudPago pSolicitudPago)
@@ -1659,7 +1677,6 @@ namespace asivamosffie.services
 
                     solicitudPagoOld.FechaModificacion = DateTime.Now;
                     solicitudPagoOld.UsuarioModificacion = pSolicitudPago.UsuarioCreacion;
-                    solicitudPagoOld.RegistroCompleto = ValidateCompleteRecordoSolicitudPagoOtrosCostosServicios(pSolicitudPago);
                 }
                 else
                 {
@@ -1667,7 +1684,6 @@ namespace asivamosffie.services
                     pSolicitudPago.NumeroSolicitud = await _commonService.EnumeradorSolicitudPagoExpensasAndOtros();
                     pSolicitudPago.FechaCreacion = DateTime.Now;
                     pSolicitudPago.Eliminado = false;
-                    pSolicitudPago.RegistroCompleto = ValidateCompleteRecordoSolicitudPagoOtrosCostosServicios(pSolicitudPago);
 
                     _context.SolicitudPago.Add(pSolicitudPago);
 

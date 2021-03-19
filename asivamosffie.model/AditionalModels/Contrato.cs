@@ -65,6 +65,6 @@ namespace asivamosffie.model.Models
         public List<VValorFacturadoContrato> ValorFacturadoContrato { get; set; }
          
         [NotMapped]
-        public List<VContratoPagosRealizados> VContratoPagosRealizados { get; set; }
+        public dynamic VContratoPagosRealizados { get; set; }
     }
 }
