@@ -1170,8 +1170,6 @@ namespace asivamosffie.services
 
         }
 
-
-
         private bool ValidarRegistroCompletoSolicitudPagoListaChequeoRespuesta(SolicitudPagoListaChequeoRespuesta pSolicitudPagoListaChequeoRespuestaNew)
         {
             if (string.IsNullOrEmpty(pSolicitudPagoListaChequeoRespuestaNew.RespuestaCodigo))
@@ -1210,37 +1208,72 @@ namespace asivamosffie.services
 
         private bool ValidateCompleteRecordSolicitudPago(SolicitudPago pSolicitudPago)
         {
-    
-            if (
-                   pSolicitudPago.SolicitudPagoSoporteSolicitud.Count() == 0
-                || pSolicitudPago.SolicitudPagoRegistrarSolicitudPago.Count() == 0
-                || pSolicitudPago.SolicitudPagoListaChequeo.Count() == 0)
-                return false;
-
-            if (_context.SolicitudPago.Where(r => r.ContratoId == pSolicitudPago.ContratoId && r.Eliminado != true).Count() > 1)
+            //Tipo Obra o Interventoria
+            if (Convert.ToInt32(pSolicitudPago.TipoSolicitudCodigo) < (int)EnumeratorTipoSolicitudRequisitosPagos.Expensas)
             {
-            }
-            else
-            {
-                if (pSolicitudPago.SolicitudPagoCargarFormaPago.Count() == 0)
+                if (
+                       pSolicitudPago.SolicitudPagoSoporteSolicitud.Count() == 0
+                    || pSolicitudPago.SolicitudPagoRegistrarSolicitudPago.Count() == 0
+                    || pSolicitudPago.SolicitudPagoListaChequeo.Count() == 0)
                     return false;
-                foreach (var SolicitudPagoCargarFormaPago in pSolicitudPago.SolicitudPagoCargarFormaPago)
+
+                if (_context.SolicitudPago.Where(r => r.ContratoId == pSolicitudPago.ContratoId && r.Eliminado != true).Count() > 1)
                 {
-                    if (!ValidateCompleteRecordSolicitudPagoCargarFormaPago(SolicitudPagoCargarFormaPago))
+                }
+                else
+                {
+                    if (pSolicitudPago.SolicitudPagoCargarFormaPago.Count() == 0)
                         return false;
+                    foreach (var SolicitudPagoCargarFormaPago in pSolicitudPago.SolicitudPagoCargarFormaPago)
+                    {
+                        if (!ValidateCompleteRecordSolicitudPagoCargarFormaPago(SolicitudPagoCargarFormaPago))
+                            return false;
+                    }
+                }
+
+                foreach (var SolicitudPagoSoporteSolicitud in pSolicitudPago.SolicitudPagoSoporteSolicitud)
+                {
+                    if (!ValidateCompleteRecordSolicitudPagoSoporteSolicitud(SolicitudPagoSoporteSolicitud))
+                        return false;
+                }
+
+            }
+
+            //Tipo Expensas
+            if (Convert.ToInt32(pSolicitudPago.TipoSolicitudCodigo) == (int)EnumeratorTipoSolicitudRequisitosPagos.Expensas)
+            {
+                if (pSolicitudPago.SolicitudPagoExpensas.Count() == 0)
+                    return false;
+                foreach (var SolicitudPagoExpensas in pSolicitudPago.SolicitudPagoExpensas)
+                {
+                    if (
+                           string.IsNullOrEmpty(SolicitudPagoExpensas.NumeroRadicadoSac)
+                        || string.IsNullOrEmpty(SolicitudPagoExpensas.NumeroFactura)
+                        || string.IsNullOrEmpty(SolicitudPagoExpensas.TipoPagoCodigo)
+                        || string.IsNullOrEmpty(SolicitudPagoExpensas.ConceptoPagoCriterioCodigo)
+                        || SolicitudPagoExpensas.ValorFacturado == 0
+                        || SolicitudPagoExpensas.ValorFacturadoConcepto == 0
+                       ) return false;
+                }
+            }
+            //Tipo Otros Costos
+            if (Convert.ToInt32(pSolicitudPago.TipoSolicitudCodigo) == (int)EnumeratorTipoSolicitudRequisitosPagos.Otros_costos_servicios)
+            {
+                if (pSolicitudPago.SolicitudPagoOtrosCostosServicios.Count() == 0)
+                    return false;
+
+                foreach (var SolicitudPagoOtrosCostosServicios in pSolicitudPago.SolicitudPagoOtrosCostosServicios)
+                {
+                    if (
+                           string.IsNullOrEmpty(SolicitudPagoOtrosCostosServicios.NumeroRadicadoSac)
+                        || string.IsNullOrEmpty(SolicitudPagoOtrosCostosServicios.NumeroFactura)
+                        || string.IsNullOrEmpty(SolicitudPagoOtrosCostosServicios.TipoPagoCodigo)
+                        || string.IsNullOrEmpty(SolicitudPagoOtrosCostosServicios.TipoPagoCodigo)
+                        || SolicitudPagoOtrosCostosServicios.ValorFacturado == 0
+                       ) return false;
                 }
             }
 
-            foreach (var SolicitudPagoSoporteSolicitud in pSolicitudPago.SolicitudPagoSoporteSolicitud)
-            {
-                if (!ValidateCompleteRecordSolicitudPagoSoporteSolicitud(SolicitudPagoSoporteSolicitud))
-                    return false;
-            }
-            foreach (var SolicitudPagoRegistrarSolicitudPago in pSolicitudPago.SolicitudPagoRegistrarSolicitudPago)
-            {
-                if (!ValidateCompleteRecordSolicitudPagoRegistrarSolicitudPago(SolicitudPagoRegistrarSolicitudPago))
-                    return false;
-            }
             foreach (var SolicitudPagoListaChequeo in pSolicitudPago.SolicitudPagoListaChequeo)
             {
                 foreach (var SolicitudPagoListaChequeoRespuesta in SolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta)
@@ -1249,6 +1282,13 @@ namespace asivamosffie.services
                         return false;
                 }
             }
+
+            foreach (var SolicitudPagoRegistrarSolicitudPago in pSolicitudPago.SolicitudPagoRegistrarSolicitudPago)
+            {
+                if (!ValidateCompleteRecordSolicitudPagoRegistrarSolicitudPago(SolicitudPagoRegistrarSolicitudPago))
+                    return false;
+            }
+
             return true;
         }
 
