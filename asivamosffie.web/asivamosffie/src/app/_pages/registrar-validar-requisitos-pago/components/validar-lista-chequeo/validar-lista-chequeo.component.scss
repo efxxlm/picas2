@@ -5,3 +5,13 @@
 .mat-button.mat-warn[disabled], .mat-button[disabled][disabled] {
     opacity: .5;
 }
+
+table th.detalle{
+    background-color: #474747;
+    border-color: white;
+}
+
+table td.detalle{
+    border-color: #474747;
+    color: #474747;
+}
