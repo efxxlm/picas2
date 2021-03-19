@@ -47,33 +47,33 @@ namespace asivamosffie.services
 
             if (pMenuId == (int)enumeratorMenu.Verificar_solicitud_de_pago)
             {
-                result = await _context.VSolicitudPago//.Where(s => Int32.Parse(s.EstadoCodigo) > 0)
+                result = await _context.VSolicitudPago.
+                    Where(s => 
+                              s.EstadoCodigo > (int)EnumEstadoSolicitudPago.En_proceso_de_registro)
                                                       .OrderByDescending(r => r.FechaModificacion)
                                                       .ToListAsync();
             }
 
+
+
+
             List<dynamic> grind = new List<dynamic>();
-
-            List<Dominio> ListParametricas = _context.Dominio.Where(d => d.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato || d.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Solicitud_Pago).ToList();
-
-            result.ForEach(r =>
+             
+            return result.Select(r => new
             {
-                grind.Add(new
-                {
-                    r.RegistroCompletoAutorizar,
-                    r.RegistroCompletoVerificar,
-                    r.TipoSolicitudCodigo,
-                    r.ContratoId,
-                    r.SolicitudPagoId,
-                    r.FechaCreacion,
-                    r.NumeroSolicitud,
-                    r.NumeroContrato,
-                    r.EstadoNombre,
-                    r.EstadoCodigo,
-                    r.ModalidadNombre
-                });
+                r.RegistroCompletoAutorizar,
+                r.RegistroCompletoVerificar,
+                r.TipoSolicitudCodigo,
+                r.ContratoId,
+                r.SolicitudPagoId,
+                r.FechaCreacion,
+                r.NumeroSolicitud,
+                r.NumeroContrato,
+                r.EstadoNombre,
+                r.EstadoCodigo,
+                r.ModalidadNombre 
             });
-            return grind;
+            
         }
 
         public async Task<Respuesta> ChangueStatusSolicitudPago(SolicitudPago pSolicitudPago)

@@ -704,7 +704,7 @@ namespace asivamosffie.services
             {
                 pSolicitudPago.TieneObservacion = false;
                 pSolicitudPago.NumeroSolicitud = Int32.Parse(strInterventoriaCodigo) == ConstanCodigoTipoContratacion.Obra ? await _commonService.EnumeradorSolicitudPago(true) : await _commonService.EnumeradorSolicitudPago(false);
-                pSolicitudPago.EstadoCodigo = ConstanCodigoEstadoSolicitudPago.En_proceso_de_registro;
+                pSolicitudPago.EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_proceso_de_registro).ToString();
                 pSolicitudPago.Eliminado = false;
                 pSolicitudPago.FechaCreacion = DateTime.Now;
                 _context.SolicitudPago.Add(pSolicitudPago);
@@ -1386,7 +1386,7 @@ namespace asivamosffie.services
             }
             else
             {
-                pSolicitudPago.EstadoCodigo = ConstanCodigoEstadoSolicitudPago.En_proceso_de_registro;
+                pSolicitudPago.EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_proceso_de_registro).ToString();
                 pSolicitudPago.NumeroSolicitud = await _commonService.EnumeradorSolicitudPagoExpensasAndOtros();
                 pSolicitudPago.FechaCreacion = DateTime.Now;
                 pSolicitudPago.Eliminado = false;
@@ -1512,7 +1512,7 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                    pSolicitudPago.EstadoCodigo = ConstanCodigoEstadoSolicitudPago.En_proceso_de_registro;
+                    pSolicitudPago.EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_proceso_de_registro).ToString();
                     pSolicitudPago.NumeroSolicitud = await _commonService.EnumeradorSolicitudPagoExpensasAndOtros();
                     pSolicitudPago.FechaCreacion = DateTime.Now;
                     pSolicitudPago.Eliminado = false;
