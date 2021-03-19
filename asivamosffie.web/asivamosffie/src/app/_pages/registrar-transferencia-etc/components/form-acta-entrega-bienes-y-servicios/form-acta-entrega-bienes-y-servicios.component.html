@@ -7,11 +7,11 @@
             <div class="pr-1">
               <label
                 class="label-left"
-                for="fechaFirma"
+                for="fechaFirmaActaBienesServicios"
                 [class.color-secondaryColor]="
-                  (addressForm.get('fechaFirma').invalid &&
-                    addressForm.get('fechaFirma').touched) ||
-                  (addressForm.get('fechaFirma').invalid && estaEditando)
+                  (addressForm.get('fechaFirmaActaBienesServicios').invalid &&
+                    addressForm.get('fechaFirmaActaBienesServicios').touched) ||
+                  (addressForm.get('fechaFirmaActaBienesServicios').invalid && estaEditando)
                 "
               >
               Fecha de firma acta de entrega de bienes y servicios
@@ -22,7 +22,7 @@
                 <input
                   matInput
                   [matDatepicker]="pickerFirma"
-                  formControlName="fechaFirma"
+                  formControlName="fechaFirmaActaBienesServicios"
                   readonly
                   (click)="pickerFirma.open()"
                   placeholder="DD/MM/AAAA"
@@ -48,9 +48,9 @@
                   matTooltip="Debe ingresar la información en el campo para continuar"
                   matTooltipClass="info-tooltip"
                   *ngIf="
-                    (addressForm.get('fechaFirma').invalid &&
-                      addressForm.get('fechaFirma').touched) ||
-                    (addressForm.get('fechaFirma').invalid && estaEditando)
+                    (addressForm.get('fechaFirmaActaBienesServicios').invalid &&
+                      addressForm.get('fechaFirmaActaBienesServicios').touched) ||
+                    (addressForm.get('fechaFirmaActaBienesServicios').invalid && estaEditando)
                   "
                 />
               </span>
@@ -62,10 +62,10 @@
         <div class="pr-1">
           <label
             class="label-left"
-            for="urlActa"
+            for="actaBienesServicios"
             [class.color-secondaryColor]="
-              (addressForm.get('urlActa').invalid && addressForm.get('urlActa').touched) ||
-              (addressForm.get('urlActa').invalid && estaEditando)
+              (addressForm.get('actaBienesServicios').invalid && addressForm.get('actaBienesServicios').touched) ||
+              (addressForm.get('actaBienesServicios').invalid && estaEditando)
             "
           >
           Url con soporte de acta
@@ -73,7 +73,7 @@
         </div>
         <div class="col">
           <mat-form-field class="full-width">
-            <input matInput type="url" required formControlName="urlActa" />
+            <input matInput type="url" required formControlName="actaBienesServicios" />
           </mat-form-field>
           <span class="info-url">Adjunte el acta con todas las firmas requeridas.</span>
         </div>
@@ -86,8 +86,8 @@
             matTooltip="Debe ingresar la información en el campo para continuar"
             matTooltipClass="info-tooltip"
             *ngIf="
-              (addressForm.get('urlActa').invalid && addressForm.get('urlActa').touched) ||
-              (addressForm.get('urlActa').invalid && estaEditando)
+              (addressForm.get('actaBienesServicios').invalid && addressForm.get('actaBienesServicios').touched) ||
+              (addressForm.get('actaBienesServicios').invalid && estaEditando)
             "
           />
         </span>
@@ -95,7 +95,7 @@
     </mat-card-content>
   </mat-card>
   <div class="text-center">
-    <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="addressForm.invalid">
+    <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="addressForm.dirty === false">
       <img src="assets/img/icon/guardar.svg" alt="Guardar" />
     </button>
   </div>

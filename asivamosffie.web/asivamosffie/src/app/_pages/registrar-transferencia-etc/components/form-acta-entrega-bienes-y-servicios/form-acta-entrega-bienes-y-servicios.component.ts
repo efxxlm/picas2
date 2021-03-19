@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { Respuesta } from 'src/app/core/_services/common/common.service';
+import { RegisterProjectEtcService } from 'src/app/core/_services/registerProjectETC/register-project-etc.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { ProyectoEntregaETC } from 'src/app/_interfaces/proyecto-entrega-etc';
 
 
 @Component({
@@ -12,15 +15,38 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class FormActaEntregaBienesYServiciosComponent implements OnInit {
 
   addressForm = this.fb.group({
-    fechaFirma: [null, Validators.required],
-    urlActa: [null, Validators.required]
+    fechaFirmaActaBienesServicios: [null, Validators.required],
+    actaBienesServicios: [null, Validators.required]
   });
 
   estaEditando = false;
+  @Input() id: number;
 
-  constructor(private fb: FormBuilder, public dialog: MatDialog) {}
+  constructor(private fb: FormBuilder, public dialog: MatDialog, private registerProjectETCService: RegisterProjectEtcService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.buildForm();
+  }
+
+  private buildForm() {    
+    this.addressForm = this.fb.group({
+      proyectoEntregaEtcid: [null, Validators.required],
+      informeFinalId: [this.id, Validators.required],
+      fechaFirmaActaBienesServicios: [null, Validators.required],
+      actaBienesServicios: [null, Validators.required]
+    });
+
+    if (this.id != null) {
+      this.registerProjectETCService.getProyectoEntregaEtc(this.id)
+      .subscribe(
+        response => {
+          this.addressForm.patchValue(response);
+        }
+      );
+      this.estaEditando = true;
+    }
+
+  }
 
   openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
@@ -30,8 +56,15 @@ export class FormActaEntregaBienesYServiciosComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.addressForm.value);
+    this.addressForm.markAllAsTouched();
     this.estaEditando = true;
-    this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+    this.addressForm.value.informeFinalId = this.id;
+    this.createEditActaBienesServicios(this.addressForm.value);
+  }
+
+  createEditActaBienesServicios(pActaServicios: any) {
+    this.registerProjectETCService.createEditActaBienesServicios(pActaServicios).subscribe((respuesta: Respuesta) => {
+      this.openDialog('', respuesta.message);
+    });
   }
 }

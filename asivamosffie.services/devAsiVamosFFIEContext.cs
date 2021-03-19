@@ -4820,9 +4820,7 @@ namespace asivamosffie.model.Models
             {
                 entity.ToTable("ProyectoEntregaETC");
 
-                entity.Property(e => e.ProyectoEntregaEtcid)
-                    .HasColumnName("ProyectoEntregaETCId")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.ProyectoEntregaEtcid).HasColumnName("ProyectoEntregaETCId");
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 

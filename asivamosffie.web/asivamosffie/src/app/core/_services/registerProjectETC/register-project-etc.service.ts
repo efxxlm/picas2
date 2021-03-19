@@ -17,7 +17,7 @@ export class RegisterProjectEtcService {
       return this.http.get(`${environment.apiUrl}/${this.final_report}/GetListInformeFinal`);
     }
 
-    getProyectoEntregaETCByInformeFinalId( pInformeFinalId: string ){
+    getProyectoEntregaETCByInformeFinalId( pInformeFinalId: number ){
       return this.http.get(`${ this.urlApi }/${this.final_report}/GetProyectoEntregaETCByInformeFinalId?pInformeFinalId=${ pInformeFinalId }`);
     }
 
@@ -40,4 +40,9 @@ export class RegisterProjectEtcService {
     createEditActaBienesServicios( pActaServicios: any ){
       return this.http.post(`${environment.apiUrl}/${this.final_report}/CreateEditActaBienesServicios`, pActaServicios );
     }
+
+    getProyectoEntregaEtc( informeFinalId: number ){
+      return this.http.get(`${ this.urlApi }/${this.final_report}/GetProyectoEntregaEtc?informeFinalId=${ informeFinalId }`);
+    }
+
 }

@@ -5,14 +5,14 @@
     </a>
   </div>
   <div class="text-center">
-    <h1 class="title-menu--h1">Registrar entrega LL457326</h1>
+    <h1 class="title-menu--h1">Registrar entrega {{ llaveMen }}</h1>
     <p class="colorMainColor mt-05em">
       Número de contrato Obra:
-      <b> N801801 </b>
+      <b> {{ numeroContratoObra }} </b>
     </p>
     <p class="colorMainColor mt-05em">
-      Número de contrato Interventoria:
-      <b> N801801 </b>
+      Número de contrato Interventoria: 
+      <b> {{ numeroContratoInterventoria }} </b>
     </p>
   </div>
 
@@ -35,7 +35,7 @@
             Recorrido de la obra
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <app-form-recorrido-obra></app-form-recorrido-obra>
+        <app-form-recorrido-obra [id]="id"></app-form-recorrido-obra>
 
       </mat-expansion-panel>
       <mat-expansion-panel class="expansion-style">
@@ -49,20 +49,19 @@
             Remisión a ETC de documentos técnicos a la ETC
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <app-form-remision></app-form-remision>
+        <app-form-remision [id]="id"></app-form-remision>
       </mat-expansion-panel>
       <mat-expansion-panel class="expansion-style">
         <mat-expansion-panel-header class="expansion-style--header">
           <mat-panel-title
             class="expansion-style--title"
-            [class.sin-diligenciar]="true"
-            [class.en-proceso]="false"
-            [class.completo]="false"
+            [ngClass]="semaforoActaBienesServicios"
           >
             Acta de entrega de bienes y servicios
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <app-form-acta-entrega-bienes-y-servicios></app-form-acta-entrega-bienes-y-servicios>
+
+        <app-form-acta-entrega-bienes-y-servicios [id]="id"></app-form-acta-entrega-bienes-y-servicios>
       </mat-expansion-panel>
     </mat-accordion>
   </div>

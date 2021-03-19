@@ -7,11 +7,11 @@
             <div class="pr-1">
               <label
                 class="label-left"
-                for="fechaEntregaDocumentos"
+                for="fechaEntregaDocumentosEtc"
                 [class.color-secondaryColor]="
-                  (addressForm.get('fechaEntregaDocumentos').invalid &&
-                    addressForm.get('fechaEntregaDocumentos').touched) ||
-                  (addressForm.get('fechaEntregaDocumentos').invalid && estaEditando)
+                  (addressForm.get('fechaEntregaDocumentosEtc').invalid &&
+                    addressForm.get('fechaEntregaDocumentosEtc').touched) ||
+                  (addressForm.get('fechaEntregaDocumentosEtc').invalid && estaEditando)
                 "
               >
                 Fecha de entrega de los documentos técnicos
@@ -22,7 +22,7 @@
                 <input
                   matInput
                   [matDatepicker]="pickerEntregaDocumentos"
-                  formControlName="fechaEntregaDocumentos"
+                  formControlName="fechaEntregaDocumentosEtc"
                   readonly
                   (click)="pickerEntregaDocumentos.open()"
                   placeholder="DD/MM/AAAA"
@@ -48,9 +48,9 @@
                   matTooltip="Debe ingresar la información en el campo para continuar"
                   matTooltipClass="info-tooltip"
                   *ngIf="
-                    (addressForm.get('fechaEntregaDocumentos').invalid &&
-                      addressForm.get('fechaEntregaDocumentos').touched) ||
-                    (addressForm.get('fechaEntregaDocumentos').invalid && estaEditando)
+                    (addressForm.get('fechaEntregaDocumentosEtc').invalid &&
+                      addressForm.get('fechaEntregaDocumentosEtc').touched) ||
+                    (addressForm.get('fechaEntregaDocumentosEtc').invalid && estaEditando)
                   "
                 />
               </span>
@@ -64,11 +64,11 @@
             <div class="pr-1">
               <label
                 class="label-left"
-                for="numeroRadicadoEntrega"
+                for="numRadicadoDocumentosEntregaEtc"
                 [class.color-secondaryColor]="
-                  (addressForm.get('numeroRadicadoEntrega').invalid &&
-                    addressForm.get('numeroRadicadoEntrega').touched) ||
-                  (addressForm.get('numeroRadicadoEntrega').invalid && estaEditando)
+                  (addressForm.get('numRadicadoDocumentosEntregaEtc').invalid &&
+                    addressForm.get('numRadicadoDocumentosEntregaEtc').touched) ||
+                  (addressForm.get('numRadicadoDocumentosEntregaEtc').invalid && estaEditando)
                 "
               >
                 Número de radicado de la entrega
@@ -79,8 +79,8 @@
                 <input
                   matInput
                   type="text"
-                  #numeroRadicadoEntrega
-                  formControlName="numeroRadicadoEntrega"
+                  #numRadicadoDocumentosEntregaEtc
+                  formControlName="numRadicadoDocumentosEntregaEtc"
                   maxlength="10"
                   required
                 />
@@ -91,7 +91,7 @@
                 matTooltip="Campo numérico"
                 matTooltipClass="info-tooltip"
               >
-                {{ 10 - numeroRadicadoEntrega.value.length }}
+                {{ 10 - numRadicadoDocumentosEntregaEtc.value.length }}
               </span>
               <span class="icon-incompleto">
                 <img
@@ -102,9 +102,9 @@
                   matTooltip="Debe ingresar la información en el campo para continuar"
                   matTooltipClass="info-tooltip"
                   *ngIf="
-                    (addressForm.get('numeroRadicadoEntrega').invalid &&
-                      addressForm.get('numeroRadicadoEntrega').touched) ||
-                    (addressForm.get('numeroRadicadoEntrega').invalid && estaEditando)
+                    (addressForm.get('numRadicadoDocumentosEntregaEtc').invalid &&
+                      addressForm.get('numRadicadoDocumentosEntregaEtc').touched) ||
+                    (addressForm.get('numRadicadoDocumentosEntregaEtc').invalid && estaEditando)
                   "
                 />
               </span>
@@ -115,7 +115,7 @@
     </mat-card-content>
   </mat-card>
   <div class="text-center">
-    <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="addressForm.invalid">
+    <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="addressForm.dirty === false">
       <img src="assets/img/icon/guardar.svg" alt="Guardar" />
     </button>
   </div>

@@ -36,9 +36,17 @@ namespace asivamosffie.api.Controllers
             return await _registerProjectETCService.GetListInformeFinal();
         }
 
+
+        [Route("GetProyectoEntregaEtc")]
+        [HttpGet]
+        public async Task<ProyectoEntregaEtc> GetProyectoEntregaEtc([FromQuery] int informeFinalId)
+        {
+            return await _registerProjectETCService.GetProyectoEntregaEtc(informeFinalId);
+        }
+
         [HttpGet]
         [Route("GetProyectoEntregaETCByInformeFinalId")]
-        public async Task<ProyectoEntregaEtc> GetProyectoEntregaETCByInformeFinalId([FromQuery] int pInformeFinalId)
+        public async Task<List<dynamic>> GetProyectoEntregaETCByInformeFinalId([FromQuery] int pInformeFinalId)
         {
             try
             {

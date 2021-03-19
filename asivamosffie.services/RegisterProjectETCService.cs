@@ -56,18 +56,60 @@ namespace asivamosffie.services
             return list;
         }
 
-
-        public async Task<ProyectoEntregaEtc> GetProyectoEntregaETCByInformeFinalId(int pInformeFinalId)
+        public async Task<ProyectoEntregaEtc> GetProyectoEntregaEtc(int informeFinalId)
         {
-            //String numeroContratoObra = string.Empty, numeroContratoInterventoria = string.Empty, llaveMen = string.Empty;
+            
+            return await _context.ProyectoEntregaEtc.Where(r => r.InformeFinalId == informeFinalId).FirstOrDefaultAsync();
+        }
 
+        public async Task<List<dynamic>> GetProyectoEntregaETCByInformeFinalId(int pInformeFinalId)
+        {
+            InformeFinal informeFinal = _context.InformeFinal.Find(pInformeFinalId);
+            String numeroContratoObra = string.Empty,numeroContratoInterventoria = string.Empty;
+            List<dynamic> ProyectoAjustado = new List<dynamic>();
+
+            List<ContratacionProyecto> ListContratacion = await _context.ContratacionProyecto
+                                            .Where(r => r.ProyectoId == informeFinal.ProyectoId)
+                                            .Include(r => r.Contratacion)
+                                             .ThenInclude(r => r.Contratista)
+                                            .Include(r => r.Contratacion)
+                                             .ThenInclude(r => r.Contrato)
+                                            .Include(r => r.Proyecto)
+                                            .ToListAsync();
+            List<Dominio> TipoObraIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar).ToList();
+
+            ListContratacion.FirstOrDefault().Contratacion.TipoContratacionCodigo = TipoObraIntervencion.Where(r => r.Codigo == ListContratacion.FirstOrDefault().Contratacion.TipoSolicitudCodigo).Select(r => r.Nombre).FirstOrDefault();
+
+            foreach (var item in ListContratacion)
+            {
+                Contrato contrato = await _context.Contrato.Where(r => r.ContratacionId == item.ContratacionId).FirstOrDefaultAsync();
+                Contratacion contratacion = await _context.Contratacion.Where(r => r.ContratacionId == item.ContratacionId).FirstOrDefaultAsync();
+                if (contrato != null)
+                {
+                    if (contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra)
+                    {
+                        numeroContratoObra = contrato.NumeroContrato != null ? contrato.NumeroContrato : string.Empty;
+                    }
+                    else if (contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria)
+                    {
+                        numeroContratoInterventoria = contrato.NumeroContrato != null ? contrato.NumeroContrato : string.Empty;
+                    }
+                }
+            }
             ProyectoEntregaEtc proyectoEntregaEtc = await _context.ProyectoEntregaEtc
                                         .Where(r => r.InformeFinalId == pInformeFinalId)
                                         .Include(r => r.RepresentanteEtcrecorrido)
-                                        .Include(r => r.InformeFinal)
-                                            .ThenInclude(r => r.Proyecto)
                                         .FirstOrDefaultAsync();
-            return proyectoEntregaEtc;
+
+            ProyectoAjustado.Add(new
+            {
+                proyectoEntregaEtc = proyectoEntregaEtc,
+                numeroContratoObra = numeroContratoObra,
+                numeroContratoInterventoria = numeroContratoInterventoria,
+                llaveMen = ListContratacion.FirstOrDefault().Proyecto.LlaveMen
+            });
+
+            return ProyectoAjustado;
         }
 
         public async Task<Respuesta> CreateEditRecorridoObra(ProyectoEntregaEtc pRecorrido)
@@ -192,6 +234,7 @@ namespace asivamosffie.services
                 {
                     strCrearEditar = "CREAR ENTREGA DE PROYECTO ETC - DOC";
                     pDocumentos.FechaCreacion = DateTime.Now;
+                    pDocumentos.RegistroCompletoRemision = !String.IsNullOrEmpty(pDocumentos.NumRadicadoDocumentosEntregaEtc) && pDocumentos.FechaEntregaDocumentosEtc != null ? true : false;
                     _context.ProyectoEntregaEtc.Add(pDocumentos);
                 }
                 else
@@ -204,8 +247,10 @@ namespace asivamosffie.services
                                                                        FechaModificacion = DateTime.Now,
                                                                        UsuarioModificacion = pDocumentos.UsuarioCreacion,
                                                                        FechaEntregaDocumentosEtc = pDocumentos.FechaEntregaDocumentosEtc,
-                                                                       NumRadicadoDocumentosEntregaEtc = pDocumentos.NumRadicadoDocumentosEntregaEtc
-                                                                   });
+                                                                       NumRadicadoDocumentosEntregaEtc = pDocumentos.NumRadicadoDocumentosEntregaEtc,
+                                                                       RegistroCompletoRemision = !String.IsNullOrEmpty(pDocumentos.NumRadicadoDocumentosEntregaEtc) && pDocumentos.FechaEntregaDocumentosEtc != null ? true : false
+
+                });
                 }
                 _context.SaveChanges();
 
@@ -243,6 +288,7 @@ namespace asivamosffie.services
                 {
                     strCrearEditar = "CREAR ENTREGA DE PROYECTO ETC - ACTA";
                     pActaServicios.FechaCreacion = DateTime.Now;
+                    pActaServicios.RegistroCompletoActaBienesServicios = !String.IsNullOrEmpty(pActaServicios.ActaBienesServicios) && pActaServicios.FechaFirmaActaBienesServicios != null ? true : false;
                     _context.ProyectoEntregaEtc.Add(pActaServicios);
                 }
                 else
@@ -255,7 +301,8 @@ namespace asivamosffie.services
                                                                        FechaModificacion = DateTime.Now,
                                                                        UsuarioModificacion = pActaServicios.UsuarioCreacion,
                                                                        FechaFirmaActaBienesServicios = pActaServicios.FechaFirmaActaBienesServicios,
-                                                                       ActaBienesServicios = pActaServicios.ActaBienesServicios
+                                                                       ActaBienesServicios = pActaServicios.ActaBienesServicios,
+                                                                       RegistroCompletoActaBienesServicios = !String.IsNullOrEmpty(pActaServicios.ActaBienesServicios) && pActaServicios.FechaFirmaActaBienesServicios != null ? true : false
                                                                    });
                 }
                 _context.SaveChanges();

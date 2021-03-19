@@ -10,11 +10,13 @@ namespace asivamosffie.services.Interfaces
     public interface IRegisterProjectETCService
     {
         Task<List<InformeFinal>> GetListInformeFinal();
-        Task<ProyectoEntregaEtc> GetProyectoEntregaETCByInformeFinalId(int pInformeFinalId);
+        Task<List<dynamic>> GetProyectoEntregaETCByInformeFinalId(int pInformeFinalId);
         //POST
         Task<Respuesta> CreateEditRecorridoObra(ProyectoEntregaEtc pRecorrido);
         Task<Respuesta> CreateEditRepresentanteETC(RepresentanteEtcrecorrido pRepresentante);
         Task<Respuesta> CreateEditRemisionDocumentosTecnicos(ProyectoEntregaEtc pDocumentos);
         Task<Respuesta> CreateEditActaBienesServicios(ProyectoEntregaEtc pActaServicios);
+        Task<ProyectoEntregaEtc> GetProyectoEntregaEtc(int informeFinalId);
+
     }
 }

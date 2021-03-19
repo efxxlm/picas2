@@ -7,10 +7,10 @@
             <div class="pr-1">
               <label
                 class="label-left"
-                for="fechaRecorrido"
+                for="fechaRecorridoObra"
                 [class.color-secondaryColor]="
-                  (addressForm.get('fechaRecorrido').invalid && addressForm.get('fechaRecorrido').touched) ||
-                  (addressForm.get('fechaRecorrido').invalid && estaEditando)
+                  (addressForm.get('fechaRecorridoObra').invalid && addressForm.get('fechaRecorridoObra').touched) ||
+                  (addressForm.get('fechaRecorridoObra').invalid && estaEditando)
                 "
               >
                 Fecha del recorrido de obra
@@ -21,7 +21,7 @@
                 <input
                   matInput
                   [matDatepicker]="pickerRecorridoObra"
-                  formControlName="fechaRecorrido"
+                  formControlName="fechaRecorridoObra"
                   readonly
                   (click)="pickerRecorridoObra.open()"
                   placeholder="DD/MM/AAAA"
@@ -47,8 +47,8 @@
                   matTooltip="Debe ingresar la información en el campo para continuar"
                   matTooltipClass="info-tooltip"
                   *ngIf="
-                    (addressForm.get('fechaRecorrido').invalid && addressForm.get('fechaRecorrido').touched) ||
-                    (addressForm.get('fechaRecorrido').invalid && estaEditando)
+                    (addressForm.get('fechaRecorridoObra').invalid && addressForm.get('fechaRecorridoObra').touched) ||
+                    (addressForm.get('fechaRecorridoObra').invalid && estaEditando)
                   "
                 />
               </span>
@@ -62,11 +62,11 @@
             <div class="pr-1">
               <label
                 class="label-left"
-                for="cuantosRepresentantes"
+                for="numRepresentantesRecorrido"
                 [class.color-secondaryColor]="
-                  (addressForm.get('cuantosRepresentantes').invalid &&
-                    addressForm.get('cuantosRepresentantes').touched) ||
-                  (addressForm.get('cuantosRepresentantes').invalid && estaEditando)
+                  (addressForm.get('numRepresentantesRecorrido').invalid &&
+                    addressForm.get('numRepresentantesRecorrido').touched) ||
+                  (addressForm.get('numRepresentantesRecorrido').invalid && estaEditando)
                 "
               >
                 ¿Cuántos representantes de la ETC estuvieron presentes en el recorrido?
@@ -77,8 +77,8 @@
                 <input
                   matInput
                   type="number"
-                  #cuantosRepresentantes
-                  formControlName="cuantosRepresentantes"
+                  #numRepresentantesRecorrido
+                  formControlName="numRepresentantesRecorrido"
                   maxlength="2"
                   min="1"
                   max="99"
@@ -94,7 +94,7 @@
                 matTooltip="Campo numérico"
                 matTooltipClass="info-tooltip"
               >
-                {{ 2 - cuantosRepresentantes.value.length }}
+                {{ 2 - numRepresentantesRecorrido.value.length }}
               </span>
               <span class="icon-incompleto">
                 <img
@@ -105,9 +105,9 @@
                   matTooltip="Debe ingresar la información en el campo para continuar"
                   matTooltipClass="info-tooltip"
                   *ngIf="
-                    (addressForm.get('cuantosRepresentantes').invalid &&
-                      addressForm.get('cuantosRepresentantes').touched) ||
-                    (addressForm.get('cuantosRepresentantes').invalid && estaEditando)
+                    (addressForm.get('numRepresentantesRecorrido').invalid &&
+                      addressForm.get('numRepresentantesRecorrido').touched) ||
+                    (addressForm.get('numRepresentantesRecorrido').invalid && estaEditando)
                   "
                 />
               </span>
@@ -121,10 +121,10 @@
             <div class="pr-1">
               <label
                 class="label-left"
-                for="fechaFirma"
+                for="fechaFirmaActaEngregaFisica"
                 [class.color-secondaryColor]="
-                  (addressForm.get('fechaFirma').invalid && addressForm.get('fechaFirma').touched) ||
-                  (addressForm.get('fechaFirma').invalid && estaEditando)
+                  (addressForm.get('fechaFirmaActaEngregaFisica').invalid && addressForm.get('fechaFirmaActaEngregaFisica').touched) ||
+                  (addressForm.get('fechaFirmaActaEngregaFisica').invalid && estaEditando)
                 "
               >
                 Fecha de firma del acta de entrega física
@@ -135,7 +135,7 @@
                 <input
                   matInput
                   [matDatepicker]="pickerFirmaActa"
-                  formControlName="fechaFirma"
+                  formControlName="fechaFirmaActaEngregaFisica"
                   readonly
                   (click)="pickerFirmaActa.open()"
                   placeholder="DD/MM/AAAA"
@@ -155,8 +155,8 @@
                   matTooltip="Debe ingresar la información en el campo para continuar"
                   matTooltipClass="info-tooltip"
                   *ngIf="
-                    (addressForm.get('fechaFirma').invalid && addressForm.get('fechaFirma').touched) ||
-                    (addressForm.get('fechaFirma').invalid && estaEditando)
+                    (addressForm.get('fechaFirmaActaEngregaFisica').invalid && addressForm.get('fechaFirmaActaEngregaFisica').touched) ||
+                    (addressForm.get('fechaFirmaActaEngregaFisica').invalid && estaEditando)
                   "
                 />
               </span>
@@ -168,10 +168,10 @@
         <div class="pr-1">
           <label
             class="label-left"
-            for="urlActa"
+            for="urlActaEntregaFisica"
             [class.color-secondaryColor]="
-              (addressForm.get('urlActa').invalid && addressForm.get('urlActa').touched) ||
-              (addressForm.get('urlActa').invalid && estaEditando)
+              (addressForm.get('urlActaEntregaFisica').invalid && addressForm.get('urlActaEntregaFisica').touched) ||
+              (addressForm.get('urlActaEntregaFisica').invalid && estaEditando)
             "
           >
             URL con soporte de votación
@@ -179,7 +179,7 @@
         </div>
         <div class="col">
           <mat-form-field class="full-width">
-            <input matInput type="url" required formControlName="urlActa" />
+            <input matInput type="url" required formControlName="urlActaEntregaFisica" />
           </mat-form-field>
           <span class="info-url">Indique la ruta del soporte de esta información</span>
         </div>
@@ -192,8 +192,8 @@
             matTooltip="Debe ingresar la información en el campo para continuar"
             matTooltipClass="info-tooltip"
             *ngIf="
-              (addressForm.get('urlActa').invalid && addressForm.get('urlActa').touched) ||
-              (addressForm.get('urlActa').invalid && estaEditando)
+              (addressForm.get('urlActaEntregaFisica').invalid && addressForm.get('urlActaEntregaFisica').touched) ||
+              (addressForm.get('urlActaEntregaFisica').invalid && estaEditando)
             "
           />
         </span>
@@ -201,16 +201,16 @@
     </mat-card-content>
   </mat-card>
   <div class="text-center">
-    <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="addressForm.invalid">
+    <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="addressForm.dirty === false">
       <img src="assets/img/icon/guardar.svg" alt="Guardar" />
     </button>
   </div>
 </form>
 
-<mat-accordion class="animatedDown" *ngIf="addressForm.get('cuantosRepresentantes').value">
+<mat-accordion class="animatedDown" *ngIf="addressForm.get('numRepresentantesRecorrido').value">
   <mat-expansion-panel
     class="expansion-style sub-expansion"
-    *ngFor="let representante of arrayOne(addressForm.get('cuantosRepresentantes').value); let i = index"
+    *ngFor="let representante of arrayOne(addressForm.get('numRepresentantesRecorrido').value); let i = index"
   >
     <mat-expansion-panel-header class="expansion-style--header">
       <mat-panel-title
