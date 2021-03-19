@@ -146,8 +146,7 @@
             </app-form-demandantes-convocantes-dj>
         </mat-expansion-panel>
     </mat-accordion>
-    <!--
-    <mat-accordion *ngIf="this.tieneDemanda==true" class="animatedDown">
+    <mat-accordion *ngIf="this.addressForm.value.legitimacionActiva==false && defensaJudicial.esDemandaFfie==false">
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title sin-diligenciar">
@@ -159,7 +158,7 @@
                 [tipoProceso]="addressForm.get('tipoProceso').value"></app-form-demandados-dj>
         </mat-expansion-panel>
     </mat-accordion>
-    <mat-accordion *ngIf="this.addressForm.value.demandaContraFFIE==false" class="animatedDown">
+    <mat-accordion *ngIf="this.addressForm.value.legitimacionActiva==false && defensaJudicial.esDemandaFfie==true" class="animatedDown">
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title sin-diligenciar">
@@ -167,12 +166,10 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <app-form-convocados-pasiva-dj [defensaJudicial]="defensaJudicial"
-                [demandaContraFFIE]="this.tieneDemanda==true"
                 [legitimacion]="addressForm.get('legitimacionActiva').value"
                 [tipoProceso]="addressForm.get('tipoProceso').value"></app-form-convocados-pasiva-dj>
         </mat-expansion-panel>
     </mat-accordion>
-    -->
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
