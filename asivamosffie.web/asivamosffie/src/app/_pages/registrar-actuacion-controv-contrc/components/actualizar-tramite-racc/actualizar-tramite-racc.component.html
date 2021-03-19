@@ -9,7 +9,7 @@
     </h1>
     <mat-card class="shipping-card var-main-gris">
         <mat-card-content align="left">
-            <p><strong>Fecha de solicitud: </strong><em>{{actuacion?.fechaCreacion | date: 'dd/MM/yyyy'}}</em></p>
+            <p><strong>Fecha de solicitud: </strong><em>{{actuacion?.controversiaContractual.fechaSolicitud | date: 'dd/MM/yyyy'}}</em></p>
             <p><strong>Número del contrato: </strong><em>{{actuacion?.numeroContrato}}</em></p>
             <p><strong>Tipo de Controversia: </strong><em>{{actuacion?.tipoControversia}}</em></p>
             <p><strong>Fecha de la actuación adelantada: </strong><em>{{actuacion?.fechaActuacion | date: 'dd/MM/yyyy'}}</em></p>
@@ -72,17 +72,17 @@
                         Finalizar actuación derivada
                     </button>
                     <button mat-raised-button color="accent" class="btn-table"
-                        *ngIf="element.estadoActuacionString!='Finalizada'"
+                        *ngIf="element.estadoActuacionString!='Finalizado'"
                         (click)="this.verDetalleEditarActuacionDerivada(element.seguimientoActuacionDerivadaId)">
                         Ver detalle/Editar
                     </button>
                     <button mat-raised-button color="accent" class="btn-table"
-                        *ngIf="element.estadoActuacionString!='Finalizada'"
+                        *ngIf="element.estadoActuacionString!='Finalizado'"
                         (click)="this.eliminarActuacionDerivada(element.seguimientoActuacionDerivadaId)">
                         Eliminar
                     </button>
                     <button mat-raised-button color="accent" class="btn-table"
-                        *ngIf="element.estadoActuacionString == 'Finalizada'"
+                        *ngIf="element.estadoActuacionString == 'Finalizado'"
                         (click)="this.verDetalleActuacionDerivada(element.seguimientoActuacionDerivadaId)">
                         Ver detalle
                     </button>
