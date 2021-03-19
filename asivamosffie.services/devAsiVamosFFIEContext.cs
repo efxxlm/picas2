@@ -237,7 +237,9 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VUsuarioRol> VUsuarioRol { get; set; }
         public virtual DbSet<VValidarSeguimientoSemanal> VValidarSeguimientoSemanal { get; set; }
         public virtual DbSet<VValorFacturadoContrato> VValorFacturadoContrato { get; set; }
+        public virtual DbSet<VValorFacturadoProyecto> VValorFacturadoProyecto { get; set; }
         public virtual DbSet<VValorUsoXcontratoId> VValorUsoXcontratoId { get; set; }
+        public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
@@ -1122,6 +1124,8 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ContratacionProyectoAportante>(entity =>
             {
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
+
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
@@ -8198,6 +8202,15 @@ namespace asivamosffie.model.Models
                     .HasColumnType("numeric(18, 2)");
             });
 
+            modelBuilder.Entity<VValorFacturadoProyecto>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_Valor_Facturado_Proyecto");
+
+                entity.Property(e => e.ValorFacturado).HasColumnType("decimal(38, 3)");
+            });
+
             modelBuilder.Entity<VValorUsoXcontratoId>(entity =>
             {
                 entity.HasNoKey();
@@ -8218,6 +8231,28 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.ValorUso).HasColumnType("numeric(38, 2)");
+            });
+
+            modelBuilder.Entity<VValorUsosFasesAportanteProyecto>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_ValorUsos_Fases_Aportante_Proyecto");
+
+                entity.Property(e => e.Descripcion)
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.LlaveMen)
+                    .HasColumnName("LlaveMEN")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroSolicitud)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorUso).HasColumnType("numeric(18, 2)");
             });
 
             modelBuilder.Entity<VVerificarSeguimientoSemanal>(entity =>

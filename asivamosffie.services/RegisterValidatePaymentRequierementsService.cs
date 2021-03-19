@@ -390,15 +390,26 @@ namespace asivamosffie.services
                 ValorPendientePorPagar
             };
         }
-         
-        public async Task<dynamic> GetMontoMaximoProyecto(int pContrato , int pProyecto , bool EsPreConstruccion)
+
+        public async Task<dynamic> GetMontoMaximoProyecto(int pContrato, int pContratacionProyectoId, bool EsPreConstruccion)
         {
-            return await _context.Contrato.Where(c => c.ContratoId == pContrato)
-              .Include(c => c.Contratacion)
-                 .ThenInclude(r => r.ContratacionProyecto)
-                    .ThenInclude(r => r.ContratacionProyectoAportante)
-                      .ThenInclude(r => r.ComponenteAportante)
-                           .ThenInclude(r => r.ComponenteUso).FirstOrDefaultAsync();
+            decimal ValorMaximoProyecto =
+               (decimal) await _context.VValorUsosFasesAportanteProyecto
+                .Where(r => r.ContratacionProyectoId == pContratacionProyectoId
+                      && r.EsPreConstruccion == EsPreConstruccion)
+                .SumAsync(s => s.ValorUso);
+
+            decimal ValorPendientePorPagar =
+               (decimal) await _context.VValorFacturadoProyecto
+                .Where(r => r.ContratacionProyectoId == pContratacionProyectoId
+                        && r.EsPreconstruccion == EsPreConstruccion)
+                .SumAsync(s => s.ValorFacturado);
+             
+            return new
+            {
+                ValorMaximoProyecto,
+                ValorPendientePorPagar
+            };
         }
         #endregion
 

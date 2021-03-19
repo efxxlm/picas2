@@ -52,9 +52,9 @@ namespace asivamosffie.api.Controllers
 
           [HttpGet]
         [Route("GetMontoMaximoProyecto")]
-        public async Task GetMontoMaximoProyecto([FromQuery] int pContrato, int pProyecto, bool EsPreConstruccion)
+        public async Task GetMontoMaximoProyecto([FromQuery] int pContrato, int pContratacionProyectoId, bool EsPreConstruccion)
         {
-            await _registerValidatePaymentRequierementsService.GetMontoMaximoProyecto(pContrato , pProyecto, EsPreConstruccion);
+            await _registerValidatePaymentRequierementsService.GetMontoMaximoProyecto(pContrato , pContratacionProyectoId, EsPreConstruccion);
         }
 
         [HttpGet]
