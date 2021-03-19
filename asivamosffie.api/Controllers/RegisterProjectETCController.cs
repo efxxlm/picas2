@@ -108,7 +108,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 pDocumentos.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _registerProjectETCService.CreateEditRecorridoObra(pDocumentos);
+                respuesta = await _registerProjectETCService.CreateEditRemisionDocumentosTecnicos(pDocumentos);
                 return Ok(respuesta);
             }
             catch (Exception ex)

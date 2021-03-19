@@ -258,6 +258,10 @@ namespace asivamosffie.services
                     ThenInclude(x => x.Contrato).
                 Include(x => x.SeguimientoActuacionDerivada).FirstOrDefault();
             controversiaActuacion.NumeroActuacionFormat = controversiaActuacion.NumeroActuacion;
+            if (!String.IsNullOrEmpty(controversiaActuacion.ActuacionAdelantadaCodigo))
+            {
+                controversiaActuacion.ActuacionAdelantadaString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(controversiaActuacion.ActuacionAdelantadaCodigo, (int)EnumeratorTipoDominio.Actuacion_adelantada);
+            }
 
             var estado = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.EstadoActuacionReclamacionCodigo, (int)EnumeratorTipoDominio.Estados_Reclamacion);
             var vTipoControversiaCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.ControversiaContractual.TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipo_de_controversia);

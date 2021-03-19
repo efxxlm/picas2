@@ -42,9 +42,7 @@
         <mat-expansion-panel-header class="expansion-style--header">
           <mat-panel-title
             class="expansion-style--title"
-            [class.sin-diligenciar]="true"
-            [class.en-proceso]="false"
-            [class.completo]="false"
+            [ngClass]="semaforoRemision"
           >
             Remisión a ETC de documentos técnicos a la ETC
           </mat-panel-title>

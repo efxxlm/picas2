@@ -50,7 +50,7 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                    item.EstadoEntregaETCString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.EstadoEntregaETCString, (int)EnumeratorTipoDominio.Estado_Entrega_ETC_proyecto);
+                    item.EstadoEntregaETCString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.EstadoEntregaEtc, (int)EnumeratorTipoDominio.Estado_Entrega_ETC_proyecto);
                 }
             }
             return list;
@@ -139,14 +139,9 @@ namespace asivamosffie.services
                                                                        UrlActaEntregaFisica = pRecorrido.UrlActaEntregaFisica
                                                                    });
                 }
-                await _context.Set<InformeFinal>().Where(r => r.InformeFinalId == pRecorrido.InformeFinalId)
-                                               .UpdateAsync(r => new InformeFinal()
-                                               {
-                                                   FechaModificacion = DateTime.Now,
-                                                   UsuarioModificacion = pRecorrido.UsuarioCreacion,
-                                                   EstadoEntregaEtc = ConstantCodigoEstadoProyectoEntregaETC.En_proceso_de_entrega_ETC
-                                               });
                 _context.SaveChanges();
+
+                validateRegistroCompletoEtc(pRecorrido.InformeFinalId);
 
                 return
                 new Respuesta
@@ -254,6 +249,8 @@ namespace asivamosffie.services
                 }
                 _context.SaveChanges();
 
+                validateRegistroCompletoEtc(pDocumentos.InformeFinalId);
+
                 return
                 new Respuesta
                 {
@@ -306,6 +303,8 @@ namespace asivamosffie.services
                                                                    });
                 }
                 _context.SaveChanges();
+
+                validateRegistroCompletoEtc(pActaServicios.InformeFinalId);
 
                 return
                 new Respuesta
@@ -363,5 +362,31 @@ namespace asivamosffie.services
                 }
             }
         }*/
+
+        private bool validateRegistroCompletoEtc(int informeFinalId)
+        {
+            bool state = false;
+
+            ProyectoEntregaEtc proyectoEntregaEtc = _context.ProyectoEntregaEtc.Where(r => r.InformeFinalId == informeFinalId).FirstOrDefault();
+            if (proyectoEntregaEtc != null)
+            {
+                if (proyectoEntregaEtc.RegistroCompletoActaBienesServicios == true && proyectoEntregaEtc.RegistroCompletoRecorridoObra == true && proyectoEntregaEtc.RegistroCompletoRemision == true)
+                {
+                    state = true;
+                }
+                _context.Set<InformeFinal>().Where(r => r.InformeFinalId == informeFinalId)
+                .Update(r => new InformeFinal()
+                {
+                    FechaModificacion = DateTime.Now,
+                    UsuarioModificacion = proyectoEntregaEtc.UsuarioCreacion,
+                    EstadoEntregaEtc = ConstantCodigoEstadoProyectoEntregaETC.En_proceso_de_entrega_ETC,
+                    RegistroCompletoEntregaEtc = state
+                });
+            }
+
+            _context.SaveChanges();
+
+            return state;
+        }
     }
 }

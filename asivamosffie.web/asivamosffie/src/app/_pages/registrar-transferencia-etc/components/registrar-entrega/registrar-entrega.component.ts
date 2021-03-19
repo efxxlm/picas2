@@ -59,10 +59,10 @@ export class RegistrarEntregaComponent implements OnInit {
         // Semaforo Remision
         if (this.proyectoEntregaEtc.numRadicadoDocumentosEntregaEtc !== null && this.proyectoEntregaEtc.numRadicadoDocumentosEntregaEtc !== ""
         && this.proyectoEntregaEtc.fechaEntregaDocumentosEtc !== null  
-        && this.proyectoEntregaEtc.registroCompletoRecorridoObra == false) {
+        && this.proyectoEntregaEtc.registroCompletoRemision == false) {
           this.semaforoRemision = 'en-proceso';
         }
-        if ( this.proyectoEntregaEtc.registroCompletoRecorridoObra === true ) {
+        if ( this.proyectoEntregaEtc.registroCompletoRemision === true ) {
           this.semaforoRemision = 'completo';
         }
       }

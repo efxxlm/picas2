@@ -243,7 +243,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -4824,6 +4823,10 @@ namespace asivamosffie.model.Models
             {
                 entity.ToTable("ProyectoEntregaETC");
 
+                entity.HasIndex(e => e.InformeFinalId)
+                    .HasName("UK_informe_final_proyecto_etc")
+                    .IsUnique();
+
                 entity.Property(e => e.ProyectoEntregaEtcid).HasColumnName("ProyectoEntregaETCId");
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
@@ -4858,8 +4861,8 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.InformeFinal)
-                    .WithMany(p => p.ProyectoEntregaEtc)
-                    .HasForeignKey(d => d.InformeFinalId)
+                    .WithOne(p => p.ProyectoEntregaEtc)
+                    .HasForeignKey<ProyectoEntregaEtc>(d => d.InformeFinalId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_informe_final_proyecto_etc");
             });

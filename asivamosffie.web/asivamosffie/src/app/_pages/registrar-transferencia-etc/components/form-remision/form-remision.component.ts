@@ -30,7 +30,7 @@ export class FormRemisionComponent implements OnInit {
 
   private buildForm() {    
     this.addressForm = this.fb.group({
-      proyectoEntregaETCId: [null, Validators.required],
+      proyectoEntregaEtcid: [null, Validators.required],
       informeFinalId: [this.id, Validators.required],
       fechaEntregaDocumentosEtc: [null, Validators.required],
       numRadicadoDocumentosEntregaEtc: [null, Validators.required]

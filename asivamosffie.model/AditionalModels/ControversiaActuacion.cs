@@ -26,5 +26,8 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public string ProximaActuacionCodigoString { get; set; }
+
+        [NotMapped]
+        public string ActuacionAdelantadaString { get; set; }
     }
 }
