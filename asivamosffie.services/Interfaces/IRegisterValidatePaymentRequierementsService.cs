@@ -9,6 +9,8 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IRegisterValidatePaymentRequierementsService
     {
+        Task<dynamic> GetMontoMaximoMontoPendiente(int SolicitudPagoId, string strFormaPago, bool EsPreConstruccion);
+
         Task<Respuesta> ReturnSolicitudPago(SolicitudPago pSolicitudPago);
 
         Task  GetValidateSolicitudPagoId(int SolicitudPagoId);

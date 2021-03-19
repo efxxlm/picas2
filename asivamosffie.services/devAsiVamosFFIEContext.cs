@@ -120,6 +120,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<OrdenGiroTerceroChequeGerencia> OrdenGiroTerceroChequeGerencia { get; set; }
         public virtual DbSet<OrdenGiroTerceroTransferenciaElectronica> OrdenGiroTerceroTransferenciaElectronica { get; set; }
         public virtual DbSet<Perfil> Perfil { get; set; }
+        public virtual DbSet<PlanesProgramasListaChequeoRespuesta> PlanesProgramasListaChequeoRespuesta { get; set; }
         public virtual DbSet<Plantilla> Plantilla { get; set; }
         public virtual DbSet<PolizaGarantia> PolizaGarantia { get; set; }
         public virtual DbSet<PolizaObservacion> PolizaObservacion { get; set; }
@@ -239,7 +240,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsoXcontratoId> VValorUsoXcontratoId { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
-
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -4074,6 +4074,37 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false)
                     .HasComment("Usuario que realizo la modificación de los datos no de auditoria");
+            });
+
+            modelBuilder.Entity<PlanesProgramasListaChequeoRespuesta>(entity =>
+            {
+                entity.Property(e => e.FechaAprobacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaRadicado).HasColumnType("datetime");
+
+                entity.Property(e => e.Observacion).HasMaxLength(2000);
+
+                entity.Property(e => e.RecibioRequisitoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.ListaChequeoItem)
+                    .WithMany(p => p.PlanesProgramasListaChequeoRespuesta)
+                    .HasForeignKey(d => d.ListaChequeoItemId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Fk_PlanesProgramasListaChequeoRespuesta_ListaChequeoItem");
             });
 
             modelBuilder.Entity<Plantilla>(entity =>
@@ -8177,6 +8208,10 @@ namespace asivamosffie.model.Models
                 entity.HasNoKey();
 
                 entity.ToView("V_ValorUsoXContratoId");
+
+                entity.Property(e => e.FaseId)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Nombre)
                     .IsRequired()
