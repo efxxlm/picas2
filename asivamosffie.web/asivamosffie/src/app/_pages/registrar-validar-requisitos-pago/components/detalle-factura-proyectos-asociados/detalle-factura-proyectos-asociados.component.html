@@ -52,7 +52,7 @@
                     <br>
                     <div class="d-flex">
                         <strong>Criterios:</strong>
-                        <p *ngFor="let criterio of criteriosArraySeleccionados; index as i" style="margin-left: .4em;"> {{ filterCriterios( criterio.codigo ) }}<span *ngIf="criteriosArraySeleccionados.length - 1 !== i">,</span><span *ngIf="criteriosArraySeleccionados.length - 1 === i">.</span> </p>
+                        <p *ngFor="let criterio of project.get( 'criterioPago' ).value; index as i" style="margin-left: .4em;"> {{ criterio.nombre }}<span *ngIf="project.get( 'criterioPago' ).value.length - 1 !== i">,</span><span *ngIf="project.get( 'criterioPago' ).value.length - 1 === i">.</span> </p>
                     </div>
                     <section formArrayName="criteriosProyecto" class="mt-1em" *ngIf="criteriosProyecto( i ).length > 0">
                         <div *ngFor="let criterioProyecto of criteriosProyecto( i ).controls; index as j" [formGroup]="criterioProyecto">

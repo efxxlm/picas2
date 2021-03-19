@@ -329,67 +329,6 @@ listaEstadosPoliza(){
     // Lista estrategias de pago CU orden de giro
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=159`);
   }
-  listaEstadoSolicitudPago() {
-    // Lista estados de la solicitud CU 4.1.7 - 4.1.8 - 4.1.9
-    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=136`)
-      .pipe(
-        map(
-          listaEstadoSolicitudPago => {
-            const estadoSolicitudPago: any = {};
-            
-            for ( const solicitud of listaEstadoSolicitudPago ) {
-              if ( solicitud.codigo === '1' ) {
-                estadoSolicitudPago.enProcesoRegistro = solicitud.codigo;
-              }
-              if ( solicitud.codigo === '2' ) {
-                estadoSolicitudPago.solicitudRevisadaEquipoFacturacion = solicitud.codigo;
-              }
-              if ( solicitud.codigo === '3' ) {
-                estadoSolicitudPago.solicitudDevueltaEquipoFacturacion = solicitud.codigo;
-              }
-              if ( solicitud.codigo === '4' ) {
-                estadoSolicitudPago.devueltaPorApoyoSupervisor = solicitud.codigo;
-              }
-              if ( solicitud.codigo === '5' ) {
-                estadoSolicitudPago.enviadaAutorizacion = solicitud.codigo;
-              }
-              if ( solicitud.codigo === '6' ) {
-                estadoSolicitudPago.aprobadaPorCoordinacion = solicitud.codigo;
-              }
-              if ( solicitud.codigo === '7' ) {
-                estadoSolicitudPago.devueltaPorCoordinacion = solicitud.codigo;
-              }
-              if ( solicitud.codigo === '8' ) {
-                estadoSolicitudPago.enviadaPorVerificadorFinancieroParaSubsanacion = solicitud.codigo;
-              }
-              if ( solicitud.codigo === '9' ) {
-                estadoSolicitudPago.enviadaPorValidadorFinancieroParaSubsanacion = solicitud.codigo;
-              }
-              if ( solicitud.codigo === '10' ) {
-                estadoSolicitudPago.rechazadaPorEquipoFinanciero = solicitud.codigo;
-              }
-              if ( solicitud.codigo === '11' ) {
-                estadoSolicitudPago.enviadaParaValidacionPorFinanciera = solicitud.codigo;
-              }
-              if ( solicitud.codigo === '12' ) {
-                estadoSolicitudPago.enviadaParaOrdenGiro = solicitud.codigo;
-              }
-              if ( solicitud.codigo === '13' ) {
-                estadoSolicitudPago.solicitudDevueltaParaFacturacionPorOrdenGiro = solicitud.codigo;
-              }
-              if ( solicitud.codigo === '14' ) {
-                estadoSolicitudPago.solicitudDevueltaParaVerificarFinancieramentePorOrdenGiro = solicitud.codigo;
-              }
-              if ( solicitud.codigo === '15' ) {
-                estadoSolicitudPago.solicitudDevueltaParaValidarFinancieramentePorOrdenGiro = solicitud.codigo;
-              }
-            }
-
-            return estadoSolicitudPago;
-          }
-        )
-      );
-  }
   listaRevisionTecnica() {
     // Lista del campo "Revision tecnica" para las listas de chequeo.
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=162`);

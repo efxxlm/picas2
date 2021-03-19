@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { CommonService } from 'src/app/core/_services/common/common.service';
 import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
+import { EstadoSolicitudPagoOrdenGiro, EstadosSolicitudPagoOrdenGiro } from 'src/app/_interfaces/estados-solicitudPago-ordenGiro.interface';
 import { DialogEnvSolicitudAutorizComponent } from '../dialog-env-solicitud-autoriz/dialog-env-solicitud-autoriz.component';
 
 @Component({
@@ -17,7 +18,7 @@ export class AutorizarSolicitudPagoComponent implements OnInit {
 
     verAyuda = false;
     tipoSolicitudCodigo: any = {};
-    listaEstadoSolicitudPago: any = {};
+    listaEstadoSolicitudPago: EstadoSolicitudPagoOrdenGiro = EstadosSolicitudPagoOrdenGiro;
     dataSource = new MatTableDataSource();
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -37,47 +38,21 @@ export class AutorizarSolicitudPagoComponent implements OnInit {
         private commonSvc: CommonService,
         private obsMultipleSvc: ObservacionesMultiplesCuService )
     {
-        this.commonSvc.listaEstadoSolicitudPago()
+        this.obsMultipleSvc.listaMenu()
             .subscribe(
-                listaEstadoSolicitudPago => {
-                    this.listaEstadoSolicitudPago = listaEstadoSolicitudPago;
-                    console.log( this.listaEstadoSolicitudPago );
-                    this.commonSvc.tiposDeSolicitudes()
+                listaMenuId => {
+                    this.obsMultipleSvc.getListSolicitudPago( listaMenuId.autorizarSolicitudPagoId )
                         .subscribe(
-                            solicitudes => {
-                                for ( const solicitud of solicitudes ) {
-                                    if ( solicitud.codigo === '1' ) {
-                                        this.tipoSolicitudCodigo.contratoObra = solicitud.codigo;
-                                    }
-                                    if ( solicitud.codigo === '2' ) {
-                                        this.tipoSolicitudCodigo.contratoInterventoria = solicitud.codigo;
-                                    }
-                                    if ( solicitud.codigo === '3' ) {
-                                        this.tipoSolicitudCodigo.expensas = solicitud.codigo;
-                                    }
-                                    if ( solicitud.codigo === '4' ) {
-                                        this.tipoSolicitudCodigo.otrosCostos = solicitud.codigo;
-                                    }
-                                }
-                                this.obsMultipleSvc.listaMenu()
-                                    .subscribe(
-                                        listaMenuId => {
-                                            this.obsMultipleSvc.getListSolicitudPago( listaMenuId.aprobarSolicitudPagoId )
-                                                .subscribe(
-                                                    getListSolicitudPago => {
-                                                        console.log( getListSolicitudPago );
-                                                        this.dataSource = new MatTableDataSource(getListSolicitudPago);
-                                                        this.dataSource.paginator = this.paginator;
-                                                        this.dataSource.sort = this.sort;
-                                                        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-                                                    }
-                                                );
-                                        }
-                                    );
+                            getListSolicitudPago => {
+                                console.log( getListSolicitudPago );
+                                this.dataSource = new MatTableDataSource(getListSolicitudPago);
+                                this.dataSource.paginator = this.paginator;
+                                this.dataSource.sort = this.sort;
+                                this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
                             }
                         );
                 }
-            )
+            );
     }
 
     ngOnInit(): void {

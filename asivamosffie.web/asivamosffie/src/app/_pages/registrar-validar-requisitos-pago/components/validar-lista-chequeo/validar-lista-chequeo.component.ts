@@ -19,6 +19,7 @@ import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrar
 export class ValidarListaChequeoComponent implements OnInit {
 
     @Input() contrato: any;
+    @Input() esVerDetalle = false;
     solicitudPagoModificado: any;
     dataSource = new MatTableDataSource();
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -73,10 +74,20 @@ export class ValidarListaChequeoComponent implements OnInit {
         return new MatTableDataSource( solicitudPagoListaChequeoRespuesta );
     }
 
+    getRevisionTecnica( respuestaCodigo: string ) {
+        if ( this.listaRevisionTecnica.length > 0 ) {
+            const revision = this.listaRevisionTecnica.find( revision => revision.codigo === respuestaCodigo );
+
+            if ( revision !== undefined ) {
+                return revision.nombre;
+            };
+        }
+    }
+
     getObservacion( registro: any, index: number, jIndex: number ) {
         const dialogRef = this.dialog.open(DialogObservacionesItemListchequeoComponent, {
             width: '70em',
-            data: { contrato: this.contrato, registro, jIndex }
+            data: { contrato: this.contrato, registro, jIndex, esVerDetalle: this.esVerDetalle }
         });
 
         dialogRef.afterClosed()
@@ -96,13 +107,24 @@ export class ValidarListaChequeoComponent implements OnInit {
       //dialogRef.afterClosed().subscribe(value => {});
     }
 
-    getEstadoSemaforo( solicitudPagoListaChequeoRespuesta: any[] ) {
-        if ( solicitudPagoListaChequeoRespuesta.length > 0 ) {
-            let enProceso = 0;
-            let completo = 0;
-            solicitudPagoListaChequeoRespuesta.forEach( listaChequeo => {
-                // console.log( Object.keys( listaChequeo ) );
-            } );
+    getEstadoSemaforo( solicitudPagoListaChequeo: any ) {
+
+        let sinDiligenciar = 0;
+
+        solicitudPagoListaChequeo.solicitudPagoListaChequeoRespuesta.forEach( value => {
+            if ( value.respuestaCodigo === null ) {
+                sinDiligenciar++;
+            }
+        } );
+
+        if ( sinDiligenciar === solicitudPagoListaChequeo.solicitudPagoListaChequeoRespuesta.length ) {
+            return 'sin-diligenciar';
+        }
+        if ( solicitudPagoListaChequeo.registroCompleto === false ) {
+            return 'en-proceso';
+        }
+        if ( solicitudPagoListaChequeo.registroCompleto === true ) {
+            return 'completo';
         }
     }
 

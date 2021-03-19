@@ -110,8 +110,6 @@ export class CriteriosPagoComponent implements OnInit {
                                     )
                                 );
                             }
-                            this.solicitudPagoFase.solicitudPagoFaseCriterio.forEach( async criterio => {
-                            } );
                         }
                         this.criteriosArray = response;
                         this.addressForm.get( 'criterioPago' ).setValue( criteriosArray );
@@ -172,17 +170,12 @@ export class CriteriosPagoComponent implements OnInit {
                                     )
                                 );
                             }
-                            this.solicitudPagoFase.solicitudPagoFaseCriterio.forEach( async criterio => {
-                            } );
                         }
                         this.criteriosArray = response;
                         this.addressForm.get( 'criterioPago' ).setValue( criteriosArray );
                     }
                 );
         }
-        setTimeout(() => {
-            console.log( this.criterios );
-        }, 3000);
     }
 
     crearFormulario() {

@@ -1,3 +1,4 @@
+import { EstadoSolicitudPagoOrdenGiro, EstadosSolicitudPagoOrdenGiro } from './../../../../_interfaces/estados-solicitudPago-ordenGiro.interface';
 import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
 import { CommonService } from './../../../../core/_services/common/common.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -18,7 +19,7 @@ import { DialogDevolverSolicitudComponent } from '../dialog-devolver-solicitud/d
 export class RegistrarValidarRequisitosPagoComponent implements OnInit {
 
     tipoSolicitudCodigo: any = {};
-    listaEstadoSolicitudPago: any = {};
+    listaEstadoSolicitudPago: EstadoSolicitudPagoOrdenGiro = EstadosSolicitudPagoOrdenGiro;
     verAyuda = false;
     dataSource = new MatTableDataSource();
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -41,40 +42,15 @@ export class RegistrarValidarRequisitosPagoComponent implements OnInit {
         private obsMultipleSvc: ObservacionesMultiplesCuService,
         private registrarPagosSvc: RegistrarRequisitosPagoService )
     {
-        this.commonSvc.listaEstadoSolicitudPago()
+        this.registrarPagosSvc.getListSolicitudPago()
             .subscribe(
-                listaEstadoSolicitudPago => {
-                    this.listaEstadoSolicitudPago = listaEstadoSolicitudPago;
+                response => {
                     console.log( this.listaEstadoSolicitudPago );
-                    this.commonSvc.tiposDeSolicitudes()
-                        .subscribe(
-                            solicitudes => {
-                                for ( const solicitud of solicitudes ) {
-                                    if ( solicitud.codigo === '1' ) {
-                                        this.tipoSolicitudCodigo.contratoObra = solicitud.codigo;
-                                    }
-                                    if ( solicitud.codigo === '2' ) {
-                                        this.tipoSolicitudCodigo.contratoInterventoria = solicitud.codigo;
-                                    }
-                                    if ( solicitud.codigo === '3' ) {
-                                        this.tipoSolicitudCodigo.expensas = solicitud.codigo;
-                                    }
-                                    if ( solicitud.codigo === '4' ) {
-                                        this.tipoSolicitudCodigo.otrosCostos = solicitud.codigo;
-                                    }
-                                }
-                                this.registrarPagosSvc.getListSolicitudPago()
-                                    .subscribe(
-                                        response => {
-                                            console.log( response );
-                                            this.dataSource = new MatTableDataSource( response );
-                                            this.dataSource.paginator = this.paginator;
-                                            this.dataSource.sort = this.sort;
-                                            this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-                                        }
-                                    );
-                            }
-                        );
+                    console.log( response );
+                    this.dataSource = new MatTableDataSource( response );
+                    this.dataSource.paginator = this.paginator;
+                    this.dataSource.sort = this.sort;
+                    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
                 }
             );
     }

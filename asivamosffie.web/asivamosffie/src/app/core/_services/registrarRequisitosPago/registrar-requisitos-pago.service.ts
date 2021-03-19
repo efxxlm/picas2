@@ -32,6 +32,10 @@ export class RegistrarRequisitosPagoService {
     return this.http.get( `${ this.apiUrl }/GetProyectosByIdContrato?pContratoId=${ pContratoId }` );
   }
 
+  getMontoMaximoMontoPendiente( SolicitudPagoId: number, strFormaPago: string, EsPreConstruccion: string ) {
+    return this.http.get( `${ this.apiUrl }/GetMontoMaximoMontoPendiente?SolicitudPagoId=${ SolicitudPagoId }&strFormaPago=${ strFormaPago }&EsPreConstruccion=${ EsPreConstruccion }` );
+  }
+
   getCriterioByFormaPagoCodigo( pFormaPagoCodigo: string ) {
     return this.http.get<{ codigo: string, nombre: string }[]>( `${ this.apiUrl }/GetCriterioByFormaPagoCodigo?pFormaPagoCodigo=${ pFormaPagoCodigo }` );
   }
