@@ -43,8 +43,7 @@
                     <div class="col-md-6" style="padding-left: 0;">
                         <div class="row">
                             <div class="pr-1">
-                                <label class="label-left" for="tipoProceso"
-                                [ngClass]="{
+                                <label class="label-left" for="tipoProceso" [ngClass]="{
                                     'color-secondaryColor':
                                       (addressForm.get('tipoProceso').invalid && addressForm.get('tipoProceso').touched) ||
                                       (addressForm.get('tipoProceso').invalid && estaEditando)
@@ -142,10 +141,38 @@
             </mat-expansion-panel-header>
             <app-form-demandantes-convocantes-dj #demandantes
                 [legitimacion]="addressForm.get('legitimacionActiva').value"
-                [tipoProceso]="addressForm.get('tipoProceso').value" [defensaJudicial]="defensaJudicial">
+                [tipoProceso]="addressForm.get('tipoProceso').value" [defensaJudicial]="defensaJudicial"
+                (tieneDemanda)="this.tieneDemanda=$event">
             </app-form-demandantes-convocantes-dj>
         </mat-expansion-panel>
     </mat-accordion>
+    <!--
+    <mat-accordion *ngIf="this.tieneDemanda==true" class="animatedDown">
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                    Demandados
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-form-demandados-dj [defensaJudicial]="defensaJudicial"
+                [legitimacion]="addressForm.get('legitimacionActiva').value"
+                [tipoProceso]="addressForm.get('tipoProceso').value"></app-form-demandados-dj>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <mat-accordion *ngIf="this.addressForm.value.demandaContraFFIE==false" class="animatedDown">
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                    Convocados
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-form-convocados-pasiva-dj [defensaJudicial]="defensaJudicial"
+                [demandaContraFFIE]="this.tieneDemanda==true"
+                [legitimacion]="addressForm.get('legitimacionActiva').value"
+                [tipoProceso]="addressForm.get('tipoProceso').value"></app-form-convocados-pasiva-dj>
+        </mat-expansion-panel>
+    </mat-accordion>
+    -->
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">

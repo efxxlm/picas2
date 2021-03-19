@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, AfterViewInit } from '@angular/core';
+import { Component, Input, OnInit, AfterViewInit, EventEmitter, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -12,6 +12,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   styleUrls: ['./form-demandantes-convocantes-dj.component.scss']
 })
 export class FormDemandantesConvocantesDjComponent implements OnInit {
+  @Output() tieneDemanda = new EventEmitter<boolean>();
   addressForm = this.fb.group({
     demandaContraFFIE: [null, Validators.required]
   });
@@ -35,6 +36,8 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
   demandado_class: number = 0;
   convocado_class: number = 0;
   estaEditando = false;
+
+
   constructor(private fb: FormBuilder, public commonService: CommonService,
     public defensaService: DefensaJudicialService,
     public dialog: MatDialog, private router: Router) {
@@ -69,6 +72,7 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
       this.textoConvocantesCapital = "Convocante";
     }
     this.addressForm.get("demandaContraFFIE").setValue(this.defensaJudicial.esDemandaFfie);
+    this.tieneDemanda.emit(this.defensaJudicial.esDemandaFfie);
     this.formContratista.get("numeroContratos").setValue(this.defensaJudicial.numeroDemandantes);
     let i = 0;
     this.demandado_class = this.estaIncompletoDemandado(this.defensaJudicial);
@@ -288,6 +292,14 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
   }
 
   cambioTipoTexto() {
+    /*
+    if(this.addressForm.value.demandaContraFFIE==false){
+      this.tieneDemanda.emit(true);
+    }
+    else{
+      this.tieneDemanda.emit(false);
+    }
+    */
     this.textoConvocantes = this.addressForm.value.demandaContraFFIE ? "convocante" : "demandante";
     this.textoConvocantesCapital = this.addressForm.value.demandaContraFFIE ? "Convocante" : "Demandante";
   }
