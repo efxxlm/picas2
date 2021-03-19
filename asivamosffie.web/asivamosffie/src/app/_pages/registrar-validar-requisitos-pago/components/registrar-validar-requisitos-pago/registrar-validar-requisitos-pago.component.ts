@@ -1,4 +1,4 @@
-import { EstadoSolicitudPagoOrdenGiro, EstadosSolicitudPagoOrdenGiro } from './../../../../_interfaces/estados-solicitudPago-ordenGiro.interface';
+import { EstadoSolicitudPagoOrdenGiro, EstadosSolicitudPagoOrdenGiro, TipoSolicitud, TipoSolicitudes } from './../../../../_interfaces/estados-solicitudPago-ordenGiro.interface';
 import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
 import { CommonService } from './../../../../core/_services/common/common.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -18,7 +18,7 @@ import { DialogDevolverSolicitudComponent } from '../dialog-devolver-solicitud/d
 })
 export class RegistrarValidarRequisitosPagoComponent implements OnInit {
 
-    tipoSolicitudCodigo: any = {};
+    tipoSolicitud: TipoSolicitud = TipoSolicitudes;
     listaEstadoSolicitudPago: EstadoSolicitudPagoOrdenGiro = EstadosSolicitudPagoOrdenGiro;
     verAyuda = false;
     dataSource = new MatTableDataSource();
@@ -45,7 +45,6 @@ export class RegistrarValidarRequisitosPagoComponent implements OnInit {
         this.registrarPagosSvc.getListSolicitudPago()
             .subscribe(
                 response => {
-                    console.log( this.listaEstadoSolicitudPago );
                     console.log( response );
                     this.dataSource = new MatTableDataSource( response );
                     this.dataSource.paginator = this.paginator;

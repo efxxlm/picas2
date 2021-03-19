@@ -1,4 +1,4 @@
-<section class="container text-center" *ngIf="contrato !== undefined">
+<section class="container text-center" *ngIf="contrato !== undefined && montoMaximoPendiente !== undefined">
     <div class="text-right">
         <a routerLink="/registrarValidarRequisitosPago" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
@@ -174,12 +174,8 @@
                                         </mat-panel-title>
                                     </mat-expansion-panel-header>
                                     <p class="info-sub-title supportBlack">
-                                        <span><b>Monto máximo por pagar en esta factura:</b> $15.000.000</span>
-                                        <span><b>Monto pendiente por pagar en la fase</b>$30.000.000</span>
-                                    </p>
-                                    <p class="info-sub-title supportBlack">
-                                        <span><b>Monto máximo por pagar en esta factura:</b> $15.000.000</span>
-                                        <span><b>Monto pendiente por pagar en la fase:</b> $30.000.000</span>
+                                        <span><b>Monto máximo por pagar en esta factura:</b> {{ montoMaximoPendiente.montoMaximo | currency:'':'symbol-narrow':'.0-0' }} </span>
+                                        <span><b>Monto pendiente por pagar en la fase</b> {{ montoMaximoPendiente.valorPendientePorPagar | currency:'':'symbol-narrow':'.0-0' }} </span>
                                     </p>
                                     <div class="d-flex justify-content-center" *ngIf="criteriosArraySeleccionados.length > 0">
                                         <strong>Criterios de pago:</strong>
@@ -242,8 +238,8 @@
                                         </mat-panel-title>
                                     </mat-expansion-panel-header>
                                     <p class="info-sub-title supportBlack">
-                                        <span><b>Monto máximo por pagar en esta factura:</b> $15.000.000</span>
-                                        <span><b>Monto pendiente por pagar en la fase:</b>$30.000.000</span>
+                                        <span><b>Monto máximo por pagar en esta factura:</b> {{ montoMaximoPendiente.montoMaximo | currency:'':'symbol-narrow':'.0-0' }} </span>
+                                        <span><b>Monto pendiente por pagar en la fase</b> {{ montoMaximoPendiente.valorPendientePorPagar | currency:'':'symbol-narrow':'.0-0' }} </span>
                                     </p>
                                     <div class="d-flex justify-content-center" *ngIf="criteriosArraySeleccionados.length > 0">
                                         <strong>Criterios de pago:</strong>

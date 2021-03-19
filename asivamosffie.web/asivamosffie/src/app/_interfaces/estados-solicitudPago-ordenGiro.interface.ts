@@ -32,3 +32,17 @@ export enum EstadosSolicitudPagoOrdenGiro {
     solicitudDevueltaParaVerificarFinancieramentePorOrdenGiro = '14',
     solicitudDevueltaParaValidarFinancieramentePorOrdenGiro = '15'
 }
+
+export interface TipoSolicitud {
+    obra: string;
+    interventoria: string;
+    expensas: string;
+    otrosCostos: string;
+}
+
+export enum TipoSolicitudes {
+    obra = '1',
+    interventoria = '2',
+    expensas = '3',
+    otrosCostos = '4'
+}

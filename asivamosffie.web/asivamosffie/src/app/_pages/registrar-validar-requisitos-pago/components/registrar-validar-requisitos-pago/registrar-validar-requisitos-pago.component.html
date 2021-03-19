@@ -83,7 +83,7 @@
             <ng-container matColumnDef="gestion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 16%;"> Gestión </th>
                 <td mat-cell *matCellDef="let element" align="center">
-                    <ng-container *ngIf="element.tipoSolicitudCodigo !== tipoSolicitudCodigo.expensas; else esExpensas">
+                    <ng-container *ngIf="element.tipoSolicitudCodigo !== tipoSolicitud.expensas; else esExpensas">
                         <!--
                             ng-container para obra, interventoria, otros costos
                             etiqueta "Section" condicionada para el estadoCodigo enProcesoRegistro === '1'

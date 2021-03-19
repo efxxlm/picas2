@@ -20,7 +20,7 @@ export class FormCriteriosPagoComponent implements OnInit {
     solicitudPagoRegistrarSolicitudPago: any;
     registroCompletoCriterio = false;
     solicitudPagoFase: any;
-    montoMaximo = 15000000;
+    montoMaximoPendiente: { montoMaximo: number, valorPendientePorPagar: number };
     addressForm = this.fb.group({
         criterioPago: [ null, Validators.required ],
         criterios: this.fb.array( [] )
@@ -61,6 +61,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                 .subscribe(
                     getMontoMaximoMontoPendiente => {
                         console.log( 'linea 63 preConstruccion', getMontoMaximoMontoPendiente )
+                        this.montoMaximoPendiente = getMontoMaximoMontoPendiente;
                         this.registrarPagosSvc.getCriterioByFormaPagoCodigo( fasePreConstruccionFormaPagoCodigo )
                             .subscribe(
                                 async response => {
@@ -136,7 +137,7 @@ export class FormCriteriosPagoComponent implements OnInit {
             this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, faseConstruccionFormaPagoCodigo, 'False' )
                 .subscribe(
                     getMontoMaximoMontoPendiente => {
-                        console.log( 'linea 138 Construccion', getMontoMaximoMontoPendiente )
+                        this.montoMaximoPendiente = getMontoMaximoMontoPendiente;
                         this.registrarPagosSvc.getCriterioByFormaPagoCodigo( faseConstruccionFormaPagoCodigo )
                             .subscribe(
                                 async response => {
@@ -230,7 +231,7 @@ export class FormCriteriosPagoComponent implements OnInit {
             }
         }
 
-        if ( valorConcepto >= this.montoMaximo ) {
+        if ( valorConcepto >= this.montoMaximoPendiente.montoMaximo ) {
             this.openDialog( '', '<b>El valor facturado al concepto no puede ser mayor o igual al monto maximo por pagar en esta factura.</b>' );
             this.getConceptos( index ).controls[ jIndex ].get( 'valorFacturadoConcepto' ).setValue( null );
             return;
@@ -242,7 +243,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                     valorTotalCriterios += concepto.value.valorFacturadoConcepto;
                 }
             } );
-            if ( valorConcepto > this.montoMaximo ) {
+            if ( valorConcepto > this.montoMaximoPendiente.montoMaximo ) {
                 this.openDialog( '', '<b>El valor total de los conceptos no puede ser mayor o igual al monto maximo por pagar en esta factura.</b>' );
                 this.criterios.controls[ index ].get( 'valorFacturado' ).setValue( null );
                 return;
@@ -259,7 +260,7 @@ export class FormCriteriosPagoComponent implements OnInit {
             }
         } );
 
-        if ( totalValorConceptos > this.montoMaximo ) {
+        if ( totalValorConceptos > this.montoMaximoPendiente.montoMaximo ) {
             this.openDialog( '', '<b>La suma total de los valores por concepto no puede ser mayor o igual al monto maximo por pagar en esta factura.</b>' );
             
             if ( index !== undefined ) {
