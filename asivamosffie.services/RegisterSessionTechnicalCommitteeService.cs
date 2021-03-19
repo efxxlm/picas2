@@ -1599,13 +1599,10 @@ namespace asivamosffie.services
                         .ThenInclude(r => r.SesionSolicitudVoto)
                     .Include(r => r.SesionComiteSolicitudComiteTecnico)
                         .ThenInclude(r => r.SesionSolicitudCompromiso)
-                    //        .ThenInclude(r => r.ResponsableSesionParticipante)
-                    //          .ThenInclude(r => r.Usuario)
                     .Include(r => r.SesionComiteTema)
-                      .ThenInclude(r => r.SesionTemaVoto)
-                   .Include(r => r.SesionComiteTema)
+                    //  .ThenInclude(r => r.SesionTemaVoto)
+                    .Include(r => r.SesionComiteTema)
                        .ThenInclude(r => r.TemaCompromiso)
-                 //.Include(r => r.SesionParticipante)
                  .FirstOrDefaultAsync();
 
             List<VSesionParticipante> listaParticipantes = _context.VSesionParticipante.Where(r => r.ComiteTecnicoId == comiteTecnico.ComiteTecnicoId).ToList();
@@ -1628,6 +1625,8 @@ namespace asivamosffie.services
                 ct.TemaCompromiso = ct.TemaCompromiso.Where(r => !(bool)r.Eliminado).ToList();
 
                 ct.RegistroCompletoActa = ValidarRegistroCompletoSesionComiteTemaActa(ct);
+
+                ct.SesionTemaVoto = _context.SesionTemaVoto.Where(r => r.SesionTemaId == ct.SesionTemaId && r.Eliminado != true).ToList();
 
             });
 

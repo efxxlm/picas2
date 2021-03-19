@@ -1587,6 +1587,7 @@ namespace asivamosffie.services
                 return
                 new Respuesta
                 {
+                    Data = ex,
                     IsSuccessful = true,
                     IsException = false,
                     IsValidation = false,

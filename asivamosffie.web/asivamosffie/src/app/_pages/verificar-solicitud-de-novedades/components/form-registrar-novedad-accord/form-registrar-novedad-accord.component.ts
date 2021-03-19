@@ -1,8 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Validators, FormArray, FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { CommonService } from 'src/app/core/_services/common/common.service';
+import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { NovedadContractualClausula, NovedadContractualDescripcion, NovedadContractualDescripcionMotivo } from 'src/app/_interfaces/novedadContractual';
 
 @Component({
   selector: 'app-form-registrar-novedad-accord',
@@ -11,22 +12,25 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class FormRegistrarNovedadAccordComponent implements OnInit {
   @Input() tiposNovedadModificacionContractual;
+  @Input() novedadDescripcion:NovedadContractualDescripcion;
+
+  @Output() guardar= new EventEmitter();
+
+  nombreTiposolicitud: string;
 
   addressForm = this.fb.group({
+    novedadContractualDescripcionId: [],
     fechaSolicitudNovedad: [null, Validators.required],
     instanciaPresentoSolicitud: [null, Validators.required],
     fechaSesionInstancia: [null, Validators.required],
     tipoNovedad: [null, Validators.required],
     motivosNovedad: [null, Validators.required],
+    presupuestoAdicional: [],
     resumenJustificacionNovedad: [null, Validators.required],
     documentacion: [null, Validators.required],
-    plazoSolicitado: this.fb.array([
-      this.fb.group({
-        fechaInicio: [null, Validators.required],
-        fechaFinal: [null, Validators.required],
-        
-      })
-    ]),
+    fechaInicio: [null, Validators.required],
+    fechaFinal: [null, Validators.required],
+
     clausula: this.fb.array([
       this.fb.group({
         clausulaModificar: [null, Validators.required],
@@ -40,6 +44,7 @@ export class FormRegistrarNovedadAccordComponent implements OnInit {
       Validators.required, Validators.minLength(5), Validators.maxLength(20)])
     ]
   });
+
   get plazoSolicitadoField() {
     return this.addressForm.get('plazoSolicitado') as FormArray;
   }
@@ -51,17 +56,7 @@ export class FormRegistrarNovedadAccordComponent implements OnInit {
   estaEditando = false;
   instanciaPresentoSolicitudArray = [];
   tipoNovedadArray = [];
-  motivosNovedadArray = [
-    { name: 'Alabama', value: 'AL' },
-    { name: 'Alaska', value: 'AK' },
-    { name: 'Vermont', value: 'VT' },
-    { name: 'Virgin Islands', value: 'VI' },
-    { name: 'Virginia', value: 'VA' },
-    { name: 'Washington', value: 'WA' },
-    { name: 'West Virginia', value: 'WV' },
-    { name: 'Wisconsin', value: 'WI' },
-    { name: 'Wyoming', value: 'WY' }
-  ];
+  motivosNovedadArray:Dominio[] = [];
 
   // minDate: Date;
   editorStyle = {
@@ -102,10 +97,59 @@ export class FormRegistrarNovedadAccordComponent implements OnInit {
     public commonServices: CommonService
   ) { }
 
+  ngOnChanges(changes: SimpleChanges): void {
+
+    this.commonServices.listaMotivosNovedadContractual()
+            .subscribe( respuesta => {
+              this.motivosNovedadArray = respuesta; 
+
+              let motivosSeleccionados = [];
+              if ( this.novedadDescripcion.novedadContractualDescripcionMotivo ){
+                this.novedadDescripcion.novedadContractualDescripcionMotivo.forEach( m => {
+                  let motivo = this.motivosNovedadArray.find( r => r.codigo === m.motivoNovedadCodigo )?.codigo;
+                  
+                  if ( motivo ){
+                    motivosSeleccionados.push( motivo );
+                  }
+                });
+                this.addressForm.get('motivosNovedad').setValue( motivosSeleccionados );
+              }
+
+            });
+
+    if ( changes.novedadDescripcion ){
+      
+    this.addressForm.get('novedadContractualDescripcionId').setValue(this.novedadDescripcion.novedadContractualDescripcionId);
+    this.addressForm.get('resumenJustificacionNovedad').setValue(this.novedadDescripcion.resumenJustificacion);
+    this.addressForm.get('documentacionSuficiente').setValue(this.novedadDescripcion.esDocumentacionSoporte);
+    this.addressForm.get('conceptoTecnico').setValue(this.novedadDescripcion.conceptoTecnico);
+    this.addressForm.get('fechaConceptoTecnico').setValue(this.novedadDescripcion.fechaConcepto);
+    this.addressForm.get('numeroRadicadoSolicitud').setValue(this.novedadDescripcion.numeroRadicado);
+
+    this.addressForm.get('presupuestoAdicional').setValue(this.novedadDescripcion.presupuestoAdicionalSolicitado);
+    this.addressForm.get('fechaInicio').setValue(this.novedadDescripcion.fechaInicioSuspension);
+    this.addressForm.get('fechaFinal').setValue(this.novedadDescripcion.fechaFinSuspension);
+
+    this.clausulaField.clear();
+
+    this.novedadDescripcion.novedadContractualClausula.forEach( c => {
+      let grupo = this.crearClausula();
+      grupo.get('novedadContractualDescripcionId').setValue( c.novedadContractualDescripcionId );
+      grupo.get('novedadContractualClausulaId').setValue( c.novedadContractualClausulaId );
+      grupo.get('clausulaModificar').setValue( c.clausulaAmodificar );
+      grupo.get('ajusteSolicitadoClausula').setValue( c.ajusteSolicitadoAclausula );
+
+      this.clausulaField.push( grupo );
+
+    });
+
+    }
+  }
+
   ngOnInit(): void {
     this.addressForm.valueChanges
       .subscribe(value => {
-        console.log(value);
+
       });
       this.commonServices.listaInstanciasdeSeguimientoTecnico().subscribe(response=>{
         this.instanciaPresentoSolicitudArray=response;
@@ -137,6 +181,8 @@ export class FormRegistrarNovedadAccordComponent implements OnInit {
 
   private crearClausula() {
     return this.fb.group({
+      novedadContractualDescripcionId:[],
+      novedadContractualClausulaId:[],
       clausulaModificar: [null, Validators.required],
       ajusteSolicitadoClausula: [null, Validators.required]
     });
@@ -160,7 +206,7 @@ export class FormRegistrarNovedadAccordComponent implements OnInit {
       data: { modalTitle, modalText, siNoBoton: true }
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+
       if (result === true) {
         this.deleteTema(e);
       }
@@ -170,16 +216,56 @@ export class FormRegistrarNovedadAccordComponent implements OnInit {
   deleteTema(i: number) {
     const tema = this.clausulaField.controls[i];
 
-    console.log(tema);
-
     this.borrarArray(this.clausulaField, i);
     this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>');
   }
 
   onSubmit() {
-    console.log(this.addressForm.value);
+
+    let listaClausulas: NovedadContractualClausula[] = [];
+    let listaMotivos: NovedadContractualDescripcionMotivo[] = [];
+
+    this.clausulaField.controls.forEach( control => {
+      let clausula:NovedadContractualClausula = {
+        novedadContractualDescripcionId: this.addressForm.get('novedadContractualDescripcionId').value,
+        novedadContractualClausulaId: control.value.novedadContractualClausulaId,
+        ajusteSolicitadoAclausula: control.value.ajusteSolicitadoClausula,
+        clausulaAmodificar: control.value.clausulaModificar,
+        
+      }
+      listaClausulas.push( clausula );
+    });
+
+    if ( this.addressForm.get('motivosNovedad').value ){
+      this.addressForm.get('motivosNovedad').value.forEach( m => {
+        let motivo:NovedadContractualDescripcionMotivo = {
+          novedadContractualDescripcionMotivoId: m.novedadContractualDescripcionMotivoId,
+          novedadContractualDescripcionId: this.addressForm.get('novedadContractualDescripcionId').value,
+          motivoNovedadCodigo: m,
+          
+        }
+        listaMotivos.push( motivo );
+      });
+    }
+    
+    this.novedadDescripcion.resumenJustificacion = this.addressForm.get('resumenJustificacionNovedad').value;
+    this.novedadDescripcion.esDocumentacionSoporte = this.addressForm.get('documentacionSuficiente').value;
+    this.novedadDescripcion.conceptoTecnico = this.addressForm.get('conceptoTecnico').value;
+    this.novedadDescripcion.fechaConcepto = this.addressForm.get('fechaConceptoTecnico').value;
+    this.novedadDescripcion.numeroRadicado = this.addressForm.get('numeroRadicadoSolicitud').value;
+    this.novedadDescripcion.presupuestoAdicionalSolicitado = this.addressForm.get('presupuestoAdicional').value;
+    this.novedadDescripcion.fechaInicioSuspension = this.addressForm.get('fechaInicio').value;
+    this.novedadDescripcion.fechaFinSuspension = this.addressForm.get('fechaFinal').value;
+
+    this.novedadDescripcion.novedadContractualClausula = listaClausulas;
+    this.novedadDescripcion.novedadContractualDescripcionMotivo = listaMotivos;
+    this.novedadDescripcion.novedadContractualDescripcionId = this.addressForm.get('novedadContractualDescripcionId').value ;
+
     this.estaEditando = true;
-    this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+
+    this.guardar.emit( true );
+
   }
+
 
 }

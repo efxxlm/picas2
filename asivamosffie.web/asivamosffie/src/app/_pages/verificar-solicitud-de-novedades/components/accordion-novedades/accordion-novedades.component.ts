@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-accordion-novedades',
@@ -6,10 +6,17 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./accordion-novedades.component.scss']
 })
 export class AccordionNovedadesComponent implements OnInit {
-  @Input() tiposNovedadModificacionContractual;
+  @Input () tiposNovedadModificacionContractual;
+  @Input () novedadeContractual: any;//NovedadContractual[];
+  @Output() guardar = new EventEmitter();
+  
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  guardarRegistro(){
+    this.guardar.emit(true);
   }
 
 }

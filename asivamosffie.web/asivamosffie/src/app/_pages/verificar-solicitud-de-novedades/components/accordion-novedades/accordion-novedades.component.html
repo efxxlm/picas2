@@ -1,35 +1,18 @@
 <!-- Para efectos de maquetación -->
 <mat-accordion>
-    <mat-expansion-panel class="expansion-style sub-expansion">
+    <mat-expansion-panel class="expansion-style sub-expansion" *ngFor="let novedad of novedadeContractual.novedadContractualDescripcion; let i = index" >
         <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title sin-diligenciar">
-                Novedad 1
+                Novedad {{ i + 1 }}
             </mat-panel-title>
         </mat-expansion-panel-header>
-        <app-form-registrar-novedad-accord [tiposNovedadModificacionContractual]="this.tiposNovedadModificacionContractual"></app-form-registrar-novedad-accord>
+
+        <app-form-registrar-novedad-accord 
+                                            [tiposNovedadModificacionContractual]="this.tiposNovedadModificacionContractual"
+                                            [novedadDescripcion]="novedad"
+                                            (guardar)="guardarRegistro()"
+            >
+        </app-form-registrar-novedad-accord>
     </mat-expansion-panel>
-    <mat-expansion-panel class="expansion-style sub-expansion">
-        <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title sin-diligenciar">
-                Novedad 2
-            </mat-panel-title>
-        </mat-expansion-panel-header>
-        <app-form-registrar-novedad-accord [tiposNovedadModificacionContractual]="this.tiposNovedadModificacionContractual"></app-form-registrar-novedad-accord>
-    </mat-expansion-panel>
-    <mat-expansion-panel class="expansion-style sub-expansion">
-        <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title sin-diligenciar">
-                Novedad 3
-            </mat-panel-title>
-        </mat-expansion-panel-header>
-        <app-form-registrar-novedad-accord [tiposNovedadModificacionContractual]="this.tiposNovedadModificacionContractual"></app-form-registrar-novedad-accord>
-    </mat-expansion-panel>
-    <mat-expansion-panel class="expansion-style sub-expansion">
-        <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title sin-diligenciar">
-                Novedad 4
-            </mat-panel-title>
-        </mat-expansion-panel-header>
-        <app-form-registrar-novedad-accord [tiposNovedadModificacionContractual]="this.tiposNovedadModificacionContractual"></app-form-registrar-novedad-accord>
-    </mat-expansion-panel>
+    
 </mat-accordion>
