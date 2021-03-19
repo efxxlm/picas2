@@ -244,7 +244,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -7350,7 +7349,7 @@ namespace asivamosffie.model.Models
             {
                 entity.HasNoKey();
 
-                entity.ToView("V_ContratoPagosRealizados");
+                entity.ToView("V_Contrato_Pagos_Realizados");
 
                 entity.Property(e => e.FaseContrato)
                     .IsRequired()

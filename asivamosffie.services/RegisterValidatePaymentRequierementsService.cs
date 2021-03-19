@@ -207,42 +207,49 @@ namespace asivamosffie.services
 
         public async Task<Contrato> GetContratoByContratoId(int pContratoId, int pSolicitudPago)
         {
-            Contrato contrato = await _context.Contrato
-                 .Where(c => c.ContratoId == pContratoId)
-                 .Include(c => c.ContratoConstruccion)
-                 .Include(c => c.ContratoPoliza)
-                 .Include(c => c.Contratacion)
-                    .ThenInclude(c => c.Contratista)
-                 .Include(c => c.Contratacion)
-                    .ThenInclude(c => c.ContratacionProyecto)
-                 .Include(c => c.Contratacion)
-                    .ThenInclude(cp => cp.DisponibilidadPresupuestal)
-                 .Include(r => r.SolicitudPago)
-                    .ThenInclude(r => r.SolicitudPagoCargarFormaPago)
-                 .Include(c => c.Contratacion)
-                    .ThenInclude(c => c.ContratacionProyecto)
-                        .ThenInclude(t => t.ContratacionProyectoAportante)
-                            .ThenInclude(t => t.CofinanciacionAportante)
-                               .ThenInclude(t => t.FuenteFinanciacion)
-                                  .ThenInclude(t => t.CuentaBancaria)
-                 .Include(c => c.Contratacion)
-                    .ThenInclude(c => c.ContratacionProyecto)
-                        .ThenInclude(t => t.ContratacionProyectoAportante)
-                            .ThenInclude(t => t.ComponenteAportante)
-                   .Include(c => c.Contratacion)
-                    .ThenInclude(c => c.ContratacionProyecto)
-
-                 .FirstOrDefaultAsync();
-
-            if (pSolicitudPago > 0)
+            try
             {
-                SolicitudPago solicitudPago = _context.SolicitudPago.Find(pSolicitudPago);
-                contrato.SolicitudPagoOnly = GetSolicitudPago(solicitudPago);
-            }
-            contrato.ValorFacturadoContrato = _context.VValorFacturadoContrato.Where(v => v.ContratoId == pContratoId).ToList();
-            contrato.VContratoPagosRealizados = _context.VContratoPagosRealizados.Where(v => v.ContratoId == pContratoId).ToList();
+                Contrato contrato = await _context.Contrato
+                        .Where(c => c.ContratoId == pContratoId)
+                        .Include(c => c.ContratoConstruccion)
+                        .Include(c => c.ContratoPoliza)
+                        .Include(c => c.Contratacion)
+                           .ThenInclude(c => c.Contratista)
+                        .Include(c => c.Contratacion)
+                           .ThenInclude(c => c.ContratacionProyecto)
+                        .Include(c => c.Contratacion)
+                           .ThenInclude(cp => cp.DisponibilidadPresupuestal)
+                        .Include(r => r.SolicitudPago)
+                           .ThenInclude(r => r.SolicitudPagoCargarFormaPago)
+                        .Include(c => c.Contratacion)
+                           .ThenInclude(c => c.ContratacionProyecto)
+                               .ThenInclude(t => t.ContratacionProyectoAportante)
+                                   .ThenInclude(t => t.CofinanciacionAportante)
+                                      .ThenInclude(t => t.FuenteFinanciacion)
+                                         .ThenInclude(t => t.CuentaBancaria)
+                        .Include(c => c.Contratacion)
+                           .ThenInclude(c => c.ContratacionProyecto)
+                               .ThenInclude(t => t.ContratacionProyectoAportante)
+                                   .ThenInclude(t => t.ComponenteAportante)
+                          .Include(c => c.Contratacion)
+                           .ThenInclude(c => c.ContratacionProyecto)
 
-            return contrato;
+                        .FirstOrDefaultAsync();
+
+                if (pSolicitudPago > 0)
+                {
+                    SolicitudPago solicitudPago = _context.SolicitudPago.Find(pSolicitudPago);
+                    contrato.SolicitudPagoOnly = GetSolicitudPago(solicitudPago);
+                }
+                contrato.ValorFacturadoContrato = _context.VValorFacturadoContrato.Where(v => v.ContratoId == pContratoId).ToList();
+              //  contrato.VContratoPagosRealizados = _context.VContratoPagosRealizados.Where(v => v.ContratoId == pContratoId).ToList();
+
+                return contrato;
+            }
+            catch (Exception ex )
+            {
+                return  new Contrato();
+            }
         }
 
         private SolicitudPago GetRemoveObjectsDelete(SolicitudPago solicitudPago)
