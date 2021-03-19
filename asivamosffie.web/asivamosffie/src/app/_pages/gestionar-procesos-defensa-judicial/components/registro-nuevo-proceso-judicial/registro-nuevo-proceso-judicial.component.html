@@ -149,7 +149,8 @@
     <mat-accordion *ngIf="this.addressForm.value.legitimacionActiva==false && defensaJudicial.esDemandaFfie==false">
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                <mat-panel-title class="expansion-style--title "
+                [ngClass]="{'sin-diligenciar':demandado_class_pasiva===0,'en-proceso':demandado_class_pasiva===1,'completo':demandado_class_pasiva===2}">
                     Demandados
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -161,7 +162,8 @@
     <mat-accordion *ngIf="this.addressForm.value.legitimacionActiva==false && defensaJudicial.esDemandaFfie==true" class="animatedDown">
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                <mat-panel-title class="expansion-style--title "
+                [ngClass]="{'sin-diligenciar':convocado_class_pasiva===0,'en-proceso':convocado_class_pasiva===1,'completo':convocado_class_pasiva===2}">
                     Convocados
                 </mat-panel-title>
             </mat-expansion-panel-header>

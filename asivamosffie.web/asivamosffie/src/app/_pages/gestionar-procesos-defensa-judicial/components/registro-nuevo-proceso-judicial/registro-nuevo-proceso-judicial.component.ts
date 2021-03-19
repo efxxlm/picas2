@@ -23,6 +23,8 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
   detalle_class:number=0;
   convocados_class:number=0;
   demandantes_class:number=0;
+  demandado_class_pasiva: number =0;
+  convocado_class_pasiva: number =0;
   soporte_class:number=0;
   ficha_class:number=3;
   textCabecera: string;
@@ -60,6 +62,8 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
           this.detalle_class=this.estaIncompletodetalle(this.defensaJudicial);
           this.convocados_class=this.estaIncompletoconvocados(this.defensaJudicial);
           this.demandantes_class= this.estaIncompletodemandanteconvocante(this.defensaJudicial);
+          this.demandado_class_pasiva = this.estaIncompletoDemandadoPasiva(this.defensaJudicial);
+          this.convocado_class_pasiva = this.estaIncompletoConvocadoPasiva(this.defensaJudicial);
           console.log(this.convocados_class);
           this.soporte_class=this.defensaJudicial.urlSoporteProceso==null || this.defensaJudicial.urlSoporteProceso== ""?0:2;
           this.ficha_class=this.estaIncompletoficha(this.defensaJudicial);
@@ -179,6 +183,85 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
     return retorno;
   }
 
+  estaIncompletoDemandadoPasiva(defensaJudicial: DefensaJudicial): number {
+    let retorno: number = 0;
+    //sin-diligenciar:retorno===0,'en-proceso':retorno===1,'completo':retorno===2
+    if (defensaJudicial != null) {
+      let num_enproceso: number = 0;
+      let num_sindiligenciar: number = 0;
+
+      let num_convocados = defensaJudicial.numeroDemandantes;// total de convocados
+      let num_completo = 0; //almacena los registros que estan completos
+      defensaJudicial.demandadoConvocado.forEach(element => {
+        if (element.esDemandado) {
+          if (element.registroCompleto == null
+            || (!element.registroCompleto
+              && (element.nombre == null || element.nombre == '')
+              && (element.tipoIdentificacionCodigo == null || element.tipoIdentificacionCodigo == '')
+              && (element.numeroIdentificacion == null || element.numeroIdentificacion == '')
+              && (element.direccion == null || element.direccion == '')
+              && (element.email == null || element.email == '')
+            )) {
+            num_sindiligenciar = num_sindiligenciar + 1;
+          } else if (!element.registroCompleto) {
+            num_enproceso = num_enproceso + 1;
+          } else if (element.registroCompleto) {
+            num_completo = num_completo + 1;
+          }
+        }
+      });
+      if (num_sindiligenciar >= num_convocados) {
+        retorno = 0;
+      } else if (num_enproceso > 0 || (num_completo > 0 && num_completo < num_convocados)) {
+        retorno = 1;
+      } else if (num_completo >= num_convocados) {
+        retorno = 2;
+      }
+
+    }
+
+    return retorno;
+  }
+
+  estaIncompletoConvocadoPasiva(defensaJudicial: DefensaJudicial): number {
+    let retorno: number = 0;
+    //sin-diligenciar:retorno===0,'en-proceso':retorno===1,'completo':retorno===2
+    if (defensaJudicial != null) {
+      let num_enproceso: number = 0;
+      let num_sindiligenciar: number = 0;
+
+      let num_convocados = defensaJudicial.numeroDemandados;// total de convocados
+      let num_completo = 0; //almacena los registros que estan completos
+      defensaJudicial.demandadoConvocado.forEach(element => {
+        if (element.esConvocado) {
+          if (element.registroCompleto == null
+            || (!element.registroCompleto
+              && (element.nombre == null || element.nombre == '')
+              && (element.tipoIdentificacionCodigo == null || element.tipoIdentificacionCodigo == '')
+              && (element.numeroIdentificacion == null || element.numeroIdentificacion == '')
+              && (element.direccion == null || element.direccion == '')
+              && (element.email == null || element.email == '')
+              && (element.existeConocimiento == null)
+            )) {
+            num_sindiligenciar = num_sindiligenciar + 1;
+          } else if (!element.registroCompleto) {
+            num_enproceso = num_enproceso + 1;
+          } else if (element.registroCompleto) {
+            num_completo = num_completo + 1;
+          }
+        }
+      });
+      if (num_sindiligenciar >= num_convocados) {
+        retorno = 0;
+      } else if (num_enproceso > 0 || (num_completo > 0 && num_completo < num_convocados)) {
+        retorno = 1;
+      } else if (num_completo >= num_convocados) {
+        retorno = 2;
+      }
+    }
+
+    return retorno;
+  }
   estaIncompletodetalle(defensaJudicial: DefensaJudicial): number {
     let retorno:number=0;
     if(defensaJudicial.localizacionIdMunicipio!=null && 
