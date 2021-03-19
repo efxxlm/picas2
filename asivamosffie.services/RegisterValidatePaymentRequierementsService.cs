@@ -209,7 +209,7 @@ namespace asivamosffie.services
         {
             Contrato contrato = await _context.Contrato
                  .Where(c => c.ContratoId == pContratoId)
-                 .Include(c=>c.ContratoConstruccion)
+                 .Include(c => c.ContratoConstruccion)
                  .Include(c => c.ContratoPoliza)
                  .Include(c => c.Contratacion)
                     .ThenInclude(c => c.Contratista)
@@ -355,7 +355,7 @@ namespace asivamosffie.services
 
             }
         }
-         
+
         #endregion
 
         #region Validate 
@@ -390,7 +390,16 @@ namespace asivamosffie.services
                 ValorPendientePorPagar
             };
         }
-
+         
+        public async Task<dynamic> GetMontoMaximoProyecto(int pContrato , int pProyecto , bool EsPreConstruccion)
+        {
+            return await _context.Contrato.Where(c => c.ContratoId == pContrato)
+              .Include(c => c.Contratacion)
+                 .ThenInclude(r => r.ContratacionProyecto)
+                    .ThenInclude(r => r.ContratacionProyectoAportante)
+                      .ThenInclude(r => r.ComponenteAportante)
+                           .ThenInclude(r => r.ComponenteUso).FirstOrDefaultAsync();
+        }
         #endregion
 
         #region Create Edit Delete
@@ -1191,8 +1200,8 @@ namespace asivamosffie.services
                 || pSolicitudPago.SolicitudPagoListaChequeo.Count() == 0)
                 return false;
 
-            if (_context.SolicitudPago.Where(r => r.ContratoId == pSolicitudPago.ContratoId && r.Eliminado != true).Count() > 1) 
-            { 
+            if (_context.SolicitudPago.Where(r => r.ContratoId == pSolicitudPago.ContratoId && r.Eliminado != true).Count() > 1)
+            {
             }
             else
             {
@@ -1202,7 +1211,7 @@ namespace asivamosffie.services
                 {
                     if (!ValidateCompleteRecordSolicitudPagoCargarFormaPago(SolicitudPagoCargarFormaPago))
                         return false;
-                } 
+                }
             }
 
             foreach (var SolicitudPagoSoporteSolicitud in pSolicitudPago.SolicitudPagoSoporteSolicitud)

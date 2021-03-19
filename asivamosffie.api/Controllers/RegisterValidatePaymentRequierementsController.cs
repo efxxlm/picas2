@@ -50,6 +50,13 @@ namespace asivamosffie.api.Controllers
             await _registerValidatePaymentRequierementsService.GetValidateSolicitudPagoId(pSolicitudPagoId);
         }
 
+          [HttpGet]
+        [Route("GetMontoMaximoProyecto")]
+        public async Task GetMontoMaximoProyecto([FromQuery] int pContrato, int pProyecto, bool EsPreConstruccion)
+        {
+            await _registerValidatePaymentRequierementsService.GetMontoMaximoProyecto(pContrato , pProyecto, EsPreConstruccion);
+        }
+
         [HttpGet]
         [Route("GetListProyectosByLlaveMen")]
         public async Task<IActionResult> GetListProyectosByLlaveMen([FromQuery] string pLlaveMen)

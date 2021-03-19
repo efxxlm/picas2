@@ -567,7 +567,7 @@ namespace asivamosffie.services
 
 
                 //Validar Contrato Poliza Duplicado
-                if (_context.ContratoPoliza.Where(r => r.ContratoId == contratoPoliza.ContratoId).ToList().Count() > 1)
+                if (_context.ContratoPoliza.Where(r => r.ContratoId == contratoPoliza.ContratoId).ToList().Count() > 0)
                 {
                     return new Respuesta
                     {
