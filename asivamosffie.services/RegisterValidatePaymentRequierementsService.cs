@@ -238,7 +238,7 @@ namespace asivamosffie.services
                 SolicitudPago solicitudPago = _context.SolicitudPago.Find(pSolicitudPago);
                 contrato.SolicitudPagoOnly = GetSolicitudPago(solicitudPago);
             }
-            contrato.ValorFacturadoContrato = _context.VValorFacturadoContrato.Where(v => v.ContratoId == pContratoId && (bool)v.SolicitudValidada).ToList();
+            contrato.ValorFacturadoContrato = _context.VValorFacturadoContrato.Where(v => v.ContratoId == pContratoId).ToList();
             contrato.VContratoPagosRealizados = _context.VContratoPagosRealizados.Where(v => v.ContratoId == pContratoId).ToList();
 
             return contrato;
@@ -1186,8 +1186,7 @@ namespace asivamosffie.services
         private bool ValidateCompleteRecordSolicitudPago(SolicitudPago pSolicitudPago)
         {
             if (
-                   pSolicitudPago.SolicitudPagoCargarFormaPago.Count() == 0
-                || pSolicitudPago.SolicitudPagoSoporteSolicitud.Count() == 0
+                   pSolicitudPago.SolicitudPagoSoporteSolicitud.Count() == 0
                 || pSolicitudPago.SolicitudPagoRegistrarSolicitudPago.Count() == 0
                 || pSolicitudPago.SolicitudPagoListaChequeo.Count() == 0)
                 return false;
@@ -1197,6 +1196,8 @@ namespace asivamosffie.services
             }
             else
             {
+                if (pSolicitudPago.SolicitudPagoCargarFormaPago.Count() == 0)
+                    return false;
                 foreach (var SolicitudPagoCargarFormaPago in pSolicitudPago.SolicitudPagoCargarFormaPago)
                 {
                     if (!ValidateCompleteRecordSolicitudPagoCargarFormaPago(SolicitudPagoCargarFormaPago))
