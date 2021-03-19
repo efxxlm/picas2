@@ -216,8 +216,6 @@ namespace asivamosffie.services
                         .Include(c => c.Contratacion)
                            .ThenInclude(c => c.Contratista)
                         .Include(c => c.Contratacion)
-                           .ThenInclude(c => c.ContratacionProyecto)
-                        .Include(c => c.Contratacion)
                            .ThenInclude(cp => cp.DisponibilidadPresupuestal)
                         .Include(r => r.SolicitudPago)
                            .ThenInclude(r => r.SolicitudPagoCargarFormaPago)
@@ -231,9 +229,6 @@ namespace asivamosffie.services
                            .ThenInclude(c => c.ContratacionProyecto)
                                .ThenInclude(t => t.ContratacionProyectoAportante)
                                    .ThenInclude(t => t.ComponenteAportante)
-                          .Include(c => c.Contratacion)
-                           .ThenInclude(c => c.ContratacionProyecto)
-
                         .FirstOrDefaultAsync();
 
                 if (pSolicitudPago > 0)
@@ -339,9 +334,8 @@ namespace asivamosffie.services
                                   .ThenInclude(r => r.SolicitudPagoFaseFacturaDescuento)
                        .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
                        .Include(r => r.SolicitudPagoSoporteSolicitud)
-                       .Include(r => r.SolicitudPagoListaChequeo)
-                         .ThenInclude(r => r.ListaChequeo)
-                               .ThenInclude(r => r.ListaChequeoListaChequeoItem)
+                       .Include(r => r.SolicitudPagoListaChequeo)  
+                         .ThenInclude(r => r.ListaChequeo) 
                          .FirstOrDefault();
                     GetRemoveObjectsDelete(solicitudPago);
                     return solicitudPago;
@@ -352,8 +346,7 @@ namespace asivamosffie.services
                         .Include(e => e.SolicitudPagoExpensas)
                         .Include(e => e.SolicitudPagoSoporteSolicitud)
                         .Include(r => r.SolicitudPagoListaChequeo)
-                           .ThenInclude(r => r.ListaChequeo)
-                               .ThenInclude(r => r.ListaChequeoListaChequeoItem)
+                         .ThenInclude(r => r.ListaChequeo) 
                         .FirstOrDefault();
                     GetRemoveObjectsDelete(solicitudPago);
                     return solicitudPago;
@@ -362,9 +355,8 @@ namespace asivamosffie.services
                     solicitudPago = _context.SolicitudPago.Where(r => r.SolicitudPagoId == solicitudPago.SolicitudPagoId)
                      .Include(e => e.SolicitudPagoOtrosCostosServicios)
                      .Include(e => e.SolicitudPagoSoporteSolicitud)
-                     .Include(r => r.SolicitudPagoListaChequeo)
-                           .ThenInclude(r => r.ListaChequeo)
-                               .ThenInclude(r => r.ListaChequeoListaChequeoItem)
+                            .Include(r => r.SolicitudPagoListaChequeo)
+                         .ThenInclude(r => r.ListaChequeo) 
                         .FirstOrDefault();
                     GetRemoveObjectsDelete(solicitudPago);
                     return solicitudPago;
