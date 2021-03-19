@@ -1,4 +1,4 @@
-<form [formGroup]="addressForm" novalidate (ngSubmit)="guardar()" *ngIf="montoMaximoPendiente !== undefined && criterios.length > 0">
+<form [formGroup]="addressForm" novalidate (ngSubmit)="guardar()" *ngIf="montoMaximoPendiente !== undefined">
   <p class="info-sub-title supportBlack">
     <span><b>Monto máximo por pagar en esta factura:</b> {{ montoMaximoPendiente.montoMaximo | currency:'':'symbol-narrow':'.0-0' }} </span>
     <span><b>Monto pendiente por pagar en la fase:</b> {{ montoMaximoPendiente.valorPendientePorPagar | currency:'':'symbol-narrow':'.0-0' }} </span>
