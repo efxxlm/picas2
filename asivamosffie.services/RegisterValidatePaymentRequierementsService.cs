@@ -362,31 +362,29 @@ namespace asivamosffie.services
 
         public async Task<dynamic> GetMontoMaximoMontoPendiente(int SolicitudPagoId, string strFormaPago, bool EsPreConstruccion)
         {
-            SolicitudPago solicitudPago = await _context.SolicitudPago
-                .Where(s => s.SolicitudPagoId == SolicitudPagoId)
-                .Include(sp => sp.SolicitudPagoCargarFormaPago).FirstOrDefaultAsync();
+            SolicitudPago solicitudPago = await _context.SolicitudPago.FindAsync(SolicitudPagoId);
 
             ulong ValorSolicitudDDP  = (ulong)_context.VValorFacturadoContrato
                 .Where(v => v.ContratoId == solicitudPago.ContratoId)
                 .Sum(c => c.ValorSolicitudDdp);
             ulong ValorTotalPorFase = (ulong)_context.VValorUsoXcontratoId.Where(r => r.ContratoId == solicitudPago.ContratoId && r.EsPreConstruccion == EsPreConstruccion).Sum(v => v.ValorUso);
 
-            ulong ValorFacturadoPorFase = (ulong)_context.VValorFacturadoContrato
+            ulong ValorPendientePorPagar = (ulong)_context.VValorFacturadoContrato
                 .Where(v => v.ContratoId == solicitudPago.ContratoId && v.EsPreconstruccion == EsPreConstruccion)
                 .Sum(c => c.SaldoPresupuestal);
              
             string strNombreFormaPago = (_context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Formas_Pago && r.Codigo == strFormaPago).FirstOrDefault().Nombre).Replace("%", ""); ;
-
+  
             List<string> FormasPago = strNombreFormaPago.Split("/").ToList();
             ulong MontoMaximo = 0;
  
             foreach (var PorcentajePago in FormasPago)
             {
                 MontoMaximo = (ValorSolicitudDDP * Convert.ToUInt32(PorcentajePago)) / 100; 
-                if (MontoMaximo < ValorFacturadoPorFase)
+                if (MontoMaximo < ValorPendientePorPagar)
                     break;
             }
-            ulong ValorPendientePorPagar = (ValorTotalPorFase - ValorFacturadoPorFase);
+        
             return new
             {
                 MontoMaximo,
