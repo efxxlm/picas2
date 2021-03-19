@@ -41,8 +41,11 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
     });
     fasesArray: Dominio[] = [];
     faseContrato: any = {};
+    minDate: Date;
     postConstruccion = '3';
     contratacionProyectoId = 0;
+    estaEditando = false;
+    manejoAnticipoRequiere: boolean;
     estadoRegistroCompleto = {
         formRegistroCompleto: false,
         solicitudPagoFaseRegistroCompleto: false
@@ -52,7 +55,6 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
         amortizacionRegistroCompleto: false,
         detalleFacturaRegistroCompleto: false
     }
-    estaEditando = false;
 
     constructor(
         private fb: FormBuilder,
@@ -66,6 +68,14 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
         this.commonSvc.listaFases()
             .subscribe(
                 response => {
+                    if ( this.contrato.fechaActaInicioFase1 === undefined ) {
+                        this.minDate = new Date( this.contrato.fechaActaInicioFase2 );
+                    } else {
+                        this.minDate = new Date( this.contrato.fechaActaInicioFase1 );
+                    }
+
+                    this.manejoAnticipoRequiere = this.contrato.contratoConstruccion[0].manejoAnticipoRequiere;
+
                     if ( this.contrato.contratacion.contratacionProyecto.length  > 0 && this.contrato.contratacion.contratacionProyecto.length < 2 ) {
                         this.contratacionProyectoId = this.contrato.contratacion.contratacionProyecto[0].contratacionProyectoId;
                     }
@@ -128,7 +138,7 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
 
                             this.estadoRegistroCompleto.formRegistroCompleto = !Object.values( this.addressForm.value ).includes( null );
                             if ( this.estadoRegistroCompleto.formRegistroCompleto === true ) {
-                                this.addressForm.get( 'fechaSolicitud' ).disable();
+                                // this.addressForm.get( 'fechaSolicitud' ).disable();
                                 this.addressForm.get( 'numeroRadicado' ).disable();
                                 this.addressForm.get( 'faseContrato' ).disable();
                             }
@@ -325,29 +335,35 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
 
                     return semaforoCriterioPago;
                 }
-                if ( tipoAcordeon === 'amortizacion' ) {
+
+                if ( this.manejoAnticipoRequiere === true ) {
+                    if ( tipoAcordeon === 'amortizacion' ) {
     
-                    if ( this.estadoRegistroCompletoSubAcordeon.criterioRegistroCompleto === false ) {
-                        return 'en-alerta';
-                    }
-                    if ( this.estadoRegistroCompletoSubAcordeon.criterioRegistroCompleto === true ) {
-                        
-                        const solicitudPagoFaseAmortizacion = this.solicitudPagoFase.solicitudPagoFaseAmortizacion[0];
-                        let semaforoAmortizacion = 'sin-diligenciar';
-    
-                        if ( solicitudPagoFaseAmortizacion !== undefined ) {
-                            if ( solicitudPagoFaseAmortizacion.registroCompleto === false ) {
-                                semaforoAmortizacion = 'en-proceso';
-                            }
-                            if ( solicitudPagoFaseAmortizacion.registroCompleto === true ) {
-                                semaforoAmortizacion = 'completo';
-                                this.estadoRegistroCompletoSubAcordeon.amortizacionRegistroCompleto = true;
-                            }
+                        if ( this.estadoRegistroCompletoSubAcordeon.criterioRegistroCompleto === false ) {
+                            return 'en-alerta';
                         }
-    
-                        return semaforoAmortizacion;
+                        if ( this.estadoRegistroCompletoSubAcordeon.criterioRegistroCompleto === true ) {
+                            
+                            const solicitudPagoFaseAmortizacion = this.solicitudPagoFase.solicitudPagoFaseAmortizacion[0];
+                            let semaforoAmortizacion = 'sin-diligenciar';
+        
+                            if ( solicitudPagoFaseAmortizacion !== undefined ) {
+                                if ( solicitudPagoFaseAmortizacion.registroCompleto === false ) {
+                                    semaforoAmortizacion = 'en-proceso';
+                                }
+                                if ( solicitudPagoFaseAmortizacion.registroCompleto === true ) {
+                                    semaforoAmortizacion = 'completo';
+                                    this.estadoRegistroCompletoSubAcordeon.amortizacionRegistroCompleto = true;
+                                }
+                            }
+        
+                            return semaforoAmortizacion;
+                        }
+        
                     }
-    
+                }
+                if ( this.manejoAnticipoRequiere === false ) {
+                    this.estadoRegistroCompletoSubAcordeon.amortizacionRegistroCompleto = true;
                 }
 
                 if ( tipoAcordeon === 'detalleFactura' ) {

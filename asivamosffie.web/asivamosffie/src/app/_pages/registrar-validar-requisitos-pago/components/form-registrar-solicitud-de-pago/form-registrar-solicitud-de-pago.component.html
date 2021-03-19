@@ -50,7 +50,7 @@
                             </div>
                             <div class="col d-flex align-items-center">
                                 <mat-form-field class="example-full-width">
-                                    <input matInput formControlName="fechaSolicitud" [matDatepicker]="pickerFechaRevision"
+                                    <input matInput formControlName="fechaSolicitud" [min]="minDate" [matDatepicker]="pickerFechaRevision"
                                         readonly (click)="pickerFechaRevision.open()" required placeholder="DD/MM/AAAA">
                                     <mat-datepicker #pickerFechaRevision></mat-datepicker>
                                 </mat-form-field>
@@ -214,7 +214,7 @@
                         <app-form-criterios-pago [solicitudPago]="contrato.solicitudPagoOnly" [esPreconstruccion]="false" [contratacionProyectoId]="contratacionProyectoId" [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"></app-form-criterios-pago>
                     </mat-expansion-panel>
 
-                    <mat-expansion-panel class="expansion-style sub-expansion-black">
+                    <mat-expansion-panel class="expansion-style sub-expansion-black" *ngIf="manejoAnticipoRequiere === true">
                         <mat-expansion-panel-header class="expansion-style--header">
                             <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeonSubFase( 'amortizacion', false )">
                                 Amortización del anticipo

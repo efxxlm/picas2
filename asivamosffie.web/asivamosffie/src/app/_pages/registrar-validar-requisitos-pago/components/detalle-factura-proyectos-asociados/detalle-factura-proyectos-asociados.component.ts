@@ -45,6 +45,7 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
         }
     );
     esMultiProyecto = false;
+    esPreconstruccion: string;
     proyectos: any;
     listaCriterios: Dominio[] = [];
     criteriosArraySeleccionados: Dominio[] = [];
@@ -80,7 +81,7 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
                         criterios => {
                             this.registrarPagosSvc.getProyectosByIdContrato( this.solicitudPago.contratoId )
                                 .subscribe(
-                                    proyectos => {
+                                    async proyectos => {
                                         const criteriosArray = [];
                                         const criteriosSeleccionados = [];
                                         let criteriosDiligenciados = [];
@@ -138,6 +139,9 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
                                                         }
                                                     } );
                                                 } );
+
+                                                const montoMaximo = await this.registrarPagosSvc.getMontoMaximoProyecto( this.solicitudPago.contratoId, proyecto.contratacionProyectoId, 'True' );
+                                                console.log( montoMaximo );
                                                 this.projects.push(
                                                     this.fb.group(
                                                         {
@@ -173,7 +177,7 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
                         criterios => {
                             this.registrarPagosSvc.getProyectosByIdContrato( this.solicitudPago.contratoId )
                                 .subscribe(
-                                    proyectos => {
+                                    async proyectos => {
                                         const criteriosArray = [];
                                         const criteriosSeleccionados = [];
                                         let criteriosDiligenciados = [];
@@ -229,6 +233,10 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
                                                         }
                                                     } );
                                                 } );
+
+                                                const montoMaximo = await this.registrarPagosSvc.getMontoMaximoProyecto( this.solicitudPago.contratoId, proyecto.contratacionProyectoId, 'False' );
+                                                console.log( 'Valores pendientes y maximos por proyecto proyecto', montoMaximo );
+
                                                 this.projects.push(
                                                     this.fb.group(
                                                         {

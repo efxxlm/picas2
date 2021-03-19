@@ -81,6 +81,13 @@ export class RegistrarRequisitosPagoService {
     } );
   }
 
+  getMontoMaximoProyecto( pContrato: number, pContratacionProyectoId: number, esPreConstruccion: string ) {
+    return new Promise( resolve => {
+      this.http.get( `${ this.apiUrl }/GetMontoMaximoProyecto?pContrato=${ pContrato }&pContratacionProyectoId=${ pContratacionProyectoId }&EsPreConstruccion=${ esPreConstruccion }` )
+        .subscribe( response => resolve( response ) );
+    } );
+  }
+
   getListProyectosByLlaveMen( pLlaveMen: string ) {
     return this.http.get<any[]>( `${ this.apiUrl }/GetListProyectosByLlaveMen?pLlaveMen=${ pLlaveMen }` );
   }
