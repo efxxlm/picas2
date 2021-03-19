@@ -4,33 +4,33 @@
             <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
     
                 <ng-container matColumnDef="llaveMen">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Llave MEN </th>
-                    <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.llaveMen }}</b> </td>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="detalle"> Llave MEN </th>
+                    <td mat-cell *matCellDef="let element" align="center" class="detalle"> <b>{{ element.llaveMen }}</b> </td>
                 </ng-container>
     
                 <ng-container matColumnDef="tipoIntervencion">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de intervención </th>
-                    <td mat-cell *matCellDef="let element" align="center"> {{ element.tipoIntervencion }} </td>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="detalle"> Tipo de intervención </th>
+                    <td mat-cell *matCellDef="let element" align="center" class="detalle"> {{ element.tipoIntervencion }} </td>
                 </ng-container>
     
                 <ng-container matColumnDef="departamento">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Departamento </th>
-                    <td mat-cell *matCellDef="let element" align="center"> {{ element.departamento }} </td>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="detalle"> Departamento </th>
+                    <td mat-cell *matCellDef="let element" align="center" class="detalle"> {{ element.departamento }} </td>
                 </ng-container>
     
                 <ng-container matColumnDef="municipio">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Municipio </th>
-                    <td mat-cell *matCellDef="let element" align="center"> {{ element.municipio }} </td>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="detalle"> Municipio </th>
+                    <td mat-cell *matCellDef="let element" align="center" class="detalle"> {{ element.municipio }} </td>
                 </ng-container>
     
                 <ng-container matColumnDef="institucionEducativa">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Institución educativa </th>
-                    <td mat-cell *matCellDef="let element" align="center"> {{ element.institucionEducativa }} </td>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="detalle"> Institución educativa </th>
+                    <td mat-cell *matCellDef="let element" align="center" class="detalle"> {{ element.institucionEducativa }} </td>
                 </ng-container>
     
                 <ng-container matColumnDef="sede">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Sede </th>
-                    <td mat-cell *matCellDef="let element" align="center"> {{ element.sede }} </td>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="detalle"> Sede </th>
+                    <td mat-cell *matCellDef="let element" align="center" class="detalle"> {{ element.sede }} </td>
                 </ng-container>
     
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -54,8 +54,8 @@
                         <strong>Criterios:</strong>
                         <p *ngFor="let criterio of project.get( 'criterioPago' ).value; index as i" style="margin-left: .4em;"> {{ criterio.nombre }}<span *ngIf="project.get( 'criterioPago' ).value.length - 1 !== i">,</span><span *ngIf="project.get( 'criterioPago' ).value.length - 1 === i">.</span> </p>
                     </div>
-                    <section formArrayName="criteriosProyecto" class="mt-1em" *ngIf="criteriosProyecto( i ).length > 0">
-                        <div *ngFor="let criterioProyecto of criteriosProyecto( i ).controls; index as j" [formGroup]="criterioProyecto">
+                    <section formArrayName="criteriosProyecto" *ngIf="criteriosProyecto( i ).length > 0">
+                        <div  class="mt-1em" *ngFor="let criterioProyecto of criteriosProyecto( i ).controls; index as j" [formGroup]="criterioProyecto">
                             <h2>
                                 <b> {{ criterioProyecto.get( 'nombre' ).value }} </b>
                             </h2>
@@ -136,8 +136,8 @@
                                               (project.get('criterioPago')?.invalid && estaEditando)
                                           }">Criterio</label>
                                     </div>
-                                    <div class="col">
-                                        <mat-form-field class="select-width" style="width: 99%;">
+                                    <div class="col d-flex">
+                                        <mat-form-field class="select-width">
                                             <mat-select formControlName="criterioPago" multiple required (selectionChange)="getvalues( $event.value, i )">
                                                 <mat-option *ngFor="let criterioPago of project.get( 'listaCriterios' ).value" [value]="criterioPago">
                                                     {{ criterioPago.nombre }}

@@ -1,12 +1,12 @@
 <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
-  <mat-card class="shipping-card">
+  <mat-card class="shipping-card var-main-gris">
     <mat-card-header class="header-card header-card--margin">
-      <mat-card-title class="header-card--text">
+      <mat-card-title class="header-card--text textoGris">
         Datos
       </mat-card-title>
     </mat-card-header>
     <mat-card-content style="text-align: left;">
-      <h2 class="card-subTitle">Descripción de la factura</h2>
+      <h2 class="card-subTitle mainGris">Descripción de la factura</h2>
       <p><strong>Número de factura:</strong> {{ addressForm.get( 'numeroFactura' ).value }} </p>
       <p><strong>Fecha de factura:</strong> {{ addressForm.get( 'fechaFactura' ).value | date: 'dd/MM/yyyy' }} </p>
       <p style="margin-top: 10px;"><strong>Valor facturado: </strong> ${{ valorFacturado | currency:'

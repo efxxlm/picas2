@@ -13,8 +13,8 @@
               (addressForm.get('criterioPago').invalid && estaEditando)
           }">Criterio de pago</label>
         </div>
-        <div class="col">
-          <mat-form-field class="select-width" style="width: 91%;">
+        <div class="col d-flex">
+          <mat-form-field class="select-width">
             <mat-select formControlName="criterioPago" multiple (selectionChange)="getvalues($event.value)">
               <mat-option *ngFor="let criterioPago of criteriosArray" [value]="criterioPago"> {{ criterioPago.nombre }} </mat-option>
             </mat-select>

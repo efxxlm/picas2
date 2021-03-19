@@ -193,7 +193,7 @@
                                                             </mat-card-header>
                                                             <mat-card-content style="text-align: left;">
                                                                 <p style="margin-bottom: 2em;"><strong>Tipo de pago:</strong> {{ criterio.get( 'tipoPago' ).value.nombre }} </p>
-                                                                <div *ngFor="let concepto of getConceptos( j ).controls">
+                                                                <div style="margin-top: 2em;" *ngFor="let concepto of getConceptos( j ).controls">
                                                                     <p style="font-size: 1.8em;"><b> {{ concepto.get( 'conceptoPagoCriterioNombre' ).value }} </b></p>
                                                                     <p><b>Valor facturado al concepto:</b> ${{ concepto.get( 'valorFacturadoConcepto' ).value | currency:' ':'symbol-narrow':'.0-0' }} </p>
                                                                 </div>
@@ -257,7 +257,7 @@
                                                             </mat-card-header>
                                                             <mat-card-content style="text-align: left;">
                                                                 <p style="margin-bottom: 2em;"><strong>Tipo de pago:</strong> {{ criterio.get( 'tipoPago' ).value.nombre }} </p>
-                                                                <div *ngFor="let concepto of getConceptos( j ).controls">
+                                                                <div style="margin-top: 2em;" *ngFor="let concepto of getConceptos( j ).controls">
                                                                     <p style="font-size: 1.8em;"><b> {{ concepto.get( 'conceptoPagoCriterioNombre' ).value }} </b></p>
                                                                     <p><b>Valor facturado al concepto:</b> ${{ concepto.get( 'valorFacturadoConcepto' ).value | currency:' ':'symbol-narrow':'.0-0' }} </p>
                                                                 </div>
