@@ -7350,7 +7350,7 @@ namespace asivamosffie.model.Models
             {
                 entity.HasNoKey();
 
-                entity.ToView("V_Contrato_Pagos_Realizados");
+                entity.ToView("V_ContratoPagosRealizados");
 
                 entity.Property(e => e.FaseContrato)
                     .IsRequired()
@@ -8206,7 +8206,7 @@ namespace asivamosffie.model.Models
             {
                 entity.HasNoKey();
 
-                entity.ToView("V_Valor_Facturado_Proyecto");
+                entity.ToView("V_ValorFacturadoProyecto");
 
                 entity.Property(e => e.ValorFacturado).HasColumnType("decimal(38, 3)");
             });
@@ -8237,7 +8237,7 @@ namespace asivamosffie.model.Models
             {
                 entity.HasNoKey();
 
-                entity.ToView("V_ValorUsos_Fases_Aportante_Proyecto");
+                entity.ToView("V_ValorUsosFasesAportanteProyecto");
 
                 entity.Property(e => e.Descripcion)
                     .HasMaxLength(300)
