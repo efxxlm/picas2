@@ -17,7 +17,7 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
- 
+
     public class RegisterValidatePaymentRequierementsController : Controller
     {
         public readonly IRegisterValidatePaymentRequierementsService _registerValidatePaymentRequierementsService;
@@ -35,7 +35,7 @@ namespace asivamosffie.api.Controllers
         {
             return Ok(await _registerValidatePaymentRequierementsService.GetSolicitudPago(pSolicitudPagoId));
         }
-      
+
         [HttpGet]
         [Route("GetMontoMaximoMontoPendiente")]
         public async Task<IActionResult> GetMontoMaximoMontoPendiente([FromQuery] int SolicitudPagoId, string strFormaPago, bool EsPreConstruccion)
@@ -50,11 +50,12 @@ namespace asivamosffie.api.Controllers
             await _registerValidatePaymentRequierementsService.GetValidateSolicitudPagoId(pSolicitudPagoId);
         }
 
-          [HttpGet]
+        [HttpGet]
         [Route("GetMontoMaximoProyecto")]
-        public async Task GetMontoMaximoProyecto([FromQuery] int pContrato, int pContratacionProyectoId, bool EsPreConstruccion)
-        {
-            await _registerValidatePaymentRequierementsService.GetMontoMaximoProyecto(pContrato , pContratacionProyectoId, EsPreConstruccion);
+        public async Task<IActionResult> GetMontoMaximoProyecto([FromQuery] int pContrato, int pContratacionProyectoId, bool EsPreConstruccion)
+        { 
+            return Ok(await _registerValidatePaymentRequierementsService.GetMontoMaximoProyecto(pContrato, pContratacionProyectoId, EsPreConstruccion));
+
         }
 
         [HttpGet]
@@ -77,7 +78,7 @@ namespace asivamosffie.api.Controllers
         {
             return Ok(await _registerValidatePaymentRequierementsService.DeleteSolicitudPago(pSolicitudPagoId, HttpContext.User.FindFirst("User").Value));
         }
-         
+
         [HttpPost]
         [Route("ReturnSolicitudPago")]
         public async Task<IActionResult> ReturnSolicitudPago([FromBody] SolicitudPago pSolicitudPago)
@@ -151,7 +152,7 @@ namespace asivamosffie.api.Controllers
         {
             return Ok(await _registerValidatePaymentRequierementsService.GetConceptoPagoCriterioCodigoByTipoPagoCodigo(TipoPagoCodigo));
         }
- 
+
         [HttpGet]
         [Route("GetUsoByConceptoPagoCriterioCodigo")]
         public async Task<IActionResult> GetUsoByConceptoPagoCriterioCodigo([FromQuery] string pConceptoPagoCodigo, int pContratoId)
@@ -185,6 +186,6 @@ namespace asivamosffie.api.Controllers
         public async Task<IActionResult> GetContratoByContratoId([FromQuery] int pContratoId, int pSolicitudPago)
         {
             return Ok(await _registerValidatePaymentRequierementsService.GetContratoByContratoId(pContratoId, pSolicitudPago));
-        } 
+        }
     }
 }

@@ -242,13 +242,13 @@ namespace asivamosffie.services
                     contrato.SolicitudPagoOnly = GetSolicitudPago(solicitudPago);
                 }
                 contrato.ValorFacturadoContrato = _context.VValorFacturadoContrato.Where(v => v.ContratoId == pContratoId).ToList();
-              //  contrato.VContratoPagosRealizados = _context.VContratoPagosRealizados.Where(v => v.ContratoId == pContratoId).ToList();
+                //  contrato.VContratoPagosRealizados = _context.VContratoPagosRealizados.Where(v => v.ContratoId == pContratoId).ToList();
 
                 return contrato;
             }
-            catch (Exception ex )
+            catch (Exception ex)
             {
-                return  new Contrato();
+                return new Contrato();
             }
         }
 
@@ -401,21 +401,22 @@ namespace asivamosffie.services
         public async Task<dynamic> GetMontoMaximoProyecto(int pContrato, int pContratacionProyectoId, bool EsPreConstruccion)
         {
             decimal ValorMaximoProyecto =
-               (decimal) await _context.VValorUsosFasesAportanteProyecto
+               (decimal)await _context.VValorUsosFasesAportanteProyecto
                 .Where(r => r.ContratacionProyectoId == pContratacionProyectoId
                       && r.EsPreConstruccion == EsPreConstruccion)
                 .SumAsync(s => s.ValorUso);
 
-            decimal ValorPendientePorPagar =
-               (decimal) await _context.VValorFacturadoProyecto
+            decimal ValorFacturadoProyecto =
+               (decimal)await _context.VValorFacturadoProyecto
                 .Where(r => r.ContratacionProyectoId == pContratacionProyectoId
                         && r.EsPreconstruccion == EsPreConstruccion)
                 .SumAsync(s => s.ValorFacturado);
-             
-            return new
+
+
+            return new  
             {
                 ValorMaximoProyecto,
-                ValorPendientePorPagar
+               ValorPendienteProyecto = ValorMaximoProyecto - ValorFacturadoProyecto
             };
         }
         #endregion
