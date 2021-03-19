@@ -49,21 +49,51 @@ export class VerDetalleEditarExpensasComponent implements OnInit {
                                 this.solicitudPago = response;
                                 // Get semaforo lista de chequeo
                                 const solicitudPagoListaChequeo: any[] = this.solicitudPago.solicitudPagoListaChequeo;
-                                let totalRegistroCompleto = 0;
+                                let completo = 0;
+                                let enProceso = 0;
+                                let sinDiligenciar = 0;
                     
                                 if ( solicitudPagoListaChequeo.length > 0 ) {
-                                    solicitudPagoListaChequeo.forEach( listaChequeo => {
-                                        if ( listaChequeo.registroCompleto === true ) {
-                                            totalRegistroCompleto++;
-                                        }
-                                    } );
                         
-                                    if ( totalRegistroCompleto > 0 && totalRegistroCompleto < solicitudPagoListaChequeo.length ) {
-                                        this.estadoSemaforoAcordeon.estadoSemaforoListaChequeo = 'en-proceso';
-                                    }
-                                    if ( totalRegistroCompleto > 0 && totalRegistroCompleto === solicitudPagoListaChequeo.length ) {
-                                        this.estadoSemaforoAcordeon.estadoSemaforoListaChequeo = 'completo';
-                                        this.registroCompletoAcordeones.registroCompletoListaChequeo = true
+                                    if ( solicitudPagoListaChequeo.length > 0 ) {
+                                        solicitudPagoListaChequeo.forEach( listaChequeo => {
+                                            let total = 0;
+
+                                            if ( listaChequeo.registroCompleto === true ) {
+                                                completo++;
+                                            }
+
+                                            if ( listaChequeo.registroCompleto === false ) {
+                                                enProceso++;
+                                            }
+
+                                            listaChequeo.solicitudPagoListaChequeoRespuesta.forEach( value => {
+                                                if ( value.respuestaCodigo === null ) {
+                                                    total++;
+                                                }
+                                            } );
+
+                                            if ( total === listaChequeo.solicitudPagoListaChequeoRespuesta ) {
+                                                sinDiligenciar++;
+                                            }
+                                        } );
+                                        if ( sinDiligenciar !== solicitudPagoListaChequeo.length ) {
+
+                                            if ( enProceso > 0 && enProceso < solicitudPagoListaChequeo.length ) {
+                                                this.estadoSemaforoAcordeon.estadoSemaforoListaChequeo = 'en-proceso';
+                                            }
+                                            if ( completo > 0 && sinDiligenciar > 0 && completo + sinDiligenciar === solicitudPagoListaChequeo.length ) {
+                                                this.estadoSemaforoAcordeon.estadoSemaforoListaChequeo = 'en-proceso';
+                                            }
+                                            if ( enProceso > 0 && enProceso === solicitudPagoListaChequeo.length ) {
+                                                this.estadoSemaforoAcordeon.estadoSemaforoListaChequeo = 'en-proceso';
+                                            }
+                                            if ( completo > 0 && completo === solicitudPagoListaChequeo.length ) {
+                                                this.estadoSemaforoAcordeon.estadoSemaforoListaChequeo = 'completo';
+                                                this.registroCompletoAcordeones.registroCompletoListaChequeo = true;
+                                            }
+                                            
+                                        }
                                     }
                                 }
                                 // Get semaforo soporte de la solicitud

@@ -46,8 +46,8 @@
                     </mat-card-title>
                 </mat-card-header>
                 <mat-card-content style="text-align: left;">
-                    <p><strong>Monto máximo a pagar en el proyecto:</strong> $30.000.000</p>
-                    <p><strong>Monto pendiente a pagar en el proyecto:</strong> $30.000.000</p>
+                    <p><strong>Monto máximo a pagar en el proyecto:</strong> {{ project.get( 'valorMaximoProyecto' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
+                    <p><strong>Monto pendiente a pagar en el proyecto:</strong> {{ project.get( 'valorPendienteProyecto' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
                     <br>
                     <br>
                     <div class="d-flex">
@@ -122,8 +122,8 @@
                         </mat-card-title>
                     </mat-card-header>
                     <mat-card-content style="text-align: left;" [formGroup]="project">
-                        <p><strong>Monto máximo a pagar en el proyecto:</strong> </p>
-                        <p><strong>Monto pendiente a pagar en el proyecto:</strong> $30.000.000</p>
+                        <p><strong>Monto máximo a pagar en el proyecto:</strong> {{ project.get( 'valorMaximoProyecto' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
+                        <p><strong>Monto pendiente a pagar en el proyecto:</strong> {{ project.get( 'valorPendienteProyecto' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
                         <br>
                         <div class="row">
                             <div class="col-md-12">
@@ -271,7 +271,7 @@
         </table>
         <!--<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>-->
     </div>
-    <div style="margin-top: 3em;" *ngIf="proyectos !== undefined">
+    <div style="margin-top: 3em;" *ngIf="proyectos !== undefined && montoMaximo!== undefined">
         <mat-card class="shipping-card var-main-gris" *ngFor="let proyecto of proyectos">
             <mat-card-header class="header-card header-card--margin">
                 <mat-card-title class="header-card--text">
@@ -279,8 +279,8 @@
                 </mat-card-title>
             </mat-card-header>
             <mat-card-content style="text-align: left;">
-                <p><strong>Monto máximo a pagar en el proyecto:</strong> $30.000.000</p>
-                <p><strong>Monto pendiente a pagar en el proyecto:</strong> $30.000.000</p>
+                <p><strong>Monto máximo a pagar en el proyecto:</strong> {{ montoMaximo.valorMaximoProyecto | currency:'':'symbol-narrow':'.0-0' }} </p>
+                <p><strong>Monto pendiente a pagar en el proyecto:</strong> {{ montoMaximo.valorPendienteProyecto | currency:'':'symbol-narrow':'.0-0' }} </p>
                 <br>
                 <div class="d-flex">
                     <strong>Criterio:</strong>

@@ -102,6 +102,12 @@ export class FormSolicitudOtrosCostosserviciosComponent implements OnInit {
     onSubmit() {
         this.estaEditando = true;
         this.addressForm.markAllAsTouched();
+
+        if ( this.contratoId === 0 ) {
+            this.openDialog( '', '<b>Debe seleccionar un número de contrato valido.</b>' );
+            return;
+        }
+
         const pSolicitudPago = {
             solicitudPagoId: this.solicitudPagoId,
             tipoSolicitudCodigo: this.tipoSolicitud,
@@ -116,8 +122,7 @@ export class FormSolicitudOtrosCostosserviciosComponent implements OnInit {
                     tipoPagoCodigo: this.addressForm.get( 'tipoPago' ).value !== null ? this.addressForm.get( 'tipoPago' ).value.codigo : this.addressForm.get( 'tipoPago' ).value
                 }
             ]
-          };
-          console.log( pSolicitudPago );
+        };
         this.registrarPagosSvc.createEditOtrosCostosServicios( pSolicitudPago )
             .subscribe(
                 response => {

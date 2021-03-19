@@ -60,7 +60,6 @@ export class FormCriteriosPagoComponent implements OnInit {
             this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, fasePreConstruccionFormaPagoCodigo, 'True' )
                 .subscribe(
                     getMontoMaximoMontoPendiente => {
-                        console.log( 'linea 63 preConstruccion', getMontoMaximoMontoPendiente )
                         this.montoMaximoPendiente = getMontoMaximoMontoPendiente;
                         this.registrarPagosSvc.getCriterioByFormaPagoCodigo( fasePreConstruccionFormaPagoCodigo )
                             .subscribe(

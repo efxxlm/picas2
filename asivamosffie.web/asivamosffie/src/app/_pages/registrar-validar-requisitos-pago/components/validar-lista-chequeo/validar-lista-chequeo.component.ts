@@ -19,8 +19,10 @@ import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrar
 export class ValidarListaChequeoComponent implements OnInit {
 
     @Input() contrato: any;
+    @Input() solicitudPago: any;
     @Input() esVerDetalle = false;
     solicitudPagoModificado: any;
+    esExpensas: boolean;
     dataSource = new MatTableDataSource();
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -45,18 +47,33 @@ export class ValidarListaChequeoComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        
-        for ( const solicitudPagoListaChequeo of this.contrato.solicitudPagoOnly.solicitudPagoListaChequeo ) {
-            for ( const solicitudPagoListaChequeoRespuesta of solicitudPagoListaChequeo.solicitudPagoListaChequeoRespuesta ) {
-                solicitudPagoListaChequeoRespuesta.respuestaCodigo = solicitudPagoListaChequeoRespuesta.respuestaCodigo !== undefined ? solicitudPagoListaChequeoRespuesta.respuestaCodigo : null;
-                solicitudPagoListaChequeoRespuesta.observacion = solicitudPagoListaChequeoRespuesta.observacion !== undefined ? solicitudPagoListaChequeoRespuesta.observacion : null;
+
+        if ( this.contrato === undefined && this.solicitudPago !== undefined ) {
+            this.esExpensas = true;
+            for ( const solicitudPagoListaChequeo of this.solicitudPago.solicitudPagoListaChequeo ) {
+                for ( const solicitudPagoListaChequeoRespuesta of solicitudPagoListaChequeo.solicitudPagoListaChequeoRespuesta ) {
+                    solicitudPagoListaChequeoRespuesta.respuestaCodigo = solicitudPagoListaChequeoRespuesta.respuestaCodigo !== undefined ? solicitudPagoListaChequeoRespuesta.respuestaCodigo : null;
+                    solicitudPagoListaChequeoRespuesta.observacion = solicitudPagoListaChequeoRespuesta.observacion !== undefined ? solicitudPagoListaChequeoRespuesta.observacion : null;
+                }
             }
+            this.solicitudPagoModificado = this.solicitudPago;
+            this.dataSource = new MatTableDataSource();
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
         }
-        this.solicitudPagoModificado = this.contrato.solicitudPagoOnly;
-        console.log( this.solicitudPagoModificado );
-        this.dataSource = new MatTableDataSource();
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+        if ( this.contrato !== undefined  && this.solicitudPago === undefined ) {
+            this.esExpensas = false;
+            for ( const solicitudPagoListaChequeo of this.contrato.solicitudPagoOnly.solicitudPagoListaChequeo ) {
+                for ( const solicitudPagoListaChequeoRespuesta of solicitudPagoListaChequeo.solicitudPagoListaChequeoRespuesta ) {
+                    solicitudPagoListaChequeoRespuesta.respuestaCodigo = solicitudPagoListaChequeoRespuesta.respuestaCodigo !== undefined ? solicitudPagoListaChequeoRespuesta.respuestaCodigo : null;
+                    solicitudPagoListaChequeoRespuesta.observacion = solicitudPagoListaChequeoRespuesta.observacion !== undefined ? solicitudPagoListaChequeoRespuesta.observacion : null;
+                }
+            }
+            this.solicitudPagoModificado = this.contrato.solicitudPagoOnly;
+            this.dataSource = new MatTableDataSource();
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
+        }
     }
 
     applyFilter(event: Event) {
@@ -86,8 +103,8 @@ export class ValidarListaChequeoComponent implements OnInit {
 
     getObservacion( registro: any, index: number, jIndex: number ) {
         const dialogRef = this.dialog.open(DialogObservacionesItemListchequeoComponent, {
-            width: '70em',
-            data: { contrato: this.contrato, registro, jIndex, esVerDetalle: this.esVerDetalle }
+            width: '80em',
+            data: { dataSolicitud: this.esExpensas === true ? this.solicitudPago : this.contrato, registro, jIndex, esVerDetalle: this.esVerDetalle, esExpensas: this.esExpensas }
         });
 
         dialogRef.afterClosed()
@@ -153,18 +170,33 @@ export class ValidarListaChequeoComponent implements OnInit {
         .subscribe(
             response => {
                 this.openDialog( '', `<b>${ response.message }</b>` );
-                this.registrarPagosSvc.getValidateSolicitudPagoId( this.solicitudPagoModificado.solicitudPagoId )
-                    .subscribe(
-                        () => {
-                            this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                                () => this.routes.navigate(
-                                    [
-                                        '/registrarValidarRequisitosPago/verDetalleEditar',  this.solicitudPagoModificado.contratoId, this.solicitudPagoModificado.solicitudPagoId
-                                    ]
-                                )
-                            );
-                        }
-                    );
+                if ( this.esExpensas === false ) {
+                    this.registrarPagosSvc.getValidateSolicitudPagoId( this.solicitudPagoModificado.solicitudPagoId )
+                        .subscribe(
+                            () => {
+                                this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                                    () => this.routes.navigate(
+                                        [
+                                            '/registrarValidarRequisitosPago/verDetalleEditar',  this.solicitudPagoModificado.contratoId, this.solicitudPagoModificado.solicitudPagoId
+                                        ]
+                                    )
+                                );
+                            }
+                        );
+                } else {
+                    this.registrarPagosSvc.getValidateSolicitudPagoId( this.solicitudPagoModificado.solicitudPagoId )
+                        .subscribe(
+                            () => {
+                                this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                                    () => this.routes.navigate(
+                                        [
+                                            '/registrarValidarRequisitosPago/verDetalleEditarExpensas', this.solicitudPagoModificado.solicitudPagoId
+                                        ]
+                                    )
+                                );
+                            }
+                        );
+                }
             },
             err => this.openDialog( '', `<b>${ err.message }</b>` )
         );

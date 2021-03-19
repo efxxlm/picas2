@@ -166,23 +166,55 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
         if ( nombreAcordeon === 'listaChequeo' && tieneRegistroAnterior === true ) {
             
             const solicitudPagoListaChequeo: any[] = this.contrato.solicitudPagoOnly.solicitudPagoListaChequeo;
-            let totalRegistroCompleto = 0;
             let semaforoListaChequeo = 'sin-diligenciar';
+            let completo = 0;
+            let enProceso = 0;
+            let sinDiligenciar = 0;
 
             if ( solicitudPagoListaChequeo.length > 0 ) {
-                solicitudPagoListaChequeo.forEach( listaChequeo => {
-                    if ( listaChequeo.registroCompleto === true ) {
-                        totalRegistroCompleto++;
+    
+                if ( solicitudPagoListaChequeo.length > 0 ) {
+                    solicitudPagoListaChequeo.forEach( listaChequeo => {
+                        let total = 0;
+
+                        if ( listaChequeo.registroCompleto === true ) {
+                            completo++;
+                        }
+
+                        if ( listaChequeo.registroCompleto === false ) {
+                            enProceso++;
+                        }
+
+                        listaChequeo.solicitudPagoListaChequeoRespuesta.forEach( value => {
+                            if ( value.respuestaCodigo === null ) {
+                                total++;
+                            }
+                        } );
+
+                        if ( total === listaChequeo.solicitudPagoListaChequeoRespuesta ) {
+                            sinDiligenciar++;
+                        }
+                    } );
+                    if ( sinDiligenciar !== solicitudPagoListaChequeo.length ) {
+
+                        if ( enProceso > 0 && enProceso < solicitudPagoListaChequeo.length ) {
+                            semaforoListaChequeo = 'en-proceso';
+                        }
+                        if ( completo > 0 && sinDiligenciar > 0 && completo + sinDiligenciar === solicitudPagoListaChequeo.length ) {
+                            semaforoListaChequeo = 'en-proceso';
+                        }
+                        if ( enProceso > 0 && enProceso === solicitudPagoListaChequeo.length ) {
+                            semaforoListaChequeo = 'en-proceso';
+                        }
+                        if ( completo > 0 && completo === solicitudPagoListaChequeo.length ) {
+                            semaforoListaChequeo = 'completo';
+                            this.registroCompletoAcordeones.registroCompletoListaChequeo = true;
+                        }
+                        
                     }
-                } );
-                if ( totalRegistroCompleto > 0 && totalRegistroCompleto < solicitudPagoListaChequeo.length ) {
-                    semaforoListaChequeo = 'en-proceso';
-                }
-                if ( totalRegistroCompleto > 0 && totalRegistroCompleto === solicitudPagoListaChequeo.length ) {
-                    semaforoListaChequeo = 'completo';
-                    this.registroCompletoAcordeones.registroCompletoListaChequeo = true;
                 }
             }
+
             return semaforoListaChequeo;
         }
 

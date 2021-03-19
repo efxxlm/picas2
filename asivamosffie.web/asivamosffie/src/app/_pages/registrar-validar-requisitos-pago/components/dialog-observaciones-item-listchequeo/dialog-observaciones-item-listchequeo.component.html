@@ -6,8 +6,15 @@
         Observaciones item {{ data.jIndex + 1 }}
     </h1>
     <p class="info-sub-title">
-        <span>Número de solicitud: <b> {{ data.contrato.solicitudPagoOnly.numeroSolicitud }} </b></span>
-        <span>Número de contrato: <b> {{ data.contrato.numeroContrato }} </b></span>
+        <ng-container *ngIf="data.esExpensas === true; else noEsExpensas">
+            <span>Número de solicitud: <b> {{ data.dataSolicitud.numeroSolicitud }} </b></span>
+            <span>Llave MEN: <b> {{ data.dataSolicitud.contratacionProyecto.proyecto.llaveMen }} </b></span>
+        </ng-container>
+        <ng-template #noEsExpensas>
+            <span>Número de solicitud: <b> {{ data.dataSolicitud.solicitudPagoOnly.numeroSolicitud }} </b></span>
+            <span>Número de contrato: <b> {{ data.dataSolicitud.numeroContrato }} </b></span>
+        </ng-template>
+        
     </p>
     <p>
         {{ data.registro.listaChequeoItem.nombre }}
@@ -26,7 +33,7 @@
     </ng-container>
     <ng-template #noEsVerDetalle>
         <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
-            <div class="row">
+            <div class="row" style="margin-left: 2em !important;">
                 <div class="col-md-12" style="padding-left: 0;">
                     <div>
                         <div class="d-flex align-items-center">

@@ -88,7 +88,7 @@ export class FormSolicitudExpensasComponent implements OnInit {
                         response => {
                             this.llavesMenArray = response;
                             if ( response.length === 0 ) {
-                                this.openDialog( '', '<b>No se encontro Llave Men relacionada.</b>' );
+                                this.openDialog( '', '<b>No se encontro una Llave Men relacionada en la busqueda.</b>' );
                             } else {
                                 trigger.openPanel();
                             }
@@ -114,7 +114,12 @@ export class FormSolicitudExpensasComponent implements OnInit {
     onSubmit() {
         this.estaEditando = true;
         this.addressForm.markAllAsTouched();
-        console.log( this.addressForm.value );
+        
+        if ( this.addressForm.get( 'llaveMenSeleccionada' ).value === null ) {
+            this.openDialog( '', '<b>Debe seleccionar una llave MEN valida</b>' );
+            return;
+        }
+
         const pSolicitudPago =  {
             solicitudPagoId: this.solicitudPagoId,
             tipoSolicitudCodigo: this.tipoSolicitud,
@@ -132,7 +137,6 @@ export class FormSolicitudExpensasComponent implements OnInit {
                 }
             ]
         };
-        console.log( pSolicitudPago );
         this.registrarPagosSvc.createEditExpensas( pSolicitudPago )
             .subscribe(
                 response => {

@@ -82,8 +82,8 @@ export class RegistrarRequisitosPagoService {
   }
 
   getMontoMaximoProyecto( pContrato: number, pContratacionProyectoId: number, esPreConstruccion: string ) {
-    return new Promise( resolve => {
-      this.http.get( `${ this.apiUrl }/GetMontoMaximoProyecto?pContrato=${ pContrato }&pContratacionProyectoId=${ pContratacionProyectoId }&EsPreConstruccion=${ esPreConstruccion }` )
+    return new Promise<{ valorMaximoProyecto: number, valorPendienteProyecto:number }>( resolve => {
+      this.http.get<{ valorMaximoProyecto: number, valorPendienteProyecto:number }>( `${ this.apiUrl }/GetMontoMaximoProyecto?pContrato=${ pContrato }&pContratacionProyectoId=${ pContratacionProyectoId }&EsPreConstruccion=${ esPreConstruccion }` )
         .subscribe( response => resolve( response ) );
     } );
   }
