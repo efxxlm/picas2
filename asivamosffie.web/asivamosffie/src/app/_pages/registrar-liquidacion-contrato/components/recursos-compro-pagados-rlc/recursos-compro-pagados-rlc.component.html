@@ -1,0 +1,89 @@
+<section class="container text-center">
+    <div class="text-right">
+        <a routerLink="/registrarLiquidacionContrato/detalleBalanceFinanciero/1" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">Recursos comprometidos y pagados LL457326</h1>
+    <p class="info-sub-title">
+        <span>Número de contrato de obra: <b>N801801</b></span>
+        <span>Número de contrato de interventoria: <b>A513513</b></span>
+    </p>
+    <mat-card class="shipping-card var-main-gris">
+        <mat-card-content align="left">
+            <p><strong>Tipo de intervención: </strong><em>Remodelación</em></p>
+            <p><strong>Institución Educativa: </strong><em>I.E Nuestra Señora Del Carmen</em></p>
+            <p><strong>Sede: </strong><em>Única Sede</em></p>
+            <p><strong>Departamento: </strong><em>Boyacá</em></p>
+            <p><strong>Municipio: </strong><em>Susacón</em></p>
+        </mat-card-content>
+    </mat-card>
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Contrato de obra N801801
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-accordion>
+                <mat-expansion-panel class="expansion-style sub-expansion">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title ">
+                            Recursos comprometidos
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <app-acordion-recursos-compro-pagados-rlc></app-acordion-recursos-compro-pagados-rlc>
+                </mat-expansion-panel>
+                <mat-expansion-panel class="expansion-style sub-expansion">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title ">
+                            Contratistas
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <app-lista-contratistas-rlc></app-lista-contratistas-rlc>
+                </mat-expansion-panel>
+                <mat-expansion-panel class="expansion-style sub-expansion">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title ">
+                            Valor total ordenes de giro
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <app-tabla-valtotal-og-rlc></app-tabla-valtotal-og-rlc>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Contrato de interventoria A513513
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-accordion>
+                <mat-expansion-panel class="expansion-style sub-expansion">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title ">
+                            Recursos comprometidos
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <app-acordion-recursos-compro-pagados-rlc></app-acordion-recursos-compro-pagados-rlc>
+                </mat-expansion-panel>
+                <mat-expansion-panel class="expansion-style sub-expansion">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title ">
+                            Contratistas
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <app-lista-contratistas-rlc></app-lista-contratistas-rlc>
+                </mat-expansion-panel>
+                <mat-expansion-panel class="expansion-style sub-expansion">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title ">
+                            Valor total ordenes de giro
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <app-tabla-valtotal-og-rlc></app-tabla-valtotal-og-rlc>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </mat-expansion-panel>
+    </mat-accordion>
+</section>

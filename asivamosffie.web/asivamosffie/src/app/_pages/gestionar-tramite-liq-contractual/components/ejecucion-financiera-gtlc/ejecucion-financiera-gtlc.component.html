@@ -1,0 +1,41 @@
+<section class="container text-center">
+    <div class="text-right">
+        <a routerLink="/gestionarTramiteLiquidacionContractual/verificarBalance/1" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">Ejecución financiera por componente LL457326</h1>
+    <p class="info-sub-title">
+        <span>Número de contrato de obra: <b>N801801</b></span>
+        <span>Número de contrato de interventoria: <b>A513513</b></span>
+    </p>
+    <mat-card class="shipping-card var-main-gris">
+        <mat-card-content align="left">
+            <p><strong>Tipo de intervención: </strong><em>Remodelación</em></p>
+            <p><strong>Institución Educativa: </strong><em>I.E Nuestra Señora Del Carmen</em></p>
+            <p><strong>Sede: </strong><em>Única Sede</em></p>
+            <p><strong>Departamento: </strong><em>Boyacá</em></p>
+            <p><strong>Municipio: </strong><em>Susacón</em></p>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="shipping-card mainGris">
+        <mat-card-header class="header-card header-card--margin">
+            <mat-card-title class="header-card--text textoGris">
+                Ejecución presupuestal
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <app-tabla-ejpresupuestal-gtlc></app-tabla-ejpresupuestal-gtlc>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="shipping-card mainGris" style="margin-top: 3em;">
+        <mat-card-header class="header-card header-card--margin">
+            <mat-card-title class="header-card--text textoGris">
+                Ejecución financiera
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <app-tabla-ejfinanciera-gtlc></app-tabla-ejfinanciera-gtlc>
+        </mat-card-content>
+    </mat-card>
+</section>

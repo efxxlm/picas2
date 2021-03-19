@@ -1,0 +1,42 @@
+<div class="container text-center">
+    <div class="text-right">
+        <a routerLink="/home" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">
+        Gestionar trámite de liquidación contractual
+    </h1>
+    <button mat-mini-fab color="primary" class="btn-info" (click)="verAyuda = !verAyuda">?</button>
+    <div class="text-info" *ngIf="verAyuda">
+        <button mat-icon-button (click)="verAyuda = false" class="text-info--close">
+            <img src="assets/img/icon/cerrar-gris.svg" alt="cerrar ayuda">
+        </button>
+        Bienvenida/o, aquí podrá verificar el cumplimiento de todos los requisitos técnicos, jurídicos y financieros
+        para solicitar la liquidación de los
+        contratos de obra e interventoría asignados a usted, que fueron ejecutados en el marco de la gestión del FFIE.
+    </div>
+    <p class="info-container" style="margin-top: 2em;">
+        <span class="info-text sin-diligenciar">Sin diligenciar</span>
+        <span class="info-text en-proceso">En proceso</span>
+        <span class="info-text completo">Completo</span>
+    </p>
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title en-proceso">
+                    Liquidación de contrato de obra
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-tabla-liquidacion-obra-gtlc></app-tabla-liquidacion-obra-gtlc>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                    Liquidación de contrato de interventoria
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-tabla-liquidacion-intervn-gtlc></app-tabla-liquidacion-intervn-gtlc>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>

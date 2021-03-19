@@ -446,6 +446,26 @@ const routes: Routes = [
         .then(m => m.AprobarIncorporacionRendimientosModule)
       },
       {
+        path: 'gestionarBalanceFinancieroTrasladoRecursos',
+        loadChildren: () => import('./_pages/gestionar-balan-financ-trasl-recursos/gestionar-balan-financ-trasl-recursos.module')
+        .then(m => m.GestionarBalanFinancTraslRecursosModule)
+      },
+      {
+        path: 'registrarActualizacionesPolizasYGarantias',
+        loadChildren: () => import('./_pages/registrar-actualiz-polizas-garantias/registrar-actualiz-polizas-garantias.module')
+        .then(m => m.RegistrarActualizPolizasGarantiasModule)
+      },
+      {
+        path: 'registrarLiquidacionContrato',
+        loadChildren: () => import('./_pages/registrar-liquidacion-contrato/registrar-liquidacion-contrato.module')
+        .then(m => m.RegistrarLiquidacionContratoModule)
+      },
+      {
+        path: 'gestionarTramiteLiquidacionContractual',
+        loadChildren: () => import('./_pages/gestionar-tramite-liq-contractual/gestionar-tramite-liq-contractual.module')
+        .then(m => m.GestionarTramiteLiqContractualModule)
+      },
+      {
         path: 'gestionListaChequeo',
         loadChildren: () => import( './_pages/gestionar-lista-chequeo/gestionar-lista-chequeo.module' )
           .then( module => module.GestionarListaChequeoModule )

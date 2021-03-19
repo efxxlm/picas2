@@ -1,0 +1,292 @@
+<section class="container text-center">
+    <div class="text-right">
+        <a routerLink="/registrarLiquidacionContrato" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">Gestionar solicitud Liq_0009</h1>
+    <p class="info-sub-title">
+        <span>Número de contrato: <b>N801801</b></span>
+    </p>
+    <mat-card class="shipping-card var-main-gris">
+        <mat-card-content align="left">
+            <p><strong>Contratista: </strong><em>Interventores S.A</em></p>
+            <p><strong>Número identificación contratista: </strong><em>900.879.765-2</em></p>
+            <p><strong>Tipo de contrato: </strong><em>Interventoría</em></p>
+            <p><strong>Valor del contrato: </strong><em>$ 180.000.000</em></p>
+            <p><strong>Número DRP 1: </strong><em>DRP_PI_003</em></p>
+            <p><strong>Número DRP 2: </strong><em>DRP_PI_013</em></p>
+            <p><strong>Número DDP: </strong><em>DRP_PI_002</em></p>
+            <p><strong>Plazo: </strong><em>3 meses / 10 días</em></p>
+            <p><strong>Objeto: </strong></p>
+            <p><b>1. </b><em>Contrato de modificación de obra que compromete el diagnóstico y/o actualización y/o
+                    complementación y/o elaboraciónde estudios
+                    y diseños y ejecución de las obras necesarias para la adecuación y mejoramiento de las instituciones
+                    rurales.</em></p>
+            <p><strong>Tipo de modificación: </strong><em>Adición y plazo</em></p>
+            <p><strong>Valor después de la modificación: </strong><em>$ 240.000.000</em></p>
+            <p><strong>Plazo después de la modificación: </strong><em>6 meses / 25 días</em></p>
+            <p><strong>Detalle de la modificación: </strong></p>
+            <p><em>Se realiza adición de recursos para obras complementarias</em></p>
+        </mat-card-content>
+    </mat-card>
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Actualización de póliza
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-actualizacion-poliza-rlc></app-actualizacion-poliza-rlc>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Balance Financiero
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-tabla-balance-financiero-rlc></app-tabla-balance-financiero-rlc>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Informe Final
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-tabla-informe-final-rlc></app-tabla-informe-final-rlc>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Proyecto de acta
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="container text-center" style="margin-top: 1em;">
+                <button mat-raised-button color="accent">
+                    Descargar acta
+                </button>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+        <mat-card class="shipping-card">
+            <mat-card-header class="header-card header-card--margin">
+                <mat-card-title class="header-card--text">
+                    Registrar trámite
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content align="left">
+                <p><strong>Fecha del trámite: </strong><span style="color: #174193"><b>12/01/2021</b></span></p>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left" for="fechaEnvioFirmaContratista" [ngClass]="{
+                              'color-secondaryColor':
+                                (addressForm.get('fechaEnvioFirmaContratista').invalid && addressForm.get('fechaEnvioFirmaContratista').touched) ||
+                                (addressForm.get('fechaEnvioFirmaContratista').invalid && estaEditando)
+                            }">Fecha de envío para firma del contratista</label>
+                            </div>
+                            <div class="col d-flex align-items-center">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput formControlName="fechaEnvioFirmaContratista"
+                                        [matDatepicker]="pickerFechaRevision" readonly
+                                        (click)="pickerFechaRevision.open()" required placeholder="DD/MM/AAAA" />
+                                    <mat-datepicker #pickerFechaRevision></mat-datepicker>
+                                </mat-form-field>
+                                <button mat-button color="primary" type="button" (click)="pickerFechaRevision.open()"
+                                    class="btn-calendario">
+                                    <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
+                                </button>
+                                <span class="icon-incompleto">
+                                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip" *ngIf="
+                                (addressForm.get('fechaEnvioFirmaContratista').invalid && addressForm.get('fechaEnvioFirmaContratista').touched) ||
+                                (addressForm.get('fechaEnvioFirmaContratista').invalid && estaEditando)
+                              " />
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row animatedDown" *ngIf="addressForm.get('fechaEnvioFirmaContratista').value!=null">
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left" for="fechaFirmaParteContratista" [ngClass]="{
+                              'color-secondaryColor':
+                                (addressForm.get('fechaFirmaParteContratista').invalid && addressForm.get('fechaFirmaParteContratista').touched) ||
+                                (addressForm.get('fechaFirmaParteContratista').invalid && estaEditando)
+                            }">Fecha de firma por parte del contratista</label>
+                            </div>
+                            <div class="col d-flex align-items-center">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput formControlName="fechaFirmaParteContratista"
+                                        [matDatepicker]="pickerFechaRevision1" readonly
+                                        (click)="pickerFechaRevision1.open()" required placeholder="DD/MM/AAAA" />
+                                    <mat-datepicker #pickerFechaRevision1></mat-datepicker>
+                                </mat-form-field>
+                                <button mat-button color="primary" type="button" (click)="pickerFechaRevision1.open()"
+                                    class="btn-calendario">
+                                    <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
+                                </button>
+                                <span class="icon-incompleto">
+                                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip" *ngIf="
+                                (addressForm.get('fechaFirmaParteContratista').invalid && addressForm.get('fechaFirmaParteContratista').touched) ||
+                                (addressForm.get('fechaFirmaParteContratista').invalid && estaEditando)
+                              " />
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row animatedDown" *ngIf="addressForm.get('fechaFirmaParteContratista').value!=null">
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left" for="fechaEnvioFirmaFiduciaria" [ngClass]="{
+                              'color-secondaryColor':
+                                (addressForm.get('fechaEnvioFirmaFiduciaria').invalid && addressForm.get('fechaEnvioFirmaFiduciaria').touched) ||
+                                (addressForm.get('fechaEnvioFirmaFiduciaria').invalid && estaEditando)
+                            }">Fecha de envío para la firma de la fiduciaria</label>
+                            </div>
+                            <div class="col d-flex align-items-center">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput formControlName="fechaEnvioFirmaFiduciaria"
+                                        [matDatepicker]="pickerFechaRevision2" readonly
+                                        (click)="pickerFechaRevision2.open()" required placeholder="DD/MM/AAAA" />
+                                    <mat-datepicker #pickerFechaRevision2></mat-datepicker>
+                                </mat-form-field>
+                                <button mat-button color="primary" type="button" (click)="pickerFechaRevision2.open()"
+                                    class="btn-calendario">
+                                    <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
+                                </button>
+                                <span class="icon-incompleto">
+                                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip" *ngIf="
+                                (addressForm.get('fechaEnvioFirmaFiduciaria').invalid && addressForm.get('fechaEnvioFirmaFiduciaria').touched) ||
+                                (addressForm.get('fechaEnvioFirmaFiduciaria').invalid && estaEditando)
+                              " />
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row animatedDown" *ngIf="addressForm.get('fechaEnvioFirmaFiduciaria').value!=null">
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left" for="fechaFirmaParteFiduciaria" [ngClass]="{
+                              'color-secondaryColor':
+                                (addressForm.get('fechaFirmaParteFiduciaria').invalid && addressForm.get('fechaFirmaParteFiduciaria').touched) ||
+                                (addressForm.get('fechaFirmaParteFiduciaria').invalid && estaEditando)
+                            }">Fecha de firma por parte de la fiduciaria</label>
+                            </div>
+                            <div class="col d-flex align-items-center">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput formControlName="fechaFirmaParteFiduciaria"
+                                        [matDatepicker]="pickerFechaRevision3" readonly
+                                        (click)="pickerFechaRevision3.open()" required placeholder="DD/MM/AAAA" />
+                                    <mat-datepicker #pickerFechaRevision3></mat-datepicker>
+                                </mat-form-field>
+                                <button mat-button color="primary" type="button" (click)="pickerFechaRevision3.open()"
+                                    class="btn-calendario">
+                                    <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
+                                </button>
+                                <span class="icon-incompleto">
+                                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip" *ngIf="
+                                (addressForm.get('fechaFirmaParteFiduciaria').invalid && addressForm.get('fechaFirmaParteFiduciaria').touched) ||
+                                (addressForm.get('fechaFirmaParteFiduciaria').invalid && estaEditando)
+                              " />
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="animatedDown">
+                    <div class="row">
+                        <div class="col-md-12" style="padding-left: 0;">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label class="label-left" for="observaciones" [ngClass]="{
+                                    'color-secondaryColor':
+                                      (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                                      (addressForm.get('observaciones').invalid && estaEditando)
+                                  }">Observaciones</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12" style="padding-left: 0;">
+                            <div>
+                                <div class="d-flex align-items-center">
+                                    <div class="text-area-quill auxBox">
+                                        <quill-editor class="quill-editor-style card" [styles]="editorStyle"
+                                            [modules]="config" required (onContentChanged)="maxLength($event, 2000)"
+                                            formControlName="observaciones" #observaciones>
+                                        </quill-editor>
+                                    </div>
+                                    <span class="contador miles" *ngIf="addressForm.controls.observaciones.value">
+                                        {{2000 - (textoLimpio(addressForm.get('observaciones').value))}}
+                                    </span>
+                                    <span class="contador miles" *ngIf="!addressForm.controls.observaciones.value">
+                                        2000
+                                    </span>
+                                    <span class="icon-incompleto">
+                                        <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                            alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                            matTooltip="Debe ingresar la información en el campo para continuar"
+                                            matTooltipClass="info-tooltip" *ngIf="
+                                            (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                                            (addressForm.get('observaciones').invalid && estaEditando)
+                                          " />
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row animatedDown" *ngIf="addressForm.get('fechaFirmaParteFiduciaria').value!=null">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left" for="urlSoporte">Url con soporte documento suscrito</label>
+                            </div>
+                            <div class="col">
+                                <mat-form-field class="full-width">
+                                    <input matInput #urlSoporte type="text" formControlName="urlSoporte"
+                                      required>
+                                </mat-form-field>
+                            </div>
+                            <span class="icon-incompleto">
+                                <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip" *ngIf="
+                                    (addressForm.get('urlSoporte').invalid && addressForm.get('urlSoporte').touched) ||
+                                    (addressForm.get('urlSoporte').invalid && estaEditando)
+                                  " />
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+        <div class="text-center mb-2em">
+            <button mat-button color="warn" class="btn-guardar" type="submit">
+                <img src="assets/img/icon/guardar.svg" alt="Regresar" />
+            </button>
+        </div>
+    </form>
+</section>

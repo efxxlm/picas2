@@ -1,0 +1,122 @@
+<section class="container text-center">
+    <div class="text-right">
+        <a routerLink="/gestionarTramiteLiquidacionContractual/verificarRequisitos/1" mat-button color="primary"
+            class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">Verificar balance LL457326</h1>
+    <p class="info-sub-title">
+        <span>Número de contrato de obra: <b>N801801</b></span>
+        <span>Número de contrato de interventoria: <b>A513513</b></span>
+    </p>
+    <mat-card class="shipping-card var-main-gris">
+        <mat-card-content align="left">
+            <p><strong>Tipo de intervención: </strong><em>Remodelación</em></p>
+            <p><strong>Institución Educativa: </strong><em>I.E Nuestra Señora Del Carmen</em></p>
+            <p><strong>Sede: </strong><em>Única Sede</em></p>
+            <p><strong>Departamento: </strong><em>Boyacá</em></p>
+            <p><strong>Municipio: </strong><em>Susacón</em></p>
+        </mat-card-content>
+    </mat-card>
+    <div class="tabs--actions">
+        <button mat-raised-button color="accent" class="tabs--btn"
+            (click)="this.irRecursosComprometidos(this.idBalance)">
+            Recursos comprometidos y pagados
+        </button>
+        <button mat-raised-button color="accent" class="tabs--btn"
+            (click)="this.verEjecucionFinanciera(this.idBalance)">
+            Ejecución financiera por componente
+        </button>
+        <button mat-raised-button color="accent" class="tabs--btn" (click)="this.verTrasladoRecursos(this.idBalance)">
+            Traslados de recursos
+        </button>
+    </div>
+    <div class="mt-2em">
+        <mat-card class="shipping-card mainGris">
+            <mat-card-header class="header-card header-card--margin">
+                <mat-card-title class="header-card--text textoGris">
+                    Observaciones del supervisor
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content align="left">
+                <p><strong>16/11/2020</strong></p>
+                <div>
+                    <p><strong>¿Desde la supervisión tiene observaciones frente al balance que deban ser tenidas en
+                            cuenta en la liquidación?: </strong><em>Sí</em></p>
+                    <p><em>Tener en cuenta que en la URL encontraran todos los soportes necesarios del traslado que se
+                            realizo en este balance.</em></p>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="mt-2em">
+        <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+            <div class="row mtop justCenter">
+                <div class="col-md-12">
+                    <label class="label-left" for="tieneObservaciones" [ngClass]="{
+                        'color-secondaryColor':
+                          (addressForm.get('tieneObservaciones').invalid && addressForm.get('tieneObservaciones').touched) ||
+                          (addressForm.get('tieneObservaciones').invalid && estaEditando)
+                      }">¿Desde control y seguimiento tiene observaciones frente a el balance que deban ser tenidas en
+                        cuenta en la liquidación?</label>
+                </div>
+                <div class="col-md-2">
+                    <mat-radio-group aria-labelledby="example-radio-group-label" class="radioInput"
+                        formControlName="tieneObservaciones">
+                        <mat-radio-button class="radio-button" [value]="true">Sí</mat-radio-button>
+                        <mat-radio-button class="radio-button" [value]="false">No</mat-radio-button>
+                    </mat-radio-group>
+                    <span class="required-form-group" style="margin-left: 1px;">*</span>
+                </div>
+                <span class="icon-incompleto">
+                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Debe ingresar la información en el campo para continuar"
+                        matTooltipClass="info-tooltip" *ngIf="
+                      (addressForm.get('tieneObservaciones').invalid && addressForm.get('tieneObservaciones').touched) ||
+                      (addressForm.get('tieneObservaciones').invalid && estaEditando)
+                      " />
+                </span>
+            </div>
+            <div class="d-flex align-items-center mt-2em animatedDown"
+                *ngIf="addressForm.get('tieneObservaciones').value === true">
+                <div class="text-area-quill izqTitle"
+                [ngClass]="{
+                    'color-secondaryColor':
+                      (addressForm.get('tieneObservaciones').invalid && addressForm.get('tieneObservaciones').touched) ||
+                      (addressForm.get('tieneObservaciones').invalid && estaEditando)
+                  }">
+                    <label for="observaciones" class="text-area-quill--label" [ngClass]="{
+                        'colorMainColor':
+                          !((addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                          (addressForm.get('observaciones').invalid && estaEditando))
+                      }">Observaciones</label>
+                    <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
+                        (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observaciones>
+                    </quill-editor>
+                </div>
+                <span class="contador miles" *ngIf="addressForm.get('observaciones').value">
+                    {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
+                </span>
+                <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null">
+                    1000
+                </span>
+                <span class="icon-incompleto">
+                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Debe ingresar la información en el campo para continuar"
+                        matTooltipClass="info-tooltip" *ngIf="
+                      (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                      (addressForm.get('observaciones').invalid && estaEditando)
+                      " />
+                </span>
+            </div>
+            <div class="mb-2em mt-2em">
+                <button mat-button color="warn" class="btn-guardar mt1" type="submit">
+                    <img src="assets/img/icon/guardar.svg" alt="Guardar">
+                </button>
+            </div>
+        </form>
+    </div>
+</section>

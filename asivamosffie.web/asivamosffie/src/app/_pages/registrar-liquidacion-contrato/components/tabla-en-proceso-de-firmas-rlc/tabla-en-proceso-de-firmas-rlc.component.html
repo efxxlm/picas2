@@ -1,0 +1,56 @@
+<div class="busqueda">
+    <mat-form-field appearance="outline" class="busqueda--input">
+        <mat-label>Buscador / Filtro</mat-label>
+        <input matInput #filtro (keyup)="applyFilter($event)">
+    </mat-form-field>
+    <button mat-button color="primary" class="busqueda--img" (click)="filtro.focus()">
+        <img src="assets/img/icon/lupa.svg" alt="Buscar">
+    </button>
+</div>
+<div class="tabla-expansion-panel">
+    <table mat-table [dataSource]="dataSource" matSort class="tabla mat-elevation-z8 text-center">
+
+        <ng-container matColumnDef="fechaSolicitud">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de la solicitud </th>
+            <td mat-cell *matCellDef="let element"> <b>{{element.fechaSolicitud}}</b> </td>
+        </ng-container>        
+        <ng-container matColumnDef="numeroSolicitud">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de la solicitud </th>
+            <td mat-cell *matCellDef="let element"> <em>{{element.numeroSolicitud}}</em> </td>
+        </ng-container>
+        <ng-container matColumnDef="numeroContrato">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Número del contrato </th>
+            <td mat-cell *matCellDef="let element"> <em>{{element.numeroContrato}}</em> </td>
+        </ng-container>
+        <ng-container matColumnDef="tipoContrato">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de contrato </th>
+            <td mat-cell *matCellDef="let element"> <em>{{element.tipoContrato}}</em> </td>
+        </ng-container>
+        <ng-container matColumnDef="estadoRegistro">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del registro  </th>
+            <td mat-cell *matCellDef="let element"> 
+                <span class="info-text info-text__table" [ngClass]="{'sin-diligenciar' : element.estadoRegistro=='Incompleto', 'completo' : element.estadoRegistro=='Completo'}"></span>
+                {{element.estadoRegistro}} </td>
+        </ng-container>
+        <ng-container matColumnDef="estadoDocumento">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Esatdo del documento </th>
+            <td mat-cell *matCellDef="let element"> <em>{{element.estadoDocumento}}</em> </td>
+        </ng-container>
+        <ng-container matColumnDef="gestion">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
+            <td mat-cell *matCellDef="let element">
+                <button mat-raised-button color="accent" class="btn-table"
+                (click)="this.verDetalleEditar(element.id)" *ngIf="element.estadoRegistro=='Completo'&&element.estadoDocumento=='Firmado'">
+                Liquidar</button>
+                <button mat-raised-button color="accent" class="btn-table"
+                (click)="this.verDetalleEditar(element.id)">
+                Ver detalle/Editar</button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+</div>
+

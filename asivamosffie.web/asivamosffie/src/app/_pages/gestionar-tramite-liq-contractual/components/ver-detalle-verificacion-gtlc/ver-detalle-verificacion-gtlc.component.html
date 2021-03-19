@@ -1,0 +1,44 @@
+<section class="container text-center">
+    <div class="text-right">
+        <a routerLink="/gestionarTramiteLiquidacionContractual" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">Ver detalle verificación de requisitos para liquidación N801801</h1>
+    <p class="info-sub-title">
+        <span>Fecha de actualización de póliza <b>10/11/2020</b></span>
+    </p>
+    <mat-card class="shipping-card var-main-gris">
+        <mat-card-content align="left">
+            <p><strong>Número de contrato: N801801</strong></p>
+            <p><strong>Valor del contrato: </strong><em>$ 105.000.000</em></p>
+            <p><strong>Cantidad de proyectos asociados: </strong><em>1</em></p>
+        </mat-card-content>
+    </mat-card>
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Actualización de póliza
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-detalle-actu-poliza-gtlc></app-detalle-actu-poliza-gtlc>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Balance financiero
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-tabla-balance-financiero-gtlc [verDetalleBtn]=true></app-tabla-balance-financiero-gtlc>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Informe final
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-tabla-informe-final-gtlc [verDetalleBtn]=true></app-tabla-informe-final-gtlc>
+        </mat-expansion-panel>
+    </mat-accordion>
+</section>

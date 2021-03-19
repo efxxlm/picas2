@@ -1,0 +1,66 @@
+<section class="container text-center">
+    <div class="text-right">
+        <a routerLink="/registrarLiquidacionContrato/gestionarSolicitud/1" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">Ver detalle balance LL457326</h1>
+    <p class="info-sub-title">
+        <span>Número de contrato de obra: <b>N801801</b></span>
+        <span>Número de contrato de interventoria: <b>A513513</b></span>
+    </p>
+    <mat-card class="shipping-card var-main-gris">
+        <mat-card-content align="left">
+            <p><strong>Tipo de intervención: </strong><em>Remodelación</em></p>
+            <p><strong>Institución Educativa: </strong><em>I.E Nuestra Señora Del Carmen</em></p>
+            <p><strong>Sede: </strong><em>Única Sede</em></p>
+            <p><strong>Departamento: </strong><em>Boyacá</em></p>
+            <p><strong>Municipio: </strong><em>Susacón</em></p>
+        </mat-card-content>
+    </mat-card>
+    <div class="tabs--actions">
+        <button mat-raised-button color="accent" class="tabs--btn" (click)="this.irRecursosComprometidos(this.idBalance)">
+            Recursos comprometidos y pagados
+        </button>
+        <button mat-raised-button color="accent" class="tabs--btn" (click)="this.verEjecucionFinanciera(this.idBalance)">
+            Ejecución financiera por componente
+        </button>
+        <button mat-raised-button color="accent" class="tabs--btn" (click)="this.verTrasladoRecursos(this.idBalance)">
+            Traslados de recursos
+        </button>
+    </div>  
+    <div class="mt-2em">
+        <mat-card class="shipping-card mainGris">
+            <mat-card-header class="header-card header-card--margin">
+                <mat-card-title class="header-card--text textoGris">
+                    Observaciones del supervisor
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content align="left">
+                <p><strong>16/11/2020</strong></p>
+                <div>
+                    <p><strong>¿Desde la supervisión tiene observaciones frente al balance que deban ser tenidas en cuenta en la liquidación?: </strong><em>Sí</em></p>
+                    <p><em>Tener en cuenta que en la URL encontraran todos los soportes necesarios del traslado que se realizo en este balance.</em></p>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="mt-2em">
+        <mat-card class="shipping-card mainGris">
+            <mat-card-header class="header-card header-card--margin">
+                <mat-card-title class="header-card--text textoGris">
+                    Observaciones de control y seguimiento
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content align="left">
+                <p><strong>17/11/2020</strong></p>
+                <div>
+                    <p><strong>¿Desde control y seguimiento tiene observaciones frente al balance que deban ser tenidas en cuenta en la liquidación?: </strong><em>Sí</em></p>
+                    <em>Recuerden que el traslado fue necesario porque la E.T Gobernación de Boyacá no aorto la totalidad del valor estimado por lo cual lo
+                        asumio la E.T Alcaldía de Susacón</em>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    
+</section>
