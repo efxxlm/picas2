@@ -1,0 +1,92 @@
+<section class="container">
+  <div class="text-right">
+    <a routerLink="../../" mat-button color="primary" class="btn-regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar" />
+    </a>
+  </div>
+  <div class="text-center">
+    <h1 class="title-menu--h1">
+      Aprobar requisitos para liquidación
+      N801801
+    </h1>
+    <p class="colorMainColor mt-05em">
+      Fecha de actualización de póliza 10/11/2020
+      <b> 10/11/2020 </b>
+    </p>
+  </div>
+
+  <mat-card class="shipping-card var-main-gris">
+    <mat-card-content>
+      <p>
+        <strong>
+          Número de contrato:
+        </strong>
+        <b>
+          N801801
+        </b>
+      </p>
+      <p>
+        <strong>
+          Valor del contrato:
+        </strong>
+        $ 105.000.000
+      </p>
+      <p>
+        <strong>
+          Cantidad de proyectos asociados:
+        </strong>
+        1
+      </p>
+    </mat-card-content>
+  </mat-card>
+
+  <div>
+    <p class="info-container text-center">
+      <span class="info-text sin-diligenciar">Sin diligenciar</span>
+      <span class="info-text en-proceso">En proceso</span>
+      <span class="info-text completo">Completo</span>
+    </p>
+
+    <mat-accordion>
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header">
+          <mat-panel-title
+            class="expansion-style--title"
+            [class.sin-diligenciar]="true"
+            [class.en-proceso]="false"
+            [class.completo]="false"
+          >
+            Actualización de póliza
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-actualizacion-poliza></app-actualizacion-poliza>
+      </mat-expansion-panel>
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header">
+          <mat-panel-title
+            class="expansion-style--title"
+            [class.sin-diligenciar]="true"
+            [class.en-proceso]="false"
+            [class.completo]="false"
+          >
+            Balance financiero
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-tabla-balance-financiero></app-tabla-balance-financiero>
+      </mat-expansion-panel>
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header">
+          <mat-panel-title
+            class="expansion-style--title"
+            [class.sin-diligenciar]="true"
+            [class.en-proceso]="false"
+            [class.completo]="false"
+          >
+            Informe final
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        Informe final
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+</section>

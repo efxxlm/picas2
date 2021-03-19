@@ -320,6 +320,11 @@ const routes: Routes = [
           .then( module => module.RegistrarSolicitudLiquidacionContractualModule )
       },
       {
+        path: 'aprobarSolicitudLiquidacionContractual',
+        loadChildren: () => import( './_pages/aprobar-solicitud-liquidacion-contractual/aprobar-solicitud-liquidacion-contractual.module' )
+          .then( module => module.AprobarSolicitudLiquidacionContractualModule )
+      },
+      {
         path: 'validarCumplimientoInformeFinalProyecto',
         loadChildren: () => import( './_pages/validar-cumplimiento-informe-final-proyecto/validar-cumplimiento-informe-final-proyecto.module' )
           .then( module => module.ValidarCumplimientoInformeFinalProyectoModule )

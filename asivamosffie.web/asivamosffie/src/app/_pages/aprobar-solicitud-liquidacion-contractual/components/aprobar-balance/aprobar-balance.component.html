@@ -1,0 +1,100 @@
+<section class="container">
+  <div class="text-right">
+    <a routerLink="../../" mat-button color="primary" class="btn-regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar" />
+    </a>
+  </div>
+  <div class="text-center">
+    <h1 class="title-menu--h1">
+      Validar balance
+      LL457326
+    </h1>
+    <p class="colorMainColor mt-05em">
+      <span class="mx-1em">
+        Número de contrato de obra:
+        <b> N801801 </b>
+      </span>
+      <span class="mx-1em">
+        Número de contrato de interventoria:
+        <b> A513513 </b>
+      </span>
+    </p>
+  </div>
+
+  <mat-card class="shipping-card var-main-gris">
+    <mat-card-content>
+      <p>
+        <strong>
+          Llave MEN:
+        </strong>
+        LL457326
+      </p>
+      <p>
+        <strong>
+          Tipo de intervención:
+        </strong>
+        Remodelación
+      </p>
+      <p>
+        <strong>
+          Institución Educativa:
+        </strong>
+        I.E Nuestra Señora Del Carmen
+      </p>
+      <p>
+        <strong>
+          Sede:
+        </strong>
+        Única Sede
+      </p>
+      <p>
+        <strong>
+          Departamento:
+        </strong>
+        Boyacá
+      </p>
+      <p>
+        <strong>
+          Municipio:
+        </strong>
+        Susacón
+      </p>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="tabs--actions">
+    <a [routerLink]="['recursos']" mat-raised-button color="accent" class="tabs--btn">
+      Ver recursos comprometidos y pagados
+    </a>
+    <a [routerLink]="['ejecucionFinanciera']" mat-raised-button color="accent" class="tabs--btn">
+        Ver ejecución financiera por componente
+    </a>
+    <a [routerLink]="['traslados']" mat-raised-button color="accent" class="tabs--btn">
+        Ver traslados de recursos
+    </a>
+  </div>
+
+  <mat-card class="shipping-card var-main-gris">
+    <mat-card-header class="header-card header-card--margin">
+      <mat-card-title class="header-card--text">
+        Validación apoyo a la supervisión
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p>
+        <strong> 
+          15/11/2020
+        </strong>
+      </p>
+      <p>
+        <strong> 
+          ¿Tiene observaciones frente a la actualización de la póliza que deban ser tenidas en cuenta en la liquidación?:
+        </strong>
+        No
+      </p>
+    </mat-card-content>
+  </mat-card>
+
+  <app-form-observacion-balance></app-form-observacion-balance>
+
+</section>
