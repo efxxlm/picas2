@@ -291,7 +291,6 @@ namespace asivamosffie.services
 
                 foreach (var SolicitudPagoListaChequeoRespuesta in SolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta)
                 {
-
                     SolicitudPagoListaChequeoRespuesta.SolicitudPagoListaChequeo = null;
                 }
             }
@@ -326,9 +325,8 @@ namespace asivamosffie.services
                        .Include(r => r.SolicitudPagoSoporteSolicitud)
                        .Include(r => r.SolicitudPagoListaChequeo)
                          .ThenInclude(r => r.ListaChequeo)
-                       .Include(r => r.SolicitudPagoListaChequeo)
-
-                       .FirstOrDefault();
+                               .ThenInclude(r => r.ListaChequeoListaChequeoItem)
+                         .FirstOrDefault();
                     GetRemoveObjectsDelete(solicitudPago);
                     return solicitudPago;
 
@@ -337,12 +335,11 @@ namespace asivamosffie.services
                         .Include(e => e.ContratacionProyecto).ThenInclude(p => p.Proyecto)
                         .Include(e => e.SolicitudPagoExpensas)
                         .Include(e => e.SolicitudPagoSoporteSolicitud)
-                            .Include(r => r.SolicitudPagoListaChequeo)
-                 .Include(r => r.SolicitudPagoListaChequeo)
-                         .ThenInclude(r => r.ListaChequeo)
-                       .Include(r => r.SolicitudPagoListaChequeo)
+                        .Include(r => r.SolicitudPagoListaChequeo)
+                           .ThenInclude(r => r.ListaChequeo)
+                               .ThenInclude(r => r.ListaChequeoListaChequeoItem)
                         .FirstOrDefault();
-
+                    GetRemoveObjectsDelete(solicitudPago);
                     return solicitudPago;
 
                 case ConstanCodigoTipoSolicitudContratoSolicitudPago.Otros_Costos_Servicios:
@@ -350,13 +347,11 @@ namespace asivamosffie.services
                      .Include(e => e.SolicitudPagoOtrosCostosServicios)
                      .Include(e => e.SolicitudPagoSoporteSolicitud)
                      .Include(r => r.SolicitudPagoListaChequeo)
-                        .Include(r => r.SolicitudPagoListaChequeo)
-                         .ThenInclude(r => r.ListaChequeo)
-                       .Include(r => r.SolicitudPagoListaChequeo)
-                     .FirstOrDefault();
-
+                           .ThenInclude(r => r.ListaChequeo)
+                               .ThenInclude(r => r.ListaChequeoListaChequeoItem)
+                        .FirstOrDefault();
+                    GetRemoveObjectsDelete(solicitudPago);
                     return solicitudPago;
-
 
                 default: return solicitudPago;
 
@@ -413,10 +408,10 @@ namespace asivamosffie.services
                 .SumAsync(s => s.ValorFacturado);
 
 
-            return new  
+            return new
             {
                 ValorMaximoProyecto,
-               ValorPendienteProyecto = ValorMaximoProyecto - ValorFacturadoProyecto
+                ValorPendienteProyecto = ValorMaximoProyecto - ValorFacturadoProyecto
             };
         }
         #endregion
@@ -1175,6 +1170,8 @@ namespace asivamosffie.services
 
         }
 
+
+
         private bool ValidarRegistroCompletoSolicitudPagoListaChequeoRespuesta(SolicitudPagoListaChequeoRespuesta pSolicitudPagoListaChequeoRespuestaNew)
         {
             if (string.IsNullOrEmpty(pSolicitudPagoListaChequeoRespuestaNew.RespuestaCodigo))
@@ -1213,6 +1210,7 @@ namespace asivamosffie.services
 
         private bool ValidateCompleteRecordSolicitudPago(SolicitudPago pSolicitudPago)
         {
+    
             if (
                    pSolicitudPago.SolicitudPagoSoporteSolicitud.Count() == 0
                 || pSolicitudPago.SolicitudPagoRegistrarSolicitudPago.Count() == 0
@@ -1461,16 +1459,8 @@ namespace asivamosffie.services
                 _context.SaveChanges();
 
                 //Crear Lista Chequeo 
-                SolicitudPagoListaChequeo solicitudPagoListaChequeo = new SolicitudPagoListaChequeo
-                {
-                    SolicitudPagoId = pSolicitudPago.SolicitudPagoId,
-                    UsuarioCreacion = pSolicitudPago.UsuarioCreacion,
-                    FechaCreacion = DateTime.Now,
-                    ListaChequeoId = ConstanListasChequeoSolicitudPago.LISTA_DE_CHEQUEO_EXPENSAS,
-                    Eliminado = false,
-                    RegistroCompleto = false,
-                };
-                _context.SolicitudPagoListaChequeo.Add(solicitudPagoListaChequeo);
+                CreateEditListaChequeoByEstadoMenuCodigo(ConstanTipoListaChequeo.Expensas, pSolicitudPago.SolicitudPagoId, pSolicitudPago.UsuarioCreacion);
+
             }
         }
 
@@ -1549,6 +1539,62 @@ namespace asivamosffie.services
             return true;
         }
 
+        private void CreateEditListaChequeoByEstadoMenuCodigo(string pEstadoMenuCodigo, int pSolicitudPagoId, string pUsuarioCreacion)
+        {
+            ListaChequeo listaChequeo = _context.ListaChequeo
+                                                           .Where(l => l.EstadoMenuCodigo == pEstadoMenuCodigo
+                                                                    && l.Eliminado != true)
+                                                           .Include(r => r.ListaChequeoListaChequeoItem)
+                                                                                                        .FirstOrDefault();
+
+            if (listaChequeo != null)
+            {
+                int? SolicitudPagoId = _context.SolicitudPagoFase
+                                        .Where(r => r.SolicitudPagoFaseId == pSolicitudPagoId)
+                                            .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
+                                                    .ThenInclude(r => r.SolicitudPago)
+                                        .Select(s => s.SolicitudPagoRegistrarSolicitudPago.SolicitudPago.SolicitudPagoId).FirstOrDefault();
+
+
+                int? SolicitudPagoListaChequeoId = _context.SolicitudPagoListaChequeo.Where(s => s.SolicitudPagoId == SolicitudPagoId
+                                                                                    && s.Eliminado != true)
+                                                                                .Select(r => r.SolicitudPagoId).FirstOrDefault();
+
+                if (SolicitudPagoListaChequeoId == 0 && pSolicitudPagoId > 0)
+                {
+                    SolicitudPagoListaChequeo solicitudPagoListaChequeoNew = new SolicitudPagoListaChequeo
+                    {
+                        UsuarioCreacion = pUsuarioCreacion,
+                        FechaCreacion = DateTime.Now,
+                        Eliminado = false,
+                        RegistroCompleto = false,
+                        SolicitudPagoId = pSolicitudPagoId,
+                        ListaChequeoId = listaChequeo.ListaChequeoId
+                    };
+                    _context.SolicitudPagoListaChequeo.Add(solicitudPagoListaChequeoNew);
+                    _context.SaveChanges();
+
+                    foreach (var ListaChequeoListaChequeoItem in listaChequeo.ListaChequeoListaChequeoItem)
+                    {
+                        SolicitudPagoListaChequeoRespuesta solicitudPagoListaChequeoRespuestaNew = new SolicitudPagoListaChequeoRespuesta
+                        {
+                            UsuarioCreacion = pUsuarioCreacion,
+                            FechaCreacion = DateTime.Now,
+                            Eliminado = false,
+
+                            SolicitudPagoListaChequeoId = solicitudPagoListaChequeoNew.SolicitudPagoListaChequeoId,
+                            ListaChequeoItemId = ListaChequeoListaChequeoItem.ListaChequeoItemId,
+                        };
+
+                        solicitudPagoListaChequeoRespuestaNew.RegistroCompleto = ValidarRegistroCompletoSolicitudPagoListaChequeoRespuesta(solicitudPagoListaChequeoRespuestaNew);
+                        _context.SolicitudPagoListaChequeoRespuesta.Add(solicitudPagoListaChequeoRespuestaNew);
+                    }
+                }
+
+            }
+
+        }
+
         #endregion;
 
         #region Tipo Otros Costos Servicios
@@ -1584,21 +1630,10 @@ namespace asivamosffie.services
                     pSolicitudPago.RegistroCompleto = ValidateCompleteRecordoSolicitudPagoOtrosCostosServicios(pSolicitudPago);
 
                     _context.SolicitudPago.Add(pSolicitudPago);
-                    //Crear Lista Chequeo 
 
-                    List<SolicitudPagoListaChequeo> solicitudPagoListaChequeos = new List<SolicitudPagoListaChequeo>
-                    {
-                         new SolicitudPagoListaChequeo  {
-                                                          //TODO  SolicitudPagoId = pSolicitudPago.SolicitudPagoId,
-                                                            UsuarioCreacion = pSolicitudPago.UsuarioCreacion,
-                                                            FechaCreacion = DateTime.Now,
-                                                            ListaChequeoId = ConstanListasChequeoSolicitudPago.LISTA_DE_CHEQUEO_OTROS_COSTOS,
-                                                            Eliminado = false,
-                                                            RegistroCompleto = false
-                                                        }
-                   };
-
-                    pSolicitudPago.SolicitudPagoListaChequeo = solicitudPagoListaChequeos;
+                    _context.SaveChanges();
+                    //Crear Lista Chequeo  
+                    CreateEditListaChequeoByEstadoMenuCodigo(ConstanTipoListaChequeo.Otros_costos_y_servicios, pSolicitudPago.SolicitudPagoId, pSolicitudPago.UsuarioCreacion);
 
                 }
                 if (pSolicitudPago.SolicitudPagoSoporteSolicitud.Count() > 0)
