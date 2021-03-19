@@ -142,7 +142,7 @@
             <app-form-demandantes-convocantes-dj #demandantes
                 [legitimacion]="addressForm.get('legitimacionActiva').value"
                 [tipoProceso]="addressForm.get('tipoProceso').value" [defensaJudicial]="defensaJudicial"
-                (tieneDemanda)="this.tieneDemanda=$event">
+                (tieneDemanda)="tieneDemanda=$event">
             </app-form-demandantes-convocantes-dj>
         </mat-expansion-panel>
     </mat-accordion>

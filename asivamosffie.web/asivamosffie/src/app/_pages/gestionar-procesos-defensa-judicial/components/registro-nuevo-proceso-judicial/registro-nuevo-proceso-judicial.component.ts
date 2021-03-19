@@ -27,7 +27,7 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
   ficha_class:number=3;
   textCabecera: string;
   estaEditando = false;
-  tieneDemanda = null;
+  tieneDemanda:boolean;
   constructor(private fb: FormBuilder, public dialog: MatDialog, 
     public commonServices: CommonService,
     public judicialServices:DefensaJudicialService,

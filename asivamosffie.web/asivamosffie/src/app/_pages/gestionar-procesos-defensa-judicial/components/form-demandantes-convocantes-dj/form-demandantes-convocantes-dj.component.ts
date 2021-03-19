@@ -294,10 +294,10 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
   cambioTipoTexto() {
     /*
     if(this.addressForm.value.demandaContraFFIE==false){
-      this.tieneDemanda.emit(true);
+      this.tieneDemanda.emit(false);
     }
     else{
-      this.tieneDemanda.emit(false);
+      this.tieneDemanda.emit(true);
     }
     */
     this.textoConvocantes = this.addressForm.value.demandaContraFFIE ? "convocante" : "demandante";
