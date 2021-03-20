@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -12,9 +13,17 @@ export class HomeComponent implements OnInit {
   obra = false;
   interventoria = false;
 
-  constructor() { }
+  constructor( 
+    private router: Router,
+     
+  ) { }
 
   ngOnInit(): void {
   }
+
+  registrarSolicitud(){
+    this.router.navigate(["/verificarSolicitudDeNovedades/registrarSolicitudInterventoria",0])
+  }
+
 
 }

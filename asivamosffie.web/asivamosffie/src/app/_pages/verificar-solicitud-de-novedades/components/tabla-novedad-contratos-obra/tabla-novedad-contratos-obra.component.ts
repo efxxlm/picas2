@@ -4,37 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-
-export interface VerificacionDiaria {
-  id: string;
-  fecha: string;
-  numeroSolicitud: string;
-  numeroContrato: string;
-  tipoNovedad: string;
-  estadoNovedad: string;
-  estadoRegistro: string;
-}
-
-const ELEMENT_DATA: VerificacionDiaria[] = [
-  {
-    id: '1',
-    fecha: '15/10/2020',
-    numeroSolicitud: 'NOV-001',
-    numeroContrato: 'A887654344',
-    tipoNovedad: 'Modificación de Condiciones Contractuales',
-    estadoNovedad: 'Sin verificar',
-    estadoRegistro: 'Incompleto',
-  },
-  {
-    id: '2',
-    fecha: '17/10/2020',
-    numeroSolicitud: 'NOV-006',
-    numeroContrato: 'A887654344',
-    tipoNovedad: 'Suspensión',
-    estadoNovedad: 'Sin verificar',
-    estadoRegistro: 'Incompleto',
-  },
-];
+import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNovelty/contractual-novelty.service';
 
 @Component({
   selector: 'app-tabla-novedad-contratos-obra',
@@ -52,14 +22,20 @@ export class TablaNovedadContratosObraComponent implements AfterViewInit {
     'estadoRegistro',
     'id'
   ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor() { }
+  constructor(
+    private contractualNoveltyService: ContractualNoveltyService,
+
+  ) { }
 
   ngAfterViewInit() {
+    this.contractualNoveltyService.getListGrillaNovedadContractualObra()
+      .subscribe(resp => {
+        this.dataSource = new MatTableDataSource(resp);
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
@@ -68,6 +44,7 @@ export class TablaNovedadContratosObraComponent implements AfterViewInit {
       return (page + 1).toString() + ' de ' + length.toString();
     };
     this.paginator._intl.previousPageLabel = 'Anterior';
+  });
   }
 
   applyFilter(event: Event) {

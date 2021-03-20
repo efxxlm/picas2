@@ -66,12 +66,26 @@ namespace asivamosffie.api.Controllers
            descripción: grilla de novedades
            impacto: CU 4.1.3*/
         [HttpGet]
-        [Route("GetListGrillaNovedadContractual")]
-        public async Task<ActionResult<List<NovedadContractual>>> GetListGrillaNovedadContractual()
+        [Route("GetListGrillaNovedadContractualObra")]
+        public async Task<ActionResult<List<VNovedadContractual>>> GetListGrillaNovedadContractualObra()
         {
             try
             {
-                return await _contractualModification.GetListGrillaNovedadContractual();
+                return await _contractualModification.GetListGrillaNovedadContractualObra();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpGet]
+        [Route("GetListGrillaNovedadContractualInterventoria")]
+        public async Task<ActionResult<List<VNovedadContractual>>> GetListGrillaNovedadContractualInterventoria()
+        {
+            try
+            {
+                return await _contractualModification.GetListGrillaNovedadContractualInterventoria();
             }
             catch (Exception ex)
             {

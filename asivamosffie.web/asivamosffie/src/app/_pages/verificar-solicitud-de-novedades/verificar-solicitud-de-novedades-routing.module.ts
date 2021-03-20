@@ -23,7 +23,7 @@ const routes: Routes = [
     component: VerDetalleSolicitudComponent
   },
   {
-    path: 'registrarSolicitud',
+    path: 'registrarSolicitud/:id',
     component: RegistrarSolicitudComponent
   },
   {
@@ -31,7 +31,7 @@ const routes: Routes = [
     component: VerDetalleInterventoriaComponent
   },
   {
-    path: 'registrarSolicitudInterventoria',
+    path: 'registrarSolicitudInterventoria/:id',
     component: RegistrarSolicitudInterventoriaComponent
   }
 ];

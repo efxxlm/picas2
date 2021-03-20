@@ -50,7 +50,7 @@ export class TablaSolicitudNovedadContractualComponent implements AfterViewInit 
 
   ngAfterViewInit() {
 
-    this.contractualNoveltyService.getListGrillaNovedadContractual()
+    this.contractualNoveltyService.getListGrillaNovedadContractualObra()
       .subscribe(resp => {
         this.dataSource = new MatTableDataSource(resp);
 

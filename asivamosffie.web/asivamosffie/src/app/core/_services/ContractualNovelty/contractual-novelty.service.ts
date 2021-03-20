@@ -27,9 +27,14 @@ export class ContractualNoveltyService {
     return this.http.post<Respuesta>( `${ this.urlApi }/CreateEditarModification`, pNContrato );
   }
   
-  getListGrillaNovedadContractual()
+  getListGrillaNovedadContractualObra()
   {
-    return this.http.get<any[]>( `${ this.urlApi }/GetListGrillaNovedadContractual` ); 
+    return this.http.get<any[]>( `${ this.urlApi }/getListGrillaNovedadContractualObra` ); 
+  }
+
+  getListGrillaNovedadContractualInterventoria()
+  {
+    return this.http.get<any[]>( `${ this.urlApi }/getListGrillaNovedadContractualInterventoria` ); 
   }
 
   getProyectosContrato(ncontrato) {

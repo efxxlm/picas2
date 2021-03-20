@@ -11,7 +11,8 @@ namespace asivamosffie.services.Interfaces
     public interface IContractualNoveltyService
     {
         Task<Respuesta> CreateEditNovedadContractual(NovedadContractual novedadContractual);
-        Task<List<NovedadContractual>> GetListGrillaNovedadContractual();
+        Task<List<VNovedadContractual>> GetListGrillaNovedadContractualObra();
+        Task<List<VNovedadContractual>> GetListGrillaNovedadContractualInterventoria();
         Task<Respuesta> EliminarNovedadContractual(int pNovedadContractualId, string pUsuario);
         Task<List<Contrato>> GetListContract(int userID);
         Task<List<VProyectosXcontrato>> GetProyectsByContract(int pContratoId);

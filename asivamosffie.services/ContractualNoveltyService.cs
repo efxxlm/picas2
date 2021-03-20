@@ -39,43 +39,33 @@ namespace asivamosffie.services
         /// CU 4.1.3 - get list of information about contractual modification 
         /// </summary>
         /// <returns></returns>
-        public async Task<List<NovedadContractual>> GetListGrillaNovedadContractual()
+        public async Task<List<VNovedadContractual>> GetListGrillaNovedadContractualObra()
         {
-            List<NovedadContractual> ListNovedades = new List<NovedadContractual>();
-
-            List<Dominio> ListDominioTipoNovedad = _context.Dominio
-                                                                .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Novedad_Modificacion_Contractual)
-                                                                .ToList();
-
-            List<Dominio> ListDominioEstado = _context.Dominio
-                                                            .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Novedad_Contractual)
-                                                            .ToList();
+            List<VNovedadContractual> ListNovedades = new List<VNovedadContractual>();
 
             try
             {
-                ListNovedades = await _context.NovedadContractual
-                                                    .Where(r => r.Eliminado != true)
-                                                    .Include( r => r.NovedadContractualDescripcion )
+                ListNovedades = await _context.VNovedadContractual
+                                                    .Where(r => r.TipoSolicitudCodigo != ConstanCodigoTipoContratacion.Obra.ToString())
                                                     .ToListAsync();
 
+                return ListNovedades.OrderByDescending(r => r.FechaSolictud).ToList();
+            }
+            catch (Exception ex)
+            {
+                return ListNovedades;
+            }
+        }
 
-                foreach( NovedadContractual novedad in ListNovedades)
-                {
-                    novedad.EstadoNovedadNombre = ListDominioEstado
-                                                        .Where(r => r.Codigo == novedad.EstadoCodigo)
-                                                        ?.FirstOrDefault()
-                                                        ?.Nombre;
+        public async Task<List<VNovedadContractual>> GetListGrillaNovedadContractualInterventoria()
+        {
+            List<VNovedadContractual> ListNovedades = new List<VNovedadContractual>();
 
-                    foreach (NovedadContractualDescripcion descripcion in novedad.NovedadContractualDescripcion)
-                    {
-                        descripcion.NombreTipoNovedad = ListDominioTipoNovedad
-                                                               .Where(r => r.Codigo == descripcion.TipoNovedadCodigo)
-                                                               ?.FirstOrDefault()
-                                                               ?.Nombre;
-
-                        novedad.NovedadesSeleccionadas = string.Concat(novedad.NovedadesSeleccionadas, descripcion.NombreTipoNovedad, ",");
-                    }
-                }
+            try
+            {
+                ListNovedades = await _context.VNovedadContractual
+                                                    .Where(r => r.TipoSolicitudCodigo != ConstanCodigoTipoContratacion.Interventoria.ToString())
+                                                    .ToListAsync();
 
                 return ListNovedades.OrderByDescending(r => r.FechaSolictud).ToList();
             }

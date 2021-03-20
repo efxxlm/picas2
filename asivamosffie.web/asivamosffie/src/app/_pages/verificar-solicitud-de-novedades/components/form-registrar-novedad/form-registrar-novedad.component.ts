@@ -265,7 +265,7 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
       .subscribe(respuesta => {
         this.openDialog('', respuesta.message);
         if (respuesta.code === '200')
-          this.router.navigate(['/registrarSolicitudNovedadContractual']);
+          this.router.navigate(['/verificarSolicitudDeNovedades']);
       });
 
   }
