@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 import { CommonService } from 'src/app/core/_services/common/common.service';
 import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
 import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
-import { EstadoSolicitudPagoOrdenGiro, EstadosSolicitudPagoOrdenGiro } from 'src/app/_interfaces/estados-solicitudPago-ordenGiro.interface';
+import { EstadoSolicitudPagoOrdenGiro, EstadosSolicitudPagoOrdenGiro, TipoSolicitud, TipoSolicitudes } from 'src/app/_interfaces/estados-solicitudPago-ordenGiro.interface';
 import { DialogEnvioAutorizacionComponent } from '../dialog-envio-autorizacion/dialog-envio-autorizacion.component';
 
 @Component({
@@ -18,7 +18,7 @@ import { DialogEnvioAutorizacionComponent } from '../dialog-envio-autorizacion/d
 export class AprobarSolicitudesPagoComponent implements OnInit {
     
     verAyuda = false;
-    tipoSolicitudCodigo: any = {};
+    tipoSolicitud: TipoSolicitud = TipoSolicitudes;
     listaEstadoSolicitudPago: EstadoSolicitudPagoOrdenGiro = EstadosSolicitudPagoOrdenGiro;
     dataSource = new MatTableDataSource();
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;

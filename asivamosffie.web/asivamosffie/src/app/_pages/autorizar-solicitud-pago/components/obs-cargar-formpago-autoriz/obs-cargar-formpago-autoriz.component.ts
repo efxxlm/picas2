@@ -18,10 +18,11 @@ export class ObsCargarFormpagoAutorizComponent implements OnInit {
     @Input() esVerDetalle = false;
     @Input() autorizarSolicitudPagoId: any;
     @Input() cargarFormaPagoCodigo: string;
+    @Input() solicitudPagoCargarFormaPago: any;
+    @Input() tieneFormaPago: boolean;
     @Output() estadoSemaforo = new EventEmitter<string>();
     solicitudPagoObservacionId = 0;
     addressForm: FormGroup;
-    solicitudPagoCargarFormaPago: any;
     formaPagoArray: Dominio[] = [];
     editorStyle = {
       height: '45px',
@@ -52,34 +53,38 @@ export class ObsCargarFormpagoAutorizComponent implements OnInit {
 
     ngOnInit(): void {
         if ( this.solicitudPago !== undefined ) {
-            this.solicitudPagoCargarFormaPago = this.solicitudPago.solicitudPagoCargarFormaPago[0];
-            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.autorizarSolicitudPagoId, this.solicitudPago.solicitudPagoId, this.solicitudPagoCargarFormaPago.solicitudPagoCargarFormaPagoId )
-                .subscribe(
-                    response => {
-                        const obsSupervisor = response.filter( obs => obs.archivada === false )[0];
-                        
-                        if ( obsSupervisor !== undefined ) {
+            if ( this.tieneFormaPago === true ) {
+                this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.autorizarSolicitudPagoId, this.solicitudPago.solicitudPagoId, this.solicitudPagoCargarFormaPago.solicitudPagoCargarFormaPagoId )
+                    .subscribe(
+                        response => {
+                            const obsSupervisor = response.filter( obs => obs.archivada === false )[0];
 
-                            if ( obsSupervisor.registroCompleto === false ) {
-                                this.estadoSemaforo.emit( 'en-proceso' );
-                            }
-                            if ( obsSupervisor.registroCompleto === true ) {
-                                this.estadoSemaforo.emit( 'completo' );
-                            }
-                            console.log( obsSupervisor );
-                            this.estaEditando = true;
-                            this.addressForm.markAllAsTouched();
-                            this.solicitudPagoObservacionId = obsSupervisor.solicitudPagoObservacionId;
-                            this.addressForm.setValue(
-                                {
-                                    fechaCreacion: obsSupervisor.fechaCreacion,
-                                    tieneObservaciones: obsSupervisor.tieneObservacion !== undefined ? obsSupervisor.tieneObservacion : null,
-                                    observaciones: obsSupervisor.observacion !== undefined ? ( obsSupervisor.observacion.length > 0 ? obsSupervisor.observacion : null ) : null
+                            if ( obsSupervisor !== undefined ) {
+
+                                if ( obsSupervisor.registroCompleto === false ) {
+                                    this.estadoSemaforo.emit( 'en-proceso' );
                                 }
-                            );
+                                if ( obsSupervisor.registroCompleto === true ) {
+                                    this.estadoSemaforo.emit( 'completo' );
+                                }
+                                console.log( obsSupervisor );
+                                this.estaEditando = true;
+                                this.addressForm.markAllAsTouched();
+                                this.solicitudPagoObservacionId = obsSupervisor.solicitudPagoObservacionId;
+                                this.addressForm.setValue(
+                                    {
+                                        fechaCreacion: obsSupervisor.fechaCreacion,
+                                        tieneObservaciones: obsSupervisor.tieneObservacion !== undefined ? obsSupervisor.tieneObservacion : null,
+                                        observaciones: obsSupervisor.observacion !== undefined ? ( obsSupervisor.observacion.length > 0 ? obsSupervisor.observacion : null ) : null
+                                    }
+                                );
+                            }
                         }
-                    }
-                );
+                    );
+            }
+            if ( this.tieneFormaPago === false ) {
+                this.estadoSemaforo.emit( 'completo' );
+            }
         }
     }
 

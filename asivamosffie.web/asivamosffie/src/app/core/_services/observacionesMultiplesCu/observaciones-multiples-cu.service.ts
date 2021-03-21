@@ -26,6 +26,13 @@ export class ObservacionesMultiplesCuService {
     return this.http.get<any[]>( `${ this.apiUrl }/GetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId?pMenuId=${ pMenuId }&pSolicitudPagoId=${ pSolicitudPagoId }&pPadreId=${ pPadreId }` );
   }
 
+  asyncGetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( pMenuId: number, pSolicitudPagoId: number, pPadreId: number ) {
+    return new Promise<any[]>( resolve => {
+      this.http.get<any[]>( `${ this.apiUrl }/GetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId?pMenuId=${ pMenuId }&pSolicitudPagoId=${ pSolicitudPagoId }&pPadreId=${ pPadreId }` )
+        .subscribe( response => resolve( response ) );
+    } );
+  }
+
   createUpdateSolicitudPagoObservacion( pSolicitudPagoObservacion: any ) {
     return this.http.post<Respuesta>( `${ this.apiUrl }/CreateUpdateSolicitudPagoObservacion`, pSolicitudPagoObservacion );
   }
@@ -70,6 +77,9 @@ export class ObservacionesMultiplesCuService {
             }
             if ( tipoObservacion.codigo === '10' ) {
               tiposObservaciones.registrarSolicitudPago.amortizacionAnticipoCodigo = tipoObservacion.codigo
+            }
+            if ( tipoObservacion.codigo === '11' ) {
+              tiposObservaciones.listaChequeoCodigo = tipoObservacion.codigo
             }
           } );
 

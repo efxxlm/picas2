@@ -23,6 +23,7 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
     solicitudPagoObservacionId = 0;
     solicitudPago: any;
     solicitudPagoFase: any;
+    solicitudPagoCargarFormaPago: any;
     dataSource = new MatTableDataSource();
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -33,24 +34,6 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
         'porcentajeFacturado',
         'saldoPorPagar',
         'porcentajePorPagar'
-    ];
-    dataTable: any[] = [
-        {
-          faseContrato: 'Fase 1 - Preconstrucción',
-          pagosRealizados: '0',
-          valorFacturado: '0',
-          porcentajeFacturado: '0',
-          saldoPorPagar: '$30.000.000',
-          porcentajePorPagar: '100%',
-        },
-        {
-          faseContrato: 'Fase 2 - Construcción',
-          pagosRealizados: '0',
-          valorFacturado: '0',
-          porcentajeFacturado: '0',
-          saldoPorPagar: '$75.000.000',
-          porcentajePorPagar: '100%',
-        }
     ];
     addressForm: FormGroup;
     editorStyle = {
@@ -77,6 +60,7 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
         semaforoAcordeonDatosFactura: 'sin-diligenciar'
     }
     estaEditando = false;
+
     constructor(
         private fb: FormBuilder,
         private routes: Router,
@@ -91,6 +75,13 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
         if ( this.contrato !== undefined ) {
             this.solicitudPago = this.contrato.solicitudPagoOnly;
             this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
+
+            if ( this.contrato.solicitudPago.length > 1 ) {
+                this.solicitudPagoCargarFormaPago = this.contrato.solicitudPago[0].solicitudPagoCargarFormaPago[0];
+            } else {
+                this.solicitudPagoCargarFormaPago = this.contrato.solicitudPagoOnly.solicitudPagoCargarFormaPago[0];
+            }
+
             if ( this.solicitudPagoFase.esPreconstruccion === true ) {
                 // Validacion si es preconstruccion eliminar el campo de amortizacion de los semaforos.
                 delete this.estadoSemaforos.semaforoAcordeonAmortizacion;
@@ -123,7 +114,7 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
                 );
         }
 
-        this.dataSource = new MatTableDataSource(this.dataTable);
+        this.dataSource = new MatTableDataSource( this.contrato.vContratoPagosRealizados );
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
     }

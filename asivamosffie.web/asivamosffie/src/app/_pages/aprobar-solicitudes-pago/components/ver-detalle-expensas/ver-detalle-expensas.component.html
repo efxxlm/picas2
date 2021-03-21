@@ -45,15 +45,16 @@
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title en-alerta">
+                <mat-panel-title class="expansion-style--title">
                     Lista de chequeo
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <div style="margin-top: 1em;">
-                <div class="d-flex align-items-center solbloq ml8 info-text en-alertaLibre mb-2em">
-                    Este acordeón consume información de la funcionalidad Listas de chequeó.
-                </div>
-            </div>
+
+            <app-obs-valid-listachequeo [solicitudPago]="solicitudPago"
+                                        [listaChequeoCodigo]="listaTipoObservacionSolicitudes.listaChequeoCodigo"
+                                        [aprobarSolicitudPagoId]="menusIdPath.aprobarSolicitudPagoId"
+                                        [esVerDetalle]="true">
+            </app-obs-valid-listachequeo>
         </mat-expansion-panel>
     </mat-accordion>
 

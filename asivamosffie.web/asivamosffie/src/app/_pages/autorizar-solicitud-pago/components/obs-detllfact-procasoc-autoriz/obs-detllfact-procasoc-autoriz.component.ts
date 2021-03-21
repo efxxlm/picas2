@@ -21,6 +21,7 @@ export class ObsDetllfactProcasocAutorizComponent implements OnInit {
     @Input() esVerDetalle = false;
     @Input() autorizarSolicitudPagoId: any
     @Input() criteriosPagoProyectoCodigo: string;
+    @Input() solicitudPagoCargarFormaPago: any;
     @Output() estadoSemaforo = new EventEmitter<string>();
     solicitudPagoObservacionId = 0;
     esMultiProyecto = false;
@@ -29,8 +30,8 @@ export class ObsDetllfactProcasocAutorizComponent implements OnInit {
     criteriosArraySeleccionados: Dominio[] = [];
     solicitudPagoFaseCriterio: any;
     solicitudPagoFaseCriterioProyecto: any;
-    solicitudPagoCargarFormaPago: any;
     solicitudPagoFase: any;
+    montoMaximo: { valorMaximoProyecto: number, valorPendienteProyecto: number };
     dataSource = new MatTableDataSource();
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -56,6 +57,7 @@ export class ObsDetllfactProcasocAutorizComponent implements OnInit {
         ]
     };
     estaEditando = false;
+
     get projects() {
         return this.addressForm.get('projects') as FormArray;
     }
@@ -79,7 +81,6 @@ export class ObsDetllfactProcasocAutorizComponent implements OnInit {
 
     getProyectos() {
         if (this.solicitudPago !== undefined) {
-            this.solicitudPagoCargarFormaPago = this.solicitudPago.solicitudPagoCargarFormaPago[0];
             this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
             this.solicitudPagoFaseCriterio = this.solicitudPagoFase.solicitudPagoFaseCriterio;
             // Get observaciones
@@ -111,7 +112,7 @@ export class ObsDetllfactProcasocAutorizComponent implements OnInit {
                         criterios => {
                             this.registrarPagosSvc.getProyectosByIdContrato(this.solicitudPago.contratoId)
                                 .subscribe(
-                                    proyectos => {
+                                    async proyectos => {
                                         const criteriosArray = [];
                                         const criteriosSeleccionados = [];
                                         let criteriosDiligenciados = [];
@@ -170,11 +171,16 @@ export class ObsDetllfactProcasocAutorizComponent implements OnInit {
                                                         }
                                                     });
                                                 });
+
+                                                const montoMaximo = await this.registrarPagosSvc.getMontoMaximoProyecto( this.solicitudPago.contratoId, proyecto.contratacionProyectoId, 'True' );
+
                                                 this.projects.push(
                                                     this.fb.group(
                                                         {
                                                             check: [criteriosProyectoSeleccionados.length > 0 ? true : false],
                                                             listaCriterios: [criteriosArray],
+                                                            valorMaximoProyecto: [ montoMaximo.valorMaximoProyecto ],
+                                                            valorPendienteProyecto: [ montoMaximo.valorPendienteProyecto ],
                                                             contratacionProyectoId: [proyecto.contratacionProyectoId],
                                                             llaveMen: [proyecto.llaveMen],
                                                             criterioPago: [criterioPagoArray.length > 0 ? criterioPagoArray : null],
@@ -192,6 +198,8 @@ export class ObsDetllfactProcasocAutorizComponent implements OnInit {
                                                 this.criteriosArraySeleccionados.push(this.listaCriterios.filter(criterioValue => criterioValue.codigo === criterio.tipoCriterioCodigo)[0]);
                                             });
                                             this.proyectos = proyectos[1];
+                                            const montoMaximo = await this.registrarPagosSvc.getMontoMaximoProyecto( this.solicitudPago.contratoId, this.proyectos[0].contratacionProyectoId, 'True' );
+                                            this.montoMaximo = montoMaximo;
                                         }
                                         this.dataSource = new MatTableDataSource(proyectos[1]);
                                         this.dataSource.paginator = this.paginator;
@@ -207,7 +215,7 @@ export class ObsDetllfactProcasocAutorizComponent implements OnInit {
                         criterios => {
                             this.registrarPagosSvc.getProyectosByIdContrato(this.solicitudPago.contratoId)
                                 .subscribe(
-                                    proyectos => {
+                                    async proyectos => {
                                         const criteriosArray = [];
                                         const criteriosSeleccionados = [];
                                         let criteriosDiligenciados = [];
@@ -266,11 +274,16 @@ export class ObsDetllfactProcasocAutorizComponent implements OnInit {
                                                         }
                                                     });
                                                 });
+
+                                                const montoMaximo = await this.registrarPagosSvc.getMontoMaximoProyecto( this.solicitudPago.contratoId, proyecto.contratacionProyectoId, 'False' );
+
                                                 this.projects.push(
                                                     this.fb.group(
                                                         {
                                                             check: [criteriosProyectoSeleccionados.length > 0 ? true : false],
                                                             listaCriterios: [criteriosArray],
+                                                            valorMaximoProyecto: [ montoMaximo.valorMaximoProyecto ],
+                                                            valorPendienteProyecto: [ montoMaximo.valorPendienteProyecto ],
                                                             contratacionProyectoId: [proyecto.contratacionProyectoId],
                                                             llaveMen: [proyecto.llaveMen],
                                                             criterioPago: [criterioPagoArray.length > 0 ? criterioPagoArray : null],
@@ -287,6 +300,8 @@ export class ObsDetllfactProcasocAutorizComponent implements OnInit {
                                                 this.criteriosArraySeleccionados.push(this.listaCriterios.filter(criterioValue => criterioValue.codigo === criterio.tipoCriterioCodigo)[0]);
                                             });
                                             this.proyectos = proyectos[1];
+                                            const montoMaximo = await this.registrarPagosSvc.getMontoMaximoProyecto( this.solicitudPago.contratoId, this.proyectos[0].contratacionProyectoId, 'False' );
+                                            this.montoMaximo = montoMaximo;
                                         }
                                         this.dataSource = new MatTableDataSource(proyectos[1]);
                                         this.dataSource.paginator = this.paginator;

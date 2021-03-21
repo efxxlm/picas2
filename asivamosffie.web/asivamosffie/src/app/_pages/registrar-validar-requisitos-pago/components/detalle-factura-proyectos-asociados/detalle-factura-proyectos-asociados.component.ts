@@ -45,7 +45,7 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
         }
     );
     esMultiProyecto = false;
-    montoMaximo: { valorMaximoProyecto: number, valorPendienteProyecto:number };
+    montoMaximo: { valorMaximoProyecto: number, valorPendienteProyecto: number };
     proyectos: any;
     listaCriterios: Dominio[] = [];
     criteriosArraySeleccionados: Dominio[] = [];
@@ -163,7 +163,7 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
                                                 this.criteriosArraySeleccionados.push( this.listaCriterios.filter( criterioValue => criterioValue.codigo === criterio.tipoCriterioCodigo )[0] );
                                             } );
                                             this.proyectos = proyectos[1];
-                                            const montoMaximo = await this.registrarPagosSvc.getMontoMaximoProyecto( this.solicitudPago.contratoId, this.proyectos[0].contratacionProyectoId, 'False' );
+                                            const montoMaximo = await this.registrarPagosSvc.getMontoMaximoProyecto( this.solicitudPago.contratoId, this.proyectos[0].contratacionProyectoId, 'True' );
                                             this.montoMaximo = montoMaximo;
                                         }
                                         this.dataSource = new MatTableDataSource( proyectos[1] );

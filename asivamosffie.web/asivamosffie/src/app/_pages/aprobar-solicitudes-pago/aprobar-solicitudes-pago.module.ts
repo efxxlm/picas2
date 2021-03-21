@@ -1,3 +1,4 @@
+import { DialogObservacionesItemListchequeoComponent } from './components/dialog-observaciones-item-listchequeo/dialog-observaciones-item-listchequeo.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AprobarSolicitudesPagoRoutingModule } from './aprobar-solicitudes-pago-routing.module';
@@ -28,7 +29,7 @@ import { FormAmortizacionComponent } from './components/form-amortizacion/form-a
 import { VerDetalleExpensasComponent } from './components/ver-detalle-expensas/ver-detalle-expensas.component';
 
 @NgModule({
-  declarations: [AprobarSolicitudesPagoComponent, FormAprobarSolicitudComponent, DialogProyectosAsociadosAprobComponent, ObsCargarFormaPagoComponent, ObsRegistrarSolicitudPagoComponent, ObsCriterioPagosComponent, ObsDetllFactProcAsociadosComponent, ObsDatosFacturaComponent, ObsDescuentosDirTecnicaComponent, ObsSoporteSolicitudComponent, ObsValidListachequeoComponent, FormEditAprobarSolicitudComponent, TablaHistorialObservacionesSolpagoComponent, VerDetalleAprobarSolicitudComponent, DetalleSolicitudPagoComponent, ViewDetllFactProcAsociadosComponent, DetalleValidarListchequeoComponent, DialogEnvioAutorizacionComponent, FormObservacionExpensasComponent, FormAmortizacionComponent, VerDetalleExpensasComponent],
+  declarations: [ DialogObservacionesItemListchequeoComponent, AprobarSolicitudesPagoComponent, FormAprobarSolicitudComponent, DialogProyectosAsociadosAprobComponent, ObsCargarFormaPagoComponent, ObsRegistrarSolicitudPagoComponent, ObsCriterioPagosComponent, ObsDetllFactProcAsociadosComponent, ObsDatosFacturaComponent, ObsDescuentosDirTecnicaComponent, ObsSoporteSolicitudComponent, ObsValidListachequeoComponent, FormEditAprobarSolicitudComponent, TablaHistorialObservacionesSolpagoComponent, VerDetalleAprobarSolicitudComponent, DetalleSolicitudPagoComponent, ViewDetllFactProcAsociadosComponent, DetalleValidarListchequeoComponent, DialogEnvioAutorizacionComponent, FormObservacionExpensasComponent, FormAmortizacionComponent, VerDetalleExpensasComponent],
   imports: [
     CommonModule,
     AprobarSolicitudesPagoRoutingModule,

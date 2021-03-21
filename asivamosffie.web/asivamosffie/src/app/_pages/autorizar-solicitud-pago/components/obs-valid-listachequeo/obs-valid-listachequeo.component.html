@@ -47,13 +47,13 @@
                 <mat-card class="shipping-card var-main-gris">
                     <mat-card-header class="header-card header-card--margin">
                         <mat-card-title class="header-card--text textoGris">
-                            Observación de la supervisión
+                            Observación de la coordinación
                         </mat-card-title>
                     </mat-card-header>
                     <mat-card-content style="text-align: left;">
                         <p><b> {{ lista.get( 'fechaCreacion' ).value | date: 'dd/MM/yyyy' }} </b></p>
-                        <p *ngIf="lista.get( 'tieneObservaciones' ).value === true"><b>¿Desde la supervisión tiene observaciones a la {{ firstLetterUpperCase( lista.get( 'solicitudPagoListaChequeo' ).value.listaChequeo.nombre ) }}?:</b> Si </p>
-                        <p *ngIf="lista.get( 'tieneObservaciones' ).value === false"><b>¿Desde la supervisión tiene observaciones a la {{ firstLetterUpperCase( lista.get( 'solicitudPagoListaChequeo' ).value.listaChequeo.nombre ) }}?:</b> No</p>
+                        <p *ngIf="lista.get( 'tieneObservaciones' ).value === true"><b>¿Desde la coordinación tiene observaciones a la {{ firstLetterUpperCase( lista.get( 'solicitudPagoListaChequeo' ).value.listaChequeo.nombre ) }}?:</b> Si </p>
+                        <p *ngIf="lista.get( 'tieneObservaciones' ).value === false"><b>¿Desde la coordinación tiene observaciones a la {{ firstLetterUpperCase( lista.get( 'solicitudPagoListaChequeo' ).value.listaChequeo.nombre ) }}?:</b> No</p>
                         <section [innerHTML]="lista.get( 'observaciones' ).value" *ngIf="lista.get( 'tieneObservaciones' ).value === true"></section>
                     </mat-card-content>
                 </mat-card>
@@ -61,7 +61,7 @@
             <ng-template #noEsVerDetalle [formGroup]="lista">
                     <div class="row mtop justCenter">
                         <div class="col-md-5">
-                            <label class="label-left">¿Desde la supervisión tiene observaciones a la {{ firstLetterUpperCase( lista.get( 'solicitudPagoListaChequeo' ).value.listaChequeo.nombre ) }}?</label>
+                            <label class="label-left">¿Desde la coordinación tiene observaciones a la {{ firstLetterUpperCase( lista.get( 'solicitudPagoListaChequeo' ).value.listaChequeo.nombre ) }}?</label>
                         </div>
                         <div class="col-md-2">
                             <mat-radio-group aria-labelledby="example-radio-group-label" class="radioInput" formControlName="tieneObservaciones" required>

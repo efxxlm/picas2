@@ -1,3 +1,5 @@
+import { DialogObservacionesItemListchequeoComponent } from './components/dialog-observaciones-item-listchequeo/dialog-observaciones-item-listchequeo.component';
+import { ObsValidListachequeoComponent } from './components/obs-valid-listachequeo/obs-valid-listachequeo.component';
 import { FormAmortizacionComponent } from './components/form-amortizacion/form-amortizacion.component';
 import { VerDetalleExpensasComponent } from './components/ver-detalle-expensas/ver-detalle-expensas.component';
 import { FormObservacionExpensasComponent } from './components/form-observacion-expensas/form-observacion-expensas.component';
@@ -31,7 +33,7 @@ import { DialogEnvSolicitudAutorizComponent } from './components/dialog-env-soli
 
 
 @NgModule({
-  declarations: [AutorizarSolicitudPagoComponent, FormAutorizarSolicitudComponent, ObsCargarFormpagoAutorizComponent, ObsRegistrarSolPagoAutorizComponent, ObsCriterioPagosAutorizComponent, ObsDetllfactProcasocAutorizComponent, ObsDatosFacturaAutorizComponent, ObsDescDirTecnicaAutorizComponent, ObsSoporteurlAutorizComponent, ObsValidListchqeoAutorizComponent, ObsCertAutorizacionAutorizComponent, FormEditAutorizarSolicitudComponent, DialogProyectosAsociadosAutorizComponent, TablaObservacionesAutorizComponent, VerDetalleAutorizarSolicitudComponent, DetalleSoliPagoAutorizComponent, DetalleValidListchqAutorizComponent, DetalleFacturaProcasAutorizComponent, DialogEnvSolicitudAutorizComponent, FormObservacionExpensasComponent, VerDetalleExpensasComponent, FormAmortizacionComponent],
+  declarations: [ DialogObservacionesItemListchequeoComponent, ObsValidListachequeoComponent, AutorizarSolicitudPagoComponent, FormAutorizarSolicitudComponent, ObsCargarFormpagoAutorizComponent, ObsRegistrarSolPagoAutorizComponent, ObsCriterioPagosAutorizComponent, ObsDetllfactProcasocAutorizComponent, ObsDatosFacturaAutorizComponent, ObsDescDirTecnicaAutorizComponent, ObsSoporteurlAutorizComponent, ObsValidListchqeoAutorizComponent, ObsCertAutorizacionAutorizComponent, FormEditAutorizarSolicitudComponent, DialogProyectosAsociadosAutorizComponent, TablaObservacionesAutorizComponent, VerDetalleAutorizarSolicitudComponent, DetalleSoliPagoAutorizComponent, DetalleValidListchqAutorizComponent, DetalleFacturaProcasAutorizComponent, DialogEnvSolicitudAutorizComponent, FormObservacionExpensasComponent, VerDetalleExpensasComponent, FormAmortizacionComponent],
   imports: [
     CommonModule,
     MaterialModule,

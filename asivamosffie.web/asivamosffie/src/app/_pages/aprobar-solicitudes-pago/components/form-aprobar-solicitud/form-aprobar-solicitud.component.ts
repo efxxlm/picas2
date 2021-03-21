@@ -29,6 +29,8 @@ export class FormAprobarSolicitudComponent implements OnInit {
     addressForm: FormGroup;
     otrosCostosObsForm: FormGroup;
     dataSource = new MatTableDataSource();
+    solicitudPagoCargarFormaPago: any;
+    tieneFormaPago = true;
     menusIdPath: any; // Se obtienen los ID de los respectivos PATH de cada caso de uso que se implementaran observaciones.
     listaTipoObservacionSolicitudes: any; // Interfaz lista tipos de observaciones.
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -43,6 +45,7 @@ export class FormAprobarSolicitudComponent implements OnInit {
     estadoAcordeones = {
         estadoFormaPago: 'sin-diligenciar',
         estadoSolicitudPago: 'sin-diligenciar',
+        estadoListaChequeo: 'sin-diligenciar',
         soporteSolicitud: 'sin-diligenciar'
     }
     editorStyle = {
@@ -181,7 +184,15 @@ export class FormAprobarSolicitudComponent implements OnInit {
                                             }
                                         } );
                                 } else {
-                                    this.dataSource = new MatTableDataSource( this.contrato.contratacion.disponibilidadPresupuestal );
+
+                                    if ( this.contrato.solicitudPago.length > 1 ) {
+                                        this.solicitudPagoCargarFormaPago = this.contrato.solicitudPago[0].solicitudPagoCargarFormaPago[0];
+                                        this.tieneFormaPago = false;
+                                    } else {
+                                        this.solicitudPagoCargarFormaPago = this.contrato.solicitudPagoOnly.solicitudPagoCargarFormaPago[0];
+                                    }
+
+                                    this.dataSource = new MatTableDataSource( this.contrato.valorFacturadoContrato );
                                     this.dataSource.paginator = this.paginator;
                                     this.dataSource.sort = this.sort;
                                 }
@@ -193,8 +204,11 @@ export class FormAprobarSolicitudComponent implements OnInit {
 
     getModalidadContrato( modalidadCodigo: string ) {
         if ( this.modalidadContratoArray.length > 0 ) {
-            const modalidad = this.modalidadContratoArray.filter( modalidad => modalidad.codigo === modalidadCodigo );
-            return modalidad[0].nombre;
+            const modalidad = this.modalidadContratoArray.find( modalidad => modalidad.codigo === modalidadCodigo );
+            
+            if ( modalidad !== undefined ) {
+                return modalidad.nombre;
+            }
         }
     }
 
@@ -207,6 +221,9 @@ export class FormAprobarSolicitudComponent implements OnInit {
         }
         if ( tipoAcordeon === 'soporteSolicitud' ) {
             this.estadoAcordeones.soporteSolicitud = estado;
+        }
+        if ( tipoAcordeon === 'listaChequeo' ) {
+            this.estadoAcordeones.estadoListaChequeo = estado;
         }
     }
 

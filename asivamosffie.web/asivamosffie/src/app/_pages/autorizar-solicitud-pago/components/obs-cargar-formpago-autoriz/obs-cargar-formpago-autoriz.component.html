@@ -24,87 +24,89 @@
         </mat-card-content>
     </mat-card>
 
-    <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
-        <mat-card class="shipping-card var-main-gris">
-            <mat-card-header class="header-card header-card--margin">
-                <mat-card-title class="header-card--text textoGris">
-                    Observación de la coordinación
-                </mat-card-title>
-            </mat-card-header>
-            <mat-card-content style="text-align: left;">
-                <p><b> {{ addressForm.get( 'fechaCreacion' ).value | date: 'dd/MM/yyyy' }} </b></p>
-                <p *ngIf="addressForm.get( 'tieneObservaciones' ).value === true"><b>¿Desde la coordinación tiene
-                        observaciones a la forma de pago?:</b> Si </p>
-                <p *ngIf="addressForm.get( 'tieneObservaciones' ).value === false"><b>¿Desde la coordinación tiene
-                        observaciones a la forma de pago?:</b> No</p>
-                <section [innerHTML]="addressForm.get( 'observaciones' ).value"
-                    *ngIf="addressForm.get( 'tieneObservaciones' ).value === true"></section>
-            </mat-card-content>
-        </mat-card>
-    </ng-container>
-    <ng-template #noEsVerDetalle>
-        <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
-            <div class="row mtop justCenter">
-                <div class="col-md-5">
-                    <label class="label-left" [ngClass]="{
+    <section *ngIf="tieneFormaPago === true">
+        <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+            <mat-card class="shipping-card var-main-gris">
+                <mat-card-header class="header-card header-card--margin">
+                    <mat-card-title class="header-card--text textoGris">
+                        Observación de la coordinación
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content style="text-align: left;">
+                    <p><b> {{ addressForm.get( 'fechaCreacion' ).value | date: 'dd/MM/yyyy' }} </b></p>
+                    <p *ngIf="addressForm.get( 'tieneObservaciones' ).value === true"><b>¿Desde la coordinación tiene
+                            observaciones a la forma de pago?:</b> Si </p>
+                    <p *ngIf="addressForm.get( 'tieneObservaciones' ).value === false"><b>¿Desde la coordinación tiene
+                            observaciones a la forma de pago?:</b> No</p>
+                    <section [innerHTML]="addressForm.get( 'observaciones' ).value"
+                        *ngIf="addressForm.get( 'tieneObservaciones' ).value === true"></section>
+                </mat-card-content>
+            </mat-card>
+        </ng-container>
+        <ng-template #noEsVerDetalle>
+            <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+                <div class="row mtop justCenter">
+                    <div class="col-md-5">
+                        <label class="label-left" [ngClass]="{
+                            'color-secondaryColor':
+                              (addressForm.get('tieneObservaciones').invalid && addressForm.get('tieneObservaciones').touched) ||
+                              (addressForm.get('tieneObservaciones').invalid && estaEditando)
+                          }">¿Desde la coordinación tiene observaciones a la forma de pago?</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-radio-group aria-labelledby="example-radio-group-label" class="radioInput"
+                            formControlName="tieneObservaciones" required>
+                            <mat-radio-button class="radio-button" [value]="true">Sí</mat-radio-button>
+                            <mat-radio-button class="radio-button" [value]="false">No</mat-radio-button>
+                        </mat-radio-group>
+                        <span class="required-form-group" style="margin-left: 1px;">*</span>
+                    </div>
+                    <span class="icon-incompleto">
+                        <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                            [matTooltipPosition]="'above'"
+                            matTooltip="Debe ingresar la información en el campo para continuar"
+                            matTooltipClass="info-tooltip" *ngIf="
+                            (addressForm.get('tieneObservaciones').invalid && addressForm.get('tieneObservaciones').touched) ||
+                            (addressForm.get('tieneObservaciones').invalid && estaEditando)
+                          " />
+                    </span>
+                </div>
+                <div class="d-flex align-items-center mtop animatedDown" *ngIf="addressForm.get('tieneObservaciones').value === true">
+                    <div class="text-area-quill izqTitle" [ngClass]="{
                         'color-secondaryColor':
-                          (addressForm.get('tieneObservaciones').invalid && addressForm.get('tieneObservaciones').touched) ||
-                          (addressForm.get('tieneObservaciones').invalid && estaEditando)
-                      }">¿Desde la coordinación tiene observaciones a la forma de pago?</label>
+                          (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                          (addressForm.get('observaciones').invalid && estaEditando)
+                      }">
+                        <label for="observaciones" class="text-area-quill--label" [ngClass]="{
+                                    'colorMainColor':
+                                      !((addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                                      (addressForm.get('observaciones').invalid && estaEditando))
+                                  }">Observaciones a la
+                            forma de pago</label>
+                        <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
+                            (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observaciones
+                            autocapitalize="on"></quill-editor>
+                    </div>
+                    <span class="contador miles" *ngIf="addressForm.get('observaciones').value">
+                        {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
+                    </span>
+                    <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null">
+                        1000
+                    </span>
+                    <span class="icon-incompleto">
+                        <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                            [matTooltipPosition]="'above'"
+                            matTooltip="Debe ingresar la información en el campo para continuar"
+                            matTooltipClass="info-tooltip" *ngIf="
+                            (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                            (addressForm.get('observaciones').invalid && estaEditando)
+                          " />
+                    </span>
                 </div>
-                <div class="col-md-2">
-                    <mat-radio-group aria-labelledby="example-radio-group-label" class="radioInput"
-                        formControlName="tieneObservaciones" required>
-                        <mat-radio-button class="radio-button" [value]="true">Sí</mat-radio-button>
-                        <mat-radio-button class="radio-button" [value]="false">No</mat-radio-button>
-                    </mat-radio-group>
-                    <span class="required-form-group" style="margin-left: 1px;">*</span>
-                </div>
-                <span class="icon-incompleto">
-                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
-                        [matTooltipPosition]="'above'"
-                        matTooltip="Debe ingresar la información en el campo para continuar"
-                        matTooltipClass="info-tooltip" *ngIf="
-                        (addressForm.get('tieneObservaciones').invalid && addressForm.get('tieneObservaciones').touched) ||
-                        (addressForm.get('tieneObservaciones').invalid && estaEditando)
-                      " />
-                </span>
-            </div>
-            <div class="d-flex align-items-center mtop animatedDown" *ngIf="addressForm.get('tieneObservaciones').value === true">
-                <div class="text-area-quill izqTitle" [ngClass]="{
-                    'color-secondaryColor':
-                      (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
-                      (addressForm.get('observaciones').invalid && estaEditando)
-                  }">
-                    <label for="observaciones" class="text-area-quill--label" [ngClass]="{
-                                'colorMainColor':
-                                  !((addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
-                                  (addressForm.get('observaciones').invalid && estaEditando))
-                              }">Observaciones a la
-                        forma de pago</label>
-                    <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
-                        (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observaciones
-                        autocapitalize="on"></quill-editor>
-                </div>
-                <span class="contador miles" *ngIf="addressForm.get('observaciones').value">
-                    {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
-                </span>
-                <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null">
-                    1000
-                </span>
-                <span class="icon-incompleto">
-                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
-                        [matTooltipPosition]="'above'"
-                        matTooltip="Debe ingresar la información en el campo para continuar"
-                        matTooltipClass="info-tooltip" *ngIf="
-                        (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
-                        (addressForm.get('observaciones').invalid && estaEditando)
-                      " />
-                </span>
-            </div>
-            <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="addressForm.dirty === false">
-                <img src="assets/img/icon/guardar.svg" alt="Guardar">
-            </button>
-        </form>
-    </ng-template>
+                <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="addressForm.dirty === false">
+                    <img src="assets/img/icon/guardar.svg" alt="Guardar">
+                </button>
+            </form>
+        </ng-template>
+    </section>
 </section>

@@ -46,7 +46,7 @@ export class FormObservacionExpensasComponent implements OnInit {
         ]
     };
     estadoAcordeones = {
-        listaChequeo: 'en-alerta',
+        listaChequeo: 'sin-diligenciar',
         soporteSolicitud: 'sin-diligenciar'
     }
     estaEditando = false;

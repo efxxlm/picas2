@@ -1,0 +1,32 @@
+<button mat-button mat-dialog-close class="modal--btn-cerrar">
+    <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
+</button>
+<div style="padding: 30px 20px; text-align: center;">
+    <h1 class="title-menu--h1 centerTrick">
+        Observaciones item {{ data.jIndex + 1 }}
+    </h1>
+    <p class="info-sub-title">
+        <ng-container *ngIf="data.esExpensas === true; else noEsExpensas">
+            <span>Número de solicitud: <b> {{ data.dataSolicitud.numeroSolicitud }} </b></span>
+            <span>Llave MEN: <b> {{ data.dataSolicitud.contratacionProyecto.proyecto.llaveMen }} </b></span>
+        </ng-container>
+        <ng-template #noEsExpensas>
+            <span>Número de solicitud: <b> {{ data.dataSolicitud.solicitudPagoOnly.numeroSolicitud }} </b></span>
+            <span>Número de contrato: <b> {{ data.dataSolicitud.numeroContrato }} </b></span>
+        </ng-template>
+        
+    </p>
+    <p>
+        {{ data.registro.listaChequeoItem.nombre }}
+    </p>
+    <mat-card class="shipping-card var-main-gris">
+        <mat-card-header class="header-card header-card--margin">
+            <mat-card-title class="header-card--text">
+                Observaciones
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content style="text-align: left;">
+            <section [innerHTML]="this.data.registro.observacion"></section>
+        </mat-card-content>
+    </mat-card>
+</div>

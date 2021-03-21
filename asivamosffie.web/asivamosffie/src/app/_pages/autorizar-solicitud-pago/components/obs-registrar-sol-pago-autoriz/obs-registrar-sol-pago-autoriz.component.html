@@ -3,7 +3,7 @@
         <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
             <ng-container matColumnDef="faseContrato">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Fase del contrato </th>
-                <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.faseContrato }}</b> </td>
+                <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.faseContrato }} </b> </td>
             </ng-container>
             <ng-container matColumnDef="pagosRealizados">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Pagos Realizados </th>
@@ -11,7 +11,7 @@
             </ng-container>
             <ng-container matColumnDef="valorFacturado">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor facturado </th>
-                <td mat-cell *matCellDef="let element" align="center"> {{ element.valorFacturado }} </td>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.valorFacturado | currency:'':'symbol-narrow':'.0-0' }} </td>
             </ng-container>
             <ng-container matColumnDef="porcentajeFacturado">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Porcentaje facturado </th>
@@ -19,7 +19,7 @@
             </ng-container>
             <ng-container matColumnDef="saldoPorPagar">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Saldo por pagar </th>
-                <td mat-cell *matCellDef="let element" align="center"> {{ element.saldoPorPagar }} </td>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.saldoPorPagar | currency:'':'symbol-narrow':'.0-0' }} </td>
             </ng-container>
             <ng-container matColumnDef="porcentajePorPagar">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Porcentaje por pagar </th>
@@ -71,11 +71,7 @@
         <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
             <div class="row mtop justCenter">
                 <div class="col-md-5">
-                    <label class="label-left" [ngClass]="{
-                        'color-secondaryColor':
-                          (addressForm.get('tieneObservaciones').invalid && addressForm.get('tieneObservaciones').touched) ||
-                          (addressForm.get('tieneObservaciones').invalid && estaEditando)
-                      }">¿Desde la coordinación tiene observaciones al registro de la solicitud?</label>
+                    <label class="label-left" [ngClass]="{ 'color-secondaryColor': (addressForm.get('tieneObservaciones').invalid && addressForm.get('tieneObservaciones').touched) || (addressForm.get('tieneObservaciones').invalid && estaEditando)}">¿Desde la coordinación tiene observaciones al registro de la solicitud?</label>
                 </div>
                 <div class="col-md-2">
                     <mat-radio-group aria-labelledby="example-radio-group-label" class="radioInput"
@@ -135,52 +131,53 @@
     <mat-accordion *ngIf="solicitudPagoFase.esPreconstruccion === true">
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title"
-                    [ngClass]="esVerDetalle === true ? '' : estadoSemaforosAcordeonesPrincipales.semaforoAcordeonFase">
+                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : estadoSemaforosAcordeonesPrincipales.semaforoAcordeonFase">
                     Fase 1 - Preconstrucción
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <mat-accordion>
                 <mat-expansion-panel class="expansion-style sub-expansion-black">
                     <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title"
-                            [ngClass]="esVerDetalle === true ? '' : estadoSemaforos.semaforoAcordeonCriterios">
+                        <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : estadoSemaforos.semaforoAcordeonCriterios">
                             Criterios de pago incluidos en la factura
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
-                    <app-obs-criterio-pagos-autoriz [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"
-                        [autorizarSolicitudPagoId]="autorizarSolicitudPagoId"
-                        [criteriosPagoFacturaCodigo]="registrarSolicitudPago.criteriosPagoFacturaCodigo"
-                        (estadoSemaforo)="getSemaforoStatus( $event, 'criteriosPago' )">
+                    <app-obs-criterio-pagos-autoriz [solicitudPago]="solicitudPago"
+                                                    [esVerDetalle]="esVerDetalle"
+                                                    [autorizarSolicitudPagoId]="autorizarSolicitudPagoId"
+                                                    [criteriosPagoFacturaCodigo]="registrarSolicitudPago.criteriosPagoFacturaCodigo"
+                                                    [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"
+                                                    (estadoSemaforo)="getSemaforoStatus( $event, 'criteriosPago' )">
                     </app-obs-criterio-pagos-autoriz>
                 </mat-expansion-panel>
                 <mat-expansion-panel class="expansion-style sub-expansion-black">
                     <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title"
-                            [ngClass]="esVerDetalle === true ? '' : estadoSemaforos.semaforoAcordeonDetalleFacturaProyecto">
+                        <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : estadoSemaforos.semaforoAcordeonDetalleFacturaProyecto">
                             Detalle factura para proyectos asociados
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
-                    <app-obs-detllfact-procasoc-autoriz [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"
-                        [autorizarSolicitudPagoId]="autorizarSolicitudPagoId"
-                        [criteriosPagoProyectoCodigo]="registrarSolicitudPago.criteriosPagoProyectoCodigo"
-                        (estadoSemaforo)="getSemaforoStatus( $event, 'detalleFactura' )">
+                    <app-obs-detllfact-procasoc-autoriz [solicitudPago]="solicitudPago"
+                                                        [esVerDetalle]="esVerDetalle"
+                                                        [autorizarSolicitudPagoId]="autorizarSolicitudPagoId"
+                                                        [criteriosPagoProyectoCodigo]="registrarSolicitudPago.criteriosPagoProyectoCodigo"
+                                                        [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"
+                                                        (estadoSemaforo)="getSemaforoStatus( $event, 'detalleFactura' )">
                     </app-obs-detllfact-procasoc-autoriz>
                 </mat-expansion-panel>
                 <mat-expansion-panel class="expansion-style sub-expansion-black">
                     <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title"
-                            [ngClass]="esVerDetalle === true ? '' : estadoSemaforos.semaforoAcordeonDatosFactura">
+                        <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : estadoSemaforos.semaforoAcordeonDatosFactura">
                             Datos de la factura
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
-                    <app-obs-datos-factura-autoriz [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"
-                        [autorizarSolicitudPagoId]="autorizarSolicitudPagoId"
-                        [datosFacturaCodigo]="registrarSolicitudPago.datosFacturaCodigo"
-                        (estadoSemaforo)="getSemaforoStatus( $event, 'datosFactura' )">
+                    <app-obs-datos-factura-autoriz  [solicitudPago]="solicitudPago"
+                                                    [esVerDetalle]="esVerDetalle"
+                                                    [autorizarSolicitudPagoId]="autorizarSolicitudPagoId"
+                                                    [datosFacturaCodigo]="registrarSolicitudPago.datosFacturaCodigo"
+                                                    (estadoSemaforo)="getSemaforoStatus( $event, 'datosFactura' )">
                     </app-obs-datos-factura-autoriz>
                 </mat-expansion-panel>
             </mat-accordion>
@@ -190,70 +187,71 @@
     <mat-accordion *ngIf="solicitudPagoFase.esPreconstruccion === false">
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title"
-                    [ngClass]="esVerDetalle === true ? '' : estadoSemaforosAcordeonesPrincipales.semaforoAcordeonFase">
+                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : estadoSemaforosAcordeonesPrincipales.semaforoAcordeonFase">
                     Fase 2 - Construcción
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <mat-accordion>
                 <mat-expansion-panel class="expansion-style sub-expansion-black">
                     <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title"
-                            [ngClass]="esVerDetalle === true ? '' : estadoSemaforos.semaforoAcordeonCriterios">
+                        <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : estadoSemaforos.semaforoAcordeonCriterios">
                             Criterios de pago incluidos en la factura
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
-                    <app-obs-criterio-pagos-autoriz [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"
-                        [autorizarSolicitudPagoId]="autorizarSolicitudPagoId"
-                        [criteriosPagoFacturaCodigo]="registrarSolicitudPago.criteriosPagoFacturaCodigo"
-                        (estadoSemaforo)="getSemaforoStatus( $event, 'criteriosPago' )">
+                    <app-obs-criterio-pagos-autoriz [solicitudPago]="solicitudPago"
+                                                    [esVerDetalle]="esVerDetalle"
+                                                    [autorizarSolicitudPagoId]="autorizarSolicitudPagoId"
+                                                    [criteriosPagoFacturaCodigo]="registrarSolicitudPago.criteriosPagoFacturaCodigo"
+                                                    [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"
+                                                    (estadoSemaforo)="getSemaforoStatus( $event, 'criteriosPago' )">
                     </app-obs-criterio-pagos-autoriz>
                 </mat-expansion-panel>
 
                 <mat-expansion-panel class="expansion-style sub-expansion-black">
                     <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title"
-                            [ngClass]="esVerDetalle === true ? '' : estadoSemaforos.semaforoAcordeonAmortizacion">
+                        <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : estadoSemaforos.semaforoAcordeonAmortizacion">
                             Amortización del anticipo
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
-                    <app-form-amortizacion [solicitudPago]="solicitudPago" [contrato]="contrato"
-                        [esVerDetalle]="esVerDetalle"
-                        [amortizacionAnticipoCodigo]="registrarSolicitudPago.amortizacionAnticipoCodigo"
-                        [autorizarSolicitudPagoId]="autorizarSolicitudPagoId"
-                        (estadoSemaforo)="getSemaforoStatus( $event, 'amortizacion' )">
+                    <app-form-amortizacion  [solicitudPago]="solicitudPago"
+                                            [contrato]="contrato"
+                                            [esVerDetalle]="esVerDetalle"
+                                            [amortizacionAnticipoCodigo]="registrarSolicitudPago.amortizacionAnticipoCodigo"
+                                            [autorizarSolicitudPagoId]="autorizarSolicitudPagoId"
+                                            (estadoSemaforo)="getSemaforoStatus( $event, 'amortizacion' )">
                     </app-form-amortizacion>
                 </mat-expansion-panel>
 
                 <mat-expansion-panel class="expansion-style sub-expansion-black">
                     <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title"
-                            [ngClass]="esVerDetalle === true ? '' : estadoSemaforos.semaforoAcordeonDetalleFacturaProyecto">
+                        <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : estadoSemaforos.semaforoAcordeonDetalleFacturaProyecto">
                             Detalle factura para proyectos asociados
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
-                    <app-obs-detllfact-procasoc-autoriz [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"
-                        [autorizarSolicitudPagoId]="autorizarSolicitudPagoId"
-                        [criteriosPagoProyectoCodigo]="registrarSolicitudPago.criteriosPagoProyectoCodigo"
-                        (estadoSemaforo)="getSemaforoStatus( $event, 'detalleFactura' )">
+                    <app-obs-detllfact-procasoc-autoriz [solicitudPago]="solicitudPago"
+                                                        [esVerDetalle]="esVerDetalle"
+                                                        [autorizarSolicitudPagoId]="autorizarSolicitudPagoId"
+                                                        [criteriosPagoProyectoCodigo]="registrarSolicitudPago.criteriosPagoProyectoCodigo"
+                                                        [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"
+                                                        (estadoSemaforo)="getSemaforoStatus( $event, 'detalleFactura' )">
                     </app-obs-detllfact-procasoc-autoriz>
                 </mat-expansion-panel>
 
                 <mat-expansion-panel class="expansion-style sub-expansion-black">
                     <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title"
-                            [ngClass]="esVerDetalle === true ? '' : estadoSemaforos.semaforoAcordeonDatosFactura">
+                        <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : estadoSemaforos.semaforoAcordeonDatosFactura">
                             Datos de la factura
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
-                    <app-obs-datos-factura-autoriz [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"
-                        [autorizarSolicitudPagoId]="autorizarSolicitudPagoId"
-                        [datosFacturaCodigo]="registrarSolicitudPago.datosFacturaCodigo"
-                        (estadoSemaforo)="getSemaforoStatus( $event, 'datosFactura' )">
+                    <app-obs-datos-factura-autoriz  [solicitudPago]="solicitudPago"
+                                                    [esVerDetalle]="esVerDetalle"
+                                                    [autorizarSolicitudPagoId]="autorizarSolicitudPagoId"
+                                                    [datosFacturaCodigo]="registrarSolicitudPago.datosFacturaCodigo"
+                                                    (estadoSemaforo)="getSemaforoStatus( $event, 'datosFactura' )">
                     </app-obs-datos-factura-autoriz>
                 </mat-expansion-panel>
             </mat-accordion>
@@ -263,16 +261,16 @@
     <mat-accordion>
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title"
-                    [ngClass]="esVerDetalle === true ? '' : estadoSemaforosAcordeonesPrincipales.semaforoAcordeonDescuentosTecnica">
+                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : estadoSemaforosAcordeonesPrincipales.semaforoAcordeonDescuentosTecnica">
                     Descuentos Dirección Técnica
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-obs-desc-dir-tecnica-autoriz [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle"
-                [autorizarSolicitudPagoId]="autorizarSolicitudPagoId"
-                [datosFacturaDescuentoCodigo]="registrarSolicitudPago.datosFacturaDescuentoCodigo"
-                (estadoSemaforo)="getSemaforoStatus( $event, 'descuentosTecnica' )">
+            <app-obs-desc-dir-tecnica-autoriz   [solicitudPago]="solicitudPago"
+                                                [esVerDetalle]="esVerDetalle"
+                                                [autorizarSolicitudPagoId]="autorizarSolicitudPagoId"
+                                                [datosFacturaDescuentoCodigo]="registrarSolicitudPago.datosFacturaDescuentoCodigo"
+                                                (estadoSemaforo)="getSemaforoStatus( $event, 'descuentosTecnica' )">
             </app-obs-desc-dir-tecnica-autoriz>
         </mat-expansion-panel>
     </mat-accordion>

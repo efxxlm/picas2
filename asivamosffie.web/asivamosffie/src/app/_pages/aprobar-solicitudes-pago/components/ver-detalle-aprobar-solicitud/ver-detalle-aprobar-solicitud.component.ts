@@ -26,6 +26,8 @@ export class VerDetalleAprobarSolicitudComponent implements OnInit {
     tipoPagoArray: Dominio[] = [];
     addressForm: FormGroup;
     otrosCostosObsForm: FormGroup;
+    solicitudPagoCargarFormaPago: any;
+    tieneFormaPago = true;
     menusIdPath: any; // Se obtienen los ID de los respectivos PATH de cada caso de uso que se implementaran observaciones.
     listaTipoObservacionSolicitudes: any; // Interfaz lista tipos de observaciones.
     dataSource = new MatTableDataSource();
@@ -158,7 +160,16 @@ export class VerDetalleAprobarSolicitudComponent implements OnInit {
                                         }
                                     } );
                                 } else {
-                                    this.dataSource = new MatTableDataSource( this.contrato.contratacion.disponibilidadPresupuestal );
+
+
+                                    if ( this.contrato.solicitudPago.length > 1 ) {
+                                        this.solicitudPagoCargarFormaPago = this.contrato.solicitudPago[0].solicitudPagoCargarFormaPago[0];
+                                        this.tieneFormaPago = false;
+                                    } else {
+                                        this.solicitudPagoCargarFormaPago = this.contrato.solicitudPagoOnly.solicitudPagoCargarFormaPago[0];
+                                    }
+
+                                    this.dataSource = new MatTableDataSource( this.contrato.valorFacturadoContrato );
                                     this.dataSource.paginator = this.paginator;
                                     this.dataSource.sort = this.sort;
                                 }

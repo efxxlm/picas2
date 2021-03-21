@@ -47,7 +47,6 @@ export class ValidarListaChequeoComponent implements OnInit {
     }
 
     ngOnInit(): void {
-
         if ( this.contrato === undefined && this.solicitudPago !== undefined ) {
             this.esExpensas = true;
             for ( const solicitudPagoListaChequeo of this.solicitudPago.solicitudPagoListaChequeo ) {
@@ -110,7 +109,9 @@ export class ValidarListaChequeoComponent implements OnInit {
         dialogRef.afterClosed()
             .subscribe(
                 obs => {
-                    this.solicitudPagoModificado.solicitudPagoListaChequeo[ index ].solicitudPagoListaChequeoRespuesta[ jIndex ].observacion = obs;
+                    if ( this.esVerDetalle === false ) {
+                        this.solicitudPagoModificado.solicitudPagoListaChequeo[ index ].solicitudPagoListaChequeoRespuesta[ jIndex ].observacion = obs;
+                    }
                 }
             );
     }

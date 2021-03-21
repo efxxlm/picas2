@@ -22,7 +22,7 @@ export class ObsValidListachequeoComponent implements OnInit {
     @Input() contrato: any;
     @Input() solicitudPago: any;
     @Input() listaChequeoCodigo: string;
-    @Input() aprobarSolicitudPagoId: number;
+    @Input() autorizarSolicitudPagoId: number;
     @Input() esVerDetalle = false;
     @Output() estadoSemaforo = new EventEmitter<string>();
     esExpensas: boolean;
@@ -86,7 +86,7 @@ export class ObsValidListachequeoComponent implements OnInit {
                     solicitudPagoListaChequeoRespuesta.observacion = solicitudPagoListaChequeoRespuesta.observacion !== undefined ? solicitudPagoListaChequeoRespuesta.observacion : null;
                 }
 
-                const listaObservaciones = await this.obsMultipleSvc.asyncGetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.aprobarSolicitudPagoId, this.activatedRoute.snapshot.params.id, solicitudPagoListaChequeo.listaChequeoId )
+                const listaObservaciones = await this.obsMultipleSvc.asyncGetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.autorizarSolicitudPagoId, this.activatedRoute.snapshot.params.id, solicitudPagoListaChequeo.listaChequeoId )
 
                 const observacionApoyo = listaObservaciones.find( obs => obs.archivada === false );
                 let semaforo = 'sin-diligenciar';
@@ -145,7 +145,7 @@ export class ObsValidListachequeoComponent implements OnInit {
                     solicitudPagoListaChequeoRespuesta.observacion = solicitudPagoListaChequeoRespuesta.observacion !== undefined ? solicitudPagoListaChequeoRespuesta.observacion : null;
                 }
 
-                const listaObservaciones = await this.obsMultipleSvc.asyncGetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.aprobarSolicitudPagoId, this.activatedRoute.snapshot.params.idSolicitudPago, solicitudPagoListaChequeo.listaChequeoId )
+                const listaObservaciones = await this.obsMultipleSvc.asyncGetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.autorizarSolicitudPagoId, this.activatedRoute.snapshot.params.idSolicitudPago, solicitudPagoListaChequeo.listaChequeoId )
 
                 const observacionApoyo = listaObservaciones.find( obs => obs.archivada === false );
                 let semaforo = 'sin-diligenciar';
@@ -181,7 +181,7 @@ export class ObsValidListachequeoComponent implements OnInit {
                 this.estadoSemaforo.emit( 'en-proceso' );
             }
 
-            if ( enProceso === 0 && completo < this.contrato.solicitudPagoOnly.solicitudPagoListaChequeo.length ) {
+            if ( enProceso === 0 && completo > 0 && completo < this.contrato.solicitudPagoOnly.solicitudPagoListaChequeo.length ) {
                 this.estadoSemaforo.emit( 'en-proceso' );
             }
 
@@ -272,7 +272,7 @@ export class ObsValidListachequeoComponent implements OnInit {
             solicitudPagoId: Number( this.activatedRoute.snapshot.params.idSolicitudPago || this.activatedRoute.snapshot.params.id ),
             observacion: lista.get( 'observaciones' ).value,
             tipoObservacionCodigo: this.listaChequeoCodigo,
-            menuId: this.aprobarSolicitudPagoId,
+            menuId: this.autorizarSolicitudPagoId,
             idPadre: lista.get( 'solicitudPagoListaChequeo' ).value.listaChequeoId,
             tieneObservacion: lista.get( 'tieneObservaciones' ).value
         };
@@ -286,13 +286,13 @@ export class ObsValidListachequeoComponent implements OnInit {
                         this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                             () => this.routes.navigate(
                                 [
-                                    '/verificarSolicitudPago/aprobacionSolicitud',  this.activatedRoute.snapshot.params.idContrato, this.activatedRoute.snapshot.params.idSolicitudPago
+                                    '/autorizarSolicitudPago/autorizacionSolicitud',  this.activatedRoute.snapshot.params.idContrato, this.activatedRoute.snapshot.params.idSolicitudPago
                                 ]
                             )
                         );
                     } else {
                         this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                            () => this.routes.navigate( [ '/verificarSolicitudPago/observacionExpensas', this.activatedRoute.snapshot.params.id ] )
+                            () => this.routes.navigate( [ '/autorizarSolicitudPago/observacionExpensas', this.activatedRoute.snapshot.params.id ] )
                         );
                     }
                 },
