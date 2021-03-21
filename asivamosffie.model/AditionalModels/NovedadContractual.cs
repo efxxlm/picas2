@@ -33,7 +33,10 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public string NovedadesSeleccionadas { get; set; }
 
-        
+        [NotMapped]
+        public string InstanciaNombre { get; set; }
+
+
     }
 
 }

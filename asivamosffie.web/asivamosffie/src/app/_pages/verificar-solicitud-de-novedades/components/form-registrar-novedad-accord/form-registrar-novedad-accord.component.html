@@ -83,52 +83,52 @@
         </div>
       </div>
 
-      <mat-card-title class="header-card--text sub-text" *ngIf="novedadDescripcion.tipoNovedadCodigo == '1' || novedadDescripcion.tipoNovedadCodigo == '2'">
+      <mat-card-title class="header-card--text sub-text" *ngIf="novedadDescripcion.tipoNovedadCodigo == '4'">
         Plazo solicitado
       </mat-card-title>
-      <div class="row" *ngIf="novedadDescripcion.tipoNovedadCodigo == '1' || novedadDescripcion.tipoNovedadCodigo == '2'">
+      
+      <div class="row" *ngIf="novedadDescripcion.tipoNovedadCodigo == '4'">
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
-              <label class="label-left" for="fechaInicio" [class.color-secondaryColor]="
-                  addressForm.get('fechaInicio').invalid && addressForm.get('fechaInicio').touched ||
-                  addressForm.get('fechaInicio').invalid && estaEditando">
-                Fecha de inicio de la suspensión
+              <label class="label-left" for="plazoAdicionalMeses" [class.color-secondaryColor]="
+                  addressForm.get('plazoAdicionalMeses').invalid && addressForm.get('plazoAdicionalMeses').touched ||
+                  addressForm.get('plazoAdicionalMeses').invalid && estaEditando">
+                  plazo Adicional Meses
               </label>
             </div>
             <div class="col d-flex">
-              <mat-form-field class="example-full-width">
-                <input matInput [matDatepicker]="pickerPlazoInicio" formControlName="fechaInicio" readonly
-                  (click)="pickerPlazoInicio.open()" placeholder="DD/MM/AAAA" required>
-                <mat-datepicker #pickerPlazoInicio></mat-datepicker>
+              <mat-form-field class="full-width">
+                <input matInput type="text" formControlName="plazoAdicionalMeses" #plazoAdicionalMeses
+                  maxlength="20" required>
               </mat-form-field>
-              <button mat-button color="primary" type="button" (click)="pickerPlazoInicio.open()"
-                class="btn-calendario">
-                <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
-              </button>
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                matTooltipClass="info-tooltip">
+                {{20 - plazoAdicionalMeses.value.length}}
+              </span>
             </div>
           </div>
         </div>
       </div>
-      <div class="row" *ngIf="novedadDescripcion.tipoNovedadCodigo == '1' || novedadDescripcion.tipoNovedadCodigo == '2'">
+      <div class="row" *ngIf="novedadDescripcion.tipoNovedadCodigo == '4'">
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
-              <label class="label-left" for="fechaFinal" [class.color-secondaryColor]="
-                    addressForm.get('fechaFinal').invalid && addressForm.get('fechaFinal').touched ||
-                    addressForm.get('fechaFinal').invalid && estaEditando">
-                Fecha final de la suspensión
+              <label class="label-left" for="plazoAdicionalDias" [class.color-secondaryColor]="
+                  addressForm.get('plazoAdicionalDias').invalid && addressForm.get('plazoAdicionalDias').touched ||
+                  addressForm.get('plazoAdicionalDias').invalid && estaEditando">
+                  plazo Adicional Días
               </label>
             </div>
             <div class="col d-flex">
-              <mat-form-field class="example-full-width">
-                <input matInput [matDatepicker]="pickerPlazoFin" formControlName="fechaFinal" readonly
-                  (click)="pickerPlazoFin.open()" placeholder="DD/MM/AAAA" required>
-                <mat-datepicker #pickerPlazoFin></mat-datepicker>
+              <mat-form-field class="full-width">
+                <input matInput type="text" formControlName="plazoAdicionalDias" #plazoAdicionalDias
+                  maxlength="20" required>
               </mat-form-field>
-              <button mat-button color="primary" type="button" (click)="pickerPlazoFin.open()" class="btn-calendario">
-                <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
-              </button>
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                matTooltipClass="info-tooltip">
+                {{20 - plazoAdicionalDias.value.length}}
+              </span>
             </div>
           </div>
         </div>

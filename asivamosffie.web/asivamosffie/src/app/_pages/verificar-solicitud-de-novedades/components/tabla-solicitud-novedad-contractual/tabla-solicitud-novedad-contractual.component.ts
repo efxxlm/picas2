@@ -86,12 +86,12 @@ export class TablaSolicitudNovedadContractualComponent implements AfterViewInit 
   }
 
   verificarSolicitud(id: string) {
-    // this.contractualNoveltyService.verificarSolicitud( id )
-    //   .subscribe( respuesta => {
-    //     this.openDialog('', `<b>${respuesta.message}</b>`);
-    //     if ( respuesta.code === '200' )
-    //       this.ngAfterViewInit();
-    //   });
+     this.contractualNoveltyService.enviarAlSupervisor( id )
+       .subscribe( respuesta => {
+         this.openDialog('', `<b>${respuesta.message}</b>`);
+         if ( respuesta.code === '200' )
+           this.ngAfterViewInit();
+       });
     console.log(`Aprobar solicitud ${id}`);
   }
 

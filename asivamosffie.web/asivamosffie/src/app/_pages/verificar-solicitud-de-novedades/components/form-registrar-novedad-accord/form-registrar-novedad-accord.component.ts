@@ -26,6 +26,8 @@ export class FormRegistrarNovedadAccordComponent implements OnInit {
     tipoNovedad: [null, Validators.required],
     motivosNovedad: [null, Validators.required],
     presupuestoAdicional: [],
+    plazoAdicionalDias:[],
+    plazoAdicionalMeses: [],
     resumenJustificacionNovedad: [null, Validators.required],
     documentacion: [null, Validators.required],
     fechaInicio: [null, Validators.required],
@@ -127,6 +129,8 @@ export class FormRegistrarNovedadAccordComponent implements OnInit {
     this.addressForm.get('numeroRadicadoSolicitud').setValue(this.novedadDescripcion.numeroRadicado);
 
     this.addressForm.get('presupuestoAdicional').setValue(this.novedadDescripcion.presupuestoAdicionalSolicitado);
+    this.addressForm.get('plazoAdicionalDias').setValue(this.novedadDescripcion.plazoAdicionalDias);
+    this.addressForm.get('plazoAdicionalMeses').setValue(this.novedadDescripcion.plazoAdicionalMeses);
     this.addressForm.get('fechaInicio').setValue(this.novedadDescripcion.fechaInicioSuspension);
     this.addressForm.get('fechaFinal').setValue(this.novedadDescripcion.fechaFinSuspension);
 
@@ -254,6 +258,8 @@ export class FormRegistrarNovedadAccordComponent implements OnInit {
     this.novedadDescripcion.fechaConcepto = this.addressForm.get('fechaConceptoTecnico').value;
     this.novedadDescripcion.numeroRadicado = this.addressForm.get('numeroRadicadoSolicitud').value;
     this.novedadDescripcion.presupuestoAdicionalSolicitado = this.addressForm.get('presupuestoAdicional').value;
+    this.novedadDescripcion.plazoAdicionalDias = this.addressForm.get('plazoAdicionalDias').value;
+    this.novedadDescripcion.plazoAdicionalMeses = this.addressForm.get('plazoAdicionalMeses').value;
     this.novedadDescripcion.fechaInicioSuspension = this.addressForm.get('fechaInicio').value;
     this.novedadDescripcion.fechaFinSuspension = this.addressForm.get('fechaFinal').value;
 

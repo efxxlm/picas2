@@ -62,9 +62,10 @@ export class RegistrarSolicitudComponent implements OnInit {
 
     //traigo contratos
     this.contractualNoveltyService.getContratosAutocomplete().subscribe(respuesta=>{
-      this.contratos=respuesta;
+      this.contratos=respuesta.filter( c => c.contratacion.tipoSolicitudCodigo === '1' ); // obra
       //this.options=respuesta.map(function(task,index,array){return task.numeroContrato})
-      this.options=respuesta;
+      this.options=respuesta.filter( c => c.contratacion.tipoSolicitudCodigo === '1' ); // obra
+      console.log( this.options )
     });
     this.filteredOptions = this.numeroContrato.valueChanges.pipe(
       startWith(''),

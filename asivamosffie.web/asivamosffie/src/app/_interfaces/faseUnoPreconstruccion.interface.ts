@@ -283,6 +283,8 @@ interface Contratista {
   fechaModificacion: string;
   usuarioModificacion: string;
   contratacion: any[];
+
+  tipoIdentificacionNotMapped?: string;
 }
 
 

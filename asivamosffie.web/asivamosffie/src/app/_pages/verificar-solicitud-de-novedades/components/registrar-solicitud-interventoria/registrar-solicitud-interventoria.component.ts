@@ -62,9 +62,9 @@ export class RegistrarSolicitudInterventoriaComponent implements OnInit {
 
     //traigo contratos
     this.contractualNoveltyService.getContratosAutocomplete().subscribe(respuesta=>{
-      this.contratos=respuesta;
+      this.contratos=respuesta.filter( r => r.contratacion.tipoSolicitudCodigo === '2' ); // interventoria
       //this.options=respuesta.map(function(task,index,array){return task.numeroContrato})
-      this.options=respuesta;
+      this.options=respuesta.filter( r => r.contratacion.tipoSolicitudCodigo === '2' ); // interventoria
     });
     this.filteredOptions = this.numeroContrato.valueChanges.pipe(
       startWith(''),

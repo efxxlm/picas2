@@ -256,4 +256,6 @@ interface Contratista {
   fechaCreacion: string;
   usuarioCreacion: string;
   contratacion: any[];
+
+  tipoIdentificacionNotMapped?: string;
 }

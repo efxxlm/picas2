@@ -1,3 +1,5 @@
+import { ActivatedRoute } from '@angular/router';
+import { AutenticacionService } from './../../../../core/_services/autenticacion/autenticacion.service';
 import { Component, AfterViewInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -6,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { DialogRechazarSolicitudInterventorComponent } from '../dialog-rechazar-solicitud-interventor/dialog-rechazar-solicitud-interventor.component'
 import { DialogDevolverSolicitudInterventorComponent } from '../dialog-devolver-solicitud-interventor/dialog-devolver-solicitud-interventor.component'
+import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNovelty/contractual-novelty.service';
 
 export interface VerificacionDiaria {
   id: string;
@@ -36,31 +39,41 @@ const ELEMENT_DATA: VerificacionDiaria[] = [
 export class TablaSolicitudNovedadContractualComponent implements AfterViewInit {
 
   displayedColumns: string[] = [
-    'fechaSolicitud',
+    'fechaSolictud',
     'numeroSolicitud',
-    'tipoNovedad',
-    'estadoNovedad',
-    'estadoRegistro',
-    'id'
+    'tipoNovedadNombre',
+    'estadoNovedadNombre',
+    'registroCompleto',
+    'novedadContractualId'
   ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
-    private dialog: MatDialog
-  ) { }
+    private contractualNoveltyService: ContractualNoveltyService,
+    public dialog: MatDialog,
+    private activatedRoute: ActivatedRoute
+  ) {
+    console.log( this.activatedRoute.snapshot.data );
+  }
 
   ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-    this.paginator._intl.nextPageLabel = 'Siguiente';
-    this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
-      return (page + 1).toString() + ' de ' + length.toString();
-    };
-    this.paginator._intl.previousPageLabel = 'Anterior';
+
+    this.contractualNoveltyService.getListGrillaNovedadContractualInterventoria()
+      .subscribe(resp => {
+        this.dataSource = new MatTableDataSource(resp);
+
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+        this.paginator._intl.nextPageLabel = 'Siguiente';
+        this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
+          return (page + 1).toString() + ' de ' + length.toString();
+        };
+        this.paginator._intl.previousPageLabel = 'Anterior';
+      });
   }
 
   applyFilter(event: Event) {

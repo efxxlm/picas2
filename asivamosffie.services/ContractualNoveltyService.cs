@@ -46,7 +46,7 @@ namespace asivamosffie.services
             try
             {
                 ListNovedades = await _context.VNovedadContractual
-                                                    .Where(r => r.TipoSolicitudCodigo != ConstanCodigoTipoContratacion.Obra.ToString())
+                                                    .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
                                                     .ToListAsync();
 
                 return ListNovedades.OrderByDescending(r => r.FechaSolictud).ToList();
@@ -64,7 +64,7 @@ namespace asivamosffie.services
             try
             {
                 ListNovedades = await _context.VNovedadContractual
-                                                    .Where(r => r.TipoSolicitudCodigo != ConstanCodigoTipoContratacion.Interventoria.ToString())
+                                                    .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
                                                     .ToListAsync();
 
                 return ListNovedades.OrderByDescending(r => r.FechaSolictud).ToList();
@@ -89,13 +89,14 @@ namespace asivamosffie.services
             var contratos = _context.Contrato
                                         .Where(x =>/*x.UsuarioInterventoria==userID*/ !(bool)x.Eliminado)
                                         .Include(x => x.Contratacion)
-                                        .ThenInclude(x => x.Contratista)
+                                            .ThenInclude(x => x.Contratista)
                                         .ToList();
 
             List<Dominio> listDominioTipoDocumento = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento).ToList();
 
             foreach (var contrato in contratos)
             {
+
                 if (contrato?.Contratacion?.Contratista != null)
                 {
                     contrato.Contratacion.Contratista.Contratacion = null;//para bajar el peso del consumo
@@ -130,6 +131,10 @@ namespace asivamosffie.services
                                                                 .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Motivos_Novedad_contractual)
                                                                 .ToList();
 
+            List<Dominio> listDominioInstancias = _context.Dominio
+                                                                .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Instancias_de_seguimiento_tecnico)
+                                                                .ToList();
+
             NovedadContractual novedadContractual = _context.NovedadContractual
                                                                 .Where( r => r.NovedadContractualId == pId)
                                                                 .Include( r => r.Contrato )
@@ -139,6 +144,9 @@ namespace asivamosffie.services
                                                                     .ThenInclude( r => r.NovedadContractualClausula )
                                                                 .Include(r => r.NovedadContractualDescripcion)
                                                                     .ThenInclude(r => r.NovedadContractualDescripcionMotivo)
+                                                                .Include(r => r.Contrato)
+                                                                    .ThenInclude(r => r.Contratacion)
+                                                                        .ThenInclude(r => r.DisponibilidadPresupuestal)
                                                                 .FirstOrDefault();
 
             novedadContractual.ProyectosContrato = _context.VProyectosXcontrato
@@ -148,6 +156,11 @@ namespace asivamosffie.services
             novedadContractual.ProyectosSeleccionado = _context.VProyectosXcontrato
                                                                     .Where(r => r.ProyectoId == novedadContractual.ProyectoId && r.ContratoId == novedadContractual.ContratoId )
                                                                     .FirstOrDefault();
+
+            novedadContractual.InstanciaNombre = listDominioInstancias
+                                                        .Where(r => r.Codigo == novedadContractual.InstanciaCodigo)
+                                                        ?.FirstOrDefault()
+                                                        ?.Nombre;
 
             foreach( NovedadContractualDescripcion novedadContractualDescripcion in novedadContractual.NovedadContractualDescripcion)
             {
@@ -182,6 +195,11 @@ namespace asivamosffie.services
         {
             Respuesta _response = new Respuesta(); /*NovedadContractual novedadContractual*/
 
+            Contrato contrato = _context.Contrato
+                                            .Where(r => r.ContratoId == novedadContractual.ContratoId)
+                                            .Include(r => r.Contratacion)
+                                            .FirstOrDefault();
+
             int idAccionCrearEditarNovedadContractual = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Novedad_Contractual, (int)EnumeratorTipoDominio.Acciones);
 
             string strCrearEditar = string.Empty;
@@ -201,7 +219,16 @@ namespace asivamosffie.services
                         novedadContractual.FechaCreacion = DateTime.Now;
                         novedadContractual.UsuarioCreacion = novedadContractual.UsuarioCreacion;
                         novedadContractual.NumeroSolicitud = "NOV-" + cantidadNovedades.ToString("000");
-                        novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.En_proceso_de_registro;
+
+                        if ( contrato.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+                        {
+                            novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.En_proceso_de_registro;
+                        }
+                        if (contrato.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
+                        {
+                            novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.En_proceso_de_verificacion;
+                        }
+
 
                         novedadContractual.Eliminado = false;
 
@@ -233,6 +260,11 @@ namespace asivamosffie.services
                         novedadContractualOld.FechaSolictud = novedadContractual.FechaSolictud;
                         novedadContractualOld.InstanciaCodigo = novedadContractual.InstanciaCodigo;
                         novedadContractualOld.FechaSesionInstancia = novedadContractual.FechaSesionInstancia;
+
+                        if (contrato.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
+                        {
+                            novedadContractualOld.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.En_proceso_de_verificacion;
+                        }
 
                         if (novedadContractual.NovedadContractualDescripcion != null)
                         {
@@ -517,6 +549,62 @@ namespace asivamosffie.services
                     novedadContractual.FechaModificacion = DateTime.Now;
                     novedadContractual.UsuarioModificacion = pUsuario;
                     novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_por_interventor;
+                    _context.NovedadContractual.Update(novedadContractual);
+
+                    _context.SaveChanges();
+
+                }
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = novedadContractual,
+                    Code = ConstantMessagesContractualControversy.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
+                    ConstantMessagesContractualControversy.OperacionExitosa,
+                    idAccion,
+                    "",//controversiaActuacion.UsuarioCreacion,
+                    strCrearEditar)
+
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = novedadContractual,
+                    Code = ConstantMessagesContractualControversy.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
+                    ConstantMessagesContractualControversy.Error,
+                    idAccion,
+                    "",//controversiaActuacion.UsuarioCreacion, 
+                    ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
+
+        public async Task<Respuesta> EnviarAlSupervisor(int pNovedadContractualId, string pUsuario)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.VerificarNovedadContractual, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = string.Empty;
+            NovedadContractual novedadContractual = _context.NovedadContractual.Find(pNovedadContractualId);
+
+            try
+            {
+
+                if (novedadContractual != null)
+                {
+                    strCrearEditar = "VERIFICAR NOVEDAD CONTRACTUAL";
+                    novedadContractual.FechaModificacion = DateTime.Now;
+                    novedadContractual.UsuarioModificacion = pUsuario;
+                    novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.Sin_validar;
                     _context.NovedadContractual.Update(novedadContractual);
 
                     _context.SaveChanges();

@@ -29,6 +29,7 @@ export class TablaNovedadContratosObraComponent implements AfterViewInit {
 
   constructor(
     private contractualNoveltyService: ContractualNoveltyService,
+    public dialog: MatDialog,
 
   ) { }
 
@@ -55,5 +56,22 @@ export class TablaNovedadContratosObraComponent implements AfterViewInit {
       this.dataSource.paginator.firstPage();
     }
   }
+
+  verificarSolicitud(id: string) {
+    this.contractualNoveltyService.enviarAlSupervisor( id )
+      .subscribe( respuesta => {
+        this.openDialog('', `<b>${respuesta.message}</b>`);
+        if ( respuesta.code === '200' )
+          this.ngAfterViewInit();
+      });
+   console.log(`Aprobar solicitud ${id}`);
+ }
+
+ openDialog(modalTitle: string, modalText: string) {
+  this.dialog.open(ModalDialogComponent, {
+    width: '28em',
+    data: { modalTitle, modalText }
+  });
+}
 
 }

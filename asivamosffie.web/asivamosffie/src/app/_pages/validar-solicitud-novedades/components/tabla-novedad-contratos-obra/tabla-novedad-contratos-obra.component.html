@@ -16,7 +16,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         Fecha de solicitud de la novedad
       </th>
-      <td mat-cell *matCellDef="let element"><b>{{element.fecha}}</b></td>
+      <td mat-cell *matCellDef="let element"><b>{{element.fechaSolictud | date: 'dd/MM/yyyy'}}</b></td>
     </ng-container>
 
     <!-- numeroSolicitud Column -->
@@ -40,7 +40,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         Tipo de novedad
       </th>
-      <td mat-cell *matCellDef="let element">{{element.tipoNovedad}}</td>
+      <td mat-cell *matCellDef="let element">{{element.novedadesSeleccionadas}}</td>
     </ng-container>
 
     <!-- estadoNovedad Column -->
@@ -48,7 +48,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         Estado de la novedad
       </th>
-      <td mat-cell *matCellDef="let element">{{element.estadoNovedad}}</td>
+      <td mat-cell *matCellDef="let element">{{element.estadoCodigoNombre}}</td>
     </ng-container>
 
     <!-- estadoRegistro Column -->
@@ -57,11 +57,10 @@
         Estado del registro
       </th>
       <td mat-cell *matCellDef="let element">
-        <span class="info-text d-block m-0"
-        [class.sin-diligenciar]="element.estadoRegistro === 'Incompleto'"
-        [class.completo]="element.estadoRegistro === 'Completo'"
-        ></span>
-        {{element.estadoRegistro}}
+        <span class="info-text d-block m-0" 
+          [class.sin-diligenciar]="element.registroCompleto !== true"
+          [class.completo]="element.registroCompleto === true"></span>
+        {{element.registroCompleto === true ? 'Completo' : 'Incompleto'}}
       </td>
     </ng-container>
 

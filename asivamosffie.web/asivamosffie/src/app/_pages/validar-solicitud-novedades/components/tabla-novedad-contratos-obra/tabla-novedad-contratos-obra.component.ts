@@ -5,6 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { DialogRechazarSolicitudComponent } from '../dialog-rechazar-solicitud/dialog-rechazar-solicitud.component'
+import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNovelty/contractual-novelty.service';
 
 export interface VerificacionDiaria {
   id: string;
@@ -53,16 +54,21 @@ export class TablaNovedadContratosObraComponent implements AfterViewInit {
     'estadoRegistro',
     'id'
   ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
-    private dialog: MatDialog
+    private contractualNoveltyService: ContractualNoveltyService,
+    public dialog: MatDialog,
+
   ) { }
 
   ngAfterViewInit() {
+    this.contractualNoveltyService.getListGrillaNovedadContractualObra()
+      .subscribe(resp => {
+        this.dataSource = new MatTableDataSource(resp);
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
@@ -71,6 +77,7 @@ export class TablaNovedadContratosObraComponent implements AfterViewInit {
       return (page + 1).toString() + ' de ' + length.toString();
     };
     this.paginator._intl.previousPageLabel = 'Anterior';
+  });
   }
 
   applyFilter(event: Event) {

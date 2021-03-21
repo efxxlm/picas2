@@ -1,4 +1,4 @@
-<section class="container">
+<section class="container" *ngIf="novedad">
   <div class="container text-center">
     <div class="text-right">
       <a routerLink="../.." mat-button color="primary" class="btn-regresar">
@@ -9,7 +9,7 @@
       Verificar solicitud de novedad NOV-001
     </h1>
     <p class="info-sub-title">
-      Número de contrato <b>A887654344</b>
+      Número de contrato <b>{{ novedad.contrato.numeroContrato }}</b>
     </p>
   </div>
 
@@ -24,51 +24,57 @@
         <strong>
           Nombre del contratista:
         </strong>
-        Constructora Colpatria SAS
+        {{ novedad.contrato.contratacion.contratista.nombre }}
       </p>
       <p>
         <strong>
           Tipo de identificación:
         </strong>
-        NIT
+        {{ novedad.contrato.contratacion.contratista.tipoIdentificacionNotMapped }}
       </p>
       <p>
         <strong>
           Número de identificación:
         </strong>
-        900.879.989
+        {{ novedad.contrato.contratacion.contratista.numeroIdentificacion }}
       </p>
       <p>
         <strong>
           Tipo de intervención:
         </strong>
-        Remodelación
+        {{ novedad.proyectosContrato[0].tipoIntervencion }}
       </p>
       <p>
         <strong>
           Valor del contrato:
         </strong>
-        $ 130.000.000
+        {{ novedad.proyectosContrato[0].valorTotal }}
       </p>
       <p>
         <strong>
           Plazo:
         </strong>
-        24 meses / 25 días
+        {{
+        novedad.contrato.contratacion.disponibilidadPresupuestal[novedad.contrato.contratacion.disponibilidadPresupuestal.length-1].plazoDias
+        }} Días
+        {{
+        novedad.contrato.contratacion.disponibilidadPresupuestal[novedad.contrato.contratacion.disponibilidadPresupuestal.length-1].plazoMeses
+        }} Meses
       </p>
       <p>
         <strong>
           Fecha de inicio de contrato:
         </strong>
-        25/06/2020
+
       </p>
       <p>
         <strong>
           Fecha de finalización de contrato:
         </strong>
-        20/07/2022
+
       </p>
 
+      <section *ngIf="novedad.esAplicadaAcontrato !== true">
       <h2 class="card-subTitle">Proyecto asociado</h2>
       <p>
         <strong>
@@ -100,6 +106,7 @@
         </strong>
         Única sede
       </p>
+    </section>
     </mat-card-content>
   </mat-card>
 
@@ -116,151 +123,66 @@
             <strong>
               Fecha de solicitud de la novedad :
             </strong>
-            17/10/2020
+            {{ novedad.fechaSolictud | date: 'dd/MM/yyyy' }}
           </p>
           <p>
             <strong>
               Instancia donde se presentó la solicitud :
             </strong>
             <span>
-              Comité de obra
+              {{ novedad.instanciaNombre }}
             </span>
           </p>
           <p>
             <strong>
               Fecha de la sesión de la instancia :
             </strong>
-            12/10/2020
+            {{ novedad.fechaSesionInstancia | date: 'dd/MM/yyyy' }}
           </p>
-          <p>
-            <strong>
-              Tipo de Novedad :
-            </strong>
-            Modificación de Condiciones Contractuales
-          </p>
-
         </mat-card-content>
       </mat-card>
       <mat-accordion>
-        <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel class="expansion-style sub-expansion"
+          *ngFor=" let descripcion of novedad.novedadContractualDescripcion; let i = index; ">
           <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title">
-              Novedad 1
+              Novedad {{ 1 + i }}
             </mat-panel-title>
           </mat-expansion-panel-header>
           <mat-card class="shipping-card var-main-gris">
             <mat-card-header class="header-card header-card--margin">
               <mat-card-title class="header-card--text textoGris">
-                Suspensión
+                {{ descripcion.nombreTipoNovedad }}
               </mat-card-title>
             </mat-card-header>
             <mat-card-content>
-              <p><strong>Motivos de la novedad :</strong>xxxxxxxx </p>
+              <strong>Motivos de la novedad :</strong>
+              <section *ngFor="let motivo of descripcion.novedadContractualDescripcionMotivo;"> {{
+                motivo.nombreMotivo}}, </section>
+
               <p><strong>Resumen de la justificación de la novedad: </strong></p>
-              <p>
-                xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-              </p>
-              <mat-card-title class="header-card--text sub-text">
+              <section [innerHTML]="descripcion.resumenJustificacion" style="margin-left: 2em"></section>
+              <mat-card-title class="header-card--text sub-text" *ngIf="descripcion.tipoNovedadCodigo == '4'">
                 Plazo solicitado
               </mat-card-title>
-              <p><strong>Fecha de inicio de la suspensión: </strong> xxxxxxxxxxxxxxxxxx</p>
-              <p><strong>Fecha final de la suspensión: </strong> xxxxxxxxxxxxxxxxxx</p>
-              <p><strong>¿Cuenta con la documentación soporte suficiente?: </strong> No</p>
+              <p *ngIf="descripcion.tipoNovedadCodigo == '4'"><strong>plazo Adicional Meses: </strong> {{
+                descripcion.plazoAdicionalMeses }}</p>
+              <p *ngIf="descripcion.tipoNovedadCodigo == '4'"><strong>plazo Adicional Días: </strong> {{
+                descripcion.plazoAdicionalDias }}</p>
+              <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'"><strong>Fecha de
+                  inicio de la suspensión: </strong> {{ descripcion.fechaInicioSuspension | date: 'dd/MM/yyyy' }}</p>
+              <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'"><strong>Fecha
+                  final de la suspensión: </strong> {{ descripcion.fechaFinSuspension | date: 'dd/MM/yyyy' }} </p>
+              <p *ngIf="descripcion.tipoNovedadCodigo == '3'"><strong>Presupuesto adicional solicitado: </strong> {{
+                descripcion.presupuestoAdicionalSolicitado }} </p>
+              <p><strong>¿Cuenta con la documentación soporte suficiente?: </strong> {{
+                descripcion.esDocumentacionSoporte === true ? 'Sí' : 'No' }}</p>
               <p><strong>Concepto técnico: </strong></p>
-              <p>
-                xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-              </p>
-              <p><strong>Fecha concepto técnico: </strong> xxxxxxxxxxxxxxxxxx</p>
-              <p><strong>Número de radicado en FFIE de solicitud: </strong> xxxxxxxxxxxxxxxxxx</p>
+              <section [innerHTML]="descripcion.conceptoTecnico" style="margin-left: 2em"></section>
+              <p><strong>Fecha concepto técnico: </strong> {{ descripcion.fechaConcepto | date: 'dd/MM/yyyy' }}</p>
+              <p><strong>Número de radicado en FFIE de solicitud: </strong> {{ descripcion.numeroRadicado }}</p>
             </mat-card-content>
           </mat-card>
-        </mat-expansion-panel>
-        <mat-expansion-panel class="expansion-style sub-expansion">
-          <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title">
-              Novedad 2
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <mat-card class="shipping-card var-main-gris">
-            <mat-card-header class="header-card header-card--margin">
-              <mat-card-title class="header-card--text textoGris">
-                Adición
-              </mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-              <p><strong>Motivos de la novedad :</strong>xxxxxxxx </p>
-              <p><strong>Resumen de la justificación de la novedad: </strong></p>
-              <p>
-                xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-              </p>
-              <p><strong>Presupuesto adicional solicitado:</strong>xxxxxxxxxxxxx </p>
-              <p><strong>¿Cuenta con la documentación soporte suficiente?:</strong>No </p>
-              <p><strong>Concepto técnico: </strong></p>
-              <p>
-                xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-              </p>
-              <p><strong>Fecha concepto técnico: </strong> xxxxxxxxxxxxxxxxxx</p>
-              <p><strong>Número de radicado en FFIE de solicitud: </strong> xxxxxxxxxxxxxxxxxx</p>
-            </mat-card-content>
-          </mat-card>
-        </mat-expansion-panel>
-        <mat-expansion-panel class="expansion-style sub-expansion">
-          <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title">
-              Novedad 3
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <mat-card class="shipping-card var-main-gris">
-            <mat-card-header class="header-card header-card--margin">
-              <mat-card-title class="header-card--text textoGris">
-                Modificaciones de condiciones contractuales
-              </mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-              <p><strong>Motivos de la novedad :</strong>xxxxxxxx </p>
-              <p><strong>Resumen de la justificación de la novedad: </strong></p>
-              <p>
-                xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-              </p>
-              <mat-card-title class="header-card--text sub-text">
-                Clausula 1
-              </mat-card-title>
-              <p><strong>Cláusula a modificar: </strong></p>
-              <p>
-                xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-              </p>
-              <p><strong>Ajuste solicitado a la cláusula: </strong></p>
-              <p>
-                xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-              </p>
-              <mat-card-title class="header-card--text sub-text">
-                Clausula 2
-              </mat-card-title>
-              <p><strong>Cláusula a modificar: </strong></p>
-              <p>
-                xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-              </p>
-              <p><strong>Ajuste solicitado a la cláusula: </strong></p>
-              <p>
-                xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-              </p>
-              <p><strong>¿Cuenta con la documentación soporte suficiente?:</strong>No </p>
-              <p><strong>Concepto técnico: </strong></p>
-              <p>
-                xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-              </p>
-              <p><strong>Fecha concepto técnico: </strong> xxxxxxxxxxxxxxxxxx</p>
-              <p><strong>Número de radicado en FFIE de solicitud: </strong> xxxxxxxxxxxxxxxxxx</p>
-            </mat-card-content>
-          </mat-card>
-        </mat-expansion-panel>
-        <mat-expansion-panel class="expansion-style sub-expansion">
-          <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title">
-              Novedad 4
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          
         </mat-expansion-panel>
       </mat-accordion>
     </mat-expansion-panel>
@@ -290,84 +212,84 @@
     </mat-expansion-panel>
   </mat-accordion>
 
-  <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
-    <div class="row justify-content-center mt-2em">
-      <div class="pr-1">
-        <label class="label-left" for="tieneObservaciones" [class.color-secondaryColor]="
+      <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+        <div class="row justify-content-center mt-2em">
+          <div class="pr-1">
+            <label class="label-left" for="tieneObservaciones" [class.color-secondaryColor]="
             addressForm.get('tieneObservaciones').invalid && addressForm.get('tieneObservaciones').touched ||
             addressForm.get('tieneObservaciones').invalid && estaEditando">
-          ¿Tiene observaciones a la solicitud de novedad?
-        </label>
-      </div>
-      <div>
-        <mat-radio-group class="radioInput" formControlName="tieneObservaciones">
-          <mat-radio-button [value]="true">Sí</mat-radio-button>
-          <mat-radio-button [value]="false">No</mat-radio-button>
-        </mat-radio-group>
-        <span class="required-form-group m-0">*</span>
-      </div>
-    </div>
+              ¿Tiene observaciones a la solicitud de novedad?
+            </label>
+          </div>
+          <div>
+            <mat-radio-group class="radioInput" formControlName="tieneObservaciones">
+              <mat-radio-button [value]="true">Sí</mat-radio-button>
+              <mat-radio-button [value]="false">No</mat-radio-button>
+            </mat-radio-group>
+            <span class="required-form-group m-0">*</span>
+          </div>
+        </div>
 
-    <div class="d-flex mt-2em align-items-center animatedDown"
-      *ngIf="addressForm.get('tieneObservaciones').value === true">
-      <div class="text-area-quill" [class.color-secondaryColor]="
+        <div class="d-flex mt-2em align-items-center animatedDown"
+          *ngIf="addressForm.get('tieneObservaciones').value === true">
+          <div class="text-area-quill" [class.color-secondaryColor]="
       addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched ||
       addressForm.get('observaciones').invalid && estaEditando">
-        <label class="text-area-quill--label align-left-label" [class.colorMainColor]="
+            <label class="text-area-quill--label align-left-label" [class.colorMainColor]="
                   !(addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched ||
                   addressForm.get('observaciones').invalid && estaEditando)">
-          Observaciones a la solicitud de novedad
-        </label>
-        <quill-editor class="quill-editor-style ml-1em" [styles]="editorStyle" [modules]="config"
-          (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" required>
-        </quill-editor>
-      </div>
-      <span class="contador miles" *ngIf="addressForm.get('observaciones').value">
-        {{1000 -
-        (textoLimpio(addressForm.get('observaciones').value)>1000?1000:textoLimpio(addressForm.get('observaciones').value))}}
-      </span>
-      <span class="contador miles" *ngIf="!addressForm.get('observaciones').value">
-        1000
-      </span>
-    </div>
-    <div class="text-center mb-2em">
-      <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="
+              Observaciones a la solicitud de novedad
+            </label>
+            <quill-editor class="quill-editor-style ml-1em" [styles]="editorStyle" [modules]="config"
+              (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" required>
+            </quill-editor>
+          </div>
+          <span class="contador miles" *ngIf="addressForm.get('observaciones').value">
+            {{1000 -
+            (textoLimpio(addressForm.get('observaciones').value)>1000?1000:textoLimpio(addressForm.get('observaciones').value))}}
+          </span>
+          <span class="contador miles" *ngIf="!addressForm.get('observaciones').value">
+            1000
+          </span>
+        </div>
+        <div class="text-center mb-2em">
+          <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="
         addressForm.get('tieneObservaciones').invalid ||
         addressForm.get('tieneObservaciones').value === true && addressForm.get('observaciones').invalid">
-        <img src="assets/img/icon/guardar.svg" alt="Regresar">
-      </button>
-    </div>
-  </form>
+            <img src="assets/img/icon/guardar.svg" alt="Regresar">
+          </button>
+        </div>
+      </form>
 
-  <div *ngIf="false" class="mb-2em">
-    <table class="mat-table cdk-table mat-sort mat-table-style table-form table-form--2 table-gris">
-      <thead>
-        <tr class="mat-header-row cdk-header-row ng-star-inserted">
-          <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-            Fecha de revisión
-          </th>
-          <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-            Responsable de la observación
-          </th>
-          <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-            Historial de observaciones
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let observacion of listaObservaciones">
-          <td class="mat-cell cdk-cell ng-star-inserted">
-            {{ observacion.fecha }}
-          </td>
-          <td class="mat-cell cdk-cell ng-star-inserted">
-            {{ observacion.responsable }}
-          </td>
-          <td class="mat-cell cdk-cell ng-star-inserted">
-            {{ observacion.historial }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+      <div *ngIf="false" class="mb-2em">
+        <table class="mat-table cdk-table mat-sort mat-table-style table-form table-form--2 table-gris">
+          <thead>
+            <tr class="mat-header-row cdk-header-row ng-star-inserted">
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                Fecha de revisión
+              </th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                Responsable de la observación
+              </th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                Historial de observaciones
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let observacion of listaObservaciones">
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{ observacion.fecha }}
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{ observacion.responsable }}
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{ observacion.historial }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
 </section>

@@ -321,5 +321,6 @@
         public const string Desactivar_Usuario = "229";
         public const string Crear_Usuario = "230";
         public const string AprobarNovedadContractual = "231";
+        public const string VerificarNovedadContractual = "232";
     }
 }

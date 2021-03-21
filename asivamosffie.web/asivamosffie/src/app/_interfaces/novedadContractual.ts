@@ -41,8 +41,12 @@ export interface NovedadContractual{
         observacionesDevolucionId?: number,
         razonesNoContinuaProceso?: string,
 
+        instanciaNombre?: string,
+
         novedadContractualDescripcion?: NovedadContractualDescripcion[],
         contrato?: Contrato,
+        proyectosContrato?: any[],
+
 
 }
 
@@ -71,6 +75,7 @@ export interface NovedadContractualDescripcion{
         numeroRadicado?: string,
 
         nombreTipoNovedad?: string,
+        
         novedadContractualDescripcionMotivo?: NovedadContractualDescripcionMotivo[],
         novedadContractualClausula?: NovedadContractualClausula[],
 

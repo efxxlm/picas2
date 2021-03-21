@@ -53,4 +53,8 @@ export class ContractualNoveltyService {
     return this.http.put<Respuesta>( `${ this.urlApi }/aprobarSolicitud?pNovedaContractual=${ id }`, null ); 
   }
 
+  enviarAlSupervisor( id ){
+    return this.http.put<Respuesta>( `${ this.urlApi }/enviarAlSupervisor?pNovedaContractual=${ id }`, null ); 
+  }
+
 }
