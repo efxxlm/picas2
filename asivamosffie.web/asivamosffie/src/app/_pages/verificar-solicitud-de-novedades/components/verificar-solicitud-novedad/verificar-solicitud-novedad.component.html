@@ -6,7 +6,7 @@
       </a>
     </div>
     <h1 class="title-menu--h1">
-      Verificar solicitud de novedad NOV-001
+      Verificar solicitud de novedad {{ novedad.numeroSolicitud }}
     </h1>
     <p class="info-sub-title">
       Número de contrato <b>{{ novedad.contrato.numeroContrato }}</b>
@@ -204,7 +204,10 @@
             <strong>
               URL con soporte:
             </strong>
-            https://drive.google.com/drive/registrodecontroversiacontractual/registrosolicituddenovedad
+            <a [href]="novedad.urlSoporte"
+              target="_blank" rel="noopener noreferrer">
+              {{ novedad.urlSoporte }} 
+            </a>
           </p>
         </mat-card-content>
       </mat-card>

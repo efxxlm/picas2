@@ -1,4 +1,4 @@
-<section class="container">
+<section class="container" *ngIf="novedad">
   <div class="container text-center">
     <div class="text-right">
       <a routerLink="../.." mat-button color="primary" class="btn-regresar">
@@ -6,7 +6,7 @@
       </a>
     </div>
     <h1 class="title-menu--h1">
-      Ver detalle verificación de solicitud de novedad NOV-001
+      Ver detalle verificación de solicitud de novedad {{ novedad.numeroSolicitud }}
     </h1>
     <p class="info-sub-title">
       Número de contrato <b>{{ novedad.contrato.numeroContrato }}</b>
@@ -70,6 +70,7 @@
         </span>
       </p>
 
+      <div *ngIf="novedad.esAplicadaAcontrato !== true">
       <h2 class="card-subTitle">Proyecto asociado</h2>
       <p>
         <strong>
@@ -101,6 +102,7 @@
         </strong>
         Única sede
       </p>
+    </div>
     </mat-card-content>
   </mat-card>
 
@@ -203,7 +205,10 @@
             <strong>
               URL con soporte:
             </strong>
-            https://drive.google.com/drive/registrodecontroversiacontractual/registrosolicituddenovedad
+            <a [href]="novedad.urlSoporte"
+              target="_blank" rel="noopener noreferrer">
+              {{ novedad.urlSoporte }}
+            </a>
           </p>
         </mat-card-content>
       </mat-card>

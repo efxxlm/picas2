@@ -6,7 +6,7 @@
       </a>
     </div>
     <h1 class="title-menu--h1">
-      Ver detalle registro solicitud de novedad
+      Ver detalle registro solicitud de novedad {{ novedad.numeroSolicitud }}
     </h1>
     <p class="mt-05em color-mainColor">
       Número de contrato <b>{{ novedad.contrato.numeroContrato }}</b>
@@ -53,14 +53,18 @@
       <p>
         <strong>Plazo:</strong>
         <span>
-          {{ novedad.contrato.contratacion.disponibilidadPresupuestal[novedad.contrato.contratacion.disponibilidadPresupuestal.length-1].plazoDias }} Días 
-          {{ novedad.contrato.contratacion.disponibilidadPresupuestal[novedad.contrato.contratacion.disponibilidadPresupuestal.length-1].plazoMeses }} Meses 
+          {{
+          novedad.contrato.contratacion.disponibilidadPresupuestal[novedad.contrato.contratacion.disponibilidadPresupuestal.length-1].plazoDias
+          }} Días
+          {{
+          novedad.contrato.contratacion.disponibilidadPresupuestal[novedad.contrato.contratacion.disponibilidadPresupuestal.length-1].plazoMeses
+          }} Meses
         </span>
       </p>
       <p>
         <strong>Fecha de inicio de contrato:</strong>
         <span>
-          
+
         </span>
       </p>
       <p>
@@ -113,7 +117,8 @@
         </mat-card-content>
       </mat-card>
       <mat-accordion>
-        <mat-expansion-panel class="expansion-style sub-expansion" *ngFor=" let descripcion of novedad.novedadContractualDescripcion; let i = index; ">
+        <mat-expansion-panel class="expansion-style sub-expansion"
+          *ngFor=" let descripcion of novedad.novedadContractualDescripcion; let i = index; ">
           <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title">
               Novedad {{ 1 + i }}
@@ -126,28 +131,29 @@
               </mat-card-title>
             </mat-card-header>
             <mat-card-content>
-              <strong>Motivos de la novedad :</strong> 
-                  <section *ngFor="let motivo of descripcion.novedadContractualDescripcionMotivo;"> {{ motivo.nombreMotivo}}, </section> 
-              
+              <strong>Motivos de la novedad :</strong>
+              <section *ngFor="let motivo of descripcion.novedadContractualDescripcionMotivo;"> {{
+                motivo.nombreMotivo}}, </section>
+
               <p><strong>Resumen de la justificación de la novedad: </strong></p>
-                <section 
-                        [innerHTML]="descripcion.resumenJustificacion"
-                        style="margin-left: 2em"
-                ></section>
+              <section [innerHTML]="descripcion.resumenJustificacion" style="margin-left: 2em"></section>
               <mat-card-title class="header-card--text sub-text" *ngIf="descripcion.tipoNovedadCodigo == '4'">
                 Plazo solicitado
               </mat-card-title>
-              <p *ngIf="descripcion.tipoNovedadCodigo == '4'"><strong>plazo Adicional Meses: </strong> {{ descripcion.plazoAdicionalMeses }}</p>
-              <p *ngIf="descripcion.tipoNovedadCodigo == '4'"><strong>plazo Adicional Días: </strong> {{ descripcion.plazoAdicionalDias }}</p>
-              <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'"><strong>Fecha de inicio de la suspensión: </strong> {{ descripcion.fechaInicioSuspension | date: 'dd/MM/yyyy' }}</p>
-              <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'"><strong>Fecha final de la suspensión: </strong> {{ descripcion.fechaFinSuspension | date: 'dd/MM/yyyy' }} </p>
-              <p *ngIf="descripcion.tipoNovedadCodigo == '3'" ><strong>Presupuesto adicional solicitado: </strong> {{ descripcion.presupuestoAdicionalSolicitado }} </p>
-              <p><strong>¿Cuenta con la documentación soporte suficiente?: </strong> {{ descripcion.esDocumentacionSoporte === true ? 'Sí' : 'No' }}</p>
+              <p *ngIf="descripcion.tipoNovedadCodigo == '4'"><strong>plazo Adicional Meses: </strong> {{
+                descripcion.plazoAdicionalMeses }}</p>
+              <p *ngIf="descripcion.tipoNovedadCodigo == '4'"><strong>plazo Adicional Días: </strong> {{
+                descripcion.plazoAdicionalDias }}</p>
+              <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'"><strong>Fecha de
+                  inicio de la suspensión: </strong> {{ descripcion.fechaInicioSuspension | date: 'dd/MM/yyyy' }}</p>
+              <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'"><strong>Fecha
+                  final de la suspensión: </strong> {{ descripcion.fechaFinSuspension | date: 'dd/MM/yyyy' }} </p>
+              <p *ngIf="descripcion.tipoNovedadCodigo == '3'"><strong>Presupuesto adicional solicitado: </strong> {{
+                descripcion.presupuestoAdicionalSolicitado }} </p>
+              <p><strong>¿Cuenta con la documentación soporte suficiente?: </strong> {{
+                descripcion.esDocumentacionSoporte === true ? 'Sí' : 'No' }}</p>
               <p><strong>Concepto técnico: </strong></p>
-              <section 
-                        [innerHTML]="descripcion.conceptoTecnico"
-                        style="margin-left: 2em"
-                ></section>
+              <section [innerHTML]="descripcion.conceptoTecnico" style="margin-left: 2em"></section>
               <p><strong>Fecha concepto técnico: </strong> {{ descripcion.fechaConcepto | date: 'dd/MM/yyyy' }}</p>
               <p><strong>Número de radicado en FFIE de solicitud: </strong> {{ descripcion.numeroRadicado }}</p>
             </mat-card-content>
@@ -174,9 +180,9 @@
             <strong>
               URL con soporte:
             </strong>
-            <a href="https://drive.google.com/drive/registrodecontroversiacontractual/registrosolicituddenovedad"
+            <a [href]="novedad.urlSoporte"
               target="_blank" rel="noopener noreferrer">
-              https://drive.google.com/drive/registrodecontroversiacontractual/registrosolicituddenovedad
+              {{ novedad.urlSoporte }}
             </a>
           </p>
 
@@ -200,10 +206,8 @@
             20/10/2020
           </strong>
         </p>
-        <p>
-          No es posible acceder a la ruta de soporte, verificar la URL.
-        </p>
 
+        <section [innerHTML]="novedad.urlSoporte" style="margin-left: 2em"></section>
       </mat-card-content>
     </mat-card>
   </div>

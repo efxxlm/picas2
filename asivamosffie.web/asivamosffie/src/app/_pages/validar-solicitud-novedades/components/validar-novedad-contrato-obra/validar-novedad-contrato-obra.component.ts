@@ -3,6 +3,8 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { NovedadContractual } from 'src/app/_interfaces/novedadContractual';
+import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNovelty/contractual-novelty.service';
 
 @Component({
   selector: 'app-validar-novedad-contrato-obra',
@@ -11,8 +13,9 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class ValidarNovedadContratoObraComponent implements OnInit {
 
-  novedadId: string;
+  detalleId: string;
   estaEditando = false;
+  novedad: NovedadContractual;
 
   addressForm = this.fb.group({
     tieneObservaciones: [null, Validators.required],
@@ -64,12 +67,19 @@ export class ValidarNovedadContratoObraComponent implements OnInit {
     public dialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,
+    private contractualNoveltyService: ContractualNoveltyService,
   ) { }
 
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
-      this.novedadId = params.id;
-      console.log(this.novedadId);
+      this.detalleId = params.id;
+      //console.log(this.detalleId);
+
+      this.contractualNoveltyService.getNovedadContractualById( this.detalleId )
+        .subscribe( respuesta => {
+          this.novedad = respuesta;
+        });
+
     });
   }
 
