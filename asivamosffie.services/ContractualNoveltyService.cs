@@ -260,6 +260,7 @@ namespace asivamosffie.services
                         novedadContractualOld.FechaSolictud = novedadContractual.FechaSolictud;
                         novedadContractualOld.InstanciaCodigo = novedadContractual.InstanciaCodigo;
                         novedadContractualOld.FechaSesionInstancia = novedadContractual.FechaSesionInstancia;
+                        novedadContractualOld.UrlSoporte = novedadContractual.UrlSoporte;
 
                         if (contrato.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
                         {
@@ -658,7 +659,8 @@ namespace asivamosffie.services
                     string.IsNullOrEmpty(pNovedadContractual.InstanciaCodigo) ||
                     pNovedadContractual.FechaSesionInstancia == null ||
                     pNovedadContractual.NovedadContractualDescripcion == null ||
-                    pNovedadContractual.NovedadContractualDescripcion.Count() == 0 
+                    pNovedadContractual.NovedadContractualDescripcion.Count() == 0 ||
+                    string.IsNullOrEmpty( pNovedadContractual.UrlSoporte )
                 )
             {
                 esCompleto = false;
@@ -691,6 +693,19 @@ namespace asivamosffie.services
 
                 }
 
+                // Prorroga
+                if (descripcion.TipoNovedadCodigo == "4")
+                {
+                    if (
+                            descripcion.PlazoAdicionalDias == null ||
+                            descripcion.PlazoAdicionalMeses == null
+                        )
+                    {
+                        esCompleto = false;
+                    }
+
+                }
+
                 if ( 
                         descripcion.NovedadContractualDescripcionMotivo == null ||
                         descripcion.NovedadContractualDescripcionMotivo.Count() == 0 ||
@@ -703,6 +718,21 @@ namespace asivamosffie.services
                     )
                 {
                     esCompleto = false;
+                }
+
+                //Modificación de Condiciones Contractuales
+                if (descripcion.TipoNovedadCodigo == "5")
+                {
+                    descripcion.NovedadContractualClausula.ToList().ForEach(c =>
+                   {
+                       if (
+                            string.IsNullOrEmpty( c.ClausulaAmodificar ) ||
+                            string.IsNullOrEmpty( c.AjusteSolicitadoAclausula )
+                       )
+                       {
+
+                       }
+                   });
                 }
             }
 

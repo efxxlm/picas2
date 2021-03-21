@@ -256,6 +256,7 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
       contratoId: this.contrato.contratoId,
       fechaSesionInstancia: this.addressForm.value ? this.addressForm.value.fechaSesionInstancia : null,
       esAplicadaAcontrato: this.novedad.esAplicadaAcontrato,
+      urlSoporte: this.novedad.urlSoporte,
 
       novedadContractualDescripcion: this.novedadContractual.novedadContractualDescripcion,
 

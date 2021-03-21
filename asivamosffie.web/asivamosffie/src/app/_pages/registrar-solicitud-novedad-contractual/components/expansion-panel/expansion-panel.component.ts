@@ -17,4 +17,8 @@ export class ExpansionPanelComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  guardar(){
+    
+  }
+
 }

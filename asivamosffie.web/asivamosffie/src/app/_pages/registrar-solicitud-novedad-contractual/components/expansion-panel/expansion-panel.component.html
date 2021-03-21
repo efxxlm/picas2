@@ -15,7 +15,7 @@
       </mat-panel-title>
     </mat-expansion-panel-header>
     
-    <app-form-registrar-novedad
+    <app-form-registrar-novedad #formRegistrarNovedad
                                 [proyecto]=proyecto
                                 [contrato]=contrato
                                 [novedad]=novedad>
@@ -29,6 +29,10 @@
         Soporte de la solicitud
       </mat-panel-title>
     </mat-expansion-panel-header>
-    <app-form-soporte-solicitud></app-form-soporte-solicitud>
+    <app-form-soporte-solicitud
+                                [novedad]=novedad
+                                (guardar)="formRegistrarNovedad.onSubmit()"
+    >
+    </app-form-soporte-solicitud>
   </mat-expansion-panel>
 </mat-accordion>
