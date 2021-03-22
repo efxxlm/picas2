@@ -869,6 +869,7 @@ namespace asivamosffie.services
                                                    .Where(s => s.SolicitudPagoListaChequeoRespuestaId == SolicitudPagoListaChequeoRespuesta.SolicitudPagoListaChequeoRespuestaId)
                                                                                 .Update(s => new SolicitudPagoListaChequeoRespuesta
                                                                                 {
+                                                                                    TieneSubsanacion = SolicitudPagoListaChequeoRespuesta.TieneSubsanacion,
                                                                                     FechaModificacion = DateTime.Now,
                                                                                     RegistroCompleto = RegistroCompletoItem,
                                                                                     UsuarioModificacion = usuarioCreacion,
