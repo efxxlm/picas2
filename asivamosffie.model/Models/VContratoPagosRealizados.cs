@@ -13,6 +13,6 @@ namespace asivamosffie.model.Models
         public decimal? PorcentajeFacturado { get; set; }
         public decimal? SaldoPorPagar { get; set; }
         public decimal? PorcentajePorPagar { get; set; }
-        public decimal? ValorSolicitud { get; set; }
+        public decimal ValorSolicitud { get; set; }
     }
 }

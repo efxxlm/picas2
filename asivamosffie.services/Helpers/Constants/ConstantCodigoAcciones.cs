@@ -322,5 +322,8 @@
         public const string Crear_Usuario = "230";
         public const string AprobarNovedadContractual = "231";
         public const string VerificarNovedadContractual = "232";
+
+        public const string Verificar_Solicitud_Financiera = "233";
+        public const string Validar_Solicitud_Financiera = "234";
     }
 }

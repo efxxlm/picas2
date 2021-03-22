@@ -250,6 +250,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -6267,6 +6268,10 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaRadicacionSacContratista).HasColumnType("datetime");
 
+                entity.Property(e => e.FechaRegistroCompletoValidacionFinanciera).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaRegistroCompletoVerificacionFinanciera).HasColumnType("datetime");
+
                 entity.Property(e => e.NumeroRadicacionSacContratista).HasMaxLength(15);
 
                 entity.Property(e => e.NumeroSolicitud)
@@ -6600,6 +6605,18 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValidacionObservacion).HasMaxLength(2000);
+
+                entity.Property(e => e.ValidacionRespuestaCodigo)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.VerificacionObservacion).HasMaxLength(2000);
+
+                entity.Property(e => e.VerificacionRespuestaCodigo)
+                    .HasMaxLength(2)
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.ListaChequeoItem)
@@ -7451,11 +7468,11 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.PorcentajePorPagar).HasColumnType("numeric(38, 6)");
 
-                entity.Property(e => e.SaldoPorPagar).HasColumnType("numeric(38, 2)");
+                entity.Property(e => e.SaldoPorPagar).HasColumnType("numeric(38, 3)");
 
                 entity.Property(e => e.ValorFacturado).HasColumnType("decimal(38, 3)");
 
-                entity.Property(e => e.ValorSolicitud).HasColumnType("numeric(38, 2)");
+                entity.Property(e => e.ValorSolicitud).HasColumnType("numeric(18, 2)");
             });
 
             modelBuilder.Entity<VCuentaBancariaPago>(entity =>

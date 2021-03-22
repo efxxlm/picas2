@@ -45,7 +45,6 @@ namespace asivamosffie.services
         {
             List<VSolicitudPago> result = new List<VSolicitudPago>();
 
-
             switch (pMenuId)
             {
                 case (int)enumeratorMenu.Verificar_solicitud_de_pago:
@@ -55,7 +54,7 @@ namespace asivamosffie.services
                                                     .ToListAsync();
                     break;
 
-                case  (int)enumeratorMenu.Autorizar_solicitud_de_pago:
+                case (int)enumeratorMenu.Autorizar_solicitud_de_pago:
                     result = await _context.VSolicitudPago.Where(s =>
                        s.EstadoCodigo > (int)EnumEstadoSolicitudPago.Con_solicitud_revisada_por_equipo_facturacion)
                                                .OrderByDescending(r => r.FechaModificacion)
@@ -66,7 +65,7 @@ namespace asivamosffie.services
                     break;
             }
 
-          
+
 
 
 
@@ -353,6 +352,136 @@ namespace asivamosffie.services
             return false;
         }
 
+        #region Financiera
 
+        private bool ValidarRegistroCompletoSolicitudPagoListaChequeoRespuesta(SolicitudPagoListaChequeoRespuesta pSolicitudPagoListaChequeoRespuestaNew, bool pEsEsValidacion)
+        {
+            if (pEsEsValidacion)
+            {
+                if (string.IsNullOrEmpty(pSolicitudPagoListaChequeoRespuestaNew.ValidacionRespuestaCodigo))
+                    return false;
+
+                if (pSolicitudPagoListaChequeoRespuestaNew.ValidacionRespuestaCodigo == ConstanCodigoRespuestasListaChequeoSolictudPago.No_cumple)
+                    if (string.IsNullOrEmpty(pSolicitudPagoListaChequeoRespuestaNew.ValidacionObservacion))
+                        return false;
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(pSolicitudPagoListaChequeoRespuestaNew.VerificacionRespuestaCodigo))
+                    return false;
+
+                if (pSolicitudPagoListaChequeoRespuestaNew.VerificacionRespuestaCodigo == ConstanCodigoRespuestasListaChequeoSolictudPago.No_cumple)
+                    if (string.IsNullOrEmpty(pSolicitudPagoListaChequeoRespuestaNew.VerificacionObservacion))
+                        return false;
+            }
+            return true;
+        }
+
+        public async Task<Respuesta> CreateEditObservacionFinancieraListaChequeo(SolicitudPagoListaChequeo pSolicitudPagoListaChequeo)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Verificar_Solicitud_Financiera, (int)EnumeratorTipoDominio.Acciones);
+            bool blRegistroCompleto = true;
+            bool blTieneSubsanacion = pSolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Any(s => s.TieneSubsanacion == true);
+
+            if (pSolicitudPagoListaChequeo.EsValidacion)
+            {
+                idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Validar_Solicitud_Financiera, (int)EnumeratorTipoDominio.Acciones);
+
+                if (pSolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Count() != pSolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Where(r => r.ValidacionRespuestaCodigo != null).ToList().Count())
+                    blRegistroCompleto = false;
+
+                if (pSolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Any(s => s.ValidacionRespuestaCodigo == ConstanCodigoRespuestasSolicitudPago.No_Cumple))
+                    blRegistroCompleto = false;
+            }
+            else
+            {
+                if (pSolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Count() != pSolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Where(r => r.VerificacionRespuestaCodigo != null).ToList().Count())
+                    blRegistroCompleto = false;
+
+                if (pSolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Any(s => s.VerificacionRespuestaCodigo == ConstanCodigoRespuestasSolicitudPago.No_Cumple))
+                    blRegistroCompleto = false;
+            }
+            try
+            {
+                pSolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta
+                    .ToList().ForEach(res =>
+                    {
+                        bool blRegistroCompletoItem = ValidarRegistroCompletoSolicitudPagoListaChequeoRespuesta(res, pSolicitudPagoListaChequeo.EsValidacion);
+
+                        if (!blRegistroCompletoItem)
+                            blRegistroCompleto = false;
+                         
+                        _context.Set<SolicitudPagoListaChequeoRespuesta>()
+                                .Where(s => s.SolicitudPagoListaChequeoRespuestaId == res.SolicitudPagoListaChequeoRespuestaId)
+                                .Update(s => new SolicitudPagoListaChequeoRespuesta
+                                {
+                                    UsuarioModificacion = pSolicitudPagoListaChequeo.UsuarioCreacion,
+                                    FechaModificacion = DateTime.Now,
+
+                                    TieneSubsanacion = res.TieneSubsanacion,
+                                    VerificacionRespuestaCodigo = res.VerificacionRespuestaCodigo,
+                                    VerificacionObservacion = res.VerificacionObservacion,
+                                    ValidacionRespuestaCodigo = res.ValidacionRespuestaCodigo,
+                                    ValidacionObservacion = res.ValidacionObservacion
+                                });
+                    });
+
+          
+                DateTime? FechaRegistroCompleto = null;
+                if (blRegistroCompleto)
+                    FechaRegistroCompleto = DateTime.Now;
+
+                if (pSolicitudPagoListaChequeo.EsValidacion)
+                {
+                    _context.Set<SolicitudPago>()
+                             .Where(s => s.SolicitudPagoId == pSolicitudPagoListaChequeo.SolicitudPagoId)
+                             .Update(s => new SolicitudPago
+                             {
+                                 FechaRegistroCompletoValidacionFinanciera = FechaRegistroCompleto,
+                                 RegistroCompletoValidacionFinanciera = blRegistroCompleto,
+                                 TieneSubsanacion = blTieneSubsanacion,
+                                 UsuarioModificacion = pSolicitudPagoListaChequeo.UsuarioCreacion,
+                                 FechaModificacion = DateTime.Now
+                             });
+                }
+                else
+                {
+                    _context.Set<SolicitudPago>()
+                               .Where(s => s.SolicitudPagoId == pSolicitudPagoListaChequeo.SolicitudPagoId)
+                               .Update(s => new SolicitudPago
+                               {
+                                   FechaRegistroCompletoVerificacionFinanciera = FechaRegistroCompleto,
+                                   RegistroCompletoVerificacionFinanciera = blRegistroCompleto,
+                                   TieneSubsanacion = blTieneSubsanacion,
+                                   UsuarioModificacion = pSolicitudPagoListaChequeo.UsuarioCreacion,
+                                   FechaModificacion = DateTime.Now
+                               });
+                }
+                return
+                         new Respuesta
+                         {
+                             IsSuccessful = true,
+                             IsException = false,
+                             IsValidation = false,
+                             Code = GeneralCodes.OperacionExitosa,
+                             Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.OperacionExitosa, idAccion, pSolicitudPagoListaChequeo.UsuarioCreacion, "CREAR EDITAR LISTA CHEQUEO FINANCIERA")
+                         };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.Error, idAccion, pSolicitudPagoListaChequeo.UsuarioCreacion, ex.InnerException.ToString())
+                    };
+            }
+        }
+
+
+        #endregion
     }
 }

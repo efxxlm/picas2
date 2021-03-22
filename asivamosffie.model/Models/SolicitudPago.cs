@@ -37,6 +37,11 @@ namespace asivamosffie.model.Models
         public string NumeroRadicacionSacContratista { get; set; }
         public bool? RegistroCompletoVerificar { get; set; }
         public bool? RegistroCompletoAutorizar { get; set; }
+        public bool? TieneSubsanacion { get; set; }
+        public bool? RegistroCompletoVerificacionFinanciera { get; set; }
+        public bool? RegistroCompletoValidacionFinanciera { get; set; }
+        public DateTime? FechaRegistroCompletoVerificacionFinanciera { get; set; }
+        public DateTime? FechaRegistroCompletoValidacionFinanciera { get; set; }
 
         public virtual ContratacionProyecto ContratacionProyecto { get; set; }
         public virtual Contrato Contrato { get; set; }

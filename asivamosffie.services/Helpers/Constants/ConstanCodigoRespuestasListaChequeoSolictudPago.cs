@@ -4,6 +4,6 @@
     {
         public const string Cumple = "1";
         public const string No_cumple = "2";
-        public const string No_aplica= "3";
+        public const string No_aplica = "3";
     }
 }

@@ -5,6 +5,7 @@ namespace asivamosffie.model.Models
 {
     public partial class VValorUsosFasesAportanteProyecto
     {
+        public int ContratoId { get; set; }
         public decimal? ValorUso { get; set; }
         public int? ContratacionProyectoId { get; set; }
         public string LlaveMen { get; set; }

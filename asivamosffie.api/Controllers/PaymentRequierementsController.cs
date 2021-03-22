@@ -46,7 +46,25 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
- 
+
+        [HttpPost]
+        [Route("CreateEditObservacionFinancieraListaChequeo")]
+        public async Task<IActionResult> CreateEditObservacionFinancieraListaChequeo([FromBody] SolicitudPagoListaChequeo pSolicitudPagoListaChequeo)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pSolicitudPagoListaChequeo.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _paymentRequierementsService.CreateEditObservacionFinancieraListaChequeo(pSolicitudPagoListaChequeo);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
         [Route("ChangueStatusSolicitudPago")]
         public async Task<IActionResult> ChangueStatusSolicitudPago([FromBody] SolicitudPago pSolicitudPago)
         {

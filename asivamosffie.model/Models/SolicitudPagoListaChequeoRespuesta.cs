@@ -16,6 +16,11 @@ namespace asivamosffie.model.Models
         public DateTime? FechaCreacion { get; set; }
         public string UsuarioModificacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
+        public bool? TieneSubsanacion { get; set; }
+        public string VerificacionRespuestaCodigo { get; set; }
+        public string VerificacionObservacion { get; set; }
+        public string ValidacionRespuestaCodigo { get; set; }
+        public string ValidacionObservacion { get; set; }
 
         public virtual ListaChequeoItem ListaChequeoItem { get; set; }
         public virtual SolicitudPagoListaChequeo SolicitudPagoListaChequeo { get; set; }

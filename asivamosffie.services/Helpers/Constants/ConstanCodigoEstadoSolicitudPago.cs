@@ -17,14 +17,14 @@
         Enviada_para_autorizacion = 5,  //4.1.9
 
         //4.1.9
-        Aprobado_por_coordinacion = 6, // 4.3.1
+        Aprobado_por_coordinacion = 6, // 4.3.1 se la envia
 
         //4.3.1
-        Enviada_para_validacion_por_financiera = 11,  //4.3.2
-        Con_solicitud_devuelta_a_verificar_financieramente_por_generador_orden_de_giro = 14, //4.3.3
+        Enviada_para_validacion_por_financiera = 11,  //4.3.2 se la envia
+        Con_solicitud_devuelta_a_verificar_financieramente_por_generador_orden_de_giro = 14, //4.3.3 se la envia
 
         //4.3.2
-        Enviada_para_orden_de_giro = 12,  //4.3.3  
+        Enviada_para_orden_de_giro = 12,  //4.3.3   se la envia
         Con_solicitud_devuelta_a_validar_financieramente_por_generador_orden_de_giro = 15, //4.3.3 se la envia
     }
 }

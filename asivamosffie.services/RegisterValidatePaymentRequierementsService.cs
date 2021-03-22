@@ -178,8 +178,9 @@ namespace asivamosffie.services
                     List<Contrato> ListContratos = await _context.Contrato
                                     .Include(c => c.Contratacion)
                                              .Where(c => c.NumeroContrato.Trim().ToLower().Contains(pNumeroContrato.Trim().ToLower())
-                                                   && c.Contratacion.TipoSolicitudCodigo == pTipoSolicitud
-                                                   && c.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioObra.Con_acta_suscrita_y_cargada
+                                                      && c.ModalidadCodigo == pModalidadContrato
+                                                      && c.Contratacion.TipoSolicitudCodigo == pTipoSolicitud
+                                                      && c.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioObra.Con_acta_suscrita_y_cargada
                                                    ).ToListAsync();
                     return ListContratos
                         .Select(r => new
@@ -248,12 +249,11 @@ namespace asivamosffie.services
                     .Where(v => v.ContratoId == pContratoId)
                     .ToList();
 
-                contrato.VContratoPagosRealizados = 
+                contrato.VContratoPagosRealizados =
                     _context.VContratoPagosRealizados
                        .Where(v => v.ContratoId == pContratoId)
                        .ToList();
 
-    
                 return contrato;
             }
             catch (Exception ex)
@@ -850,8 +850,10 @@ namespace asivamosffie.services
             {
                 bool blRegistroCompletoListaChequeo = true;
 
-
                 if (SolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Count() != SolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Where(r => r.RespuestaCodigo != null).ToList().Count())
+                    blRegistroCompletoListaChequeo = false;
+
+                if (SolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Any(s => s.RespuestaCodigo == ConstanCodigoRespuestasSolicitudPago.No_Cumple))
                     blRegistroCompletoListaChequeo = false;
 
                 SolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta = SolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Where(r => r.RespuestaCodigo != null).ToList();
@@ -1781,7 +1783,6 @@ namespace asivamosffie.services
 
         #endregion
 
-        #endregion
-
+        #endregion 
     }
 }
