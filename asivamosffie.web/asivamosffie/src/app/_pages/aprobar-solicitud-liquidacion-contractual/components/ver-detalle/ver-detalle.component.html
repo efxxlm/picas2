@@ -1,0 +1,218 @@
+<section class="container">
+  <div class="text-center">
+    <div class="text-right">
+      <a routerLink="../.." mat-button color="primary" class="btn-regresar">
+        <img src="assets/img/icon/regresar.svg" alt="Regresar" />
+      </a>
+    </div>
+    <h1 class="title-menu--h1">
+      Ver detalle ODG_Obra_001
+    </h1>
+    <p class="colorMainColor mt-1em">
+      <span class="mx-1em">
+        Número de contrato de obra: <b> N801801 </b>
+      </span>
+      <span class="mx-1em">
+        Contratista: <b> Construir futuro </b>
+      </span>
+    </p>
+  </div>
+
+  <mat-card class="shipping-card var-main-gris">
+    <mat-card-content>
+      <p>
+        <strong>
+          Tipo de intervención:
+        </strong>
+        Remodelación
+      </p>
+      <p>
+        <strong>
+          Institución Educativa:
+        </strong>
+        I.E Nuestra Señora Del Carmen
+      </p>
+      <p>
+        <strong>
+          Sede:
+        </strong>
+        Única Sede
+      </p>
+      <p>
+        <strong>
+          Departamento:
+        </strong>
+        Boyacá
+      </p>
+      <p>
+        <strong>
+          Municipio:
+        </strong>
+        Susacón
+      </p>
+    </mat-card-content>
+  </mat-card>
+
+  <p class="text-center">
+    Valor total facturado:
+    <b>
+      $15.000.000
+    </b>
+  </p>
+  
+  <mat-card class="shipping-card var-main-gris">
+    <mat-card-header class="header-card header-card--margin">
+      <mat-card-title class="header-card--text">
+        Facturado
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="table-responsive mb-1em mt-1em">
+        <table class="mat-table cdk-table mat-sort mat-table-style table-form">
+          <thead>
+            <tr class="mat-header-row cdk-header-row ng-star-inserted">
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                Aportante
+              </th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                Valor aportante
+              </th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                Uso
+              </th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                Tipo de pago
+              </th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                concepto de pago
+              </th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                Valor concepto de pago
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let element of listaFacturado">
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                <b> {{ element.aportante }} </b>
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{ element.valor }}
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{ element.uso }}
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{ element.tipoPago }}
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{ element.conceptoPago }}
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{ element.valorConceptoPago }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  
+  <mat-card class="shipping-card var-main-gris">
+    <mat-card-header class="header-card header-card--margin">
+      <mat-card-title class="header-card--text">
+        Descuentos
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="table-responsive mb-1em mt-1em">
+        <table class="mat-table cdk-table mat-sort mat-table-style table-form">
+          <thead>
+            <tr class="mat-header-row cdk-header-row ng-star-inserted">
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                Aportante
+              </th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                Valor facturado
+              </th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                Uso
+              </th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                Tipo de pago
+              </th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                Concepto de pago
+              </th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                Valor concepto de pago
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let element of listaDescuentos">
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                <b> {{ element.aportante }} </b>
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{ element.valor }}
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{ element.uso }}
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{ element.tipoPago }}
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{ element.conceptoPago }}
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{ element.valorConceptoPago }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  
+  <mat-card class="shipping-card var-main-gris">
+    <mat-card-header class="header-card header-card--margin">
+      <mat-card-title class="header-card--text">
+        Detalle otros descuentos
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="table-responsive mb-1em mt-1em">
+        <table class="mat-table cdk-table mat-sort mat-table-style table-form w-tabla-descuentos">
+          <thead>
+            <tr class="mat-header-row cdk-header-row ng-star-inserted">
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                Concepto
+              </th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                Descuento
+              </th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                Alcaldía de Susacón
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let element of listaDetalleOtrosDescuentos">
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                <b> {{ element.concepto }} </b>
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{ element.descuento }}
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{ element.valor }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</section>

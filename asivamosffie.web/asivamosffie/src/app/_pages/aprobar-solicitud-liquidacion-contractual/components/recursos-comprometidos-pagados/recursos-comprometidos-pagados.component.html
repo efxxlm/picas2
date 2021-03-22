@@ -1,0 +1,170 @@
+<section class="container">
+  <div class="text-right">
+    <a routerLink="./../" mat-button color="primary" class="btn-regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar" />
+    </a>
+  </div>
+  <div class="text-center">
+    <h1 class="title-menu--h1">
+      Recursos comprometidos y pagados
+      LL457326
+    </h1>
+    <p class="colorMainColor mt-05em">
+      <span class="mx-1em">
+        Número de contrato de obra:
+        <b> N801801 </b>
+      </span>
+      <span class="mx-1em">
+        Número de contrato de interventoria:
+        <b> A513513 </b>
+      </span>
+    </p>
+  </div>
+
+  <mat-card class="shipping-card var-main-gris">
+    <mat-card-content>
+      <p>
+        <strong>
+          Tipo de intervención:
+        </strong>
+        Remodelación
+      </p>
+      <p>
+        <strong>
+          Institución Educativa:
+        </strong>
+        I.E Nuestra Señora Del Carmen
+      </p>
+      <p>
+        <strong>
+          Sede:
+        </strong>
+        Única Sede
+      </p>
+      <p>
+        <strong>
+          Departamento:
+        </strong>
+        Boyacá
+      </p>
+      <p>
+        <strong>
+          Municipio:
+        </strong>
+        Susacón
+      </p>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-accordion>
+    <mat-expansion-panel class="expansion-style">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title">
+          Contrato de obra
+          N801801
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-accordion>
+        <mat-expansion-panel class="expansion-style sub-expansion">
+          <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title">
+              Recursos comprometidos
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <app-detalle-recursos-comprometidos></app-detalle-recursos-comprometidos>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style sub-expansion">
+          <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title">
+              Contratistas
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <app-detalle-contratistas></app-detalle-contratistas>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style sub-expansion">
+          <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title">
+              Valor total ordenes de giro
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          
+          
+          <div class="table-responsive text-center">
+            <table class="mat-table cdk-table mat-sort mat-table-style table-form">
+              <thead>
+                <tr class="mat-header-row cdk-header-row ng-star-inserted">
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                    Número de orden de giro
+                  </th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                    Contratistas
+                  </th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                    Facturado
+                  </th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                    ANS aplicado
+                  </th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                    Rete garantía a pagar
+                  </th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                    Otros descuentos
+                  </th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                    A pagar antes de impuestos
+                  </th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                    Gestión
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let element of listaValorTotalOrdenesGiro">
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    <b>
+                      {{ element.numeroOrdenGiro }}
+                    </b>
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.contratista }}
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    <b>
+                      {{ element.facturado }}
+                    </b>
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.adn }}
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.reteGarantia }}
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.otrosDescuentos }}
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.pagarAntesImpuestos }}
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    <a
+                      mat-button
+                      mat-raised-button
+                      color="accent"
+                      class="btn-table"
+                      [routerLink]="['verDetalle', element.id]"
+                    >
+                      Ver detalle
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </mat-expansion-panel>
+      </mat-accordion>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+</section>
