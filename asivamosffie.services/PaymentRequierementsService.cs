@@ -26,10 +26,10 @@ namespace asivamosffie.services
             _commonService = commonService;
             _context = context;
         }
-        public async Task<dynamic> GetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(int pMenuId, int pSolicitudPagoId, int pPadreId)
+        public async Task<dynamic> GetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(int pMenuId, int pSolicitudPagoId, int pPadreId , string pTipoObservacionCodigo)
         {
             return await _context.SolicitudPagoObservacion
-                                           .Where(s => s.MenuId == pMenuId && s.SolicitudPagoId == pSolicitudPagoId && s.IdPadre == pPadreId)
+                                           .Where(s => s.MenuId == pMenuId && s.SolicitudPagoId == pSolicitudPagoId && s.IdPadre == pPadreId && s.TipoObservacionCodigo == pTipoObservacionCodigo)
                                                                                                                        .Select(p => new
                                                                                                                        {
                                                                                                                            p.SolicitudPagoObservacionId,

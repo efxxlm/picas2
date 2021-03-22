@@ -84,9 +84,9 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId")]
         [HttpGet]
-        public async Task<dynamic> GetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId([FromQuery] int pMenuId, int pSolicitudPagoId, int pPadreId)
+        public async Task<dynamic> GetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId([FromQuery] int pMenuId, int pSolicitudPagoId, int pPadreId ,string pTipoObservacionCodigo)
         {
-            return await _paymentRequierementsService.GetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(pMenuId, pSolicitudPagoId, pPadreId);
+            return await _paymentRequierementsService.GetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(pMenuId, pSolicitudPagoId, pPadreId , pTipoObservacionCodigo);
         }
 
         [Route("GetListSolicitudPago")]
