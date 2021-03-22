@@ -1,9 +1,15 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
+import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
 import { DialogObservacionesVfspComponent } from '../dialog-observaciones-vfsp/dialog-observaciones-vfsp.component';
+import humanize from 'humanize-plus';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-form-valid-listchequeo-vfsp',
@@ -11,119 +17,202 @@ import { DialogObservacionesVfspComponent } from '../dialog-observaciones-vfsp/d
   styleUrls: ['./form-valid-listchequeo-vfsp.component.scss']
 })
 export class FormValidListchequeoVfspComponent implements OnInit {
-  dataSource = new MatTableDataSource();
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-  displayedColumns: string[] = [
-    'item',
-    'documento',
-    'revTecnica',
-    'verificacionFinanciera',
-    'observaciones'
-  ];
-  dataTable: any[] = [
-    {
-      item: '1',
-      documento: 'Certificación de supervisión de aprobación de pago de interventoría suscrita por el contratista y el Supervisor en original, en el cual se evidencie el avance porcentual de obra.',
-      revTecnica: 'Sí cumple',
-      verificacionFinanciera:'',      
-      observaciones: ''
-    },
-    {
-      item: '2',
-      documento: 'Factura (Prefactura si tiene facturación electrónica) por costo variable del Contrato de Interventoría, cuyo deudor es el Patrimonio Autónomo del Fondo de Infraestructura Educativa FFIE, NIT 830.053.812-2. Indicar el lugar en el que se presta el servicio. Para la instrucción de pago se sugiere la siguiente nota: “Favor realizar transferencia electrónica (consignación) a la cuenta (mencionar el tipo: ahorro o corriente) No. XXXXX en el (nombre de banco), a nombre de (XXXXXXXXX) con NIT (XXXXXXXX).',
-      revTecnica: 'Sí cumple',
-      verificacionFinanciera:'', 
-      observaciones: ''
-    },
-    {
-      item: '3',
-      documento: 'Copia de la resolución de facturación vigente.',
-      revTecnica: 'Sí cumple',
-      verificacionFinanciera:'', 
-      observaciones: ''
-    },
-    {
-      item: '4',
-      documento: 'Copia del Acta de Inicio de la Fase del Contrato de Interventoría (Requerido para el primer pago).',
-      revTecnica: 'Sí cumple',
-      verificacionFinanciera:'', 
-      observaciones: ''
-    },
-    {
-      item: '5',
-      documento: 'Acta parcial de Interventoría suscrita por el contratista y el Supervisor, de forma impresa y con una copia magnética en formato Excel editable.',
-      revTecnica: 'Sí cumple',
-      verificacionFinanciera:'', 
-      observaciones: ''
-    },
-    {
-      item: '6',
-      documento: 'Certificación revisor fiscal con copia de la tarjeta profesional y/o representante legal (únicamente cuando la sociedad no esté obligada a tener revisor fiscal) en la cual certifique que están al día en el pago de nómina, seguridad social y parafiscales del consorcio y los consorciados (debe corresponder al periodo en el que se emite la factura. Si la factura tiene fecha de los cinco (5) primeros días hábiles del mes, se podrá anexar la certificación del mes anterior).',
-      revTecnica: 'Sí cumple',
-      verificacionFinanciera:'', 
-      observaciones: ''
-    },
-    {
-      item: '7',
-      documento: 'Certificación bancaria original no mayor a treinta (30) días, la cual debe contener los siguientes datos: Número de cuenta, clase de cuenta, NIT, nombre del titular y banco al cual se le debe realizar el pago (para el primer pago y/o cada vez que se cambie).',
-      revTecnica: 'Sí cumple',
-      verificacionFinanciera:'', 
-      observaciones: ''
-    },
-    {
-      item: '8',
-      documento: 'RUT del Contratista. En el caso de un Consorcio o Unión Temporal, se deberá aportar el RUT de la forma plural de asociación y de cada uno de los integrantes (para el primer pago y/o cada vez que se actualice).',
-      revTecnica: 'Sí cumple',
-      verificacionFinanciera:'', 
-      observaciones: ''
-    },
-    {
-      item: '9',
-      documento: 'Copia documento de constitución del consorcio o unión temporal.',
-      revTecnica: 'Sí cumple',
-      verificacionFinanciera:'', 
-      observaciones: ''
-    },
-    {
-      item: '10',
-      documento: 'Formato de retención en la fuente (si es persona natural) (Requerido para el primer pago).',
-      revTecnica: 'Sí cumple',
-      verificacionFinanciera:'', 
-      observaciones: ''
+
+    @Input() contrato: any;
+    @Input() solicitudPago: any;
+    @Input() listaChequeoCodigo: string;
+    @Input() aprobarSolicitudPagoId: number;
+    @Input() esVerDetalle = false;
+    @Output() estadoSemaforo = new EventEmitter<string>();
+    esExpensas: boolean;
+    listaRevisionTecnica: Dominio[] = [];
+    noCumpleCodigo = '2';
+    seDiligencioCampo = false;
+    solicitudPagoModificado: any;
+    dataSource = new MatTableDataSource();
+    estaEditando = false;
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild(MatSort, { static: true }) sort: MatSort;
+    displayedColumns: string[] = [
+        'item',
+        'documento',
+        'revTecnica',
+        'verificacionFinanciera',
+        'observaciones'
+    ];
+    addressForm: FormGroup;
+    editorStyle = {
+      height: '45px',
+      overflow: 'auto'
+    };
+    config = {
+      toolbar: [
+        ['bold', 'italic', 'underline'],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        [{ indent: '-1' }, { indent: '+1' }],
+        [{ align: [] }],
+      ]
+    };
+
+
+    get listas() {
+        return this.addressForm.get( 'listas' ) as FormArray;
     }
-  ];
-  booleanosVerificacionFinanciera: any[] = [
-    { value: true, viewValue: 'Si cumple' },
-    { value: false, viewValue: 'No cumple' }
-  ]
-  constructor(public dialog: MatDialog) { }
 
-  ngOnInit(): void {
-    this.dataSource = new MatTableDataSource(this.dataTable);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-  };
+    getRespuestasListaChequeo( index: number ) {
+        return this.listas.controls[ index ].get( 'solicitudPagoListaChequeoRespuesta' ).get( 'respuestasListaChequeo' ) as FormArray;
+    }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  };
-  callObservaciones(){
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.height = 'auto';
-    dialogConfig.width = '865px';
-    //dialogConfig.data = { id: id, idRol: idRol, numContrato: numContrato, fecha1Titulo: fecha1Titulo, fecha2Titulo: fecha2Titulo };
-    const dialogRef = this.dialog.open(DialogObservacionesVfspComponent, dialogConfig);
-    //dialogRef.afterClosed().subscribe(value => {});
-  }
-  callSubsanacion(){
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.height = 'auto';
-    dialogConfig.width = '865px';
-    //dialogConfig.data = { id: id, idRol: idRol, numContrato: numContrato, fecha1Titulo: fecha1Titulo, fecha2Titulo: fecha2Titulo };
-    //const dialogRef = this.dialog.open(DialogSubsanacionComponent, dialogConfig);
-    //dialogRef.afterClosed().subscribe(value => {});
-  }
+    constructor(
+        private fb: FormBuilder,
+        private routes: Router,
+        private activatedRoute: ActivatedRoute,
+        private dialog: MatDialog,
+        private commonSvc: CommonService )
+    {
+        this.commonSvc.listaRevisionTecnica()
+            .subscribe( listaRevisionTecnica => this.listaRevisionTecnica = listaRevisionTecnica );
+        this.addressForm = this.crearFormulario();
+    }
+
+    ngOnInit(): void {
+        this.getListasDeChequeo();
+    }
+
+    async getListasDeChequeo() {
+        if ( this.contrato === undefined && this.solicitudPago !== undefined ) {
+            this.esExpensas = true;
+            for ( const solicitudPagoListaChequeo of this.solicitudPago.solicitudPagoListaChequeo ) {
+                const respuestasListaChequeo = [];
+                for ( const solicitudPagoListaChequeoRespuesta of solicitudPagoListaChequeo.solicitudPagoListaChequeoRespuesta ) {
+
+                    respuestasListaChequeo.push(
+                        this.fb.group(
+                            {
+                                listaChequeoItemNombre: [ solicitudPagoListaChequeoRespuesta.listaChequeoItem.nombre ],
+                                respuestaCodigo: [ solicitudPagoListaChequeoRespuesta.respuestaCodigo !== undefined ? solicitudPagoListaChequeoRespuesta.respuestaCodigo : null, Validators.required ],
+                                observacion: [ null, Validators.required ],
+                                respuestaRevisionTecnicaCodigo: [ null, Validators.required ],
+                                tieneSubsanacion: [ null, Validators.required ]
+                            }
+                        )
+                    )
+
+                }
+
+                this.listas.push( this.fb.group(
+                    {
+                        solicitudPagoId: this.solicitudPago.solicitudPagoId,
+                        solicitudPagoListaChequeoId: solicitudPagoListaChequeo.solicitudPagoListaChequeoId,
+                        nombre: solicitudPagoListaChequeo.listaChequeo.nombre,
+                        solicitudPagoListaChequeoRespuesta: this.fb.group(
+                            {
+                                respuestasListaChequeo: this.fb.array( respuestasListaChequeo )
+                            }
+                        )
+                    }
+                ) );
+            }
+
+            this.dataSource = new MatTableDataSource();
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
+        }
+        if ( this.contrato !== undefined  && this.solicitudPago === undefined ) {
+            this.esExpensas = false;
+            for ( const solicitudPagoListaChequeo of this.contrato.solicitudPagoOnly.solicitudPagoListaChequeo ) {
+                const respuestasListaChequeo = [];
+                for ( const solicitudPagoListaChequeoRespuesta of solicitudPagoListaChequeo.solicitudPagoListaChequeoRespuesta ) {
+
+                    respuestasListaChequeo.push(
+                        this.fb.group(
+                            {
+                                solicitudPagoListaChequeoRespuestaId: [ solicitudPagoListaChequeoRespuesta.solicitudPagoListaChequeoRespuestaId ],
+                                listaChequeoItemNombre: [ solicitudPagoListaChequeoRespuesta.listaChequeoItem.nombre ],
+                                respuestaCodigo: [ solicitudPagoListaChequeoRespuesta.respuestaCodigo !== undefined ? solicitudPagoListaChequeoRespuesta.respuestaCodigo : null, Validators.required ],
+                                observacion: [ null, Validators.required ],
+                                respuestaRevisionTecnicaCodigo: [ null, Validators.required ],
+                                tieneSubsanacion: [ null, Validators.required ]
+                            }
+                        )
+                    )
+
+                }
+
+                this.listas.push( this.fb.group(
+                    {
+                        solicitudPagoId: this.contrato.solicitudPagoOnly.solicitudPagoId,
+                        solicitudPagoListaChequeoId: solicitudPagoListaChequeo.solicitudPagoListaChequeoId,
+                        nombre: solicitudPagoListaChequeo.listaChequeo.nombre,
+                        solicitudPagoListaChequeoRespuesta: this.fb.group(
+                            {
+                                respuestasListaChequeo: this.fb.array( respuestasListaChequeo )
+                            }
+                        )
+                    }
+                ) );
+            }
+
+            this.dataSource = new MatTableDataSource();
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
+        }
+    }
+
+    crearFormulario() {
+        return this.fb.group(
+            {
+                listas: this.fb.array( [] )
+            }
+        )
+    }
+
+    firstLetterUpperCase( texto:string ) {
+        if ( texto !== undefined ) {
+            return humanize.capitalize( String( texto ).toLowerCase() );
+        }
+    }
+
+    getMatTable( index: number ) {
+        return new MatTableDataSource( this.getRespuestasListaChequeo( index ).controls );
+    }
+
+    getRevisionTecnica( respuestaCodigo: string ) {
+        if ( this.listaRevisionTecnica.length > 0 ) {
+            const revision = this.listaRevisionTecnica.find( revision => revision.codigo === respuestaCodigo );
+
+            if ( revision !== undefined ) {
+                return revision.nombre;
+            };
+        }
+    }
+
+    getSubsanacion( registro: any, index: number, jIndex: number ) {
+        const dialogRef = this.dialog.open( DialogObservacionesVfspComponent, {
+            width: '80em',
+            data: { registro, jIndex }
+        });
+
+        dialogRef.afterClosed()
+            .subscribe(
+                value => {
+                    this.getRespuestasListaChequeo( index ).controls[ jIndex ].get( 'observacion' ).setValue( value.observaciones );
+                    this.getRespuestasListaChequeo( index ).controls[ jIndex ].get( 'tieneSubsanacion' ).setValue( value.tieneSubsanacion );
+                }
+            );
+    }
+
+    openDialog(modalTitle: string, modalText: string) {
+        const dialogRef = this.dialog.open(ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle, modalText }
+        });
+    }
+
+    guardar() {
+        this.estaEditando = true;
+        this.listas.markAllAsTouched();
+        console.log( this.addressForm );
+    }
 
 }

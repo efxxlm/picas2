@@ -3,7 +3,7 @@
         <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
             <ng-container matColumnDef="faseContrato">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Fase del contrato </th>
-                <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.faseContrato }}</b> </td>
+                <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.faseContrato }} </b> </td>
             </ng-container>
             <ng-container matColumnDef="pagosRealizados">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Pagos Realizados </th>
@@ -11,7 +11,7 @@
             </ng-container>
             <ng-container matColumnDef="valorFacturado">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor facturado </th>
-                <td mat-cell *matCellDef="let element" align="center"> {{ element.valorFacturado }} </td>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.valorFacturado | currency:'':'symbol-narrow':'.0-0' }} </td>
             </ng-container>
             <ng-container matColumnDef="porcentajeFacturado">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Porcentaje facturado </th>
@@ -19,7 +19,7 @@
             </ng-container>
             <ng-container matColumnDef="saldoPorPagar">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Saldo por pagar </th>
-                <td mat-cell *matCellDef="let element" align="center"> {{ element.saldoPorPagar }} </td>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.saldoPorPagar | currency:'':'symbol-narrow':'.0-0' }} </td>
             </ng-container>
             <ng-container matColumnDef="porcentajePorPagar">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Porcentaje por pagar </th>
@@ -58,7 +58,7 @@
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
-                    <app-criterios-pago [solicitudPago]="solicitudPago"></app-criterios-pago>
+                    <app-criterios-pago [solicitudPago]="solicitudPago" [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"></app-criterios-pago>
                 </mat-expansion-panel>
 
                 <mat-expansion-panel class="expansion-style sub-expansion-black">
@@ -68,7 +68,7 @@
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
-                    <app-detalle-factura-proyectos [solicitudPago]="solicitudPago"></app-detalle-factura-proyectos>
+                    <app-detalle-factura-proyectos [solicitudPago]="solicitudPago" [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"></app-detalle-factura-proyectos>
                 </mat-expansion-panel>
 
                 <mat-expansion-panel class="expansion-style sub-expansion-black">
@@ -99,7 +99,7 @@
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
-                    <app-criterios-pago [solicitudPago]="solicitudPago" [esPreconstruccion]="false"></app-criterios-pago>
+                    <app-criterios-pago [solicitudPago]="solicitudPago" [esPreconstruccion]="false" [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"></app-criterios-pago>
                 </mat-expansion-panel>
 
                 <mat-expansion-panel class="expansion-style sub-expansion-black">
@@ -119,7 +119,7 @@
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
-                    <app-detalle-factura-proyectos [solicitudPago]="solicitudPago"></app-detalle-factura-proyectos>
+                    <app-detalle-factura-proyectos [solicitudPago]="solicitudPago" [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"></app-detalle-factura-proyectos>
                 </mat-expansion-panel>
 
                 <mat-expansion-panel class="expansion-style sub-expansion-black">

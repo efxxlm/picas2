@@ -243,8 +243,6 @@ export class FormCriteriosPagoComponent implements OnInit {
                 }
             } );
             if ( valorConcepto > this.montoMaximoPendiente.montoMaximo ) {
-                this.openDialog( '', '<b>El valor total de los conceptos no puede ser mayor o igual al monto maximo por pagar en esta factura.</b>' );
-                this.criterios.controls[ index ].get( 'valorFacturado' ).setValue( null );
                 return;
             }
             this.criterios.controls[ index ].get( 'valorFacturado' ).setValue( valorTotalCriterios );
@@ -260,7 +258,7 @@ export class FormCriteriosPagoComponent implements OnInit {
         } );
 
         if ( totalValorConceptos > this.montoMaximoPendiente.montoMaximo ) {
-            this.openDialog( '', '<b>La suma total de los valores por concepto no puede ser mayor o igual al monto maximo por pagar en esta factura.</b>' );
+            this.openDialog( '', '<b>No se puede tramitar el pago, dado que el valor ingresado supera el monto pendiente de pago para el porcentaje seleccionado en la fase del contrato.<br>La información no será guardada.<br>Se recomienda revisar la solicitud.</b>' );
             
             if ( index !== undefined ) {
                 this.criterios.controls[ index ].get( 'valorFacturado' ).setValue( null );

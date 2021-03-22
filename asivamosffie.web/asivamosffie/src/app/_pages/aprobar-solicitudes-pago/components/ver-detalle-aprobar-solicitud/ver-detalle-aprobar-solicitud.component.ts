@@ -108,7 +108,11 @@ export class VerDetalleAprobarSolicitudComponent implements OnInit {
                                 this.contrato = response;
                                 console.log( this.contrato );
                                 // Get observaciones Soporte de la solicitud
-                                this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.menusIdPath.aprobarSolicitudPagoId, this.activatedRoute.snapshot.params.idSolicitudPago, this.contrato.solicitudPagoOnly.solicitudPagoSoporteSolicitud[0].solicitudPagoSoporteSolicitudId )
+                                this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                                    this.menusIdPath.aprobarSolicitudPagoId,
+                                    this.activatedRoute.snapshot.params.idSolicitudPago,
+                                    this.contrato.solicitudPagoOnly.solicitudPagoSoporteSolicitud[0].solicitudPagoSoporteSolicitudId,
+                                    this.listaTipoObservacionSolicitudes.soporteSolicitudCodigo )
                                     .subscribe(
                                         response => {
                                             const obsSupervisor = response.filter( obs => obs.archivada === false )[0];
@@ -127,7 +131,11 @@ export class VerDetalleAprobarSolicitudComponent implements OnInit {
 
                                 if ( this.contrato.solicitudPagoOnly.tipoSolicitudCodigo === this.tipoSolicitudCodigo.otrosCostos ) {
                                     // Get observaciones otros costos
-                                    this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.menusIdPath.aprobarSolicitudPagoId, this.activatedRoute.snapshot.params.idSolicitudPago, this.contrato.solicitudPagoOnly.solicitudPagoOtrosCostosServicios[0].solicitudPagoOtrosCostosServiciosId )
+                                    this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                                        this.menusIdPath.aprobarSolicitudPagoId,
+                                        this.activatedRoute.snapshot.params.idSolicitudPago,
+                                        this.contrato.solicitudPagoOnly.solicitudPagoOtrosCostosServicios[0].solicitudPagoOtrosCostosServiciosId,
+                                        this.listaTipoObservacionSolicitudes.otrosCostosCodigo )
                                         .subscribe(
                                             response => {
                                                 const obsSupervisor = response.filter( obs => obs.archivada === false )[0];

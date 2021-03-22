@@ -330,7 +330,7 @@ listaEstadosPoliza(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=159`);
   }
   listaRevisionTecnica() {
-    // Lista del campo "Revision tecnica" para las listas de chequeo.
+    // Lista del campo "Revision tecnica, verificacion financiera, validacion financiera" para las listas de chequeo paquete 4.
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=162`);
   }
   listaEstadoListaChequeo() {

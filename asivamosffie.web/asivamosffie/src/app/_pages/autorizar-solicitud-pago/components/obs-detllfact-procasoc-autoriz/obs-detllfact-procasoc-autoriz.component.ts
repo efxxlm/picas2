@@ -84,7 +84,11 @@ export class ObsDetllfactProcasocAutorizComponent implements OnInit {
             this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
             this.solicitudPagoFaseCriterio = this.solicitudPagoFase.solicitudPagoFaseCriterio;
             // Get observaciones
-            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(this.autorizarSolicitudPagoId, this.solicitudPago.solicitudPagoId, this.solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioProyecto[0].solicitudPagoFaseCriterioProyectoId)
+            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                this.autorizarSolicitudPagoId,
+                this.solicitudPago.solicitudPagoId,
+                this.solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioProyecto[0].solicitudPagoFaseCriterioProyectoId,
+                this.criteriosPagoProyectoCodigo )
                 .subscribe(
                     response => {
                         const obsSupervisor = response.filter(obs => obs.archivada === false)[0];

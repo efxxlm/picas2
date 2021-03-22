@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
@@ -8,46 +8,64 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
   styleUrls: ['./dialog-observaciones-vfsp.component.scss']
 })
 export class DialogObservacionesVfspComponent implements OnInit {
-  addressForm = this.fb.group({});
-  editorStyle = {
-    height: '45px',
-    overflow: 'auto'
-  };
 
-  config = {
-    toolbar: [
-      ['bold', 'italic', 'underline'],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      [{ indent: '-1' }, { indent: '+1' }],
-      [{ align: [] }],
-    ]
-  };
-  estaEditando =false;
-  constructor(public matDialogRef: MatDialogRef<DialogObservacionesVfspComponent>, @Inject(MAT_DIALOG_DATA) public data: any, private fb: FormBuilder) { }
+    addressForm: FormGroup;
+    editorStyle = {
+      height: '45px',
+      overflow: 'auto'
+    };
+    config = {
+      toolbar: [
+        ['bold', 'italic', 'underline'],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        [{ indent: '-1' }, { indent: '+1' }],
+        [{ align: [] }],
+      ]
+    };
+    estaEditando = false;
 
-  ngOnInit(): void {
-    this.addressForm = this.crearFormulario();
-  }
-  crearFormulario() {
-    return this.fb.group({
-      observaciones:[null, Validators.required],
-      puedeSubsanar:[null, Validators.required]
-    })
-  }
-  maxLength(e: any, n: number) {
-    if (e.editor.getLength() > n) {
-      e.editor.deleteText(n-1, e.editor.getLength());
+    constructor(
+        public matDialogRef: MatDialogRef<DialogObservacionesVfspComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: any,
+        private fb: FormBuilder )
+    {
+        this.addressForm = this.crearFormulario();
     }
-  }
-  textoLimpio(texto,n) {
-    if (texto!=undefined) {
-      return texto.getLength() > n ? n : texto.getLength();
+
+    ngOnInit(): void {
+        this.addressForm.setValue(
+            {
+                observaciones: this.data.registro.get( 'observacion' ).value,
+                tieneSubsanacion: this.data.registro.get( 'tieneSubsanacion' ).value
+            }
+        );
     }
-  }
-  onSubmit() {
-    this.estaEditando = true;
-    this.addressForm.markAllAsTouched();
-    console.log(this.addressForm.value);
-  }
+
+    crearFormulario() {
+        return this.fb.group({
+            observaciones: [ null, Validators.required ],
+            tieneSubsanacion: [ null, Validators.required ]
+        })
+    }
+
+    maxLength(e: any, n: number) {
+        if (e.editor.getLength() > n) {
+            e.editor.deleteText(n - 1, e.editor.getLength());
+        }
+    }
+
+    textoLimpio( evento: any, n: number ) {
+        if ( evento !== undefined ) {
+            return evento.getLength() > n ? n : evento.getLength();
+        } else {
+            return 0;
+        }
+    }
+
+    onSubmit() {
+      this.estaEditando = true;
+      this.addressForm.markAllAsTouched();
+      this.matDialogRef.close( this.addressForm.value );
+    }
 
 }

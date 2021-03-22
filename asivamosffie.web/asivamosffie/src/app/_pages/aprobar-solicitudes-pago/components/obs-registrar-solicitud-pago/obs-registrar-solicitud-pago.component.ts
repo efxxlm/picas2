@@ -86,7 +86,11 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
                 // Validacion si es preconstruccion eliminar el campo de amortizacion de los semaforos.
                 delete this.estadoSemaforos.semaforoAcordeonAmortizacion;
             }
-            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.aprobarSolicitudPagoId, this.solicitudPago.solicitudPagoId, this.solicitudPagoFase.solicitudPagoFaseId )
+            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                this.aprobarSolicitudPagoId,
+                this.solicitudPago.solicitudPagoId,
+                this.solicitudPagoFase.solicitudPagoFaseId,
+                this.registrarSolicitudPago.registrarSolicitudPagoCodigo )
                 .subscribe(
                     response => {
                         const obsSupervisor = response.filter( obs => obs.archivada === false )[0];

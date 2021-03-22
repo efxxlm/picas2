@@ -59,7 +59,11 @@ export class FormAmortizacionComponent implements OnInit {
             const solicitudPagoFaseAmortizacion = this.solicitudPagoFase.solicitudPagoFaseAmortizacion[0]
             this.solicitudPagoFaseAmortizacionId = solicitudPagoFaseAmortizacion.solicitudPagoFaseAmortizacionId;
             // Get observaciones
-            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.aprobarSolicitudPagoId, this.solicitudPago.solicitudPagoId, this.solicitudPagoFaseAmortizacionId )
+            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                this.aprobarSolicitudPagoId,
+                this.solicitudPago.solicitudPagoId,
+                this.solicitudPagoFaseAmortizacionId,
+                this.amortizacionAnticipoCodigo )
                 .subscribe(
                     response => {
                         const obsSupervisor = response.filter( obs => obs.archivada === false )[0];

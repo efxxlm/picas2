@@ -18,6 +18,7 @@ export class RegistrarSolicitudPagoComponent implements OnInit {
     solicitudPago: any;
     solicitudPagoFase: any;
     dataSource = new MatTableDataSource();
+    solicitudPagoCargarFormaPago: any;
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     displayedColumns: string[] = [
@@ -28,35 +29,24 @@ export class RegistrarSolicitudPagoComponent implements OnInit {
         'saldoPorPagar',
         'porcentajePorPagar'
     ];
-    dataTable: any[] = [
-        {
-          faseContrato: 'Fase 1 - Preconstrucción',
-          pagosRealizados: '0',
-          valorFacturado: '0',
-          porcentajeFacturado: '0',
-          saldoPorPagar: '$30.000.000',
-          porcentajePorPagar: '100%',
-        },
-        {
-          faseContrato: 'Fase 2 - Construcción',
-          pagosRealizados: '0',
-          valorFacturado: '0',
-          porcentajeFacturado: '0',
-          saldoPorPagar: '$75.000.000',
-          porcentajePorPagar: '100%',
-        }
-    ];
 
     constructor( ){
     }
 
     ngOnInit(): void {
         if ( this.contrato !== undefined ) {
+
+            if ( this.contrato.solicitudPago.length > 1 ) {
+                this.solicitudPagoCargarFormaPago = this.contrato.solicitudPago[0].solicitudPagoCargarFormaPago[0];
+            } else {
+                this.solicitudPagoCargarFormaPago = this.contrato.solicitudPagoOnly.solicitudPagoCargarFormaPago[0];
+            }
+
             this.solicitudPago = this.contrato.solicitudPagoOnly;
             this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
         }
 
-        this.dataSource = new MatTableDataSource(this.dataTable);
+        this.dataSource = new MatTableDataSource( this.contrato.vContratoPagosRealizados );
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
     }

@@ -87,7 +87,11 @@ export class ObsRegistrarSolPagoAutorizComponent implements OnInit {
                 delete this.estadoSemaforos.semaforoAcordeonAmortizacion;
             }
 
-            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.autorizarSolicitudPagoId, this.solicitudPago.solicitudPagoId, this.solicitudPagoFase.solicitudPagoFaseId )
+            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                this.autorizarSolicitudPagoId,
+                this.solicitudPago.solicitudPagoId,
+                this.solicitudPagoFase.solicitudPagoFaseId,
+                this.registrarSolicitudPago.registrarSolicitudPagoCodigo )
                 .subscribe(
                     response => {
                         const obsSupervisor = response.filter( obs => obs.archivada === false )[0];

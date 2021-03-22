@@ -66,32 +66,37 @@ export class ObsDatosFacturaAutorizComponent implements OnInit {
     }
 
     ngOnInit(): void {
-      this.getDatosFactura();
-      this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.autorizarSolicitudPagoId, this.solicitudPago.solicitudPagoId, this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaId )
-        .subscribe(
-            response => {
-                const obsSupervisor = response.filter( obs => obs.archivada === false )[0];
+        this.getDatosFactura();
+        this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+            this.autorizarSolicitudPagoId,
+            this.solicitudPago.solicitudPagoId,
+            this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaId,
+            this.datosFacturaCodigo )
+            .subscribe(
+                response => {
+                    const obsSupervisor = response.filter( obs => obs.archivada === false )[0];
 
-                if ( obsSupervisor !== undefined ) {
-                    if ( obsSupervisor.registroCompleto === false ) {
-                        this.estadoSemaforo.emit( 'en-proceso' );
-                    }
-                    if ( obsSupervisor.registroCompleto === true ) {
-                        this.estadoSemaforo.emit( 'completo' );
-                    }
-                    this.estaEditando = true;
-                    this.addressForm.markAllAsTouched();
-                    this.solicitudPagoObservacionId = obsSupervisor.solicitudPagoObservacionId;
-                    this.addressForm.setValue(
-                        {
-                            fechaCreacion: obsSupervisor.fechaCreacion,
-                            tieneObservaciones: obsSupervisor.tieneObservacion !== undefined ? obsSupervisor.tieneObservacion : null,
-                            observaciones: obsSupervisor.observacion !== undefined ? ( obsSupervisor.observacion.length > 0 ? obsSupervisor.observacion : null ) : null
+                    if ( obsSupervisor !== undefined ) {
+                        if ( obsSupervisor.registroCompleto === false ) {
+                            this.estadoSemaforo.emit( 'en-proceso' );
                         }
-                    );
+                        if ( obsSupervisor.registroCompleto === true ) {
+                            this.estadoSemaforo.emit( 'completo' );
+                        }
+
+                        this.estaEditando = true;
+                        this.addressForm.markAllAsTouched();
+                        this.solicitudPagoObservacionId = obsSupervisor.solicitudPagoObservacionId;
+                        this.addressForm.setValue(
+                            {
+                                fechaCreacion: obsSupervisor.fechaCreacion,
+                                tieneObservaciones: obsSupervisor.tieneObservacion !== undefined ? obsSupervisor.tieneObservacion : null,
+                                observaciones: obsSupervisor.observacion !== undefined ? ( obsSupervisor.observacion.length > 0 ? obsSupervisor.observacion : null ) : null
+                            }
+                        );
+                    }
                 }
-            }
-        );
+            );
     }
 
     getDatosFactura() {

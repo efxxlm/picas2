@@ -36,8 +36,7 @@ export class ObsValidListachequeoComponent implements OnInit {
     displayedColumns: string[] = [
         'item',
         'documento',
-        'revTecnica',
-        'observaciones'
+        'revTecnica'
     ];
     addressForm: FormGroup;
     editorStyle = {
@@ -86,7 +85,11 @@ export class ObsValidListachequeoComponent implements OnInit {
                     solicitudPagoListaChequeoRespuesta.observacion = solicitudPagoListaChequeoRespuesta.observacion !== undefined ? solicitudPagoListaChequeoRespuesta.observacion : null;
                 }
 
-                const listaObservaciones = await this.obsMultipleSvc.asyncGetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.autorizarSolicitudPagoId, this.activatedRoute.snapshot.params.id, solicitudPagoListaChequeo.listaChequeoId )
+                const listaObservaciones = await this.obsMultipleSvc.asyncGetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                    this.autorizarSolicitudPagoId,
+                    this.activatedRoute.snapshot.params.id,
+                    solicitudPagoListaChequeo.solicitudPagoListaChequeoId,
+                    this.listaChequeoCodigo )
 
                 const observacionApoyo = listaObservaciones.find( obs => obs.archivada === false );
                 let semaforo = 'sin-diligenciar';
@@ -145,7 +148,11 @@ export class ObsValidListachequeoComponent implements OnInit {
                     solicitudPagoListaChequeoRespuesta.observacion = solicitudPagoListaChequeoRespuesta.observacion !== undefined ? solicitudPagoListaChequeoRespuesta.observacion : null;
                 }
 
-                const listaObservaciones = await this.obsMultipleSvc.asyncGetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.autorizarSolicitudPagoId, this.activatedRoute.snapshot.params.idSolicitudPago, solicitudPagoListaChequeo.listaChequeoId )
+                const listaObservaciones = await this.obsMultipleSvc.asyncGetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                    this.autorizarSolicitudPagoId,
+                    this.activatedRoute.snapshot.params.idSolicitudPago,
+                    solicitudPagoListaChequeo.solicitudPagoListaChequeoId,
+                    this.listaChequeoCodigo )
 
                 const observacionApoyo = listaObservaciones.find( obs => obs.archivada === false );
                 let semaforo = 'sin-diligenciar';

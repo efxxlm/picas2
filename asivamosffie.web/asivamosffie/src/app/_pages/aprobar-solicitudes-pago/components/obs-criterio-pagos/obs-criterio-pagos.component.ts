@@ -65,7 +65,11 @@ export class ObsCriterioPagosComponent implements OnInit {
     ngOnInit(): void {
         this.getCriterios();
         if ( this.solicitudPago !== undefined ) {
-            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.aprobarSolicitudPagoId, this.solicitudPago.solicitudPagoId, this.solicitudPagoFase.solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioId )
+            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                this.aprobarSolicitudPagoId,
+                this.solicitudPago.solicitudPagoId,
+                this.solicitudPagoFase.solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioId,
+                this.criteriosPagoFacturaCodigo )
                 .subscribe(
                     response => {
                         const obsSupervisor = response.filter( obs => obs.archivada === false )[0];

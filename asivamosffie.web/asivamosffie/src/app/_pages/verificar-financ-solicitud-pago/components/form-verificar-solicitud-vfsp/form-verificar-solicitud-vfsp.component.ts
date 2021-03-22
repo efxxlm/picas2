@@ -57,7 +57,7 @@ export class FormVerificarSolicitudVfspComponent implements OnInit {
     }
 
     getContrato() {
-        this.registrarPagosSvc.getContratoByContratoId( 13 /* this.activatedRoute.snapshot.params.idContrato */, 37 /* this.activatedRoute.snapshot.params.idSolicitudPago */ )
+        this.registrarPagosSvc.getContratoByContratoId( 175 /* this.activatedRoute.snapshot.params.idContrato */, 60 /* this.activatedRoute.snapshot.params.idSolicitudPago */ )
             .subscribe(
                 response => {
                     this.commonSvc.tiposDeSolicitudes()
@@ -100,8 +100,14 @@ export class FormVerificarSolicitudVfspComponent implements OnInit {
                                             }
                                         } );
                                 } else {
-                                    this.solicitudPagoCargarFormaPago = this.contrato.solicitudPagoOnly.solicitudPagoCargarFormaPago[0];
-                                    this.dataSource = new MatTableDataSource( this.contrato.contratacion.disponibilidadPresupuestal );
+                                    
+                                    if ( this.contrato.solicitudPago.length > 1 ) {
+                                        this.solicitudPagoCargarFormaPago = this.contrato.solicitudPago[0].solicitudPagoCargarFormaPago[0];
+                                    } else {
+                                        this.solicitudPagoCargarFormaPago = this.contrato.solicitudPagoOnly.solicitudPagoCargarFormaPago[0];
+                                    }
+
+                                    this.dataSource = new MatTableDataSource( this.contrato.valorFacturadoContrato );
                                     this.dataSource.paginator = this.paginator;
                                     this.dataSource.sort = this.sort;
                                 }
@@ -118,8 +124,11 @@ export class FormVerificarSolicitudVfspComponent implements OnInit {
 
     getModalidadContrato( modalidadCodigo: string ) {
         if ( this.modalidadContratoArray.length > 0 ) {
-            const modalidad = this.modalidadContratoArray.filter( modalidad => modalidad.codigo === modalidadCodigo );
-            return modalidad[0].nombre;
+            const modalidad = this.modalidadContratoArray.find( modalidad => modalidad.codigo === modalidadCodigo );
+            
+            if ( modalidad !== undefined ) {
+                return modalidad.nombre;
+            }
         }
     }
 

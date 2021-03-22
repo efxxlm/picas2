@@ -22,13 +22,13 @@ export class ObservacionesMultiplesCuService {
     return this.http.post<Respuesta>( `${ this.apiUrl }/ChangueStatusSolicitudPago`, pSolicitudPago );
   }
 
-  getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( pMenuId: number, pSolicitudPagoId: number, pPadreId: number ) {
-    return this.http.get<any[]>( `${ this.apiUrl }/GetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId?pMenuId=${ pMenuId }&pSolicitudPagoId=${ pSolicitudPagoId }&pPadreId=${ pPadreId }` );
+  getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( pMenuId: number, pSolicitudPagoId: number, pPadreId: number, pTipoObservacionCodigo: string ) {
+    return this.http.get<any[]>( `${ this.apiUrl }/GetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId?pMenuId=${ pMenuId }&pSolicitudPagoId=${ pSolicitudPagoId }&pPadreId=${ pPadreId }&pTipoObservacionCodigo=${ pTipoObservacionCodigo }` );
   }
 
-  asyncGetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( pMenuId: number, pSolicitudPagoId: number, pPadreId: number ) {
+  asyncGetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( pMenuId: number, pSolicitudPagoId: number, pPadreId: number, pTipoObservacionCodigo: string ) {
     return new Promise<any[]>( resolve => {
-      this.http.get<any[]>( `${ this.apiUrl }/GetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId?pMenuId=${ pMenuId }&pSolicitudPagoId=${ pSolicitudPagoId }&pPadreId=${ pPadreId }` )
+      this.http.get<any[]>( `${ this.apiUrl }/GetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId?pMenuId=${ pMenuId }&pSolicitudPagoId=${ pSolicitudPagoId }&pPadreId=${ pPadreId }&pTipoObservacionCodigo=${ pTipoObservacionCodigo }` )
         .subscribe( response => resolve( response ) );
     } );
   }

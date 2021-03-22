@@ -8,9 +8,9 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
-import { DialogObservacionesItemListchequeoComponent } from '../dialog-observaciones-item-listchequeo/dialog-observaciones-item-listchequeo.component';
 import humanize from 'humanize-plus';
 import { Dominio } from 'src/app/core/_services/common/common.service';
+import { DialogObservacionesVfspComponent } from '../dialog-observaciones-vfsp/dialog-observaciones-vfsp.component';
 
 @Component({
   selector: 'app-obs-valid-listachequeo',
@@ -31,12 +31,15 @@ export class ObsValidListachequeoComponent implements OnInit {
     seDiligencioCampo = false;
     solicitudPagoModificado: any;
     dataSource = new MatTableDataSource();
+    estaEditando = false;
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     displayedColumns: string[] = [
         'item',
         'documento',
-        'revTecnica'
+        'revTecnica',
+        'verificacionFinanciera',
+        'observaciones'
     ];
     addressForm: FormGroup;
     editorStyle = {
@@ -51,7 +54,11 @@ export class ObsValidListachequeoComponent implements OnInit {
         [{ align: [] }],
       ]
     };
-    estaEditando = false;
+    booleanosVerificacionFinanciera: any[] = [
+        { value: true, viewValue: 'Si cumple' },
+        { value: false, viewValue: 'No cumple' }
+    ];
+
 
     get listas() {
         return this.addressForm.get( 'listas' ) as FormArray;
@@ -85,11 +92,7 @@ export class ObsValidListachequeoComponent implements OnInit {
                     solicitudPagoListaChequeoRespuesta.observacion = solicitudPagoListaChequeoRespuesta.observacion !== undefined ? solicitudPagoListaChequeoRespuesta.observacion : null;
                 }
 
-                const listaObservaciones = await this.obsMultipleSvc.asyncGetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
-                    this.aprobarSolicitudPagoId,
-                    this.activatedRoute.snapshot.params.id,
-                    solicitudPagoListaChequeo.solicitudPagoListaChequeoId,
-                    this.listaChequeoCodigo )
+                const listaObservaciones = await this.obsMultipleSvc.asyncGetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.aprobarSolicitudPagoId, this.activatedRoute.snapshot.params.id, solicitudPagoListaChequeo.listaChequeoId )
 
                 const observacionApoyo = listaObservaciones.find( obs => obs.archivada === false );
                 let semaforo = 'sin-diligenciar';
@@ -148,11 +151,7 @@ export class ObsValidListachequeoComponent implements OnInit {
                     solicitudPagoListaChequeoRespuesta.observacion = solicitudPagoListaChequeoRespuesta.observacion !== undefined ? solicitudPagoListaChequeoRespuesta.observacion : null;
                 }
 
-                const listaObservaciones = await this.obsMultipleSvc.asyncGetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
-                    this.aprobarSolicitudPagoId,
-                    this.activatedRoute.snapshot.params.idSolicitudPago,
-                    solicitudPagoListaChequeo.solicitudPagoListaChequeoId,
-                    this.listaChequeoCodigo )
+                const listaObservaciones = await this.obsMultipleSvc.asyncGetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.aprobarSolicitudPagoId, this.activatedRoute.snapshot.params.idSolicitudPago, solicitudPagoListaChequeo.listaChequeoId )
 
                 const observacionApoyo = listaObservaciones.find( obs => obs.archivada === false );
                 let semaforo = 'sin-diligenciar';
@@ -231,35 +230,12 @@ export class ObsValidListachequeoComponent implements OnInit {
         }
     }
 
-    maxLength(e: any, n: number) {
-        if (e.editor.getLength() > n) {
-            e.editor.deleteText(n - 1, e.editor.getLength());
-        }
-    }
-
-    textoLimpio( evento: any, n: number ) {
-        if ( evento !== undefined ) {
-            return evento.getLength() > n ? n : evento.getLength();
-        } else {
-            return 0;
-        }
-    }
-
-    getObservacion( registro: any, index: number, jIndex: number ) {
-        const dialogRef = this.dialog.open(DialogObservacionesItemListchequeoComponent, {
+    getSubsanacion( registro: any, index: number, jIndex: number ) {
+        const dialogRef = this.dialog.open(DialogObservacionesVfspComponent, {
             width: '80em',
             data: { dataSolicitud: this.esExpensas === true ? this.solicitudPago : this.contrato, registro, jIndex, esExpensas: this.esExpensas }
         });
     }
-
-    // callSubsanacion(){
-    //     const dialogConfig = new MatDialogConfig();
-    //     dialogConfig.height = 'auto';
-    //     dialogConfig.width = '865px';
-    //     //dialogConfig.data = { id: id, idRol: idRol, numContrato: numContrato, fecha1Titulo: fecha1Titulo, fecha2Titulo: fecha2Titulo };
-    //     const dialogRef = this.dialog.open(DialogSubsanacionComponent, dialogConfig);
-    //     //dialogRef.afterClosed().subscribe(value => {});
-    // }
 
     openDialog(modalTitle: string, modalText: string) {
         const dialogRef = this.dialog.open(ModalDialogComponent, {
@@ -271,39 +247,7 @@ export class ObsValidListachequeoComponent implements OnInit {
     guardar( lista: FormGroup ) {
         this.estaEditando = true;
         this.listas.markAllAsTouched();
-        if ( lista.get( 'observaciones' ).value !== null && lista.get( 'tieneObservaciones' ).value === false ) {
-            lista.get( 'observaciones' ).setValue( '' );
-        }
-        const pSolicitudPagoObservacion = {
-            solicitudPagoObservacionId: lista.get( 'solicitudPagoObservacionId' ).value,
-            solicitudPagoId: Number( this.activatedRoute.snapshot.params.idSolicitudPago || this.activatedRoute.snapshot.params.id ),
-            observacion: lista.get( 'observaciones' ).value,
-            tipoObservacionCodigo: this.listaChequeoCodigo,
-            menuId: this.aprobarSolicitudPagoId,
-            idPadre: lista.get( 'solicitudPagoListaChequeo' ).value.solicitudPagoListaChequeoId,
-            tieneObservacion: lista.get( 'tieneObservaciones' ).value
-        };
-
-        this.obsMultipleSvc.createUpdateSolicitudPagoObservacion( pSolicitudPagoObservacion )
-            .subscribe(
-                response => {
-                    this.openDialog( '', `<b>${ response.message }</b>` );
-                    if ( this.esExpensas === false ) {
-                        this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                            () => this.routes.navigate(
-                                [
-                                    '/verificarSolicitudPago/aprobacionSolicitud',  this.activatedRoute.snapshot.params.idContrato, this.activatedRoute.snapshot.params.idSolicitudPago
-                                ]
-                            )
-                        );
-                    } else {
-                        this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                            () => this.routes.navigate( [ '/verificarSolicitudPago/observacionExpensas', this.activatedRoute.snapshot.params.id ] )
-                        );
-                    }
-                },
-                err => this.openDialog( '', `<b>${ err.message }</b>` )
-            )
+        console.log( lista );
     }
 
 }

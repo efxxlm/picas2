@@ -52,7 +52,11 @@ export class ObsCargarFormaPagoComponent implements OnInit {
     ngOnInit(): void {
         if ( this.solicitudPago !== undefined ) {
             if ( this.tieneFormaPago === true ) {
-                this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId( this.aprobarSolicitudPagoId, this.solicitudPago.solicitudPagoId, this.solicitudPagoCargarFormaPago.solicitudPagoCargarFormaPagoId )
+                this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                    this.aprobarSolicitudPagoId,
+                    this.solicitudPago.solicitudPagoId,
+                    this.solicitudPagoCargarFormaPago.solicitudPagoCargarFormaPagoId,
+                    this.cargarFormaPagoCodigo )
                     .subscribe(
                         response => {
                             const obsSupervisor = response.filter( obs => obs.archivada === false )[0];
