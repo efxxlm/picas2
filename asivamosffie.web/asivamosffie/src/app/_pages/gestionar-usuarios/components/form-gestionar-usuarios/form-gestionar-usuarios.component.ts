@@ -7,6 +7,7 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import humanize from 'humanize-plus';
 
 @Component({
   selector: 'app-form-gestionar-usuarios',
@@ -155,8 +156,8 @@ export class FormGestionarUsuariosComponent implements OnInit {
                                                                                             tipoDocumento: getUsuario.tipoDocumentoCodigo !== undefined ? this.listaTipoDocumento.find( documento => documento.codigo === getUsuario.tipoDocumentoCodigo ).codigo : null,
                                                                                             numeroIdentificacion: getUsuario.numeroIdentificacion !== undefined ? getUsuario.numeroIdentificacion : null,
                                                                                             correo: getUsuario.email !== undefined ? getUsuario.email : null,
-                                                                                            telefonoFijo: getUsuario.telefonoFijo !== undefined ? getUsuario.telefonoFijo : null,
-                                                                                            telefonoCelular: getUsuario.telefonoCelular !== undefined ? getUsuario.telefonoCelular : null,
+                                                                                            telefonoFijo: null,
+                                                                                            telefonoCelular: null,
                                                                                             departamento: null,
                                                                                             municipio: null,
                                                                                             fechaCreacion: getUsuario.fechaCreacion !== undefined ? getUsuario.fechaCreacion : null,
@@ -207,8 +208,8 @@ export class FormGestionarUsuariosComponent implements OnInit {
                 tipoDocumento: [ null, Validators.required ],
                 numeroIdentificacion: [ null, Validators.required ],
                 correo: [ null, Validators.required ],
-                telefonoFijo: [ null, Validators.required ],
-                telefonoCelular: [ null, Validators.required ],
+                telefonoFijo: [ null, [ Validators.pattern( '[- +()0-9]+' ), Validators.required ] ],
+                telefonoCelular: [ null, [ Validators.pattern( '[- +()0-9]+' ), Validators.required ] ],
                 departamento: [ null, Validators.required ],
                 municipio: [ null, Validators.required ],
                 fechaCreacion: [ null, Validators.required ],
@@ -250,6 +251,12 @@ export class FormGestionarUsuariosComponent implements OnInit {
         }
     }
 
+    firstLetterUpperCase( texto:string ) {
+        if ( texto !== undefined ) {
+            return humanize.capitalize( String( texto ).toLowerCase() );
+        }
+    }
+
     getlistaContratos( tipoAsignacion: string ) {
         this.gestionarUsuariosSvc.getContratoByTipo( tipoAsignacion, this.usuarioId )
             .subscribe( getContratoByTipo => this.listaContratos = getContratoByTipo );
@@ -262,6 +269,15 @@ export class FormGestionarUsuariosComponent implements OnInit {
             this.formUsuario.get( 'municipio' ).setValue( null );
             this.commonSvc.listaMunicipiosByIdDepartamento( departamento.localizacionId )
                 .subscribe( listaMunicipiosByIdDepartamento => this.listaMunicipio = listaMunicipiosByIdDepartamento );
+        }
+    }
+
+    getValidateNumberPhone( controlName: string ) {
+        if ( this.formUsuario.get( controlName ).valid === false ) {
+            this.formUsuario.get( controlName ).setValue( null );
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -311,6 +327,32 @@ export class FormGestionarUsuariosComponent implements OnInit {
                     }
                 } );
             }
+        }
+
+        if ( this.formUsuario.get( 'telefonoFijo' ).value !== null ) {
+
+            if ( this.formUsuario.get( 'telefonoFijo' ).value.length < 7 ) {
+                this.openDialog( '', '<b>El numero de teléfono fijo no debe ser menor a 7 digitos</b>' );
+            }
+
+            if ( this.getValidateNumberPhone( 'telefonoFijo' ) === true ) {
+                this.openDialog( '', '<b>Debe Ingresar un numero de teléfono fijo valido.</b>' );
+                this.formUsuario.get( 'telefonoFijo' ).setValue( null );
+            }
+
+        }
+
+        if ( this.formUsuario.get( 'telefonoCelular' ).value !== null ) {
+
+            if ( this.formUsuario.get( 'telefonoCelular' ).value.length < 10 ) {
+                this.openDialog( '', '<b>El numero de teléfono celular no debe ser menor a 10 digitos</b>' );
+            }
+
+            if ( this.getValidateNumberPhone( 'telefonoCelular' ) === true ) {
+                this.openDialog( '', '<b>Debe Ingresar un numero de teléfono celular valido.</b>' );
+                this.formUsuario.get( 'telefonoCelular' ).setValue( null );
+            }
+
         }
 
         const pUsuario = {
