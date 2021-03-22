@@ -117,7 +117,7 @@ namespace asivamosffie.services
             return await
                 _context.VProyectosXcontrato
                                             .Where(r => r.LlaveMen.Contains(pLlaveMen)
-                                            && r.EstadoActaFase2 == ConstanCodigoEstadoActaInicioObra.Con_acta_suscrita_y_cargada)
+                                            && r.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioObra.Con_acta_suscrita_y_cargada)
                                                                                                                                 .Select(s => new
                                                                                                                                 {
                                                                                                                                     s.LlaveMen,
@@ -144,7 +144,11 @@ namespace asivamosffie.services
                                                                                     .ToListAsync();
 
             List<dynamic> grind = new List<dynamic>();
-            List<Dominio> ListParametricas = _context.Dominio.Where(d => d.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato || d.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Solicitud_Pago).ToList();
+            List<Dominio> ListParametricas =
+                _context.Dominio
+                               .Where(d => d.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato
+                                   || d.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Solicitud_Pago)
+                               .ToList();
 
             result.ForEach(r =>
             {
@@ -175,7 +179,7 @@ namespace asivamosffie.services
                                     .Include(c => c.Contratacion)
                                              .Where(c => c.NumeroContrato.Trim().ToLower().Contains(pNumeroContrato.Trim().ToLower())
                                                    && c.Contratacion.TipoSolicitudCodigo == pTipoSolicitud
-                                                   && c.EstadoActaFase2 == ConstanCodigoEstadoActaInicioObra.Con_acta_suscrita_y_cargada
+                                                   && c.EstadoActaFase2.Trim() == ConstanCodigoEstadoActaInicioObra.Con_acta_suscrita_y_cargada
                                                    ).ToListAsync();
                     return ListContratos
                         .Select(r => new
@@ -334,8 +338,8 @@ namespace asivamosffie.services
                                   .ThenInclude(r => r.SolicitudPagoFaseFacturaDescuento)
                        .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
                        .Include(r => r.SolicitudPagoSoporteSolicitud)
-                       .Include(r => r.SolicitudPagoListaChequeo)  
-                         .ThenInclude(r => r.ListaChequeo) 
+                       .Include(r => r.SolicitudPagoListaChequeo)
+                         .ThenInclude(r => r.ListaChequeo)
                          .FirstOrDefault();
                     GetRemoveObjectsDelete(solicitudPago);
                     return solicitudPago;
@@ -346,7 +350,7 @@ namespace asivamosffie.services
                         .Include(e => e.SolicitudPagoExpensas)
                         .Include(e => e.SolicitudPagoSoporteSolicitud)
                         .Include(r => r.SolicitudPagoListaChequeo)
-                         .ThenInclude(r => r.ListaChequeo) 
+                         .ThenInclude(r => r.ListaChequeo)
                         .FirstOrDefault();
                     GetRemoveObjectsDelete(solicitudPago);
                     return solicitudPago;
@@ -356,7 +360,7 @@ namespace asivamosffie.services
                      .Include(e => e.SolicitudPagoOtrosCostosServicios)
                      .Include(e => e.SolicitudPagoSoporteSolicitud)
                             .Include(r => r.SolicitudPagoListaChequeo)
-                         .ThenInclude(r => r.ListaChequeo) 
+                         .ThenInclude(r => r.ListaChequeo)
                         .FirstOrDefault();
                     GetRemoveObjectsDelete(solicitudPago);
                     return solicitudPago;

@@ -5,7 +5,6 @@ namespace asivamosffie.model.Models
 {
     public partial class VContratoPagosRealizados
     {
-        public int SolicitudPagoId { get; set; }
         public int ContratoId { get; set; }
         public bool EsPreconstruccion { get; set; }
         public string FaseContrato { get; set; }
@@ -14,5 +13,6 @@ namespace asivamosffie.model.Models
         public decimal? PorcentajeFacturado { get; set; }
         public decimal? SaldoPorPagar { get; set; }
         public decimal? PorcentajePorPagar { get; set; }
+        public decimal? ValorSolicitud { get; set; }
     }
 }
