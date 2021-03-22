@@ -235,30 +235,25 @@ namespace asivamosffie.services
                                    .ThenInclude(t => t.ComponenteAportante)
                         .FirstOrDefaultAsync();
 
+                if (contrato.SolicitudPago.Count() > 0)
+                    contrato.SolicitudPago = contrato.SolicitudPago.Where(s => s.Eliminado != true).ToList();
+
                 if (pSolicitudPago > 0)
                 {
                     SolicitudPago solicitudPago = _context.SolicitudPago.Find(pSolicitudPago);
                     contrato.SolicitudPagoOnly = GetSolicitudPago(solicitudPago);
                 }
-                contrato.ValorFacturadoContrato = _context.VValorFacturadoContrato.Where(v => v.ContratoId == pContratoId).ToList();
+                contrato.ValorFacturadoContrato =
+                    _context.VValorFacturadoContrato
+                    .Where(v => v.ContratoId == pContratoId)
+                    .ToList();
 
-                List<VContratoPagosRealizados> vContratoPagosRealizados = new List<VContratoPagosRealizados>();
-                vContratoPagosRealizados = _context.VContratoPagosRealizados
-                        .Where(v => v.ContratoId == pContratoId).ToList();
+                contrato.VContratoPagosRealizados = 
+                    _context.VContratoPagosRealizados
+                       .Where(v => v.ContratoId == pContratoId)
+                       .ToList();
 
-                contrato.VContratoPagosRealizados = vContratoPagosRealizados
-                    .GroupBy(r => r.EsPreconstruccion)
-                    .Select(r => new
-                    {
-                        EsPreconstruccion = r.Key,
-                        FaseContrato = r.Select(r => r.FaseContrato).FirstOrDefault(),
-                        ValorFacturado = r.Sum(r => r.ValorFacturado),
-                        PagosRealizados = r.Sum(r => r.PagosRealizados) / r.Count(),
-                        PorcentajeFacturado = Math.Truncate((decimal)r.Sum(r => r.PorcentajeFacturado) / r.Count()) + "%",
-                        SaldoPorPagar = r.Sum(r => r.SaldoPorPagar),
-                        PorcentajePorPagar = Math.Truncate((decimal)r.Sum(r => r.PorcentajePorPagar) / r.Count()) + "%"
-                    });
-
+    
                 return contrato;
             }
             catch (Exception ex)
