@@ -36,6 +36,20 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public string InstanciaNombre { get; set; }
 
+        [NotMapped]
+        public NovedadContractualObservaciones ObservacionApoyo { get; set; }
+
+        [NotMapped]
+        public NovedadContractualObservaciones ObservacionSupervisor { get; set; }
+        
+        [NotMapped]
+        public NovedadContractualObservaciones ObservacionTramite { get; set; }
+
+        [NotMapped]
+        public NovedadContractualObservaciones ObservacionDevolucion { get; set; }
+
+        [NotMapped]
+        public NovedadContractualObservaciones ObservacionDevolucionTramite { get; set; }
 
     }
 

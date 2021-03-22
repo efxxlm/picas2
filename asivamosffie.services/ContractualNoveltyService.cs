@@ -15,7 +15,7 @@ namespace asivamosffie.services
 {
     //CU 4_4_1 Registrar actuaciones de controversias contractuales
 
-    public class ContractualNoveltyService : IContractualNoveltyService 
+    public class ContractualNoveltyService : IContractualNoveltyService
     {
 
         private readonly ICommonService _commonService;
@@ -32,7 +32,7 @@ namespace asivamosffie.services
         }
 
 
-        
+
         #region Grids
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace asivamosffie.services
             return listProyectos;
         }
 
-        public async Task<NovedadContractual> GetNovedadContractualById( int pId)
+        public async Task<NovedadContractual> GetNovedadContractualById(int pId)
         {
             List<Dominio> listDominioTipoDocumento = _context.Dominio
                                                                 .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento)
@@ -136,12 +136,13 @@ namespace asivamosffie.services
                                                                 .ToList();
 
             NovedadContractual novedadContractual = _context.NovedadContractual
-                                                                .Where( r => r.NovedadContractualId == pId)
-                                                                .Include( r => r.Contrato )
-                                                                    .ThenInclude( r => r.Contratacion )
-                                                                        .ThenInclude( r => r.Contratista )
-                                                                .Include( r => r.NovedadContractualDescripcion )
-                                                                    .ThenInclude( r => r.NovedadContractualClausula )
+                                                                .Where(r => r.NovedadContractualId == pId)
+                                                                .Include( r => r.NovedadContractualObservaciones )
+                                                                .Include(r => r.Contrato)
+                                                                    .ThenInclude(r => r.Contratacion)
+                                                                        .ThenInclude(r => r.Contratista)
+                                                                .Include(r => r.NovedadContractualDescripcion)
+                                                                    .ThenInclude(r => r.NovedadContractualClausula)
                                                                 .Include(r => r.NovedadContractualDescripcion)
                                                                     .ThenInclude(r => r.NovedadContractualDescripcionMotivo)
                                                                 .Include(r => r.Contrato)
@@ -152,9 +153,9 @@ namespace asivamosffie.services
             novedadContractual.ProyectosContrato = _context.VProyectosXcontrato
                                                                 .Where(r => r.ContratoId == novedadContractual.ContratoId)
                                                                 .ToList();
-            
+
             novedadContractual.ProyectosSeleccionado = _context.VProyectosXcontrato
-                                                                    .Where(r => r.ProyectoId == novedadContractual.ProyectoId && r.ContratoId == novedadContractual.ContratoId )
+                                                                    .Where(r => r.ProyectoId == novedadContractual.ProyectoId && r.ContratoId == novedadContractual.ContratoId)
                                                                     .FirstOrDefault();
 
             novedadContractual.InstanciaNombre = listDominioInstancias
@@ -162,26 +163,33 @@ namespace asivamosffie.services
                                                         ?.FirstOrDefault()
                                                         ?.Nombre;
 
-            foreach( NovedadContractualDescripcion novedadContractualDescripcion in novedadContractual.NovedadContractualDescripcion)
+            foreach (NovedadContractualDescripcion novedadContractualDescripcion in novedadContractual.NovedadContractualDescripcion)
             {
                 novedadContractualDescripcion.NombreTipoNovedad = listDominioTipoNovedad
                                                                         .Where(r => r.Codigo == novedadContractualDescripcion.TipoNovedadCodigo)
                                                                         ?.FirstOrDefault()
                                                                         ?.Nombre;
-                foreach( NovedadContractualDescripcionMotivo motivo in novedadContractualDescripcion.NovedadContractualDescripcionMotivo)
+                foreach (NovedadContractualDescripcionMotivo motivo in novedadContractualDescripcion.NovedadContractualDescripcionMotivo)
                 {
                     motivo.NombreMotivo = listDominioMotivos.Where(r => r.Codigo == motivo.MotivoNovedadCodigo)?.FirstOrDefault()?.Nombre;
                 }
 
-                
+
             }
 
-                if (novedadContractual?.Contrato?.Contratacion?.Contratista != null)
-                {
-                    novedadContractual.Contrato.Contratacion.Contratista.Contratacion = null;//para bajar el peso del consumo
-                    novedadContractual.Contrato.Contratacion.Contratista.TipoIdentificacionNotMapped = novedadContractual.Contrato.Contratacion.Contratista.TipoIdentificacionCodigo == null ? "" : listDominioTipoDocumento.Where(x => x.Codigo == novedadContractual.Contrato.Contratacion.Contratista.TipoIdentificacionCodigo)?.FirstOrDefault()?.Nombre;
-                    //contrato.TipoIntervencion no se de donde sale, preguntar, porque si es del proyecto, cuando sea multiproyecto cual traigo?
-                }
+            if (novedadContractual?.Contrato?.Contratacion?.Contratista != null)
+            {
+                novedadContractual.Contrato.Contratacion.Contratista.Contratacion = null;//para bajar el peso del consumo
+                novedadContractual.Contrato.Contratacion.Contratista.TipoIdentificacionNotMapped = novedadContractual.Contrato.Contratacion.Contratista.TipoIdentificacionCodigo == null ? "" : listDominioTipoDocumento.Where(x => x.Codigo == novedadContractual.Contrato.Contratacion.Contratista.TipoIdentificacionCodigo)?.FirstOrDefault()?.Nombre;
+                //contrato.TipoIntervencion no se de donde sale, preguntar, porque si es del proyecto, cuando sea multiproyecto cual traigo?
+            }
+
+            novedadContractual.ObservacionApoyo = getObservacion(novedadContractual, false, null);
+            novedadContractual.ObservacionSupervisor = getObservacion(novedadContractual, true, null);
+            novedadContractual.ObservacionTramite = getObservacion(novedadContractual, null, true);
+
+            novedadContractual.ObservacionDevolucion = _context.NovedadContractualObservaciones.Find(novedadContractual.ObervacionSupervisorId);
+            novedadContractual.ObservacionDevolucionTramite = _context.NovedadContractualObservaciones.Find(novedadContractual.ObservacionesDevolucionId);
 
             return novedadContractual;
         }
@@ -220,7 +228,7 @@ namespace asivamosffie.services
                         novedadContractual.UsuarioCreacion = novedadContractual.UsuarioCreacion;
                         novedadContractual.NumeroSolicitud = "NOV-" + cantidadNovedades.ToString("000");
 
-                        if ( contrato.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+                        if (contrato.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
                         {
                             novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.En_proceso_de_registro;
                         }
@@ -234,7 +242,7 @@ namespace asivamosffie.services
 
                         if (novedadContractual.NovedadContractualDescripcion != null)
                         {
-                            foreach( NovedadContractualDescripcion descripcion in novedadContractual.NovedadContractualDescripcion)
+                            foreach (NovedadContractualDescripcion descripcion in novedadContractual.NovedadContractualDescripcion)
                             {
                                 descripcion.UsuarioCreacion = novedadContractual.UsuarioCreacion;
                                 descripcion.NovedadContractualId = novedadContractual.NovedadContractualId;
@@ -303,19 +311,21 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                    return _response = new Respuesta { 
-                                            IsSuccessful = false, 
-                                            IsValidation = false, 
-                                            Data = null, 
-                                            Code = ConstantMessagesContractualNovelty.RecursoNoEncontrado,
-                                            Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_solicitud_novedad_contractual, ConstantMessagesContractualNovelty.RecursoNoEncontrado, idAccionCrearEditarNovedadContractual, novedadContractual.UsuarioCreacion, strCrearEditar)
+                    return _response = new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsValidation = false,
+                        Data = null,
+                        Code = ConstantMessagesContractualNovelty.RecursoNoEncontrado,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_solicitud_novedad_contractual, ConstantMessagesContractualNovelty.RecursoNoEncontrado, idAccionCrearEditarNovedadContractual, novedadContractual.UsuarioCreacion, strCrearEditar)
                     };
                 }
 
             }
             catch (Exception ex)
             {
-                return _response = new Respuesta {
+                return _response = new Respuesta
+                {
                     IsSuccessful = false,
                     IsException = true,
                     IsValidation = false,
@@ -342,8 +352,8 @@ namespace asivamosffie.services
                     strCrearEditar = "CREAR NOVEDAD CONTRACTUAL DESCRIPCION";
                     novedadContractualDescripcion.FechaCreacion = DateTime.Now;
                     novedadContractualDescripcion.Eliminado = false;
-                    
-                    _context.NovedadContractualDescripcion.Add( novedadContractualDescripcion );
+
+                    _context.NovedadContractualDescripcion.Add(novedadContractualDescripcion);
 
                 }
                 else
@@ -372,7 +382,7 @@ namespace asivamosffie.services
                     novedadDescripcionOld.RegistroCompleto = novedadContractualDescripcion.RegistroCompleto;
                     novedadDescripcionOld.NumeroRadicado = novedadContractualDescripcion.NumeroRadicado;
 
-                    _context.NovedadContractualDescripcion.Update( novedadDescripcionOld );
+                    _context.NovedadContractualDescripcion.Update(novedadDescripcionOld);
                 }
 
                 foreach (NovedadContractualClausula clausula in novedadContractualDescripcion.NovedadContractualClausula)
@@ -467,6 +477,121 @@ namespace asivamosffie.services
             }
         }
 
+        public async Task<Respuesta> CreateEditObservacion(NovedadContractual pNovedadContractual, bool? esSupervisor, bool? esTramite)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Novedad_Contractual, (int)EnumeratorTipoDominio.Acciones);
+            string CreateEdit = "";
+
+            try
+            {
+                CreateEdit = "EDIT NOVEDAD CONTRACTUAL";
+                int idObservacion = 0;
+
+                if (pNovedadContractual.NovedadContractualObservaciones.Count() > 0)
+                    idObservacion = pNovedadContractual.NovedadContractualObservaciones.FirstOrDefault().NovedadContractualObservacionesId;
+
+                NovedadContractual novedadContractual = _context.NovedadContractual.Find(pNovedadContractual.NovedadContractualId);
+
+                novedadContractual.UsuarioModificacion = pNovedadContractual.UsuarioCreacion;
+                novedadContractual.FechaModificacion = DateTime.Now;
+
+                if (esTramite == true)
+                {
+
+                }
+                else
+                {
+                    if (esSupervisor == true)
+                    {
+                        novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.En_proceso_de_validacion;
+
+                        novedadContractual.TieneObservacionesSupervisor = pNovedadContractual.TieneObservacionesSupervisor;
+
+                        if (novedadContractual.TieneObservacionesSupervisor.HasValue ? novedadContractual.TieneObservacionesSupervisor.Value : false)
+                        {
+
+                            await CreateEditObservacionSeguimientoDiario(pNovedadContractual.NovedadContractualObservaciones.FirstOrDefault(), pNovedadContractual.UsuarioCreacion);
+                        }
+                        else
+                        {
+                            NovedadContractualObservaciones observacionDelete = _context.NovedadContractualObservaciones.Find(idObservacion);
+
+                            if (observacionDelete != null)
+                                observacionDelete.Eliminado = true;
+                        }
+
+                        novedadContractual.RegistroCompletoValidacion = await ValidarRegistroCompletoValidacion(novedadContractual.NovedadContractualId, esSupervisor, esTramite);
+                        if (novedadContractual.RegistroCompletoValidacion.Value)
+                        {
+                            novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.En_proceso_de_validacion;
+                        }
+                        else
+                        {
+                            novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.Sin_validar;
+                        }
+
+
+                    }
+                    else
+                    {
+                        novedadContractual.TieneObservacionesApoyo = pNovedadContractual.TieneObservacionesApoyo;
+
+                        if (novedadContractual.TieneObservacionesApoyo.HasValue ? novedadContractual.TieneObservacionesApoyo.Value : true)
+                        {
+                            await CreateEditObservacionSeguimientoDiario(pNovedadContractual.NovedadContractualObservaciones.FirstOrDefault(), pNovedadContractual.UsuarioCreacion);
+                        }
+                        else
+                        {
+                            NovedadContractualObservaciones observacionDelete = _context.NovedadContractualObservaciones.Find(idObservacion);
+
+                            if (observacionDelete != null)
+                                observacionDelete.Eliminado = true;
+                        }
+
+                        novedadContractual.RegistroCompletoVerificacion = await ValidarRegistroCompletoVerificacion(novedadContractual.NovedadContractualId, esSupervisor, esTramite);
+                        if (novedadContractual.RegistroCompletoVerificacion.Value)
+                        {
+                            novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.En_proceso_de_verificacion;
+                        }
+                        else
+                        {
+                            novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_por_interventor;
+                        }
+                    }
+                }
+
+
+
+
+
+
+
+                _context.SaveChanges();
+
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = GeneralCodes.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Verificar_seguimiento_diario, GeneralCodes.OperacionExitosa, idAccion, pNovedadContractual.UsuarioCreacion, CreateEdit)
+                    };
+
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Verificar_seguimiento_diario, GeneralCodes.Error, idAccion, pNovedadContractual.UsuarioCreacion, ex.InnerException.ToString())
+                    };
+            }
+        }
 
         #endregion CreateEdit 
 
@@ -534,7 +659,7 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<Respuesta> AprobarSolicitud( int pNovedadContractualId, string pUsuario)
+        public async Task<Respuesta> AprobarSolicitud(int pNovedadContractualId, string pUsuario)
         {
             Respuesta respuesta = new Respuesta();
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.AprobarNovedadContractual, (int)EnumeratorTipoDominio.Acciones);
@@ -650,7 +775,74 @@ namespace asivamosffie.services
 
         #region private 
 
-        private bool Registrocompleto( NovedadContractual pNovedadContractual)
+        private async Task<Respuesta> CreateEditObservacionSeguimientoDiario(NovedadContractualObservaciones pObservacion, string pUsuarioCreacion)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Novedad_Contractual, (int)EnumeratorTipoDominio.Acciones);
+
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                string strCrearEditar = "";
+                if (pObservacion.NovedadContractualObservacionesId > 0)
+                {
+                    strCrearEditar = "EDITAR OBSERVACION NOVEDAD CONTRACTUAL";
+                    NovedadContractualObservaciones novedadContractualObservaciones = _context.NovedadContractualObservaciones.Find(pObservacion.NovedadContractualObservacionesId);
+
+                    novedadContractualObservaciones.FechaModificacion = DateTime.Now;
+                    novedadContractualObservaciones.UsuarioModificacion = pUsuarioCreacion;
+
+                    novedadContractualObservaciones.Observaciones = pObservacion.Observaciones;
+
+                }
+                else
+                {
+                    strCrearEditar = "CREAR OBSERVACION NOVEDAD CONTRACTUAL";
+
+                    NovedadContractualObservaciones novedadContractualObservaciones = new NovedadContractualObservaciones
+                    {
+                        FechaCreacion = DateTime.Now,
+                        UsuarioCreacion = pUsuarioCreacion,
+
+                        NovedadContractualId = pObservacion.NovedadContractualId,
+                        Observaciones = pObservacion.Observaciones,
+                        EsSupervision = pObservacion.EsSupervision,
+                        EsTramiteNovedades = pObservacion.EsTramiteNovedades,
+                    };
+
+                    _context.NovedadContractualObservaciones.Add(novedadContractualObservaciones);
+                }
+
+                return respuesta;
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Verificar_seguimiento_diario, GeneralCodes.Error, idAccion, pObservacion.UsuarioCreacion, ex.InnerException.ToString())
+                    };
+            }
+        }
+
+
+        private NovedadContractualObservaciones getObservacion(NovedadContractual pNovedadContractual, bool? pEsSupervicion, bool? pEsTramite)
+        {
+            NovedadContractualObservaciones novedadContractualObservaciones = pNovedadContractual.NovedadContractualObservaciones.ToList()
+                        .Where(r => r.EsSupervision == pEsSupervicion &&
+                                    r.Archivado != true &&
+                                    r.EsTramiteNovedades == pEsTramite
+                              )
+                        .FirstOrDefault();
+
+            return novedadContractualObservaciones;
+        }
+
+
+        private bool Registrocompleto(NovedadContractual pNovedadContractual)
         {
             bool esCompleto = true;
 
@@ -660,20 +852,20 @@ namespace asivamosffie.services
                     pNovedadContractual.FechaSesionInstancia == null ||
                     pNovedadContractual.NovedadContractualDescripcion == null ||
                     pNovedadContractual.NovedadContractualDescripcion.Count() == 0 ||
-                    string.IsNullOrEmpty( pNovedadContractual.UrlSoporte )
+                    string.IsNullOrEmpty(pNovedadContractual.UrlSoporte)
                 )
             {
                 esCompleto = false;
             }
 
-            foreach( NovedadContractualDescripcion descripcion in pNovedadContractual.NovedadContractualDescripcion)
+            foreach (NovedadContractualDescripcion descripcion in pNovedadContractual.NovedadContractualDescripcion)
             {
                 // Suspension - Prórroga a la Suspensión
-                if ( descripcion.TipoNovedadCodigo == "1" || descripcion.TipoNovedadCodigo == "2")
+                if (descripcion.TipoNovedadCodigo == "1" || descripcion.TipoNovedadCodigo == "2")
                 {
                     if (
                             descripcion.FechaInicioSuspension == null ||
-                            descripcion.FechaFinSuspension == null 
+                            descripcion.FechaFinSuspension == null
                         )
                     {
                         esCompleto = false;
@@ -685,7 +877,7 @@ namespace asivamosffie.services
                 if (descripcion.TipoNovedadCodigo == "3")
                 {
                     if (
-                            descripcion.PresupuestoAdicionalSolicitado == null 
+                            descripcion.PresupuestoAdicionalSolicitado == null
                         )
                     {
                         esCompleto = false;
@@ -706,14 +898,14 @@ namespace asivamosffie.services
 
                 }
 
-                if ( 
+                if (
                         descripcion.NovedadContractualDescripcionMotivo == null ||
                         descripcion.NovedadContractualDescripcionMotivo.Count() == 0 ||
-                        string.IsNullOrEmpty( descripcion.ResumenJustificacion ) ||
+                        string.IsNullOrEmpty(descripcion.ResumenJustificacion) ||
                         descripcion.EsDocumentacionSoporte == null ||
-                        string.IsNullOrEmpty(descripcion.ConceptoTecnico ) ||
+                        string.IsNullOrEmpty(descripcion.ConceptoTecnico) ||
                         descripcion.FechaConcepto == null ||
-                        string.IsNullOrEmpty( descripcion.NumeroRadicado )
+                        string.IsNullOrEmpty(descripcion.NumeroRadicado)
 
                     )
                 {
@@ -726,8 +918,8 @@ namespace asivamosffie.services
                     descripcion.NovedadContractualClausula.ToList().ForEach(c =>
                    {
                        if (
-                            string.IsNullOrEmpty( c.ClausulaAmodificar ) ||
-                            string.IsNullOrEmpty( c.AjusteSolicitadoAclausula )
+                            string.IsNullOrEmpty(c.ClausulaAmodificar) ||
+                            string.IsNullOrEmpty(c.AjusteSolicitadoAclausula)
                        )
                        {
 
@@ -738,6 +930,47 @@ namespace asivamosffie.services
 
             return esCompleto;
         }
+
+        private async Task<bool> ValidarRegistroCompletoVerificacion(int id, bool? pEsSupervicion, bool? pEsTramite)
+        {
+            bool esCompleto = true;
+
+            NovedadContractual nc = await _context.NovedadContractual.Where(cc => cc.NovedadContractualId == id)
+                                                                .FirstOrDefaultAsync();
+
+
+            nc.ObservacionApoyo = getObservacion(nc, pEsSupervicion, pEsTramite);
+
+            if (nc.TieneObservacionesApoyo == null ||
+                 (nc.TieneObservacionesApoyo == true && string.IsNullOrEmpty(nc.ObservacionApoyo != null ? nc.ObservacionApoyo.Observaciones : null))
+               )
+            {
+                esCompleto = false;
+            }
+
+            return esCompleto;
+        }
+
+        private async Task<bool> ValidarRegistroCompletoValidacion(int id, bool? pEsSupervicion, bool? pEsTramite)
+        {
+            bool esCompleto = true;
+
+            NovedadContractual nc = await _context.NovedadContractual.Where(cc => cc.NovedadContractualId == id)
+                                                                .FirstOrDefaultAsync();
+
+
+            nc.ObservacionSupervisor = getObservacion(nc, pEsSupervicion, pEsTramite);
+
+            if (nc.TieneObservacionesSupervisor == null ||
+                 (nc.TieneObservacionesSupervisor == true && string.IsNullOrEmpty(nc.ObservacionSupervisor != null ? nc.ObservacionSupervisor.Observaciones : null))
+               )
+            {
+                esCompleto = false;
+            }
+
+            return esCompleto;
+        }
+
 
         #endregion private 
 

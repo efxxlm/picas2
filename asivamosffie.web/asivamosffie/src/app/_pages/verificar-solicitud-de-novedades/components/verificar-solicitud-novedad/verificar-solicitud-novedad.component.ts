@@ -13,10 +13,9 @@ import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNov
 })
 export class VerificarSolicitudNovedadComponent implements OnInit {
 
-  novedadId: string;
   estaEditando = false;
   novedad: NovedadContractual;
-  detalleId: string;
+  detalleId: number;
 
   addressForm = this.fb.group({
     tieneObservaciones: [null, Validators.required],
@@ -92,6 +91,9 @@ export class VerificarSolicitudNovedadComponent implements OnInit {
       this.contractualNoveltyService.getNovedadContractualById( this.detalleId )
         .subscribe( respuesta => {
           this.novedad = respuesta;
+
+            this.addressForm.get('observaciones').setValue(this.novedad.observacionApoyo ? this.novedad.observacionApoyo.observaciones : null);
+            this.addressForm.get('tieneObservaciones').setValue(this.novedad.tieneObservacionesApoyo);
         });
 
     });
@@ -109,7 +111,33 @@ export class VerificarSolicitudNovedadComponent implements OnInit {
     console.log(this.addressForm.value);
     this.estaEditando = true;
     this.addressForm.markAllAsTouched();
-    this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+
+    let novedad: NovedadContractual = {
+      novedadContractualId: this.detalleId,
+      tieneObservacionesApoyo: this.addressForm.value.tieneObservaciones,
+
+      novedadContractualObservaciones: [
+        {
+          novedadContractualObservacionesId: this.novedad.observacionApoyo ? this.novedad.observacionApoyo.novedadContractualObservacionesId : 0,
+          novedadContractualId: this.detalleId,
+          esSupervision: false,
+          esTramiteNovedades: null,
+          observaciones: this.addressForm.value.observaciones
+        }
+      ]
+    }
+
+    this.contractualNoveltyService.createEditObservacion(novedad, false)
+      .subscribe(respuesta => {
+        this.openDialog('', respuesta.message);
+        if (respuesta.code == "200") {
+          this.router.navigate(['/verificarSolicitudDeNovedades']);
+        }
+
+
+      });
   }
 
 }
+
+

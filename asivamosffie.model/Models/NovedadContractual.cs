@@ -51,6 +51,7 @@ namespace asivamosffie.model.Models
         public string UrlSoporteFirmas { get; set; }
         public int? ObservacionesDevolucionId { get; set; }
         public string RazonesNoContinuaProceso { get; set; }
+        public bool? RegistroCompletoValidacion { get; set; }
 
         public virtual Usuario AbogadoRevision { get; set; }
         public virtual Contrato Contrato { get; set; }

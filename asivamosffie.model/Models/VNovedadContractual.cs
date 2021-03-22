@@ -16,5 +16,7 @@ namespace asivamosffie.model.Models
         public string NovedadesSeleccionadas { get; set; }
         public string TipoSolicitudCodigo { get; set; }
         public string NumeroContrato { get; set; }
+        public bool? RegistroCompletoVerificacion { get; set; }
+        public bool? RegistroCompletoValidacion { get; set; }
     }
 }

@@ -46,6 +46,10 @@ export interface NovedadContractual{
         novedadContractualDescripcion?: NovedadContractualDescripcion[],
         contrato?: Contrato,
         proyectosContrato?: any[],
+        novedadContractualObservaciones?: NovedadContractualObservaciones[],
+
+        observacionApoyo?: NovedadContractualObservaciones,
+        
 
 
 }
@@ -79,7 +83,6 @@ export interface NovedadContractualDescripcion{
         novedadContractualDescripcionMotivo?: NovedadContractualDescripcionMotivo[],
         novedadContractualClausula?: NovedadContractualClausula[],
 
-
 }
 
 export interface NovedadContractualClausula{
@@ -95,4 +98,13 @@ export interface NovedadContractualDescripcionMotivo{
         novedadContractualDescripcionId?: number,
         motivoNovedadCodigo?: string,
         eliminado?: boolean,
+}
+
+export interface NovedadContractualObservaciones{
+        novedadContractualObservacionesId?:number,
+        novedadContractualId?:number,
+        observaciones?:string,
+        esSupervision?:boolean,
+        archivado?:boolean,
+        esTramiteNovedades?:boolean,
 }

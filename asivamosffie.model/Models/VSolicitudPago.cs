@@ -18,5 +18,9 @@ namespace asivamosffie.model.Models
         public bool? RegistroCompletoVerificar { get; set; }
         public bool? RegistroCompletoAutorizar { get; set; }
         public bool? TieneObservacion { get; set; }
+        public bool? RegistroCompletoCoordinador { get; set; }
+        public bool? TieneSubsanacion { get; set; }
+        public bool? RegistroCompletoValidacionFinanciera { get; set; }
+        public bool? RegistroCompletoVerificacionFinanciera { get; set; }
     }
 }

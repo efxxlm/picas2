@@ -172,6 +172,23 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("CreateEditObservacion")]
+        [HttpPost]
+        public async Task<Respuesta> CreateEditObservacion([FromBody] NovedadContractual pNovedadContractual, [FromQuery] bool? esSupervisor, bool? esTramite)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pNovedadContractual.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _contractualModification.CreateEditObservacion(pNovedadContractual, esSupervisor, esTramite);
+                return respuesta;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
 
     }
 }

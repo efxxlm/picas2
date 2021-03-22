@@ -57,4 +57,8 @@ export class ContractualNoveltyService {
     return this.http.put<Respuesta>( `${ this.urlApi }/enviarAlSupervisor?pNovedaContractual=${ id }`, null ); 
   }
 
+  createEditObservacion( novedad: NovedadContractual, esSupervisor?: boolean, esTramite?: boolean ){
+    return this.http.post<Respuesta>( `${ this.urlApi }/createEditObservacion?esSupervisor=${ esSupervisor }&esTramite=${ esTramite }`, novedad ); 
+  }
+
 }
