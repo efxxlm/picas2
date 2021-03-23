@@ -84,10 +84,10 @@ namespace asivamosffie.services
                 default:
                     break;
             }
-         
-          
 
-          
+
+
+
             return result.Select(r => new
             {
                 r.RegistroCompletoAutorizar,
@@ -465,7 +465,10 @@ namespace asivamosffie.services
                     EstaAprobadoCoordinacion = true;
                     await SendEmailToAproved(pSolicitudPago.SolicitudPagoId);
                 }
-
+                if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Enviada_para_autorizacion)
+                {
+                    ActualizarSolicitudPagoCertificado(pSolicitudPago);
+                }
 
                 await _context.Set<SolicitudPago>()
                                        .Where(o => o.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
@@ -506,9 +509,21 @@ namespace asivamosffie.services
             }
         }
 
+        private void ActualizarSolicitudPagoCertificado(SolicitudPago pSolicitudPago)
+        {
+            SolicitudPagoCertificado solicitudPagoCertificado = new SolicitudPagoCertificado
+            {
+                SolicitudPagoId = pSolicitudPago.SolicitudPagoId,
+                Url = pSolicitudPago.SolicitudPagoCertificado.FirstOrDefault().Url,
+                UsuarioCreacion = pSolicitudPago.UsuarioCreacion,
+                FechaCreacion = DateTime.Now,
+                RegistroCompleto = !string.IsNullOrEmpty(pSolicitudPago.SolicitudPagoCertificado.FirstOrDefault().Url),
+            }; 
+            _context.SolicitudPagoCertificado.Add(solicitudPagoCertificado);
+        }
+
         private async Task<bool> SendEmailToAproved(int pSeguimientoSemanal)
         {
-
             Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Enviar_a_aprobacion4_1_7));
             string strContenido = ReplaceVariablesSolicitudPago(template.Contenido, pSeguimientoSemanal);
 
@@ -525,13 +540,14 @@ namespace asivamosffie.services
             List<Dominio> ListTipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato && r.Activo == true).ToList();
 
             SolicitudPago solicitudPago = _context.SolicitudPago.Where(s => s.SolicitudPagoId == pSolicitudPago).Include(r => r.Contrato).FirstOrDefault();
+            string strModalidadPagoContrato = ListTipoIntervencion.Where(lti => lti.Codigo == solicitudPago.Contrato.ModalidadCodigo).FirstOrDefault().Nombre;
 
             template = template
                       .Replace("[NUMERO_SOLICITUD]", solicitudPago.NumeroSolicitud)
                       .Replace("[NUMERO_CONTRATO]", solicitudPago.Contrato.NumeroContrato)
-                      .Replace("[FECHA_SOLICITUD]", solicitudPago.FechaCreacion.ToString(""))
-                      .Replace("[FECHA_VALIDACION]", Convert.ToDateTime(solicitudPago.FechaCreacion).ToString("dd/MM/yyy")
-                      .Replace("[MODALIDAD_CONTRATO]", ListTipoIntervencion.Where(lti => lti.Codigo == solicitudPago.Contrato.ModalidadCodigo).FirstOrDefault().Nombre));
+                      .Replace("[FECHA_SOLICITUD]", solicitudPago.FechaCreacion.ToString("dd/MM/yyy"))
+                      .Replace("[FECHA_VALIDACION]", DateTime.Now.ToString("dd/MM/yyy"))
+                      .Replace("[MODALIDAD_CONTRATO]", strModalidadPagoContrato);
             return template;
         }
 

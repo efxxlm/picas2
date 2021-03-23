@@ -18,6 +18,12 @@
 
         public const string Expensas = "8";
          
-        public const string Otros_Costos_Servicios = "9"; 
+        public const string Otros_Costos_Servicios = "9";       
+        
+        public const string Amortizacion_Anticipo = "10";    
+
+        public const string Lista_de_Chequeo = "11";    
+        
+        public const string Certificado = "12"; 
     } 
 }
