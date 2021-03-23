@@ -97,7 +97,9 @@
                                 class="btn-table"
                                 [routerLink]="[ 'verDetalleEditar', element.contratoId, element.solicitudPagoId ]"
                                 *ngIf=" element.estadoCodigo === listaEstadoSolicitudPago.enProcesoRegistro
-                                        || element.estadoCodigo === listaEstadoSolicitudPago.solicitudRevisadaEquipoFacturacion">
+                                        || element.estadoCodigo === listaEstadoSolicitudPago.solicitudRevisadaEquipoFacturacion
+                                        || element.estadoCodigo === listaEstadoSolicitudPago.solicitudDevueltaApoyoSupervision
+                                        || element.estadoCodigo === listaEstadoSolicitudPago.solicitudDevueltaPorCoordinador">
                                 Ver detalle/Editar
                         </button>
 
@@ -130,7 +132,7 @@
                                 color="accent"
                                 class="btn-table"
                                 [routerLink]="[ 'verDetalle', element.contratoId, element.solicitudPagoId ]"
-                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enviadaParaVerificacion"> 
+                                *ngIf="element.estadoCodigo !== listaEstadoSolicitudPago.enProcesoRegistro && element.estadoCodigo !== listaEstadoSolicitudPago.solicitudRevisadaEquipoFacturacion">
                                 Ver detalle
                         </button>
 
@@ -145,7 +147,9 @@
                                 class="btn-table"
                                 [routerLink]="[ 'verDetalleEditarExpensas', element.solicitudPagoId ]"
                                 *ngIf=" element.estadoCodigo === listaEstadoSolicitudPago.enProcesoRegistro
-                                        || element.estadoCodigo === listaEstadoSolicitudPago.solicitudRevisadaEquipoFacturacion"> 
+                                        || element.estadoCodigo === listaEstadoSolicitudPago.solicitudRevisadaEquipoFacturacion
+                                        || element.estadoCodigo === listaEstadoSolicitudPago.solicitudDevueltaApoyoSupervision
+                                        || element.estadoCodigo === listaEstadoSolicitudPago.solicitudDevueltaPorCoordinador"> 
                                 Ver detalle/Editar
                         </button>
 
@@ -178,7 +182,7 @@
                                 color="accent"
                                 class="btn-table"
                                 [routerLink]="[ 'verDetalleExpensas', element.solicitudPagoId ]"
-                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enviadaParaVerificacion">
+                                *ngIf="element.estadoCodigo !== listaEstadoSolicitudPago.enProcesoRegistro && element.estadoCodigo !== listaEstadoSolicitudPago.solicitudRevisadaEquipoFacturacion">
                                 Ver detalle
                         </button>
 
