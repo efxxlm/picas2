@@ -196,23 +196,21 @@ namespace asivamosffie.services
                                                               && r.Eliminado != true
                                                               && r.Archivada != true).Count();
 
-                if (pSolicitudPagoObservacion.MenuId == (int)enumeratorMenu.Autorizar_solicitud_de_pago)
-                {
-                    //Agrego La dependencia de Certificado de solicitud
-                    intCantidadDependenciasSolicitudPago++;
-                }
 
-                if (pSolicitudPagoObservacion.TieneObservacion == true)
-                {
-                    await _context.Set<SolicitudPago>()
-                                          .Where(o => o.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId)
-                                                                                                                    .UpdateAsync(r => new SolicitudPago()
-                                                                                                                    {
-                                                                                                                        FechaModificacion = DateTime.Now,
-                                                                                                                        UsuarioModificacion = pUsuarioMod,
-                                                                                                                        TieneObservacion = true,
-                                                                                                                    });
-                }
+                bool TieneObservacion =
+                                 _context.SolicitudPagoObservacion.Any(r => r.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId
+                                                            && r.MenuId == pSolicitudPagoObservacion.MenuId
+                                                            && r.Eliminado != true
+                                                            && r.Archivada != true
+                                                            && r.TieneObservacion == true
+                                                            );
+                //Agrego La dependencia de Certificado de solicitud 
+                if (pSolicitudPagoObservacion.MenuId == (int)enumeratorMenu.Autorizar_solicitud_de_pago)
+                    intCantidadDependenciasSolicitudPago++;
+
+                //Sumar cantidad Listas de chequeo
+                intCantidadDependenciasSolicitudPago += solicitudPago.SolicitudPagoListaChequeo.Count();
+              
                 //Valida si la cantidad de relaciones de solicitud Pago es igual a la cantidad de observaciones de esa Solicitud pago 
                 bool blRegistroCompleto = false;
                 if (intCantidadObservacionesSolicitudPago == intCantidadDependenciasSolicitudPago)
@@ -222,17 +220,18 @@ namespace asivamosffie.services
                 switch (pSolicitudPagoObservacion.MenuId)
                 {
                     case (int)enumeratorMenu.Verificar_solicitud_de_pago:
-                        
 
-                            await _context.Set<SolicitudPago>()
-                                                     .Where(o => o.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId)
-                                                                                                                            .UpdateAsync(r => new SolicitudPago()
-                                                                                                                            {
-                                                                                                                                FechaModificacion = DateTime.Now,
-                                                                                                                                UsuarioModificacion = pUsuarioMod,
-                                                                                                                                EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_proceso_de_verificacion).ToString(),
-                                                                                                                                RegistroCompletoVerificar = blRegistroCompleto,
-                                                                                                                            });
+
+                        await _context.Set<SolicitudPago>()
+                                                 .Where(o => o.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId)
+                                                                                                                        .UpdateAsync(r => new SolicitudPago()
+                                                                                                                        {
+                                                                                                                            TieneObservacion = TieneObservacion,
+                                                                                                                            FechaModificacion = DateTime.Now,
+                                                                                                                            UsuarioModificacion = pUsuarioMod,
+                                                                                                                            EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_proceso_de_verificacion).ToString(),
+                                                                                                                            RegistroCompletoVerificar = blRegistroCompleto,
+                                                                                                                        });
                         break;
 
                     case (int)enumeratorMenu.Autorizar_solicitud_de_pago:
@@ -240,6 +239,7 @@ namespace asivamosffie.services
                                                 .Where(o => o.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId)
                                                                                                                         .UpdateAsync(r => new SolicitudPago()
                                                                                                                         {
+                                                                                                                            TieneObservacion = TieneObservacion,
                                                                                                                             EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_proceso_de_autorizacion).ToString(),
                                                                                                                             FechaModificacion = DateTime.Now,
                                                                                                                             UsuarioModificacion = pUsuarioMod,
@@ -283,9 +283,18 @@ namespace asivamosffie.services
             //#2 pSolicitudPago.SolicitudPagoSoporteSolicitud  
             int intCantidadDependenciasSolicitudPago = 2;
 
+            if (_context.SolicitudPago
+                .Where(s => s.ContratoId == pSolicitudPago.ContratoId && s.Eliminado == false)
+                .Count() > 1)
+            {
+                //Si ya existe una solicitud pago no se crea
+                //nuevamente observacion a cargar forma pago 
+                intCantidadDependenciasSolicitudPago--;
+            }
+
             foreach (var SolicitudPagoRegistrarSolicitudPago in pSolicitudPago.SolicitudPagoRegistrarSolicitudPago.Where(r => r.Eliminado != true))
             {
-                //#4 Registro De la Solicituud
+                //#4 Registrar  Solicitud de pago
                 intCantidadDependenciasSolicitudPago++;
 
                 foreach (var SolicitudPagoFase in SolicitudPagoRegistrarSolicitudPago.SolicitudPagoFase.Where(r => r.Eliminado != true))
@@ -301,12 +310,10 @@ namespace asivamosffie.services
                     foreach (var SolicitudPagoFaseFactura in SolicitudPagoFase.SolicitudPagoFaseFactura.Where(r => r.Eliminado != true))
                     {
                         //#7 Factura para proyectos asociados
-                        intCantidadDependenciasSolicitudPago++;
-
-                        //#7 Factura Descuentos de la Dirección Técnica
-                        intCantidadDependenciasSolicitudPago++;
+                        intCantidadDependenciasSolicitudPago++; 
                     }
-                    if (SolicitudPagoFase.SolicitudPagoFaseFactura.Any(s => s.TieneDescuento == false))
+                    // #8 Fase Factura
+                    if (SolicitudPagoFase.SolicitudPagoFaseFactura.Any(s => s.TieneDescuento == true))
                         intCantidadDependenciasSolicitudPago++;
                 }
             }

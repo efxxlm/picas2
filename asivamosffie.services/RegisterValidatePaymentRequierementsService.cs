@@ -1037,7 +1037,7 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                    SolicitudPagoAmortizacion.Eliminado = true;
+                    SolicitudPagoAmortizacion.Eliminado = false;
                     SolicitudPagoAmortizacion.UsuarioCreacion = pUsuarioCreacion;
                     SolicitudPagoAmortizacion.FechaCreacion = DateTime.Now;
                     SolicitudPagoAmortizacion.RegistroCompleto = ValidateCompleteRecordSolicitudPagoAmortizacion(SolicitudPagoAmortizacion);
