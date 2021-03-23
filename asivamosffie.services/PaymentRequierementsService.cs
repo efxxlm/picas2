@@ -517,25 +517,21 @@ namespace asivamosffie.services
             return _commonService.EnviarCorreo(perfilsEnviarCorreo, " ", template.Asunto);
         }
 
-        //private string ReplaceVariablesSolicitudPago(string template, int pSolicitudPago)
-        //{
-        //    List<Dominio> ListTipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion && r.Activo == true).ToList();
+        private string ReplaceVariablesSolicitudPago(string template, int pSolicitudPago)
+        {
+            List<Dominio> ListTipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato && r.Activo == true).ToList();
 
-           
+            SolicitudPago solicitudPago = _context.SolicitudPago.Where(s => s.SolicitudPagoId == pSolicitudPago).Include(r => r.Contrato).FirstOrDefault();
 
-
-        //    template = template
-        //              .Replace("[LLAVE_MEN]", seguimientoSemanal.ContratacionProyecto.Proyecto.LlaveMen)
-        //              .Replace("[NUMERO_CONTRATO]", seguimientoSemanal.ContratacionProyecto.Contratacion.Contrato.FirstOrDefault().NumeroContrato)
-        //              .Replace("[INTITUCION_EDUCATIVA]", seguimientoSemanal.ContratacionProyecto.Proyecto.InstitucionEducativa.Nombre)
-        //              .Replace("[SEDE]", seguimientoSemanal.ContratacionProyecto.Proyecto.Sede.Nombre)
-        //              .Replace("[TIPO_INTERVENCION]", ListTipoIntervencion.Where(lti => lti.Codigo == seguimientoSemanal.ContratacionProyecto.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre)
-        //              .Replace("[FECHA_ULTIMO_REPORTE]", seguimientoSemanal.FechaModificacion.HasValue ? Convert.ToDateTime(seguimientoSemanal.FechaModificacion).ToString("dd/MM/yyy") : "Sin fecha de reporte")
-        //              .Replace("[FECHA_INICIAl]", seguimientoSemanal.FechaInicio.HasValue ? Convert.ToDateTime(seguimientoSemanal.FechaModificacion).ToString("dd/MM/yyy") : "Sin fecha inicial")
-        //              .Replace("[FECHA_FINAL]", seguimientoSemanal.FechaFin.HasValue ? Convert.ToDateTime(seguimientoSemanal.FechaModificacion).ToString("dd/MM/yyy") : "Sin fecha final");
-
-        //    return template;
-        //}
+            template = template
+                      .Replace("[NUMERO_SOLICITUD]", solicitudPago.NumeroSolicitud)
+                      .Replace("[NUMERO_CONTRATO]", solicitudPago.Contrato.NumeroContrato)
+                      .Replace("[FECHA_SOLICITUD]", solicitudPago.FechaCreacion.ToString(""))
+                      .Replace("[FECHA_VALIDACION]", Convert.ToDateTime(solicitudPago.FechaCreacion).ToString("dd/MM/yyy")
+                      .Replace("[MODALIDAD_CONTRATO]", ListTipoIntervencion.Where(lti => lti.Codigo == solicitudPago.Contrato.ModalidadCodigo).FirstOrDefault().Nombre));
+                   
+            return template;
+        }
 
 
 

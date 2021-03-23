@@ -504,7 +504,7 @@ namespace asivamosffie.services
         {
             SolicitudPago solicitudPago = await GetSolicitudPago(SolicitudPagoId);
             bool CompleteRecord = ValidateCompleteRecordSolicitudPago(solicitudPago);
-            bool TieneNoCumpleListaChequeo = solicitudPago.SolicitudPagoListaChequeo.Any(r => r.SolicitudPagoListaChequeoRespuesta.Any(s => s.RespuestaCodigo == ConstanCodigoRespuestasListaChequeoSolictudPago.No_aplica));
+            bool TieneNoCumpleListaChequeo = solicitudPago.SolicitudPagoListaChequeo.Any(r => r.SolicitudPagoListaChequeoRespuesta.Any(s => s.RespuestaCodigo == ConstanCodigoRespuestasListaChequeoSolictudPago.No_cumple));
             string EstadoSolicitudPago = solicitudPago.EstadoCodigo;
 
             if (CompleteRecord == true)
@@ -562,8 +562,7 @@ namespace asivamosffie.services
                     };
             }
         }
-
-
+         
         public async Task<Respuesta> DeleteSolicitudPagoFaseFacturaDescuento(int pSolicitudPagoFaseFacturaDescuentoId, string pUsuarioModificacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Descuento, (int)EnumeratorTipoDominio.Acciones);
