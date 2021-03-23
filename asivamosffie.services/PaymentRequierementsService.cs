@@ -51,7 +51,7 @@ namespace asivamosffie.services
             {
                 case (int)enumeratorMenu.Verificar_solicitud_de_pago:
                     result = await _context.VSolicitudPago.Where(s =>
-                            s.IntEstadoCodigo > (int)EnumEstadoSolicitudPago.Con_solicitud_revisada_por_equipo_facturacion) 
+                            s.IntEstadoCodigo > (int)EnumEstadoSolicitudPago.Con_solicitud_revisada_por_equipo_facturacion)
                                                     .OrderByDescending(r => r.FechaModificacion)
                                                     .ToListAsync();
                     break;
@@ -189,7 +189,7 @@ namespace asivamosffie.services
             try
             {
                 SolicitudPago solicitudPago = await _registerValidatePaymentRequierementsService.GetSolicitudPago(pSolicitudPagoObservacion.SolicitudPagoId);
-               
+
                 int intCantidadDependenciasSolicitudPago = CantidadDependenciasSolicitudPago(solicitudPago);
                 int intCantidadObservacionesSolicitudPago = _context.SolicitudPagoObservacion.Where(r => r.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId
                                                               && r.MenuId == pSolicitudPagoObservacion.MenuId
@@ -218,18 +218,21 @@ namespace asivamosffie.services
                 if (intCantidadObservacionesSolicitudPago == intCantidadDependenciasSolicitudPago)
                     blRegistroCompleto = true;
 
-
+                string stringEstadoSolicitud = solicitudPago.EstadoCodigo;
                 switch (pSolicitudPagoObservacion.MenuId)
                 {
                     case (int)enumeratorMenu.Verificar_solicitud_de_pago:
-                        await _context.Set<SolicitudPago>()
-                                                 .Where(o => o.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId)
-                                                                                                                        .UpdateAsync(r => new SolicitudPago()
-                                                                                                                        {
-                                                                                                                            FechaModificacion = DateTime.Now,
-                                                                                                                            UsuarioModificacion = pUsuarioMod,
-                                                                                                                            RegistroCompletoVerificar = blRegistroCompleto,
-                                                                                                                        });
+                        
+
+                            await _context.Set<SolicitudPago>()
+                                                     .Where(o => o.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId)
+                                                                                                                            .UpdateAsync(r => new SolicitudPago()
+                                                                                                                            {
+                                                                                                                                FechaModificacion = DateTime.Now,
+                                                                                                                                UsuarioModificacion = pUsuarioMod,
+                                                                                                                                EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_proceso_de_verificacion).ToString(),
+                                                                                                                                RegistroCompletoVerificar = blRegistroCompleto,
+                                                                                                                            });
                         break;
 
                     case (int)enumeratorMenu.Autorizar_solicitud_de_pago:
@@ -237,6 +240,7 @@ namespace asivamosffie.services
                                                 .Where(o => o.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId)
                                                                                                                         .UpdateAsync(r => new SolicitudPago()
                                                                                                                         {
+                                                                                                                            EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_proceso_de_autorizacion).ToString(),
                                                                                                                             FechaModificacion = DateTime.Now,
                                                                                                                             UsuarioModificacion = pUsuarioMod,
                                                                                                                             RegistroCompletoAutorizar = blRegistroCompleto,
@@ -252,7 +256,7 @@ namespace asivamosffie.services
         }
 
         private int CantidadDependenciasSolicitudPago(SolicitudPago solicitudPago)
-        {  
+        {
             switch (solicitudPago.TipoSolicitudCodigo)
             {
                 case ConstanCodigoTipoSolicitudContratoSolicitudPago.Contratos_Interventoria:
@@ -302,11 +306,11 @@ namespace asivamosffie.services
                         //#7 Factura Descuentos de la Dirección Técnica
                         intCantidadDependenciasSolicitudPago++;
                     }
-                    if(SolicitudPagoFase.SolicitudPagoFaseFactura.Any(s=> s.TieneDescuento == false))
+                    if (SolicitudPagoFase.SolicitudPagoFaseFactura.Any(s => s.TieneDescuento == false))
                         intCantidadDependenciasSolicitudPago++;
                 }
             }
-             
+
             return intCantidadDependenciasSolicitudPago;
         }
 
@@ -528,7 +532,7 @@ namespace asivamosffie.services
                 UsuarioCreacion = pSolicitudPago.UsuarioCreacion,
                 FechaCreacion = DateTime.Now,
                 RegistroCompleto = !string.IsNullOrEmpty(pSolicitudPago.SolicitudPagoCertificado.FirstOrDefault().Url),
-            }; 
+            };
             _context.SolicitudPagoCertificado.Add(solicitudPagoCertificado);
         }
 
