@@ -45,38 +45,86 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
                 <td mat-cell *matCellDef="let element" align="center">
                     <ng-container *ngIf="element.tipoSolicitudCodigo !== tipoSolicitud.expensas; else esExpensas">
-                        <button mat-raised-button color="accent" class="btn-table" [routerLink]="[ 'aprobacionSolicitud', element.contratoId, element.solicitudPagoId ]">
-                            Verificar solicitud
+
+                        <button mat-raised-button
+                                color="accent"
+                                class="btn-table"
+                                [routerLink]="[ 'aprobacionSolicitud', element.contratoId, element.solicitudPagoId ]"
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enviadaParaVerificacion">
+                                Verificar solicitud
                         </button>
-                        <button mat-raised-button color="accent" class="btn-table">
-                            Enviar para autorizar solicitud
+
+                        <button mat-raised-button
+                                color="accent"
+                                class="btn-table"
+                                [routerLink]="[ 'aprobacionSolicitud', element.contratoId, element.solicitudPagoId ]"
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoVerificacion">
+                                Ver detalle/Editar
                         </button>
-                        <button mat-raised-button color="accent" class="btn-table" [routerLink]="[ 'aprobacionSolicitud', element.contratoId, element.solicitudPagoId ]">
-                            Ver detalle/Editar
+
+                        <button mat-raised-button
+                                color="accent"
+                                class="btn-table"
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoVerificacion">
+                                Enviar para autorizar solicitud
                         </button>
-                        <button mat-raised-button color="accent" class="btn-table" [routerLink]="[ 'verDetalleAprobarSolicitud', element.contratoId, element.solicitudPagoId ]">
-                            Ver detalle
+
+                        <button mat-raised-button
+                                color="accent"
+                                class="btn-table"
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoVerificacion">
+                                Devolver solicitud
                         </button>
-                        <button mat-raised-button color="accent" class="btn-table">
-                            Devolver solicitud
+
+                        <button mat-raised-button
+                                color="accent"
+                                class="btn-table"
+                                [routerLink]="[ 'verDetalleAprobarSolicitud', element.contratoId, element.solicitudPagoId ]"
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enviadaAutorizacion">
+                                Ver detalle
                         </button>
+
                     </ng-container>
                     <ng-template #esExpensas>
-                        <button mat-raised-button color="accent" class="btn-table" [routerLink]="[ 'observacionExpensas', element.solicitudPagoId ]">
-                            Verificar solicitud
+
+                        <button mat-raised-button
+                                color="accent"
+                                class="btn-table"
+                                [routerLink]="[ 'observacionExpensas', element.solicitudPagoId ]"
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enviadaParaVerificacion">
+                                Verificar solicitud
                         </button>
-                        <button mat-raised-button color="accent" class="btn-table">
-                            Enviar para autorizar solicitud
+
+                        <button mat-raised-button
+                                color="accent"
+                                class="btn-table"
+                                [routerLink]="[ 'observacionExpensas', element.solicitudPagoId ]"
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoVerificacion">
+                                Ver detalle/Editar
                         </button>
-                        <button mat-raised-button color="accent" class="btn-table" [routerLink]="[ 'observacionExpensas', element.solicitudPagoId ]">
-                            Ver detalle/Editar
+
+                        <button mat-raised-button
+                                color="accent"
+                                class="btn-table"
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoVerificacion">
+                                Enviar para autorizar solicitud
                         </button>
-                        <button mat-raised-button color="accent" class="btn-table" [routerLink]="[ 'verDetalleExpensas', element.solicitudPagoId ]">
-                            Ver detalle
+
+                        <button mat-raised-button
+                                color="accent"
+                                class="btn-table"
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoVerificacion">
+                                Devolver solicitud
                         </button>
-                        <button mat-raised-button color="accent" class="btn-table">
-                            Devolver solicitud
+
+                        <button mat-raised-button
+                                color="accent"
+                                class="btn-table"
+                                [routerLink]="[ 'verDetalleExpensas', element.solicitudPagoId ]"
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enviadaAutorizacion">
+                                Ver detalle
                         </button>
+
                     </ng-template>
                 </td>
             </ng-container>

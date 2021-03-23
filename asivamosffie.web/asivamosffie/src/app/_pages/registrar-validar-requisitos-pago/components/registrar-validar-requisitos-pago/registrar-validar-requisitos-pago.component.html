@@ -92,39 +92,48 @@
                             - Cuando un registro de la lista de chequeo este en "No cumple" muestra los botones devolver solicitud, ver detalle / editar, eliminar y la solicitud en registro completo
                             - Cuando el registro esta completo y los registros de la lista de chequeo estan en cumple o no aplica se muestran los botones ver detalle / editar, eliminar y enviar a verificacion
                         -->
-                        <section [ngSwitch]="element.estadoCodigo">
+                        <button mat-raised-button
+                                color="accent"
+                                class="btn-table"
+                                [routerLink]="[ 'verDetalleEditar', element.contratoId, element.solicitudPagoId ]"
+                                *ngIf=" element.estadoCodigo === listaEstadoSolicitudPago.enProcesoRegistro
+                                        || element.estadoCodigo === listaEstadoSolicitudPago.solicitudRevisadaEquipoFacturacion">
+                                Ver detalle/Editar
+                        </button>
 
-                            <div *ngSwitchCase="listaEstadoSolicitudPago.enProcesoRegistro">
-                                <button mat-raised-button color="accent" class="btn-table" [routerLink]="[ 'verDetalleEditar', element.contratoId, element.solicitudPagoId ]"> 
-                                    Ver detalle/Editar
-                                </button>
-                                <button mat-raised-button color="accent" class="btn-table" (click)="deleteSolicitudPago( element.solicitudPagoId )" *ngIf="element.registroCompleto === false">
-                                    Eliminar
-                                </button>
-                            </div>
+                        <button mat-raised-button
+                                color="accent"
+                                class="btn-table"
+                                (click)="deleteSolicitudPago( element.solicitudPagoId )"
+                                *ngIf=" element.estadoCodigo === listaEstadoSolicitudPago.enProcesoRegistro
+                                        || element.estadoCodigo === listaEstadoSolicitudPago.solicitudRevisadaEquipoFacturacion">
+                                Eliminar
+                        </button>
 
-                            <div *ngSwitchCase="listaEstadoSolicitudPago.solicitudRevisadaEquipoFacturacion">
-                                <button mat-raised-button color="accent" class="btn-table" (click)="changueStatusSolicitudPago( element.solicitudPagoId )" *ngIf="element.tieneNoCumpleListaChequeo === false">
-                                    Enviar para verificación
-                                </button>
-                                <button mat-raised-button color="accent" class="btn-table" (click)="devolverSolicitudDialog( element )" *ngIf="element.tieneNoCumpleListaChequeo === true">
-                                    Devolver solicitud
-                                </button>
-                                <button mat-raised-button color="accent" class="btn-table" [routerLink]="[ 'verDetalleEditar', element.contratoId, element.solicitudPagoId ]"> 
-                                    Ver detalle/Editar
-                                </button>
-                                <button mat-raised-button color="accent" class="btn-table" (click)="deleteSolicitudPago( element.solicitudPagoId )" *ngIf="element.registroCompleto === false">
-                                    Eliminar
-                                </button>
-                            </div>
+                        <button mat-raised-button
+                                color="accent"
+                                class="btn-table"
+                                (click)="changueStatusSolicitudPago( element.solicitudPagoId )"
+                                *ngIf="element.tieneNoCumpleListaChequeo === false && element.estadoCodigo === listaEstadoSolicitudPago.solicitudRevisadaEquipoFacturacion">
+                                Enviar para verificación
+                        </button>
 
-                            <div *ngSwitchCase="listaEstadoSolicitudPago.enviadaParaVerificacion">
-                                <button mat-raised-button color="accent" class="btn-table" [routerLink]="[ 'verDetalle', element.contratoId, element.solicitudPagoId ]"> 
-                                    Ver detalle
-                                </button>
-                            </div>
+                        <button mat-raised-button
+                                color="accent"
+                                class="btn-table"
+                                (click)="devolverSolicitudDialog( element )"
+                                *ngIf="element.tieneNoCumpleListaChequeo === true && element.estadoCodigo === listaEstadoSolicitudPago.solicitudRevisadaEquipoFacturacion">
+                                Devolver solicitud
+                        </button>
 
-                        </section>
+                        <button mat-raised-button
+                                color="accent"
+                                class="btn-table"
+                                [routerLink]="[ 'verDetalle', element.contratoId, element.solicitudPagoId ]"
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enviadaParaVerificacion"> 
+                                Ver detalle
+                        </button>
+
                     </ng-container>
                     <ng-template #esExpensas>
                         <!--
@@ -137,45 +146,42 @@
                                 [routerLink]="[ 'verDetalleEditarExpensas', element.solicitudPagoId ]"
                                 *ngIf=" element.estadoCodigo === listaEstadoSolicitudPago.enProcesoRegistro
                                         || element.estadoCodigo === listaEstadoSolicitudPago.solicitudRevisadaEquipoFacturacion"> 
-                            Ver detalle/Editar
+                                Ver detalle/Editar
                         </button>
 
                         <button mat-raised-button
                                 color="accent"
                                 class="btn-table"
                                 (click)="deleteSolicitudPago( element.solicitudPagoId )"
-                                *ngIf=" element.registroCompleto === false
-                                        && ( element.estadoCodigo === listaEstadoSolicitudPago.enProcesoRegistro || element.estadoCodigo === listaEstadoSolicitudPago.solicitudRevisadaEquipoFacturacion )">
-                            Eliminar
+                                *ngIf=" element.estadoCodigo === listaEstadoSolicitudPago.enProcesoRegistro
+                                        || element.estadoCodigo === listaEstadoSolicitudPago.solicitudRevisadaEquipoFacturacion">
+                                Eliminar
                         </button>
 
-                        <section [ngSwitch]="element.estadoCodigo">
+                        <button mat-raised-button
+                                color="accent"
+                                class="btn-table"
+                                (click)="devolverSolicitudDialog( element )"
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoRegistro">
+                                Devolver solicitud
+                        </button>
 
-                            <div *ngSwitchCase="listaEstadoSolicitudPago.enProcesoRegistro">
-                            </div>
+                        <button mat-raised-button
+                                color="accent"
+                                class="btn-table"
+                                (click)="changueStatusSolicitudPago( element.solicitudPagoId )"
+                                *ngIf="element.registroCompleto === true && element.estadoCodigo === listaEstadoSolicitudPago.solicitudRevisadaEquipoFacturacion">
+                                Enviar para verificación
+                        </button>
 
-                            <div *ngSwitchCase="listaEstadoSolicitudPago.solicitudRevisadaEquipoFacturacion">
-                                <button mat-raised-button color="accent" class="btn-table" (click)="devolverSolicitudDialog( element )" *ngIf="element.registroCompleto === false">
-                                    Devolver solicitud
-                                </button>
-                                <button mat-raised-button color="accent" class="btn-table" [routerLink]="[ 'verDetalleEditarExpensas', element.solicitudPagoId ]"> 
-                                    Ver detalle/Editar
-                                </button>
-                                <button mat-raised-button color="accent" class="btn-table" (click)="deleteSolicitudPago( element.solicitudPagoId )" *ngIf="element.registroCompleto === false">
-                                    Eliminar
-                                </button>
-                                <button mat-raised-button color="accent" class="btn-table" (click)="changueStatusSolicitudPago( element.solicitudPagoId )" *ngIf="element.registroCompleto === true">
-                                    Enviar para verificación
-                                </button>
-                            </div>
+                        <button mat-raised-button
+                                color="accent"
+                                class="btn-table"
+                                [routerLink]="[ 'verDetalleExpensas', element.solicitudPagoId ]"
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enviadaParaVerificacion">
+                                Ver detalle
+                        </button>
 
-                            <div *ngSwitchCase="listaEstadoSolicitudPago.enviadaParaVerificacion">
-                                <button mat-raised-button color="accent" class="btn-table" [routerLink]="[ 'verDetalleExpensas', element.solicitudPagoId ]">
-                                    Ver detalle
-                                </button>
-                            </div>
-
-                        </section>
                     </ng-template>
                     
                 </td>

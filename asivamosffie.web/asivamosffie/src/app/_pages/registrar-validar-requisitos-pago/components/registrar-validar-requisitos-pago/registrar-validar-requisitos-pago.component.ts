@@ -111,7 +111,7 @@ export class RegistrarValidarRequisitosPagoComponent implements OnInit {
     changueStatusSolicitudPago( pSolicitudPagoId: number ) {
         const pSolicitudPago = {
             solicitudPagoId: pSolicitudPagoId,
-            estadoCodigo: this.listaEstadoSolicitudPago.solicitudRevisadaEquipoFacturacion
+            estadoCodigo: this.listaEstadoSolicitudPago.enviadaParaVerificacion
         };
 
         this.obsMultipleSvc.changueStatusSolicitudPago( pSolicitudPago )
