@@ -58,7 +58,7 @@ namespace asivamosffie.services
 
                 case (int)enumeratorMenu.Autorizar_solicitud_de_pago:
                     result = await _context.VSolicitudPago.Where(s =>
-                       s.IntEstadoCodigo > (int)EnumEstadoSolicitudPago.Con_solicitud_revisada_por_equipo_facturacion)
+                       s.IntEstadoCodigo > (int)EnumEstadoSolicitudPago.En_proceso_de_verificacion)
                                                .OrderByDescending(r => r.FechaModificacion)
                                                .ToListAsync();
                     break;
@@ -531,8 +531,7 @@ namespace asivamosffie.services
                 ///4.1.9
                 if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Solicitud_devuelta_por_coordinardor)
                     await SendEmailToDeclineValidate(pSolicitudPago.SolicitudPagoId);
-
-
+                 
                 await _context.Set<SolicitudPago>()
                                        .Where(o => o.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
                                                                                                        .UpdateAsync(r => new SolicitudPago()
