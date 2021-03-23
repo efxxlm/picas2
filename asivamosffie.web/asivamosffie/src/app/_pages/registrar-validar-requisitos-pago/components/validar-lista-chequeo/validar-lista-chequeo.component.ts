@@ -32,6 +32,11 @@ export class ValidarListaChequeoComponent implements OnInit {
       'revTecnica',
       'observaciones'
     ];
+    displayedColumnsDetalle: string[] = [
+        'item',
+        'documento',
+        'revTecnica'
+      ];
     listaRevisionTecnica: Dominio[] = [];
     noCumpleCodigo = '2';
     seDiligencioCampo = false;

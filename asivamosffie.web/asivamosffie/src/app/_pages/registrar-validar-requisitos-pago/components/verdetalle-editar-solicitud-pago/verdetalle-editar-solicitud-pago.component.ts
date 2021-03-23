@@ -5,6 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
+import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
 import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
 import { DialogProyectosAsociadosComponent } from '../dialog-proyectos-asociados/dialog-proyectos-asociados.component';
 
@@ -17,6 +18,8 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
 
     dataSource = new MatTableDataSource();
     modalidadContratoArray: Dominio[] = [];
+    menusIdPath: any; // Se obtienen los ID de los respectivos PATH de cada caso de uso que se implementaran observaciones.
+    listaTipoObservacionSolicitudes: any; // Interfaz lista tipos de observaciones.
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     contrato: any;
@@ -41,8 +44,16 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
         private activatedRoute: ActivatedRoute,
         public dialog: MatDialog,
         private registrarPagosSvc: RegistrarRequisitosPagoService,
+        private obsMultipleSvc: ObservacionesMultiplesCuService,
         private commonSvc: CommonService )
     {
+        this.obsMultipleSvc.listaMenu()
+            .subscribe( response => this.menusIdPath = response );
+        this.obsMultipleSvc.listaTipoObservacionSolicitudes()
+            .subscribe( response => {
+                this.listaTipoObservacionSolicitudes = response;
+                console.log( response );
+            } );
         this.getContrato();
     }
 

@@ -40,6 +40,12 @@ export class FormValidListchequeoVfspComponent implements OnInit {
         'verificacionFinanciera',
         'observaciones'
     ];
+    displayedColumnsDetalle: string[] = [
+        'item',
+        'documento',
+        'revTecnica',
+        'verificacionFinanciera'
+    ];
     addressForm: FormGroup;
     editorStyle = {
       height: '45px',

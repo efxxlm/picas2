@@ -17,12 +17,14 @@ export class FormObservacionExpensasComponent implements OnInit {
     solicitudPago: any;
     solicitudPagoObservacionExpensasId = 0;
     solicitudPagoObservacionId = 0;
+    solicitudPagoCertificadoObsId = 0;
     menusIdPath: any; // Se obtienen los ID de los respectivos PATH de cada caso de uso que se implementaran observaciones.
     listaTipoObservacionSolicitudes: any; // Interfaz lista tipos de observaciones.
     tipoPagoArray: Dominio[] = [];
     conceptoPagoCriterioArray: Dominio[] = [];
     addressForm: FormGroup;
     expensasForm: FormGroup;
+    certificadoObsForm: FormGroup;
     detalleForm = this.fb.group({
         llaveMen: [null, Validators.required],
         llaveMenSeleccionada: [null, Validators.required],
@@ -47,7 +49,8 @@ export class FormObservacionExpensasComponent implements OnInit {
     };
     estadoAcordeones = {
         listaChequeo: 'sin-diligenciar',
-        soporteSolicitud: 'sin-diligenciar'
+        soporteSolicitud: 'sin-diligenciar',
+        certificado: 'sin-diligenciar'
     }
     estaEditando = false;
     constructor(
@@ -60,6 +63,7 @@ export class FormObservacionExpensasComponent implements OnInit {
         private registrarPagosSvc: RegistrarRequisitosPagoService) {
         this.addressForm = this.crearFormulario();
         this.expensasForm = this.crearFormulario();
+        this.certificadoObsForm = this.crearFormulario();
         this.getSolicitudExpensas();
     }
 
@@ -107,6 +111,7 @@ export class FormObservacionExpensasComponent implements OnInit {
                                                     }
                                                 }
                                             );
+
                                         // Get observacion soporte de la solicitud
                                         this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
                                             this.menusIdPath.autorizarSolicitudPagoId,
@@ -137,6 +142,38 @@ export class FormObservacionExpensasComponent implements OnInit {
                                                     }
                                                 }
                                             );
+
+                                        // Get observaciones certificado de la solicitud
+                                        this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                                            this.menusIdPath.autorizarSolicitudPagoId,
+                                            this.activatedRoute.snapshot.params.id,
+                                            this.solicitudPago.solicitudPagoSoporteSolicitud[0].solicitudPagoSoporteSolicitudId,
+                                            this.listaTipoObservacionSolicitudes.certificadoCodigo )
+                                            .subscribe(
+                                                response => {
+                                                    const obsSupervisor = response.filter(obs => obs.archivada === false)[0];
+
+                                                    if (obsSupervisor !== undefined) {
+                                                        if (obsSupervisor.registroCompleto === false) {
+                                                            this.estadoAcordeones.certificado = 'en-proceso';
+                                                        }
+                                                        if (obsSupervisor.registroCompleto === true) {
+                                                            this.estadoAcordeones.certificado = 'completo';
+                                                        }
+                                                        this.estaEditando = true;
+                                                        this.certificadoObsForm.markAllAsTouched();
+                                                        this.solicitudPagoCertificadoObsId = obsSupervisor.solicitudPagoObservacionId;
+                                                        this.certificadoObsForm.setValue(
+                                                            {
+                                                                fechaCreacion: obsSupervisor.fechaCreacion,
+                                                                tieneObservaciones: obsSupervisor.tieneObservacion !== undefined ? obsSupervisor.tieneObservacion : null,
+                                                                observaciones: obsSupervisor.observacion !== undefined ? (obsSupervisor.observacion.length > 0 ? obsSupervisor.observacion : null) : null
+                                                            }
+                                                        );
+                                                    }
+                                                }
+                                            );
+
                                         const solicitudPagoExpensas = this.solicitudPago.solicitudPagoExpensas[0];
                                         this.detalleForm.setValue(
                                             {
@@ -249,6 +286,40 @@ export class FormObservacionExpensasComponent implements OnInit {
                         () => this.routes.navigate(
                             [
                                 '/autorizarSolicitudPago/observacionExpensas', this.activatedRoute.snapshot.params.id
+                            ]
+                        )
+                    );
+                },
+                err => this.openDialog('', `<b>${err.message}</b>`)
+            )
+    }
+
+    guardarCertificado() {
+        this.estaEditando = true;
+        this.certificadoObsForm.markAllAsTouched();
+        if (this.certificadoObsForm.get('tieneObservaciones').value !== null && this.certificadoObsForm.get('tieneObservaciones').value === false) {
+            this.certificadoObsForm.get('observaciones').setValue('');
+        }
+
+        const pSolicitudPagoObservacion = {
+            solicitudPagoObservacionId: this.solicitudPagoCertificadoObsId,
+            solicitudPagoId: Number(this.activatedRoute.snapshot.params.idSolicitudPago),
+            observacion: this.certificadoObsForm.get('observaciones').value !== null ? this.certificadoObsForm.get('observaciones').value : this.certificadoObsForm.get('observaciones').value,
+            tipoObservacionCodigo: this.listaTipoObservacionSolicitudes.certificadoCodigo,
+            menuId: this.menusIdPath.autorizarSolicitudPagoId,
+            idPadre: this.solicitudPago.solicitudPagoCertificado[0].solicitudPagoCertificadoId,
+            tieneObservacion: this.certificadoObsForm.get('tieneObservaciones').value !== null ? this.certificadoObsForm.get('tieneObservaciones').value : this.certificadoObsForm.get('tieneObservaciones').value
+        };
+
+        console.log(pSolicitudPagoObservacion);
+        this.obsMultipleSvc.createUpdateSolicitudPagoObservacion(pSolicitudPagoObservacion)
+            .subscribe(
+                response => {
+                    this.openDialog('', `<b>${response.message}</b>`);
+                    this.routes.navigateByUrl('/', { skipLocationChange: true }).then(
+                        () => this.routes.navigate(
+                            [
+                                '/autorizarSolicitudPago/autorizacionSolicitud', this.activatedRoute.snapshot.params.idContrato, this.activatedRoute.snapshot.params.idSolicitudPago
                             ]
                         )
                     );

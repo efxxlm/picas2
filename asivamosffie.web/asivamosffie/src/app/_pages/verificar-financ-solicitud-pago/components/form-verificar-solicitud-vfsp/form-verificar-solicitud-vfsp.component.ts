@@ -57,7 +57,7 @@ export class FormVerificarSolicitudVfspComponent implements OnInit {
     }
 
     getContrato() {
-        this.registrarPagosSvc.getContratoByContratoId( 175 /* this.activatedRoute.snapshot.params.idContrato */, 60 /* this.activatedRoute.snapshot.params.idSolicitudPago */ )
+        this.registrarPagosSvc.getContratoByContratoId( this.activatedRoute.snapshot.params.idContrato, this.activatedRoute.snapshot.params.idSolicitudPago )
             .subscribe(
                 response => {
                     this.commonSvc.tiposDeSolicitudes()

@@ -51,12 +51,12 @@ export class DialogEnvioAutorizacionComponent implements OnInit {
         console.log(this.addressForm.value);
 
         const pSolicitudPago = {
-            solicitudPagoId: this.solicitud.pSolicitudPagoId,
+            solicitudPagoId: this.solicitud.solicitudPagoId,
             estadoCodigo: this.listaEstadoSolicitudPago.enviadaAutorizacion,
             solicitudPagoCertificado: [
                 {
                     solicitudPagoCertificadoId: 0,
-                    solicitudPagoId: this.solicitud.pSolicitudPagoId,
+                    solicitudPagoId: this.solicitud.solicitudPagoId,
                     url: this.addressForm.get( 'urlSoporte' ).value
                 }
             ]
@@ -66,8 +66,10 @@ export class DialogEnvioAutorizacionComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
+                    
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} )
                         .then( () => this.routes.navigate( ['/verificarSolicitudPago'] ) );
+                    this.matDialogRef.close();
                 }, err => this.openDialog( '', `<b>${ err.message }</b>` )
             );
     }

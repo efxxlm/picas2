@@ -16,12 +16,14 @@ export class VerDetalleExpensasComponent implements OnInit {
     solicitudPago: any;
     solicitudPagoObservacionExpensasId = 0;
     solicitudPagoObservacionId = 0;
+    solicitudPagoCertificadoObsId = 0;
     menusIdPath: any; // Se obtienen los ID de los respectivos PATH de cada caso de uso que se implementaran observaciones.
     listaTipoObservacionSolicitudes: any; // Interfaz lista tipos de observaciones.
     tipoPagoArray: Dominio[] = [];
     conceptoPagoCriterioArray: Dominio[] = [];
     addressForm: FormGroup;
     expensasForm: FormGroup;
+    certificadoObsForm: FormGroup;
     detalleForm = this.fb.group({
         llaveMen: [null, Validators.required],
         llaveMenSeleccionada: [ null, Validators.required ],
@@ -44,6 +46,7 @@ export class VerDetalleExpensasComponent implements OnInit {
     {
         this.addressForm = this.crearFormulario();
         this.expensasForm = this.crearFormulario();
+        this.certificadoObsForm = this.crearFormulario();
         this.getSolicitudExpensas();
     }
 
@@ -89,6 +92,7 @@ export class VerDetalleExpensasComponent implements OnInit {
                                                     }
                                                 }
                                             );
+
                                         // Get observacion soporte de la solicitud
                                         this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
                                             this.menusIdPath.autorizarSolicitudPagoId,
@@ -111,6 +115,31 @@ export class VerDetalleExpensasComponent implements OnInit {
                                                     }
                                                 }
                                             );
+
+                                        // Get observaciones certificado de la solicitud
+                                        this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                                            this.menusIdPath.autorizarSolicitudPagoId,
+                                            this.activatedRoute.snapshot.params.id,
+                                            this.solicitudPago.solicitudPagoSoporteSolicitud[0].solicitudPagoSoporteSolicitudId,
+                                            this.listaTipoObservacionSolicitudes.certificadoCodigo )
+                                            .subscribe(
+                                                response => {
+                                                    const obsSupervisor = response.filter(obs => obs.archivada === false)[0];
+
+                                                    if (obsSupervisor !== undefined) {
+                                                        this.certificadoObsForm.markAllAsTouched();
+                                                        this.solicitudPagoCertificadoObsId = obsSupervisor.solicitudPagoObservacionId;
+                                                        this.certificadoObsForm.setValue(
+                                                            {
+                                                                fechaCreacion: obsSupervisor.fechaCreacion,
+                                                                tieneObservaciones: obsSupervisor.tieneObservacion !== undefined ? obsSupervisor.tieneObservacion : null,
+                                                                observaciones: obsSupervisor.observacion !== undefined ? (obsSupervisor.observacion.length > 0 ? obsSupervisor.observacion : null) : null
+                                                            }
+                                                        );
+                                                    }
+                                                }
+                                            );
+
                                         const solicitudPagoExpensas = this.solicitudPago.solicitudPagoExpensas[0];
                                         this.detalleForm.setValue(
                                             {

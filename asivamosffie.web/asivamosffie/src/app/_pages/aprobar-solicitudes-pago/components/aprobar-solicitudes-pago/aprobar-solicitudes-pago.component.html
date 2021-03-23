@@ -120,7 +120,7 @@
                         <button mat-raised-button
                                 color="accent"
                                 class="btn-table"
-                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoVerificacion"
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoVerificacion && element.registroCompletoVerificar === true && element.tieneObservacion === false"
                                 (click)="getCerificadoDialog( element )">
                                 Enviar para autorizar solicitud
                         </button>
@@ -128,7 +128,7 @@
                         <button mat-raised-button
                                 color="accent"
                                 class="btn-table"
-                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoVerificacion"
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoVerificacion && element.registroCompletoVerificar === true && element.tieneObservacion === true"
                                 (click)="changueStatusSolicitudPago( element.solicitudPagoId )">
                                 Devolver solicitud
                         </button>

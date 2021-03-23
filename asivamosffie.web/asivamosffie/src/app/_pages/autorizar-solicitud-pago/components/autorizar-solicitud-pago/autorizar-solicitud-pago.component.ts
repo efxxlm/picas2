@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { CommonService } from 'src/app/core/_services/common/common.service';
 import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { EstadoSolicitudPagoOrdenGiro, EstadosSolicitudPagoOrdenGiro, TipoSolicitud, TipoSolicitudes } from 'src/app/_interfaces/estados-solicitudPago-ordenGiro.interface';
 import { DialogEnvSolicitudAutorizComponent } from '../dialog-env-solicitud-autoriz/dialog-env-solicitud-autoriz.component';
 
@@ -63,25 +64,34 @@ export class AutorizarSolicitudPagoComponent implements OnInit {
       this.dataSource.filter = filterValue.trim().toLowerCase();
     }
 
-    autorizarSolicitud(id){
-      this.routes.navigate(['/autorizarSolicitudPago/autorizacionSolicitud',id]);
+    openDialog(modalTitle: string, modalText: string) {
+        const dialogRef = this.dialog.open( ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle, modalText }
+        });
     }
 
-    verDetalleEditar(id){
-      this.routes.navigate(['/autorizarSolicitudPago/verDetalleEditarAutorizarSolicitud',id]);
+    getCerificadoDialog( registro: any ) {
+        this.dialog.open( DialogEnvSolicitudAutorizComponent, {
+          width: '90em',
+          data: registro
+        });
     }
 
-    verDetalle(id){
-      this.routes.navigate(['/autorizarSolicitudPago/verDetalleAutorizarSolicitud',id]);
-    }
+    changueStatusSolicitudPago( pSolicitudPagoId: number ) {
+        const pSolicitudPago = {
+            solicitudPagoId: pSolicitudPagoId,
+            estadoCodigo: this.listaEstadoSolicitudPago.solicitudDevueltaPorCoordinador
+        };
 
-    openCertificate(){
-      const dialogConfig = new MatDialogConfig();
-      dialogConfig.height = 'auto';
-      dialogConfig.width = '1020px';
-      //dialogConfig.data = { id: id, idRol: idRol, numContrato: numContrato, fecha1Titulo: fecha1Titulo, fecha2Titulo: fecha2Titulo };
-      const dialogRef = this.dialog.open(DialogEnvSolicitudAutorizComponent, dialogConfig);
-      //dialogRef.afterClosed().subscribe(value => {});
+        this.obsMultipleSvc.changueStatusSolicitudPago( pSolicitudPago )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} )
+                        .then( () => this.routes.navigate( ['/autorizarSolicitudPago'] ) );
+                }, err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }

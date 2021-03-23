@@ -76,14 +76,16 @@
                         <button mat-raised-button
                                 color="accent"
                                 class="btn-table"
-                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoAutorizacion">
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoAutorizacion && element.registroCompletoAutorizar === true && element.tieneObservacion === false"
+                                (click)="getCerificadoDialog( element )">
                                 Enviar para trámite en financiera
                         </button>
 
                         <button mat-raised-button
                                 color="accent"
                                 class="btn-table"
-                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoAutorizacion">
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoAutorizacion && element.registroCompletoAutorizar === true && element.tieneObservacion === true"
+                                (click)="changueStatusSolicitudPago( element.solicitudPagoId )">
                                 Devolver solicitud
                         </button>
 
@@ -117,14 +119,16 @@
                         <button mat-raised-button
                                 color="accent"
                                 class="btn-table"
-                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoAutorizacion">
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoAutorizacion && element.registroCompletoAutorizar === true && element.tieneObservacion === false"
+                                (click)="getCerificadoDialog( element )">
                                 Enviar para trámite en financiera
                         </button>
 
                         <button mat-raised-button
                                 color="accent"
                                 class="btn-table"
-                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoAutorizacion">
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoAutorizacion && element.registroCompletoAutorizar === true && element.tieneObservacion === true"
+                                (click)="changueStatusSolicitudPago( element.solicitudPagoId )">
                                 Devolver solicitud
                         </button>
 

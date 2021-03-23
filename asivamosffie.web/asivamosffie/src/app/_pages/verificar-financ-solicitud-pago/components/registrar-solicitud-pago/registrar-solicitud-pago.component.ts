@@ -17,6 +17,7 @@ export class RegistrarSolicitudPagoComponent implements OnInit {
     solicitudPagoObservacionId = 0;
     solicitudPago: any;
     solicitudPagoFase: any;
+    manejoAnticipoRequiere: boolean;
     dataSource = new MatTableDataSource();
     solicitudPagoCargarFormaPago: any;
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -35,6 +36,8 @@ export class RegistrarSolicitudPagoComponent implements OnInit {
 
     ngOnInit(): void {
         if ( this.contrato !== undefined ) {
+
+            this.manejoAnticipoRequiere = this.contrato.contratoConstruccion.length > 0 ? this.contrato.contratoConstruccion[0].manejoAnticipoRequiere : false;
 
             if ( this.contrato.solicitudPago.length > 1 ) {
                 this.solicitudPagoCargarFormaPago = this.contrato.solicitudPago[0].solicitudPagoCargarFormaPago[0];

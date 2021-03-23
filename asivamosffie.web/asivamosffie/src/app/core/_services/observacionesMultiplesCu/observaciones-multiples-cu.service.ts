@@ -104,6 +104,12 @@ export class ObservacionesMultiplesCuService {
             if ( menu.menuId === 71 ) {
               menusId.aprobarSolicitudPagoId = menu.menuId
             }
+            if ( menu.menuId === 82 ) {
+              menusId.verificarFinancieramenteId = menu.menuId
+            }
+            if ( menu.menuId === 83 ) {
+              menusId.validarFinancieramenteId = menu.menuId
+            }
           } );
 
           return menusId;

@@ -280,7 +280,7 @@ export class ObsValidListachequeoComponent implements OnInit {
             observacion: lista.get( 'observaciones' ).value,
             tipoObservacionCodigo: this.listaChequeoCodigo,
             menuId: this.autorizarSolicitudPagoId,
-            idPadre: lista.get( 'solicitudPagoListaChequeo' ).value.listaChequeoId,
+            idPadre: lista.get( 'solicitudPagoListaChequeo' ).value.solicitudPagoListaChequeoId,
             tieneObservacion: lista.get( 'tieneObservaciones' ).value
         };
 

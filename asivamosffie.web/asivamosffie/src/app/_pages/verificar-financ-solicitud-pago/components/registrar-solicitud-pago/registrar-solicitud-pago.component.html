@@ -15,7 +15,7 @@
             </ng-container>
             <ng-container matColumnDef="porcentajeFacturado">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Porcentaje facturado </th>
-                <td mat-cell *matCellDef="let element" align="center"> {{ element.porcentajeFacturado }} </td>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.porcentajeFacturado.toFixed( 2 ) }}% </td>
             </ng-container>
             <ng-container matColumnDef="saldoPorPagar">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Saldo por pagar </th>
@@ -23,7 +23,7 @@
             </ng-container>
             <ng-container matColumnDef="porcentajePorPagar">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Porcentaje por pagar </th>
-                <td mat-cell *matCellDef="let element" align="center"> {{ element.porcentajePorPagar }} </td>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.porcentajePorPagar.toFixed( 2 ) }}% </td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
@@ -102,7 +102,7 @@
                     <app-criterios-pago [solicitudPago]="solicitudPago" [esPreconstruccion]="false" [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"></app-criterios-pago>
                 </mat-expansion-panel>
 
-                <mat-expansion-panel class="expansion-style sub-expansion-black">
+                <mat-expansion-panel class="expansion-style sub-expansion-black" *ngIf="manejoAnticipoRequiere === true">
                     <mat-expansion-panel-header class="expansion-style--header">
                         <mat-panel-title class="expansion-style--title">
                             Amortización del anticipo

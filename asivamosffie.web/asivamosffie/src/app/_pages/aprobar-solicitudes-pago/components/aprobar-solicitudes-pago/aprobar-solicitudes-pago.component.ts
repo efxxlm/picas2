@@ -80,17 +80,10 @@ export class AprobarSolicitudesPagoComponent implements OnInit {
     }
 
     getCerificadoDialog( registro: any ) {
-        const dialogRef = this.dialog.open( DialogEnvioAutorizacionComponent, {
+        this.dialog.open( DialogEnvioAutorizacionComponent, {
           width: '80em',
           data: registro
         });
-
-        dialogRef.afterClosed()
-            .subscribe(
-                value => {
-                    console.log( value );
-                }
-            )
     }
 
     changueStatusSolicitudPago( pSolicitudPagoId: number ) {
