@@ -19,6 +19,7 @@ namespace asivamosffie.services
         private readonly IDocumentService _documentService;
         private readonly IRegisterValidatePaymentRequierementsService _registerValidatePaymentRequierementsService;
 
+        #region Solicitud Pago
         public PaymentRequierementsService(IRegisterValidatePaymentRequierementsService registerValidatePaymentRequierementsService, IDocumentService documentService, devAsiVamosFFIEContext context, ICommonService commonService)
         {
             _registerValidatePaymentRequierementsService = registerValidatePaymentRequierementsService;
@@ -26,7 +27,8 @@ namespace asivamosffie.services
             _commonService = commonService;
             _context = context;
         }
-        public async Task<dynamic> GetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(int pMenuId, int pSolicitudPagoId, int pPadreId , string pTipoObservacionCodigo)
+
+        public async Task<dynamic> GetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(int pMenuId, int pSolicitudPagoId, int pPadreId, string pTipoObservacionCodigo)
         {
             return await _context.SolicitudPagoObservacion
                                            .Where(s => s.MenuId == pMenuId && s.SolicitudPagoId == pSolicitudPagoId && s.IdPadre == pPadreId && s.TipoObservacionCodigo == pTipoObservacionCodigo)
@@ -50,6 +52,7 @@ namespace asivamosffie.services
                 case (int)enumeratorMenu.Verificar_solicitud_de_pago:
                     result = await _context.VSolicitudPago.Where(s =>
                             s.EstadoCodigo > (int)EnumEstadoSolicitudPago.En_proceso_de_registro)
+
                                                     .OrderByDescending(r => r.FechaModificacion)
                                                     .ToListAsync();
                     break;
@@ -61,16 +64,31 @@ namespace asivamosffie.services
                                                .ToListAsync();
                     break;
 
+                case (int)enumeratorMenu.Verificar_Financieramente_Solicitud_De_Pago:
+                    result = await _context.VSolicitudPago.Where(s =>
+                       s.EstadoCodigo > (int)EnumEstadoSolicitudPago.Con_solicitud_revisada_por_equipo_facturacion)
+
+
+                               .OrderByDescending(r => r.FechaModificacion)
+                                               .ToListAsync();
+                    break;
+
+
+                case (int)enumeratorMenu.Validar_Financieramente_Solicitud_De_Pago:
+                    result = await _context.VSolicitudPago.Where(s =>
+                       s.EstadoCodigo > (int)EnumEstadoSolicitudPago.Con_solicitud_revisada_por_equipo_facturacion)
+                                               .OrderByDescending(r => r.FechaModificacion)
+                                               .ToListAsync();
+                    break;
+
                 default:
                     break;
             }
 
-
-
+            return result;
 
 
             List<dynamic> grind = new List<dynamic>();
-
             return result.Select(r => new
             {
                 r.RegistroCompletoAutorizar,
@@ -98,15 +116,13 @@ namespace asivamosffie.services
 
                 bool EstaAprobadoCoordinacion = false;
 
-                if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Aprobado_por_coordinacion)
-                    EstaAprobadoCoordinacion = true;
-
-
-
+                //   if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Aprobado_por_coordinacion)
+                //   EstaAprobadoCoordinacion = true;
+                 
                 await _context.Set<SolicitudPago>()
                                        .Where(o => o.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
                                                                                                        .UpdateAsync(r => new SolicitudPago()
-                                                                                                       {
+                                                                                                       { 
                                                                                                            RegistroCompletoCoordinador = EstaAprobadoCoordinacion,
                                                                                                            FechaModificacion = DateTime.Now,
                                                                                                            UsuarioModificacion = pSolicitudPago.UsuarioCreacion,
@@ -352,6 +368,8 @@ namespace asivamosffie.services
             return false;
         }
 
+        #endregion
+
         #region Financiera
 
         private bool ValidarRegistroCompletoSolicitudPagoListaChequeoRespuesta(SolicitudPagoListaChequeoRespuesta pSolicitudPagoListaChequeoRespuestaNew, bool pEsEsValidacion)
@@ -410,7 +428,7 @@ namespace asivamosffie.services
 
                         if (!blRegistroCompletoItem)
                             blRegistroCompleto = false;
-                         
+
                         _context.Set<SolicitudPagoListaChequeoRespuesta>()
                                 .Where(s => s.SolicitudPagoListaChequeoRespuestaId == res.SolicitudPagoListaChequeoRespuestaId)
                                 .Update(s => new SolicitudPagoListaChequeoRespuesta
@@ -426,7 +444,7 @@ namespace asivamosffie.services
                                 });
                     });
 
-          
+
                 DateTime? FechaRegistroCompleto = null;
                 if (blRegistroCompleto)
                     FechaRegistroCompleto = DateTime.Now;
@@ -480,6 +498,14 @@ namespace asivamosffie.services
                     };
             }
         }
+
+
+        #endregion
+         
+        #region  Emails
+
+
+
 
 
         #endregion

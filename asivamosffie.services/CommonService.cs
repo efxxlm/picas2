@@ -90,8 +90,8 @@ namespace asivamosffie.services
             try
             {
                 pContenido = pContenido
-                                                   .Replace("_LinkF_", _mailSettings.DominioFront)
-                                                   .Replace("[URL]", _mailSettings.DominioFront);
+                                        .Replace("_LinkF_", _mailSettings.DominioFront)
+                                        .Replace("[URL]", _mailSettings.DominioFront);
 
                 var ListEmails =
                                _context.UsuarioPerfil

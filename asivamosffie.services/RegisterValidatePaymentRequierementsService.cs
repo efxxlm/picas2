@@ -505,10 +505,15 @@ namespace asivamosffie.services
         {
             SolicitudPago solicitudPago = await GetSolicitudPago(SolicitudPagoId);
             bool CompleteRecord = ValidateCompleteRecordSolicitudPago(solicitudPago);
+            string EstadoSolicitudPago = solicitudPago.EstadoCodigo;
+            if (CompleteRecord == true)
+                EstadoSolicitudPago = ((int)EnumEstadoSolicitudPago.Con_solicitud_revisada_por_equipo_facturacion).ToString();
+
             await _context.Set<SolicitudPago>()
                                               .Where(s => s.SolicitudPagoId == SolicitudPagoId)
                                                                                               .UpdateAsync(r => new SolicitudPago()
                                                                                               {
+                                                                                                  EstadoCodigo = EstadoSolicitudPago,
                                                                                                   RegistroCompleto = CompleteRecord
                                                                                               });
         }
@@ -1656,7 +1661,6 @@ namespace asivamosffie.services
 
             try
             {
-
                 if (pSolicitudPago.SolicitudPagoOtrosCostosServicios.Count() > 0)
                 {
                     CreateEditNewOtrosCostosServicios(pSolicitudPago.SolicitudPagoOtrosCostosServicios, pSolicitudPago.UsuarioCreacion);
