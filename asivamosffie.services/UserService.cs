@@ -533,21 +533,47 @@ namespace asivamosffie.services
         }
 
         public void ResetContratoUser(int pAuthor, string strTipoRolAsignadoContratoCodigo)
-        {
-            _context.Set<Contrato>()
-                                                                    .Where(r =>
-                                                                               r.InterventorId == pAuthor
-                                                                            || r.ApoyoId == pAuthor
-                                                                            || r.SupervisorId == pAuthor
-                                                                           )
-                                                                     .Update(r =>
-                                                                     new Contrato
-                                                                     {
-                                                                         InterventorId = null,
-                                                                         ApoyoId = null,
-                                                                         SupervisorId = null,
-                                                                         FechaModificacion = DateTime.Now,
-                                                                     });
+        { 
+            if(strTipoRolAsignadoContratoCodigo == ConstantCodigoTipoAsignacionContrato.Interventor)
+            {
+                _context.Set<Contrato>()
+                                        .Where(r =>
+                                                    r.InterventorId == pAuthor 
+                                                )
+                                            .Update(r =>
+                                            new Contrato
+                                            {
+                                                InterventorId = null, 
+                                                FechaModificacion = DateTime.Now,
+                                            }); 
+            }
+
+            if (strTipoRolAsignadoContratoCodigo == ConstantCodigoTipoAsignacionContrato.Apoyo)
+            {
+                _context.Set<Contrato>()
+                                        .Where(r =>
+                                                    r.ApoyoId == pAuthor
+                                                )
+                                        .Update(r =>
+                                        new Contrato
+                                        {
+                                            ApoyoId = null,
+                                            FechaModificacion = DateTime.Now,
+                                        });
+            }
+            if(strTipoRolAsignadoContratoCodigo == ConstantCodigoTipoAsignacionContrato.Supervisor) 
+            {
+                _context.Set<Contrato>()
+                                        .Where(r =>
+                                                    r.SupervisorId == pAuthor
+                                                )
+                                            .Update(r =>
+                                            new Contrato
+                                            {
+                                                SupervisorId = null,
+                                                FechaModificacion = DateTime.Now,
+                                            });
+            } 
         }
 
         public async Task<Respuesta> ActivateDeActivateUsuario(Usuario pUsuario)
