@@ -197,6 +197,7 @@ namespace asivamosffie.services
                 int intCantidadObservacionesSolicitudPago = _context.SolicitudPagoObservacion.Where(r => r.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId
                                                               && r.MenuId == pSolicitudPagoObservacion.MenuId
                                                               && r.Eliminado != true
+                                                              && r.RegistroCompleto == true
                                                               && r.Archivada != true).Count();
                 //Sumar cantidad Listas de chequeo
                 intCantidadDependenciasSolicitudPago += solicitudPago.SolicitudPagoListaChequeo.Count(r => r.Eliminado == false);
@@ -266,13 +267,8 @@ namespace asivamosffie.services
                     return CantidadDependenciasTipoInterventoriaObra(solicitudPago);
 
                 case ConstanCodigoTipoSolicitudContratoSolicitudPago.Expensas:
-
-                    return CantidadDependenciasTipoInterventoriaObra(solicitudPago);
-
                 case ConstanCodigoTipoSolicitudContratoSolicitudPago.Otros_Costos_Servicios:
-
-                    return CantidadDependenciasTipoInterventoriaObra(solicitudPago);
-
+                    return 2; 
                 default: return 0;
             }
 
@@ -315,10 +311,10 @@ namespace asivamosffie.services
 
                         //#7 Factura Descuentos de la Dirección Técnica
                         intCantidadDependenciasSolicitudPago++;
-                    }
-                    // #8 Fase Factura
-                    if (SolicitudPagoFase.SolicitudPagoFaseFactura.Any(s => s.TieneDescuento == true))
+
                         intCantidadDependenciasSolicitudPago++;
+                    }
+
                 }
             }
 
@@ -667,7 +663,7 @@ namespace asivamosffie.services
                 _context.SolicitudPago.Where(s => s.SolicitudPagoId == pSolicitudPago)
                 .Include(r => r.Contrato)
                 .FirstOrDefault();
-              
+
             template = template
                       .Replace("[NUMERO_SOLICITUD]", solicitudPago.NumeroSolicitud)
                       .Replace("[NUMERO_CONTRATO]", solicitudPago.Contrato.NumeroContrato)
@@ -676,7 +672,7 @@ namespace asivamosffie.services
                       .Replace("[MODALIDAD_CONTRATO]", ListTipoIntervencion.Where(lti => lti.Codigo == solicitudPago.Contrato.ModalidadCodigo).FirstOrDefault().Nombre);
             return template;
         }
-         
+
         ///Tareas programadas  
         ///4.1.8
         public async Task<bool> SolicitudPagoPendienteVerificacion()
