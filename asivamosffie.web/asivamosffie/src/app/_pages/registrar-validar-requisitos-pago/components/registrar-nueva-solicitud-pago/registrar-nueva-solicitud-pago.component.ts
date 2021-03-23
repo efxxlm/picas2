@@ -28,20 +28,6 @@ export class RegistrarNuevaSolicitudPagoComponent implements OnInit {
       'valor',
       'saldo'
     ];
-    dataTable: any[] = [
-      {
-        drp: '1',
-        numDrp: 'IP_00090',
-        valor: '$100.000.000',
-        saldo: '$100.000.000'
-      },
-      {
-        drp: '2',
-        numDrp: 'IP_00123',
-        valor: '$5.000.000',
-        saldo: '$5.000.000'
-      }
-    ];
     addressForm = this.fb.group({
       tipoSolicitud: [null, Validators.required],
       modalidadContrato: [null, Validators.required],
@@ -134,6 +120,20 @@ export class RegistrarNuevaSolicitudPagoComponent implements OnInit {
             width: '80em',
             data: { contrato: this.addressForm.get( 'contratoSeleccionado' ).value }
         });
+    }
+
+    getTipoSolicitud( tipoSolicitud: Dominio ) {
+        if ( tipoSolicitud.codigo === this.tipoSolicitudCodigo.contratoObra || this.tipoSolicitudCodigo.contratoInterventoria ) {
+
+            if ( this.contrato ) {
+                this.addressForm.get( 'modalidadContrato' ).setValue( null )
+                this.addressForm.get( 'numeroContrato' ).setValue( null )
+                this.addressForm.get( 'searchContrato' ).setValue( null )
+                this.addressForm.get( 'contratoSeleccionado' ).setValue( null )
+                this.contrato = undefined;
+            }
+
+        }
     }
 
     openDialog(modalTitle: string, modalText: string) {

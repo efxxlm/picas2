@@ -223,17 +223,15 @@ export class FormCriteriosPagoComponent implements OnInit {
             let valorTotalUso = 0;
             usoByConcepto.forEach( uso => valorTotalUso += uso.valorUso );
 
-            if ( valorConcepto > valorTotalUso ) {
+            if ( valorConcepto > valorTotalUso && this.criterios.length > 1 ) {
                 this.openDialog( '', `El valor facturado al concepto no puede ser mayor al uso asociado <b>${ usoByConcepto[ usoByConcepto.length -1 ].nombre }.</b>` );
                 this.getConceptos( index ).controls[ jIndex ].get( 'valorFacturadoConcepto' ).setValue( null );
-                return;
             }
         }
 
-        if ( valorConcepto >= this.montoMaximoPendiente.montoMaximo ) {
+        if ( valorConcepto > this.montoMaximoPendiente.montoMaximo && this.getConceptos( index ).length > 1 ) {
             this.openDialog( '', '<b>El valor facturado al concepto no puede ser mayor o igual al monto maximo por pagar en esta factura.</b>' );
             this.getConceptos( index ).controls[ jIndex ].get( 'valorFacturadoConcepto' ).setValue( null );
-            return;
         }
         if ( this.getConceptos( index ).length > 0 ) {
             let valorTotalCriterios = 0;
@@ -257,7 +255,7 @@ export class FormCriteriosPagoComponent implements OnInit {
             }
         } );
 
-        if ( totalValorConceptos > this.montoMaximoPendiente.montoMaximo ) {
+        if ( totalValorConceptos > this.montoMaximoPendiente.montoMaximo && this.criterios.length > 1 ) {
             this.openDialog( '', '<b>No se puede tramitar el pago, dado que el valor ingresado supera el monto pendiente de pago para el porcentaje seleccionado en la fase del contrato.<br>La información no será guardada.<br>Se recomienda revisar la solicitud.</b>' );
             
             if ( index !== undefined ) {

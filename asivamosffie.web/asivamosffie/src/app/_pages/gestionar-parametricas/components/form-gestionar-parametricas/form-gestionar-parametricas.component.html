@@ -1,4 +1,4 @@
-<section class="container text-center mb-2em" *ngIf="parametricas.length > 0">
+<section class="container text-center mb-2em" *ngIf="dominio !== undefined">
     <div class="text-right">
         <a routerLink="/gestionParametricas" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
@@ -6,12 +6,11 @@
     </div>
 
     <h1 class="title-menu--h1"> Crear valores paramétrica </h1>
-
-    <form [formGroup]="formParametricas" (ngSubmit)="guardar()">
+    <form [formGroup]="formParametricas" (ngSubmit)="guardar()" class="mt-3em">
         <mat-card class="shipping-card" align="left">
             <mat-card-header class="header-card">
                 <mat-card-title class="header-card--text">
-                    Tipo de intervensión
+                    {{ dominio.nombreDominio }}
                 </mat-card-title>
             </mat-card-header>
             <mat-card-content>
@@ -50,15 +49,13 @@
                                 </span>
                             </div>
                             <span class="icon-incompleto">
-                                <img
-                                  class="icon-incompleto--img"
-                                  src="assets/img/icon/incompleto.svg"
-                                  alt="este campo es requerido"
-                                  [matTooltipPosition]="'above'"
-                                  matTooltip="Debe ingresar la información en el campo para continuar"
-                                  matTooltipClass="info-tooltip"
-                                  *ngIf="( parametrica.get('nombre').invalid && parametrica.get('nombre').touched ) || ( parametrica.get('nombre').invalid )"
-                                />
+                                <img    class="icon-incompleto--img"
+                                        src="assets/img/icon/incompleto.svg"
+                                        alt="este campo es requerido"
+                                        [matTooltipPosition]="'above'"
+                                        matTooltip="Debe ingresar la información en el campo para continuar"
+                                        matTooltipClass="info-tooltip"
+                                        *ngIf="( parametrica.get('nombre').invalid && parametrica.get('nombre').touched ) || ( parametrica.get('nombre').invalid )">
                             </span>
                       </div>
                       <div class="text-right" *ngIf="parametricas.controls.length === 1">

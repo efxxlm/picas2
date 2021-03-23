@@ -23,7 +23,7 @@
                     </div>
                     <div class="col">
                         <mat-form-field class="select-width">
-                            <mat-select formControlName="tipoSolicitud" required style="top: 20px;">
+                            <mat-select formControlName="tipoSolicitud" required style="top: 20px;" (ngModelChange)="getTipoSolicitud( $event )">
                                 <mat-option *ngFor="let solicitud of tiposSolicitudArray" [value]="solicitud">
                                     {{ solicitud.nombre }}
                                 </mat-option>
@@ -243,7 +243,7 @@
                         </table>
                     </div>
                     <div class="tabs--actions" style="margin-top: 1em;">
-                        <button mat-raised-button color="accent" class="tabs--btn auxBtn" (click)="openProyectosAsociados()">
+                        <button mat-raised-button color="accent" type="button" class="tabs--btn auxBtn" (click)="openProyectosAsociados()">
                             Ver proyectos asociados
                         </button>
                     </div>

@@ -1,3 +1,5 @@
+import { Dominio } from 'src/app/core/_services/common/common.service';
+import { GestionarParametricasService } from './../../../../core/_services/gestionarParametricas/gestionar-parametricas.service';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -12,6 +14,8 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class FormGestionarParametricasComponent implements OnInit {
 
     formParametricas: FormGroup;
+    tipoDominioId: number;
+    dominio: any;
 
     get parametricas() {
         return this.formParametricas.get( 'parametricas' ) as FormArray;
@@ -21,9 +25,14 @@ export class FormGestionarParametricasComponent implements OnInit {
         private activatedRoute: ActivatedRoute,
         private fb: FormBuilder,
         private dialog: MatDialog,
-        private routes: Router )
+        private routes: Router,
+        private gestionarParametricaSvc: GestionarParametricasService )
     {
         this.formParametricas = this.crearFormulario();
+        this.tipoDominioId = Number( this.activatedRoute.snapshot.params.id );
+
+        this.gestionarParametricaSvc.dominioByIdDominio( this.tipoDominioId )
+            .subscribe( dominioByIdDominio => this.dominio = dominioByIdDominio[ dominioByIdDominio.length - 1 ] );
     }
 
     ngOnInit(): void {
@@ -82,7 +91,21 @@ export class FormGestionarParametricasComponent implements OnInit {
     }
 
     guardar() {
-        console.log( this.formParametricas );
+        const pTipoDominio = { 
+            tipoDominioId: this.tipoDominioId,
+            dominio: []
+        };
+
+        this.parametricas.controls.forEach( control => pTipoDominio.dominio.push( { tipoDominioId: this.tipoDominioId, nombre: control.get( 'nombre' ).value } ) );
+
+        this.gestionarParametricaSvc.createDominio( pTipoDominio )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', { skipLocationChange: true } ).then( () => this.routes.navigate( [ '/gestionParametricas' ] ) );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }

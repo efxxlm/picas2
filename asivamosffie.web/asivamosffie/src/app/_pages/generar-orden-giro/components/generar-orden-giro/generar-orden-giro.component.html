@@ -58,14 +58,19 @@
                     <button mat-raised-button color="accent" class="btn-table" (click)="devolverSolicitud()">
                         Enviar para verificación orden de giro
                     </button>
-                    <button mat-raised-button color="accent" class="btn-table" (click)="devolverSolicitud()">
-                        Devolver solicitud de pago
-                    </button>
                     <button mat-raised-button color="accent" class="btn-table" (click)="verDetalleEdit(element.gestion)">
                         Ver detalle/Editar
                     </button>
+                    <button mat-raised-button color="accent" class="btn-table" (click)="devolverSolicitud()">
+                        Devolver solicitud de pago
+                    </button>
+                    Se habilitan los botones ver detalle y descargar orden de giro en estado enviadaVerificacionOrdenGiro === '13'
+                    el Boton descargar orden de giro aparece en CU 4.3.3, 4.3.4 y 4.3.5
                     <button mat-raised-button color="accent" class="btn-table" (click)="verDetalle(element.gestion)">
                         Ver detalle
+                    </button>
+                    <button mat-raised-button color="accent" class="btn-table" (click)="verDetalle(element.gestion)">
+                        Descargar orden de giro
                     </button>
                     -->
                 </td>
