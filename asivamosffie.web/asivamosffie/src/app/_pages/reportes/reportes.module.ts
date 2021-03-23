@@ -11,10 +11,12 @@ import { HomeComponent } from './component/home/home.component';
 import { FichaContratosProyectosComponent } from './component/ficha-contratos-proyectos/ficha-contratos-proyectos.component';
 import { TablaResultadosComponent } from './component/tabla-resultados/tabla-resultados.component';
 import { MenuFichaComponent } from './component/menu-ficha/menu-ficha.component';
+import { MapaInteractivoComponent } from './component/mapa-interactivo/mapa-interactivo.component';
+import { ReportesEstandarComponent } from './component/reportes-estandar/reportes-estandar.component';
 
 
 @NgModule({
-  declarations: [HomeComponent, FichaContratosProyectosComponent, TablaResultadosComponent, MenuFichaComponent],
+  declarations: [HomeComponent, FichaContratosProyectosComponent, TablaResultadosComponent, MenuFichaComponent, MapaInteractivoComponent, ReportesEstandarComponent],
   imports: [
     CommonModule,
     ReportesRoutingModule,

@@ -3,6 +3,8 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { HomeComponent } from './component/home/home.component';
 import { FichaContratosProyectosComponent } from './component/ficha-contratos-proyectos/ficha-contratos-proyectos.component';
+import { MapaInteractivoComponent } from './component/mapa-interactivo/mapa-interactivo.component';
+import { ReportesEstandarComponent } from './component/reportes-estandar/reportes-estandar.component';
 
 const routes: Routes = [
   {
@@ -12,6 +14,14 @@ const routes: Routes = [
   {
     path: 'fichaContratosProyectos',
     component: FichaContratosProyectosComponent
+  },
+  {
+    path: 'mapaInteractivo',
+    component: MapaInteractivoComponent
+  },
+  {
+    path: 'reportesEstandar',
+    component: ReportesEstandarComponent
   }
 ];
 
