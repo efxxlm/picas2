@@ -6264,6 +6264,8 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaAprobacionFinanciera).HasColumnType("datetime");
 
+                entity.Property(e => e.FechaAsignacionSacFinanciera).HasColumnType("datetime");
+
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
@@ -8712,11 +8714,11 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.Property(e => e.SaldoPresupuestal).HasColumnType("numeric(38, 3)");
+                entity.Property(e => e.SaldoPresupuestal).HasColumnType("numeric(38, 2)");
 
                 entity.Property(e => e.ValorSolicitudDdp)
                     .HasColumnName("ValorSolicitudDDP")
-                    .HasColumnType("numeric(18, 2)");
+                    .HasColumnType("numeric(38, 2)");
             });
 
             modelBuilder.Entity<VValorFacturadoProyecto>(entity =>

@@ -45,6 +45,7 @@ namespace asivamosffie.model.Models
         public string NumeroRadicacionSacFinanciera { get; set; }
         public string UrlSoporteFinanciera { get; set; }
         public bool TieneNoCumpleListaChequeo { get; set; }
+        public DateTime? FechaAsignacionSacFinanciera { get; set; }
 
         public virtual ContratacionProyecto ContratacionProyecto { get; set; }
         public virtual Contrato Contrato { get; set; }

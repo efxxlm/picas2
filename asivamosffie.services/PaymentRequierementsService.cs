@@ -195,6 +195,8 @@ namespace asivamosffie.services
                                                               && r.MenuId == pSolicitudPagoObservacion.MenuId
                                                               && r.Eliminado != true
                                                               && r.Archivada != true).Count();
+                //Sumar cantidad Listas de chequeo
+                intCantidadDependenciasSolicitudPago += solicitudPago.SolicitudPagoListaChequeo.Count(r => r.Eliminado == false);
 
 
                 bool TieneObservacion =
@@ -208,9 +210,7 @@ namespace asivamosffie.services
                 if (pSolicitudPagoObservacion.MenuId == (int)enumeratorMenu.Autorizar_solicitud_de_pago)
                     intCantidadDependenciasSolicitudPago++;
 
-                //Sumar cantidad Listas de chequeo
-                intCantidadDependenciasSolicitudPago += solicitudPago.SolicitudPagoListaChequeo.Count();
-              
+
                 //Valida si la cantidad de relaciones de solicitud Pago es igual a la cantidad de observaciones de esa Solicitud pago 
                 bool blRegistroCompleto = false;
                 if (intCantidadObservacionesSolicitudPago == intCantidadDependenciasSolicitudPago)
@@ -482,22 +482,30 @@ namespace asivamosffie.services
             {
                 int intEstadoCodigo = Int32.Parse(pSolicitudPago.EstadoCodigo);
 
-                bool EstaAprobadoCoordinacion = false;
-
                 if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Enviado_para_verificacion)
                 {
-                    EstaAprobadoCoordinacion = true;
                     await SendEmailToAproved(pSolicitudPago.SolicitudPagoId);
                 }
                 if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Enviada_para_autorizacion)
                 {
+                    await SendEmailToAprovedVerify(pSolicitudPago.SolicitudPagoId);
                     ActualizarSolicitudPagoCertificado(pSolicitudPago);
+                }
+
+                if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Solicitud_devuelta_por_apoyo_a_la_supervision)
+                {
+                    await SendEmailToDeclineVerify(pSolicitudPago.SolicitudPagoId);
+                }
+
+                if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Enviada_Verificacion_Financiera)
+                {
+                    ActualizarSacFinanciera(pSolicitudPago); 
                 }
 
                 await _context.Set<SolicitudPago>()
                                        .Where(o => o.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
                                                                                                        .UpdateAsync(r => new SolicitudPago()
-                                                                                                       { 
+                                                                                                       {
                                                                                                            FechaModificacion = DateTime.Now,
                                                                                                            UsuarioModificacion = pSolicitudPago.UsuarioCreacion,
                                                                                                            EstadoCodigo = pSolicitudPago.EstadoCodigo
@@ -532,10 +540,22 @@ namespace asivamosffie.services
             }
         }
 
+        private void ActualizarSacFinanciera(SolicitudPago pSolicitudPago)
+        {
+             _context.Set<SolicitudPago>()
+                                          .Where(o => o.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
+                                                                                                          .Update(r => new SolicitudPago()
+                                                                                                          {
+                                                                                                              FechaRadicacionSacFinanciera = pSolicitudPago.FechaRadicacionSacFinanciera,
+                                                                                                              NumeroRadicacionSacFinanciera = pSolicitudPago.NumeroRadicacionSacFinanciera,
+                                                                                                              FechaAsignacionSacFinanciera = DateTime.Now
+                                                                                                          });
+        }
+
         private void ActualizarSolicitudPagoCertificado(SolicitudPago pSolicitudPago)
         {
             SolicitudPagoCertificado solicitudPagoCertificado = new SolicitudPagoCertificado
-            {
+            { 
                 SolicitudPagoId = pSolicitudPago.SolicitudPagoId,
                 Url = pSolicitudPago.SolicitudPagoCertificado.FirstOrDefault().Url,
                 UsuarioCreacion = pSolicitudPago.UsuarioCreacion,
@@ -545,6 +565,36 @@ namespace asivamosffie.services
             _context.SolicitudPagoCertificado.Add(solicitudPagoCertificado);
         }
 
+
+        /// 4.1.8 Aprueba
+        private async Task<bool> SendEmailToAprovedVerify(int pSeguimientoSemanal)
+        {
+            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Enviar_para_autorizar_solicitud_4_1_8));
+            string strContenido = ReplaceVariablesSolicitudPago(template.Contenido, pSeguimientoSemanal);
+
+            List<EnumeratorPerfil> perfilsEnviarCorreo =
+                new List<EnumeratorPerfil>
+                                          {
+                                                EnumeratorPerfil.CordinadorFinanciera
+                                          };
+            return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
+        }
+        /// 4.1.8 Aprueba
+        private async Task<bool> SendEmailToDeclineVerify(int pSeguimientoSemanal)
+        {
+            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Enviar_para_autorizar_solicitud_4_1_8));
+            string strContenido = ReplaceVariablesSolicitudPago(template.Contenido, pSeguimientoSemanal);
+
+            List<EnumeratorPerfil> perfilsEnviarCorreo =
+                new List<EnumeratorPerfil>
+                                          {
+                                                EnumeratorPerfil.Apoyo
+                                          };
+            return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
+        }
+
+
+        /// 4.1.7 Aprueba
         private async Task<bool> SendEmailToAproved(int pSeguimientoSemanal)
         {
             Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Enviar_a_aprobacion4_1_7));
