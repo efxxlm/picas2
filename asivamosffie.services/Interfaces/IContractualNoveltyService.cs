@@ -21,5 +21,6 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> EnviarAlSupervisor(int pNovedadContractualId, string pUsuario);
         Task<Respuesta> CreateEditObservacion(NovedadContractual pNovedadContractual, bool? esSupervisor, bool? esTramite);
         Task<Respuesta> TramitarSolicitud(int pNovedadContractualId, string pUsuario);
+        Task<Respuesta> DevolverSolicitud(int pNovedadContractualId, string pUsuario);
     }
 }

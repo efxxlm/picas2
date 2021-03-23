@@ -118,4 +118,13 @@ export class TablaNovedadContratosObraComponent implements AfterViewInit {
       })
   }
 
+  devolver(id){
+    this.contractualNoveltyService.devolverSolicitud( id )
+      .subscribe( respuesta => {
+        this.openDialog('', `<b>${respuesta.message}</b>`);
+        if ( respuesta.code === '200' )
+          this.ngAfterViewInit();
+      })
+  }
+
 }

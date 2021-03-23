@@ -215,8 +215,9 @@
 
     </mat-expansion-panel>
   </mat-accordion>
+  
 
-  <mat-card class="shipping-card var-main-gris">
+  <mat-card class="shipping-card var-main-gris" *ngIf="novedad.observacionApoyo !== undefined">
     <mat-card-header class="header-card header-card--margin">
       <mat-card-title class="header-card--text">
         Verificación del apoyo a la supervisión
@@ -225,7 +226,7 @@
     <mat-card-content>
       <p>
         <strong>
-          20/10/2020
+          {{ novedad.observacionApoyo.fechaCreacion | date: 'dd/MM/yyyy' }}
         </strong>
       </p>
       <p>
@@ -234,31 +235,36 @@
         </strong>
         Sí
       </p>
-      <p>
-        Se requieren más soportes que justifiquen la novedad solicitada.
-      </p>
+      <section 
+                  [innerHTML]="novedad.observacionApoyo.observaciones"
+                  style="margin-left: 2em"
+          ></section>
     </mat-card-content>
   </mat-card>
 
-  <mat-card class="shipping-card var-main-gris">
-    <mat-card-header class="header-card header-card--margin">
-      <mat-card-title class="header-card--text">
-        Causa del rechazo por el supervisor
-      </mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <p>
-        <strong>
-          23/10/2020
-        </strong>
-      </p>
-      <p>
-        Los soportes publicados en la ruta URL registrada no cumple con los requisitos, por lo tanto, no se considera necesaria la novedad solicitada.
-      </p>
-    </mat-card-content>
-  </mat-card>
+  <div *ngIf="novedad.obervacionSupervisorId">
+    <mat-card class="shipping-card var-main-gris">
+      <mat-card-header class="header-card header-card--margin">
+        <mat-card-title class="header-card--text">
+          Observaciones del supervisor
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
 
-  <div *ngIf="false" class="mb-2em">
+        <p>
+          <strong>
+            {{ novedad.observacionDevolucion.fechaCreacion | date: 'dd/MM/yyyy' }}
+          </strong>
+        </p>
+          <section 
+                  [innerHTML]="novedad.observacionDevolucion.observaciones"
+                  style="margin-left: 2em"
+          ></section>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div *ngIf="false">
     <table class="mat-table cdk-table mat-sort mat-table-style table-form table-form--2 table-gris">
       <thead>
         <tr class="mat-header-row cdk-header-row ng-star-inserted">

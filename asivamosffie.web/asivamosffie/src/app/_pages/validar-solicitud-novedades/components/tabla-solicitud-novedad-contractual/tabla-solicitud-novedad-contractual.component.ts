@@ -110,5 +110,31 @@ export class TablaSolicitudNovedadContractualComponent implements AfterViewInit 
         };
       })
   }
+  
+    openDialog(modalTitle: string, modalText: string) {
+    this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+  }
+
+  tramitar(id){
+    this.contractualNoveltyService.tramitarSolicitud( id )
+      .subscribe( respuesta => {
+        this.openDialog('', `<b>${respuesta.message}</b>`);
+        if ( respuesta.code === '200' )
+          this.ngAfterViewInit();
+      })
+  }
+
+  devolver(id){
+    this.contractualNoveltyService.devolverSolicitud( id )
+      .subscribe( respuesta => {
+        this.openDialog('', `<b>${respuesta.message}</b>`);
+        if ( respuesta.code === '200' )
+          this.ngAfterViewInit();
+      })
+  }
+
 
 }

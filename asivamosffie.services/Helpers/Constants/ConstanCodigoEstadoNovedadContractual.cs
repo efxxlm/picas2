@@ -19,5 +19,6 @@
 		public const string Enviada_a_comite_tecnico = "15";
 		public const string Devuelta_para_ajustes_de_supervisión = "16";
 		public const string En_registro_de_firmas = "17";
+		public const string Con_observaciones_del_supervisor = "18";
 	}
 }

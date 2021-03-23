@@ -84,7 +84,7 @@
         </button>
 
         <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
-        (click)="this.rechazarSolicitud( element.novedadContractualId)"
+        (click)="this.devolver( element.novedadContractualId)"
           *ngIf=" element.estadoCodigo === '5' && 
                   element.registroCompletoValidacion === true && 
                   element.tieneObservacionesSupervisor === true">
@@ -104,11 +104,12 @@
     </a>
 
       <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
+        (click)="tramitar(element.novedadContractualId)"
         *ngIf=" element.estadoCodigo === '5' && 
                 element.registroCompletoValidacion === true &&
                 element.tieneObservacionesSupervisor === false">
-        Tramitar solicitud
-      </button>
+        Tramitar solicitud 
+      </button> 
 
       </td>
     </ng-container>

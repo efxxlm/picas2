@@ -56,7 +56,7 @@
                       color="accent" 
                       class="btn-table"
                       [routerLink]="[ 'verDetalleSolicitudNovedadInterventoria', element.novedadContractualId ]"
-                      *ngIf="element.estadoCodigo !== '2' && element.estadoCodigo !== '3'"
+                      *ngIf="element.estadoCodigo !== '2' && element.estadoCodigo !== '3' && element.estadoCodigo !== '18'"
                       >
           Ver detalle
         </a>
@@ -91,7 +91,7 @@
                       color="accent" 
                       class="btn-table"
                       [routerLink]="[ '/verificarSolicitudDeNovedades/registrarSolicitudInterventoria', element.novedadContractualId ]"
-                      *ngIf="element.estadoCodigo === '2' || element.estadoCodigo === '3'"
+                      *ngIf="element.estadoCodigo === '2' || element.estadoCodigo === '3' || element.estadoCodigo === '18'"
                       >
           Ver detalle/Editar
         </a>

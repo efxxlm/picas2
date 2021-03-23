@@ -65,4 +65,8 @@ export class ContractualNoveltyService {
     return this.http.put<Respuesta>( `${ this.urlApi }/tramitarSolicitud?pNovedaContractual=${ id }`, null ); 
   }
 
+  devolverSolicitud( id ){
+    return this.http.put<Respuesta>( `${ this.urlApi }/devolverSolicitud?pNovedaContractual=${ id }`, null ); 
+  }
+
 }

@@ -827,6 +827,91 @@ namespace asivamosffie.services
             }
         }
 
+        public async Task<Respuesta> DevolverSolicitud(int pNovedadContractualId, string pUsuario)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Devolver_Novedad_Contractual, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = "DEVOLVER NOVEDAD CONTRACTUAL";
+
+            try
+            {
+
+                NovedadContractual novedadContractual = _context.NovedadContractual
+                                                                    .Where( r => r.NovedadContractualId == pNovedadContractualId)
+                                                                    .Include(r => r.NovedadContractualObservaciones)
+                                                                    .FirstOrDefault();
+
+                novedadContractual.UsuarioModificacion = pUsuario;
+                novedadContractual.FechaModificacion = DateTime.Now;
+
+                if (novedadContractual.TieneObservacionesApoyo == true)
+                {
+
+                    NovedadContractualObservaciones observacionesApoyo = getObservacion(novedadContractual, false, null);
+
+                    if (observacionesApoyo != null)
+                        observacionesApoyo.Archivado = true;
+
+                }
+
+                if (novedadContractual.TieneObservacionesSupervisor == true)
+                {
+
+                    NovedadContractualObservaciones observacionesSupervisor = getObservacion(novedadContractual, true, null);
+
+                    if (observacionesSupervisor != null)
+                    {
+                        observacionesSupervisor.Archivado = true;
+                        novedadContractual.ObervacionSupervisorId = observacionesSupervisor.NovedadContractualObservacionesId;
+                    }
+
+                }
+
+                novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.Con_observaciones_del_supervisor;
+                novedadContractual.TieneObservacionesApoyo = null;
+                novedadContractual.TieneObservacionesSupervisor = null;
+                novedadContractual.RegistroCompleto = null;
+                novedadContractual.RegistroCompletoValidacion = null;
+                novedadContractual.RegistroCompletoVerificacion = null;
+
+                _context.SaveChanges();
+
+               
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = novedadContractual,
+                    Code = ConstantMessagesContractualControversy.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
+                    ConstantMessagesContractualControversy.OperacionExitosa,
+                    idAccion,
+                    "",//controversiaActuacion.UsuarioCreacion,
+                    strCrearEditar)
+
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = ex,
+                    Code = ConstantMessagesContractualControversy.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
+                    ConstantMessagesContractualControversy.Error,
+                    idAccion,
+                    "",//controversiaActuacion.UsuarioCreacion, 
+                    ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
+
         #endregion business
 
         #region private 

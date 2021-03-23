@@ -219,16 +219,16 @@
     </mat-expansion-panel>
   </mat-accordion>
 
-  <mat-card class="shipping-card var-main-gris mt-2em">
+  <mat-card class="shipping-card var-main-gris" *ngIf="novedad.observacionApoyo !== undefined">
     <mat-card-header class="header-card header-card--margin">
       <mat-card-title class="header-card--text">
         Verificación del apoyo a la supervisión
       </mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <p>
+      <p> 
         <strong>
-          20/10/2020
+          {{ novedad.observacionApoyo.fechaCreacion | date: 'dd/MM/yyyy' }}
         </strong>
       </p>
       <p>
@@ -237,13 +237,14 @@
         </strong>
         Sí
       </p>
-      <p>
-        Se requieren más soportes que justifiquen la novedad solicitada.
-      </p>
+      <section 
+                  [innerHTML]="novedad.observacionApoyo.observaciones"
+                  style="margin-left: 2em"
+          ></section>
     </mat-card-content>
   </mat-card>
 
-  <div class="mt-2em">
+  <div class="mt-2em" *ngIf="novedad.observacionDevolucion">
     <mat-card class="shipping-card var-main-gris mt-2em">
       <mat-card-header class="header-card header-card--margin">
         <mat-card-title class="header-card--text">
@@ -253,15 +254,20 @@
       <mat-card-content>
         <p>
           <strong>
-            20/10/2020
+            {{ novedad.fechaCreacion | date: 'dd/MM/yyyy' }}
           </strong>
         </p>
         <p>
           <strong>
             ¿Desde la supervisión tiene observaciones a la solicitud de novedad?:
           </strong>
-          No
+          Sí
         </p>
+        <section 
+                        [innerHTML]="novedad.observacionDevolucion.observaciones"
+                        style="margin-left: 2em"
+                        
+                ></section>
       </mat-card-content>
     </mat-card>
   </div>

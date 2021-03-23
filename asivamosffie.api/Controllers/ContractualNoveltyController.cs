@@ -160,6 +160,22 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [HttpPut]
+        [Route("DevolverSolicitud")]
+        public async Task<IActionResult> DevolverSolicitud([FromQuery] int pNovedaContractual)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _contractualModification.DevolverSolicitud(pNovedaContractual, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         [HttpGet]
         [Route("GetProyectsByContract")]
         public async Task<ActionResult<List<VProyectosXcontrato>>> GetProyectsByContract(int pContratoId)
