@@ -192,7 +192,7 @@
     </mat-expansion-panel>
   </mat-accordion>
 
-  <div *ngIf="true">
+  <div *ngIf="novedad.observacionDevolucion">
     <mat-card class="shipping-card var-main-gris">
       <mat-card-header class="header-card header-card--margin">
         <mat-card-title class="header-card--text">
@@ -203,16 +203,26 @@
 
         <p>
           <strong>
-            20/10/2020
+            {{ novedad.fechaCreacion | date: 'dd/MM/yyyy' }}
           </strong>
         </p>
 
-        <section [innerHTML]="novedad.urlSoporte" style="margin-left: 2em"></section>
+        <p>
+          <strong>
+            ¿Desde la supervisión tiene observaciones a la solicitud de novedad?:
+          </strong>
+          Sí
+        </p>
+        <section 
+                        [innerHTML]="novedad.observacionDevolucion.observaciones"
+                        style="margin-left: 2em"
+                        
+                ></section>
       </mat-card-content>
     </mat-card>
   </div>
 
-  <div *ngIf="true">
+  <div *ngIf="false">
     <table class="mat-table cdk-table mat-sort mat-table-style table-form table-form--2 table-gris">
       <thead>
         <tr class="mat-header-row cdk-header-row ng-star-inserted">

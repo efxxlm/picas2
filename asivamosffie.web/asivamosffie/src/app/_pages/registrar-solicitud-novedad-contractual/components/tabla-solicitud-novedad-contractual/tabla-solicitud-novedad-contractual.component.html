@@ -56,7 +56,7 @@
                       color="accent" 
                       class="btn-table"
                       [routerLink]="[ 'verDetalle', element.novedadContractualId ]"
-                      *ngIf="element.estadoCodigo !== '1'"
+                      *ngIf="element.estadoCodigo !== '1' && element.estadoCodigo !== '18'"
                       >
           Ver detalle
         </a>
@@ -68,7 +68,7 @@
                           class="btn-table" 
                           type="button"
                           (click)="aprobarSolicitud(element.novedadContractualId)"
-                          *ngIf="element.estadoCodigo === '1' && element.registroCompleto === true"
+                          *ngIf="(element.estadoCodigo === '1' || element.estadoCodigo === '18' ) && element.registroCompleto === true"
                           >
           Aprobar solicitud
         </button>
@@ -91,7 +91,7 @@
                       color="accent" 
                       class="btn-table"
                       [routerLink]="[ '/registrarSolicitudNovedadContractual/registrarSolicitud', element.novedadContractualId ]"
-                      *ngIf="element.estadoCodigo === '1'"
+                      *ngIf="element.estadoCodigo === '1' || element.estadoCodigo === '18'"
                       >
           Ver detalle/Editar
         </a>
