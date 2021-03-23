@@ -6274,9 +6274,15 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaRadicacionSacFinanciera).HasColumnType("datetime");
 
+                entity.Property(e => e.FechaRegistroCompleto).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaRegistroCompletoAutorizar).HasColumnType("datetime");
+
                 entity.Property(e => e.FechaRegistroCompletoValidacionFinanciera).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaRegistroCompletoVerificacionFinanciera).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaRegistroCompletoVerificar).HasColumnType("datetime");
 
                 entity.Property(e => e.NumeroRadicacionSacContratista).HasMaxLength(15);
 

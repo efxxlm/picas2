@@ -510,10 +510,11 @@ namespace asivamosffie.services
             bool TieneNoCumpleListaChequeo = solicitudPago.SolicitudPagoListaChequeo.Any(r => r.SolicitudPagoListaChequeoRespuesta.Any(s => s.RespuestaCodigo == ConstanCodigoRespuestasListaChequeoSolictudPago.No_cumple));
             string EstadoSolicitudPago = solicitudPago.EstadoCodigo;
 
-            if (CompleteRecord == true)
+            DateTime? FechaRegistroCompleto = null;
+            if (CompleteRecord)
             {
+                FechaRegistroCompleto = DateTime.Now;
                 EstadoSolicitudPago = ((int)EnumEstadoSolicitudPago.Con_solicitud_revisada_por_equipo_facturacion).ToString();
-
             }
             await _context.Set<SolicitudPago>()
                                               .Where(s => s.SolicitudPagoId == SolicitudPagoId)
@@ -521,6 +522,7 @@ namespace asivamosffie.services
                                                                                               {
                                                                                                   EstadoCodigo = EstadoSolicitudPago,
                                                                                                   RegistroCompleto = CompleteRecord,
+                                                                                                  FechaRegistroCompleto = FechaRegistroCompleto,
                                                                                                   TieneNoCumpleListaChequeo = TieneNoCumpleListaChequeo
                                                                                               });
         }

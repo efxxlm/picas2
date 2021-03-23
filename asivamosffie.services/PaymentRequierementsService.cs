@@ -84,9 +84,6 @@ namespace asivamosffie.services
                     break;
             }
 
-
-
-
             return result.Select(r => new
             {
                 r.TieneObservacion,
@@ -220,31 +217,31 @@ namespace asivamosffie.services
                 switch (pSolicitudPagoObservacion.MenuId)
                 {
                     case (int)enumeratorMenu.Verificar_solicitud_de_pago:
-
-
                         await _context.Set<SolicitudPago>()
-                                                 .Where(o => o.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId)
-                                                                                                                        .UpdateAsync(r => new SolicitudPago()
-                                                                                                                        {
-                                                                                                                            TieneObservacion = TieneObservacion,
-                                                                                                                            FechaModificacion = DateTime.Now,
-                                                                                                                            UsuarioModificacion = pUsuarioMod,
-                                                                                                                            EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_proceso_de_verificacion).ToString(),
-                                                                                                                            RegistroCompletoVerificar = blRegistroCompleto,
-                                                                                                                        });
+                        .Where(o => o.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId)
+                        .UpdateAsync(r => new SolicitudPago()
+                        {
+                            TieneObservacion = TieneObservacion,
+                            FechaModificacion = DateTime.Now,
+                            UsuarioModificacion = pUsuarioMod,
+                            EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_proceso_de_verificacion).ToString(),
+                            RegistroCompletoVerificar = blRegistroCompleto,
+                            FechaRegistroCompletoVerificar = DateTime.Now
+                        });
                         break;
 
                     case (int)enumeratorMenu.Autorizar_solicitud_de_pago:
                         await _context.Set<SolicitudPago>()
-                                                .Where(o => o.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId)
-                                                                                                                        .UpdateAsync(r => new SolicitudPago()
-                                                                                                                        {
-                                                                                                                            TieneObservacion = TieneObservacion,
-                                                                                                                            EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_proceso_de_autorizacion).ToString(),
-                                                                                                                            FechaModificacion = DateTime.Now,
-                                                                                                                            UsuarioModificacion = pUsuarioMod,
-                                                                                                                            RegistroCompletoAutorizar = blRegistroCompleto,
-                                                                                                                        });
+                        .Where(o => o.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId)
+                        .UpdateAsync(r => new SolicitudPago()
+                        {
+                            TieneObservacion = TieneObservacion,
+                            EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_proceso_de_autorizacion).ToString(),
+                            FechaModificacion = DateTime.Now,
+                            UsuarioModificacion = pUsuarioMod,
+                            RegistroCompletoAutorizar = blRegistroCompleto,
+                            FechaRegistroCompletoAutorizar = DateTime.Now
+                        });
                         break;
                 }
                 return true;
@@ -510,6 +507,10 @@ namespace asivamosffie.services
                 if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Enviado_para_verificacion)
                     await SendEmailToAproved(pSolicitudPago.SolicitudPagoId);
 
+                ///4.1.7
+                if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Solicitud_devuelta_por_equipo_facturacion)
+                    await SendEmailToAproved(pSolicitudPago.SolicitudPagoId);
+
                 ///4.1.8
                 if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Enviada_para_autorizacion)
                 {
@@ -531,7 +532,7 @@ namespace asivamosffie.services
                 ///4.1.9
                 if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Solicitud_devuelta_por_coordinardor)
                     await SendEmailToDeclineValidate(pSolicitudPago.SolicitudPagoId);
-                 
+
                 await _context.Set<SolicitudPago>()
                                        .Where(o => o.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
                                                                                                        .UpdateAsync(r => new SolicitudPago()
@@ -613,7 +614,6 @@ namespace asivamosffie.services
             return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
         }
 
-
         /// 4.1.8 Aprueba
         private async Task<bool> SendEmailToAprovedVerify(int pSolicitudPagoId)
         {
@@ -641,7 +641,6 @@ namespace asivamosffie.services
             return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
         }
 
-
         /// 4.1.7 Aprueba
         private async Task<bool> SendEmailToAproved(int pSolicitudPagoId)
         {
@@ -652,6 +651,19 @@ namespace asivamosffie.services
                 new List<EnumeratorPerfil>
                                           {
                                                 EnumeratorPerfil.Supervisor
+                                          };
+            return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
+        }
+        /// 4.1.7 devuelve
+        private async Task<bool> SendEmailToDecline(int pSolicitudPagoId)
+        {
+            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.DevolverSolicititud4_1_7));
+            string strContenido = ReplaceVariablesSolicitudPago(template.Contenido, pSolicitudPagoId);
+
+            List<EnumeratorPerfil> perfilsEnviarCorreo =
+                new List<EnumeratorPerfil>
+                                          {
+                                                EnumeratorPerfil.CordinadorFinanciera
                                           };
             return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
         }
@@ -674,6 +686,16 @@ namespace asivamosffie.services
 
 
 
+        ///Tareas programadas 
+
+
+        //public async Task<bool> SolicitudPagoPendienteVerificacion()
+        //{
+        //     List<>
+
+        //}
+
         #endregion
+
     }
 }

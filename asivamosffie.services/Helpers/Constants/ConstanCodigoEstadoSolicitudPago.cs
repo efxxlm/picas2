@@ -7,7 +7,7 @@
         En_proceso_de_registro = 1,
         Con_solicitud_revisada_por_equipo_facturacion = 2,//Completo - lista chequeo tenga items no cumple. (botones devolver solicitud , ver detalle y eliminar)
                                                           //Completo - lista chequeo tenga items todos cumplen o no aplican, (botones enviar a verificación , ver detalle )
-        Solicitud_devuelta_por_equipo_facturacion = 20,
+        Solicitud_devuelta_por_equipo_facturacion = 20, // 4.1.7
         Solicitud_devuelta_por_apoyo_a_la_supervision = 21,//4.1.8
         Solicitud_devuelta_por_coordinardor = 22,//4.1.9
         Enviada_para_subsanacion_por_verificacion_financiera = 23, //4.3.1
