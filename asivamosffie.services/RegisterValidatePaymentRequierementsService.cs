@@ -20,11 +20,9 @@ namespace asivamosffie.services
         #region constructor
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
-        private readonly IDocumentService _documentService;
-        private readonly IPaymentRequierementsService _paymentRequierementsService;
-        public RegisterValidatePaymentRequierementsService(IPaymentRequierementsService paymentRequierementsService, IDocumentService documentService, devAsiVamosFFIEContext context, ICommonService commonService)
-        {
-            _paymentRequierementsService = paymentRequierementsService;
+        private readonly IDocumentService _documentService; 
+        public RegisterValidatePaymentRequierementsService(  IDocumentService documentService, devAsiVamosFFIEContext context, ICommonService commonService)
+        { 
             _documentService = documentService;
             _commonService = commonService;
             _context = context;
