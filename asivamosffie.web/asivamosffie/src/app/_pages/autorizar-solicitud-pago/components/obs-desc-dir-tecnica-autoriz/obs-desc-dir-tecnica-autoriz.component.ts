@@ -73,7 +73,7 @@ export class ObsDescDirTecnicaAutorizComponent implements OnInit {
             this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
                 this.autorizarSolicitudPagoId,
                 this.solicitudPago.solicitudPagoId,
-                this.solicitudPagoFaseFacturaDescuento[0].solicitudPagoFaseFacturaDescuentoId,
+                this.solicitudPagoFaseFacturaDescuento.length > 0 ? this.solicitudPagoFaseFacturaDescuento[0].solicitudPagoFaseFacturaDescuentoId : this.solicitudPagoFaseFacturaId,
                 this.datosFacturaDescuentoCodigo )
                 .subscribe(
                     response => {
@@ -178,7 +178,7 @@ export class ObsDescDirTecnicaAutorizComponent implements OnInit {
             observacion: this.addressForm.get( 'observaciones' ).value !== null ? this.addressForm.get( 'observaciones' ).value : this.addressForm.get( 'observaciones' ).value,
             tipoObservacionCodigo: this.datosFacturaDescuentoCodigo,
             menuId: this.autorizarSolicitudPagoId,
-            idPadre: this.solicitudPagoFaseFacturaDescuento[0].solicitudPagoFaseFacturaDescuentoId,
+            idPadre: this.solicitudPagoFaseFacturaDescuento.length > 0 ? this.solicitudPagoFaseFacturaDescuento[0].solicitudPagoFaseFacturaDescuentoId : this.solicitudPagoFaseFacturaId,
             tieneObservacion: this.addressForm.get( 'tieneObservaciones' ).value !== null ? this.addressForm.get( 'tieneObservaciones' ).value : this.addressForm.get( 'tieneObservaciones' ).value
         };
 

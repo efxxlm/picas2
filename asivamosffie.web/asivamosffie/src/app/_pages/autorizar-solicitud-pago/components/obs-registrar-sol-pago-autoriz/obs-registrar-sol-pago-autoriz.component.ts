@@ -24,6 +24,7 @@ export class ObsRegistrarSolPagoAutorizComponent implements OnInit {
     solicitudPago: any;
     solicitudPagoFase: any;
     solicitudPagoCargarFormaPago: any;
+    manejoAnticipoRequiere: boolean;
     dataSource = new MatTableDataSource();
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -75,6 +76,8 @@ export class ObsRegistrarSolPagoAutorizComponent implements OnInit {
         if ( this.contrato !== undefined ) {
             this.solicitudPago = this.contrato.solicitudPagoOnly;
             this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
+
+            this.manejoAnticipoRequiere = this.contrato.contratoConstruccion.length > 0 ? this.contrato.contratoConstruccion[0].manejoAnticipoRequiere : false;
 
             if ( this.contrato.solicitudPago.length > 1 ) {
                 this.solicitudPagoCargarFormaPago = this.contrato.solicitudPago[0].solicitudPagoCargarFormaPago[0];

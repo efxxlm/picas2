@@ -214,7 +214,7 @@
                     </app-obs-criterio-pagos>
                 </mat-expansion-panel>
 
-                <mat-expansion-panel class="expansion-style sub-expansion-black">
+                <mat-expansion-panel class="expansion-style sub-expansion-black" *ngIf="manejoAnticipoRequiere === true">
                     <mat-expansion-panel-header class="expansion-style--header">
                         <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === true ? '' : estadoSemaforos.semaforoAcordeonAmortizacion">
                             Amortización del anticipo

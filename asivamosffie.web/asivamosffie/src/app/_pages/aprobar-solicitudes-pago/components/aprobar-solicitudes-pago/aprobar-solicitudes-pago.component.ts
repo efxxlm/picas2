@@ -104,8 +104,7 @@ export class AprobarSolicitudesPagoComponent implements OnInit {
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} )
-                        .then( () => this.routes.navigate( ['/verificarSolicitudPago'] )
-                    );
+                        .then( () => this.routes.navigate( ['/verificarSolicitudPago'] ) );
                 }, err => this.openDialog( '', `<b>${ err.message }</b>` )
             );
     }
