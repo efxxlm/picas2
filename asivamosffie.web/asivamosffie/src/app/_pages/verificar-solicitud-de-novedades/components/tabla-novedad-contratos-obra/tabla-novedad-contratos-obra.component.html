@@ -58,9 +58,9 @@
       </th>
       <td mat-cell *matCellDef="let element">
         <span class="info-text d-block m-0" 
-          [class.sin-diligenciar]="element.registroCompleto !== true"
-          [class.completo]="element.registroCompleto === true"></span>
-        {{element.registroCompleto === true ? 'Completo' : 'Incompleto'}}
+          [class.sin-diligenciar]="element.registroCompletoVerificacion !== true"
+          [class.completo]="element.registroCompletoVerificacion === true"></span>
+        {{element.registroCompletoVerificacion === true ? 'Completo' : 'Incompleto'}}
       </td>
     </ng-container>
 
@@ -75,7 +75,7 @@
         </a>
         <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
           (click)="verificarSolicitud(element.novedadContractualId)"
-          *ngIf="element.estadoCodigo === '3'">
+          *ngIf="element.estadoCodigo === '3' && element.registroCompletoVerificacion === true">
           Enviar al supervisor
         </button>
         <a mat-button color="warn" mat-raised-button color="accent" class="btn-table"

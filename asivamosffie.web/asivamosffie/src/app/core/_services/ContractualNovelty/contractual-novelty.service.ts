@@ -61,4 +61,8 @@ export class ContractualNoveltyService {
     return this.http.post<Respuesta>( `${ this.urlApi }/createEditObservacion?esSupervisor=${ esSupervisor }&esTramite=${ esTramite }`, novedad ); 
   }
 
+  tramitarSolicitud( id ){
+    return this.http.put<Respuesta>( `${ this.urlApi }/tramitarSolicitud?pNovedaContractual=${ id }`, null ); 
+  }
+
 }

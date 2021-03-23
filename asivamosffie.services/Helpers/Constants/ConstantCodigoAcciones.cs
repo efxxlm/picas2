@@ -325,5 +325,7 @@
 
         public const string Verificar_Solicitud_Financiera = "233";
         public const string Validar_Solicitud_Financiera = "234";
+        public const string Tramitar_Novedad_Contractual = "235";
+
     }
 }

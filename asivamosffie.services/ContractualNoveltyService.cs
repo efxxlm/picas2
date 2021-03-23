@@ -771,6 +771,62 @@ namespace asivamosffie.services
             }
         }
 
+        public async Task<Respuesta> TramitarSolicitud(int pNovedadContractualId, string pUsuario)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Tramitar_Novedad_Contractual, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = string.Empty;
+            NovedadContractual novedadContractual = _context.NovedadContractual.Find(pNovedadContractualId);
+
+            try
+            {
+
+                if (novedadContractual != null)
+                {
+                    strCrearEditar = "TRAMITAR NOVEDAD CONTRACTUAL";
+                    novedadContractual.FechaModificacion = DateTime.Now;
+                    novedadContractual.UsuarioModificacion = pUsuario;
+                    novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.Sin_tramite;
+                    _context.NovedadContractual.Update(novedadContractual);
+
+                    _context.SaveChanges();
+
+                }
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = novedadContractual,
+                    Code = ConstantMessagesContractualControversy.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
+                    ConstantMessagesContractualControversy.OperacionExitosa,
+                    idAccion,
+                    "",//controversiaActuacion.UsuarioCreacion,
+                    strCrearEditar)
+
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = novedadContractual,
+                    Code = ConstantMessagesContractualControversy.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
+                    ConstantMessagesContractualControversy.Error,
+                    idAccion,
+                    "",//controversiaActuacion.UsuarioCreacion, 
+                    ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
+
         #endregion business
 
         #region private 
@@ -834,6 +890,7 @@ namespace asivamosffie.services
             NovedadContractualObservaciones novedadContractualObservaciones = pNovedadContractual.NovedadContractualObservaciones.ToList()
                         .Where(r => r.EsSupervision == pEsSupervicion &&
                                     r.Archivado != true &&
+                                    r.Eliminado != true &&
                                     r.EsTramiteNovedades == pEsTramite
                               )
                         .FirstOrDefault();

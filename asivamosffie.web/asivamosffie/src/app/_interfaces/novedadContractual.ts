@@ -49,8 +49,10 @@ export interface NovedadContractual{
         novedadContractualObservaciones?: NovedadContractualObservaciones[],
 
         observacionApoyo?: NovedadContractualObservaciones,
-        
-
+        observacionSupervisor?: NovedadContractualObservaciones,
+        observacionTramite?: NovedadContractualObservaciones,
+        observacionDevolucion?: NovedadContractualObservaciones,
+        observacionDevolucionTramite?: NovedadContractualObservaciones,
 
 }
 
