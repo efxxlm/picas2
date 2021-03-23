@@ -139,6 +139,7 @@ namespace asivamosffie.services
                                              s.EstadoCodigo,
                                              s.ContratoId,
                                              s.SolicitudPagoId,
+                                             s.TieneNoCumpleListaChequeo,
                                              RegistroCompleto = s.RegistroCompleto ?? false
                                          }).OrderByDescending(r => r.SolicitudPagoId)
                                                                                     .ToListAsync();
@@ -1314,8 +1315,7 @@ namespace asivamosffie.services
 
             return true;
         }
-
-
+         
         private bool ValidateCompleteRecordSolicitudPagoSoporteSolicitud(SolicitudPagoSoporteSolicitud pSolicitudPagoSoporteSolicitud)
         {
             if (string.IsNullOrEmpty(pSolicitudPagoSoporteSolicitud.UrlSoporte))
