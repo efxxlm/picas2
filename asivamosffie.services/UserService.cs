@@ -592,7 +592,7 @@ namespace asivamosffie.services
                               FechaModificacion = DateTime.Now,
                               UsuarioModificacion = pUsuario.UsuarioCreacion
                           }); ;
-
+                ResetContratoUser(pUsuario.UsuarioId, pUsuario.TipoAsignacionCodigo);
                 Usuario usuario1 = _context.Usuario.Find(pUsuario.UsuarioId);
                 if (pUsuario.Eliminado == true)
                     await SendEmailWhenDesactivateUsuario(usuario1, string.Empty);

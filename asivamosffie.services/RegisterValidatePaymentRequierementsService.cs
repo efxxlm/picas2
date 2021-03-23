@@ -1512,6 +1512,12 @@ namespace asivamosffie.services
             }
             else
             {
+                pSolicitudPago.ContratoId = _context.ContratacionProyecto
+                    .Where(r => r.ContratacionProyectoId == pSolicitudPago.ContratacionProyectoId)
+                    .Include(r => r.Contratacion)
+                    .ThenInclude(r => r.Contrato).Select
+                    (c => c.Contratacion.Contrato.FirstOrDefault().ContratoId).FirstOrDefault();
+
                 pSolicitudPago.EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_proceso_de_registro).ToString();
                 pSolicitudPago.NumeroSolicitud = await _commonService.EnumeradorSolicitudPagoExpensasAndOtros();
                 pSolicitudPago.FechaCreacion = DateTime.Now;

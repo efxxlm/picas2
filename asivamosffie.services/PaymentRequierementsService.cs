@@ -31,16 +31,19 @@ namespace asivamosffie.services
         public async Task<dynamic> GetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(int pMenuId, int pSolicitudPagoId, int pPadreId, string pTipoObservacionCodigo)
         {
             return await _context.SolicitudPagoObservacion
-                                           .Where(s => s.MenuId == pMenuId && s.SolicitudPagoId == pSolicitudPagoId && s.IdPadre == pPadreId && s.TipoObservacionCodigo == pTipoObservacionCodigo)
-                                                                                                                       .Select(p => new
-                                                                                                                       {
-                                                                                                                           p.SolicitudPagoObservacionId,
-                                                                                                                           p.TieneObservacion,
-                                                                                                                           p.Archivada,
-                                                                                                                           p.FechaCreacion,
-                                                                                                                           p.Observacion,
-                                                                                                                           p.RegistroCompleto
-                                                                                                                       }).ToListAsync();
+                                           .Where(s => s.MenuId == pMenuId
+                                               && s.SolicitudPagoId == pSolicitudPagoId
+                                               && s.IdPadre == pPadreId
+                                               && s.TipoObservacionCodigo == pTipoObservacionCodigo)
+                                            .Select(p => new
+                                            {
+                                                p.SolicitudPagoObservacionId,
+                                                p.TieneObservacion,
+                                                p.Archivada,
+                                                p.FechaCreacion,
+                                                p.Observacion,
+                                                p.RegistroCompleto
+                                            }).ToListAsync();
         }
 
         public async Task<dynamic> GetListSolicitudPago(int pMenuId)
@@ -130,6 +133,9 @@ namespace asivamosffie.services
             {
                 if (pSolicitudPagoObservacion.SolicitudPagoObservacionId > 0)
                 {
+                    if (pSolicitudPagoObservacion.Archivada == null)
+                        pSolicitudPagoObservacion.Archivada = false;
+
                     await _context.Set<SolicitudPagoObservacion>()
                                   .Where(o => o.SolicitudPagoObservacionId == pSolicitudPagoObservacion.SolicitudPagoObservacionId)
                                   .UpdateAsync(r => new SolicitudPagoObservacion()
@@ -501,7 +507,7 @@ namespace asivamosffie.services
                 ///4.1.8
                 if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Enviada_para_autorizacion)
                     await SendEmailToAprovedVerify(pSolicitudPago.SolicitudPagoId);
-                 
+
                 ///4.1.8
                 if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Solicitud_devuelta_por_apoyo_a_la_supervision)
                     await SendEmailToDeclineVerify(pSolicitudPago.SolicitudPagoId);
@@ -513,7 +519,7 @@ namespace asivamosffie.services
                     await SendEmailToAprovedValidateAll(pSolicitudPago.SolicitudPagoId);
                     ActualizarSacFinanciera(pSolicitudPago);
                 }
-             
+
                 ///4.1.9
                 if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Solicitud_devuelta_por_coordinardor)
                     await SendEmailToDeclineValidate(pSolicitudPago.SolicitudPagoId);
@@ -657,20 +663,20 @@ namespace asivamosffie.services
         {
             List<Dominio> ListTipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato && r.Activo == true).ToList();
 
-            SolicitudPago solicitudPago = _context.SolicitudPago.Where(s => s.SolicitudPagoId == pSolicitudPago).Include(r => r.Contrato).FirstOrDefault();
-            string strModalidadPagoContrato = ListTipoIntervencion.Where(lti => lti.Codigo == solicitudPago.Contrato.ModalidadCodigo).FirstOrDefault().Nombre;
-
+            SolicitudPago solicitudPago =
+                _context.SolicitudPago.Where(s => s.SolicitudPagoId == pSolicitudPago)
+                .Include(r => r.Contrato)
+                .FirstOrDefault();
+              
             template = template
                       .Replace("[NUMERO_SOLICITUD]", solicitudPago.NumeroSolicitud)
                       .Replace("[NUMERO_CONTRATO]", solicitudPago.Contrato.NumeroContrato)
                       .Replace("[FECHA_SOLICITUD]", solicitudPago.FechaCreacion.ToString("dd/MM/yyy"))
                       .Replace("[FECHA_VALIDACION]", DateTime.Now.ToString("dd/MM/yyy"))
-                      .Replace("[MODALIDAD_CONTRATO]", strModalidadPagoContrato);
+                      .Replace("[MODALIDAD_CONTRATO]", ListTipoIntervencion.Where(lti => lti.Codigo == solicitudPago.Contrato.ModalidadCodigo).FirstOrDefault().Nombre);
             return template;
         }
-
-
-
+         
         ///Tareas programadas  
         ///4.1.8
         public async Task<bool> SolicitudPagoPendienteVerificacion()

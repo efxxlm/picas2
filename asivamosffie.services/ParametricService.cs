@@ -38,14 +38,16 @@ namespace asivamosffie.services
 
             try
             {
-
                 foreach (var Dominio in pTipoDominio.Dominio)
                 {
                     if (Dominio.DominioId == 0)
                     {
-                        Dominio.FechaCreacion = DateTime.Now;
-                        Dominio.Activo = true;
-                        await _context.Dominio.AddAsync(Dominio);
+                        Dominio.FechaCreacion = DateTime.Now; 
+                        Dominio.Activo = true; 
+                        Dominio.Activo = Dominio.Activo;
+                        Dominio.Codigo = _context.Dominio.Count(d => d.TipoDominioId == d.TipoDominioId).ToString();
+                        _context.Dominio.Add(Dominio);
+                        _context.SaveChanges();
                     }
                     else
                     {
@@ -53,6 +55,7 @@ namespace asivamosffie.services
                                       .Where(d => d.DominioId == Dominio.DominioId)
                                       .UpdateAsync(d => new Dominio
                                       {
+                                          Activo = Dominio.Activo,
                                           Nombre = Dominio.Nombre,
                                           Descripcion = Dominio.Descripcion,
                                           Codigo = Dominio.Codigo,
@@ -83,7 +86,7 @@ namespace asivamosffie.services
                 };
             }
         }
-         
+
         public async Task<List<VDominio>> GetDominioByTipoDominioId(int pTipoDominioId)
         {
             return await _context.VDominio.Where(d => d.TipoDominioId == pTipoDominioId).ToListAsync();
