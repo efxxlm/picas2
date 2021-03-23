@@ -189,13 +189,18 @@ namespace asivamosffie.services
             try
             {
                 SolicitudPago solicitudPago = await _registerValidatePaymentRequierementsService.GetSolicitudPago(pSolicitudPagoObservacion.SolicitudPagoId);
-
+               
                 int intCantidadDependenciasSolicitudPago = CantidadDependenciasSolicitudPago(solicitudPago);
                 int intCantidadObservacionesSolicitudPago = _context.SolicitudPagoObservacion.Where(r => r.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId
                                                               && r.MenuId == pSolicitudPagoObservacion.MenuId
                                                               && r.Eliminado != true
                                                               && r.Archivada != true).Count();
 
+                if (pSolicitudPagoObservacion.MenuId == (int)enumeratorMenu.Autorizar_solicitud_de_pago)
+                {
+                    //Agrego La dependencia de Certificado de solicitud
+                    intCantidadDependenciasSolicitudPago++;
+                }
 
                 if (pSolicitudPagoObservacion.TieneObservacion == true)
                 {
@@ -247,7 +252,7 @@ namespace asivamosffie.services
         }
 
         private int CantidadDependenciasSolicitudPago(SolicitudPago solicitudPago)
-        {
+        {  
             switch (solicitudPago.TipoSolicitudCodigo)
             {
                 case ConstanCodigoTipoSolicitudContratoSolicitudPago.Contratos_Interventoria:
@@ -297,8 +302,11 @@ namespace asivamosffie.services
                         //#7 Factura Descuentos de la Dirección Técnica
                         intCantidadDependenciasSolicitudPago++;
                     }
+                    if(SolicitudPagoFase.SolicitudPagoFaseFactura.Any(s=> s.TieneDescuento == false))
+                        intCantidadDependenciasSolicitudPago++;
                 }
             }
+             
             return intCantidadDependenciasSolicitudPago;
         }
 
