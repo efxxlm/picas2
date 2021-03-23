@@ -13,10 +13,13 @@ import { TablaResultadosComponent } from './component/tabla-resultados/tabla-res
 import { MenuFichaComponent } from './component/menu-ficha/menu-ficha.component';
 import { MapaInteractivoComponent } from './component/mapa-interactivo/mapa-interactivo.component';
 import { ReportesEstandarComponent } from './component/reportes-estandar/reportes-estandar.component';
+import { MapaEntidadInstEducativaComponent } from './component/mapa-entidad-inst-educativa/mapa-entidad-inst-educativa.component';
+import { MapaEstadisticasContratistasComponent } from './component/mapa-estadisticas-contratistas/mapa-estadisticas-contratistas.component';
+import { MapaEstadisticasSupervisoresComponent } from './component/mapa-estadisticas-supervisores/mapa-estadisticas-supervisores.component';
 
 
 @NgModule({
-  declarations: [HomeComponent, FichaContratosProyectosComponent, TablaResultadosComponent, MenuFichaComponent, MapaInteractivoComponent, ReportesEstandarComponent],
+  declarations: [HomeComponent, FichaContratosProyectosComponent, TablaResultadosComponent, MenuFichaComponent, MapaInteractivoComponent, ReportesEstandarComponent, MapaEntidadInstEducativaComponent, MapaEstadisticasContratistasComponent, MapaEstadisticasSupervisoresComponent],
   imports: [
     CommonModule,
     ReportesRoutingModule,
