@@ -21,10 +21,10 @@ namespace asivamosffie.services
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
         private readonly IDocumentService _documentService;
-        private readonly IRegisterPayPerformanceService _registerPayPerformanceService;
-        public RegisterValidatePaymentRequierementsService(IRegisterPayPerformanceService registerPayPerformanceService, IDocumentService documentService, devAsiVamosFFIEContext context, ICommonService commonService)
+        private readonly IPaymentRequierementsService _paymentRequierementsService;
+        public RegisterValidatePaymentRequierementsService(IPaymentRequierementsService paymentRequierementsService, IDocumentService documentService, devAsiVamosFFIEContext context, ICommonService commonService)
         {
-            _registerPayPerformanceService = registerPayPerformanceService;
+            _paymentRequierementsService = paymentRequierementsService;
             _documentService = documentService;
             _commonService = commonService;
             _context = context;
@@ -864,8 +864,8 @@ namespace asivamosffie.services
                 if (SolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Count() != SolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Where(r => r.RespuestaCodigo != null).ToList().Count())
                     blRegistroCompletoListaChequeo = false;
 
-                if (SolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Any(s => s.RespuestaCodigo == ConstanCodigoRespuestasSolicitudPago.No_Cumple))
-                    blRegistroCompletoListaChequeo = false;
+                //if (SolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Any(s => s.RespuestaCodigo == ConstanCodigoRespuestasSolicitudPago.No_Cumple))
+                //    blRegistroCompletoListaChequeo = false;
 
                 SolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta = SolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Where(r => r.RespuestaCodigo != null).ToList();
 
