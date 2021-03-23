@@ -10,7 +10,10 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="quieroVer">Quiero ver</label>
+                            <label class="label-left" for="quieroVer"
+                            [class.color-secondaryColor]="
+                      addressForm.get('quieroVer').invalid && addressForm.get('quieroVer').touched
+                    ">Quiero ver</label>
                         </div>
                         <div class="col">
                             <mat-form-field class="select-width">
