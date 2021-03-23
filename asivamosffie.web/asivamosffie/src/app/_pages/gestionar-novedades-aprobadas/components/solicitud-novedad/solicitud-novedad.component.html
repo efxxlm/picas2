@@ -1,4 +1,4 @@
-<mat-card class="shipping-card var-main-gris mb-4em">
+<mat-card class="shipping-card var-main-gris mb-4em" *ngIf="novedad">
   <mat-card-header class="header-card header-card--margin">
     <mat-card-title class="header-card--text">
       Datos del contrato
@@ -9,51 +9,53 @@
       <strong>
         Nombre del contratista:
       </strong>
-      Constructora Colpatria SAS
+      {{ novedad.contrato.contratacion.contratista.nombre }}
+    </p>
+    <p>
+      <strong>Tipo de identificación:</strong>
+      <span>
+        {{ novedad.contrato.contratacion.contratista.tipoIdentificacionNotMapped }}
+      </span>
     </p>
     <p>
       <strong>
-        Tipo de identificación:
+        Número de identificación
       </strong>
-      NIT
+      {{ novedad.contrato.contratacion.contratista.numeroIdentificacion }}
     </p>
     <p>
-      <strong>
-        Número de identificación:
-      </strong>
-      900.879.989
+      <strong>Tipo de intervención:</strong>
+      <span>
+        {{ novedad.proyectosContrato[0].tipoIntervencion }}
+      </span>
     </p>
     <p>
-      <strong>
-        Tipo de intervención:
-      </strong>
-      Remodelación
+      <strong>Valor del contrato:</strong>
+      <span>
+        {{ novedad.proyectosContrato[0].valorTotal }}
+      </span>
     </p>
     <p>
-      <strong>
-        Valor del contrato:
-      </strong>
-      $ 420.000.000
+      <strong>Plazo:</strong>
+      <span>
+        {{ novedad.contrato.contratacion.disponibilidadPresupuestal[novedad.contrato.contratacion.disponibilidadPresupuestal.length-1].plazoDias }} Días 
+        {{ novedad.contrato.contratacion.disponibilidadPresupuestal[novedad.contrato.contratacion.disponibilidadPresupuestal.length-1].plazoMeses }} Meses 
+      </span>
     </p>
     <p>
-      <strong>
-        Plazo:
-      </strong>
-      36 meses / 25 días
+      <strong>Fecha de inicio de contrato:</strong>
+      <span>
+        
+      </span>
     </p>
     <p>
-      <strong>
-        Fecha de inicio de contrato:
-      </strong>
-      10/02/2020
-    </p>
-    <p>
-      <strong>
-        Fecha de finalización de contrato:
-      </strong>
-      05/04/2023
+      <strong>Fecha de finalización de contrato:</strong>
+      <span>
+
+      </span>
     </p>
 
+    <div *ngIf="novedad.esAplicadaAcontrato !== true">
     <h2 class="card-subTitle">Proyecto asociado</h2>
     <div class="table-responsive mb-2em px-table">
       <table class="mat-table cdk-table mat-sort mat-table-style table-form table-form--2 table-gris">
@@ -97,6 +99,7 @@
         </tbody>
       </table>
     </div>
+    </div>
   </mat-card-content>
 </mat-card>
 
@@ -111,241 +114,70 @@
       <strong>
         Fecha de solicitud de la novedad :
       </strong>
-      17/10/2020
+      {{ novedad.fechaSolictud | date: 'dd/MM/yyyy' }}
     </p>
     <p>
       <strong>
         Instancia donde se presentó la solicitud :
       </strong>
       <span>
-        Comité de obra
+        {{ novedad.instanciaNombre }}
       </span>
     </p>
     <p>
       <strong>
         Fecha de la sesión de la instancia :
       </strong>
-      12/10/2020
+      {{ novedad.fechaSesionInstancia | date: 'dd/MM/yyyy' }}
     </p>
-    <p>
+    <!-- <p>
       <strong>
         Tipo de Novedad :
       </strong>
       Modificación de Condiciones Contractuales
-    </p>
+    </p> -->
 
   </mat-card-content>
 </mat-card>
-    <mat-accordion>
-  <mat-expansion-panel class="expansion-style sub-expansion">
+<mat-accordion>
+  <mat-expansion-panel class="expansion-style sub-expansion" *ngFor=" let descripcion of novedad.novedadContractualDescripcion; let i = index; ">
     <mat-expansion-panel-header class="expansion-style--header">
       <mat-panel-title class="expansion-style--title">
-        Novedad 1
+        Novedad {{ 1 + i }}
       </mat-panel-title>
     </mat-expansion-panel-header>
     <mat-card class="shipping-card var-main-gris">
       <mat-card-header class="header-card header-card--margin">
         <mat-card-title class="header-card--text textoGris">
-          Suspensión
+          {{ descripcion.nombreTipoNovedad }}
         </mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <p><strong>Motivos de la novedad :</strong>xxxxxxxx </p>
+        <strong>Motivos de la novedad :</strong> 
+            <section *ngFor="let motivo of descripcion.novedadContractualDescripcionMotivo;"> {{ motivo.nombreMotivo}}, </section> 
+        
         <p><strong>Resumen de la justificación de la novedad: </strong></p>
-        <p>
-          xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-        </p>
-        <mat-card-title class="header-card--text sub-text">
+          <section 
+                  [innerHTML]="descripcion.resumenJustificacion"
+                  style="margin-left: 2em"
+          ></section>
+        <mat-card-title class="header-card--text sub-text" *ngIf="descripcion.tipoNovedadCodigo == '4'">
           Plazo solicitado
         </mat-card-title>
-        <p><strong>Fecha de inicio de la suspensión: </strong> xxxxxxxxxxxxxxxxxx</p>
-        <p><strong>Fecha final de la suspensión: </strong> xxxxxxxxxxxxxxxxxx</p>
-        <p><strong>¿Cuenta con la documentación soporte suficiente?: </strong> No</p>
+        <p *ngIf="descripcion.tipoNovedadCodigo == '4'"><strong>plazo Adicional Meses: </strong> {{ descripcion.plazoAdicionalMeses }}</p>
+        <p *ngIf="descripcion.tipoNovedadCodigo == '4'"><strong>plazo Adicional Días: </strong> {{ descripcion.plazoAdicionalDias }}</p>
+        <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'"><strong>Fecha de inicio de la suspensión: </strong> {{ descripcion.fechaInicioSuspension | date: 'dd/MM/yyyy' }}</p>
+        <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'"><strong>Fecha final de la suspensión: </strong> {{ descripcion.fechaFinSuspension | date: 'dd/MM/yyyy' }} </p>
+        <p *ngIf="descripcion.tipoNovedadCodigo == '3'" ><strong>Presupuesto adicional solicitado: </strong> {{ descripcion.presupuestoAdicionalSolicitado }} </p>
+        <p><strong>¿Cuenta con la documentación soporte suficiente?: </strong> {{ descripcion.esDocumentacionSoporte === true ? 'Sí' : 'No' }}</p>
         <p><strong>Concepto técnico: </strong></p>
-        <p>
-          xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-        </p>
-        <p><strong>Fecha concepto técnico: </strong> xxxxxxxxxxxxxxxxxx</p>
-        <p><strong>Número de radicado en FFIE de solicitud: </strong> xxxxxxxxxxxxxxxxxx</p>
+        <section 
+                  [innerHTML]="descripcion.conceptoTecnico"
+                  style="margin-left: 2em"
+          ></section>
+        <p><strong>Fecha concepto técnico: </strong> {{ descripcion.fechaConcepto | date: 'dd/MM/yyyy' }}</p>
+        <p><strong>Número de radicado en FFIE de solicitud: </strong> {{ descripcion.numeroRadicado }}</p>
       </mat-card-content>
     </mat-card>
-  </mat-expansion-panel>
-  <mat-expansion-panel class="expansion-style sub-expansion">
-    <mat-expansion-panel-header class="expansion-style--header">
-      <mat-panel-title class="expansion-style--title">
-        Novedad 2
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-    <mat-card class="shipping-card var-main-gris">
-      <mat-card-header class="header-card header-card--margin">
-        <mat-card-title class="header-card--text textoGris">
-          Adición
-        </mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <p><strong>Motivos de la novedad :</strong>xxxxxxxx </p>
-        <p><strong>Resumen de la justificación de la novedad: </strong></p>
-        <p>
-          xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-        </p>
-        <p><strong>Presupuesto adicional solicitado:</strong>xxxxxxxxxxxxx </p>
-        <p><strong>¿Cuenta con la documentación soporte suficiente?:</strong>No </p>
-        <p><strong>Concepto técnico: </strong></p>
-        <p>
-          xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-        </p>
-        <p><strong>Fecha concepto técnico: </strong> xxxxxxxxxxxxxxxxxx</p>
-        <p><strong>Número de radicado en FFIE de solicitud: </strong> xxxxxxxxxxxxxxxxxx</p>
-      </mat-card-content>
-    </mat-card>
-  </mat-expansion-panel>
-  <mat-expansion-panel class="expansion-style sub-expansion">
-    <mat-expansion-panel-header class="expansion-style--header">
-      <mat-panel-title class="expansion-style--title">
-        Novedad 3
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-    <mat-card class="shipping-card var-main-gris">
-      <mat-card-header class="header-card header-card--margin">
-        <mat-card-title class="header-card--text textoGris">
-          Modificaciones de condiciones contractuales
-        </mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <p><strong>Motivos de la novedad :</strong>xxxxxxxx </p>
-        <p><strong>Resumen de la justificación de la novedad: </strong></p>
-        <p>
-          xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-        </p>
-        <mat-card-title class="header-card--text sub-text">
-          Clausula 1
-        </mat-card-title>
-        <p><strong>Cláusula a modificar: </strong></p>
-        <p>
-          xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-        </p>
-        <p><strong>Ajuste solicitado a la cláusula: </strong></p>
-        <p>
-          xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-        </p>
-        <mat-card-title class="header-card--text sub-text">
-          Clausula 2
-        </mat-card-title>
-        <p><strong>Cláusula a modificar: </strong></p>
-        <p>
-          xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-        </p>
-        <p><strong>Ajuste solicitado a la cláusula: </strong></p>
-        <p>
-          xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-        </p>
-        <p><strong>¿Cuenta con la documentación soporte suficiente?:</strong>No </p>
-        <p><strong>Concepto técnico: </strong></p>
-        <p>
-          xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-        </p>
-        <p><strong>Fecha concepto técnico: </strong> xxxxxxxxxxxxxxxxxx</p>
-        <p><strong>Número de radicado en FFIE de solicitud: </strong> xxxxxxxxxxxxxxxxxx</p>
-      </mat-card-content>
-    </mat-card>
-  </mat-expansion-panel>
-  <mat-expansion-panel class="expansion-style sub-expansion">
-    <mat-expansion-panel-header class="expansion-style--header">
-      <mat-panel-title class="expansion-style--title">
-        Novedad 4
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-    
   </mat-expansion-panel>
 </mat-accordion>
-<!--
-<mat-card class="shipping-card var-main-gris">
-  <mat-card-header class="header-card header-card--margin">
-    <mat-card-title class="header-card--text">
-      Registro de novedad
-    </mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <p>
-      <strong>
-        Fecha de solicitud de la novedad:
-      </strong>
-      17/10/2020
-    </p>
-    <p>
-      <strong>
-        Instancia donde se presentó la solicitud:
-      </strong>
-      No aplica
-    </p>
-    <p>
-      <strong>
-        Tipo de Novedad:
-      </strong>
-      Reinicio
-    </p>
-    <p>
-      <strong>
-        Resumen de la justificación de la novedad:
-      </strong>
-      <span class="d-block">
-        El predio se está utilizando como albergue dado el desastre natural presentado en el municipio.
-      </span>
-    </p>
-    <p>
-      <strong>
-        Motivos de la novedad:
-      </strong>
-      Desastres naturales
-    </p>
-
-    <mat-card-title class="header-card--text">
-      Plazo solicitado
-    </mat-card-title>
-    <p>
-      <strong>
-        Fecha de inicio del reinicio:
-      </strong>
-      01/12/2020
-    </p>
-    <p>
-      <strong>
-        Fecha final del reinicio:
-      </strong>
-      03/02/2020
-    </p>
-    <p>
-      <strong>
-        Plazo adicional solicitado:
-      </strong>
-      4 meses / 10 días
-    </p>
-    <p>
-      <strong>
-        ¿Cuenta con la documentación soporte suficiente?:
-      </strong>
-      Si
-    </p>
-    <p>
-      <strong>
-        Concepto técnico:
-      </strong>
-      <span class="d-block">
-        Se evalúa la documentación y se evidencia que se requiere generar la novedad contractual por la calamidad presentada.
-      </span>
-    </p>
-    <p>
-      <strong>
-        Fecha concepto técnico:
-      </strong>
-      20/10/2020
-    </p>
-    <p>
-      <strong>
-        Número de radicado en FFIE de solicitud:
-      </strong>
-      NR-N56789-006
-    </p>
-  </mat-card-content>
-</mat-card>
--->

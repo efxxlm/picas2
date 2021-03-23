@@ -16,7 +16,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         Fecha de solicitud de la novedad
       </th>
-      <td mat-cell *matCellDef="let element"><b>{{element.fechaValidacionNovedad}}</b></td>
+      <td mat-cell *matCellDef="let element"><b>{{element.fechaSolictud | date:'dd/MM/yyyy'}}</b></td>
     </ng-container>
 
     <!-- numeroSolicitud Column -->
@@ -40,7 +40,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         Tipo de novedad
       </th>
-      <td mat-cell *matCellDef="let element">{{element.tipoNovedad}}</td>
+      <td mat-cell *matCellDef="let element">{{element.novedadesSeleccionadas}}</td>
     </ng-container>
 
     <!-- estadoNovedad Column -->
@@ -48,7 +48,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         Estado de la novedad
       </th>
-      <td mat-cell *matCellDef="let element">{{element.estadoNovedad}}</td>
+      <td mat-cell *matCellDef="let element">{{element.estadoCodigoNombre}}</td>
     </ng-container>
 
     <!-- estadoRegistro Column -->
@@ -57,9 +57,10 @@
         Estado del registro
       </th>
       <td mat-cell *matCellDef="let element">
-        <span class="info-text d-block m-0" [class.sin-diligenciar]="element.estadoRegistro === 'Incompleto'"
-          [class.completo]="element.estadoRegistro === 'Completo'"></span>
-        {{element.estadoRegistro}}
+        <span class="info-text d-block m-0" 
+          [class.sin-diligenciar]="element.registroCompletoTramiteNovedades !== true"
+          [class.completo]="element.registroCompletoTramiteNovedades === true"></span>
+        {{element.registroCompletoTramiteNovedades === true ? 'Completo' : 'Incompleto'}}
       </td>
     </ng-container>
 
@@ -68,14 +69,14 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Gestión</th>
       <td mat-cell *matCellDef="let element">
         <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
-          [routerLink]="[ 'registrarRevisionJuridica', element.id ]">
+          [routerLink]="[ 'registrarRevisionJuridica', element.novedadContractualId ]">
           Registrar revisión jurídica
         </a>
         <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button">
           Enviar a comité técnico
         </button>
         <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
-        [routerLink]="[ 'verDetalle', element.id ]">
+        [routerLink]="[ 'verDetalle', element.novedadContractualId ]">
         Ver detalle
       </a>
       <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button">

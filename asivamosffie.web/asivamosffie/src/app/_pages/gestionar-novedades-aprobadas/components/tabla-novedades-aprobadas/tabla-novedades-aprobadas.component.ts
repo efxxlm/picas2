@@ -4,28 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-
-export interface VerificacionDiaria {
-  id: string;
-  fechaValidacionNovedad: string;
-  numeroSolicitud: string;
-  numeroContrato: string;
-  tipoNovedad: string;
-  estadoNovedad: string;
-  estadoRegistro: string;
-}
-
-const ELEMENT_DATA: VerificacionDiaria[] = [
-  {
-    id: '1',
-    fechaValidacionNovedad: '15/10/2020',
-    numeroSolicitud: 'NOV-001',
-    numeroContrato: 'C223456789',
-    tipoNovedad: 'Modificación de Condiciones Contractuales',
-    estadoNovedad: 'En proceso de registro',
-    estadoRegistro: 'Incompleto',
-  }
-];
+import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNovelty/contractual-novelty.service';
 
 @Component({
   selector: 'app-tabla-novedades-aprobadas',
@@ -43,22 +22,29 @@ export class TablaNovedadesAprobadasComponent implements AfterViewInit {
     'estadoRegistro',
     'id'
   ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor() { }
+  constructor(
+    private contractualNoveltyService: ContractualNoveltyService
+  ) { }
 
   ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-    this.paginator._intl.nextPageLabel = 'Siguiente';
-    this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
-      return (page + 1).toString() + ' de ' + length.toString();
-    };
-    this.paginator._intl.previousPageLabel = 'Anterior';
+    this.contractualNoveltyService.getListGrillaNovedadContractualGestionar()
+      .subscribe(respuesta => {
+        this.dataSource = new MatTableDataSource( respuesta );
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+        this.paginator._intl.nextPageLabel = 'Siguiente';
+        this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
+          return (page + 1).toString() + ' de ' + length.toString();
+        };
+        this.paginator._intl.previousPageLabel = 'Anterior';
+      });
+
   }
 
   applyFilter(event: Event) {

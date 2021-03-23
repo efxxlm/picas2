@@ -5,15 +5,20 @@
     <span class="info-text completo">Completo</span>
   </p>
 </div>
-<mat-accordion>
+<mat-accordion *ngIf="novedad">
   <mat-expansion-panel class="expansion-style">
     <mat-expansion-panel-header class="expansion-style--header">
       <mat-panel-title class="expansion-style--title">
         Solicitud de novedad
       </mat-panel-title>
     </mat-expansion-panel-header>
-    <app-solicitud-novedad></app-solicitud-novedad>
+    <app-solicitud-novedad
+                          [novedad]="novedad"
+    >
+
+    </app-solicitud-novedad>
   </mat-expansion-panel>
+
   <mat-expansion-panel class="expansion-style">
     <mat-expansion-panel-header class="expansion-style--header">
       <mat-panel-title class="expansion-style--title">
@@ -32,7 +37,10 @@
           <strong>
             URL con soporte:
           </strong>
-          https://drive.google.com/drive/registrodecontroversiacontractual/registrosolicituddenovedad
+          <a [href]="novedad.urlSoporte"
+              target="_blank" rel="noopener noreferrer">
+              {{ novedad.urlSoporte }}
+            </a>
         </p>
       </mat-card-content>
     </mat-card>

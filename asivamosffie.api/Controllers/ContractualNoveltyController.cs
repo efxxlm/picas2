@@ -93,6 +93,20 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetListGrillaNovedadContractualGestionar")]
+        public async Task<ActionResult<List<VNovedadContractual>>> GetListGrillaNovedadContractualGestionar()
+        {
+            try
+            {
+                return await _contractualModification.GetListGrillaNovedadContractualGestionar();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         /*autor: jflorez
            descripción: elimina
            impacto: CU 4.1.3*/

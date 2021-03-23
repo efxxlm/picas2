@@ -75,6 +75,24 @@ namespace asivamosffie.services
             }
         }
 
+        public async Task<List<VNovedadContractual>> GetListGrillaNovedadContractualGestionar()
+        {
+            List<VNovedadContractual> ListNovedades = new List<VNovedadContractual>();
+
+            try
+            {
+                ListNovedades = await _context.VNovedadContractual
+                                                    .Where(r => r.RegistroCompletoValidacion == true)
+                                                    .ToListAsync();
+
+                return ListNovedades.OrderByDescending(r => r.FechaSolictud).ToList();
+            }
+            catch (Exception ex)
+            {
+                return ListNovedades;
+            }
+        }
+
         #endregion Grids
 
         #region Gets

@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNovelty/contractual-novelty.service';
+import { NovedadContractual, NovedadContractualObservaciones } from 'src/app/_interfaces/novedadContractual';
 
 @Component({
   selector: 'app-solicitud-novedad',
@@ -6,6 +8,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./solicitud-novedad.component.scss']
 })
 export class SolicitudNovedadComponent implements OnInit {
+
+  @Input() novedad: NovedadContractual;
 
   listaObservaciones = [
     {
@@ -17,9 +21,13 @@ export class SolicitudNovedadComponent implements OnInit {
     }
   ]
 
-  constructor() { }
+  constructor(
+    private contractualNoveltyService: ContractualNoveltyService,
+
+  ) { }
 
   ngOnInit(): void {
+    //this.contractualNoveltyService.get
   }
 
 }

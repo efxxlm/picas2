@@ -69,4 +69,9 @@ export class ContractualNoveltyService {
     return this.http.put<Respuesta>( `${ this.urlApi }/devolverSolicitud?pNovedaContractual=${ id }`, null ); 
   }
 
+  getListGrillaNovedadContractualGestionar()
+  {
+    return this.http.get<any[]>( `${ this.urlApi }/getListGrillaNovedadContractualGestionar` ); 
+  }
+
 }

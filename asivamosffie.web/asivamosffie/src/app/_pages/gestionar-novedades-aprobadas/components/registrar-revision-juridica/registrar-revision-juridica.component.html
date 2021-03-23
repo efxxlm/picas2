@@ -1,4 +1,4 @@
-<section class="container">
+<section class="container" *ngIf="novedad">
   <div class="container text-center">
     <div class="text-right">
       <a routerLink="../.." mat-button color="primary" class="btn-regresar">
@@ -6,10 +6,10 @@
       </a>
     </div>
     <h1 class="title-menu--h1">
-      Registrar revisión jurídica solicitud de novedad NOV-001
+      Registrar revisión jurídica solicitud de novedad {{ novedad.numeroSolicitud }}
     </h1>
     <p class="info-sub-title">
-      Número de contrato <b>C223456789</b>
+      Número de contrato <b>{{ novedad.contrato.numeroContrato }}</b>
     </p>
   </div>
 
@@ -19,24 +19,27 @@
         <strong>
           Fecha de solicitud:
         </strong>
-        20/10/2020
+        {{ novedad.fechaSolictud | date: 'dd/MM/yyyy' }}
       </p>
       <p>
         <strong>
           Fecha de aprobación del supervisor:
         </strong>
-        23/10/2020
+       
       </p>
       <p>
         <strong>
           Tipo de solicitud:
         </strong>
-        Reinicio
+       
       </p>
     </mat-card-content>
   </mat-card>
 
   <div class="mb-2em">
-    <app-expansion-panel></app-expansion-panel>
+    <app-expansion-panel
+                        [novedad]="novedad"
+    >
+  </app-expansion-panel>
   </div>
 </section>
