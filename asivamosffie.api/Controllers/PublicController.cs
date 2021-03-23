@@ -30,8 +30,11 @@ namespace asivamosffie.api.Controllers
         public readonly IValidateFulfilmentFinalReportService _ValidateFulfilmentFinalReportService;
         public readonly IRegisterWeeklyProgressService _registerWeeklyProgressService;
         public readonly IContractualControversy _ContractualControversyService;
+        public readonly IPaymentRequierementsService _paymentRequierementsService;
+
 
         public PublicController(
+                                IPaymentRequierementsService paymentRequierementsService,
                                 IManagePreContructionActPhase1Service managePreContructionActPhase1Service,
                                 IRegisterPreContructionPhase1Service registerPreContructionPhase1Service,
                                 IManagementCommitteeReportService managementCommitteeReportService,
@@ -41,8 +44,9 @@ namespace asivamosffie.api.Controllers
                                 IGuaranteePolicyService guaranteePolicy,
                                 IActBeginService actBeginService,
                                 IRegisterWeeklyProgressService registerWeeklyProgressService
-                            )
+                              )
         {
+            _paymentRequierementsService = paymentRequierementsService;
             _managePreContructionActPhase1Service = managePreContructionActPhase1Service;
             _RegisterPreContructionPhase1Service = registerPreContructionPhase1Service;
             _sourceFunding = sourceFunding;
@@ -67,6 +71,35 @@ namespace asivamosffie.api.Controllers
             return appSettingsService;
         }
 
+        #region Solicitud Pago
+        ///4.1.8
+        [HttpGet("GetSolicitudPagoPendienteVerificacion")]
+        public async Task SolicitudPagoPendienteVerificacion()
+        {
+            try
+            {
+                await _paymentRequierementsService.SolicitudPagoPendienteVerificacion();
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        ///4.1.9
+        [HttpGet("GetSolicitudPagoPendienteAutorizacion")]
+        public async Task SolicitudPagoPendienteAutorizacion()
+        {
+            try
+            {
+                await _paymentRequierementsService.SolicitudPagoPendienteAutorizacion();
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+
+        #endregion 
 
         #region Seguimiento Semanal 
         ///4.1.12
@@ -272,8 +305,8 @@ namespace asivamosffie.api.Controllers
         }
 
         #endregion
-
-
+         
+        #region Other
         [HttpGet("GetDiasHabilesActaConstruccionEnviada")]
         public async Task GetDiasHabilesActaConstruccionEnviada()
         {
@@ -365,6 +398,8 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
+
+        #endregion
     }
 
 

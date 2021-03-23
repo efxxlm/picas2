@@ -9,6 +9,10 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IPaymentRequierementsService
     {
+        Task<bool> SolicitudPagoPendienteVerificacion();
+
+        Task<bool> SolicitudPagoPendienteAutorizacion();
+
         Task<Respuesta> CreateEditObservacionFinancieraListaChequeo(SolicitudPagoListaChequeo pSolicitudPagoListaChequeo);
        
         Task<Respuesta> CreateUpdateSolicitudPagoObservacion(SolicitudPagoObservacion pSolicitudPagoObservacion);
