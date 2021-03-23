@@ -10,7 +10,8 @@ namespace asivamosffie.model.Models
         public string NumeroSolicitud { get; set; }
         public int? ContratoId { get; set; }
         public int SolicitudPagoId { get; set; }
-        public int? EstadoCodigo { get; set; }
+        public string EstadoCodigo { get; set; }
+        public int? IntEstadoCodigo { get; set; }
         public string EstadoNombre { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public string NumeroContrato { get; set; }

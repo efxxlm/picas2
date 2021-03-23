@@ -51,7 +51,7 @@ namespace asivamosffie.services
             {
                 case (int)enumeratorMenu.Verificar_solicitud_de_pago:
                     result = await _context.VSolicitudPago.Where(s =>
-                            s.EstadoCodigo > (int)EnumEstadoSolicitudPago.En_proceso_de_registro)
+                            s.IntEstadoCodigo > (int)EnumEstadoSolicitudPago.Con_solicitud_revisada_por_equipo_facturacion)
 
                                                     .OrderByDescending(r => r.FechaModificacion)
                                                     .ToListAsync();
@@ -59,14 +59,14 @@ namespace asivamosffie.services
 
                 case (int)enumeratorMenu.Autorizar_solicitud_de_pago:
                     result = await _context.VSolicitudPago.Where(s =>
-                       s.EstadoCodigo > (int)EnumEstadoSolicitudPago.Con_solicitud_revisada_por_equipo_facturacion)
+                       s.IntEstadoCodigo > (int)EnumEstadoSolicitudPago.Con_solicitud_revisada_por_equipo_facturacion)
                                                .OrderByDescending(r => r.FechaModificacion)
                                                .ToListAsync();
                     break;
 
                 case (int)enumeratorMenu.Verificar_Financieramente_Solicitud_De_Pago:
                     result = await _context.VSolicitudPago.Where(s =>
-                       s.EstadoCodigo > (int)EnumEstadoSolicitudPago.Con_solicitud_revisada_por_equipo_facturacion)
+                       s.IntEstadoCodigo > (int)EnumEstadoSolicitudPago.Con_solicitud_revisada_por_equipo_facturacion)
 
 
                                .OrderByDescending(r => r.FechaModificacion)
@@ -76,7 +76,7 @@ namespace asivamosffie.services
 
                 case (int)enumeratorMenu.Validar_Financieramente_Solicitud_De_Pago:
                     result = await _context.VSolicitudPago.Where(s =>
-                       s.EstadoCodigo > (int)EnumEstadoSolicitudPago.Con_solicitud_revisada_por_equipo_facturacion)
+                       s.IntEstadoCodigo > (int)EnumEstadoSolicitudPago.Con_solicitud_revisada_por_equipo_facturacion)
                                                .OrderByDescending(r => r.FechaModificacion)
                                                .ToListAsync();
                     break;
@@ -84,11 +84,10 @@ namespace asivamosffie.services
                 default:
                     break;
             }
+         
+          
 
-            return result;
-
-
-            List<dynamic> grind = new List<dynamic>();
+          
             return result.Select(r => new
             {
                 r.RegistroCompletoAutorizar,
@@ -104,58 +103,6 @@ namespace asivamosffie.services
                 r.ModalidadNombre
             });
 
-        }
-
-        public async Task<Respuesta> ChangueStatusSolicitudPago(SolicitudPago pSolicitudPago)
-        {
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Solicitud_Pago, (int)EnumeratorTipoDominio.Acciones);
-
-            try
-            {
-                int intEstadoCodigo = Int32.Parse(pSolicitudPago.EstadoCodigo);
-
-                bool EstaAprobadoCoordinacion = false;
-
-                //   if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Aprobado_por_coordinacion)
-                //   EstaAprobadoCoordinacion = true;
-                 
-                await _context.Set<SolicitudPago>()
-                                       .Where(o => o.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
-                                                                                                       .UpdateAsync(r => new SolicitudPago()
-                                                                                                       { 
-                                                                                                           RegistroCompletoCoordinador = EstaAprobadoCoordinacion,
-                                                                                                           FechaModificacion = DateTime.Now,
-                                                                                                           UsuarioModificacion = pSolicitudPago.UsuarioCreacion,
-                                                                                                           EstadoCodigo = pSolicitudPago.EstadoCodigo
-                                                                                                       });
-
-                string strEstadoSolicitudPago = _context.Dominio.Where(
-                                                                          d => d.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Solicitud_Pago
-                                                                       && d.Codigo == pSolicitudPago.EstadoCodigo)
-                                                                                                                  .FirstOrDefault().Nombre;
-
-                return
-                    new Respuesta
-                    {
-                        IsSuccessful = true,
-                        IsException = false,
-                        IsValidation = false,
-                        Code = GeneralCodes.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.OperacionExitosa, idAccion, pSolicitudPago.UsuarioCreacion, "EL ESTADO DE LA SOLICITUD DE PAGO CAMBIO A: " + strEstadoSolicitudPago.ToUpper())
-                    };
-            }
-            catch (Exception ex)
-            {
-                return
-                    new Respuesta
-                    {
-                        IsSuccessful = false,
-                        IsException = true,
-                        IsValidation = false,
-                        Code = GeneralCodes.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.Error, idAccion, pSolicitudPago.UsuarioCreacion, ex.InnerException.ToString())
-                    };
-            }
         }
 
         private void ActualizarSolicitudPagoTieneObservacion(SolicitudPagoObservacion pSolicitudPagoObservacion, bool TieneObservacion)
@@ -503,18 +450,74 @@ namespace asivamosffie.services
         #endregion
 
         #region  Emails
-
-        public async Task<bool> SendEmailWhenCompleteWeeklyProgress(int pSeguimientoSemanalId)
+        public async Task<Respuesta> ChangueStatusSolicitudPago(SolicitudPago pSolicitudPago)
         {
-            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Seguimiento_Semanal_Completo));
-        
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Solicitud_Pago, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                int intEstadoCodigo = Int32.Parse(pSolicitudPago.EstadoCodigo);
+
+                bool EstaAprobadoCoordinacion = false;
+
+                if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Enviado_para_verificacion)
+                {
+                    EstaAprobadoCoordinacion = true;
+                    await SendEmailToAproved(pSolicitudPago.SolicitudPagoId);
+                }
+
+
+                await _context.Set<SolicitudPago>()
+                                       .Where(o => o.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
+                                                                                                       .UpdateAsync(r => new SolicitudPago()
+                                                                                                       {
+                                                                                                           RegistroCompletoCoordinador = EstaAprobadoCoordinacion,
+                                                                                                           FechaModificacion = DateTime.Now,
+                                                                                                           UsuarioModificacion = pSolicitudPago.UsuarioCreacion,
+                                                                                                           EstadoCodigo = pSolicitudPago.EstadoCodigo
+                                                                                                       });
+
+                string strEstadoSolicitudPago = _context.Dominio.Where(
+                                                                          d => d.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Solicitud_Pago
+                                                                       && d.Codigo == pSolicitudPago.EstadoCodigo)
+                                                                                                                  .FirstOrDefault().Nombre;
+
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = GeneralCodes.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.OperacionExitosa, idAccion, pSolicitudPago.UsuarioCreacion, "EL ESTADO DE LA SOLICITUD DE PAGO CAMBIO A: " + strEstadoSolicitudPago.ToUpper())
+                    };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.Error, idAccion, pSolicitudPago.UsuarioCreacion, ex.InnerException.ToString())
+                    };
+            }
+        }
+
+        private async Task<bool> SendEmailToAproved(int pSeguimientoSemanal)
+        {
+
+            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Enviar_a_aprobacion4_1_7));
+            string strContenido = ReplaceVariablesSolicitudPago(template.Contenido, pSeguimientoSemanal);
+
             List<EnumeratorPerfil> perfilsEnviarCorreo =
                 new List<EnumeratorPerfil>
                                           {
-                                                EnumeratorPerfil.Apoyo
+                                                EnumeratorPerfil.Supervisor
                                           };
-
-            return _commonService.EnviarCorreo(perfilsEnviarCorreo, " ", template.Asunto);
+            return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
         }
 
         private string ReplaceVariablesSolicitudPago(string template, int pSolicitudPago)
@@ -529,7 +532,6 @@ namespace asivamosffie.services
                       .Replace("[FECHA_SOLICITUD]", solicitudPago.FechaCreacion.ToString(""))
                       .Replace("[FECHA_VALIDACION]", Convert.ToDateTime(solicitudPago.FechaCreacion).ToString("dd/MM/yyy")
                       .Replace("[MODALIDAD_CONTRATO]", ListTipoIntervencion.Where(lti => lti.Codigo == solicitudPago.Contrato.ModalidadCodigo).FirstOrDefault().Nombre));
-                   
             return template;
         }
 

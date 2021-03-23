@@ -91,6 +91,19 @@ namespace asivamosffie.services.Helpers.Enumerator
         //6.2
         CreateUserEmail_6_2 = 95,
 
-        DesactivarUsuario_6_2 = 96
+        DesactivarUsuario_6_2 = 96,
+
+        //SOLICITUD DE PAGO
+        Enviar_a_aprobacion4_1_7 = 97,
+        DevolverSolicititud4_1_7 = 102,
+
+        Devolver_solicitud_4_1_8 = 98,
+        Enviar_para_autorizar_solicitud_4_1_8 = 101,
+        Alerta_4_1_8 = 103,
+
+        Devolver_4_1_9 = 104,
+        EnviarTramiteFinanciera_4_1_9 = 105,
+        Alerta_4_1_9 = 106,
+        EnviarTramiteFinanciera_4_1_9_TODOS = 107,
     }
 }

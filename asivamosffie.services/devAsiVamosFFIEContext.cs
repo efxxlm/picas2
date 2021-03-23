@@ -8513,6 +8513,10 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_SolicitudPago");
 
+                entity.Property(e => e.EstadoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.EstadoNombre)
                     .HasMaxLength(100)
                     .IsUnicode(false);
@@ -8520,6 +8524,8 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.IntEstadoCodigo).HasColumnName("intEstadoCodigo");
 
                 entity.Property(e => e.ModalidadNombre)
                     .HasMaxLength(100)

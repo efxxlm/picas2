@@ -20,9 +20,9 @@ namespace asivamosffie.services
         #region constructor
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
-        private readonly IDocumentService _documentService; 
-        public RegisterValidatePaymentRequierementsService(  IDocumentService documentService, devAsiVamosFFIEContext context, ICommonService commonService)
-        { 
+        private readonly IDocumentService _documentService;
+        public RegisterValidatePaymentRequierementsService(IDocumentService documentService, devAsiVamosFFIEContext context, ICommonService commonService)
+        {
             _documentService = documentService;
             _commonService = commonService;
             _context = context;
@@ -85,7 +85,7 @@ namespace asivamosffie.services
         public async Task<dynamic> GetUsoByConceptoPagoCriterioCodigo(string pConceptoPagoCodigo, int pContratoId)
         {
             try
-            { 
+            {
                 List<dynamic> ListDynamics = new List<dynamic>();
                 List<string> strCriterios = _context.ConceptoPagoUso.Where(r => r.ConceptoPagoCodigo == pConceptoPagoCodigo).Select(r => r.Uso).ToList();
                 List<Dominio> ListUsos = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Usos);
@@ -94,7 +94,7 @@ namespace asivamosffie.services
 
             }
             catch (Exception ex)
-            { 
+            {
                 return new { };
             }
         }
@@ -562,7 +562,7 @@ namespace asivamosffie.services
                     };
             }
         }
-         
+
         public async Task<Respuesta> DeleteSolicitudPagoFaseFacturaDescuento(int pSolicitudPagoFaseFacturaDescuentoId, string pUsuarioModificacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Descuento, (int)EnumeratorTipoDominio.Acciones);
@@ -1312,7 +1312,7 @@ namespace asivamosffie.services
 
             return true;
         }
-         
+
         private bool ValidateCompleteRecordSolicitudPagoSoporteSolicitud(SolicitudPagoSoporteSolicitud pSolicitudPagoSoporteSolicitud)
         {
             if (string.IsNullOrEmpty(pSolicitudPagoSoporteSolicitud.UrlSoporte))
@@ -1793,6 +1793,8 @@ namespace asivamosffie.services
 
         #endregion
 
-        #endregion 
+        #endregion
+         
+      
     }
 }
