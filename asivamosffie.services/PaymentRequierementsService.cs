@@ -194,18 +194,16 @@ namespace asivamosffie.services
                                                               && r.Archivada != true).Count();
                 //Sumar cantidad Listas de chequeo
                 intCantidadDependenciasSolicitudPago += solicitudPago.SolicitudPagoListaChequeo.Count(r => r.Eliminado == false);
-
-
+     
                 bool TieneObservacion =
-                                 _context.SolicitudPagoObservacion.Any(r => r.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId
+                                 _context.SolicitudPagoObservacion.Any
+                                                            (r => r.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId
                                                             && r.MenuId == pSolicitudPagoObservacion.MenuId
                                                             && r.Eliminado != true
                                                             && r.Archivada != true
                                                             && r.TieneObservacion == true
                                                             );
-                //Agrego La dependencia de Certificado de solicitud 
-                if (pSolicitudPagoObservacion.MenuId == (int)enumeratorMenu.Autorizar_solicitud_de_pago)
-                    intCantidadDependenciasSolicitudPago++;
+               
 
 
                 //Valida si la cantidad de relaciones de solicitud Pago es igual a la cantidad de observaciones de esa Solicitud pago 
@@ -348,18 +346,7 @@ namespace asivamosffie.services
                                                                                                          });
         }
 
-        private void ActualizarSolicitudPagoCertificado(SolicitudPago pSolicitudPago)
-        {
-            SolicitudPagoCertificado solicitudPagoCertificado = new SolicitudPagoCertificado
-            {
-                SolicitudPagoId = pSolicitudPago.SolicitudPagoId,
-                Url = pSolicitudPago.SolicitudPagoCertificado.FirstOrDefault().Url,
-                UsuarioCreacion = pSolicitudPago.UsuarioCreacion,
-                FechaCreacion = DateTime.Now,
-                RegistroCompleto = !string.IsNullOrEmpty(pSolicitudPago.SolicitudPagoCertificado.FirstOrDefault().Url),
-            };
-            _context.SolicitudPagoCertificado.Add(solicitudPagoCertificado);
-        }
+ 
         #endregion
 
         #region Financiera
@@ -514,8 +501,7 @@ namespace asivamosffie.services
                 ///4.1.8
                 if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Enviada_para_autorizacion)
                 {
-                    await SendEmailToAprovedVerify(pSolicitudPago.SolicitudPagoId);
-                    ActualizarSolicitudPagoCertificado(pSolicitudPago);
+                    await SendEmailToAprovedVerify(pSolicitudPago.SolicitudPagoId); 
                 }
 
                 ///4.1.8

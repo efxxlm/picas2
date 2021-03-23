@@ -314,7 +314,6 @@ namespace asivamosffie.services
                 case ConstanCodigoTipoSolicitudContratoSolicitudPago.Contratos_Obra:
 
                     solicitudPago = _context.SolicitudPago.Where(r => r.SolicitudPagoId == solicitudPago.SolicitudPagoId)
-                        .Include(r => r.SolicitudPagoCertificado)
                         .Include(r => r.SolicitudPagoCargarFormaPago)
                         .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
                            .ThenInclude(r => r.SolicitudPagoFase)
@@ -341,8 +340,7 @@ namespace asivamosffie.services
 
                 case ConstanCodigoTipoSolicitudContratoSolicitudPago.Expensas:
                     solicitudPago = _context.SolicitudPago.Where(r => r.SolicitudPagoId == solicitudPago.SolicitudPagoId)
-                        .Include(r => r.SolicitudPagoCertificado)
-                        .Include(e => e.ContratacionProyecto).ThenInclude(p => p.Proyecto)
+                         .Include(e => e.ContratacionProyecto).ThenInclude(p => p.Proyecto)
                         .Include(e => e.SolicitudPagoExpensas)
                         .Include(e => e.SolicitudPagoSoporteSolicitud)
                         .Include(r => r.SolicitudPagoListaChequeo)
@@ -353,7 +351,6 @@ namespace asivamosffie.services
 
                 case ConstanCodigoTipoSolicitudContratoSolicitudPago.Otros_Costos_Servicios:
                     solicitudPago = _context.SolicitudPago.Where(r => r.SolicitudPagoId == solicitudPago.SolicitudPagoId)
-                        .Include(r => r.SolicitudPagoCertificado)
                         .Include(e => e.SolicitudPagoOtrosCostosServicios)
                      .Include(e => e.SolicitudPagoSoporteSolicitud)
                             .Include(r => r.SolicitudPagoListaChequeo)

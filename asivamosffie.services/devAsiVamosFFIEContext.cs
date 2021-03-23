@@ -183,7 +183,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<Solicitud> Solicitud { get; set; }
         public virtual DbSet<SolicitudPago> SolicitudPago { get; set; }
         public virtual DbSet<SolicitudPagoCargarFormaPago> SolicitudPagoCargarFormaPago { get; set; }
-        public virtual DbSet<SolicitudPagoCertificado> SolicitudPagoCertificado { get; set; }
         public virtual DbSet<SolicitudPagoExpensas> SolicitudPagoExpensas { get; set; }
         public virtual DbSet<SolicitudPagoFase> SolicitudPagoFase { get; set; }
         public virtual DbSet<SolicitudPagoFaseAmortizacion> SolicitudPagoFaseAmortizacion { get; set; }
@@ -6348,39 +6347,6 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.SolicitudPagoCargarFormaPago)
                     .HasForeignKey(d => d.SolicitudPagoId)
                     .HasConstraintName("FK_SolicitudPagoCargarFormaPago_SolicitudPago");
-            });
-
-            modelBuilder.Entity<SolicitudPagoCertificado>(entity =>
-            {
-                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
-
-                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
-
-                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
-
-                entity.Property(e => e.RegistroCompleto).HasDefaultValueSql("((0))");
-
-                entity.Property(e => e.RegistroCompletoCoordinador).HasDefaultValueSql("((0))");
-
-                entity.Property(e => e.RegistroCompletoSupervisor).HasDefaultValueSql("((0))");
-
-                entity.Property(e => e.Url)
-                    .HasMaxLength(500)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.UsuarioCreacion)
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.UsuarioModificacion)
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
-
-                entity.HasOne(d => d.SolicitudPago)
-                    .WithMany(p => p.SolicitudPagoCertificado)
-                    .HasForeignKey(d => d.SolicitudPagoId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SolicitudPagoCertificado_SolicitudPago");
             });
 
             modelBuilder.Entity<SolicitudPagoExpensas>(entity =>
