@@ -8,7 +8,7 @@
         <mat-card-content style="text-align: left;">
             <p><strong>Porcentaje de amortización:</strong> {{ detalleForm.get( 'porcentajeAmortizacion' ).value }}%
             </p>
-            <p><strong>Valor de amortización:</strong> {{ detalleForm.get( 'valorAmortizacion' ).value }} </p>
+            <p><strong>Valor de amortización:</strong> ${{ detalleForm.get( 'valorAmortizacion' ).value | currency:' ':'symbol-narrow':'.0-0' }} </p>
         </mat-card-content>
     </mat-card>
 

@@ -77,7 +77,7 @@
                                 color="accent"
                                 class="btn-table"
                                 *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoVerificacion && element.registroCompletoVerificar === true && element.tieneObservacion === false"
-                                (click)="getCerificadoDialog( element )">
+                                (click)="getAutorizarSolicitudPago( element.solicitudPagoId )">
                                 Enviar para autorizar solicitud
                         </button>
 
@@ -121,7 +121,7 @@
                                 color="accent"
                                 class="btn-table"
                                 *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoVerificacion && element.registroCompletoVerificar === true && element.tieneObservacion === false"
-                                (click)="getCerificadoDialog( element )">
+                                (click)="getAutorizarSolicitudPago( element.solicitudPagoId )">
                                 Enviar para autorizar solicitud
                         </button>
 

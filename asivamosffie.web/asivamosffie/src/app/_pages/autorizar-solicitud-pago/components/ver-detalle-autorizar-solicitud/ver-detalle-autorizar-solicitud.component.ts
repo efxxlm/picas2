@@ -145,31 +145,6 @@ export class VerDetalleAutorizarSolicitudComponent implements OnInit {
                                         }
                                     );
 
-                                // Get observaciones certificado de la solicitud
-                                this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
-                                    this.menusIdPath.autorizarSolicitudPagoId,
-                                    this.activatedRoute.snapshot.params.idSolicitudPago,
-                                    this.contrato.solicitudPagoOnly.solicitudPagoCertificado[0].solicitudPagoCertificadoId,
-                                    this.listaTipoObservacionSolicitudes.certificadoCodigo )
-                                    .subscribe(
-                                        response => {
-                                            const obsSupervisor = response.filter(obs => obs.archivada === false)[0];
-
-                                            if (obsSupervisor !== undefined) {
-                                                this.estaEditando = true;
-                                                this.certificadoObsForm.markAllAsTouched();
-                                                this.solicitudPagoObservacionId = obsSupervisor.solicitudPagoObservacionId;
-                                                this.certificadoObsForm.setValue(
-                                                    {
-                                                        fechaCreacion: obsSupervisor.fechaCreacion,
-                                                        tieneObservaciones: obsSupervisor.tieneObservacion !== undefined ? obsSupervisor.tieneObservacion : null,
-                                                        observaciones: obsSupervisor.observacion !== undefined ? (obsSupervisor.observacion.length > 0 ? obsSupervisor.observacion : null) : null
-                                                    }
-                                                );
-                                            }
-                                        }
-                                    );
-
                                 if (this.contrato.solicitudPagoOnly.tipoSolicitudCodigo === this.tipoSolicitudCodigo.otrosCostos) {
                                     // Get observaciones otros costos
                                     this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(

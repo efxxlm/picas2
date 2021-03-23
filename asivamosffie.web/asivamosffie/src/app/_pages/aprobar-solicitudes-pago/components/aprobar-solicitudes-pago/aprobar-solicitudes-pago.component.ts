@@ -79,11 +79,20 @@ export class AprobarSolicitudesPagoComponent implements OnInit {
         });
     }
 
-    getCerificadoDialog( registro: any ) {
-        this.dialog.open( DialogEnvioAutorizacionComponent, {
-          width: '80em',
-          data: registro
-        });
+    getAutorizarSolicitudPago( pSolicitudPagoId: number ) {
+        const pSolicitudPago = {
+            solicitudPagoId: pSolicitudPagoId,
+            estadoCodigo: this.listaEstadoSolicitudPago.enviadaAutorizacion
+        };
+
+        this.obsMultipleSvc.changueStatusSolicitudPago( pSolicitudPago )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} )
+                        .then( () => this.routes.navigate( ['/verificarSolicitudPago'] ) );
+                }, err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
     changueStatusSolicitudPago( pSolicitudPagoId: number ) {

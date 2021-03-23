@@ -91,38 +91,4 @@
             </mat-card>
         </mat-expansion-panel>
     </mat-accordion>
-
-    <mat-accordion>
-        <mat-expansion-panel class="expansion-style">
-            <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title">
-                    Certificado de autorización
-                </mat-panel-title>
-            </mat-expansion-panel-header>
-            <mat-card class="shipping-card var-main-gris">
-                <mat-card-header class="header-card header-card--margin">
-                    <mat-card-title class="header-card--text textoGris">
-                        Certificado
-                    </mat-card-title>
-                </mat-card-header>
-                <mat-card-content style="text-align: left;">
-                    <p><strong>URL con certificado:</strong> {{ solicitudPago.solicitudPagoCertificado[0].url }} </p>
-                </mat-card-content>
-            </mat-card>
-
-            <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;" *ngIf="certificadoObsForm.get( 'fechaCreacion' ).value !== null">
-                <mat-card-header class="header-card header-card--margin">
-                    <mat-card-title class="header-card--text textoGris">
-                        Observación de la coordinación
-                    </mat-card-title>
-                </mat-card-header>
-                <mat-card-content style="text-align: left;">
-                    <p><b> {{ certificadoObsForm.get( 'fechaCreacion' ).value | date: 'dd/MM/yyyy' }} </b></p>
-                    <p *ngIf="certificadoObsForm.get( 'tieneObservaciones' ).value === true"><b>¿Desde la coordinación tiene observaciones a el certificado de autorización?:</b> Si</p>
-                    <p *ngIf="certificadoObsForm.get( 'tieneObservaciones' ).value === false"><b>¿Desde la coordinación tiene observaciones a el certificado de autorización?:</b> No</p>
-                    <section [innerHTML]="certificadoObsForm.get( 'observaciones' ).value" *ngIf="certificadoObsForm.get( 'tieneObservaciones' ).value === true"></section>
-                </mat-card-content>
-            </mat-card>
-        </mat-expansion-panel>
-    </mat-accordion>
 </section>

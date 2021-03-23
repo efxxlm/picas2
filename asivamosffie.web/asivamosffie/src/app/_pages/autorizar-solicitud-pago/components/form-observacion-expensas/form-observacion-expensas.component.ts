@@ -143,37 +143,6 @@ export class FormObservacionExpensasComponent implements OnInit {
                                                 }
                                             );
 
-                                        // Get observaciones certificado de la solicitud
-                                        this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
-                                            this.menusIdPath.autorizarSolicitudPagoId,
-                                            this.activatedRoute.snapshot.params.id,
-                                            this.solicitudPago.solicitudPagoSoporteSolicitud[0].solicitudPagoSoporteSolicitudId,
-                                            this.listaTipoObservacionSolicitudes.certificadoCodigo )
-                                            .subscribe(
-                                                response => {
-                                                    const obsSupervisor = response.filter(obs => obs.archivada === false)[0];
-
-                                                    if (obsSupervisor !== undefined) {
-                                                        if (obsSupervisor.registroCompleto === false) {
-                                                            this.estadoAcordeones.certificado = 'en-proceso';
-                                                        }
-                                                        if (obsSupervisor.registroCompleto === true) {
-                                                            this.estadoAcordeones.certificado = 'completo';
-                                                        }
-                                                        this.estaEditando = true;
-                                                        this.certificadoObsForm.markAllAsTouched();
-                                                        this.solicitudPagoCertificadoObsId = obsSupervisor.solicitudPagoObservacionId;
-                                                        this.certificadoObsForm.setValue(
-                                                            {
-                                                                fechaCreacion: obsSupervisor.fechaCreacion,
-                                                                tieneObservaciones: obsSupervisor.tieneObservacion !== undefined ? obsSupervisor.tieneObservacion : null,
-                                                                observaciones: obsSupervisor.observacion !== undefined ? (obsSupervisor.observacion.length > 0 ? obsSupervisor.observacion : null) : null
-                                                            }
-                                                        );
-                                                    }
-                                                }
-                                            );
-
                                         const solicitudPagoExpensas = this.solicitudPago.solicitudPagoExpensas[0];
                                         this.detalleForm.setValue(
                                             {
