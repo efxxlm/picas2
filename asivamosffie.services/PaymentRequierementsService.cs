@@ -51,8 +51,7 @@ namespace asivamosffie.services
             {
                 case (int)enumeratorMenu.Verificar_solicitud_de_pago:
                     result = await _context.VSolicitudPago.Where(s =>
-                            s.IntEstadoCodigo > (int)EnumEstadoSolicitudPago.Con_solicitud_revisada_por_equipo_facturacion)
-
+                            s.IntEstadoCodigo > (int)EnumEstadoSolicitudPago.Con_solicitud_revisada_por_equipo_facturacion) 
                                                     .OrderByDescending(r => r.FechaModificacion)
                                                     .ToListAsync();
                     break;
@@ -90,6 +89,8 @@ namespace asivamosffie.services
 
             return result.Select(r => new
             {
+                r.TieneObservacion,
+                r.TieneSubsanacion,
                 r.RegistroCompletoAutorizar,
                 r.RegistroCompletoVerificar,
                 r.TipoSolicitudCodigo,
@@ -99,6 +100,7 @@ namespace asivamosffie.services
                 r.NumeroSolicitud,
                 r.NumeroContrato,
                 r.EstadoNombre,
+                r.EstadoNombre2,
                 r.EstadoCodigo,
                 r.ModalidadNombre
             });

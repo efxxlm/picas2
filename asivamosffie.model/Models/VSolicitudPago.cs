@@ -13,6 +13,7 @@ namespace asivamosffie.model.Models
         public string EstadoCodigo { get; set; }
         public int? IntEstadoCodigo { get; set; }
         public string EstadoNombre { get; set; }
+        public string EstadoNombre2 { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public string NumeroContrato { get; set; }
         public string ModalidadNombre { get; set; }
