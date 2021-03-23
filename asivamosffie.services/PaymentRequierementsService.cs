@@ -310,7 +310,10 @@ namespace asivamosffie.services
                     foreach (var SolicitudPagoFaseFactura in SolicitudPagoFase.SolicitudPagoFaseFactura.Where(r => r.Eliminado != true))
                     {
                         //#7 Factura para proyectos asociados
-                        intCantidadDependenciasSolicitudPago++; 
+                        intCantidadDependenciasSolicitudPago++;
+
+                        //#7 Factura Descuentos de la Dirección Técnica
+                        intCantidadDependenciasSolicitudPago++;
                     }
                     // #8 Fase Factura
                     if (SolicitudPagoFase.SolicitudPagoFaseFactura.Any(s => s.TieneDescuento == true))
@@ -494,8 +497,7 @@ namespace asivamosffie.services
                 await _context.Set<SolicitudPago>()
                                        .Where(o => o.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
                                                                                                        .UpdateAsync(r => new SolicitudPago()
-                                                                                                       {
-                                                                                                           RegistroCompletoCoordinador = EstaAprobadoCoordinacion,
+                                                                                                       { 
                                                                                                            FechaModificacion = DateTime.Now,
                                                                                                            UsuarioModificacion = pSolicitudPago.UsuarioCreacion,
                                                                                                            EstadoCodigo = pSolicitudPago.EstadoCodigo

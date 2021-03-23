@@ -30,8 +30,6 @@ namespace asivamosffie.model.Models
         public string EstadoCodigo { get; set; }
         public string NumeroSolicitud { get; set; }
         public bool? TieneObservacion { get; set; }
-        public bool? RegistroCompletoSupervisor { get; set; }
-        public bool? RegistroCompletoCoordinador { get; set; }
         public int? OrdenGiroId { get; set; }
         public DateTime? FechaAprobacionFinanciera { get; set; }
         public DateTime? FechaRadicacionSacContratista { get; set; }
