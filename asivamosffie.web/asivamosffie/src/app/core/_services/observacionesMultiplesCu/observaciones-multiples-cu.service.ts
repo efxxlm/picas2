@@ -39,7 +39,7 @@ export class ObservacionesMultiplesCuService {
 
   listaTipoObservacionSolicitudes() {
     /*
-      Get lista de tipos de observaciones para los CU => 4.1.8 - 4.1.9 - 4.3.1 - 4.3.2 - 4.3.4 - 4.3.5
+      Get lista de tipos de observaciones para los CU => 4.1.8 - 4.1.9 - 4.3.4 - 4.3.5 - 
     */
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=150`)
       .pipe(
@@ -80,6 +80,9 @@ export class ObservacionesMultiplesCuService {
             }
             if ( tipoObservacion.codigo === '11' ) {
               tiposObservaciones.listaChequeoCodigo = tipoObservacion.codigo
+            }
+            if ( tipoObservacion.codigo === '12' ) {
+              tiposObservaciones.certificadoCodigo = tipoObservacion.codigo
             }
           } );
 

@@ -4,9 +4,11 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import moment from 'moment';
 import { CommonService } from 'src/app/core/_services/common/common.service';
 import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
 import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { EstadoSolicitudPagoOrdenGiro, EstadosSolicitudPagoOrdenGiro, TipoSolicitud, TipoSolicitudes } from 'src/app/_interfaces/estados-solicitudPago-ordenGiro.interface';
 import { DialogEnvioAutorizacionComponent } from '../dialog-envio-autorizacion/dialog-envio-autorizacion.component';
 
@@ -47,6 +49,11 @@ export class AprobarSolicitudesPagoComponent implements OnInit {
                         .subscribe(
                             getListSolicitudPago => {
                                 console.log( getListSolicitudPago );
+
+                                if ( getListSolicitudPago.length > 0 ) {
+                                    getListSolicitudPago.forEach( registro => registro.fechaCreacion = registro.fechaCreacion !== undefined ? moment( registro.fechaCreacion ).format( 'DD/MM/YYYY' ) : '' )
+                                }
+
                                 this.dataSource = new MatTableDataSource(getListSolicitudPago);
                                 this.dataSource.paginator = this.paginator;
                                 this.dataSource.sort = this.sort;
@@ -65,13 +72,42 @@ export class AprobarSolicitudesPagoComponent implements OnInit {
       this.dataSource.filter = filterValue.trim().toLowerCase();
     }
 
-    openCertificate(){
-      const dialogConfig = new MatDialogConfig();
-      dialogConfig.height = 'auto';
-      dialogConfig.width = '1020px';
-      //dialogConfig.data = { id: id, idRol: idRol, numContrato: numContrato, fecha1Titulo: fecha1Titulo, fecha2Titulo: fecha2Titulo };
-      const dialogRef = this.dialog.open(DialogEnvioAutorizacionComponent, dialogConfig);
-      //dialogRef.afterClosed().subscribe(value => {});
+    openDialog(modalTitle: string, modalText: string) {
+        const dialogRef = this.dialog.open( ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle, modalText }
+        });
+    }
+
+    getCerificadoDialog( registro: any ) {
+        const dialogRef = this.dialog.open( DialogEnvioAutorizacionComponent, {
+          width: '80em',
+          data: registro
+        });
+
+        dialogRef.afterClosed()
+            .subscribe(
+                value => {
+                    console.log( value );
+                }
+            )
+    }
+
+    changueStatusSolicitudPago( pSolicitudPagoId: number ) {
+        const pSolicitudPago = {
+            solicitudPagoId: pSolicitudPagoId,
+            estadoCodigo: this.listaEstadoSolicitudPago.solicitudDevueltaApoyoSupervision
+        };
+
+        this.obsMultipleSvc.changueStatusSolicitudPago( pSolicitudPago )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} )
+                        .then( () => this.routes.navigate( ['/verificarSolicitudPago'] )
+                    );
+                }, err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }

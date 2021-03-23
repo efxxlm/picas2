@@ -3,7 +3,7 @@
 </button>
 <div style="padding: 30px 20px; text-align: center;">
     <h1 class="title-menu--h1 centerTrick">
-        Certificado solicitud SolPagoO0001
+        Certificado solicitud {{ solicitud.numeroSolicitud }}
     </h1>
 </div>
 <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
@@ -18,33 +18,31 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="urlSoporte" 
-                            [ngClass]="{
-                                'color-secondaryColor':
-                                  (addressForm.get('urlSoporte').invalid && addressForm.get('urlSoporte').touched) ||
-                                  (addressForm.get('urlSoporte').invalid && estaEditando)
-                              }">URL con certificado</label>
+                            <label class="label-left"
+                                    for="urlSoporte"
+                                    [ngClass]="{ 'color-secondaryColor': ( addressForm.get('urlSoporte')?.invalid && addressForm.get('urlSoporte').touched ) || ( addressForm.get('urlSoporte')?.invalid && estaEditando === true ) }">
+                                    URL con certificado
+                            </label>
                         </div>
                         <div class="col">
                             <mat-form-field class="full-width">
-                                <input matInput #urlSoporte type="text" formControlName="urlSoporte"
-                                  required>
+                                <input  matInput
+                                        #urlSoporte
+                                        type="text"
+                                        formControlName="urlSoporte"
+                                        maxlength="400"
+                                        required>
                             </mat-form-field>
                             <span class="info-url">Indique la ruta en la que se encuentran los documentos de soporte de la novedad</span>
                         </div>
                         <span class="icon-incompleto">
-                            <img
-                              class="icon-incompleto--img"
-                              src="assets/img/icon/incompleto.svg"
-                              alt="este campo es requerido"
-                              [matTooltipPosition]="'above'"
-                              matTooltip="Debe ingresar la información en el campo para continuar"
-                              matTooltipClass="info-tooltip"
-                              *ngIf="
-                                (addressForm.get('urlSoporte').invalid && addressForm.get('urlSoporte').touched) ||
-                                (addressForm.get('urlSoporte').invalid && estaEditando)
-                              "
-                            />
+                            <img    class="icon-incompleto--img"
+                                    src="assets/img/icon/incompleto.svg"
+                                    alt="este campo es requerido"
+                                    [matTooltipPosition]="'above'"
+                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                    matTooltipClass="info-tooltip"
+                                    *ngIf="( addressForm.get('urlSoporte')?.invalid && addressForm.get('urlSoporte').touched ) || ( addressForm.get('urlSoporte')?.invalid && estaEditando === true )">
                           </span>
                     </div>
                 </div>
@@ -52,7 +50,7 @@
         </mat-card-content>
     </mat-card>
     <div class="text-center">
-        <button mat-raised-button color="accent" class="btn-dialog" type="submit" [disabled]="addressForm.invalid">
+        <button mat-raised-button color="accent" class="btn-dialog" type="submit" [disabled]="addressForm.dirty === false">
             Enviar para autorización
         </button>
     </div>

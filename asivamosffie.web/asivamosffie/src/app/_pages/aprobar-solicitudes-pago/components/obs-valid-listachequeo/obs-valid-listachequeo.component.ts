@@ -188,7 +188,7 @@ export class ObsValidListachequeoComponent implements OnInit {
                 this.estadoSemaforo.emit( 'en-proceso' );
             }
 
-            if ( enProceso === 0 && completo < this.contrato.solicitudPagoOnly.solicitudPagoListaChequeo.length ) {
+            if ( enProceso === 0 && completo > 0 && completo < this.contrato.solicitudPagoOnly.solicitudPagoListaChequeo.length ) {
                 this.estadoSemaforo.emit( 'en-proceso' );
             }
 
