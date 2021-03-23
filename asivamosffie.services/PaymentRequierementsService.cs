@@ -130,20 +130,20 @@ namespace asivamosffie.services
             {
                 if (pSolicitudPagoObservacion.SolicitudPagoObservacionId > 0)
                 {
-                  await _context.Set<SolicitudPagoObservacion>()
-                                .Where(o => o.SolicitudPagoObservacionId == pSolicitudPagoObservacion.SolicitudPagoObservacionId)
-                                .UpdateAsync(r => new SolicitudPagoObservacion()
-                                {
-                                    Archivada = pSolicitudPagoObservacion.Archivada,
-                                    FechaModificacion = DateTime.Now,
-                                    UsuarioModificacion = pSolicitudPagoObservacion.UsuarioCreacion,
-                                    RegistroCompleto = ValidateCompleteRecordSolicitudPagoObservacion(pSolicitudPagoObservacion),
-                                    TieneObservacion = pSolicitudPagoObservacion.TieneObservacion,
-                                    Observacion = pSolicitudPagoObservacion.Observacion,
-                                });
+                    await _context.Set<SolicitudPagoObservacion>()
+                                  .Where(o => o.SolicitudPagoObservacionId == pSolicitudPagoObservacion.SolicitudPagoObservacionId)
+                                  .UpdateAsync(r => new SolicitudPagoObservacion()
+                                  {
+                                      Archivada = pSolicitudPagoObservacion.Archivada,
+                                      FechaModificacion = DateTime.Now,
+                                      UsuarioModificacion = pSolicitudPagoObservacion.UsuarioCreacion,
+                                      RegistroCompleto = ValidateCompleteRecordSolicitudPagoObservacion(pSolicitudPagoObservacion),
+                                      TieneObservacion = pSolicitudPagoObservacion.TieneObservacion,
+                                      Observacion = pSolicitudPagoObservacion.Observacion,
+                                  });
                 }
                 else
-                { 
+                {
                     pSolicitudPagoObservacion.Archivada = false;
                     pSolicitudPagoObservacion.FechaCreacion = DateTime.Now;
                     pSolicitudPagoObservacion.Eliminado = false;
@@ -194,7 +194,7 @@ namespace asivamosffie.services
                                                               && r.Archivada != true).Count();
                 //Sumar cantidad Listas de chequeo
                 intCantidadDependenciasSolicitudPago += solicitudPago.SolicitudPagoListaChequeo.Count(r => r.Eliminado == false);
-     
+
                 bool TieneObservacion =
                                  _context.SolicitudPagoObservacion.Any
                                                             (r => r.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId
@@ -203,7 +203,7 @@ namespace asivamosffie.services
                                                             && r.Archivada != true
                                                             && r.TieneObservacion == true
                                                             );
-               
+
 
 
                 //Valida si la cantidad de relaciones de solicitud Pago es igual a la cantidad de observaciones de esa Solicitud pago 
@@ -346,7 +346,7 @@ namespace asivamosffie.services
                                                                                                          });
         }
 
- 
+
         #endregion
 
         #region Financiera
@@ -500,10 +500,8 @@ namespace asivamosffie.services
 
                 ///4.1.8
                 if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Enviada_para_autorizacion)
-                {
-                    await SendEmailToAprovedVerify(pSolicitudPago.SolicitudPagoId); 
-                }
-
+                    await SendEmailToAprovedVerify(pSolicitudPago.SolicitudPagoId);
+                 
                 ///4.1.8
                 if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Solicitud_devuelta_por_apoyo_a_la_supervision)
                     await SendEmailToDeclineVerify(pSolicitudPago.SolicitudPagoId);
@@ -515,6 +513,7 @@ namespace asivamosffie.services
                     await SendEmailToAprovedValidateAll(pSolicitudPago.SolicitudPagoId);
                     ActualizarSacFinanciera(pSolicitudPago);
                 }
+             
                 ///4.1.9
                 if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Solicitud_devuelta_por_coordinardor)
                     await SendEmailToDeclineValidate(pSolicitudPago.SolicitudPagoId);
