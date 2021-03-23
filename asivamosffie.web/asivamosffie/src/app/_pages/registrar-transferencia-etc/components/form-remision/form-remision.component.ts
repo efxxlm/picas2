@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Respuesta } from 'src/app/core/_services/common/common.service';
@@ -14,6 +14,8 @@ import { ProyectoEntregaETC } from 'src/app/_interfaces/proyecto-entrega-etc';
 export class FormRemisionComponent implements OnInit {
   @Input() proyectoEntregaEtc: ProyectoEntregaETC;
   @Input() id: number;
+
+  @Output("callOnInitParent") callOnInitParent: EventEmitter<any> = new EventEmitter();
 
   addressForm = this.fb.group({
     fechaEntregaDocumentosEtc: [null, Validators.required],
@@ -64,6 +66,7 @@ export class FormRemisionComponent implements OnInit {
   createEditRemisionDocumentosTecnicos(pDocumentos: any) {
     this.registerProjectETCService.createEditRemisionDocumentosTecnicos(pDocumentos).subscribe((respuesta: Respuesta) => {
       this.openDialog('', respuesta.message);
+      this.callOnInitParent.emit();
     });
   }
 }

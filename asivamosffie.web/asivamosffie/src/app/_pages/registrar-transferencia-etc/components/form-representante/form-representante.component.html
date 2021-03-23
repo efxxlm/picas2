@@ -1,14 +1,14 @@
-<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+<!--<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
   <mat-card class="shipping-card">
     <mat-card-content>
       <div class="row">
         <div class="pr-1">
           <label
             class="label-left"
-            for="nombreApellidos"
+            for="nombre"
             [class.color-secondaryColor]="
-              (addressForm.get('nombreApellidos').invalid && addressForm.get('nombreApellidos').touched) ||
-              (addressForm.get('nombreApellidos').invalid && estaEditando)
+              (addressForm.get('nombre').invalid && addressForm.get('nombre').touched) ||
+              (addressForm.get('nombre').invalid && estaEditando)
             "
           >
             Nombre y apellidos
@@ -16,7 +16,7 @@
         </div>
         <div class="col d-flex">
           <mat-form-field class="full-width">
-            <input matInput type="text" #nombreApellidos formControlName="nombreApellidos" maxlength="100" required />
+            <input matInput type="text" #nombre formControlName="nombre" maxlength="100" required />
           </mat-form-field>
           <span
             class="contador"
@@ -24,7 +24,7 @@
             matTooltip="Campo numérico"
             matTooltipClass="info-tooltip"
           >
-            {{ 100 - nombreApellidos.value.length }}
+            {{ 100 - nombre.value.length }}
           </span>
           <span class="icon-incompleto">
             <img
@@ -35,8 +35,8 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
               *ngIf="
-                (addressForm.get('nombreApellidos').invalid && addressForm.get('nombreApellidos').touched) ||
-                (addressForm.get('nombreApellidos').invalid && estaEditando)
+                (addressForm.get('nombre').invalid && addressForm.get('nombre').touched) ||
+                (addressForm.get('nombre').invalid && estaEditando)
               "
             />
           </span>
@@ -87,10 +87,10 @@
         <div class="pr-1">
           <label
             class="label-left"
-            for="dependenciaETC"
+            for="dependencia"
             [class.color-secondaryColor]="
-              (addressForm.get('dependenciaETC').invalid && addressForm.get('dependenciaETC').touched) ||
-              (addressForm.get('dependenciaETC').invalid && estaEditando)
+              (addressForm.get('dependencia').invalid && addressForm.get('dependencia').touched) ||
+              (addressForm.get('dependencia').invalid && estaEditando)
             "
           >
             Dependencia de la ETC
@@ -98,7 +98,7 @@
         </div>
         <div class="col d-flex">
           <mat-form-field class="full-width">
-            <input matInput type="text" #dependenciaETC formControlName="dependenciaETC" maxlength="100" required />
+            <input matInput type="text" #dependencia formControlName="dependencia" maxlength="100" required />
           </mat-form-field>
           <span
             class="contador"
@@ -106,7 +106,7 @@
             matTooltip="Campo numérico"
             matTooltipClass="info-tooltip"
           >
-            {{ 100 - dependenciaETC.value.length }}
+            {{ 100 - dependencia.value.length }}
           </span>
           <span class="icon-incompleto">
             <img
@@ -117,8 +117,8 @@
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
               *ngIf="
-                (addressForm.get('dependenciaETC').invalid && addressForm.get('dependenciaETC').touched) ||
-                (addressForm.get('dependenciaETC').invalid && estaEditando)
+                (addressForm.get('dependencia').invalid && addressForm.get('dependencia').touched) ||
+                (addressForm.get('dependencia').invalid && estaEditando)
               "
             />
           </span>
@@ -131,4 +131,156 @@
       <img src="assets/img/icon/guardar.svg" alt="Guardar" />
     </button>
   </div>
-</form>
+</form>-->
+<div *ngIf="representantesForm.get( 'numRepresentantesRecorrido' ).value > 0" [formGroup]="representantesForm">
+  <mat-accordion class="animatedDown" formArrayName="representantes" *ngFor="let representante of representantes.controls; index as i">
+    <mat-expansion-panel
+      class="expansion-style sub-expansion"
+      [formGroup]="representante" novalidate (ngSubmit)="onSubmit()"
+    >
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title
+          class="expansion-style--title"
+          [class.sin-diligenciar]="true"
+          [class.en-proceso]="false"
+          [class.completo]="false"
+        >
+          Representante {{ i + 1 }}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+        <mat-card class="shipping-card">
+          <mat-card-content>
+            <div class="row">
+              <div class="pr-1">
+                <label
+                  class="label-left"
+                  for="nombre"
+                  [class.color-secondaryColor]="
+                    (representante.get('nombre').invalid && representante.get('nombre').touched) ||
+                    (representante.get('nombre').invalid && estaEditando)
+                  "
+                >
+                  Nombre y apellidos
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput type="text" #nombre formControlName="nombre" maxlength="100" required />
+                </mat-form-field>
+                <span
+                  class="contador"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Campo numérico"
+                  matTooltipClass="info-tooltip"
+                >
+                  {{ 100 - nombre.value.length }}
+                </span>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
+                    *ngIf="
+                      (representante.get('nombre').invalid && representante.get('nombre').touched) ||
+                      (representante.get('nombre').invalid && estaEditando)
+                    "
+                  />
+                </span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="pr-1">
+                <label
+                  class="label-left"
+                  for="cargo"
+                  [class.color-secondaryColor]="
+                    (representante.get('cargo').invalid && representante.get('cargo').touched) ||
+                    (representante.get('cargo').invalid && estaEditando)
+                  "
+                >
+                  Cargo
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput type="text" #cargo formControlName="cargo" maxlength="100" required />
+                </mat-form-field>
+                <span
+                  class="contador"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Campo numérico"
+                  matTooltipClass="info-tooltip"
+                >
+                  {{ 100 - cargo.value.length }}
+                </span>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
+                    *ngIf="
+                      (representante.get('cargo').invalid && representante.get('cargo').touched) ||
+                      (representante.get('cargo').invalid && estaEditando)
+                    "
+                  />
+                </span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="pr-1">
+                <label
+                  class="label-left"
+                  for="dependencia"
+                  [class.color-secondaryColor]="
+                    (representante.get('dependencia').invalid && representante.get('dependencia').touched) ||
+                    (representante.get('dependencia').invalid && estaEditando)
+                  "
+                >
+                  Dependencia de la ETC
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput type="text" #dependencia formControlName="dependencia" maxlength="100" required />
+                </mat-form-field>
+                <span
+                  class="contador"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Campo numérico"
+                  matTooltipClass="info-tooltip"
+                >
+                  {{ 100 - dependencia.value.length }}
+                </span>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
+                    *ngIf="
+                      (representante.get('dependencia').invalid && representante.get('dependencia').touched) ||
+                      (representante.get('dependencia').invalid && estaEditando)
+                    "
+                  />
+                </span>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+        <div class="text-center">
+          <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="representante.dirty">
+            <img src="assets/img/icon/guardar.svg" alt="Guardar" />
+          </button>
+        </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
+

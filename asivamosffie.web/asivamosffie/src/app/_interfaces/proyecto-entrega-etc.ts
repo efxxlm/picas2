@@ -15,13 +15,14 @@ export interface ProyectoEntregaETC {
     urlActaEntregaFisica?: string,
     registroCompletoActaBienesServicios?: boolean,
     registroCompletoRecorridoObra?: boolean,
-    registroCompletoRemision?: boolean
+    registroCompletoRemision?: boolean,
+    representanteEtcrecorrido?: RepresentanteETCRecorrido[]
 }
 
 
 export interface RepresentanteETCRecorrido{
-    representanteETCId?:number,
-    proyectoEntregaETCId?:number,
+    representanteEtcid?:number,
+    proyectoEntregaEtcId?:number,
     nombre?: string,
     cargo?: string,
     dependencia?: string,

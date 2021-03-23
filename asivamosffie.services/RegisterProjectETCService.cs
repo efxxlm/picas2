@@ -59,7 +59,9 @@ namespace asivamosffie.services
         public async Task<ProyectoEntregaEtc> GetProyectoEntregaEtc(int informeFinalId)
         {
             
-            return await _context.ProyectoEntregaEtc.Where(r => r.InformeFinalId == informeFinalId).FirstOrDefaultAsync();
+            return await _context.ProyectoEntregaEtc.Where(r => r.InformeFinalId == informeFinalId)
+                                                    .Include(r => r.RepresentanteEtcrecorrido)
+                                                    .FirstOrDefaultAsync();
         }
 
         public async Task<List<dynamic>> GetProyectoEntregaETCByInformeFinalId(int pInformeFinalId)
@@ -139,6 +141,13 @@ namespace asivamosffie.services
                                                                        UrlActaEntregaFisica = pRecorrido.UrlActaEntregaFisica
                                                                    });
                 }
+
+                foreach (RepresentanteEtcrecorrido representanteEtcrecorrido in pRecorrido.RepresentanteEtcrecorrido)
+                {
+                    representanteEtcrecorrido.UsuarioCreacion = pRecorrido.UsuarioCreacion.ToUpper();
+                    await this.CreateEditRepresentanteETC(representanteEtcrecorrido);
+                }
+
                 _context.SaveChanges();
 
                 validateRegistroCompletoEtc(pRecorrido.InformeFinalId);

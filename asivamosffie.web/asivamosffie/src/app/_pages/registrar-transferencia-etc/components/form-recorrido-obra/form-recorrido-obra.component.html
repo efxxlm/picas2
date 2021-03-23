@@ -206,8 +206,8 @@
     </button>
   </div>
 </form>
-
-<mat-accordion class="animatedDown" *ngIf="addressForm.get('numRepresentantesRecorrido').value">
+<app-form-representante [numRepresentantesRecorrido] = "addressForm.get('numRepresentantesRecorrido').value" [proyectoEntregaEtcId]= "addressForm.get('proyectoEntregaEtcid').value" [representanteEtcrecorrido] = "representanteEtcrecorrido"></app-form-representante>
+<!--<mat-accordion class="animatedDown" *ngIf="addressForm.get('numRepresentantesRecorrido').value">
   <mat-expansion-panel
     class="expansion-style sub-expansion"
     *ngFor="let representante of arrayOne(addressForm.get('numRepresentantesRecorrido').value); let i = index"
@@ -225,4 +225,4 @@
 
     <app-form-representante></app-form-representante>
   </mat-expansion-panel>
-</mat-accordion>
+</mat-accordion>-->

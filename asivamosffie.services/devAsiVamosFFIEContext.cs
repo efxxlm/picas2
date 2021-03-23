@@ -5067,9 +5067,7 @@ namespace asivamosffie.model.Models
 
                 entity.ToTable("RepresentanteETCRecorrido");
 
-                entity.Property(e => e.RepresentanteEtcid)
-                    .HasColumnName("RepresentanteETCId")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.RepresentanteEtcid).HasColumnName("RepresentanteETCId");
 
                 entity.Property(e => e.Cargo)
                     .HasMaxLength(200)
