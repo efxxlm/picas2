@@ -18,8 +18,6 @@ namespace asivamosffie.services
         private readonly ICommonService _commonService;
         private readonly IDocumentService _documentService;
         private readonly IRegisterValidatePaymentRequierementsService _registerValidatePaymentRequierementsService;
-
-        #region Solicitud Pago
         public PaymentRequierementsService(IRegisterValidatePaymentRequierementsService registerValidatePaymentRequierementsService, IDocumentService documentService, devAsiVamosFFIEContext context, ICommonService commonService)
         {
             _registerValidatePaymentRequierementsService = registerValidatePaymentRequierementsService;
@@ -27,6 +25,8 @@ namespace asivamosffie.services
             _commonService = commonService;
             _context = context;
         }
+
+        #region Solicitud Pago
 
         public async Task<dynamic> GetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(int pMenuId, int pSolicitudPagoId, int pPadreId, string pTipoObservacionCodigo)
         {
@@ -398,7 +398,7 @@ namespace asivamosffie.services
                     FechaModificacion = DateTime.Now,
                     UsuarioModificacion = pSolicitudPago.UsuarioCreacion
                 });
-        } 
+        }
         #endregion
 
         #region Financiera
@@ -465,14 +465,16 @@ namespace asivamosffie.services
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Verificar_Solicitud_Financiera, (int)EnumeratorTipoDominio.Acciones);
             bool blRegistroCompleto = true;
-            bool blTieneSubsanacion = SolicitudPagoListaChequeo
-                .Any(r => r.SolicitudPagoListaChequeoRespuesta
-                .Any(s => s.TieneSubsanacion != true &&
-                      (s.ValidacionRespuestaCodigo == ConstanCodigoRespuestasListaChequeoSolictudPago.No_cumple
-                       || s.VerificacionRespuestaCodigo == ConstanCodigoRespuestasListaChequeoSolictudPago.No_cumple
-                      )
+            bool blTieneSubsanacion = SolicitudPagoListaChequeo.Any(r => r.SolicitudPagoListaChequeoRespuesta.Any(s => s.TieneSubsanacion == true));
 
-                ));
+            bool blrechazado = SolicitudPagoListaChequeo
+             .Any(r => r.SolicitudPagoListaChequeoRespuesta
+             .Any(s => s.TieneSubsanacion != true &&
+                      (s.ValidacionRespuestaCodigo == ConstanCodigoRespuestasListaChequeoSolictudPago.No_cumple
+                    || s.VerificacionRespuestaCodigo == ConstanCodigoRespuestasListaChequeoSolictudPago.No_cumple
+                   )
+             ));
+
             try
             {
                 foreach (var pSolicitudPagoListaChequeo in SolicitudPagoListaChequeo)
@@ -551,6 +553,7 @@ namespace asivamosffie.services
                                      FechaRegistroCompletoValidacionFinanciera = FechaRegistroCompleto,
                                      RegistroCompletoValidacionFinanciera = blRegistroCompleto,
                                      TieneSubsanacion = blTieneSubsanacion,
+                                     EstaRechazada = blrechazado,
                                      EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_Proceso_Validacion_Financiera).ToString(),
                                      UsuarioModificacion = pSolicitudPagoListaChequeo.UsuarioCreacion,
                                      FechaModificacion = DateTime.Now
@@ -566,6 +569,7 @@ namespace asivamosffie.services
                                        FechaRegistroCompletoVerificacionFinanciera = FechaRegistroCompleto,
                                        RegistroCompletoVerificacionFinanciera = blRegistroCompleto,
                                        TieneSubsanacion = blTieneSubsanacion,
+                                       EstaRechazada = blrechazado,
                                        UsuarioModificacion = pSolicitudPagoListaChequeo.UsuarioCreacion,
                                        FechaModificacion = DateTime.Now
                                    });
@@ -647,7 +651,7 @@ namespace asivamosffie.services
                     ActualizarSacTecnica(pSolicitudPago);
                     await SendEmailRejectAutorizar(pSolicitudPago.SolicitudPagoId, true);
                 }
-                 
+
                 ///4.3.1
                 if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Enviada_Validacion_Financiera)
                     await SendEmailAprovedVerificar(pSolicitudPago.SolicitudPagoId);
@@ -979,7 +983,7 @@ namespace asivamosffie.services
 
             return SedndIsSuccessfull;
         }
-         
-        #endregion 
+
+        #endregion
     }
 }

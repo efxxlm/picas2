@@ -244,6 +244,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VSesionParticipante> VSesionParticipante { get; set; }
         public virtual DbSet<VSetHistDefensaJudicial> VSetHistDefensaJudicial { get; set; }
         public virtual DbSet<VSetHistDefensaJudicialContratacionProyecto> VSetHistDefensaJudicialContratacionProyecto { get; set; }
+        public virtual DbSet<VSetHistProyectoAportante> VSetHistProyectoAportante { get; set; }
         public virtual DbSet<VSolicitudPago> VSolicitudPago { get; set; }
         public virtual DbSet<VUsuarioPerfil> VUsuarioPerfil { get; set; }
         public virtual DbSet<VUsuarioRol> VUsuarioRol { get; set; }
@@ -8638,6 +8639,33 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VSetHistProyectoAportante>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_setHistProyectoAportante");
+
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.ProyectoAportanteId).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorInterventoria).HasColumnType("numeric(18, 2)");
+
+                entity.Property(e => e.ValorObra).HasColumnType("numeric(18, 2)");
+
+                entity.Property(e => e.ValorTotalAportante).HasColumnType("numeric(18, 2)");
             });
 
             modelBuilder.Entity<VSolicitudPago>(entity =>
