@@ -230,7 +230,7 @@ namespace asivamosffie.services
             return ListInformeFinalChequeo;
         }
 
-        private bool VerificarInformeFinalAprobacion(int pInformeFinalId, bool tieneOBservaciones)
+        private bool VerificarInformeFinalAprobacion(int pInformeFinalId, bool? tieneOBservaciones)
         {
             bool esCompleto = false;
 
@@ -240,19 +240,23 @@ namespace asivamosffie.services
             {
                 InformeFinalInterventoria existe_no_cumple = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == pInformeFinalId && r.AprobacionCodigo == ConstantCodigoCalificacionInformeFinal.No_Cumple).FirstOrDefault();
                 InformeFinalInterventoria existe_no_diligenciado = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == pInformeFinalId && (r.AprobacionCodigo == "0" || String.IsNullOrEmpty(r.AprobacionCodigo))).FirstOrDefault();
+                
+                if (tieneOBservaciones == null)
+                {
+                    return false;
+                }
 
+                if (existe_no_diligenciado != null)
+                {
+                    return false;
+                }
                 if (existe_no_cumple != null)
                 {
                     informeFinal.EstadoAprobacion = ConstantCodigoEstadoAprobacionInformeFinal.Con_observaciones_supervisor;
                     return false;
                 }
-                if (existe_no_diligenciado != null)
-                {
-                    return false;
-                }
-
                 //validar si tiene observaciones al recibo de satisfaccion
-                if (tieneOBservaciones && existe_no_diligenciado == null && existe_no_cumple == null)
+                if (tieneOBservaciones == true && existe_no_diligenciado == null && existe_no_cumple == null)
                 {
                     informeFinal.EstadoAprobacion = ConstantCodigoEstadoAprobacionInformeFinal.Con_observaciones_supervisor;
                     return false;
@@ -301,8 +305,9 @@ namespace asivamosffie.services
                     }
 
                 }
+                bool? tieneObservaciones = null;
 
-                VerificarInformeFinalAprobacion(informeFinal.InformeFinalId, informeFinal.TieneObservacionesSupervisor == null ? false : (bool)informeFinal.TieneObservacionesSupervisor);
+                VerificarInformeFinalAprobacion(informeFinal.InformeFinalId, informeFinal.TieneObservacionesSupervisor == null ? tieneObservaciones : (bool)informeFinal.TieneObservacionesSupervisor);
 
                 await _context.SaveChangesAsync();
 

@@ -186,6 +186,7 @@ namespace asivamosffie.services
                 {
                     strCrearEditar = "CREAR REPRESENTANTE DE PROYECTO ETC - RECORRIDO";
                     pRepresentante.FechaCreacion = DateTime.Now;
+                    pRepresentante.RegistroCompleto = (string.IsNullOrEmpty(pRepresentante.Nombre) || string.IsNullOrEmpty(pRepresentante.Cargo) || string.IsNullOrEmpty(pRepresentante.Dependencia)) ? false : true;
                     _context.RepresentanteEtcrecorrido.Add(pRepresentante);
                 }
                 else
@@ -200,7 +201,9 @@ namespace asivamosffie.services
                                                                        Nombre = pRepresentante.Nombre,
                                                                        Cargo = pRepresentante.Cargo,
                                                                        Dependencia = pRepresentante.Dependencia,
-                                                                   });
+                                                                       RegistroCompleto = (string.IsNullOrEmpty(pRepresentante.Nombre) || string.IsNullOrEmpty(pRepresentante.Cargo) || string.IsNullOrEmpty(pRepresentante.Dependencia)) ? false : true
+
+                });
                 }
                 _context.SaveChanges();
 
