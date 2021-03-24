@@ -8,7 +8,8 @@ import { ContractualControversyService } from 'src/app/core/_services/Contractua
   styleUrls: ['./ver-detalleeditar-actuacion-mt.component.scss']
 })
 export class VerDetalleeditarActuacionMtComponent implements OnInit {
-
+  idControversia: any;
+  idMesa: any;
   idSeguimientoMesa: any;
   public nomMesaTrabajo = localStorage.getItem("numActuacionMT");
   public controversiaID = parseInt(localStorage.getItem("controversiaID"));
@@ -19,6 +20,8 @@ export class VerDetalleeditarActuacionMtComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(param => {
+      this.idControversia = param.idControversia;
+      this.idMesa = param.idMesa;
       this.idSeguimientoMesa = param.id;
     });
     this.loadBasicData();
