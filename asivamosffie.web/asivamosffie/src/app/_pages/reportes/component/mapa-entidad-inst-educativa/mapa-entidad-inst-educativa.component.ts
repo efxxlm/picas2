@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-mapa-entidad-inst-educativa',
@@ -6,10 +7,27 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./mapa-entidad-inst-educativa.component.scss']
 })
 export class MapaEntidadInstEducativaComponent implements OnInit {
+  addressForm: FormGroup = this.fb.group({
+    vigencia: [null],
+    departamento: [null],
+    municipio: [null],
+    institucionEducativa: [null]
+  });
+  vigenciaArray = [
+  ];
+  departamentoArray = [
+  ];
+  municipioArray = [
+  ];
+  institucionEduArray=[
 
-  constructor() { }
+  ];
+  gFiltro = false;
+  constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
   }
+  onSubmit(){
 
+  }
 }

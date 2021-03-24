@@ -1,1 +1,105 @@
-<p>mapa-entidad-inst-educativa works!</p>
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+    <div class="bordingGeneral">
+        <h2 class="card-subTitle ajusteTable">Estadísticas por Entidad Territorial o Institución Educativa</h2>
+        <div class="mt-1em mb-1em">
+            <div class="text-center">
+                <button mat-raised-button color="accent" type="submit" (click)="gFiltro = !gFiltro">
+                   Gestionar Filtro</button> 
+            </div>
+            <div class="animatedDown mlAux mrAux" *ngIf="gFiltro">
+                <button mat-icon-button class="text-info--close">
+                    <img src="assets/img/icon/cerrar-primary.svg" alt="cerrar ayuda">
+                </button>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left" for="vigencia"
+                                    [class.color-secondaryColor]="addressForm.get('vigencia').invalid && addressForm.get('vigencia').touched">
+                                    Vigencia
+                                </label>
+                            </div>
+                            <div class="col">
+                                <mat-form-field class="select-width">
+                                    <mat-select formControlName="vigencia">
+                                        <mat-option *ngFor="let vigencia of vigenciaArray" [value]="vigencia.value">
+                                            {{ vigencia.name }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left" for="departamento"
+                                    [class.color-secondaryColor]="addressForm.get('departamento').invalid && addressForm.get('departamento').touched">
+                                    Departamento
+                                </label>
+                            </div>
+                            <div class="col">
+                                <mat-form-field class="select-width">
+                                    <mat-select formControlName="departamento" multiple>
+                                        <mat-option *ngFor="let departamento of departamentoArray" [value]="departamento.value">
+                                            {{ departamento.name }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left" for="municipio"
+                                    [class.color-secondaryColor]="addressForm.get('municipio').invalid && addressForm.get('municipio').touched">
+                                    Municipio
+                                </label>
+                            </div>
+                            <div class="col">
+                                <mat-form-field class="select-width">
+                                    <mat-select formControlName="municipio" multiple>
+                                        <mat-option *ngFor="let municipio of municipioArray" [value]="municipio.value">
+                                            {{ municipio.name }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left" for="institucionEducativa"
+                                    [class.color-secondaryColor]="addressForm.get('institucionEducativa').invalid && addressForm.get('institucionEducativa').touched">
+                                    Institución Educativa
+                                </label>
+                            </div>
+                            <div class="col">
+                                <mat-form-field class="select-width">
+                                    <mat-select formControlName="institucionEducativa">
+                                        <mat-option *ngFor="let institucionEducativa of institucionEduArray" [value]="institucionEducativa.value">
+                                            {{ institucionEducativa.name }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mb-2em">
+                    <button mat-button color="warn" class="btn-guardar" type="submit">
+                        <img src="assets/img/icon/guardar.svg" alt="Regresar">
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,1 +1,84 @@
-<p>mapa-estadisticas-contratistas works!</p>
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+    <div class="bordingGeneral">
+        <h2 class="card-subTitle ajusteTable">Estadísticas de contratistas</h2>
+        <div class="mt-1em mb-1em">
+            <div class="text-center">
+                <button mat-raised-button color="accent" type="submit" (click)="gFiltro = !gFiltro">
+                   Gestionar Filtro</button> 
+            </div>
+            <div class="animatedDown mlAux mrAux" *ngIf="gFiltro">
+                <button mat-icon-button class="text-info--close">
+                    <img src="assets/img/icon/cerrar-primary.svg" alt="cerrar ayuda">
+                </button>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left" for="vigencia"
+                                    [class.color-secondaryColor]="addressForm.get('vigencia').invalid && addressForm.get('vigencia').touched">
+                                    Vigencia
+                                </label>
+                            </div>
+                            <div class="col">
+                                <mat-form-field class="select-width">
+                                    <mat-select formControlName="vigencia">
+                                        <mat-option *ngFor="let vigencia of vigenciaArray" [value]="vigencia.value">
+                                            {{ vigencia.name }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left" for="tipoContratista"
+                                    [class.color-secondaryColor]="addressForm.get('tipoContratista').invalid && addressForm.get('tipoContratista').touched">
+                                    Tipo de contratista
+                                </label>
+                            </div>
+                            <div class="col">
+                                <mat-form-field class="select-width">
+                                    <mat-select formControlName="tipoContratista">
+                                        <mat-option *ngFor="let tipoContratista of tipoContratistaArray" [value]="tipoContratista.value">
+                                            {{ tipoContratista.name }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left" for="nombreContratista"
+                                    [class.color-secondaryColor]="addressForm.get('nombreContratista').invalid && addressForm.get('nombreContratista').touched">
+                                    Nombre de contratista
+                                </label>
+                            </div>
+                            <div class="col">
+                                <mat-form-field class="select-width">
+                                    <mat-select formControlName="nombreContratista">
+                                        <mat-option *ngFor="let nombreContratista of nombreContratistaArray" [value]="nombreContratista.value">
+                                            {{ nombreContratista.name }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mb-2em">
+                    <button mat-button color="warn" class="btn-guardar" type="submit">
+                        <img src="assets/img/icon/guardar.svg" alt="Regresar">
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
