@@ -387,9 +387,14 @@ namespace asivamosffie.services
 
             foreach (var PorcentajePago in FormasPago)
             {
-                MontoMaximo = ((ValorTotalPorFase * Convert.ToUInt32(PorcentajePago)) / 100) - ValorFacturado;
-                if (MontoMaximo < ValorPendientePorPagar)
-                    break;
+                if (Convert.ToUInt32(PorcentajePago) == 100) 
+                    MontoMaximo = ValorFacturado; 
+                else
+                {
+                    MontoMaximo = ((ValorTotalPorFase * Convert.ToUInt32(PorcentajePago)) / 100) - ValorFacturado;
+                    if (MontoMaximo < ValorPendientePorPagar)
+                        break;
+                }
             }
 
             return new
@@ -504,7 +509,7 @@ namespace asivamosffie.services
         {
             try
             {
-                SolicitudPago solicitudPago = _context.SolicitudPago.Find(SolicitudPagoId); 
+                SolicitudPago solicitudPago = _context.SolicitudPago.Find(SolicitudPagoId);
                 solicitudPago = GetSolicitudPagoComplete(solicitudPago);
                 bool CompleteRecord = ValidateCompleteRecordSolicitudPago(solicitudPago);
                 bool TieneNoCumpleListaChequeo = solicitudPago.SolicitudPagoListaChequeo.Any(r => r.SolicitudPagoListaChequeoRespuesta.Any(s => s.RespuestaCodigo == ConstanCodigoRespuestasListaChequeoSolictudPago.No_cumple));
@@ -515,15 +520,15 @@ namespace asivamosffie.services
                                                             && s.TieneObservacion == true
                                                             );
                 DateTime? FechaRegistroCompleto = null;
-           
+
                 if (CompleteRecord && !TieneAlgunaObservacionPendiente)
                 {
                     FechaRegistroCompleto = DateTime.Now;
                     EstadoSolicitudPago = ((int)EnumEstadoSolicitudPago.Con_solicitud_revisada_por_equipo_facturacion).ToString();
                 }
-                else 
-                    CompleteRecord = false; 
-              
+                else
+                    CompleteRecord = false;
+
                 await _context.Set<SolicitudPago>()
                                                   .Where(s => s.SolicitudPagoId == SolicitudPagoId)
                                                                                                   .UpdateAsync(r => new SolicitudPago()
