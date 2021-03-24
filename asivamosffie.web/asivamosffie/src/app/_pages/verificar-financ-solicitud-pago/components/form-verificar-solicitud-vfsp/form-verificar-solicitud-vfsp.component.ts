@@ -24,6 +24,7 @@ export class FormVerificarSolicitudVfspComponent implements OnInit {
     formaPagoArray: Dominio[] = [];
     tipoSolicitudCodigo: any = {};
     solicitudPagoCargarFormaPago: any;
+    estadoSemaforo: string;
     dataSource = new MatTableDataSource();
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;

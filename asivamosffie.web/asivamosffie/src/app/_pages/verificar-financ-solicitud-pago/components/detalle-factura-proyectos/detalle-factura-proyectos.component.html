@@ -67,7 +67,7 @@
         </form>
     </ng-container>
     <ng-template #noEsMultiProyecto>
-        <div style="margin-top: 3em;" *ngIf="proyectos !== undefined">
+        <div style="margin-top: 3em;" *ngIf="proyectos !== undefined && montoMaximo !== undefined">
             <mat-card class="shipping-card var-main-gris" *ngFor="let proyecto of proyectos">
                 <mat-card-header class="header-card header-card--margin">
                     <mat-card-title class="header-card--text">

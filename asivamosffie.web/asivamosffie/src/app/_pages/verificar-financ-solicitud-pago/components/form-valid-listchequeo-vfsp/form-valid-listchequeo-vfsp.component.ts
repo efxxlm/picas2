@@ -74,6 +74,7 @@ export class FormValidListchequeoVfspComponent implements OnInit {
         private routes: Router,
         private activatedRoute: ActivatedRoute,
         private dialog: MatDialog,
+        private obsMultipleSvc: ObservacionesMultiplesCuService,
         private commonSvc: CommonService )
     {
         this.commonSvc.listaRevisionTecnica()
@@ -106,6 +107,8 @@ export class FormValidListchequeoVfspComponent implements OnInit {
 
                 }
 
+
+
                 this.listas.push( this.fb.group(
                     {
                         solicitudPagoId: this.solicitudPago.solicitudPagoId,
@@ -126,9 +129,23 @@ export class FormValidListchequeoVfspComponent implements OnInit {
         }
         if ( this.contrato !== undefined  && this.solicitudPago === undefined ) {
             this.esExpensas = false;
+            let semaforoSinDiligenciar = 0;
+            let semaforoEnProceso = 0;
+            let semaforoCompleto = 0;
             for ( const solicitudPagoListaChequeo of this.contrato.solicitudPagoOnly.solicitudPagoListaChequeo ) {
                 const respuestasListaChequeo = [];
+                let sinDiligenciar = 0;
+                let completo = 0;
+                let estadoSemaforo: string;
                 for ( const solicitudPagoListaChequeoRespuesta of solicitudPagoListaChequeo.solicitudPagoListaChequeoRespuesta ) {
+
+                    if ( solicitudPagoListaChequeoRespuesta.verificacionRespuestaCodigo === undefined ) {
+                        sinDiligenciar++;
+                    }
+
+                    if ( solicitudPagoListaChequeoRespuesta.verificacionRespuestaCodigo !== undefined ) {
+                        completo++;
+                    }
 
                     respuestasListaChequeo.push(
                         this.fb.group(
@@ -136,17 +153,40 @@ export class FormValidListchequeoVfspComponent implements OnInit {
                                 solicitudPagoListaChequeoRespuestaId: [ solicitudPagoListaChequeoRespuesta.solicitudPagoListaChequeoRespuestaId ],
                                 listaChequeoItemNombre: [ solicitudPagoListaChequeoRespuesta.listaChequeoItem.nombre ],
                                 respuestaCodigo: [ solicitudPagoListaChequeoRespuesta.respuestaCodigo !== undefined ? solicitudPagoListaChequeoRespuesta.respuestaCodigo : null, Validators.required ],
-                                observacion: [ null, Validators.required ],
-                                respuestaRevisionTecnicaCodigo: [ null, Validators.required ],
-                                tieneSubsanacion: [ null, Validators.required ]
+                                observacion: [ solicitudPagoListaChequeoRespuesta.verificacionObservacion !== undefined ? solicitudPagoListaChequeoRespuesta.verificacionObservacion : null, Validators.required ],
+                                respuestaRevisionTecnicaCodigo: [ solicitudPagoListaChequeoRespuesta.verificacionRespuestaCodigo !== undefined ? solicitudPagoListaChequeoRespuesta.verificacionRespuestaCodigo : null, Validators.required ],
+                                tieneSubsanacion: [ solicitudPagoListaChequeoRespuesta.tieneSubsanacion !== undefined ? solicitudPagoListaChequeoRespuesta.tieneSubsanacion : null, Validators.required ]
                             }
                         )
                     )
 
                 }
 
+                if ( sinDiligenciar > 0 && sinDiligenciar === solicitudPagoListaChequeo.solicitudPagoListaChequeoRespuesta.length ) {
+                    estadoSemaforo = 'sin-diligenciar';
+                }
+
+                if ( completo > 0 && completo === solicitudPagoListaChequeo.solicitudPagoListaChequeoRespuesta.length ) {
+                    estadoSemaforo = 'completo';
+                }
+
+                if ( completo > 0 && completo < solicitudPagoListaChequeo.solicitudPagoListaChequeoRespuesta.length ) {
+                    estadoSemaforo = 'en-proceso';
+                }
+
+                if ( estadoSemaforo === 'sin-diligenciar' ) {
+                    semaforoSinDiligenciar++;
+                }
+                if ( estadoSemaforo === 'en-proceso' ) {
+                    semaforoEnProceso++;
+                }
+                if ( estadoSemaforo === 'completo' ) {
+                    semaforoCompleto++;
+                }
+
                 this.listas.push( this.fb.group(
                     {
+                        estadoSemaforo,
                         solicitudPagoId: this.contrato.solicitudPagoOnly.solicitudPagoId,
                         solicitudPagoListaChequeoId: solicitudPagoListaChequeo.solicitudPagoListaChequeoId,
                         nombre: solicitudPagoListaChequeo.listaChequeo.nombre,
@@ -157,6 +197,19 @@ export class FormValidListchequeoVfspComponent implements OnInit {
                         )
                     }
                 ) );
+            }
+
+            if ( semaforoSinDiligenciar > 0 && semaforoSinDiligenciar === this.contrato.solicitudPagoOnly.solicitudPagoListaChequeo.length ) {
+                this.estadoSemaforo.emit( 'sin-diligenciar' );
+            }
+            if ( semaforoEnProceso > 0 && semaforoEnProceso === this.contrato.solicitudPagoOnly.solicitudPagoListaChequeo.length ) {
+                this.estadoSemaforo.emit( 'en-proceso' );
+            }
+            if ( semaforoEnProceso > 0 && semaforoEnProceso < this.contrato.solicitudPagoOnly.solicitudPagoListaChequeo.length ) {
+                this.estadoSemaforo.emit( 'en-proceso' );
+            }
+            if ( semaforoCompleto > 0 && semaforoCompleto === this.contrato.solicitudPagoOnly.solicitudPagoListaChequeo.length ) {
+                this.estadoSemaforo.emit( 'completo' );
             }
 
             this.dataSource = new MatTableDataSource();
@@ -202,8 +255,9 @@ export class FormValidListchequeoVfspComponent implements OnInit {
         dialogRef.afterClosed()
             .subscribe(
                 value => {
-                    this.getRespuestasListaChequeo( index ).controls[ jIndex ].get( 'observacion' ).setValue( value.observaciones );
-                    this.getRespuestasListaChequeo( index ).controls[ jIndex ].get( 'tieneSubsanacion' ).setValue( value.tieneSubsanacion );
+                    
+                    this.getRespuestasListaChequeo( index ).controls[ jIndex ].get( 'observacion' ).setValue( value.observaciones !== undefined ? value.observaciones : this.getRespuestasListaChequeo( index ).controls[ jIndex ].get( 'observacion' ).value );
+                    this.getRespuestasListaChequeo( index ).controls[ jIndex ].get( 'tieneSubsanacion' ).setValue( value.tieneSubsanacion !== undefined ? value.tieneSubsanacion : this.getRespuestasListaChequeo( index ).controls[ jIndex ].get( 'tieneSubsanacion' ).value );
                 }
             );
     }
@@ -219,6 +273,50 @@ export class FormValidListchequeoVfspComponent implements OnInit {
         this.estaEditando = true;
         this.listas.markAllAsTouched();
         console.log( this.addressForm );
+
+        const pSolicitudPagoListaChequeo = [];
+
+        this.listas.controls.forEach( ( control,index ) => {
+
+            const solicitudPagoListaChequeoRespuesta = [];
+
+            this.getRespuestasListaChequeo( index ).controls.forEach( controlRespuesta => {
+                solicitudPagoListaChequeoRespuesta.push(
+                    {
+                        solicitudPagoListaChequeoId: control.get( 'solicitudPagoListaChequeoId' ).value,
+                        solicitudPagoListaChequeoRespuestaId: controlRespuesta.get( 'solicitudPagoListaChequeoRespuestaId' ).value,
+                        tieneSubsanacion: controlRespuesta.get( 'respuestaRevisionTecnicaCodigo' ).value === this.noCumpleCodigo ? controlRespuesta.get( 'tieneSubsanacion' ).value : null,
+                        verificacionRespuestaCodigo: controlRespuesta.get( 'respuestaRevisionTecnicaCodigo' ).value,
+                        verificacionObservacion: controlRespuesta.get( 'respuestaRevisionTecnicaCodigo' ).value === this.noCumpleCodigo ? controlRespuesta.get( 'observacion' ).value : null
+                    }
+                );
+            } )
+
+            pSolicitudPagoListaChequeo.push(
+                {
+                    esValidacion: false,
+                    solicitudPagoListaChequeoId: control.get( 'solicitudPagoListaChequeoId' ).value,
+                    solicitudPagoId: control.get( 'solicitudPagoId' ).value,
+                    solicitudPagoListaChequeoRespuesta
+                }
+            )
+
+        } )
+
+        this.obsMultipleSvc.createEditObservacionFinancieraListaChequeo( pSolicitudPagoListaChequeo )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () => this.routes.navigate(
+                            [
+                                '/verificarFinancieramenteSolicitudDePago/verificarFinancSolicitud',  this.contrato.contratoId, this.contrato.solicitudPagoOnly.solicitudPagoId
+                            ]
+                        )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }

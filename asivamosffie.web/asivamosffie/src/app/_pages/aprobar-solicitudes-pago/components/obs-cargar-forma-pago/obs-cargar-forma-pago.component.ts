@@ -50,45 +50,6 @@ export class ObsCargarFormaPagoComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        if ( this.solicitudPago !== undefined ) {
-            if ( this.tieneFormaPago === true ) {
-                this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
-                    this.aprobarSolicitudPagoId,
-                    this.solicitudPago.solicitudPagoId,
-                    this.solicitudPagoCargarFormaPago.solicitudPagoCargarFormaPagoId,
-                    this.cargarFormaPagoCodigo )
-                    .subscribe(
-                        response => {
-                            const obsSupervisor = response.filter( obs => obs.archivada === false )[0];
-
-                            if ( obsSupervisor !== undefined ) {
-
-                                if ( obsSupervisor.registroCompleto === false ) {
-                                    this.estadoSemaforo.emit( 'en-proceso' );
-                                }
-                                if ( obsSupervisor.registroCompleto === true ) {
-                                    this.estadoSemaforo.emit( 'completo' );
-                                }
-                                console.log( obsSupervisor );
-                                this.solicitudPagoObservacionId = obsSupervisor.solicitudPagoObservacionId;
-                                this.estaEditando = true;
-                                this.addressForm.markAllAsTouched();
-                                this.addressForm.setValue(
-                                    {
-                                        fechaCreacion: obsSupervisor.fechaCreacion,
-                                        tieneObservaciones: obsSupervisor.tieneObservacion !== undefined ? obsSupervisor.tieneObservacion : null,
-                                        observaciones: obsSupervisor.observacion !== undefined ? ( obsSupervisor.observacion.length > 0 ? obsSupervisor.observacion : null ) : null
-                                    }
-                                );
-                            }
-                        }
-                    );
-            }
-            if ( this.tieneFormaPago === false ) {
-                this.estadoSemaforo.emit( 'completo' );
-            }
-
-        }
     }
 
     crearFormulario() {
@@ -127,40 +88,6 @@ export class ObsCargarFormaPagoComponent implements OnInit {
                 return forma[0].nombre;
             }
         }
-    }
-
-    onSubmit() {
-        this.estaEditando = true;
-        this.addressForm.markAllAsTouched();
-        if ( this.addressForm.get( 'tieneObservaciones' ).value !== null && this.addressForm.get( 'tieneObservaciones' ).value === false ) {
-            this.addressForm.get( 'observaciones' ).setValue( '' );
-        }
-
-        const pSolicitudPagoObservacion = {
-            solicitudPagoObservacionId: this.solicitudPagoObservacionId,
-            solicitudPagoId: this.solicitudPago.solicitudPagoId,
-            observacion: this.addressForm.get( 'observaciones' ).value !== null ? this.addressForm.get( 'observaciones' ).value : this.addressForm.get( 'observaciones' ).value,
-            tipoObservacionCodigo: this.cargarFormaPagoCodigo,
-            menuId: this.aprobarSolicitudPagoId,
-            idPadre: this.solicitudPagoCargarFormaPago.solicitudPagoCargarFormaPagoId,
-            tieneObservacion: this.addressForm.get( 'tieneObservaciones' ).value !== null ? this.addressForm.get( 'tieneObservaciones' ).value : this.addressForm.get( 'tieneObservaciones' ).value
-        };
-
-        console.log( pSolicitudPagoObservacion );
-        // this.obsMultipleSvc.createUpdateSolicitudPagoObservacion( pSolicitudPagoObservacion )
-        //     .subscribe(
-        //         response => {
-        //             this.openDialog( '', `<b>${ response.message }</b>` );
-        //             this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-        //                 () => this.routes.navigate(
-        //                     [
-        //                         '/verificarSolicitudPago/aprobacionSolicitud',  this.activatedRoute.snapshot.params.idContrato, this.activatedRoute.snapshot.params.idSolicitudPago
-        //                     ]
-        //                 )
-        //             );
-        //         },
-        //         err => this.openDialog( '', `<b>${ err.message }</b>` )
-        //     )
     }
 
 }

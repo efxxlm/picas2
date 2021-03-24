@@ -117,4 +117,9 @@ export class ObservacionesMultiplesCuService {
       );
   }
 
+  /* servicios de financiera CU 4.3.1 & 4.3.2 */
+  createEditObservacionFinancieraListaChequeo( pSolicitudPagoListaChequeo: any ) {
+    return this.http.post<Respuesta>( `${ this.apiUrl }/CreateEditObservacionFinancieraListaChequeo`, pSolicitudPagoListaChequeo )
+  }
+
 }

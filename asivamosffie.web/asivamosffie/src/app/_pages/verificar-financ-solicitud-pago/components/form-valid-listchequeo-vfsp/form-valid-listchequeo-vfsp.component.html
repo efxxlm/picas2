@@ -2,7 +2,7 @@
     <mat-accordion>
         <mat-expansion-panel class="expansion-style sub-expansion" *ngFor="let lista of listas.controls; index as i">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title sin-diligenciar" style="font-size: .8em !important;">
+                <mat-panel-title class="expansion-style--title" style="font-size: .8em !important;">
                     {{ firstLetterUpperCase( lista.get( 'nombre' ).value ) }}
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -37,7 +37,7 @@
         <mat-accordion>
             <mat-expansion-panel class="expansion-style sub-expansion" formArrayName="listas" *ngFor="let lista of listas.controls; index as i">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title sin-diligenciar" style="font-size: .8em !important;">
+                    <mat-panel-title class="expansion-style--title" style="font-size: .8em !important;" [ngClass]="lista.get( 'estadoSemaforo' ).value">
                         {{ firstLetterUpperCase( lista.get( 'nombre' ).value ) }}
                     </mat-panel-title>
                 </mat-expansion-panel-header>

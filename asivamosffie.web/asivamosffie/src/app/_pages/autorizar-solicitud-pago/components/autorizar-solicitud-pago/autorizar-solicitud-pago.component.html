@@ -93,7 +93,8 @@
                                 color="accent"
                                 class="btn-table"
                                 [routerLink]="[ 'verDetalleAutorizarSolicitud', element.contratoId, element.solicitudPagoId ]"
-                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enviadaVerificacionFinanciera">
+                                *ngIf=" element.estadoCodigo === listaEstadoSolicitudPago.enviadaVerificacionFinanciera
+                                        || element.estadoCodigo === listaEstadoSolicitudPago.solicitudDevueltaPorCoordinador">
                                 Ver detalle
                         </button>
 
@@ -136,7 +137,8 @@
                                 color="accent"
                                 class="btn-table"
                                 [routerLink]="[ 'verDetalleExpensas', element.solicitudPagoId ]"
-                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enviadaVerificacionFinanciera">
+                                *ngIf=" element.estadoCodigo === listaEstadoSolicitudPago.enviadaVerificacionFinanciera
+                                        || element.estadoCodigo === listaEstadoSolicitudPago.solicitudDevueltaPorCoordinador">
                                 Ver detalle
                         </button>
 

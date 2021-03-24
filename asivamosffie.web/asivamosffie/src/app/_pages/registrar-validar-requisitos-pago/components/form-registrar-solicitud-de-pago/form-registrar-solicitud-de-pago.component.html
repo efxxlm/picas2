@@ -11,7 +11,7 @@
             </ng-container>
             <ng-container matColumnDef="valorFacturado">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor facturado </th>
-                <td mat-cell *matCellDef="let element" align="center"> {{ element.valorFacturado !== undefined ? element.valorFacturado : 0 | currency:'':'symbol-narrow':'.0-0' }} </td>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.valorFacturado !== undefined ? ( element.valorFacturado | currency:'':'symbol-narrow':'.0-0' ) : ( 0 | currency:'':'symbol-narrow':'.0-0' ) }} </td>
             </ng-container>
             <ng-container matColumnDef="porcentajeFacturado">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Porcentaje facturado </th>
@@ -19,7 +19,7 @@
             </ng-container>
             <ng-container matColumnDef="saldoPorPagar">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Saldo por pagar </th>
-                <td mat-cell *matCellDef="let element" align="center"> {{ element.saldoPorPagar !== undefined ? element.saldoPorPagar : 0 | currency:'':'symbol-narrow':'.0-0' }} </td>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.saldoPorPagar !== undefined ? ( element.saldoPorPagar | currency:'':'symbol-narrow':'.0-0' ) : ( 0 | currency:'':'symbol-narrow':'.0-0' ) }} </td>
             </ng-container>
             <ng-container matColumnDef="porcentajePorPagar">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Porcentaje por pagar </th>
