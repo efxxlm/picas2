@@ -54,21 +54,21 @@ namespace asivamosffie.services
             {
                 case (int)enumeratorMenu.Verificar_solicitud_de_pago:
                     result = await _context.VSolicitudPago.Where(s =>
-                            s.IntEstadoCodigo > (int)EnumEstadoSolicitudPago.Con_solicitud_revisada_por_equipo_facturacion)
+                            s.IntEstadoCodigo >= (int)EnumEstadoSolicitudPago.Enviado_para_verificacion)
                                                     .OrderByDescending(r => r.FechaModificacion)
                                                     .ToListAsync();
                     break;
 
                 case (int)enumeratorMenu.Autorizar_solicitud_de_pago:
                     result = await _context.VSolicitudPago.Where(s =>
-                       s.IntEstadoCodigo > (int)EnumEstadoSolicitudPago.En_proceso_de_verificacion)
+                       s.IntEstadoCodigo >= (int)EnumEstadoSolicitudPago.Enviada_para_autorizacion)
                                                .OrderByDescending(r => r.FechaModificacion)
                                                .ToListAsync();
                     break;
 
                 case (int)enumeratorMenu.Verificar_Financieramente_Solicitud_De_Pago:
                     result = await _context.VSolicitudPago.Where(s =>
-                       s.IntEstadoCodigo > (int)EnumEstadoSolicitudPago.Con_solicitud_revisada_por_equipo_facturacion)
+                       s.IntEstadoCodigo >= (int)EnumEstadoSolicitudPago.Enviada_Verificacion_Financiera)
                                                .OrderByDescending(r => r.FechaModificacion)
                                                .ToListAsync();
                     break;
@@ -76,7 +76,7 @@ namespace asivamosffie.services
 
                 case (int)enumeratorMenu.Validar_Financieramente_Solicitud_De_Pago:
                     result = await _context.VSolicitudPago.Where(s =>
-                       s.IntEstadoCodigo > (int)EnumEstadoSolicitudPago.En_proceso_de_autorizacion)
+                       s.IntEstadoCodigo >= (int)EnumEstadoSolicitudPago.Enviada_Validacion_Financiera)
                                                .OrderByDescending(r => r.FechaModificacion)
                                                .ToListAsync();
                     break;
