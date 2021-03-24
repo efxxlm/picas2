@@ -3,7 +3,7 @@ export interface Report {
         informeFinal: [
             {
                 informeFinalId: number,
-                contratacionProyectoId: number,
+                proyectoId: number,
                 eliminado: boolean
                 estadoInforme: string,
                 fechaCreacion: string,

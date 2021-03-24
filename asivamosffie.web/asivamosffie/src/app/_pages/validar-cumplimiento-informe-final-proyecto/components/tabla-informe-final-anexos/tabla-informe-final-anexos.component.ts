@@ -30,7 +30,7 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   ];
   addressForm: FormGroup;
   dataSource = new MatTableDataSource<ListaChequeo>(this.ELEMENT_DATA);
-  semaforo = false;
+  semaforo :string;
   estaEditando = false;
   noGuardado=false;
 
@@ -42,6 +42,22 @@ export class TablaInformeFinalAnexosComponent implements OnInit, AfterViewInit {
   ) {}
   
   ngOnInit(): void {
+    console.log(this.report);
+    if(this.report.proyecto.informeFinal[0].tieneObservacionesInterventoria){
+      if(this.report.proyecto.informeFinal[0].informeFinalObservacionesInterventoria.length > 0){
+        if(this.report.proyecto.informeFinal[0].informeFinalObservacionesInterventoria[0].observaciones == null || this.report.proyecto.informeFinal[0].informeFinalObservacionesInterventoria[0].observaciones == ""){
+          this.semaforo = "2";
+        }else{
+          this.semaforo = "1";
+        }
+      }else{
+          this.semaforo = "2";
+      }
+    }else if(this.report.proyecto.informeFinal[0].tieneObservacionesInterventoria == false){
+        this.semaforo = "1";
+    }else{
+      this.semaforo = "3";
+    }
     this.getInformeFinalListaChequeoByInformeFinalId(this.id);
   }
 

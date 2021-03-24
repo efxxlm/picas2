@@ -124,10 +124,10 @@
       <strong>
         ¿Desde el grupo de novedades y liquidaciones tiene observaciones al recibo de satisfacción?:
       </strong>
-      <span *ngIf="report.proyecto.informeFinal[0].tieneObservacionesCumplimiento"> Si</span>
-      <span *ngIf="!report.proyecto.informeFinal[0].tieneObservacionesCumplimiento"> No</span>
+      <span *ngIf="report.proyecto.informeFinal[0].tieneObservacionesCumplimiento || (report.proyecto.informeFinal[0].estadoCumplimiento === '4' && !report.proyecto.informeFinal[0].tieneObservacionesCumplimiento && report.proyecto.informeFinal[0].informeFinalObservacionesCumplimiento.length > 0)"> Si</span>
+      <span *ngIf="(!report.proyecto.informeFinal[0].tieneObservacionesCumplimiento && report.proyecto.informeFinal[0].estadoCumplimiento !== '4') || (report.proyecto.informeFinal[0].estadoCumplimiento === '4' && !report.proyecto.informeFinal[0].tieneObservacionesCumplimiento && report.proyecto.informeFinal[0].informeFinalObservacionesCumplimiento.length < 0)"> No</span>    
     </p>
-    <p *ngIf="report.proyecto.informeFinal[0].tieneObservacionesCumplimiento" [innerHTML]="report.proyecto.informeFinal[0].informeFinalObservacionesCumplimiento[0].observaciones">
+    <p *ngIf="report.proyecto.informeFinal[0].tieneObservacionesCumplimiento || (report.proyecto.informeFinal[0].estadoCumplimiento === '4' && !report.proyecto.informeFinal[0].tieneObservacionesCumplimiento && report.proyecto.informeFinal[0].informeFinalObservacionesCumplimiento.length > 0)" [innerHTML]="report.proyecto.informeFinal[0].informeFinalObservacionesCumplimiento[0].observaciones">
     </p>
   </mat-card-content>
 </mat-card>

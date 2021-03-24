@@ -109,8 +109,15 @@ export class FormReciboASatisfaccionComponent implements OnInit {
   }
 
   respuestaFormCompleto() {
-    if (this.addressForm.get('urlActa').valid) return true;
+    if(this.addressForm.get('urlActa').value == "" || this.addressForm.get('urlActa').value == null || !this.addressForm.get('urlActa').valid){
+      return false;
+    }else if (!this.addressForm.get('fechaSuscripcion').valid || this.addressForm.get('urlActa').value == null){
+      return false;
+    }else{
+      return true;
+    }
+    /*if (this.addressForm.get('urlActa').valid) return true;
     else if (this.addressForm.get('fechaSuscripcion').valid) return true;
-    else return false;
+    else return false;*/
   }
 }

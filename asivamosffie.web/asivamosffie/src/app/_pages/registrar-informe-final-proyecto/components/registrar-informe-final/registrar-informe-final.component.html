@@ -6,7 +6,8 @@
   </div>
   <div class="text-center">
     <h1 class="title-menu--h1">
-      Registrar informe final
+      <span *ngIf="report && !mostrarTxtDetalle">Registrar informe final</span>
+      <span *ngIf="report && mostrarTxtDetalle">Ver detalle/Editar registro informe final</span>
       <b *ngIf="report"> {{ report.proyecto.llaveMen }} </b>
     </h1>
     <p class="colorMainColor mt-05em"> 

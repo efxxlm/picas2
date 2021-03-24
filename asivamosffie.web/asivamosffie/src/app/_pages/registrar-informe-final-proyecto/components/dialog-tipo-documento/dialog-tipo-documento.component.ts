@@ -79,7 +79,7 @@ export class DialogTipoDocumentoComponent implements OnInit {
     }
     //this.tieneModificacionInterventor = true; 
     this.dialog.getDialogById('dialogTipoDocumento').close({ anexo: this.addressForm.value, id: this.data.informe.informeFinalInterventoriaId, tieneModificacionInterventor: this.tieneModificacionInterventor});
-    this.openDialog('', '<b>La información ha sido guardada correctamente.</b>');
+    this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
   }
 
   createEditInformeFinalAnexo(informeFinalAnexo: any, informeFinalInterventoriaid: number) {

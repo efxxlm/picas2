@@ -98,7 +98,7 @@ export class TablaInformeFinalProyectoComponent implements OnInit, AfterViewInit
   enviarRegistroFinal(pProyectoId: number) {
     this.registrarInformeFinalProyectoService.sendFinalReportToSupervision(pProyectoId)
       .subscribe(respuesta => {
-        this.openDialog('', '<b>La información ha sido guardada correctamente.</b>');
+        this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
         this.ngOnInit();
       });
   }

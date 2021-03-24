@@ -113,8 +113,8 @@
           class="btn-table"
           [routerLink]="['revisarInforme', element.proyectoId]"
         >
-          <span *ngIf="element.estadoCumplimiento == null || element.estadoCumplimiento === '0' || element.estadoCumplimiento === '4'">Revisar informe</span> <!--Null o 0-->
-          <span *ngIf="element.estadoCumplimiento != null && element.estadoCumplimiento !== '0' && element.estadoCumplimiento === '1'">ver Detalle/Editar</span><!--En proceso de validación de cumplimiento-->
+          <span *ngIf="element.estadoCumplimiento == '' || element.estadoCumplimiento == null || element.estadoCumplimiento === '0'">Revisar informe</span> <!--Null o 0-->
+          <span *ngIf="element.estadoCumplimiento != null && element.estadoCumplimiento !== '0' && (element.estadoCumplimiento === '1' || element.estadoCumplimiento === '4')">ver Detalle/Editar</span><!--En proceso de validación de cumplimiento-->
         </a>
         <a
         *ngIf="element.estadoCumplimiento === '2' || element.estadoCumplimiento === '3'"

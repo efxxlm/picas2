@@ -5,6 +5,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 import { Report } from 'src/app/_interfaces/proyecto-final.model';
 import { ValidarCumplimientoInformeFinalService } from 'src/app/core/_services/validarCumplimientoInformeFinal/validar-cumplimiento-informe-final.service';
 import { Respuesta } from 'src/app/core/_services/common/common.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-form-observaciones-recibo-satisfaccion',
@@ -20,7 +21,7 @@ export class FormObservacionesReciboSatisfaccionComponent implements OnInit {
   tieneObservacionesCumplimiento = null;
   observaciones: FormGroup;
   noGuardado=true; 
-
+  id : number;
   editorStyle = {
     height: '100px'
   };
@@ -35,6 +36,7 @@ export class FormObservacionesReciboSatisfaccionComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog, private fb: FormBuilder,
+    private routes: Router,
     private validarCumplimientoInformeFinalService: ValidarCumplimientoInformeFinalService
     ) {}
 
@@ -60,14 +62,24 @@ export class FormObservacionesReciboSatisfaccionComponent implements OnInit {
       }if(this.report.proyecto.informeFinal[0].informeFinalObservacionesCumplimiento.length>0){
         this.observaciones.patchValue(this.report.proyecto.informeFinal[0].informeFinalObservacionesCumplimiento[0]);
       }
+      this.id = this.report.proyecto.informeFinal[0].proyectoId;
       this.estaEditando = true;
     }
   }
 
   openDialog(modalTitle: string, modalText: string) {
-    this.dialog.open(ModalDialogComponent, {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+        () =>   this.routes.navigate(
+                    [
+                        '/validarCumplimientoInformeFinalProyecto/revisarInforme', this.id
+                    ]
+                )
+    );
     });
   }
 

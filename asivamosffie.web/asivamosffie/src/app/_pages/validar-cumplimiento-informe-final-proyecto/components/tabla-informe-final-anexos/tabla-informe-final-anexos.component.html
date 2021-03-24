@@ -8,7 +8,8 @@
   <mat-accordion>
     <mat-expansion-panel class="expansion-style">
       <mat-expansion-panel-header class="expansion-style--header">
-        <mat-panel-title class="expansion-style--title">
+        <mat-panel-title class="expansion-style--title 
+        {{semaforo == '1' ? 'completo' : semaforo == '2' ? 'en-proceso' : 'sin-diligenciar' }}">
                 Informe final y anexos
         </mat-panel-title>
       </mat-expansion-panel-header>

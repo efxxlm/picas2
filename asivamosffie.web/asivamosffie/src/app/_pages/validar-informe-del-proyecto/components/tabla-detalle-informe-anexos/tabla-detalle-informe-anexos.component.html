@@ -132,7 +132,7 @@
           ></mat-paginator>
         </div>
       </section>
-      <app-tabla-observaciones-cumplimiento-interventoria *ngIf="id && estadoCumplimiento === '2'" [id]="id"></app-tabla-observaciones-cumplimiento-interventoria>
+      <app-tabla-observaciones-cumplimiento-interventoria *ngIf="id && (estadoCumplimiento === '2' || estadoCumplimiento === '4')" [id]="id"></app-tabla-observaciones-cumplimiento-interventoria>
     </mat-expansion-panel>
   </mat-accordion>
 </div>

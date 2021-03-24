@@ -4,7 +4,21 @@
 
 <div class="text-center">
   <h1 class="title-menu--h1">
-    Tipo de documento
+    <span *ngIf="((data.informe.informeFinalAnexoId == null || data.informe.informeFinalAnexoId == 0) && (data.informe.tieneAnexo == null || !data.informe.tieneAnexo)) || data.verDetalle">
+      Tipo de documento
+    </span>
+    <span *ngIf="((data.informe.estadoInformeFinal !== '4' && data.informe.estadoInformeFinal !== '8' 
+                && data.informe.informeFinalAnexoId != null && data.informe.informeFinalAnexoId > 0)  
+                || data.informe.tieneAnexo
+                || ((data.informe.estadoInformeFinal ==='4' || data.informe.estadoInformeFinal ==='8')
+                && data.informe.tieneObservacionSupervisor 
+                && (data.informe.aprobacionCodigo === '2' || data.informe.aprobacionCodigo === 2) 
+                && ((data.informe.calificacionCodigo === '1' || data.informe.calificacionCodigo === 1) 
+                || (data.informe.calificacionCodigo === '3' || data.informe.calificacionCodigo === 3)))
+                )&& !data.verDetalle
+                ">
+      Ver detalle/editar documento
+    </span>
     {{ data.llaveMen }}
   </h1>
   <p class="mt-05em">

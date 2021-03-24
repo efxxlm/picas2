@@ -19,6 +19,7 @@ export class RegistrarInformeFinalComponent implements OnInit {
   mostrarInforme = true;
   mostrarDetalleAnexos = false;
   mostrarDetalleRecibo = false;
+  mostrarTxtDetalle = false;
   @ViewChild(TablaInformeFinalAnexosComponent ) childTablaInformeFinalAnexos: TablaInformeFinalAnexosComponent ; 
   @ViewChild(FormReciboASatisfaccionComponent ) childFormReciboASatisfaccion: FormReciboASatisfaccionComponent ; 
 
@@ -90,6 +91,9 @@ export class RegistrarInformeFinalComponent implements OnInit {
       }
       if(report[0].proyecto.informeFinal[0].estadoAprobacion === '6' && report[0].proyecto.informeFinal[0].tieneObservacionesSupervisor == false){
         this.mostrarDetalleRecibo = true;
+      }
+      if(this.report.proyecto.informeFinal[0].informeFinalId != null){
+        this.mostrarTxtDetalle = true;
       }
     });
   }
