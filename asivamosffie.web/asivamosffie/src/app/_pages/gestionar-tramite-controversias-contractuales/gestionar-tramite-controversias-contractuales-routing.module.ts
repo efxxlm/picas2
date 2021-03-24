@@ -100,31 +100,31 @@ const routes: Routes = [
     component: VerDetalleActuacionNotaiComponent
   },
   {
-    path: 'registrarNuevaMesaTrabajo/:id',
+    path: 'registrarNuevaMesaTrabajo/:idControversia/:id',
     component: RegistrarNuevaMesatrabajoCcComponent
   },
   {
-    path: 'verDetalleEditarMesaTrabajo/:id',
+    path: 'verDetalleEditarMesaTrabajo/:idControversia/:id',
     component: VerDetalleeditarMesaDeTrabajoComponent
   },
   {
-    path: 'verDetalleMesaTrabajo/:id',
+    path: 'verDetalleMesaTrabajo/:idControversia/:id',
     component: VerDetalleMesaTrabajoComponent
   },
   {
-    path: 'actualizarMesaTrabajo',
+    path: 'actualizarMesaTrabajo/:idControversia/:idMesa',
     component: ActualizarMesaDeTrabajoComponent
   },
   {
-    path: 'registrarNuevaMesaTrabajoAct',
+    path: 'registrarNuevaMesaTrabajoAct/:idControversia/:idMesa/:id',
     component: RegistrarNuevaMesatrabajoActComponent
   },
   {
-    path: 'verDetalleEditarMesaTrabajoAct/:id',
+    path: 'verDetalleEditarMesaTrabajoAct/:idControversia/:idMesa/:id',
     component: VerDetalleeditarActuacionMtComponent
   },
   {
-    path: 'verDetalleMesaTrabajoAct/:id',
+    path: 'verDetalleMesaTrabajoAct/:idControversia/:idMesa/:id',
     component: VerDetalleActuacionMtComponent
   }
 ];

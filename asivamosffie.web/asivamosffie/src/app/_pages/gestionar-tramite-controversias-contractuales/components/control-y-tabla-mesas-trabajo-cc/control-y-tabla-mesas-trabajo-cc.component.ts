@@ -44,29 +44,29 @@ export class ControlYTablaMesasTrabajoCcComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
   registrarNuevaMesa(id){
-    this.router.navigate(['/gestionarTramiteControversiasContractuales/registrarNuevaMesaTrabajo',id]);
+    this.router.navigate(['/gestionarTramiteControversiasContractuales/registrarNuevaMesaTrabajo',this.controversiaID,id]);
   }
   verDetalleEditar(id,codeMT,idMesa){
     localStorage.setItem("idMesa",idMesa);
     localStorage.setItem("nomMesaTrabajo",codeMT);
-    this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarMesaTrabajo',id]);
+    this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarMesaTrabajo',this.controversiaID,id]);
   }
   finalizarMesaTrabajo(id){
     this.services.FinalizarMesa(id).subscribe((data:any)=>{
       this.router.navigateByUrl('/', { skipLocationChange: true }).then(
-        () => this.router.navigate(['gestionarTramiteControversiasContractuales/actualizarTramiteControversia'])
+        () => this.router.navigate(['gestionarTramiteControversiasContractuales/actualizarTramiteControversia',this.controversiaID])
       );
     });
   }
   verDetalleMesaTrabajo(id,codeMT,idMesa){
     localStorage.setItem("idMesa",idMesa);
     localStorage.setItem("nomMesaTrabajo",codeMT);
-    this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleMesaTrabajo',id]);
+    this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleMesaTrabajo',this.controversiaID,id]);
   }
   actualizarMesaTrabajo(id,codeMT,idMesa){
     localStorage.setItem("idMesaTrabajo",id);
     localStorage.setItem("nomMesaTrabajo",codeMT);
     localStorage.setItem("idMesa",idMesa);
-    this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarMesaTrabajo']);
+    this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarMesaTrabajo',this.controversiaID,id]);
   } 
 }
