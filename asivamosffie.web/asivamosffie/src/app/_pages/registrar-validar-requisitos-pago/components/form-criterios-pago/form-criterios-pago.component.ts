@@ -342,13 +342,13 @@ export class FormCriteriosPagoComponent implements OnInit {
             let valorTotalUso = 0;
             usoByConcepto.forEach( uso => valorTotalUso += uso.valorUso );
 
-            if ( valorConcepto > valorTotalUso && this.criterios.length > 1 ) {
+            if ( valorConcepto > valorTotalUso ) {
                 this.openDialog( '', `El valor facturado al concepto no puede ser mayor al uso asociado <b>${ usoByConcepto[ usoByConcepto.length -1 ].nombre }.</b>` );
                 this.getConceptos( index ).controls[ jIndex ].get( 'valorFacturadoConcepto' ).setValue( null );
             }
         }
 
-        if ( valorConcepto > this.montoMaximoPendiente.montoMaximo && this.getConceptos( index ).length > 1 ) {
+        if ( valorConcepto > this.montoMaximoPendiente.montoMaximo ) {
             this.openDialog( '', '<b>El valor facturado al concepto no puede ser mayor o igual al monto maximo por pagar en esta factura.</b>' );
             this.getConceptos( index ).controls[ jIndex ].get( 'valorFacturadoConcepto' ).setValue( null );
         }

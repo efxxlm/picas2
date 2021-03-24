@@ -41,15 +41,16 @@
                             </mat-card-title>
                         </mat-card-header>
                         <mat-card-content style="text-align: left;">
-                            <p><strong>Monto máximo a pagar en el proyecto:</strong> $30.000.000</p>
-                            <p><strong>Monto pendiente a pagar en el proyecto:</strong> $30.000.000</p>
+                            <p><strong>Monto máximo a pagar en el proyecto:</strong> {{ project.get( 'valorMaximoProyecto' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
+                            <p><strong>Monto pendiente a pagar en el proyecto:</strong> {{ project.get( 'valorPendienteProyecto' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
                             <br>
                             <br>
                             <div class="d-flex">
                                 <strong>Criterios:</strong>
-                                <section>
-                                    <p *ngFor="let criterio of criteriosArraySeleccionados; index as i" style="margin-left: .4em;"> {{ filterCriterios( criterio.codigo ) }}<span *ngIf="criteriosArraySeleccionados.length - 1 !== i">,</span><span *ngIf="criteriosArraySeleccionados.length - 1 === i">.</span> </p>
-                                </section>
+                                <div class="d-flex">
+                                    <strong>Criterios:</strong>
+                                    <p *ngFor="let criterio of project.get( 'criterioPago' ).value; index as i" style="margin-left: .4em;"> {{ criterio.nombre }}<span *ngIf="project.get( 'criterioPago' ).value.length - 1 !== i">,</span><span *ngIf="project.get( 'criterioPago' ).value.length - 1 === i">.</span> </p>
+                                </div>
                             </div>
                             <section formArrayName="criteriosProyecto" class="mt-1em" *ngIf="criteriosProyecto( i ).length > 0">
                                 <div *ngFor="let criterioProyecto of criteriosProyecto( i ).controls; index as j" [formGroup]="criterioProyecto">
@@ -66,7 +67,7 @@
         </form>
     </ng-container>
     <ng-template #noEsMultiProyecto>
-        <div style="margin-top: 3em;" *ngIf="proyectos !== undefined">
+        <div style="margin-top: 3em;" *ngIf="proyectos !== undefined && montoMaximo !== undefined">
             <mat-card class="shipping-card var-main-gris" *ngFor="let proyecto of proyectos">
                 <mat-card-header class="header-card header-card--margin">
                     <mat-card-title class="header-card--text">
@@ -74,8 +75,8 @@
                     </mat-card-title>
                 </mat-card-header>
                 <mat-card-content style="text-align: left;">
-                    <p><strong>Monto máximo a pagar en el proyecto:</strong> $30.000.000</p>
-                    <p><strong>Monto pendiente a pagar en el proyecto:</strong> $30.000.000</p>
+                    <p><strong>Monto máximo a pagar en el proyecto:</strong> {{ montoMaximo.valorMaximoProyecto | currency:'':'symbol-narrow':'.0-0' }} </p>
+                    <p><strong>Monto pendiente a pagar en el proyecto:</strong> {{ montoMaximo.valorPendienteProyecto | currency:'':'symbol-narrow':'.0-0' }} </p>
                     <br>
                     <div class="d-flex">
                         <strong>Criterio:</strong>

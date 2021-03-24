@@ -20,6 +20,7 @@ export class DetalleFacturaProyectosComponent implements OnInit {
     @Input() esVerDetalle = false;
     @Input() aprobarSolicitudPagoId: any
     @Input() criteriosPagoProyectoCodigo: string;
+    @Input() solicitudPagoCargarFormaPago: any;
     solicitudPagoObservacionId = 0;
     esMultiProyecto = false;
     proyectos: any;
@@ -27,9 +28,9 @@ export class DetalleFacturaProyectosComponent implements OnInit {
     criteriosArraySeleccionados: Dominio[] = [];
     solicitudPagoFaseCriterio: any;
     solicitudPagoFaseCriterioProyecto: any;
-    solicitudPagoCargarFormaPago: any;
     solicitudPagoFase: any;
     dataSource = new MatTableDataSource();
+    montoMaximo: { valorMaximoProyecto: number, valorPendienteProyecto: number };
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     displayedColumns: string[] = [
@@ -59,7 +60,6 @@ export class DetalleFacturaProyectosComponent implements OnInit {
 
     getProyectos() {
         if ( this.solicitudPago !== undefined ) {
-            this.solicitudPagoCargarFormaPago = this.solicitudPago.solicitudPagoCargarFormaPago[0];
             this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
             this.solicitudPagoFaseCriterio = this.solicitudPagoFase.solicitudPagoFaseCriterio;
 
@@ -69,7 +69,7 @@ export class DetalleFacturaProyectosComponent implements OnInit {
                         criterios => {
                             this.registrarPagosSvc.getProyectosByIdContrato( this.solicitudPago.contratoId )
                                 .subscribe(
-                                    proyectos => {
+                                    async proyectos => {
                                         const criteriosArray = [];
                                         const criteriosSeleccionados = [];
                                         let criteriosDiligenciados = [];
@@ -128,11 +128,16 @@ export class DetalleFacturaProyectosComponent implements OnInit {
                                                         }
                                                     } );
                                                 } );
+
+                                                const montoMaximo = await this.registrarPagosSvc.getMontoMaximoProyecto( this.solicitudPago.contratoId, proyecto.contratacionProyectoId, 'True' );
+
                                                 this.projects.push(
                                                     this.fb.group(
                                                         {
                                                             check: [ criteriosProyectoSeleccionados.length > 0 ? true : false ],
                                                             listaCriterios: [ criteriosArray ],
+                                                            valorMaximoProyecto: [ montoMaximo.valorMaximoProyecto ],
+                                                            valorPendienteProyecto: [ montoMaximo.valorPendienteProyecto ],
                                                             contratacionProyectoId: [ proyecto.contratacionProyectoId ],
                                                             llaveMen: [ proyecto.llaveMen ],
                                                             criterioPago: [ criterioPagoArray.length > 0 ? criterioPagoArray : null ],
@@ -150,6 +155,8 @@ export class DetalleFacturaProyectosComponent implements OnInit {
                                                 this.criteriosArraySeleccionados.push( this.listaCriterios.filter( criterioValue => criterioValue.codigo === criterio.tipoCriterioCodigo )[0] );
                                             } );
                                             this.proyectos = proyectos[1];
+                                            const montoMaximo = await this.registrarPagosSvc.getMontoMaximoProyecto( this.solicitudPago.contratoId, this.proyectos[0].contratacionProyectoId, 'True' );
+                                            this.montoMaximo = montoMaximo;
                                         }
                                         this.dataSource = new MatTableDataSource( proyectos[1] );
                                         this.dataSource.paginator = this.paginator;
@@ -165,7 +172,7 @@ export class DetalleFacturaProyectosComponent implements OnInit {
                         criterios => {
                             this.registrarPagosSvc.getProyectosByIdContrato( this.solicitudPago.contratoId )
                                 .subscribe(
-                                    proyectos => {
+                                    async proyectos => {
                                         const criteriosArray = [];
                                         const criteriosSeleccionados = [];
                                         let criteriosDiligenciados = [];
@@ -224,11 +231,17 @@ export class DetalleFacturaProyectosComponent implements OnInit {
                                                         }
                                                     } );
                                                 } );
+
+
+                                                const montoMaximo = await this.registrarPagosSvc.getMontoMaximoProyecto( this.solicitudPago.contratoId, proyecto.contratacionProyectoId, 'False' );
+
                                                 this.projects.push(
                                                     this.fb.group(
                                                         {
                                                             check: [ criteriosProyectoSeleccionados.length > 0 ? true : false ],
                                                             listaCriterios: [ criteriosArray ],
+                                                            valorMaximoProyecto: [ montoMaximo.valorMaximoProyecto ],
+                                                            valorPendienteProyecto: [ montoMaximo.valorPendienteProyecto ],
                                                             contratacionProyectoId: [ proyecto.contratacionProyectoId ],
                                                             llaveMen: [ proyecto.llaveMen ],
                                                             criterioPago: [ criterioPagoArray.length > 0 ? criterioPagoArray : null ],
@@ -245,6 +258,8 @@ export class DetalleFacturaProyectosComponent implements OnInit {
                                                 this.criteriosArraySeleccionados.push( this.listaCriterios.filter( criterioValue => criterioValue.codigo === criterio.tipoCriterioCodigo )[0] );
                                             } );
                                             this.proyectos = proyectos[1];
+                                            const montoMaximo = await this.registrarPagosSvc.getMontoMaximoProyecto( this.solicitudPago.contratoId, this.proyectos[0].contratacionProyectoId, 'False' );
+                                            this.montoMaximo = montoMaximo;
                                         }
                                         this.dataSource = new MatTableDataSource( proyectos[1] );
                                         this.dataSource.paginator = this.paginator;

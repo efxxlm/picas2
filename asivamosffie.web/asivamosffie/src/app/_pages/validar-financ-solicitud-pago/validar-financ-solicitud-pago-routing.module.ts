@@ -13,7 +13,7 @@ const routes: Routes = [
     component: ValidarFinancSolicitudPagoComponent
   },
   {
-    path: 'validarFinancSolicitud/:id',
+    path: 'validarFinancSolicitud/:idContrato/:idSolicitudPago',
     component: FormValidarSolicitudValidfspComponent
   },
   {
@@ -21,11 +21,11 @@ const routes: Routes = [
     component: FormEditValidarSolicitudValidfspComponent
   },
   {
-    path: 'verDetalleValidarFinancSolicitud/:id',
+    path: 'verDetalleValidarFinancSolicitud/:idContrato/:idSolicitudPago',
     component: VerdetalleValidfspComponent
   },
   {
-    path: 'verificarExpensas/:id',
+    path: 'validarExpensas/:id',
     component: VerDetalleEditarExpensasComponent
   },
   {

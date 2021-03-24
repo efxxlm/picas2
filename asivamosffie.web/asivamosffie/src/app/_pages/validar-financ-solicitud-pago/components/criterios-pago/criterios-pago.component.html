@@ -1,11 +1,11 @@
-<section *ngIf="solicitudPago !== undefined">
+<section *ngIf="solicitudPago !== undefined && montoMaximoPendiente !== undefined">
     <p class="info-sub-title supportBlack">
-        <span><b>Monto máximo por pagar en esta factura:</b> $15.000.000</span>
-        <span><b>Monto pendiente por pagar en la fase:</b> $30.000.000</span>
+        <span><b>Monto máximo por pagar en esta factura:</b> {{ montoMaximoPendiente.montoMaximo | currency:'':'symbol-narrow':'.0-0' }} </span>
+        <span><b>Monto pendiente por pagar en la fase</b> {{ montoMaximoPendiente.valorPendientePorPagar | currency:'':'symbol-narrow':'.0-0' }} </span>
     </p>
     <div class="d-flex justify-content-center" *ngIf="criteriosArraySeleccionados.length > 0">
         <strong>Criterios de pago:</strong>
-        <p *ngFor="let criterio of criteriosArraySeleccionados; index as i" style="margin-left: .4em;"> {{ filterCriterios( criterio.codigo ) }}<span *ngIf="criteriosArraySeleccionados.length - 1 !== i">,</span><span *ngIf="criteriosArraySeleccionados.length - 1 === i">.</span> </p>
+        <p *ngFor="let criterio of criteriosArraySeleccionados; index as i" style="margin-left: .4em;"> {{ criterio.nombre }}<span *ngIf="criteriosArraySeleccionados.length - 1 !== i">,</span><span *ngIf="criteriosArraySeleccionados.length - 1 === i">.</span> </p>
     </div>
     <section *ngIf="criterios.length > 0">
             <form [formGroup]="addressForm">
@@ -19,7 +19,7 @@
                             </mat-card-header>
                             <mat-card-content style="text-align: left;">
                                 <p style="margin-bottom: 2em;"><strong>Tipo de pago:</strong> {{ criterio.get( 'tipoPago' ).value.nombre }} </p>
-                                <div *ngFor="let concepto of getConceptos( j ).controls">
+                                <div style="margin-top: 2em;" *ngFor="let concepto of getConceptos( j ).controls">
                                     <p style="font-size: 1.8em;"><b> {{ concepto.get( 'conceptoPagoCriterioNombre' ).value }} </b></p>
                                     <p><b>Valor facturado al concepto:</b> ${{ concepto.get( 'valorFacturadoConcepto' ).value | currency:' ':'symbol-narrow':'.0-0' }} </p>
                                 </div>
