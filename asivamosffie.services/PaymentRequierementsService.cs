@@ -498,9 +498,7 @@ namespace asivamosffie.services
                                         ValidacionRespuestaCodigo = res.ValidacionRespuestaCodigo,
                                         ValidacionObservacion = res.ValidacionObservacion
                                     });
-                        });
-
-
+                        }); 
                     DateTime? FechaRegistroCompleto = null;
                     if (blRegistroCompleto)
                         FechaRegistroCompleto = DateTime.Now;
@@ -514,6 +512,7 @@ namespace asivamosffie.services
                                      FechaRegistroCompletoValidacionFinanciera = FechaRegistroCompleto,
                                      RegistroCompletoValidacionFinanciera = blRegistroCompleto,
                                      TieneSubsanacion = blTieneSubsanacion,
+                                     EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_Proceso_Verificacion_Financiera).ToString(),
                                      UsuarioModificacion = pSolicitudPagoListaChequeo.UsuarioCreacion,
                                      FechaModificacion = DateTime.Now
                                  });
@@ -524,18 +523,15 @@ namespace asivamosffie.services
                                    .Where(s => s.SolicitudPagoId == pSolicitudPagoListaChequeo.SolicitudPagoId)
                                    .Update(s => new SolicitudPago
                                    {
+                                       EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_Proceso_Validacion_Financiera).ToString(),
                                        FechaRegistroCompletoVerificacionFinanciera = FechaRegistroCompleto,
                                        RegistroCompletoVerificacionFinanciera = blRegistroCompleto,
                                        TieneSubsanacion = blTieneSubsanacion,
                                        UsuarioModificacion = pSolicitudPagoListaChequeo.UsuarioCreacion,
                                        FechaModificacion = DateTime.Now
                                    });
-                    }
-
-                }
-
-
-
+                    } 
+                } 
             }
             catch (Exception ex)
             {
