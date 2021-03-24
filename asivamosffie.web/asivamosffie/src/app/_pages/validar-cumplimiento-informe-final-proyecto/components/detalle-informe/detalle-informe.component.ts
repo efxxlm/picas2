@@ -37,6 +37,8 @@ export class DetalleInformeComponent implements OnInit {
       }
       if(report[0].proyecto.informeFinal[0].observacionVigenteInformeFinalInterventoriaNovedades != null){
         this.existeObservacionInterventoria = true;
+      }else if(report[0].proyecto.informeFinal[0].estadoCumplimiento === '3' && report[0].proyecto.informeFinal[0].historialObsInformeFinalInterventoriaNovedades.length > 0){
+        this.existeObservacionInterventoria = true;
       }
     });
   }

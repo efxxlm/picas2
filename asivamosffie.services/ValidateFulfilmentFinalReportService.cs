@@ -356,31 +356,6 @@ namespace asivamosffie.services
                     informeFinal.FechaModificacion = DateTime.Now;
                 }
 
-                //recibo satisfacción
-                if (!(bool)informeFinal.TieneObservacionesCumplimiento)
-                {
-                    //DeleteInformeFinalObservacionesCumplimiento
-                    await _context.Set<InformeFinalObservaciones>().Where(r => r.InformeFinalId == informeFinal.InformeFinalId && r.EsGrupoNovedades == true && (r.Archivado == null || r.Archivado == false) && (r.Eliminado == null || r.Eliminado == false))
-                           .UpdateAsync(r => new InformeFinalObservaciones()
-                           {
-                               FechaModificacion = DateTime.Now,
-                               UsuarioModificacion = pUsuario,
-                               Eliminado = true
-                           });
-                }
-                //anexos
-                if (!(bool)informeFinal.TieneObservacionesInterventoria)
-                {
-                    //DeleteInformeFinalObservacionesCumplimiento
-                    await _context.Set<InformeFinalObservaciones>().Where(r => r.InformeFinalId == informeFinal.InformeFinalId && r.EsGrupoNovedadesInterventoria == true && (r.Archivado == null || r.Archivado == false) && (r.Eliminado == null || r.Eliminado == false))
-                           .UpdateAsync(r => new InformeFinalObservaciones()
-                           {
-                               FechaModificacion = DateTime.Now,
-                               UsuarioModificacion = pUsuario,
-                               Eliminado = true
-                           });
-                }
-
                 _context.SaveChanges();
 
                 return new Respuesta
