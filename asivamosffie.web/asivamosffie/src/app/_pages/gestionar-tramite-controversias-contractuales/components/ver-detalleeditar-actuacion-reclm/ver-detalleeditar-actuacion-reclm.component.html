@@ -1,6 +1,6 @@
 <div class="container text-center">
     <div class="text-right">
-        <a routerLink="/gestionarTramiteControversiasContractuales/actualizarReclamoAseguradora" mat-button color="primary" class="btn-regresar">
+        <a routerLink="/gestionarTramiteControversiasContractuales/actualizarReclamoAseguradora/{{this.controversiaId}}/{{this.reclamacionId}}" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
         </a>
     </div>
@@ -8,8 +8,9 @@
         Ver detalle/Editar reclamación {{this.codReclamacionActuacion}}
     </h1>
     <p class="info-sub-title">
-        <span>Número de reclamación: <b>{{this.codRecalamacion}}</b></span>
+        <span>Número de reclamación: <b>{{this.numReclamacion}}</b></span>
     </p>
-    <app-form-actuacion-reclamacion [isEditable]="true" [idReclamacionActuacion]="this.idReclamacionActuacion"
-    (codRecalamacion)="this.codRecalamacion = $event"></app-form-actuacion-reclamacion>
+    <app-form-actuacion-reclamacion [isEditable]="true"
+    [controversiaID]="this.controversiaId" [reclamacionID]="this.reclamacionId" [idReclamacionActuacion]="this.idReclamacionActuacion"
+    (codRecalamacion)="this.numReclamacion = $event" (codReclamacionActuacion)="this.codReclamacionActuacion = $event"></app-form-actuacion-reclamacion>
 </div>

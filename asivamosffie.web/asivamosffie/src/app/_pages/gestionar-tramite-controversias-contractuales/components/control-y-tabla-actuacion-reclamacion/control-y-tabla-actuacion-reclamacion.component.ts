@@ -48,7 +48,7 @@ export class ControlYTablaActuacionReclamacionComponent implements OnInit {
   }
   verDetalleEditarActuacion(id,actR){
     localStorage.setItem('actuacionReclamacion',actR);
-    this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarActuacionReclamacion',id]);
+    this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarActuacionReclamacion',this.idControversia,this.idReclamacion,id]);
   }
   eliminarActuacion(id){
     this.services.EliminarActuacionSeguimientoActuacion(id).subscribe((a:any)=>{
@@ -56,6 +56,6 @@ export class ControlYTablaActuacionReclamacionComponent implements OnInit {
     });
   }
   verDetalleActuacion(id){
-    this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleActuacionReclamacion',id]);
+    this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleActuacionReclamacion',this.idControversia,this.idReclamacion,id]);
   }
 }

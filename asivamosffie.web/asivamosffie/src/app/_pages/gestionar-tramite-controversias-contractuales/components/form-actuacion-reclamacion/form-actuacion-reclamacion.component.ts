@@ -13,10 +13,15 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class FormActuacionReclamacionComponent implements OnInit {
   @Input() isEditable;
+  @Input() controversiaID;
+  @Input() reclamacionID;
   @Input() idReclamacionActuacion;
   @Output() codRecalamacion = new EventEmitter<string>();
+  @Output() codReclamacionActuacion = new EventEmitter<string>();
+  /*
   public controversiaID = parseInt(localStorage.getItem("controversiaID"));
   public reclamacionID = parseInt(localStorage.getItem("reclamacionID"));
+  */
   addressForm = this.fb.group({
     estadoAvanceTramite: [null, Validators.required],
     fechaActuacionAdelantada: [null, Validators.required],
@@ -66,6 +71,7 @@ export class FormActuacionReclamacionComponent implements OnInit {
         this.addressForm.get('observaciones').setValue(data.observaciones !== undefined ? data.observaciones : null);
         this.addressForm.get('urlSoporte').setValue(data.rutaSoporte);
         this.codRecalamacion.emit(data.numeroReclamacion);
+        this.codReclamacionActuacion.emit(data.numeroActuacionReclamacion);
       });
     }
   }
@@ -134,7 +140,7 @@ export class FormActuacionReclamacionComponent implements OnInit {
     this.services.CreateEditarActuacionReclamacion(actuacionTaiArray).subscribe((data: any) => {
       if (data.isSuccessful == true) {
         this.openDialog("", data.message);
-        this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarReclamoAseguradora']);
+        this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarReclamoAseguradora',this.controversiaID,this.reclamacionID]);
       }
       else {
         this.openDialog("", data.message);

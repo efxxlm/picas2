@@ -80,11 +80,11 @@ const routes: Routes = [
     component: RegistrarNuevaActuacionReclamacionComponent
   },
   {
-    path: 'verDetalleEditarActuacionReclamacion/:id',
+    path: 'verDetalleEditarActuacionReclamacion/:idControversia/:idReclamacion/:id',
     component: VerDetalleeditarActuacionReclmComponent
   },
   {
-    path: 'verDetalleActuacionReclamacion/:id',
+    path: 'verDetalleActuacionReclamacion/:idControversia/:idReclamacion/:id',
     component: VerdetalleReclamacionActuacionCcComponent
   },
   {
