@@ -23,5 +23,6 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> TramitarSolicitud(int pNovedadContractualId, string pUsuario);
         Task<Respuesta> DevolverSolicitud(int pNovedadContractualId, string pUsuario);
         Task<List<VNovedadContractual>> GetListGrillaNovedadContractualGestionar();
+        Task<Respuesta> CreateEditNovedadContractualTramite(NovedadContractual novedadContractual);
     }
 }

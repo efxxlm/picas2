@@ -71,7 +71,11 @@
         Registrar revisión jurídica de la novedad
       </mat-panel-title>
     </mat-expansion-panel-header>
-    <app-registrar-revision-novedad></app-registrar-revision-novedad>
+    <app-registrar-revision-novedad
+                                    [novedad]="novedad"
+                                    (guardar)="guardar()"
+    >
+  </app-registrar-revision-novedad>
   </mat-expansion-panel>
   <mat-expansion-panel class="expansion-style">
     <mat-expansion-panel-header class="expansion-style--header">
@@ -84,7 +88,11 @@
         Registrar firmas
       </mat-panel-title>
     </mat-expansion-panel-header>
-    <app-registrar-firmas></app-registrar-firmas>
+    <app-registrar-firmas
+                          [novedad]="novedad"
+                          (guardar)="guardar()"
+    >
+  </app-registrar-firmas>
   </mat-expansion-panel>
   
 </mat-accordion>

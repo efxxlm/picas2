@@ -62,6 +62,24 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("CreateEditNovedadContractualTramite")]
+        public async Task<IActionResult> CreateEditNovedadContractualTramite(NovedadContractual novedadContractual)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                novedadContractual.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _contractualModification.CreateEditNovedadContractualTramite(novedadContractual);
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         /*autor: jflorez
            descripción: grilla de novedades
            impacto: CU 4.1.3*/

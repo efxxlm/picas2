@@ -26,6 +26,7 @@ export interface NovedadContractual{
         causaRechazo?: string,
         registroCompletoTramiteNovedades?: boolean,
         fechaEnvioGestionContractual?: Date,
+        fechaAprobacionGestionContractual?: Date,
         estadoProcesoCodigo?: string,
         abogadoRevisionId?: number,
         deseaContinuar?: boolean,

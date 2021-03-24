@@ -1,21 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { NovedadContractual, NovedadContractualObservaciones } from 'src/app/_interfaces/novedadContractual';
 @Component({
   selector: 'app-registrar-revision-novedad',
   templateUrl: './registrar-revision-novedad.component.html',
   styleUrls: ['./registrar-revision-novedad.component.scss']
 })
-export class RegistrarRevisionNovedadComponent implements OnInit {
+export class RegistrarRevisionNovedadComponent implements OnInit, OnChanges {
 
   addressForm = this.fb.group({
-    fechaEnvioSolicitud: [null, Validators.required],
-    estadoDelProceso: [null, Validators.required],
-    fechaSolicitudNovedad: [null, Validators.required],
-    nombreAbogadoPresentoSolicitud: [null, Validators.required],
-    fechaAprobacionGrupoGestionContractual: [null, Validators.required],
-    nombreAbogadorealizoRevision: [null, Validators.required]
+    fechaEnvioGestionContractual: [null, Validators.required],
+    estadoProcesoCodigo: [null, Validators.required],
+    fechaAprobacionGestionContractual: [null, Validators.required],
+    abogadoRevisionId: [null, Validators.required],
   });
 
   estaEditando = false;
@@ -41,10 +40,21 @@ export class RegistrarRevisionNovedadComponent implements OnInit {
     return alphanumeric.test(inputChar) ? true : false;
   }
 
+  @Input() novedad: NovedadContractual;
+  @Output() guardar = new EventEmitter();
+
   constructor(
     private fb: FormBuilder,
     public dialog: MatDialog,
   ) { }
+  ngOnChanges(changes: SimpleChanges): void {
+    if ( changes.novedad ){
+      this.addressForm.get('fechaEnvioGestionContractual').setValue( this.novedad.fechaEnvioGestionContractual )
+      this.addressForm.get('estadoProcesoCodigo').setValue( this.novedad.estadoProcesoCodigo )
+      this.addressForm.get('fechaAprobacionGestionContractual').setValue( this.novedad.fechaAprobacionGestionContractual )
+      this.addressForm.get('abogadoRevisionId').setValue( this.novedad.abogadoRevisionId )
+    }
+  }
 
   ngOnInit(): void {
   }
@@ -57,9 +67,16 @@ export class RegistrarRevisionNovedadComponent implements OnInit {
   }
 
   onSubmit() {
-    // console.log(this.addressForm.value);
+
     this.estaEditando = true;
     this.addressForm.markAllAsTouched();
-    this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+
+    this.novedad.fechaEnvioGestionContractual = this.addressForm.get('fechaEnvioGestionContractual').value;
+    this.novedad.estadoProcesoCodigo = this.addressForm.get('estadoProcesoCodigo').value;
+    this.novedad.fechaAprobacionGestionContractual = this.addressForm.get('fechaAprobacionGestionContractual').value;
+    this.novedad.abogadoRevisionId = this.addressForm.get('abogadoRevisionId').value;
+
+    this.guardar.emit(true);
+
   }
 }

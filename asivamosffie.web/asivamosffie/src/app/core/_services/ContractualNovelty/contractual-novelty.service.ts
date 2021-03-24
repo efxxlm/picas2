@@ -74,4 +74,8 @@ export class ContractualNoveltyService {
     return this.http.get<any[]>( `${ this.urlApi }/getListGrillaNovedadContractualGestionar` ); 
   }
 
+  createEditNovedadContractualTramite( novedadContractual: NovedadContractual ) {
+    return this.http.post<Respuesta>( `${ this.urlApi }/createEditNovedadContractualTramite`, novedadContractual );
+  }
+
 }

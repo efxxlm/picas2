@@ -636,6 +636,7 @@ namespace asivamosffie.services
                 novedadContractualOld.FechaEnvioGestionContractual = novedadContractual.FechaEnvioGestionContractual;
                 novedadContractualOld.EstadoProcesoCodigo = novedadContractual.EstadoProcesoCodigo;
                 novedadContractualOld.FechaAprobacionGestionContractual = novedadContractual.FechaAprobacionGestionContractual;
+                novedadContractualOld.AbogadoRevisionId = novedadContractual.AbogadoRevisionId;
                 novedadContractualOld.DeseaContinuar = novedadContractual.DeseaContinuar;
                 novedadContractualOld.FechaEnvioActaContratistaObra = novedadContractual.FechaEnvioActaContratistaObra;
                 novedadContractualOld.FechaFirmaActaContratistaObra = novedadContractual.FechaFirmaActaContratistaObra;
@@ -645,6 +646,7 @@ namespace asivamosffie.services
                 novedadContractualOld.FechaFirmaApoyo = novedadContractual.FechaFirmaApoyo;
                 novedadContractualOld.FechaEnvioActaSupervisor = novedadContractual.FechaEnvioActaSupervisor;
                 novedadContractualOld.FechaFirmaSupervisor = novedadContractual.FechaFirmaSupervisor;
+                novedadContractualOld.UrlSoporteFirmas = novedadContractual.UrlSoporteFirmas;
 
                 novedadContractualOld.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.En_proceso_de_aprobacion;
 

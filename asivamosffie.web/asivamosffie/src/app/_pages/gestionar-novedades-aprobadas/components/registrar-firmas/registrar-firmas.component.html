@@ -49,16 +49,16 @@
           <div class="col-md-12">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left" for="fechaEnvioActaFirmaContratistaObra" [class.color-secondaryColor]="
-                addressForm.get('fechaEnvioActaFirmaContratistaObra').invalid && addressForm.get('fechaEnvioActaFirmaContratistaObra').touched ||
-                addressForm.get('fechaEnvioActaFirmaContratistaObra').invalid && estaEditando">
+                <label class="label-left" for="fechaFirmaContratistaObra" [class.color-secondaryColor]="
+                addressForm.get('fechaFirmaContratistaObra').invalid && addressForm.get('fechaFirmaContratistaObra').touched ||
+                addressForm.get('fechaFirmaContratistaObra').invalid && estaEditando">
                   Fecha de firma del contratista de obra
                 </label>
               </div>
               <div class="col d-flex">
                 <mat-form-field class="example-full-width">
                   <input matInput [matDatepicker]="fechaFirmaContratistaObraPicker"
-                    formControlName="fechaEnvioActaFirmaContratistaObra" readonly
+                    formControlName="fechaFirmaContratistaObra" readonly
                     (click)="fechaFirmaContratistaObraPicker.open()" placeholder="DD/MM/AAAA" required>
                   <mat-datepicker #fechaFirmaContratistaObraPicker></mat-datepicker>
                 </mat-form-field>
