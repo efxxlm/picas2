@@ -8,8 +8,8 @@ import { ContractualControversyService } from 'src/app/core/_services/Contractua
   styleUrls: ['./registrar-nueva-mesatrabajo-act.component.scss']
 })
 export class RegistrarNuevaMesatrabajoActComponent implements OnInit {
-  idActuacion: any;
-  public controversiaID = parseInt(localStorage.getItem("controversiaID"));
+  idControversia: any;
+  idMesa: any;
   tipoControversia: string;
   fechaSolicitud: any;
   codigoSolicitud: any;
@@ -18,9 +18,10 @@ export class RegistrarNuevaMesatrabajoActComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(param => {
-      this.idActuacion = param.id;
+      this.idControversia = param.idControversia;
+      this.idMesa = param.idMesa;
     });
-    this.services.GetControversiaContractualById(this.controversiaID).subscribe((a:any)=>{
+    this.services.GetControversiaContractualById(this.idControversia).subscribe((a:any)=>{
       switch(a.tipoControversiaCodigo){
         case '1':
           this.tipoControversia = 'Terminación anticipada por incumplimiento (TAI)';

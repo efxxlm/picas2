@@ -14,9 +14,11 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class FormRegistrarMesaDeTrabajoActComponent implements OnInit {
 
   @Input() isEditable;
+  @Input() idControversia;
+  @Input() mesaID;
   @Input() idSeguimientoMesa;
   public actuacionID = parseInt(localStorage.getItem("idMesaTrabajo"));
-  public mesaID = parseInt(localStorage.getItem("idMesa"));
+  //public mesaID = parseInt(localStorage.getItem("idMesa"));
   addressForm = this.fb.group({
     estadoAvanceTramite: [null, Validators.required],
     fechaActuacionAdelantada: [null, Validators.required],
@@ -109,7 +111,7 @@ export class FormRegistrarMesaDeTrabajoActComponent implements OnInit {
       mesaTrabajoArray =
       {
         "ControversiaActuacionMesaSeguimientoId": this.idSeguimientoMesa,
-        "ControversiaActuacionMesaId": this.mesaID,
+        "ControversiaActuacionMesaId": parseInt(this.mesaID),
         "estadoAvanceMesaCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
         "fechaActuacionAdelantada": this.addressForm.value.fechaActuacionAdelantada,
         "actuacionAdelantada": this.addressForm.value.actuacionAdelantada,
@@ -124,7 +126,7 @@ export class FormRegistrarMesaDeTrabajoActComponent implements OnInit {
     else {
       mesaTrabajoArray =
       {
-        "ControversiaActuacionMesaId": this.mesaID,
+        "ControversiaActuacionMesaId": parseInt(this.mesaID),
         "estadoAvanceMesaCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
         "fechaActuacionAdelantada": this.addressForm.value.fechaActuacionAdelantada,
         "actuacionAdelantada": this.addressForm.value.actuacionAdelantada,
@@ -139,7 +141,7 @@ export class FormRegistrarMesaDeTrabajoActComponent implements OnInit {
     this.services.CreateEditarActuacionMesa(mesaTrabajoArray).subscribe((data: any) => {
       if (data.isSuccessful == true) {
         this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
-        this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarMesaTrabajo']);
+        this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarMesaTrabajo',this.idControversia,this.mesaID]);
       }
       else {
         this.openDialog('', data.message);

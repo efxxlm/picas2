@@ -13,8 +13,8 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   styleUrls: ['./control-y-tabla-actuacion-mt.component.scss']
 })
 export class ControlYTablaActuacionMtComponent implements OnInit {
-  @Input() idMesaTrabajo;
   @Input() controversiaId;
+  @Input() idMesaTrabajo;
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -58,14 +58,14 @@ export class ControlYTablaActuacionMtComponent implements OnInit {
   }
   verDetalleEditarMTActuacion(id,numActuacionMT){
     localStorage.setItem("numActuacionMT",numActuacionMT);
-    this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarMesaTrabajoAct',id]);
+    this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarMesaTrabajoAct',this.controversiaId,this.idMesaTrabajo,id]);
   }
   eliminarMTActuacion(id){
     this.openDialogSiNo("","¿Está seguro de eliminar este registro?",id);
   }
   verDetalleMTActuacion(id,numActuacionMT){
     localStorage.setItem("numActuacionMT",numActuacionMT);
-    this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleMesaTrabajoAct',id]);
+    this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleMesaTrabajoAct',this.controversiaId,this.idMesaTrabajo,id]);
   }
   deleteControversia(id) {
     this.services.EliminacionActuacionMesa(id).subscribe((resp:any)=>{
