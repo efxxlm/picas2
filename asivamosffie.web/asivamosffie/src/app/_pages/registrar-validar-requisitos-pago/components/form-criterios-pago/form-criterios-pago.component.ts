@@ -70,7 +70,9 @@ export class FormCriteriosPagoComponent implements OnInit {
                 .subscribe(
                     getMontoMaximoMontoPendiente => {
                         this.montoMaximoPendiente = getMontoMaximoMontoPendiente;
-                        this.registrarPagosSvc.getCriterioByFormaPagoCodigo( fasePreConstruccionFormaPagoCodigo )
+
+                        if ( this.montoMaximoPendiente.montoMaximo > 0 ) {
+                            this.registrarPagosSvc.getCriterioByFormaPagoCodigo( fasePreConstruccionFormaPagoCodigo )
                             .subscribe(
                                 async response => {
                                     const criteriosSeleccionadosArray = [];
@@ -129,66 +131,67 @@ export class FormCriteriosPagoComponent implements OnInit {
                                                 )
                                             );
                                         }
+
+                                        // Get observacion CU autorizar solicitud de pago 4.1.9
+                                        this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                                            this.listaMenusId.autorizarSolicitudPagoId,
+                                            this.solicitudPago.solicitudPagoId,
+                                            this.solicitudPagoFase.solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioId,
+                                            this.criteriosPagoFacturaCodigo )
+                                            .subscribe(
+                                                response => {
+                                                    const observacion = response.find( obs => obs.archivada === false );
+
+                                                    if ( observacion !== undefined ) {
+                                                        this.esAutorizar = true;
+                                                        this.observacion = observacion;
+                                                        this.criterios.enable();
+                                                        if ( this.observacion.tieneObservacion === true ) {
+                                                            this.semaforoObservacion.emit( true );
+                                                            setTimeout(() => {
+                                                                this.addressForm.controls[ 'criterioPago' ].enable()
+                                                            }, 1500);
+                                                        }
+
+                                                        this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                                                    }
+                                                }
+                                            );
+
+                                        // Get observacion CU verificar solicitud de pago 4.1.8
+                                        this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                                            this.listaMenusId.aprobarSolicitudPagoId,
+                                            this.solicitudPago.solicitudPagoId,
+                                            this.solicitudPagoFase.solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioId,
+                                            this.criteriosPagoFacturaCodigo )
+                                            .subscribe(
+                                                response => {
+                                                    const observacion = response.find( obs => obs.archivada === false );
+                                                    if ( observacion !== undefined ) {
+                                                        this.esAutorizar = false;
+                                                        this.observacion = observacion;
+                                                        this.criterios.enable();
+
+                                                        if ( this.observacion.tieneObservacion === true ) {
+                                                            this.semaforoObservacion.emit( true );
+                                                            setTimeout(() => {
+                                                                this.addressForm.controls[ 'criterioPago' ].enable()
+                                                            }, 1500);
+                                                        }
+
+                                                        this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                                                    }
+                                                }
+                                            );
                                     }
                                     this.criteriosArray = response;
                                     this.addressForm.get( 'criterioPago' ).setValue( criteriosSeleccionadosArray.length > 0 ? criteriosSeleccionadosArray : null );
                                     if ( this.registroCompletoCriterio === true && this.tieneObservacion === false ) {
                                         this.criterios.disable();
                                     }
-
-                                // Get observacion CU autorizar solicitud de pago 4.1.9
-                                this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
-                                    this.listaMenusId.autorizarSolicitudPagoId,
-                                    this.solicitudPago.solicitudPagoId,
-                                    this.solicitudPagoFase.solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioId,
-                                    this.criteriosPagoFacturaCodigo )
-                                    .subscribe(
-                                        response => {
-                                            const observacion = response.find( obs => obs.archivada === false );
-
-                                            if ( observacion !== undefined ) {
-                                                this.esAutorizar = true;
-                                                this.observacion = observacion;
-                                                this.criterios.enable();
-                                                if ( this.observacion.tieneObservacion === true ) {
-                                                    this.semaforoObservacion.emit( true );
-                                                    setTimeout(() => {
-                                                        this.addressForm.controls[ 'criterioPago' ].enable()
-                                                    }, 1500);
-                                                }
-                                                this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
-                                            }
-                                        }
-                                    );
-
-                                // Get observacion CU verificar solicitud de pago 4.1.8
-                                this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
-                                    this.listaMenusId.aprobarSolicitudPagoId,
-                                    this.solicitudPago.solicitudPagoId,
-                                    this.solicitudPagoFase.solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioId,
-                                    this.criteriosPagoFacturaCodigo )
-                                    .subscribe(
-                                        response => {
-                                            const observacion = response.find( obs => obs.archivada === false );
-                                            console.log( observacion );
-                                            if ( observacion !== undefined ) {
-                                                this.esAutorizar = false;
-                                                this.observacion = observacion;
-                                                this.criterios.enable();
-
-                                                if ( this.observacion.tieneObservacion === true ) {
-                                                    this.semaforoObservacion.emit( true );
-                                                    setTimeout(() => {
-                                                        this.addressForm.controls[ 'criterioPago' ].enable()
-                                                    }, 1500);
-                                                }
-
-                                                this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
-                                            }
-                                        }
-                                    );
                                 }
                             );
+                        }
                     }
                 )
         }
@@ -198,7 +201,9 @@ export class FormCriteriosPagoComponent implements OnInit {
                 .subscribe(
                     getMontoMaximoMontoPendiente => {
                         this.montoMaximoPendiente = getMontoMaximoMontoPendiente;
-                        this.registrarPagosSvc.getCriterioByFormaPagoCodigo( faseConstruccionFormaPagoCodigo )
+                        
+                        if ( this.montoMaximoPendiente.montoMaximo > 0 ) {
+                            this.registrarPagosSvc.getCriterioByFormaPagoCodigo( faseConstruccionFormaPagoCodigo )
                             .subscribe(
                                 async response => {
                                     const criteriosSeleccionadosArray = [];
@@ -257,67 +262,67 @@ export class FormCriteriosPagoComponent implements OnInit {
                                                 )
                                             );
                                         }
+
+                                        // Get observacion CU autorizar solicitud de pago 4.1.9
+                                        this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                                            this.listaMenusId.autorizarSolicitudPagoId,
+                                            this.solicitudPago.solicitudPagoId,
+                                            this.solicitudPagoFase.solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioId,
+                                            this.criteriosPagoFacturaCodigo )
+                                            .subscribe(
+                                                response => {
+                                                    const observacion = response.find( obs => obs.archivada === false );
+
+                                                    if ( observacion !== undefined ) {
+                                                        this.esAutorizar = true;
+                                                        this.observacion = observacion;
+                                                        this.criterios.enable();
+                                                        if ( this.observacion.tieneObservacion === true ) {
+                                                            this.semaforoObservacion.emit( true );
+                                                            setTimeout(() => {
+                                                                this.addressForm.controls[ 'criterioPago' ].enable()
+                                                            }, 1500);
+                                                        }
+
+                                                        this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                                                    }
+                                                }
+                                            );
+
+                                        // Get observacion CU verificar solicitud de pago 4.1.8
+                                        this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                                            this.listaMenusId.aprobarSolicitudPagoId,
+                                            this.solicitudPago.solicitudPagoId,
+                                            this.solicitudPagoFase.solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioId,
+                                            this.criteriosPagoFacturaCodigo )
+                                            .subscribe(
+                                                response => {
+                                                    const observacion = response.find( obs => obs.archivada === false );
+                                                    if ( observacion !== undefined ) {
+                                                        this.esAutorizar = false;
+                                                        this.observacion = observacion;
+                                                        this.criterios.enable();
+
+                                                        if ( this.observacion.tieneObservacion === true ) {
+                                                            this.semaforoObservacion.emit( true );
+                                                            setTimeout(() => {
+                                                                this.addressForm.controls[ 'criterioPago' ].enable()
+                                                            }, 1500);
+                                                        }
+
+                                                        this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                                                    }
+                                                }
+                                            );
                                     }
                                     this.criteriosArray = response;
                                     this.addressForm.get( 'criterioPago' ).setValue( criteriosSeleccionadosArray.length > 0 ? criteriosSeleccionadosArray : null );
                                     if ( this.registroCompletoCriterio === true && this.tieneObservacion === false ) {
                                         this.criterios.disable();
                                     }
-
-                                // Get observacion CU autorizar solicitud de pago 4.1.9
-                                this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
-                                    this.listaMenusId.autorizarSolicitudPagoId,
-                                    this.solicitudPago.solicitudPagoId,
-                                    this.solicitudPagoFase.solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioId,
-                                    this.criteriosPagoFacturaCodigo )
-                                    .subscribe(
-                                        response => {
-                                            const observacion = response.find( obs => obs.archivada === false );
-
-                                            if ( observacion !== undefined ) {
-                                                this.esAutorizar = true;
-                                                this.observacion = observacion;
-                                                this.criterios.enable();
-                                                if ( this.observacion.tieneObservacion === true ) {
-                                                    this.semaforoObservacion.emit( true );
-                                                    setTimeout(() => {
-                                                        this.addressForm.controls[ 'criterioPago' ].enable()
-                                                    }, 1500);
-                                                }
-
-                                                this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
-                                            }
-                                        }
-                                    );
-
-                                // Get observacion CU verificar solicitud de pago 4.1.8
-                                this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
-                                    this.listaMenusId.aprobarSolicitudPagoId,
-                                    this.solicitudPago.solicitudPagoId,
-                                    this.solicitudPagoFase.solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioId,
-                                    this.criteriosPagoFacturaCodigo )
-                                    .subscribe(
-                                        response => {
-                                            const observacion = response.find( obs => obs.archivada === false );
-                                            console.log( observacion );
-                                            if ( observacion !== undefined ) {
-                                                this.esAutorizar = false;
-                                                this.observacion = observacion;
-                                                this.criterios.enable();
-
-                                                if ( this.observacion.tieneObservacion === true ) {
-                                                    this.semaforoObservacion.emit( true );
-                                                    setTimeout(() => {
-                                                        this.addressForm.controls[ 'criterioPago' ].enable()
-                                                    }, 1500);
-                                                }
-
-                                                this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
-                                            }
-                                        }
-                                    );
                                 }
                             );
+                        }
                     }
                 )
         }
