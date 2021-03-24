@@ -91,12 +91,18 @@ export class ValidarListaChequeoComponent implements OnInit {
                 if ( observacionCoordinador !== undefined ) {
                     solicitudPagoListaChequeo.esAutorizar = true;
                     solicitudPagoListaChequeo.observacion = observacionCoordinador;
-                    completoObservacion++;
+
+                    if ( observacionCoordinador.tieneObservacion === true ) {
+                        completoObservacion++;
+                    }
                 }
                 if ( observacionSupervisor !== undefined ) {
                     solicitudPagoListaChequeo.esAutorizar = false;
                     solicitudPagoListaChequeo.observacion = observacionSupervisor;
-                    completoObservacion++;
+
+                    if ( observacionSupervisor.tieneObservacion === true ) {
+                        completoObservacion++;
+                    }
                 }
             }
 
@@ -138,12 +144,18 @@ export class ValidarListaChequeoComponent implements OnInit {
                 if ( observacionCoordinador !== undefined ) {
                     solicitudPagoListaChequeo.esAutorizar = true;
                     solicitudPagoListaChequeo.observacion = observacionCoordinador;
-                    completoObservacion++;
+
+                    if ( observacionCoordinador.tieneObservacion === true ) {
+                        completoObservacion++;
+                    }
                 }
                 if ( observacionSupervisor !== undefined ) {
                     solicitudPagoListaChequeo.esAutorizar = false;
                     solicitudPagoListaChequeo.observacion = observacionSupervisor;
-                    completoObservacion++;
+
+                    if ( observacionSupervisor.tieneObservacion === true ) {
+                        completoObservacion++;
+                    }
                 }
             }
 
