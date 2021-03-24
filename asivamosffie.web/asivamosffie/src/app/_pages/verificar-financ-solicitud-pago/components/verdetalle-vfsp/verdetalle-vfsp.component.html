@@ -5,7 +5,7 @@
         </a>
     </div>
     <h1 class="title-menu--h1">
-        Verificar solicitud {{ contrato.solicitudPagoOnly.numeroSolicitud }}
+        Ver detalle solicitud {{ contrato.solicitudPagoOnly.numeroSolicitud }}
     </h1>
     <ng-container *ngIf="contrato.solicitudPagoOnly.tipoSolicitudCodigo === this.tipoSolicitudCodigo.contratoInterventoria || contrato.solicitudPagoOnly.tipoSolicitudCodigo === this.tipoSolicitudCodigo.contratoObra; else esOtrosCostos">
         <p style="margin-top: 0.5em;">
@@ -71,7 +71,7 @@
                     </table>
                 </div>
                 <div class="tabs--actions"  style="margin-top: 1em;">
-                    <button mat-raised-button color="accent" class="tabs--btn auxBtn"
+                    <button mat-raised-button color="accent" type="button" class="tabs--btn auxBtn"
                         (click)="openProyectosAsociados()">
                         Ver proyectos asociados
                     </button>
@@ -162,7 +162,7 @@
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                <mat-panel-title class="expansion-style--title">
                     Validar lista de chequeo
                 </mat-panel-title>
             </mat-expansion-panel-header>

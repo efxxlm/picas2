@@ -1,3 +1,5 @@
+import { DialogObservacionesVfspComponent } from './components/dialog-observaciones-vfsp/dialog-observaciones-vfsp.component';
+import { FormValidListchequeoVfspComponent } from './components/form-valid-listchequeo-vfsp/form-valid-listchequeo-vfsp.component';
 import { VerDetalleExpensasComponent } from './components/ver-detalle-expensas/ver-detalle-expensas.component';
 import { VerDetalleEditarExpensasComponent } from './components/ver-detalle-editar-expensas/ver-detalle-editar-expensas.component';
 import { RegistrarSolicitudPagoComponent } from './components/registrar-solicitud-pago/registrar-solicitud-pago.component';
@@ -29,7 +31,7 @@ import { DetalleValidListchqValidfspComponent } from './components/detalle-valid
 
 
 @NgModule({
-  declarations: [ VerDetalleExpensasComponent, VerDetalleEditarExpensasComponent, RegistrarSolicitudPagoComponent, FormSolicitudExpensasComponent, DetalleFacturaProyectosComponent, DescuentosDireccionTecnicaComponent, DatosFacturaComponent, CriteriosPagoComponent, AmortizacionPagoComponent, ValidarFinancSolicitudPagoComponent, FormValidarSolicitudValidfspComponent, DialogProyectosAsociadosValidfspComponent, DetalleRegSolPagoValidfspComponent, FormValidListchequeoValidfspComponent, DetalleFactProcasValidfspComponent, FormEditValidarSolicitudValidfspComponent, DialogRechazarSolicitudValidfspComponent, VerdetalleValidfspComponent, DialogObservacionesValidfspComponent, DetalleValidListchqValidfspComponent],
+  declarations: [ DialogObservacionesVfspComponent, FormValidListchequeoVfspComponent, VerDetalleExpensasComponent, VerDetalleEditarExpensasComponent, RegistrarSolicitudPagoComponent, FormSolicitudExpensasComponent, DetalleFacturaProyectosComponent, DescuentosDireccionTecnicaComponent, DatosFacturaComponent, CriteriosPagoComponent, AmortizacionPagoComponent, ValidarFinancSolicitudPagoComponent, FormValidarSolicitudValidfspComponent, DialogProyectosAsociadosValidfspComponent, DetalleRegSolPagoValidfspComponent, FormValidListchequeoValidfspComponent, DetalleFactProcasValidfspComponent, FormEditValidarSolicitudValidfspComponent, DialogRechazarSolicitudValidfspComponent, VerdetalleValidfspComponent, DialogObservacionesValidfspComponent, DetalleValidListchqValidfspComponent],
   imports: [
     CommonModule,
     MaterialModule,

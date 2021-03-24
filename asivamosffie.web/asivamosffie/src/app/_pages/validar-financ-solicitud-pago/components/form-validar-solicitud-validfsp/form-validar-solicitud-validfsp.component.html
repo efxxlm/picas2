@@ -1,6 +1,6 @@
 <section class="container text-center" *ngIf="contrato !== undefined">
     <div class="text-right">
-        <a routerLink="/verificarFinancieramenteSolicitudDePago" mat-button color="primary" class="btn-regresar">
+        <a routerLink="/validarFinancieramenteSolicitudDePago" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
         </a>
     </div>
@@ -162,12 +162,12 @@
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title">
+                <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforo">
                     Validar lista de chequeo
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-form-valid-listchequeo-validfsp></app-form-valid-listchequeo-validfsp>
+            <app-form-valid-listchequeo-vfsp [contrato]="contrato" (estadoSemaforo)="estadoSemaforo = $event"></app-form-valid-listchequeo-vfsp>
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">

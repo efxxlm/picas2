@@ -31,9 +31,9 @@
 
             <mat-card class="shipping-card var-main-gris">
                 <mat-card-content style="text-align: left;">
-                    <p><strong>Fecha de Radicación SAC a financiera:</strong> 10/10/2020 </p>
-                    <p><strong>Número de radicación SAC a financiera:</strong> 009898 </p>
-                    <p><strong>Fecha de asignación:</strong> 11/10/2020 </p>
+                    <p><strong>Fecha de Radicación SAC a financiera:</strong> {{ solicitudPago.fechaRadicacionSacFinanciera !== undefined ? ( solicitudPago.fechaRadicacionSacFinanciera | date: 'dd/MM/yyyy' ) : '' }} </p>
+                    <p><strong>Número de radicación SAC a financiera:</strong> {{ solicitudPago.numeroRadicacionSacFinanciera !== undefined ? solicitudPago.numeroRadicacionSacFinanciera : '' }} </p>
+                    <p><strong>Fecha de asignación:</strong> {{ solicitudPago.fechaAsignacionSacFinanciera !== undefined ? ( solicitudPago.fechaAsignacionSacFinanciera | date: 'dd/MM/yyyy' ) : '' }} </p>
                 </mat-card-content>
             </mat-card>
 
@@ -45,7 +45,7 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-form-valid-listchequeo-vfsp></app-form-valid-listchequeo-vfsp>
+            <app-form-valid-listchequeo-vfsp [solicitudPago]="solicitudPago" [esVerDetalle]="true"></app-form-valid-listchequeo-vfsp>
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">

@@ -12,13 +12,7 @@ export class VerDetalleEditarExpensasComponent implements OnInit {
 
     tipoSolicitudCodigo: any = {};
     solicitudPago: any;
-    registroCompletoAcordeones = {
-        registroCompletoListaChequeo: false
-    };
-    estadoSemaforoAcordeon = {
-        estadoSemaforoListaChequeo: 'sin-diligenciar',
-        estadoSemaforoSoporteSolicitud: 'en-alerta'
-    };
+    estadoSemaforo: string;
 
     constructor(
         private commonSvc: CommonService,
@@ -57,31 +51,6 @@ export class VerDetalleEditarExpensasComponent implements OnInit {
                                             totalRegistroCompleto++;
                                         }
                                     } );
-                        
-                                    if ( totalRegistroCompleto > 0 && totalRegistroCompleto < solicitudPagoListaChequeo.length ) {
-                                        this.estadoSemaforoAcordeon.estadoSemaforoListaChequeo = 'en-proceso';
-                                    }
-                                    if ( totalRegistroCompleto > 0 && totalRegistroCompleto === solicitudPagoListaChequeo.length ) {
-                                        this.estadoSemaforoAcordeon.estadoSemaforoListaChequeo = 'completo';
-                                        this.registroCompletoAcordeones.registroCompletoListaChequeo = true
-                                    }
-                                }
-                                // Get semaforo soporte de la solicitud
-                                const solicitudPagoSoporteSolicitud = this.solicitudPago.solicitudPagoSoporteSolicitud[0];
-
-                                if ( this.registroCompletoAcordeones.registroCompletoListaChequeo === true ) {
-                                    if ( solicitudPagoSoporteSolicitud === undefined ) {
-                                        this.estadoSemaforoAcordeon.estadoSemaforoSoporteSolicitud = 'sin-diligenciar';
-                                    }
-                                    if ( solicitudPagoSoporteSolicitud !== undefined ) {
-                                        if ( solicitudPagoSoporteSolicitud.registroCOmpleto === false ) {
-                                            this.estadoSemaforoAcordeon.estadoSemaforoSoporteSolicitud = 'en-proceso';
-                                        }
-    
-                                        if ( solicitudPagoSoporteSolicitud.registroCompleto === true ) {
-                                            this.estadoSemaforoAcordeon.estadoSemaforoSoporteSolicitud = 'completo';
-                                        }
-                                    }
                                 }
                             }
                         );
