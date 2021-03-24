@@ -5,7 +5,7 @@ import { MatTableDataSource } from '@angular/material/table'
 import { MatDialog } from '@angular/material/dialog'
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component'
 import { Report } from 'src/app/_interfaces/proyecto-final.model'
-import { ListaChequeo } from 'src/app/_interfaces/proyecto-final-anexos.model'
+import { InformeFinalInterventoriaObservaciones, ListaChequeo } from 'src/app/_interfaces/proyecto-final-anexos.model'
 import { ValidarCumplimientoInformeFinalService } from 'src/app/core/_services/validarCumplimientoInformeFinal/validar-cumplimiento-informe-final.service'
 import { Router } from '@angular/router'
 
@@ -21,6 +21,7 @@ export class TablaDetalleInformeFinalAnexosComponent implements OnInit {
   @Input() report: Report;
   @Input() existeObservacionInterventoria: boolean;
   existe_historial = false;
+  data: InformeFinalInterventoriaObservaciones = {};
 
   listChequeo: any;
   displayedColumns: string[] = [
@@ -57,6 +58,21 @@ export class TablaDetalleInformeFinalAnexosComponent implements OnInit {
     if(this.report != null){
       if(this.report.proyecto.informeFinal[0].historialObsInformeFinalInterventoriaNovedades.length > 0){
         this.existe_historial = true;
+        this.data.fechaCreacion = this.report.proyecto.informeFinal[0].historialObsInformeFinalInterventoriaNovedades[0].fechaCreacion;
+        const observaciones = this.report.proyecto.informeFinal[0].historialObsInformeFinalInterventoriaNovedades[0].observaciones
+        if(observaciones != null && observaciones != 'undefined'){
+          this.data.observaciones = observaciones;
+        }else{
+          this.data.observaciones = "";
+        }
+      }else if(this.report.proyecto.informeFinal[0].observacionVigenteInformeFinalInterventoriaNovedades != null){
+        const observaciones = this.report.proyecto.informeFinal[0].observacionVigenteInformeFinalInterventoriaNovedades.observaciones;
+        if(observaciones != null && observaciones != 'undefined'){
+          this.data.observaciones = observaciones;
+        }else{
+          this.data.observaciones = "";
+        }
+        this.data.fechaCreacion = this.report.proyecto.informeFinal[0].observacionVigenteInformeFinalInterventoriaNovedades.fechaCreacion;
       }
     }
   }

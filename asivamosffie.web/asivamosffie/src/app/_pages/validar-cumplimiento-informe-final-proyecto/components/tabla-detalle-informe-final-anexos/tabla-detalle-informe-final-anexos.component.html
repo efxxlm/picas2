@@ -116,7 +116,7 @@
           </p>
         </mat-card-content>
       </mat-card>
-      <mat-card class="shipping-card var-main-gris" *ngIf="existeObservacionInterventoria && report.proyecto.informeFinal[0].estadoCumplimiento == '3'">
+      <mat-card class="shipping-card var-main-gris" *ngIf="data != null && existeObservacionInterventoria && report.proyecto.informeFinal[0].estadoCumplimiento == '3'">
         <mat-card-header class="header-card header-card--margin">
           <mat-card-title class="mat-card-title header-card--text">
             Verificación del grupo de novedades y liquidaciones
@@ -125,17 +125,17 @@
         <mat-card-content>
           <p>
             <strong>
-              {{ report.proyecto.informeFinal[0].historialObsInformeFinalInterventoriaNovedades[0].fechaCreacion | date:'dd/MM/yyyy' }} 
+              {{ data.fechaCreacion | date:'dd/MM/yyyy' }} 
             </strong>
           </p>
           <p>
             <strong>
               ¿Desde el grupo de novedades y liquidaciones tiene observaciones al informe final del proyecto?:
             </strong>
-            <span *ngIf="report.proyecto.informeFinal[0].historialObsInformeFinalInterventoriaNovedades[0].observaciones != null && report.proyecto.informeFinal[0].historialObsInformeFinalInterventoriaNovedades[0].observaciones != ''"> Si</span>
-            <span *ngIf="report.proyecto.informeFinal[0].historialObsInformeFinalInterventoriaNovedades[0].observaciones == null || report.proyecto.informeFinal[0].historialObsInformeFinalInterventoriaNovedades[0].observaciones === ''"> No</span>
+            <span *ngIf="data.observaciones != null && data.observaciones != ''"> Si</span>
+            <span *ngIf="data.observaciones == null || data.observaciones === ''"> No</span>
           </p>
-          <p *ngIf="report.proyecto.informeFinal[0].historialObsInformeFinalInterventoriaNovedades[0].observaciones != null && report.proyecto.informeFinal[0].historialObsInformeFinalInterventoriaNovedades[0].observaciones != ''" [innerHTML]="report.proyecto.informeFinal[0].historialObsInformeFinalInterventoriaNovedades[0].observaciones">
+          <p *ngIf="data.observaciones != null && data.observaciones != ''" [innerHTML]="data.observaciones">
           </p>
         </mat-card-content>
       </mat-card>

@@ -89,4 +89,5 @@ export interface InformeFinalInterventoriaObservaciones{
   esSupervision?: boolean,
   esCalificacion?: boolean,
   esApoyo?: boolean,
+  fechaCreacion?: Date
 }
