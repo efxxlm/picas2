@@ -9,8 +9,8 @@ import { PolizaGarantiaService } from 'src/app/core/_services/polizaGarantia/pol
   styleUrls: ['./actualizar-mesa-de-trabajo.component.scss']
 })
 export class ActualizarMesaDeTrabajoComponent implements OnInit {
-  idControversia: any;
-  public controversiaID = parseInt(localStorage.getItem("controversiaID"));
+  controversiaID : any;
+  actuacionId: any;
   tipoControversia: string;
   solicitud: any;
   numContrato: any;
@@ -32,7 +32,8 @@ export class ActualizarMesaDeTrabajoComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(param => {
-      this.idControversia = param.id;
+      this.controversiaID = param.idControversia;
+      this.actuacionId = param.idMesa;
     });
     this.loadService();
   }

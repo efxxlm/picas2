@@ -13,6 +13,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class FormRegistrarMesaDeTrabajoComponent implements OnInit {
   @Input() isEditable;
+  @Input() idControversia;
   @Input() idActuacion;
   @Input() idSeguimientoMesa;
   public idMesadeTrabajo = parseInt(localStorage.getItem('idMesa'));
@@ -137,7 +138,7 @@ export class FormRegistrarMesaDeTrabajoComponent implements OnInit {
     this.services.CreateEditarMesa(mesaTrabajoArray).subscribe((data: any) => {
       if (data.isSuccessful == true) {
         this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
-        this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
+        this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia',this.idControversia]);
       }
       else {
         this.openDialog('', data.message);

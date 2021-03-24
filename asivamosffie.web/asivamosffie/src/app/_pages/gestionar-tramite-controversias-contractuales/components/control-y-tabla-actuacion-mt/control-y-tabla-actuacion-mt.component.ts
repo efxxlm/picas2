@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -13,7 +13,8 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   styleUrls: ['./control-y-tabla-actuacion-mt.component.scss']
 })
 export class ControlYTablaActuacionMtComponent implements OnInit {
-
+  @Input() idMesaTrabajo;
+  @Input() controversiaId;
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -26,7 +27,7 @@ export class ControlYTablaActuacionMtComponent implements OnInit {
     'gestion',
   ];
   dataTable: any[] = [];  
-  public idMesaTrabajo = parseInt(localStorage.getItem("idMesaTrabajo"));
+  //public idMesaTrabajo = parseInt(localStorage.getItem("idMesaTrabajo"));
   constructor(public dialog: MatDialog, private router: Router,private services: ContractualControversyService) { }
 
   ngOnInit(): void {

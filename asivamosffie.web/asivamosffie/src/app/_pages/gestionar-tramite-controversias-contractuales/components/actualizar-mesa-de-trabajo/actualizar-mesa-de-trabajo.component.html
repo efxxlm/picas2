@@ -1,6 +1,6 @@
 <div class="container text-center">
     <div class="text-right">
-        <a routerLink="/gestionarTramiteControversiasContractuales/actualizarTramiteControversia" mat-button color="primary" class="btn-regresar">
+        <a routerLink="/gestionarTramiteControversiasContractuales/actualizarTramiteControversia/{{this.controversiaID}}" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
         </a>
     </div>
@@ -30,6 +30,6 @@
                 <p><strong>Fecha de radicación:</strong> {{this.fechaRadicacion | date:'dd/MM/yyyy'}}</p>
             </mat-card-content>
         </mat-card>
-        <app-control-y-tabla-actuacion-mt></app-control-y-tabla-actuacion-mt>
+        <app-control-y-tabla-actuacion-mt [controversiaId]=this.controversiaID [idMesaTrabajo]=this.actuacionId></app-control-y-tabla-actuacion-mt>
     </div>
 </div>
