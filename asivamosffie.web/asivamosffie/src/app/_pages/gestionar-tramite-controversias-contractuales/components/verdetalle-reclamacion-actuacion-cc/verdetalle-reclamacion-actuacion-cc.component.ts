@@ -8,6 +8,8 @@ import { ContractualControversyService } from 'src/app/core/_services/Contractua
   styleUrls: ['./verdetalle-reclamacion-actuacion-cc.component.scss']
 })
 export class VerdetalleReclamacionActuacionCcComponent implements OnInit {
+  controversiaId: any;
+  reclamacionId: any;
   idReclamacionActuacion: any;
   estadoAvanceReclamacion: any;
   fechaActuacionAdelantada: any;
@@ -18,18 +20,24 @@ export class VerdetalleReclamacionActuacionCcComponent implements OnInit {
   observacionesAR: any;
   resultadoDefinitivo: any;
   urlSoporte: any;
-  public codRecalamacion = localStorage.getItem('codReclamacion');
-  public codReclamacionActuacion = localStorage.getItem('actuacionReclamacion');
+  codRecalamacion: any;
+  codReclamacionActuacion: any;
   constructor(private services: ContractualControversyService, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(param => {
+      this.controversiaId = param.idControversia;
+      this.reclamacionId = param.idReclamacion;
       this.idReclamacionActuacion = param.id;
+      this.services.GetControversiaActuacionById(this.reclamacionId).subscribe((data:any)=>{
+        this.codRecalamacion = data.numeroActuacionReclamacion;
+      });
       this.loadData(this.idReclamacionActuacion);
     });
   }
   loadData(id) {
     this.services.GetActuacionSeguimientoById(id).subscribe((dataSeguimiento: any) => {
+      this.codReclamacionActuacion = dataSeguimiento.numeroReclamacion;
       this.estadoAvanceReclamacion = dataSeguimiento.estadoReclamacionCodigo;
       this.fechaActuacionAdelantada = dataSeguimiento.fechaActuacionAdelantada;
       this.actuacionAdelantada = dataSeguimiento.actuacionAdelantada;
