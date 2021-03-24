@@ -88,7 +88,7 @@ namespace asivamosffie.services
         }
 
         //Lista Compromisos temas y solicitudes
-        public async Task<List<dynamic>> GetListCompromisos(int pUserId)
+        public async Task<List<dynamic>> GetListCompromisosOLD(int pUserId)
         {
             List<dynamic> ListDynamic = new List<dynamic>();
             string StrSql = "SELECT ComiteTecnico.* FROM  dbo.ComiteTecnico INNER JOIN dbo.SesionParticipante  ON   ComiteTecnico.ComiteTecnicoId = SesionParticipante.ComiteTecnicoId WHERE  SesionParticipante.UsuarioId = " + pUserId + " AND   ComiteTecnico.Eliminado = 0 AND  SesionParticipante.Eliminado = 0";
@@ -166,6 +166,17 @@ namespace asivamosffie.services
 
             return ListDynamic.OrderByDescending(r => r.CompromisoId).ToList();
         }
+
+        //Lista Compromisos temas y solicitudes optimizada
+        public async Task<List<dynamic>> GetListCompromisos(int pUserId)
+        {
+            List<dynamic> ListDynamic = new List<dynamic>();
+            ListDynamic.AddRange(_context.VListCompromisosComiteTecnico.Where(r => r.UsuarioId == pUserId));
+            ListDynamic.AddRange(_context.VListCompromisosTemas.Where(r => r.UsuarioId == pUserId));
+             
+            return ListDynamic;
+        }
+
 
         //Detalle gestion compromisos
         public async Task<ActionResult<List<GrillaSesionComiteTecnicoCompromiso>>> GetManagementCommitteeReportById(int sesionComiteTecnicoCompromisoId)
@@ -556,7 +567,7 @@ namespace asivamosffie.services
                 .Include(sc => sc.SesionComentario)
                 .FirstOrDefault();
             try
-            { 
+            {
                 SesionComentario sesionComentario = new SesionComentario
                 {
                     Fecha = DateTime.Now,
@@ -568,9 +579,9 @@ namespace asivamosffie.services
                     EstadoActaVoto = ConstantCodigoActas.Devuelta,
                     ValidacionVoto = false
                 };
-                 
+
                 _context.SesionComentario.Add(sesionComentario);
-                 
+
                 _context.SaveChanges();
 
                 if ((bool)ValidarTodosVotacion(comiteTecnicoOld))
@@ -900,8 +911,8 @@ namespace asivamosffie.services
 
             if (pComiteTecnico.SesionComentario
                                            .Where(r => r.EstadoActaVoto == ConstantCodigoActas.Aprobada && r.ValidacionVoto == false).Count()
-                                                                      == pComiteTecnico.SesionComentario.Where(r=> r.ValidacionVoto == false).Count())
-                EstadoActa = ConstantCodigoActas.Aprobada; 
+                                                                      == pComiteTecnico.SesionComentario.Where(r => r.ValidacionVoto == false).Count())
+                EstadoActa = ConstantCodigoActas.Aprobada;
 
             return EstadoActa;
         }

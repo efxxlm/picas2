@@ -219,6 +219,8 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VDefensaJudicialContratacionProyecto> VDefensaJudicialContratacionProyecto { get; set; }
         public virtual DbSet<VDominio> VDominio { get; set; }
         public virtual DbSet<VGestionarGarantiasPolizas> VGestionarGarantiasPolizas { get; set; }
+        public virtual DbSet<VListCompromisosComiteTecnico> VListCompromisosComiteTecnico { get; set; }
+        public virtual DbSet<VListCompromisosTemas> VListCompromisosTemas { get; set; }
         public virtual DbSet<VListaContratacionModificacionContractual> VListaContratacionModificacionContractual { get; set; }
         public virtual DbSet<VListaProyectos> VListaProyectos { get; set; }
         public virtual DbSet<VNovedadContractual> VNovedadContractual { get; set; }
@@ -252,6 +254,8 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -7630,6 +7634,52 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.TipoSolicitudContratacion)
                     .HasMaxLength(100)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VListCompromisosComiteTecnico>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_ListCompromisosComiteTecnico");
+
+                entity.Property(e => e.Compromiso)
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EstadoCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FechaComite).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaCumplimiento).HasColumnType("datetime");
+
+                entity.Property(e => e.NumeroComite)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VListCompromisosTemas>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_ListCompromisosTemas");
+
+                entity.Property(e => e.Compromiso)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EstadoCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FechaComite).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaCumplimiento).HasColumnType("datetime");
+
+                entity.Property(e => e.NumeroComite)
+                    .HasMaxLength(50)
                     .IsUnicode(false);
             });
 
