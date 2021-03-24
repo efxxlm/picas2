@@ -1,6 +1,6 @@
 <div class="container text-center">
     <div class="text-right">
-        <a routerLink="/gestionarTramiteControversiasContractuales/actualizarTramiteControversia" mat-button color="primary" class="btn-regresar">
+        <a routerLink="/gestionarTramiteControversiasContractuales/actualizarTramiteControversia/{{this.idControversia}}" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
         </a>
     </div>
@@ -16,10 +16,14 @@
                 <p><b>Estado de avance del trámite:</b> {{this.estadoAvanceTramite}}</p>
                 <p><b>Fecha de la actuación adelantada:</b> {{this.fechaActuacionAdelantada | date:'dd/MM/yyyy'}}</p>
                 <p><b>Actuación adelantada:</b> {{this.actuacionAdelantada}}</p>
+                <p *ngIf="this.actuacionAdelantada=='Otra'"><b>Cual:</b></p>
+                <div *ngIf="this.actuacionAdelantada=='Otra'">
+                    <div [innerHtml]="this.detalleOtra"></div>
+                </div>
                 <p><b>Próxima actuación requerida:</b>{{this.actuacionRequerida}}</p>
                 <p *ngIf="this.actuacionRequerida=='Otra'"><b>Cual:</b></p>
                 <div *ngIf="this.actuacionRequerida=='Otra'">
-                    <div [innerHtml]="this.detalleOtra"></div>
+                    <div [innerHtml]="this.detalleOtra1"></div>
                 </div>
                 <p><b>Días de vencimiento de términos para la próxima actuación requerida:</b> {{this.diasVencimiento}}</p>
                 <p><b>Fecha de vencimiento de términos para la próxima actuación requerida:</b> {{this.fechaVencimiento | date:'dd/MM/yyyy'}}</p>

@@ -8,7 +8,7 @@ import { ContractualControversyService } from 'src/app/core/_services/Contractua
   styleUrls: ['./ver-detalle-actuacion-notai.component.scss']
 })
 export class VerDetalleActuacionNotaiComponent implements OnInit {
-
+  idControversia: any;
   idActuacion: any;
   tipoControversia: string;
   numSolicitud: any;
@@ -19,6 +19,7 @@ export class VerDetalleActuacionNotaiComponent implements OnInit {
   actuacionAdelantada: string;
   actuacionRequerida: string;
   detalleOtra: any;
+  detalleOtra1: any;
   diasVencimiento: any;
   fechaVencimiento: any;
   requiereContratista: string;
@@ -35,6 +36,7 @@ export class VerDetalleActuacionNotaiComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(param => {
+      this.idControversia = param.idControversia;
       this.idActuacion = param.id;
       this.loadData(param.id);
     });
@@ -124,7 +126,11 @@ export class VerDetalleActuacionNotaiComponent implements OnInit {
         case '3':
           this.actuacionAdelantada = 'Actuación 3';
         break;
+        case '4':
+          this.actuacionAdelantada = 'Otra';
+        break;
       }
+      this.detalleOtra = a.actuacionAdelantadaOtro;
       switch(a.proximaActuacionCodigo){
         case '1':
           this.actuacionRequerida = 'Actuación 1';
@@ -139,7 +145,7 @@ export class VerDetalleActuacionNotaiComponent implements OnInit {
           this.actuacionRequerida = 'Otra';
         break;
       }
-      this.detalleOtra = a.actuacionAdelantadaOtro;
+      this.detalleOtra1 = a.proximaActuacionOtro;
       this.diasVencimiento = a.cantDiasVencimiento;
       this.fechaVencimiento = a.fechaVencimiento;
       switch(a.esRequiereContratista){

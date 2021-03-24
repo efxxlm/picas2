@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
 
 @Component({
@@ -7,15 +8,18 @@ import { ContractualControversyService } from 'src/app/core/_services/Contractua
   styleUrls: ['./registrar-nueva-actuacion-tram-no-tai.component.scss']
 })
 export class RegistrarNuevaActuacionTramNoTaiComponent implements OnInit {
-  public controversiaID = parseInt(localStorage.getItem("controversiaID"));
+  public controversiaID;
   public tipoControversia;
   public fechaSolicitud;
   public codigoSolicitud;
   public numeroContrato;
-  constructor(private services: ContractualControversyService) { }
+  constructor(private services: ContractualControversyService,private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.loadDataContrato(this.controversiaID);
+    this.activatedRoute.params.subscribe(param => {
+      this.controversiaID = param.idControversia;
+      this.loadDataContrato(this.controversiaID);
+    });
   }
   loadDataContrato(id){
     this.services.GetControversiaContractualById(id).subscribe((data:any)=>{

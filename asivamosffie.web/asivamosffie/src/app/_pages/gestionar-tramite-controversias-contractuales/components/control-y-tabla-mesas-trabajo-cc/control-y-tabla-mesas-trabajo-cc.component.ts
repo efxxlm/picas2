@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -11,7 +11,7 @@ import { ContractualControversyService } from 'src/app/core/_services/Contractua
   styleUrls: ['./control-y-tabla-mesas-trabajo-cc.component.scss']
 })
 export class ControlYTablaMesasTrabajoCcComponent implements OnInit {
-  public controversiaID = parseInt(localStorage.getItem("controversiaID"));
+  @Input() controversiaID;
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;

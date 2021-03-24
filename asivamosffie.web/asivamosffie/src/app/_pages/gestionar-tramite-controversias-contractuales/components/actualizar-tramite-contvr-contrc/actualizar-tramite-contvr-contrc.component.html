@@ -41,9 +41,9 @@
                     Mesas de trabajo
                 </button>
             </div>
-            <app-control-y-tabla-actuaciones-no-tai *ngIf="opcion1"></app-control-y-tabla-actuaciones-no-tai>
+            <app-control-y-tabla-actuaciones-no-tai *ngIf="opcion1" [controversiaID]="this.controversiaID"></app-control-y-tabla-actuaciones-no-tai>
             <!--<app-control-y-tabla-actuacion-mt *ngIf="opcion2"></app-control-y-tabla-actuacion-mt>-->
-            <app-control-y-tabla-mesas-trabajo-cc *ngIf="opcion2"></app-control-y-tabla-mesas-trabajo-cc>
+            <app-control-y-tabla-mesas-trabajo-cc *ngIf="opcion2" [controversiaID]="this.controversiaID"></app-control-y-tabla-mesas-trabajo-cc>
         </div>
     </div>
 </div>

@@ -42,8 +42,8 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
   actuacionAdelantadaArrayDom = [
 
   ];
-
-  public controversiaID = parseInt(localStorage.getItem("controversiaID"));
+  @Input()controversiaID;
+  //public controversiaID = parseInt(localStorage.getItem("controversiaID"));
   editorStyle = {
     height: '50px'
   };
@@ -226,7 +226,7 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
         this.services.CambiarEstadoActuacionSeguimiento(data.data.controversiaActuacionId,"1").subscribe((data0:any)=>{
         });
         this.openDialog("", `<b>${data.message}</b>`);
-        this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
+        this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia',this.controversiaID]);
       }
       else {
         this.openDialog("", `<b>${data.message}</b>`);

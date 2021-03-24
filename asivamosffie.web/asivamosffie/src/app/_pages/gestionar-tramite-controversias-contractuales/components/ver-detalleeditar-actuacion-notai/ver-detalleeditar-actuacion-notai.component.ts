@@ -21,10 +21,11 @@ export class VerDetalleeditarActuacionNotaiComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(param => {
+      this.idControversia = param.idControversia;
       this.idActuacion = param.id;
+      this.loadDataContrato(this.idControversia);
       this.loadDataActuacionFormat(this.idActuacion);
     });
-    this.loadDataContrato(this.controversiaID);
   }
   loadDataContrato(id){
     this.services.GetControversiaContractualById(id).subscribe((data:any)=>{

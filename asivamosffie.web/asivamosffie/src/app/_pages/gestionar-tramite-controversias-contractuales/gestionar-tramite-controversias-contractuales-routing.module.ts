@@ -88,15 +88,15 @@ const routes: Routes = [
     component: VerdetalleReclamacionActuacionCcComponent
   },
   {
-    path: 'registrarNuevaActuacionTramiteNoTai',
+    path: 'registrarNuevaActuacionTramiteNoTai/:idControversia/:idActuacion',
     component: RegistrarNuevaActuacionTramNoTaiComponent
   },
   {
-    path: 'verDetalleEditarActuacionNoTai/:id',
+    path: 'verDetalleEditarActuacionNoTai/:idControversia/:id',
     component: VerDetalleeditarActuacionNotaiComponent
   },
   {
-    path: 'verDetalleActuacionNoTai/:id',
+    path: 'verDetalleActuacionNoTai/:idControversia/:id',
     component: VerDetalleActuacionNotaiComponent
   },
   {
