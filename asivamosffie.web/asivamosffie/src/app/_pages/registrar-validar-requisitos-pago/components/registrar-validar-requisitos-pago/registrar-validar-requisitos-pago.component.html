@@ -132,7 +132,13 @@
                                 color="accent"
                                 class="btn-table"
                                 [routerLink]="[ 'verDetalle', element.contratoId, element.solicitudPagoId ]"
-                                *ngIf="element.estadoCodigo !== listaEstadoSolicitudPago.enProcesoRegistro && element.estadoCodigo !== listaEstadoSolicitudPago.solicitudRevisadaEquipoFacturacion">
+                                *ngIf=" element.estadoCodigo !== listaEstadoSolicitudPago.enProcesoRegistro
+                                        && element.estadoCodigo !== listaEstadoSolicitudPago.solicitudRevisadaEquipoFacturacion
+                                        && element.estadoCodigo !== listaEstadoSolicitudPago.solicitudDevueltaApoyoSupervision
+                                        && element.estadoCodigo !== listaEstadoSolicitudPago.solicitudDevueltaPorCoordinador
+                                        && element.estadoCodigo !== listaEstadoSolicitudPago.enviadaSubsanacionVerificacionFinanciera
+                                        && element.estadoCodigo !== listaEstadoSolicitudPago.enviadaSubsanacionValidacionFinanciera
+                                        && element.estadoCodigo !== listaEstadoSolicitudPago.solicitudDevueltaPorGenerarOrdenGiroParaEquipoFacturacion">
                                 Ver detalle
                         </button>
 
@@ -182,7 +188,13 @@
                                 color="accent"
                                 class="btn-table"
                                 [routerLink]="[ 'verDetalleExpensas', element.solicitudPagoId ]"
-                                *ngIf="element.estadoCodigo !== listaEstadoSolicitudPago.enProcesoRegistro && element.estadoCodigo !== listaEstadoSolicitudPago.solicitudRevisadaEquipoFacturacion">
+                                *ngIf=" element.estadoCodigo !== listaEstadoSolicitudPago.enProcesoRegistro
+                                        && element.estadoCodigo !== listaEstadoSolicitudPago.solicitudRevisadaEquipoFacturacion
+                                        && element.estadoCodigo !== listaEstadoSolicitudPago.solicitudDevueltaApoyoSupervision
+                                        && element.estadoCodigo !== listaEstadoSolicitudPago.solicitudDevueltaPorCoordinador
+                                        && element.estadoCodigo !== listaEstadoSolicitudPago.enviadaSubsanacionVerificacionFinanciera
+                                        && element.estadoCodigo !== listaEstadoSolicitudPago.enviadaSubsanacionValidacionFinanciera
+                                        && element.estadoCodigo !== listaEstadoSolicitudPago.solicitudDevueltaPorGenerarOrdenGiroParaEquipoFacturacion">
                                 Ver detalle
                         </button>
 
