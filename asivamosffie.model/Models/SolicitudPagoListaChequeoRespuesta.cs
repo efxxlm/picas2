@@ -21,6 +21,8 @@ namespace asivamosffie.model.Models
         public string VerificacionObservacion { get; set; }
         public string ValidacionRespuestaCodigo { get; set; }
         public string ValidacionObservacion { get; set; }
+        public bool? RegistroCompletoVerificar { get; set; }
+        public bool? RegistroCompletoValidar { get; set; }
 
         public virtual ListaChequeoItem ListaChequeoItem { get; set; }
         public virtual SolicitudPagoListaChequeo SolicitudPagoListaChequeo { get; set; }

@@ -467,6 +467,27 @@ namespace asivamosffie.services
 
                         if (pSolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Any(s => s.ValidacionRespuestaCodigo == ConstanCodigoRespuestasSolicitudPago.No_Cumple))
                             blRegistroCompleto = false;
+                         
+                        pSolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta
+                                                  .ToList().ForEach(res =>
+                                                  {
+                                                      bool blRegistroCompletoItem = ValidarRegistroCompletoSolicitudPagoListaChequeoRespuesta(res, pSolicitudPagoListaChequeo.EsValidacion);
+
+                                                      if (!blRegistroCompletoItem)
+                                                          blRegistroCompleto = false;
+
+                                                      _context.Set<SolicitudPagoListaChequeoRespuesta>()
+                                                              .Where(s => s.SolicitudPagoListaChequeoRespuestaId == res.SolicitudPagoListaChequeoRespuestaId)
+                                                              .Update(s => new SolicitudPagoListaChequeoRespuesta
+                                                              {
+                                                                  UsuarioModificacion = pSolicitudPagoListaChequeo.UsuarioCreacion,
+                                                                  FechaModificacion = DateTime.Now, 
+                                                                  TieneSubsanacion = res.TieneSubsanacion,
+                                                                  RegistroCompletoValidar = blRegistroCompletoItem,
+                                                                  ValidacionRespuestaCodigo = res.ValidacionRespuestaCodigo,
+                                                                  ValidacionObservacion = res.ValidacionObservacion
+                                                              });
+                                                  });
                     }
                     else
                     {
@@ -475,30 +496,29 @@ namespace asivamosffie.services
 
                         if (pSolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Any(s => s.VerificacionRespuestaCodigo == ConstanCodigoRespuestasSolicitudPago.No_Cumple))
                             blRegistroCompleto = false;
+
+
+                        pSolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta
+                                                    .ToList().ForEach(res =>
+                                                    {
+                                                        bool blRegistroCompletoItem = ValidarRegistroCompletoSolicitudPagoListaChequeoRespuesta(res, pSolicitudPagoListaChequeo.EsValidacion);
+
+                                                        if (!blRegistroCompletoItem)
+                                                            blRegistroCompleto = false;
+
+                                                        _context.Set<SolicitudPagoListaChequeoRespuesta>()
+                                                                .Where(s => s.SolicitudPagoListaChequeoRespuestaId == res.SolicitudPagoListaChequeoRespuestaId)
+                                                                .Update(s => new SolicitudPagoListaChequeoRespuesta
+                                                                {
+                                                                    UsuarioModificacion = pSolicitudPagoListaChequeo.UsuarioCreacion,
+                                                                    FechaModificacion = DateTime.Now,
+                                                                    RegistroCompletoVerificar = blRegistroCompletoItem,
+                                                                    TieneSubsanacion = res.TieneSubsanacion,
+                                                                    VerificacionRespuestaCodigo = res.VerificacionRespuestaCodigo,
+                                                                    VerificacionObservacion = res.VerificacionObservacion  
+                                                                });
+                                                    });
                     }
-
-                    pSolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta
-                        .ToList().ForEach(res =>
-                        {
-                            bool blRegistroCompletoItem = ValidarRegistroCompletoSolicitudPagoListaChequeoRespuesta(res, pSolicitudPagoListaChequeo.EsValidacion);
-
-                            if (!blRegistroCompletoItem)
-                                blRegistroCompleto = false;
-
-                            _context.Set<SolicitudPagoListaChequeoRespuesta>()
-                                    .Where(s => s.SolicitudPagoListaChequeoRespuestaId == res.SolicitudPagoListaChequeoRespuestaId)
-                                    .Update(s => new SolicitudPagoListaChequeoRespuesta
-                                    {
-                                        UsuarioModificacion = pSolicitudPagoListaChequeo.UsuarioCreacion,
-                                        FechaModificacion = DateTime.Now,
-
-                                        TieneSubsanacion = res.TieneSubsanacion,
-                                        VerificacionRespuestaCodigo = res.VerificacionRespuestaCodigo,
-                                        VerificacionObservacion = res.VerificacionObservacion,
-                                        ValidacionRespuestaCodigo = res.ValidacionRespuestaCodigo,
-                                        ValidacionObservacion = res.ValidacionObservacion
-                                    });
-                        }); 
                     DateTime? FechaRegistroCompleto = null;
                     if (blRegistroCompleto)
                         FechaRegistroCompleto = DateTime.Now;
@@ -530,8 +550,8 @@ namespace asivamosffie.services
                                        UsuarioModificacion = pSolicitudPagoListaChequeo.UsuarioCreacion,
                                        FechaModificacion = DateTime.Now
                                    });
-                    } 
-                } 
+                    }
+                }
             }
             catch (Exception ex)
             {
