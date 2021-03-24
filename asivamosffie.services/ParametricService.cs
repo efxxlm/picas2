@@ -38,14 +38,14 @@ namespace asivamosffie.services
 
             try
             {
-                foreach (var Dominio in pTipoDominio.Dominio)
+                foreach (var Dominio in pTipoDominio.Dominio.Where(r=> !string.IsNullOrEmpty(r.Nombre)))
                 {
                     if (Dominio.DominioId == 0)
                     {
-                        Dominio.FechaCreacion = DateTime.Now; 
+                        int CantidadParametricas = _context.Dominio.Count(d => d.TipoDominioId == Dominio.TipoDominioId) + 1;
+                        Dominio.FechaCreacion = DateTime.Now;
                         Dominio.Activo = true; 
-                        Dominio.Activo = Dominio.Activo;
-                        Dominio.Codigo = _context.Dominio.Count(d => d.TipoDominioId == d.TipoDominioId).ToString();
+                        Dominio.Codigo = (CantidadParametricas).ToString();
                         _context.Dominio.Add(Dominio);
                         _context.SaveChanges();
                     }

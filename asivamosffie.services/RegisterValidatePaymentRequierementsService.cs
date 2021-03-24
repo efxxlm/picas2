@@ -105,7 +105,7 @@ namespace asivamosffie.services
         {
             SolicitudPago solicitudPago = await _context.SolicitudPago.FindAsync(pSolicitudPagoId);
 
-            return GetSolicitudPago(solicitudPago);
+            return GetSolicitudPagoComplete(solicitudPago);
 
         }
 
@@ -241,7 +241,7 @@ namespace asivamosffie.services
                 if (pSolicitudPago > 0)
                 {
                     SolicitudPago solicitudPago = _context.SolicitudPago.Find(pSolicitudPago);
-                    contrato.SolicitudPagoOnly = GetSolicitudPago(solicitudPago);
+                    contrato.SolicitudPagoOnly = GetSolicitudPagoComplete(solicitudPago);
                 }
                 contrato.ValorFacturadoContrato =
                     _context.VValorFacturadoContrato
@@ -306,7 +306,7 @@ namespace asivamosffie.services
             return solicitudPago;
         }
 
-        public SolicitudPago GetSolicitudPago(SolicitudPago solicitudPago)
+        public SolicitudPago GetSolicitudPagoComplete(SolicitudPago solicitudPago)
         {
             switch (solicitudPago.TipoSolicitudCodigo)
             {
@@ -502,30 +502,42 @@ namespace asivamosffie.services
 
         public async Task GetValidateSolicitudPagoId(int SolicitudPagoId)
         {
-            SolicitudPago solicitudPago = await GetSolicitudPago(SolicitudPagoId);
-            bool CompleteRecord = ValidateCompleteRecordSolicitudPago(solicitudPago);
-            bool TieneNoCumpleListaChequeo = solicitudPago.SolicitudPagoListaChequeo.Any(r => r.SolicitudPagoListaChequeoRespuesta.Any(s => s.RespuestaCodigo == ConstanCodigoRespuestasListaChequeoSolictudPago.No_cumple));
-            string EstadoSolicitudPago = solicitudPago.EstadoCodigo; 
-            bool TieneAlgunaObservacionPendiente =
-                _context.SolicitudPagoObservacion.Any(s => s.SolicitudPagoId == SolicitudPagoId
-                                                        && s.Archivada != true
-                                                        && s.TieneObservacion == true
-                                                        );
-            DateTime? FechaRegistroCompleto = null;
-            if (CompleteRecord && TieneAlgunaObservacionPendiente)
+            try
             {
-                FechaRegistroCompleto = DateTime.Now;
-                EstadoSolicitudPago = ((int)EnumEstadoSolicitudPago.Con_solicitud_revisada_por_equipo_facturacion).ToString();
+                SolicitudPago solicitudPago = _context.SolicitudPago.Find(SolicitudPagoId); 
+                solicitudPago = GetSolicitudPagoComplete(solicitudPago);
+                bool CompleteRecord = ValidateCompleteRecordSolicitudPago(solicitudPago);
+                bool TieneNoCumpleListaChequeo = solicitudPago.SolicitudPagoListaChequeo.Any(r => r.SolicitudPagoListaChequeoRespuesta.Any(s => s.RespuestaCodigo == ConstanCodigoRespuestasListaChequeoSolictudPago.No_cumple));
+                string EstadoSolicitudPago = solicitudPago.EstadoCodigo;
+                bool TieneAlgunaObservacionPendiente =
+                    _context.SolicitudPagoObservacion.Any(s => s.SolicitudPagoId == SolicitudPagoId
+                                                            && s.Archivada != true
+                                                            && s.TieneObservacion == true
+                                                            );
+                DateTime? FechaRegistroCompleto = null;
+           
+                if (CompleteRecord && !TieneAlgunaObservacionPendiente)
+                {
+                    FechaRegistroCompleto = DateTime.Now;
+                    EstadoSolicitudPago = ((int)EnumEstadoSolicitudPago.Con_solicitud_revisada_por_equipo_facturacion).ToString();
+                }
+                else 
+                    CompleteRecord = false; 
+              
+                await _context.Set<SolicitudPago>()
+                                                  .Where(s => s.SolicitudPagoId == SolicitudPagoId)
+                                                                                                  .UpdateAsync(r => new SolicitudPago()
+                                                                                                  {
+                                                                                                      EstadoCodigo = EstadoSolicitudPago,
+                                                                                                      RegistroCompleto = CompleteRecord,
+                                                                                                      FechaRegistroCompleto = FechaRegistroCompleto,
+                                                                                                      TieneNoCumpleListaChequeo = TieneNoCumpleListaChequeo
+                                                                                                  });
             }
-            await _context.Set<SolicitudPago>()
-                                              .Where(s => s.SolicitudPagoId == SolicitudPagoId)
-                                                                                              .UpdateAsync(r => new SolicitudPago()
-                                                                                              {
-                                                                                                  EstadoCodigo = EstadoSolicitudPago,
-                                                                                                  RegistroCompleto = CompleteRecord,
-                                                                                                  FechaRegistroCompleto = FechaRegistroCompleto,
-                                                                                                  TieneNoCumpleListaChequeo = TieneNoCumpleListaChequeo
-                                                                                              });
+            catch (Exception e)
+            {
+
+            }
         }
 
         public async Task<Respuesta> ReturnSolicitudPago(SolicitudPago pSolicitudPago)

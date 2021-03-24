@@ -169,7 +169,8 @@ namespace asivamosffie.services
                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.OperacionExitosa, idAccion, pSolicitudPagoObservacion.UsuarioCreacion, "CREAR OBSERVACION SOLICITUD PAGO")
                    };
 
-                await ValidateCompleteObservation(pSolicitudPagoObservacion, pSolicitudPagoObservacion.UsuarioCreacion);
+                if (pSolicitudPagoObservacion.Archivada != true)
+                    await ValidateCompleteObservation(pSolicitudPagoObservacion, pSolicitudPagoObservacion.UsuarioCreacion);
 
                 return respuesta;
             }
@@ -392,7 +393,10 @@ namespace asivamosffie.services
                     FechaRegistroCompletoVerificacionFinanciera = null,
 
                     RegistroCompletoValidacionFinanciera = false,
-                    FechaRegistroCompletoValidacionFinanciera = null
+                    FechaRegistroCompletoValidacionFinanciera = null,
+
+                    FechaModificacion = DateTime.Now,
+                    UsuarioModificacion = pSolicitudPago.UsuarioCreacion
                 });
         }
 
