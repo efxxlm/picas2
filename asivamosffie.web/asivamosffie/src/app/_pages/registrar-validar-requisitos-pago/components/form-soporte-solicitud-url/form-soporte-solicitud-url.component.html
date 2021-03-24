@@ -37,6 +37,21 @@
             </div>
         </mat-card-content>
     </mat-card>
+
+    <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;" *ngIf="observacion !== undefined">
+        <mat-card-header class="header-card header-card--margin">
+            <mat-card-title class="header-card--text textoGris">
+                Observación {{ esAutorizar === true ? 'de la coordinación' : 'del apoyo a la supervisión' }}
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content style="text-align: left;">
+            <p><b> {{ observacion.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+            <p *ngIf="observacion.tieneObservacion === true"><b>¿Desde {{ esAutorizar === true ? 'la coordinación' : 'el apoyo a la supervisión' }} tiene observaciones a el soporte de la solicitud?:</b> Si</p>
+            <p *ngIf="observacion.tieneObservacion === false"><b>¿Desde {{ esAutorizar === true ? 'la coordinación' : 'el apoyo a la supervisión' }} tiene observaciones a el soporte de la solicitud?:</b> No</p>
+            <section [innerHTML]="observacion.observacion" *ngIf="observacion.tieneObservacion === true"></section>
+        </mat-card-content>
+    </mat-card>
+
     <div class="text-center mb-2em">
         <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="addressForm.dirty === false">
             <img src="assets/img/icon/guardar.svg" alt="Regresar">

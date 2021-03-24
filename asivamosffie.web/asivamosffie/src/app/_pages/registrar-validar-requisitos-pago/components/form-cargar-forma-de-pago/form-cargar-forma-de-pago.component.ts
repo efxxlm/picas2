@@ -2,9 +2,10 @@ import { Router } from '@angular/router';
 import { RegistrarRequisitosPagoService } from './../../../../core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
 import { CommonService, Dominio } from './../../../../core/_services/common/common.service';
 import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
 
 @Component({
     selector: 'app-form-cargar-forma-de-pago',
@@ -16,26 +17,34 @@ export class FormCargarFormaDePagoComponent implements OnInit {
     @Input() contrato: any;
     @Input() tipoSolicitud: string;
     @Input() esUnEditar = false;
-    addressForm = this.fb.group({
-        formaPagoPreconstruccion: [null, Validators.required],
-        formaPagoConstruccion: [null, Validators.required]
-    });
+    @Input() cargarFormaPagoCodigo: string;
+    @Input() listaMenusId: any;
     formaDePago: any;
     formaPagoArray: Dominio[] = [];
     solicitudPagoId = 0;
     solicitudPagoCargarFormaPago: any;
     solicitudPagoCargarFormaPagoId = 0;
+    solicitudPagoObservacionId = 0;
     tieneFase1 = false;
     estaEditando = false;
+    esAutorizar: boolean;
+    observacion: any;
+    addressForm = this.fb.group({
+        formaPagoPreconstruccion: [null, Validators.required],
+        formaPagoConstruccion: [null, Validators.required]
+    });
+
     constructor(
         private fb: FormBuilder,
         private commonSvc: CommonService,
         private dialog: MatDialog,
         private routes: Router,
+        private obsMultipleSvc: ObservacionesMultiplesCuService,
         private registrarPagosSvc: RegistrarRequisitosPagoService) {
     }
 
     ngOnInit(): void {
+        console.log( this.listaMenusId );
         this.commonSvc.formasDePago()
             .subscribe(response => {
                 this.formaPagoArray = response;
@@ -69,6 +78,7 @@ export class FormCargarFormaDePagoComponent implements OnInit {
                     }
                 } else {
                     if (this.contrato.solicitudPagoOnly !== undefined) {
+
                         this.solicitudPagoId = this.contrato.solicitudPagoOnly.solicitudPagoId;
                         this.solicitudPagoCargarFormaPago = this.contrato.solicitudPagoOnly.solicitudPagoCargarFormaPago[0];
                         this.solicitudPagoCargarFormaPagoId = this.solicitudPagoCargarFormaPago.solicitudPagoCargarFormaPagoId;

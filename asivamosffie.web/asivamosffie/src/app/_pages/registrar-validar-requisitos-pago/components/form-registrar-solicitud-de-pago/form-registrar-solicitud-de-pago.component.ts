@@ -1,13 +1,14 @@
 import { CommonService, Dominio } from './../../../../core/_services/common/common.service';
 import { RegistrarRequisitosPagoService } from './../../../../core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
 import { Router } from '@angular/router';
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, Output, ViewChild, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
 
 @Component({
   selector: 'app-form-registrar-solicitud-de-pago',
@@ -16,16 +17,30 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class FormRegistrarSolicitudDePagoComponent implements OnInit {
 
-    dataSource = new MatTableDataSource();
+    @Input() listaMenusId: any;
+    @Input() registrarSolicitudPago: any;
     @Input() contrato: any;
+    @Output() tieneObservacionSemaforo = new EventEmitter<boolean>();
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     solicitudPagoId = 0;
     solicitudPagoRegistrarSolicitudPagoId = 0;
     solicitudPagofaseId = 0;
+    solicitudPagoObservacionId = 0;
     solicitudPagoRegistrarSolicitudPago: any;
     solicitudPagoFase: any;
     solicitudPagoCargarFormaPago: any;
+    esAutorizar: boolean;
+    tieneObservacion: boolean;
+    observacion: any;
+    fasesArray: Dominio[] = [];
+    faseContrato: any = {};
+    minDate: Date;
+    postConstruccion = '3';
+    contratacionProyectoId = 0;
+    estaEditando = false;
+    manejoAnticipoRequiere: boolean;
+    dataSource = new MatTableDataSource();
     displayedColumns: string[] = [
       'faseContrato',
       'pagosRealizados',
@@ -34,18 +49,19 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
       'saldoPorPagar',
       'porcentajePorPagar'
     ];
+    // Interfaz verificar semaforos en caso de haber observaciones
+    estadoSemaforosObservaciones = {
+        observacionCriterios: null,
+        observacionAmortizacion: null,
+        observacionCriteriosProyecto: null,
+        observacionDatosFactura: null,
+        observacionDescuentos: null
+    }
     addressForm = this.fb.group({
       fechaSolicitud: [null, Validators.required],
       numeroRadicado: [null, Validators.required],
       faseContrato: [null, Validators.required]
     });
-    fasesArray: Dominio[] = [];
-    faseContrato: any = {};
-    minDate: Date;
-    postConstruccion = '3';
-    contratacionProyectoId = 0;
-    estaEditando = false;
-    manejoAnticipoRequiere: boolean;
     estadoRegistroCompleto = {
         formRegistroCompleto: false,
         solicitudPagoFaseRegistroCompleto: false
@@ -61,6 +77,7 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
         private routes: Router,
         private dialog: MatDialog,
         private commonSvc: CommonService,
+        private obsMultipleSvc: ObservacionesMultiplesCuService,
         private registrarPagosSvc: RegistrarRequisitosPagoService )
     { }
 
@@ -138,10 +155,61 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
 
                             this.estadoRegistroCompleto.formRegistroCompleto = !Object.values( this.addressForm.value ).includes( null );
                             if ( this.estadoRegistroCompleto.formRegistroCompleto === true ) {
-                                // this.addressForm.get( 'fechaSolicitud' ).disable();
+                                this.addressForm.get( 'fechaSolicitud' ).disable();
                                 this.addressForm.get( 'numeroRadicado' ).disable();
                                 this.addressForm.get( 'faseContrato' ).disable();
                             }
+
+                            // Get observacion CU autorizar solicitud de pago 4.1.9
+                            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                                this.listaMenusId.autorizarSolicitudPagoId,
+                                this.contrato.solicitudPagoOnly.solicitudPagoId,
+                                this.solicitudPagofaseId,
+                                this.registrarSolicitudPago.registrarSolicitudPagoCodigo )
+                                .subscribe(
+                                    response => {
+                                        const observacion = response.find( obs => obs.archivada === false );
+
+                                        if ( observacion !== undefined ) {
+                                            this.esAutorizar = true;
+                                            this.observacion = observacion;
+
+                                            if ( this.observacion.tieneObservacion === true ) {
+                                                this.tieneObservacion = true;
+                                                this.tieneObservacionSemaforo.emit( true );
+                                                this.addressForm.get( 'fechaSolicitud' ).enable();
+                                                this.addressForm.get( 'numeroRadicado' ).enable();
+                                                this.addressForm.get( 'faseContrato' ).enable();
+                                                this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                                            }
+                                        }
+                                    }
+                                );
+
+                            // Get observacion CU verificar solicitud de pago 4.1.8
+                            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                                this.listaMenusId.aprobarSolicitudPagoId,
+                                this.contrato.solicitudPagoOnly.solicitudPagoId,
+                                this.solicitudPagofaseId,
+                                this.registrarSolicitudPago.registrarSolicitudPagoCodigo )
+                                .subscribe(
+                                    response => {
+                                        const observacion = response.find( obs => obs.archivada === false );
+                                        if ( observacion !== undefined ) {
+                                            this.esAutorizar = false;
+                                            this.observacion = observacion;
+
+                                            if ( this.observacion.tieneObservacion === true ) {
+                                                this.tieneObservacion = true;
+                                                this.tieneObservacionSemaforo.emit( true );;
+                                                this.addressForm.get( 'fechaSolicitud' ).enable();
+                                                this.addressForm.get( 'numeroRadicado' ).enable();
+                                                this.addressForm.get( 'faseContrato' ).enable();
+                                                this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                                            }
+                                        }
+                                    }
+                                );
                         }
                     }
                     // Tabla pendiente por integrar
@@ -487,11 +555,15 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                 }
             ]
         }
-        console.log( pSolicitudPago );
+
         this.registrarPagosSvc.createEditNewPayment( pSolicitudPago )
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
+                    if ( this.tieneObservacion === true ) {
+                        this.observacion.archivada = !this.observacion.archivada;
+                        this.obsMultipleSvc.createUpdateSolicitudPagoObservacion( this.observacion ).subscribe();
+                    }
                     this.registrarPagosSvc.getValidateSolicitudPagoId( this.solicitudPagoId )
                         .subscribe(
                             () => {

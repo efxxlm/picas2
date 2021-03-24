@@ -1,20 +1,25 @@
 import { RegistrarRequisitosPagoService } from './../../../../core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
 import { Router } from '@angular/router';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, EventEmitter, Output } from '@angular/core';
 import { Validators, FormBuilder, FormArray } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Dominio, CommonService } from 'src/app/core/_services/common/common.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
 
 @Component({
   selector: 'app-datos-factura-construccion-rvrp',
   templateUrl: './datos-factura-construccion-rvrp.component.html',
   styleUrls: ['./datos-factura-construccion-rvrp.component.scss']
 })
-export class DatosFacturaConstruccionRvrpComponent implements OnInit {
+export class DatosFacturaConstruccionRvrpComponent implements OnInit, OnChanges {
 
     @Input() solicitudPago: any;
     @Input() esVerDetalle = false;
+    @Input() tieneObservacion: boolean;
+    @Input() datosFacturaCodigo: string;
+    @Input() listaMenusId: any;
+    @Output() semaforoObservacion = new EventEmitter<boolean>();
     addressForm = this.fb.group({
         numeroFactura: [null, Validators.required],
         fechaFactura: [null, Validators.required]
@@ -25,16 +30,25 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
     solicitudPagoFaseFacturaId = 0;
     solicitudPagoFaseFactura: any;
     solicitudPagoFase: any;
+    esAutorizar: boolean;
+    observacion: any;
+    solicitudPagoObservacionId = 0;
     estaEditando = false;
     constructor(
         private fb: FormBuilder,
         private dialog: MatDialog,
         private commonSvc: CommonService,
         private routes: Router,
+        private obsMultipleSvc: ObservacionesMultiplesCuService,
         private registrarPagosSvc: RegistrarRequisitosPagoService )
     {
         this.commonSvc.tiposDescuento()
             .subscribe( response => this.tiposDescuentoArray = response );
+    }
+    ngOnChanges(changes: SimpleChanges): void {
+        if ( changes.tieneObservacion.currentValue === true ) {
+            this.addressForm.enable();
+        }
     }
 
     ngOnInit(): void {
@@ -55,6 +69,50 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
             if ( this.addressForm.get( 'numeroFactura' ).value !== undefined && this.addressForm.get( 'fechaFactura' ).value !== undefined ) {
                 this.addressForm.disable();
             }
+
+            // Get observacion CU autorizar solicitud de pago 4.1.9
+            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                this.listaMenusId.autorizarSolicitudPagoId,
+                this.solicitudPago.solicitudPagoId,
+                this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaId,
+                this.datosFacturaCodigo )
+                .subscribe(
+                    response => {
+                        const observacion = response.find( obs => obs.archivada === false );
+                        if ( observacion !== undefined ) {
+                            this.esAutorizar = true;
+                            this.observacion = observacion;
+
+                            if ( this.observacion.tieneObservacion === true ) {
+                                this.addressForm.enable();
+                                this.semaforoObservacion.emit( true );
+                                this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                            }
+                        }
+                    }
+                );
+
+            // Get observacion CU verificar solicitud de pago 4.1.8
+            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                this.listaMenusId.aprobarSolicitudPagoId,
+                this.solicitudPago.solicitudPagoId,
+                this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaId,
+                this.datosFacturaCodigo )
+                .subscribe(
+                    response => {
+                        const observacion = response.find( obs => obs.archivada === false );
+                        if ( observacion !== undefined ) {
+                            this.esAutorizar = false;
+                            this.observacion = observacion;
+
+                            if ( this.observacion.tieneObservacion === true ) {
+                                this.addressForm.enable();
+                                this.semaforoObservacion.emit( true );
+                                this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                            }
+                        }
+                    }
+                );
         }
         for ( const criterio of this.solicitudPagoFase.solicitudPagoFaseCriterio ) {
             this.valorFacturado += criterio.valorFacturado;
@@ -134,6 +192,10 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
+                    if ( this.observacion !== undefined ) {
+                        this.observacion.archivada = !this.observacion.archivada;
+                        this.obsMultipleSvc.createUpdateSolicitudPagoObservacion( this.observacion ).subscribe();
+                    }
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                         () => this.routes.navigate(
                             [

@@ -4,6 +4,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
+import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
 
 @Component({
   selector: 'app-form-soporte-solicitud-url',
@@ -14,6 +15,10 @@ export class FormSoporteSolicitudUrlComponent implements OnInit {
 
     @Input() solicitudPago: any;
     @Input() esExpensas = false;
+    @Input() listaMenusId: any;
+    @Input() soporteSolicitudCodigo: string;
+    esAutorizar: boolean;
+    observacion: any;
     addressForm = this.fb.group({
       urlSoporte: [null, Validators.required]
     });
@@ -24,6 +29,7 @@ export class FormSoporteSolicitudUrlComponent implements OnInit {
         private fb: FormBuilder,
         private dialog: MatDialog,
         private routes: Router,
+        private obsMultipleSvc: ObservacionesMultiplesCuService,
         private registrarPagosSvc: RegistrarRequisitosPagoService, )
     { }
 
@@ -35,6 +41,46 @@ export class FormSoporteSolicitudUrlComponent implements OnInit {
                 this.addressForm.markAllAsTouched();
                 this.solicitudPagoSoporteSolicitudId = this.solicitudPago.solicitudPagoSoporteSolicitud[0].solicitudPagoSoporteSolicitudId;
                 this.addressForm.get( 'urlSoporte' ).setValue( this.solicitudPago.solicitudPagoSoporteSolicitud[0].urlSoporte !== undefined ? this.solicitudPago.solicitudPagoSoporteSolicitud[0].urlSoporte : null );
+
+                // Get observacion CU autorizar solicitud de pago 4.1.9
+                this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                    this.listaMenusId.autorizarSolicitudPagoId,
+                    this.solicitudPago.solicitudPagoId,
+                    this.solicitudPago.solicitudPagoSoporteSolicitud[0].solicitudPagoSoporteSolicitudId,
+                    this.soporteSolicitudCodigo )
+                    .subscribe(
+                        response => {
+                            const observacion = response.find( obs => obs.archivada === false );
+                            if ( observacion !== undefined ) {
+                                this.esAutorizar = true;
+                                this.observacion = observacion;
+
+                                if ( this.observacion.tieneObservacion === true ) {
+
+                                }
+                            }
+                        }
+                    );
+
+                // Get observacion CU verificar solicitud de pago 4.1.8
+                this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                    this.listaMenusId.aprobarSolicitudPagoId,
+                    this.solicitudPago.solicitudPagoId,
+                    this.solicitudPago.solicitudPagoSoporteSolicitud[0].solicitudPagoSoporteSolicitudId,
+                    this.soporteSolicitudCodigo )
+                    .subscribe(
+                        response => {
+                            const observacion = response.find( obs => obs.archivada === false );
+                            if ( observacion !== undefined ) {
+                                this.esAutorizar = false;
+                                this.observacion = observacion;
+
+                                if ( this.observacion.tieneObservacion === true ) {
+
+                                }
+                            }
+                        }
+                    );
             }
         }
     }

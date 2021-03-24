@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -8,8 +8,9 @@ import { DialogObservacionesItemListchequeoComponent } from '../dialog-observaci
 import { DialogSubsanacionComponent } from '../dialog-subsanacion/dialog-subsanacion.component';
 import humanize from 'humanize-plus';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
+import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
 
 @Component({
   selector: 'app-validar-lista-chequeo',
@@ -21,6 +22,9 @@ export class ValidarListaChequeoComponent implements OnInit {
     @Input() contrato: any;
     @Input() solicitudPago: any;
     @Input() esVerDetalle = false;
+    @Input() listaChequeoCodigo: string;
+    @Input() listaMenusId: any;
+    @Output() semaforoObservacion = new EventEmitter<boolean>();
     solicitudPagoModificado: any;
     esExpensas: boolean;
     dataSource = new MatTableDataSource();
@@ -43,8 +47,10 @@ export class ValidarListaChequeoComponent implements OnInit {
 
     constructor(
         private routes: Router,
+        private activatedRoute: ActivatedRoute,
         private registrarPagosSvc: RegistrarRequisitosPagoService,
         private dialog: MatDialog,
+        private obsMultipleSvc: ObservacionesMultiplesCuService,
         private commonSvc: CommonService )
     {
         this.commonSvc.listaRevisionTecnica()
@@ -52,14 +58,52 @@ export class ValidarListaChequeoComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.getListaChequeo();
+    }
+
+    async getListaChequeo() {
         if ( this.contrato === undefined && this.solicitudPago !== undefined ) {
             this.esExpensas = true;
+            let completoObservacion = 0;
             for ( const solicitudPagoListaChequeo of this.solicitudPago.solicitudPagoListaChequeo ) {
                 for ( const solicitudPagoListaChequeoRespuesta of solicitudPagoListaChequeo.solicitudPagoListaChequeoRespuesta ) {
                     solicitudPagoListaChequeoRespuesta.respuestaCodigo = solicitudPagoListaChequeoRespuesta.respuestaCodigo !== undefined ? solicitudPagoListaChequeoRespuesta.respuestaCodigo : null;
                     solicitudPagoListaChequeoRespuesta.observacion = solicitudPagoListaChequeoRespuesta.observacion !== undefined ? solicitudPagoListaChequeoRespuesta.observacion : null;
                 }
+
+                // Get observacion CU autorizar solicitud de pago 4.1.9
+                const listaObservacionCoordinador = await this.obsMultipleSvc.asyncGetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                    this.listaMenusId.autorizarSolicitudPagoId,
+                    this.activatedRoute.snapshot.params.id,
+                    solicitudPagoListaChequeo.solicitudPagoListaChequeoId,
+                    this.listaChequeoCodigo )
+                const observacionCoordinador = listaObservacionCoordinador.find( obs => obs.archivada === false );
+
+                // Get observacion CU verificar solicitud de pago 4.1.8
+                const listaObservacionApoyoSupervisor = await this.obsMultipleSvc.asyncGetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                    this.listaMenusId.aprobarSolicitudPagoId,
+                    this.activatedRoute.snapshot.params.id,
+                    solicitudPagoListaChequeo.solicitudPagoListaChequeoId,
+                    this.listaChequeoCodigo )
+                const observacionSupervisor = listaObservacionApoyoSupervisor.find( obs => obs.archivada === false );
+
+                
+                if ( observacionCoordinador !== undefined ) {
+                    solicitudPagoListaChequeo.esAutorizar = true;
+                    solicitudPagoListaChequeo.observacion = observacionCoordinador;
+                    completoObservacion++;
+                }
+                if ( observacionSupervisor !== undefined ) {
+                    solicitudPagoListaChequeo.esAutorizar = false;
+                    solicitudPagoListaChequeo.observacion = observacionSupervisor;
+                    completoObservacion++;
+                }
             }
+
+            if ( completoObservacion > 0 ) {
+                this.semaforoObservacion.emit( true );
+            }
+
             this.solicitudPagoModificado = this.solicitudPago;
             this.dataSource = new MatTableDataSource();
             this.dataSource.paginator = this.paginator;
@@ -67,12 +111,46 @@ export class ValidarListaChequeoComponent implements OnInit {
         }
         if ( this.contrato !== undefined  && this.solicitudPago === undefined ) {
             this.esExpensas = false;
+            let completoObservacion = 0;
             for ( const solicitudPagoListaChequeo of this.contrato.solicitudPagoOnly.solicitudPagoListaChequeo ) {
                 for ( const solicitudPagoListaChequeoRespuesta of solicitudPagoListaChequeo.solicitudPagoListaChequeoRespuesta ) {
                     solicitudPagoListaChequeoRespuesta.respuestaCodigo = solicitudPagoListaChequeoRespuesta.respuestaCodigo !== undefined ? solicitudPagoListaChequeoRespuesta.respuestaCodigo : null;
                     solicitudPagoListaChequeoRespuesta.observacion = solicitudPagoListaChequeoRespuesta.observacion !== undefined ? solicitudPagoListaChequeoRespuesta.observacion : null;
                 }
+
+                // Get observacion CU autorizar solicitud de pago 4.1.9
+                const listaObservacionCoordinador = await this.obsMultipleSvc.asyncGetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                    this.listaMenusId.autorizarSolicitudPagoId,
+                    this.activatedRoute.snapshot.params.idSolicitud,
+                    solicitudPagoListaChequeo.solicitudPagoListaChequeoId,
+                    this.listaChequeoCodigo )
+                const observacionCoordinador = listaObservacionCoordinador.find( obs => obs.archivada === false );
+
+                // Get observacion CU verificar solicitud de pago 4.1.8
+                const listaObservacionApoyoSupervisor = await this.obsMultipleSvc.asyncGetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                    this.listaMenusId.aprobarSolicitudPagoId,
+                    this.activatedRoute.snapshot.params.idSolicitud,
+                    solicitudPagoListaChequeo.solicitudPagoListaChequeoId,
+                    this.listaChequeoCodigo )
+                const observacionSupervisor = listaObservacionApoyoSupervisor.find( obs => obs.archivada === false );
+
+                
+                if ( observacionCoordinador !== undefined ) {
+                    solicitudPagoListaChequeo.esAutorizar = true;
+                    solicitudPagoListaChequeo.observacion = observacionCoordinador;
+                    completoObservacion++;
+                }
+                if ( observacionSupervisor !== undefined ) {
+                    solicitudPagoListaChequeo.esAutorizar = false;
+                    solicitudPagoListaChequeo.observacion = observacionSupervisor;
+                    completoObservacion++;
+                }
             }
+
+            if ( completoObservacion > 0 ) {
+                this.semaforoObservacion.emit( true );
+            }
+
             this.solicitudPagoModificado = this.contrato.solicitudPagoOnly;
             this.dataSource = new MatTableDataSource();
             this.dataSource.paginator = this.paginator;
@@ -167,8 +245,9 @@ export class ValidarListaChequeoComponent implements OnInit {
         });
     }
 
-    disabledBtn() {
+    disabledBtn( index: number ) {
         this.seDiligencioCampo = true;
+        this.solicitudPagoModificado.solicitudPagoListaChequeo[ index ].seDeligencioCampo = true;
     }
 
     guardar() {
@@ -176,6 +255,14 @@ export class ValidarListaChequeoComponent implements OnInit {
         .subscribe(
             response => {
                 this.openDialog( '', `<b>${ response.message }</b>` );
+                this.solicitudPagoModificado.solicitudPagoListaChequeo.forEach( listaChequeo => {
+                    if ( listaChequeo.seDeligencioCampo === true ) {
+                        if ( listaChequeo.observacion !== undefined ) {
+                            listaChequeo.observacion.archivada = !listaChequeo.observacion.archivada;
+                            this.obsMultipleSvc.createUpdateSolicitudPagoObservacion( listaChequeo.observacion ).subscribe();
+                        }
+                    }
+                } );
                 if ( this.esExpensas === false ) {
                     this.registrarPagosSvc.getValidateSolicitudPagoId( this.solicitudPagoModificado.solicitudPagoId )
                         .subscribe(

@@ -95,7 +95,8 @@
                                 [routerLink]="[ 'verDetalleAprobarSolicitud', element.contratoId, element.solicitudPagoId ]"
                                 *ngIf=" element.estadoCodigo === listaEstadoSolicitudPago.enviadaAutorizacion
                                         || element.estadoCodigo === this.listaEstadoSolicitudPago.enProcesoAutorizacion
-                                        || element.estadoCodigo === this.listaEstadoSolicitudPago.enviadaVerificacionFinanciera">
+                                        || element.estadoCodigo === this.listaEstadoSolicitudPago.enviadaVerificacionFinanciera
+                                        || element.estadoCodigo === this.listaEstadoSolicitudPago.solicitudDevueltaApoyoSupervision">
                                 Ver detalle
                         </button>
 
@@ -140,7 +141,8 @@
                                 [routerLink]="[ 'verDetalleExpensas', element.solicitudPagoId ]"
                                 *ngIf=" element.estadoCodigo === listaEstadoSolicitudPago.enviadaAutorizacion
                                         || element.estadoCodigo === this.listaEstadoSolicitudPago.enProcesoAutorizacion
-                                        || element.estadoCodigo === this.listaEstadoSolicitudPago.enviadaVerificacionFinanciera">
+                                        || element.estadoCodigo === this.listaEstadoSolicitudPago.enviadaVerificacionFinanciera
+                                        || element.estadoCodigo === this.listaEstadoSolicitudPago.solicitudDevueltaApoyoSupervision">
                                 Ver detalle
                         </button>
 

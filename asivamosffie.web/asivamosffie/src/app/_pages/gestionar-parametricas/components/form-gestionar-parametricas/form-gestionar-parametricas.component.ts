@@ -74,7 +74,7 @@ export class FormGestionarParametricasComponent implements OnInit {
     }
 
     openDialog(modalTitle: string, modalText: string) {
-        const dialogRef = this.dialog.open(ModalDialogComponent, {
+        const dialogRef = this.dialog.open( ModalDialogComponent, {
           width: '28em',
           data: { modalTitle, modalText }
         });
@@ -82,7 +82,7 @@ export class FormGestionarParametricasComponent implements OnInit {
 
     openDialogTrueFalse(modalTitle: string, modalText: string) {
 
-        const dialogRef = this.dialog.open(ModalDialogComponent, {
+        const dialogRef = this.dialog.open( ModalDialogComponent, {
           width: '28em',
           data: { modalTitle, modalText, siNoBoton: true }
         });

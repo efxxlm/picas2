@@ -1,8 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, EventEmitter, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
+import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
 import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
@@ -11,10 +12,17 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
     templateUrl: './form-descuentos-direccion-tecnica.component.html',
     styleUrls: ['./form-descuentos-direccion-tecnica.component.scss']
 })
-export class FormDescuentosDireccionTecnicaComponent implements OnInit {
+export class FormDescuentosDireccionTecnicaComponent implements OnInit, OnChanges {
 
     @Input() solicitudPago: any;
     @Input() esVerDetalle = false;
+    @Input() tieneObservacion: boolean;
+    @Input() datosFacturaDescuentoCodigo: string;
+    @Input() listaMenusId: any;
+    @Output() semaforoObservacion = new EventEmitter<boolean>();
+    esAutorizar: boolean;
+    observacion: any;
+    solicitudPagoObservacionId = 0;
     formDescuentos: FormGroup;
     valorFacturado = 0;
     tiposDescuentoArray: Dominio[] = [];
@@ -32,10 +40,17 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit {
         private dialog: MatDialog,
         private commonSvc: CommonService,
         private routes: Router,
-        private registrarPagosSvc: RegistrarRequisitosPagoService) {
+        private obsMultipleSvc: ObservacionesMultiplesCuService,
+        private registrarPagosSvc: RegistrarRequisitosPagoService ) {
         this.commonSvc.tiposDescuento()
             .subscribe(response => this.tiposDescuentoArray = response);
         this.crearFormulario();
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if ( changes.tieneObservacion.currentValue === true ) {
+            this.formDescuentos.enable();
+        }
     }
 
     ngOnInit(): void {
@@ -71,6 +86,50 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit {
                 if ( this.solicitudPagoFaseFactura.registroCompleto === true ) {
                     this.formDescuentos.disable();
                 }
+
+                // Get observacion CU autorizar solicitud de pago 4.1.9
+                this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                    this.listaMenusId.autorizarSolicitudPagoId,
+                    this.solicitudPago.solicitudPagoId,
+                    this.solicitudPagoFaseFacturaDescuento.length > 0 ? this.solicitudPagoFaseFacturaDescuento[0].solicitudPagoFaseFacturaDescuentoId : this.solicitudPagoFaseFacturaId,
+                    this.datosFacturaDescuentoCodigo )
+                    .subscribe(
+                        response => {
+                            const observacion = response.find( obs => obs.archivada === false );
+                            if ( observacion !== undefined ) {
+                                this.esAutorizar = true;
+                                this.observacion = observacion;
+
+                                if ( this.observacion.tieneObservacion === true ) {
+                                    this.formDescuentos.enable();
+                                    this.semaforoObservacion.emit( true );
+                                    this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                                }
+                            }
+                        }
+                    );
+
+                // Get observacion CU verificar solicitud de pago 4.1.8
+                this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                    this.listaMenusId.aprobarSolicitudPagoId,
+                    this.solicitudPago.solicitudPagoId,
+                    this.solicitudPagoFaseFacturaDescuento.length > 0 ? this.solicitudPagoFaseFacturaDescuento[0].solicitudPagoFaseFacturaDescuentoId : this.solicitudPagoFaseFacturaId,
+                    this.datosFacturaDescuentoCodigo )
+                    .subscribe(
+                        response => {
+                            const observacion = response.find( obs => obs.archivada === false );
+                            if ( observacion !== undefined ) {
+                                this.esAutorizar = false;
+                                this.observacion = observacion;
+
+                                if ( this.observacion.tieneObservacion === true ) {
+                                    this.formDescuentos.enable();
+                                    this.semaforoObservacion.emit( true );
+                                    this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                                }
+                            }
+                        }
+                    );
             }
         }
         for (const criterio of this.solicitudPagoFase.solicitudPagoFaseCriterio) {
@@ -329,12 +388,16 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit {
                 solicitudPagoFaseFacturaDescuento: getSolicitudPagoFaseFacturaDescuento()
             }
         ]
-        console.log(solicitudPagoFaseFactura);
+
         this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseFactura = solicitudPagoFaseFactura;
         this.registrarPagosSvc.createEditNewPayment(this.solicitudPago)
             .subscribe(
                 response => {
                     this.openDialog('', `<b>${response.message}</b>`);
+                    if ( this.observacion !== undefined ) {
+                        this.observacion.archivada = !this.observacion.archivada;
+                        this.obsMultipleSvc.createUpdateSolicitudPagoObservacion( this.observacion ).subscribe();
+                    }
                     this.routes.navigateByUrl('/', { skipLocationChange: true }).then(
                         () => this.routes.navigate(
                             [

@@ -1,6 +1,6 @@
 import { Dominio } from './../../../../core/_services/common/common.service';
 import { RegistrarRequisitosPagoService } from './../../../../core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, Validators, FormArray, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -8,6 +8,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
 
 @Component({
   selector: 'app-detalle-factura-proyectos-asociados',
@@ -19,6 +20,13 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
     @Input() solicitudPago: any;
     @Input() esVerDetalle = false;
     @Input() solicitudPagoCargarFormaPago: any;
+    @Input() tieneObservacion: boolean;
+    @Input() listaMenusId: any;
+    @Input() criteriosPagoProyectoCodigo: string;
+    @Output() semaforoObservacion = new EventEmitter<boolean>();
+    esAutorizar: boolean;
+    observacion: any;
+    solicitudPagoObservacionId = 0;
     dataSource = new MatTableDataSource();
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -62,6 +70,7 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
         private fb: FormBuilder,
         private dialog: MatDialog,
         private routes: Router,
+        private obsMultipleSvc: ObservacionesMultiplesCuService,
         private registrarPagosSvc: RegistrarRequisitosPagoService )
     {
     }
@@ -270,20 +279,61 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
                         }
                     );
             }
-                if ( this.solicitudPagoFaseCriterio.length > 0 ) {
-                    let registroCompleto = 0;
-                    for ( const criterio of this.solicitudPagoFaseCriterio ) {
-                        if ( criterio.registroCompleto === true ) {
-                            registroCompleto++;
-                        }
-                    }
-
-                    if ( this.solicitudPagoFaseCriterio.length === registroCompleto ) {
-                        setTimeout(() => {
-                            this.projects.disable();
-                        }, 2000);
+            if ( this.solicitudPagoFaseCriterio.length > 0 ) {
+                let registroCompleto = 0;
+                for ( const criterio of this.solicitudPagoFaseCriterio ) {
+                    if ( criterio.registroCompleto === true ) {
+                        registroCompleto++;
                     }
                 }
+                if ( this.solicitudPagoFaseCriterio.length === registroCompleto && this.tieneObservacion === false ) {
+                    setTimeout(() => {
+                        this.projects.disable();
+                    }, 2000);
+                }
+                setTimeout(() => {
+                    // Get observacion CU autorizar solicitud de pago 4.1.9
+                    this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                        this.listaMenusId.autorizarSolicitudPagoId,
+                        this.solicitudPago.solicitudPagoId,
+                        this.solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioProyecto[0].solicitudPagoFaseCriterioProyectoId,
+                        this.criteriosPagoProyectoCodigo )
+                        .subscribe(
+                            response => {
+                                const observacion = response.find( obs => obs.archivada === false );
+                                if ( observacion !== undefined ) {
+                                    this.esAutorizar = true;
+                                    this.observacion = observacion;
+                                    if ( this.observacion.tieneObservacion === true && this.esMultiProyecto === true ) {
+                                        this.projects.enable();
+                                        this.semaforoObservacion.emit( true );
+                                        this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                                    }
+                                }
+                            }
+                        );
+                    // Get observacion CU verificar solicitud de pago 4.1.8
+                    this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                        this.listaMenusId.aprobarSolicitudPagoId,
+                        this.solicitudPago.solicitudPagoId,
+                        this.solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioProyecto[0].solicitudPagoFaseCriterioProyectoId,
+                        this.criteriosPagoProyectoCodigo )
+                        .subscribe(
+                            response => {
+                                const observacion = response.find( obs => obs.archivada === false );
+                                if ( observacion !== undefined ) {
+                                    this.esAutorizar = false;
+                                    this.observacion = observacion;
+                                    if ( this.observacion.tieneObservacion === true && this.esMultiProyecto === true ) {
+                                        this.projects.enable();
+                                        this.semaforoObservacion.emit( true );
+                                        this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                                    }
+                                }
+                            }
+                        );
+                }, 2000);
+            }
         }
     }
 
@@ -488,6 +538,10 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
+                    if ( this.observacion !== undefined ) {
+                        this.observacion.archivada = !this.observacion.archivada;
+                        this.obsMultipleSvc.createUpdateSolicitudPagoObservacion( this.observacion ).subscribe();
+                    }
                     this.registrarPagosSvc.getValidateSolicitudPagoId( this.solicitudPago.solicitudPagoId )
                     .subscribe(
                         () => {

@@ -150,6 +150,21 @@
                 </div>
             </mat-card-content>
         </mat-card>
+
+        <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;" *ngIf="observacion !== undefined">
+            <mat-card-header class="header-card header-card--margin">
+                <mat-card-title class="header-card--text textoGris">
+                    Observación {{ esAutorizar === true ? 'de la coordinación' : 'del apoyo a la supervisión' }}
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content style="text-align: left;">
+                <p><b> {{ observacion.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+                <p *ngIf="observacion.tieneObservacion === true"><b>¿Desde {{ esAutorizar === true ? 'la coordinación' : 'el apoyo a la supervisión' }} tiene observaciones al registro de la solicitud?:</b> Si</p>
+                <p *ngIf="observacion.tieneObservacion === false"><b>¿Desde {{ esAutorizar === true ? 'la coordinación' : 'el apoyo a la supervisión' }} tiene observaciones al registro de la solicitud?:</b> No</p>
+                <section [innerHTML]="observacion.observacion" *ngIf="observacion.tieneObservacion === true"></section>
+            </mat-card-content>
+        </mat-card>
+
         <div class="text-center mb-2em">
             <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="addressForm.dirty === false">
                 <img src="assets/img/icon/guardar.svg" alt="Regresar">
@@ -168,29 +183,47 @@
 
                     <mat-expansion-panel class="expansion-style sub-expansion-black">
                         <mat-expansion-panel-header class="expansion-style--header">
-                            <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeonSubFase( 'criterioDePago', true )">
+                            <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforosObservaciones.observacionCriterios === true ? 'en-proceso' : enabledAcordeonSubFase( 'criterioDePago', true )">
                                 Criterios de pago incluidos en la factura
                             </mat-panel-title>
                         </mat-expansion-panel-header>
-                        <app-form-criterios-pago [solicitudPago]="contrato.solicitudPagoOnly" [contratacionProyectoId]="contratacionProyectoId" [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"></app-form-criterios-pago>
+                        <app-form-criterios-pago    [solicitudPago]="contrato.solicitudPagoOnly"
+                                                    [contratacionProyectoId]="contratacionProyectoId"
+                                                    [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"
+                                                    [tieneObservacion]="tieneObservacion !== undefined ? tieneObservacion : false"
+                                                    (semaforoObservacion)="estadoSemaforosObservaciones.observacionCriterios = $event">
+                        </app-form-criterios-pago>
                     </mat-expansion-panel>
 
                     <mat-expansion-panel class="expansion-style sub-expansion-black">
                         <mat-expansion-panel-header class="expansion-style--header">
-                            <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeonSubFase( 'detalleFactura', true )">
+                            <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforosObservaciones.observacionCriteriosProyecto === true ? 'en-proceso' : enabledAcordeonSubFase( 'detalleFactura', true )">
                                 Detalle factura para proyectos asociados
                             </mat-panel-title>
                         </mat-expansion-panel-header>
-                        <app-detalle-factura-proyectos-asociados [solicitudPago]="contrato.solicitudPagoOnly" *ngIf="estadoRegistroCompletoSubAcordeon.amortizacionRegistroCompleto === true" [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"></app-detalle-factura-proyectos-asociados>
+                        <app-detalle-factura-proyectos-asociados    [solicitudPago]="contrato.solicitudPagoOnly"
+                                                                    [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"
+                                                                    [tieneObservacion]="tieneObservacion !== undefined ? tieneObservacion : false"
+                                                                    [listaMenusId]="listaMenusId"
+                                                                    [criteriosPagoProyectoCodigo]="registrarSolicitudPago.criteriosPagoProyectoCodigo"
+                                                                    *ngIf="estadoRegistroCompletoSubAcordeon.amortizacionRegistroCompleto === true"
+                                                                    (semaforoObservacion)="estadoSemaforosObservaciones.observacionCriteriosProyecto = $event">
+                        </app-detalle-factura-proyectos-asociados>
                     </mat-expansion-panel>
 
                     <mat-expansion-panel class="expansion-style sub-expansion-black">
                         <mat-expansion-panel-header class="expansion-style--header">
-                            <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeonSubFase( 'datosFactura', true )">
+                            <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforosObservaciones.observacionDatosFactura === true ? 'en-proceso' : enabledAcordeonSubFase( 'datosFactura', true )">
                                 Datos de la factura
                             </mat-panel-title>
                         </mat-expansion-panel-header>
-                        <app-datos-factura-construccion-rvrp [solicitudPago]="contrato.solicitudPagoOnly" *ngIf="estadoRegistroCompletoSubAcordeon.detalleFacturaRegistroCompleto === true"></app-datos-factura-construccion-rvrp>
+                        <app-datos-factura-construccion-rvrp    [solicitudPago]="contrato.solicitudPagoOnly"
+                                                                [datosFacturaCodigo]="registrarSolicitudPago.datosFacturaCodigo"
+                                                                [listaMenusId]="listaMenusId"
+                                                                [tieneObservacion]="tieneObservacion !== undefined ? tieneObservacion : false"
+                                                                *ngIf="estadoRegistroCompletoSubAcordeon.detalleFacturaRegistroCompleto === true"
+                                                                (semaforoObservacion)="estadoSemaforosObservaciones.observacionDatosFactura = $event">
+                        </app-datos-factura-construccion-rvrp>
                     </mat-expansion-panel>
                 </mat-accordion>
             </mat-expansion-panel>
@@ -207,38 +240,68 @@
                 <mat-accordion *ngIf="estadoRegistroCompleto.formRegistroCompleto === true">
                     <mat-expansion-panel class="expansion-style sub-expansion-black">
                         <mat-expansion-panel-header class="expansion-style--header">
-                            <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeonSubFase( 'criterioDePago', false )">
+                            <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforosObservaciones.observacionCriterios === true ? 'en-proceso' : enabledAcordeonSubFase( 'criterioDePago', false )">
                                 Criterios de pago incluidos en la factura
                             </mat-panel-title>
                         </mat-expansion-panel-header>
-                        <app-form-criterios-pago [solicitudPago]="contrato.solicitudPagoOnly" [esPreconstruccion]="false" [contratacionProyectoId]="contratacionProyectoId" [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"></app-form-criterios-pago>
+
+                        <app-form-criterios-pago    [solicitudPago]="contrato.solicitudPagoOnly"
+                                                    [esPreconstruccion]="false"
+                                                    [contratacionProyectoId]="contratacionProyectoId"
+                                                    [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"
+                                                    [tieneObservacion]="tieneObservacion !== undefined ? tieneObservacion : false"
+                                                    [listaMenusId]="listaMenusId"
+                                                    [criteriosPagoFacturaCodigo]="registrarSolicitudPago.criteriosPagoFacturaCodigo"
+                                                    (semaforoObservacion)="estadoSemaforosObservaciones.observacionCriterios = $event">
+                        </app-form-criterios-pago>
                     </mat-expansion-panel>
 
                     <mat-expansion-panel class="expansion-style sub-expansion-black" *ngIf="manejoAnticipoRequiere === true">
                         <mat-expansion-panel-header class="expansion-style--header">
-                            <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeonSubFase( 'amortizacion', false )">
+                            <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforosObservaciones.observacionAmortizacion === true ? 'en-proceso' : enabledAcordeonSubFase( 'amortizacion', false )">
                                 Amortización del anticipo
                             </mat-panel-title>
                         </mat-expansion-panel-header>
-                        <app-form-amortizacion-anticipo [solicitudPago]="contrato.solicitudPagoOnly" [contrato]="contrato" *ngIf="estadoRegistroCompletoSubAcordeon.criterioRegistroCompleto === true"></app-form-amortizacion-anticipo>
+
+                        <app-form-amortizacion-anticipo [solicitudPago]="contrato.solicitudPagoOnly"
+                                                        [contrato]="contrato"
+                                                        [tieneObservacion]="tieneObservacion !== undefined ? tieneObservacion : false"
+                                                        [listaMenusId]="listaMenusId"
+                                                        [amortizacionAnticipoCodigo]="registrarSolicitudPago.amortizacionAnticipoCodigo"
+                                                        *ngIf="estadoRegistroCompletoSubAcordeon.criterioRegistroCompleto === true"
+                                                        (semaforoObservacion)="estadoSemaforosObservaciones.observacionAmortizacion = $event">
+                        </app-form-amortizacion-anticipo>
                     </mat-expansion-panel>
 
                     <mat-expansion-panel class="expansion-style sub-expansion-black">
                         <mat-expansion-panel-header class="expansion-style--header">
-                            <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeonSubFase( 'detalleFactura', false )">
+                            <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforosObservaciones.observacionCriteriosProyecto === true ? 'en-proceso' : enabledAcordeonSubFase( 'detalleFactura', false )">
                                 Detalle factura para proyectos asociados
                             </mat-panel-title>
                         </mat-expansion-panel-header>
-                        <app-detalle-factura-proyectos-asociados [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago" [solicitudPago]="contrato.solicitudPagoOnly" *ngIf="estadoRegistroCompletoSubAcordeon.amortizacionRegistroCompleto === true"></app-detalle-factura-proyectos-asociados>
+                        <app-detalle-factura-proyectos-asociados    [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"
+                                                                    [solicitudPago]="contrato.solicitudPagoOnly"
+                                                                    [tieneObservacion]="tieneObservacion !== undefined ? tieneObservacion : false"
+                                                                    [listaMenusId]="listaMenusId"
+                                                                    [criteriosPagoProyectoCodigo]="registrarSolicitudPago.criteriosPagoProyectoCodigo"
+                                                                    *ngIf="estadoRegistroCompletoSubAcordeon.amortizacionRegistroCompleto === true"
+                                                                    (semaforoObservacion)="estadoSemaforosObservaciones.observacionCriteriosProyecto = $event">
+                        </app-detalle-factura-proyectos-asociados>
                     </mat-expansion-panel>
 
                     <mat-expansion-panel class="expansion-style sub-expansion-black">
                         <mat-expansion-panel-header class="expansion-style--header">
-                            <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeonSubFase( 'datosFactura', false )">
+                            <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforosObservaciones.observacionDatosFactura === true ? 'en-proceso' : enabledAcordeonSubFase( 'datosFactura', false )">
                                 Datos de la factura
                             </mat-panel-title>
                         </mat-expansion-panel-header>
-                        <app-datos-factura-construccion-rvrp [solicitudPago]="contrato.solicitudPagoOnly" *ngIf="estadoRegistroCompletoSubAcordeon.detalleFacturaRegistroCompleto === true"></app-datos-factura-construccion-rvrp>
+                        <app-datos-factura-construccion-rvrp    [solicitudPago]="contrato.solicitudPagoOnly"
+                                                                [tieneObservacion]="tieneObservacion !== undefined ? tieneObservacion : false"
+                                                                [datosFacturaCodigo]="registrarSolicitudPago.datosFacturaCodigo"
+                                                                [listaMenusId]="listaMenusId"
+                                                                *ngIf="estadoRegistroCompletoSubAcordeon.detalleFacturaRegistroCompleto === true"
+                                                                (semaforoObservacion)="estadoSemaforosObservaciones.observacionDatosFactura = $event">
+                        </app-datos-factura-construccion-rvrp>
                     </mat-expansion-panel>
                 </mat-accordion>
             </mat-expansion-panel>
@@ -247,12 +310,18 @@
     <mat-accordion>
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeonFase( estadoRegistroCompleto.solicitudPagoFaseRegistroCompleto )">
+                <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforosObservaciones.observacionDescuentos === true ? 'en-proceso' : enabledAcordeonFase( estadoRegistroCompleto.solicitudPagoFaseRegistroCompleto )">
                     Descuentos Dirección Técnica
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            
-            <app-form-descuentos-direccion-tecnica [solicitudPago]="contrato.solicitudPagoOnly" *ngIf="estadoRegistroCompleto.solicitudPagoFaseRegistroCompleto === true"></app-form-descuentos-direccion-tecnica>
+
+            <app-form-descuentos-direccion-tecnica  [solicitudPago]="contrato.solicitudPagoOnly"
+                                                    [tieneObservacion]="tieneObservacion !== undefined ? tieneObservacion : false"
+                                                    [datosFacturaDescuentoCodigo]="registrarSolicitudPago.datosFacturaDescuentoCodigo"
+                                                    [listaMenusId]="listaMenusId"
+                                                    *ngIf="estadoRegistroCompleto.solicitudPagoFaseRegistroCompleto === true"
+                                                    (semaforoObservacion)="estadoSemaforosObservaciones.observacionDescuentos = $event">
+            </app-form-descuentos-direccion-tecnica>
         </mat-expansion-panel>
     </mat-accordion>
 </section>

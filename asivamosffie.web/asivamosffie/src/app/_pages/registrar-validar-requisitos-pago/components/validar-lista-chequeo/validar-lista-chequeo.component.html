@@ -30,7 +30,9 @@
     <ng-template #noEsVerDetalle>
         <mat-expansion-panel class="expansion-style sub-expansion" *ngFor="let solicitudPagoListaChequeo of solicitudPagoModificado.solicitudPagoListaChequeo; index as i">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" style="font-size: .8em !important;" [ngClass]="getEstadoSemaforo( solicitudPagoListaChequeo )">
+                <mat-panel-title    class="expansion-style--title"
+                                    style="font-size: .8em !important;"
+                                    [ngClass]="solicitudPagoListaChequeo.observacion !== undefined ? ( solicitudPagoListaChequeo.observacion.tieneObservacion === true ? 'en-proceso' : getEstadoSemaforo( solicitudPagoListaChequeo ) ) : getEstadoSemaforo( solicitudPagoListaChequeo )">
                     {{ firstLetterUpperCase( solicitudPagoListaChequeo.listaChequeo?.nombre ) }}
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -50,7 +52,7 @@
                         <td mat-cell *matCellDef="let element" align="center">
                             <div class="col">
                                 <mat-form-field class="select-width">
-                                    <mat-select required [(ngModel)]="element.respuestaCodigo" (ngModelChange)="disabledBtn()">
+                                    <mat-select required [(ngModel)]="element.respuestaCodigo" (ngModelChange)="disabledBtn( i )">
                                         <mat-option *ngFor="let revision of listaRevisionTecnica" [value]="revision.codigo">
                                             {{ revision.nombre }}
                                         </mat-option>
@@ -74,6 +76,20 @@
                     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                 </table>
             </div>
+
+            <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;" *ngIf="solicitudPagoListaChequeo.observacion !== undefined">
+                <mat-card-header class="header-card header-card--margin">
+                    <mat-card-title class="header-card--text textoGris">
+                        Observación {{ solicitudPagoListaChequeo.esAutorizar === true ? 'de la coordinación' : 'del apoyo a la supervisión' }}
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content style="text-align: left;">
+                    <p><b> {{ solicitudPagoListaChequeo.observacion.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+                    <p *ngIf="solicitudPagoListaChequeo.observacion.tieneObservacion === true"><b>¿Desde {{ solicitudPagoListaChequeo.esAutorizar === true ? 'la coordinación' : 'el apoyo a la supervisión' }} tiene observaciones a {{ firstLetterUpperCase( solicitudPagoListaChequeo.listaChequeo?.nombre ) }}?:</b> Si</p>
+                    <p *ngIf="solicitudPagoListaChequeo.observacion.tieneObservacion === false"><b>¿Desde {{ solicitudPagoListaChequeo.esAutorizar === true ? 'la coordinación' : 'el apoyo a la supervisión' }} tiene observaciones a {{ firstLetterUpperCase( solicitudPagoListaChequeo.listaChequeo?.nombre ) }}?:</b> No</p>
+                    <section [innerHTML]="solicitudPagoListaChequeo.observacion.observacion" *ngIf="solicitudPagoListaChequeo.observacion.tieneObservacion === true"></section>
+                </mat-card-content>
+            </mat-card>
         </mat-expansion-panel>
         <div class="text-center mb-2em" *ngIf="solicitudPagoModificado.solicitudPagoListaChequeo.length > 0">
             <button mat-button color="warn" class="btn-guardar" type="button" (click)="guardar()" [disabled]="seDiligencioCampo === false">

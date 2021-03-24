@@ -1,23 +1,31 @@
 import { Router } from '@angular/router';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { Validators, FormBuilder } from '@angular/forms';
 import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
 
 @Component({
   selector: 'app-form-amortizacion-anticipo',
   templateUrl: './form-amortizacion-anticipo.component.html',
   styleUrls: ['./form-amortizacion-anticipo.component.scss']
 })
-export class FormAmortizacionAnticipoComponent implements OnInit {
+export class FormAmortizacionAnticipoComponent implements OnInit, OnChanges {
 
     @Input() solicitudPago: any;
     @Input() esVerDetalle = false;
     @Input() contrato: any;
+    @Input() tieneObservacion: boolean;
+    @Input() listaMenusId: any;
+    @Input() amortizacionAnticipoCodigo: string;
+    @Output() semaforoObservacion = new EventEmitter<boolean>();
     solicitudPagoFase: any;
     solicitudPagoFaseAmortizacionId = 0;
     valorTotalDelContrato = 0;
+    esAutorizar: boolean;
+    observacion: any;
+    solicitudPagoObservacionId = 0;
     addressForm = this.fb.group({
       porcentajeAmortizacion: [null, Validators.required],
       valorAmortizacion: [ { value: null, disabled: true } , Validators.required]
@@ -27,6 +35,7 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
         private fb: FormBuilder,
         private routes: Router,
         private dialog: MatDialog,
+        private obsMultipleSvc: ObservacionesMultiplesCuService,
         private registrarPagosSvc: RegistrarRequisitosPagoService )
     {
         this.addressForm.get( 'porcentajeAmortizacion' ).valueChanges
@@ -40,6 +49,12 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
                     }
                 }
             );
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if ( changes.tieneObservacion.currentValue === true ) {
+            this.addressForm.get( 'porcentajeAmortizacion' ).enable();
+        }
     }
 
     ngOnInit(): void {
@@ -61,6 +76,50 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
                     valorAmortizacion: solicitudPagoFaseAmortizacion.valorAmortizacion !== undefined ? solicitudPagoFaseAmortizacion.valorAmortizacion : null
                 }
             );
+
+            // Get observacion CU autorizar solicitud de pago 4.1.9
+            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                this.listaMenusId.autorizarSolicitudPagoId,
+                this.contrato.solicitudPagoOnly.solicitudPagoId,
+                this.solicitudPagoFaseAmortizacionId,
+                this.amortizacionAnticipoCodigo )
+                .subscribe(
+                    response => {
+                        const observacion = response.find( obs => obs.archivada === false );
+                        if ( observacion !== undefined ) {
+                            this.esAutorizar = true;
+                            this.observacion = observacion;
+
+                            if ( this.observacion.tieneObservacion === true ) {
+                                this.semaforoObservacion.emit( true );
+                                this.addressForm.get( 'porcentajeAmortizacion' ).enable();
+                                this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                            }
+                        }
+                    }
+                );
+
+            // Get observacion CU verificar solicitud de pago 4.1.8
+            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                this.listaMenusId.aprobarSolicitudPagoId,
+                this.contrato.solicitudPagoOnly.solicitudPagoId,
+                this.solicitudPagoFaseAmortizacionId,
+                this.amortizacionAnticipoCodigo )
+                .subscribe(
+                    response => {
+                        const observacion = response.find( obs => obs.archivada === false );
+                        if ( observacion !== undefined ) {
+                            this.esAutorizar = false;
+                            this.observacion = observacion;
+
+                            if ( this.observacion.tieneObservacion === true ) {
+                                this.semaforoObservacion.emit( true );
+                                this.addressForm.get( 'porcentajeAmortizacion' ).enable();
+                                this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                            }
+                        }
+                    }
+                );
         }
     }
 
@@ -102,6 +161,10 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
+                    if ( this.observacion !== undefined ) {
+                        this.observacion.archivada = !this.observacion.archivada;
+                        this.obsMultipleSvc.createUpdateSolicitudPagoObservacion( this.observacion ).subscribe();
+                    }
                     this.registrarPagosSvc.getValidateSolicitudPagoId( this.solicitudPago.solicitudPagoId )
                         .subscribe(
                             () => {

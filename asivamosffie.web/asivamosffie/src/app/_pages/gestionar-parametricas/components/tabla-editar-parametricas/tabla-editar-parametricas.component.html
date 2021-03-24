@@ -38,13 +38,17 @@
 
                   <button mat-raised-button
                           color="accent" 
-                          class="btn-table">
+                          class="btn-table"
+                          *ngIf="element.activo === false"
+                          (click)="activarDesactivarParametrica( element )">
                           Activar
                   </button>
 
                   <button mat-raised-button
                           color="accent" 
-                          class="btn-table">
+                          class="btn-table"
+                          *ngIf="element.activo === true"
+                          (click)="activarDesactivarParametrica( element )">
                           Desactivar
                   </button>
 
