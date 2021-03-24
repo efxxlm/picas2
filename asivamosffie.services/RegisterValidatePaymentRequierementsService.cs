@@ -505,11 +505,11 @@ namespace asivamosffie.services
             SolicitudPago solicitudPago = await GetSolicitudPago(SolicitudPagoId);
             bool CompleteRecord = ValidateCompleteRecordSolicitudPago(solicitudPago);
             bool TieneNoCumpleListaChequeo = solicitudPago.SolicitudPagoListaChequeo.Any(r => r.SolicitudPagoListaChequeoRespuesta.Any(s => s.RespuestaCodigo == ConstanCodigoRespuestasListaChequeoSolictudPago.No_cumple));
-            string EstadoSolicitudPago = solicitudPago.EstadoCodigo;
-
+            string EstadoSolicitudPago = solicitudPago.EstadoCodigo; 
             bool TieneAlgunaObservacionPendiente =
                 _context.SolicitudPagoObservacion.Any(s => s.SolicitudPagoId == SolicitudPagoId
                                                         && s.Archivada != true
+                                                        && s.TieneObservacion == true
                                                         );
             DateTime? FechaRegistroCompleto = null;
             if (CompleteRecord && TieneAlgunaObservacionPendiente)
