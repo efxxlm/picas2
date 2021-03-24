@@ -398,8 +398,10 @@ namespace asivamosffie.services
                     FechaModificacion = DateTime.Now,
                     UsuarioModificacion = pSolicitudPago.UsuarioCreacion
                 });
-        }
+        } 
+        #endregion
 
+        #region Financiera
         private void ActualizarSacFinanciera(SolicitudPago pSolicitudPago)
         {
             _context.Set<SolicitudPago>()
@@ -422,9 +424,19 @@ namespace asivamosffie.services
                                                                                                          });
         }
 
-        #endregion
-
-        #region Financiera
+        private void ActualizarSacTecnica(SolicitudPago pSolicitudPago)
+        {
+            _context.Set<SolicitudPago>()
+                    .Where(o => o.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
+                    .Update(r => new SolicitudPago()
+                    {
+                        FechaRadicacionSacTecnica = pSolicitudPago.FechaRadicacionSacTecnica,
+                        NumeroRadicacionSacTecnica = pSolicitudPago.NumeroRadicacionSacTecnica,
+                        ObservacionRadicacionSacTecnica = pSolicitudPago.ObservacionRadicacionSacTecnica,
+                        FechaModificacion = DateTime.Now,
+                        UsuarioModificacion = pSolicitudPago.UsuarioCreacion
+                    });
+        }
 
         private bool ValidarRegistroCompletoSolicitudPagoListaChequeoRespuesta(SolicitudPagoListaChequeoRespuesta pSolicitudPagoListaChequeoRespuestaNew, bool pEsEsValidacion)
         {
@@ -453,7 +465,14 @@ namespace asivamosffie.services
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Verificar_Solicitud_Financiera, (int)EnumeratorTipoDominio.Acciones);
             bool blRegistroCompleto = true;
-            bool blTieneSubsanacion = SolicitudPagoListaChequeo.Any(r => r.SolicitudPagoListaChequeoRespuesta.Any(s => s.TieneSubsanacion == true));
+            bool blTieneSubsanacion = SolicitudPagoListaChequeo
+                .Any(r => r.SolicitudPagoListaChequeoRespuesta
+                .Any(s => s.TieneSubsanacion != true &&
+                      (s.ValidacionRespuestaCodigo == ConstanCodigoRespuestasListaChequeoSolictudPago.No_cumple
+                       || s.VerificacionRespuestaCodigo == ConstanCodigoRespuestasListaChequeoSolictudPago.No_cumple
+                      )
+
+                ));
             try
             {
                 foreach (var pSolicitudPagoListaChequeo in SolicitudPagoListaChequeo)
@@ -467,7 +486,7 @@ namespace asivamosffie.services
 
                         if (pSolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta.Any(s => s.ValidacionRespuestaCodigo == ConstanCodigoRespuestasSolicitudPago.No_Cumple))
                             blRegistroCompleto = false;
-                         
+
                         pSolicitudPagoListaChequeo.SolicitudPagoListaChequeoRespuesta
                                                   .ToList().ForEach(res =>
                                                   {
@@ -481,7 +500,7 @@ namespace asivamosffie.services
                                                               .Update(s => new SolicitudPagoListaChequeoRespuesta
                                                               {
                                                                   UsuarioModificacion = pSolicitudPagoListaChequeo.UsuarioCreacion,
-                                                                  FechaModificacion = DateTime.Now, 
+                                                                  FechaModificacion = DateTime.Now,
                                                                   TieneSubsanacion = res.TieneSubsanacion,
                                                                   RegistroCompletoValidar = blRegistroCompletoItem,
                                                                   ValidacionRespuestaCodigo = res.ValidacionRespuestaCodigo,
@@ -515,7 +534,7 @@ namespace asivamosffie.services
                                                                     RegistroCompletoVerificar = blRegistroCompletoItem,
                                                                     TieneSubsanacion = res.TieneSubsanacion,
                                                                     VerificacionRespuestaCodigo = res.VerificacionRespuestaCodigo,
-                                                                    VerificacionObservacion = res.VerificacionObservacion  
+                                                                    VerificacionObservacion = res.VerificacionObservacion
                                                                 });
                                                     });
                     }
@@ -606,7 +625,8 @@ namespace asivamosffie.services
                     ArchivarSolicitudPagoObservacion(pSolicitudPago);
                     await SendEmailToDeclineVerify(pSolicitudPago.SolicitudPagoId);
                 }
-                ///4.1.9
+
+                ///4.1.9 
                 if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Enviada_Verificacion_Financiera)
                 {
                     await SendEmailToAprovedValidate(pSolicitudPago.SolicitudPagoId);
@@ -620,10 +640,14 @@ namespace asivamosffie.services
                     ArchivarSolicitudPagoObservacion(pSolicitudPago);
                     await SendEmailToDeclineValidate(pSolicitudPago.SolicitudPagoId);
                 }
+
                 ///4.3.1
                 if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Solicitud_Rechazado_por_verificacion_financiera)
+                {
+                    ActualizarSacTecnica(pSolicitudPago);
                     await SendEmailRejectAutorizar(pSolicitudPago.SolicitudPagoId, true);
-
+                }
+                 
                 ///4.3.1
                 if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Enviada_Validacion_Financiera)
                     await SendEmailAprovedVerificar(pSolicitudPago.SolicitudPagoId);
@@ -641,8 +665,10 @@ namespace asivamosffie.services
 
                 ///4.3.2
                 if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Solicitud_Rechazado_por_validacion_financiera)
+                {
+                    ActualizarSacTecnica(pSolicitudPago);
                     await SendEmailAprovedValidar(pSolicitudPago.SolicitudPagoId);
-
+                }
                 ///4.3.2
                 if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Solicitud_Rechazado_por_validacion_financiera)
                     await SendEmailRejectAutorizar(pSolicitudPago.SolicitudPagoId, false);
@@ -650,6 +676,7 @@ namespace asivamosffie.services
                 ///4.3.2
                 if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Enviada_A_Order_Giro)
                     await SendEmailAprovedValidar(pSolicitudPago.SolicitudPagoId);
+
 
                 _context.Set<SolicitudPago>()
                                       .Where(o => o.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
@@ -688,6 +715,7 @@ namespace asivamosffie.services
                     };
             }
         }
+
 
         ///4.3.2 Aprobar
         private async Task<bool> SendEmailAprovedValidar(int pSolicitudPagoId)
@@ -951,10 +979,7 @@ namespace asivamosffie.services
 
             return SedndIsSuccessfull;
         }
-
-
-
-        #endregion
-
+         
+        #endregion 
     }
 }

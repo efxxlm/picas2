@@ -11,7 +11,7 @@ namespace asivamosffie.model.Models
         public string EstadoCodigo { get; set; }
         public int TipoSolicitud { get; set; }
         public DateTime? FechaCumplimiento { get; set; }
-        public int? CompromisoId { get; set; }
+        public int CompromisoId { get; set; }
         public int UsuarioId { get; set; }
     }
 }
