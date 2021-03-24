@@ -108,7 +108,9 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Estado_Verificacion_Contrato = 53,
 
-        Tipo_Observacion_Contrato_Perfil_Observacion = 54,
+        Tipo_Observacion_Contrato_Perfil_Observacion = 55,
+
+ 
 
         Tipo_Modificacion_Contrato_Poliza = 56,
 
@@ -117,6 +119,8 @@ namespace asivamosffie.services.Helpers.Enumerator
         Estado_Del_Acta_Contrato = 60,
 
         Estado_Revision_Poliza = 61,
+
+        Estado_Documento_Contrato = 62,
 
         Estado_Proyecto = 63,
 
@@ -142,6 +146,10 @@ namespace asivamosffie.services.Helpers.Enumerator
         Causa_Baja_Disponibilidad_Productividad = 97,
         Estados_Seguimiento_Diario = 98,
 
+        Tipo_de_controversia = 80,
+
+        Tipo_Observacion_Construccion = 82,
+
         Estado_controversia = 89,
 
         Estados_actas_inicio_obra = 85,
@@ -150,7 +158,7 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Estado_Programacion_Inicial = 88,
 
-        Tipo_de_controversia = 80,
+   
 
         Estado_controversia_contractual_TAI = 90,
 
@@ -179,6 +187,8 @@ namespace asivamosffie.services.Helpers.Enumerator
         Estado_Reporte_Semanal_Y_Muestras = 112,
 
         Tipo_Novedad_Modificacion_Contractual = 113,
+
+        EstadoAvanceProcesosDefensa = 122,
 
         Tipo_Observacion_Seguimiento_Semanal = 123,
 
@@ -237,6 +247,8 @@ namespace asivamosffie.services.Helpers.Enumerator
         Dependencia_Usuario = 171,
 
         Grupo_Usuario = 172,
+
+        Tipo_Asignaacion = 173,
 
         Motivos_Novedad_contractual = 174
     }

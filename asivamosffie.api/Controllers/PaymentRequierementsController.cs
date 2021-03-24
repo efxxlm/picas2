@@ -49,13 +49,13 @@ namespace asivamosffie.api.Controllers
 
         [HttpPost]
         [Route("CreateEditObservacionFinancieraListaChequeo")]
-        public async Task<IActionResult> CreateEditObservacionFinancieraListaChequeo([FromBody] SolicitudPagoListaChequeo pSolicitudPagoListaChequeo)
+        public async Task<IActionResult> CreateEditObservacionFinancieraListaChequeo([FromBody] List<SolicitudPagoListaChequeo> pSolicitudPagoListaChequeo)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
-                pSolicitudPagoListaChequeo.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _paymentRequierementsService.CreateEditObservacionFinancieraListaChequeo(pSolicitudPagoListaChequeo);
+         
+                respuesta = await _paymentRequierementsService.CreateEditObservacionFinancieraListaChequeo(pSolicitudPagoListaChequeo , HttpContext.User.FindFirst("User").Value);
                 return Ok(respuesta);
             }
             catch (Exception ex)

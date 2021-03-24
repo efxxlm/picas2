@@ -13,7 +13,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<bool> SolicitudPagoPendienteAutorizacion();
 
-        Task<Respuesta> CreateEditObservacionFinancieraListaChequeo(SolicitudPagoListaChequeo pSolicitudPagoListaChequeo);
+        Task<Respuesta> CreateEditObservacionFinancieraListaChequeo(List<SolicitudPagoListaChequeo> pSolicitudPagoListaChequeo , string pAuthor);
        
         Task<Respuesta> CreateUpdateSolicitudPagoObservacion(SolicitudPagoObservacion pSolicitudPagoObservacion);
 

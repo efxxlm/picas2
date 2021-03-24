@@ -28,6 +28,26 @@ namespace asivamosffie.services
         public async Task<List<VParametricas>> GetParametricas()
         {
             return await _context.VParametricas
+                .Where(
+                r =>
+                 r.TipoDominioId != (int)EnumeratorTipoDominio.Tipo_Asignaacion
+              && r.TipoDominioId != (int)EnumeratorTipoDominio.Tipo_Observacion_Construccion
+              && r.TipoDominioId != (int)EnumeratorTipoDominio.PlaceHolderDDP
+              && r.TipoDominioId != (int)EnumeratorTipoDominio.Estado_Proyecto
+              && r.TipoDominioId != (int)EnumeratorTipoDominio.Estado_Documento_Contrato
+              && r.TipoDominioId != (int)EnumeratorTipoDominio.Estado_Revision_Poliza
+              && r.TipoDominioId != (int)EnumeratorTipoDominio.Estado_Del_Acta_Contrato
+              && r.TipoDominioId != (int)EnumeratorTipoDominio.Tipo_Observacion_Contrato_Perfil_Observacion
+              && r.TipoDominioId != (int)EnumeratorTipoDominio.Lista_Fases_Sistema  
+              && r.TipoDominioId != (int)EnumeratorTipoDominio.Lista_Chequeo_Menu 
+              && r.TipoDominioId != (int)EnumeratorTipoDominio.Estados_Lista_Chequeo   
+              && r.TipoDominioId != (int)EnumeratorTipoDominio.Tipo_Observacion_Seguimiento_Semanal      
+              && r.TipoDominioId != (int)EnumeratorTipoDominio.EstadoAvanceProcesosDefensa  
+              && r.TipoDominioId != (int)EnumeratorTipoDominio.Estado_Reporte_Semanal_Y_Muestras  
+              && r.TipoDominioId != (int)EnumeratorTipoDominio.Estado_Reporte_Semanal_Y_Muestras
+                )
+
+
                 .OrderByDescending(p => p.TipoDominioId)
                 .ToListAsync();
         }
@@ -38,13 +58,13 @@ namespace asivamosffie.services
 
             try
             {
-                foreach (var Dominio in pTipoDominio.Dominio.Where(r=> !string.IsNullOrEmpty(r.Nombre)))
+                foreach (var Dominio in pTipoDominio.Dominio.Where(r => !string.IsNullOrEmpty(r.Nombre)))
                 {
                     if (Dominio.DominioId == 0)
                     {
                         int CantidadParametricas = _context.Dominio.Count(d => d.TipoDominioId == Dominio.TipoDominioId) + 1;
                         Dominio.FechaCreacion = DateTime.Now;
-                        Dominio.Activo = true; 
+                        Dominio.Activo = true;
                         Dominio.Codigo = (CantidadParametricas).ToString();
                         _context.Dominio.Add(Dominio);
                         _context.SaveChanges();
