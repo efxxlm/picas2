@@ -9,6 +9,7 @@ import { NovedadContractual } from 'src/app/_interfaces/novedadContractual';
 export class ExpansionPanelComponent implements OnInit {
 
   @Input() novedad: NovedadContractual
+  @Input() tieneAdicion: boolean
 
   constructor() { }
 

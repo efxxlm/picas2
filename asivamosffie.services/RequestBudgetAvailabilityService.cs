@@ -1738,8 +1738,10 @@ namespace asivamosffie.services
                                 var valorproyecto = detailDP.Contratacion.TipoSolicitudCodigo == "2" ? ppapor.ValorInterventoria : ppapor.ValorObra;
                                 if (detailDP.EsNovedadContractual != null && Convert.ToBoolean(detailDP.EsNovedadContractual))
                                 {
+                                    
+
                                     valorproyecto = _context.ComponenteUsoNovedad.Where(x => x.ComponenteAportanteNovedad.CofinanciacionAportanteId == ppapor.AportanteId &&
-                                    x.ComponenteAportanteNovedad.NovedadContractualId == detailDP.NovedadContractualId).Sum(x => x.ValorUso);
+                                    x.ComponenteAportanteNovedad.NovedadContractualAportante.NovedadContractualId == detailDP.NovedadContractualId).Sum(x => x.ValorUso);
                                 }
                                 aportantes.Add(new CofinanicacionAportanteGrilla
                                 {
@@ -1773,7 +1775,7 @@ namespace asivamosffie.services
                                 if (detailDP.EsNovedadContractual != null && Convert.ToBoolean(detailDP.EsNovedadContractual))
                                 {
                                     valorAportate = _context.ComponenteUsoNovedad.Where(x => x.ComponenteAportanteNovedad.CofinanciacionAportanteId == ppapor.AportanteId &&
-                                    x.ComponenteAportanteNovedad.NovedadContractualId == detailDP.NovedadContractualId).Sum(x => x.ValorUso);
+                                    x.ComponenteAportanteNovedad.NovedadContractualAportante.NovedadContractualId == detailDP.NovedadContractualId).Sum(x => x.ValorUso);
                                 }
 
 
@@ -2178,7 +2180,8 @@ namespace asivamosffie.services
                     ThenInclude(x => x.Contratacion).
                     ThenInclude(x => x.DisponibilidadPresupuestal).
                 Include(x => x.NovedadContractualDescripcion).
-                Include(x => x.ComponenteAportanteNovedad).ToList();
+                Include( x => x.NovedadContractualAportante ).
+                    ThenInclude(x => x.ComponenteAportanteNovedad).ToList();
         }
     }
 }

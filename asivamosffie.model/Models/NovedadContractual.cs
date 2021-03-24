@@ -7,7 +7,7 @@ namespace asivamosffie.model.Models
     {
         public NovedadContractual()
         {
-            ComponenteAportanteNovedad = new HashSet<ComponenteAportanteNovedad>();
+            NovedadContractualAportante = new HashSet<NovedadContractualAportante>();
             NovedadContractualDescripcion = new HashSet<NovedadContractualDescripcion>();
             NovedadContractualObservaciones = new HashSet<NovedadContractualObservaciones>();
         }
@@ -52,11 +52,12 @@ namespace asivamosffie.model.Models
         public int? ObservacionesDevolucionId { get; set; }
         public string RazonesNoContinuaProceso { get; set; }
         public bool? RegistroCompletoValidacion { get; set; }
+        public DateTime? FechaAprobacionGestionContractual { get; set; }
 
         public virtual Usuario AbogadoRevision { get; set; }
         public virtual Contrato Contrato { get; set; }
         public virtual Proyecto Proyecto { get; set; }
-        public virtual ICollection<ComponenteAportanteNovedad> ComponenteAportanteNovedad { get; set; }
+        public virtual ICollection<NovedadContractualAportante> NovedadContractualAportante { get; set; }
         public virtual ICollection<NovedadContractualDescripcion> NovedadContractualDescripcion { get; set; }
         public virtual ICollection<NovedadContractualObservaciones> NovedadContractualObservaciones { get; set; }
     }

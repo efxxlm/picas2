@@ -12,6 +12,7 @@ export class RegistrarRevisionJuridicaComponent implements OnInit {
 
   detalleId: string;
   novedad: NovedadContractual;
+  tieneAdicion: boolean = false;
 
   constructor(
     private router: Router,
@@ -26,6 +27,12 @@ export class RegistrarRevisionJuridicaComponent implements OnInit {
       this.contractualNoveltyService.getNovedadContractualById( this.detalleId )
         .subscribe( respuesta => {
           this.novedad = respuesta;
+
+          respuesta.novedadContractualDescripcion.forEach( d => {
+            if ( d.tipoNovedadCodigo === '3' )
+              this.tieneAdicion = true;
+          });
+
         });
 
       console.log(this.detalleId);

@@ -103,6 +103,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<MenuPerfil> MenuPerfil { get; set; }
         public virtual DbSet<MesEjecucion> MesEjecucion { get; set; }
         public virtual DbSet<NovedadContractual> NovedadContractual { get; set; }
+        public virtual DbSet<NovedadContractualAportante> NovedadContractualAportante { get; set; }
         public virtual DbSet<NovedadContractualClausula> NovedadContractualClausula { get; set; }
         public virtual DbSet<NovedadContractualDescripcion> NovedadContractualDescripcion { get; set; }
         public virtual DbSet<NovedadContractualDescripcionMotivo> NovedadContractualDescripcionMotivo { get; set; }
@@ -251,8 +252,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
-
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -708,9 +707,9 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.CofinanciacionAportanteId)
                     .HasConstraintName("FK_ComponenteAportanteNovedad_CofinanciacionAportante");
 
-                entity.HasOne(d => d.NovedadContractual)
+                entity.HasOne(d => d.NovedadContractualAportante)
                     .WithMany(p => p.ComponenteAportanteNovedad)
-                    .HasForeignKey(d => d.NovedadContractualId)
+                    .HasForeignKey(d => d.NovedadContractualAportanteId)
                     .HasConstraintName("FK_ComponenteAportanteNovedad_ComponenteAportanteNovedad");
             });
 
@@ -3571,6 +3570,8 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
+                entity.Property(e => e.FechaAprobacionGestionContractual).HasColumnType("date");
+
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaEnvioActaApoyo).HasColumnType("datetime");
@@ -3635,6 +3636,36 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.NovedadContractual)
                     .HasForeignKey(d => d.ProyectoId)
                     .HasConstraintName("FK_NovedadContractual_Proyecto");
+            });
+
+            modelBuilder.Entity<NovedadContractualAportante>(entity =>
+            {
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorAporte).HasColumnType("numeric(18, 9)");
+
+                entity.HasOne(d => d.CofinanciacionAportante)
+                    .WithMany(p => p.NovedadContractualAportante)
+                    .HasForeignKey(d => d.CofinanciacionAportanteId)
+                    .HasConstraintName("FK_NovedadContractualAportante_CofinanciacionAportante");
+
+                entity.HasOne(d => d.NovedadContractual)
+                    .WithMany(p => p.NovedadContractualAportante)
+                    .HasForeignKey(d => d.NovedadContractualId)
+                    .HasConstraintName("FK_NovedadContractualAportante_NovedadContractual");
             });
 
             modelBuilder.Entity<NovedadContractualClausula>(entity =>

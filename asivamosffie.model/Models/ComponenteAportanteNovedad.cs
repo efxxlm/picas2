@@ -21,10 +21,10 @@ namespace asivamosffie.model.Models
         public string UsuarioCreacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
-        public int? NovedadContractualId { get; set; }
+        public int? NovedadContractualAportanteId { get; set; }
 
         public virtual CofinanciacionAportante CofinanciacionAportante { get; set; }
-        public virtual NovedadContractual NovedadContractual { get; set; }
+        public virtual NovedadContractualAportante NovedadContractualAportante { get; set; }
         public virtual ICollection<ComponenteUsoNovedad> ComponenteUsoNovedad { get; set; }
     }
 }
