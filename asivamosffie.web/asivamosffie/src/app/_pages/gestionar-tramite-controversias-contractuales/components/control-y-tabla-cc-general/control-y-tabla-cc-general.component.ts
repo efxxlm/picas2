@@ -81,18 +81,18 @@ export class ControlYTablaCcGeneralComponent implements OnInit {
   actualizarTramiteButton(id) {
     localStorage.setItem("controversiaID", id);
     this.services.CambiarEstadoControversiaContractual(id, "10").subscribe((dataUpdt: any) => {
-      this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
+      this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia', id]);
     });
   }
   actualizarTramiteButtonNoTAI(id) {
     localStorage.setItem("controversiaID", id);
     this.services.CambiarEstadoControversiaContractual(id, "4").subscribe((dataUpdt: any) => {
-      this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
+      this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia', id]);
     });
   }
   consultarActualizaciones(id){
     localStorage.setItem("controversiaID", id);
-    this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
+    this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia', id]);
   }
   cerrarTramite(id){
     this.services.CambiarEstadoControversiaContractual(id, "11").subscribe((dataUpdt: any) => {

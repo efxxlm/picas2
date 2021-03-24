@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -13,7 +13,8 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   styleUrls: ['./control-y-tabla-actua-tramite-cc.component.scss']
 })
 export class ControlYTablaActuaTramiteCcComponent implements OnInit {
-  public controversiaID = parseInt(localStorage.getItem("controversiaID"));
+  //public controversiaID = parseInt(localStorage.getItem("controversiaID"));
+  @Input () controversiaID;
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -47,7 +48,7 @@ export class ControlYTablaActuaTramiteCcComponent implements OnInit {
       this.services.CambiarEstadoActuacionSeguimiento(id,'3').subscribe((data:any)=>{
         if(data.isSuccessful==true){
           this.router.navigateByUrl('/', { skipLocationChange: true }).then(
-            () => this.router.navigate(['gestionarTramiteControversiasContractuales/actualizarTramiteControversia'])
+            () => this.router.navigate(['gestionarTramiteControversiasContractuales/actualizarTramiteControversia',this.controversiaID])
           );
         }
       });
@@ -56,14 +57,14 @@ export class ControlYTablaActuaTramiteCcComponent implements OnInit {
       this.services.CambiarEstadoActuacionSeguimiento(id,'2').subscribe((data:any)=>{
         if(data.isSuccessful==true){
           this.router.navigateByUrl('/', { skipLocationChange: true }).then(
-            () => this.router.navigate(['gestionarTramiteControversiasContractuales/actualizarTramiteControversia'])
+            () => this.router.navigate(['gestionarTramiteControversiasContractuales/actualizarTramiteControversia',this.controversiaID])
           );
         }
       });
     }
   }
   verDetalleEditarActuacion(id){
-    this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarTramite',id]);
+    this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarTramite',this.controversiaID,id]);
   }
   deleteActuacion(id) {
     this.openDialogSiNo("","¿Está seguro de eliminar este registro?",id);
@@ -71,12 +72,12 @@ export class ControlYTablaActuaTramiteCcComponent implements OnInit {
   eliminarActuacion(id){
     this.services.EliminarControversiaActuacion(id).subscribe((data:any)=>{
       this.router.navigateByUrl('/', { skipLocationChange: true }).then(
-        () => this.router.navigate(['gestionarTramiteControversiasContractuales/actualizarTramiteControversia'])
+        () => this.router.navigate(['gestionarTramiteControversiasContractuales/actualizarTramiteControversia',this.controversiaID])
       );
     });
   }
   verDetalleActuacion(id){
-    this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleActuacionTramite',id]);
+    this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleActuacionTramite',this.controversiaID,id]);
   }
   openDialogSiNo(modalTitle: string, modalText: string, e: number) {
     let dialogRef = this.dialog.open(ModalDialogComponent, {

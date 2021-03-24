@@ -9,7 +9,7 @@ import { ContractualControversyService } from 'src/app/core/_services/Contractua
 })
 export class VerdetalleeditTramiteCntrvContrcComponent implements OnInit {
   idActuacion: any;
-  public controversiaID = parseInt(localStorage.getItem("controversiaID"));
+  public controversiaID;
   public tipoControversia;
   public fechaSolicitud;
   public codigoSolicitud;
@@ -19,10 +19,11 @@ export class VerdetalleeditTramiteCntrvContrcComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(param => {
+      this.controversiaID = param.idControversia;
       this.idActuacion = param.id;
+      this.loadDataContrato(param.idControversia);
       this.loadActuacionCodeID(param.id);
     });
-    this.loadDataContrato(this.controversiaID);
   } 
   loadDataContrato(id){
     this.services.GetControversiaContractualById(id).subscribe((data:any)=>{

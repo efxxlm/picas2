@@ -46,8 +46,8 @@ export class FormDescripcionActuacionComponent implements OnInit {
   actuacionAdelantadaArrayDom = [
 
   ];
-
-  public controversiaID = parseInt(localStorage.getItem("controversiaID"));
+  @Input() controversiaID;
+  //public controversiaID = parseInt(localStorage.getItem("controversiaID"));
   editorStyle = {
     height: '50px'
   };
@@ -223,7 +223,7 @@ export class FormDescripcionActuacionComponent implements OnInit {
         });
         */
         this.openDialog("", `<b>${data.message}</b>`);
-        this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
+        this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia',this.controversiaID]);
       }
       else {
         this.openDialog("", `<b>${data.message}</b>`);

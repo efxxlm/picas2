@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
 
 @Component({
@@ -12,10 +13,14 @@ export class RegistrarNuevaActuacionTramiteComponent implements OnInit {
   public fechaSolicitud;
   public codigoSolicitud;
   public numeroContrato;
-  constructor(private services: ContractualControversyService) { }
+  constructor(private services: ContractualControversyService,private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.loadDataContrato(this.controversiaID);
+    this.activatedRoute.params.subscribe(param => {
+      this.controversiaID = param.idControversia;
+      this.loadDataContrato(this.controversiaID);
+    });
+    
   }
   loadDataContrato(id){
     this.services.GetControversiaContractualById(id).subscribe((data:any)=>{

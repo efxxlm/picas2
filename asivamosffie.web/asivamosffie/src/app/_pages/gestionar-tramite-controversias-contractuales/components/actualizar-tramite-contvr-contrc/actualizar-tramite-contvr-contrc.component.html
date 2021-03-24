@@ -26,7 +26,7 @@
                     Reclamaciones
                 </button>
             </div>
-            <app-control-y-tabla-actua-tramite-cc *ngIf="opcion1"></app-control-y-tabla-actua-tramite-cc>
+            <app-control-y-tabla-actua-tramite-cc *ngIf="opcion1" [controversiaID]="this.controversiaID"></app-control-y-tabla-actua-tramite-cc>
             <!--<app-control-y-tabla-actuacion-reclamacion *ngIf="opcion2"></app-control-y-tabla-actuacion-reclamacion>-->
             <app-control-y-tabla-reclamacion-cc *ngIf="opcion2"></app-control-y-tabla-reclamacion-cc>
         </div>

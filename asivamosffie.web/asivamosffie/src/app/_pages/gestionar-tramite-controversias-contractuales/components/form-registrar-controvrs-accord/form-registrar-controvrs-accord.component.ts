@@ -22,7 +22,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
     tipoControversia: [null, Validators.required],
     fechaSolicitud: [null, Validators.required],
     motivosSolicitud: [null, Validators.required],
-    cualOtroMotivo: [null ,Validators.compose([Validators.required, Validators.minLength(1), Validators.maxLength(100)])],
+    cualOtroMotivo: [null ,Validators.required],
     fechaComitePretecnico: [null, Validators.required],
     conclusionComitePretecnico: [null, Validators.required],
     procedeSolicitud: [null, Validators.required],
@@ -128,6 +128,9 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
                 break;
             }
           }
+          if(this.obj1!=true){
+            this.addressForm.get('cualOtroMotivo').setValue(null);
+          }
           //fin modificacion
           /*
           const motivoSolicitudCod = [];
@@ -177,10 +180,15 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
     this.estadoSemaforo.emit('sin-diligenciar');
     switch (this.addressForm.value.tipoControversia.codigo) {
       case '1':
+        console.log(this.addressForm.value.tipoControversia.codigo);
+        console.log(this.addressForm.value.fechaSolicitud);
+        console.log(this.addressForm.value.motivosSolicitud);
+        console.log(this.obj1);
+        console.log(this.addressForm.value.cualOtroMotivo);
         if (this.addressForm.value.tipoControversia.codigo == '1' && this.addressForm.value.fechaSolicitud != null && ((this.addressForm.value.motivosSolicitud != null && this.obj1!=true && this.addressForm.value.cualOtroMotivo == null) || (this.addressForm.value.motivosSolicitud != null && this.obj1==true && this.addressForm.value.cualOtroMotivo != null))
           && this.addressForm.value.fechaComitePretecnico != null && this.addressForm.value.conclusionComitePretecnico != null
-          && ((this.addressForm.value.procedeSolicitud == true && this.addressForm.value.motivosRechazo == null && this.addressForm.value.requeridoComite == null) || (this.addressForm.value.procedeSolicitud == false && this.addressForm.value.motivosRechazo != null && this.addressForm.value.requeridoComite == null))
-          && ((this.addressForm.value.procedeSolicitud == true && this.addressForm.value.requeridoComite != null) || (this.addressForm.value.procedeSolicitud == false && this.addressForm.value.requeridoComite == null))) {
+          && (((this.addressForm.value.procedeSolicitud == true && this.addressForm.value.motivosRechazo == null && this.addressForm.value.requeridoComite == null) || (this.addressForm.value.procedeSolicitud == false && this.addressForm.value.motivosRechazo != null && this.addressForm.value.requeridoComite == null))
+          || ((this.addressForm.value.procedeSolicitud == true && this.addressForm.value.requeridoComite != null) || (this.addressForm.value.procedeSolicitud == false && this.addressForm.value.requeridoComite == null)))) {
           this.estadoSemaforo.emit('completo');
           this.estaCompleto = true;
         }
@@ -309,7 +317,6 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
     this.fechaSesionString3 = `${this.fechaSesion3.getFullYear()}-${this.fechaSesion3.getMonth() + 1}-${this.fechaSesion3.getDate()}`;
 
     let motivosDeSolicitud = this.addressForm.get('motivosSolicitud').value;
-    console.log(motivosDeSolicitud);
 
     if (this.addressForm.value.tipoControversia.codigo == '1') {
       if (this.addressForm.value.tipoControversia.codigo == '1' && this.addressForm.value.fechaSolicitud != null && this.addressForm.value.motivosSolicitud != null

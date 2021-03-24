@@ -19,6 +19,7 @@ export class VerDetalleActuacionContrContrctComponent implements OnInit {
   actuacionRequerida: string;
   diasVencimiento: any;
   detalleOtra: any;
+  detalleOtra1: any;
   fechaVencimiento: any;
   requiereContratista: string;
   requiereInterventor: string;
@@ -27,11 +28,12 @@ export class VerDetalleActuacionContrContrctComponent implements OnInit {
   requiereComite: string;
   observaciones: any;
   rutaSoporte: any;
-
+  public controversiaId;
   constructor(private activatedRoute: ActivatedRoute,private services: ContractualControversyService) { }
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(param => {
+      this.controversiaId = param.idControversia;
       this.idActuacion = param.id;
       this.loadData(param.id);
     });
@@ -44,7 +46,7 @@ export class VerDetalleActuacionContrContrctComponent implements OnInit {
             this.tipoControversia = 'Terminación anticipada por incumplimiento (TAI)';
           break;
         };
-        this.numSolicitud = data0.numeroSolicitudFormat;
+        this.numSolicitud = data0.numeroSolicitud;
         this.numContrato = data0.contrato.numeroContrato;
       });
       this.actuacionNum = data.numeroActuacionFormat;
@@ -106,7 +108,11 @@ export class VerDetalleActuacionContrContrctComponent implements OnInit {
         case '3':
           this.actuacionAdelantada = 'Actuación 3';
         break;
+        case '4':
+          this.actuacionAdelantada = 'Otra';
+        break;
       }
+      this.detalleOtra1 = data.actuacionAdelantadaOtro;
       switch(data.proximaActuacionCodigo){
         case '1':
           this.actuacionRequerida = 'Actuación 1';
@@ -121,7 +127,7 @@ export class VerDetalleActuacionContrContrctComponent implements OnInit {
           this.actuacionRequerida = 'Otra';
         break;
       }
-      this.detalleOtra = data.actuacionAdelantadaOtro;
+      this.detalleOtra = data.proximaActuacionOtro;
       this.diasVencimiento = data.cantDiasVencimiento;
       this.fechaVencimiento = data.fechaVencimiento;
       switch(data.esRequiereContratista){

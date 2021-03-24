@@ -40,19 +40,19 @@ const routes: Routes = [
     component: VerDetalleditarCntrvContrcComponent
   },
   {
-    path: 'actualizarTramiteControversia',
+    path: 'actualizarTramiteControversia/:id',
     component: ActualizarTramiteContvrContrcComponent
   },
   {
-    path: 'registrarNuevaActuacionTramite',
+    path: 'registrarNuevaActuacionTramite/:idControversia/:idActuacion',
     component: RegistrarNuevaActuacionTramiteComponent
   },
   {
-    path: 'verDetalleEditarTramite/:id',
+    path: 'verDetalleEditarTramite/:idControversia/:id',
     component: VerdetalleeditTramiteCntrvContrcComponent
   },
   {
-    path: 'verDetalleActuacionTramite/:id',
+    path: 'verDetalleActuacionTramite/:idControversia/:id',
     component: VerDetalleActuacionContrContrctComponent
   },
   {

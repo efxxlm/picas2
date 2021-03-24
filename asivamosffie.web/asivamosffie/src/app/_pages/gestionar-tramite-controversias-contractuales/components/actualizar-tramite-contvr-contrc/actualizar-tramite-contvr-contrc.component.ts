@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
 
 @Component({
@@ -7,7 +8,7 @@ import { ContractualControversyService } from 'src/app/core/_services/Contractua
   styleUrls: ['./actualizar-tramite-contvr-contrc.component.scss']
 })
 export class ActualizarTramiteContvrContrcComponent implements OnInit {
-  public controversiaID = parseInt(localStorage.getItem("controversiaID"));
+  public controversiaID;
   public selTab;
   public tipoControversia;
   public fechaSolicitud;
@@ -17,10 +18,14 @@ export class ActualizarTramiteContvrContrcComponent implements OnInit {
   opcion2 = false;
   tieneReclamaciones: any[] = [];
   tieneMesasTrabajo: any[] = [];
-  constructor(private services: ContractualControversyService) { }
+  constructor(private services: ContractualControversyService,private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.loadDataContrato(this.controversiaID);
+    this.activatedRoute.params.subscribe(param => {
+      this.controversiaID = param.id;
+      this.loadDataContrato(param.id);
+    });
+    //this.loadDataContrato(this.controversiaID);
   }
   cambiarTab(opc) {
     this.selTab=opc;
