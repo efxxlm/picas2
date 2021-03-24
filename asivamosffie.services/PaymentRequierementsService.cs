@@ -372,8 +372,28 @@ namespace asivamosffie.services
                     {
                         Archivada = true,
                         FechaModificacion = DateTime.Now,
-                        UsuarioModificacion = pSolicitudPago.UsuarioCreacion 
-                    }); 
+                        UsuarioModificacion = pSolicitudPago.UsuarioCreacion
+                    });
+
+            _context.Set<SolicitudPago>()
+                .Where(s => s.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
+                .Update(s => new SolicitudPago
+                {
+                    RegistroCompleto = false,
+                    FechaRegistroCompleto = null,
+
+                    RegistroCompletoVerificar = false,
+                    FechaRegistroCompletoVerificar = null,
+
+                    RegistroCompletoAutorizar = false,
+                    FechaRegistroCompletoAutorizar = null,
+
+                    RegistroCompletoVerificacionFinanciera = false,
+                    FechaRegistroCompletoVerificacionFinanciera = null,
+
+                    RegistroCompletoValidacionFinanciera = false,
+                    FechaRegistroCompletoValidacionFinanciera = null
+                });
         }
 
         private void ActualizarSacFinanciera(SolicitudPago pSolicitudPago)
