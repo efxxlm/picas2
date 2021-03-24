@@ -31,12 +31,7 @@ namespace asivamosffie.services
             _registerValidatePayment = registerValidatePaymentRequierementsService;
         }
 
-        #region create
-        /// <summary>
-        /// create edit
-        /// </summary>
-        /// <param name="pOrdenGiro"></param>
-        /// <returns></returns>
+        #region create 
         public async Task<Respuesta> CreateEditOrdenGiro(OrdenGiro pOrdenGiro)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
@@ -55,7 +50,7 @@ namespace asivamosffie.services
                 {
                     pOrdenGiro.FechaCreacion = DateTime.Now;
                     pOrdenGiro.Eliminado = false;
-                    pOrdenGiro.EstadoCodigo = ConstanCodigoEstadoOrdenGiro.En_proceso_de_generacion;
+                    pOrdenGiro.EstadoCodigo = ((int)EnumEstadoOrdenGiro.En_Proceso_Generacion).ToString();
                     pOrdenGiro.RegistroCompleto = ValidarRegistroCompletoOrdenGiro(pOrdenGiro);
                     pOrdenGiro.OrdenGiroTerceroId = OrdenGiroTerceroId;
                     pOrdenGiro.OrdenGiroDetalleId = OrdenGiroDetalleId;
@@ -359,7 +354,6 @@ namespace asivamosffie.services
 
         #endregion
 
-
         #region validate 
         private bool? ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(OrdenGiroDetalleTerceroCausacion pOrdenGiroDetalleTerceroCausacion)
         {
@@ -413,7 +407,21 @@ namespace asivamosffie.services
         /// TODO : VALIDAR SOLICITUDES DE PAGO QUE YA TENGAN APROBACION 
         /// </summary>
         /// <returns></returns>
-        public async Task<dynamic> GetListSolicitudPago()
+        /// 
+
+        public async Task<dynamic> GetListOrdenGiro(int pMenuId)
+        {
+            return pMenuId switch
+            {
+                (int)enumeratorMenu.Generar_Orden_de_giro => await _context.VOrdenGiro.Where(s =>
+                                             s.IntEstadoCodigo >= (int)EnumEstadoOrdenGiro.Enviada_A_Order_Giro)
+                                                                   .OrderByDescending(r => r.FechaModificacion)
+                                                                   .ToListAsync(),
+
+                _ => new { },
+            };
+        }
+        public async Task<dynamic> GetListSolicitudPagoOLD()
         {
             var result = await _context.SolicitudPago
                  .Include(r => r.Contrato)
@@ -441,13 +449,13 @@ namespace asivamosffie.services
                 bool RegistroCompleto = false;
                 string EstadoOrdenGiro = string.Empty;
                 if (r.OrdenGiro == null)
-                    EstadoOrdenGiro = ConstanCodigoEstadoOrdenGiro.Sin_generacion;
+                    EstadoOrdenGiro = ((int)EnumEstadoOrdenGiro.Enviada_A_Order_Giro).ToString();
                 else
                 {
                     EstadoOrdenGiro = r.OrdenGiro.EstadoCodigo;
                     RegistroCompleto = r.OrdenGiro.RegistroCompleto ?? false;
                 }
-                EstadoOrdenGiro = ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Orden_Giro && r.Codigo == EstadoOrdenGiro).FirstOrDefault().Nombre;
+                EstadoOrdenGiro = ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Solicitud_Pago && r.Codigo == EstadoOrdenGiro).FirstOrDefault().Nombre;
 
                 grind.Add(new
                 {

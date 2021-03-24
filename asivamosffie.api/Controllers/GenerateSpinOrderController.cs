@@ -41,15 +41,14 @@ namespace asivamosffie.api.Controllers
             }
         }
  
-        [Route("GetListSolicitudPago")]
+        [Route("GetListOrdenGiro")]
         [HttpGet]
-        public async Task<dynamic> GetListSolicitudPago()
+        public async Task<dynamic> GetListOrdenGiro([FromQuery] int pMenuId)
         {
-            var result = await _generateSpinOrderService.GetListSolicitudPago();
+            var result = await _generateSpinOrderService.GetListOrdenGiro(pMenuId);
             return result;
         }
-
-
+         
         [HttpPost]
         [Route("CreateEditOrdenGiro")]
         public async Task<IActionResult> CreateEditOrdenGiro([FromBody] OrdenGiro pOrdenGiro)

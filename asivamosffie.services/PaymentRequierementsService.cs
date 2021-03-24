@@ -69,16 +69,14 @@ namespace asivamosffie.services
                 case (int)enumeratorMenu.Verificar_Financieramente_Solicitud_De_Pago:
                     result = await _context.VSolicitudPago.Where(s =>
                        s.IntEstadoCodigo > (int)EnumEstadoSolicitudPago.Con_solicitud_revisada_por_equipo_facturacion)
-
-
-                               .OrderByDescending(r => r.FechaModificacion)
+                                               .OrderByDescending(r => r.FechaModificacion)
                                                .ToListAsync();
                     break;
 
 
                 case (int)enumeratorMenu.Validar_Financieramente_Solicitud_De_Pago:
                     result = await _context.VSolicitudPago.Where(s =>
-                       s.IntEstadoCodigo > (int)EnumEstadoSolicitudPago.Con_solicitud_revisada_por_equipo_facturacion)
+                       s.IntEstadoCodigo > (int)EnumEstadoSolicitudPago.En_proceso_de_autorizacion)
                                                .OrderByDescending(r => r.FechaModificacion)
                                                .ToListAsync();
                     break;
@@ -102,7 +100,9 @@ namespace asivamosffie.services
                 r.EstadoNombre,
                 r.EstadoNombre2,
                 r.EstadoCodigo,
-                r.ModalidadNombre
+                r.ModalidadNombre,
+                r.RegistroCompletoVerificacionFinanciera,
+                r.RegistroCompletoValidacionFinanciera
             });
 
         }
@@ -192,15 +192,19 @@ namespace asivamosffie.services
             try
             {
                 SolicitudPago solicitudPago = await _registerValidatePaymentRequierementsService.GetSolicitudPago(pSolicitudPagoObservacion.SolicitudPagoId);
+                //Sumar cantidad Listas de chequeo
+                int intCantidadDependenciasSolicitudPago = solicitudPago.SolicitudPagoListaChequeo.Count(r => r.Eliminado == false);
 
-                int intCantidadDependenciasSolicitudPago = CantidadDependenciasSolicitudPago(solicitudPago);
+                if (pSolicitudPagoObservacion.MenuId == (int)enumeratorMenu.Verificar_solicitud_de_pago
+                    || pSolicitudPagoObservacion.MenuId == (int)enumeratorMenu.Autorizar_solicitud_de_pago)
+                    intCantidadDependenciasSolicitudPago = CantidadDependenciasSolicitudPago(solicitudPago);
+
+
                 int intCantidadObservacionesSolicitudPago = _context.SolicitudPagoObservacion.Where(r => r.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId
                                                               && r.MenuId == pSolicitudPagoObservacion.MenuId
                                                               && r.Eliminado != true
                                                               && r.RegistroCompleto == true
                                                               && r.Archivada != true).Count();
-                //Sumar cantidad Listas de chequeo
-                intCantidadDependenciasSolicitudPago += solicitudPago.SolicitudPagoListaChequeo.Count(r => r.Eliminado == false);
 
                 bool TieneObservacion =
                                  _context.SolicitudPagoObservacion.Any
@@ -212,11 +216,16 @@ namespace asivamosffie.services
                                                             );
 
 
-
-                //Valida si la cantidad de relaciones de solicitud Pago es igual a la cantidad de observaciones de esa Solicitud pago 
+                //Valida si la cantidad de relaciones de solicitud Pago
+                //es igual a la cantidad de observaciones de esa Solicitud pago 
                 bool blRegistroCompleto = false;
+                DateTime? FechaRegistroCompleto = null;
                 if (intCantidadObservacionesSolicitudPago == intCantidadDependenciasSolicitudPago)
+                {
+                    FechaRegistroCompleto = DateTime.Now;
                     blRegistroCompleto = true;
+                }
+
 
                 string stringEstadoSolicitud = solicitudPago.EstadoCodigo;
                 switch (pSolicitudPagoObservacion.MenuId)
@@ -231,7 +240,7 @@ namespace asivamosffie.services
                             UsuarioModificacion = pUsuarioMod,
                             EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_proceso_de_verificacion).ToString(),
                             RegistroCompletoVerificar = blRegistroCompleto,
-                            FechaRegistroCompletoVerificar = DateTime.Now
+                            FechaRegistroCompletoVerificar = FechaRegistroCompleto
                         });
                         break;
 
@@ -245,8 +254,36 @@ namespace asivamosffie.services
                             FechaModificacion = DateTime.Now,
                             UsuarioModificacion = pUsuarioMod,
                             RegistroCompletoAutorizar = blRegistroCompleto,
-                            FechaRegistroCompletoAutorizar = DateTime.Now
+                            FechaRegistroCompletoAutorizar = FechaRegistroCompleto
                         });
+                        break;
+
+                    case (int)enumeratorMenu.Verificar_Financieramente_Solicitud_De_Pago:
+                        await _context.Set<SolicitudPago>()
+                       .Where(o => o.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId)
+                       .UpdateAsync(r => new SolicitudPago()
+                       {
+                           TieneObservacion = TieneObservacion,
+                           EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_Proceso_Verificacion_Financiera).ToString(),
+                           FechaModificacion = DateTime.Now,
+                           UsuarioModificacion = pUsuarioMod,
+                           RegistroCompletoVerificacionFinanciera = blRegistroCompleto,
+                           FechaRegistroCompletoVerificacionFinanciera = FechaRegistroCompleto
+                       });
+                        break;
+
+                    case (int)enumeratorMenu.Validar_Financieramente_Solicitud_De_Pago:
+                        await _context.Set<SolicitudPago>()
+                       .Where(o => o.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId)
+                       .UpdateAsync(r => new SolicitudPago()
+                       {
+                           TieneObservacion = TieneObservacion,
+                           EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_Proceso_Validacion_Financiera).ToString(),
+                           FechaModificacion = DateTime.Now,
+                           UsuarioModificacion = pUsuarioMod,
+                           RegistroCompletoValidacionFinanciera = blRegistroCompleto,
+                           FechaRegistroCompletoValidacionFinanciera = FechaRegistroCompleto
+                       });
                         break;
                 }
                 return true;
@@ -268,7 +305,7 @@ namespace asivamosffie.services
 
                 case ConstanCodigoTipoSolicitudContratoSolicitudPago.Expensas:
                 case ConstanCodigoTipoSolicitudContratoSolicitudPago.Otros_Costos_Servicios:
-                    return 2; 
+                    return 2;
                 default: return 0;
             }
 
@@ -276,18 +313,8 @@ namespace asivamosffie.services
 
         private int CantidadDependenciasTipoInterventoriaObra(SolicitudPago pSolicitudPago)
         {
-            //#1 pSolicitudPago.SolicitudPagoCargarFormaPago
             //#2 pSolicitudPago.SolicitudPagoSoporteSolicitud  
-            int intCantidadDependenciasSolicitudPago = 2;
-
-            if (_context.SolicitudPago
-                .Where(s => s.ContratoId == pSolicitudPago.ContratoId && s.Eliminado == false)
-                .Count() > 1)
-            {
-                //Si ya existe una solicitud pago no se crea
-                //nuevamente observacion a cargar forma pago 
-                intCantidadDependenciasSolicitudPago--;
-            }
+            int intCantidadDependenciasSolicitudPago = 1;
 
             foreach (var SolicitudPagoRegistrarSolicitudPago in pSolicitudPago.SolicitudPagoRegistrarSolicitudPago.Where(r => r.Eliminado != true))
             {
@@ -348,6 +375,15 @@ namespace asivamosffie.services
                                                                                                          });
         }
 
+        private void ActualizarSubsanacion(SolicitudPago pSolicitudPago)
+        {
+            _context.Set<SolicitudPago>()
+                                         .Where(o => o.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
+                                                                                                         .Update(r => new SolicitudPago()
+                                                                                                         {
+                                                                                                             FechaSubsanacion = DateTime.Now
+                                                                                                         });
+        }
 
         #endregion
 
@@ -480,7 +516,6 @@ namespace asivamosffie.services
             }
         }
 
-
         #endregion
 
         #region  Emails
@@ -520,14 +555,44 @@ namespace asivamosffie.services
                 if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Solicitud_devuelta_por_coordinardor)
                     await SendEmailToDeclineValidate(pSolicitudPago.SolicitudPagoId);
 
-                await _context.Set<SolicitudPago>()
-                                       .Where(o => o.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
-                                                                                                       .UpdateAsync(r => new SolicitudPago()
-                                                                                                       {
-                                                                                                           FechaModificacion = DateTime.Now,
-                                                                                                           UsuarioModificacion = pSolicitudPago.UsuarioCreacion,
-                                                                                                           EstadoCodigo = pSolicitudPago.EstadoCodigo
-                                                                                                       });
+                ///4.3.1
+                if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Solicitud_Rechazado_por_verificacion_financiera)
+                    await SendEmailRejectAutorizar(pSolicitudPago.SolicitudPagoId, true);
+
+                ///4.3.1
+                if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Enviada_Validacion_Financiera)
+                    await SendEmailAprovedVerificar(pSolicitudPago.SolicitudPagoId);
+
+                ///4.3.1  ///4.3.2
+                if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Enviada_para_subsanacion_por_verificacion_financiera
+                 || intEstadoCodigo == (int)EnumEstadoSolicitudPago.Enviada_para_subsanacion_por_validaccion_financiera
+                    )
+                {
+                    await SendEmailRejectedCorrectALL(pSolicitudPago.SolicitudPagoId);
+                    await SendEmailRejectedCorrect(pSolicitudPago.SolicitudPagoId);
+                    ActualizarSubsanacion(pSolicitudPago);
+                }
+
+                ///4.3.2
+                if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Solicitud_Rechazado_por_validacion_financiera)
+                    await SendEmailAprovedValidar(pSolicitudPago.SolicitudPagoId);
+
+                ///4.3.2
+                if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Solicitud_Rechazado_por_validacion_financiera)
+                    await SendEmailRejectAutorizar(pSolicitudPago.SolicitudPagoId, false);
+
+                ///4.3.2
+                if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Enviada_A_Order_Giro)
+                    await SendEmailAprovedValidar(pSolicitudPago.SolicitudPagoId);
+
+                _context.Set<SolicitudPago>()
+                                      .Where(o => o.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
+                                                                                                      .Update(r => new SolicitudPago()
+                                                                                                      {
+                                                                                                          FechaModificacion = DateTime.Now,
+                                                                                                          UsuarioModificacion = pSolicitudPago.UsuarioCreacion,
+                                                                                                          EstadoCodigo = pSolicitudPago.EstadoCodigo
+                                                                                                      });
 
                 string strEstadoSolicitudPago = _context.Dominio.Where(
                                                                           d => d.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Solicitud_Pago
@@ -556,6 +621,82 @@ namespace asivamosffie.services
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.Error, idAccion, pSolicitudPago.UsuarioCreacion, ex.InnerException.ToString())
                     };
             }
+        }
+     
+        ///4.3.2 Aprobar
+        private async Task<bool> SendEmailAprovedValidar(int pSolicitudPagoId)
+        {
+            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Aprobar_4_3_2));
+            string strContenido = ReplaceVariablesSolicitudPago(template.Contenido, pSolicitudPagoId);
+
+            List<EnumeratorPerfil> perfilsEnviarCorreo =
+                new List<EnumeratorPerfil>
+                                          {
+                                                EnumeratorPerfil.CordinadorFinanciera
+                                          };
+            return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
+        }
+
+        ///4.3.1 Aprobar
+        private async Task<bool> SendEmailAprovedVerificar(int pSolicitudPagoId)
+        {
+            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Enviar_Validacion_4_3_1));
+            string strContenido = ReplaceVariablesSolicitudPago(template.Contenido, pSolicitudPagoId);
+
+            List<EnumeratorPerfil> perfilsEnviarCorreo =
+                new List<EnumeratorPerfil>
+                                          {
+                                                EnumeratorPerfil.CordinadorFinanciera
+                                          };
+            return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
+        }
+        
+        ///4.3.1  y 4.3.2 envian subsanacion
+        private async Task<bool> SendEmailRejectedCorrect(int pSolicitudPagoId)
+        {
+            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Enviar_Subsanacion_4_3_1_Y_4_3_));
+            string strContenido = ReplaceVariablesSolicitudPago(template.Contenido, pSolicitudPagoId);
+
+            List<EnumeratorPerfil> perfilsEnviarCorreo =
+                new List<EnumeratorPerfil>
+                                          {
+                                                EnumeratorPerfil.Supervisor,
+                                                EnumeratorPerfil.CordinadorFinanciera
+                                          };
+            return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
+        }
+        ///4.3.1  y 4.3.2 envian subsanacion
+        private async Task<bool> SendEmailRejectedCorrectALL(int pSolicitudPagoId)
+        {
+            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Enviar_Subsanacion_TODOS_4_3_1_Y_4_3_));
+            string strContenido = ReplaceVariablesSolicitudPago(template.Contenido, pSolicitudPagoId);
+
+            List<EnumeratorPerfil> perfilsEnviarCorreo =
+                new List<EnumeratorPerfil>
+                                          {
+                                                EnumeratorPerfil.CordinadorFinanciera
+                                          };
+            return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
+        }
+        ///4.3.1 Rechaza
+        private async Task<bool> SendEmailRejectAutorizar(int pSolicitudPagoId, bool esVerificar)
+        {
+            Template template = new Template();
+            if (esVerificar)
+                template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Rechazar_4_3_1));
+            else
+                template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Rechazar_4_3_2));
+
+            string strContenido = ReplaceVariablesSolicitudPago(template.Contenido, pSolicitudPagoId);
+
+            List<EnumeratorPerfil> perfilsEnviarCorreo =
+                new List<EnumeratorPerfil>
+                                          {
+                                                EnumeratorPerfil.Supervisor,
+                                                EnumeratorPerfil.CordinadorFinanciera
+                                          };
+
+            return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
         }
 
         /// 4.1.9 devuelve 
@@ -665,6 +806,9 @@ namespace asivamosffie.services
                 .FirstOrDefault();
 
             template = template
+                      .Replace("[FECHA_SUBSANACION]", solicitudPago.FechaSubsanacion.HasValue ? ((DateTime)solicitudPago.FechaSubsanacion).ToString("dd/MM/yyyy") : string.Empty)
+                      .Replace("[FECHA_RADICACION_SAC_CONTRATISTA]", solicitudPago.FechaRadicacionSacContratista.HasValue ? ((DateTime)solicitudPago.FechaRadicacionSacContratista).ToString("dd/MM/yyyy") : string.Empty)
+                      .Replace("[NUMERO_RADICACION]", solicitudPago.NumeroRadicacionSacContratista ?? string.Empty)
                       .Replace("[NUMERO_SOLICITUD]", solicitudPago.NumeroSolicitud)
                       .Replace("[NUMERO_CONTRATO]", solicitudPago.Contrato.NumeroContrato)
                       .Replace("[FECHA_SOLICITUD]", solicitudPago.FechaCreacion.ToString("dd/MM/yyy"))

@@ -222,6 +222,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VListaProyectos> VListaProyectos { get; set; }
         public virtual DbSet<VNovedadContractual> VNovedadContractual { get; set; }
         public virtual DbSet<VNovedadContractualReporteHist> VNovedadContractualReporteHist { get; set; }
+        public virtual DbSet<VOrdenGiro> VOrdenGiro { get; set; }
         public virtual DbSet<VParametricas> VParametricas { get; set; }
         public virtual DbSet<VPermisosMenus> VPermisosMenus { get; set; }
         public virtual DbSet<VProcesoSeleccionReporteHist> VProcesoSeleccionReporteHist { get; set; }
@@ -3759,6 +3760,8 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<OrdenGiro>(entity =>
             {
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
+
                 entity.Property(e => e.EstadoCodigo)
                     .HasMaxLength(2)
                     .IsUnicode(false);
@@ -3766,6 +3769,8 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.RegistroCompleto).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
@@ -6280,6 +6285,8 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaRegistroCompletoVerificar).HasColumnType("datetime");
 
+                entity.Property(e => e.FechaSubsanacion).HasColumnType("datetime");
+
                 entity.Property(e => e.NumeroRadicacionSacContratista).HasMaxLength(15);
 
                 entity.Property(e => e.NumeroRadicacionSacFinanciera).HasMaxLength(20);
@@ -7772,6 +7779,39 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioCreacion).HasMaxLength(400);
 
                 entity.Property(e => e.UsuarioModificacion).HasMaxLength(400);
+            });
+
+            modelBuilder.Entity<VOrdenGiro>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_OrdenGiro");
+
+                entity.Property(e => e.EstadoCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EstadoNombre)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EstadoNombre2)
+                    .HasMaxLength(400)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FechaAprobacionFinanciera).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.IntEstadoCodigo).HasColumnName("intEstadoCodigo");
+
+                entity.Property(e => e.Modalidad)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroContrato)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<VParametricas>(entity =>

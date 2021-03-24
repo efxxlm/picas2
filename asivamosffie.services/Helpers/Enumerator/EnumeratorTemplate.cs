@@ -105,5 +105,11 @@ namespace asivamosffie.services.Helpers.Enumerator
         EnviarTramiteFinanciera_4_1_9 = 105,
         Alerta_4_1_9 = 106,
         EnviarTramiteFinanciera_4_1_9_TODOS = 107,
+        Rechazar_4_3_1 = 108,
+        Enviar_Subsanacion_4_3_1_Y_4_3_ = 110,
+        Enviar_Subsanacion_TODOS_4_3_1_Y_4_3_ = 111,
+        Enviar_Validacion_4_3_1 = 112,
+        Rechazar_4_3_2 = 113,
+        Aprobar_4_3_2 = 114,
     }
 }

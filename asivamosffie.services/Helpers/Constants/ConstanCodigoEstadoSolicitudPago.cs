@@ -15,7 +15,7 @@
         Solicitud_devuelta_a_equipo_de_facturacion_por_generar_orden_de_giro = 25, //4.3.3 //Orden giro
 
         Solicitud_Rechazado_por_verificacion_financiera = 26, //4.3.1
-        Solicitud_Rechazado_por_validacion_financiera = 26, //4.3.2
+        Solicitud_Rechazado_por_validacion_financiera = 27, //4.3.2
 
         //4.1.8 
         Enviado_para_verificacion = 3, // Sin Verificación
