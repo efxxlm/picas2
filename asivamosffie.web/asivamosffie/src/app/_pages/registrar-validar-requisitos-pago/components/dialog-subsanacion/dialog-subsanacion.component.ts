@@ -8,11 +8,12 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class DialogSubsanacionComponent implements OnInit {
 
-  constructor(public matDialogRef: MatDialogRef<DialogSubsanacionComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
+    constructor(
+        public matDialogRef: MatDialogRef<DialogSubsanacionComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: any )
+    {}
 
-  ngOnInit(): void {
-  }
-  close() {
-    this.matDialogRef.close('aceptado');
-  }
+    ngOnInit(): void {
+    }
+
 }

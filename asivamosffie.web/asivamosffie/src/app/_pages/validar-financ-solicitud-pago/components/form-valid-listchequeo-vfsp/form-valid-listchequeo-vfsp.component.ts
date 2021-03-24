@@ -148,7 +148,7 @@ export class FormValidListchequeoVfspComponent implements OnInit {
                 this.listas.push( this.fb.group(
                     {
                         estadoSemaforo,
-                        solicitudPagoId: this.contrato.solicitudPagoOnly.solicitudPagoId,
+                        solicitudPagoId: this.solicitudPago.solicitudPagoId,
                         solicitudPagoListaChequeoId: solicitudPagoListaChequeo.solicitudPagoListaChequeoId,
                         nombre: solicitudPagoListaChequeo.listaChequeo.nombre,
                         solicitudPagoListaChequeoRespuesta: this.fb.group(
@@ -359,13 +359,23 @@ export class FormValidListchequeoVfspComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                        () => this.routes.navigate(
-                            [
-                                '/validarFinancieramenteSolicitudDePago/validarFinancSolicitud',  this.contrato.contratoId, this.contrato.solicitudPagoOnly.solicitudPagoId
-                            ]
-                        )
-                    );
+                    if ( this.esExpensas === false ) {
+                        this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                            () => this.routes.navigate(
+                                [
+                                    '/validarFinancieramenteSolicitudDePago/validarFinancSolicitud',  this.contrato.contratoId, this.contrato.solicitudPagoOnly.solicitudPagoId
+                                ]
+                            )
+                        );
+                    } else {
+                        this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                            () => this.routes.navigate(
+                                [
+                                    '/validarFinancieramenteSolicitudDePago/validarExpensas', this.solicitudPago.solicitudPagoId
+                                ]
+                            )
+                        );
+                    }
                 },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
             );

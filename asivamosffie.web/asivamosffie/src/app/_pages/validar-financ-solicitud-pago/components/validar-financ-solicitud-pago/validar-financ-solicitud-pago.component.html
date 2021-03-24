@@ -36,16 +36,16 @@
             </ng-container>
             <ng-container matColumnDef="estadoValidacion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la validación </th>
-                <td mat-cell *matCellDef="let element" align="center"> {{ element.estadoNombre }} </td>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.estadoCodigo === listaEstadoSolicitudPago.enviarParaValidacionFinanciera ? element.estadoNombre2 : element.estadoNombre }} </td>
             </ng-container>
             <ng-container matColumnDef="estadoRegistro">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del registro </th>
                 <td mat-cell *matCellDef="let element" align="center">
                     <span class="info-text info-text__table"
-                        [ngClass]="{'sin-diligenciar' : element.estadoRegistro=='Incompleto', 'completo' : element.estadoRegistro=='Completo'}"
+                        [ngClass]="{'sin-diligenciar' : element.registroCompletoValidacionFinanciera === false, 'completo' : element.registroCompletoValidacionFinanciera === true }"
                         style="margin-right: 0em;"></span>
                     <br>
-                    {{ element.estadoRegistro }} 
+                    {{ element.registroCompletoValidacionFinanciera === true ? 'Completo' : 'Incompleto' }} 
                 </td>
             </ng-container>
             <ng-container matColumnDef="gestion">
@@ -56,33 +56,50 @@
                         <button mat-raised-button
                                 color="accent"
                                 class="btn-table"
-                                [routerLink]="[ 'validarFinancSolicitud', element.contratoId, element.solicitudPagoId ]">
+                                [routerLink]="[ 'validarFinancSolicitud', element.contratoId, element.solicitudPagoId ]"
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enviarParaValidacionFinanciera">
                                 Validar Solicitud
                         </button>
 
                         <button mat-raised-button
                                 color="accent"
                                 class="btn-table"
-                                [routerLink]="[ 'validarFinancSolicitud', element.contratoId, element.solicitudPagoId ]">
+                                [routerLink]="[ 'validarFinancSolicitud', element.contratoId, element.solicitudPagoId ]"
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoValidacionFinanciera">
                                 Ver detalle/Editar
                         </button>
-
-                        <!--
-                        <button mat-raised-button color="accent" class="btn-table" (click)="this.openRechazo()">
-                            Rechazar solicitud
-                        </button>
-                        <button mat-raised-button color="accent" class="btn-table" (click)="this.openRechazo()">
-                            Subsanar solicitud
-                        </button>
-                        <button mat-raised-button color="accent" class="btn-table" (click)="this.openRechazo()">
-                            Enviar para orden de giro
-                        </button>
-                        -->
 
                         <button mat-raised-button
                                 color="accent"
                                 class="btn-table"
-                                [routerLink]="[ 'verDetalleValidarFinancSolicitud', element.contratoId, element.solicitudPagoId ]">
+                                (click)="subsanarSolicitud( element.solicitudPagoId )"
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoValidacionFinanciera && element.tieneSubsanacion === true">
+                                Subsanar solicitud
+                        </button>
+
+                        <button mat-raised-button
+                                color="accent"
+                                class="btn-table"
+                                (click)="changueStatusSolicitudPago( element.solicitudPagoId )"
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoValidacionFinanciera && element.tieneSubsanacion === false">
+                                Enviar para orden de giro
+                        </button>
+
+                        <button mat-raised-button
+                                color="accent"
+                                class="btn-table"
+                                (click)="getRechazo( element )"
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoValidacionFinanciera && element.estaRechazada === true">
+                                Rechazar solicitud
+                        </button>
+
+                        <button mat-raised-button
+                                color="accent"
+                                class="btn-table"
+                                [routerLink]="[ 'verDetalleValidarFinancSolicitud', element.contratoId, element.solicitudPagoId ]"
+                                *ngIf=" element.estadoCodigo === listaEstadoSolicitudPago.enviadaParaOrdenGiro
+                                        || element.estadoCodigo === listaEstadoSolicitudPago.enviadaSubsanacionValidacionFinanciera
+                                        || element.estadoCodigo === listaEstadoSolicitudPago.solicitudRechazadaPorValidacionFinanciera">
                                 Ver detalle
                         </button>
 
@@ -92,33 +109,50 @@
                         <button mat-raised-button
                                 color="accent"
                                 class="btn-table"
-                                [routerLink]="[ 'validarExpensas', element.solicitudPagoId ]">
+                                [routerLink]="[ 'validarExpensas', element.solicitudPagoId ]"
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enviarParaValidacionFinanciera">
                                 Validar Solicitud
                         </button>
 
                         <button mat-raised-button
                                 color="accent"
                                 class="btn-table"
-                                [routerLink]="[ 'validarExpensas', element.solicitudPagoId ]">
+                                [routerLink]="[ 'validarExpensas', element.solicitudPagoId ]"
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoValidacionFinanciera">
                                 Ver detalle/Editar
                         </button>
-
-                        <!--
-                        <button mat-raised-button color="accent" class="btn-table" (click)="this.openRechazo()">
-                            Rechazar solicitud
-                        </button>
-                        <button mat-raised-button color="accent" class="btn-table" (click)="this.openRechazo()">
-                            Subsanar solicitud
-                        </button>
-                        <button mat-raised-button color="accent" class="btn-table" (click)="this.openRechazo()">
-                            Enviar para orden de giro
-                        </button>
-                        -->
 
                         <button mat-raised-button
                                 color="accent"
                                 class="btn-table"
-                                [routerLink]="[ 'verDetalleExpensas', element.solicitudPagoId ]">
+                                (click)="subsanarSolicitud( element.solicitudPagoId )"
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoValidacionFinanciera && element.tieneSubsanacion === true">
+                                Subsanar solicitud
+                        </button>
+
+                        <button mat-raised-button
+                                color="accent"
+                                class="btn-table"
+                                (click)="changueStatusSolicitudPago( element.solicitudPagoId )"
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoValidacionFinanciera && element.tieneSubsanacion === false">
+                                Enviar para orden de giro
+                        </button>
+
+                        <button mat-raised-button
+                                color="accent"
+                                class="btn-table"
+                                (click)="getRechazo( element )"
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoValidacionFinanciera && element.estaRechazada === true">
+                                Rechazar solicitud
+                        </button>
+
+                        <button mat-raised-button
+                                color="accent"
+                                class="btn-table"
+                                [routerLink]="[ 'verDetalleExpensas', element.solicitudPagoId ]"
+                                *ngIf=" element.estadoCodigo === listaEstadoSolicitudPago.enviadaParaOrdenGiro
+                                        || element.estadoCodigo === listaEstadoSolicitudPago.enviadaSubsanacionValidacionFinanciera
+                                        || element.estadoCodigo === listaEstadoSolicitudPago.solicitudRechazadaPorValidacionFinanciera">
                                 Ver detalle
                         </button>
 

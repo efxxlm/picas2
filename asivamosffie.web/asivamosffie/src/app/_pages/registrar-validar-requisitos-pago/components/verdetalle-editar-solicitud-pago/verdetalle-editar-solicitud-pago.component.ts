@@ -55,7 +55,6 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
         this.obsMultipleSvc.listaTipoObservacionSolicitudes()
             .subscribe( response => {
                 this.listaTipoObservacionSolicitudes = response;
-                console.log( response );
             } );
         this.getContrato();
     }

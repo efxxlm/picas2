@@ -1,6 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { EstadoSolicitudPagoOrdenGiro, EstadosSolicitudPagoOrdenGiro } from 'src/app/_interfaces/estados-solicitudPago-ordenGiro.interface';
 
 @Component({
   selector: 'app-dialog-rechazar-solicitud-vfsp',
@@ -8,48 +12,87 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
   styleUrls: ['./dialog-rechazar-solicitud-vfsp.component.scss']
 })
 export class DialogRechazarSolicitudVfspComponent implements OnInit {
-  addressForm = this.fb.group({});
-  editorStyle = {
-    height: '45px',
-    overflow: 'auto'
-  };
 
-  config = {
-    toolbar: [
-      ['bold', 'italic', 'underline'],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      [{ indent: '-1' }, { indent: '+1' }],
-      [{ align: [] }],
-    ]
-  };
-  estaEditando = false;
-  constructor(public matDialogRef: MatDialogRef<DialogRechazarSolicitudVfspComponent>, @Inject(MAT_DIALOG_DATA) public data: any, private fb: FormBuilder) { }
+    estaEditando = false;
+    addressForm: FormGroup;
+    listaEstadoSolicitudPago: EstadoSolicitudPagoOrdenGiro = EstadosSolicitudPagoOrdenGiro;
+    editorStyle = {
+      height: '45px',
+      overflow: 'auto'
+    };
+    config = {
+      toolbar: [
+        ['bold', 'italic', 'underline'],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        [{ indent: '-1' }, { indent: '+1' }],
+        [{ align: [] }],
+      ]
+    };
 
-  ngOnInit(): void {
-    this.addressForm = this.crearFormulario();
-  }
-  crearFormulario() {
-    return this.fb.group({
-      fechaRadicacionSAC: [null, Validators.required],
-      numeroRadicacionSAC: [null, Validators.required],
-      observaciones: [null, Validators.required]
-    })
-  }
-  maxLength(e: any, n: number) {
-    if (e.editor.getLength() > n) {
-      e.editor.deleteText(n - 1, e.editor.getLength());
+    constructor(
+        public matDialogRef: MatDialogRef<DialogRechazarSolicitudVfspComponent>,
+        @Inject(MAT_DIALOG_DATA) public registro: any,
+        private dialog: MatDialog,
+        private routes: Router,
+        private obsMultipleSvc: ObservacionesMultiplesCuService,
+        private fb: FormBuilder )
+    {
+        this.addressForm = this.crearFormulario();
     }
-  }
-  textoLimpio(texto, n) {
-    if (texto != undefined) {
-      return texto.getLength() > n ? n : texto.getLength();
+
+    ngOnInit(): void {
     }
-  }
-  onSubmit() {
-    //De forma maquetada
-    this.estaEditando = true;
-    this.addressForm.markAllAsTouched();
-    console.log(this.addressForm.value);
-  }
+
+    crearFormulario() {
+      return this.fb.group({
+        fechaRadicacionSAC: [null, Validators.required],
+        numeroRadicacionSAC: [null, Validators.required],
+        observaciones: [null, Validators.required]
+      })
+    }
+
+    maxLength(e: any, n: number) {
+        if (e.editor.getLength() > n) {
+            e.editor.deleteText(n - 1, e.editor.getLength());
+        }
+    }
+
+    textoLimpio( evento: any, n: number ) {
+        if ( evento !== undefined ) {
+            return evento.getLength() > n ? n : evento.getLength();
+        } else {
+            return 0;
+        }
+    }
+
+    openDialog(modalTitle: string, modalText: string) {
+        const dialogRef = this.dialog.open( ModalDialogComponent, {
+            width: '28em',
+            data: { modalTitle, modalText }
+        });
+    }
+
+    onSubmit() {
+        //De forma maquetada
+        this.estaEditando = true;
+        this.addressForm.markAllAsTouched();
+
+        const pSolicitudPago = {
+            solicitudPagoId: this.registro.solicitudPagoId,
+            estadoCodigo: this.listaEstadoSolicitudPago.solicitudRechazadaPorVerificacionFinanciera,
+            fechaRadicacionSacTecnica: this.addressForm.get( 'fechaRadicacionSAC' ).value !== null ? new Date( this.addressForm.get( 'fechaRadicacionSAC' ).value ).toISOString() : this.addressForm.get( 'fechaRadicacionSAC' ).value,
+            numeroRadicacionSacTecnica: this.addressForm.get( 'numeroRadicacionSAC' ).value,
+            observacionRadicacionSacTecnica: this.addressForm.get( 'observaciones' ).value
+        };
+
+        this.obsMultipleSvc.changueStatusSolicitudPago( pSolicitudPago )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} )
+                        .then( () => this.routes.navigate( ['/verificarFinancieramenteSolicitudDePago'] ) );
+                }, err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
+    }
 
 }

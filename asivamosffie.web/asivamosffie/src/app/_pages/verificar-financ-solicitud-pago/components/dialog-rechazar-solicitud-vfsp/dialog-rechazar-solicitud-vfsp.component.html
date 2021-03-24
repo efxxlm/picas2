@@ -3,7 +3,7 @@
 </button>
 <div style="padding: 30px 20px; text-align: center;">
     <h1 class="title-menu--h1 centerTrick">
-        Rechazar solicitud SolPagoO0001
+        Rechazar solicitud {{ registro.numeroSolicitud }}
     </h1>
     <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
         <mat-card class="shipping-card mainGris auxBoxCard">

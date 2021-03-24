@@ -89,28 +89,64 @@ export class FormValidListchequeoVfspComponent implements OnInit {
     async getListasDeChequeo() {
         if ( this.contrato === undefined && this.solicitudPago !== undefined ) {
             this.esExpensas = true;
+            let semaforoSinDiligenciar = 0;
+            let semaforoEnProceso = 0;
+            let semaforoCompleto = 0;
             for ( const solicitudPagoListaChequeo of this.solicitudPago.solicitudPagoListaChequeo ) {
                 const respuestasListaChequeo = [];
+                let sinDiligenciar = 0;
+                let completo = 0;
+                let estadoSemaforo: string;
                 for ( const solicitudPagoListaChequeoRespuesta of solicitudPagoListaChequeo.solicitudPagoListaChequeoRespuesta ) {
+
+                    if ( solicitudPagoListaChequeoRespuesta.verificacionRespuestaCodigo === undefined ) {
+                        sinDiligenciar++;
+                    }
+
+                    if ( solicitudPagoListaChequeoRespuesta.verificacionRespuestaCodigo !== undefined ) {
+                        completo++;
+                    }
 
                     respuestasListaChequeo.push(
                         this.fb.group(
                             {
+                                solicitudPagoListaChequeoRespuestaId: [ solicitudPagoListaChequeoRespuesta.solicitudPagoListaChequeoRespuestaId ],
                                 listaChequeoItemNombre: [ solicitudPagoListaChequeoRespuesta.listaChequeoItem.nombre ],
                                 respuestaCodigo: [ solicitudPagoListaChequeoRespuesta.respuestaCodigo !== undefined ? solicitudPagoListaChequeoRespuesta.respuestaCodigo : null, Validators.required ],
-                                observacion: [ null, Validators.required ],
-                                respuestaRevisionTecnicaCodigo: [ null, Validators.required ],
-                                tieneSubsanacion: [ null, Validators.required ]
+                                observacion: [ solicitudPagoListaChequeoRespuesta.verificacionObservacion !== undefined ? solicitudPagoListaChequeoRespuesta.verificacionObservacion : null, Validators.required ],
+                                respuestaRevisionTecnicaCodigo: [ solicitudPagoListaChequeoRespuesta.verificacionRespuestaCodigo !== undefined ? solicitudPagoListaChequeoRespuesta.verificacionRespuestaCodigo : null, Validators.required ],
+                                tieneSubsanacion: [ solicitudPagoListaChequeoRespuesta.tieneSubsanacion !== undefined ? solicitudPagoListaChequeoRespuesta.tieneSubsanacion : null, Validators.required ]
                             }
                         )
                     )
 
                 }
 
+                if ( sinDiligenciar > 0 && sinDiligenciar === solicitudPagoListaChequeo.solicitudPagoListaChequeoRespuesta.length ) {
+                    estadoSemaforo = 'sin-diligenciar';
+                }
 
+                if ( completo > 0 && completo === solicitudPagoListaChequeo.solicitudPagoListaChequeoRespuesta.length ) {
+                    estadoSemaforo = 'completo';
+                }
+
+                if ( completo > 0 && completo < solicitudPagoListaChequeo.solicitudPagoListaChequeoRespuesta.length ) {
+                    estadoSemaforo = 'en-proceso';
+                }
+
+                if ( estadoSemaforo === 'sin-diligenciar' ) {
+                    semaforoSinDiligenciar++;
+                }
+                if ( estadoSemaforo === 'en-proceso' ) {
+                    semaforoEnProceso++;
+                }
+                if ( estadoSemaforo === 'completo' ) {
+                    semaforoCompleto++;
+                }
 
                 this.listas.push( this.fb.group(
                     {
+                        estadoSemaforo,
                         solicitudPagoId: this.solicitudPago.solicitudPagoId,
                         solicitudPagoListaChequeoId: solicitudPagoListaChequeo.solicitudPagoListaChequeoId,
                         nombre: solicitudPagoListaChequeo.listaChequeo.nombre,
@@ -121,6 +157,19 @@ export class FormValidListchequeoVfspComponent implements OnInit {
                         )
                     }
                 ) );
+            }
+
+            if ( semaforoSinDiligenciar > 0 && semaforoSinDiligenciar === this.solicitudPago.solicitudPagoListaChequeo.length ) {
+                this.estadoSemaforo.emit( 'sin-diligenciar' );
+            }
+            if ( semaforoEnProceso > 0 && semaforoEnProceso === this.solicitudPago.solicitudPagoListaChequeo.length ) {
+                this.estadoSemaforo.emit( 'en-proceso' );
+            }
+            if ( semaforoEnProceso > 0 && semaforoEnProceso < this.solicitudPago.solicitudPagoListaChequeo.length ) {
+                this.estadoSemaforo.emit( 'en-proceso' );
+            }
+            if ( semaforoCompleto > 0 && semaforoCompleto === this.solicitudPago.solicitudPagoListaChequeo.length ) {
+                this.estadoSemaforo.emit( 'completo' );
             }
 
             this.dataSource = new MatTableDataSource();
@@ -307,13 +356,23 @@ export class FormValidListchequeoVfspComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                        () => this.routes.navigate(
-                            [
-                                '/verificarFinancieramenteSolicitudDePago/verificarFinancSolicitud',  this.contrato.contratoId, this.contrato.solicitudPagoOnly.solicitudPagoId
-                            ]
-                        )
-                    );
+                    if ( this.esExpensas === false ) {
+                        this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                            () => this.routes.navigate(
+                                [
+                                    '/verificarFinancieramenteSolicitudDePago/verificarFinancSolicitud',  this.contrato.contratoId, this.contrato.solicitudPagoOnly.solicitudPagoId
+                                ]
+                            )
+                        );
+                    } else {
+                        this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                            () => this.routes.navigate(
+                                [
+                                    '/verificarFinancieramenteSolicitudDePago/verificarExpensas', this.solicitudPago.solicitudPagoId
+                                ]
+                            )
+                        );
+                    }
                 },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
             );

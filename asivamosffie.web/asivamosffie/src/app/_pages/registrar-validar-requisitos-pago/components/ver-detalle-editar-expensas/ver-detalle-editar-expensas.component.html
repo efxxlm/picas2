@@ -33,7 +33,10 @@
                     Lista de chequeo
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-validar-lista-chequeo [solicitudPago]="solicitudPago"></app-validar-lista-chequeo>
+            <app-validar-lista-chequeo  [solicitudPago]="solicitudPago"
+                                        [listaMenusId]="menusIdPath"
+                                        [listaChequeoCodigo]="listaTipoObservacionSolicitudes.listaChequeoCodigo"
+            ></app-validar-lista-chequeo>
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion>
@@ -43,7 +46,12 @@
                     Soporte
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-form-soporte-solicitud-url [solicitudPago]="solicitudPago" [esExpensas]="true" *ngIf="registroCompletoAcordeones.registroCompletoListaChequeo === true"></app-form-soporte-solicitud-url>
+            <app-form-soporte-solicitud-url [solicitudPago]="solicitudPago"
+                                            [esExpensas]="true"
+                                            [listaMenusId]="menusIdPath"
+                                            [soporteSolicitudCodigo]="listaTipoObservacionSolicitudes.soporteSolicitudCodigo"
+                                            *ngIf="registroCompletoAcordeones.registroCompletoListaChequeo === true">
+            </app-form-soporte-solicitud-url>
         </mat-expansion-panel>
     </mat-accordion>
     <div style="margin-top: 1em;margin-bottom: 1em;">

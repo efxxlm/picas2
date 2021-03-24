@@ -5,6 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { EstadoSolicitudPagoOrdenGiro, EstadosSolicitudPagoOrdenGiro, TipoSolicitud, TipoSolicitudes } from 'src/app/_interfaces/estados-solicitudPago-ordenGiro.interface';
 import { DialogRechazarSolicitudVfspComponent } from '../dialog-rechazar-solicitud-vfsp/dialog-rechazar-solicitud-vfsp.component';
 
@@ -32,7 +33,6 @@ export class VerificarFinancSolicitudPagoComponent implements OnInit {
     ];
 
     constructor(
-        private router: Router,
         private dialog: MatDialog,
         private routes: Router,
         private obsMultipleSvc: ObservacionesMultiplesCuService )
@@ -66,25 +66,50 @@ export class VerificarFinancSolicitudPagoComponent implements OnInit {
       this.dataSource.filter = filterValue.trim().toLowerCase();
     }
 
-    verificarSolicitud(id){
-      this.routes.navigate(['/verificarFinancieramenteSolicitudDePago/verificarFinancSolicitud',id]);
+    openDialog(modalTitle: string, modalText: string) {
+        const dialogRef = this.dialog.open( ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle, modalText }
+        });
     }
 
-    verDetalleEditar(id){
-      this.routes.navigate(['/verificarFinancieramenteSolicitudDePago/verDetalleEditarVerificarFinancSolicitud',id]);
+    getRechazo( registro: any ) {
+        this.dialog.open( DialogRechazarSolicitudVfspComponent, {
+            width: '90em',
+            data: registro
+        });
     }
 
-    verDetalle(id){
-      this.routes.navigate(['/verificarFinancieramenteSolicitudDePago/verDetalleVerificarFinancSolicitud',id]);
+    subsanarSolicitud( pSolicitudPagoId: number ) {
+        const pSolicitudPago = {
+            solicitudPagoId: pSolicitudPagoId,
+            estadoCodigo: this.listaEstadoSolicitudPago.enviadaSubsanacionVerificacionFinanciera
+        };
+
+        this.obsMultipleSvc.changueStatusSolicitudPago( pSolicitudPago )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} )
+                        .then( () => this.routes.navigate( ['/verificarFinancieramenteSolicitudDePago'] ) );
+                }, err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
-    openRechazo(){
-        const dialogConfig = new MatDialogConfig();
-        dialogConfig.height = 'auto';
-        dialogConfig.width = '1020px';
-        //dialogConfig.data = { id: id, idRol: idRol, numContrato: numContrato, fecha1Titulo: fecha1Titulo, fecha2Titulo: fecha2Titulo };
-        const dialogRef = this.dialog.open(DialogRechazarSolicitudVfspComponent, dialogConfig);
-        //dialogRef.afterClosed().subscribe(value => {});
+    changueStatusSolicitudPago( pSolicitudPagoId: number ) {
+        const pSolicitudPago = {
+            solicitudPagoId: pSolicitudPagoId,
+            estadoCodigo: this.listaEstadoSolicitudPago.enviarParaValidacionFinanciera
+        };
+
+        this.obsMultipleSvc.changueStatusSolicitudPago( pSolicitudPago )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} )
+                        .then( () => this.routes.navigate( ['/verificarFinancieramenteSolicitudDePago'] ) );
+                }, err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }

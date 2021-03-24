@@ -2,6 +2,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CommonService } from './../../../../core/_services/common/common.service';
 import { Component, OnInit } from '@angular/core';
 import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
+import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
 
 @Component({
   selector: 'app-ver-detalle-editar-expensas',
@@ -12,6 +13,8 @@ export class VerDetalleEditarExpensasComponent implements OnInit {
 
     tipoSolicitudCodigo: any = {};
     solicitudPago: any;
+    menusIdPath: any; // Se obtienen los ID de los respectivos PATH de cada caso de uso que se implementaran observaciones.
+    listaTipoObservacionSolicitudes: any; // Interfaz lista tipos de observaciones.
     registroCompletoAcordeones = {
         registroCompletoListaChequeo: false
     };
@@ -22,9 +25,16 @@ export class VerDetalleEditarExpensasComponent implements OnInit {
 
     constructor(
         private commonSvc: CommonService,
+        private obsMultipleSvc: ObservacionesMultiplesCuService,
         private registrarPagosSvc: RegistrarRequisitosPagoService,
         private activatedRoute: ActivatedRoute )
     {
+        this.obsMultipleSvc.listaMenu()
+            .subscribe( response => this.menusIdPath = response );
+        this.obsMultipleSvc.listaTipoObservacionSolicitudes()
+            .subscribe( response => {
+                this.listaTipoObservacionSolicitudes = response;
+            } );
         this.commonSvc.tiposDeSolicitudes()
             .subscribe(
                 solicitudes => {

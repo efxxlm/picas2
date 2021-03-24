@@ -211,13 +211,11 @@ export class ValidarListaChequeoComponent implements OnInit {
             );
     }
 
-    callObservaciones(){
-      const dialogConfig = new MatDialogConfig();
-      dialogConfig.height = 'auto';
-      dialogConfig.width = '865px';
-      //dialogConfig.data = { id: id, idRol: idRol, numContrato: numContrato, fecha1Titulo: fecha1Titulo, fecha2Titulo: fecha2Titulo };
-      const dialogRef = this.dialog.open(DialogObservacionesItemListchequeoComponent, dialogConfig);
-      //dialogRef.afterClosed().subscribe(value => {});
+    observacionSubsanacion( registro: any, jIndex: number ) {
+        this.dialog.open( DialogSubsanacionComponent, {
+            width: '80em',
+            data: { registro, dataSolicitud: this.esExpensas === true ? this.solicitudPago : this.contrato, jIndex, esExpensas: this.esExpensas }
+        })
     }
 
     getEstadoSemaforo( solicitudPagoListaChequeo: any ) {
@@ -239,15 +237,6 @@ export class ValidarListaChequeoComponent implements OnInit {
         if ( solicitudPagoListaChequeo.registroCompleto === true ) {
             return 'completo';
         }
-    }
-
-    callSubsanacion(){
-      const dialogConfig = new MatDialogConfig();
-      dialogConfig.height = 'auto';
-      dialogConfig.width = '865px';
-      //dialogConfig.data = { id: id, idRol: idRol, numContrato: numContrato, fecha1Titulo: fecha1Titulo, fecha2Titulo: fecha2Titulo };
-      const dialogRef = this.dialog.open(DialogSubsanacionComponent, dialogConfig);
-      //dialogRef.afterClosed().subscribe(value => {});
     }
 
     openDialog(modalTitle: string, modalText: string) {

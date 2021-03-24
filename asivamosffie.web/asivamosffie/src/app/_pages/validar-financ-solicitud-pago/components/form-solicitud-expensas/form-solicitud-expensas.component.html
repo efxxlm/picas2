@@ -1,4 +1,4 @@
-<mat-card class="shipping-card">
+<mat-card class="shipping-card" *ngIf="addressForm.get( 'tipoPago' ).value !== null && addressForm.get( 'conceptoPagoCriterio' ).value !== null">
     <mat-card-header class="header-card header-card--margin">
         <mat-card-title class="header-card--text">
             Expensas
