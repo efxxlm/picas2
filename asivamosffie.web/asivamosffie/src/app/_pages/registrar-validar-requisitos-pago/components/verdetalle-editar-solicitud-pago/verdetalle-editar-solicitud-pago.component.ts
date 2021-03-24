@@ -27,6 +27,7 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
     // Semaforos
     tieneObservacionSemaforo = false;
     tieneObservacionSemaforoListaChequeo = false;
+    tieneObservacionSemaforoSoporte = false;
     semaforoFormaDePago = 'sin-diligenciar';
     // Acordeones habilitados
     registroCompletoAcordeones: any = {

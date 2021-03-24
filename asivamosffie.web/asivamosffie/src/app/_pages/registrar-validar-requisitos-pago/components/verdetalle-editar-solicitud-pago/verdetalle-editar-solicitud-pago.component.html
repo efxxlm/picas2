@@ -146,14 +146,15 @@
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title    class="expansion-style--title"
-                                    [ngClass]="enabledAcordeon( 'soporteSolicitud', registroCompletoAcordeones.registroCompletoListaChequeo )">
+                                    [ngClass]="tieneObservacionSemaforoSoporte === true ? 'en-proceso' : enabledAcordeon( 'soporteSolicitud', registroCompletoAcordeones.registroCompletoListaChequeo )">
                     Soporte de la solicitud
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <app-form-soporte-solicitud-url [solicitudPago]="contrato.solicitudPagoOnly"
                                             [listaMenusId]="menusIdPath"
                                             [soporteSolicitudCodigo]="listaTipoObservacionSolicitudes.soporteSolicitudCodigo"
-                                            *ngIf="registroCompletoAcordeones.registroCompletoListaChequeo === true">
+                                            *ngIf="registroCompletoAcordeones.registroCompletoListaChequeo === true"
+                                            (semaforoObservacion)="tieneObservacionSemaforoSoporte = $event">
             </app-form-soporte-solicitud-url>
         </mat-expansion-panel>
     </mat-accordion>

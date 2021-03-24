@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -17,6 +17,7 @@ export class FormSoporteSolicitudUrlComponent implements OnInit {
     @Input() esExpensas = false;
     @Input() listaMenusId: any;
     @Input() soporteSolicitudCodigo: string;
+    @Output() semaforoObservacion = new EventEmitter<boolean>();
     esAutorizar: boolean;
     observacion: any;
     addressForm = this.fb.group({
@@ -56,7 +57,7 @@ export class FormSoporteSolicitudUrlComponent implements OnInit {
                                 this.observacion = observacion;
 
                                 if ( this.observacion.tieneObservacion === true ) {
-
+                                    this.semaforoObservacion.emit( true );
                                 }
                             }
                         }
@@ -76,7 +77,7 @@ export class FormSoporteSolicitudUrlComponent implements OnInit {
                                 this.observacion = observacion;
 
                                 if ( this.observacion.tieneObservacion === true ) {
-
+                                    this.semaforoObservacion.emit( true );
                                 }
                             }
                         }
@@ -113,6 +114,10 @@ export class FormSoporteSolicitudUrlComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
+                    if ( this.observacion !== undefined ) {
+                        this.observacion.archivada = !this.observacion.archivada;
+                        this.obsMultipleSvc.createUpdateSolicitudPagoObservacion( this.observacion ).subscribe();
+                    }
                     if ( this.esExpensas === false ) {
                         this.registrarPagosSvc.getValidateSolicitudPagoId( this.solicitudPago.solicitudPagoId )
                             .subscribe(
