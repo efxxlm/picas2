@@ -23,5 +23,6 @@ namespace asivamosffie.model.Models
         public bool? TieneSubsanacion { get; set; }
         public bool? RegistroCompletoValidacionFinanciera { get; set; }
         public bool? RegistroCompletoVerificacionFinanciera { get; set; }
+        public bool? EstaRechazada { get; set; }
     }
 }

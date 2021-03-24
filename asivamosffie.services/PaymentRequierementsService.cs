@@ -87,6 +87,7 @@ namespace asivamosffie.services
 
             return result.Select(r => new
             {
+                
                 r.TieneObservacion,
                 r.TieneSubsanacion,
                 r.RegistroCompletoAutorizar,
@@ -102,7 +103,8 @@ namespace asivamosffie.services
                 r.EstadoCodigo,
                 r.ModalidadNombre,
                 r.RegistroCompletoVerificacionFinanciera,
-                r.RegistroCompletoValidacionFinanciera
+                r.RegistroCompletoValidacionFinanciera,
+                r.EstaRechazada
             });
 
         }
