@@ -314,7 +314,7 @@ namespace asivamosffie.services
         private int CantidadDependenciasTipoInterventoriaObra(SolicitudPago pSolicitudPago)
         {
             //#2 pSolicitudPago.SolicitudPagoSoporteSolicitud  
-            int intCantidadDependenciasSolicitudPago = 1;
+            int intCantidadDependenciasSolicitudPago = 2;
 
             foreach (var SolicitudPagoRegistrarSolicitudPago in pSolicitudPago.SolicitudPagoRegistrarSolicitudPago.Where(r => r.Eliminado != true))
             {
@@ -361,6 +361,19 @@ namespace asivamosffie.services
             }
 
             return false;
+        }
+
+        private void ArchivarSolicitudPagoObservacion(SolicitudPago pSolicitudPago)
+        {
+            _context.Set<SolicitudPagoObservacion>()
+                    .Where(s => s.SolicitudPagoId == pSolicitudPago.SolicitudPagoId
+                              && s.TieneObservacion == false)
+                    .Update(s => new SolicitudPagoObservacion()
+                    {
+                        Archivada = true,
+                        FechaModificacion = DateTime.Now,
+                        UsuarioModificacion = pSolicitudPago.UsuarioCreacion 
+                    }); 
         }
 
         private void ActualizarSacFinanciera(SolicitudPago pSolicitudPago)
@@ -541,8 +554,10 @@ namespace asivamosffie.services
 
                 ///4.1.8
                 if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Solicitud_devuelta_por_apoyo_a_la_supervision)
+                {
+                    ArchivarSolicitudPagoObservacion(pSolicitudPago);
                     await SendEmailToDeclineVerify(pSolicitudPago.SolicitudPagoId);
-
+                }
                 ///4.1.9
                 if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Enviada_Verificacion_Financiera)
                 {
@@ -553,8 +568,10 @@ namespace asivamosffie.services
 
                 ///4.1.9
                 if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Solicitud_devuelta_por_coordinardor)
+                {
+                    ArchivarSolicitudPagoObservacion(pSolicitudPago);
                     await SendEmailToDeclineValidate(pSolicitudPago.SolicitudPagoId);
-
+                }
                 ///4.3.1
                 if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Solicitud_Rechazado_por_verificacion_financiera)
                     await SendEmailRejectAutorizar(pSolicitudPago.SolicitudPagoId, true);
@@ -568,6 +585,7 @@ namespace asivamosffie.services
                  || intEstadoCodigo == (int)EnumEstadoSolicitudPago.Enviada_para_subsanacion_por_validaccion_financiera
                     )
                 {
+                    ArchivarSolicitudPagoObservacion(pSolicitudPago);
                     await SendEmailRejectedCorrectALL(pSolicitudPago.SolicitudPagoId);
                     await SendEmailRejectedCorrect(pSolicitudPago.SolicitudPagoId);
                     ActualizarSubsanacion(pSolicitudPago);
@@ -622,7 +640,7 @@ namespace asivamosffie.services
                     };
             }
         }
-     
+
         ///4.3.2 Aprobar
         private async Task<bool> SendEmailAprovedValidar(int pSolicitudPagoId)
         {
@@ -650,7 +668,7 @@ namespace asivamosffie.services
                                           };
             return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
         }
-        
+
         ///4.3.1  y 4.3.2 envian subsanacion
         private async Task<bool> SendEmailRejectedCorrect(int pSolicitudPagoId)
         {
