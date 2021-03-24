@@ -8,6 +8,7 @@ import { ContractualControversyService } from 'src/app/core/_services/Contractua
   styleUrls: ['./verdetalle-reclamacion-aseg-cc.component.scss']
 })
 export class VerdetalleReclamacionAsegCcComponent implements OnInit {
+  controversiaId: any;
   idActuacion: any;
   reclamacionCod: any;
   actuacion: any;
@@ -19,17 +20,25 @@ export class VerdetalleReclamacionAsegCcComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(param => {
+      this.controversiaId = param.idControversia;
       this.idActuacion = param.id;
       this.loadData(this.idActuacion);
     });
   }
   loadData(id){
     this.services.GetControversiaActuacionById(id).subscribe((a:any)=>{
-      this.reclamacionCod = localStorage.getItem("numReclamacion");
-      this.actuacion = localStorage.getItem("actuacion");
+      this.reclamacionCod = a.numeroActuacionReclamacion;
+      this.actuacion = a.actuacionAdelantadaString;
       this.numActuacion = a.numeroActuacionFormat;
       this.resumen = a.resumenPropuestaFiduciaria;
-      this.requiereReclamacionComite = 'Sí'; //quemado
+      switch(a.esRequiereComiteReclamacion){
+        case false:
+        this.requiereReclamacionComite = 'No';
+        break;
+      case true:
+        this.requiereReclamacionComite = 'Sí';
+        break;
+      }
       this.soporteReclamacion = a.rutaSoporte;
     });
   }

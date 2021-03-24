@@ -13,10 +13,11 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
   @Input() isEditable;
   @Input() controversiaAct;
+  @Input() controversiaID;
   @Output() numReclamacion = new EventEmitter<string>();
   @Output() actuacion = new EventEmitter<string>();
   @Output() numActuacion = new EventEmitter<string>();
-  public controversiaID = parseInt(localStorage.getItem("controversiaID"));
+  //public controversiaID = parseInt(localStorage.getItem("controversiaID"));
   addressForm = this.fb.group({
     resumenReclamacionFiduciaria: [null, Validators.required],
     requereReclamacionComiteTecnico: [null, Validators.required],
@@ -92,7 +93,7 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
           
         });
         this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
-        this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
+        this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia',this.controversiaID]);
       });
     }
     else{
@@ -108,7 +109,7 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
           
         });
         this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
-        this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
+        this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia',this.controversiaID]);
       });
     }
   }

@@ -60,23 +60,23 @@ const routes: Routes = [
     component: VerdetalleTramiteCcComponent
   },
   {
-    path: 'registrarReclamacionAseguradora/:id',
+    path: 'registrarReclamacionAseguradora/:idControversia/:id',
     component: RegistarReclamacionAseguradoraCcComponent
   },
   {
-    path: 'verDetalleEditarReclamacionAseguradora/:id',
+    path: 'verDetalleEditarReclamacionAseguradora/:idControversia/:id',
     component: VerDetalleeditarReclamacionComponent
   },
   {
-    path: 'verDetalleReclamacionAseguradora/:id',
+    path: 'verDetalleReclamacionAseguradora/:idControversia/:id',
     component: VerdetalleReclamacionAsegCcComponent
   },
   {
-    path: 'actualizarReclamoAseguradora',
+    path: 'actualizarReclamoAseguradora/:idControversia/:idReclamacion',
     component: ActualizarReclamacionAsegCcComponent
   },
   {
-    path: 'registrarNuevaActuacionReclamacion',
+    path: 'registrarNuevaActuacionReclamacion/:idControversia/:idReclamacion/:id',
     component: RegistrarNuevaActuacionReclamacionComponent
   },
   {

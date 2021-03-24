@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -11,7 +11,8 @@ import { ContractualControversyService } from 'src/app/core/_services/Contractua
   styleUrls: ['./control-y-tabla-actuacion-reclamacion.component.scss']
 })
 export class ControlYTablaActuacionReclamacionComponent implements OnInit {
-
+  @Input() idControversia;
+  @Input() idReclamacion;
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -24,11 +25,11 @@ export class ControlYTablaActuacionReclamacionComponent implements OnInit {
     'gestion',
   ];
   dataTable: any[] = [];  
-  public reclamacionId = parseInt(localStorage.getItem("reclamacionID"));
+  //public reclamacionId = parseInt(localStorage.getItem("reclamacionID"));
   constructor(private router: Router,private services: ContractualControversyService) { }
 
   ngOnInit(): void {
-    this.services.GetListGrillaActuacionReclamacionByActuacionID(this.reclamacionId).subscribe((data:any)=>{
+    this.services.GetListGrillaActuacionReclamacionByActuacionID(this.idReclamacion).subscribe((data:any)=>{
       this.dataTable = data;
       this.dataSource = new MatTableDataSource(this.dataTable);
       this.dataSource.paginator = this.paginator;

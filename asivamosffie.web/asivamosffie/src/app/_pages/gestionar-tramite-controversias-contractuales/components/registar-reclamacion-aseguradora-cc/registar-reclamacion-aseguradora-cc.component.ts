@@ -8,13 +8,15 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class RegistarReclamacionAseguradoraCcComponent implements OnInit {
   idControversia: any;
+  idActuacion: any;
   actuacion = localStorage.getItem("actuacion");
   numActuacion = localStorage.getItem("numeroActuacion"); 
   constructor(private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(param => {
-      this.idControversia = param.id;
+      this.idControversia = param.idControversia;
+      this.idActuacion = param.id;
     });
   }
 

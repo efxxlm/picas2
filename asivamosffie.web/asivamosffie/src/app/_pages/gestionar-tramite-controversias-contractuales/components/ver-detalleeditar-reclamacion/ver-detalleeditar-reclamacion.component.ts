@@ -8,6 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class VerDetalleeditarReclamacionComponent implements OnInit {
   idControversia: any;
+  idActuacion : any;
   numReclamacion: any;
   actuacion: any;
   numActuacion: any;
@@ -15,7 +16,8 @@ export class VerDetalleeditarReclamacionComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(param => {
-      this.idControversia = param.id;
+      this.idControversia = param.idControversia;
+      this.idActuacion = param.id;
     });
   }
 

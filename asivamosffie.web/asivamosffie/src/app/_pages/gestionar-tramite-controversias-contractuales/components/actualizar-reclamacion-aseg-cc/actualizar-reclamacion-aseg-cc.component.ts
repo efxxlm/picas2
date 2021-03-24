@@ -9,9 +9,9 @@ import { PolizaGarantiaService } from 'src/app/core/_services/polizaGarantia/pol
   styleUrls: ['./actualizar-reclamacion-aseg-cc.component.scss']
 })
 export class ActualizarReclamacionAsegCcComponent implements OnInit {
-  idControversia: any;
-  public controversiaID = parseInt(localStorage.getItem("controversiaID"));
-  public numReclamacion = localStorage.getItem("numReclamacion");
+  public controversiaID;
+  public reclamID;
+  numReclamacion :any;
   tipoControversia: string;
   solicitud: any;
   numContrato: any;
@@ -32,11 +32,15 @@ export class ActualizarReclamacionAsegCcComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(param => {
-      this.idControversia = param.id;
+      this.controversiaID = param.idControversia;
+      this.reclamID = param.idReclamacion;
     });
     this.loadService();
   }
   loadService(){
+    this.services.GetControversiaActuacionById(this.reclamID).subscribe((d:any)=>{
+      this.numReclamacion = d.numeroActuacionReclamacion;
+    });
     this.services.GetControversiaContractualById(this.controversiaID).subscribe((data:any)=>{
       this.solicitud = data.numeroSolicitud;
       this.numContrato = data.contrato.numeroContrato;

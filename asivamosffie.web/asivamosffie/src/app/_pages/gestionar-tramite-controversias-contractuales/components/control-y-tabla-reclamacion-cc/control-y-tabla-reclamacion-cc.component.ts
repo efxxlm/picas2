@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -11,7 +11,8 @@ import { ContractualControversyService } from 'src/app/core/_services/Contractua
   styleUrls: ['./control-y-tabla-reclamacion-cc.component.scss']
 })
 export class ControlYTablaReclamacionCcComponent implements OnInit {
-  public controversiaID = parseInt(localStorage.getItem("controversiaID"));
+  @Input() controversiaID;
+  //public controversiaID = parseInt(localStorage.getItem("controversiaID"));
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -46,27 +47,27 @@ export class ControlYTablaReclamacionCcComponent implements OnInit {
   actualizarReclamacionAseguradora(id,numReclamacion){
     localStorage.setItem("reclamacionID",id);
     localStorage.setItem("codReclamacion",numReclamacion);
-    this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarReclamoAseguradora']);
+    this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarReclamoAseguradora',this.controversiaID,id]);
   }
   registrarReclamacionAseguradora(id,actuacion,numeroActuacion){
     localStorage.setItem("actuacion",actuacion);
     localStorage.setItem("numeroActuacion",numeroActuacion);
-    this.router.navigate(['/gestionarTramiteControversiasContractuales/registrarReclamacionAseguradora',id]);
+    this.router.navigate(['/gestionarTramiteControversiasContractuales/registrarReclamacionAseguradora',this.controversiaID,id]);
   }
   verDetalleEditarReclamacion(id,actuacion,numReclamacion){
     localStorage.setItem("actuacion",actuacion);
     localStorage.setItem("numReclamacion",numReclamacion);
-    this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarReclamacionAseguradora',id]);
+    this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarReclamacionAseguradora',this.controversiaID,id]);
   }
   enviarReclamacionComiteTecnico(id){
     this.services.CambiarEstadoActuacionReclamacion(id,'3').subscribe((data:any)=>{
       this.router.navigateByUrl('/', { skipLocationChange: true }).then(
-        () => this.router.navigate(['gestionarTramiteControversiasContractuales/actualizarTramiteControversia'])
+        () => this.router.navigate(['gestionarTramiteControversiasContractuales/actualizarTramiteControversia',this.controversiaID])
       );
     });
   }
   verDetalleReclamacion(id,actuacion,numReclamacion){
-    this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleReclamacionAseguradora',id]);
+    this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleReclamacionAseguradora',this.controversiaID, id]);
     localStorage.setItem("actuacion",actuacion);
     localStorage.setItem("numReclamacion",numReclamacion);
   }
