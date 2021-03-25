@@ -33,48 +33,50 @@ export class ValidarInformeComponent implements OnInit {
   ) { }
 
   ngOnDestroy(): void {
-    //Sólo satisfacción
-    if (this.childFormObsReciboASatisfaccion.noGuardado===true && this.childFormObsReciboASatisfaccion.observaciones.dirty && !this.childTablaInformeFinalAnexos.noGuardado) {
-      let dialogRef =this.dialog.open(ModalDialogComponent, {
-        width: '28em',
-        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
-      });   
-      dialogRef.afterClosed().subscribe(result => {
-        if(result === true)
-        {
-          this.childFormObsReciboASatisfaccion.onSubmit(false); 
-          this.ngOnInit();
-        }           
-      });
-    }
-    //Sólo tabla anexos
-    else if (!(this.childFormObsReciboASatisfaccion.noGuardado===true && this.childFormObsReciboASatisfaccion.observaciones.dirty) && this.childTablaInformeFinalAnexos.noGuardado) {
-      let dialogRef =this.dialog.open(ModalDialogComponent, {
-        width: '28em',
-        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
-      });   
-      dialogRef.afterClosed().subscribe(result => {
-        if(result === true)
-        {
-          this.childTablaInformeFinalAnexos.onSubmit(true); 
-          this.ngOnInit();
-        }           
-      });
-    }
-    //ambos
-    else if (this.childFormObsReciboASatisfaccion.noGuardado===true && this.childFormObsReciboASatisfaccion.observaciones.dirty && this.childTablaInformeFinalAnexos.noGuardado) {
-      let dialogRef =this.dialog.open(ModalDialogComponent, {
-        width: '28em',
-        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
-      });   
-      dialogRef.afterClosed().subscribe(result => {
-        if(result === true)
-        {
-            this.childFormObsReciboASatisfaccion.onSubmit(true); //solo muestre una vez la ventana de éxito
-            this.childTablaInformeFinalAnexos.onSubmit(true); //cambiar pop up
+    if(this.childFormObsReciboASatisfaccion && this.childTablaInformeFinalAnexos){
+      //Sólo satisfacción
+      if (this.childFormObsReciboASatisfaccion.noGuardado===true && this.childFormObsReciboASatisfaccion.observaciones.dirty && !this.childTablaInformeFinalAnexos.noGuardado) {
+        let dialogRef =this.dialog.open(ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
+        });   
+        dialogRef.afterClosed().subscribe(result => {
+          if(result === true)
+          {
+            this.childFormObsReciboASatisfaccion.onSubmit(false); 
             this.ngOnInit();
-        }           
-      });
+          }           
+        });
+      }
+      //Sólo tabla anexos
+      else if (!(this.childFormObsReciboASatisfaccion.noGuardado===true && this.childFormObsReciboASatisfaccion.observaciones.dirty) && this.childTablaInformeFinalAnexos.noGuardado) {
+        let dialogRef =this.dialog.open(ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
+        });   
+        dialogRef.afterClosed().subscribe(result => {
+          if(result === true)
+          {
+            this.childTablaInformeFinalAnexos.onSubmit(true); 
+            this.ngOnInit();
+          }           
+        });
+      }
+      //ambos
+      else if (this.childFormObsReciboASatisfaccion.noGuardado===true && this.childFormObsReciboASatisfaccion.observaciones.dirty && this.childTablaInformeFinalAnexos.noGuardado) {
+        let dialogRef =this.dialog.open(ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
+        });   
+        dialogRef.afterClosed().subscribe(result => {
+          if(result === true)
+          {
+              this.childFormObsReciboASatisfaccion.onSubmit(true); //solo muestre una vez la ventana de éxito
+              this.childTablaInformeFinalAnexos.onSubmit(true); //cambiar pop up
+              this.ngOnInit();
+          }           
+        });
+      }
     }
   };
 
