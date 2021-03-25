@@ -18,9 +18,10 @@ import { TablaObservacionesRevAprobRapgComponent } from './components/tabla-obse
 import { VerDetalleEditarPolizaRapgComponent } from './components/ver-detalle-editar-poliza-rapg/ver-detalle-editar-poliza-rapg.component';
 import { VerDetallePolizaRapgComponent } from './components/ver-detalle-poliza-rapg/ver-detalle-poliza-rapg.component';
 import { DetalleTablaObservacionesRapgComponent } from './components/detalle-tabla-observaciones-rapg/detalle-tabla-observaciones-rapg.component';
+import { AccordVigenciasValorComponent } from './components/accord-vigencias-valor/accord-vigencias-valor.component';
 
 @NgModule({
-  declarations: [RegistrarActualizPolizasGarantiasComponent, TablaGeneralRapgComponent, ActualizarPolizaRapgComponent, RazonTipoActualizacionRapgComponent, VigenciasValorRapgComponent, ObservacionesEspecificasRapgComponent, ListaChequeoRapgComponent, RevisionAprobacionRapgComponent, TablaObservacionesRevAprobRapgComponent, VerDetalleEditarPolizaRapgComponent, VerDetallePolizaRapgComponent, DetalleTablaObservacionesRapgComponent],
+  declarations: [RegistrarActualizPolizasGarantiasComponent, TablaGeneralRapgComponent, ActualizarPolizaRapgComponent, RazonTipoActualizacionRapgComponent, VigenciasValorRapgComponent, ObservacionesEspecificasRapgComponent, ListaChequeoRapgComponent, RevisionAprobacionRapgComponent, TablaObservacionesRevAprobRapgComponent, VerDetalleEditarPolizaRapgComponent, VerDetallePolizaRapgComponent, DetalleTablaObservacionesRapgComponent, AccordVigenciasValorComponent],
   imports: [
     CommonModule,
     RegistrarActualizPolizasGarantiasRoutingModule,
