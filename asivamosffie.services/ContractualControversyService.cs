@@ -16,6 +16,7 @@ using System.IO;
 using DinkToPdf;
 using DinkToPdf.Contracts;
 using Microsoft.AspNetCore.Mvc;
+using Z.EntityFramework.Plus;
 
 namespace asivamosffie.services
 {
@@ -2880,7 +2881,7 @@ namespace asivamosffie.services
                                 EstadoControversia = strEstadoControversia,
                                 EstadoControversiaCodigo = strEstadoCodigoControversia,
                                 RegistroCompletoNombre = (bool)controversia.EsCompleto ? "Completo" : "Incompleto",
-
+                                RegistroCompletoActuacionDerivada = controversiaActuacion.RegistroCompletoActuacionDerivada == null ? false : (bool)controversiaActuacion.RegistroCompletoActuacionDerivada,
                                 //cu 4.4.1
                                 //Actuacion = "Actuación " + actuacionSeguimiento.ActuacionSeguimientoId.ToString()
 
@@ -3057,6 +3058,9 @@ namespace asivamosffie.services
                 _context.SeguimientoActuacionDerivada.Update(actuacionSeguimientoOld);
                 _context.SaveChanges();
 
+                //LCT
+                validarRegistroCompletoActuacionDerivada(actuacionSeguimientoOld.ControversiaActuacionId, pUsuarioModifica);
+
                 return new Respuesta
                 {
                     IsSuccessful = true,
@@ -3079,6 +3083,30 @@ namespace asivamosffie.services
             }
         }
 
+        private bool validarRegistroCompletoActuacionDerivada(int pControversiaActuacionId, string user)
+        {
+            bool state = false;
+            int totalActuacionesDerivadas = _context.SeguimientoActuacionDerivada.Where(r => r.ControversiaActuacionId == pControversiaActuacionId && (r.Eliminado == null || r.Eliminado == false)).Count();
+            int totalFinalizadas = _context.SeguimientoActuacionDerivada.Where(r => r.ControversiaActuacionId == pControversiaActuacionId && (r.Eliminado == null || r.Eliminado == false) && r.EstadoActuacionDerivadaCodigo == ConstantCodigoActuacionSeguimientoDerivada.Finalizada).Count();
+            if (totalActuacionesDerivadas == totalFinalizadas)
+            {
+                state = true;
+            }
+            else
+            {
+                state = false;
+            }
+             _context.Set<ControversiaActuacion>()
+                .Where(r => r.ControversiaActuacionId == pControversiaActuacionId)
+                                                  .Update(r => new ControversiaActuacion()
+                                                  {
+                                                      FechaModificacion = DateTime.Now,
+                                                      UsuarioModificacion = user,
+                                                      RegistroCompletoActuacionDerivada = state,
+                                                  });
+            _context.SaveChanges();
+            return false;
+        }
         public async Task<Respuesta> EliminacionActuacionDerivada(int pControversiaActuacionId, string pUsuarioModifica)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_estado_Actuacion_Seguimiento, (int)EnumeratorTipoDominio.Acciones);

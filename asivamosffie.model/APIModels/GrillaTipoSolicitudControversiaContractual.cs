@@ -24,5 +24,6 @@ namespace asivamosffie.model.APIModels
         public int ActuacionID { get; set; }
         public string EstadoReclamacion { get; set; }
         public bool SePuedeCerrar { get; set; }
+        public bool RegistroCompletoActuacionDerivada { get; set; }
     }
 }
