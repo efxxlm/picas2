@@ -20,8 +20,6 @@ export class GestionarBalanFinancTraslRecComponent implements OnInit {
     'tipoIntervencion',
     'institucionEducativa',
     'sede',
-    'numeroTraslados',
-    'estadoBalance',
     'gestion'
   ];
   dataTable: any[] = [
@@ -36,6 +34,10 @@ export class GestionarBalanFinancTraslRecComponent implements OnInit {
       gestion: 1
     },
   ];
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
   constructor(
     private routes: Router
   ) { }

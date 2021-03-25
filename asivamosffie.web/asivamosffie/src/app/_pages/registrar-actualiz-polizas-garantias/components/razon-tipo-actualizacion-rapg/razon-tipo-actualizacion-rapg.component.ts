@@ -13,7 +13,8 @@ export class RazonTipoActualizacionRapgComponent implements OnInit {
     razonActualizacion: [null, Validators.required],
     fechaExpedicion: [null, Validators.required],
     polizasYSeguros: [null, Validators.required],
-    tipoActualizacion: [null, Validators.required]
+    tipoActualizacion: [null, Validators.required],
+    tipoActualizacion1: [null, Validators.required]
   });
   razonActualizacionArray : any[] = [
     {

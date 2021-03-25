@@ -13,15 +13,15 @@
         <mat-card-content align="left">
             <p><strong>Tipo de intervención: </strong><em>Remodelación</em></p>
             <p><strong>Institución Educativa: </strong><em>I.E Nuestra Señora Del Carmen</em></p>
-            <p><strong>Sede: </strong><em>Única Sede</em></p>
+            <p><strong>Sede educativa: </strong><em>Única Sede</em></p>
             <p><strong>Departamento: </strong><em>Boyacá</em></p>
             <p><strong>Municipio: </strong><em>Susacón</em></p>
         </mat-card-content>
     </mat-card>
     <div class="tabs--actions">
-        <button mat-raised-button color="accent" class="tabs--btn" [ngClass]="{'active': opcion1 === true}"
+        <button mat-raised-button color="accent" class="tabs--btn2" [ngClass]="{'active': opcion1 === true}"
             (click)="opcion1 = true; opcion2 = false; opcion3 = false;">
-            Recursos comprometidos y pagados
+            Recursos comprometidos y pagados por contrato
         </button>
         <button mat-raised-button color="accent" class="tabs--btn" [ngClass]="{'active': opcion2 === true}"
             (click)="opcion2 = true; opcion1 = false;  opcion3 = false;">
