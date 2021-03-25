@@ -479,7 +479,7 @@ namespace asivamosffie.services
                     proyecto.FechaModificacion = DateTime.Now;
                 proyecto.UsuarioModificacion = pUsuarioModificacion;
 
-                proyecto.UrlMonitoreo = pURLMonitoreo;                             
+                proyecto.UrlMonitoreo = pURLMonitoreo;
 
                 //proyecto.UrlMonitoreo = pURLMonitoreo;
                 //DP.Eliminado = false;
@@ -488,7 +488,10 @@ namespace asivamosffie.services
                 //DP.EstadoSolicitudCodigo = "4"; // Sin registr/*a*/r
 
                 _context.Proyecto.Update(proyecto);
-                    return respuesta = new Respuesta
+
+                await SendMailCargarEnlace(pProyectoId);
+
+                return respuesta = new Respuesta
                     {
                         IsSuccessful = true,
                         IsException = false,
@@ -499,7 +502,6 @@ namespace asivamosffie.services
                     };
 
                 //}
-               
               
             }
             catch (Exception ex)
@@ -552,5 +554,44 @@ namespace asivamosffie.services
                 };
             }
         }
+
+        #region correos
+        private async Task<bool> SendMailCargarEnlace(int proyectoId)
+        {
+            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Cargar_enlace_sistema_monitoreo_linea_4_1_1));
+
+            Proyecto proyecto = _context.Proyecto.Where(r => r.ProyectoId == proyectoId)
+                 .Include(r => r.ContratacionProyecto)
+                    .ThenInclude(r => r.Contratacion)
+                        .ThenInclude(r => r.Contrato)
+                 .Include(r => r.Sede)
+                 .Include(r => r.InstitucionEducativa)
+                 .Include(r => r.LocalizacionIdMunicipioNavigation)
+                 .FirstOrDefault();
+            List<Dominio> ListTipoIntervencion = await _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion && (bool)r.Activo).ToListAsync();
+
+            List<EnumeratorPerfil> perfilsEnviarCorreo =
+                new List<EnumeratorPerfil>
+                                          {
+                                                EnumeratorPerfil.Supervisor
+                                          };
+
+            if (proyecto != null)
+            {
+                String strContenido = template.Contenido
+                             .Replace("[LLAVE_MEN]", proyecto.LlaveMen)
+                             .Replace("[NUM_CONTRATO]", proyecto.ContratacionProyecto.FirstOrDefault().Contratacion.Contrato.FirstOrDefault().NumeroContrato)
+                             .Replace("[INSTITUCION_EDUCATIVA]", proyecto.InstitucionEducativa.Nombre)
+                             .Replace("[SEDE]", proyecto.Sede.Nombre)
+                             .Replace("[TIPO_INTERVENCION]", ListTipoIntervencion.Find(r => r.Codigo == proyecto.TipoIntervencionCodigo).Nombre)
+                             .Replace("[FECHA_ACTA_INICIO]", proyecto.ContratacionProyecto.FirstOrDefault().Contratacion.Contrato.FirstOrDefault().FechaActaInicioFase1.HasValue ? ((DateTime)proyecto.ContratacionProyecto.FirstOrDefault().Contratacion.Contrato.FirstOrDefault().FechaActaInicioFase1).ToString("dd-MM-yy") : " ");
+
+
+                return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
+            }
+
+            return false;
+        }
+        #endregion
     }
 }

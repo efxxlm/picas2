@@ -111,5 +111,8 @@ namespace asivamosffie.services.Helpers.Enumerator
         Enviar_Validacion_4_3_1 = 112,
         Rechazar_4_3_2 = 113,
         Aprobar_4_3_2 = 114,
+
+        //monitoring url
+        Cargar_enlace_sistema_monitoreo_linea_4_1_1 = 115,
     }
 }
