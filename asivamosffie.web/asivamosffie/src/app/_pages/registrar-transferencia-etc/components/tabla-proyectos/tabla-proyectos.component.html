@@ -76,12 +76,12 @@
           [class.completo]="element.registroCompletoEntregaETC"
         ></span>
         <span
-        *ngIf="element.registroCompletoEntregaETC"
+        *ngIf="element.registroCompleto"
           >
           Completo
       </span>
       <span
-      *ngIf="!element.registroCompletoEntregaETC || element.registroCompletoEntregaETC == null"
+      *ngIf="!element.registroCompleto || element.registroCompleto == null"
         >
         Incompleto
     </span>
@@ -101,7 +101,8 @@
           class="btn-table"
           [routerLink]="['registrarEntrega', element.informeFinalId]"
         >
-        Registrar entrega
+        <span *ngIf="element.estadoEntregaEtc === '0' || element.estadoEntregaEtc === null ">Registrar entrega</span>
+        <span *ngIf="element.estadoEntregaEtc !== '0' && element.estadoEntregaEtc !== null">Ver detalle/Editar</span>
         </a>
       </td>
     </ng-container>

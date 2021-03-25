@@ -23,10 +23,10 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
         public DateTime? FechaFirmaActaEngregaFisica { get; set; }
-        public string UrlActaEntregaFisica { get; set; }
         public bool? RegistroCompletoActaBienesServicios { get; set; }
         public bool? RegistroCompletoRecorridoObra { get; set; }
         public bool? RegistroCompletoRemision { get; set; }
+        public string UrlActaEntregaFisica { get; set; }
 
         public virtual InformeFinal InformeFinal { get; set; }
         public virtual ICollection<RepresentanteEtcrecorrido> RepresentanteEtcrecorrido { get; set; }

@@ -70,12 +70,20 @@ export class RegistrarEntregaComponent implements OnInit {
         // Semaforo recorrido obra
         if ( this.proyectoEntregaEtc.registroCompletoRecorridoObra === true ) {
           this.semaforoRecorrido = 'completo';
-        }else if(this.proyectoEntregaEtc.registroCompletoRemision === false && (this.proyectoEntregaEtc.numRadicadoDocumentosEntregaEtc === null || this.proyectoEntregaEtc.numRadicadoDocumentosEntregaEtc === ""
-        || this.proyectoEntregaEtc.fechaEntregaDocumentosEtc === null  )){
-          this.semaforoRemision = 'en-proceso';
+        }else if(this.proyectoEntregaEtc.registroCompletoRecorridoObra === false 
+                && (this.proyectoEntregaEtc.fechaRecorridoObra === null || this.proyectoEntregaEtc.fechaFirmaActaEngregaFisica === null
+                || this.proyectoEntregaEtc.urlActaEntregaFisica === null || this.proyectoEntregaEtc.urlActaEntregaFisica === "" 
+                || this.proyectoEntregaEtc.numRepresentantesRecorrido == null)){
+          this.semaforoRecorrido = 'en-proceso';
+        }else if(this.proyectoEntregaEtc.registroCompletoRecorridoObra === false
+          && (this.proyectoEntregaEtc.fechaRecorridoObra === null && this.proyectoEntregaEtc.fechaFirmaActaEngregaFisica === null
+          && (this.proyectoEntregaEtc.urlActaEntregaFisica === null || this.proyectoEntregaEtc.urlActaEntregaFisica === "" )
+          && this.proyectoEntregaEtc.numRepresentantesRecorrido === null)){
+          this.semaforoRecorrido = 'sin-diligenciar';
+        }else{
+          this.semaforoRecorrido = 'en-proceso';
         }
       }
-
     });
   }
 

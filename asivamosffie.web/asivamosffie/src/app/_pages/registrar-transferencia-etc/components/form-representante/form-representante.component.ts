@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
@@ -15,6 +15,7 @@ export class FormRepresentanteComponent implements OnInit {
   @Input() numRepresentantesRecorrido: any;
   @Input() proyectoEntregaEtcId: any;
   @Input() representanteEtcrecorrido: any;
+  @Output("callOnSubmitParent") callOnSubmitParent: EventEmitter<any> = new EventEmitter();
 
   representantesForm: FormGroup;
   ELEMENT_DATA : RepresentanteETCRecorrido[] = [];
@@ -223,10 +224,16 @@ export class FormRepresentanteComponent implements OnInit {
   }
 
   openDialog(modalTitle: string, modalText: string) {
-    this.dialog.open(ModalDialogComponent, {
+    let dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
     });
+  }
+
+  guardar() {
+    this.estaEditando = true;
+    this.callOnSubmitParent.emit();
+    return;
   }
 
   onSubmit() {

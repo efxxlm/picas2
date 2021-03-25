@@ -28,9 +28,7 @@
         <mat-expansion-panel-header class="expansion-style--header">
           <mat-panel-title
             class="expansion-style--title"
-            [class.sin-diligenciar]="true"
-            [class.en-proceso]="false"
-            [class.completo]="false"
+            [ngClass]="semaforoRecorrido"
           >
             Recorrido de la obra
           </mat-panel-title>

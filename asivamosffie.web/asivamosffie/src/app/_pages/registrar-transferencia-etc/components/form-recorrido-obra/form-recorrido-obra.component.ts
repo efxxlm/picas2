@@ -82,6 +82,7 @@ export class FormRecorridoObraComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       this.callOnInitParent.emit();
+      this.ngOnInit();
       return;
     });
   }
