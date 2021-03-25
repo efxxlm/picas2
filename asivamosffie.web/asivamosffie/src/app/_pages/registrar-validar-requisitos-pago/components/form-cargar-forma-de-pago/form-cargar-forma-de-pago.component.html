@@ -1,4 +1,4 @@
-<form [formGroup]="addressForm" novalidate (ngSubmit)="guardar()" *ngIf="contrato !== undefined && formaPagoArray.length > 0">
+<form [formGroup]="addressForm" novalidate (ngSubmit)="guardar()" *ngIf="contrato !== undefined && formaPagoArrayPreconstruccion.length > 0">
     <mat-card class="shipping-card">
         <mat-card-header class="header-card header-card--margin">
             <mat-card-title class="header-card--text">
@@ -23,7 +23,7 @@
                         <div class="col">
                             <mat-form-field class="select-width">
                                 <mat-select formControlName="formaPagoPreconstruccion" required>
-                                    <mat-option *ngFor="let forma of formaPagoArray" [value]="forma">
+                                    <mat-option *ngFor="let forma of formaPagoArrayPreconstruccion" [value]="forma">
                                         {{ forma.nombre }}
                                     </mat-option>
                                 </mat-select>
@@ -64,7 +64,7 @@
                         <div class="col">
                             <mat-form-field class="select-width">
                                 <mat-select formControlName="formaPagoConstruccion" required>
-                                    <mat-option *ngFor="let forma of formaPagoArray" [value]="forma">
+                                    <mat-option *ngFor="let forma of formaPagoArrayConstruccion" [value]="forma">
                                         {{ forma.nombre }}
                                     </mat-option>
                                 </mat-select>

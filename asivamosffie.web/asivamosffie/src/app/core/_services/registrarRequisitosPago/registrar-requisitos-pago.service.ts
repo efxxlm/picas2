@@ -1,3 +1,4 @@
+import { Dominio } from 'src/app/core/_services/common/common.service';
 import { Respuesta } from './../common/common.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from './../../../../environments/environment';
@@ -30,6 +31,10 @@ export class RegistrarRequisitosPagoService {
 
   getProyectosByIdContrato( pContratoId: number ) {
     return this.http.get( `${ this.apiUrl }/GetProyectosByIdContrato?pContratoId=${ pContratoId }` );
+  }
+
+  getFormaPagoCodigoByFase( pEsPreconstruccion: string ) {
+    return this.http.get<Dominio[]>( `${ this.apiUrl }/GetFormaPagoCodigoByFase?pEsPreconstruccion=${ pEsPreconstruccion }` );
   }
 
   getMontoMaximoMontoPendiente( SolicitudPagoId: number, strFormaPago: string, EsPreConstruccion: string ) {
