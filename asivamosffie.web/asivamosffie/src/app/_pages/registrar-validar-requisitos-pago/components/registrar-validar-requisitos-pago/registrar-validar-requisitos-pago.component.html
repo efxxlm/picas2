@@ -126,7 +126,12 @@
                                 color="accent"
                                 class="btn-table"
                                 (click)="devolverSolicitudDialog( element )"
-                                *ngIf="element.tieneNoCumpleListaChequeo === true && element.estadoCodigo === listaEstadoSolicitudPago.solicitudRevisadaEquipoFacturacion">
+                                *ngIf=" element.tieneNoCumpleListaChequeo === true && 
+                                        (   element.estadoCodigo === listaEstadoSolicitudPago.solicitudRevisadaEquipoFacturacion
+                                            || element.estadoCodigo === listaEstadoSolicitudPago.solicitudDevueltaApoyoSupervision
+                                            || element.estadoCodigo === listaEstadoSolicitudPago.solicitudDevueltaPorCoordinador
+                                            || element.estadoCodigo === listaEstadoSolicitudPago.enviadaSubsanacionVerificacionFinanciera
+                                            || element.estadoCodigo === listaEstadoSolicitudPago.enviadaSubsanacionValidacionFinanciera )">
                                 Devolver solicitud
                         </button>
 
@@ -176,7 +181,12 @@
                                 color="accent"
                                 class="btn-table"
                                 (click)="devolverSolicitudDialog( element )"
-                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoRegistro">
+                                *ngIf=" element.tieneNoCumpleListaChequeo === true && 
+                                        (   element.estadoCodigo === listaEstadoSolicitudPago.solicitudRevisadaEquipoFacturacion
+                                            || element.estadoCodigo === listaEstadoSolicitudPago.solicitudDevueltaApoyoSupervision
+                                            || element.estadoCodigo === listaEstadoSolicitudPago.solicitudDevueltaPorCoordinador
+                                            || element.estadoCodigo === listaEstadoSolicitudPago.enviadaSubsanacionVerificacionFinanciera
+                                            || element.estadoCodigo === listaEstadoSolicitudPago.enviadaSubsanacionValidacionFinanciera )">
                                 Devolver solicitud
                         </button>
 
