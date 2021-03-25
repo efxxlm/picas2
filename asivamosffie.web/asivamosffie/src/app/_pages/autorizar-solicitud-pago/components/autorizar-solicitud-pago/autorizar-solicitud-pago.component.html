@@ -94,7 +94,16 @@
                                 class="btn-table"
                                 [routerLink]="[ 'verDetalleAutorizarSolicitud', element.contratoId, element.solicitudPagoId ]"
                                 *ngIf=" element.estadoCodigo === listaEstadoSolicitudPago.enviadaVerificacionFinanciera
-                                        || element.estadoCodigo === listaEstadoSolicitudPago.solicitudDevueltaPorCoordinador">
+                                        || element.estadoCodigo === listaEstadoSolicitudPago.enProcesoVerificacionFinanciera
+                                        || element.estadoCodigo === listaEstadoSolicitudPago.enviarParaValidacionFinanciera
+                                        || element.estadoCodigo === listaEstadoSolicitudPago.enProcesoValidacionFinanciera
+                                        || element.estadoCodigo === listaEstadoSolicitudPago.enviadaParaOrdenGiro
+                                        || element.estadoCodigo === listaEstadoSolicitudPago.solicitudDevueltaPorCoordinador
+                                        || element.estadoCodigo === listaEstadoSolicitudPago.enviadaSubsanacionVerificacionFinanciera
+                                        || element.estadoCodigo === listaEstadoSolicitudPago.enviadaSubsanacionValidacionFinanciera
+                                        || element.estadoCodigo === listaEstadoSolicitudPago.solicitudDevueltaPorGenerarOrdenGiroParaEquipoFacturacion
+                                        || element.estadoCodigo === listaEstadoSolicitudPago.solicitudRechazadaPorVerificacionFinanciera
+                                        || element.estadoCodigo === listaEstadoSolicitudPago.solicitudRechazadaPorValidacionFinanciera">
                                 Ver detalle
                         </button>
 
@@ -138,7 +147,16 @@
                                 class="btn-table"
                                 [routerLink]="[ 'verDetalleExpensas', element.solicitudPagoId ]"
                                 *ngIf=" element.estadoCodigo === listaEstadoSolicitudPago.enviadaVerificacionFinanciera
-                                        || element.estadoCodigo === listaEstadoSolicitudPago.solicitudDevueltaPorCoordinador">
+                                        || element.estadoCodigo === listaEstadoSolicitudPago.enProcesoVerificacionFinanciera
+                                        || element.estadoCodigo === listaEstadoSolicitudPago.enviarParaValidacionFinanciera
+                                        || element.estadoCodigo === listaEstadoSolicitudPago.enProcesoValidacionFinanciera
+                                        || element.estadoCodigo === listaEstadoSolicitudPago.enviadaParaOrdenGiro
+                                        || element.estadoCodigo === listaEstadoSolicitudPago.solicitudDevueltaPorCoordinador
+                                        || element.estadoCodigo === listaEstadoSolicitudPago.enviadaSubsanacionVerificacionFinanciera
+                                        || element.estadoCodigo === listaEstadoSolicitudPago.enviadaSubsanacionValidacionFinanciera
+                                        || element.estadoCodigo === listaEstadoSolicitudPago.solicitudDevueltaPorGenerarOrdenGiroParaEquipoFacturacion
+                                        || element.estadoCodigo === listaEstadoSolicitudPago.solicitudRechazadaPorVerificacionFinanciera
+                                        || element.estadoCodigo === listaEstadoSolicitudPago.solicitudRechazadaPorValidacionFinanciera">
                                 Ver detalle
                         </button>
 
