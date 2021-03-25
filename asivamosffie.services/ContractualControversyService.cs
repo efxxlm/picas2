@@ -3013,6 +3013,7 @@ namespace asivamosffie.services
                 _context.ControversiaActuacion.Update(controversia);
                 _context.SaveChanges();
 
+                validarRegistroCompletoActuacionDerivada(actuacionSeguimiento.ControversiaActuacionId,actuacionSeguimiento.UsuarioCreacion);
                 return new Respuesta
                 {
                     IsSuccessful = true,
