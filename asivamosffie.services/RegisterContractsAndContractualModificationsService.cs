@@ -198,7 +198,7 @@ namespace asivamosffie.services
                 Contrato contratoOld = _context.Contrato.Where(r => r.ContratoId == pContrato.ContratoId)
                     .Include(r => r.Contratacion)
                     .FirstOrDefault();
-                contratoOld.ModalidadCodigo = pContrato.ModalidadCodigo;
+
                 //contratacion
                 Contratacion contratacionOld = _context.Contratacion.Find(contratoOld.ContratacionId);
 
@@ -215,6 +215,9 @@ namespace asivamosffie.services
 
                 contratacionOld.FechaTramite = DateTime.Now;
 
+                //Cambiando por enésima vez 
+                if (!string.IsNullOrEmpty(pContrato.ModalidadCodigo))
+                    contratoOld.ModalidadCodigo = pContrato.ModalidadCodigo;
 
                 if (!string.IsNullOrEmpty(pContrato.NumeroContrato))
                     contratoOld.NumeroContrato = pContrato.NumeroContrato;
@@ -333,7 +336,7 @@ namespace asivamosffie.services
                     };
             }
         }
-         
+
         private bool ValidarRegistroCompletoContrato(Contrato contratoOld)
         {
             if (
@@ -360,7 +363,7 @@ namespace asivamosffie.services
 
             return true;
         }
-         
+
         public async Task<bool> EnviarNotificaciones(Contrato pContrato, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
             Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificacionContratacion341);
