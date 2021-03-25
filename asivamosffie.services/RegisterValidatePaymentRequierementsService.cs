@@ -567,6 +567,7 @@ namespace asivamosffie.services
                                                   .Where(s => s.SolicitudPagoId == SolicitudPagoId)
                                                                                                   .UpdateAsync(r => new SolicitudPago()
                                                                                                   {
+                                                                                                      TieneObservacion = TieneAlgunaObservacionPendiente,
                                                                                                       EstadoCodigo = EstadoSolicitudPago,
                                                                                                       RegistroCompleto = CompleteRecord,
                                                                                                       FechaRegistroCompleto = FechaRegistroCompleto,
