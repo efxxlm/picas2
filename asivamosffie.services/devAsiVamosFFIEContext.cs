@@ -257,7 +257,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -2882,6 +2881,10 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaEnvioApoyoSupervisor).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaEnvioEtc)
+                    .HasColumnName("FechaEnvioETC")
+                    .HasColumnType("datetime");
 
                 entity.Property(e => e.FechaEnvioGrupoNovedades).HasColumnType("datetime");
 

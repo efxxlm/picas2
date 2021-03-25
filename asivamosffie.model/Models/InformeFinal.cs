@@ -38,6 +38,7 @@ namespace asivamosffie.model.Models
         public DateTime? FechaEnvioGrupoNovedades { get; set; }
         public DateTime? FechaAprobacionFinal { get; set; }
         public bool? RegistroCompletoCumplimiento { get; set; }
+        public DateTime? FechaEnvioEtc { get; set; }
 
         public virtual Proyecto Proyecto { get; set; }
         public virtual ProyectoEntregaEtc ProyectoEntregaEtc { get; set; }

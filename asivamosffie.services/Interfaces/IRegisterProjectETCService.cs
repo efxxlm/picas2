@@ -17,6 +17,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CreateEditRemisionDocumentosTecnicos(ProyectoEntregaEtc pDocumentos);
         Task<Respuesta> CreateEditActaBienesServicios(ProyectoEntregaEtc pActaServicios);
         Task<ProyectoEntregaEtc> GetProyectoEntregaEtc(int informeFinalId);
+        Task<Respuesta> SendProjectToEtc(int informeFinalId, string pUsuario);
 
     }
 }

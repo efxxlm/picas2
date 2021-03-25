@@ -432,5 +432,47 @@ namespace asivamosffie.services
 
             return state;
         }
+
+        public async Task<Respuesta> SendProjectToEtc(int informeFinalId, string pUsuario)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Enviar_A_ETC, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                InformeFinal informeFinal = _context.InformeFinal.Find(informeFinalId);
+                if (informeFinal != null)
+                {
+                    informeFinal.FechaEnvioEtc = DateTime.Now;
+                    informeFinal.EstadoEntregaEtc = ConstantCodigoEstadoProyectoEntregaETC.Entregado_a_ETC;
+                    informeFinal.UsuarioModificacion = pUsuario;
+                    informeFinal.FechaModificacion = DateTime.Now;
+                    
+                    //Enviar Correo apoyo supervisor 5.1.1
+                    //await EnviarCorreoApoyoSupervisor(informeFinal, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
+                }
+
+                _context.SaveChanges();
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarTransferenciaProyectoETC, GeneralCodes.OperacionExitosa, idAccion, pUsuario, "INFORME FINAL ")
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantSesionComiteTecnico.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarTransferenciaProyectoETC, GeneralCodes.Error, idAccion, pUsuario, ex.InnerException.ToString())
+                };
+            }
+        }
     }
 }

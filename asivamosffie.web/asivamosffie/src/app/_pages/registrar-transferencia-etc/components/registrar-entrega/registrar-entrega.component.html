@@ -5,7 +5,10 @@
     </a>
   </div>
   <div class="text-center">
-    <h1 class="title-menu--h1">Registrar entrega {{ llaveMen }}</h1>
+    <h1 class="title-menu--h1">
+      <span *ngIf="proyectoEntregaEtc.informeFinal.estadoEntregaEtc === '0' || proyectoEntregaEtc.informeFinal.estadoEntregaEtc === null ">Registrar entrega</span>
+      <span *ngIf="proyectoEntregaEtc.informeFinal.estadoEntregaEtc !== '0' && proyectoEntregaEtc.informeFinal.estadoEntregaEtc !== null">Ver detalle/Editar registro de entrega</span>
+      {{ llaveMen }}</h1>
     <p class="colorMainColor mt-05em">
       Número de contrato Obra:
       <b> {{ numeroContratoObra }} </b>

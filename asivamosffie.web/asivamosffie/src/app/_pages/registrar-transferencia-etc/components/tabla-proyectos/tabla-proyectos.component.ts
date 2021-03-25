@@ -90,4 +90,13 @@ export class TablaProyectosComponent implements OnInit, AfterViewInit {
     }
   }
 
+  enviarProyectoAEtc(informeFinalId: number) {
+    console.log(informeFinalId);
+    this.registerProjectETCService.sendProjectToEtc(informeFinalId)
+      .subscribe(respuesta => {
+        this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+        this.ngOnInit();
+      });
+  }
+
 }

@@ -298,6 +298,7 @@
         public const string Crear_Editar_Representante_ETC = "212";
         public const string Crear_Editar_Remision_Documentos_Tecnicos = "213";
         public const string Crear_Editar_Acta_Bienes_Servicios = "214";
+        public const string Enviar_A_ETC = "239";
 
         public const string Cambiar_Estado_Legitimacion_Defensa_Judicial = "216";
 

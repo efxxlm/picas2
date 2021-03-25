@@ -16,7 +16,10 @@ export interface ProyectoEntregaETC {
     registroCompletoActaBienesServicios?: boolean,
     registroCompletoRecorridoObra?: boolean,
     registroCompletoRemision?: boolean,
-    representanteEtcrecorrido?: RepresentanteETCRecorrido[]
+    representanteEtcrecorrido?: RepresentanteETCRecorrido[],
+    informeFinal?: {
+        estadoEntregaEtc?: string
+    }
 }
 
 

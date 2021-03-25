@@ -45,4 +45,7 @@ export class RegisterProjectEtcService {
       return this.http.get(`${ this.urlApi }/${this.final_report}/GetProyectoEntregaEtc?informeFinalId=${ informeFinalId }`);
     }
 
+    sendProjectToEtc(informeFinalId: number){
+      return this.http.post(`${environment.apiUrl}/${this.final_report}/SendProjectToEtc?informeFinalId=${ informeFinalId }`,null);
+    }
 }
