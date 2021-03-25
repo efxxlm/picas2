@@ -405,71 +405,43 @@
     </div>
   </div>
 
-  <div class="row" *ngIf="dataFormulario.get('fechaFirmaPorParteFiduciaria').value !== null" style="margin-top: 2em">
+  <div class="row mt-1em" *ngIf="dataFormulario.get('fechaFirmaPorParteFiduciaria').value !== null">
     <div class="col-md-12">
       <div class="row">
         <div class="pr-1">
           <label
             class="label-left"
-            style="margin-top: 1.4em"
+            for="rutaDocumento"
             [class.color-secondaryColor]="
-              (dataFormulario.get('documentoFile').invalid && dataFormulario.get('documentoFile').touched) ||
-              (dataFormulario.get('documentoFile').invalid && estaEditando)
+              (dataFormulario.get('rutaDocumento').invalid && dataFormulario.get('rutaDocumento').touched) ||
+              (dataFormulario.get('rutaDocumento').invalid && estaEditando)
             "
           >
-            Adjuntar documento suscrito
+            Url con soporte
           </label>
         </div>
         <div class="col d-flex">
-          <span
-            class="input-file-text text-center required"
-            (click)="fileInput.click()"
-            style="width: 100%"
-            [class.invalid]="
-              (dataFormulario.get('documentoFile').invalid && dataFormulario.get('documentoFile').touched) ||
-              (dataFormulario.get('documentoFile').invalid && estaEditando)
-            "
-          >
-            {{ archivo || dataFormulario.get('documento').value }}
+          <mat-form-field style="width: 92%;">
+            <input matInput type="text" maxlength="400" formControlName="rutaDocumento" required />
+          </mat-form-field>
+          <span class="icon-incompleto">
+            <img
+              class="icon-incompleto--img"
+              src="assets/img/icon/incompleto.svg"
+              alt="este campo es requerido"
+              [matTooltipPosition]="'above'"
+              matTooltip="Debe ingresar la información en el campo para continuar"
+              matTooltipClass="info-tooltip"
+              *ngIf="
+                (dataFormulario.get('rutaDocumento').invalid && dataFormulario.get('rutaDocumento').touched) ||
+                (dataFormulario.get('rutaDocumento').invalid && estaEditando)
+              "
+            />
           </span>
-          <button mat-raised-button color="primary" type="button" (click)="fileInput.click()" class="input-file--btn">
-            Adjuntar
-          </button>
-          <input
-            required
-            hidden
-            (change)="fileName($event)"
-            #fileInput
-            type="file"
-            id="file"
-            formControlName="documentoFile"
-            [placeholder]="archivo || dataFormulario.get('documento').value"
-            [class.invalid]="campoSinDiligenciar('documentoFile')"
-            accept="application/pdf"
-          />
         </div>
-        <span class="icon-incompleto">
-          <img
-            class="icon-incompleto--img"
-            src="assets/img/icon/incompleto.svg"
-            alt="este campo es requerido"
-            [matTooltipPosition]="'above'"
-            matTooltip="Debe ingresar la información en el campo para continuar"
-            matTooltipClass="info-tooltip"
-            *ngIf="
-              (dataFormulario.get('documentoFile').invalid && dataFormulario.get('documentoFile').touched) ||
-              (dataFormulario.get('documentoFile').invalid && estaEditando)
-            "
-          />
-        </span>
       </div>
+      <span class="info-url">Indique la ruta en la que se encuentra el contrato suscrito.</span>
     </div>
-  </div>
-
-  <div class="container text-center" *ngIf="dataFormulario.get('fechaFirmaPorParteFiduciaria').value !== null">
-    <p class="align-text">
-      <small><i>Adjunte el contrato suscrito cuando tenga todas las firmas requeridas.</i></small>
-    </p>
   </div>
 
   <div class="text-center" style="margin-top: 2em">

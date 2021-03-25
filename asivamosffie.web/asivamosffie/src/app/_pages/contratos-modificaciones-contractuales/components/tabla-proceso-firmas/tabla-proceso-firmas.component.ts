@@ -7,6 +7,7 @@ import { ContratosModificacionesContractualesService } from '../../../../core/_s
 import { ProcesosContractualesService } from '../../../../core/_services/procesosContractuales/procesos-contractuales.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import moment from 'moment';
 
 @Component({
   selector: 'app-tabla-proceso-firmas',
@@ -75,7 +76,9 @@ export class TablaProcesoFirmasComponent implements OnInit {
           this.estadoAcordeon.emit( 'en-proceso' );
         }
 
-        this.dataTable.forEach( registro => registro.contratacion.fechaCreacion = registro.contratacion.fechaCreacion.split('T')[0].split('-').reverse().join('/') );
+        if ( this.dataTable.length > 0 ) {
+          this.dataTable.forEach( registro => registro.fechaCreacion = registro.contratacion.fechaCreacion !== undefined ? moment( registro.contratacion.fechaCreacion ).format( 'DD/MM/YYYY' ) : '' );
+        }
 
         this.dataSource                        = new MatTableDataSource( this.dataTable );
         this.dataSource.paginator              = this.paginator;

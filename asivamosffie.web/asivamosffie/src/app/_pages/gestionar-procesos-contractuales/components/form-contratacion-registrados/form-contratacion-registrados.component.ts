@@ -59,8 +59,11 @@ export class FormContratacionRegistradosComponent implements OnInit {
 
   getModalidadContrato( modalidadCodigo: string ) {
     if ( this.modalidadContratoArray.length > 0 ) {
-      const modalidad = this.modalidadContratoArray.filter( modalidad => modalidad.codigo === modalidadCodigo );
-      return modalidad[0].nombre;
+      const modalidad = this.modalidadContratoArray.find( modalidad => modalidad.codigo === modalidadCodigo );
+      
+      if ( modalidad !== undefined ) {
+        return modalidad.nombre;
+      }
     }
   }
 
@@ -76,7 +79,6 @@ export class FormContratacionRegistradosComponent implements OnInit {
           let rutaDocumento;
           if ( resp.contrato[0].rutaDocumento !== undefined ) {
             rutaDocumento = resp.contrato[0].rutaDocumento.split( /\\/gi );
-            console.log( rutaDocumento );
             rutaDocumento = rutaDocumento[ rutaDocumento.length -1 ];
           } else {
             rutaDocumento = null;
@@ -107,7 +109,7 @@ export class FormContratacionRegistradosComponent implements OnInit {
 
   getEstadoCodigo () {
     if ( this.routes.getCurrentNavigation().extras.replaceUrl || this.routes.getCurrentNavigation().extras.skipLocationChange === false ) {
-      this.routes.navigate( [ '/contratosModificacionesContractuales' ] );
+      this.routes.navigate( [ '/procesosContractuales' ] );
       return;
     }
     

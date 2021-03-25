@@ -49,7 +49,7 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
 
         if ( solicitud.estadoCodigo === this.estadoCodigos.aprobadoCf ) {
 
-          ( solicitud.estadoRegistro ) ? conTrue+=1 : conFalse+=1;
+          solicitud.estadoRegistro === true ? conTrue+=1 : conFalse+=1;
 
           dataTable.push( solicitud );
         };
@@ -57,11 +57,17 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
 
       if ( conTrue === dataTable.length ) {
         this.estadoAcordeon.emit( 'completo' );
-      } else if ( conFalse === dataTable.length ) {
+      }
+      if ( conFalse === dataTable.length ) {
         this.estadoAcordeon.emit( 'sin-diligenciar' );
-      } else if ( conTrue > conFalse || conTrue < conFalse ) {
+      }
+      if ( conTrue > conFalse || conTrue < conFalse ) {
         this.estadoAcordeon.emit( 'en-proceso' );
       };
+
+      if ( conTrue > 0 && conFalse > 0 && conTrue + conFalse === dataTable.length ) {
+        this.estadoAcordeon.emit( 'en-proceso' );
+      }
 
       if ( dataTable.length > 0 ) {
         dataTable.forEach( registro => registro.fechaSolicitud !== undefined ? registro.fechaSolicitud = registro.fechaSolicitud.split('T')[0].split('-').reverse().join('/') : '---' );

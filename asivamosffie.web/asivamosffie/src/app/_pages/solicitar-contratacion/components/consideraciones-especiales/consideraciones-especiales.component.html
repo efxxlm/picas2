@@ -67,7 +67,7 @@
   </div>
 
   <div class="text-center animatedDown" *ngIf="addressForm.controls.reasignacion.value !== ''">
-    <button mat-button color="warn" class="btn-guardar" type="submit">
+    <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="addressForm.dirty === false">
       <img src="assets/img/icon/guardar.svg" alt="guardar" />
     </button>
   </div>

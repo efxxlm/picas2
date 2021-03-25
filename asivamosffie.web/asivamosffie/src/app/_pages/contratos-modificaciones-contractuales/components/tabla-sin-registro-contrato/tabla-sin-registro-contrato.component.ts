@@ -3,6 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import moment from 'moment';
 import { ContratosModificacionesContractualesService } from '../../../../core/_services/contratos-modificaciones-contractuales/contratos-modificaciones-contractuales.service';
 
 @Component({
@@ -69,8 +70,9 @@ export class TablaSinRegistroContratoComponent implements OnInit {
           this.sinData.emit( false );
           this.estadoSemaforo.emit( 'completo' );
           return;
-        } else {
-          this.dataTable.forEach( registro => registro.contratacion.fechaCreacion = registro.contratacion.fechaCreacion.split('T')[0].split('-').reverse().join('/') );
+        }
+        if ( this.dataTable.length > 0 ) {
+          this.dataTable.forEach( registro => registro.fechaCreacion = registro.contratacion.fechaCreacion !== undefined ? moment( registro.contratacion.fechaCreacion ).format( 'DD/MM/YYYY' ) : '' );
         }
 
         this.dataSource                        = new MatTableDataSource( this.dataTable );

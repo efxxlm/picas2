@@ -104,8 +104,11 @@ export class FormContratacionComponent implements OnInit {
 
   getModalidadContrato( modalidadCodigo: string ) {
     if ( this.modalidadContratoArray.length > 0 ) {
-        const modalidad = this.modalidadContratoArray.filter( modalidad => modalidad.codigo === modalidadCodigo );
-        return modalidad[0].nombre;
+        const modalidad = this.modalidadContratoArray.find( modalidad => modalidad.codigo === modalidadCodigo );
+
+        if ( modalidad !== undefined ) {
+          return modalidad.nombre;
+        }
     }
   }
 

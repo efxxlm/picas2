@@ -64,7 +64,8 @@
           <a mat-raised-button color="accent" class="btn-table"
             [routerLink]="['/solicitarContratacion/solicitud', element.contratacionId]"
             *ngIf=" (element.estadoSolicitudCodigo == 'Sin registro' && element.usuarioModificacion !== undefined)
-                    || (element.estadoSolicitudCodigo === 'Devuelto por comité técnico' && element.registroCompleto)">
+                    || (element.estadoSolicitudCodigo === 'Devuelto por comité técnico' && element.registroCompleto)
+                    || (element.estadoSolicitudCodigo === 'Devuelto por comité fiduciario' && element.registroCompleto)">
             Ver detalle / Editar
           </a>
           <button mat-raised-button color="accent" class="btn-table" (click)="enviarSolicitud(element.contratacionId)"

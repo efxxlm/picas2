@@ -64,12 +64,19 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
 
     if ( acordeon === 'consideracionEspecial' ) {
       if (this.contratacion.esObligacionEspecial !== undefined) {
-
-        if ( this.contratacion.consideracionDescripcion !== undefined ) {
+        if ( this.contratacion.esObligacionEspecial === false ) {
           return this.estadoSemaforos.completo;
         }
-        return this.estadoSemaforos.enProceso;
+
+        if ( this.contratacion.esObligacionEspecial === true ) {
+          if ( this.contratacion.consideracionDescripcion !== undefined ) {
+            return this.estadoSemaforos.completo;
+          }
+
+          return this.estadoSemaforos.enProceso;
+        } 
       } else {
+
         return this.estadoSemaforos.sinDiligenciar;
       }
     } else if ( acordeon === 'datosContratista' ) {

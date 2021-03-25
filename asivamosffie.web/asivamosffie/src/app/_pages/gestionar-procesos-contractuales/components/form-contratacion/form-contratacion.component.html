@@ -250,17 +250,18 @@
                   [innerHTML]="innerObservacion( dataContratacion.observaciones ? dataContratacion.observaciones : '' )">
                 </div>
               </section>
-              <p><b>Minuta adjunta</b>:
-                {{ form.get( 'minutaName' ).value !== null ? form.get( 'minutaName' ).value : '' }}</p>
+              <p><b>URL con soporte</b>: {{ dataContratacion.rutaMinuta }}</p>
             </mat-card-content>
           </mat-card>
         </div>
 
+        <!--
         <div class="text-center" style="width: 20%;display: inline-block;">
           <button mat-raised-button color="accent" class="btn-table" (click)="getDocumento( form.get( 'rutaDocumento' ).value )">
             Descargar minuta
           </button>
         </div>
+        -->
 
       </mat-expansion-panel>
     </mat-accordion>
