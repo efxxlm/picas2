@@ -30,6 +30,24 @@ namespace asivamosffie.services
         #endregion
 
         #region Tablas Relacionadas Para Pagos
+        //0# Traer Forma de Pago por Fase
+        public async Task<dynamic> GetFormaPagoCodigoByFase(bool pEsPreconstruccion)
+        {
+            List<dynamic> ListDynamics = new List<dynamic>();
+            List<string> strCriterios = _context.FormasPagoFase.Where(r => r.EsPreconstruccion == pEsPreconstruccion).Select(r => r.FormaPagoCodigo).ToList();
+            List<Dominio> ListCriterio = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Formas_Pago);
+
+            strCriterios.ForEach(l =>
+            {
+                ListDynamics.Add(new
+                {
+                    Codigo = l,
+                    Nombre = ListCriterio.Where(lc => lc.Codigo == l).FirstOrDefault().Nombre
+                });
+            });
+            return ListDynamics;
+        }
+
         //1# Traer criterio de pago por Forma de pago
         public async Task<dynamic> GetCriterioByFormaPagoCodigo(string pFormaPagoCodigo)
         {
@@ -429,7 +447,7 @@ namespace asivamosffie.services
                 .Where(r => r.ContratacionProyectoId == pContratacionProyectoId
                         && r.EsPreconstruccion == EsPreConstruccion)
                 .SumAsync(s => s.ValorFacturado);
-             
+
             return new
             {
                 ValorMaximoProyecto,

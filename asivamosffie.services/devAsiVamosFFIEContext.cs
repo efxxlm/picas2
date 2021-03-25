@@ -75,6 +75,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<FichaEstudio> FichaEstudio { get; set; }
         public virtual DbSet<FlujoInversion> FlujoInversion { get; set; }
         public virtual DbSet<FormaPagoCriterioPago> FormaPagoCriterioPago { get; set; }
+        public virtual DbSet<FormasPagoFase> FormasPagoFase { get; set; }
         public virtual DbSet<FuenteFinanciacion> FuenteFinanciacion { get; set; }
         public virtual DbSet<GestionFuenteFinanciacion> GestionFuenteFinanciacion { get; set; }
         public virtual DbSet<GestionObraCalidadEnsayoLaboratorio> GestionObraCalidadEnsayoLaboratorio { get; set; }
@@ -2521,8 +2522,7 @@ namespace asivamosffie.model.Models
                     .HasComment("Código de la parametrica en el sistema si lo tiene");
 
                 entity.Property(e => e.Descripcion)
-                    .HasMaxLength(400)
-                    .IsUnicode(false)
+                    .HasMaxLength(250)
                     .HasComment("Descripción de la  parametrica en el sistema");
 
                 entity.Property(e => e.FechaCreacion)
@@ -2535,8 +2535,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.Nombre)
                     .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
+                    .HasMaxLength(250)
                     .HasComment("Nombre del Tipo de parametrica en el sistema");
 
                 entity.Property(e => e.TipoDominioId).HasComment("Identificador de la tabla del Tipo de dominio al que pertenece la parametrica");
@@ -2691,6 +2690,14 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(2)
                     .IsUnicode(false);
 
+                entity.Property(e => e.FormaPagoCodigo)
+                    .IsRequired()
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<FormasPagoFase>(entity =>
+            {
                 entity.Property(e => e.FormaPagoCodigo)
                     .IsRequired()
                     .HasMaxLength(2)
@@ -7531,11 +7538,11 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.PorcentajePorPagar).HasColumnType("numeric(38, 6)");
 
-                entity.Property(e => e.SaldoPorPagar).HasColumnType("numeric(38, 3)");
+                entity.Property(e => e.SaldoPorPagar).HasColumnType("numeric(38, 2)");
 
                 entity.Property(e => e.ValorFacturado).HasColumnType("decimal(38, 3)");
 
-                entity.Property(e => e.ValorSolicitud).HasColumnType("numeric(18, 2)");
+                entity.Property(e => e.ValorSolicitud).HasColumnType("numeric(38, 2)");
             });
 
             modelBuilder.Entity<VCuentaBancariaPago>(entity =>
