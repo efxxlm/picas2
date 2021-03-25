@@ -3,7 +3,7 @@
         <mat-card class="border">
             <mat-card-content class="mt-1em">
                 <p><b>Cantidad de accidentes laborales registrados en la semana</b>: {{ gestionObraSst.cantidadAccidentes }} </p>
-                <section style="display: flex;align-items: baseline;">
+                <section style="display: flex;align-items: baseline;" *ngIf="getCausasDetalle( gestionObraSst.seguridadSaludCausaAccidente ).length > 0">
                     <b>Principales causas de los accidentes o incidentes laborales ocurridos durante la semana</b>:
                     <div class="mb-1em" style="margin-left: .5em;">
                         <p *ngFor="let causa of getCausasDetalle( gestionObraSst.seguridadSaludCausaAccidente ); index as j"> {{ causa.nombre }} </p>

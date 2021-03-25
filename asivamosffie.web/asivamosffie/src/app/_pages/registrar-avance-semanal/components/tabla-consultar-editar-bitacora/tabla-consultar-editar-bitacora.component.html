@@ -60,14 +60,14 @@
             <button mat-raised-button
                     color="accent" 
                     class="btn-table"
-                    *ngIf="element.registroCompletoMuestras === false"
+                    *ngIf="element.registroCompletoMuestras !== false"
                     [routerLink]="[ 'verDetalleAvanceSemanal', element.seguimientoSemanalId ]">
                     Ver detalle
             </button>
             <button mat-raised-button
                     color="accent" 
                     class="btn-table"
-                    *ngIf="element.registroCompletoMuestras !== false"
+                    *ngIf="element.registroCompletoMuestras === false"
                     [routerLink]="[ 'verDetalleAvanceSemanalMuestras', element.seguimientoSemanalId ]">
                     Ver detalle/Editar
             </button>

@@ -7,33 +7,39 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <form autocomplete="off" [formGroup]="formResumenGeneral" (ngSubmit)="guardar()">
-                <div class="flex-editor size-resumen-general justify-content-center">
-                    <mat-card class="shipping-card" style="width: 100%;">
-                        <mat-card-header class="header-card">
-                            <mat-card-title class="header-card--text">
+                <div class="d-flex mt-2em align-items-center animatedDown" align="left">
+                    <div class="text-area-quill"
+                    [class.color-secondaryColor]="formResumenGeneral.get('resumenEstadoContrato').invalid && formResumenGeneral.get('resumenEstadoContrato').touched || formResumenGeneral.get('resumenEstadoContrato').invalid">
+                        <label  class="text-area-quill--label align-left-label"
+                                [class.colorMainColor]="!(formResumenGeneral.get('resumenEstadoContrato').invalid && formResumenGeneral.get('resumenEstadoContrato').touched || formResumenGeneral.get('resumenEstadoContrato').invalid)">
                                 Resumen general del estado del contrato
-                            </mat-card-title>
-                        </mat-card-header>
-                        <mat-card-content>
-
-                            <quill-editor   align="left"
-                                            class="quill-editor-style ml-1em"
-                                            [styles]="editorStyle"
-                                            [modules]="config"
-                                            (onContentChanged)="maxLength($event, 2000)"
-                                            formControlName="resumenEstadoContrato"
-                                            #obsResumenGeneral
-                                            required>
-                            </quill-editor>
-
-                        </mat-card-content>
-                    </mat-card>
-                    <span class="contador miles" *ngIf="formResumenGeneral.value.resumenEstadoContrato !== null">
-                        {{2000 - textoLimpio( obsResumenGeneral.quillEditor, 2000 )}}
+                        </label>
+                        <quill-editor   class="quill-editor-style ml-1em"
+                                        [styles]="editorStyle"
+                                        [modules]="config"
+                                        (onContentChanged)="maxLength($event, 2000)"
+                                        formControlName="resumenEstadoContrato"
+                                        #obsResumenGeneral
+                                        required>
+                        </quill-editor>
+                    </div>
+                    <span class="contador miles" *ngIf="formResumenGeneral.get('resumenEstadoContrato').value !== null">
+                      {{2000 - textoLimpio( obsResumenGeneral.quillEditor, 2000 )}}
                     </span>
-                    <span class="contador miles" *ngIf="formResumenGeneral.value.resumenEstadoContrato === null">
-                        2000
+                    <span class="contador miles" *ngIf="formResumenGeneral.get('resumenEstadoContrato').value === null">
+                      2000
                     </span>
+                    <span class="icon-incompleto">
+                        <img
+                          class="icon-incompleto--img"
+                          src="assets/img/icon/incompleto.svg"
+                          alt="este campo es requerido"
+                          [matTooltipPosition]="'above'"
+                          matTooltip="Debe ingresar la información en el campo para continuar"
+                          matTooltipClass="info-tooltip"
+                          *ngIf="( formResumenGeneral.get('resumenEstadoContrato').invalid && formResumenGeneral.get('resumenEstadoContrato').touched ) || ( formResumenGeneral.get('resumenEstadoContrato').invalid )"
+                        />
+                      </span>
                 </div>
                 <div class="text-center" style="margin-top: 2em;">
                     <button mat-button
