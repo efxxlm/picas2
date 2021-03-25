@@ -398,13 +398,13 @@ namespace asivamosffie.services
                     .Where(v => v.ContratoId == solicitudPago.ContratoId && v.EsPreconstruccion == EsPreConstruccion)
                     .Sum(c => c.SaldoPresupuestal));
 
-                ValorPendientePorPagar = ValorPendientePorPagar -ValorTotalPorFase;
+                ValorPendientePorPagar = ValorTotalPorFase - ValorPendientePorPagar ;
 
                 string strNombreFormaPago = (_context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Formas_Pago && r.Codigo == strFormaPago).FirstOrDefault().Nombre).Replace("%", ""); ;
 
                 List<string> FormasPago = strNombreFormaPago.Split("/").ToList();
                 decimal MontoMaximo = 0;
-
+                //TODO:VALIDAR 
                 foreach (var PorcentajePago in FormasPago)
                 {
                     if (Convert.ToUInt32(PorcentajePago) == 100)
@@ -414,6 +414,9 @@ namespace asivamosffie.services
                         MontoMaximo = ValorTotalPorFase * Convert.ToUInt32(PorcentajePago);
                         MontoMaximo /= 100;
                         MontoMaximo -= ValorPendientePorPagar;
+
+                        if (MontoMaximo < 0)
+                            MontoMaximo  = ValorTotalPorFase ;
 
                         if (MontoMaximo < ValorPendientePorPagar)
                             break;
