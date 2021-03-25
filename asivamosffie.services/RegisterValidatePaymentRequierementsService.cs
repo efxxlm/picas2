@@ -46,8 +46,7 @@ namespace asivamosffie.services
                 });
             });
             return ListDynamics;
-        }
-
+        } 
         //1# Traer criterio de pago por Forma de pago
         public async Task<dynamic> GetCriterioByFormaPagoCodigo(string pFormaPagoCodigo)
         {
@@ -393,26 +392,29 @@ namespace asivamosffie.services
             {
                 SolicitudPago solicitudPago = await _context.SolicitudPago.FindAsync(SolicitudPagoId);
 
-                ulong ValorTotalPorFase = (ulong)_context.VValorUsoXcontratoId.Where(r => r.ContratoId == solicitudPago.ContratoId && r.EsPreConstruccion == EsPreConstruccion).Sum(v => v.ValorUso);
+                decimal ValorTotalPorFase = (decimal)_context.VValorUsoXcontratoId.Where(r => r.ContratoId == solicitudPago.ContratoId && r.EsPreConstruccion == EsPreConstruccion).Sum(v => v.ValorUso);
 
-                ulong ValorPendientePorPagar = (ulong)_context.VValorFacturadoContrato
+                decimal ValorPendientePorPagar = (ValorTotalPorFase - (decimal)_context.VValorFacturadoContrato
                     .Where(v => v.ContratoId == solicitudPago.ContratoId && v.EsPreconstruccion == EsPreConstruccion)
-                    .Sum(c => c.SaldoPresupuestal);
+                    .Sum(c => c.SaldoPresupuestal));
 
-                ulong ValorFacturado = ValorTotalPorFase - ValorPendientePorPagar;
+                ValorPendientePorPagar = ValorPendientePorPagar -ValorTotalPorFase;
 
                 string strNombreFormaPago = (_context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Formas_Pago && r.Codigo == strFormaPago).FirstOrDefault().Nombre).Replace("%", ""); ;
 
                 List<string> FormasPago = strNombreFormaPago.Split("/").ToList();
-                ulong MontoMaximo = 0;
+                decimal MontoMaximo = 0;
 
                 foreach (var PorcentajePago in FormasPago)
                 {
                     if (Convert.ToUInt32(PorcentajePago) == 100)
-                        MontoMaximo = ValorFacturado;
+                        MontoMaximo = ValorPendientePorPagar;
                     else
                     {
-                        MontoMaximo = ((ValorTotalPorFase * Convert.ToUInt32(PorcentajePago)) / 100) - ValorFacturado;
+                        MontoMaximo = ValorTotalPorFase * Convert.ToUInt32(PorcentajePago);
+                        MontoMaximo /= 100;
+                        MontoMaximo -= ValorPendientePorPagar;
+
                         if (MontoMaximo < ValorPendientePorPagar)
                             break;
                     }
