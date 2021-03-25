@@ -254,6 +254,23 @@ namespace asivamosffie.services
 
                                         break;
                                     }
+                                case ConstanCodigoTipoSolicitud.Novedad_Contractual:
+                                    {
+                                        NovedadContractual novedadContractual = _context.NovedadContractual.Find(ss.SolicitudId);
+
+                                        if (novedadContractual != null)
+                                            comite.data.Add(new
+                                            {
+                                                Id = novedadContractual.NovedadContractualId,
+                                                IdSolicitud = ss.SesionComiteSolicitudId,
+                                                FechaSolicitud = (DateTime?)(novedadContractual.FechaSolictud),
+                                                NumeroSolicitud = novedadContractual.NumeroSolicitud,
+                                                TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Novedad_Contractual).FirstOrDefault().Nombre,
+                                                tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.Novedad_Contractual
+                                            });
+
+                                        break;
+                                    }
                             }
                     }
                     if (comite.data.Count > 0)
@@ -1017,7 +1034,21 @@ namespace asivamosffie.services
 
                         break;
 
-                       #endregion Defensa Judicial Seguimiento 
+                    #endregion Defensa Judicial Seguimiento 
+
+                    #region novedad contractual 
+
+                    case ConstanCodigoTipoSolicitud.Novedad_Contractual:
+
+                        NovedadContractual novedadContractual = _context.NovedadContractual.Find(sesionComiteSolicitud.SolicitudId);
+
+                        sesionComiteSolicitud.FechaSolicitud = novedadContractual.FechaSolictud;
+
+                        sesionComiteSolicitud.NumeroSolicitud = novedadContractual.NumeroSolicitud;
+
+                        break;
+
+                        #endregion Novedad Contractual
                 }
 
                 sesionComiteSolicitud.TipoSolicitud = TipoComiteSolicitud.Where(r => r.Codigo == sesionComiteSolicitud.TipoSolicitudCodigo).FirstOrDefault().Nombre;
@@ -3033,6 +3064,33 @@ namespace asivamosffie.services
                 }
 
                 #endregion Defensa Judicial Seguimiento
+
+                #region novedad contractual
+
+                if (pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Novedad_Contractual)
+                {
+                    NovedadContractual novedadContractual = _context.NovedadContractual.Find(sesionComiteSolicitudOld.SolicitudId);
+
+                    if (novedadContractual != null)
+                    {
+                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario)
+                        {
+                            novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_tecnica_y_juridicamente;
+                        }
+                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario)
+                        {
+                            novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.rechazado_por_comite_fiduciario;
+                        }
+                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario)
+                        {
+                            novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.devuelto_por_comite_fiduciario;
+                        }
+
+                    }
+
+                }
+
+                #endregion novedad contractual
 
                 foreach (var SesionSolicitudCompromiso in pSesionComiteSolicitud.SesionSolicitudCompromiso)
                 {

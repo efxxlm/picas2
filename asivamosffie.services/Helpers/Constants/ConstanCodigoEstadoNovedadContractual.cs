@@ -20,5 +20,10 @@
 		public const string Devuelta_para_ajustes_de_supervisión = "16";
 		public const string En_registro_de_firmas = "17";
 		public const string Con_observaciones_del_supervisor = "18";
+		public const string aprobado_por_comite_tecnico = "19";
+		public const string devuelto_por_comite_tecnico = "20";
+		public const string rechazado_por_comite_tecnico = "21";
+		public const string devuelto_por_comite_fiduciario = "22";
+		public const string rechazado_por_comite_fiduciario = "23";
 	}
 }

@@ -1056,7 +1056,6 @@ namespace asivamosffie.services
 
                 List<NovedadContractual> ListNovedadContractual = _context.NovedadContractual
                     .Where(r => !(bool)r.Eliminado
-                    //&& r.FichaEstudio.FirstOrDefault().EsActuacionTramiteComite == true
                     && r.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Enviada_a_comite_tecnico
                     && r.FechaSolictud < pFechaOrdenDelDia // no estoy seguro de esto
                     )
@@ -1872,7 +1871,21 @@ namespace asivamosffie.services
 
                         break;
 
-                        #endregion Defensa Judicial Seguimiento 
+                    #endregion Defensa Judicial Seguimiento 
+
+                    #region Novedad Contractual
+
+                    case ConstanCodigoTipoSolicitud.Novedad_Contractual:
+
+                        NovedadContractual novedadContractual = _context.NovedadContractual.Find(sesionComiteSolicitud.SolicitudId);
+
+                        sesionComiteSolicitud.FechaSolicitud = novedadContractual.FechaSolictud;
+
+                        sesionComiteSolicitud.NumeroSolicitud = novedadContractual.NumeroSolicitud;
+
+                        break;
+
+                        #endregion Novedad Contractual
 
                 }
 
@@ -2796,6 +2809,33 @@ namespace asivamosffie.services
                 }
 
                 #endregion Defensa Judicial seguimiento
+
+                #region Novedad contractual
+
+                if (pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Novedad_Contractual)
+                {
+                    NovedadContractual novedadContractual = _context.NovedadContractual.Find(sesionComiteSolicitudOld.SolicitudId);
+
+                    if (novedadContractual != null)
+                    {
+                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_tecnico)
+                        {
+                            novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.aprobado_por_comite_tecnico;
+                        }
+                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_tecnico)
+                        {
+                            novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.rechazado_por_comite_tecnico;
+                        }
+                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_tecnico)
+                        {
+                            novedadContractual.EstadoCodigo = ConstanCodigoEstadoNovedadContractual.devuelto_por_comite_tecnico;
+                        }
+
+                    }
+
+                }
+
+                #endregion Novedad contractual
 
                 #region compromisos
 
