@@ -103,7 +103,7 @@
   </mat-card-content>
 </mat-card>
 
-<mat-card class="shipping-card var-main-gris">
+<mat-card class="shipping-card var-main-gris" *ngIf="novedad">
   <mat-card-header class="header-card header-card--margin">
     <mat-card-title class="header-card--text">
       Registro de novedad
@@ -139,7 +139,7 @@
 
   </mat-card-content>
 </mat-card>
-<mat-accordion>
+<mat-accordion *ngIf="novedad">
   <mat-expansion-panel class="expansion-style sub-expansion" *ngFor=" let descripcion of novedad.novedadContractualDescripcion; let i = index; ">
     <mat-expansion-panel-header class="expansion-style--header">
       <mat-panel-title class="expansion-style--title">

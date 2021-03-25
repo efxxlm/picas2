@@ -57,7 +57,11 @@
       Detallar solicitud
       </mat-panel-title>
     </mat-expansion-panel-header>
-    <app-form-detallar-solicitud-novedad></app-form-detallar-solicitud-novedad>
+    <app-form-detallar-solicitud-novedad
+                                        [novedad]="novedad"
+                                        (guardar)="guardar()"    
+    >
+    </app-form-detallar-solicitud-novedad>
   </mat-expansion-panel>
 
   <mat-expansion-panel class="expansion-style">

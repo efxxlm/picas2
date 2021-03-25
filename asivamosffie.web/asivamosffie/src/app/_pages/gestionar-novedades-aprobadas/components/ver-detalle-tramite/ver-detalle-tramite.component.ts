@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNovelty/contractual-novelty.service';
+import { NovedadContractual, NovedadContractualAportante } from 'src/app/_interfaces/novedadContractual';
 
 @Component({
   selector: 'app-ver-detalle-tramite',
@@ -7,28 +10,58 @@ import { Component, OnInit } from '@angular/core';
 })
 export class VerDetalleTramiteComponent implements OnInit {
 
-  detallarSolicitud = [
-    {
-      aportante: 'Fundación Pies Descalzos',
-      valorAportante: '$ 60.000.000',
-      componente: 'Obra',
-      fase: 'Pre-Construcción ',
-      uso: 'Diseño Obra Complementaria',
-      valorUso: '$ 20.000.000'
-    },
-    {
-      aportante: 'Fundación Pies Descalzos',
-      valorAportante: '$ 60.000.000',
-      componente: 'Interventoría',
-      fase: 'Pre-Construcción ',
-      uso: 'Interventoría Diseño Obra Complementaria',
-      valorUso: '$ 40.000.000'
-    }
-  ]
+  detalleId: string;
+  novedad: NovedadContractual;
+  tieneAdicion: boolean = false;
 
-  constructor() { }
+  detallarSolicitud = []
+
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private contractualNoveltyService: ContractualNoveltyService,
+  ) { }
 
   ngOnInit(): void {
+    this.route.params.subscribe((params: Params) => {
+      this.detalleId = params.id;
+
+      this.contractualNoveltyService.getNovedadContractualById(this.detalleId)
+        .subscribe(respuesta => {
+          this.novedad = respuesta;
+
+          respuesta.novedadContractualDescripcion.forEach(d => {
+            if (d.tipoNovedadCodigo === '3')
+              this.tieneAdicion = true;
+          });
+
+          if (this.tieneAdicion === true) {
+            this.novedad.novedadContractualAportante.forEach( na => {
+              na.componenteAportanteNovedad.forEach( ca => {
+                ca.componenteUsoNovedad.forEach( cu => {
+
+                  this.detallarSolicitud.push(
+                    { 
+                      aportante: na.nombreAportante,
+                      valorAportante: na.valorAporte,
+                      componente: ca.nombreTipoComponente,
+                      fase: ca.nombrefase,
+                      uso: cu.nombreUso,
+                      valorUso: cu.valorUso 
+                    })
+
+                });
+
+              });
+
+            });
+          }
+
+
+        });
+
+      console.log(this.detalleId);
+    });
   }
 
 }

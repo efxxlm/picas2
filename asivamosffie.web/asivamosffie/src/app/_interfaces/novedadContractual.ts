@@ -48,6 +48,7 @@ export interface NovedadContractual{
         contrato?: Contrato,
         proyectosContrato?: any[],
         novedadContractualObservaciones?: NovedadContractualObservaciones[],
+        novedadContractualAportante?: NovedadContractualAportante[],
 
         observacionApoyo?: NovedadContractualObservaciones,
         observacionSupervisor?: NovedadContractualObservaciones,
@@ -110,4 +111,47 @@ export interface NovedadContractualObservaciones{
         esSupervision?:boolean,
         archivado?:boolean,
         esTramiteNovedades?:boolean,
+}
+
+export interface NovedadContractualAportante{
+        novedadContractualAportanteId?:number,
+        novedadContractualId?:number,
+        cofinanciacionAportanteId?:number,
+        valorAporte?:number,
+        eliminado?:boolean,
+        registroCompleto?:boolean,
+        fechaCreacion?:Date,
+
+        componenteAportanteNovedad?: ComponenteAportanteNovedad[]
+
+        nombreAportante?: string,
+}
+
+export interface ComponenteAportanteNovedad{
+        componenteAportanteNovedadId?: number,
+        cofinanciacionAportanteId?: number,
+        tipoComponenteCodigo?: string,
+        faseCodigo?: string,
+        eliminado?: boolean,
+        activo?: number,
+        registroCompleto?: boolean,
+        novedadContractualAportanteId?: number,
+
+        componenteUsoNovedad?: ComponenteUsoNovedad[]
+
+        nombreTipoComponente?: string,
+        nombrefase?: string,
+}
+
+export interface ComponenteUsoNovedad{
+        componenteUsoNovedadId?:number
+        componenteAportanteNovedadId?:number
+        tipoUsoCodigo?:string
+        valorUso?:number
+        eliminado?:boolean
+        activo?:number
+        registroCompleto?:boolean
+
+        nombreUso?: string,
+        
 }

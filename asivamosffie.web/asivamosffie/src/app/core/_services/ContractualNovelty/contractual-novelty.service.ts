@@ -78,4 +78,8 @@ export class ContractualNoveltyService {
     return this.http.post<Respuesta>( `${ this.urlApi }/createEditNovedadContractualTramite`, novedadContractual );
   }
 
+  enviarAComite( id ){
+    return this.http.put<Respuesta>( `${ this.urlApi }/enviarAComite?pNovedaContractual=${ id }`, null ); 
+  }
+
 }

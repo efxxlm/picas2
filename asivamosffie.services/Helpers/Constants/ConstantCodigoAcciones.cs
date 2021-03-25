@@ -328,6 +328,7 @@
         public const string Tramitar_Novedad_Contractual = "235";
         public const string Devolver_Novedad_Contractual = "236";
         public const string Crear_Editar_Novedad_Contractual_Tramite = "237";
+        public const string Enviar_A_Comite_Novedad_Contractual = "238";
 
     }
 }

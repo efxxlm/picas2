@@ -1,4 +1,4 @@
-<section class="container">
+<section class="container"  *ngIf="novedad">
   <div class="container text-center">
     <div class="text-right">
       <a routerLink="../.." mat-button color="primary" class="btn-regresar">
@@ -6,33 +6,25 @@
       </a>
     </div>
     <h1 class="title-menu--h1">
-      Ver detalle registro revisión jurídica solicitud de novedad NOV-001
+      Ver detalle registro revisión jurídica solicitud de novedad {{ novedad.numeroSolicitud }}
     </h1>
     <p class="info-sub-title">
-      Número de contrato <b>C223456789</b>
+      Número de contrato <b>{{ novedad.contrato.numeroContrato }}</b>
     </p>
   </div>
 
   <mat-card class="shipping-card var-main-gris">
     <mat-card-content>
-      <p>
-        <strong>
-          Fecha de solicitud:
-        </strong>
-        20/10/2020
-      </p>
-      <p>
-        <strong>
-          Fecha de aprobación del supervisor:
-        </strong>
-        23/10/2020
-      </p>
-      <p>
-        <strong>
-          Tipo de solicitud:
-        </strong>
-        Reinicio
-      </p>
+      <strong>
+        Fecha de solicitud:
+      </strong>
+      {{ novedad.fechaSolictud | date: 'dd/MM/yyyy' }}
+    <p>
+      <strong>
+        Fecha de aprobación del supervisor:
+      </strong>
+      {{ novedad.fechaValidacion | date: 'dd/MM/yyyy' }}
+    </p>
     </mat-card-content>
   </mat-card>
 
@@ -44,7 +36,9 @@
             Solicitud de novedad
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <app-solicitud-novedad></app-solicitud-novedad>
+        <app-solicitud-novedad
+        [novedad]="novedad"
+        ></app-solicitud-novedad>
       </mat-expansion-panel>
       <mat-expansion-panel class="expansion-style">
         <mat-expansion-panel-header class="expansion-style--header">
@@ -64,7 +58,10 @@
               <strong>
                 URL con soporte:
               </strong>
-              https://drive.google.com/drive/registrodecontroversiacontractual/registrosolicituddenovedad
+              <a [href]="novedad.urlSoporte"
+              target="_blank" rel="noopener noreferrer">
+              {{ novedad.urlSoporte }}
+            </a>
             </p>
           </mat-card-content>
         </mat-card>
@@ -140,25 +137,25 @@
               <strong>
                 Fecha de envío de solicitud al grupo de Gestión Contractual:
               </strong>
-              29/10/2020
+              {{ novedad.fechaEnvioGestionContractual | date: 'dd/MM/yyyy' }}
             </p>
             <p>
               <strong>
                 Estado del proceso:
               </strong>
-              Aprobada
+              {{ novedad.estadoProcesoCodigo }}
             </p>
             <p>
               <strong>
                 Fecha de aprobación del grupo de Gestión Contractual:
               </strong>
-              30/10/2020
+              {{ novedad.fechaAprobacionGestionContractual | date: 'dd/MM/yyyy' }}
             </p>
             <p>
               <strong>
-                Fecha de aprobación del grupo de Gestión Contractual:
+                Nombre del abogado que realizó la revisión
               </strong>
-              Laura Andrea Osorio Martínez
+             {{ novedad.abogadoRevisionId }}
             </p>
           </mat-card-content>
         </mat-card>
@@ -177,55 +174,55 @@
               <strong>
                 ¿Desea continuar con el proceso?:
               </strong>
-              Si
+              {{ novedad.deseaContinuar === true ? 'Sí' : 'No' }}
             </p>
             <p>
               <strong>
                 Fecha de envió de acta para firma del contratista de obra:
               </strong>
-              15/06/2020
+              {{ novedad.fechaEnvioActaContratistaObra | date: 'dd/MM/yyyy'  }}
             </p>
             <p>
               <strong>
                 Fecha de firma del contratista de obra:
               </strong>
-              30/06/2020
+              {{ novedad.fechaFirmaActaContratistaObra | date: 'dd/MM/yyyy'  }}
             </p>
             <p>
               <strong>
                 Fecha de envió del acta para firma del contratista de interventoría:
               </strong>
-              08/07/2020
+              {{ novedad.fechaEnvioActaContratistaInterventoria | date: 'dd/MM/yyyy'  }}
             </p>
             <p>
               <strong>
                 Fecha de firma del contratista de interventoría:
               </strong>
-              10/07/2020
+              {{ novedad.fechaFirmaContratistaInterventoria | date: 'dd/MM/yyyy'  }}
             </p>
             <p>
               <strong>
                 Fecha de envío del acta para firma del apoyo a la supervisión:
               </strong>
-              15/07/2020
+              {{ novedad.fechaEnvioActaApoyo | date: 'dd/MM/yyyy'  }}
             </p>
             <p>
               <strong>
                 Fecha de firma del apoyo a la supervisión:
               </strong>
-              05/08/2020
+              {{ novedad.fechaFirmaApoyo | date: 'dd/MM/yyyy'  }}
             </p>
             <p>
               <strong>
                 Fecha de envío para firma del supervisor:
               </strong>
-              15/08/2020
+              {{ novedad.fechaEnvioActaSupervisor | date: 'dd/MM/yyyy'  }}
             </p>
             <p>
               <strong>
                 Fecha de firma del supervisor:
               </strong>
-              10/05/2020
+              {{ novedad.fechaFirmaSupervisor | date: 'dd/MM/yyyy'  }}
             </p>
           </mat-card-content>
         </mat-card>
@@ -241,7 +238,10 @@
               <strong>
                 URL con soporte:
               </strong>
-              https://drive.google.com/drive/registrodecontroversiacontractual/registrodefirmas
+              <a [href]="novedad.urlSoporteFirmas"
+              target="_blank" rel="noopener noreferrer">
+              {{ novedad.urlSoporteFirmas }}
+            </a>
             </p>
           </mat-card-content>
         </mat-card>

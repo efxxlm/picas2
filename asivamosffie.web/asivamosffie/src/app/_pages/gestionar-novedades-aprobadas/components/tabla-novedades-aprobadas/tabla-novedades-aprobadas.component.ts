@@ -28,7 +28,8 @@ export class TablaNovedadesAprobadasComponent implements AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
-    private contractualNoveltyService: ContractualNoveltyService
+    private contractualNoveltyService: ContractualNoveltyService,
+    public dialog: MatDialog,
   ) { }
 
   ngAfterViewInit() {
@@ -54,6 +55,22 @@ export class TablaNovedadesAprobadasComponent implements AfterViewInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  openDialog(modalTitle: string, modalText: string) {
+    this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+  }
+
+  EnviarAComite(id){
+    this.contractualNoveltyService.enviarAComite( id )
+      .subscribe( respuesta => {
+        this.openDialog('', `<b>${respuesta.message}</b>`);
+        if ( respuesta.code === '200' )
+          this.ngAfterViewInit();
+      })
   }
 
 }
