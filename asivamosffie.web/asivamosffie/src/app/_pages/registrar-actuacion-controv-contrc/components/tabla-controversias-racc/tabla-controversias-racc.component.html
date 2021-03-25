@@ -37,7 +37,7 @@
             <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Gestión </th>
             <td mat-cell *matCellDef="let element" align="center">
                 <button mat-raised-button color="accent" class="btn-table"
-                    *ngIf="element.estadoActuacion == 'En proceso de registro'"
+                    *ngIf="element.estadoActuacion == 'En proceso de registro' && element.registroCompletoActuacionDerivada==false"
                     (click)="this.finalizarActuacion(element.actuacionID)">
                     Finalizar actuación
                 </button>
