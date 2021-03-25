@@ -3,7 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonService } from 'src/app/core/_services/common/common.service';
-import { DefensaJudicial, DefensaJudicialService } from 'src/app/core/_services/defensaJudicial/defensa-judicial.service';
+import { DefensaJudicial, DefensaJudicialSeguimiento, DefensaJudicialService } from 'src/app/core/_services/defensaJudicial/defensa-judicial.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -52,7 +52,7 @@ export class RegistrarActuacionProcesoComponent implements OnInit {
       this.controlJudicialId = param['id'];
       this.judicialServices.GetDefensaJudicialById(this.controlJudicialId).subscribe(respose=>{
         this.defensaJudicial=respose;
-        this.addressForm.patchValue(this.defensaJudicial.defensaJudicialSeguimiento[0]);
+        //this.addressForm.patchValue(this.defensaJudicial.defensaJudicialSeguimiento[0]);
       });
     });
     this.commonServices.getEstadoAvanceProcesosDefensa().subscribe(
@@ -100,8 +100,7 @@ export class RegistrarActuacionProcesoComponent implements OnInit {
     this.estaEditando = true;
     this.addressForm.markAllAsTouched();
     let defensaJudicial=this.defensaJudicial;
-    
-    defensaJudicial.defensaJudicialSeguimiento.push({
+    const defensaJudicialSeguimiento: DefensaJudicialSeguimiento = {
       defensaJudicialSeguimientoId: this.addressForm.get("defensaJudicialSeguimientoId").value,
       defensaJudicialId: this.controlJudicialId,
       estadoProcesoCodigo:this.addressForm.get("estadoAvanceProceso").value != null ? this.addressForm.get("estadoAvanceProceso").value.codigo : null,
@@ -112,9 +111,10 @@ export class RegistrarActuacionProcesoComponent implements OnInit {
       observaciones:this.addressForm.get("observaciones").value,
       esprocesoResultadoDefinitivo:this.addressForm.get("actuacionDefinitiva").value,
       rutaSoporte:this.addressForm.get("urlSoporte").value
-    });
-      console.log(defensaJudicial);
-      this.judicialServices.createOrEditDefensaJudicialSeguimiento(defensaJudicial.defensaJudicialSeguimiento[0]).subscribe(
+    };
+      console.log(defensaJudicial,defensaJudicialSeguimiento);
+      //this.judicialServices.createOrEditDefensaJudicialSeguimiento(defensaJudicial.defensaJudicialSeguimiento[0]).subscribe(
+      this.judicialServices.createOrEditDefensaJudicialSeguimiento(defensaJudicialSeguimiento).subscribe(
         response=>{
           this.openDialog('', `<b>${response.message}</b>`,true,response.data?response.data.defensaJudicialId:0);
         }

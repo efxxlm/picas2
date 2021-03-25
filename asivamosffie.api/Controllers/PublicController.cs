@@ -31,6 +31,7 @@ namespace asivamosffie.api.Controllers
         public readonly IRegisterWeeklyProgressService _registerWeeklyProgressService;
         public readonly IContractualControversy _ContractualControversyService;
         public readonly IPaymentRequierementsService _paymentRequierementsService;
+        public readonly IJudicialDefense _judicialDefense;
 
 
         public PublicController(
@@ -43,7 +44,13 @@ namespace asivamosffie.api.Controllers
                                 IOptions<AppSettings> settings,
                                 IGuaranteePolicyService guaranteePolicy,
                                 IActBeginService actBeginService,
-                                IRegisterWeeklyProgressService registerWeeklyProgressService
+                                IRegisterWeeklyProgressService registerWeeklyProgressService,
+                                IJudicialDefense judicialDefense,
+                                IContractualControversy contractualControversy,
+                                IRegisterFinalReportService registerFinalReportService,
+                                IVerifyFinalReportService verifyFinalReportService,
+                                IValidateFinalReportService validateFinalReportService,
+                                IValidateFulfilmentFinalReportService validateFulfilmentFinalReportService
                               )
         {
             _paymentRequierementsService = paymentRequierementsService;
@@ -56,6 +63,12 @@ namespace asivamosffie.api.Controllers
             _guaranteePolicy = guaranteePolicy;
             _actBeginService = actBeginService;
             _registerWeeklyProgressService = registerWeeklyProgressService;
+            _judicialDefense = judicialDefense;
+            _ContractualControversyService = contractualControversy;
+            _RegisterFinalReportService = registerFinalReportService;
+            _ValidateFinalReportService = validateFinalReportService;
+            _VerifyFinalReportService = verifyFinalReportService;
+            _ValidateFulfilmentFinalReportService = validateFulfilmentFinalReportService;
         }
 
         public AppSettingsService ToAppSettingsService(IOptions<AppSettings> appSettings)
@@ -400,6 +413,20 @@ namespace asivamosffie.api.Controllers
         }
 
         #endregion
+
+        //4.2.2 - alerta
+        [HttpGet("GetVencimientoTerminosDefensaJudicial")]
+        public async Task VencimientoTerminosDefensaJudicial()
+        {
+            try
+            {
+                await _judicialDefense.VencimientoTerminosDefensaJudicial();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 
 

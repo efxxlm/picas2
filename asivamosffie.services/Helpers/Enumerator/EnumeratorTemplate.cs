@@ -114,5 +114,8 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         //monitoring url
         Cargar_enlace_sistema_monitoreo_linea_4_1_1 = 115,
+        //judicial defense 4.2.2
+        Actuacion_requerida_proceso_defensa_judicial_4_2_2 = 116,
+        Fecha_vencimiento_terminos_proxima_actuacion_requerida_4_2_2 = 117,
     }
 }

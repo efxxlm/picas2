@@ -461,7 +461,7 @@ namespace asivamosffie.services
                 }
             }
 
-            else{
+            else {
                 //demandantes/convocantes
                 if (defensaJudicial.DemandadoConvocado.Count() == 0)
                 {
@@ -471,7 +471,7 @@ namespace asivamosffie.services
                 {
                     retorno = false;
                 }
-             }
+            }
 
             //soporte
             if (defensaJudicial.UrlSoporteProceso == null)
@@ -525,7 +525,7 @@ namespace asivamosffie.services
 
                     ListDefensaJudicial.ForEach(defensaJudicialItem =>
                     {
-                        List<DemandadoConvocado> demandadoConvocado = _context.DemandadoConvocado.Where(r => (bool)r.Eliminado == false && r.DefensaJudicialId == defensaJudicialItem.DefensaJudicialId).ToList();  
+                        List<DemandadoConvocado> demandadoConvocado = _context.DemandadoConvocado.Where(r => (bool)r.Eliminado == false && r.DefensaJudicialId == defensaJudicialItem.DefensaJudicialId).ToList();
                         defensaJudicialItem.DemandadoConvocado = demandadoConvocado;
                     });
 
@@ -1468,11 +1468,16 @@ namespace asivamosffie.services
                     defensaJudicial.FechaModificacion = DateTime.Now;
                     defensaJudicial.UsuarioModificacion = pUsuarioModifico;
                     defensaJudicial.Eliminado = false;
-                    defensaJudicial.EstadoProcesoCodigo = "3";//cambiar
+                    defensaJudicial.EstadoProcesoCodigo = ConstantCodigoEstadoProcesoDefensaJudicialSeguimiento.Actuacion_finalizada;//cambiar
                     _context.DefensaJudicialSeguimiento.Update(defensaJudicial);
 
                     _context.SaveChanges();
 
+                    //enviar correo
+                    if (defensaJudicial.EsRequiereSupervisor == true)
+                    {
+                        await SendMailSupervisor(pId);
+                    }
                 }
 
                 return respuesta = new Respuesta
@@ -1564,7 +1569,7 @@ namespace asivamosffie.services
                 {
                     retorno = false;
                 }
-            }else if (demandadoConvocado.EsConvocado == true)
+            } else if (demandadoConvocado.EsConvocado == true)
             {
                 if (demandadoConvocado.ExisteConocimiento == true)
                 {
@@ -1622,8 +1627,8 @@ namespace asivamosffie.services
             bool retorno = true;
 
             //valido detalle
-            if (string.IsNullOrEmpty(defensaJudicialSeguimiento.EstadoProcesoCodigo) 
-                || string.IsNullOrEmpty(defensaJudicialSeguimiento.ActuacionAdelantada) 
+            if (string.IsNullOrEmpty(defensaJudicialSeguimiento.EstadoProcesoCodigo)
+                || string.IsNullOrEmpty(defensaJudicialSeguimiento.ActuacionAdelantada)
                 || string.IsNullOrEmpty(defensaJudicialSeguimiento.ProximaActuacion)
                 || defensaJudicialSeguimiento.FechaVencimiento == null
                 || defensaJudicialSeguimiento.EsRequiereSupervisor == null
@@ -1771,7 +1776,7 @@ namespace asivamosffie.services
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_procesos_Defensa_Judicial, ConstanMessagesRegisterWeeklyProgress.Error, idAccion, pUsuarioModificacion, "Demandado convocado no encontrado".ToUpper())
                     };
                 }
-                
+
                 demandadoConvocadoOld.UsuarioModificacion = pUsuarioModificacion;
                 demandadoConvocadoOld.FechaModificacion = DateTime.Now;
                 demandadoConvocadoOld.Eliminado = true;
@@ -1868,6 +1873,225 @@ namespace asivamosffie.services
 
         }
 
+        #region Correos 
+        private async Task<bool> SendMailSupervisor(int defensaJudicialSeguimientoId)
+        {
+            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.Actuacion_requerida_proceso_defensa_judicial_4_2_2));
+            DefensaJudicialSeguimiento defensaJudicialSeguimiento = await _context.DefensaJudicialSeguimiento.Where(d => d.DefensaJudicialSeguimientoId == defensaJudicialSeguimientoId && d.EsRequiereSupervisor == true)
+                                                                    .Include(r => r.DefensaJudicial)
+                                                                        .ThenInclude(r => r.DefensaJudicialContratacionProyecto)
+                                                                            .ThenInclude(r => r.ContratacionProyecto)
+                                                                    .FirstOrDefaultAsync();
+            Contrato contrato = new Contrato();
+            List<EnumeratorPerfil> perfilsEnviarCorreo =
+                new List<EnumeratorPerfil>
+                                          {
+                                                EnumeratorPerfil.Supervisor
+                                          };
+
+            if (defensaJudicialSeguimiento != null)
+            {
+                if (defensaJudicialSeguimiento.DefensaJudicial.DefensaJudicialContratacionProyecto.FirstOrDefault().ContratacionProyecto != null)
+                {
+                    contrato = _context.Contrato.Where(r => r.ContratacionId == defensaJudicialSeguimiento.DefensaJudicial.DefensaJudicialContratacionProyecto.FirstOrDefault().ContratacionProyecto.ContratacionId).FirstOrDefault();
+                }
+                string strContenido = template.Contenido
+                                    .Replace("[NUMERO_CONTRATO]", contrato != null ? contrato.NumeroContrato : String.Empty)
+                                    .Replace("[NUMERO_PROCESO]", defensaJudicialSeguimiento.DefensaJudicial.NumeroProceso)
+                                    .Replace("[PROXIMA_ACTUACION]", defensaJudicialSeguimiento.ProximaActuacion)
+                                    .Replace("[FECHA_VENCIMIENTO]", ((DateTime)defensaJudicialSeguimiento.FechaVencimiento).ToString("yyyy-MM-dd"))
+                                    .Replace("[FECHA_REGISTRO]", ((DateTime)defensaJudicialSeguimiento.DefensaJudicial.FechaCreacion).ToString("yyyy-MM-dd"))
+                                    .Replace("[TIPO_CONTROVERSIA]", defensaJudicialSeguimiento.DefensaJudicial.EsLegitimacionActiva == true ? "Activa" : "Pasiva");
+
+                return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
+            }
+
+            return false;
+        }
+        #endregion
+
+        #region Alertas 
+
+        //Alerta - usuario juridica (antes de 3/2 o 1 dia de que se cumpla la Fecha de vencimiento de términos para la próxima actuación requerida)
+        public async Task VencimientoTerminosDefensaJudicial()
+        {
+            DateTime RangoFechaCon5DiasHabiles = await _commonService.CalculardiasLaborales(5, DateTime.Now);
+            DateTime RangoFechaCon4DiasHabiles = await _commonService.CalculardiasLaborales(4, DateTime.Now);
+            DateTime RangoFechaCon3DiasHabiles = await _commonService.CalculardiasLaborales(3, DateTime.Now);
+            DateTime RangoFechaCon2DiasHabiles = await _commonService.CalculardiasLaborales(2, DateTime.Now);
+            DateTime RangoFechaCon1DiasHabiles = await _commonService.CalculardiasLaborales(1, DateTime.Now);
+
+            List < DefensaJudicialSeguimiento > defensaJudicialSeguimiento5dias = _context.DefensaJudicialSeguimiento
+                                                        .Where(r => r.EstadoProcesoCodigo == ConstantCodigoEstadoProcesoDefensaJudicialSeguimiento.Actuacion_finalizada && r.FechaVencimiento == RangoFechaCon5DiasHabiles)
+                                                        .Include(r => r.DefensaJudicial)
+                                                            .ThenInclude(r => r.DefensaJudicialContratacionProyecto)
+                                                                .ThenInclude(r => r.ContratacionProyecto)
+                                                        .ToList();
+
+            List<DefensaJudicialSeguimiento> defensaJudicialSeguimiento4dias = _context.DefensaJudicialSeguimiento
+                                                        .Where(r => r.EstadoProcesoCodigo == ConstantCodigoEstadoProcesoDefensaJudicialSeguimiento.Actuacion_finalizada && r.FechaVencimiento == RangoFechaCon4DiasHabiles)
+                                                        .Include(r => r.DefensaJudicial)
+                                                            .ThenInclude(r => r.DefensaJudicialContratacionProyecto)
+                                                                .ThenInclude(r => r.ContratacionProyecto)
+                                                        .ToList();
+
+            List<DefensaJudicialSeguimiento> defensaJudicialSeguimiento3dias = _context.DefensaJudicialSeguimiento
+                                                        .Where(r => r.EstadoProcesoCodigo == ConstantCodigoEstadoProcesoDefensaJudicialSeguimiento.Actuacion_finalizada && r.FechaVencimiento == RangoFechaCon3DiasHabiles)
+                                                        .Include(r => r.DefensaJudicial)
+                                                            .ThenInclude(r => r.DefensaJudicialContratacionProyecto)
+                                                                .ThenInclude(r => r.ContratacionProyecto)
+                                                        .ToList();
+
+            List<DefensaJudicialSeguimiento> defensaJudicialSeguimiento2dias = _context.DefensaJudicialSeguimiento
+                                                        .Where(r => r.EstadoProcesoCodigo == ConstantCodigoEstadoProcesoDefensaJudicialSeguimiento.Actuacion_finalizada && r.FechaVencimiento == RangoFechaCon2DiasHabiles)
+                                                        .Include(r => r.DefensaJudicial)
+                                                            .ThenInclude(r => r.DefensaJudicialContratacionProyecto)
+                                                                .ThenInclude(r => r.ContratacionProyecto)
+                                                        .ToList();
+
+            List<DefensaJudicialSeguimiento> defensaJudicialSeguimiento1dias = _context.DefensaJudicialSeguimiento
+                                                        .Where(r => r.EstadoProcesoCodigo == ConstantCodigoEstadoProcesoDefensaJudicialSeguimiento.Actuacion_finalizada && r.FechaVencimiento == RangoFechaCon1DiasHabiles)
+                                                        .Include(r => r.DefensaJudicial)
+                                                            .ThenInclude(r => r.DefensaJudicialContratacionProyecto)
+                                                                .ThenInclude(r => r.ContratacionProyecto)
+                                                        .ToList();
+
+            List<EnumeratorPerfil> perfilsEnviarCorreo = new List<EnumeratorPerfil> { EnumeratorPerfil.Juridica };
+
+            Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.FechaVencimientoProximaActuacionJuridica_4_2_1);
+            Contrato contrato = new Contrato();
+            // 5 días
+            foreach (var defensaJudicialSeguimiento in defensaJudicialSeguimiento5dias)
+            {
+
+                if (defensaJudicialSeguimiento.DefensaJudicial.DefensaJudicialContratacionProyecto.FirstOrDefault().ContratacionProyecto != null)
+                {
+                    contrato = _context.Contrato.Where(r => r.ContratacionId == defensaJudicialSeguimiento.DefensaJudicial.DefensaJudicialContratacionProyecto.FirstOrDefault().ContratacionProyecto.ContratacionId)
+                                                .Include(r => r.ControversiaContractual)
+                                                .FirstOrDefault();
+                    if (contrato != null)
+                    {
+                        Dominio TipoControversia = await _commonService.GetDominioByNombreDominioAndTipoDominio(contrato.ControversiaContractual.FirstOrDefault().TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipos_Controversia);
+
+                        string strContenido = TemplateRecoveryPassword.Contenido
+                                         .Replace("[NUMERO_CONTRATO]", contrato != null ? contrato.NumeroContrato : String.Empty)
+                                         .Replace("[PROXIMA_ACTUACION]", defensaJudicialSeguimiento.ProximaActuacion)
+                                         .Replace("[NUMERO_PROCESO]", defensaJudicialSeguimiento.DefensaJudicial.NumeroProceso)
+                                         .Replace("[FECHA_VENCIMIENTO]", ((DateTime)defensaJudicialSeguimiento.FechaVencimiento).ToString("yyyy-MM-dd"))
+                                         .Replace("[DIAS]", "cinco (5) días")
+                                         .Replace("[FECHA_REGISTRO_PROCESO]", ((DateTime)defensaJudicialSeguimiento.DefensaJudicial.FechaCreacion).ToString("yyyy-MM-dd"))
+                                         .Replace("[LEGITIMACION]", defensaJudicialSeguimiento.DefensaJudicial.EsLegitimacionActiva == true ? "Activa" : "Pasiva")
+                                         .Replace("[TIPO_CONTROVERSIA]", TipoControversia.Nombre);
+                        _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, TemplateRecoveryPassword.Asunto);
+                    }
+                }
+            }
+            //4 días
+            foreach (var defensaJudicialSeguimiento in defensaJudicialSeguimiento4dias)
+            {
+
+                if (defensaJudicialSeguimiento.DefensaJudicial.DefensaJudicialContratacionProyecto.FirstOrDefault().ContratacionProyecto != null)
+                {
+                    contrato = _context.Contrato.Where(r => r.ContratacionId == defensaJudicialSeguimiento.DefensaJudicial.DefensaJudicialContratacionProyecto.FirstOrDefault().ContratacionProyecto.ContratacionId)
+                                                .Include(r => r.ControversiaContractual)
+                                                .FirstOrDefault();
+                    if (contrato != null)
+                    {
+                        Dominio TipoControversia = await _commonService.GetDominioByNombreDominioAndTipoDominio(contrato.ControversiaContractual.FirstOrDefault().TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipos_Controversia);
+
+                        string strContenido = TemplateRecoveryPassword.Contenido
+                                         .Replace("[NUMERO_CONTRATO]", contrato != null ? contrato.NumeroContrato : String.Empty)
+                                         .Replace("[PROXIMA_ACTUACION]", defensaJudicialSeguimiento.ProximaActuacion)
+                                         .Replace("[NUMERO_PROCESO]", defensaJudicialSeguimiento.DefensaJudicial.NumeroProceso)
+                                         .Replace("[FECHA_VENCIMIENTO]", ((DateTime)defensaJudicialSeguimiento.FechaVencimiento).ToString("yyyy-MM-dd"))
+                                         .Replace("[DIAS]", "cuatro (4) días")
+                                         .Replace("[FECHA_REGISTRO_PROCESO]", ((DateTime)defensaJudicialSeguimiento.DefensaJudicial.FechaCreacion).ToString("yyyy-MM-dd"))
+                                         .Replace("[LEGITIMACION]", defensaJudicialSeguimiento.DefensaJudicial.EsLegitimacionActiva == true ? "Activa" : "Pasiva")
+                                         .Replace("[TIPO_CONTROVERSIA]", TipoControversia.Nombre);
+                        _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, TemplateRecoveryPassword.Asunto);
+                    }
+                }
+            }
+            //3 días
+            foreach (var defensaJudicialSeguimiento in defensaJudicialSeguimiento3dias)
+            {
+
+                if (defensaJudicialSeguimiento.DefensaJudicial.DefensaJudicialContratacionProyecto.FirstOrDefault().ContratacionProyecto != null)
+                {
+                    contrato = _context.Contrato.Where(r => r.ContratacionId == defensaJudicialSeguimiento.DefensaJudicial.DefensaJudicialContratacionProyecto.FirstOrDefault().ContratacionProyecto.ContratacionId)
+                                                .Include(r => r.ControversiaContractual)
+                                                .FirstOrDefault();
+                    if (contrato != null)
+                    {
+                        Dominio TipoControversia = await _commonService.GetDominioByNombreDominioAndTipoDominio(contrato.ControversiaContractual.FirstOrDefault().TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipos_Controversia);
+
+                        string strContenido = TemplateRecoveryPassword.Contenido
+                                         .Replace("[NUMERO_CONTRATO]", contrato != null ? contrato.NumeroContrato : String.Empty)
+                                         .Replace("[PROXIMA_ACTUACION]", defensaJudicialSeguimiento.ProximaActuacion)
+                                         .Replace("[NUMERO_PROCESO]", defensaJudicialSeguimiento.DefensaJudicial.NumeroProceso)
+                                         .Replace("[FECHA_VENCIMIENTO]", ((DateTime)defensaJudicialSeguimiento.FechaVencimiento).ToString("yyyy-MM-dd"))
+                                         .Replace("[DIAS]", "tres (3) días")
+                                         .Replace("[FECHA_REGISTRO_PROCESO]", ((DateTime)defensaJudicialSeguimiento.DefensaJudicial.FechaCreacion).ToString("yyyy-MM-dd"))
+                                         .Replace("[LEGITIMACION]", defensaJudicialSeguimiento.DefensaJudicial.EsLegitimacionActiva == true ? "Activa" : "Pasiva")
+                                         .Replace("[TIPO_CONTROVERSIA]", TipoControversia.Nombre);
+                        _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, TemplateRecoveryPassword.Asunto);
+                    }
+                }
+            }
+            //2 días
+            foreach (var defensaJudicialSeguimiento in defensaJudicialSeguimiento2dias)
+            {
+
+                if (defensaJudicialSeguimiento.DefensaJudicial.DefensaJudicialContratacionProyecto.FirstOrDefault().ContratacionProyecto != null)
+                {
+                    contrato = _context.Contrato.Where(r => r.ContratacionId == defensaJudicialSeguimiento.DefensaJudicial.DefensaJudicialContratacionProyecto.FirstOrDefault().ContratacionProyecto.ContratacionId)
+                                                .Include(r => r.ControversiaContractual)
+                                                .FirstOrDefault();
+                    if (contrato != null)
+                    {
+                        Dominio TipoControversia = await _commonService.GetDominioByNombreDominioAndTipoDominio(contrato.ControversiaContractual.FirstOrDefault().TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipos_Controversia);
+
+                        string strContenido = TemplateRecoveryPassword.Contenido
+                                         .Replace("[NUMERO_CONTRATO]", contrato != null ? contrato.NumeroContrato : String.Empty)
+                                         .Replace("[PROXIMA_ACTUACION]", defensaJudicialSeguimiento.ProximaActuacion)
+                                         .Replace("[NUMERO_PROCESO]", defensaJudicialSeguimiento.DefensaJudicial.NumeroProceso)
+                                         .Replace("[FECHA_VENCIMIENTO]", ((DateTime)defensaJudicialSeguimiento.FechaVencimiento).ToString("yyyy-MM-dd"))
+                                         .Replace("[DIAS]", "dos (2) días")
+                                         .Replace("[FECHA_REGISTRO_PROCESO]", ((DateTime)defensaJudicialSeguimiento.DefensaJudicial.FechaCreacion).ToString("yyyy-MM-dd"))
+                                         .Replace("[LEGITIMACION]", defensaJudicialSeguimiento.DefensaJudicial.EsLegitimacionActiva == true ? "Activa" : "Pasiva")
+                                         .Replace("[TIPO_CONTROVERSIA]", TipoControversia.Nombre);
+                        _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, TemplateRecoveryPassword.Asunto);
+                    }
+                }
+            }
+            //1 día
+            foreach (var defensaJudicialSeguimiento in defensaJudicialSeguimiento1dias)
+            {
+
+                if (defensaJudicialSeguimiento.DefensaJudicial.DefensaJudicialContratacionProyecto.FirstOrDefault().ContratacionProyecto != null)
+                {
+                    contrato = _context.Contrato.Where(r => r.ContratacionId == defensaJudicialSeguimiento.DefensaJudicial.DefensaJudicialContratacionProyecto.FirstOrDefault().ContratacionProyecto.ContratacionId)
+                                                .Include(r => r.ControversiaContractual)
+                                                .FirstOrDefault();
+                    if (contrato != null)
+                    {
+                        Dominio TipoControversia = await _commonService.GetDominioByNombreDominioAndTipoDominio(contrato.ControversiaContractual.FirstOrDefault().TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipos_Controversia);
+
+                        string strContenido = TemplateRecoveryPassword.Contenido
+                                         .Replace("[NUMERO_CONTRATO]", contrato != null ? contrato.NumeroContrato : String.Empty)
+                                         .Replace("[PROXIMA_ACTUACION]", defensaJudicialSeguimiento.ProximaActuacion)
+                                         .Replace("[NUMERO_PROCESO]", defensaJudicialSeguimiento.DefensaJudicial.NumeroProceso)
+                                         .Replace("[FECHA_VENCIMIENTO]", ((DateTime)defensaJudicialSeguimiento.FechaVencimiento).ToString("yyyy-MM-dd"))
+                                         .Replace("[DIAS]", "(1) día")
+                                         .Replace("[FECHA_REGISTRO_PROCESO]", ((DateTime)defensaJudicialSeguimiento.DefensaJudicial.FechaCreacion).ToString("yyyy-MM-dd"))
+                                         .Replace("[LEGITIMACION]", defensaJudicialSeguimiento.DefensaJudicial.EsLegitimacionActiva == true ? "Activa" : "Pasiva")
+                                         .Replace("[TIPO_CONTROVERSIA]", TipoControversia.Nombre);
+                        _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, TemplateRecoveryPassword.Asunto);
+                    }
+                }
+            }
+        }
+        #endregion
 
     }
 }
