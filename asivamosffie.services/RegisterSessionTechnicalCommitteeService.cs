@@ -1054,6 +1054,14 @@ namespace asivamosffie.services
                     .Include( r => r.DefensaJudicial )
                     .OrderByDescending(r => r.DefensaJudicialId).ToList();
 
+                List<NovedadContractual> ListNovedadContractual = _context.NovedadContractual
+                    .Where(r => !(bool)r.Eliminado
+                    //&& r.FichaEstudio.FirstOrDefault().EsActuacionTramiteComite == true
+                    && r.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Enviada_a_comite_tecnico
+                    && r.FechaSolictud < pFechaOrdenDelDia // no estoy seguro de esto
+                    )
+                    .OrderByDescending(r => r.FechaSolictud).ToList();
+
                 #endregion Buscar Solicitudes
 
                 #region Quitar los que ya estan en sesionComiteSolicitud
@@ -1130,6 +1138,14 @@ namespace asivamosffie.services
                                                                  )
                                                             .Select(r => r.SolicitudId).Distinct().ToList();
 
+                List<int> ListIdNovedadContractual = _context.SesionComiteSolicitud
+                                                            .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Novedad_Contractual &&
+                                                                r.Eliminado != true &&
+                                                                r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario &&
+                                                                r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_tecnico
+                                                                 )
+                                                            .Select(r => r.SolicitudId).Distinct().ToList();
+
 
                 ListContratacion.RemoveAll(item => LisIdContratacion.Contains(item.ContratacionId));
                 ListProcesoSeleccion.RemoveAll(item => ListIdProcesosSeleccion.Contains(item.ProcesoSeleccionId));
@@ -1140,6 +1156,7 @@ namespace asivamosffie.services
                 ListControversiasActuacionReclmacion.RemoveAll(item => ListIdControversiasActuacionesReclamaciones.Contains(item.ControversiaActuacionId));
                 ListDefensaJudicial.RemoveAll(item => ListIdDefensaJudicial.Contains(item.DefensaJudicialId));
                 ListDefensaJudicialSeguimiento.RemoveAll(item => ListIdDefensaJudicialSeguimiento.Contains(item.DefensaJudicialSeguimientoId));
+                ListNovedadContractual.RemoveAll(item => ListIdNovedadContractual.Contains(item.NovedadContractualId));
 
                 #endregion Quitar los que ya estan en sesionComiteSolicitud
 
@@ -1254,6 +1271,18 @@ namespace asivamosffie.services
                         NumeroSolicitud = defensa.DefensaJudicial.NumeroProceso,
                         TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Actuaciones_Defensa_judicial).FirstOrDefault().Nombre,
                         tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.Actuaciones_Defensa_judicial
+                    });
+                };
+
+                foreach (var novedad in ListNovedadContractual)
+                {
+                    ListValidacionSolicitudesContractualesGrilla.Add(new
+                    {
+                        Id = novedad.NovedadContractualId,
+                        FechaSolicitud = Convert.ToDateTime(novedad.FechaSolictud.HasValue ? novedad.FechaSolictud.Value.ToString("yyyy-MM-dd") : novedad.FechaCreacion.Value.ToString("yyyy-MM-dd")),
+                        NumeroSolicitud = novedad.NumeroSolicitud,
+                        TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Novedad_Contractual).FirstOrDefault().Nombre,
+                        tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.Novedad_Contractual
                     });
                 };
 

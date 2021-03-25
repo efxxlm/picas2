@@ -12,6 +12,7 @@
         public const string Actuaciones_Controversias_Contractuales = "8";
         public const string Actuaciones_Controversias_Reclamaciones = "9";
         public const string Actuaciones_Defensa_judicial = "10";
+        public const string Novedad_Contractual = "11";
 
 
     }
