@@ -280,6 +280,7 @@ namespace asivamosffie.services
 
             try
             {
+                InformeFinal informeFinalOld = _context.InformeFinal.Find(informeFinal.InformeFinalId);
 
                 foreach (InformeFinalInterventoria informeFinalInterventoria in informeFinal.InformeFinalInterventoria)
                 {
@@ -307,7 +308,7 @@ namespace asivamosffie.services
                 }
                 bool? tieneObservaciones = null;
 
-                VerificarInformeFinalAprobacion(informeFinal.InformeFinalId, informeFinal.TieneObservacionesSupervisor == null ? tieneObservaciones : (bool)informeFinal.TieneObservacionesSupervisor);
+                VerificarInformeFinalAprobacion(informeFinal.InformeFinalId, informeFinalOld.TieneObservacionesSupervisor == null ? tieneObservaciones : (bool)informeFinalOld.TieneObservacionesSupervisor);
 
                 await _context.SaveChangesAsync();
 

@@ -5,8 +5,9 @@
     </a>
   </div>
   <div class="text-center">
-    <h1 class="title-menu--h1">
-      Validar informe final
+    <h1 class="title-menu--h1" *ngIf="report">
+      <span *ngIf="report.proyecto.informeFinal[0].estadoAprobacion == null || report.proyecto.informeFinal[0].estadoAprobacion === '0' || report.proyecto.informeFinal[0].estadoAprobacion === '7'">Validar informe final</span>
+      <span *ngIf="report.proyecto.informeFinal[0].estadoAprobacion != null && report.proyecto.informeFinal[0].estadoAprobacion !== '0' && report.proyecto.informeFinal[0].estadoAprobacion !== '7' && report.proyecto.informeFinal[0].estadoAprobacion !== '6' && report.proyecto.informeFinal[0].estadoAprobacion !== '2'">Ver detalle/Editar Validación informe final</span>
       <b *ngIf="report"> {{ report.proyecto.llaveMen }} </b>
     </h1>
     <p class="colorMainColor mt-05em"> 

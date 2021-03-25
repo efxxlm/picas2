@@ -230,6 +230,11 @@ namespace asivamosffie.services
 
             InformeFinal informeFinal = _context.InformeFinal.Where(r => r.InformeFinalId == pInformeFinalId).FirstOrDefault();
             InformeFinalInterventoria existe_no_data = _context.InformeFinalInterventoria.Where(r => r.InformeFinalId == pInformeFinalId && r.ValidacionCodigo == null).FirstOrDefault();
+            if (informeFinal.TieneObservacionesValidacion == null)
+            {
+                return false;
+            }
+            
             if (existe_no_data != null)
             {
                 return false;
@@ -408,7 +413,6 @@ namespace asivamosffie.services
                                                                        UsuarioModificacion = pObservacion.UsuarioCreacion,
                                                                        Observaciones = pObservacion.Observaciones,
                                                                    });
-                    await VerificarInformeFinalValidacion(pObservacion.InformeFinalId);
                 }
                 await _context.Set<InformeFinal>().Where(r => r.InformeFinalId == pObservacion.InformeFinalId)
                                                .UpdateAsync(r => new InformeFinal()
@@ -417,6 +421,9 @@ namespace asivamosffie.services
                                                    UsuarioModificacion = pObservacion.UsuarioCreacion,
                                                    TieneObservacionesValidacion = tieneObservacion,
                                                });
+                _context.SaveChanges();
+
+                await VerificarInformeFinalValidacion(pObservacion.InformeFinalId);
                 _context.SaveChanges();
 
                 return
