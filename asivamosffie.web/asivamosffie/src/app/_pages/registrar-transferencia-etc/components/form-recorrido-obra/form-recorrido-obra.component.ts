@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Respuesta } from 'src/app/core/_services/common/common.service';
@@ -17,6 +17,8 @@ export class FormRecorridoObraComponent implements OnInit {
   @ViewChild(FormRepresentanteComponent ) childFormRepresentante: FormRepresentanteComponent ; 
 
   @Input() id: number;
+  @Output("callOnInitParent") callOnInitParent: EventEmitter<any> = new EventEmitter();
+
 
   representanteEtcrecorrido: any;
   addressForm = this.fb.group({
@@ -74,9 +76,13 @@ export class FormRecorridoObraComponent implements OnInit {
   }
 
   openDialog(modalTitle: string, modalText: string) {
-    this.dialog.open(ModalDialogComponent, {
+    let dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      this.callOnInitParent.emit();
+      return;
     });
   }
 

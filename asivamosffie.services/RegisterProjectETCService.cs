@@ -151,6 +151,7 @@ namespace asivamosffie.services
                 _context.SaveChanges();
 
                 validateRegistroCompletoEtc(pRecorrido.InformeFinalId);
+                registroCompletoRecorridoObra(pRecorrido.ProyectoEntregaEtcid);
 
                 return
                 new Respuesta
@@ -374,6 +375,37 @@ namespace asivamosffie.services
                 }
             }
         }*/
+        private bool registroCompletoRecorridoObra(int proyectoEntregaEtcId)
+        {
+            bool state = false;
+            ProyectoEntregaEtc proyectoEntregaEtc = _context.ProyectoEntregaEtc.Where(r => r.ProyectoEntregaEtcid == proyectoEntregaEtcId).Include(r => r.RepresentanteEtcrecorrido).FirstOrDefault();
+            if (proyectoEntregaEtc != null)
+            {
+                if (proyectoEntregaEtc.FechaRecorridoObra != null &&
+                    proyectoEntregaEtc.FechaFirmaActaEngregaFisica != null &&
+                    !String.IsNullOrEmpty(proyectoEntregaEtc.UrlActaEntregaFisica) &&
+                    proyectoEntregaEtc.NumRepresentantesRecorrido != null
+                    )
+                {
+                    int totalRepresentantes = _context.RepresentanteEtcrecorrido.Where(r => r.ProyectoEntregaEtcid == proyectoEntregaEtcId && (r.Eliminado == false || r.Eliminado == null) && r.RegistroCompleto == true).Count();
+                    if (totalRepresentantes == proyectoEntregaEtc.NumRepresentantesRecorrido)
+                    {
+                        state = true;
+                    }
+                }
+            }
+
+            _context.Set<ProyectoEntregaEtc>().Where(r => r.ProyectoEntregaEtcid == proyectoEntregaEtcId)
+            .Update(r => new ProyectoEntregaEtc()
+            {
+                RegistroCompletoRecorridoObra = state
+            });
+
+            _context.SaveChanges();
+
+            return false;
+
+        }
 
         private bool validateRegistroCompletoEtc(int informeFinalId)
         {

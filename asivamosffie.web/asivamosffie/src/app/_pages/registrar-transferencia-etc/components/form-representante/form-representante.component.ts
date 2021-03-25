@@ -50,6 +50,8 @@ export class FormRepresentanteComponent implements OnInit {
                           nombre: representante.nombre,
                           cargo:  representante.cargo,
                           dependencia: representante.dependencia,
+                          semaforo: representante.registroCompleto == true ? "completo" : 
+                                    representante.registroCompleto == false && (representante.nombre == "" || representante.nombre == null || representante.cargo == "" || representante.cargo == null || representante.dependencia == "" || representante.dependencia == null) ? "en-proceso" : "sin-diligenciar"
                       }
                   )
               );
@@ -62,7 +64,8 @@ export class FormRepresentanteComponent implements OnInit {
                     proyectoEntregaEtcId: [this.proyectoEntregaEtcId, Validators.required],  
                     nombre: [null, Validators.required],
                     cargo: [null, Validators.required],
-                    dependencia: [null, Validators.required]
+                    dependencia: [null, Validators.required],
+                    semaforo: "sin-diligenciar"
                   })
               );
           }
@@ -100,6 +103,8 @@ export class FormRepresentanteComponent implements OnInit {
                                       nombre: representante.nombre,
                                       cargo:  representante.cargo,
                                       dependencia: representante.dependencia,
+                                      semaforo: representante.registroCompleto == true ? "completo" : 
+                                                representante.registroCompleto == false && (representante.nombre == "" || representante.nombre == null || representante.cargo == "" || representante.cargo == null || representante.dependencia == "" || representante.dependencia == null) ? "en-proceso" : "sin-diligenciar"
                                   }
                               )
                           );
@@ -120,7 +125,8 @@ export class FormRepresentanteComponent implements OnInit {
                                 proyectoEntregaEtcId: [this.proyectoEntregaEtcId, Validators.required],  
                                 nombre: [null, Validators.required],
                                 cargo: [null, Validators.required],
-                                dependencia: [null, Validators.required]
+                                dependencia: [null, Validators.required],
+                                semaforo: "sin-diligenciar"
                               })
                           );
                       }
@@ -147,7 +153,8 @@ export class FormRepresentanteComponent implements OnInit {
                                             proyectoEntregaEtcId: [this.proyectoEntregaEtcId, Validators.required],  
                                             nombre: [null, Validators.required],
                                             cargo: [null, Validators.required],
-                                            dependencia: [null, Validators.required]
+                                            dependencia: [null, Validators.required],
+                                            semaforo: "sin-diligenciar"
                                         })
                                     );
                                 }
@@ -160,7 +167,8 @@ export class FormRepresentanteComponent implements OnInit {
                                           proyectoEntregaEtcId: [this.proyectoEntregaEtcId, Validators.required],  
                                           nombre: [null, Validators.required],
                                           cargo: [null, Validators.required],
-                                          dependencia: [null, Validators.required]
+                                          dependencia: [null, Validators.required],
+                                          semaforo: "sin-diligenciar"
                                         })
                                     );
                                 }
@@ -188,7 +196,8 @@ export class FormRepresentanteComponent implements OnInit {
                                           proyectoEntregaEtcId: [this.proyectoEntregaEtcId, Validators.required],  
                                           nombre: [null, Validators.required],
                                           cargo: [null, Validators.required],
-                                          dependencia: [null, Validators.required]
+                                          dependencia: [null, Validators.required],
+                                          semaforo: "sin-diligenciar"
                                         })
                                     );
                                 }
@@ -201,7 +210,8 @@ export class FormRepresentanteComponent implements OnInit {
                                           proyectoEntregaEtcId: [this.proyectoEntregaEtcId, Validators.required],  
                                           nombre: [null, Validators.required],
                                           cargo: [null, Validators.required],
-                                          dependencia: [null, Validators.required]
+                                          dependencia: [null, Validators.required],
+                                          semaforo: "sin-diligenciar"
                                         })
                                     );
                                 }

@@ -50,9 +50,13 @@ export class FormRemisionComponent implements OnInit {
   }
 
   openDialog(modalTitle: string, modalText: string) {
-    this.dialog.open(ModalDialogComponent, {
+    let dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      this.callOnInitParent.emit();
+      return;
     });
   }
 
@@ -66,7 +70,6 @@ export class FormRemisionComponent implements OnInit {
   createEditRemisionDocumentosTecnicos(pDocumentos: any) {
     this.registerProjectETCService.createEditRemisionDocumentosTecnicos(pDocumentos).subscribe((respuesta: Respuesta) => {
       this.openDialog('', respuesta.message);
-      this.callOnInitParent.emit();
     });
   }
 }

@@ -20,6 +20,7 @@ export class RegistrarEntregaComponent implements OnInit {
   proyectoEntregaEtc: ProyectoEntregaETC;
   semaforoActaBienesServicios = 'sin-diligenciar';
   semaforoRemision = 'sin-diligenciar';
+  semaforoRecorrido = 'sin-diligenciar';
 
   constructor(
     private route: ActivatedRoute,
@@ -34,6 +35,7 @@ export class RegistrarEntregaComponent implements OnInit {
   dataSource = new MatTableDataSource<ProyectoEntregaETC>(this.ELEMENT_DATA);
 
   ngOnInit(): void {
+    console.log("entra");
     this.getProyectoEntregaETCByInformeFinalId(this.id);
   }
 
@@ -48,23 +50,29 @@ export class RegistrarEntregaComponent implements OnInit {
         this.proyectoEntregaEtc = report[0].proyectoEntregaEtc as ProyectoEntregaETC;
 
         // Semaforo Acta Bienes Servicios
-        if (this.proyectoEntregaEtc.actaBienesServicios !== null && this.proyectoEntregaEtc.actaBienesServicios !== ""
-             && this.proyectoEntregaEtc.fechaFirmaActaBienesServicios !== null  
-             && this.proyectoEntregaEtc.registroCompletoActaBienesServicios == false) {
-          this.semaforoActaBienesServicios = 'en-proceso';
-        }
         if ( this.proyectoEntregaEtc.registroCompletoActaBienesServicios === true ) {
           this.semaforoActaBienesServicios = 'completo';
         }
+        else if (this.proyectoEntregaEtc.registroCompletoActaBienesServicios === false && 
+                (this.proyectoEntregaEtc.actaBienesServicios === null || this.proyectoEntregaEtc.actaBienesServicios === ""
+                || this.proyectoEntregaEtc.fechaFirmaActaBienesServicios === null)) {
+            this.semaforoActaBienesServicios = 'en-proceso';
+        }
         
         // Semaforo Remision
-        if (this.proyectoEntregaEtc.numRadicadoDocumentosEntregaEtc !== null && this.proyectoEntregaEtc.numRadicadoDocumentosEntregaEtc !== ""
-        && this.proyectoEntregaEtc.fechaEntregaDocumentosEtc !== null  
-        && this.proyectoEntregaEtc.registroCompletoRemision == false) {
-          this.semaforoRemision = 'en-proceso';
-        }
         if ( this.proyectoEntregaEtc.registroCompletoRemision === true ) {
           this.semaforoRemision = 'completo';
+        }else if(this.proyectoEntregaEtc.registroCompletoRemision === false && (this.proyectoEntregaEtc.numRadicadoDocumentosEntregaEtc === null || this.proyectoEntregaEtc.numRadicadoDocumentosEntregaEtc === ""
+        || this.proyectoEntregaEtc.fechaEntregaDocumentosEtc === null  )){
+          this.semaforoRemision = 'en-proceso';
+        }
+
+        // Semaforo recorrido obra
+        if ( this.proyectoEntregaEtc.registroCompletoRecorridoObra === true ) {
+          this.semaforoRecorrido = 'completo';
+        }else if(this.proyectoEntregaEtc.registroCompletoRemision === false && (this.proyectoEntregaEtc.numRadicadoDocumentosEntregaEtc === null || this.proyectoEntregaEtc.numRadicadoDocumentosEntregaEtc === ""
+        || this.proyectoEntregaEtc.fechaEntregaDocumentosEtc === null  )){
+          this.semaforoRemision = 'en-proceso';
         }
       }
 
