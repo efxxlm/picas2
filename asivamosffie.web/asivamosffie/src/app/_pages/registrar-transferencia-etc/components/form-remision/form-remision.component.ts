@@ -42,7 +42,9 @@ export class FormRemisionComponent implements OnInit {
       this.registerProjectETCService.getProyectoEntregaEtc(this.id)
       .subscribe(
         response => {
-          this.addressForm.patchValue(response);
+          if(response != null){
+            this.addressForm.patchValue(response);
+          }
         }
       );
       this.estaEditando = true;

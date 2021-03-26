@@ -61,9 +61,11 @@ export class FormRecorridoObraComponent implements OnInit {
       this.registerProjectETCService.getProyectoEntregaEtc(this.id)
       .subscribe(
         (response: ProyectoEntregaETC) => {
-          this.representanteEtcrecorrido = response.representanteEtcrecorrido;
-          this.addressForm.patchValue(response);
-          console.log("response: ", response, this.representanteEtcrecorrido);
+          if(response != null){
+            this.representanteEtcrecorrido = response.representanteEtcrecorrido;
+            this.addressForm.patchValue(response);
+            console.log("response: ", response, this.representanteEtcrecorrido);
+          }
         }
       );
       this.estaEditando = true;
