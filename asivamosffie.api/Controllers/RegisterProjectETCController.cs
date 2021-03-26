@@ -154,5 +154,24 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("DeleteRepresentanteEtcRecorrido")]
+        public async Task<IActionResult> DeleteRepresentanteEtcRecorrido([FromQuery] int representanteEtcId, [FromQuery] int numRepresentantesRecorrido)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _registerProjectETCService.DeleteRepresentanteEtcRecorrido(representanteEtcId, numRepresentantesRecorrido, HttpContext.User.FindFirst("User").Value);
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+
     }
 }

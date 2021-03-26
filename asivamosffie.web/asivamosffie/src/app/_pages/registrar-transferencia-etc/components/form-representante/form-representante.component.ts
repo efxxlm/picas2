@@ -2,6 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
+import { Respuesta } from 'src/app/core/_services/common/common.service';
+import { RegisterProjectEtcService } from 'src/app/core/_services/registerProjectETC/register-project-etc.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { RepresentanteETCRecorrido } from 'src/app/_interfaces/proyecto-entrega-etc';
 
@@ -16,6 +18,7 @@ export class FormRepresentanteComponent implements OnInit {
   @Input() proyectoEntregaEtcId: any;
   @Input() representanteEtcrecorrido: any;
   @Output("callOnSubmitParent") callOnSubmitParent: EventEmitter<any> = new EventEmitter();
+  @Output("callOnInitParent") callOnInitParent: EventEmitter<any> = new EventEmitter();
   @Output() numRepresentantesRecorridoChange = new EventEmitter<string>();
 
   representantesForm: FormGroup;
@@ -27,7 +30,7 @@ export class FormRepresentanteComponent implements OnInit {
     return this.representantesForm.get("representantes") as FormArray
   }
   
-  constructor(private fb: FormBuilder, public dialog: MatDialog) {
+  constructor(private fb: FormBuilder, public dialog: MatDialog,private registerProjectETCService: RegisterProjectEtcService) {
     this.crearFormulario();
   }
 
@@ -79,7 +82,7 @@ export class FormRepresentanteComponent implements OnInit {
   }
 
   ngOnChanges(changes) {
-    if(changes.numRepresentantesRecorrido.currentValue != null){
+    if(changes.numRepresentantesRecorrido.currentValue != null && changes.numRepresentantesRecorrido.currentValue != 'undefined'){
       this.representantesForm.get("numRepresentantesRecorrido").setValue(this.numRepresentantesRecorrido, { emitEvent: true });
       this.representantesForm.markAsDirty();
       this.getCantidadRepresentantes();
@@ -248,9 +251,39 @@ export class FormRepresentanteComponent implements OnInit {
     this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
   }
 
-  /*get representantes() {
-    return this.formGestionCalidad.get( 'ensayosLaboratorio' ) as FormArray;
-}*/
+  openDialogTrueFalse(modalTitle: string, modalText: string) {
+
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+
+    return dialogRef.afterClosed();
+  }
+
+  eliminarRepresentante( representanteEtcid: number, numeroRepresentante: number ) {
+    this.openDialogTrueFalse( '', '¿Está seguro de eliminar esta información?' )
+      .subscribe( value => {
+        if ( value === true ) {
+            if ( representanteEtcid === 0 || representanteEtcid == null ) {
+                this.representantes.removeAt( numeroRepresentante );
+                this.numRepresentantesRecorridoChange.emit(String( this.representantes.length ) );
+                this.representantesForm.get( 'numRepresentantesRecorrido' ).setValue( String( this.representantes.length ) );
+                this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
+            } else {
+                this.representantes.removeAt( numeroRepresentante );
+                this.registerProjectETCService.deleteRepresentanteEtcRecorrido( representanteEtcid , this.representantes.length)
+                .subscribe((response: Respuesta) => {
+                            this.callOnInitParent.emit();
+                            return;
+                        },
+                      err => this.openDialog( '', `<b>${ err.message }</b>` )
+                );
+            }
+        }
+      } );
+  } 
+
 
     arrayOne(n: number): any[] {
       return Array(n);

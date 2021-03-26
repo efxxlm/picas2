@@ -48,4 +48,8 @@ export class RegisterProjectEtcService {
     sendProjectToEtc(informeFinalId: number){
       return this.http.post(`${environment.apiUrl}/${this.final_report}/SendProjectToEtc?informeFinalId=${ informeFinalId }`,null);
     }
+
+    deleteRepresentanteEtcRecorrido( representanteEtcId: number , numRepresentantesRecorrido: number) {
+      return this.http.post(`${environment.apiUrl}/${this.final_report}/DeleteRepresentanteEtcRecorrido?representanteEtcId=${ representanteEtcId }&numRepresentantesRecorrido=${ numRepresentantesRecorrido }`,'');
+    }
 }

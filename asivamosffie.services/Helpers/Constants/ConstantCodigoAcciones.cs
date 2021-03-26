@@ -331,5 +331,7 @@
         public const string Crear_Editar_Novedad_Contractual_Tramite = "237";
         public const string Enviar_A_Comite_Novedad_Contractual = "238";
 
+        public const string Eliminar_Representante_Etc = "240";
+
     }
 }

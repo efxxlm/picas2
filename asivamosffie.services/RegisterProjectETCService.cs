@@ -59,9 +59,16 @@ namespace asivamosffie.services
         public async Task<ProyectoEntregaEtc> GetProyectoEntregaEtc(int informeFinalId)
         {
             
-            return await _context.ProyectoEntregaEtc.Where(r => r.InformeFinalId == informeFinalId)
-                                                    .Include(r => r.RepresentanteEtcrecorrido)
-                                                    .FirstOrDefaultAsync();
+            ProyectoEntregaEtc proyectoEntregaEtc = await _context.ProyectoEntregaEtc.Where(r => r.InformeFinalId == informeFinalId).FirstOrDefaultAsync();
+            
+            if (proyectoEntregaEtc != null)
+            {
+                List<RepresentanteEtcrecorrido> representantesEtcrecorrido = await _context.RepresentanteEtcrecorrido.Where(r => r.ProyectoEntregaEtcid == proyectoEntregaEtc.ProyectoEntregaEtcid && (r.Eliminado == false || r.Eliminado == null)).ToListAsync();
+                proyectoEntregaEtc.RepresentanteEtcrecorrido = representantesEtcrecorrido;
+            }
+            
+            return proyectoEntregaEtc;
+
         }
 
         public async Task<List<dynamic>> GetProyectoEntregaETCByInformeFinalId(int pInformeFinalId)
@@ -100,8 +107,13 @@ namespace asivamosffie.services
             }
             ProyectoEntregaEtc proyectoEntregaEtc = await _context.ProyectoEntregaEtc
                                         .Where(r => r.InformeFinalId == pInformeFinalId)
-                                        .Include(r => r.RepresentanteEtcrecorrido)
                                         .FirstOrDefaultAsync();
+
+            if (proyectoEntregaEtc != null)
+            {
+                List<RepresentanteEtcrecorrido> representantesEtcrecorrido = await _context.RepresentanteEtcrecorrido.Where(r => r.ProyectoEntregaEtcid == proyectoEntregaEtc.ProyectoEntregaEtcid && (r.Eliminado == false || r.Eliminado == null)).ToListAsync();
+                proyectoEntregaEtc.RepresentanteEtcrecorrido = representantesEtcrecorrido;
+            }
 
             ProyectoAjustado.Add(new
             {
@@ -490,6 +502,62 @@ namespace asivamosffie.services
                     IsValidation = false,
                     Code = ConstantSesionComiteTecnico.Error,
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarTransferenciaProyectoETC, GeneralCodes.Error, idAccion, pUsuario, ex.InnerException.ToString())
+                };
+            }
+        }
+
+        public async Task<Respuesta> DeleteRepresentanteEtcRecorrido(int representanteEtcId,int numRepresentantesRecorrido, string pUsuarioModificacion)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Representante_Etc, (int)EnumeratorTipoDominio.Acciones);
+            try
+            {
+                RepresentanteEtcrecorrido representanteEtcrecorridoOld = await _context.RepresentanteEtcrecorrido
+                    .Where(r => r.RepresentanteEtcid == representanteEtcId).FirstOrDefaultAsync();
+                if (representanteEtcrecorridoOld == null)
+                {
+                    return new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = ConstanMessagesRegisterWeeklyProgress.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarTransferenciaProyectoETC, ConstanMessagesRegisterWeeklyProgress.Error, idAccion, pUsuarioModificacion, "RepresentanteEtcrecorrido no encontrado".ToUpper())
+                    };
+                }
+                ProyectoEntregaEtc proyectoEntregaEtc = await _context.ProyectoEntregaEtc.FindAsync(representanteEtcrecorridoOld.ProyectoEntregaEtcid);
+
+                representanteEtcrecorridoOld.UsuarioModificacion = pUsuarioModificacion;
+                representanteEtcrecorridoOld.FechaModificacion = DateTime.Now;
+                representanteEtcrecorridoOld.Eliminado = true;
+
+                if (proyectoEntregaEtc != null)
+                {
+                    proyectoEntregaEtc.UsuarioModificacion = pUsuarioModificacion;
+                    proyectoEntregaEtc.FechaModificacion = DateTime.Now;
+                    proyectoEntregaEtc.NumRepresentantesRecorrido = numRepresentantesRecorrido;
+                }
+
+                await _context.SaveChangesAsync();
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarTransferenciaProyectoETC, ConstanMessagesRegisterWeeklyProgress.OperacionExitosa, idAccion, pUsuarioModificacion, "Eliminar RepresentanteEtcrecorrido".ToUpper())
+                };
+
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantSesionComiteTecnico.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarTransferenciaProyectoETC, ConstantSesionComiteTecnico.Error, idAccion, pUsuarioModificacion, ex.InnerException.ToString())
                 };
             }
         }

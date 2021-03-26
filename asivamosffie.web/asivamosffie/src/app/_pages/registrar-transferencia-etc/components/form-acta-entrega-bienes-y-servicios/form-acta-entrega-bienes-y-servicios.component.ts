@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { Respuesta } from 'src/app/core/_services/common/common.service';
 import { RegisterProjectEtcService } from 'src/app/core/_services/registerProjectETC/register-project-etc.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -23,7 +24,7 @@ export class FormActaEntregaBienesYServiciosComponent implements OnInit {
   @Input() id: number;
   @Output("callOnInitParent") callOnInitParent: EventEmitter<any> = new EventEmitter();
 
-  constructor(private fb: FormBuilder, public dialog: MatDialog, private registerProjectETCService: RegisterProjectEtcService) {}
+  constructor(private fb: FormBuilder, public dialog: MatDialog, private registerProjectETCService: RegisterProjectEtcService,private router: Router) {}
 
   ngOnInit(): void {
     this.buildForm();
@@ -58,6 +59,7 @@ export class FormActaEntregaBienesYServiciosComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       this.callOnInitParent.emit();
+      this.router.navigate(['/registrarTransferenciaProyectosETC']);
       return;
     });
   }

@@ -19,6 +19,7 @@ namespace asivamosffie.services.Interfaces
         Task<ProyectoEntregaEtc> GetProyectoEntregaEtc(int informeFinalId);
         Task<Respuesta> SendProjectToEtc(int informeFinalId, string pUsuario);
         Task GetInformeFinalActaBienesServicios();
+        Task<Respuesta> DeleteRepresentanteEtcRecorrido(int representanteEtcId,int numRepresentantesRecorrido, string pUsuarioModificacion);
 
     }
 }

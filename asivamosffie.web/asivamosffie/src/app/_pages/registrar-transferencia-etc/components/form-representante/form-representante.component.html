@@ -139,6 +139,16 @@
             </div>
           </mat-card-content>
         </mat-card>
+        <div class="text-right" *ngIf="representantesForm.get( 'numRepresentantesRecorrido' ).value > 1">
+          <button mat-button
+                  color="warn"
+                  type="button"
+                  class="btn-eliminar"
+                  (click)="eliminarRepresentante( representante.get( 'representanteEtcid' ).value, i )">
+            <img src="assets/img/icon/menos.svg">
+            Eliminar representante
+          </button>
+      </div>
         <div class="text-center">
           <button mat-button color="warn" class="btn-guardar" type="submit" (click)="guardar()">
             <img src="assets/img/icon/guardar.svg" alt="Guardar" />
