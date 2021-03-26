@@ -94,15 +94,15 @@
         Gestión
       </th>
       <td mat-cell *matCellDef="let element">
-        <a *ngIf="element.estadoEntregaEtc !='2' "
+        <a *ngIf="element.estadoEntregaEtc !='2'"
           mat-button
           mat-raised-button
           color="accent"
           class="btn-table"
           [routerLink]="['registrarEntrega', element.informeFinalId]"
         >
-        <span *ngIf="element.estadoEntregaEtc === '0' || element.estadoEntregaEtc === null ">Registrar entrega</span>
-        <span *ngIf="element.estadoEntregaEtc !== '0' && element.estadoEntregaEtc !== '2' && element.estadoEntregaEtc !== null">Ver detalle/Editar</span>
+        <span *ngIf="element.estadoEntregaEtc === '0' || element.estadoEntregaEtc === null || !element.estadoEntregaEtc">Registrar entrega</span>
+        <span *ngIf="element.estadoEntregaEtc && element.estadoEntregaEtc !== '0' && element.estadoEntregaEtc !== '2' && element.estadoEntregaEtc !== null">Ver detalle/Editar</span>
         </a>
         <a *ngIf="element.estadoEntregaEtc === '2'"
           mat-button
@@ -115,7 +115,7 @@
           Ver detalle
         </a>
         <button
-        *ngIf="element.registroCompleto === true && element.estadoEntregaEtc !== '2'"
+        *ngIf="element.registroCompleto === true && element.estadoEntregaEtc !== '2' && element.estadoEntregaEtc"
           mat-button
           mat-raised-button
           color="accent"
