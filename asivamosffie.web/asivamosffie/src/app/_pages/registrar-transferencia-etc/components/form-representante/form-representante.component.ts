@@ -52,7 +52,10 @@ export class FormRepresentanteComponent implements OnInit {
                           cargo:  representante.cargo,
                           dependencia: representante.dependencia,
                           semaforo: representante.registroCompleto == true ? "completo" : 
-                                    representante.registroCompleto == false && (representante.nombre == "" || representante.nombre == null || representante.cargo == "" || representante.cargo == null || representante.dependencia == "" || representante.dependencia == null) ? "en-proceso" : "sin-diligenciar"
+                                    (representante.registroCompleto == false && ((representante.nombre == "" || representante.nombre == null) 
+                                                                            && (representante.cargo == "" || representante.cargo == null)
+                                                                            && (representante.dependencia == "" || representante.dependencia == null)) 
+                                    || (representante.registroCompleto == null)) ? "sin-diligenciar" : "en-proceso"
                       }
                   )
               );
@@ -105,8 +108,11 @@ export class FormRepresentanteComponent implements OnInit {
                                       cargo:  representante.cargo,
                                       dependencia: representante.dependencia,
                                       semaforo: representante.registroCompleto == true ? "completo" : 
-                                                representante.registroCompleto == false && (representante.nombre == "" || representante.nombre == null || representante.cargo == "" || representante.cargo == null || representante.dependencia == "" || representante.dependencia == null) ? "en-proceso" : "sin-diligenciar"
-                                  }
+                                      (representante.registroCompleto == false && ((representante.nombre == "" || representante.nombre == null) 
+                                                                              && (representante.cargo == "" || representante.cargo == null)
+                                                                              && (representante.dependencia == "" || representante.dependencia == null)) 
+                                      || (representante.registroCompleto == null)) ? "sin-diligenciar" : "en-proceso"
+                                      }
                               )
                           );
                       }

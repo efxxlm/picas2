@@ -54,16 +54,16 @@ export class RegistrarEntregaComponent implements OnInit {
           this.semaforoActaBienesServicios = 'completo';
         }
         else if (this.proyectoEntregaEtc.registroCompletoActaBienesServicios === false && 
-                (this.proyectoEntregaEtc.actaBienesServicios === null || this.proyectoEntregaEtc.actaBienesServicios === ""
-                || this.proyectoEntregaEtc.fechaFirmaActaBienesServicios === null)) {
+                (this.proyectoEntregaEtc.actaBienesServicios === null || this.proyectoEntregaEtc.actaBienesServicios === "" || !this.proyectoEntregaEtc.actaBienesServicios
+                || this.proyectoEntregaEtc.fechaFirmaActaBienesServicios === null || !this.proyectoEntregaEtc.fechaFirmaActaBienesServicios )) {
             this.semaforoActaBienesServicios = 'en-proceso';
         }
         
         // Semaforo Remision
         if ( this.proyectoEntregaEtc.registroCompletoRemision === true ) {
           this.semaforoRemision = 'completo';
-        }else if(this.proyectoEntregaEtc.registroCompletoRemision === false && (this.proyectoEntregaEtc.numRadicadoDocumentosEntregaEtc === null || this.proyectoEntregaEtc.numRadicadoDocumentosEntregaEtc === ""
-        || this.proyectoEntregaEtc.fechaEntregaDocumentosEtc === null  )){
+        }else if(this.proyectoEntregaEtc.registroCompletoRemision === false && (this.proyectoEntregaEtc.numRadicadoDocumentosEntregaEtc === null || this.proyectoEntregaEtc.numRadicadoDocumentosEntregaEtc === "" || !this.proyectoEntregaEtc.numRadicadoDocumentosEntregaEtc)
+        || this.proyectoEntregaEtc.fechaEntregaDocumentosEtc === null || !this.proyectoEntregaEtc.fechaEntregaDocumentosEtc  ){
           this.semaforoRemision = 'en-proceso';
         }
 
@@ -79,6 +79,8 @@ export class RegistrarEntregaComponent implements OnInit {
           && (this.proyectoEntregaEtc.fechaRecorridoObra === null && this.proyectoEntregaEtc.fechaFirmaActaEngregaFisica === null
           && (this.proyectoEntregaEtc.urlActaEntregaFisica === null || this.proyectoEntregaEtc.urlActaEntregaFisica === "" )
           && this.proyectoEntregaEtc.numRepresentantesRecorrido === null)){
+          this.semaforoRecorrido = 'sin-diligenciar';
+        }else if (this.proyectoEntregaEtc.registroCompletoRecorridoObra == null){
           this.semaforoRecorrido = 'sin-diligenciar';
         }else{
           this.semaforoRecorrido = 'en-proceso';

@@ -150,8 +150,9 @@ namespace asivamosffie.services
 
                 _context.SaveChanges();
 
-                validateRegistroCompletoEtc(pRecorrido.InformeFinalId);
-                registroCompletoRecorridoObra(pRecorrido.ProyectoEntregaEtcid);
+                await registroCompletoRecorridoObra(pRecorrido.ProyectoEntregaEtcid);
+
+                //validateRegistroCompletoEtc(pRecorrido.InformeFinalId);
 
                 return
                 new Respuesta
@@ -375,7 +376,7 @@ namespace asivamosffie.services
                 }
             }
         }*/
-        private bool registroCompletoRecorridoObra(int proyectoEntregaEtcId)
+        private async Task<bool> registroCompletoRecorridoObra(int proyectoEntregaEtcId)
         {
             bool state = false;
             ProyectoEntregaEtc proyectoEntregaEtc = _context.ProyectoEntregaEtc.Where(r => r.ProyectoEntregaEtcid == proyectoEntregaEtcId).Include(r => r.RepresentanteEtcrecorrido).FirstOrDefault();
@@ -395,10 +396,27 @@ namespace asivamosffie.services
                 }
             }
 
-            _context.Set<ProyectoEntregaEtc>().Where(r => r.ProyectoEntregaEtcid == proyectoEntregaEtcId)
-            .Update(r => new ProyectoEntregaEtc()
+            await _context.Set<ProyectoEntregaEtc>().Where(r => r.ProyectoEntregaEtcid == proyectoEntregaEtcId)
+            .UpdateAsync(r => new ProyectoEntregaEtc()
             {
                 RegistroCompletoRecorridoObra = state
+            });
+
+            if (proyectoEntregaEtc.RegistroCompletoActaBienesServicios == true && state == true && proyectoEntregaEtc.RegistroCompletoRemision == true)
+            {
+                state = true;
+            }
+            else
+            {
+                state = false;
+            }
+            _context.Set<InformeFinal>().Where(r => r.InformeFinalId == proyectoEntregaEtc.InformeFinalId)
+            .Update(r => new InformeFinal()
+            {
+                FechaModificacion = DateTime.Now,
+                UsuarioModificacion = proyectoEntregaEtc.UsuarioCreacion,
+                EstadoEntregaEtc = ConstantCodigoEstadoProyectoEntregaETC.En_proceso_de_entrega_ETC,
+                RegistroCompletoEntregaEtc = state
             });
 
             _context.SaveChanges();
