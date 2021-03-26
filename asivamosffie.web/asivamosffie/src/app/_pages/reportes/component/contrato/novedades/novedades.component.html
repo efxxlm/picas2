@@ -1,0 +1,49 @@
+<section class="container">
+  <div class="container text-center">
+    <div class="text-right">
+      <a routerLink="../.." mat-button color="primary" class="btn-regresar">
+        <img src="assets/img/icon/regresar.svg" alt="Regresar">
+      </a>
+    </div>
+    <h1 class="title-menu--h1">
+      Novedades N801801
+    </h1>
+    <p class="info-sub-title">
+      Contratista <b>Construir futuro</b>
+    </p>
+  </div>
+
+  <div class="table-responsive mb-1em mt-1em">
+    <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
+      <thead>
+        <tr class="mat-header-row cdk-header-row ng-star-inserted">
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted">Fecha de solicitud de la novedad</th>
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted">Número de solicitud</th>
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted">Tipo de novedad</th>
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted">Estado de la novedad</th>
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted">URL con soporte</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let element of listaNovedades">
+          <td class="mat-cell cdk-cell ng-star-inserted">
+            <b> {{ element.fechaSolicitudNovedad }} </b>
+          </td>
+          <td class="mat-cell cdk-cell ng-star-inserted">
+            {{ element.numeroSolicitud }}
+          </td>
+          <td class="mat-cell cdk-cell ng-star-inserted">
+            {{ element.tipoNovedad }}
+          </td>
+          <td class="mat-cell cdk-cell ng-star-inserted">
+            {{ element.estadoNovedad }}
+          </td>
+          <td class="mat-cell cdk-cell ng-star-inserted">
+            {{ element.urlSoporte }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+</section>

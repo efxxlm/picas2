@@ -1,0 +1,248 @@
+<section class="container">
+  <div class="container text-center">
+    <div class="text-right">
+      <a routerLink="../.." mat-button color="primary" class="btn-regresar">
+        <img src="assets/img/icon/regresar.svg" alt="Regresar">
+      </a>
+    </div>
+    <h1 class="title-menu--h1">
+      Ejecución financiera N801801
+    </h1>
+    <p class="info-sub-title">
+      Contratista <b>Construir futuro</b>
+    </p>
+  </div>
+
+  <mat-accordion>
+    <mat-expansion-panel class="expansion-style">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title">
+          DDP
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <mat-card class="shipping-card var-main-gris">
+        <mat-card-content>
+          <p>
+            <strong>
+              Número de DDP:
+            </strong>
+            DDP_0001
+          </p>
+          <p>
+            <strong>
+              Valor inicial DDP:
+            </strong>
+            $100.000.000
+          </p>
+          <p>
+            <strong>
+              Rubro por financiar:
+            </strong>
+            Proyecto de infraestructura
+          </p>
+          <p>
+            <strong>
+              Objeto:
+            </strong>
+            <span class="d-block">
+              Contrato de obra que compromete el diagnóstico y/o actualización y/o complementación y/o elaboración de
+              estudios y diseños y ejecución de las obras necesarias para la adecuación y mejoramiento de las
+              instituciones rurales.
+            </span>
+          </p>
+          <p>
+            <strong>
+              Número de comité técnico:
+            </strong>
+            CT_003
+          </p>
+          <p>
+            <strong>
+              Fecha comité técnico:
+            </strong>
+            03/07/2020
+          </p>
+          <p>
+            <strong>
+              Url con sporte:
+            </strong>
+            http://DDP_0001
+          </p>
+          <h2 class="card-subTitle">Modificaciones</h2>
+          <div class="table-responsive mb-1em mt-1em">
+            <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
+              <thead>
+                <tr class="mat-header-row cdk-header-row ng-star-inserted">
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Número de actualización</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Tipo de modificación</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Valor adicional</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Número de comité</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Fecha de comité</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Url con soporte</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let element of listaModificaciones">
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    <b> {{ element.numeroActualizacion }} </b>
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.tipoModificacion }}
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.valorAdicional }}
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.numeroComite }}
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.fechaComite }}
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.urlSoporte }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+    </mat-expansion-panel>
+    <mat-expansion-panel class="expansion-style">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title">
+          DRP
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <mat-card class="shipping-card var-main-gris">
+        <mat-card-content>
+          <p>
+            <strong>
+              Objeto:
+            </strong>
+            <span class="d-block">
+              Contrato de obra que compromete el diagnóstico y/o actualización y/o complementación y/o elaboración de
+              estudios y diseños y ejecución de las obras necesarias para la adecuación y mejoramiento de las
+              instituciones rurales.
+            </span>
+          </p>
+          <p>
+            <strong>
+              Url con sporte:
+            </strong>
+            http://DRP_N801801
+          </p>
+          <div class="table-responsive mb-1em mt-1em w-talble">
+            <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
+              <thead>
+                <tr class="mat-header-row cdk-header-row ng-star-inserted">
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">DRP</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Número DRP</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Valor</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let element of listaDRP">
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    <b> {{ element.drp }} </b>
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.numero }}
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.Valor }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+    </mat-expansion-panel>
+    <mat-expansion-panel class="expansion-style">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title">
+          Ejecución presupuestal
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+        <div class="table-responsive mb-1em mt-1em">
+          <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
+            <thead>
+              <tr class="mat-header-row cdk-header-row ng-star-inserted">
+                <th class="mat-header-cell cdk-header-cell ng-star-inserted">Componente</th>
+                <th class="mat-header-cell cdk-header-cell ng-star-inserted">Total comprometido</th>
+                <th class="mat-header-cell cdk-header-cell ng-star-inserted">Facturado antes de impuestos</th>
+                <th class="mat-header-cell cdk-header-cell ng-star-inserted">Saldo</th>
+                <th class="mat-header-cell cdk-header-cell ng-star-inserted">Porcentaje de ejecución presupuestal</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let element of listaejEcucionPresupuestal">
+                <td class="mat-cell cdk-cell ng-star-inserted">
+                  <b> {{ element.componente }} </b>
+                </td>
+                <td class="mat-cell cdk-cell ng-star-inserted">
+                  {{ element.totalComprometido }}
+                </td>
+                <td class="mat-cell cdk-cell ng-star-inserted">
+                  {{ element.facturadoAntesImpuestos }}
+                </td>
+                <td class="mat-cell cdk-cell ng-star-inserted">
+                  {{ element.saldo }}
+                </td>
+                <td class="mat-cell cdk-cell ng-star-inserted">
+                  {{ element.porcentajeEjecucionPresupuestal }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+      </div>
+
+    </mat-expansion-panel>
+    <mat-expansion-panel class="expansion-style">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title">
+          Ejecución financiera
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+        <div class="table-responsive mb-1em mt-1em">
+          <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
+            <thead>
+              <tr class="mat-header-row cdk-header-row ng-star-inserted">
+                <th class="mat-header-cell cdk-header-cell ng-star-inserted">Componente</th>
+                <th class="mat-header-cell cdk-header-cell ng-star-inserted">Total comprometido</th>
+                <th class="mat-header-cell cdk-header-cell ng-star-inserted">Ordenado a girar antes de impuestos</th>
+                <th class="mat-header-cell cdk-header-cell ng-star-inserted">Saldo</th>
+                <th class="mat-header-cell cdk-header-cell ng-star-inserted">Porcentaje de ejecución presupuestal</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let element of listaEjecucionFinanciera">
+                <td class="mat-cell cdk-cell ng-star-inserted">
+                  <b> {{ element.componente }} </b>
+                </td>
+                <td class="mat-cell cdk-cell ng-star-inserted">
+                  {{ element.totalComprometido }}
+                </td>
+                <td class="mat-cell cdk-cell ng-star-inserted">
+                  {{ element.ordenadoGirarAntesImpuestos }}
+                </td>
+                <td class="mat-cell cdk-cell ng-star-inserted">
+                  {{ element.saldo }}
+                </td>
+                <td class="mat-cell cdk-cell ng-star-inserted">
+                  {{ element.porcentajeEjecucionPresupuestal }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+      </div>
+
+    </mat-expansion-panel>
+  </mat-accordion>
+  
+</section>

@@ -1,0 +1,150 @@
+<section class="container">
+  <div class="container text-center">
+    <div class="text-right">
+      <a routerLink="../.." mat-button color="primary" class="btn-regresar">
+        <img src="assets/img/icon/regresar.svg" alt="Regresar">
+      </a>
+    </div>
+    <h1 class="title-menu--h1">
+      Resumen N801801
+    </h1>
+    <p class="info-sub-title">
+      Contratista <b>Construir futuro</b>
+    </p>
+  </div>
+
+  <mat-card class="shipping-card var-main-gris">
+    <mat-card-content>
+      <p>
+        <strong>
+          Tipo de contrato:
+        </strong>
+        Obra
+      </p>
+      <p>
+        <strong>
+          Estado:
+        </strong>
+        Liquidado
+      </p>
+      <p>
+        <strong>
+          Valor actual del contrato:
+        </strong>
+        $105.000.000
+      </p>
+      <p>
+        <strong>
+          Fecha de suscripción:
+        </strong>
+        22/10/2020
+      </p>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-accordion>
+    <mat-expansion-panel class="expansion-style">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title">
+          LL457326
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      
+      <mat-card class="shipping-card var-main-gris">
+        <mat-card-content>
+          <p>
+            <strong>
+              Tipo de intervensión:
+            </strong>
+            Remodelación
+          </p>
+          <h2 class="card-subTitle">Ubicación</h2>
+          <p>
+            <strong>
+              Departamento:
+            </strong>
+            Boyacá
+          </p>
+          <p>
+            <strong>
+              Municipio:
+            </strong>
+            Susacón
+          </p>
+          <p>
+            <strong>
+              Institución Educativa:
+            </strong>
+            I.E Nuestra Señora del Carmén
+          </p>
+          <p>
+            <strong>
+              Sede:
+            </strong>
+            Única sede
+          </p>
+          <h2 class="card-subTitle">Inversión</h2>
+          <div class="table-responsive mb-1em mt-1em w-talble">
+            <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
+              <thead>
+                <tr class="mat-header-row cdk-header-row ng-star-inserted">
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">DRP</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Número DRP</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Valor</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let element of listaInversion">
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    <b> {{ element.drp }} </b>
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.numeroDRP }}
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.valor }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <h2 class="card-subTitle">Fuentes y usos</h2>
+          <div class="table-responsive mb-1em mt-1em">
+            <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
+              <thead>
+                <tr class="mat-header-row cdk-header-row ng-star-inserted">
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Aportante</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Valor aportante</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Fuente</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Uso</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Valor uso</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let element of listaFuentesUsos">
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    <b> {{ element.aportante }} </b>
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.valorAportante }}
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.fuente }}
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.uso }}
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.valorUso }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+    </mat-expansion-panel>
+  </mat-accordion>
+
+</section>

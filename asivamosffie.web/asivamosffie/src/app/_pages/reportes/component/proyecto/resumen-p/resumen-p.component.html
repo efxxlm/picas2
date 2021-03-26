@@ -1,0 +1,226 @@
+<section class="container">
+  <div class="container text-center">
+    <div class="text-right">
+      <a routerLink="../.." mat-button color="primary" class="btn-regresar">
+        <img src="assets/img/icon/regresar.svg" alt="Regresar">
+      </a>
+    </div>
+    <h1 class="title-menu--h1">
+      Resumen N801801
+    </h1>
+  </div>
+
+  <mat-card class="shipping-card var-main-gris">
+    <mat-card-header class="header-card header-card--margin">
+      <mat-card-title class="header-card--text">
+        Ubicación
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p>
+        <strong>
+          Departamento:
+        </strong>
+        BoyacápatriaSAS
+      </p>
+      <p>
+        <strong>
+          Municipio:
+        </strong>
+        SusacónColpatriaSAS
+      </p>
+      <p>
+        <strong>
+          Institución Educativa:
+        </strong>
+        I.E Señora Del Carmén
+      </p>
+      <p>
+        <strong>
+          Código DANE:
+        </strong>
+        00000000lpatriaSAS
+      </p>
+      <p>
+        <strong>
+          Sede:
+        </strong>
+        Única sedectoraColpatriaSAS
+      </p>
+      <p>
+        <strong>
+          Código DANE sede:
+        </strong>
+        0000000iaSAS
+      </p>
+      <p>
+        <strong>
+          Ubicación del predio principal:
+        </strong>
+        <b>
+          Latitud:
+        </b>
+        18”78”9º
+        <b>
+          Longitud:
+        </b>
+        90”00”0º
+      </p>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="shipping-card var-main-gris">
+    <mat-card-header class="header-card header-card--margin">
+      <mat-card-title class="header-card--text">
+        Alcance
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p>
+        <strong>
+          Plazo de obra:
+        </strong>
+        <b>
+          Meses:
+        </b>
+        10
+        <b>
+          Días:
+        </b>
+        12
+      </p>
+      <p>
+        <strong>
+          Valor de obra:
+        </strong>
+        $100.00.000
+      </p>
+      <p>
+        <strong>
+          Plazo de interventoria:
+        </strong>
+        Meses: 01 Días:10
+      </p>
+      <p>
+        <strong>
+          Valor de interventoria:
+        </strong>
+        $5.000.000
+      </p>
+
+      <div class="table-responsive mb-1em mt-1em w-talble">
+        <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
+          <thead>
+            <tr class="mat-header-row cdk-header-row ng-star-inserted">
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">Infraestructura</th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">Cantidad</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let element of listaAlcance">
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                <b> {{ element.infraestructura }} </b>
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{ element.cantidad }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-accordion>
+    <mat-expansion-panel class="expansion-style">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title">
+          Contrato de obra N801801
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <mat-card class="shipping-card var-main-gris">
+        <mat-card-header class="header-card header-card--margin">
+          <mat-card-title class="header-card--text">
+            Fuentes y usos
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="table-responsive mb-1em mt-1em">
+            <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
+              <thead>
+                <tr class="mat-header-row cdk-header-row ng-star-inserted">
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Aportante</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Valor aportante</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Fuente</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Uso</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Valor uso</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let element of listaFuentesUsos">
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    <b> {{ element.aportante }} </b>
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.valorAportante }}
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.fuente }}
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.uso }}
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.valorOso }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="shipping-card var-main-gris">
+        <mat-card-header class="header-card header-card--margin">
+          <mat-card-title class="header-card--text">
+            Contratistas
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="mb-2em">
+            <mat-card-title class="header-card--text sub-text"> 
+              Construir Futuro
+            </mat-card-title>
+            <p>
+              <strong>
+                Nit:
+              </strong>
+              900.879-765-2
+            </p>
+            <p>
+              <strong>
+                Representante lega:
+              </strong>
+              Juan Pablo Tello Posada
+            </p>
+            <p>
+              <strong>
+                Número de identificación del representante:
+              </strong>
+              103456783
+            </p>
+            <p>
+              <strong>
+                Valor pagado:
+              </strong>
+              $75.000.000
+            </p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+    </mat-expansion-panel>
+  </mat-accordion>
+  
+</section>

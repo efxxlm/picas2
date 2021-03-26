@@ -1,0 +1,280 @@
+<section class="container">
+  <div class="container text-center">
+    <div class="text-right">
+      <a routerLink="../.." mat-button color="primary" class="btn-regresar">
+        <img src="assets/img/icon/regresar.svg" alt="Regresar">
+      </a>
+    </div>
+    <h1 class="title-menu--h1">
+      Contratación N801801
+    </h1>
+  </div>
+
+  <mat-accordion>
+    <mat-expansion-panel class="expansion-style">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title">
+          Contrato de obra N801801
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <mat-accordion>
+        <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                  Proceso de selección
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <mat-card class="shipping-card var-main-gris">
+              <mat-card-content>
+                  <p>
+                    <strong>
+                      Número de proceso:
+                    </strong>
+                    SP 0003-2020
+                  </p>
+                  <p>
+                    <strong>
+                      Fecha de solicitud:
+                    </strong>
+                    20/07/2020
+                  </p>
+                  <p>
+                    <strong>
+                      Tipo de proceso de selección:
+                    </strong>
+                    Selección privada
+                  </p>
+                  <p>
+                    <strong>
+                      Objeto:
+                    </strong>
+                    <span class="d-block">
+                      Mejorar los ambientes para el desarrollo pedagógico de los estudiantes, hecho que se traduce en 
+                      aspectos motivacionales que llevan a un mejor aprendizaje, al tiempo que asegura la capacidad del
+                      sistema para absorber y retener al mayor número de población estudiantil y a largo plazo favorece
+                      los índices de desarrollo social de la población.
+                    </span>
+                  </p>
+                  <p>
+                    <strong>
+                      Alcance particular:
+                    </strong>
+                    <span class="d-block">
+                      Incrementar en un 45% la capacidad de estructuras educativas en la zona del Caribe que se
+                      encuentran con un alto porcentaje de deserción escolar.
+                    </span>
+                  </p>
+                  <p>
+                    <strong>
+                      Fecha de apertura:
+                    </strong>
+                    21/07/2020
+                  </p>
+                  <p>
+                    <strong>
+                      Fecha de evaluación:
+                    </strong>
+                    15/12/2020
+                  </p>
+                  <p>
+                    <strong>
+                      Fecha de adjudicación:
+                    </strong>
+                    03/01/2021
+                  </p>
+                  <p>
+                    <strong>
+                      Fecha de cierre:
+                    </strong>
+                    20/01/2020
+                  </p>
+                  <p>
+                    <strong>
+                      ¿Este proceso de selección se realiza distribución del territorio en grupos?:
+                    </strong>
+                    Si
+                  </p>
+                  <p>
+                    <strong>
+                      ¿Cuántos grupos?:
+                    </strong>
+                    2
+                  </p>
+                  <p>
+                    <strong>
+                      Url con soporte:
+                    </strong>
+                    one.drive.procesodeseleccionprivada0007
+                  </p>
+              </mat-card-content>
+            </mat-card>
+            
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                  Contratación
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <mat-card class="shipping-card var-main-gris">
+              <mat-card-content>
+                  <p>
+                    <strong>
+                      Número de solicitud:
+                    </strong>
+                    P.I_0001
+                  </p>
+                  <p>
+                    <strong>
+                      Fecha de solicitud:
+                    </strong>
+                    20/07/2020
+                  </p>
+                  <p>
+                    <strong>
+                      Opción por contratar:
+                    </strong>
+                    Obra
+                  </p>
+                  <p>
+                    <strong>
+                      Valor total de la solicitud:
+                    </strong>
+                    $105.000.000
+                  </p>
+                  <p>
+                    <strong>
+                      Url con soporte:
+                    </strong>
+                    one.drive.contratación0007
+                  </p>
+
+                  <h2 class="card-subTitle">Proyectos asociados</h2>
+                  <div class="table-responsive mb-1em mt-1em">
+                    <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
+                      <thead>
+                        <tr class="mat-header-row cdk-header-row ng-star-inserted">
+                          <th class="mat-header-cell cdk-header-cell ng-star-inserted">Número de contrato</th>
+                          <th class="mat-header-cell cdk-header-cell ng-star-inserted">Llave MEN</th>
+                          <th class="mat-header-cell cdk-header-cell ng-star-inserted">Tipo de intervensión</th>
+                          <th class="mat-header-cell cdk-header-cell ng-star-inserted">Departamento</th>
+                          <th class="mat-header-cell cdk-header-cell ng-star-inserted">Municipio</th>
+                          <th class="mat-header-cell cdk-header-cell ng-star-inserted">Institución Educativa/ Sede</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let element of listaProyectosAsociados">
+                          <td class="mat-cell cdk-cell ng-star-inserted">
+                            <b> {{ element.numeroContrato }} </b>
+                          </td>
+                          <td class="mat-cell cdk-cell ng-star-inserted">
+                            {{ element.llaveMEN }}
+                          </td>
+                          <td class="mat-cell cdk-cell ng-star-inserted">
+                            {{ element.tipoIntervension }}
+                          </td>
+                          <td class="mat-cell cdk-cell ng-star-inserted">
+                            {{ element.departamento }}
+                          </td>
+                          <td class="mat-cell cdk-cell ng-star-inserted">
+                            {{ element.municipio }}
+                          </td>
+                          <td class="mat-cell cdk-cell ng-star-inserted">
+                            {{ element.institucionEducativa }} / {{ element.sede }}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+              </mat-card-content>
+            </mat-card>
+            
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                  Contrato
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <mat-card class="shipping-card var-main-gris">
+              <mat-card-content>
+                  <p>
+                    <strong>
+                      Número de contrato:
+                    </strong>
+                    N801801
+                  </p>
+                  <p>
+                    <strong>
+                      Fecha de suscripción:
+                    </strong>
+                    20/07/2020
+                  </p>
+                  <p>
+                    <strong>
+                      Contrato suscrito:
+                    </strong>
+                    http://contratosuscritoN801801.one.drive
+                  </p>
+                  <p>
+                    <strong>
+                      Número de póliza:
+                    </strong>
+                    0000-9868
+                  </p>
+              </mat-card-content>
+            </mat-card>
+            
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style sub-expansion">
+          <mat-expansion-panel-header class="expansion-style--header">
+              <mat-panel-title class="expansion-style--title">
+                Novedades
+              </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div class="table-responsive mb-1em mt-1em">
+            <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
+              <thead>
+                <tr class="mat-header-row cdk-header-row ng-star-inserted">
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Fecha de solicitud de la novedad</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Número de solicitud</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Tipo de novedad</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Estado de la novedad</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">URL con soporte</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let element of listaNovedades">
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    <b> {{ element.fechaSolicitudNovedad }} </b>
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.numeroSolicitud }}
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.tipoNovedad }}
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.estadoNovedad }}
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.urlSoporte }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+      </mat-expansion-panel>
+    </mat-accordion>
+      
+
+    </mat-expansion-panel>
+  </mat-accordion>
+  
+</section>

@@ -1,0 +1,53 @@
+<section class="container">
+  <div class="container text-center">
+    <div class="text-right">
+      <a routerLink="../.." mat-button color="primary" class="btn-regresar">
+        <img src="assets/img/icon/regresar.svg" alt="Regresar">
+      </a>
+    </div>
+    <h1 class="title-menu--h1">
+      Procesos de defensa judicial N801801
+    </h1>
+    <p class="info-sub-title">
+      Contratista <b>Construir futuro</b>
+    </p>
+  </div>
+
+  <div class="table-responsive mb-1em mt-1em">
+    <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
+      <thead>
+        <tr class="mat-header-row cdk-header-row ng-star-inserted">
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted">Fecha de registro del proceso</th>
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted">Legitimación</th>
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted">Tipo de acción</th>
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted">Número de proceso</th>
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted">Estado del proceso</th>
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted">URL con soporte</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let element of listaProcesosDefensaJudicial">
+          <td class="mat-cell cdk-cell ng-star-inserted">
+            <b> {{ element.fechaRegistroProceso }} </b>
+          </td>
+          <td class="mat-cell cdk-cell ng-star-inserted">
+            {{ element.legitimacion }}
+          </td>
+          <td class="mat-cell cdk-cell ng-star-inserted">
+            {{ element.tipoAccion }}
+          </td>
+          <td class="mat-cell cdk-cell ng-star-inserted">
+            {{ element.numeroProceso }}
+          </td>
+          <td class="mat-cell cdk-cell ng-star-inserted">
+            {{ element.estadoProceso }}
+          </td>
+          <td class="mat-cell cdk-cell ng-star-inserted">
+            {{ element.urlSoporte }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+</section>

@@ -1,0 +1,229 @@
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+  <mat-card class="shipping-card">
+    <mat-card-header class="header-card header-card--margin">
+      <mat-card-title class="header-card--text">
+        Ficha de proyecto
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="pr-1">
+              <label
+                class="label-left"
+                for="llaveMen"
+                [class.color-secondaryColor]="
+                  addressForm.get('llaveMen').invalid && addressForm.get('llaveMen').touched
+                "
+              >
+              Llave MEN
+              </label>
+            </div>
+            <div class="col">
+              <mat-form-field class="select-width">
+                <mat-select formControlName="llaveMen">
+                  <mat-option *ngFor="let tipoFicha of listaTipoFicha" [value]="tipoFicha.value">
+                    {{ tipoFicha.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="pr-1">
+              <label
+                class="label-left"
+                for="departamento"
+                [class.color-secondaryColor]="
+                  addressForm.get('departamento').invalid && addressForm.get('departamento').touched
+                "
+              >
+                Departamento
+              </label>
+            </div>
+            <div class="col">
+              <mat-form-field class="select-width">
+                <mat-select formControlName="departamento">
+                  <mat-option *ngFor="let tipoFicha of listaTipoFicha" [value]="tipoFicha.value">
+                    {{ tipoFicha.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="pr-1">
+              <label
+                class="label-left"
+                for="municipio"
+                [class.color-secondaryColor]="
+                  addressForm.get('municipio').invalid && addressForm.get('municipio').touched
+                "
+              >
+                Municipio
+              </label>
+            </div>
+            <div class="col">
+              <mat-form-field class="select-width">
+                <mat-select formControlName="municipio">
+                  <mat-option *ngFor="let tipoFicha of listaTipoFicha" [value]="tipoFicha.value">
+                    {{ tipoFicha.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="pr-1">
+              <label
+                class="label-left"
+                for="institucionEducativa"
+                [class.color-secondaryColor]="
+                  addressForm.get('institucionEducativa').invalid && addressForm.get('institucionEducativa').touched
+                "
+              >
+                Institución Educativa
+              </label>
+            </div>
+            <div class="col">
+              <mat-form-field class="select-width">
+                <mat-select formControlName="institucionEducativa">
+                  <mat-option *ngFor="let tipoFicha of listaTipoFicha" [value]="tipoFicha.value">
+                    {{ tipoFicha.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="pr-1">
+              <label
+                class="label-left"
+                for="dede"
+                [class.color-secondaryColor]="
+                  addressForm.get('dede').invalid && addressForm.get('dede').touched
+                "
+              >
+                Sede
+              </label>
+            </div>
+            <div class="col">
+              <mat-form-field class="select-width">
+                <mat-select formControlName="dede">
+                  <mat-option *ngFor="let tipoFicha of listaTipoFicha" [value]="tipoFicha.value">
+                    {{ tipoFicha.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="pr-1">
+              <label
+                class="label-left"
+                for="tipoContrato"
+                [class.color-secondaryColor]="
+                  addressForm.get('tipoContrato').invalid && addressForm.get('tipoContrato').touched
+                ">
+                Tipo de contrato
+              </label>
+            </div>
+            <div class="col">
+              <mat-form-field class="select-width">
+                <mat-select formControlName="tipoContrato">
+                  <mat-option *ngFor="let tipoFicha of listaTipoFicha" [value]="tipoFicha.value">
+                    {{ tipoFicha.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="pr-1">
+              <label
+                class="label-left"
+                for="vigenciaContratación"
+                [class.color-secondaryColor]="
+                  addressForm.get('vigenciaContratación').invalid && addressForm.get('vigenciaContratación').touched
+                "
+              >
+                Vigencia de la contratación
+              </label>
+            </div>
+            <div class="col">
+              <mat-form-field class="select-width">
+                <mat-select formControlName="vigenciaContratación">
+                  <mat-option *ngFor="let tipoFicha of listaTipoFicha" [value]="tipoFicha.value">
+                    {{ tipoFicha.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+    <mat-card-actions class="text-center">
+      <button
+        mat-button
+        color="primary"
+        class="btn-buscar btn-borrar"
+        type="button"
+        (click)="reiniciarFiltro()"
+        [disabled]="
+          !addressForm.get('llaveMen').value &&
+          !addressForm.get('departamento').value &&
+          !addressForm.get('municipio').value &&
+          !addressForm.get('institucionEducativa').value &&
+          !addressForm.get('dede').value &&
+          !addressForm.get('tipoContrato').value &&
+          !addressForm.get('vigenciaContratación').value
+        "
+      >
+        <img src="assets/img/icon/borrar.svg" alt="buscar" />
+      </button>
+
+      <button
+        mat-button
+        color="primary"
+        class="btn-buscar"
+        type="submit"
+      >
+        <img src="assets/img/icon/lupa.svg" alt="buscar" />
+        Buscar
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</form>
+
+<div class="animatedDown" *ngIf="verResultados">
+  <app-tabla-resultados-proyecto (morstrarFicha)="verFicha( $event )"></app-tabla-resultados-proyecto>
+</div>
+<div class="animatedDown" *ngIf="mostrarFicha">
+  <app-menu-ficha-proyecto></app-menu-ficha-proyecto>
+</div>

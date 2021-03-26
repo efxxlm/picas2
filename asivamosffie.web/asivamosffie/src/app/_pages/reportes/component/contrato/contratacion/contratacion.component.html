@@ -1,0 +1,88 @@
+<section class="container">
+  <div class="container text-center">
+    <div class="text-right">
+      <a routerLink="../.." mat-button color="primary" class="btn-regresar">
+        <img src="assets/img/icon/regresar.svg" alt="Regresar">
+      </a>
+    </div>
+    <h1 class="title-menu--h1">
+      Contratación N801801
+    </h1>
+    <p class="info-sub-title">
+      Contratista <b>Construir futuro</b>
+    </p>
+  </div>
+
+  <mat-card class="shipping-card var-main-gris">
+    <mat-card-content>
+      <p>
+        <strong>
+          Número de solicitud:
+        </strong>
+        P.I_0001
+      </p>
+      <p>
+        <strong>
+          Fecha de solicitud:
+        </strong>
+        20/07/2020
+      </p>
+      <p>
+        <strong>
+          Opción por contratar:
+        </strong>
+        Obra
+      </p>
+      <p>
+        <strong>
+          Valor total de la solicitud:
+        </strong>
+        $105.000.000
+      </p>
+      <p>
+        <strong>
+          Url con soporte:
+        </strong>
+        one.drive.contratación0007
+      </p>
+      <h2 class="card-subTitle">Proyectos asociados</h2>
+      <div class="table-responsive mb-1em mt-1em">
+        <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
+          <thead>
+            <tr class="mat-header-row cdk-header-row ng-star-inserted">
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">Número de contrato</th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">Llave MEN</th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">Tipo de intervensión</th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">Departamento</th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">Municipio</th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">Institución Educativa/ Sede</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let element of listaProyectosAsociados">
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                <b> {{ element.numeroContrato }} </b>
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{ element.llaveMEN }}
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{ element.tipoIntervension }}
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{ element.departamento }}
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{ element.municipio }}
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{ element.institucionEducativa }} / {{ element.sede }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+</section>

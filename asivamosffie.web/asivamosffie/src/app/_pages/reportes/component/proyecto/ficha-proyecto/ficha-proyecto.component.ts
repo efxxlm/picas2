@@ -1,26 +1,21 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
-import { CommonService, Dominio, Localizacion } from 'src/app/core/_services/common/common.service';
-import { ProjectService, InstitucionEducativa, ProyectoGrilla } from 'src/app/core/_services/project/project.service';
 import { forkJoin } from 'rxjs';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-ficha-contratos-proyectos',
-  templateUrl: './ficha-contratos-proyectos.component.html',
-  styleUrls: ['./ficha-contratos-proyectos.component.scss']
+  selector: 'app-ficha-proyecto',
+  templateUrl: './ficha-proyecto.component.html',
+  styleUrls: ['./ficha-proyecto.component.scss']
 })
-export class FichaContratosProyectosComponent implements OnInit {
+export class FichaProyectoComponent implements OnInit {
 
-  tipoFicha: FormControl;
-  
   verResultados = false;
   mostrarFicha = false;
 
   addressForm: FormGroup = this.fb.group({
-    numeroContrato: [null],
-    nombreContratista: [null],
+    llaveMen: [null],
     departamento: [null],
     municipio: [null],
     institucionEducativa: [null],
@@ -42,23 +37,22 @@ export class FichaContratosProyectosComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private commonService: CommonService,
-    private projectService: ProjectService,
     private dialog: MatDialog
-    ) { }
+  ) { }
 
   ngOnInit(): void {
-    this.declararTipoFicha();
   }
 
-  private declararTipoFicha() {
-    this.tipoFicha = new FormControl(null, Validators.required);
-  }
-  
-  validateNumberKeypress(event: KeyboardEvent) {
-    const alphanumeric = /[0-9]/;
-    const inputChar = String.fromCharCode(event.charCode);
-    return alphanumeric.test(inputChar) ? true : false;
+  reiniciarFiltro() {
+    this.addressForm.setValue({
+      llaveMen: null,
+      departamento: null,
+      municipio: null,
+      institucionEducativa: null,
+      dede: null,
+      tipoContrato: null,
+      vigenciaContratación: null
+    });
   }
 
   buscar() {
