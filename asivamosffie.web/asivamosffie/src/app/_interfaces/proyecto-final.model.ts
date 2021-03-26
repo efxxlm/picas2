@@ -268,4 +268,5 @@ export interface InformeFinalObservaciones{
     esSupervision?: boolean,
     esCalificacion: boolean,
     fechaCreacion?: Date,
+    nombreResponsable?: string,
 }

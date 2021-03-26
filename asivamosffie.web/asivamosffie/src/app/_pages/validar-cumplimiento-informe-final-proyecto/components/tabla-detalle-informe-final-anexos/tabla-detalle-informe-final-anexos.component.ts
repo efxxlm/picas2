@@ -56,7 +56,16 @@ export class TablaDetalleInformeFinalAnexosComponent implements OnInit {
       this.listChequeo = listChequeo;
     });
     if(this.report != null){
-      if(this.report.proyecto.informeFinal[0].historialObsInformeFinalInterventoriaNovedades.length > 0){
+      if(this.report.proyecto.informeFinal[0].observacionVigenteInformeFinalInterventoriaNovedades != null){
+        const observaciones = this.report.proyecto.informeFinal[0].observacionVigenteInformeFinalInterventoriaNovedades.observaciones;
+        if(observaciones != null && observaciones != 'undefined'){
+          this.data.observaciones = observaciones;
+        }else{
+          this.data.observaciones = "";
+        }
+        this.data.fechaCreacion = this.report.proyecto.informeFinal[0].observacionVigenteInformeFinalInterventoriaNovedades.fechaCreacion;
+      }
+      else if(this.report.proyecto.informeFinal[0].historialObsInformeFinalInterventoriaNovedades.length > 0){
         this.existe_historial = true;
         this.data.fechaCreacion = this.report.proyecto.informeFinal[0].historialObsInformeFinalInterventoriaNovedades[0].fechaCreacion;
         const observaciones = this.report.proyecto.informeFinal[0].historialObsInformeFinalInterventoriaNovedades[0].observaciones
@@ -65,14 +74,6 @@ export class TablaDetalleInformeFinalAnexosComponent implements OnInit {
         }else{
           this.data.observaciones = "";
         }
-      }else if(this.report.proyecto.informeFinal[0].observacionVigenteInformeFinalInterventoriaNovedades != null){
-        const observaciones = this.report.proyecto.informeFinal[0].observacionVigenteInformeFinalInterventoriaNovedades.observaciones;
-        if(observaciones != null && observaciones != 'undefined'){
-          this.data.observaciones = observaciones;
-        }else{
-          this.data.observaciones = "";
-        }
-        this.data.fechaCreacion = this.report.proyecto.informeFinal[0].observacionVigenteInformeFinalInterventoriaNovedades.fechaCreacion;
       }
     }
   }

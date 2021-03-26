@@ -91,6 +91,11 @@ namespace asivamosffie.services
                 proyecto.InformeFinal.FirstOrDefault().ObservacionVigenteInformeFinalNovedades = _context.InformeFinalObservaciones.Where(r => r.EsGrupoNovedades == true && r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && (r.Archivado == false || r.Archivado == null) && (r.Eliminado == false || r.Eliminado == null)).FirstOrDefault();
                 //historial de anexos (EsGrupoNovedadesInterventoria)
                 proyecto.InformeFinal.FirstOrDefault().HistorialObsInformeFinalInterventoriaNovedades = _context.InformeFinalObservaciones.Where(r => r.EsGrupoNovedadesInterventoria == true && r.Archivado == true && (r.EsApoyo == false || r.EsApoyo == null) && r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && (r.Eliminado == false || r.Eliminado == null)).ToList();
+                foreach (var item in proyecto.InformeFinal.FirstOrDefault().HistorialObsInformeFinalInterventoriaNovedades)
+                {
+                    Usuario user = _context.Usuario.Where(r => r.Email == item.UsuarioCreacion).FirstOrDefault();
+                    item.NombreResponsable = user.PrimerNombre + " " + user.PrimerApellido;
+                }
                 proyecto.InformeFinal.FirstOrDefault().ObservacionVigenteInformeFinalInterventoriaNovedades = _context.InformeFinalObservaciones.Where(r => r.EsGrupoNovedadesInterventoria == true && r.InformeFinalId == proyecto.InformeFinal.FirstOrDefault().InformeFinalId && (r.Archivado == false || r.Archivado == null) && (r.Eliminado == false || r.Eliminado == null)).FirstOrDefault();
 
             }

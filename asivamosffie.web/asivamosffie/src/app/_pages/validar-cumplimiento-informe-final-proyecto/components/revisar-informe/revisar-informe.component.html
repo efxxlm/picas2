@@ -5,8 +5,9 @@
     </a>
   </div>
   <div class="text-center">
-    <h1 class="title-menu--h1">
-      Revisar informe final
+    <h1 class="title-menu--h1" *ngIf="report">
+      <span *ngIf="report.proyecto.informeFinal[0].estadoCumplimiento == '' || report.proyecto.informeFinal[0].estadoCumplimiento == null || report.proyecto.informeFinal[0].estadoCumplimiento === '0'">Revisar informe final</span> <!--Null o 0-->
+      <span *ngIf="report.proyecto.informeFinal[0].estadoCumplimiento != null && report.proyecto.informeFinal[0].estadoCumplimiento !== '0' && (report.proyecto.informeFinal[0].estadoCumplimiento === '1' || report.proyecto.informeFinal[0].estadoCumplimiento === '4')">Ver detalle/Editar Revisión informe final</span><!--En proceso de validación de cumplimiento-->
       <b *ngIf="report"> {{ report.proyecto.llaveMen }} </b>
     </h1>
     <p class="colorMainColor mt-05em"> 
