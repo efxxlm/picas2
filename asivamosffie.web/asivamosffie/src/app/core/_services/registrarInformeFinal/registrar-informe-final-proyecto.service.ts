@@ -13,7 +13,7 @@ export class RegistrarInformeFinalProyectoService {
   final_report = 'RegisterFinalReport';
 
   getListReportGrilla(){
-    return this.http.get(`${environment.apiUrl}/${this.final_report}/gridRegisterFinalReport`);
+    return this.http.get<any[]>(`${environment.apiUrl}/${this.final_report}/gridRegisterFinalReport`);
   }
 
   getInformeFinalByProyecto( pProyectoId: string ){

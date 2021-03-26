@@ -7,16 +7,16 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 import { RegistrarInformeFinalProyectoService } from 'src/app/core/_services/registrarInformeFinal/registrar-informe-final-proyecto.service';
 
 export interface RegistrarInterface {
-  fechaTerminacionObra: Date,
-  fechaTerminacionInterventoria: Date,
-  llaveMen: string,
-  tipoIntervencion: string,
-  institucionEducativa: string,
-  sedeEducativa: string,
-  proyectoId: number,
+  fechaTerminacionObra: Date;
+  fechaTerminacionInterventoria: Date;
+  llaveMen: string;
+  tipoIntervencion: string;
+  institucionEducativa: string;
+  sedeEducativa: string;
+  proyectoId: number;
   registroCompleto: boolean;
-  estadoInforme: string,
-  estadoInformeCod: string
+  estadoInforme: string;
+  estadoInformeCod: string;
 }
 
 @Component({
@@ -24,9 +24,8 @@ export interface RegistrarInterface {
   templateUrl: './tabla-informe-final-proyecto.component.html',
   styleUrls: ['./tabla-informe-final-proyecto.component.scss']
 })
-
 export class TablaInformeFinalProyectoComponent implements OnInit, AfterViewInit {
-  ELEMENT_DATA : RegistrarInterface[] = [];
+  ELEMENT_DATA: RegistrarInterface[] = [];
   displayedColumns: string[] = [
     'fechaTerminacionInterventoria',
     'fechaTerminacionObra',
@@ -46,15 +45,25 @@ export class TablaInformeFinalProyectoComponent implements OnInit, AfterViewInit
   constructor(
     private registrarInformeFinalProyectoService: RegistrarInformeFinalProyectoService,
     public dialog: MatDialog
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.getAllReports();
   }
 
-  getAllReports(){
-    this.registrarInformeFinalProyectoService.getListReportGrilla()
-    .subscribe(report => {
+  getAllReports() {
+    this.registrarInformeFinalProyectoService.getListReportGrilla().subscribe(report => {
+      report.forEach(element => {
+        element.fechaTerminacionObra =
+          element.fechaTerminacionObra !== undefined
+            ? element.fechaTerminacionObra.split('T')[0].split('-').reverse().join('/')
+            : '';
+        element.fechaTerminacionInterventoria =
+          element.fechaTerminacionInterventoria !== undefined
+            ? element.fechaTerminacionInterventoria.split('T')[0].split('-').reverse().join('/')
+            : '';
+        element.registroCompleto = element.registroCompleto ? 'Completo' : 'Incompleto';
+      });
       this.dataSource.data = report as RegistrarInterface[];
     });
   }
@@ -78,9 +87,7 @@ export class TablaInformeFinalProyectoComponent implements OnInit, AfterViewInit
       length = Math.max(length, 0);
       const startIndex = page * pageSize;
       // If the start index exceeds the list length, do not try and fix the end index to the end.
-      const endIndex = startIndex < length ?
-        Math.min(startIndex + pageSize, length) :
-        startIndex + pageSize;
+      const endIndex = startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize;
       return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
     };
     this.paginator._intl.previousPageLabel = 'Anterior';
@@ -96,11 +103,9 @@ export class TablaInformeFinalProyectoComponent implements OnInit, AfterViewInit
   }
 
   enviarRegistroFinal(pProyectoId: number) {
-    this.registrarInformeFinalProyectoService.sendFinalReportToSupervision(pProyectoId)
-      .subscribe(respuesta => {
-        this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
-        this.ngOnInit();
-      });
+    this.registrarInformeFinalProyectoService.sendFinalReportToSupervision(pProyectoId).subscribe(respuesta => {
+      this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+      this.ngOnInit();
+    });
   }
-
 }
