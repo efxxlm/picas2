@@ -41,7 +41,7 @@ export class TablaGenerarFIPreconstruccionComponent implements OnInit {
       if ( this.dataTable.length > 0 ) {
         this.dataTable.forEach( registro => registro.fechaAprobacionRequisitosDate = registro.fechaAprobacionRequisitosDate.split('T')[0].split('-').reverse().join('/') );
       }
-
+      console.log( this.dataTable );
       this.dataSource = new MatTableDataSource(this.dataTable);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;

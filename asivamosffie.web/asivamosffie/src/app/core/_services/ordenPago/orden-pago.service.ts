@@ -12,8 +12,8 @@ export class OrdenPagoService {
 
   constructor( private http: HttpClient ) { }
 
-  getListSolicitudPago() {
-    return this.http.get<any[]>( `${ this.urlApi }/GetListSolicitudPago` );
+  getListOrdenGiro( pMenuId: number ) {
+    return this.http.get<any[]>( `${ this.urlApi }/GetListOrdenGiro?pMenuId=${ pMenuId }` );
   }
 
   getSolicitudPagoBySolicitudPagoId( SolicitudPagoId: number ) {

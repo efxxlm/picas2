@@ -14,8 +14,7 @@
                         <div class="col">
                             <mat-form-field class="select-width">
                                 <mat-select formControlName="estrategiaPagoCodigo" required>
-                                    <mat-option *ngFor="let estrategia of estrategiaPagoArray"
-                                        [value]="estrategia.codigo">
+                                    <mat-option *ngFor="let estrategia of estrategiaPagoArray" [value]="estrategia.codigo">
                                         {{ estrategia.nombre }}
                                     </mat-option>
                                 </mat-select>
@@ -36,7 +35,11 @@
         </mat-card-content>
     </mat-card>
     <div class="text-center mb-2em">
-        <button mat-button color="warn" class="btn-guardar" type="submit">
+        <button mat-button
+                color="warn"
+                class="btn-guardar"
+                type="submit"
+                [disabled]="addressForm.dirty === false">
             <img src="assets/img/icon/guardar.svg" alt="Regresar">
         </button>
     </div>

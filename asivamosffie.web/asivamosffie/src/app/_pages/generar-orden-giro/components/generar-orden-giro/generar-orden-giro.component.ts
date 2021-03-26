@@ -1,3 +1,4 @@
+import { EstadoSolicitudPagoOrdenGiro, EstadosSolicitudPagoOrdenGiro, ListaMenu, ListaMenuId } from './../../../../_interfaces/estados-solicitudPago-ordenGiro.interface';
 import { OrdenPagoService } from './../../../../core/_services/ordenPago/orden-pago.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
@@ -15,6 +16,8 @@ import { DialogDevolverSolPagoGogComponent } from '../dialog-devolver-sol-pago-g
 export class GenerarOrdenGiroComponent implements OnInit {
 
     verAyuda = false;
+    listaMenu: ListaMenu = ListaMenuId;
+    estadoSolicitudPagoOrdenGiro: EstadoSolicitudPagoOrdenGiro = EstadosSolicitudPagoOrdenGiro;
     dataSource = new MatTableDataSource();
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -34,7 +37,7 @@ export class GenerarOrdenGiroComponent implements OnInit {
         private dialog: MatDialog,
         private ordenPagoSvc: OrdenPagoService )
     {
-        this.ordenPagoSvc.getListSolicitudPago()
+        this.ordenPagoSvc.getListOrdenGiro( this.listaMenu.generarOrdenGiro )
             .subscribe(
                 response => {
                   console.log( response );

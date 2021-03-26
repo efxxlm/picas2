@@ -79,6 +79,10 @@ export class ObsRegistrarSolicitudPagoComponent implements OnInit {
 
             this.manejoAnticipoRequiere = this.contrato.contratoConstruccion.length > 0 ? this.contrato.contratoConstruccion[0].manejoAnticipoRequiere : false;
 
+            if ( this.manejoAnticipoRequiere === false ) {
+                delete this.estadoSemaforos.semaforoAcordeonAmortizacion;
+            }
+
             if ( this.contrato.solicitudPago.length > 1 ) {
                 this.solicitudPagoCargarFormaPago = this.contrato.solicitudPago[0].solicitudPagoCargarFormaPago[0];
             } else {

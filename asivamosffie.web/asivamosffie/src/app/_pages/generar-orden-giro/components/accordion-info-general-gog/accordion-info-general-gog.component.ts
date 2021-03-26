@@ -13,6 +13,8 @@ export class AccordionInfoGeneralGogComponent implements OnInit {
 
     @Input() solicitudPago: any;
     listaTipoSolicitudContrato: Dominio[] = [];
+    valorTotalFactura = 0;
+    solicitudPagoFase: any;
     dataSource = new MatTableDataSource();
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -30,10 +32,18 @@ export class AccordionInfoGeneralGogComponent implements OnInit {
     }
 
     ngOnInit(): void {
-      this.dataSource = new MatTableDataSource( this.solicitudPago.contratoSon.contratacion.disponibilidadPresupuestal );
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+        this.getSolicitudPago();
     };
+
+    getSolicitudPago() {
+        this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
+
+        this.solicitudPagoFase.solicitudPagoFaseCriterio.forEach( criterio => this.valorTotalFactura += criterio.valorFacturado );
+
+        this.dataSource = new MatTableDataSource( this.solicitudPago.contratoSon.contratacion.disponibilidadPresupuestal );
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+    }
 
     getTipoSolicitudContrato( tipoSolicitudCodigo: string ) {
         if ( this.listaTipoSolicitudContrato.length > 0 ) {

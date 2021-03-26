@@ -227,6 +227,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                                             const conceptoDePagoArray = [];
                                             const conceptosDePagoSeleccionados = [];
                                             // Get conceptos de pago
+                                            console.log( conceptosDePago );
                                             if ( criterio.solicitudPagoFaseCriterioConceptoPago.length > 0 ) {
                                                 criterio.solicitudPagoFaseCriterioConceptoPago.forEach( solicitudPagoFaseCriterioConceptoPago => {
                                                     if ( conceptosDePago.filter( concepto => concepto.codigo === solicitudPagoFaseCriterioConceptoPago.conceptoPagoCriterio ).length > 0 ) {
@@ -245,6 +246,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                                                     );
                                                 } );
                                             }
+                                            console.log( criterioSeleccionado, response );
                                             this.criterios.push(
                                                 this.fb.group(
                                                     {

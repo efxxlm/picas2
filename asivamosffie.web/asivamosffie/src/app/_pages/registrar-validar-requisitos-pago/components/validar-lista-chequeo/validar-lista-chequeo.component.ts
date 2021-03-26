@@ -71,43 +71,47 @@ export class ValidarListaChequeoComponent implements OnInit {
                     solicitudPagoListaChequeoRespuesta.observacion = solicitudPagoListaChequeoRespuesta.observacion !== undefined ? solicitudPagoListaChequeoRespuesta.observacion : null;
                 }
 
-                // Get observacion CU autorizar solicitud de pago 4.1.9
-                const listaObservacionCoordinador = await this.obsMultipleSvc.asyncGetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
-                    this.listaMenusId.autorizarSolicitudPagoId,
-                    this.activatedRoute.snapshot.params.id,
-                    solicitudPagoListaChequeo.solicitudPagoListaChequeoId,
-                    this.listaChequeoCodigo )
-                const observacionCoordinador = listaObservacionCoordinador.find( obs => obs.archivada === false );
+                if ( this.esVerDetalle === false ) {
+                    // Get observacion CU autorizar solicitud de pago 4.1.9
+                    const listaObservacionCoordinador = await this.obsMultipleSvc.asyncGetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                        this.listaMenusId.autorizarSolicitudPagoId,
+                        this.activatedRoute.snapshot.params.id,
+                        solicitudPagoListaChequeo.solicitudPagoListaChequeoId,
+                        this.listaChequeoCodigo )
+                    const observacionCoordinador = listaObservacionCoordinador.find( obs => obs.archivada === false );
 
-                // Get observacion CU verificar solicitud de pago 4.1.8
-                const listaObservacionApoyoSupervisor = await this.obsMultipleSvc.asyncGetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
-                    this.listaMenusId.aprobarSolicitudPagoId,
-                    this.activatedRoute.snapshot.params.id,
-                    solicitudPagoListaChequeo.solicitudPagoListaChequeoId,
-                    this.listaChequeoCodigo )
-                const observacionSupervisor = listaObservacionApoyoSupervisor.find( obs => obs.archivada === false );
+                    // Get observacion CU verificar solicitud de pago 4.1.8
+                    const listaObservacionApoyoSupervisor = await this.obsMultipleSvc.asyncGetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                        this.listaMenusId.aprobarSolicitudPagoId,
+                        this.activatedRoute.snapshot.params.id,
+                        solicitudPagoListaChequeo.solicitudPagoListaChequeoId,
+                        this.listaChequeoCodigo )
+                    const observacionSupervisor = listaObservacionApoyoSupervisor.find( obs => obs.archivada === false );
 
-                
-                if ( observacionCoordinador !== undefined ) {
-                    solicitudPagoListaChequeo.esAutorizar = true;
-                    solicitudPagoListaChequeo.observacion = observacionCoordinador;
 
-                    if ( observacionCoordinador.tieneObservacion === true ) {
-                        completoObservacion++;
+                    if ( observacionCoordinador !== undefined ) {
+                        solicitudPagoListaChequeo.esAutorizar = true;
+                        solicitudPagoListaChequeo.observacion = observacionCoordinador;
+
+                        if ( observacionCoordinador.tieneObservacion === true ) {
+                            completoObservacion++;
+                        }
                     }
-                }
-                if ( observacionSupervisor !== undefined ) {
-                    solicitudPagoListaChequeo.esAutorizar = false;
-                    solicitudPagoListaChequeo.observacion = observacionSupervisor;
+                    if ( observacionSupervisor !== undefined ) {
+                        solicitudPagoListaChequeo.esAutorizar = false;
+                        solicitudPagoListaChequeo.observacion = observacionSupervisor;
 
-                    if ( observacionSupervisor.tieneObservacion === true ) {
-                        completoObservacion++;
+                        if ( observacionSupervisor.tieneObservacion === true ) {
+                            completoObservacion++;
+                        }
                     }
                 }
             }
 
-            if ( completoObservacion > 0 ) {
-                this.semaforoObservacion.emit( true );
+            if ( this.esVerDetalle === false ) {
+                if ( completoObservacion > 0 ) {
+                    this.semaforoObservacion.emit( true );
+                }
             }
 
             this.solicitudPagoModificado = this.solicitudPago;
@@ -124,43 +128,47 @@ export class ValidarListaChequeoComponent implements OnInit {
                     solicitudPagoListaChequeoRespuesta.observacion = solicitudPagoListaChequeoRespuesta.observacion !== undefined ? solicitudPagoListaChequeoRespuesta.observacion : null;
                 }
 
-                // Get observacion CU autorizar solicitud de pago 4.1.9
-                const listaObservacionCoordinador = await this.obsMultipleSvc.asyncGetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
-                    this.listaMenusId.autorizarSolicitudPagoId,
-                    this.activatedRoute.snapshot.params.idSolicitud,
-                    solicitudPagoListaChequeo.solicitudPagoListaChequeoId,
-                    this.listaChequeoCodigo )
-                const observacionCoordinador = listaObservacionCoordinador.find( obs => obs.archivada === false );
+                if ( this.esVerDetalle === false ) {
+                    // Get observacion CU autorizar solicitud de pago 4.1.9
+                    const listaObservacionCoordinador = await this.obsMultipleSvc.asyncGetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                        this.listaMenusId.autorizarSolicitudPagoId,
+                        this.activatedRoute.snapshot.params.idSolicitud,
+                        solicitudPagoListaChequeo.solicitudPagoListaChequeoId,
+                        this.listaChequeoCodigo )
+                    const observacionCoordinador = listaObservacionCoordinador.find( obs => obs.archivada === false );
 
-                // Get observacion CU verificar solicitud de pago 4.1.8
-                const listaObservacionApoyoSupervisor = await this.obsMultipleSvc.asyncGetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
-                    this.listaMenusId.aprobarSolicitudPagoId,
-                    this.activatedRoute.snapshot.params.idSolicitud,
-                    solicitudPagoListaChequeo.solicitudPagoListaChequeoId,
-                    this.listaChequeoCodigo )
-                const observacionSupervisor = listaObservacionApoyoSupervisor.find( obs => obs.archivada === false );
+                    // Get observacion CU verificar solicitud de pago 4.1.8
+                    const listaObservacionApoyoSupervisor = await this.obsMultipleSvc.asyncGetObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                        this.listaMenusId.aprobarSolicitudPagoId,
+                        this.activatedRoute.snapshot.params.idSolicitud,
+                        solicitudPagoListaChequeo.solicitudPagoListaChequeoId,
+                        this.listaChequeoCodigo )
+                    const observacionSupervisor = listaObservacionApoyoSupervisor.find( obs => obs.archivada === false );
 
-                
-                if ( observacionCoordinador !== undefined ) {
-                    solicitudPagoListaChequeo.esAutorizar = true;
-                    solicitudPagoListaChequeo.observacion = observacionCoordinador;
 
-                    if ( observacionCoordinador.tieneObservacion === true ) {
-                        completoObservacion++;
+                    if ( observacionCoordinador !== undefined ) {
+                        solicitudPagoListaChequeo.esAutorizar = true;
+                        solicitudPagoListaChequeo.observacion = observacionCoordinador;
+
+                        if ( observacionCoordinador.tieneObservacion === true ) {
+                            completoObservacion++;
+                        }
                     }
-                }
-                if ( observacionSupervisor !== undefined ) {
-                    solicitudPagoListaChequeo.esAutorizar = false;
-                    solicitudPagoListaChequeo.observacion = observacionSupervisor;
+                    if ( observacionSupervisor !== undefined ) {
+                        solicitudPagoListaChequeo.esAutorizar = false;
+                        solicitudPagoListaChequeo.observacion = observacionSupervisor;
 
-                    if ( observacionSupervisor.tieneObservacion === true ) {
-                        completoObservacion++;
+                        if ( observacionSupervisor.tieneObservacion === true ) {
+                            completoObservacion++;
+                        }
                     }
                 }
             }
 
-            if ( completoObservacion > 0 ) {
-                this.semaforoObservacion.emit( true );
+            if ( this.esVerDetalle === false ) {
+                if ( completoObservacion > 0 ) {
+                    this.semaforoObservacion.emit( true );
+                }
             }
 
             this.solicitudPagoModificado = this.contrato.solicitudPagoOnly;

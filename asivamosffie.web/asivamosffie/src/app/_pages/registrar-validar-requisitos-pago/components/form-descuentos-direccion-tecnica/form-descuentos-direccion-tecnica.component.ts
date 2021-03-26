@@ -48,8 +48,10 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit, OnChange
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if ( changes.tieneObservacion.currentValue === true ) {
-            this.formDescuentos.enable();
+        if ( this.esVerDetalle === false ) {
+            if ( changes.tieneObservacion.currentValue === true ) {
+                this.formDescuentos.enable();
+            }
         }
     }
 
@@ -87,49 +89,51 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit, OnChange
                     this.formDescuentos.disable();
                 }
 
-                // Get observacion CU autorizar solicitud de pago 4.1.9
-                this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
-                    this.listaMenusId.autorizarSolicitudPagoId,
-                    this.solicitudPago.solicitudPagoId,
-                    this.solicitudPagoFaseFacturaDescuento.length > 0 ? this.solicitudPagoFaseFacturaDescuento[0].solicitudPagoFaseFacturaDescuentoId : this.solicitudPagoFaseFacturaId,
-                    this.datosFacturaDescuentoCodigo )
-                    .subscribe(
-                        response => {
-                            const observacion = response.find( obs => obs.archivada === false );
-                            if ( observacion !== undefined ) {
-                                this.esAutorizar = true;
-                                this.observacion = observacion;
+                if ( this.esVerDetalle === false ) {
+                    // Get observacion CU autorizar solicitud de pago 4.1.9
+                    this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                        this.listaMenusId.autorizarSolicitudPagoId,
+                        this.solicitudPago.solicitudPagoId,
+                        this.solicitudPagoFaseFacturaDescuento.length > 0 ? this.solicitudPagoFaseFacturaDescuento[0].solicitudPagoFaseFacturaDescuentoId : this.solicitudPagoFaseFacturaId,
+                        this.datosFacturaDescuentoCodigo )
+                        .subscribe(
+                            response => {
+                                const observacion = response.find( obs => obs.archivada === false );
+                                if ( observacion !== undefined ) {
+                                    this.esAutorizar = true;
+                                    this.observacion = observacion;
 
-                                if ( this.observacion.tieneObservacion === true ) {
-                                    this.formDescuentos.enable();
-                                    this.semaforoObservacion.emit( true );
-                                    this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                                    if ( this.observacion.tieneObservacion === true ) {
+                                        this.formDescuentos.enable();
+                                        this.semaforoObservacion.emit( true );
+                                        this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                                    }
                                 }
                             }
-                        }
-                    );
+                        );
 
-                // Get observacion CU verificar solicitud de pago 4.1.8
-                this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
-                    this.listaMenusId.aprobarSolicitudPagoId,
-                    this.solicitudPago.solicitudPagoId,
-                    this.solicitudPagoFaseFacturaDescuento.length > 0 ? this.solicitudPagoFaseFacturaDescuento[0].solicitudPagoFaseFacturaDescuentoId : this.solicitudPagoFaseFacturaId,
-                    this.datosFacturaDescuentoCodigo )
-                    .subscribe(
-                        response => {
-                            const observacion = response.find( obs => obs.archivada === false );
-                            if ( observacion !== undefined ) {
-                                this.esAutorizar = false;
-                                this.observacion = observacion;
+                    // Get observacion CU verificar solicitud de pago 4.1.8
+                    this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                        this.listaMenusId.aprobarSolicitudPagoId,
+                        this.solicitudPago.solicitudPagoId,
+                        this.solicitudPagoFaseFacturaDescuento.length > 0 ? this.solicitudPagoFaseFacturaDescuento[0].solicitudPagoFaseFacturaDescuentoId : this.solicitudPagoFaseFacturaId,
+                        this.datosFacturaDescuentoCodigo )
+                        .subscribe(
+                            response => {
+                                const observacion = response.find( obs => obs.archivada === false );
+                                if ( observacion !== undefined ) {
+                                    this.esAutorizar = false;
+                                    this.observacion = observacion;
 
-                                if ( this.observacion.tieneObservacion === true ) {
-                                    this.formDescuentos.enable();
-                                    this.semaforoObservacion.emit( true );
-                                    this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                                    if ( this.observacion.tieneObservacion === true ) {
+                                        this.formDescuentos.enable();
+                                        this.semaforoObservacion.emit( true );
+                                        this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                                    }
                                 }
                             }
-                        }
-                    );
+                        );
+                }
             }
         }
         for (const criterio of this.solicitudPagoFase.solicitudPagoFaseCriterio) {

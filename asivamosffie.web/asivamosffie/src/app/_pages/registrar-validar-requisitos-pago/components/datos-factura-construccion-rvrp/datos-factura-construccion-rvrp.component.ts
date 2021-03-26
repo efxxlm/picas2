@@ -46,8 +46,10 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit, OnChanges 
             .subscribe( response => this.tiposDescuentoArray = response );
     }
     ngOnChanges(changes: SimpleChanges): void {
-        if ( changes.tieneObservacion.currentValue === true ) {
-            this.addressForm.enable();
+        if ( this.esVerDetalle === false ) {
+            if ( changes.tieneObservacion.currentValue === true ) {
+                this.addressForm.enable();
+            }
         }
     }
 
@@ -70,49 +72,51 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit, OnChanges 
                 this.addressForm.disable();
             }
 
-            // Get observacion CU autorizar solicitud de pago 4.1.9
-            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
-                this.listaMenusId.autorizarSolicitudPagoId,
-                this.solicitudPago.solicitudPagoId,
-                this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaId,
-                this.datosFacturaCodigo )
-                .subscribe(
-                    response => {
-                        const observacion = response.find( obs => obs.archivada === false );
-                        if ( observacion !== undefined ) {
-                            this.esAutorizar = true;
-                            this.observacion = observacion;
+            if ( this.esVerDetalle === false ) {
+                // Get observacion CU autorizar solicitud de pago 4.1.9
+                this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                    this.listaMenusId.autorizarSolicitudPagoId,
+                    this.solicitudPago.solicitudPagoId,
+                    this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaId,
+                    this.datosFacturaCodigo )
+                    .subscribe(
+                        response => {
+                            const observacion = response.find( obs => obs.archivada === false );
+                            if ( observacion !== undefined ) {
+                                this.esAutorizar = true;
+                                this.observacion = observacion;
 
-                            if ( this.observacion.tieneObservacion === true ) {
-                                this.addressForm.enable();
-                                this.semaforoObservacion.emit( true );
-                                this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                                if ( this.observacion.tieneObservacion === true ) {
+                                    this.addressForm.enable();
+                                    this.semaforoObservacion.emit( true );
+                                    this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                                }
                             }
                         }
-                    }
-                );
+                    );
 
-            // Get observacion CU verificar solicitud de pago 4.1.8
-            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
-                this.listaMenusId.aprobarSolicitudPagoId,
-                this.solicitudPago.solicitudPagoId,
-                this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaId,
-                this.datosFacturaCodigo )
-                .subscribe(
-                    response => {
-                        const observacion = response.find( obs => obs.archivada === false );
-                        if ( observacion !== undefined ) {
-                            this.esAutorizar = false;
-                            this.observacion = observacion;
+                // Get observacion CU verificar solicitud de pago 4.1.8
+                this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                    this.listaMenusId.aprobarSolicitudPagoId,
+                    this.solicitudPago.solicitudPagoId,
+                    this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaId,
+                    this.datosFacturaCodigo )
+                    .subscribe(
+                        response => {
+                            const observacion = response.find( obs => obs.archivada === false );
+                            if ( observacion !== undefined ) {
+                                this.esAutorizar = false;
+                                this.observacion = observacion;
 
-                            if ( this.observacion.tieneObservacion === true ) {
-                                this.addressForm.enable();
-                                this.semaforoObservacion.emit( true );
-                                this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                                if ( this.observacion.tieneObservacion === true ) {
+                                    this.addressForm.enable();
+                                    this.semaforoObservacion.emit( true );
+                                    this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                                }
                             }
                         }
-                    }
-                );
+                    );
+            }
         }
         for ( const criterio of this.solicitudPagoFase.solicitudPagoFaseCriterio ) {
             this.valorFacturado += criterio.valorFacturado;

@@ -16,6 +16,7 @@ export class FormEstrategPagosGogComponent implements OnInit {
     @Input() solicitudPago: any;
     ordenGiroId = 0;
     ordenGiroDetalleId = 0;
+    ordenGiro: any;
     estrategiaPagoArray: Dominio[] = [];
     addressForm: FormGroup;
     estaEditando = true;
@@ -34,10 +35,24 @@ export class FormEstrategPagosGogComponent implements OnInit {
 
     ngOnInit(): void {
         if ( this.solicitudPago.ordenGiro !== undefined ) {
-            this.ordenGiroId = this.solicitudPago.ordenGiro.ordenGiroId;
 
-            if ( this.solicitudPago.ordenGiro.ordenGiroDetalle !== undefined ) {
-                this.ordenGiroDetalleId = this.solicitudPago.ordenGiro.ordenGiroDetalle.ordenGiroDetalleId;
+            this.ordenGiro = this.solicitudPago.ordenGiro;
+            this.ordenGiroId = this.ordenGiro.ordenGiroId;
+
+            if ( this.ordenGiro.ordenGiroDetalle !== undefined ) {
+                const ordenGiroDetalle = this.ordenGiro.ordenGiroDetalle;
+                this.ordenGiroDetalleId = ordenGiroDetalle.ordenGiroDetalleId;
+                
+                if ( ordenGiroDetalle.ordenGiroDetalleEstrategiaPago !== undefined ) {
+                    const ordenGiroDetalleEstrategiaPago = ordenGiroDetalle.ordenGiroDetalleEstrategiaPago;
+
+                    this.addressForm.setValue(
+                        {
+                            ordenGiroDetalleEstrategiaPagoId: ordenGiroDetalleEstrategiaPago.ordenGiroDetalleEstrategiaPagoId,
+                            estrategiaPagoCodigo: ordenGiroDetalleEstrategiaPago.estrategiaPagoCodigo !== undefined ? ordenGiroDetalleEstrategiaPago.estrategiaPagoCodigo : null
+                        }
+                    );
+                }
             }
         }
     }
@@ -45,7 +60,7 @@ export class FormEstrategPagosGogComponent implements OnInit {
     crearFormulario() {
       return this.fb.group({
         ordenGiroDetalleEstrategiaPagoId: [ null ],
-        estrategiaPagoCodigo: [null, Validators.required]
+        estrategiaPagoCodigo: [ null, Validators.required ]
       })
     }
 

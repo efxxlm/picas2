@@ -1,6 +1,5 @@
 <section class="table-responsive tabla-gris mt-3em">
     <table mat-table [dataSource]="dataSource" matSort>
-  
         <ng-container matColumnDef="uso">
           <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Uso </th>
           <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.uso }}</b> </td>

@@ -1,3 +1,4 @@
+import { ListaMediosPagoCodigo, MediosPagoCodigo } from './../../../../_interfaces/estados-solicitudPago-ordenGiro.interface';
 import { Router } from '@angular/router';
 import { OrdenPagoService } from 'src/app/core/_services/ordenPago/orden-pago.service';
 import { Component, Input, OnInit } from '@angular/core';
@@ -17,7 +18,7 @@ export class FormTerceroGiroGogComponent implements OnInit {
     medioPagoArray: Dominio[] = [];
     bancosArray: Dominio[] = [];
     addressForm: FormGroup;
-    listaMediosPagoCodigo: any = {};
+    listaMediosPagoCodigo: ListaMediosPagoCodigo = MediosPagoCodigo;
     ordenGiroId = 0;
     ordenGiroTerceroId = 0;
     estaEditando = false;
@@ -30,19 +31,7 @@ export class FormTerceroGiroGogComponent implements OnInit {
     {
         this.addressForm = this.crearFormulario();
         this.commonSvc.listaMediosPago()
-            .subscribe( response => {
-                this.medioPagoArray = response;
-                
-                response.forEach( medio => {
-                    if ( medio.codigo === '1' ) {
-                        this.listaMediosPagoCodigo.transferenciaElectronica = medio.codigo;
-                    }
-
-                    if ( medio.codigo === '2' ) {
-                        this.listaMediosPagoCodigo.chequeGerencia = medio.codigo;
-                    }
-                } );
-            } );
+            .subscribe( response => this.medioPagoArray = response );
         this.commonSvc.listaBancos()
             .subscribe( response => this.bancosArray = response );
     }
@@ -50,6 +39,8 @@ export class FormTerceroGiroGogComponent implements OnInit {
     ngOnInit(): void {
         if ( this.solicitudPago.ordenGiro !== undefined ) {
             this.ordenGiroId = this.solicitudPago.ordenGiro.ordenGiroId;
+
+            // if (  )
         }
     }
 
@@ -111,7 +102,9 @@ export class FormTerceroGiroGogComponent implements OnInit {
             ordenGiroTercero: {
                 ordenGiroTerceroId: this.ordenGiroTerceroId,
                 medioPagoGiroCodigo: this.addressForm.get( 'medioPagoGiroContrato' ).value,
-                [ this.listaMediosPagoCodigo.transferenciaElectronica === this.addressForm.get( 'medioPagoGiroContrato' ).value ? 'ordenGiroTerceroTransferenciaElectronica' : 'ordenGiroTerceroChequeGerencia' ]: ordenGiroTerceroDiligenciado()
+                [
+                    this.listaMediosPagoCodigo.transferenciaElectronica === this.addressForm.get( 'medioPagoGiroContrato' ).value ? 'ordenGiroTerceroTransferenciaElectronica' : 'ordenGiroTerceroChequeGerencia'
+                ]: ordenGiroTerceroDiligenciado()
             }
         }
         

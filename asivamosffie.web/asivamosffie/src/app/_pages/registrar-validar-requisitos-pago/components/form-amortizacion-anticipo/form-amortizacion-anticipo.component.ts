@@ -52,8 +52,10 @@ export class FormAmortizacionAnticipoComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if ( changes.tieneObservacion.currentValue === true ) {
-            this.addressForm.get( 'porcentajeAmortizacion' ).enable();
+        if ( this.esVerDetalle === false ) {
+            if ( changes.tieneObservacion.currentValue === true ) {
+                this.addressForm.get( 'porcentajeAmortizacion' ).enable();
+            }
         }
     }
 
@@ -77,49 +79,51 @@ export class FormAmortizacionAnticipoComponent implements OnInit, OnChanges {
                 }
             );
 
-            // Get observacion CU autorizar solicitud de pago 4.1.9
-            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
-                this.listaMenusId.autorizarSolicitudPagoId,
-                this.contrato.solicitudPagoOnly.solicitudPagoId,
-                this.solicitudPagoFaseAmortizacionId,
-                this.amortizacionAnticipoCodigo )
-                .subscribe(
-                    response => {
-                        const observacion = response.find( obs => obs.archivada === false );
-                        if ( observacion !== undefined ) {
-                            this.esAutorizar = true;
-                            this.observacion = observacion;
+            if ( this.esVerDetalle === false ) {
+                // Get observacion CU autorizar solicitud de pago 4.1.9
+                this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                    this.listaMenusId.autorizarSolicitudPagoId,
+                    this.contrato.solicitudPagoOnly.solicitudPagoId,
+                    this.solicitudPagoFaseAmortizacionId,
+                    this.amortizacionAnticipoCodigo )
+                    .subscribe(
+                        response => {
+                            const observacion = response.find( obs => obs.archivada === false );
+                            if ( observacion !== undefined ) {
+                                this.esAutorizar = true;
+                                this.observacion = observacion;
 
-                            if ( this.observacion.tieneObservacion === true ) {
-                                this.semaforoObservacion.emit( true );
-                                this.addressForm.get( 'porcentajeAmortizacion' ).enable();
-                                this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                                if ( this.observacion.tieneObservacion === true ) {
+                                    this.semaforoObservacion.emit( true );
+                                    this.addressForm.get( 'porcentajeAmortizacion' ).enable();
+                                    this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                                }
                             }
                         }
-                    }
-                );
+                    );
 
-            // Get observacion CU verificar solicitud de pago 4.1.8
-            this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
-                this.listaMenusId.aprobarSolicitudPagoId,
-                this.contrato.solicitudPagoOnly.solicitudPagoId,
-                this.solicitudPagoFaseAmortizacionId,
-                this.amortizacionAnticipoCodigo )
-                .subscribe(
-                    response => {
-                        const observacion = response.find( obs => obs.archivada === false );
-                        if ( observacion !== undefined ) {
-                            this.esAutorizar = false;
-                            this.observacion = observacion;
+                // Get observacion CU verificar solicitud de pago 4.1.8
+                this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                    this.listaMenusId.aprobarSolicitudPagoId,
+                    this.contrato.solicitudPagoOnly.solicitudPagoId,
+                    this.solicitudPagoFaseAmortizacionId,
+                    this.amortizacionAnticipoCodigo )
+                    .subscribe(
+                        response => {
+                            const observacion = response.find( obs => obs.archivada === false );
+                            if ( observacion !== undefined ) {
+                                this.esAutorizar = false;
+                                this.observacion = observacion;
 
-                            if ( this.observacion.tieneObservacion === true ) {
-                                this.semaforoObservacion.emit( true );
-                                this.addressForm.get( 'porcentajeAmortizacion' ).enable();
-                                this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                                if ( this.observacion.tieneObservacion === true ) {
+                                    this.semaforoObservacion.emit( true );
+                                    this.addressForm.get( 'porcentajeAmortizacion' ).enable();
+                                    this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                                }
                             }
                         }
-                    }
-                );
+                    );
+            }
         }
     }
 

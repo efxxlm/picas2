@@ -79,3 +79,25 @@ export enum TipoSolicitudes {
     expensas = '3',
     otrosCostos = '4'
 }
+
+export interface ListaMenu {
+    generarOrdenGiro: number;
+    verificarOrdenGiro: number;
+    aprobarOrdenGiro: number;
+}
+
+export enum ListaMenuId {
+    generarOrdenGiro = 68,
+    verificarOrdenGiro = 76,
+    aprobarOrdenGiro
+}
+
+export interface ListaMediosPagoCodigo {
+    transferenciaElectronica: string;
+    chequeGerencia: string;
+}
+
+export enum MediosPagoCodigo {
+    transferenciaElectronica = '1',
+    chequeGerencia = '2'
+}

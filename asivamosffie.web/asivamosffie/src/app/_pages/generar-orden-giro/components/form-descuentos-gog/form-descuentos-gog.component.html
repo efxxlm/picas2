@@ -1,600 +1,288 @@
-<section class="container text-center">
-    <p>Nombre del descuento: <b>4x1000</b></p>
-    <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
-        <div class="row">
-            <div class="col-md-12" style="padding-left: 0;">
-                <div class="row">
-                    <div class="pr-1">
-                        <label class="label-left" for="criterios" [ngClass]="{
-                            'color-secondaryColor':
-                              (addressForm.get('criterios').invalid && addressForm.get('criterios').touched) ||
-                              (addressForm.get('criterios').invalid && estaEditando)
-                          }">Criterios a los cuales aplica el descuento</label>
-                    </div>
-                    <div class="col">
-                        <mat-form-field class="select-width">
-                            <mat-select formControlName="criterios" required multiple
-                                (selectionChange)="getvalues($event.value)">
-                                <mat-option *ngFor="let criterios of listaCriterios" [value]="criterios">
-                                    {{ criterios.nombre }}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <span class="icon-incompleto">
-                        <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
-                            alt="este campo es requerido" [matTooltipPosition]="'above'"
-                            matTooltip="Debe ingresar la información en el campo para continuar"
-                            matTooltipClass="info-tooltip" *ngIf="
-                          (addressForm.get('criterios').invalid && addressForm.get('criterios').touched) ||
-                          (addressForm.get('criterios').invalid && estaEditando)
-                          " />
-                    </span>
-                </div>
-            </div>
-        </div>
-        <!--Para efectos de maquetacion-->
-        <div *ngIf="this.obj1==true">
-            <mat-card class="shipping-card">
-                <mat-card-header class="header-card header-card--margin">
-                    <mat-card-title class="header-card--text">
-                        Criterio 1
-                    </mat-card-title>
-                </mat-card-header>
-                <mat-card-content style="text-align: left;">
-                    <p><b>Tipo de pago:</b> <em>Costo Variable</em></p>
+<form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+    <mat-accordion *ngIf="descuentos.length > 0 && criteriosArray.length > 0">
+        <mat-expansion-panel class="expansion-style sub-expansion-black" formArrayName="descuentos" *ngFor="let descuento of descuentos.controls; index as i">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                    Descuento {{ i + 1 }}
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+    
+            <section class="container text-center" [formGroup]="descuento">
+                <p>Nombre del descuento: <b> {{ getTipoDescuento( descuento.get( 'tipoDescuentoCodigo' ).value ) }} </b></p>
                     <div class="row">
                         <div class="col-md-12" style="padding-left: 0;">
                             <div class="row">
                                 <div class="pr-1">
-                                    <label class="label-left" for="conceptosdePago" [ngClass]="{
-                                        'color-secondaryColor':
-                                          (addressForm.get('conceptosdePago').invalid && addressForm.get('conceptosdePago').touched) ||
-                                          (addressForm.get('conceptosdePago').invalid && estaEditando)
-                                      }">Conceptos de pago que aplican para
-                                        el descuento: </label>
+                                    <label  class="label-left"
+                                            for="criterio"
+                                            [ngClass]="{ 'color-secondaryColor': (addressForm.get('criterio')?.invalid && addressForm.get('criterio').touched) || (addressForm.get('criterio')?.invalid && estaEditando) }">
+                                            Criterios a los cuales aplica el descuento
+                                    </label>
                                 </div>
                                 <div class="col">
                                     <mat-form-field class="select-width">
-                                        <mat-select formControlName="conceptosdePago" required multiple
-                                            (selectionChange)="obtenerConceptos($event.value)">
-                                            <mat-option *ngFor="let conceptosdePago of listaConceptoPago"
-                                                [value]="conceptosdePago">
-                                                {{ conceptosdePago.nombre }}
+                                        <mat-select formControlName="criterio" required multiple (selectionChange)="getListCriterios( $event.value, i )">
+                                            <mat-option *ngFor="let criterio of criteriosArray" [value]="criterio.codigo">
+                                                {{ firstLetterUpperCase( criterio.nombre ) }}
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
                                 </div>
                                 <span class="icon-incompleto">
-                                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
-                                        alt="este campo es requerido" [matTooltipPosition]="'above'"
-                                        matTooltip="Debe ingresar la información en el campo para continuar"
-                                        matTooltipClass="info-tooltip" *ngIf="
-                                      (addressForm.get('conceptosdePago').invalid && addressForm.get('conceptosdePago').touched) ||
-                                          (addressForm.get('conceptosdePago').invalid && estaEditando)
-                                      " />
+                                    <img    class="icon-incompleto--img"
+                                            src="assets/img/icon/incompleto.svg"
+                                            alt="este campo es requerido"
+                                            [matTooltipPosition]="'above'"
+                                            matTooltip="Debe ingresar la información en el campo para continuar"
+                                            matTooltipClass="info-tooltip"
+                                            *ngIf="(addressForm.get('criterio')?.invalid && addressForm.get('criterio').touched) || (addressForm.get('criterio')?.invalid && estaEditando)">
                                 </span>
                             </div>
                         </div>
                     </div>
-                    <div *ngIf="this.objD1==true">
-                        <h2 class="card-subTitle"> Demolición</h2>
-                        <!-- se puso 2 aportantes quemados para efectos de maquetacion-->
-                        <div>
-                            <mat-card-title class="header-card--text">
-                                Aportante 1
-                            </mat-card-title>
-                            <div class="row">
-                                <div class="col-md-8">
+                    
+                    <section *ngIf="getCriterios( i ).length > 0">
+                        <div formArrayName="criterios" *ngFor="let criterio of getCriterios( i ).controls; index as j">
+                            <mat-card class="shipping-card">
+                                <mat-card-header class="header-card header-card--margin">
+                                    <mat-card-title class="header-card--text">
+                                        {{ firstLetterUpperCase( criterio.get( 'nombre' ).value ) }}
+                                    </mat-card-title>
+                                </mat-card-header>
+                                <mat-card-content style="text-align: left;" [formGroup]="criterio">
+                                    <p><b>Tipo de pago: </b> <em> {{ firstLetterUpperCase( criterio.get( 'tipoPagoNombre' ).value ) }} </em></p>
                                     <div class="row">
-                                        <div class="pr-1">
-                                            <label class="label-left" for="tipoAportante" [ngClass]="{
-                                                'color-secondaryColor':
-                                                  (addressForm.get('tipoAportante').invalid && addressForm.get('tipoAportante').touched) ||
-                                                  (addressForm.get('tipoAportante').invalid && estaEditando)
-                                              }">Tipo de aportante:</label>
+                                        <div class="col-md-12" style="padding-left: 0;">
+                                            <div class="row">
+                                                <div class="pr-1">
+                                                    <label  class="label-left"
+                                                            for="concepto" [ngClass]="{ 'color-secondaryColor': (criterio.get('concepto').invalid && criterio.get('concepto').touched) || (criterio.get('concepto').invalid && estaEditando) }">
+                                                            Conceptos de pago que aplican para el descuento:
+                                                    </label>
+                                                </div>
+                                                <div class="col">
+                                                    <mat-form-field class="select-width">
+                                                        <mat-select formControlName="concepto" required multiple (selectionChange)="getListConceptos( $event.value, i, j )">
+                                                            <mat-option *ngFor="let concepto of criterio.get( 'conceptosDePago' ).value" [value]="concepto.codigo">
+                                                                {{ firstLetterUpperCase( concepto.nombre ) }}
+                                                            </mat-option>
+                                                        </mat-select>
+                                                    </mat-form-field>
+                                                </div>
+                                                <span class="icon-incompleto">
+                                                    <img    class="icon-incompleto--img"
+                                                            src="assets/img/icon/incompleto.svg"
+                                                            alt="este campo es requerido"
+                                                            [matTooltipPosition]="'above'"
+                                                            matTooltip="Debe ingresar la información en el campo para continuar"
+                                                            matTooltipClass="info-tooltip" *ngIf="(criterio.get('concepto').invalid && criterio.get('concepto').touched) || (criterio.get('concepto').invalid && estaEditando)">
+                                                </span>
+                                            </div>
                                         </div>
-                                        <div class="col">
-                                            <mat-form-field class="select-width">
-                                                <mat-select formControlName="tipoAportante" required>
-                                                    <mat-option *ngFor="let tipoAportante of tipoAportantesArray"
-                                                        [value]="tipoAportante">
-                                                        {{ tipoAportante.nombre }}
-                                                    </mat-option>
-                                                </mat-select>
-                                            </mat-form-field>
-                                        </div>
-                                        <span class="icon-incompleto">
-                                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
-                                                alt="este campo es requerido" [matTooltipPosition]="'above'"
-                                                matTooltip="Debe ingresar la información en el campo para continuar"
-                                                matTooltipClass="info-tooltip" *ngIf="
-                                              (addressForm.get('tipoAportante').invalid && addressForm.get('tipoAportante').touched) ||
-                                                  (addressForm.get('tipoAportante').invalid && estaEditando)
-                                              " />
-                                        </span>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <div class="row">
-                                        <div class="pr-1">
-                                            <label class="label-left" for="nombreAportante" [ngClass]="{
-                                                'color-secondaryColor':
-                                                  (addressForm.get('nombreAportante').invalid && addressForm.get('nombreAportante').touched) ||
-                                                  (addressForm.get('nombreAportante').invalid && estaEditando)
-                                              }">Nombre del aportante:</label>
+                                    <div *ngIf="getConceptos( i, j ).length > 0">
+                                        <div formArrayName="conceptos" *ngFor="let concepto of getConceptos( i, j ).controls; index as k">
+                                            <h2 class="card-subTitle"> {{ firstLetterUpperCase( concepto.get( 'nombre' ).value ) }} </h2>
+                
+                                            <div [formGroup]="concepto" *ngIf="getAportantes( i, j, k ).length > 0">
+                                                <div formArrayName="aportantes" *ngFor="let aportante of getAportantes( i, j, k ).controls; index as l">
+                                                    <mat-card-title class="header-card--text"> Aportante {{ l + 1 }} </mat-card-title>
+                                                    <div class="row">
+                                                        <div class="col-md-9" [formGroup]="aportante">
+                                                            <div class="row">
+                                                                <div class="col-md-11">
+                                                                    <div class="row">
+                                                                        <div class="pr-1">
+                                                                            <label  class="label-left"
+                                                                                    for="tipoAportante"
+                                                                                    [ngClass]="{ 'color-secondaryColor': (aportante.get('tipoAportante').invalid && aportante.get('tipoAportante').touched) || (aportante.get('tipoAportante').invalid && estaEditando) }">
+                                                                                    Tipo de aportante:
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="col">
+                                                                            <mat-form-field class="select-width">
+                                                                                <mat-select formControlName="tipoAportante" required>
+                                                                                    <mat-option *ngFor="let tipoAportante of tipoAportantesArray" [value]="tipoAportante">
+                                                                                        {{ tipoAportante.nombre }}
+                                                                                    </mat-option>
+                                                                                </mat-select>
+                                                                            </mat-form-field>
+                                                                        </div>
+                                                                        <span class="icon-incompleto">
+                                                                            <img    class="icon-incompleto--img"
+                                                                                    src="assets/img/icon/incompleto.svg"
+                                                                                    alt="este campo es requerido"
+                                                                                    [matTooltipPosition]="'above'"
+                                                                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                                                                    matTooltipClass="info-tooltip"
+                                                                                    *ngIf="(aportante.get('tipoAportante').invalid && aportante.get('tipoAportante').touched) || (aportante.get('tipoAportante').invalid && estaEditando)">
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-11">
+                                                                    <div class="row">
+                                                                        <div class="pr-1">
+                                                                            <label  class="label-left"
+                                                                                    for="nombreAportante"
+                                                                                    [ngClass]="{ 'color-secondaryColor': (aportante.get('nombreAportante').invalid && aportante.get('nombreAportante').touched) || (aportante.get('nombreAportante').invalid && estaEditando) }">
+                                                                                    Nombre del aportante:
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="col">
+                                                                            <mat-form-field class="select-width">
+                                                                                <mat-select formControlName="nombreAportante" required>
+                                                                                    <mat-option *ngFor="let nombreAportante of nombreAportantesArray" [value]="nombreAportante">
+                                                                                        {{ nombreAportante.nombre }}
+                                                                                    </mat-option>
+                                                                                </mat-select>
+                                                                            </mat-form-field>
+                                                                        </div>
+                                                                        <span class="icon-incompleto">
+                                                                            <img    class="icon-incompleto--img"
+                                                                                    src="assets/img/icon/incompleto.svg"
+                                                                                    alt="este campo es requerido"
+                                                                                    [matTooltipPosition]="'above'"
+                                                                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                                                                    matTooltipClass="info-tooltip"
+                                                                                    *ngIf="(aportante.get('nombreAportante').invalid && aportante.get('nombreAportante').touched) || (aportante.get('nombreAportante').invalid && estaEditando)">
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-11">
+                                                                    <div class="row">
+                                                                        <div class="pr-1">
+                                                                            <label  class="label-left"
+                                                                                    for="fuenteRecursos"
+                                                                                    [ngClass]="{ 'color-secondaryColor': (aportante.get('fuenteRecursos').invalid && aportante.get('fuenteRecursos').touched) || (aportante.get('fuenteRecursos').invalid && estaEditando) }">
+                                                                                    Fuente de los recursos:
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="col">
+                                                                            <mat-form-field class="select-width">
+                                                                                <mat-select formControlName="fuenteRecursos" required>
+                                                                                    <mat-option *ngFor="let fuenteRecursos of fuenteRecursosArray" [value]="fuenteRecursos">
+                                                                                        {{ fuenteRecursos.nombre }}
+                                                                                    </mat-option>
+                                                                                </mat-select>
+                                                                            </mat-form-field>
+                                                                        </div>
+                                                                        <span class="icon-incompleto">
+                                                                            <img    class="icon-incompleto--img"
+                                                                                    src="assets/img/icon/incompleto.svg"
+                                                                                    alt="este campo es requerido"
+                                                                                    [matTooltipPosition]="'above'"
+                                                                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                                                                    matTooltipClass="info-tooltip"
+                                                                                    *ngIf="(aportante.get('fuenteRecursos').invalid && aportante.get('fuenteRecursos').touched) || (aportante.get('fuenteRecursos').invalid && estaEditando)">
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-11">
+                                                                    <div class="row">
+                                                                        <div class="pr-1">
+                                                                            <label  class="label-left"
+                                                                                    for="valorDescuento"
+                                                                                    [ngClass]="{ 'color-secondaryColor': (aportante.get('valorDescuento').invalid && aportante.get('valorDescuento').touched) || (aportante.get('valorDescuento').invalid && estaEditando) }">
+                                                                                    Valor del descuento
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="col d-flex">
+                                                                            <mat-form-field class="full-width">
+                                                                                <input  matInput
+                                                                                        #valorDescuento
+                                                                                        maxlength="20"
+                                                                                        type="number"
+                                                                                        required
+                                                                                        formControlName="valorDescuento"
+                                                                                        (ngModelChange)="checkTotalDiscountValues( i, j, k, l );"
+                                                                                        onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                                                                            </mat-form-field>
+                                                                            <span   class="contador"
+                                                                                    [matTooltipPosition]="'above'"
+                                                                                    matTooltip="Valor en ($) Pesos colombianos"
+                                                                                    matTooltipClass="info-tooltip">
+                                                                                    {{ 20 - valorDescuento.value.length }}
+                                                                            </span>
+                                                                        </div>
+                                                                        <span class="icon-incompleto">
+                                                                            <img    class="icon-incompleto--img"
+                                                                                    src="assets/img/icon/incompleto.svg"
+                                                                                    alt="este campo es requerido"
+                                                                                    [matTooltipPosition]="'above'"
+                                                                                    matTooltip="Debe ingresar la información en el campo para continuar"
+                                                                                    matTooltipClass="info-tooltip"
+                                                                                    *ngIf="(aportante.get('valorDescuento').invalid && aportante.get('valorDescuento').touched) || (aportante.get('valorDescuento').invalid && estaEditando)">
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 text-right" style="padding-top: 7em;">
+                                                            <button mat-button
+                                                                    color="warn"
+                                                                    type="button"
+                                                                    class="btn-eliminar"
+                                                                    (click)="deleteAportante( i, j, k, l )"
+                                                                    *ngIf="getAportantes( i, j, k ).length > 1">
+                                                                    <img src="assets/img/icon/menos.svg" alt="Eliminar radicado">
+                                                                    Eliminar aportante
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12 text-right">
+                                                        <button mat-button
+                                                                color="warn"
+                                                                type="button"
+                                                                class="btn-eliminar"
+                                                                *ngIf="getConceptos( i, j ).length > 1"
+                                                                (click)="deleteConcepto( i, j, k )">
+                                                                <img src="assets/img/icon/menos.svg" alt="Eliminar radicado">
+                                                                Eliminar concepto para descuento
+                                                        </button>
+                                                        <button mat-button
+                                                                color="warn"
+                                                                type="button"
+                                                                class="btn-eliminar text-right"
+                                                                (click)="addAportante( i, j, k )"
+                                                                *ngIf="l === getAportantes( i, j, k ).length - 1">
+                                                                <img src="assets/img/icon/mas.svg" alt="Eliminar radicado">
+                                                                Agregar otro aportante
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="col">
-                                            <mat-form-field class="select-width">
-                                                <mat-select formControlName="nombreAportante" required>
-                                                    <mat-option *ngFor="let nombreAportante of nombreAportantesArray"
-                                                        [value]="nombreAportante">
-                                                        {{ nombreAportante.nombre }}
-                                                    </mat-option>
-                                                </mat-select>
-                                            </mat-form-field>
-                                        </div>
-                                        <span class="icon-incompleto">
-                                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
-                                                alt="este campo es requerido" [matTooltipPosition]="'above'"
-                                                matTooltip="Debe ingresar la información en el campo para continuar"
-                                                matTooltipClass="info-tooltip" *ngIf="
-                                              (addressForm.get('nombreAportante').invalid && addressForm.get('nombreAportante').touched) ||
-                                                  (addressForm.get('nombreAportante').invalid && estaEditando)
-                                              " />
-                                        </span>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <div class="row">
-                                        <div class="pr-1">
-                                            <label class="label-left" for="fuenteRecursos" [ngClass]="{
-                                                'color-secondaryColor':
-                                                  (addressForm.get('fuenteRecursos').invalid && addressForm.get('fuenteRecursos').touched) ||
-                                                  (addressForm.get('fuenteRecursos').invalid && estaEditando)
-                                              }">Fuente de los recursos:</label>
-                                        </div>
-                                        <div class="col">
-                                            <mat-form-field class="select-width">
-                                                <mat-select formControlName="fuenteRecursos" required>
-                                                    <mat-option *ngFor="let fuenteRecursos of fuenteRecursosArray"
-                                                        [value]="fuenteRecursos">
-                                                        {{ fuenteRecursos.nombre }}
-                                                    </mat-option>
-                                                </mat-select>
-                                            </mat-form-field>
-                                        </div>
-                                        <span class="icon-incompleto">
-                                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
-                                                alt="este campo es requerido" [matTooltipPosition]="'above'"
-                                                matTooltip="Debe ingresar la información en el campo para continuar"
-                                                matTooltipClass="info-tooltip" *ngIf="
-                                              (addressForm.get('fuenteRecursos').invalid && addressForm.get('fuenteRecursos').touched) ||
-                                                  (addressForm.get('fuenteRecursos').invalid && estaEditando)
-                                              " />
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <div class="row">
-                                        <div class="pr-1">
-                                            <label class="label-left" for="valorDescuento" [ngClass]="{
-                                                'color-secondaryColor':
-                                                  (addressForm.get('valorDescuento').invalid && addressForm.get('valorDescuento').touched) ||
-                                                  (addressForm.get('valorDescuento').invalid && estaEditando)
-                                              }">
-                                                Valor del descuento
-                                            </label>
-                                        </div>
-                                        <div class="col d-flex">
-                                            <mat-form-field class="full-width">
-                                                <input matInput #valorDescuento maxlength="20" type="number" required
-                                                    formControlName="valorDescuento"
-                                                    (keypress)="validateNumberKeypress($event)"
-                                                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
-                                            </mat-form-field>
-                                            <span class="contador" [matTooltipPosition]="'above'"
-                                                matTooltip="Valor en ($) Pesos colombianos"
-                                                matTooltipClass="info-tooltip">{{20 -
-                                                valorDescuento.value.length}}</span>
-                                        </div>
-                                        <span class="icon-incompleto">
-                                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
-                                                alt="este campo es requerido" [matTooltipPosition]="'above'"
-                                                matTooltip="Debe ingresar la información en el campo para continuar"
-                                                matTooltipClass="info-tooltip" *ngIf="
-                                              (addressForm.get('valorDescuento').invalid && addressForm.get('valorDescuento').touched) ||
-                                                  (addressForm.get('valorDescuento').invalid && estaEditando)
-                                              " />
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-12 text-right">
-                                <button mat-button color="warn" type="button" class="btn-eliminar">
-                                    <img src="assets/img/icon/menos.svg" alt="Eliminar radicado">
-                                    Eliminar aportante
+                                </mat-card-content>
+                            </mat-card>
+                            <div class="col-md-12 text-right" *ngIf="getCriterios( i ).length > 1">
+                                <button mat-button
+                                        color="warn"
+                                        type="button"
+                                        class="btn-eliminar"
+                                        (click)="deleteCriterio( i, j )">
+                                        <img src="assets/img/icon/menos.svg" alt="Eliminar radicado">
+                                        Eliminar criterio para descuento
                                 </button>
                             </div>
                         </div>
-                        <div>
-                            <mat-card-title class="header-card--text">
-                                Aportante 2
-                            </mat-card-title>
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <div class="row">
-                                        <div class="pr-1">
-                                            <label class="label-left" for="tipoAportante"
-                                            [ngClass]="{
-                                                'color-secondaryColor':
-                                                  (addressForm.get('tipoAportante').invalid && addressForm.get('tipoAportante').touched) ||
-                                                  (addressForm.get('tipoAportante').invalid && estaEditando)
-                                              }">Tipo de aportante:</label>
-                                        </div>
-                                        <div class="col">
-                                            <mat-form-field class="select-width">
-                                                <mat-select formControlName="tipoAportante" required>
-                                                    <mat-option *ngFor="let tipoAportante of tipoAportantesArray"
-                                                        [value]="tipoAportante">
-                                                        {{ tipoAportante.nombre }}
-                                                    </mat-option>
-                                                </mat-select>
-                                            </mat-form-field>
-                                        </div>
-                                        <span class="icon-incompleto">
-                                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
-                                                alt="este campo es requerido" [matTooltipPosition]="'above'"
-                                                matTooltip="Debe ingresar la información en el campo para continuar"
-                                                matTooltipClass="info-tooltip" *ngIf="
-                                              (addressForm.get('tipoAportante').invalid && addressForm.get('tipoAportante').touched) ||
-                                                  (addressForm.get('tipoAportante').invalid && estaEditando)
-                                              " />
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <div class="row">
-                                        <div class="pr-1">
-                                            <label class="label-left" for="nombreAportante"
-                                            [ngClass]="{
-                                                'color-secondaryColor':
-                                                  (addressForm.get('nombreAportante').invalid && addressForm.get('nombreAportante').touched) ||
-                                                  (addressForm.get('nombreAportante').invalid && estaEditando)
-                                              }">Nombre del aportante:</label>
-                                        </div>
-                                        <div class="col">
-                                            <mat-form-field class="select-width">
-                                                <mat-select formControlName="nombreAportante" required>
-                                                    <mat-option *ngFor="let nombreAportante of nombreAportantesArray"
-                                                        [value]="nombreAportante">
-                                                        {{ nombreAportante.nombre }}
-                                                    </mat-option>
-                                                </mat-select>
-                                            </mat-form-field>
-                                        </div>
-                                        <span class="icon-incompleto">
-                                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
-                                                alt="este campo es requerido" [matTooltipPosition]="'above'"
-                                                matTooltip="Debe ingresar la información en el campo para continuar"
-                                                matTooltipClass="info-tooltip" *ngIf="
-                                                (addressForm.get('nombreAportante').invalid && addressForm.get('nombreAportante').touched) ||
-                                                (addressForm.get('nombreAportante').invalid && estaEditando)
-                                              " />
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <div class="row">
-                                        <div class="pr-1">
-                                            <label class="label-left" for="fuenteRecursos"
-                                            [ngClass]="{
-                                                'color-secondaryColor':
-                                                  (addressForm.get('fuenteRecursos').invalid && addressForm.get('fuenteRecursos').touched) ||
-                                                  (addressForm.get('fuenteRecursos').invalid && estaEditando)
-                                              }">Fuente de los recursos:</label>
-                                        </div>
-                                        <div class="col">
-                                            <mat-form-field class="select-width">
-                                                <mat-select formControlName="fuenteRecursos" required>
-                                                    <mat-option *ngFor="let fuenteRecursos of fuenteRecursosArray"
-                                                        [value]="fuenteRecursos">
-                                                        {{ fuenteRecursos.nombre }}
-                                                    </mat-option>
-                                                </mat-select>
-                                            </mat-form-field>
-                                        </div>
-                                        <span class="icon-incompleto">
-                                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
-                                                alt="este campo es requerido" [matTooltipPosition]="'above'"
-                                                matTooltip="Debe ingresar la información en el campo para continuar"
-                                                matTooltipClass="info-tooltip" *ngIf="
-                                                (addressForm.get('fuenteRecursos').invalid && addressForm.get('fuenteRecursos').touched) ||
-                                                (addressForm.get('fuenteRecursos').invalid && estaEditando)
-                                              " />
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <div class="row">
-                                        <div class="pr-1">
-                                            <label class="label-left" for="valorDescuento"
-                                            [ngClass]="{
-                                                'color-secondaryColor':
-                                                  (addressForm.get('valorDescuento').invalid && addressForm.get('valorDescuento').touched) ||
-                                                  (addressForm.get('valorDescuento').invalid && estaEditando)
-                                              }">
-                                                Valor del descuento
-                                            </label>
-                                        </div>
-                                        <div class="col d-flex">
-                                            <mat-form-field class="full-width">
-                                                <input matInput #valorDescuento maxlength="20" type="number" required
-                                                    formControlName="valorDescuento"
-                                                    (keypress)="validateNumberKeypress($event)"
-                                                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
-                                            </mat-form-field>
-                                            <span class="contador" [matTooltipPosition]="'above'"
-                                                matTooltip="Valor en ($) Pesos colombianos"
-                                                matTooltipClass="info-tooltip">{{20 -
-                                                valorDescuento.value.length}}</span>
-                                        </div>
-                                        <span class="icon-incompleto">
-                                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
-                                                alt="este campo es requerido" [matTooltipPosition]="'above'"
-                                                matTooltip="Debe ingresar la información en el campo para continuar"
-                                                matTooltipClass="info-tooltip" *ngIf="
-                                                (addressForm.get('valorDescuento').invalid && addressForm.get('valorDescuento').touched) ||
-                                                  (addressForm.get('valorDescuento').invalid && estaEditando)
-                                              " />
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-12 text-right">
-                                <button mat-button color="warn" type="button" class="btn-eliminar">
-                                    <img src="assets/img/icon/menos.svg" alt="Eliminar radicado">
-                                    Eliminar aportante
-                                </button>
-                            </div>
-                        </div>
-                        <div class="col-md-12 text-right">
-                            <button mat-button color="warn" type="button" class="btn-eliminar">
-                                <img src="assets/img/icon/menos.svg" alt="Eliminar radicado">
-                                Eliminar concepto para descuento
-                            </button>
-                            <button mat-button color="warn" type="button" class="btn-eliminar text-right">
-                                <img src="assets/img/icon/mas.svg" alt="Eliminar radicado">
-                                Agregar otro aportante
-                            </button>
-                        </div>
+                    </section>
+                    <div class="text-center mb-2em">
+                        <button mat-button
+                                color="warn"
+                                class="btn-guardar"
+                                type="submit"
+                                [disabled]="getCriterios( i ).dirty === false">
+                                <img src="assets/img/icon/guardar.svg" alt="Regresar">
+                        </button>
                     </div>
-                    <div *ngIf="this.objD2==true">
-                        <h2 class="card-subTitle"> Cimentación</h2>
-                        <div>
-                            <mat-card-title class="header-card--text">
-                                Aportante 1
-                            </mat-card-title>
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <div class="row">
-                                        <div class="pr-1">
-                                            <label class="label-left" for="tipoAportante"
-                                            [ngClass]="{
-                                                'color-secondaryColor':
-                                                  (addressForm.get('tipoAportante').invalid && addressForm.get('tipoAportante').touched) ||
-                                                  (addressForm.get('tipoAportante').invalid && estaEditando)
-                                              }">Tipo de aportante:</label>
-                                        </div>
-                                        <div class="col">
-                                            <mat-form-field class="select-width">
-                                                <mat-select formControlName="tipoAportante" required>
-                                                    <mat-option *ngFor="let tipoAportante of tipoAportantesArray"
-                                                        [value]="tipoAportante">
-                                                        {{ tipoAportante.nombre }}
-                                                    </mat-option>
-                                                </mat-select>
-                                            </mat-form-field>
-                                        </div>
-                                        <span class="icon-incompleto">
-                                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
-                                                alt="este campo es requerido" [matTooltipPosition]="'above'"
-                                                matTooltip="Debe ingresar la información en el campo para continuar"
-                                                matTooltipClass="info-tooltip" *ngIf="
-                                                (addressForm.get('tipoAportante').invalid && addressForm.get('tipoAportante').touched) ||
-                                                  (addressForm.get('tipoAportante').invalid && estaEditando)
-                                              " />
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <div class="row">
-                                        <div class="pr-1">
-                                            <label class="label-left" for="nombreAportante"
-                                            [ngClass]="{
-                                                'color-secondaryColor':
-                                                  (addressForm.get('nombreAportante').invalid && addressForm.get('nombreAportante').touched) ||
-                                                  (addressForm.get('nombreAportante').invalid && estaEditando)
-                                              }">Nombre del aportante:</label>
-                                        </div>
-                                        <div class="col">
-                                            <mat-form-field class="select-width">
-                                                <mat-select formControlName="nombreAportante" required>
-                                                    <mat-option *ngFor="let nombreAportante of nombreAportantesArray"
-                                                        [value]="nombreAportante">
-                                                        {{ nombreAportante.nombre }}
-                                                    </mat-option>
-                                                </mat-select>
-                                            </mat-form-field>
-                                        </div>
-                                        <span class="icon-incompleto">
-                                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
-                                                alt="este campo es requerido" [matTooltipPosition]="'above'"
-                                                matTooltip="Debe ingresar la información en el campo para continuar"
-                                                matTooltipClass="info-tooltip" *ngIf="
-                                                (addressForm.get('nombreAportante').invalid && addressForm.get('nombreAportante').touched) ||
-                                                (addressForm.get('nombreAportante').invalid && estaEditando)
-                                              " />
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <div class="row">
-                                        <div class="pr-1">
-                                            <label class="label-left" for="fuenteRecursos"
-                                            [ngClass]="{
-                                                'color-secondaryColor':
-                                                  (addressForm.get('fuenteRecursos').invalid && addressForm.get('fuenteRecursos').touched) ||
-                                                  (addressForm.get('fuenteRecursos').invalid && estaEditando)
-                                              }">Fuente de los recursos:</label>
-                                        </div>
-                                        <div class="col">
-                                            <mat-form-field class="select-width">
-                                                <mat-select formControlName="fuenteRecursos" required>
-                                                    <mat-option *ngFor="let fuenteRecursos of fuenteRecursosArray"
-                                                        [value]="fuenteRecursos">
-                                                        {{ fuenteRecursos.nombre }}
-                                                    </mat-option>
-                                                </mat-select>
-                                            </mat-form-field>
-                                        </div>
-                                        <span class="icon-incompleto">
-                                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
-                                                alt="este campo es requerido" [matTooltipPosition]="'above'"
-                                                matTooltip="Debe ingresar la información en el campo para continuar"
-                                                matTooltipClass="info-tooltip" *ngIf="
-                                                (addressForm.get('fuenteRecursos').invalid && addressForm.get('fuenteRecursos').touched) ||
-                                                  (addressForm.get('fuenteRecursos').invalid && estaEditando)
-                                              " />
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <div class="row">
-                                        <div class="pr-1">
-                                            <label class="label-left" for="valorDescuento"
-                                            [ngClass]="{
-                                                'color-secondaryColor':
-                                                  (addressForm.get('valorDescuento').invalid && addressForm.get('valorDescuento').touched) ||
-                                                  (addressForm.get('valorDescuento').invalid && estaEditando)
-                                              }">
-                                                Valor del descuento
-                                            </label>
-                                        </div>
-                                        <div class="col d-flex">
-                                            <mat-form-field class="full-width">
-                                                <input matInput #valorDescuento maxlength="20" type="number" required
-                                                    formControlName="valorDescuento"
-                                                    (keypress)="validateNumberKeypress($event)"
-                                                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
-                                            </mat-form-field>
-                                            <span class="contador" [matTooltipPosition]="'above'"
-                                                matTooltip="Valor en ($) Pesos colombianos"
-                                                matTooltipClass="info-tooltip">{{20 -
-                                                valorDescuento.value.length}}</span>
-                                        </div>
-                                        <span class="icon-incompleto">
-                                            <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
-                                                alt="este campo es requerido" [matTooltipPosition]="'above'"
-                                                matTooltip="Debe ingresar la información en el campo para continuar"
-                                                matTooltipClass="info-tooltip" *ngIf="
-                                                (addressForm.get('valorDescuento').invalid && addressForm.get('valorDescuento').touched) ||
-                                                  (addressForm.get('valorDescuento').invalid && estaEditando)
-                                              " />
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-12 text-right">
-                            <button mat-button color="warn" type="button" class="btn-eliminar">
-                                <img src="assets/img/icon/menos.svg" alt="Eliminar radicado">
-                                Eliminar concepto para descuento
-                            </button>
-                            <button mat-button color="warn" type="button" class="btn-eliminar text-right">
-                                <img src="assets/img/icon/mas.svg" alt="Eliminar radicado">
-                                Agregar otro aportante
-                            </button>
-                        </div>
-                    </div>
-                </mat-card-content>
-            </mat-card>
-            <div class="col-md-12 text-right">
-                <button mat-button color="warn" type="button" class="btn-eliminar" (click)="eliminarCriterio()">
-                    <img src="assets/img/icon/menos.svg" alt="Eliminar radicado">
-                    Eliminar criterio para descuento
-                </button>
-            </div>
-        </div>
-        <div *ngIf="this.obj2==true">
-            <mat-card class="shipping-card">
-                <mat-card-header class="header-card header-card--margin">
-                    <mat-card-title class="header-card--text">
-                        Criterio 2
-                    </mat-card-title>
-                </mat-card-header>
-                <mat-card-content style="text-align: left;">
-                    <p><b>Tipo de pago:</b> <em>Tipo de pago 3</em></p>
-                    <div class="row">
-                        <div class="col-md-12" style="padding-left: 0;">
-                            <div class="row">
-                                <div class="pr-1">
-                                    <label class="label-left" for="conceptosdePago"
-                                    [ngClass]="{
-                                        'color-secondaryColor':
-                                          (addressForm.get('conceptosdePago').invalid && addressForm.get('conceptosdePago').touched) ||
-                                          (addressForm.get('conceptosdePago').invalid && estaEditando)
-                                      }">Conceptos de pago que aplican para el descuento: </label>
-                                </div>
-                                <div class="col">
-                                    <mat-form-field class="select-width">
-                                        <mat-select formControlName="conceptosdePago" required multiple
-                                            (selectionChange)="obtenerConceptos($event.value)">
-                                            <mat-option *ngFor="let conceptosdePago of listaConceptoPago"
-                                                [value]="conceptosdePago">
-                                                {{ conceptosdePago.nombre }}
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </div>
-                                <span class="icon-incompleto">
-                                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
-                                        alt="este campo es requerido" [matTooltipPosition]="'above'"
-                                        matTooltip="Debe ingresar la información en el campo para continuar"
-                                        matTooltipClass="info-tooltip" *ngIf="
-                                        (addressForm.get('conceptosdePago').invalid && addressForm.get('conceptosdePago').touched) ||
-                                          (addressForm.get('conceptosdePago').invalid && estaEditando)
-                                      " />
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </mat-card-content>
-            </mat-card>
-            <div class="col-md-12 text-right">
-                <button mat-button color="warn" type="button" class="btn-eliminar" (click)="eliminarCriterio()">
-                    <img src="assets/img/icon/menos.svg" alt="Eliminar radicado">
-                    Eliminar criterio para descuento
-                </button>
-            </div>
-        </div>
-    </form>
-</section>
+            </section>
+        </mat-expansion-panel> 
+    </mat-accordion>
+</form>
