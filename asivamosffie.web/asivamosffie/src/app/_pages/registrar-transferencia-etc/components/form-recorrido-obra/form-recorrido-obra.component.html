@@ -206,23 +206,4 @@
     </button>
   </div>
 </form>
-<app-form-representante [numRepresentantesRecorrido] = "addressForm.get('numRepresentantesRecorrido').value" [proyectoEntregaEtcId]= "addressForm.get('proyectoEntregaEtcid').value" [representanteEtcrecorrido] = "representanteEtcrecorrido" (callOnSubmitParent)="onSubmit()"></app-form-representante>
-<!--<mat-accordion class="animatedDown" *ngIf="addressForm.get('numRepresentantesRecorrido').value">
-  <mat-expansion-panel
-    class="expansion-style sub-expansion"
-    *ngFor="let representante of arrayOne(addressForm.get('numRepresentantesRecorrido').value); let i = index"
-  >
-    <mat-expansion-panel-header class="expansion-style--header">
-      <mat-panel-title
-        class="expansion-style--title"
-        [class.sin-diligenciar]="true"
-        [class.en-proceso]="false"
-        [class.completo]="false"
-      >
-        Representante {{ i + 1 }}
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-
-    <app-form-representante></app-form-representante>
-  </mat-expansion-panel>
-</mat-accordion>-->
+<app-form-representante [numRepresentantesRecorrido] = "addressForm.get('numRepresentantesRecorrido').value" (numRepresentantesRecorridoChange)="changeValueRepresentantes($event)" [proyectoEntregaEtcId]= "addressForm.get('proyectoEntregaEtcid').value" [representanteEtcrecorrido] = "representanteEtcrecorrido" (callOnSubmitParent)="onSubmit()"></app-form-representante>

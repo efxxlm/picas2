@@ -35,7 +35,6 @@ export class RegistrarEntregaComponent implements OnInit {
   dataSource = new MatTableDataSource<ProyectoEntregaETC>(this.ELEMENT_DATA);
 
   ngOnInit(): void {
-    console.log("entra");
     this.getProyectoEntregaETCByInformeFinalId(this.id);
   }
 

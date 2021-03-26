@@ -16,6 +16,7 @@ export class FormRepresentanteComponent implements OnInit {
   @Input() proyectoEntregaEtcId: any;
   @Input() representanteEtcrecorrido: any;
   @Output("callOnSubmitParent") callOnSubmitParent: EventEmitter<any> = new EventEmitter();
+  @Output() numRepresentantesRecorridoChange = new EventEmitter<string>();
 
   representantesForm: FormGroup;
   ELEMENT_DATA : RepresentanteETCRecorrido[] = [];
@@ -89,145 +90,145 @@ export class FormRepresentanteComponent implements OnInit {
     }
   }
 
-  getCantidadRepresentantes() {
-    console.log(this.representantesForm.get( 'numRepresentantesRecorrido' ).valueChanges);
-    this.representantesForm.get( 'numRepresentantesRecorrido' ).valueChanges
-        .subscribe(
-            value => {
-              this.estaEditando = true;
-              console.log("value: ", value, " - rep: ", this.representanteEtcrecorrido);
-                    if ( this.representanteEtcrecorrido !== undefined && this.representanteEtcrecorrido.length > 0 ) {
-                      this.representantes.clear();
-                      for ( const representante of this.representanteEtcrecorrido ) {
-                          this.representantes.push(
-                              this.fb.group(
-                                  {
-                                      representanteEtcid: representante.representanteEtcid,
-                                      proyectoEntregaEtcId: representante.proyectoEntregaEtcId,
-                                      nombre: representante.nombre,
-                                      cargo:  representante.cargo,
-                                      dependencia: representante.dependencia,
-                                      semaforo: representante.registroCompleto == true ? "completo" : 
-                                      (representante.registroCompleto == false && ((representante.nombre == "" || representante.nombre == null) 
-                                                                              && (representante.cargo == "" || representante.cargo == null)
-                                                                              && (representante.dependencia == "" || representante.dependencia == null)) 
-                                      || (representante.registroCompleto == null)) ? "sin-diligenciar" : "en-proceso"
-                                      }
-                              )
-                          );
-                      }
-                      this.representantesForm.get( 'numRepresentantesRecorrido' ).setValidators( Validators.min( this.representantes.length ) );
-                      const nuevosRepresentantes = Number( value ) - this.representantes.length;
-                      if ( Number( value ) < this.representantes.length && Number( value ) > 0 ) {
-                        this.openDialog(
-                          '', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>'
-                        );
-                        this.representantesForm.get( 'numRepresentantesRecorrido' ).setValue( String( this.representantes.length ) );
-                        return;
-                      }
-                      for ( let i = 0; i < nuevosRepresentantes; i++ ) {
-                          this.representantes.push(
-                              this.fb.group({
-                                representanteEtcid: [null, Validators.required],
-                                proyectoEntregaEtcId: [this.proyectoEntregaEtcId, Validators.required],  
-                                nombre: [null, Validators.required],
-                                cargo: [null, Validators.required],
-                                dependencia: [null, Validators.required],
-                                semaforo: "sin-diligenciar"
-                              })
-                          );
-                      }
-                    }
-                    if (this.representanteEtcrecorrido !== undefined && this.representanteEtcrecorrido.length === 0 ){
-                        if ( Number( value ) < 0 ) {
-                            this.representantesForm.get( 'numRepresentantesRecorrido' ).setValue( '0' );
+    getCantidadRepresentantes() {
+      const value = this.representantesForm.get( 'numRepresentantesRecorrido' ).value;
+                this.estaEditando = true;
+                      if ( this.representanteEtcrecorrido !== undefined && this.representanteEtcrecorrido.length > 0 ) {
+                        this.representantes.clear();
+                        for ( const representante of this.representanteEtcrecorrido ) {
+                            this.representantes.push(
+                                this.fb.group(
+                                    {
+                                        representanteEtcid: representante.representanteEtcid,
+                                        proyectoEntregaEtcId: representante.proyectoEntregaEtcId,
+                                        nombre: representante.nombre,
+                                        cargo:  representante.cargo,
+                                        dependencia: representante.dependencia,
+                                        semaforo: representante.registroCompleto == true ? "completo" : 
+                                        (representante.registroCompleto == false && ((representante.nombre == "" || representante.nombre == null) 
+                                                                                && (representante.cargo == "" || representante.cargo == null)
+                                                                                && (representante.dependencia == "" || representante.dependencia == null)) 
+                                        || (representante.registroCompleto == null)) ? "sin-diligenciar" : "en-proceso"
+                                        }
+                                )
+                            );
                         }
-                        if ( Number( value ) > 0 ) {
-                            if ( this.representantes.dirty === true ) {
-                                this.representantesForm.get( 'numRepresentantesRecorrido' ).setValidators( Validators.min( this.representantes.length ) );
-                                const nuevosRepresentantes = Number( value ) - this.representantes.length;
-                                if ( Number( value ) < this.representantes.length && Number( value ) > 0 ) {
-                                  this.openDialog(
-                                    '', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>'
-                                  );
-                                  this.representantesForm.get( 'numRepresentantesRecorrido' ).setValue( String( this.representantes.length ) );
-                                  return;
-                                }
-                                for ( let i = 0; i < nuevosRepresentantes; i++ ) {
-                                    this.representantes.push(
-                                        this.fb.group({
+                        this.representantesForm.get( 'numRepresentantesRecorrido' ).setValidators( Validators.min( this.representantes.length ) );
+                        const nuevosRepresentantes = Number( value ) - this.representantes.length;
+                        if ( Number( value ) < this.representantes.length) {
+                          this.openDialog(
+                            '', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>'
+                          );
+                          this.representantesForm.get( 'numRepresentantesRecorrido' ).setValue( String( this.representantes.length ) );
+                          this.numRepresentantesRecorridoChange.emit(String( this.representantes.length ) );
+                          return;
+                        }
+                        for ( let i = 0; i < nuevosRepresentantes; i++ ) {
+                            this.representantes.push(
+                                this.fb.group({
+                                  representanteEtcid: [null, Validators.required],
+                                  proyectoEntregaEtcId: [this.proyectoEntregaEtcId, Validators.required],  
+                                  nombre: [null, Validators.required],
+                                  cargo: [null, Validators.required],
+                                  dependencia: [null, Validators.required],
+                                  semaforo: "sin-diligenciar"
+                                })
+                            );
+                        }
+                      }
+                      else if (this.representanteEtcrecorrido !== undefined && this.representanteEtcrecorrido.length === 0 ){
+                          if ( Number( value ) < 0 ) {
+                              this.numRepresentantesRecorridoChange.emit('0');
+                              this.representantesForm.get( 'numRepresentantesRecorrido' ).setValue( '0' );
+                          }
+                          if ( Number( value ) > 0 ) {
+                              if ( this.representantes.dirty === true ) {
+                                  this.numRepresentantesRecorridoChange.emit(String( this.representantes.length ) );  
+                                  this.representantesForm.get( 'numRepresentantesRecorrido' ).setValidators( Validators.min( this.representantes.length ) );
+                                  const nuevosRepresentantes = Number( value ) - this.representantes.length;
+                                  if ( Number( value ) < this.representantes.length && Number( value ) > 0 ) {
+                                    this.openDialog(
+                                      '', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>'
+                                    );
+                                    this.numRepresentantesRecorridoChange.emit(String( this.representantes.length ) );
+                                    this.representantesForm.get( 'numRepresentantesRecorrido' ).setValue( String( this.representantes.length ) );
+                                    return;
+                                  }
+                                  for ( let i = 0; i < nuevosRepresentantes; i++ ) {
+                                      this.representantes.push(
+                                          this.fb.group({
+                                              representanteEtcid: [null, Validators.required],
+                                              proyectoEntregaEtcId: [this.proyectoEntregaEtcId, Validators.required],  
+                                              nombre: [null, Validators.required],
+                                              cargo: [null, Validators.required],
+                                              dependencia: [null, Validators.required],
+                                              semaforo: "sin-diligenciar"
+                                          })
+                                      );
+                                  }
+                              } else {
+                                  this.representantes.clear();
+                                  for ( let i = 0; i < Number( value ); i++ ) {
+                                      this.representantes.push(
+                                          this.fb.group({                                      
                                             representanteEtcid: [null, Validators.required],
                                             proyectoEntregaEtcId: [this.proyectoEntregaEtcId, Validators.required],  
                                             nombre: [null, Validators.required],
                                             cargo: [null, Validators.required],
                                             dependencia: [null, Validators.required],
                                             semaforo: "sin-diligenciar"
-                                        })
-                                    );
-                                }
-                            } else {
-                                this.representantes.clear();
-                                for ( let i = 0; i < Number( value ); i++ ) {
-                                    this.representantes.push(
-                                        this.fb.group({                                      
-                                          representanteEtcid: [null, Validators.required],
-                                          proyectoEntregaEtcId: [this.proyectoEntregaEtcId, Validators.required],  
-                                          nombre: [null, Validators.required],
-                                          cargo: [null, Validators.required],
-                                          dependencia: [null, Validators.required],
-                                          semaforo: "sin-diligenciar"
-                                        })
-                                    );
-                                }
-                            }
-                        }
+                                          })
+                                      );
+                                  }
+                              }
+                          }
+                      }
+                      else if ( this.representanteEtcrecorrido === undefined ) {
+                          if ( Number( value ) < 0 ) {
+                              this.numRepresentantesRecorridoChange.emit('0');
+                              this.representantesForm.get( 'numRepresentantesRecorrido' ).setValue( '0' );
+                          }
+                          if ( Number( value ) > 0 ) {
+                              if ( this.representantes.dirty === true ) {
+                                  this.representantesForm.get( 'numRepresentantesRecorrido' )
+                                  .setValidators( Validators.min( this.representantes.length ) );
+                                  const nuevosRepresentantes = Number( value ) - this.representantes.length;
+                                  if ( Number( value ) < this.representantes.length && Number( value ) > 0 ) {
+                                    this.openDialog( '', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>' );
+                                    this.numRepresentantesRecorridoChange.emit(String( this.representantes.length ) );
+                                    this.representantesForm.get( 'numRepresentantesRecorrido' ).setValue( String( this.representantes.length ) );
+                                    return;
+                                  }
+                                  for ( let i = 0; i < nuevosRepresentantes; i++ ) {
+                                      this.representantes.push(
+                                          this.fb.group({
+                                            representanteEtcid: [null, Validators.required],
+                                            proyectoEntregaEtcId: [this.proyectoEntregaEtcId, Validators.required],  
+                                            nombre: [null, Validators.required],
+                                            cargo: [null, Validators.required],
+                                            dependencia: [null, Validators.required],
+                                            semaforo: "sin-diligenciar"
+                                          })
+                                      );
+                                  }
+                              } else {
+                                  this.representantes.clear();
+                                  for ( let i = 0; i < Number( value ); i++ ) {
+                                      this.representantes.push(
+                                          this.fb.group({
+                                            representanteEtcid: [null, Validators.required],
+                                            proyectoEntregaEtcId: [this.proyectoEntregaEtcId, Validators.required],  
+                                            nombre: [null, Validators.required],
+                                            cargo: [null, Validators.required],
+                                            dependencia: [null, Validators.required],
+                                            semaforo: "sin-diligenciar"
+                                          })
+                                      );
+                                  }
+                              }
+                          }
                     }
-                    if ( this.representanteEtcrecorrido === undefined ) {
-                        if ( Number( value ) < 0 ) {
-                            this.representantesForm.get( 'numRepresentantesRecorrido' ).setValue( '0' );
-                        }
-                        if ( Number( value ) > 0 ) {
-                            if ( this.representantes.dirty === true ) {
-                                this.representantesForm.get( 'numRepresentantesRecorrido' )
-                                .setValidators( Validators.min( this.representantes.length ) );
-                                const nuevosRepresentantes = Number( value ) - this.representantes.length;
-                                if ( Number( value ) < this.representantes.length && Number( value ) > 0 ) {
-                                  this.openDialog( '', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>' );
-                                  this.representantesForm.get( 'numRepresentantesRecorrido' ).setValue( String( this.representantes.length ) );
-                                  return;
-                                }
-                                for ( let i = 0; i < nuevosRepresentantes; i++ ) {
-                                    this.representantes.push(
-                                        this.fb.group({
-                                          representanteEtcid: [null, Validators.required],
-                                          proyectoEntregaEtcId: [this.proyectoEntregaEtcId, Validators.required],  
-                                          nombre: [null, Validators.required],
-                                          cargo: [null, Validators.required],
-                                          dependencia: [null, Validators.required],
-                                          semaforo: "sin-diligenciar"
-                                        })
-                                    );
-                                }
-                            } else {
-                                this.representantes.clear();
-                                for ( let i = 0; i < Number( value ); i++ ) {
-                                    this.representantes.push(
-                                        this.fb.group({
-                                          representanteEtcid: [null, Validators.required],
-                                          proyectoEntregaEtcId: [this.proyectoEntregaEtcId, Validators.required],  
-                                          nombre: [null, Validators.required],
-                                          cargo: [null, Validators.required],
-                                          dependencia: [null, Validators.required],
-                                          semaforo: "sin-diligenciar"
-                                        })
-                                    );
-                                }
-                            }
-                        }
-                  }
-                }
-        );
-  }
+    }
 
   openDialog(modalTitle: string, modalText: string) {
     let dialogRef = this.dialog.open(ModalDialogComponent, {

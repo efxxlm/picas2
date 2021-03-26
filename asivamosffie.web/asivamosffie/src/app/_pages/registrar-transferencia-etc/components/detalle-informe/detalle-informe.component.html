@@ -6,17 +6,21 @@
   </div>
   <div class="text-center">
     <h1 class="title-menu--h1">
-      Ver detalle entrega LL457326
+      Ver detalle entrega {{ llaveMen }}
     </h1>
     <p class="colorMainColor mt-05em">
-      Número de contrato:
-      <b> N801801 </b>
+      Número de contrato Obra:
+      <b> {{ numeroContratoObra }} </b>
+    </p>
+    <p class="colorMainColor mt-05em">
+      Número de contrato Interventoria: 
+      <b> {{ numeroContratoInterventoria }} </b>
     </p>
   </div>
 
   <div>
 
-    <mat-accordion>
+    <mat-accordion *ngIf="proyectoEntregaEtc">
       <mat-expansion-panel class="expansion-style">
         <mat-expansion-panel-header class="expansion-style--header">
           <mat-panel-title
@@ -31,20 +35,20 @@
               <strong>
                 Fecha del recorrido de obra:
               </strong>
-              20/07/2021
+              {{ proyectoEntregaEtc.fechaRecorridoObra | date:'dd/MM/yyyy'}}
             </p>
             <p>
               <strong>
                 ¿Cuántos representantes de la ETC estuvieron presentes en el recorrido?:
               </strong>
-              1
+              {{ proyectoEntregaEtc.numRepresentantesRecorrido }}
             </p>
             <p>
               <strong>
                 Fecha de firma del acta de entrega física:
               </strong>
               <span>
-                23/07/2021
+                {{ proyectoEntregaEtc.fechaFirmaActaEngregaFisica | date:'dd/MM/yyyy'}}
               </span>
             </p>
             <p>
@@ -52,49 +56,47 @@
                 URL de acta de entrega física:
               </strong>
               <span>
-                http://Actafisica222
+                {{ proyectoEntregaEtc.urlActaEntregaFisica }}
               </span>
             </p>
           </mat-card-content>
         </mat-card>
-
-        <mat-accordion class="animatedDown">
+        <mat-accordion class="animatedDown" *ngIf="proyectoEntregaEtc.representanteEtcrecorrido.length > 0">
           <mat-expansion-panel
             class="expansion-style sub-expansion"
+            *ngFor="let representante of arrayOne(proyectoEntregaEtc.numRepresentantesRecorrido); let i = index"
           >
             <mat-expansion-panel-header class="expansion-style--header">
               <mat-panel-title
                 class="expansion-style--title"
               >
-                Representante 1
+                Representante {{ i + 1 }}
               </mat-panel-title>
             </mat-expansion-panel-header>
-        
             <mat-card class="shipping-card var-main-gris">
               <mat-card-content>
                 <p>
                   <strong>
                     Nombre y apellidos:
                   </strong>
-                  Helena Mesa Quintín
+                  {{ proyectoEntregaEtc.representanteEtcrecorrido[i].nombre }} 
                 </p>
                 <p>
                   <strong>
                     Cargo:
                   </strong>
-                  Coordinador de Infraestructura
+                  {{ proyectoEntregaEtc.representanteEtcrecorrido[i].cargo }} 
                 </p>
                 <p>
                   <strong>
                     Dependencia de la ETC:
                   </strong>
                   <span>
-                    Dependencia 1
+                    {{ proyectoEntregaEtc.representanteEtcrecorrido[i].dependencia }} 
                   </span>
                 </p>
               </mat-card-content>
             </mat-card>
-
           </mat-expansion-panel>
         </mat-accordion>
 
@@ -114,13 +116,13 @@
               <strong>
                 Fecha de entrega de los documentos técnicos:
               </strong>
-              28/07/2021
+              {{ proyectoEntregaEtc.fechaEntregaDocumentosEtc | date:'dd/MM/yyyy'}}
             </p>
             <p>
               <strong>
                 Número de radicado de la entrega:
               </strong>
-              Rad00345
+              {{ proyectoEntregaEtc.numRadicadoDocumentosEntregaEtc }}
             </p>
           </mat-card-content>
         </mat-card>
@@ -141,19 +143,19 @@
               <strong>
                 Fecha de firma acta de entrega de bienes y servicios:
               </strong>
-              01/08/2021
+              {{ proyectoEntregaEtc.fechaFirmaActaBienesServicios | date:'dd/MM/yyyy'}}
             </p>
             <p>
               <strong>
                 Adjuntar acta:
               </strong>
-              Actaentregabienesyservicios032.pdf
+              {{ proyectoEntregaEtc.actaBienesServicios }}
             </p>
           </mat-card-content>
         </mat-card>
 
         <div class="text-center">
-          <button mat-raised-button color="accent">
+          <button mat-raised-button color="accent" (click)="descargarActa(proyectoEntregaEtc.actaBienesServicios)">
             Descargar acta
         </button>
         </div>

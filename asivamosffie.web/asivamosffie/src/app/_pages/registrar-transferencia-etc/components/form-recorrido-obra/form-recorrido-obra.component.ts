@@ -131,4 +131,10 @@ export class FormRecorridoObraComponent implements OnInit {
       this.openDialog('', respuesta.message);
     });
   }
+  changeValueRepresentantes(event: any){
+    console.log(event);
+    this.addressForm.get("numRepresentantesRecorrido").setValue(event);
+    this.childFormRepresentante.representantesForm.get( 'numRepresentantesRecorrido' ).setValue(event);
+    return;
+  }
 }
