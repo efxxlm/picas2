@@ -32,6 +32,7 @@ namespace asivamosffie.api.Controllers
         public readonly IContractualControversy _ContractualControversyService;
         public readonly IPaymentRequierementsService _paymentRequierementsService;
         public readonly IJudicialDefense _judicialDefense;
+        public readonly IRegisterProjectETCService _registerProjectETCService;
 
 
         public PublicController(
@@ -50,7 +51,8 @@ namespace asivamosffie.api.Controllers
                                 IRegisterFinalReportService registerFinalReportService,
                                 IVerifyFinalReportService verifyFinalReportService,
                                 IValidateFinalReportService validateFinalReportService,
-                                IValidateFulfilmentFinalReportService validateFulfilmentFinalReportService
+                                IValidateFulfilmentFinalReportService validateFulfilmentFinalReportService,
+                                IRegisterProjectETCService registerProjectETCService
                               )
         {
             _paymentRequierementsService = paymentRequierementsService;
@@ -69,6 +71,7 @@ namespace asivamosffie.api.Controllers
             _ValidateFinalReportService = validateFinalReportService;
             _VerifyFinalReportService = verifyFinalReportService;
             _ValidateFulfilmentFinalReportService = validateFulfilmentFinalReportService;
+            _registerProjectETCService = registerProjectETCService;
         }
 
         public AppSettingsService ToAppSettingsService(IOptions<AppSettings> appSettings)
@@ -421,6 +424,20 @@ namespace asivamosffie.api.Controllers
             try
             {
                 await _judicialDefense.VencimientoTerminosDefensaJudicial();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        //5.1.5
+        [HttpGet("GetInformeFinalActaBienesServicios")]
+        public async Task GetInformeFinalActaBienesServicios()
+        {
+            try
+            {
+                await _registerProjectETCService.GetInformeFinalActaBienesServicios();
             }
             catch (Exception ex)
             {
