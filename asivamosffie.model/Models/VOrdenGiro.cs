@@ -7,6 +7,8 @@ namespace asivamosffie.model.Models
     {
         public DateTime? FechaAprobacionFinanciera { get; set; }
         public DateTime? FechaModificacion { get; set; }
+        public string NumeroSolicitudPago { get; set; }
+        public string NumeroSolicitudOrdenGiro { get; set; }
         public int OrdenGiroId { get; set; }
         public string Modalidad { get; set; }
         public string NumeroContrato { get; set; }

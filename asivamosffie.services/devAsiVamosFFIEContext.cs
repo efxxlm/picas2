@@ -258,6 +258,8 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -3817,6 +3819,10 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.NumeroSolicitud)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.RegistroCompleto).HasDefaultValueSql("((0))");
 
@@ -7887,13 +7893,9 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.EstadoNombre)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                entity.Property(e => e.EstadoNombre).HasMaxLength(250);
 
-                entity.Property(e => e.EstadoNombre2)
-                    .HasMaxLength(400)
-                    .IsUnicode(false);
+                entity.Property(e => e.EstadoNombre2).HasMaxLength(250);
 
                 entity.Property(e => e.FechaAprobacionFinanciera).HasColumnType("datetime");
 
@@ -7901,12 +7903,18 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.IntEstadoCodigo).HasColumnName("intEstadoCodigo");
 
-                entity.Property(e => e.Modalidad)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                entity.Property(e => e.Modalidad).HasMaxLength(250);
 
                 entity.Property(e => e.NumeroContrato)
                     .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroSolicitudOrdenGiro)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroSolicitudPago)
+                    .HasMaxLength(255)
                     .IsUnicode(false);
             });
 
