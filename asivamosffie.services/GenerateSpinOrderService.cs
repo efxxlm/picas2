@@ -267,6 +267,7 @@ namespace asivamosffie.services
                 pOrdenGiroTercero.RegistroCompleto = ValidarRegistroCompletoOrdenGiroTercero(pOrdenGiroTercero);
 
                 _context.OrdenGiroTercero.Add(pOrdenGiroTercero);
+                _context.SaveChanges();
             }
             else
             {
@@ -421,6 +422,7 @@ namespace asivamosffie.services
                 _ => new { },
             };
         }
+
         public async Task<dynamic> GetListSolicitudPagoOLD()
         {
             var result = await _context.SolicitudPago
