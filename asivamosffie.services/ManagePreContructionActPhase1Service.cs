@@ -274,7 +274,7 @@ namespace asivamosffie.services
                 Contrato contratoOld = _context.Contrato.Find(pContratoId);
                 contratoOld.FechaModificacion = DateTime.Now;
                 contratoOld.UsuarioModificacion = pUsuarioModificacion;
-              //  contratoOld.EstadoActa = pCodigoEstadoActa;
+                contratoOld.EstadoActa = pCodigoEstadoActa;
                 _context.SaveChanges();
                 //jflorez 2020 122 10 envionotificacioncambiar por constante
                 if (pCodigoEstadoActa == "17")
